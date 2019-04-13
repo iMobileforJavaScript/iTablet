@@ -1,68 +1,76 @@
-const layersetting = [
-  {
-    title: '设置为当前图层',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_this.png'),
-  },
-  {
-    title: '可见比例尺范围',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_range.png'),
-  },
-  {
-    title: '图层风格',
-    data: [],
-    image: require('../../../../assets/function/icon_function_style.png'),
-  },
-  // {
-  //   title: '图层属性',
-  //   data: [],
-  // },
-  {
-    title: '重命名',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_rename.png'),
-  },
-  {
-    title: '上移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-  },
-  {
-    title: '下移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-  },
-  {
-    title: '置顶',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-  },
-  {
-    title: '置底',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-  },
-  // {
-  //   title: '复制',
-  //   data: [],
-  // },
-  // {
-  //   title: '插入复制的图层',
-  //   data: [],
-  // },
-  {
-    title: '移除',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
-  },
-  // {
-  //   title: '取消',
-  //   data: [],
-  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-  // },
-]
+import {  getLanguage } from '../../../../language/index'
 
+function layersetting(param)  {
+    return  [
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_LAYER_STYLE,
+        //'图层风格',
+        data: [],
+        image: require('../../../../assets/function/icon_function_style.png'),
+      },
+      // {
+      //   title: '图层属性',
+      //   data: [],
+      // },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+      },
+      // {
+      //   title: '复制',
+      //   data: [],
+      // },
+      // {
+      //   title: '插入复制的图层',
+      //   data: [],
+      // },
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        data: [],
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+      // {
+      //   title: '取消',
+      //   data: [],
+      //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+      // },
+    ]
+}
 const baseListData = [
   {
     title: '在线底图',
@@ -89,105 +97,117 @@ const baseListData = [
   },
 ]
 
-const layerThemeSetting = [
-  {
-    title: '设置为当前图层',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_this.png'),
-  },
-  {
-    title: '可见比例尺范围',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_range.png'),
-  },
-  {
-    title: '新建专题图',
-    data: [],
-    image: require('../../../../assets/layerToolbar/theme_new.png'),
-  },
-  {
-    title: '重命名',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_rename.png'),
-  },
-  {
-    title: '上移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-  },
-  {
-    title: '下移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-  },
-  {
-    title: '置顶',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-  },
-  {
-    title: '置底',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-  },
-  {
-    title: '移除',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
-  },
-]
+function layerThemeSetting (param){
+   return [
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+      //'可见比例尺范围',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_range.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_CREAT_THEMATIC_MAP,//'新建专题图',
+      data: [],
+      image: require('../../../../assets/layerToolbar/theme_new.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+      //'重命名',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_rename.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_TOP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+      //'移除',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_remove.png'),
+    },
+  ]
+}
+  function layerThemeSettings(param) {
+  return [
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+      //'可见比例尺范围',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_range.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
+      //'修改专题图',
+      data: [],
+      image: require('../../../../assets/layerToolbar/theme_modify.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+      //'重命名',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_rename.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_TOP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+      //'移除',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_remove.png'),
+    },
+  ]
+}
 
-const layerThemeSettings = [
+const layer3dSettingCanSelect=(param) => [
   {
-    title: '设置为当前图层',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_this.png'),
-  },
-  {
-    title: '可见比例尺范围',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_range.png'),
-  },
-  {
-    title: '修改专题图',
-    data: [],
-    image: require('../../../../assets/layerToolbar/theme_modify.png'),
-  },
-  {
-    title: '重命名',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_rename.png'),
-  },
-  {
-    title: '上移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-  },
-  {
-    title: '下移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-  },
-  {
-    title: '置顶',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-  },
-  {
-    title: '置底',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-  },
-  {
-    title: '移除',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
-  },
-]
-
-const layer3dSettingCanSelect = [
-  {
-    title: '设置为当前图层',
+    title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
     data: [],
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
@@ -211,80 +231,94 @@ const layer3dSettingCanNotSelect = [
   },
 ]
 
-const layereditsetting = [
+function layereditsetting(param){
+  return [
   {
-    title: '切换底图',
+    title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
     data: [],
     image: require('../../../../assets/mapTools/icon_open_black.png'),
   },
-]
+  ]
+}
 
-const layerCollectionSetting = [
-  {
-    title: '设置为当前图层',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_this.png'),
-  },
-  {
-    title: '可见比例尺范围',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_range.png'),
-  },
-  {
-    title: '重命名',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_rename.png'),
-  },
-  {
-    title: '上移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-  },
-  {
-    title: '下移',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-  },
-  {
-    title: '置顶',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-  },
-  {
-    title: '置底',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-  },
-  {
-    title: '移除',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
-  },
-]
+  function layerCollectionSetting(param)  {
+    return[
+    {
+      title:  getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    },
+    {
+      title:  getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+      //'可见比例尺范围',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_range.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+      //'重命名',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_rename.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_TOP,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+      //'移除',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_remove.png'),
+    },
+  ]
+}
+function taggingData(param)  {
+   return [
+    {
+      title:  getLanguage(param).Map_Layer.PLOTS_IMPORT,
+      //'导入标注',
+      data: [],
+      image: require('../../../../assets/function/icon_function_Tagging.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.PLOTS_DELETE,
+      //'删除标注',
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_remove.png'),
+    },
+  ]
+}
 
-const taggingData = [
+function scaleData(param)  {
+  return [
   {
-    title: '导入标注',
-    data: [],
-    image: require('../../../../assets/function/icon_function_Tagging.png'),
-  },
-  {
-    title: '删除标注',
-    data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
-  },
-]
-
-const scaleData = [
-  {
-    title: '最大可见比例尺',
+    title: getLanguage(param).Map_Layer.LAYERS_MAXIMUM,
+    //'最大可见比例尺',
     data: [],
   },
   {
-    title: '最小可见比例尺',
+    title: getLanguage(param).Map_Layer.LAYERS_MINIMUM,
+    //'最小可见比例尺',
     data: [],
   },
-]
+]}
 
 const mscaleData = [
   {

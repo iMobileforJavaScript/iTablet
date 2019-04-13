@@ -18,6 +18,7 @@ import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Utils } from '../../../workspace/util'
 import { SMap, Action } from 'imobile_for_reactnative'
+import { language, getLanguage } from '../../../../language/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
 
 export default class LayerAttributeTabs extends React.Component {
   props: {
+    language:Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -521,7 +523,8 @@ export default class LayerAttributeTabs extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          // {'撤销'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_undo}
           imageStyle={styles.headerBtn}
@@ -529,7 +532,8 @@ export default class LayerAttributeTabs extends React.Component {
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_redo}
           imageStyle={styles.headerBtn}
@@ -537,7 +541,8 @@ export default class LayerAttributeTabs extends React.Component {
         />
         <MTBtn
           key={'revert'}
-          title={'还原'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT}
+          //{'还原'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_revert}
           imageStyle={styles.headerBtn}
@@ -553,7 +558,7 @@ export default class LayerAttributeTabs extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '属性',
+          title:  getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: [
@@ -602,6 +607,7 @@ export default class LayerAttributeTabs extends React.Component {
               <View style={{ flex: 1 }} />
             )}
             <LocationView
+              language={this.props.language}
               ref={ref => (this.locationView = ref)}
               style={styles.locationView}
               currentIndex={

@@ -10,9 +10,11 @@ import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../language/index'
 
 export default class MapSetting extends Component {
   props: {
+    language:Object,
     navigation: Object,
     currentMap: Object,
     data: Array,
@@ -144,19 +146,24 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
-      case '手势旋转':
+      case getLanguage(this.props.language).Map_Module.ROTATION_GRSTURE:
+      //'手势旋转':
         SMap.enableRotateTouch(value)
         break
-      case '手势俯仰':
+      case getLanguage(this.props.language).Map_Module.PITCH_GESTURE:
+      //'手势俯仰':
         SMap.enableSlantTouch(value)
         break
-      case '反走样地图':
+      case getLanguage(this.props.language).Map_Module.ANTI_ALIASING_MAP:
+      //'反走样地图':
         SMap.setAntialias(value)
         break
-      case '显示压盖对象':
+      case getLanguage(this.props.language).Map_Module.SHOW_OVERLAYS:
+      //'显示压盖对象':
         SMap.setOverlapDisplayed(value)
         break
-      case '固定比例尺':
+      case getLanguage(this.props.language).Map_Module.FIX_SCALE:
+      //'固定比例尺':
         SMap.setVisibleScalesEnabled(value)
         break
       case '专题图图例':
@@ -213,19 +220,24 @@ export default class MapSetting extends Component {
     let title = ''
     switch (GLOBAL.Type) {
       case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
+        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
+        //MAP_MODULE.MAP_COLLECTION
         break
       case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
+        title =getLanguage(this.props.language).Map_Module.MAP_EDIT
+        //MAP_MODULE.MAP_EDIT
         break
       case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
+        title = getLanguage(this.props.language).Map_Module.MAP_3D
+        //MAP_MODULE.MAP_3D
         break
       case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
+        title = getLanguage(this.props.language).Map_Module.MAP_THEME
+        //MAP_MODULE.MAP_THEME
         break
       case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
+        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
+        //MAP_MODULE.MAP_PLOTTING
         break
     }
     return (

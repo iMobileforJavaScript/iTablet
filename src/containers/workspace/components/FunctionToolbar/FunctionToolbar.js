@@ -33,12 +33,14 @@ const MAP_EDIT = 'MAP_EDIT'
  */
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
+import{ getLanguage }from '../../../../language/index'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 const BottomHeight = scaleSize(100)
 
 export default class FunctionToolbar extends React.Component {
   props: {
+    language:Object,
     style?: any,
     hide?: boolean,
     direction?: string,
@@ -134,7 +136,8 @@ export default class FunctionToolbar extends React.Component {
       this.props.Label()
     }
     if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
-      Toast.show('提示: 请先选择专题图层。')
+      Toast.show( getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER)            
+      //'提示: 请先选择专题图层。')
       NavigationService.navigate('LayerManager')
       return
     }
@@ -168,7 +171,8 @@ export default class FunctionToolbar extends React.Component {
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
       default:
-        Toast.show('提示: 请先选择专题图层。')
+        Toast.show(getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER)            
+        //''提示: 请先选择专题图层。')
         NavigationService.navigate('LayerManager')
         return
     }
@@ -315,7 +319,8 @@ export default class FunctionToolbar extends React.Component {
 
   showMap3DSymbol = async () => {
     if (!GLOBAL.openWorkspace) {
-      Toast.show('请打开场景')
+      Toast.show( getLanguage(this.props.language).Map_Main_Menu.TOOLS_AREA_MEASUREMENT)            
+//'请打开场景')
       return
     }
     SScene.checkoutListener('startLabelOperate')
@@ -423,7 +428,10 @@ export default class FunctionToolbar extends React.Component {
         tableType,
         cb: () => SMap.setAction(Action.SELECT),
       })
-      Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
+      Toast.show(
+        getLanguage(this.props.language).Map_Main_Menu.PLEASE_SELECT_OBJECT,
+      //ConstInfo.CHOOSE_EDIT_OBJ
+      )
     }
   }
 
@@ -525,11 +533,13 @@ export default class FunctionToolbar extends React.Component {
         }
       } else {
         NavigationService.navigate('LayerManager')
-        Toast.show('当前图层无法设置风格,请重新选择图层')
+        Toast.show(getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER_CANNOT_BE_STYLED)            
+        //'当前图层无法设置风格,请重新选择图层')
       }
     } else {
       NavigationService.navigate('LayerManager')
-      Toast.show('当前图层无法设置风格,请重新选择图层')
+      Toast.show(getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER_CANNOT_BE_STYLED)            
+      //'当前图层无法设置风格,请重新选择图层')
     }
   }
 
@@ -595,7 +605,8 @@ export default class FunctionToolbar extends React.Component {
                   data: customerUDBs,
                 },
                 {
-                  title: Const.DATA_SOURCE,
+                  title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
+                  //Const.DATA_SOURCE,
                   image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: userUDBs,
                 },
@@ -603,7 +614,8 @@ export default class FunctionToolbar extends React.Component {
             } else {
               data = [
                 {
-                  title: Const.DATA_SOURCE,
+                  title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
+                  //Const.DATA_SOURCE,
                   image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
                 },
@@ -703,7 +715,8 @@ export default class FunctionToolbar extends React.Component {
         //   data: customerUDBs,
         // },
         {
-          title: Const.DATA_SOURCE,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
+          //Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: userUDBs,
         },
@@ -734,7 +747,8 @@ export default class FunctionToolbar extends React.Component {
       })
       data = [
         {
-          title: Const.DATA_SOURCE,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
+          //Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: customerUDBs,
         },
@@ -781,7 +795,8 @@ export default class FunctionToolbar extends React.Component {
       this.props.map.currentMap.name || 'DefaultMap',
     )
     NavigationService.navigate('InputPage', {
-      headerTitle: '标注名称',
+      headerTitle:  getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
+      // '标注名称',
       value: newName,
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async value => {
@@ -851,21 +866,24 @@ export default class FunctionToolbar extends React.Component {
           // },
           {
             key: '开始',
-            title: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
+            // title: '开始',
             action: () => this.start(ConstToolType.MAP_EDIT_START),
             size: 'large',
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
             key: constants.ADD,
-            title: constants.ADD,
+            title:getLanguage(this.props.language).Map_Main_Menu.OPEN, 
+            //constants.ADD,
             size: 'large',
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             key: '标注',
-            title: '标注',
+            title: getLanguage(this.props.language).Map_Main_Menu.PLOTS, 
+            //'标注',
             action: this.Tagging,
             size: 'large',
             image: require('../../../../assets/function/icon_function_Tagging.png'),
@@ -873,19 +891,22 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             key: '风格',
-            title: '风格',
+            title: getLanguage(this.props.language).Map_Main_Menu.STYLE, 
+            //'风格',
             action: this.mapStyle,
             size: 'large',
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
           },
           {
-            title: '工具',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS, 
+            //'工具',
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '分享',
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE, 
+            //'分享',
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },
@@ -897,7 +918,8 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             key: '开始',
-            title: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
+            // title: '开始',
             action: this.map3Dstart,
             size: 'large',
             image: require('../../../../assets/function/icon_function_start.png'),
@@ -916,7 +938,8 @@ export default class FunctionToolbar extends React.Component {
           // },
           {
             // key: 'fly',
-            title: '飞行',
+            title:  getLanguage(this.props.language).Map_Main_Menu.FLY,
+            //'飞行',
             action: () => {
               // this.isShow=!this.isShow
               // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
@@ -929,13 +952,15 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
           },
           {
-            title: '工具',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS, 
+            //'工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
 
           {
-            title: '分享',
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE, 
+            //'分享',
             action: async () => {
               this.showMap3Dshare()
             },
@@ -947,7 +972,8 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             key: '开始',
-            title: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
+            // title: '开始',
             action: this.startTheme,
             size: 'large',
             selectMode: 'flash',
@@ -962,7 +988,8 @@ export default class FunctionToolbar extends React.Component {
           // },
           {
             key: '专题图',
-            title: '专题图',
+            title: getLanguage(this.props.language).Map_Main_Menu.THEME,
+            //'专题图',
             action: this.showThemeCreate,
             size: 'large',
             selectMode: 'flash',
@@ -970,20 +997,23 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             key: '风格',
-            title: '风格',
+            title: getLanguage(this.props.language).Map_Main_Menu.STYLE, 
+            //'风格',
             size: 'large',
             selectMode: 'flash',
             action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_style.png'),
           },
           {
-            title: '工具',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS, 
+            //'工具',
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
             key: '分享',
-            title: '分享',
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE, 
+            //'分享',
             size: 'large',
             selectMode: 'flash',
             action: () => {
@@ -1062,32 +1092,38 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
+  
       case constants.COLLECTION:
       default:
         data = [
           {
             key: '开始',
-            title: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
+            // title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
-            title: '采集',
+            title: getLanguage(this.props.language).Map_Main_Menu.COLLECTION,
+            //'采集',
             action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_symbol.png'),
           },
           {
-            title: '编辑',
+            title: getLanguage(this.props.language).Map_Main_Menu.EDIT,
+            //'编辑',
             action: this.showEdit,
             image: require('../../../../assets/function/icon_edit.png'),
           },
           {
-            title: '工具',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS, 
+            //'工具',
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '分享',
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE, 
+            //'分享',
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },

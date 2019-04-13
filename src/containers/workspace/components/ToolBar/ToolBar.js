@@ -64,6 +64,7 @@ import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
+import { language,getLanguage } from '../../../../language/index'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -80,6 +81,7 @@ const DEFAULT_FULL_SCREEN = true
 
 export default class ToolBar extends React.PureComponent {
   props: {
+    language:Object,
     children: any,
     type: string,
     containerProps?: Object,
@@ -371,10 +373,12 @@ export default class ToolBar extends React.PureComponent {
         data = [
           {
             key: 'distanceMeasure',
-            title: '距离量算',
+            title:getLanguage(this.props.language).Map_Main_Menu.TOOLS_DISTANCE_MEASUREMENT,
+            //'距离量算',
             action: () => {
               if (!GLOBAL.openWorkspace) {
-                Toast.show('请打开场景')
+                Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                 return
               }
               SScene.checkoutListener('startMeasure')
@@ -393,10 +397,12 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'suerfaceMeasure',
-            title: '面积量算',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_AREA_MEASUREMENT,
+            //''面积量算',
             action: () => {
               if (!GLOBAL.openWorkspace) {
-                Toast.show('请打开场景')
+                Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                 return
               }
               SScene.checkoutListener('startMeasure')
@@ -413,11 +419,13 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'map3DPoint',
-            title: '兴趣点',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_3D_CREATE_POINT,
+            //'兴趣点',
             action: () => {
               try {
                 if (!GLOBAL.openWorkspace) {
-                  Toast.show('请打开场景')
+                  Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                   return
                 }
                 SScene.checkoutListener('startLabelOperate')
@@ -437,11 +445,13 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'map3DText',
-            title: '文字',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CREATE_TEXT,
+            //''文字',
             action: () => {
               try {
                 if (!GLOBAL.openWorkspace) {
-                  Toast.show('请打开场景')
+                  Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                   return
                 }
                 SScene.checkoutListener('startLabelOperate')
@@ -464,10 +474,12 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'map3DPiontLine',
-            title: '点绘线',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CREATE_LINE,
+            //''点绘线',
             action: () => {
               if (!GLOBAL.openWorkspace) {
-                Toast.show('请打开场景')
+                Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                 return
               }
               SScene.checkoutListener('startLabelOperate')
@@ -484,11 +496,13 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'map3DPointSurface',
-            title: '点绘面',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CREATE_REGION,
+            //''点绘面',
             action: () => {
               try {
                 if (!GLOBAL.openWorkspace) {
-                  Toast.show('请打开场景')
+                  Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                   return
                 }
                 SScene.checkoutListener('startLabelOperate')
@@ -504,11 +518,13 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'closeAllLable',
-            title: '清除标注',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLEAN_PLOTTING,
+            //''清除标注',
             action: () => {
               try {
                 if (!GLOBAL.openWorkspace) {
-                  Toast.show('请打开场景')
+                  Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
                   return
                 }
                 SScene.checkoutListener('startLabelOperate')
@@ -527,7 +543,8 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'action3d',
-            title: '点选',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_SELECT,
+            //''点选',
             action: () => {
               // try {
               //   if (GLOBAL.action3d === 'PAN3D') {
@@ -561,7 +578,8 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'pointAnalyst',
-            title: '路径分析',
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_PATH_ANALYSIS,
+            //''路径分析',
             action: () => {
               try {
                 NavigationService.navigate('PointAnalyst', {
@@ -647,7 +665,7 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
           GLOBAL.currentLayer.name,
         )
@@ -760,7 +778,7 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
           GLOBAL.currentLayer.name,
         )
@@ -953,11 +971,12 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         let list = await ThemeMenuData.getThemeGraphColorScheme()
         let datalist = [
           {
-            title: '颜色方案',
+            title: getLanguage(this.props.language).Map_Main_Menu.THEME_COLOR_SCHEME,
+            //'颜色方案',
             data: list,
           },
         ]
@@ -1070,11 +1089,12 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         let list = await ThemeMenuData.getUniqueColorScheme()
         let datalist = [
           {
-            title: '颜色方案',
+            title: getLanguage(this.props.language).Map_Main_Menu.THEME_COLOR_SCHEME,
+            //'颜色方案',
             data: list,
           },
         ]
@@ -1134,11 +1154,12 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         let list = await ThemeMenuData.getRangeColorScheme()
         let datalist = [
           {
-            title: '颜色方案',
+            title: getLanguage(this.props.language).Map_Main_Menu.THEME_COLOR_SCHEME,
+            //'颜色方案',
             data: list,
           },
         ]
@@ -1197,11 +1218,12 @@ export default class ToolBar extends React.PureComponent {
     let setData = async function() {
       try {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         let list = await ThemeMenuData.getColorGradientType()
         let datalist = [
           {
-            title: '颜色方案',
+            title: getLanguage(this.props.language).Map_Main_Menu.THEME_COLOR_SCHEME,
+            //'颜色方案',
             data: list,
           },
         ]
@@ -1749,7 +1771,10 @@ export default class ToolBar extends React.PureComponent {
     } catch (error) {
       let buttons = []
       let data = []
-      Toast.show('当前场景无飞行轨迹')
+      Toast.show(
+        getLanguage(this.props.language).Prompt.NO_FLY,
+      //'当前场景无飞行轨迹'
+      )
       return { data, buttons }
     }
   }
@@ -1788,7 +1813,8 @@ export default class ToolBar extends React.PureComponent {
 
   showMap3DSymbol = async () => {
     if (!GLOBAL.openWorkspace) {
-      Toast.show('请打开场景')
+      Toast.show( getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE)            
+//'请打开场景')
       return
     }
     SScene.checkoutListener('startLabelOperate')
@@ -2330,7 +2356,8 @@ export default class ToolBar extends React.PureComponent {
         if (result) {
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
-          Toast.show('创建专题图成功')
+          Toast.show( getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)            
+//'创建专题图成功')
         } else {
           Toast.show('创建专题图失败')
         }
@@ -2361,7 +2388,8 @@ export default class ToolBar extends React.PureComponent {
         if (result) {
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
-          Toast.show('创建专题图成功')
+          Toast.show( getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)            
+//'创建专题图成功')
         } else {
           Toast.show('创建专题图失败')
         }
@@ -3189,7 +3217,7 @@ export default class ToolBar extends React.PureComponent {
           }
           //其他专题图需要选择字段
           this.props.setContainerLoading &&
-            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+            this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
           let data = await SThemeCartography.getThemeExpressionByDatasetName(
             item.datasourceName,
             item.datasetName,
@@ -3321,7 +3349,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
       (async function() {
         this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
         SMap.getUDBName(this.path).then(list => {
           let dataList = [
@@ -3354,7 +3382,7 @@ export default class ToolBar extends React.PureComponent {
           // 添加数据集
           this.lastUdbList = this.state.data //保存上次的数据源数据
           this.props.setContainerLoading &&
-            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+            this.props.setContainerLoading(true, getLanguage(this.props.language).Prompt.READING_DATA)
           this.path = await FileTools.appendingHomeDirectory(item.path)
           SThemeCartography.getUDBName(this.path).then(list => {
             list.forEach(item => {
@@ -3614,14 +3642,16 @@ export default class ToolBar extends React.PureComponent {
         )
         let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
         NavigationService.navigate('InputPage', {
-          headerTitle: '新建地图',
+          headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
+          //'新建地图',
           value: newName,
           placeholder: ConstInfo.PLEASE_INPUT_NAME,
           cb: async value => {
             GLOBAL.Loading &&
               GLOBAL.Loading.setLoading(
                 true,
-                ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+                getLanguage(this.props.language).Prompt.CREATING,
+                //ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
               )
             await this.props.closeMap()
             this.props.setCollectionInfo() // 清空当前模板
@@ -3723,12 +3753,15 @@ export default class ToolBar extends React.PureComponent {
     )
     NavigationService.navigate('InputPage', {
       value: newName,
-      headerTitle: '新建地图',
+      headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
+      //'新建地图',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&
-            this.props.setContainerLoading(true, ConstInfo.MAP_CREATING)
+            this.props.setContainerLoading(true, 
+              //ConstInfo.MAP_CREATING
+              getLanguage(this.props.language).Prompt.CREATING)
           // 打开模板工作空间
           let moduleName = ''
           if (this.props.map.currentMap.name) {
@@ -3768,7 +3801,8 @@ export default class ToolBar extends React.PureComponent {
                   if (mapInfo.Template) {
                     this.props.setContainerLoading(
                       true,
-                      ConstInfo.TEMPLATE_READING,
+                      getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+      //ConstInfo.TEMPLATE_READING,
                     )
                     let templatePath = await FileTools.appendingHomeDirectory(
                       ConstPath.UserPath + mapInfo.Template,
@@ -3819,12 +3853,16 @@ export default class ToolBar extends React.PureComponent {
                 //   currentLayerIndex: 0,
                 // })
                 this.mapMoveToCurrent()
-                this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
+                this.props.setContainerLoading(true, 
+                  //ConstInfo.TEMPLATE_READING
+                  getLanguage(this.props.language).Prompt.READING_TEMPLATE)
                 this.props.getSymbolTemplates(null, () => {
                   this.setVisible(false)
                   this.props.setContainerLoading &&
                     this.props.setContainerLoading(false)
-                  Toast.show(ConstInfo.TEMPLATE_CHANGE_SUCCESS)
+                  Toast.show(
+                    getLanguage(this.props.language).Prompt.READING_TEMPLATE)
+                    //ConstInfo.TEMPLATE_CHANGE_SUCCESS
                 })
               } else {
                 this.props.setContainerLoading &&
@@ -3856,7 +3894,10 @@ export default class ToolBar extends React.PureComponent {
         Toast.show(ConstInfo.MAP_ALREADY_OPENED)
         return
       }
-      this.props.setContainerLoading(true, ConstInfo.MAP_CHANGING)
+      this.props.setContainerLoading(true, 
+        getLanguage(this.props.language).Prompt.SWITCHING,
+        //ConstInfo.MAP_CHANGING
+        )
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
@@ -3865,9 +3906,13 @@ export default class ToolBar extends React.PureComponent {
       await this.props.setCurrentSymbols()
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
-        Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
+        Toast.show(getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
+        //ConstInfo.CHANGE_MAP_TO + mapInfo.name
+        )
         if (mapInfo.Template) {
-          this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
+          this.props.setContainerLoading(true, 
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE)
           let templatePath = await FileTools.appendingHomeDirectory(
             ConstPath.UserPath + mapInfo.Template,
           )
@@ -4309,17 +4354,17 @@ export default class ToolBar extends React.PureComponent {
     let list
     if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
       if (this.state.themeType === constants.THEME_UNIQUE_STYLE) {
-        list = uniqueMenuInfo
+        list = uniqueMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_RANGE_STYLE) {
-        list = rangeMenuInfo
+        list = rangeMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_UNIFY_LABEL) {
-        list = labelMenuInfo
+        list = labelMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRAPH_STYLE) {
-        list = graphMenuInfo
+        list = graphMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_DOT_DENSITY) {
-        list = dotDensityMenuInfo
+        list = dotDensityMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRADUATED_SYMBOL) {
-        list = graduatedSymbolMenuInfo
+        list = graduatedSymbolMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRID_UNIQUE) {
         list = gridUniqueMenuInfo
       } else if (this.state.themeType === constants.THEME_GRID_RANGE) {
@@ -4329,16 +4374,16 @@ export default class ToolBar extends React.PureComponent {
     if (!list) {
       switch (this.props.currentLayer.type) {
         case 1:
-          list = point
+          list = point(this.props.language)
           break
         case 3:
-          list = line
+          list = line(this.props.language)
           break
         case 5:
-          list = region
+          list = region(this.props.language)
           break
         case 83:
-          list = grid
+          list = grid(this.props.language)
           break
       }
     }
@@ -4780,6 +4825,7 @@ export default class ToolBar extends React.PureComponent {
         )}
         {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
+            //language={this.props.language}
             selectName={this.state.selectName}
             showMenu={this.menu}
           />

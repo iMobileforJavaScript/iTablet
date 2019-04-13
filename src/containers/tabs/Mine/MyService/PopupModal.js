@@ -5,6 +5,7 @@ import Toast from '../../../../utils/Toast'
 import { color, size } from '../../../../styles'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils'
+import {language, getLanguage  } from '../../../../language'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -165,7 +166,10 @@ export default class PopupModal extends PureComponent {
           <View style={{ width: '100%', position: 'absolute', bottom: 0 }}>
             {this._renderSeparatorLine()}
             {this._publishButton(!this.props.isPublish)}
-            {this._deleteButton('删除')}
+            {this._deleteButton(
+              getLanguage(global.language).Profile.DELETE
+              //'删除'
+              )}
           </View>
         </TouchableOpacity>
       </Modal>

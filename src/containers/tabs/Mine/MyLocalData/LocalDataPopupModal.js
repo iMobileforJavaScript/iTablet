@@ -2,8 +2,10 @@ import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
+import{ getLanguage }from '../../../../language/index'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
+    language:Object,
     modalVisible: boolean,
     onCloseModal: () => {},
     onDeleteData: () => {},
@@ -59,7 +61,8 @@ export default class LocalDataPopupModal extends PureComponent {
             fontSize: this.fontSize,
           }}
         >
-          导入数据
+          {/* 导入数据 */}
+          {getLanguage(this.props.language).Profile.IMPORT_DATA}
         </Text>
         {this._renderSeparatorLine()}
       </TouchableOpacity>
@@ -84,7 +87,8 @@ export default class LocalDataPopupModal extends PureComponent {
             fontSize: this.fontSize,
           }}
         >
-          删除
+           {/* 删除 */}
+           {getLanguage(this.props.language).Profile.DELETE_DATA}
         </Text>
         {this._renderSeparatorLine()}
       </TouchableOpacity>

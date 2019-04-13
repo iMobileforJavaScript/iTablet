@@ -21,6 +21,9 @@ import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
+import {connect} from "react-redux"
+
+
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -120,8 +123,9 @@ class RenderModuleItem extends Component {
   }
 }
 
-export default class ModuleList extends Component {
+export class ModuleList extends Component {
   props: {
+    language:Object,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -415,7 +419,7 @@ export default class ModuleList extends Component {
         showsHorizontalScrollIndicator={false}
       >
         <FlatList
-          data={ConstModule}
+          data={ConstModule(this.props.language)}
           horizontal={true}
           renderItem={this._renderItem}
           keyboardShouldPersistTaps={'always'}
@@ -433,7 +437,7 @@ export default class ModuleList extends Component {
         ) : (
           <FlatList
             style={styles.flatList}
-            data={ConstModule}
+            data={ConstModule(this.props.language)}
             renderItem={this._renderItem}
             horizontal={false}
             numColumns={2}
@@ -445,6 +449,15 @@ export default class ModuleList extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language
+})
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ModuleList)
 
 const styles = StyleSheet.create({
   container: {

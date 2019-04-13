@@ -6,6 +6,7 @@ import ConstToolType from './ConstToolType'
 import ConstOnline from './ConstOnline'
 import { ConstPath } from '../constants'
 import { scaleSize } from '../utils'
+import {language ,getLanguage} from '../language/index'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -20,15 +21,15 @@ function getHeaderTitle(type) {
   if (!type) return ''
   switch (type) {
     case constants.MAP_EDIT:
-      return MAP_MODULE.MAP_EDIT
+      return  getLanguage(global.language).Map_Module.MAP_EDIT
     case constants.MAP_3D:
-      return MAP_MODULE.MAP_3D
+      return getLanguage(global.language).Map_Module.MAP_3D
     case constants.MAP_THEME:
-      return MAP_MODULE.MAP_THEME
+      return getLanguage(global.language).Map_Module.MAP_THEME
     case constants.MAP_COLLECTION:
-      return MAP_MODULE.MAP_COLLECTION
+      return getLanguage(global.language).Map_Module.MAP_COLLECTION
     case constants.MAP_PLOTTING:
-      return MAP_MODULE.MAP_PLOTTING
+      return getLanguage(global.language).Map_Module.MAP_PLOTTING
     case constants.MAP_ANALYST:
       return MAP_MODULE.MAP_ANALYST
   }
@@ -36,11 +37,15 @@ function getHeaderTitle(type) {
 
 export { MAP_MODULE, getHeaderTitle }
 
-export default [
+function SetMap(param){
+ return [
   {
     key: '地图制图',
-    title: '地图制图',
-    baseImage: require('../assets/home/Frenchgrey/left_top_free.png'),
+    title:getLanguage(param).Map_Module.MAP_EDIT,
+    baseImage:
+      param==='CN'?
+      require('../assets/home/Frenchgrey/left_top_free.png')
+      :require('../assets/home/Frenchgrey/free_top_left.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_cartography.png'),
     style: {
       width: scaleSize(60),
@@ -100,15 +105,18 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_EDIT,
         wsData: wsData,
-        mapName: '地图制图',
+        mapName: getLanguage(param).Map_Module.MAP_EDIT,
         isExample: false,
       })
     },
   },
   {
     key: '三维场景',
-    title: '三维场景',
-    baseImage: require('../assets/home/Frenchgrey/right_bottom_free.png'),
+    title: getLanguage(param).Map_Module.MAP_3D,
+    baseImage: 
+      param==='CN'?
+      require('../assets/home/Frenchgrey/right_bottom_free.png')
+      :require('../assets/home/Frenchgrey/free_bottom_right.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_map3D.png'),
     style: {
       width: scaleSize(60),
@@ -166,7 +174,7 @@ export default [
   // },
   {
     key: '专题制图',
-    title: '专题制图',
+    title: getLanguage(param).Map_Module.MAP_THEME,
     baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_thematicmap.png'),
     style: {
@@ -224,14 +232,14 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData,
-        mapName: '专题制图',
+        mapName: getLanguage(param).Map_Module.MAP_THEME,
         isExample: false,
       })
     },
   },
   {
     key: '外业采集',
-    title: '外业采集',
+    title: getLanguage(param).Map_Module.MAP_COLLECTION,
     baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
     style: {
@@ -292,7 +300,7 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.COLLECTION,
         wsData,
-        mapName: '外业采集',
+        mapName: getLanguage(param).Map_Module.MAP_COLLECTION,
         isExample: false,
       })
     },
@@ -422,3 +430,7 @@ export default [
   //   },
   // },
 ]
+
+}
+
+export default SetMap

@@ -1,33 +1,39 @@
 import { SScene } from 'imobile_for_reactnative'
+import { language,getLanguage } from '../../language/index'
 async function getMap3DSettings() {
   let item = await SScene.getSetting()
   let data = [
     {
-      title: '基本设置',
+      title: getLanguage(global.language).Map_Setting.BASIC_SETTING,
       visible: true,
       index: 0,
       data: [
         {
-          name: '场景名称',
+          name: getLanguage(global.language).Map_Setting.SCENE_NAME,
+          //'场景名称',
           value: item.sceneNmae,
           isShow: true,
           index: 0,
         },
         {
-          name: '相机角度',
+          name: getLanguage(global.language).Map_Setting.FOV,
+          //'相机角度',
           value: item.heading,
           isShow: true,
           index: 0,
         },
         {
-          name: '场景操作状态',
+          name:  getLanguage(global.language).Map_Setting.SCENE_OPERATION_STATUS,
+          //'场景操作状态',
           value: GLOBAL.action3d ? GLOBAL.action3d : 'NULL',
           isShow: true,
           index: 0,
         },
         {
-          name: '视图模式',
-          value: '球面',
+          name: getLanguage(global.language).Map_Setting.VIEW_MODE,
+          //'视图模式',
+          value: getLanguage(global.language).Map_Setting.SPHERICAL,
+          //'球面',
           isShow: true,
           index: 0,
         },

@@ -12,6 +12,7 @@ import styles from './Styles'
 import color from '../../styles/color'
 import FetchUtils from '../../utils/FetchUtils'
 import { SOnlineService } from 'imobile_for_reactnative'
+import { language,getLanguage } from '../../language/index'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import RNFS from 'react-native-fs'
@@ -440,7 +441,8 @@ export default class PublicMap extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '公共地图',
+          title: getLanguage(global.language).Prompt.PUBLIC_MAP,
+          //'公共地图',
           navigation: this.props.navigation,
         }}
       >

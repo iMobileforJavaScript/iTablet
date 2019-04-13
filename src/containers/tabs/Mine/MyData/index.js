@@ -5,6 +5,7 @@ import { setUser } from '../../../../models/user'
 import { uploading } from '../../../../models/online'
 import { exportWorkspace } from '../../../../models/map'
 const mapStateToProps = state => ({
+  language:state.setting.toJS().language,
   user: state.user.toJS(),
   upload: state.online.toJS().upload,
 })
