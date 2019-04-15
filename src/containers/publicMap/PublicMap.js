@@ -38,6 +38,11 @@ export default class PublicMap extends Component {
     this.flatListData = []
     this.allUserDataCount = -1
     this.currentLoadDataCount = 0
+    this._onRefresh2 = this._onRefresh2.bind(this)
+    this._loadData2 = this._loadData2.bind(this)
+    this.getCurrentLoadData2 = this.getCurrentLoadData2.bind(this)
+    this._loadUserData2 = this._loadUserData2.bind(this)
+
   }
   componentDidMount() {
     // this._loadFirstUserData()
@@ -90,6 +95,7 @@ export default class PublicMap extends Component {
 
           if (!data[0].id) {
             this._showLoadProgressView()
+            debugger
             let data = await this.getCurrentLoadData2(currentPage, totalPage)
             this.setState({ data: data })
             this._clearInterval()
@@ -113,6 +119,7 @@ export default class PublicMap extends Component {
         }
       } else {
         this._showLoadProgressView()
+        debugger
         let data = await this.getCurrentLoadData2(currentPage, totalPage)
         // let objUserData = await this.getAllUserZipData(12)
         this.setState({ data: data })
@@ -123,9 +130,12 @@ export default class PublicMap extends Component {
     }
   }
 
-  getCurrentLoadData2 = async (currentPage, totalPage) => {
+  async getCurrentLoadData2(currentPage, totalPage) {
     await SOnlineService.syncAndroidCookie()
     let data = []
+    if(!totalPage){
+      totalPage = 100
+    }
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)
       if (data.length >= 1) {
@@ -136,14 +146,14 @@ export default class PublicMap extends Component {
     }
     return data
   }
-  _loadFirstUserData = async () => {
-    try {
-      this._showLoadProgressView()
-      await this._loadUserData(1)
-    } finally {
-      this._clearInterval()
-    }
-  }
+  // _loadFirstUserData = async () => {
+  //   try {
+  //     this._showLoadProgressView()
+  //     await this._loadUserData(1)
+  //   } finally {
+  //     this._clearInterval()
+  //   }
+  // }
   _showLoadProgressView = () => {
     this.objProgressWidth = setInterval(() => {
       let prevProgressWidth = this.state.progressWidth
@@ -160,7 +170,7 @@ export default class PublicMap extends Component {
       this.setState({ progressWidth: currentPorWidth })
     }, 100)
   }
-  _loadUserData2 = async (currentPage, currentData) => {
+  async _loadUserData2(currentPage, currentData){
     if (!currentData) {
       currentData = []
     }
@@ -236,42 +246,46 @@ export default class PublicMap extends Component {
     }
     return currentData
   }
-  _loadUserData = async currentPage => {
-    let arrObjContent = []
-    try {
-      let objUserData = await this.getAllUserZipData(currentPage)
-      this.currentLoadDataCount = currentPage * 9
-      this.allUserDataCount = objUserData.total
-      let objArrUserDataContent = objUserData.content
-      let contentLength = objArrUserDataContent.length
-      for (let i = 0; i < contentLength; i++) {
-        let objContent = objArrUserDataContent[i]
-        if (objContent.type === 'WORKSPACE') {
-          arrObjContent.push(objContent)
-        }
-      }
-      if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
-        this.flatListData = this.flatListData.concat(arrObjContent)
-        this.setState({ data: this.flatListData })
-      }
-    } catch (e) {
-      Toast.show('网络错误')
-      this.setState({ data: arrObjContent })
-    }
-    return arrObjContent
-  }
+  // _loadUserData = async currentPage => {
+  //   let arrObjContent = []
+  //   try {
+  //     let objUserData = await this.getAllUserZipData(currentPage)
+  //     this.currentLoadDataCount = currentPage * 9
+  //     this.allUserDataCount = objUserData.total
+  //     let objArrUserDataContent = objUserData.content
+  //     let contentLength = objArrUserDataContent.length
+  //     for (let i = 0; i < contentLength; i++) {
+  //       let objContent = objArrUserDataContent[i]
+  //       if (objContent.type === 'WORKSPACE') {
+  //         arrObjContent.push(objContent)
+  //       }
+  //     }
+  //     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
+  //       this.flatListData = this.flatListData.concat(arrObjContent)
+  //       this.setState({ data: this.flatListData })
+  //     }
+  //   } catch (e) {
+  //     Toast.show('网络错误')
+  //     this.setState({ data: arrObjContent })
+  //   }
+  //   return arrObjContent
+  // }
 
   getAllUserZipData = currentPage => {
     let time = new Date().getTime()
     let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
     return FetchUtils.getObjJson(uri)
   }
-  _onRefresh2 = async () => {
+  async _onRefresh2(){
     try {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
-        this.currentLoadPage2 = 1
-        let data = await this.getCurrentLoadData2(this.currentLoadPage2, 100)
+        // this.currentLoadPage2 = 1
+        debugger
+        let data = await this.getCurrentLoadData2(1, 100)
+        this.setState({ isRefresh: false, data: data })
+
+        data = await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
         this.setState({ isRefresh: false, data: data })
       }
     } catch (e) {
@@ -279,20 +293,20 @@ export default class PublicMap extends Component {
       this.setState({ isRefresh: false })
     }
   }
-  _onRefresh = async () => {
-    try {
-      if (!this.state.isRefresh) {
-        this.loadCount = 1
-        this.setState({ isRefresh: true })
-        this.flatListData = await this._loadUserData2(1)
-        this.setState({ isRefresh: false, data: this.flatListData })
-      }
-    } catch (e) {
-      Toast.show('网络错误')
-      this.setState({ isRefresh: false })
-    }
-  }
-  _loadData2 = async () => {
+  // _onRefresh = async () => {
+  //   try {
+  //     if (!this.state.isRefresh) {
+  //       this.loadCount = 1
+  //       this.setState({ isRefresh: true })
+  //       this.flatListData = await this._loadUserData2(1)
+  //       this.setState({ isRefresh: false, data: this.flatListData })
+  //     }
+  //   } catch (e) {
+  //     Toast.show('网络错误')
+  //     this.setState({ isRefresh: false })
+  //   }
+  // }
+  async _loadData2(){
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
@@ -310,20 +324,20 @@ export default class PublicMap extends Component {
       this.setState({ isLoadingData: false })
     }
   }
-  _loadData = async () => {
-    try {
-      if (!this.state.isLoadingData) {
-        this.setState({ data: this.flatListData, isLoadingData: true })
-        this.loadCount = this.loadCount + 1
-        let arrData = await this._loadUserData(this.loadCount)
-        this.flatListData = this.flatListData.concat(arrData)
-        this.setState({ data: this.flatListData, isLoadingData: false })
-      }
-    } catch (e) {
-      Toast.show('网络错误')
-      this.setState({ isLoadingData: false })
-    }
-  }
+  // _loadData = async () => {
+  //   try {
+  //     if (!this.state.isLoadingData) {
+  //       this.setState({ data: this.flatListData, isLoadingData: true })
+  //       this.loadCount = this.loadCount + 1
+  //       let arrData = await this._loadUserData(this.loadCount)
+  //       this.flatListData = this.flatListData.concat(arrData)
+  //       this.setState({ data: this.flatListData, isLoadingData: false })
+  //     }
+  //   } catch (e) {
+  //     Toast.show('网络错误')
+  //     this.setState({ isLoadingData: false })
+  //   }
+  // }
 
   _footView() {
     // if (
@@ -373,7 +387,7 @@ export default class PublicMap extends Component {
             textAlign: 'center',
           }}
         >
-          -----这是底线-----
+          {/* -----这是底线----- */}
         </Text>
       </View>
     )
