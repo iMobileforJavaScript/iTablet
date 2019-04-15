@@ -72,8 +72,13 @@ export default class MapSetting extends Component {
     let isAntialias = await SMap.isAntialias()
     let isOverlapDisplayed = await SMap.isOverlapDisplayed()
     let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+    let isEnableRotateTouch = SMap.isEnableRotateTouch()
+    let isEnableSlantTouch = SMap.isEnableSlantTouch()
+
 
     let newData = getMapSettings()
+    newData[0].data[0].value = isEnableRotateTouch
+    newData[0].data[1].value = isEnableSlantTouch
     newData[1].data[0].value = isAntialias
     newData[1].data[1].value = isOverlapDisplayed
     newData[2].data[0].value = isVisibleScalesEnabled
