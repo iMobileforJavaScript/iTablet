@@ -14,8 +14,6 @@ const Profile_Chinese ={
    TEMPLATE:'模板',
    COLLECTION_TEMPLATE:'采集模板',
 
-   
-
    //我的——登录
    LOGIN:'登录',
    MOBILE_LOGIN:'手机登录',
@@ -41,6 +39,7 @@ const Profile_Chinese ={
    SAVE:'保存',
 
    //我的服务
+   SERVICE:'服务',
    MY_SERVICE:'我的服务',
    PRIVATE_SERVICE:'私有服务',
    PUBLIC_SERVICE:'公有服务',
@@ -74,6 +73,13 @@ const Profile_Chinese ={
    DELETE_SCENE:'删除场景',
    UPLOAD_SYMBOL:'上传符号',
    DELETE_SYMBOL:'删除符号',
+
+   DELETE_SERVICE:'删除服务',
+   PUBLISH_SERVICE:'发布服务',
+   SET_AS_PRIVATE_SERVICE:'设为私有服务',
+   SET_AS_PUBLIC_SERVICE:'设为公有服务',
+   SET_AS_PRIVATE_DATA:'设为私有数据',
+   SET_AS_PUBLIC_DATA:'设为公有数据',
 
    //关于
    ABOUT:'关于',
@@ -144,6 +150,7 @@ const Profile_English ={
    SAVE:'Save',
 
    //我的服务
+   SERVICE:'Service',
    MY_SERVICE:'My Service',
    PRIVATE_SERVICE:'Private Service',
    PUBLIC_SERVICE:'Public Service',
@@ -158,6 +165,12 @@ const Profile_English ={
    MANAGE_ACCOUNT:'Manage Account',
    ADD_ACCOUNT:'Add Account',
 
+   DELETE_SERVICE:'Delete Service',
+   PUBLISH_SERVICE:'Publish',
+   SET_AS_PRIVATE_SERVICE:'Set as Private Service',
+   SET_AS_PUBLIC_SERVICE:'Set as Public Service',
+   SET_AS_PRIVATE_DATA:'Set as Private Data',
+   SET_AS_PUBLIC_DATA:'Set as Public Data',
 }
 export {
     Profile_Chinese,

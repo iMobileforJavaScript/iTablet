@@ -76,21 +76,24 @@ export default class PopupModal extends PureComponent {
   }
 
   _publishServiceButton = () => {
-    let title = '发布服务'
+    let title =  getLanguage(global.language).Profile.PUBLISH_SERVICE
+    //'发布服务'
     let objContent = this.props.data
     if (objContent && objContent.dataItemServices) {
       let dataItemServices = objContent.dataItemServices
       for (let i = 0; i < dataItemServices.length; i++) {
         let serviceType = dataItemServices[i].serviceType
         if (serviceType === 'RESTMAP') {
-          title = '删除' + dataItemServices[i].serviceName + '服务'
+          title = getLanguage(global.language).Profile.DELETE
+           + dataItemServices[i].serviceName 
+           + getLanguage(global.language).Profile.SERVICE
         }
       }
       return (
         <TouchableOpacity
           style={{ backgroundColor: color.itemColorWhite }}
           onPress={async () => {
-            if (title === '发布服务') {
+            if (title === getLanguage(global.language).Profile.PUBLISH_SERVICE) {
               this.props.onPublishService()
             } else {
               this.props.onDeleteService()
@@ -129,9 +132,11 @@ export default class PopupModal extends PureComponent {
       }
       let title
       if (isPublish) {
-        title = '设为私有数据'
+        title = getLanguage(global.language).Profile.SET_AS_PRIVATE_DATA
+        //'设为私有数据'
       } else {
-        title = '设为公有数据'
+        title = getLanguage(global.language).Profile.SET_AS_PUBLIC_DATA
+        //'设为公有数据'
       }
       return (
         <TouchableOpacity

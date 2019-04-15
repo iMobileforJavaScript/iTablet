@@ -164,7 +164,8 @@ export default class Find extends Component {
             },
           })} */}
           {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
+            title:getLanguage(this.props.language).Prompt.SUPERMAP_KNOW,
+            // Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
             onClick: () => {
               NavigationService.navigate('SuperMapKnown')

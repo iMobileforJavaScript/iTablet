@@ -146,23 +146,23 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
-      case getLanguage(this.props.language).Map_Module.ROTATION_GRSTURE:
+      case getLanguage(this.props.language).Map_Setting.ROTATION_GRSTURE:
       //'手势旋转':
         SMap.enableRotateTouch(value)
         break
-      case getLanguage(this.props.language).Map_Module.PITCH_GESTURE:
+      case getLanguage(this.props.language).Map_Setting.PITCH_GESTURE:
       //'手势俯仰':
         SMap.enableSlantTouch(value)
         break
-      case getLanguage(this.props.language).Map_Module.ANTI_ALIASING_MAP:
+      case getLanguage(this.props.language).Map_Setting.ANTI_ALIASING_MAP:
       //'反走样地图':
         SMap.setAntialias(value)
         break
-      case getLanguage(this.props.language).Map_Module.SHOW_OVERLAYS:
+      case getLanguage(this.props.language).Map_Setting.SHOW_OVERLAYS:
       //'显示压盖对象':
         SMap.setOverlapDisplayed(value)
         break
-      case getLanguage(this.props.language).Map_Module.FIX_SCALE:
+      case getLanguage(this.props.language).Map_Setting.FIX_SCALE:
       //'固定比例尺':
         SMap.setVisibleScalesEnabled(value)
         break

@@ -125,7 +125,8 @@ export default class protocol extends Component {
             this.knownItem.id +
             '.html',
         }
-        title = '超图知道'
+        title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
+        //'超图知道'
         break
       default:
         break

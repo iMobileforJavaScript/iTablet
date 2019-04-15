@@ -17,7 +17,7 @@ const Chinese ={
 
     CONFIRM:'确定',
 
-    QUIT:'确认退出 SuperMap iTablet?',
+    QUIT:'确认退出SuperMap iTablet?',
     MAP_LOADING:'地图加载中',
     LOADING:'加载中',
     SWITCHING:'正在切换地图',
@@ -28,6 +28,7 @@ const Chinese ={
     
     PUBLIC_MAP:'公共地图',
     SUPERMAP_FORUM:'超图论坛',
+    SUPERMAP_KNOW:'超图知道',
 
     THE_CURRENT_LAYER:'当前图层为',
     ENTER_KEY_WORDS:'请输入搜索关键字',
@@ -63,8 +64,13 @@ const Chinese ={
     FAILED_TO_DELETE:'删除失败',
     
     LOG_IN:'登录中',
-    
+    ENTER_MAP_NAME:'请输入地图名字',
 
+    CLIPPING:'地图裁剪中',
+    CLIPPED_SUCCESS:'裁剪成功',
+
+    LAYER_CANNOT_CREATE_THEMATIC_MAP:'不支持由该图层创建专题图',
+   
 }
 const English ={
     SAVE_TITLE:"Do you want to save the changes to the current map?",
@@ -95,6 +101,7 @@ const English ={
     
     PUBLIC_MAP:'Public Map',
     SUPERMAP_FORUM:'SuperMap Forum',
+    SUPERMAP_KNOW:'SuperMap Know',
 
     
     THE_CURRENT_LAYER:'The current layer is',
@@ -132,6 +139,14 @@ const English ={
     FAILED_TO_DELETE:'Failed to Delete',
 
     LOG_IN:'Loading',
+    ENTER_MAP_NAME:'Please enter the map name',
+
+    
+    CLIPPING:'Clipping',
+    CLIPPED_SUCCESS:'Clipped Successfully',
+
+    LAYER_CANNOT_CREATE_THEMATIC_MAP:'The current layer cannot be used to create a thematic map.',
+
 
 }
 
