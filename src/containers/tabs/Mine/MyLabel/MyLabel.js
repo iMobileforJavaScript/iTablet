@@ -192,7 +192,7 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
-        title: getLanguage(global.language).Prompt.SHARE,
+        title: getLanguage(global.language).Profile.SHARE,
         //'分享',
         action: () => {
           this._closeModal()

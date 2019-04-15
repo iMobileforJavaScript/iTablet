@@ -429,7 +429,7 @@ export default class FunctionToolbar extends React.Component {
         cb: () => SMap.setAction(Action.SELECT),
       })
       Toast.show(
-        getLanguage(this.props.language).Map_Main_Menu.PLEASE_SELECT_OBJECT,
+        getLanguage(this.props.language).Prompt.PLEASE_SELECT_OBJECT,
       //ConstInfo.CHOOSE_EDIT_OBJ
       )
     }

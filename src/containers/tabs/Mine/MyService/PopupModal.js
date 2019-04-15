@@ -56,9 +56,11 @@ export default class PopupModal extends PureComponent {
   _publishButton = isPublish => {
     let title
     if (isPublish) {
-      title = '设为公有服务'
+      title =  getLanguage(global.language).Profile.SET_AS_PRIVATE_SERVICE
+      //'设为公有服务'
     } else {
-      title = '设为私有服务'
+      title =  getLanguage(global.language).Profile.SET_AS_PUBLIC_SERVICE
+      //'设为私有服务'
     }
     let lineHeight = scaleSize(80)
     return (

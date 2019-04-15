@@ -98,6 +98,8 @@ const Map_Lable_English ={
     TOOLS_REMARKS:'备注',
     TOOLS_HTTP:'http地址',
     TOOLS_PICTURES:'图片',
+    
+    //裁剪
     TOOLS_RECTANGLE_CLIP:'矩形裁剪',
     TOOLS_CIRCLE_CLIP:'圆形裁剪',
     TOOLS_POLYGON_CLIP:'多边形裁剪',
@@ -107,6 +109,9 @@ const Map_Lable_English ={
     TOOLS_EXACT_CLIP:'精确裁剪',
     TOOLS_TARGET_DATASOURCE:'目标数据源',
     TOOLS_UNIFIED_SETTING:'统一设置',
+    MAP_CLIP:'地图裁剪',
+    CLIP:'裁剪',
+   
     TOOLS_MAGNIFIER:'放大镜',
     TOOLS_SELECT_ALL:'全选',
     TOOLS_SELECT_REVERSE:'反选',
@@ -123,8 +128,6 @@ const Map_Lable_English ={
     FLY_ADD_STOPS:'添加站点',
     
     //专题制图 专题图
-   
-
     THEME:'专题图',
     THEME_UNIFORM_MAP:'统一风格',
     THEME_UNIQUE_VALUES_MAP:'单值风格',
@@ -209,8 +212,6 @@ const Map_Lable_English ={
     COLLECTION_STOP:'停止',
 
     //外业采集 编辑
-
-
     EDIT:'编辑',
     EDIT_ADD_NODES:'添加节点',
     EDIT_NODES:'编辑节点',
@@ -226,6 +227,7 @@ const Map_Lable_English ={
     EDIT_CANCEL_SELECTION:'取消选择',
     MOVE:'平移',
     FREE_DRAW_ERASE:'手绘擦除',
+
 
     //分享
     SHARE:'分享',
@@ -306,18 +308,21 @@ const Map_Lable_English ={
     TOOLS_REMARKS:'Remarks',
     TOOLS_HTTP:'http Address',
     TOOLS_PICTURES:'Pictures',
+    
     TOOLS_RECTANGLE_CLIP:'Rectangle Clip',
     TOOLS_CIRCLE_CLIP:'Circle Clip',
     TOOLS_POLYGON_CLIP:'Polygon Clip',
     TOOLS_SELECT_OBJECT_AREA_CLIP:'Select Cbject Area Clip',
     TOOLS_CLIP_INSIDE:'Clip Inside',
     TOOLS_ERASE:'Erase',
-    TOOLS_RXACT_CLIP:'Exact Clip',
+    TOOLS_EXACT_CLIP:'Exact Clip',
     TOOLS_TARGET_DATASOURCE:'Target Datasource',
     TOOLS_UNIFIED_SETTING:'Unified setting',
     TOOLS_MAGNIFIER:'Magnifier',
     TOOLS_SELECT_ALL:'Select All',
     TOOLS_SELECT_REVERSE:'Select Reverse',
+    MAP_CLIP:'Map Clip',
+    CLIP:'Clip',
 
     TOOLS_SCENE_SELECT:'Select',
     TOOLS_PATH_ANALYSIS:'Path Analysis',
