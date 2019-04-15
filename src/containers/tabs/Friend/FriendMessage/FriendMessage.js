@@ -290,6 +290,7 @@ class FriendMessage extends Component {
             user: this.props.user,
             messageInfo: this.inFormData,
             friend: this.props.friend,
+            language: this.props.language,
           })
         }}
       >

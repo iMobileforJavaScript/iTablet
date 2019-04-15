@@ -16,6 +16,7 @@ import { Container, Dialog } from '../../../../components'
 import { dialogStyles } from './../Styles'
 import { styles } from './Styles'
 import AddFriend from './../AddFriend'
+import{getLanguage}from '../../../../language/index'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -29,6 +30,7 @@ export default class InformMessage extends React.Component {
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
       currentUser: this.props.navigation.getParam('user', ''),
     }
+    this.language = this.props.navigation.getParam('language', '')
   }
   componentDidMount() {
     this.friend = this.props.navigation.getParam('friend')
@@ -83,7 +85,8 @@ export default class InformMessage extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '通知消息',
+          title: getLanguage(this.language).Friends.TITLE_NOTIFICATION,
+          // '通知消息',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -210,7 +213,10 @@ export default class InformMessage extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={dialogStyles.dialogHeaderImgX}
         />
-        <Text style={dialogStyles.promptTtileX}>同意对方添加请求 ？</Text>
+        <Text style={dialogStyles.promptTtileX}>
+          {getLanguage(this.language).Friends.FRIEND_RESPOND}
+          {/* 同意对方添加请求 ？ */}
+        </Text>
       </View>
     )
   }
@@ -219,8 +225,8 @@ export default class InformMessage extends React.Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
         confirmAction={this._dialogConfirm}
         opacity={1}
         opacityStyle={styles.opacityView}

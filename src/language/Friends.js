@@ -21,6 +21,9 @@ const Friends_Chinese ={
   TEXT_CONTENT:'文本内容',
   INPUT_MARK_NAME:'请输入备注名',
   INPUT_INVALID:'内容不符合规范请重新输入',
+  //InformMessage
+  TITLE_NOTIFICATION: '通知消息',
+  FRIEND_RESPOND: '同意对方添加请求 ？',
 }
 const Friends_English ={
   MESSAGES:'Messages',
@@ -34,7 +37,7 @@ const Friends_English ={
   DEL:'Delete',//*
   NOTIFICATION:'Notification',//*
   CLEAR_NOTIFICATION:'Clear notification',//*
-  CONFIRM:'YES',//*
+  CONFIRM:'Yes',//*
   CANCEL:'Cancel',//*
   ALERT_DEL_HISTORY:'Clear this chat history?',//*
   //FriendList
@@ -44,6 +47,9 @@ const Friends_English ={
   TEXT_CONTENT:'Text content',
   INPUT_MARK_NAME:'Please input mark name',
   INPUT_INVALID:'Invalid input, please input again',
+  //InformMessage
+  TITLE_NOTIFICATION: 'Notification',
+  FRIEND_RESPOND: '同意对方添加请求 ？',
 }
 export {
   Friends_Chinese,
