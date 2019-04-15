@@ -17,7 +17,7 @@ import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
 import ThemeTable from '../ThemeTable'
 import ChoosePage from '../../../choosePage'
-import { language,getLanguage } from '../../../../../language/index'
+// import { getLanguage } from '../../../../../language/index'
 import styles from './styles'
 
 const CHOOSE = '请选择'

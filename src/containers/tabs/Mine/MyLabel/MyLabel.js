@@ -18,7 +18,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {

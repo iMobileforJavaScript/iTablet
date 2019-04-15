@@ -9,7 +9,7 @@ import { TouchableOpacity, FlatList, Text } from 'react-native'
 import { Container, ListSeparator } from '../../../components'
 import { ColorGradientType } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
-import { language,getLanguage } from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 import styles from './styles'
 
 const fonts = [

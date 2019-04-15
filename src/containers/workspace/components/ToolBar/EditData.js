@@ -3,7 +3,7 @@ import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import NavigationService from '../../../NavigationService'
-import { language,getLanguage } from '../../../../language/index' 
+import { getLanguage } from '../../../../language/index'
 
 /**
  * 获取编辑操作
@@ -22,16 +22,22 @@ function getEditData(type) {
           title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
           //'属性记录',
           data: [
-            { title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-              //'名称', 
-              action: name },
-            { title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
-              //'备注', 
-              action: remark },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+              //'名称',
+              action: name,
+            },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+              //'备注',
+              action: remark,
+            },
             // { title: '风格', action: remark },
-            { title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
-              //'http地址', 
-              action: address },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+              //'http地址',
+              action: address,
+            },
             // { title: '图片', action: address },
           ],
         },
@@ -68,7 +74,7 @@ function getEditData(type) {
         },
         {
           key: constants.FREELINE,
-          title:getLanguage(global.language).Map_Main_Menu.FREE_LINE,
+          title: getLanguage(global.language).Map_Main_Menu.FREE_LINE,
           //constants.FREELINE,
           size: 'large',
           action: freeline,
@@ -217,7 +223,7 @@ function getEditData(type) {
         },
         {
           key: constants.EDIT_NODE,
-          title:  getLanguage(global.language).Map_Main_Menu.EDIT_NODES,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_NODES,
           //constants.EDIT_NODE,
           action: editNode,
           size: 'large',
@@ -225,7 +231,7 @@ function getEditData(type) {
         },
         {
           key: constants.DELETE_NODE,
-          title:  getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
           //constants.DELETE_NODE,
           action: deleteNode,
           size: 'large',
@@ -233,7 +239,7 @@ function getEditData(type) {
         },
         {
           key: constants.ADD_NODE,
-          title:  getLanguage(global.language).Map_Main_Menu.EDIT_ADD_NODES,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_ADD_NODES,
           //constants.ADD_NODE,
           action: addNode,
           size: 'large',
@@ -260,7 +266,7 @@ function getEditData(type) {
         },
         {
           key: constants.DELETE,
-          title:  getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
           //constants.DELETE,
           size: 'large',
           action: remove,
@@ -292,7 +298,7 @@ function getEditData(type) {
         },
         {
           key: constants.DELETE_NODE,
-          title:getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
           // constants.DELETE_NODE,
           size: 'large',
           action: deleteNode,
@@ -308,7 +314,7 @@ function getEditData(type) {
         },
         {
           key: constants.ERASE_REGION,
-          title:getLanguage(global.language).Map_Main_Menu.EDIT_ERASE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_ERASE,
           // constants.ERASE_REGION,
           size: 'large',
           action: eraseRegion,
@@ -324,7 +330,7 @@ function getEditData(type) {
         },
         {
           key: constants.MERGE,
-          title:getLanguage(global.language).Map_Main_Menu.EDIT_UNION,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_UNION,
           // constants.MERGE,
           size: 'large',
           action: merge,

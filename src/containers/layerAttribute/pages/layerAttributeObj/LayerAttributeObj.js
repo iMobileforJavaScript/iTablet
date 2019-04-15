@@ -11,7 +11,7 @@ import { Container, Button } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 import { CursorType } from 'imobile_for_reactnative'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 
 export default class LayerAttributeObj extends React.Component {
@@ -189,8 +189,8 @@ export default class LayerAttributeObj extends React.Component {
             // colHeight={this.state.colHeight}
             widthArr={[100, 100]}
             tableHead={[
-              getLanguage(global.language).Map_Lable.NAME, 
-              getLanguage(global.language).Map_Lable.ATTRIBUTE
+              getLanguage(global.language).Map_Lable.NAME,
+              getLanguage(global.language).Map_Lable.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]}

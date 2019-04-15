@@ -1,19 +1,16 @@
-
-global.language ='CN'
+global.language = 'CN'
 
 function getLanguage(param) {
-    let language = {}
-    switch (param) {
-      case 'CN':
+  let language = {}
+  switch (param) {
+    case 'CN':
       language = require('./CN').default
-        break
-      case 'EN':
+      break
+    case 'EN':
       language = require('./EN').default
-        break
-    }
-    return language
+      break
   }
-
-export  {
-    getLanguage
+  return language
 }
+
+export { getLanguage }

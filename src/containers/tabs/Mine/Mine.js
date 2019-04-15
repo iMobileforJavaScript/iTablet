@@ -20,14 +20,14 @@ import { color, size } from '../../../styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
-import { UserType, Const } from '../../../constants'
+import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
-import{ getLanguage }from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 
 const Customer = 'Customer'
 export default class Mine extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     user: Object,
     workspace: Object,
@@ -151,7 +151,7 @@ export default class Mine extends Component {
           >
             {this._renderLine()}
             {this._renderItem({
-              title:getLanguage(this.props.language).Profile.IMPORT,
+              title: getLanguage(this.props.language).Profile.IMPORT,
               leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
               onClick: this.goToMyLocalData,
             })}
@@ -159,25 +159,28 @@ export default class Mine extends Component {
             {this._renderItem({
               title: getLanguage(this.props.language).Profile.DATA,
               leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-              onClick: () => this.goToMyData( getLanguage(this.props.language).Profile.DATA),
+              onClick: () =>
+                this.goToMyData(getLanguage(this.props.language).Profile.DATA),
             })}
             {this._renderItem({
-              title:  getLanguage(this.props.language).Profile.MARK,
+              title: getLanguage(this.props.language).Profile.MARK,
               //Const.MYLABEL,
               leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
               onClick: () => {
-                this.goToMyLabel( getLanguage(this.props.language).Profile.MARK)
+                this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
               },
             })}
             {this._renderItem({
               title: getLanguage(this.props.language).Profile.MAP,
               leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-              onClick: () => this.goToMyData( getLanguage(this.props.language).Profile.MAP),
+              onClick: () =>
+                this.goToMyData(getLanguage(this.props.language).Profile.MAP),
             })}
             {this._renderItem({
               title: getLanguage(this.props.language).Profile.SCENE,
               leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-              onClick: () => this.goToMyData( getLanguage(this.props.language).Profile.SCENE),
+              onClick: () =>
+                this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
             })}
             {this._renderItem({
               title: getLanguage(this.props.language).Profile.BASEMAP,
@@ -190,7 +193,10 @@ export default class Mine extends Component {
             {this._renderItem({
               title: getLanguage(this.props.language).Profile.SYMBOL,
               leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
-              onClick: () => this.goToMyData( getLanguage(this.props.language).Profile.SYMBOL),
+              onClick: () =>
+                this.goToMyData(
+                  getLanguage(this.props.language).Profile.SYMBOL,
+                ),
             })}
             {/* {this._renderItem({
               title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
@@ -198,9 +204,12 @@ export default class Mine extends Component {
               onClick: () =>  this.goToMyData(getLanguage(this.props.language).Profile.COLOR_SCHEME),
             })} */}
             {this._renderItem({
-              title:getLanguage(this.props.language).Profile.TEMPLATE,
+              title: getLanguage(this.props.language).Profile.TEMPLATE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () => this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
+              onClick: () =>
+                this.goToMyModule(
+                  getLanguage(this.props.language).Profile.TEMPLATE,
+                ),
             })}
           </ScrollView>
         </View>
@@ -228,19 +237,20 @@ export default class Mine extends Component {
         >
           {this._renderLine()}
           {this._renderItem({
-            title:  getLanguage(this.props.language).Profile.IMPORT,
+            title: getLanguage(this.props.language).Profile.IMPORT,
             leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
-            title:getLanguage(this.props.language).Profile.MY_SERVICE,
+            title: getLanguage(this.props.language).Profile.MY_SERVICE,
             leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
             onClick: this.goToMyService,
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.DATA,
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.DATA),
+            onClick: () =>
+              this.goToMyData(getLanguage(this.props.language).Profile.DATA),
             //Const.DATA),
           })}
           {this._renderItem({
@@ -248,19 +258,21 @@ export default class Mine extends Component {
             leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
             onClick: () => {
               this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
-                //Const.MYLABEL)
+              //Const.MYLABEL)
             },
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.MAP,
             leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-            onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.MAP)
+            onClick: () =>
+              this.goToMyData(getLanguage(this.props.language).Profile.MAP),
             //Const.MAP),
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.SCENE,
             leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-            onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.SCENE)
+            onClick: () =>
+              this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
             //Const.SCENE),
           })}
           {this._renderItem({
@@ -273,19 +285,26 @@ export default class Mine extends Component {
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.SYMBOL,
             leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
-            onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL)
+            onClick: () =>
+              this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
             //Const.SYMBOL),
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
             leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-            onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.COLOR_SCHEME)
+            onClick: () =>
+              this.goToMyData(
+                getLanguage(this.props.language).Profile.COLOR_SCHEME,
+              ),
             //Const.MINE_COLOR),
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
+            onClick: () =>
+              this.goToMyModule(
+                getLanguage(this.props.language).Profile.TEMPLATE,
+              ),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}
@@ -318,7 +337,7 @@ export default class Mine extends Component {
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
         : Customer
-      :getLanguage(this.props.language).Profile.LOGIN
+      : getLanguage(this.props.language).Profile.LOGIN
     return (
       <View
         style={{
@@ -330,7 +349,9 @@ export default class Mine extends Component {
       >
         <TouchableOpacity
           onPress={() => {
-            if (headerTitle !== getLanguage(this.props.language).Profile.LOGIN) {
+            if (
+              headerTitle !== getLanguage(this.props.language).Profile.LOGIN
+            ) {
               this.goToPersonal()
             }
           }}
@@ -355,7 +376,9 @@ export default class Mine extends Component {
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => {
-            if (headerTitle === getLanguage(this.props.language).Profile.LOGIN) {
+            if (
+              headerTitle === getLanguage(this.props.language).Profile.LOGIN
+            ) {
               this.goToLogin()
             }
           }}

@@ -12,11 +12,11 @@ import { color } from '../../../styles'
 import { getPublicAssets } from '../../../assets'
 import NavigationService from '../../NavigationService'
 import styles from '../styles'
-import { getLanguage } from '../../../language';
+import { getLanguage } from '../../../language'
 
 export default class MapCutSetting extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     datasources: Array,
     configAction?: () => {},
   }
@@ -44,25 +44,26 @@ export default class MapCutSetting extends React.Component {
     const data = (new Map(): Map<string, Object>)
     data.set('ds', {
       selected: true,
-      title:getLanguage(this.props.language).Map_Main_Menu.TOOLS_TARGET_DATASOURCE, 
+      title: getLanguage(this.props.language).Map_Main_Menu
+        .TOOLS_TARGET_DATASOURCE,
       //'目标数据源',
       dsName: this.props.datasources[0] ? this.props.datasources[0].alias : '',
     })
     data.set('range', {
       selected: true,
-      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE, 
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE,
       //'区域内裁剪',
       value: true,
     })
     data.set('erase', {
       selected: true,
-      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE, 
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE,
       //'擦除裁剪区域',
       value: true,
     })
     data.set('exactCut', {
       selected: true,
-      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP, 
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP,
       //'精确裁剪',
       value: true,
     })
@@ -135,8 +136,8 @@ export default class MapCutSetting extends React.Component {
     return (
       <View style={styles.settingTopView}>
         <Text style={styles.settingTopTitle}>
-        {getLanguage(this.props.language).Map_Main_Menu.TOOLS_UNIFIED_SETTING}
-        {/* 统一设置 */}
+          {getLanguage(this.props.language).Map_Main_Menu.TOOLS_UNIFIED_SETTING}
+          {/* 统一设置 */}
         </Text>
       </View>
     )
@@ -253,8 +254,8 @@ export default class MapCutSetting extends React.Component {
           }
         >
           <Text style={styles.closeText}>
-          {getLanguage(this.props.language).Prompt.CANCEL}
-          {/* 取消 */}
+            {getLanguage(this.props.language).Prompt.CANCEL}
+            {/* 取消 */}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -265,8 +266,8 @@ export default class MapCutSetting extends React.Component {
           }}
         >
           <Text style={styles.closeText}>
-          {getLanguage(this.props.language).Prompt.CONFIRM}
-          {/* 确定 */}
+            {getLanguage(this.props.language).Prompt.CONFIRM}
+            {/* 确定 */}
           </Text>
         </TouchableOpacity>
       </View>

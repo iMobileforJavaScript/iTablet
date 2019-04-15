@@ -21,8 +21,7 @@ import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
-import {connect} from "react-redux"
-
+import { connect } from 'react-redux'
 
 class RenderModuleItem extends Component {
   props: {
@@ -114,9 +113,14 @@ class RenderModuleItem extends Component {
               source={item.moduleImage}
               style={styles.moduleImage}
             />
-            <Text style={item.key==='专题制图'&&global.language==='EN'?
-              styles.longtitle:styles.title}>
-            {item.title}
+            <Text
+              style={
+                item.key === '专题制图' && global.language === 'EN'
+                  ? styles.longtitle
+                  : styles.title
+              }
+            >
+              {item.title}
             </Text>
           </View>
           {this._renderProgressView()}
@@ -128,7 +132,7 @@ class RenderModuleItem extends Component {
 
 export class ModuleList extends Component {
   props: {
-    language:Object,
+    language: Object,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -266,7 +270,7 @@ export class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  itemAction = async (language,{ item, index }) => {
+  itemAction = async (language, { item, index }) => {
     try {
       let fileName
       let moduleKey = item.key
@@ -289,7 +293,7 @@ export class ModuleList extends Component {
       } else if (moduleKey === '应急标绘') {
         fileName = '湖南'
       }
-      
+
       let homePath = await FileTools.appendingHomeDirectory()
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
@@ -410,7 +414,7 @@ export class ModuleList extends Component {
         importWorkspace={this.props.importWorkspace}
         showDialog={this.props.showDialog}
         getMoudleItem={this.props.getMoudleItem}
-        itemAction={() => this.itemAction(this.props.language,{ item, index })}
+        itemAction={() => this.itemAction(this.props.language, { item, index })}
       />
     )
   }
@@ -455,7 +459,7 @@ export class ModuleList extends Component {
 }
 
 const mapStateToProps = state => ({
-  language: state.setting.toJS().language
+  language: state.setting.toJS().language,
 })
 const mapDispatchToProps = {}
 export default connect(

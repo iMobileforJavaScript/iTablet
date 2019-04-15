@@ -9,7 +9,7 @@ import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 import { scaleSize } from '../../../../utils'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 export default class Personal extends Component {
   props: {
@@ -151,20 +151,23 @@ export default class Personal extends Component {
       <View style={{ width: '100%' }}>
         {this._renderItem(
           //'头像'
-           getLanguage(global.language).Profile.PROFILE_PHOTO 
-          )}
+          getLanguage(global.language).Profile.PROFILE_PHOTO,
+        )}
         {this._renderItem(
           //'用户名'
-          getLanguage(global.language).Profile.USERNAME
-          , this.props.user.currentUser.userName)}
+          getLanguage(global.language).Profile.USERNAME,
+          this.props.user.currentUser.userName,
+        )}
         {this._renderItem(
           //'手机号'
-          getLanguage(global.language).Profile.PHONE
-          , this.props.user.currentUser.phone)}
+          getLanguage(global.language).Profile.PHONE,
+          this.props.user.currentUser.phone,
+        )}
         {this._renderItem(
           //'邮箱'
-          getLanguage(global.language).Profile.E_MAIL
-          , this.props.user.currentUser.email)}
+          getLanguage(global.language).Profile.E_MAIL,
+          this.props.user.currentUser.email,
+        )}
       </View>
     )
   }
@@ -198,7 +201,7 @@ export default class Personal extends Component {
             color: color.fontColorBlack,
           }}
         >
-        { getLanguage(global.language).Profile.SWITCH_ACCOUNT }
+          {getLanguage(global.language).Profile.SWITCH_ACCOUNT}
           {/* 切换账号 */}
         </Text>
       </TouchableOpacity>
@@ -220,7 +223,7 @@ export default class Personal extends Component {
             color: color.fontColorBlack,
           }}
         >
-          { getLanguage(global.language).Profile.LOG_OUT }
+          {getLanguage(global.language).Profile.LOG_OUT}
           {/* 退出登录 */}
         </Text>
       </TouchableOpacity>

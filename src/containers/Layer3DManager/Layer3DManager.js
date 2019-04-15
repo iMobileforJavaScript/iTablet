@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
+// import { MAP_MODULE } from '../../constants'
 import Layer3DItem from './Layer3DItem'
 import {
   View,
@@ -14,11 +14,11 @@ import {
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
-import { getLanguage  } from '../../language/index'
+import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     type: string,
     data: Array,
@@ -189,7 +189,7 @@ export default class Map3DToolBar extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title:  getLanguage(this.props.language).Map_Module.MAP_3D,
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
           //MAP_MODULE.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,

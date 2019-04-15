@@ -3,7 +3,7 @@ import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { Toast, dataUtil } from '../utils'
 import { ConstInfo } from '../constants'
-import { language,getLanguage } from '../language/index'
+import { getLanguage } from '../language/index'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -422,7 +422,7 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
       index: 2,
     },
     {
-      title:  getLanguage(global.language).Map_Layer.MY_TERRAIN,
+      title: getLanguage(global.language).Map_Layer.MY_TERRAIN,
       //'我的地形',
       data: terrainList,
       visible: true,
@@ -619,8 +619,9 @@ export default handleActions(
         currentLayer3d = payload
         Toast.show(
           //'当前图层为 '
-          getLanguage(global.language).Prompt.THE_CURRENT_LAYER
-          + currentLayer3d.name)
+          getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
+            currentLayer3d.name,
+        )
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
     },

@@ -9,7 +9,7 @@ import constants from '../../constants'
 import { ConstToolType, ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 let _params = {}
 
@@ -70,7 +70,8 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_POINT_DRAW,
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () => showCollection(SMCollectorType.POINT_HAND),
           size: 'large',
@@ -89,7 +90,8 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_POINT_DRAW,
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () => showCollection(SMCollectorType.LINE_HAND_POINT),
           size: 'large',
@@ -97,7 +99,8 @@ function getCollectionOperationData(type, params) {
         },
         {
           key: 'freeDraw',
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_FREE_DRAW,
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_FREE_DRAW,
           //'自由式',
           action: () => showCollection(SMCollectorType.LINE_HAND_PATH),
           size: 'large',
@@ -109,7 +112,8 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_POINT_DRAW,
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () => showCollection(SMCollectorType.REGION_HAND_POINT),
           size: 'large',
@@ -117,7 +121,8 @@ function getCollectionOperationData(type, params) {
         },
         {
           key: 'freeDraw',
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_FREE_DRAW,
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_FREE_DRAW,
           //'自由式',
           action: () => showCollection(SMCollectorType.REGION_HAND_PATH),
           size: 'large',
@@ -170,7 +175,7 @@ function getCollectionData(type, params) {
   ) {
     data.push({
       key: 'addGPSPoint',
-      title:  getLanguage(global.language).Map_Main_Menu.COLLECTION_ADD_POINT,
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_ADD_POINT,
       //'打点',
       action: () => SCollector.addGPSPoint(type),
       size: 'large',
@@ -209,7 +214,7 @@ function getCollectionData(type, params) {
   })
   data.push({
     key: constants.REDO,
-    title:  getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
     //constants.REDO,
     action: () => redo(type),
     size: 'large',
@@ -225,7 +230,7 @@ function getCollectionData(type, params) {
   })
   data.push({
     key: constants.SUBMIT,
-    title:  getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
     //constants.SUBMIT,
     action: () => collectionSubmit(type),
     size: 'large',

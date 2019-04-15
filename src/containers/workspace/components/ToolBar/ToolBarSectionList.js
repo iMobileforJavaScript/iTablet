@@ -1,7 +1,7 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
-import { language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -219,8 +219,11 @@ export default class ToolBarSectionList extends React.Component {
                 style={styles.selectImg}
               />
               <Text style={[styles.sectionSelectedTitle]}>
-              {getLanguage(global.language).Map_Main_Menu.THEME_HIDE_SYSTEM_FIELDS}
-              {/* 隐藏系统字段 */}
+                {
+                  getLanguage(global.language).Map_Main_Menu
+                    .THEME_HIDE_SYSTEM_FIELDS
+                }
+                {/* 隐藏系统字段 */}
               </Text>
             </TouchableOpacity>
           )}

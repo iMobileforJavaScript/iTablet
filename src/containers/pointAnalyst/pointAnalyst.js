@@ -14,7 +14,7 @@ import { SScene } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 import { Toast } from '../../utils'
 import styles from './styles'
-import { language,getLanguage } from '../../language/index'
+import { getLanguage } from '../../language/index'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {

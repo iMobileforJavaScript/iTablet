@@ -9,7 +9,7 @@ import { View, ScrollView } from 'react-native'
 import { ImageButton } from '../../../../components'
 import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import styles from './styles'
-import {language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 export default class LayerTopBar extends React.Component {
   props: {
@@ -121,7 +121,8 @@ export default class LayerTopBar extends React.Component {
               ? getThemeAssets().attribute.attribute_location
               : getThemeAssets().attribute.attribute_location,
             key: '定位',
-            title:  getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION,
+            title: getLanguage(global.language).Map_Attribute
+              .ATTRIBUTE_LOCATION,
             //'定位',
             action: this.locateAction,
             enabled: this.props.canLocated,
@@ -140,7 +141,8 @@ export default class LayerTopBar extends React.Component {
               ? getThemeAssets().attribute.icon_attribute_browse
               : getPublicAssets().attribute.icon_attribute_browse,
             key: '关联',
-            title:  getLanguage(global.language).Map_Attribute.ATTRIBUTE_ASSOCIATION,
+            title: getLanguage(global.language).Map_Attribute
+              .ATTRIBUTE_ASSOCIATION,
             //'关联',
             action: this.relateAction,
             enabled: this.props.canRelated,

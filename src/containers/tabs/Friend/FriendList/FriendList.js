@@ -27,7 +27,7 @@ import MessageDataHandle from '../MessageDataHandle'
 import { ActionPopover } from 'teaset'
 import { dialogStyles, inputStyles } from '../Styles'
 import { Dialog } from '../../../../components/Dialog'
-import {getLanguage} from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 class FriendList extends Component {
   props: {
@@ -66,7 +66,7 @@ class FriendList extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language!==this.props.language
+      prevProps.language !== this.props.language
     ) {
       return true
     }
@@ -93,7 +93,7 @@ class FriendList extends Component {
 
   getContacts = async () => {
     let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + this.props.user.userName,
+      ConstPath.UserPath + this.props.user.userName + '/Data/Temp',
     )
 
     FriendListFileHandle.getContacts(userPath, 'friend.list', results => {
@@ -322,7 +322,14 @@ class FriendList extends Component {
   }
 
   _modifyName() {
-    FriendListFileHandle.modifyFriendList(this.target.id, this.state.inputText)
+    if (this.state.inputText !== '') {
+      FriendListFileHandle.modifyFriendList(
+        this.target.id,
+        this.state.inputText,
+      )
+    } else {
+      FriendListFileHandle.modifyFriendList(this.target.id, this.target.name)
+    }
     this.inputdialog.setDialogVisible(false)
   }
   _deleteFriend = () => {
@@ -406,7 +413,7 @@ class FriendList extends Component {
     this.target = item
 
     let obj = {
-      title:  getLanguage(this.props.language).Friends.SET_MARK_NAME,
+      title: getLanguage(this.props.language).Friends.SET_MARK_NAME,
       // '设置备注',
       onPress: () => {
         this.inputdialog.setDialogVisible(true)
@@ -517,20 +524,25 @@ class FriendList extends Component {
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}
-            accessibilityLabel={getLanguage(this.props.language).Friends.TEXT_CONTENT}
+            accessibilityLabel={
+              getLanguage(this.props.language).Friends.TEXT_CONTENT
+            }
             onChangeText={text => {
               this.setState({
                 inputText: text,
               })
             }}
             value={this.state.inputText}
-            placeholder={getLanguage(this.props.language).Friends.INPUT_MARK_NAME}
+            placeholder={
+              getLanguage(this.props.language).Friends.INPUT_MARK_NAME
+            }
             style={inputStyles.textInputStyle}
           />
         </View>
         {this.state.placeholder && (
           <Text style={styles.placeholder}>
-            {getLanguage(this.props.language).Friends.INPUT_INVALID}</Text>
+            {getLanguage(this.props.language).Friends.INPUT_INVALID}
+          </Text>
         )}
       </Dialog>
     )

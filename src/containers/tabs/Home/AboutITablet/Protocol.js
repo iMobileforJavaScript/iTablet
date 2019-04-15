@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import Toast from '../../../../utils/Toast'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 export default class protocol extends Component {
   props: {

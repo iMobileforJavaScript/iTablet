@@ -6,7 +6,7 @@ import { color } from '../../../../styles'
 // import { ConstToolType } from '../../../../constants'
 
 import { ThemeType } from 'imobile_for_reactnative'
-import {language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 export default class TemplateList extends React.Component {
   props: {
     user: Object,
@@ -63,9 +63,12 @@ export default class TemplateList extends React.Component {
 
   action = ({ data }) => {
     Toast.show(
-      //'当前选择为:' 
-      getLanguage(global.language).Prompt.THE_CURRENT_SELECTION
-      + data.$.code + ' ' + data.$.name)
+      //'当前选择为:'
+      getLanguage(global.language).Prompt.THE_CURRENT_SELECTION +
+        data.$.code +
+        ' ' +
+        data.$.name,
+    )
     // this.props.setCurrentTemplateInfo(data)
 
     // 找到对应的图层

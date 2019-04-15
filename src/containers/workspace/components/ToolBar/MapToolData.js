@@ -7,7 +7,7 @@ import { dataUtil } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
-import{language, getLanguage }from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 // import NavigationService from '../../../NavigationService'
 
 let _params = {}
@@ -27,7 +27,8 @@ function getMapTool(type, params) {
       data = [
         {
           key: 'distanceComput',
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_DISTANCE_MEASUREMENT, 
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_DISTANCE_MEASUREMENT,
           //'距离量算',
           action: measureLength,
           size: 'large',
@@ -35,7 +36,8 @@ function getMapTool(type, params) {
         },
         {
           key: 'coverComput',
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_AREA_MEASUREMENT, 
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AREA_MEASUREMENT,
           //'面积量算',
           action: measureArea,
           size: 'large',
@@ -43,7 +45,8 @@ function getMapTool(type, params) {
         },
         {
           key: 'azimuthComput',
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_AZIMUTH_MEASUREMENT, 
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AZIMUTH_MEASUREMENT,
           //'方位角量算',
           action: measureAngle,
           size: 'large',
@@ -51,7 +54,7 @@ function getMapTool(type, params) {
         },
         {
           key: 'pointSelect',
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT, 
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT,
           //'点选',
           action: pointSelect,
           size: 'large',
@@ -59,7 +62,8 @@ function getMapTool(type, params) {
         },
         {
           key: 'selectByRectangle',
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_RECTANGLE_SELECT, 
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_SELECT,
           //'框选',
           action: selectByRectangle,
           size: 'large',
@@ -67,9 +71,9 @@ function getMapTool(type, params) {
         },
         {
           key: 'pointSelect',
-          title:getLanguage(global.language).Map_Main_Menu.FULL_SCREEN, 
-          //'全幅', 
-          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP, 
+          title: getLanguage(global.language).Map_Main_Menu.FULL_SCREEN,
+          //'全幅',
+          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
           //'全幅',
           action: viewEntire,
           size: 'large',
@@ -139,7 +143,8 @@ function getMapTool(type, params) {
         // },
         {
           key: 'rectangularCut',
-          title:getLanguage(global.language).Map_Main_Menu.TOOLS_RECTANGLE_CLIP, 
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_CLIP,
           //'矩形裁剪',
           action: rectangleCut,
           size: 'large',
@@ -229,7 +234,7 @@ function getMapTool(type, params) {
         // },
         {
           key: constants.CANCEL_SELECT,
-          title: getLanguage(global.language).Prompt.CANCEL, 
+          title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
           action: cancelSelect,
           size: 'large',

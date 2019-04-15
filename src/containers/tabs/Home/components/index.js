@@ -5,8 +5,8 @@ import HomeUsualTitle from './Home_usual_title'
 import BtnbarLoad from './Btnbar_load'
 import ExampleMapList from './ExampleMapList'
 import OffLineList from './OffLineList'
+// eslint-disable-next-line import/no-named-as-default
 import ModuleList from './ModuleList'
-
 
 export {
   BtnbarHome,

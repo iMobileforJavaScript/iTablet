@@ -10,7 +10,7 @@ import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { Button } from '../../../../components'
 
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 const styles = StyleSheet.create({
   topContainer: {

@@ -4,7 +4,7 @@ import { Container } from '../../../../components'
 import { color, size } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
-import { language, getLanguage } from '../../../../language';
+import { getLanguage } from '../../../../language'
 export default class LoadServer extends Component {
   props: {
     navigation: Object,
@@ -55,9 +55,9 @@ export default class LoadServer extends Component {
         }}
       >
         <Text style={styles.text}>
-        {getLanguage(global.language).Profile.SAVE}
-          
-        {/* {'保存'} */}
+          {getLanguage(global.language).Profile.SAVE}
+
+          {/* {'保存'} */}
         </Text>
       </TouchableOpacity>
     )
@@ -82,7 +82,9 @@ export default class LoadServer extends Component {
           onChangeText={text => this.setState({ name: text })}
         />
         <TextInput
-          placeholder={getLanguage(global.language).Profile.ENTER_SERVICE_ADDRESS}
+          placeholder={
+            getLanguage(global.language).Profile.ENTER_SERVICE_ADDRESS
+          }
           //{'请输入服务地址'}
           style={[styles.textInput, { marginTop: 20 }]}
           ref={ref => (this.server = ref)}

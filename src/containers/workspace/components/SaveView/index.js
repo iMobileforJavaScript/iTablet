@@ -3,10 +3,10 @@ import SaveView from './SaveView'
 // const mapStateToProps = state => ({
 //     language: state.setting.toJS().language
 //   })
-  
+
 //   const mapDispatchToProps = {}
 //   export default connect(
 //     mapStateToProps,
 //     mapDispatchToProps,
 //   )(SaveView)
- export default SaveView
+export default SaveView

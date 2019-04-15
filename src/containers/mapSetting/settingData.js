@@ -1,4 +1,4 @@
-import { language,getLanguage } from '../../language/index'
+import { getLanguage } from '../../language/index'
 
 function getMapSettings() {
   let data = [
@@ -92,7 +92,7 @@ function getMapSettings() {
           sectionIndex: 1,
         },
         {
-          name:  getLanguage(global.language).Map_Setting.SHOW_OVERLAYS,
+          name: getLanguage(global.language).Map_Setting.SHOW_OVERLAYS,
           //'显示压盖对象',
           value: false,
           isShow: true,
@@ -101,7 +101,7 @@ function getMapSettings() {
       ],
     },
     {
-      title:  getLanguage(global.language).Map_Setting.BOUNDS_SETTING,
+      title: getLanguage(global.language).Map_Setting.BOUNDS_SETTING,
       //'范围设置',
       visible: true,
       index: 1,

@@ -76,19 +76,19 @@ export default class SaveView extends React.Component {
     this.state = {
       visible: false,
       title: '是否保存当前地图？',
-      save_yes:'保存',
-      save_no:'不保存',
-      cancel:'取消'
+      save_yes: '保存',
+      save_no: '不保存',
+      cancel: '取消',
     }
     this.cb = () => {}
   }
 
-  setTitle = (title,save_yes,save_no,cancel) => {
-    this.setState({ 
+  setTitle = (title, save_yes, save_no, cancel) => {
+    this.setState({
       title: title,
-      save_yes:save_yes,
-      save_no:save_no,
-      cancel:cancel
+      save_yes: save_yes,
+      save_no: save_no,
+      cancel: cancel,
     })
   }
 

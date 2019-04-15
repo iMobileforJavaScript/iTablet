@@ -9,7 +9,7 @@ import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
-import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import {
@@ -28,7 +28,7 @@ const PAGE_SIZE = 30
 
 export default class LayerAttribute extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     nav: Object,
     navigation: Object,
     currentAttribute: Object,
@@ -751,8 +751,8 @@ export default class LayerAttribute extends React.Component {
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
             : [
-              getLanguage(this.props.language).Map_Lable.NAME, 
-              getLanguage(this.props.language).Map_Lable.ATTRIBUTE
+              getLanguage(this.props.language).Map_Lable.NAME,
+              getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]
@@ -803,7 +803,9 @@ export default class LayerAttribute extends React.Component {
         />
         <MTBtn
           key={'revert'}
-          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT}
+          title={
+            getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT
+          }
           //{'还原'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_revert}
@@ -937,7 +939,7 @@ export default class LayerAttribute extends React.Component {
           {showContent
             ? this.renderMapLayerAttribute()
             : this.renderInfoView({
-              title: getLanguage(this.props.language).Prompt.NO_ATTRIBUTES
+              title: getLanguage(this.props.language).Prompt.NO_ATTRIBUTES,
               //'暂无属性',
             })}
           {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}

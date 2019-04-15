@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
 export const NORMAL = 'NORMAL'
-import { language,getLanguage } from '../../language/index'
+import { getLanguage } from '../../language/index'
 
 const INFO = getLanguage(global.language).Prompt.LOADING
 //'加载中'

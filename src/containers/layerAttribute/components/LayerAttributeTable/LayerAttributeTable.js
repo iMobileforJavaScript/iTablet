@@ -23,8 +23,8 @@ import {
   Col,
   Cell,
 } from 'react-native-table-component'
-import { language, getLanguage } from '../../../../language/index' 
- // import { SScene } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language/index'
+// import { SScene } from 'imobile_for_reactnative'
 // import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
@@ -73,7 +73,10 @@ export default class LayerAttributeTable extends React.Component {
       props.data,
     )
     let tableHead = this.props.hasIndex
-      ? [getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO, ...props.tableHead]
+      ? [
+        getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
+        ...props.tableHead,
+      ]
       : props.tableHead
     this.state = {
       colHeight: colHeight,

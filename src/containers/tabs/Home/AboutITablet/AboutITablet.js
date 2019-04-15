@@ -6,7 +6,7 @@ import styles from './styles'
 import { getLanguage } from '../../../../language/index'
 export default class AboutITablet extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     device: Object,
   }
@@ -46,7 +46,9 @@ export default class AboutITablet extends Component {
     return (
       <Container
         headerProps={{
-          title:getLanguage(this.props.language).Profile.ABOUT+' SuperMap iTablet',
+          title:
+            getLanguage(this.props.language).Profile.ABOUT +
+            ' SuperMap iTablet',
           navigation: this.props.navigation,
         }}
         style={styles.container}
@@ -105,9 +107,9 @@ export default class AboutITablet extends Component {
             ]}
           >
             <Text style={[styles.consultTitle, marginLeft]}>
-             {getLanguage(this.props.language).Profile.SALES_CONSULTATION}
+              {getLanguage(this.props.language).Profile.SALES_CONSULTATION}
               {/* 销售咨询 */}
-              </Text>
+            </Text>
             <Text style={[styles.phone, marginRight]}>01059896655转6156</Text>
           </TouchableOpacity>
         </View>
@@ -119,9 +121,9 @@ export default class AboutITablet extends Component {
               官网
             </Text> */}
             <Text style={styles.footerItem}>
-            {getLanguage(this.props.language).Profile.BUSINESS_WEBSITE}
+              {getLanguage(this.props.language).Profile.BUSINESS_WEBSITE}
               {/* 进入官网 */}
-              </Text>
+            </Text>
           </TouchableOpacity>
           <View
             style={[
@@ -134,7 +136,7 @@ export default class AboutITablet extends Component {
           />
           <TouchableOpacity style={[styles.protocol]} onPress={this.Protocol}>
             <Text style={styles.footerItem}>
-            {getLanguage(this.props.language).Profile.PRIVACY_POLICY}
+              {getLanguage(this.props.language).Profile.PRIVACY_POLICY}
               {/* 服务协议 */}
             </Text>
           </TouchableOpacity>
