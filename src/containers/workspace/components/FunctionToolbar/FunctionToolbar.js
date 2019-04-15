@@ -617,8 +617,7 @@ export default class FunctionToolbar extends React.Component {
                   data: customerUDBs,
                 },
                 {
-                  title: getLanguage(this.props.language).Map_Main_Menu
-                    .OPEN_DATASOURCE,
+                  title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
                   //Const.DATA_SOURCE,
                   image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: userUDBs,
@@ -627,8 +626,7 @@ export default class FunctionToolbar extends React.Component {
             } else {
               data = [
                 {
-                  title: getLanguage(this.props.language).Map_Main_Menu
-                    .OPEN_DATASOURCE,
+                  title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
                   //Const.DATA_SOURCE,
                   image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
@@ -735,7 +733,8 @@ export default class FunctionToolbar extends React.Component {
           data: userUDBs,
         },
         {
-          title: Const.MAP,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
+          //Const.MAP,
           image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: mapData,
         },
@@ -767,7 +766,8 @@ export default class FunctionToolbar extends React.Component {
           data: customerUDBs,
         },
         {
-          title: Const.MAP,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
+          //Const.MAP,
           image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: mapData,
         },
