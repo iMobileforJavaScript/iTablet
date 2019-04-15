@@ -155,6 +155,7 @@ export default class HomePopupModal extends PureComponent {
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_ABOUT,
             this.props.onAbout,
           )}
+
           {this._renderItem(
             this.props.language == 'EN' ? 'Chinese' : '英文版',
             () => {
