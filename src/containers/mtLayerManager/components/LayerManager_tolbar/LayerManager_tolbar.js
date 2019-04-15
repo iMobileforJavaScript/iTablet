@@ -472,6 +472,7 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
       //'设置为当前图层'
+
       if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
         this.cb && this.cb(this.layer3dItem)
         this.setVisible(false)
@@ -575,17 +576,16 @@ export default class LayerManager_tolbar extends React.Component {
     overlayView = {},
     changeState = () => {},
   ) => {
-    //console.log(layer3dItem)
     this.layer3dItem = layer3dItem
     this.cb = cb
     this.setItemSelectable = setItemSelectable
     this.overlayView = overlayView
     this.changeState = changeState
-    let selectabel = this.layer3dItem.selectable
+    let selectable = this.layer3dItem.selectable
     let data
-    selectabel
-      ? (data = layer3dSettingCanSelect)
-      : (data = layer3dSettingCanNotSelect)
+    selectable
+      ? (data = layer3dSettingCanSelect(this.props.language))
+      : (data = layer3dSettingCanNotSelect(this.props.language))
     this.setState({ data })
   }
 
