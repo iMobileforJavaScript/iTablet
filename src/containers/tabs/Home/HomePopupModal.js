@@ -129,10 +129,10 @@ export default class HomePopupModal extends PureComponent {
             { this._renderItem(
               getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG, 
               this.props.onLogin
-              )}
+            )}
             { this._renderItem(
-               getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_REG,
-               this.props.onRegister
+              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_REG,
+              this.props.onRegister
             )}
           </View>
         )
@@ -152,19 +152,19 @@ export default class HomePopupModal extends PureComponent {
           { this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_ABOUT,
             this.props.onAbout
-            )}
+          )}
           { this._renderItem(
-            this.props.language=='EN'?"Chinese":"英文版", 
+            this.props.language=='EN'?"Chinese":"英文版",
             ()=>{
               if(this.props.language=='EN'){
-                this.props.setLanguage('CN');
+                this.props.setLanguage('CN')
                 global.language='CN'
               }
               else{
-                this.props.setLanguage('EN');
+                this.props.setLanguage('EN')
                 global.language='EN'
               }
-            })} 
+            })}
           { this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_SETTING,
             this.props.onSetting)}
