@@ -52,27 +52,27 @@ async function addBaseMap(
   index,
   visible = true,
 ) {
-  // if (getBaseLayers(layers).length === 0) {
-  //   if (data instanceof Array) {
-  //     for (let i = data.length - 1; i >= 0; i--) {
-  //       await SMap.openDatasource(
-  //         data[i].DSParams,
-  //         index !== undefined ? index : data[i].layerIndex,
-  //         false,
-  //         visible,
-  //       )
-  //     }
-  //     GLOBAL.BaseMapSize = data.length
-  //   } else {
-  //     await SMap.openDatasource(
-  //       data.DSParams,
-  //       index !== undefined ? index : data.layerIndex,
-  //       false,
-  //       visible,
-  //     )
-  //     GLOBAL.BaseMapSize = 1
-  //   }
-  // }
+  if (getBaseLayers(layers).length === 0) {
+    if (data instanceof Array) {
+      for (let i = data.length - 1; i >= 0; i--) {
+        await SMap.openDatasource(
+          data[i].DSParams,
+          index !== undefined ? index : data[i].layerIndex,
+          false,
+          visible,
+        )
+      }
+      GLOBAL.BaseMapSize = data.length
+    } else {
+      await SMap.openDatasource(
+        data.DSParams,
+        index !== undefined ? index : data.layerIndex,
+        false,
+        visible,
+      )
+      GLOBAL.BaseMapSize = 1
+    }
+  }
 }
 
 export { isBaseLayer, getBaseLayers, addBaseMap }
