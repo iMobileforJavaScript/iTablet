@@ -8,7 +8,7 @@ import * as React from 'react'
 import { ConstInfo } from '../../../../constants'
 import { Toast, LayerUtil } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 const PAGE_SIZE = 30
 
@@ -744,8 +744,8 @@ export default class LayerSelectionAttribute extends React.Component {
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
             : [
-              getLanguage(global.language).Map_Lable.NAME, 
-              getLanguage(global.language).Map_Lable.ATTRIBUTE
+              getLanguage(global.language).Map_Lable.NAME,
+              getLanguage(global.language).Map_Lable.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]

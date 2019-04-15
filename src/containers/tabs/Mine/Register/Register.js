@@ -25,11 +25,11 @@ import styles, {
   fontSize,
 } from './Styles'
 import color from '../../../../styles/color'
-import{ getLanguage }from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 export default class Register extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
   }
 
@@ -153,7 +153,7 @@ export default class Register extends React.Component {
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           // 请输入密码
-          placeholder={ getLanguage(this.props.language).Profile.ENTER_PASSWORD}
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmailPassword = text
@@ -201,7 +201,9 @@ export default class Register extends React.Component {
             onPress={() => {
               if (!this.txtPhoneNumber && this.txtPhoneNumber === undefined) {
                 //'请输入手机号'
-                Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
+                Toast.show(
+                  getLanguage(this.props.language).Profile.ENTER_MOBILE,
+                )
                 return
               }
               Toast.show('验证码已发送')
@@ -209,8 +211,8 @@ export default class Register extends React.Component {
             }}
           >
             <Text style={styles.verifyCodeRTextStyle}>
-            {/* 获取验证码 */}
-            {getLanguage(this.props.language).Profile.GET_CODE}
+              {/* 获取验证码 */}
+              {getLanguage(this.props.language).Profile.GET_CODE}
             </Text>
           </TouchableOpacity>
         </View>
@@ -308,8 +310,8 @@ export default class Register extends React.Component {
                   ]}
                 >
                   <Text style={[styles.titleContainerStyle]}>
-                  {/* 手机注册 */}
-                  {getLanguage(this.props.language).Profile.MOBILE_REGISTER}
+                    {/* 手机注册 */}
+                    {getLanguage(this.props.language).Profile.MOBILE_REGISTER}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -329,8 +331,8 @@ export default class Register extends React.Component {
                   }}
                 >
                   <Text style={[styles.titleContainerStyle]}>
-                  {/* 邮箱注册 */}
-                  {getLanguage(this.props.language).Profile.EMAIL_REGISTER}
+                    {/* 邮箱注册 */}
+                    {getLanguage(this.props.language).Profile.EMAIL_REGISTER}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -344,8 +346,8 @@ export default class Register extends React.Component {
                 }}
               >
                 <Text style={styles.titleContainerStyle}>
-                {/* 注册 */}
-                {getLanguage(this.props.language).Profile.REGISTER}
+                  {/* 注册 */}
+                  {getLanguage(this.props.language).Profile.REGISTER}
                 </Text>
               </TouchableOpacity>
               <View style={{ flex: 1, height: 200 }} />

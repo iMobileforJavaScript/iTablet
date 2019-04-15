@@ -18,7 +18,7 @@ import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Utils } from '../../../workspace/util'
 import { SMap, Action } from 'imobile_for_reactnative'
-import { language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
 export default class LayerAttributeTabs extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -541,7 +541,9 @@ export default class LayerAttributeTabs extends React.Component {
         />
         <MTBtn
           key={'revert'}
-          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT}
+          title={
+            getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT
+          }
           //{'还原'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_revert}
@@ -558,7 +560,7 @@ export default class LayerAttributeTabs extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title:  getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
+          title: getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: [

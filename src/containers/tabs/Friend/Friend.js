@@ -26,7 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstans from './MsgConstans'
-import{ language, getLanguage }from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
@@ -35,7 +35,7 @@ let addFriendImg = getThemeAssets().friend.friend_add
 let g_connectService = false
 export default class Friend extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     user: Object,
     chat: Array,
@@ -122,8 +122,8 @@ export default class Friend extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)||
-      prevProps.language!==this.props.language
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language !== this.props.language
     ) {
       return true
     }
@@ -509,7 +509,7 @@ export default class Friend extends Component {
       })
     }
   }
-  render() { 
+  render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -584,8 +584,8 @@ export default class Friend extends Component {
         >
           <FriendMessage
             ref={ref => (this.friendMessage = ref)}
-          tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
-         //"消息"
+            tabLabel={getLanguage(this.props.language).Friends.MESSAGES}
+            //"消息"
             user={this.props.user.currentUser}
             chat={this.props.chat}
             friend={this}

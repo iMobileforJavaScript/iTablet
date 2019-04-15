@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { Button, RadioGroup, TextBtn } from '../../../../components'
 import { Toast } from '../../../../utils'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 import styles from './styles'
 
@@ -115,9 +115,9 @@ export default class LocationView extends React.Component {
     return (
       <View style={styles.topView}>
         <Text style={styles.text}>
-          {getLanguage(global.language).Map_Attribute.ATTRIBUTE_CURRENT
-            //'当前位置 ' 
-            + (this.props.currentIndex + 1 || '')}
+          {getLanguage(global.language).Map_Attribute.ATTRIBUTE_CURRENT +
+            //'当前位置 '
+            (this.props.currentIndex + 1 || '')}
         </Text>
       </View>
     )
@@ -129,14 +129,18 @@ export default class LocationView extends React.Component {
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title={getLanguage(global.language).Map_Attribute.ATTRIBUTE_FIRST_RECORD}
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_FIRST_RECORD
+          }
           //"定位到首位"
           onPress={this.locateToTop}
         />
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title={getLanguage(global.language).Map_Attribute.ATTRIBUTE_LAST_RECORD}
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LAST_RECORD
+          }
           //"定位到末行"
           onPress={this.locateToBottom}
         />
@@ -169,7 +173,9 @@ export default class LocationView extends React.Component {
         />
         <TextBtn
           textStyle={styles.bottomBtnTxt}
-          btnText={getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION}
+          btnText={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION
+          }
           //"定位"
           btnClick={this.locateToPosition}
         />

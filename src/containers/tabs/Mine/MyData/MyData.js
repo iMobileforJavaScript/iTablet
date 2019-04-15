@@ -19,7 +19,7 @@ import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
 import { SOnlineService } from 'imobile_for_reactnative'
-import{ getLanguage }from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 export default class MyLocalData extends Component {
   props: {
-    language:Object,
+    language: Object,
     user: Object,
     navigation: Object,
     upload: Object,
@@ -195,7 +195,7 @@ export default class MyLocalData extends Component {
       let filter,
         title = '我的数据'
       switch (this.state.title) {
-        case  getLanguage(this.props.language).Profile.MAP:
+        case getLanguage(this.props.language).Profile.MAP:
           path += ConstPath.RelativePath.Map
           filter = {
             extension: 'xml',
@@ -203,7 +203,7 @@ export default class MyLocalData extends Component {
           }
           title = isUser ? '我的地图' : '游客地图'
           break
-        case  getLanguage(this.props.language).Profile.DATA:
+        case getLanguage(this.props.language).Profile.DATA:
           path += ConstPath.RelativePath.Datasource
           filter = {
             extension: 'udb',
@@ -211,14 +211,14 @@ export default class MyLocalData extends Component {
           }
           title = isUser ? '我的数据' : '游客数据'
           break
-        case  getLanguage(this.props.language).Profile.SCENE:
+        case getLanguage(this.props.language).Profile.SCENE:
           path += ConstPath.RelativePath.Scene
           filter = {
             type: 'Directory',
           }
           title = isUser ? '我的场景' : '游客场景'
           break
-        case  getLanguage(this.props.language).Profile.SYMBOL:
+        case getLanguage(this.props.language).Profile.SYMBOL:
           path += ConstPath.RelativePath.Symbol
           filter = {
             type: 'file',
@@ -226,7 +226,7 @@ export default class MyLocalData extends Component {
           title = isUser ? '我的符号' : '游客符号'
           break
         case getLanguage(this.props.language).Profile.COLOR_SCHEME:
-        //Const.MINE_COLOR:
+          //Const.MINE_COLOR:
           path += ConstPath.RelativePath.Color
           filter = {
             extension: 'scs',
@@ -658,31 +658,34 @@ export default class MyLocalData extends Component {
     try {
       this._closeModal()
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
-        this.setLoading(true, 
+        this.setLoading(
+          true,
           //ConstInfo.DELETING_DATA
-          getLanguage(this.props.language).Prompt.DELETING
-          )
+          getLanguage(this.props.language).Prompt.DELETING,
+        )
         let result = false
         switch (this.state.title) {
-          case  getLanguage(this.props.language).Profile.MAP:
+          case getLanguage(this.props.language).Profile.MAP:
             result = await this._deleteMap()
             break
-          case  getLanguage(this.props.language).Profile.DATA:
+          case getLanguage(this.props.language).Profile.DATA:
             result = await this._deleteDatasource()
             break
-          case  getLanguage(this.props.language).Profile.SCENE:
+          case getLanguage(this.props.language).Profile.SCENE:
             result = await this._deleteScene()
             break
-          case  getLanguage(this.props.language).Profile.SYMBOL:
+          case getLanguage(this.props.language).Profile.SYMBOL:
             result = await this._deleteSymbol()
             break
-          case  getLanguage(this.props.language).Profile.MINE_COLOR:
+          case getLanguage(this.props.language).Profile.MINE_COLOR:
             result = await this._deleteSymbol()
             break
         }
-        Toast.show(result ?  
-          getLanguage(this.props.language).Prompt.DELETED_SUCCESS 
-          : getLanguage(this.props.language).Prompt.FAILED_TO_DELETE )
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.DELETED_SUCCESS
+            : getLanguage(this.props.language).Prompt.FAILED_TO_DELETE,
+        )
         if (result) {
           this.itemInfo = null
           this.getData()
@@ -810,8 +813,9 @@ export default class MyLocalData extends Component {
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       let data
+      //eslint-disable-next-line
       let title = getLanguage(this.props.language).Profile.SHARE
-        //'分享'
+      //'分享'
       if (
         this.props.user.currentUser.userName &&
         this.props.user.currentUser.userType !== UserType.PROBATION_USER
@@ -830,7 +834,7 @@ export default class MyLocalData extends Component {
               },
             },
             {
-              title:getLanguage(this.props.language).Profile.EXPORT_DATA,
+              title: getLanguage(this.props.language).Profile.EXPORT_DATA,
               // '导出数据',
               action: () => {
                 this._exportData(true)

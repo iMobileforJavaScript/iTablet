@@ -19,7 +19,7 @@ import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
 //import Friend from './Friend'
 import FriendListFileHandle from './FriendListFileHandle'
-import { language,getLanguage } from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 import { Toast } from '../../../utils'
 
 const dismissKeyboard = require('dismissKeyboard')

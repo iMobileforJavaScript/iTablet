@@ -5,7 +5,7 @@ import Toast from '../../../../utils/Toast'
 import { color, size } from '../../../../styles'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils'
-import {language, getLanguage  } from '../../../../language'
+import { getLanguage } from '../../../../language'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -56,10 +56,10 @@ export default class PopupModal extends PureComponent {
   _publishButton = isPublish => {
     let title
     if (isPublish) {
-      title =  getLanguage(global.language).Profile.SET_AS_PRIVATE_SERVICE
+      title = getLanguage(global.language).Profile.SET_AS_PRIVATE_SERVICE
       //'设为公有服务'
     } else {
-      title =  getLanguage(global.language).Profile.SET_AS_PUBLIC_SERVICE
+      title = getLanguage(global.language).Profile.SET_AS_PUBLIC_SERVICE
       //'设为私有服务'
     }
     let lineHeight = scaleSize(80)
@@ -169,9 +169,9 @@ export default class PopupModal extends PureComponent {
             {this._renderSeparatorLine()}
             {this._publishButton(!this.props.isPublish)}
             {this._deleteButton(
-              getLanguage(global.language).Profile.DELETE
+              getLanguage(global.language).Profile.DELETE,
               //'删除'
-              )}
+            )}
           </View>
         </TouchableOpacity>
       </Modal>

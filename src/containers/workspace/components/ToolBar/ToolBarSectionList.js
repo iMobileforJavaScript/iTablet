@@ -1,7 +1,7 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
-import { language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -94,17 +94,19 @@ export default class ToolBarSectionList extends React.Component {
             selectList[title][pushName] !== true
           ) {
             selectList[title].push(pushObj)
+          } else {
+            for (let i = 0, l = selectList[title].length; i < l; i++)
+              if (pushName in selectList[title][i]) {
+                selectList[title][i][pushName] = false
+                break
+              }
           }
-        }
-      } else {
-        for (let j = 0; j < selectList[title].length; j++) {
-          if (
-            selectList[title][j] === sections[i].data[index].title ||
-            selectList[title][j] === sections[i].data[index].name ||
-            selectList[title][j] === sections[i].data[index].expression ||
-            selectList[title][j] === sections[i].data[index].datasetName
-          ) {
-            selectList[title].splice(j, 1)
+        } else {
+          for (let j = 0; j < selectList[title].length; j++) {
+            let pushName = section.data[index].datasetName
+            if (pushName in selectList[title][j]) {
+              selectList[title][j][pushName] = true
+            }
           }
         }
       }
@@ -219,8 +221,11 @@ export default class ToolBarSectionList extends React.Component {
                 style={styles.selectImg}
               />
               <Text style={[styles.sectionSelectedTitle]}>
-              {getLanguage(global.language).Map_Main_Menu.THEME_HIDE_SYSTEM_FIELDS}
-              {/* 隐藏系统字段 */}
+                {
+                  getLanguage(global.language).Map_Main_Menu
+                    .THEME_HIDE_SYSTEM_FIELDS
+                }
+                {/* 隐藏系统字段 */}
               </Text>
             </TouchableOpacity>
           )}

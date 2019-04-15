@@ -26,7 +26,7 @@ import {
 // import { SScene } from 'imobile_for_reactnative'
 // import NavigationService from '../../../NavigationService'
 import styles from './styles'
-import { language, getLanguage } from '../../../../language/index' 
+import { getLanguage } from '../../../../language/index'
 
 const COL_HEIGHT = scaleSize(80)
 
@@ -75,7 +75,10 @@ export default class LayerAttributeTable extends React.Component {
       props.data,
     )
     let tableHead = this.props.hasIndex
-      ? [getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO, ...props.tableHead]
+      ? [
+        getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
+        ...props.tableHead,
+      ]
       : props.tableHead
     this.state = {
       colHeight: colHeight,

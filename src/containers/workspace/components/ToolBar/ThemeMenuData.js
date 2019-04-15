@@ -5,7 +5,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType, ConstPath, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 import { Toast } from '../../../../utils'
 
 let _toolbarParams = {}
@@ -252,7 +252,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //统一风格
       key: constants.THEME_UNIFY_STYLE,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_MAP, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_MAP,
       //constants.THEME_UNIFY_STYLE,
       action: getUnifyStyleAdd,
       size: 'large',
@@ -262,7 +262,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUES_MAP, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUES_MAP,
       //constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: () => showExpressionList('Theme'),
@@ -272,7 +272,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //分段风格
       key: constants.THEME_RANGE_STYLE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_RANGES_MAP, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_RANGES_MAP,
       // constants.THEME_RANGE_STYLE,
       size: 'large',
       action: () => showExpressionList('Theme'),
@@ -300,7 +300,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //统一标签
       key: constants.THEME_UNIFY_LABEL,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE,
       // constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: () => showExpressionList('Theme'),
@@ -310,7 +310,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //单值标签
     //   key: constants.THEME_UNIQUE_LABEL,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUE_LABLE_MAP, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUE_LABLE_MAP,
     //   // constants.THEME_UNIQUE_LABEL,
     //   size: 'large',
     //   action: () => showExpressionList('Theme'),
@@ -320,7 +320,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //分段标签
     //   key: constants.THEME_RANGE_LABEL,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_RANGES_LABLE_MAP, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_RANGES_LABLE_MAP,
     //   // constants.THEME_RANGE_LABEL,
     //   size: 'large',
     //   action: () => showExpressionList('Theme'),
@@ -330,7 +330,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //面积图
     //   key: constants.THEME_GRAPH_AREA,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_AREA, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_AREA,
     //   // constants.THEME_GRAPH_AREA,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -340,7 +340,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //阶梯图
     //   key: constants.THEME_GRAPH_STEP,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STEP, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STEP,
     //   // constants.THEME_GRAPH_STEP,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -350,7 +350,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //折线图
     //   key: constants.THEME_GRAPH_LINE,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_LINE, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_LINE,
     //   // constants.THEME_GRAPH_LINE,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -360,7 +360,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //点状图
     //   key: constants.THEME_GRAPH_POINT,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_POINT, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_POINT,
     //   //constants.THEME_GRAPH_POINT,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -370,7 +370,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //柱状图
     //   key: constants.THEME_GRAPH_BAR,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_COLUMN, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_COLUMN,
     //   // constants.THEME_GRAPH_BAR,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -380,7 +380,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //三维柱状图
     //   key: constants.THEME_GRAPH_BAR3D,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_COLUMN, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_COLUMN,
     //   // constants.THEME_GRAPH_BAR3D,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -390,7 +390,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //饼图
     //   key: constants.THEME_GRAPH_PIE,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_PIE, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_PIE,
     //   // constants.THEME_GRAPH_PIE,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -400,7 +400,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //三维饼图
     //   key: constants.THEME_GRAPH_PIE3D,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_PIE, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_PIE,
     //   // constants.THEME_GRAPH_PIE3D,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -410,7 +410,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //玫瑰图
     //   key: constants.THEME_GRAPH_ROSE,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_ROSE, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_ROSE,
     //   // constants.THEME_GRAPH_ROSE,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -420,7 +420,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //三维玫瑰图
     //   key: constants.THEME_GRAPH_ROSE3D,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_ROSE, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_ROSE,
     //   // constants.THEME_GRAPH_ROSE3D,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -430,7 +430,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //堆叠柱状图
     //   key: constants.THEME_GRAPH_STACK_BAR,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STACKED_BAR, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STACKED_BAR,
     //   // constants.THEME_GRAPH_STACK_BAR,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -440,7 +440,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //三维堆叠柱状图
     //   key: constants.THEME_GRAPH_STACK_BAR3D,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_STACKED_BAR, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_3D_STACKED_BAR,
     //   // constants.THEME_GRAPH_STACK_BAR3D,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -450,7 +450,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //环状图
     //   key: constants.THEME_GRAPH_RING,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_RING, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_RING,
     //   // constants.THEME_GRAPH_RING,
     //   size: 'large',
     //   action: () => showExpressionList('ThemeGraph'),
@@ -460,7 +460,7 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //点密度专题图
     //   key: constants.THEME_DOT_DENSITY,
-    //   title:  getLanguage(global.language).Map_Main_Menu.THEME_DOT_DENSITY_MAP, 
+    //   title:  getLanguage(global.language).Map_Main_Menu.THEME_DOT_DENSITY_MAP,
     //   size: 'large',
     //   action: () => showExpressionList('Theme'),
     //   image: getThemeAssets().themeType.theme_dot_density,
@@ -511,7 +511,7 @@ function getThemeMapCreate(type, params) {
     {
       //统一风格
       key: constants.THEME_UNIFY_STYLE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_MAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_MAP,
       //constants.THEME_UNIFY_STYLE,
       action: getUnifyStyleAdd,
       size: 'large',
@@ -521,7 +521,7 @@ function getThemeMapCreate(type, params) {
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUES_MAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIQUE_VALUES_MAP,
       //constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showDatasetsList,
@@ -531,7 +531,7 @@ function getThemeMapCreate(type, params) {
     {
       //分段风格
       key: constants.THEME_RANGE_STYLE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_RANGES_MAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_RANGES_MAP,
       //constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showDatasetsList,
@@ -559,7 +559,7 @@ function getThemeMapCreate(type, params) {
     {
       //统一标签
       key: constants.THEME_UNIFY_LABEL,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE,
       //constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showDatasetsList,
@@ -869,7 +869,7 @@ function getThemeMapStartCreate(type, params) {
     {
       //统一标签
       key: constants.THEME_UNIFY_LABEL,
-      title:getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE,
       //constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showLocalDatasetsList,
@@ -930,7 +930,7 @@ function getRangeMode() {
     {
       // 等距分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_EQUALINTERVAL,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_EQUAL_INTERVAL, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_EQUAL_INTERVAL,
       //'等距分段',
       action: setRangeMode,
       size: 'large',
@@ -940,7 +940,8 @@ function getRangeMode() {
     {
       // 平方根分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_SQUAREROOT,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_SQURE_ROOT_INTERVAL, 
+      title: getLanguage(global.language).Map_Main_Menu
+        .THEME_SQURE_ROOT_INTERVAL,
       //'平方根分段',
       action: setRangeMode,
       size: 'large',
@@ -950,7 +951,7 @@ function getRangeMode() {
     // {
     //   // 标准差分段
     //   key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STANDARD_DEVIATION_INTERVAL, 
+    //   title: getLanguage(global.language).Map_Main_Menu.THEME_STANDARD_DEVIATION_INTERVAL,
     //   //'标准差分段',
     //   action: setRangeMode,
     //   size: 'large',
@@ -960,7 +961,8 @@ function getRangeMode() {
     {
       // 对数分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_LOGARITHMIC_INTERVAL, 
+      title: getLanguage(global.language).Map_Main_Menu
+        .THEME_LOGARITHMIC_INTERVAL,
       //'对数分段',
       action: setRangeMode,
       size: 'large',
@@ -970,7 +972,7 @@ function getRangeMode() {
     {
       // 等计数分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_QUANTILE,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_QUANTILE_INTERVAL, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_QUANTILE_INTERVAL,
       //'等计数分段',
       action: setRangeMode,
       size: 'large',
@@ -1041,7 +1043,7 @@ function getLabelBackShape() {
   let data = [
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_NONE,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_DEFAULT, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_DEFAULT,
       //'空背景',
       action: setLabelBackShape,
       size: 'large',
@@ -1050,7 +1052,7 @@ function getLabelBackShape() {
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_DIAMOND,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_DIAMOND, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_DIAMOND,
       //'菱形背景',
       action: setLabelBackShape,
       size: 'large',
@@ -1059,7 +1061,7 @@ function getLabelBackShape() {
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ROUNDRECT,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_ROUND_RECTANGLE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_ROUND_RECTANGLE,
       //'圆角矩形背景',
       action: setLabelBackShape,
       size: 'large',
@@ -1068,7 +1070,7 @@ function getLabelBackShape() {
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_RECT,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_RECTANGLE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_RECTANGLE,
       //'矩形背景',
       action: setLabelBackShape,
       size: 'large',
@@ -1077,7 +1079,7 @@ function getLabelBackShape() {
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ELLIPSE,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_ELLIPSE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_ELLIPSE,
       //'椭圆形背景',
       action: setLabelBackShape,
       size: 'large',
@@ -1086,7 +1088,7 @@ function getLabelBackShape() {
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_TRIANGLE,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_TRIANGLE, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_TRIANGLE,
       //'三角形背景',
       action: setLabelBackShape,
       size: 'large',
@@ -2554,7 +2556,7 @@ function getThemeGraphType() {
     },
     {
       key: constants.THEME_GRAPH_PIE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_PIE,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_PIE,
       //constants.THEME_GRAPH_PIE,
       action: setThemeGraphType,
       size: 'large',
@@ -2563,7 +2565,7 @@ function getThemeGraphType() {
     },
     {
       key: constants.THEME_GRAPH_PIE3D,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_3D_PIE,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_3D_PIE,
       //constants.THEME_GRAPH_PIE3D,
       action: setThemeGraphType,
       size: 'large',
@@ -2572,7 +2574,7 @@ function getThemeGraphType() {
     },
     {
       key: constants.THEME_GRAPH_ROSE,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_ROSE,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_ROSE,
       //constants.THEME_GRAPH_ROSE,
       action: setThemeGraphType,
       size: 'large',
@@ -2628,7 +2630,7 @@ function getGraphThemeGradutedMode() {
   let data = [
     {
       key: constants.THEME_GRAPH_GRADUATEDMODE_CONS_KEY,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_CONSTANT, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_CONSTANT,
       //constants.THEME_GRAPH_GRADUATEDMODE_CONS,
       action: setThemeGraphGraduatedMode,
       size: 'large',
@@ -2637,7 +2639,7 @@ function getGraphThemeGradutedMode() {
     },
     {
       key: constants.THEME_GRAPH_GRADUATEDMODE_LOG_KEY,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_LOGARITHM, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_LOGARITHM,
       //constants.THEME_GRAPH_GRADUATEDMODE_LOG,
       action: setThemeGraphGraduatedMode,
       size: 'large',
@@ -2646,7 +2648,7 @@ function getGraphThemeGradutedMode() {
     },
     {
       key: constants.THEME_GRAPH_GRADUATEDMODE_SQUARE_KEY,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_SQUARE_ROOT, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_SQUARE_ROOT,
       //constants.THEME_GRAPH_GRADUATEDMODE_SQUARE,
       action: setThemeGraphGraduatedMode,
       size: 'large',
@@ -2667,7 +2669,7 @@ function getGraduatedSymbolGradutedMode() {
   let data = [
     {
       key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_CONS_KEY,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_CONSTANT, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_CONSTANT,
       //constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_CONS,
       action: setThemeGraduatedSymbolGraduatedMode,
       size: 'large',
@@ -2676,7 +2678,7 @@ function getGraduatedSymbolGradutedMode() {
     },
     {
       key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_LOG_KEY,
-      title:  getLanguage(global.language).Map_Main_Menu.THEME_LOGARITHM, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_LOGARITHM,
       //constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_LOG,
       action: setThemeGraduatedSymbolGraduatedMode,
       size: 'large',
@@ -2685,7 +2687,7 @@ function getGraduatedSymbolGradutedMode() {
     },
     {
       key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_SQUARE_KEY,
-      title: getLanguage(global.language).Map_Main_Menu.THEME_SQUARE_ROOT, 
+      title: getLanguage(global.language).Map_Main_Menu.THEME_SQUARE_ROOT,
       // constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_SQUARE,
       action: setThemeGraduatedSymbolGraduatedMode,
       size: 'large',
@@ -2918,7 +2920,7 @@ async function getUnifyStyleAdd() {
       //   data: customerUDBs,
       // },
       {
-        title: getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE, 
+        title: getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE,
         // Const.DATA_SOURCE,
         image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: userUDBs,
@@ -2927,7 +2929,7 @@ async function getUnifyStyleAdd() {
   } else {
     data = [
       {
-        title:getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE, 
+        title: getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE,
         //  Const.DATA_SOURCE,
         image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: customerUDBs,
@@ -3087,7 +3089,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
       break
   }
   if (isSuccess) {
-    Toast.show( getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY) 
+    Toast.show(getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
     //设置当前图层
     ToolbarParams.getLayers(-1, layers => {
       ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
@@ -3230,7 +3232,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
       break
   }
   if (isSuccess) {
-    Toast.show( getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
+    Toast.show(getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
     //设置当前图层
     ToolbarParams.getLayers(-1, layers => {
       ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])

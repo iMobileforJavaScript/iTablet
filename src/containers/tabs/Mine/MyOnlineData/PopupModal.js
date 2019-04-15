@@ -4,7 +4,7 @@ import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 import { color, size } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
-import { language,getLanguage } from '../../../../language';
+import { getLanguage } from '../../../../language'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -76,7 +76,7 @@ export default class PopupModal extends PureComponent {
   }
 
   _publishServiceButton = () => {
-    let title =  getLanguage(global.language).Profile.PUBLISH_SERVICE
+    let title = getLanguage(global.language).Profile.PUBLISH_SERVICE
     //'发布服务'
     let objContent = this.props.data
     if (objContent && objContent.dataItemServices) {
@@ -84,16 +84,19 @@ export default class PopupModal extends PureComponent {
       for (let i = 0; i < dataItemServices.length; i++) {
         let serviceType = dataItemServices[i].serviceType
         if (serviceType === 'RESTMAP') {
-          title = getLanguage(global.language).Profile.DELETE
-           + dataItemServices[i].serviceName 
-           + getLanguage(global.language).Profile.SERVICE
+          title =
+            getLanguage(global.language).Profile.DELETE +
+            dataItemServices[i].serviceName +
+            getLanguage(global.language).Profile.SERVICE
         }
       }
       return (
         <TouchableOpacity
           style={{ backgroundColor: color.itemColorWhite }}
           onPress={async () => {
-            if (title === getLanguage(global.language).Profile.PUBLISH_SERVICE) {
+            if (
+              title === getLanguage(global.language).Profile.PUBLISH_SERVICE
+            ) {
               this.props.onPublishService()
             } else {
               this.props.onDeleteService()
@@ -276,9 +279,9 @@ export default class PopupModal extends PureComponent {
             {this._downloadButton()}
             {this._dataVisibleButton()}
             {this._deleteButton(
-              getLanguage(global.language).Profile.DELETE
+              getLanguage(global.language).Profile.DELETE,
               //'删除'
-              )}
+            )}
           </View>
         </TouchableOpacity>
       </Modal>

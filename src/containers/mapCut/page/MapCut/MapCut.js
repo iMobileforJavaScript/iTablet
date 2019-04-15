@@ -30,28 +30,27 @@ import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
 import NavigationService from '../../../NavigationService'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import styles from '../../styles'
-import { getLanguage } from '../../../../language';
+import { getLanguage } from '../../../../language'
 
-let COMPLETE =''
-let EDIT =''
+let COMPLETE = ''
+let EDIT = ''
 
 export default class MapCut extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     nav: Object,
     map: Array,
     layers: Array,
     getLayers: () => {},
   }
-  
- 
+
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
-    COMPLETE=getLanguage(this.props.language).Prompt.CONFIRM,
-    EDIT=getLanguage(this.props.language).Map_Main_Menu.EDIT,
-    this.state = {
+    ;(COMPLETE = getLanguage(this.props.language).Prompt.CONFIRM),
+    (EDIT = getLanguage(this.props.language).Map_Main_Menu.EDIT),
+    (this.state = {
       headerBtnTitle: EDIT,
       selected: (new Map(): Map<string, boolean>),
       extraData: (new Map(): Map<string, Object>),
@@ -63,7 +62,7 @@ export default class MapCut extends React.Component {
       outLayers: [], // 未选中的图层
       datasources: [],
       points: (params && params.points) || [],
-    }
+    })
     this.init = true
     this.changeDSData = null
     this.isCutting = false // 判断是否正在裁剪
@@ -118,7 +117,11 @@ export default class MapCut extends React.Component {
         this.isCutting = true
 
         this.mapNameIput && this.mapNameIput.blur()
-        this.container && this.container.setLoading(true,getLanguage(this.props.language).Prompt.CLIPPING)
+        this.container &&
+          this.container.setLoading(
+            true,
+            getLanguage(this.props.language).Prompt.CLIPPING,
+          )
         setTimeout(async () => {
           let layersInfo = []
           this.state.selected.forEach((value, key) => {
@@ -440,8 +443,8 @@ export default class MapCut extends React.Component {
               action: this.selectAll,
             })}
             <Text style={styles.topText}>
-            {getLanguage(this.props.language).Map_Lable.LAYER}
-            {/* 图层 */}
+              {getLanguage(this.props.language).Map_Lable.LAYER}
+              {/* 图层 */}
             </Text>
           </View>
           <View style={[styles.topRightView, { width: scaleSize(360) }]}>
@@ -451,7 +454,10 @@ export default class MapCut extends React.Component {
                 { width: scaleSize(120), marginRight: scaleSize(30) },
               ]}
             >
-            {getLanguage(this.props.language).Map_Main_Menu.TOOLS_TARGET_DATASOURCE}
+              {
+                getLanguage(this.props.language).Map_Main_Menu
+                  .TOOLS_TARGET_DATASOURCE
+              }
               {/* 目标数据源 */}
             </Text>
           </View>
@@ -463,21 +469,21 @@ export default class MapCut extends React.Component {
           <View style={styles.topLeftView}>
             <View style={styles.selectImgView} />
             <Text style={styles.topText}>
-            {getLanguage(this.props.language).Map_Lable.LAYER}
-            {/* 图层 */}
+              {getLanguage(this.props.language).Map_Lable.LAYER}
+              {/* 图层 */}
             </Text>
           </View>
           <View style={styles.topRightView}>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-            {getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE}
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE}
               {/* 区域内裁剪 */}
             </Text>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-            {getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE}
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE}
               {/* 擦除 */}
             </Text>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-            {getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP}
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP}
               {/* 精确裁剪 */}
             </Text>
           </View>
@@ -601,7 +607,9 @@ export default class MapCut extends React.Component {
                   ref={ref => (this.mapNameIput = ref)}
                   value={this.state.text}
                   style={styles.input}
-                  placeholder={getLanguage(this.props.language).Prompt.ENTER_MAP_NAME}
+                  placeholder={
+                    getLanguage(this.props.language).Prompt.ENTER_MAP_NAME
+                  }
                   // {'请输入地图名字'}
                   underlineColorAndroid="transparent"
                   onChangeText={text => this._onChangeText(text)}
@@ -609,9 +617,12 @@ export default class MapCut extends React.Component {
                 />
               ) : (
                 <Text style={styles.topText}>
-                {getLanguage(this.props.language).Map_Main_Menu.START_SAVE_AS_MAP}
-              {/* 另存地图 */}
-              </Text>
+                  {
+                    getLanguage(this.props.language).Map_Main_Menu
+                      .START_SAVE_AS_MAP
+                  }
+                  {/* 另存地图 */}
+                </Text>
               )}
             </View>
             <View style={styles.bottomRightView}>
@@ -669,8 +680,8 @@ export default class MapCut extends React.Component {
           onPress={() => this.dsModal && this.dsModal.setVisible(false)}
         >
           <Text style={styles.closeText}>
-          {getLanguage(this.props.language).Prompt.CANCEL}
-          {/* 关闭 */}
+            {getLanguage(this.props.language).Prompt.CANCEL}
+            {/* 关闭 */}
           </Text>
         </TouchableOpacity>
       </View>

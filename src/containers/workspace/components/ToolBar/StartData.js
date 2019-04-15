@@ -1,8 +1,10 @@
 import { FileTools, NativeMethod } from '../../../../native'
+
 import {
   ConstToolType,
   ConstInfo,
   ConstPath,
+  //eslint-disable-next-line
   Const,
   UserType,
   ConstOnline,
@@ -13,7 +15,7 @@ import constants from '../../constants'
 // import Orientation from 'react-native-orientation'
 let _params = {}
 import { SMap, SScene } from 'imobile_for_reactnative'
-import{language, getLanguage }from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 function setParams(params) {
   _params = params
 }
@@ -34,7 +36,7 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title:getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP, 
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
           //constants.OPEN,
           action: openMap,
           size: 'large',
@@ -156,7 +158,7 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title:  getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
           //constants.OPEN,
           action: openMap,
           size: 'large',
@@ -418,7 +420,7 @@ function openMap() {
       })
     }
     data.push({
-      title: getLanguage(global.language).Map_Main_Menu.OPEN_MAP, 
+      title: getLanguage(global.language).Map_Main_Menu.OPEN_MAP,
       //'我的地图',
       image: require('../../../../assets/mapToolbar/list_type_maps.png'),
       data: userFileList || [],
@@ -575,12 +577,12 @@ function openTemplate() {
     }
     let data = [
       {
-        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_SYMBOLS, 
+        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_SYMBOLS,
         //Const.CREATE_SYMBOL_COLLECTION,
         data: [],
       },
       {
-        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_TEMPLATE, 
+        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_TEMPLATE,
         //Const.CREATE_MODULE,
         data: tpList,
       },
@@ -655,7 +657,7 @@ function create() {
       )
       let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
       NavigationService.navigate('InputPage', {
-        headerTitle:  getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+        headerTitle: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
         //'新建地图',
         value: newName,
         placeholder: ConstInfo.PLEASE_INPUT_NAME,
@@ -733,7 +735,7 @@ function showHistory() {
   })
   let data = [
     {
-      title: getLanguage(global.language).Map_Main_Menu.START_RECENT, 
+      title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
       //Const.HISTORY,
       data: latestMap,
     },
@@ -917,7 +919,7 @@ function saveMapAs() {
     )
     NavigationService.navigate('InputPage', {
       value: newName,
-      headerTitle: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP, 
+      headerTitle: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
       //'地图另存',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async value => {

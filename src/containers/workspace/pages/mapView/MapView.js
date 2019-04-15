@@ -46,15 +46,15 @@ import {
 } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
-import{ getLanguage }from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import LegendView from '../../components/LegendView/LegendView'
-
+//eslint-disable-next-line
 const SAVE_TITLE = '是否保存当前地图?'
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
-    language:PropTypes.object,
+    language: PropTypes.object,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -187,15 +187,18 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(
-      getLanguage(this.props.language).Prompt.SAVE_TITLE,
-      getLanguage(this.props.language).Prompt.SAVE_YES,
-      getLanguage(this.props.language).Prompt.SAVE_NO,
-      getLanguage(this.props.language).Prompt.CANCEL,
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setTitle(
+        getLanguage(this.props.language).Prompt.SAVE_TITLE,
+        getLanguage(this.props.language).Prompt.SAVE_YES,
+        getLanguage(this.props.language).Prompt.SAVE_NO,
+        getLanguage(this.props.language).Prompt.CANCEL,
       )
-    this.container && this.container.setLoading(true, 
-      getLanguage(this.props.language).Prompt.LOADING,
-      //'地图加载中'
+    this.container &&
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+        //'地图加载中'
       )
     let timer = setTimeout(() => {
       this.setState({
@@ -797,10 +800,11 @@ export default class MapView extends React.Component {
     }
     this.backAction = async () => {
       try {
-        this.setLoading(true, 
+        this.setLoading(
+          true,
           getLanguage(this.props.language).Prompt.CLOSING,
           //'正在关闭地图'
-          )
+        )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setLoading(false)
@@ -945,9 +949,11 @@ export default class MapView extends React.Component {
       if (mapInfo) {
         // 如果是模板地图，则加载模板
         if (mapInfo.Template) {
-          this.setLoading(true, 
+          this.setLoading(
+            true,
             //ConstInfo.TEMPLATE_READING
-            getLanguage(this.props.language).Prompt.READING_TEMPLATE)
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
           let templatePath = await FileTools.appendingHomeDirectory(
             ConstPath.UserPath + mapInfo.Template,
           )

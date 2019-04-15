@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
 import RenderSettingItem from './RenderSettingItem'
-import {language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 export default class Setting extends Component {
   props: {
     navigation: Object,

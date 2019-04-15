@@ -6,7 +6,7 @@ import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
-import {language,getLanguage  } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 export default class ToggleAccount extends Component {
   props: {
     navigation: Object,

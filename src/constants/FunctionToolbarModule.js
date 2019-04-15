@@ -3,8 +3,8 @@ import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
 import constants from '../containers/workspace/constants'
-import { language,getLanguage } from '../language/index'
- 
+import { getLanguage } from '../language/index'
+
 async function OpenData(data, index) {
   let layers = await SMap.getLayersByType()
   // Layer index = 0 为顶层
@@ -281,7 +281,7 @@ const openData = [
   },
 ]
 
-const line= (param)=> [
+const line = param => [
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL,
     //'符号线',
@@ -329,7 +329,7 @@ const line= (param)=> [
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_LINE_WIDTH,
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
       GLOBAL.toolBox &&
@@ -348,12 +348,12 @@ const line= (param)=> [
           selectKey: '线颜色',
         })
     },
-    selectName:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    selectName: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
   },
 ]
 
-const point =(param)=> [
+const point = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     action: () => {
@@ -402,7 +402,7 @@ const point =(param)=> [
     //'大小',
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
       GLOBAL.toolBox &&
@@ -422,11 +422,11 @@ const point =(param)=> [
           selectKey: '点颜色',
         })
     },
-    selectName:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    selectName: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
@@ -443,7 +443,7 @@ const point =(param)=> [
           ],
         })
     },
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
@@ -463,12 +463,11 @@ const point =(param)=> [
           ],
         })
     },
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
-         
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
   },
 ]
 
-const region = (param)=>[
+const region = param => [
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL,
     //'面符号',
@@ -554,7 +553,7 @@ const region = (param)=>[
           selectKey: '面透明度',
         })
     },
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
   },
   // {
   //   key: '渐变',
@@ -572,7 +571,7 @@ const region = (param)=>[
   // },
 ]
 
-const grid =(param)=> [
+const grid = param => [
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
     action: () => {
@@ -636,7 +635,7 @@ const grid =(param)=> [
 ]
 
 //单值
-const uniqueMenuInfo =(param )=> [
+const uniqueMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
@@ -664,7 +663,7 @@ const uniqueMenuInfo =(param )=> [
 ]
 
 //分段
-const rangeMenuInfo =(param)=> [
+const rangeMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
@@ -719,11 +718,11 @@ const rangeMenuInfo =(param)=> [
 ]
 
 //统一标签
-const labelMenuInfo=(param)=> [
+const labelMenuInfo = param => [
   {
-    key:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
-    btntitle:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     action: () => {
       GLOBAL.toolBox &&
@@ -734,9 +733,9 @@ const labelMenuInfo=(param)=> [
     },
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
-    selectKey:  getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
-    btntitle:  getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
+    key: getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getLabelBackShape(
@@ -773,9 +772,9 @@ const labelMenuInfo=(param)=> [
   //   },
   // },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    btntitle:  getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getLabelFontSize(
@@ -785,9 +784,9 @@ const labelMenuInfo=(param)=> [
     },
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    btntitle:  getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getLabelFontRotation(
@@ -797,9 +796,9 @@ const labelMenuInfo=(param)=> [
     },
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
-    selectKey:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
-    btntitle:  getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getColorTable(
@@ -810,11 +809,11 @@ const labelMenuInfo=(param)=> [
   },
 ]
 //统计专题图
-const graphMenuInfo =(param)=> [
+const graphMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
-    btntitle:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getGraphThemeExpressions(
@@ -863,9 +862,9 @@ const graphMenuInfo =(param)=> [
 ]
 
 //修改点密度专题图：设置点密度图的表达式，单点代表的值，点风格（大小和颜色）。
-const dotDensityMenuInfo = (param)=> [
+const dotDensityMenuInfo = param => [
   {
-    key:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     //'',
     selectKey: '表达式',
     //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
@@ -884,7 +883,7 @@ const dotDensityMenuInfo = (param)=> [
     selectKey: '单点代表值',
     //getLanguage(param).Map_Main_Menu.DOT_VALUE,
     //'单点代表值',
-    btntitle:  getLanguage(param).Map_Main_Menu.DOT_VALUE,
+    btntitle: getLanguage(param).Map_Main_Menu.DOT_VALUE,
     //'单点代表值',
     action: () => {
       GLOBAL.toolBox &&
@@ -899,7 +898,7 @@ const dotDensityMenuInfo = (param)=> [
   },
   {
     key: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
-    selectKey:'点符号',
+    selectKey: '点符号',
     //getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     btntitle: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     action: () => {
@@ -943,8 +942,8 @@ const dotDensityMenuInfo = (param)=> [
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
-    selectKey:'点颜色',
-   // getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    selectKey: '点颜色',
+    // getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
     action: () => {
       GLOBAL.toolBox &&
@@ -958,25 +957,25 @@ const dotDensityMenuInfo = (param)=> [
 ]
 
 //修改等级符号专题图：设置表达式，分级方式，基准值，正值基准值风格（大小和颜色）。
-const graduatedSymbolMenuInfo = (param)=> [
+const graduatedSymbolMenuInfo = param => [
   {
-    key:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
-    btntitle:getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getThemeExpress(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION,
-         '表达式',
+          '表达式',
         )
     },
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.GRADUATE_BY,
+    key: getLanguage(param).Map_Main_Menu.GRADUATE_BY,
     //'分级方式',
-    selectKey:  getLanguage(param).Map_Main_Menu.GRADUATE_BY,
+    selectKey: getLanguage(param).Map_Main_Menu.GRADUATE_BY,
     //'分级方式',
-    btntitle:  getLanguage(param).Map_Main_Menu.GRADUATE_BY,
+    btntitle: getLanguage(param).Map_Main_Menu.GRADUATE_BY,
     //'分级方式',
     action: () => {
       GLOBAL.toolBox &&
@@ -987,11 +986,11 @@ const graduatedSymbolMenuInfo = (param)=> [
     },
   },
   {
-    key:  getLanguage(param).Map_Main_Menu.DATUM_VALUE,
+    key: getLanguage(param).Map_Main_Menu.DATUM_VALUE,
     //'基准值',
-    selectKey:  getLanguage(param).Map_Main_Menu.DATUM_VALUE,
+    selectKey: getLanguage(param).Map_Main_Menu.DATUM_VALUE,
     //'基准值',
-    btntitle:  getLanguage(param).Map_Main_Menu.DATUM_VALUE,
+    btntitle: getLanguage(param).Map_Main_Menu.DATUM_VALUE,
     //'基准值',
     action: () => {
       GLOBAL.toolBox &&

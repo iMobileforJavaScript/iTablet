@@ -6,7 +6,7 @@ import { scaleSize, Toast } from '../../../../utils'
 // import { ConstToolType } from '../../../../constants'
 import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
 import { ThemeType, SMCollectorType } from 'imobile_for_reactnative'
-import {language, getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 export default class TemplateTab extends React.Component {
   props: {
     data: Array,
@@ -28,9 +28,12 @@ export default class TemplateTab extends React.Component {
 
   action = ({ item }) => {
     Toast.show(
-      //'当前选择为:' 
-      getLanguage(global.language).Prompt.THE_CURRENT_SELECTION
-      + item.code + ' ' + item.name)
+      //'当前选择为:'
+      getLanguage(global.language).Prompt.THE_CURRENT_SELECTION +
+        item.code +
+        ' ' +
+        item.name,
+    )
 
     // 找到对应的图层
     let layer, type, toolbarType

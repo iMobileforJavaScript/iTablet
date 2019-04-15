@@ -13,13 +13,14 @@ import { color, size } from '../../../styles'
 // import ConstPath from '../../../constants/ConstPath'
 // import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
+//eslint-disable-next-line
 import { Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
-import{ getLanguage }from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 
 export default class Find extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     user: Object,
   }
@@ -143,7 +144,7 @@ export default class Find extends Component {
           {/* {this._renderLine()} */}
           {this._renderItem({
             title: getLanguage(this.props.language).Prompt.PUBLIC_MAP,
-          //  Const.PUBLICMAP,
+            //  Const.PUBLICMAP,
             leftImagePath: require('../../../assets/Find/find_publicmap.png'),
             onClick: () => {
               NavigationService.navigate('PublicMap')
@@ -164,7 +165,7 @@ export default class Find extends Component {
             },
           })} */}
           {this._renderItem({
-            title:getLanguage(this.props.language).Prompt.SUPERMAP_KNOW,
+            title: getLanguage(this.props.language).Prompt.SUPERMAP_KNOW,
             // Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
             onClick: () => {

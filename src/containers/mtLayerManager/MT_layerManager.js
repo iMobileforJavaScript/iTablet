@@ -36,7 +36,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MT_layerManager extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     editLayer: Object,
     map: Object,
@@ -175,18 +175,24 @@ export default class MT_layerManager extends React.Component {
       dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
-          { title: getLanguage(this.props.language).Map_Layer.LAYERS,
-            //'我的图层', 
-            data: layers, visible: true },
           {
-            title:getLanguage(this.props.language).Map_Layer.BASEMAP,
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
+            data: layers,
+            visible: true,
+          },
+          {
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
             // '我的底图',
             data: baseMap,
             visible: true,
           },
-          { title: getLanguage(this.props.language).Map_Layer.PLOTS,
+          {
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
             //'我的标注',
-             data: dataList, visible: true },
+            data: dataList,
+            visible: true,
+          },
         ],
         selectLayer: this.props.currentLayer.caption,
         refreshing: false,
@@ -531,8 +537,8 @@ export default class MT_layerManager extends React.Component {
       this.props.navigation.navigate('MapView')
       Toast.show(
         //'当前图层为:'
-        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER
-         + data.name)
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER + data.name,
+      )
     }
   }
 
@@ -763,7 +769,9 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
+        if (
+          section.title === getLanguage(this.props.language).Map_Layer.PLOTS
+        ) {
           return (
             <TouchableOpacity
               key={item.name}
@@ -827,7 +835,9 @@ export default class MT_layerManager extends React.Component {
             </TouchableOpacity>
           )
         } else {
-          if (section.title === getLanguage(this.props.language).Map_Layer.LAYERS) {
+          if (
+            section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+          ) {
             action = this.onToolPress
             if (
               this.props.layers.length > 0 &&

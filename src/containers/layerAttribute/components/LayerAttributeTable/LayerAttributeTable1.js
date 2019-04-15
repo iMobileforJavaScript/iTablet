@@ -18,7 +18,7 @@ import { color } from '../../../../styles'
 import Row from './Row'
 
 import styles from './styles'
-import { language, getLanguage } from '../../../../language/index' 
+import { getLanguage } from '../../../../language/index'
 
 const COL_HEIGHT = scaleSize(80)
 
@@ -406,10 +406,10 @@ export default class LayerAttributeTable extends React.Component {
           alignItems: 'center',
         }}
       >
-        <IndicatorLoading 
-        title={getLanguage(global.language).Prompt.LOADING}
-  //{'加载中'}
-         />
+        <IndicatorLoading
+          title={getLanguage(global.language).Prompt.LOADING}
+          //{'加载中'}
+        />
       </View>
     )
   }

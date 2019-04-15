@@ -2,12 +2,12 @@ import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../styles'
 import { scaleSize } from '../../../utils'
-import{language, getLanguage }from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
   props: {
-    language:Object,
-    setLanguage:() => {},
+    language: Object,
+    setLanguage: () => {},
     modalVisible: Boolean,
     isLogin: Boolean,
     onCloseModal: () => {},
@@ -106,13 +106,15 @@ export default class HomePopupModal extends PureComponent {
           >
             {this._renderItem(
               //'切换账号'
-              getLanguage(this.props.language).Profile.SWITCH_ACCOUNT
-              , this.props.onToggleAccount)}
+              getLanguage(this.props.language).Profile.SWITCH_ACCOUNT,
+              this.props.onToggleAccount,
+            )}
             {/*{this._renderItem('注册', this.props.onRegister)}*/}
             {this._renderItem(
               //'退出登录'
-              getLanguage(this.props.language).Profile.LOG_OUT
-              , this.props.onLogout)}
+              getLanguage(this.props.language).Profile.LOG_OUT,
+              this.props.onLogout,
+            )}
           </View>
         )
       } else {
@@ -126,13 +128,13 @@ export default class HomePopupModal extends PureComponent {
               right: 0,
             }}
           >
-            { this._renderItem(
-              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG, 
-              this.props.onLogin
+            {this._renderItem(
+              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG,
+              this.props.onLogin,
             )}
-            { this._renderItem(
+            {this._renderItem(
               getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_REG,
-              this.props.onRegister
+              this.props.onRegister,
             )}
           </View>
         )
@@ -149,28 +151,30 @@ export default class HomePopupModal extends PureComponent {
             backgroundColor: color.contentColorWhite,
           }}
         >
-          { this._renderItem(
+          {this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_ABOUT,
-            this.props.onAbout
+            this.props.onAbout,
           )}
-          { this._renderItem(
-            this.props.language=='EN'?"Chinese":"英文版",
-            ()=>{
-              if(this.props.language=='EN'){
+          {this._renderItem(
+            this.props.language == 'EN' ? 'Chinese' : '英文版',
+            () => {
+              if (this.props.language == 'EN') {
                 this.props.setLanguage('CN')
-                global.language='CN'
-              }
-              else{
+                global.language = 'CN'
+              } else {
                 this.props.setLanguage('EN')
-                global.language='EN'
+                global.language = 'EN'
               }
-            })}
-          { this._renderItem(
+            },
+          )}
+          {this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_SETTING,
-            this.props.onSetting)}
-          { this._renderItem(
+            this.props.onSetting,
+          )}
+          {this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_EXIT,
-            this.closeApp)}
+            this.closeApp,
+          )}
         </View>
       )
     }

@@ -31,7 +31,7 @@ import { getLanguage } from '../../../../language/index'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
-    language:Object,
+    language: Object,
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
@@ -131,8 +131,7 @@ export default class Map3D extends React.Component {
     if (!this.name) {
       setTimeout(() => {
         this.container.setLoading(false)
-        Toast.show(
-           getLanguage(this.props.language).Prompt.NO_SCENE)
+        Toast.show(getLanguage(this.props.language).Prompt.NO_SCENE)
         //'无场景显示')
       }, 1500)
       return
@@ -222,8 +221,10 @@ export default class Map3D extends React.Component {
     // }
     // GLOBAL.sceneName = ''
     try {
-      this.container && this.container.setLoading(true, 
-        getLanguage(this.props.language).Prompt.CLOSING_3D,
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING_3D,
           //'正在关闭'
         )
       if (GLOBAL.openWorkspace) {
@@ -381,10 +382,11 @@ export default class Map3D extends React.Component {
               })
             }}
             value={this.state.inputText}
-            placeholder={getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT}
+            placeholder={
+              getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT
+            }
             // {'请输入文本内容'}
             style={styles.textInputStyle}
-           
           />
         </View>
         {this.state.placeholder && (

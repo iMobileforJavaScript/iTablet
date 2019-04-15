@@ -22,7 +22,7 @@ import { color, size } from '../../../../styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
-import { language, getLanguage } from '../../../../language/index' 
+import { getLanguage } from '../../../../language/index'
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -42,9 +42,13 @@ export default class MyService extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
-    this.publishServiceTitle = getLanguage(global.language).Profile.PRIVATE_SERVICE,
-    this.privateServiceTitle = getLanguage(global.language).Profile.PUBLIC_SERVICE,
-    this.state = {
+    ;(this.publishServiceTitle = getLanguage(
+      global.language,
+    ).Profile.PRIVATE_SERVICE),
+    (this.privateServiceTitle = getLanguage(
+      global.language,
+    ).Profile.PUBLIC_SERVICE),
+    (this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
       bPrivateServiceShow: true,
@@ -56,7 +60,7 @@ export default class MyService extends Component {
       modalIsVisible: false,
       isRefreshing: false,
       progressWidth: this.screenWidth * 0.6,
-    }
+    })
 
     this.serviceListTotal = -1
     this._renderItem = this._renderItem.bind(this)
@@ -489,7 +493,7 @@ export default class MyService extends Component {
               color: color.font_color_white,
             }}
           >
-          {getLanguage(global.language).Prompt.LOADING}
+            {getLanguage(global.language).Prompt.LOADING}
             {/* //加载中... */}
           </Text>
         </View>
@@ -575,7 +579,7 @@ export default class MyService extends Component {
         ref={ref => (this.container = ref)}
         headerProps={{
           title: getLanguage(global.language).Profile.MY_SERVICE,
-            
+
           //'我的服务',
           withoutBack: false,
           navigation: this.props.navigation,

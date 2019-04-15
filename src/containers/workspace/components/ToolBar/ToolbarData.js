@@ -9,8 +9,8 @@ import CollectionData from './CollectionData'
 import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
-import { language,getLanguage } from '../../../../language/index'
- 
+import { getLanguage } from '../../../../language/index'
+
 // let _params = {}
 
 // 更新类中的数据
@@ -291,7 +291,7 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'cancel',
-          title:  getLanguage(global.language).Prompt.CANCEL,
+          title: getLanguage(global.language).Prompt.CANCEL,
           //'取消',
           action: () => {
             SScene.clearSelection()

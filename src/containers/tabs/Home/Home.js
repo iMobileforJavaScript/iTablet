@@ -19,13 +19,13 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
-import{languag,getLanguage }from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
-    language:Object,
-    setLanguage:() => {},
+    language: Object,
+    setLanguage: () => {},
     nav: Object,
     latestMap: Object,
     currentUser: Object,
@@ -260,7 +260,9 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{getLanguage(this.props.language).Prompt.DOWNLOAD_SAMPLE_DATA}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.DOWNLOAD_SAMPLE_DATA}
+        </Text>
         <Text style={styles.depict}>
           {fileName}
           {storage}
@@ -274,8 +276,8 @@ export default class Home extends Component {
         >
           <Image source={Img} style={styles.checkImg} />
           <Text style={styles.dialogCheck}>
-          {getLanguage(this.props.language).Prompt.NO_REMINDER}
-          {/* 不再提示 */}
+            {getLanguage(this.props.language).Prompt.NO_REMINDER}
+            {/* 不再提示 */}
           </Text>
         </TouchableOpacity>
       </View>
@@ -290,8 +292,8 @@ export default class Home extends Component {
           style={styles.dialogHeaderImg}
         />
         <Text style={styles.promptTtile}>
-        {getLanguage(this.props.language).Prompt.QUIT}
-        {/* 确定退出SuperMap iTablet ？ */}
+          {getLanguage(this.props.language).Prompt.QUIT}
+          {/* 确定退出SuperMap iTablet ？ */}
         </Text>
       </View>
     )

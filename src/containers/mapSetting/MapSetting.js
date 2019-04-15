@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
+//eslint-disable-next-line
 import { MAP_MODULE } from '../../constants'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
@@ -14,7 +15,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MapSetting extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     currentMap: Object,
     data: Array,
@@ -74,7 +75,6 @@ export default class MapSetting extends Component {
     let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
     let isEnableRotateTouch = SMap.isEnableRotateTouch()
     let isEnableSlantTouch = SMap.isEnableSlantTouch()
-
 
     let newData = getMapSettings()
     newData[0].data[0].value = isEnableRotateTouch
@@ -152,23 +152,23 @@ export default class MapSetting extends Component {
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
       case getLanguage(this.props.language).Map_Setting.ROTATION_GRSTURE:
-      //'手势旋转':
+        //'手势旋转':
         SMap.enableRotateTouch(value)
         break
       case getLanguage(this.props.language).Map_Setting.PITCH_GESTURE:
-      //'手势俯仰':
+        //'手势俯仰':
         SMap.enableSlantTouch(value)
         break
       case getLanguage(this.props.language).Map_Setting.ANTI_ALIASING_MAP:
-      //'反走样地图':
+        //'反走样地图':
         SMap.setAntialias(value)
         break
       case getLanguage(this.props.language).Map_Setting.SHOW_OVERLAYS:
-      //'显示压盖对象':
+        //'显示压盖对象':
         SMap.setOverlapDisplayed(value)
         break
       case getLanguage(this.props.language).Map_Setting.FIX_SCALE:
-      //'固定比例尺':
+        //'固定比例尺':
         SMap.setVisibleScalesEnabled(value)
         break
       case '专题图图例':
@@ -229,7 +229,7 @@ export default class MapSetting extends Component {
         //MAP_MODULE.MAP_COLLECTION
         break
       case constants.MAP_EDIT:
-        title =getLanguage(this.props.language).Map_Module.MAP_EDIT
+        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
         //MAP_MODULE.MAP_EDIT
         break
       case constants.MAP_3D:

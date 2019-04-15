@@ -21,7 +21,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
-import { language,getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -124,7 +124,7 @@ export default class MyModule extends Component {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       data = [
         {
-          title:  getLanguage(global.language).Profile.DELETE_DATA,
+          title: getLanguage(global.language).Profile.DELETE_DATA,
           //'删除数据',
           action: async () => {
             try {
