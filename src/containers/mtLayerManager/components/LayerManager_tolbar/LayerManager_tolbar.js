@@ -468,7 +468,10 @@ export default class LayerManager_tolbar extends React.Component {
       let themeType = this.state.layerdata.themeType
       let type = this.state.layerdata.type
       if (parseInt(themeType) > 0) {
-        Toast.show('不支持由该图层创建专题图')
+        Toast.show(
+          getLanguage(global.language).Prompt.LAYER_CANNOT_CREATE_THEMATIC_MAP
+          //'不支持由该图层创建专题图'
+          )
       } else if (
         parseInt(type) === 1 ||
         parseInt(type) === 3 ||
@@ -495,7 +498,10 @@ export default class LayerManager_tolbar extends React.Component {
         // eslint-disable-next-line react/prop-types
         this.props.navigation.navigate('MapView')
       } else {
-        Toast.show('不支持由该图层创建专题图')
+        Toast.show( 
+          getLanguage(global.language).Prompt.LAYER_CANNOT_CREATE_THEMATIC_MAP
+        //'不支持由该图层创建专题图'
+        )
       }
     } else if (
       section.title === '设置图层可选' ||

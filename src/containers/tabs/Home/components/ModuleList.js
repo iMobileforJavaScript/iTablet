@@ -114,7 +114,10 @@ class RenderModuleItem extends Component {
               source={item.moduleImage}
               style={styles.moduleImage}
             />
-            <Text style={styles.title}>{item.title}</Text>
+            <Text style={item.key==='专题制图'&&global.language==='EN'?
+              styles.longtitle:styles.title}>
+            {item.title}
+            </Text>
           </View>
           {this._renderProgressView()}
         </TouchableOpacity>
@@ -263,7 +266,7 @@ export class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  itemAction = async ({ item, index }) => {
+  itemAction = async (language,{ item, index }) => {
     try {
       let fileName
       let moduleKey = item.key
@@ -286,6 +289,7 @@ export class ModuleList extends Component {
       } else if (moduleKey === '应急标绘') {
         fileName = '湖南'
       }
+      
       let homePath = await FileTools.appendingHomeDirectory()
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
@@ -406,7 +410,7 @@ export class ModuleList extends Component {
         importWorkspace={this.props.importWorkspace}
         showDialog={this.props.showDialog}
         getMoudleItem={this.props.getMoudleItem}
-        itemAction={() => this.itemAction({ item, index })}
+        itemAction={() => this.itemAction(this.props.language,{ item, index })}
       />
     )
   }
@@ -514,7 +518,15 @@ const styles = StyleSheet.create({
   },
   title: {
     width: scaleSize(130),
-    height: scaleSize(32),
+    height: scaleSize(37),
+    fontSize: setSpText(25),
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: scaleSize(13),
+  },
+  longtitle: {
+    width: scaleSize(130),
+    height: scaleSize(70),
     fontSize: setSpText(25),
     color: '#FFFFFF',
     textAlign: 'center',

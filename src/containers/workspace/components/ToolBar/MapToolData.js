@@ -139,7 +139,8 @@ function getMapTool(type, params) {
         // },
         {
           key: 'rectangularCut',
-          title: '矩形裁剪',
+          title:getLanguage(global.language).Map_Main_Menu.TOOLS_RECTANGLE_CLIP, 
+          //'矩形裁剪',
           action: rectangleCut,
           size: 'large',
           image: getPublicAssets().mapTools.tools_rectangle_cut,

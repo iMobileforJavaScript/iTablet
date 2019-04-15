@@ -27,6 +27,7 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 // import UserType from '../../../../constants/UserType'
 // import RNFS from 'react-native-fs'
+import { language,getLanguage } from '../../../../language/index'
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
@@ -244,7 +245,8 @@ export default class MyOnlineData extends Component {
         let objContent = arrDataContent[i]
         objContent.isDownloading = true
         let fileSize = (objContent.size / 1024 / 1024).toFixed(2) + 'MB'
-        objContent.downloadingProgress = '下载 (' + fileSize + ')'
+        objContent.downloadingProgress =  
+        getLanguage(global.language).Prompt.DOWNLOAD+'(' + fileSize + ')'
         newData.push(objContent)
       }
     } catch (e) {

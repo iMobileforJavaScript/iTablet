@@ -809,8 +809,8 @@ export default class MyLocalData extends Component {
 
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
-      let data,
-        title = getLanguage(this.props.language).Profile.SHARE
+      let data
+      let title = getLanguage(this.props.language).Profile.SHARE
         //'分享'
       if (
         this.props.user.currentUser.userName &&
@@ -823,7 +823,7 @@ export default class MyLocalData extends Component {
         if (this.state.sectionData[0].title.indexOf('我的地图') !== -1) {
           data = [
             {
-              title: '分享',
+              title: getLanguage(this.props.language).Profile.SHARE,
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
@@ -845,7 +845,8 @@ export default class MyLocalData extends Component {
         } else {
           data = [
             {
-              title: '分享',
+              title: getLanguage(this.props.language).Profile.SHARE,
+              //'分享',
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
