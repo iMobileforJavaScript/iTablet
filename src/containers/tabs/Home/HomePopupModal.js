@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../styles'
 import { scaleSize } from '../../../utils'
-import{language, getLanguage }from '../../../language/index'
+import{ getLanguage }from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
   props: {
@@ -127,7 +127,7 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             { this._renderItem(
-              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG, 
+              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG,
               this.props.onLogin
             )}
             { this._renderItem(
@@ -154,7 +154,7 @@ export default class HomePopupModal extends PureComponent {
             this.props.onAbout
           )}
           { this._renderItem(
-            this.props.language=='EN'?"Chinese":"英文版",
+            this.props.language=='EN'?"简体中文":"English",
             ()=>{
               if(this.props.language=='EN'){
                 this.props.setLanguage('CN')
