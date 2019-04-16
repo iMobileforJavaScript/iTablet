@@ -62,7 +62,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
-    mapLegend: PropTypes.boolean,
+    mapLegend: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -186,7 +186,7 @@ export default class MapView extends React.Component {
 
   componentDidMount() {
     GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    this.container && this.container.setLoading(true, '地图加载中')
+    this.setLoading(true, '地图加载中')
     let timer = setTimeout(() => {
       this.setState({
         showMap: true,
@@ -305,11 +305,10 @@ export default class MapView extends React.Component {
     if (!this.map || !this.mapControl || !this.workspace) return
     this.saveLatest(
       async function() {
-        this.container &&
-          this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
+        this.setLoading(true, '正在关闭', { bgColor: 'white' })
         this.clearData()
         this._removeGeometrySelectedListener()
-        this.container && this.container.setLoading(false)
+        this.setLoading(false)
         cb && cb()
       }.bind(this),
     )
@@ -497,7 +496,7 @@ export default class MapView extends React.Component {
 
   // 地图保存为xml(fileName, cb)
   saveMapToXML = mapName => {
-    this.container.setLoading(true, '正在保存')
+    this.setLoading(true, '正在保存')
     ;(async function() {
       try {
         const filePath =
@@ -508,10 +507,10 @@ export default class MapView extends React.Component {
         SMap.saveMapToXML(filePath).then(result => {
           if (!result) {
             Toast.show('保存失败')
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
             Toast.show('保存成功')
-            this.container.setLoading(false)
+            this.setLoading(false)
             //获取数据源
             //修改数据
             SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
@@ -535,14 +534,14 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveXMLDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
 
   // 地图保存为xml(fileName, cb)
   saveMapToXMLWithDialog = ({ mapName }) => {
-    // this.container.setLoading(true, '正在保存')
+    // this.setLoading(true, '正在保存')
     (async function() {
       try {
         const filePath =
@@ -554,11 +553,11 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.saveXMLDialog.setDialogVisible(false)
-            // this.container.setLoading(false)
+            // this.setLoading(false)
           } else {
             Toast.show('保存成功')
             this.saveXMLDialog.setDialogVisible(false)
-            // this.container.setLoading(false)
+            // this.setLoading(false)
             this.mapType = 'LOAD'
             //获取数据源
             SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
@@ -574,7 +573,7 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveXMLDialog.setDialogVisible(false)
-        // this.container.setLoading(false)
+        // this.setLoading(false)
       }
     }.bind(this)())
   }
@@ -604,7 +603,7 @@ export default class MapView extends React.Component {
 
   // 地图保存为xml 同时 关闭地图
   saveMapToXMLAndClose = () => {
-    // this.container.setLoading(true, '正在保存')
+    // this.setLoading(true, '正在保存')
     (async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -618,10 +617,10 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.saveMapDialog.setDialogVisible(false)
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
             Toast.show('保存成功')
-            this.container.setLoading(false)
+            this.setLoading(false)
             this.saveMapDialog.setDialogVisible(false)
             //获取数据源
             //修改数据
@@ -638,14 +637,14 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveMapDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.container.setLoading(true, '正在保存')
+    this.setLoading(true, '正在保存')
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -659,10 +658,10 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.AlertDialog.setDialogVisible(false)
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
             Toast.show('保存成功')
-            this.container.setLoading(false)
+            this.setLoading(false)
             this.AlertDialog.setDialogVisible(false)
             //获取数据源
             //修改数据
@@ -688,7 +687,7 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.AlertDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
@@ -816,7 +815,10 @@ export default class MapView extends React.Component {
   _addMap = () => {
     (async function() {
       try {
-        if (this.wsData === null) return
+        if (this.wsData === null || this.wsData === undefined) {
+          this.setLoading(false)
+          return
+        }
 
         if (this.wsData instanceof Array) {
           for (let i = 0; i < this.wsData.length; i++) {
@@ -886,9 +888,9 @@ export default class MapView extends React.Component {
           },
         )
         this._addGeometrySelectedListener()
-        this.container.setLoading(false)
+        this.setLoading(false)
       } catch (e) {
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
       this.showMarker &&
         SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
@@ -897,7 +899,7 @@ export default class MapView extends React.Component {
 
   _openWorkspace = async (wsData, index = -1) => {
     if (!wsData.DSParams || !wsData.DSParams.server) {
-      this.container.setLoading(false)
+      this.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
@@ -906,20 +908,20 @@ export default class MapView extends React.Component {
       let result = await this.props.openWorkspace(wsData.DSParams)
       result && this.props.openMap(index)
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 
   _openDatasource = async (wsData, index = -1) => {
     if (!wsData.DSParams || !wsData.DSParams.server) {
-      this.container.setLoading(false)
+      this.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
     try {
       await SMap.openDatasource(wsData.DSParams, index)
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 
@@ -950,7 +952,7 @@ export default class MapView extends React.Component {
         this.setVisible(false)
       }
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 

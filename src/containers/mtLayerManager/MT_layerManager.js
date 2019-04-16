@@ -60,7 +60,7 @@ export default class MT_layerManager extends React.Component {
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
       selectLayer: this.props.currentLayer.caption,
-      type: params && params.type, // 底部Tabbar类型
+      type: (params && params.type) || GLOBAL.Type, // 底部Tabbar类型
     }
   }
 

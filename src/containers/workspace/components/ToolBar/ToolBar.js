@@ -2257,7 +2257,7 @@ export default class ToolBar extends React.PureComponent {
   themeCommit = () => {
     (async function() {
       if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
-        let result = true
+        let resultArr = []
         let datasetNames =
           (this.toolBarSectionList &&
             this.toolBarSectionList.getSelectList()) ||
@@ -2266,15 +2266,28 @@ export default class ToolBar extends React.PureComponent {
           Toast.show('请先选择要添加的数据集')
           return
         }
-        result = await SMap.addLayers(
+        resultArr = await SMap.addLayers(
           datasetNames,
           this.state.themeDatasourceAlias,
         )
-        result &&
+
+        // 找出有默认样式的数据集，并给对应图层设置
+        for (let i = 0; i < resultArr.length; i++) {
+          let description =
+            resultArr[i].description && JSON.parse(resultArr[i].description)
+          if (description && description.geoStyle) {
+            await SMap.setLayerStyle(
+              resultArr[i].layerName,
+              JSON.stringify(description.geoStyle),
+            )
+          }
+        }
+
+        if (resultArr && resultArr.length > 0) {
           this.props.getLayers(-1, layers => {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
-        if (result) {
+
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show('添加成功')
