@@ -11,7 +11,7 @@ const Chinese ={
   DOWNLOAD_SAMPLE_DATA:"是否下载样例数据？",
   DOWNLOAD:'下载',
   DOWNLOADING:'下载中',
-  DOWNLOAD_SUCCESSFULLY:'下载完成',
+  DOWNLOAD_SUCCESSFULLY:'已下载',
 
   NO_REMINDER:"下次不再提醒",
 
