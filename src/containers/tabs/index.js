@@ -126,17 +126,26 @@ const Tabs = TabNavigator(
         return {
           tabBarLabel: data => {
             return (
-              <View style={[styles.labelView]}>
-                <Image
-                  resizeMode="contain"
-                  source={
-                    data.focused
-                      ? getThemeAssets().tabBar.tab_friend_selected
-                      : getThemeAssets().tabBar.tab_friend
-                  }
-                  style={styles.icon}
+              // <View style={[styles.labelView]}>
+              //   <Image
+              //     resizeMode="contain"
+              //     source={
+              //       data.focused
+              //         ? getThemeAssets().tabBar.tab_friend_selected
+              //         : getThemeAssets().tabBar.tab_friend
+              //     }
+              //     style={styles.icon}
+              //   />
+              //   <Text style={styles.tabText}>好友</Text>
+              // <InformSpot />
+              // </View>
+              <View>
+                <TabBarLabel
+                  data={data}
+                  title={'friend'}
+                  source_focuse={getThemeAssets().tabBar.tab_friend_selected}
+                  source_unfocuse={getThemeAssets().tabBar.tab_friend}
                 />
-                <Text style={styles.tabText}>好友</Text>
                 <InformSpot />
               </View>
             )

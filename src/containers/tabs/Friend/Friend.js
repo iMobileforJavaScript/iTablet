@@ -26,7 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstant from './MsgConstant'
-import{getLanguage}from '../../../language/index'
+import { getLanguage } from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
@@ -35,7 +35,7 @@ let addFriendImg = getThemeAssets().friend.friend_add
 let g_connectService = false
 export default class Friend extends Component {
   props: {
-    language:Object,
+    language: Object,
     navigation: Object,
     user: Object,
     chat: Array,
@@ -122,8 +122,8 @@ export default class Friend extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)||
-      prevProps.language!==this.props.language
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language !== this.props.language
     ) {
       return true
     }
@@ -415,7 +415,10 @@ export default class Friend extends Component {
         }
 
         //文件通知消息
-        if (messageObj.message.type && messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
+        if (
+          messageObj.message.type &&
+          messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY
+        ) {
           messageObj.message.message.isReceived = 0
         }
 
@@ -512,11 +515,13 @@ export default class Friend extends Component {
       NavigationService.navigate('AddFriend', {
         user: this.props.user.currentUser,
         friend: this,
+        language: this.props.language,
       })
     } else if (index === 2) {
       NavigationService.navigate('CreateGroupChat', {
         user: this.props.user.currentUser,
         friend: this,
+        language: this.props.language,
       })
     }
   }
@@ -595,7 +600,7 @@ export default class Friend extends Component {
         >
           <FriendMessage
             ref={ref => (this.friendMessage = ref)}
-            tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
+            tabLabel={getLanguage(this.props.language).Friends.MESSAGES}
             //"消息"
             language={this.props.language}
             user={this.props.user.currentUser}

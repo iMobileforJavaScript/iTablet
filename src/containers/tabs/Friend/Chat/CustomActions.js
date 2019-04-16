@@ -13,7 +13,7 @@ import {
   Image,
   Platform,
 } from 'react-native'
-
+import { getLanguage } from '../../../../language/index'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
@@ -32,7 +32,7 @@ const ICONS = context => [
   {
     name: require('../../../../assets/lightTheme/friend/app_chat_map.png'),
     type: 'ionicon',
-    text: '地图',
+    text: getLanguage(global.language).Friends.MAP,
     onPress: () => {
       NavigationService.navigate('MyData', {
         title: Const.MAP,
@@ -49,7 +49,7 @@ const ICONS = context => [
   {
     name: require('../../../../assets/lightTheme/friend/app_chat_data.png'),
     type: 'ionicon',
-    text: '模版',
+    text: getLanguage(global.language).Friends.TEMPLATE,
     onPress: () => {
       NavigationService.navigate('MyModule', {
         formChat: true,
@@ -62,7 +62,7 @@ const ICONS = context => [
   {
     name: require('../../../../assets/lightTheme/friend/app_chat_location.png'),
     type: 'material',
-    text: '位置',
+    text: getLanguage(global.language).Friends.LOCATION,
     onPress: () => {
       context.setModalVisible()
       context.handleLocationClick()
@@ -211,7 +211,9 @@ export default class CustomActions extends React.Component {
           )
         },
         error => {
-          alert('获取位置失败：' + error)
+          alert(
+            getLanguage(global.language).Friends.LOACTION_FAILED + '：' + error,
+          )
         },
       )
     } else {
@@ -247,7 +249,7 @@ const modalStyles = StyleSheet.create({
     alignItems: 'center',
     marginTop: scaleSize(20),
     marginLeft: scaleSize(20),
-    width: scaleSize(90),
+    width: scaleSize(110),
     height: scaleSize(90),
   },
   textStyle: {

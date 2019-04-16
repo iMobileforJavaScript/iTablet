@@ -28,9 +28,11 @@ import { Dialog } from '../../../../components/Dialog'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 // import { styles } from './../Styles'
+import { getLanguage } from '../../../../language/index'
 
 class FriendGroup extends Component {
   props: {
+    language: String,
     friend: Object,
     user: Object,
     chat: Array,
@@ -66,7 +68,8 @@ class FriendGroup extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language !== this.props.language
     ) {
       return true
     }
@@ -199,7 +202,7 @@ class FriendGroup extends Component {
               colors={['orange', 'red']}
               tintColor={'orange'}
               titleColor={'orange'}
-              title={'刷新中...'}
+              title={getLanguage(this.props.language).Friends.LOADING}
               enabled={true}
             />
           }
@@ -213,7 +216,7 @@ class FriendGroup extends Component {
   _showPopover = (pressView, item) => {
     this.target = item
     let obj = {
-      title: '设置备注',
+      title: getLanguage(this.props.language).Friends.SET_MARK_NAME,
       onPress: () => {
         this.inputdialog.setDialogVisible(true)
       },
@@ -222,7 +225,7 @@ class FriendGroup extends Component {
       let items = [
         obj,
         {
-          title: '删除群聊',
+          title: getLanguage(this.props.language).Friends.DEL_GROUP,
           onPress: () => {
             this.dialog.setDialogVisible(true)
           },
@@ -383,7 +386,9 @@ class FriendGroup extends Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={dialogStyles.dialogHeaderImgX}
         />
-        <Text style={dialogStyles.promptTtileX}>将该群聊删除?</Text>
+        <Text style={dialogStyles.promptTtileX}>
+          {getLanguage(this.props.language).Friends.DEL_GROUP_CONFIRM}
+        </Text>
       </View>
     )
   }
@@ -392,8 +397,8 @@ class FriendGroup extends Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Friends.CANCEL}
         confirmAction={this._deleteGroup}
         opacity={1}
         opacityStyle={styles.opacityView}
@@ -422,19 +427,25 @@ class FriendGroup extends Component {
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}
-            accessibilityLabel={'文本内容'}
+            accessibilityLabel={
+              getLanguage(this.props.language).Friends.TEXT_CONTENT
+            }
             onChangeText={text => {
               this.setState({
                 inputText: text,
               })
             }}
             value={this.state.inputText}
-            placeholder={'请输入备注名'}
+            placeholder={
+              getLanguage(this.props.language).Friends.INPUT_MARK_NAME
+            }
             style={inputStyles.textInputStyle}
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
+          <Text style={styles.placeholder}>
+            {getLanguage(this.props.language).Friends.INPUT_INVALID}
+          </Text>
         )}
       </Dialog>
     )

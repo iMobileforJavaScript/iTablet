@@ -19,6 +19,7 @@ import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
+import { getLanguage } from '../../../../language/index'
 // import ConstPath from '../../../../constants/ConstPath'
 // import { FileTools } from '../../../../native'
 
@@ -40,6 +41,7 @@ class CreateGroupChat extends Component {
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
+    this.language = this.props.navigation.getParam('language')
   }
 
   refresh = () => {
@@ -188,12 +190,17 @@ class CreateGroupChat extends Component {
     //偏移量 = （设备高度 - 字母索引高度 - 底部导航栏 - 顶部标题栏 - 24）/ 2
     // const top_offset = (Dimensions.get('window').height - letterArr.length*scaleSize(35) - 24) / 2;
 
-    let nSelect = '确定(' + this.state.seletctArr.length + ')'
+    let nSelect =
+      getLanguage(this.language).Friends.CONFIRM2 +
+      '(' +
+      this.state.seletctArr.length +
+      ')'
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '选择好友',
+          title: getLanguage(this.language).Friends.TITLE_CHOOSE_FRIEND,
+          // '选择好友',
           withoutBack: false,
           navigation: this.props.navigation,
           headerRight: (
@@ -201,7 +208,9 @@ class CreateGroupChat extends Component {
               onPress={() => {
                 {
                   if (this.state.seletctArr.length < 2) {
-                    Toast.show('少于两人不能发起群聊')
+                    Toast.show(
+                      getLanguage(this.language).Friends.TOAST_CHOOSE_2,
+                    )
                     return
                   }
                   NavigationService.goBack()
@@ -250,7 +259,7 @@ class CreateGroupChat extends Component {
                 }}
               >
                 <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
-                  您还未添加好友哦
+                  {getLanguage(this.language).Friends.NO_FRIEND}
                 </Text>
               </View>
             )} // 数据为空时调用

@@ -33,6 +33,7 @@ import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
+import { getLanguage } from '../../../../language/index'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -139,14 +140,16 @@ class Chat extends React.Component {
     // })
   }
 
-  onReceiveProgress (value)  {
-    this.setState({ messages: this.state.messages.map(m => {
-      if(m._id === value.msgId){
-        m.message.message.progress = value.percentage
-      }
-      return {
-        ...m,
-      }}),
+  onReceiveProgress(value) {
+    this.setState({
+      messages: this.state.messages.map(m => {
+        if (m._id === value.msgId) {
+          m.message.message.progress = value.percentage
+        }
+        return {
+          ...m,
+        }
+      }),
     })
     //todo input to redux
     // this.friend._onReceiveProgress(value)
@@ -558,7 +561,8 @@ class Chat extends React.Component {
             renderMessageText={props => {
               if (
                 props.currentMessage.message.type &&
-                props.currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
+                props.currentMessage.message.type ===
+                  MSGConstant.MSG_FILE_NOTIFY
               ) {
                 return null
               }
@@ -686,16 +690,24 @@ class Chat extends React.Component {
     )
   }
   //渲染标记
-  renderTicks (props) {
-    let currentMessage  = props
-    if (currentMessage.message.type && currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY) {
+  renderTicks(props) {
+    let currentMessage = props
+    if (
+      currentMessage.message.type &&
+      currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
+    ) {
       let progress = currentMessage.message.message.progress
       return (
         <View style={styles.tickView}>
-          <Text style={currentMessage.user._id !== this.curUser.userId
-            ? styles.tickLeft
-            : [styles.tickLeft, styles.tickRight]
-          }>{progress === 100 ? '✓' : (progress === 0 ? '' : progress + '%')}</Text>
+          <Text
+            style={
+              currentMessage.user._id !== this.curUser.userId
+                ? styles.tickLeft
+                : [styles.tickLeft, styles.tickRight]
+            }
+          >
+            {progress === 100 ? '✓' : progress === 0 ? '' : progress + '%'}
+          </Text>
         </View>
       )
     }
@@ -736,20 +748,24 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.import = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.import.setDialogVisible(false)
-          GLOBAL.Loading.setLoading(true, '数据导入中')
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Friends.IMPORT_DATA,
+          )
 
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
-              result && Toast.show('导入成功')
+              result &&
+                Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
             },
             () => {
               GLOBAL.Loading.setLoading(false)
-              Toast.show('导入失败')
+              Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
             },
           )
         }}
@@ -774,7 +790,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否导入数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.IMPORT_CONFIRM}
+        </Text>
       </View>
     )
   }
@@ -784,8 +802,8 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.download = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.download.setDialogVisible(false)
           this.receiveFile(this.downloadmessage, this.downloadreceivePath)
@@ -809,7 +827,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否接收数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.RECEIVE_CONFIRM}
+        </Text>
       </View>
     )
   }
