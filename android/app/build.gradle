@@ -161,7 +161,6 @@ android {
 
 dependencies {
     implementation project(':react-native-amap-geolocation')
-    implementation project(':react-native-maps')
     api project(':react-native-splash-screen')
     api project(':react-native-fs')
     api project(':react-native-orientation')
