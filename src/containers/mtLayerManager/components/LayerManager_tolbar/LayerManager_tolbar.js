@@ -472,8 +472,7 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
       //'设置为当前图层'
-
-      if (this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE) {
+      if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT || this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE) {
         this.cb && this.cb(this.layer3dItem)
         this.setVisible(false)
         let overlayView = this.props.getOverlayView
