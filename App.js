@@ -37,7 +37,7 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstans from "./src/containers/tabs/Friend/MsgConstans"
+import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
 
 const {persistor, store} = ConfigStore()
@@ -145,11 +145,11 @@ class AppRoot extends Component {
     }
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
       SMessageService.connectService(
-        MSGConstans.MSG_IP,
-        MSGConstans.MSG_Port,
-        MSGConstans.MSG_HostName,
-        MSGConstans.MSG_UserName,
-        MSGConstans.MSG_Password,
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
     }
@@ -302,7 +302,7 @@ class AppRoot extends Component {
 
   addGetShareResultListener = async () => {
     await FileTools.getShareResult({
-      callback: result => {
+      callback: () => {
         if(GLOBAL.shareFilePath&&GLOBAL.shareFilePath.length>1){
           // FileTools.deleteFile(GLOBAL.shareFilePath)
         }
@@ -494,7 +494,7 @@ class AppRoot extends Component {
             result && Toast.show('导入成功')
           }, () => {
             GLOBAL.Loading.setLoading(false)
-            result && Toast.show('导入失败')
+            Toast.show('导入失败')
           })
         }}
         cancelAction={ async () => {
