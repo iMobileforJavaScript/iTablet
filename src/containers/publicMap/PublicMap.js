@@ -373,7 +373,7 @@ export default class PublicMap extends Component {
             textAlign: 'center',
           }}
         >
-          -----这是底线-----
+          {/* -----这是底线----- */}
         </Text>
       </View>
     )

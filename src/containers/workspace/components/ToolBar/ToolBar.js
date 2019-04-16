@@ -2347,7 +2347,7 @@ export default class ToolBar extends React.PureComponent {
         if (result) {
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
-          Toast.show('添加成功')
+          Toast.show( getLanguage(this.props.language).Prompt.ADD_SUCCESS)
         } else {
           Toast.show('添加失败')
         }
@@ -3432,7 +3432,7 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        if (section.title === Const.DATA_SOURCE) {
+        if (section.title === getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE) {
           // 添加数据集
           this.lastUdbList = this.state.data //保存上次的数据源数据
           this.props.setContainerLoading &&
@@ -3496,14 +3496,19 @@ export default class ToolBar extends React.PureComponent {
             )
             // this.setLastState()
           })
-        } else if (section.title === Const.MAP) {
+        } else if (section.title === getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP) {
           // 添加地图
           this.props.setContainerLoading &&
-            this.props.setContainerLoading(true, ConstInfo.ADDING_MAP)
+            this.props.setContainerLoading(
+              true,
+              getLanguage(this.props.language).Prompt.LOADING,
+            )
           SMap.addMap(item.name || item.title).then(async result => {
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
-            Toast.show(result ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED)
+            Toast.show(result ?
+              getLanguage(this.props.language).Prompt.ADD_SUCCESS
+              : ConstInfo.ADD_FAILED)
             if (result) {
               await this.props.getLayers(-1, layers => {
                 this.props.setCurrentLayer(layers.length > 0 && layers[0])
@@ -3523,7 +3528,9 @@ export default class ToolBar extends React.PureComponent {
         }
         let result = await SMap.openDatasource(udbpath, index)
         Toast.show(
-          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+          result === true ?
+            getLanguage(this.props.language).Prompt.ADD_SUCCESS
+            : ConstInfo.ADD_FAILED,
         )
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_OPEN) {
