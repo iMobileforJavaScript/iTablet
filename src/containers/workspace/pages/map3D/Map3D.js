@@ -31,7 +31,7 @@ import { getLanguage } from '../../../../language/index'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
-    language: Object,
+    language: String,
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
