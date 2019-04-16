@@ -13,6 +13,7 @@ import { FileTools } from '../../native'
 import ConstPath from '../../constants/ConstPath'
 import { color } from '../../styles'
 import UserType from '../../constants/UserType'
+import { getLanguage } from '../../language'
 
 export default class RenderFindItem extends Component {
   props: {
@@ -23,7 +24,8 @@ export default class RenderFindItem extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      progress: '下载',
+      progress: getLanguage(global.language).Prompt.DOWNLOAD,
+      // '下载',
       isDownloading: false,
     }
   }
@@ -56,10 +58,14 @@ export default class RenderFindItem extends Component {
           this.props.user.currentUser.userName !== ''))
     ) {
       if (this.state.isDownloading) {
-        Toast.show('正在下载...')
+        Toast.show(getLanguage(global.language).Prompt.DOWNLOADING)
+        //'正在下载...')
         return
       }
-      this.setState({ progress: '下载中...', isDownloading: true })
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOADING,
+        isDownloading: true,
+      })
       let dataId = this.props.data.id
       let dataUrl =
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
@@ -90,7 +96,7 @@ export default class RenderFindItem extends Component {
         progress: res => {
           let value = ~~res.progress.toFixed(0)
           // console.warn("value:"+value)
-          let progress = '下载:' + value + '%'
+          let progress = value + '%'
           if (this.state.progress !== progress) {
             this.setState({ progress })
           }
@@ -100,7 +106,12 @@ export default class RenderFindItem extends Component {
         const ret = RNFS.downloadFile(downloadOptions)
         ret.promise
           .then(async () => {
-            this.setState({ progress: '下载完成', isDownloading: false })
+            this.setState({
+              progress: getLanguage(global.language).Prompt
+                .DOWNLOAD_SUCCESSFULLY,
+              //'下载完成',
+              isDownloading: false,
+            })
             let savePath =
               appHome +
               ConstPath.UserPath +
@@ -239,7 +250,7 @@ export default class RenderFindItem extends Component {
               style={{
                 fontSize: 12,
                 textAlign: 'center',
-                width: 100,
+                width: 125,
                 color: fontColor,
               }}
               numberOfLines={1}

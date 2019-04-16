@@ -18,6 +18,7 @@ import { color } from '../../../../styles'
 import Row from './Row'
 
 import styles from './styles'
+import { getLanguage } from '../../../../language/index'
 
 const COL_HEIGHT = scaleSize(80)
 
@@ -291,10 +292,10 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       data.length > 0 &&
-      data[0].name !== '序号'
+      data[0].name !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
       data.unshift({
-        name: '序号',
+        name: getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
         value: this.props.startIndex + index,
         fieldInfo: {},
       })
@@ -324,9 +325,9 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       titles.length > 0 &&
-      titles[0] !== '序号'
+      titles[0] !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
-      titles.unshift('序号')
+      titles.unshift(getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO)
     }
     return (
       <Row
@@ -405,7 +406,10 @@ export default class LayerAttributeTable extends React.Component {
           alignItems: 'center',
         }}
       >
-        <IndicatorLoading title={'加载中'} />
+        <IndicatorLoading
+          title={getLanguage(global.language).Prompt.LOADING}
+          //{'加载中'}
+        />
       </View>
     )
   }

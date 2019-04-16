@@ -9,6 +9,7 @@ import constants from '../../constants'
 import { ConstToolType, ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
+import { getLanguage } from '../../../../language/index'
 
 let _params = {}
 
@@ -43,7 +44,8 @@ function getCollectionOperationData(type, params) {
         : SMCollectorType.REGION_GPS_POINT
   data.push({
     key: 'gpsPoint',
-    title: 'GPS打点',
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_POINTS_BY_GPS,
+    //'GPS打点',
     action: () => showCollection(gpsPointType),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_collection_point_collect.png'),
@@ -55,7 +57,8 @@ function getCollectionOperationData(type, params) {
         : SMCollectorType.REGION_GPS_PATH
     data.push({
       key: 'gpsPath',
-      title: 'GPS轨迹',
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_LINE_BY_GPS,
+      //'GPS轨迹',
       action: () => showCollection(gpsPathType),
       size: 'large',
       image: require('../../../../assets/mapTools/icon_collection_path_start.png'),
@@ -67,7 +70,9 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: '点绘式',
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
+          //'点绘式',
           action: () => showCollection(SMCollectorType.POINT_HAND),
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_point.png'),
@@ -85,14 +90,18 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: '点绘式',
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
+          //'点绘式',
           action: () => showCollection(SMCollectorType.LINE_HAND_POINT),
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_line.png'),
         },
         {
           key: 'freeDraw',
-          title: '自由式',
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_FREE_DRAW,
+          //'自由式',
           action: () => showCollection(SMCollectorType.LINE_HAND_PATH),
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_line_freedom.png'),
@@ -103,14 +112,18 @@ function getCollectionOperationData(type, params) {
       data.push(
         {
           key: 'pointDraw',
-          title: '点绘式',
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_POINT_DRAW,
+          //'点绘式',
           action: () => showCollection(SMCollectorType.REGION_HAND_POINT),
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_region.png'),
         },
         {
           key: 'freeDraw',
-          title: '自由式',
+          title: getLanguage(global.language).Map_Main_Menu
+            .COLLECTION_FREE_DRAW,
+          //'自由式',
           action: () => showCollection(SMCollectorType.REGION_HAND_PATH),
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_region_freedom.png'),
@@ -162,7 +175,8 @@ function getCollectionData(type, params) {
   ) {
     data.push({
       key: 'addGPSPoint',
-      title: '打点',
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_ADD_POINT,
+      //'打点',
       action: () => SCollector.addGPSPoint(type),
       size: 'large',
       image: require('../../../../assets/mapTools/icon_collection_point_collect.png'),
@@ -174,14 +188,16 @@ function getCollectionData(type, params) {
   ) {
     data.push({
       key: 'start',
-      title: '开始',
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_START,
+      //'开始',
       action: () => SCollector.startCollect(type),
       size: 'large',
       image: require('../../../../assets/mapTools/icon_collection_path_start.png'),
     })
     data.push({
       key: 'stop',
-      title: '停止',
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_STOP,
+      //'停止',
       action: () => {},
       size: 'large',
       image: require('../../../../assets/mapTools/icon_pause.png'),
@@ -190,28 +206,32 @@ function getCollectionData(type, params) {
   }
   data.push({
     key: constants.UNDO,
-    title: constants.UNDO,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+    // constants.UNDO,
     action: () => undo(type),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_undo_black.png'),
   })
   data.push({
     key: constants.REDO,
-    title: constants.REDO,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+    //constants.REDO,
     action: () => redo(type),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_recover_black.png'),
   })
   data.push({
     key: constants.CANCEL,
-    title: constants.CANCEL,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_CANCEL,
+    // constants.CANCEL,
     action: () => cancel(type),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_close_black.png'),
   })
   data.push({
     key: constants.SUBMIT,
-    title: constants.SUBMIT,
+    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
+    //constants.SUBMIT,
     action: () => collectionSubmit(type),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_submit_black.png'),

@@ -32,6 +32,8 @@ import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
+import MSGConstant from '../MsgConstant'
+import { getLanguage } from '../../../../language/index'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -210,7 +212,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 6: //文件
+        case MSGConstant.MSG_FILE_NOTIFY: //文件
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -219,7 +221,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 10: //位置
+        case MSGConstant.MSG_LOCATION: //位置
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -227,10 +229,6 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
-            // location: {
-            //   latitude: msg.msg.message.latitude,
-            //   longitude: msg.msg.message.longitude,
-            // },
           }
       }
     }
@@ -290,7 +288,7 @@ class Chat extends React.Component {
     let time = Date.parse(ctime)
     let message = {
       message: {
-        type: 10,
+        type: MSGConstant.MSG_LOCATION,
         message: {
           message: positionStr,
           longitude: value.longitude,
@@ -319,7 +317,7 @@ class Chat extends React.Component {
       //   longitude: value.longitude,
       // },
       message: {
-        type: 10,
+        type: MSGConstant.MSG_LOCATION,
         message: {
           message: positionStr,
           longitude: value.longitude,
@@ -355,7 +353,7 @@ class Chat extends React.Component {
       time: time,
       system: 0,
       message: {
-        type: 3, //文件本体
+        type: MSGConstant.MSG_FILE, //文件本体
         message: {
           data: '',
           index: 0,
@@ -377,7 +375,7 @@ class Chat extends React.Component {
       createdAt: time,
       system: 0,
       message: {
-        type: 6,
+        type: MSGConstant.MSG_FILE_NOTIFY,
         message: {
           message: '[文件]',
           fileName: fileName,
@@ -438,10 +436,10 @@ class Chat extends React.Component {
         type: messageObj.type,
         message: messageObj.message,
       }
-      if (messageObj.message.type === 6) {
+      if (messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
         //文件通知
         msg.message.message.isReceived = 0
-      } else if (messageObj.message.type === 10) {
+      } else if (messageObj.message.type === MSGConstant.MSG_LOCATION) {
         //位置
         msg.location = {
           latitude: messageObj.message.message.latitude,
@@ -483,7 +481,7 @@ class Chat extends React.Component {
   async onLongPress(context, message) {
     if (message.message.type) {
       switch (message.message.type) {
-        case 6:
+        case MSGConstant.MSG_FILE_NOTIFY:
           if (message.user._id !== this.curUser.userId) {
             let userPath = await FileTools.appendingHomeDirectory(
               ConstPath.UserPath + this.curUser.userName,
@@ -563,7 +561,8 @@ class Chat extends React.Component {
             renderMessageText={props => {
               if (
                 props.currentMessage.message.type &&
-                props.currentMessage.message.type === 6
+                props.currentMessage.message.type ===
+                  MSGConstant.MSG_FILE_NOTIFY
               ) {
                 return null
               }
@@ -693,7 +692,10 @@ class Chat extends React.Component {
   //渲染标记
   renderTicks(props) {
     let currentMessage = props
-    if (currentMessage.message.type && currentMessage.message.type === 6) {
+    if (
+      currentMessage.message.type &&
+      currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
+    ) {
       let progress = currentMessage.message.message.progress
       return (
         <View style={styles.tickView}>
@@ -746,20 +748,24 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.import = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.import.setDialogVisible(false)
-          GLOBAL.Loading.setLoading(true, '数据导入中')
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Friends.IMPORT_DATA,
+          )
 
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
-              result && Toast.show('导入成功')
+              result &&
+                Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
             },
             () => {
               GLOBAL.Loading.setLoading(false)
-              Toast.show('导入失败')
+              Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
             },
           )
         }}
@@ -784,7 +790,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否导入数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.IMPORT_CONFIRM}
+        </Text>
       </View>
     )
   }
@@ -794,8 +802,8 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.download = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.download.setDialogVisible(false)
           this.receiveFile(this.downloadmessage, this.downloadreceivePath)
@@ -819,7 +827,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否接收数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.RECEIVE_CONFIRM}
+        </Text>
       </View>
     )
   }

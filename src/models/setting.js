@@ -12,6 +12,7 @@ export const ROUTE_SETTING_SET = 'ROUTE_SETTING_SET'
 export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
 export const SETTING_DATA = 'SETTING_DATA'
 export const MAP_SETTING = 'MAP_SETTING'
+export const SETTING_LANGUAGE = 'SETTING_LANGUAGE'
 export const MAP_LEGEND = 'MAP_LEGEND'
 
 // Actions
@@ -64,6 +65,13 @@ export const setMapSetting = (cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const setLanguage = (params, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SETTING_LANGUAGE,
+    payload: params,
+  })
+  cb && cb()
+}
 export const setMapLegend = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_LEGEND,
@@ -118,11 +126,15 @@ const initialState = fromJS({
   },
   settingData: [],
   mapSetting: [],
+  language: 'CN',
   mapLegend: false,
 })
 
 export default handleActions(
   {
+    [`${SETTING_LANGUAGE}`]: (state, { payload }) => {
+      return state.setIn(['language'], fromJS(payload))
+    },
     [`${BUFFER_SETTING_SET}`]: (state, { payload }) => {
       return state.setIn(['buffer'], fromJS(payload))
     },

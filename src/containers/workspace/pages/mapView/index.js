@@ -38,6 +38,7 @@ import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
 
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   nav: state.nav.toJS(),
   editLayer: state.layers.toJS().editLayer,
   analystLayer: state.layers.toJS().analystLayer,

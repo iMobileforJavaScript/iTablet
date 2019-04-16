@@ -9,6 +9,7 @@ import CollectionData from './CollectionData'
 import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 
 // let _params = {}
 
@@ -172,7 +173,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'startFly',
-          title: '添加站点',
+          title: getLanguage(global.language).Map_Main_Menu.FLY_ADD_STOPS,
+          //'添加站点',
           action: () => {
             try {
               SScene.saveCurrentRoutStop().then(result => {
@@ -289,7 +291,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'cancel',
-          title: '取消',
+          title: getLanguage(global.language).Prompt.CANCEL,
+          //'取消',
           action: () => {
             SScene.clearSelection()
             params.setAttributes && params.setAttributes({})

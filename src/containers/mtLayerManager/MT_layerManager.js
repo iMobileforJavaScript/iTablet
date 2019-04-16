@@ -31,10 +31,12 @@ const LAYER_GROUP = 'layerGroup'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
+import { getLanguage } from '../../language/index'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
+    language: Object,
     navigation: Object,
     editLayer: Object,
     map: Object,
@@ -92,17 +94,20 @@ export default class MT_layerManager extends React.Component {
         dataList = await SMap.getUDBName(udbPath)
         newState.data = [
           {
-            title: '我的图层',
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
             data: this.props.layers,
             visible: true,
           },
           {
-            title: '我的底图',
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+            //'我的底图',
             data: baseData,
             visible: true,
           },
           {
-            title: '我的标注',
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
             data: dataList,
             visible: true,
           },
@@ -170,13 +175,24 @@ export default class MT_layerManager extends React.Component {
       dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
-          { title: '我的图层', data: layers, visible: true },
           {
-            title: '我的底图',
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
+            data: layers,
+            visible: true,
+          },
+          {
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+            // '我的底图',
             data: baseMap,
             visible: true,
           },
-          { title: '我的标注', data: dataList, visible: true },
+          {
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
+            data: dataList,
+            visible: true,
+          },
         ],
         selectLayer: this.props.currentLayer.caption,
         refreshing: false,
@@ -519,7 +535,10 @@ export default class MT_layerManager extends React.Component {
       )
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
-      Toast.show('当前图层为:' + data.name)
+      Toast.show(
+        //'当前图层为:'
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER + data.name,
+      )
     }
   }
 
@@ -750,7 +769,9 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === '我的标注') {
+        if (
+          section.title === getLanguage(this.props.language).Map_Layer.PLOTS
+        ) {
           return (
             <TouchableOpacity
               key={item.name}
@@ -814,7 +835,9 @@ export default class MT_layerManager extends React.Component {
             </TouchableOpacity>
           )
         } else {
-          if (section.title === '我的图层') {
+          if (
+            section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+          ) {
             action = this.onToolPress
             if (
               this.props.layers.length > 0 &&
@@ -995,6 +1018,7 @@ export default class MT_layerManager extends React.Component {
   renderTool = () => {
     return (
       <LayerManager_tolbar
+        language={this.props.language}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}

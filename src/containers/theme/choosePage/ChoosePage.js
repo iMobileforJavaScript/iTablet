@@ -9,7 +9,7 @@ import { TouchableOpacity, FlatList, Text } from 'react-native'
 import { Container, ListSeparator } from '../../../components'
 import { ColorGradientType } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
-
+import { getLanguage } from '../../../language/index'
 import styles from './styles'
 
 const fonts = [
@@ -45,19 +45,23 @@ export default class ChoosePage extends React.Component {
 
     switch (this.type) {
       case 'font':
-        this.title = '字体'
+        this.title = getLanguage(global.language).Map_Main_Menu.THEME_FONT
+        //'字体'
         data = fonts
         break
       case 'color':
-        this.title = '颜色'
+        this.title = getLanguage(global.language).Map_Main_Menu.THEME_COLOR
+        //'颜色'
         data = this.getColors()
         break
       case 'expression':
-        this.title = '表达式'
+        this.title = getLanguage(global.language).Map_Main_Menu.THEME_EXPRESSION
+        //'表达式'
         data = []
         break
       case 'fontColor':
-        this.title = '文本颜色'
+        this.title = getLanguage(global.language).Map_Main_Menu.THEME_FONT
+        //'文本颜色'
         data = fontColors
         break
     }

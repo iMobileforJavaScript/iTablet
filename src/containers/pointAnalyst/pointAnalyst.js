@@ -14,6 +14,7 @@ import { SScene } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 import { Toast } from '../../utils'
 import styles from './styles'
+import { getLanguage } from '../../language/index'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
@@ -245,7 +246,8 @@ export default class PointAnalyst extends Component {
           this.setLoading(true, ConstInfo.SEARCHING)
           SScene.pointSearch(searchKey)
         }}
-        placeholder={'请输入搜索关键字'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+        //{'请输入搜索关键字'}
       />
     )
   }

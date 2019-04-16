@@ -15,6 +15,7 @@ import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
 // import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language/index'
 
 const PAGE_SIZE = 30
 
@@ -243,7 +244,12 @@ export default class LayerAttributeSearch extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(global.language).Map_Lable.NAME,
+              getLanguage(global.language).Map_Lable.ATTRIBUTE,
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
@@ -275,7 +281,8 @@ export default class LayerAttributeSearch extends React.Component {
           this.setLoading(true, ConstInfo.SEARCHING)
           this.search(searchKey)
         }}
-        placeholder={'请输入搜索关键字'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+        //{'请输入搜索关键字'}
       />
     )
   }
@@ -321,12 +328,12 @@ export default class LayerAttributeSearch extends React.Component {
               this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>
-                <Text style={styles.info}>搜索结果</Text>
+                <Text style={styles.info}>{/* 搜索结果 */}</Text>
               </View>
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>搜索结果</Text>
+              <Text style={styles.info}>{/* 搜索结果 */}</Text>
             </View>
           )}
       </Container>

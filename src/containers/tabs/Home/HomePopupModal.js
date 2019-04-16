@@ -2,9 +2,12 @@ import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../styles'
 import { scaleSize } from '../../../utils'
+import { getLanguage } from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
   props: {
+    language: Object,
+    setLanguage: () => {},
     modalVisible: Boolean,
     isLogin: Boolean,
     onCloseModal: () => {},
@@ -101,9 +104,17 @@ export default class HomePopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderItem('切换账号', this.props.onToggleAccount)}
+            {this._renderItem(
+              //'切换账号'
+              getLanguage(this.props.language).Profile.SWITCH_ACCOUNT,
+              this.props.onToggleAccount,
+            )}
             {/*{this._renderItem('注册', this.props.onRegister)}*/}
-            {this._renderItem('退出登录', this.props.onLogout)}
+            {this._renderItem(
+              //'退出登录'
+              getLanguage(this.props.language).Profile.LOG_OUT,
+              this.props.onLogout,
+            )}
           </View>
         )
       } else {
@@ -117,8 +128,14 @@ export default class HomePopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderItem('登录', this.props.onLogin)}
-            {this._renderItem('注册', this.props.onRegister)}
+            {this._renderItem(
+              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG,
+              this.props.onLogin,
+            )}
+            {this._renderItem(
+              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_REG,
+              this.props.onRegister,
+            )}
           </View>
         )
       }
@@ -134,9 +151,30 @@ export default class HomePopupModal extends PureComponent {
             backgroundColor: color.contentColorWhite,
           }}
         >
-          {this._renderItem('关于 SuperMap iTablet', this.props.onAbout)}
-          {this._renderItem('设置', this.props.onSetting)}
-          {this._renderItem('退出', this.closeApp)}
+          {this._renderItem(
+            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_ABOUT,
+            this.props.onAbout,
+          )}
+          {this._renderItem(
+            this.props.language == 'EN' ? '中文' : 'English',
+            () => {
+              if (this.props.language == 'EN') {
+                this.props.setLanguage('CN')
+                global.language = 'CN'
+              } else {
+                this.props.setLanguage('EN')
+                global.language = 'EN'
+              }
+            },
+          )}
+          {this._renderItem(
+            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_SETTING,
+            this.props.onSetting,
+          )}
+          {this._renderItem(
+            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_EXIT,
+            this.closeApp,
+          )}
         </View>
       )
     }

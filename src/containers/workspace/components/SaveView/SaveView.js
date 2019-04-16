@@ -76,12 +76,20 @@ export default class SaveView extends React.Component {
     this.state = {
       visible: false,
       title: '是否保存当前地图？',
+      save_yes: '保存',
+      save_no: '不保存',
+      cancel: '取消',
     }
     this.cb = () => {}
   }
 
-  setTitle = title => {
-    this.setState({ title: title })
+  setTitle = (title, save_yes, save_no, cancel) => {
+    this.setState({
+      title: title,
+      save_yes: save_yes,
+      save_no: save_no,
+      cancel: cancel,
+    })
   }
 
   save = () => {
@@ -158,7 +166,7 @@ export default class SaveView extends React.Component {
               <Button
                 style={styles.item}
                 titleStyle={styles.btnTitle}
-                title="保存"
+                title={this.state.save_yes}
                 onPress={this.save}
                 activeOpacity={0.5}
               />
@@ -166,7 +174,7 @@ export default class SaveView extends React.Component {
               <Button
                 style={[styles.item, { marginTop: 1 }]}
                 titleStyle={styles.btnTitle}
-                title="不保存"
+                title={this.state.save_no}
                 onPress={this.notSave}
                 activeOpacity={0.5}
               />
@@ -174,7 +182,7 @@ export default class SaveView extends React.Component {
               <Button
                 style={[styles.item, { marginTop: 1 }]}
                 titleStyle={styles.btnTitle}
-                title="取消"
+                title={this.state.cancel}
                 onPress={this.cancel}
                 activeOpacity={0.5}
               />

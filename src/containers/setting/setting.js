@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
+// import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -15,8 +15,11 @@ import {
 import styles from './styles'
 import settingData from './settingData'
 import { color } from '../../styles'
+import { getLanguage } from '../../language/index'
 export default class setting extends Component {
   props: {
+    // eslint-disable-next-line no-undef
+    language: object,
     navigation: Object,
     data: Array,
     setSettingData: () => {},
@@ -202,7 +205,7 @@ export default class setting extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: MAP_MODULE.MAP_3D,
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,
         }}
