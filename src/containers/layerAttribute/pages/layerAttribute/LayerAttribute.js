@@ -80,7 +80,9 @@ export default class LayerAttribute extends React.Component {
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
-      this.setLoading(true, ConstInfo.LOADING_DATA)
+      this.setLoading(true,
+        getLanguage(this.props.language).Prompt.LOADING)
+      //ConstInfo.LOADING_DATA)
       this.refresh()
     }
   }

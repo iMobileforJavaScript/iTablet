@@ -64,7 +64,7 @@ class RenderModuleItem extends Component {
     let progress =
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
-        : `下载${this.state.progress}`
+        : `${this.state.progress}`
     return this.state.isShowProgressView ? (
       <View
         style={[

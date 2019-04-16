@@ -727,7 +727,7 @@ export default class MapView extends React.Component {
         })
 
         if (result) {
-          Toast.show('删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
           // 删除对象后，编辑设为为选择状态
@@ -1382,11 +1382,12 @@ export default class MapView extends React.Component {
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
+          // title={'提示'}
+          info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
+          // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
+          cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveXMLDialog = ref)}
@@ -1403,7 +1404,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图?'}
+          Alerttitle={getLanguage(this.props.language).Prompt.SAVE_TITLE}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

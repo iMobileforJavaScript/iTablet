@@ -134,7 +134,7 @@ export default class PublicMap extends Component {
     while (currentPage <= totalPage) {
       this.isLoading = true
       await this._loadUserData2(currentPage, data)
-      //一条也刷新 
+      //一条也刷新
       if (data.length >= 1) {
         let newData = this.addMapCache(data)
         this.setState({ data: newData })
@@ -368,7 +368,8 @@ export default class PublicMap extends Component {
               color: 'orange',
             }}
           >
-            加载中...
+            {getLanguage(global.language).Prompt.LOADING}
+            {/* 加载中... */}
           </Text>
         </View>
       )

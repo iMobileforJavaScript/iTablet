@@ -416,7 +416,7 @@ function getEditData(type) {
 
 function name() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
     //'名称',
     cb: async value => {
       if (value !== '') {
@@ -431,7 +431,7 @@ function name() {
 
 function remark() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
     //'名称',
     cb: async value => {
       if (value !== '') {
@@ -446,7 +446,7 @@ function remark() {
 
 function address() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
     //'名称',
     cb: async value => {
       if (value !== '') {

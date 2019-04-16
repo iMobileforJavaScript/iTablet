@@ -3,6 +3,8 @@ import { View, StyleSheet } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
+import { getLanguage } from '../../../../language';
+
 
 export default class ModalBtns extends Component {
   props: {
@@ -38,7 +40,7 @@ export default class ModalBtns extends Component {
           />
           <MTBtn
             key={'wechat'}
-            title={'微信'}
+            title={getLanguage(global.language).Prompt.WECHAT}
             style={styles.button}
             image={require('../../../../assets/Mine/icon_mine_wechat.png')}
             imageStyle={styles.headerBtn}
@@ -49,7 +51,7 @@ export default class ModalBtns extends Component {
           <View style={styles.button} />
           <MTBtn
             key={'cancel'}
-            title={'取消'}
+            title={getLanguage(global.language).Prompt.CANCEL}
             style={styles.button}
             image={require('../../../../assets/mapTools/icon_cancel_1.png')}
             imageStyle={styles.headerBtn}

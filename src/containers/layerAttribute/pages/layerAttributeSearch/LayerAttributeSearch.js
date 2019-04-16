@@ -278,7 +278,7 @@ export default class LayerAttributeSearch extends React.Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, ConstInfo.SEARCHING)
+          this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
           this.search(searchKey)
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
