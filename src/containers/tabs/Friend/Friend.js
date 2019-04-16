@@ -25,7 +25,7 @@ import UserType from '../../../constants/UserType'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
-import MSGConstans from './MsgConstans'
+import MSGConstant from './MsgConstant'
 import { getLanguage } from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
@@ -191,11 +191,11 @@ export default class Friend extends Component {
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
-        MSGConstans.MSG_IP,
-        MSGConstans.MSG_Port,
-        MSGConstans.MSG_HostName,
-        MSGConstans.MSG_UserName,
-        MSGConstans.MSG_Password,
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
         .then(() => {
@@ -249,11 +249,11 @@ export default class Friend extends Component {
 
   _sendFile = (messageStr, filepath, talkId, msgId) => {
     let connectInfo = {
-      serverIP: MSGConstans.MSG_IP,
-      port: MSGConstans.MSG_Port,
-      hostName: MSGConstans.MSG_HostName,
-      userName: MSGConstans.MSG_UserName,
-      passwd: MSGConstans.MSG_Password,
+      serverIP: MSGConstant.MSG_IP,
+      port: MSGConstant.MSG_Port,
+      hostName: MSGConstant.MSG_HostName,
+      userName: MSGConstant.MSG_UserName,
+      passwd: MSGConstant.MSG_Password,
       userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFile(
@@ -459,11 +459,11 @@ export default class Friend extends Component {
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
           SMessageService.connectService(
-            MSGConstans.MSG_IP,
-            MSGConstans.MSG_Port,
-            MSGConstans.MSG_HostName,
-            MSGConstans.MSG_UserName,
-            MSGConstans.MSG_Password,
+            MSGConstant.MSG_IP,
+            MSGConstant.MSG_Port,
+            MSGConstant.MSG_HostName,
+            MSGConstant.MSG_UserName,
+            MSGConstant.MSG_Password,
             this.props.user.currentUser.userId,
           )
             .then(res => {
