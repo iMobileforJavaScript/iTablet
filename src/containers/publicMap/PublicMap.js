@@ -5,7 +5,7 @@
 */
 import React, { Component } from 'react'
 import Container from '../../components/Container'
-import { View, Text, FlatList, RefreshControl, Dimensions } from 'react-native'
+import { View, Text, FlatList, RefreshControl, Dimensions,ActivityIndicator } from 'react-native'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../utils'
 import styles from './Styles'
@@ -34,40 +34,27 @@ export default class PublicMap extends Component {
       progressWidth: this.screenWidth * 0.4,
       isLoadingData: false,
     }
+    this.isLoading = false
     this.loadCount = 1
     this.flatListData = []
     this.allUserDataCount = -1
     this.currentLoadDataCount = 0
-    this._onRefresh2 = this._onRefresh2.bind(this)
+    this._onRefresh = this._onRefresh.bind(this)
     this._loadData2 = this._loadData2.bind(this)
     this.getCurrentLoadData2 = this.getCurrentLoadData2.bind(this)
     this._loadUserData2 = this._loadUserData2.bind(this)
-
+    this.addMapCache = this.addMapCache.bind(this)
+    this.saveMapCache = this.saveMapCache.bind(this)
+    this._showLoadProgressView = this._showLoadProgressView.bind(this)
   }
   componentDidMount() {
     // this._loadFirstUserData()
     this.currentLoadPage2 = 1
-    let data = []
-    this._loadFirstUserData2(this.currentLoadPage2, 100, data)
+    this._loadFirstUserData2(this.currentLoadPage2, 100)
   }
   componentWillUnmount() {
     this._clearInterval()
-    this.savefriendMap()
-  }
-
-  savefriendMap = async () => {
-    if (this.state.length < 1) return
-    let data = JSON.stringify(this.state.data)
-    let path =
-      (await FileTools.getHomeDirectory()) +
-      ConstPath.UserPath +
-      this.props.user.currentUser.userName +
-      '/' +
-      ConstPath.RelativePath.Temp +
-      'publicMap.txt'
-    RNFS.writeFile(path, data, 'utf8')
-      .then(() => {})
-      .catch(() => {})
+    this.saveMapCache()
   }
 
   _clearInterval = () => {
@@ -96,8 +83,7 @@ export default class PublicMap extends Component {
           if (!data[0].id) {
             this._showLoadProgressView()
             debugger
-            let data = await this.getCurrentLoadData2(currentPage, totalPage)
-            this.setState({ data: data })
+            this.getCurrentLoadData2(currentPage, totalPage)
             this._clearInterval()
           } else {
             for (let index = 0; index < data.length; index++) {
@@ -106,23 +92,28 @@ export default class PublicMap extends Component {
               let dataUrl =
                 'https://www.supermapol.com/web/datas/' + dataId + '.json'
               // 'https://www.supermapol.com/web/datas/1916243026.json'
+
+              let bValid = false
               let objDataJson = await FetchUtils.getObjJson(dataUrl)
               if (objDataJson) {
                 if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
                   mapList.push(element)
+                  bValid = true
                 }
               }
+              if(!bValid){
+                this.removeMapCache([element])
+              }
+              this.setState({ data: mapList })
             }
-            this.setState({ data: mapList })
             this._clearInterval()
           }
         }
       } else {
         this._showLoadProgressView()
         debugger
-        let data = await this.getCurrentLoadData2(currentPage, totalPage)
-        // let objUserData = await this.getAllUserZipData(12)
-        this.setState({ data: data })
+        await this.getCurrentLoadData2(currentPage, totalPage)
+
         this._clearInterval()
       }
     } catch (e) {
@@ -132,42 +123,47 @@ export default class PublicMap extends Component {
 
   async getCurrentLoadData2(currentPage, totalPage) {
     await SOnlineService.syncAndroidCookie()
-    let data = []
     if(!totalPage){
       totalPage = 100
     }
+    if(this.isLoading === true){
+      return
+    }
+
+    let data = []
     while (currentPage <= totalPage) {
+      this.isLoading = true
       await this._loadUserData2(currentPage, data)
+      //一条也刷新 
       if (data.length >= 1) {
-        break
+        let newData = this.addMapCache(data)
+        this.setState({ data: newData })
       }
       currentPage = currentPage + 1
       this.currentLoadPage2 = currentPage
+      //加载15条跳出
+      if(data.length > 5){
+        break
+      }
     }
+    this.isLoading = false
     return data
   }
-  // _loadFirstUserData = async () => {
-  //   try {
-  //     this._showLoadProgressView()
-  //     await this._loadUserData(1)
-  //   } finally {
-  //     this._clearInterval()
-  //   }
-  // }
-  _showLoadProgressView = () => {
+  _showLoadProgressView(){
+    let thisHandle = this
     this.objProgressWidth = setInterval(() => {
-      let prevProgressWidth = this.state.progressWidth
+      let prevProgressWidth = thisHandle.state.progressWidth
       let currentPorWidth
-      if (prevProgressWidth >= this.screenWidth - 300) {
+      if (prevProgressWidth >= thisHandle.screenWidth - 300) {
         currentPorWidth = prevProgressWidth + 1
-        if (currentPorWidth >= this.screenWidth - 50) {
-          currentPorWidth = this.screenWidth - 50
+        if (currentPorWidth >= thisHandle.screenWidth - 50) {
+          currentPorWidth = thisHandle.screenWidth - 50
           return
         }
       } else {
         currentPorWidth = prevProgressWidth * 1.01
       }
-      this.setState({ progressWidth: currentPorWidth })
+      thisHandle.setState({ progressWidth: currentPorWidth })
     }, 100)
   }
   async _loadUserData2(currentPage, currentData){
@@ -246,152 +242,152 @@ export default class PublicMap extends Component {
     }
     return currentData
   }
-  // _loadUserData = async currentPage => {
-  //   let arrObjContent = []
-  //   try {
-  //     let objUserData = await this.getAllUserZipData(currentPage)
-  //     this.currentLoadDataCount = currentPage * 9
-  //     this.allUserDataCount = objUserData.total
-  //     let objArrUserDataContent = objUserData.content
-  //     let contentLength = objArrUserDataContent.length
-  //     for (let i = 0; i < contentLength; i++) {
-  //       let objContent = objArrUserDataContent[i]
-  //       if (objContent.type === 'WORKSPACE') {
-  //         arrObjContent.push(objContent)
-  //       }
-  //     }
-  //     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
-  //       this.flatListData = this.flatListData.concat(arrObjContent)
-  //       this.setState({ data: this.flatListData })
-  //     }
-  //   } catch (e) {
-  //     Toast.show('网络错误')
-  //     this.setState({ data: arrObjContent })
-  //   }
-  //   return arrObjContent
-  // }
 
   getAllUserZipData = currentPage => {
     let time = new Date().getTime()
     let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
     return FetchUtils.getObjJson(uri)
   }
-  async _onRefresh2(){
-    try {
-      if (!this.state.isRefresh) {
-        this.setState({ isRefresh: true })
-        // this.currentLoadPage2 = 1
-        debugger
-        let data = await this.getCurrentLoadData2(1, 100)
-        this.setState({ isRefresh: false, data: data })
+  async saveMapCache(){
+    if (this.state.length < 1) return
+    let data = JSON.stringify(this.state.data)
+    let path =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      'publicMap.txt'
+    RNFS.writeFile(path, data, 'utf8')
+      .then(() => {})
+      .catch(() => {})
+  }
 
-        data = await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
-        this.setState({ isRefresh: false, data: data })
+  removeMapCache(newMapData){
+    if(!newMapData){
+      return
+    }
+    let srcData = [...this.state.data]
+    for(let i=0;i<newMapData.length;i++){
+      let map = newMapData[i]
+
+      let bFound = false
+      let index
+      for(let n=0;n<srcData.length;n++){
+        if(srcData[n].MD5 === map.MD5){
+          bFound = true
+          index = n
+          break
+        }
       }
+
+      if(!bFound){
+        srcData.splice(index,1)
+      }
+    }
+
+    return srcData
+  }
+  addMapCache(newMapData){
+    if(!newMapData){
+      return
+    }
+    let srcData = [...this.state.data]
+    for(let i=0;i<newMapData.length;i++){
+      let map = newMapData[i]
+
+      let bFound = false
+      for(let n=0;n<srcData.length;n++){
+        if(srcData[n].MD5 === map.MD5){
+          bFound = true
+          break
+        }
+      }
+
+      if(!bFound){
+        srcData.push(map)
+      }
+    }
+
+    return srcData
+  }
+  async _onRefresh(){
+    try {
+      this.setState({ isRefresh: true })
+      setTimeout(()=>{
+        this.setState({ isRefresh: false })
+      },3000)
+      // this.currentLoadPage2 = 1
+      await this.getCurrentLoadData2(1, 100)
+      await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
     } catch (e) {
       Toast.show('网络错误')
       this.setState({ isRefresh: false })
     }
   }
-  // _onRefresh = async () => {
-  //   try {
-  //     if (!this.state.isRefresh) {
-  //       this.loadCount = 1
-  //       this.setState({ isRefresh: true })
-  //       this.flatListData = await this._loadUserData2(1)
-  //       this.setState({ isRefresh: false, data: this.flatListData })
-  //     }
-  //   } catch (e) {
-  //     Toast.show('网络错误')
-  //     this.setState({ isRefresh: false })
-  //   }
-  // }
   async _loadData2(){
     try {
-      if (!this.state.isLoadingData) {
+      if(!this.state.isLoadingData){
         this.setState({ isLoadingData: true })
-
         this.currentLoadPage2 = this.currentLoadPage2 + 1
-        let data = await this.getCurrentLoadData2(
-          this.currentLoadPage2,
-          this.totalPage,
-        )
-        let newData = [...this.state.data].concat(data)
-        this.setState({ data: newData, isLoadingData: false })
+        await this.getCurrentLoadData2(this.currentLoadPage2,this.totalPage)
+        this.setState({ isLoadingData: false })
       }
     } catch (e) {
       Toast.show('网络错误')
       this.setState({ isLoadingData: false })
     }
   }
-  // _loadData = async () => {
-  //   try {
-  //     if (!this.state.isLoadingData) {
-  //       this.setState({ data: this.flatListData, isLoadingData: true })
-  //       this.loadCount = this.loadCount + 1
-  //       let arrData = await this._loadUserData(this.loadCount)
-  //       this.flatListData = this.flatListData.concat(arrData)
-  //       this.setState({ data: this.flatListData, isLoadingData: false })
-  //     }
-  //   } catch (e) {
-  //     Toast.show('网络错误')
-  //     this.setState({ isLoadingData: false })
-  //   }
-  // }
-
   _footView() {
-    // if (
-    //   this.allUserDataCount >= this.state.data.length &&
-    //   this.allUserDataCount > this.currentLoadDataCount
-    // ) {
-    //   return (
-    //     <View
-    //       style={{
-    //         flex: 1,
-    //         height: 50,
-    //         justifyContent: 'center',
-    //         alignItems: 'center',
-    //       }}
-    //     >
-    //       <ActivityIndicator
-    //         style={{
-    //           flex: 1,
-    //           height: 30,
-    //           justifyContent: 'center',
-    //           alignItems: 'center',
-    //         }}
-    //         color={'orange'}
-    //         animating={true}
-    //       />
-    //       <Text
-    //         style={{
-    //           flex: 1,
-    //           lineHeight: 20,
-    //           fontSize: 12,
-    //           textAlign: 'center',
-    //           color: 'orange',
-    //         }}
-    //       >
-    //         加载中...
-    //       </Text>
-    //     </View>
-    //   )
-    // } else {
-    return (
-      <View>
-        <Text
+    if (this.state.isLoadingData) {
+      return (
+        <View
           style={{
             flex: 1,
-            lineHeight: 30,
-            fontSize: 12,
-            textAlign: 'center',
+            height: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          {/* -----这是底线----- */}
-        </Text>
-      </View>
-    )
-    // }
+          <ActivityIndicator
+            style={{
+              flex: 1,
+              height: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            color={'orange'}
+            animating={true}
+          />
+          <Text
+            style={{
+              flex: 1,
+              lineHeight: 20,
+              fontSize: 12,
+              textAlign: 'center',
+              color: 'orange',
+            }}
+          >
+            加载中...
+          </Text>
+        </View>
+      )
+    } else {
+      return (
+        <View>
+          <Text
+            style={{
+              flex: 1,
+              lineHeight: 30,
+              fontSize: 12,
+              textAlign: 'center',
+            }}
+          >
+            {/* -----这是底线----- */}
+          </Text>
+        </View>
+      )
+    }
   }
 
   _keyExtractor = (item, index) => {
@@ -434,7 +430,7 @@ export default class PublicMap extends Component {
         refreshControl={
           <RefreshControl
             refreshing={this.state.isRefresh}
-            onRefresh={this._onRefresh2}
+            onRefresh={this._onRefresh}
             colors={['orange', 'red']}
             tintColor={'orange'}
             titleColor={'orange'}
