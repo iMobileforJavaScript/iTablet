@@ -88,37 +88,44 @@ export default class CustomActions extends React.Component {
 
   componentDidMount() {
     if (Platform.OS === 'android') {
+      this.showLocation = true
       Geolocation.init({
-        ios: '9bd6c82e77583020a73ef1af59d0c759',
         android: '078057f0e29931c173ad8ec02284a897',
       }).then(() => {
         Geolocation.setOptions({
           interval: 8000,
           distanceFilter: 20,
         })
-        Geolocation.addLocationListener(location => {
+        this.locationListener = Geolocation.addLocationListener(location => {
           Geolocation.stop()
-          SOnlineService.reverseGeocoding(
-            location.longitude,
-            location.latitude,
-            {
-              onResult: result => {
-                this.props.sendCallBack(3, {
-                  address: result,
-                  longitude: location.longitude,
-                  latitude: location.latitude,
-                })
-                // alert(result)
+          if (this.showLocation) {
+            this.showLocation = false
+            SOnlineService.reverseGeocoding(
+              location.longitude,
+              location.latitude,
+              {
+                onResult: result => {
+                  this.props.sendCallBack(3, {
+                    address: result,
+                    longitude: location.longitude,
+                    latitude: location.latitude,
+                  })
+                  // alert(result)
+                },
               },
-            },
-          )
+            )
+            //3s内不接收其他位置信息,避免一次定位多次回调问题
+            setInterval(() => {
+              this.showLocation = true
+            }, 3000)
+          }
         })
       })
     }
   }
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      // Geolocation.removeLocationListener();
+      this.locationListener.remove()
       Geolocation.stop()
     }
   }
