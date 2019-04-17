@@ -6,6 +6,7 @@ import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language/index'
 import { downloadFile } from 'react-native-fs'
 import { SOnlineService, SMap } from 'imobile_for_reactnative'
+// import console = require('console');
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -212,32 +213,56 @@ async function downFileAction(
         let result = downloadFile(downloadOptions)
         result.promise.then(
           async result => {
-            if (result.statusCode) {
-              //下载成功后解压导入
-              if (result.statusCode >= 200 && result.statusCode < 300) {
-                Toast.show('文件导入中')
-                let result = await FileTools.unZipFile(filePath, toPath)
-                if (result) {
-                  await FileTools.deleteFile(filePath)
-                  setFilterDatas(
-                    toPath,
-                    {
-                      smwu: 'smwu',
-                      sxwu: 'sxwu',
-                      udb: 'udb',
-                    },
-                    importWorkspace,
-                  )
-                  updateDownList({
-                    id: itemInfo.id,
-                    progress: 0,
-                    downed: true,
-                  })
-                }
-              } else {
-                Toast.show('请求异常，导入失败')
-              }
+            console.warn(result)
+            let unzipRes = await FileTools.unZipFile(filePath, toPath)
+            if (unzipRes === false) {
+              Toast.show('网络数据已损坏，无法正常使用')
+            } else {
+              await FileTools.deleteFile(filePath)
+              setFilterDatas(
+                toPath,
+                {
+                  smwu: 'smwu',
+                  sxwu: 'sxwu',
+                  udb: 'udb',
+                },
+                importWorkspace,
+              )
+              updateDownList({
+                id: itemInfo.id,
+                progress: 0,
+                downed: true,
+              })
             }
+            // if (result.statusCode) {
+            //   //下载成功后解压导入
+            //   if (result.statusCode >= 200 && result.statusCode < 300) 
+            //   {
+            //     Toast.show('文件导入中')
+            //     debugger
+            //     let result = await FileTools.unZipFile(filePath, toPath)
+            //     debugger
+            //     if (result) {
+            //       await FileTools.deleteFile(filePath)
+            //       setFilterDatas(
+            //         toPath,
+            //         {
+            //           smwu: 'smwu',
+            //           sxwu: 'sxwu',
+            //           udb: 'udb',
+            //         },
+            //         importWorkspace,
+            //       )
+            //       updateDownList({
+            //         id: itemInfo.id,
+            //         progress: 0,
+            //         downed: true,
+            //       })
+            //     }
+            //   } else {
+            //     Toast.show('请求异常，导入失败')
+            //   }
+            // }
           },
           //eslint-disable-next-line
           e => {
@@ -256,6 +281,7 @@ async function setFilterDatas(
   fileType,
   importWorkspace = () => {},
 ) {
+  debugger
   try {
     let isRecordFile = false
     let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
@@ -302,7 +328,7 @@ async function setFilterDatas(
           break
         }
       } else if (isFile === 'directory') {
-        await setFilterDatas(newPath, fileType)
+        await setFilterDatas(newPath, fileType,importWorkspace)
       }
     }
   } catch (e) {

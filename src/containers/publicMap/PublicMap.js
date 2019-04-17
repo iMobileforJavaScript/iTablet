@@ -75,10 +75,7 @@ export default class PublicMap extends Component {
       await SOnlineService.syncAndroidCookie()
       let path =
         (await FileTools.getHomeDirectory()) +
-        ConstPath.UserPath +
-        this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativePath.Temp +
+        ConstPath.CachePath +
         'publicMap.txt'
       let exist = await FileTools.fileIsExist(path)
       if (exist) {
@@ -101,6 +98,10 @@ export default class PublicMap extends Component {
               // 'https://www.supermapol.com/web/datas/1916243026.json'
 
               let bValid = false
+              if (element.serviceStatus !== 'UNPUBLISHED'){
+                this.removeMapCache([element])
+                continue
+              }
               let objDataJson = await FetchUtils.getObjJson(dataUrl)
               if (objDataJson) {
                 if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
@@ -207,7 +208,6 @@ export default class PublicMap extends Component {
             let restUrl
             for (let i = 0; i < length; i++) {
               let dataItemServices = arrDataItemServices[i]
-
               if (
                 dataItemServices &&
                 dataItemServices.serviceType === 'RESTMAP'
@@ -260,10 +260,7 @@ export default class PublicMap extends Component {
     let data = JSON.stringify(this.state.data)
     let path =
       (await FileTools.getHomeDirectory()) +
-      ConstPath.UserPath +
-      this.props.user.currentUser.userName +
-      '/' +
-      ConstPath.RelativePath.Temp +
+      ConstPath.CachePath +
       'publicMap.txt'
     RNFS.writeFile(path, data, 'utf8')
       .then(() => {})
@@ -312,10 +309,9 @@ export default class PublicMap extends Component {
       }
 
       if (!bFound) {
-        srcData.push(map)
+        srcData.unshift(map)
       }
     }
-
     return srcData
   }
   async _onRefresh() {
