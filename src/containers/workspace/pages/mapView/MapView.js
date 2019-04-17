@@ -46,13 +46,15 @@ import {
 } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
+import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import LegendView from '../../components/LegendView/LegendView'
+//eslint-disable-next-line
 
-const SAVE_TITLE = '是否保存当前地图?'
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
+    language: PropTypes.string,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -185,8 +187,19 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    this.container && this.container.setLoading(true, '地图加载中')
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setTitle(
+        getLanguage(this.props.language).Prompt.SAVE_TITLE,
+        getLanguage(this.props.language).Prompt.SAVE_YES,
+        getLanguage(this.props.language).Prompt.SAVE_NO,
+        getLanguage(this.props.language).Prompt.CANCEL,
+      )
+    this.container &&
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+        //'地图加载中'
+      )
     let timer = setTimeout(() => {
       this.setState({
         showMap: true,
@@ -440,11 +453,15 @@ export default class MapView extends React.Component {
     cb = () => {},
   ) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+          Toast.show(
+            result
+              ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+              : ConstInfo.MAP_EXIST,
+          )
           cb && cb()
         },
         () => {
@@ -471,10 +488,15 @@ export default class MapView extends React.Component {
   // 地图保存
   saveMap = (name = '', cb = () => {}) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
+      //'正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : ConstInfo.MAP_EXIST,
+        )
         cb && cb()
       })
     } catch (e) {
@@ -645,7 +667,10 @@ export default class MapView extends React.Component {
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.container.setLoading(true, '正在保存')
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.SAVING,
+    )
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -661,7 +686,9 @@ export default class MapView extends React.Component {
             this.AlertDialog.setDialogVisible(false)
             this.container.setLoading(false)
           } else {
-            Toast.show('保存成功')
+            Toast.show(
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+            )
             this.container.setLoading(false)
             this.AlertDialog.setDialogVisible(false)
             //获取数据源
@@ -709,7 +736,7 @@ export default class MapView extends React.Component {
         })
 
         if (result) {
-          Toast.show('删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
           // 删除对象后，编辑设为为选择状态
@@ -787,7 +814,11 @@ export default class MapView extends React.Component {
     }
     this.backAction = async () => {
       try {
-        this.setLoading(true, '正在关闭地图')
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING,
+          //'正在关闭地图'
+        )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setLoading(false)
@@ -937,7 +968,11 @@ export default class MapView extends React.Component {
       if (mapInfo) {
         // 如果是模板地图，则加载模板
         if (mapInfo.Template) {
-          this.setLoading(true, ConstInfo.TEMPLATE_READING)
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
           let templatePath = await FileTools.appendingHomeDirectory(
             ConstPath.UserPath + mapInfo.Template,
           )
@@ -1043,6 +1078,7 @@ export default class MapView extends React.Component {
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
+        language={this.props.language}
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.type}
@@ -1166,6 +1202,7 @@ export default class MapView extends React.Component {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
+        language={this.props.language}
         existFullMap={() => this.showFullMap(false)}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1200,10 +1237,13 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.dialog = ref)}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
-        title={'提示'}
-        info={'是否开启动态投影？'}
-        confirmBtnTitle={'是'}
-        cancelBtnTitle={'否'}
+        //title={'提示'}
+        info={getLanguage(this.props.language).Prompt.TURN_ON_AUTO_SPLIT_REGION}
+        //{'是否开启动态投影？'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
+        //{'是'}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        //{'否'}
       />
     )
   }
@@ -1213,7 +1253,8 @@ export default class MapView extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          //{'撤销'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_undo}
           imageStyle={styles.headerBtn}
@@ -1221,7 +1262,8 @@ export default class MapView extends React.Component {
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_redo}
           imageStyle={styles.headerBtn}
@@ -1354,11 +1396,12 @@ export default class MapView extends React.Component {
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
+          // title={'提示'}
+          info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
+          // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
+          cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveXMLDialog = ref)}
@@ -1375,7 +1418,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图?'}
+          Alerttitle={getLanguage(this.props.language).Prompt.SAVE_TITLE}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

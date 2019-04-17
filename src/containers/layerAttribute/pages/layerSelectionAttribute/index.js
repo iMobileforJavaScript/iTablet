@@ -8,6 +8,7 @@ import {
 } from '../../../../models/layers'
 
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   currentAttribute: state.layers.toJS().currentAttribute,
   attributes: state.layers.toJS().attributes,
   selection: state.layers.toJS().selection,

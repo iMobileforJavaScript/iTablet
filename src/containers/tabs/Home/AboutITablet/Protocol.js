@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import Toast from '../../../../utils/Toast'
+import { getLanguage } from '../../../../language/index'
 
 export default class protocol extends Component {
   props: {
@@ -102,13 +103,14 @@ export default class protocol extends Component {
         source = {
           uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
         }
-        title = '服务协议'
+        title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
       case 'superMapForum':
         source = {
           uri: `https://ask.supermap.com/`,
         }
-        title = '超图论坛'
+        title = getLanguage(global.language).Prompt.SUPERMAP_FORUM
+        //'超图论坛'
         break
       case 'supermap':
         source = {
@@ -123,7 +125,8 @@ export default class protocol extends Component {
             this.knownItem.id +
             '.html',
         }
-        title = '超图知道'
+        title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
+        //'超图知道'
         break
       default:
         break

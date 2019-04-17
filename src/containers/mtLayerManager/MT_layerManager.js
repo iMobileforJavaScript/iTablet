@@ -34,9 +34,11 @@ import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
+import { getLanguage } from '../../language/index'
 
 export default class MT_layerManager extends React.Component {
   props: {
+    language: String,
     navigation: Object,
     editLayer: Object,
     map: Object,
@@ -94,17 +96,20 @@ export default class MT_layerManager extends React.Component {
         )
         newState.data = [
           {
-            title: '我的标注',
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
             data: dataList,
             visible: true,
           },
           {
-            title: '我的图层',
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
             data: this.props.layers,
             visible: true,
           },
           {
-            title: '我的底图',
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+            //'我的底图',
             data: baseData,
             visible: true,
           },
@@ -171,10 +176,21 @@ export default class MT_layerManager extends React.Component {
       )
       this.setState({
         data: [
-          { title: '我的标注', data: dataList, visible: true },
-          { title: '我的图层', data: layers, visible: true },
           {
-            title: '我的底图',
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
+            data: dataList,
+            visible: true,
+          },
+          {
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
+            data: layers,
+            visible: true,
+          },
+          {
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+            // '我的底图',
             data: baseMap,
             visible: true,
           },
@@ -525,7 +541,10 @@ export default class MT_layerManager extends React.Component {
       )
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
-      Toast.show('当前图层为:' + data.name)
+      Toast.show(
+        //'当前图层为:'
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER + data.name,
+      )
     }
   }
 
@@ -628,15 +647,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
-    let layers = this.state.data[0].data
-    let backMaps = this.state.data[1].data
-    let Label = this.state.data[2].data
+    let layers = this.state.data[1].data
+    let backMaps = this.state.data[2].data
+    let Label = this.state.data[0].data
     let hasDeal = false
     let caption = data.caption
     let curData = this.state.data.concat()
     for (let i = 0, l = layers.length; i < l; i++) {
       if (caption === layers[i].caption) {
-        curData[0].data[i].isVisible = value
+        curData[1].data[i].isVisible = value
         hasDeal = true
         break
       }
@@ -644,7 +663,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
         if (caption === backMaps[j].caption) {
-          curData[1].data.isVisible = value
+          curData[2].data.isVisible = value
           hasDeal = true
           break
         }
@@ -652,7 +671,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = Label.length; j < l; j++) {
         if (caption === Label[j].caption) {
-          curData[1].data.isVisible = value
+          curData[0].data.isVisible = value
           hasDeal = true
           break
         }
@@ -738,7 +757,7 @@ export default class MT_layerManager extends React.Component {
       this.props.map.currentMap.name || 'DefaultMap',
     )
     NavigationService.navigate('InputPage', {
-      headerTitle: '标注名称',
+      headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async value => {
@@ -800,7 +819,9 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === '我的图层') {
+        if (
+          section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+        ) {
           action = this.onToolPress
           if (
             this.props.layers.length > 0 &&
@@ -814,10 +835,19 @@ export default class MT_layerManager extends React.Component {
           ) {
             if (LayerUtils.isBaseLayer(item.name)) return true
           }
-        } else if (section.title === '我的底图') {
+          if (
+            this.props.layers.length > 0 &&
+            item.name.indexOf('@Label') >= 0
+          ) {
+            return true
+          }
+        } else if (
+          section.title === getLanguage(this.props.language).Map_Layer.BASEMAP
+        ) {
           action = this.onToolBasePress
-          if (!LayerUtils.isBaseLayer(item.name)) return true
-        } else if (section.title === '我的标注') {
+        } else if (
+          section.title === getLanguage(this.props.language).Map_Layer.PLOTS
+        ) {
           action = this.taggingTool
         }
         return (
@@ -879,7 +909,7 @@ export default class MT_layerManager extends React.Component {
     let image = section.visible
       ? (image = getThemeAssets().publicAssets.list_section_packup)
       : (image = getThemeAssets().publicAssets.list_section_spread)
-    if (section.title === '我的标注') {
+    if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
       return (
         <TouchableOpacity
           style={{
@@ -1044,6 +1074,7 @@ export default class MT_layerManager extends React.Component {
   renderTool = () => {
     return (
       <LayerManager_tolbar
+        language={this.props.language}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}

@@ -19,9 +19,13 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
+import { getLanguage } from '../../../language/index'
+
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
+    language: String,
+    setLanguage: () => {},
     nav: Object,
     latestMap: Object,
     currentUser: Object,
@@ -146,7 +150,7 @@ export default class Home extends Component {
 
   _onLogout = () => {
     if (this.container) {
-      this.container.setLoading(true, '注销中...')
+      //this.container.setLoading(true, '注销中...')
     }
     try {
       if (this.props.currentUser.userType !== UserType.PROBATION_USER) {
@@ -256,7 +260,9 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否下载示例数据？'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.DOWNLOAD_SAMPLE_DATA}
+        </Text>
         <Text style={styles.depict}>
           {fileName}
           {storage}
@@ -269,7 +275,10 @@ export default class Home extends Component {
           }}
         >
           <Image source={Img} style={styles.checkImg} />
-          <Text style={styles.dialogCheck}>不再提示</Text>
+          <Text style={styles.dialogCheck}>
+            {getLanguage(this.props.language).Prompt.NO_REMINDER}
+            {/* 不再提示 */}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -282,7 +291,10 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>确定退出SuperMap iTablet ？</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.QUIT}
+          {/* 确定退出SuperMap iTablet ？ */}
+        </Text>
       </View>
     )
   }
@@ -293,8 +305,10 @@ export default class Home extends Component {
         ref={ref => (this.dialog = ref)}
         type={'modal'}
         confirmAction={this.confirm}
-        confirmBtnTitle={'下载'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.DOWNLOAD}
+        //{'下载'}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        //{'取消'}
         // backgroundStyle={styles.dialogBackground}
         opacity={0.85}
         opacityStyle={styles.opacityView}
@@ -313,8 +327,8 @@ export default class Home extends Component {
       <Dialog
         ref={ref => (this.exit = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         confirmAction={this.exitConfirm}
         opacity={1}
         opacityStyle={styles.opacityView}
@@ -329,6 +343,8 @@ export default class Home extends Component {
     let isLogin = this.props.currentUser.password !== undefined
     return (
       <HomePopupModal
+        language={this.props.language}
+        setLanguage={this.props.setLanguage}
         isLogin={isLogin}
         onLogin={this._onLogin}
         onRegister={this._onRegister}

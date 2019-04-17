@@ -13,10 +13,14 @@ import { color, size } from '../../../styles'
 // import ConstPath from '../../../constants/ConstPath'
 // import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
+//eslint-disable-next-line
 import { Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
+import { getLanguage } from '../../../language/index'
+
 export default class Find extends Component {
   props: {
+    language: String,
     navigation: Object,
     user: Object,
   }
@@ -139,7 +143,8 @@ export default class Find extends Component {
         >
           {/* {this._renderLine()} */}
           {this._renderItem({
-            title: Const.PUBLICMAP,
+            title: getLanguage(this.props.language).Prompt.PUBLIC_MAP,
+            //  Const.PUBLICMAP,
             leftImagePath: require('../../../assets/Find/find_publicmap.png'),
             onClick: () => {
               NavigationService.navigate('PublicMap')
@@ -160,14 +165,16 @@ export default class Find extends Component {
             },
           })} */}
           {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
+            title: getLanguage(this.props.language).Prompt.SUPERMAP_KNOW,
+            // Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
             onClick: () => {
               NavigationService.navigate('SuperMapKnown')
             },
           })}
           {this._renderItem({
-            title: Const.FORUMOFSUPERMAP,
+            title: getLanguage(this.props.language).Prompt.SUPERMAP_FORUM,
+            //Const.FORUMOFSUPERMAP,
             leftImagePath: require('../../../assets/Find/find_forum.png'),
             onClick: this.goToSuperMapForum,
           })}
@@ -200,7 +207,7 @@ export default class Find extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '发现',
+          title: getLanguage(this.props.language).Navigator_Lable.EXPLORE,
           withoutBack: true,
           navigation: this.props.navigation,
         }}

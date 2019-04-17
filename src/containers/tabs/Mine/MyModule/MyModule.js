@@ -21,6 +21,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
+import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -79,7 +80,8 @@ export default class MyModule extends Component {
     if (collectionData.length > 0) {
       isShowItem = true
       data.push({
-        title: '采集模板',
+        title: getLanguage(global.language).Profile.COLLECTION_TEMPLATE,
+        //'采集模板',
         data: collectionData,
         isShowItem: isShowItem,
       })
@@ -122,7 +124,8 @@ export default class MyModule extends Component {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       data = [
         {
-          title: '删除数据',
+          title: getLanguage(global.language).Profile.DELETE_DATA,
+          //'删除数据',
           action: async () => {
             try {
               let filePath = this.itemInfo.item.path.substring(
@@ -146,7 +149,8 @@ export default class MyModule extends Component {
     } else {
       data = [
         {
-          title: '分享',
+          title: getLanguage(global.language).Profile.SHARE,
+          //''分享',
           action: async () => {
             this._closeModal()
             this.ModalBtns.setVisible(true)
@@ -177,7 +181,8 @@ export default class MyModule extends Component {
           },
         },
         {
-          title: '删除数据',
+          title: getLanguage(global.language).Profile.DELETE_DATA,
+          //'删除数据',
           action: async () => {
             try {
               let filePath = await FileTools.appendingHomeDirectory(

@@ -9,6 +9,7 @@ import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
+//eslint-disable-next-line
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -21,12 +22,14 @@ import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import { SMap, Action } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language/index'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
 
 export default class LayerAttribute extends React.Component {
   props: {
+    language: String,
     nav: Object,
     navigation: Object,
     currentAttribute: Object,
@@ -77,7 +80,8 @@ export default class LayerAttribute extends React.Component {
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
-      this.setLoading(true, ConstInfo.LOADING_DATA)
+      this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
+      //ConstInfo.LOADING_DATA)
       this.refresh()
     }
   }
@@ -327,6 +331,7 @@ export default class LayerAttribute extends React.Component {
    */
   locateToBottom = () => {
     if (this.total <= 0) return
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -397,6 +402,7 @@ export default class LayerAttribute extends React.Component {
       currentIndex = data.index
     }
 
+    this.setLoading(true, ConstInfo.LOCATING)
     // if (this.currentPage > 0) {
     //   this.canBeRefresh = true
     // }
@@ -530,7 +536,7 @@ export default class LayerAttribute extends React.Component {
               filter: `SmID=${
                 isSingleData
                   ? this.state.attributes.data[0][0].value
-                  : data.rowData[0].value
+                  : data.rowData[1].value // 0为序号
               }`, // 过滤条件
               cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },
@@ -746,7 +752,12 @@ export default class LayerAttribute extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(this.props.language).Map_Lable.NAME,
+              getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
@@ -776,7 +787,8 @@ export default class LayerAttribute extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          //{'撤销'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_undo}
           imageStyle={styles.headerBtn}
@@ -784,7 +796,8 @@ export default class LayerAttribute extends React.Component {
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_redo}
           imageStyle={styles.headerBtn}
@@ -792,7 +805,10 @@ export default class LayerAttribute extends React.Component {
         />
         <MTBtn
           key={'revert'}
-          title={'还原'}
+          title={
+            getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT
+          }
+          //{'还原'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_revert}
           imageStyle={styles.headerBtn}
@@ -849,19 +865,24 @@ export default class LayerAttribute extends React.Component {
     let title = ''
     switch (GLOBAL.Type) {
       case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
+        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
+        //MAP_MODULE.MAP_COLLECTION
         break
       case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
+        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
+        //MAP_MODULE.MAP_EDIT
         break
       case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
+        title = getLanguage(this.props.language).Map_Module.MAP_3D
+        //MAP_MODULE.MAP_3D
         break
       case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
+        title = getLanguage(this.props.language).Map_Module.MAP_THEME
+        //MAP_MODULE.MAP_THEME
         break
       case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
+        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
+        //MAP_MODULE.MAP_PLOTTING
         break
     }
     let showContent =
@@ -920,7 +941,8 @@ export default class LayerAttribute extends React.Component {
           {showContent
             ? this.renderMapLayerAttribute()
             : this.renderInfoView({
-              title: '暂无属性',
+              title: getLanguage(this.props.language).Prompt.NO_ATTRIBUTES,
+              //'暂无属性',
             })}
           {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
           <LocationView

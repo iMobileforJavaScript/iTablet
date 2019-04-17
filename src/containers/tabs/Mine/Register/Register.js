@@ -25,9 +25,11 @@ import styles, {
   fontSize,
 } from './Styles'
 import color from '../../../../styles/color'
+import { getLanguage } from '../../../../language/index'
 
 export default class Register extends React.Component {
   props: {
+    language: String,
     navigation: Object,
   }
 
@@ -53,15 +55,18 @@ export default class Register extends React.Component {
       let isEmail = this.state.onEmailTitleFocus
       if (!isEmail) {
         if (!this.txtEmail) {
-          Toast.show('请输入邮箱')
+          //请输入QQ邮箱
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
           return
         }
         if (!this.txtEmailNickname) {
-          Toast.show('请输入昵称')
+          //请输入昵称
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
           return
         }
         if (!this.txtEmailPassword) {
-          Toast.show('请输入密码')
+          //请输入密码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
         this.container.setLoading(true, '注册中...')
@@ -72,19 +77,23 @@ export default class Register extends React.Component {
         )
       } else {
         if (!this.txtPhoneNumber) {
-          Toast.show('请输入手机号')
+          //请输入手机号
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
           return
         }
         if (!this.txtPhoneNumberNickname) {
-          Toast.show('请输入昵称')
+          //请输入昵称
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
           return
         }
         if (!this.txtVerifyCode) {
-          Toast.show('请输入验证码')
+          //请输入验证码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_CODE)
           return
         }
         if (!this.txtPhoneNumberPassword) {
-          Toast.show('请输入密码')
+          //请输入密码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
         this.container.setLoading(true, '注册中...')
@@ -124,7 +133,8 @@ export default class Register extends React.Component {
         <TextInput
           keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
-          placeholder={'请输入邮箱'}
+          //'请输入QQ邮箱'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text
@@ -132,7 +142,8 @@ export default class Register extends React.Component {
         />
         <TextInput
           clearButtonMode={'while-editing'}
-          placeholder={'请输入昵称'}
+          //'请输入昵称'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmailNickname = text
@@ -141,7 +152,8 @@ export default class Register extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
-          placeholder={'请输入密码'}
+          // 请输入密码
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmailPassword = text
@@ -156,7 +168,8 @@ export default class Register extends React.Component {
       <View style={{ width: '70%' }}>
         <TextInput
           keyboardType={'phone-pad'}
-          placeholder={'请输入手机号'}
+          //'请输入手机号'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
           style={styles.textInputStyle}
           clearButtonMode={'while-editing'}
           onChangeText={text => {
@@ -165,7 +178,8 @@ export default class Register extends React.Component {
         />
         <TextInput
           keyboardType={'email-address'}
-          placeholder={'请输入昵称'}
+          //'请输入昵称'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -176,7 +190,8 @@ export default class Register extends React.Component {
           <TextInput
             keyboardType={'phone-pad'}
             clearButtonMode={'while-editing'}
-            placeholder={'请输入验证码'}
+            //'请输入验证码'
+            placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
             style={{ flex: 1, fontSize: fontSize }}
             onChangeText={text => {
               this.txtVerifyCode = text
@@ -185,20 +200,27 @@ export default class Register extends React.Component {
           <TouchableOpacity
             onPress={() => {
               if (!this.txtPhoneNumber && this.txtPhoneNumber === undefined) {
-                Toast.show('请输入手机号')
+                //'请输入手机号'
+                Toast.show(
+                  getLanguage(this.props.language).Profile.ENTER_MOBILE,
+                )
                 return
               }
               Toast.show('验证码已发送')
               SOnlineService.sendSMSVerifyCode(this.txtPhoneNumber)
             }}
           >
-            <Text style={styles.verifyCodeRTextStyle}>获取验证码</Text>
+            <Text style={styles.verifyCodeRTextStyle}>
+              {/* 获取验证码 */}
+              {getLanguage(this.props.language).Profile.GET_CODE}
+            </Text>
           </TouchableOpacity>
         </View>
         <TextInput
           secureTextEntry={true}
           clearButtonMode={'while-editing'}
-          placeholder={'请输入密码'}
+          //'请输入密码'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtPhoneNumberPassword = text
@@ -242,7 +264,8 @@ export default class Register extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: '注册',
+          //'注册'
+          title: getLanguage(this.props.language).Profile.REGISTER,
           navigation: this.props.navigation,
         }}
       >
@@ -286,7 +309,10 @@ export default class Register extends React.Component {
                     },
                   ]}
                 >
-                  <Text style={[styles.titleContainerStyle]}>手机注册</Text>
+                  <Text style={[styles.titleContainerStyle]}>
+                    {/* 手机注册 */}
+                    {getLanguage(this.props.language).Profile.MOBILE_REGISTER}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -304,7 +330,10 @@ export default class Register extends React.Component {
                     backgroundColor: this.state.titlePhoneBg,
                   }}
                 >
-                  <Text style={[styles.titleContainerStyle]}>邮箱注册</Text>
+                  <Text style={[styles.titleContainerStyle]}>
+                    {/* 邮箱注册 */}
+                    {getLanguage(this.props.language).Profile.EMAIL_REGISTER}
+                  </Text>
                 </TouchableOpacity>
               </View>
               {this._onSelectTitle()}
@@ -316,7 +345,10 @@ export default class Register extends React.Component {
                   this._register()
                 }}
               >
-                <Text style={styles.titleContainerStyle}>注册</Text>
+                <Text style={styles.titleContainerStyle}>
+                  {/* 注册 */}
+                  {getLanguage(this.props.language).Profile.REGISTER}
+                </Text>
               </TouchableOpacity>
               <View style={{ flex: 1, height: 200 }} />
             </View>

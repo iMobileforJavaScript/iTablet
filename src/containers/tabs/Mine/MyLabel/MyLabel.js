@@ -18,6 +18,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
+import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
@@ -191,7 +192,8 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
-        title: '分享',
+        title: getLanguage(global.language).Profile.SHARE,
+        //'分享',
         action: () => {
           this._closeModal()
           this.ModalBtns.setVisible(true)
@@ -199,7 +201,8 @@ export default class MyLabel extends Component {
         },
       },
       {
-        title: '删除数据',
+        title: getLanguage(global.language).Profile.DELETE_DATA,
+        //'删除数据',
         action: () => {
           SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
         },

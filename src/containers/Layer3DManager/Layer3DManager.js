@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
+//eslint-disable-next-line
 import { MAP_MODULE } from '../../constants'
 import Layer3DItem from './Layer3DItem'
 import {
@@ -14,9 +15,11 @@ import {
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
+import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
+    language: String,
     navigation: Object,
     type: string,
     data: Array,
@@ -109,7 +112,9 @@ export default class Map3DToolBar extends Component {
   }
 
   renderListSectionHeader = ({ section }) => {
-    let image = section.visible
+    let image
+    let visible = section.visible
+    visible
       ? (image = require('../../assets/mapEdit/icon_spread.png'))
       : (image = require('../../assets/mapEdit/icon_packUP.png'))
     return (
@@ -170,6 +175,7 @@ export default class Map3DToolBar extends Component {
   renderLayerToolbar = () => {
     return (
       <LayerManager_tolbar
+        language={this.props.language}
         ref={ref => (this.layer3dToolbar = ref)}
         getOverlayView={this.getOverlayView}
         device={this.props.device}
@@ -187,7 +193,8 @@ export default class Map3DToolBar extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: MAP_MODULE.MAP_3D,
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
+          //MAP_MODULE.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,
         }}

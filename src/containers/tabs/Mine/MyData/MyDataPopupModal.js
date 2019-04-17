@@ -10,6 +10,8 @@ import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { Button } from '../../../../components'
 
+import { getLanguage } from '../../../../language/index'
+
 const styles = StyleSheet.create({
   topContainer: {
     flexDirection: 'column',
@@ -92,7 +94,8 @@ export default class MyDataPopupModal extends PureComponent {
       <Button
         style={styles.item}
         titleStyle={styles.btnTitle}
-        title={'取消'}
+        title={getLanguage(global.language).Prompt.CANCEL}
+        // {'取消'}
         key={'取消'}
         onPress={() => {
           this._onCloseModal()

@@ -9,6 +9,7 @@ import CollectionData from './CollectionData'
 import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 
 // let _params = {}
 
@@ -146,7 +147,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'startFly',
-          title: '开始飞行',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_START,
+          //'开始飞行',
           action: () => {
             SScene.flyStart()
           },
@@ -156,7 +158,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'stop',
-          title: '暂停',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
           action: () => {
             SScene.flyPause()
           },
@@ -172,12 +175,14 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'startFly',
-          title: '添加站点',
+          title: getLanguage(global.language).Map_Main_Menu.FLY_ADD_STOPS,
+          //'添加站点',
           action: () => {
             try {
               SScene.saveCurrentRoutStop().then(result => {
                 if (result) {
-                  Toast.show('添加站点成功')
+                  Toast.show(getLanguage(global.language).Prompt.ADD_SUCCESS)
+                  //'添加站点成功')
                 }
               })
             } catch (error) {
@@ -190,7 +195,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'stop',
-          title: '飞行',
+          title: getLanguage(global.language).Map_Main_Menu.FLY,
+          //'飞行',
           action: () => {
             try {
               SScene.saveRoutStop()
@@ -205,7 +211,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'pause',
-          title: '暂停',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
           action: () => {
             try {
               SScene.pasueRoutStop()
@@ -289,7 +296,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'cancel',
-          title: '取消',
+          title: getLanguage(global.language).Prompt.CANCEL,
+          //'取消',
           action: () => {
             SScene.clearSelection()
             params.setAttributes && params.setAttributes({})

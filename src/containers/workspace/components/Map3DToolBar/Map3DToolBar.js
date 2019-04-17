@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
+
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
@@ -239,7 +241,8 @@ export default class Map3DToolBar extends React.Component {
 
   openWorkspace = item => {
     if (item.name === GLOBAL.sceneName) {
-      Toast.show('场景已打开,请勿重复打开场景')
+      Toast.show(getLanguage(global.language).Prompt.THE_SCENE_IS_OPENED)
+      //'场景已打开,请勿重复打开场景')
       return
     }
     SScene.openScence(item.name).then(() => {
@@ -368,7 +371,10 @@ export default class Map3DToolBar extends React.Component {
               source={require('../../../../assets/mapToolbar/list_type_maps.png')}
               style={styles.sceneImg}
             />
-            <Text style={styles.sceneTitle}>场景</Text>
+            <Text style={styles.sceneTitle}>
+              {getLanguage(global.language).Map_Lable.SCENE}
+              {/* 场景 */}
+            </Text>
           </View>
           <FlatList
             data={this.state.data}

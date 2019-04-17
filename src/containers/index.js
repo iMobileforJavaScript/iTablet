@@ -1,11 +1,11 @@
 import { StackNavigator } from 'react-navigation'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
-
 //主页
 import MapLoad from './mapLoad'
 
 //我的
-import Tabs, {
+import {
+  Tabs,
   MyService,
   MyOnlineData,
   Register,

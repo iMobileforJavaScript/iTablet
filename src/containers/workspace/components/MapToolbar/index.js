@@ -1,3 +1,13 @@
 import MapToolbar from './MapToolbar'
+import { connect } from 'react-redux'
 
-export default MapToolbar
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
+})
+
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MapToolbar)
+//export default MapToolbar

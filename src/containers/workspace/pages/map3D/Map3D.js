@@ -27,9 +27,11 @@ import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
+import { getLanguage } from '../../../../language/index'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
+    language: String,
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
@@ -125,11 +127,15 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    this.container.setLoading(true)
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.LOADING,
+    )
     if (!this.name) {
       setTimeout(() => {
         this.container.setLoading(false)
-        Toast.show('无场景显示')
+        Toast.show(getLanguage(this.props.language).Prompt.NO_SCENE)
+        //'无场景显示')
       }, 1500)
       return
     }
@@ -218,7 +224,12 @@ export default class Map3D extends React.Component {
     // }
     // GLOBAL.sceneName = ''
     try {
-      this.container && this.container.setLoading(true, '正在关闭')
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING_3D,
+          //'正在关闭'
+        )
       if (GLOBAL.openWorkspace) {
         // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
         // await SScene.saveWorkspace()
@@ -247,6 +258,7 @@ export default class Map3D extends React.Component {
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
+        language={this.props.language}
         style={styles.functionToolbar}
         ref={ref => (this.functionToolbar = ref)}
         getToolRef={() => {
@@ -358,6 +370,8 @@ export default class Map3D extends React.Component {
         type={'modal'}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
       >
         <View style={styles.item}>
           {/* <Text style={styles.title}>文本内容</Text> */}
@@ -371,7 +385,10 @@ export default class Map3D extends React.Component {
               })
             }}
             value={this.state.inputText}
-            placeholder={'请输入文本内容'}
+            placeholder={
+              getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT
+            }
+            // {'请输入文本内容'}
             style={styles.textInputStyle}
           />
         </View>
@@ -407,7 +424,8 @@ export default class Map3D extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '三维场景',
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
+          //'三维场景',
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: (

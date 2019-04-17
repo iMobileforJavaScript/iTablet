@@ -30,11 +30,13 @@ import { SMap, SScene } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import Map3DToolBar from '../../../workspace/components/Map3DToolBar'
+import { getLanguage } from '../../../../language/index'
 /** 工具栏类型 **/
 const list = 'list'
 
 export default class LayerManager_tolbar extends React.Component {
   props: {
+    language: String,
     type?: string,
     containerProps?: Object,
     data: Array,
@@ -88,25 +90,25 @@ export default class LayerManager_tolbar extends React.Component {
     let data
     switch (type) {
       case ConstToolType.MAP_STYLE:
-        data = layersetting
+        data = layersetting(this.props.language)
         break
       case ConstToolType.MAP_THEME_STYLE:
-        data = layerThemeSetting
+        data = layerThemeSetting(this.props.language)
         break
       case ConstToolType.MAP_THEME_STYLES:
-        data = layerThemeSettings
+        data = layerThemeSettings(this.props.language)
         break
       case ConstToolType.MAP3D_LAYER3DSELECT:
-        data = layer3dSettingCanSelect
+        data = layer3dSettingCanSelect(this.props.language)
         break
       case ConstToolType.MAP3D_LAYER3DCHANGE:
-        data = layereditsetting
+        data = layereditsetting(global.language)
         break
       case ConstToolType.COLLECTION:
-        data = layerCollectionSetting
+        data = layerCollectionSetting(this.props.language)
         break
       case ConstToolType.MAP_EDIT_STYLE:
-        data = layereditsetting
+        data = layereditsetting(global.language)
         break
       case ConstToolType.MAP_EDIT_MORE_STYLE:
         data = layerManagerData
@@ -115,10 +117,10 @@ export default class LayerManager_tolbar extends React.Component {
         data = baseListData
         break
       case ConstToolType.MAP_EDIT_TAGGING:
-        data = taggingData
+        data = taggingData(global.language)
         break
       case ConstToolType.MAP_SCALE:
-        data = scaleData
+        data = scaleData(this.props.language)
         break
       case ConstToolType.MAP_MAX_SCALE:
         data = mscaleData
@@ -255,13 +257,20 @@ export default class LayerManager_tolbar extends React.Component {
         this.setVisible(false)
       }.bind(this)())
     }
-    if (section.title === '移除') {
+    if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_REMOVE
+    ) {
+      //'移除'
+
       (async function() {
         await SMap.removeLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
-    } else if (section.title === '切换底图') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
+    ) {
+      //'切换底图') {
       if (this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE) {
         this.setVisible(true, ConstToolType.MAP3D_BASE, {
           height: ConstToolType.TOOLBAR_HEIGHT[5],
@@ -273,20 +282,34 @@ export default class LayerManager_tolbar extends React.Component {
           layerdata: this.state.layerdata,
         })
       }
-    } else if (section.title === '图层风格') {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_LAYER_STYLE
+    ) {
+      // '图层风格'
       this.mapStyle()
       this.setVisible(false)
-    } else if (section.title === '可见比例尺范围') {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
+    ) {
+      //'可见比例尺范围'
       this.setVisible(true, ConstToolType.MAP_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[1],
         layerdata: this.state.layerdata,
       })
-    } else if (section.title === '最大可见比例尺') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM
+    ) {
+      //'最大可见比例尺') {
       this.setVisible(true, ConstToolType.MAP_MAX_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: this.state.layerdata,
       })
-    } else if (section.title === '最小可见比例尺') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MINIMUM
+    ) {
+      //'最小可见比例尺') {
       this.setVisible(true, ConstToolType.MAP_MIN_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: this.state.layerdata,
@@ -371,9 +394,13 @@ export default class LayerManager_tolbar extends React.Component {
           this.setVisible(false)
         }
       }.bind(this)())
-    } else if (section.title === '重命名') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
+    ) {
+      //'重命名') {
       NavigationService.navigate('InputPage', {
-        headerTitle: '图层名称',
+        headerTitle: getLanguage(global.language).Map_Layer.LAYERS_LAYER_NAME,
+        //'图层名称',
         value: this.state.layerdata ? this.state.layerdata.caption : '',
         cb: async value => {
           if (value !== '') {
@@ -387,23 +414,35 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    } else if (section.title === '上移') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
+    ) {
+      //''上移') {
       (async function() {
         await SMap.moveUpLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
-    } else if (section.title === '下移') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN
+    ) {
+      //''下移') {
       (async function() {
         await SMap.moveDownLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
-    } else if (section.title === '置顶') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_TOP
+    ) {
+      //''置顶') {
       (async function() {
         await SMap.moveToTop(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
-    } else if (section.title === '置底') {
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
+    ) {
+      //''置底') {
       (async function() {
         await SMap.moveToBottom(this.state.layerdata.name)
       }.bind(this)())
@@ -417,7 +456,10 @@ export default class LayerManager_tolbar extends React.Component {
       }
       this.props.getLayers()
       this.setVisible(false)
-    } else if (section.title === '设置为当前标注') {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
+    ) {
       (async function() {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
           this.state.layerdata.name,
@@ -425,8 +467,15 @@ export default class LayerManager_tolbar extends React.Component {
         this.updateTagging()
         this.setVisible(false)
       }.bind(this)())
-    } else if (section.title === '设置为当前图层') {
-      if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
+    ) {
+      //'设置为当前图层'
+      if (
+        this.state.type === ConstToolType.MAP3D_LAYER3DSELECT ||
+        this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE
+      ) {
         this.cb && this.cb(this.layer3dItem)
         this.setVisible(false)
         let overlayView = this.props.getOverlayView
@@ -440,16 +489,32 @@ export default class LayerManager_tolbar extends React.Component {
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
       this.setThislayer()
-      Toast.show('当前图层为' + this.state.layerdata.caption)
+      Toast.show(
+        //'当前图层为'
+        getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
+          '  ' +
+          this.state.layerdata.caption,
+      )
       this.setVisible(false)
-    } else if (section.title === '修改专题图') {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP
+    ) {
+      //'修改专题图') {
       this.mapStyle()
       this.setVisible(false)
-    } else if (section.title === '新建专题图') {
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_CREAT_THEMATIC_MAP
+    ) {
+      //'新建专题图') {
       let themeType = this.state.layerdata.themeType
       let type = this.state.layerdata.type
       if (parseInt(themeType) > 0) {
-        Toast.show('不支持由该图层创建专题图')
+        Toast.show(
+          getLanguage(global.language).Prompt.LAYER_CANNOT_CREATE_THEMATIC_MAP,
+          //'不支持由该图层创建专题图'
+        )
       } else if (
         parseInt(type) === 1 ||
         parseInt(type) === 3 ||
@@ -476,7 +541,10 @@ export default class LayerManager_tolbar extends React.Component {
         // eslint-disable-next-line react/prop-types
         this.props.navigation.navigate('MapView')
       } else {
-        Toast.show('不支持由该图层创建专题图')
+        Toast.show(
+          getLanguage(global.language).Prompt.LAYER_CANNOT_CREATE_THEMATIC_MAP,
+          //'不支持由该图层创建专题图'
+        )
       }
     } else if (
       section.title === '设置图层可选' ||
@@ -510,17 +578,16 @@ export default class LayerManager_tolbar extends React.Component {
     overlayView = {},
     changeState = () => {},
   ) => {
-    //console.log(layer3dItem)
     this.layer3dItem = layer3dItem
     this.cb = cb
     this.setItemSelectable = setItemSelectable
     this.overlayView = overlayView
     this.changeState = changeState
-    let selectabel = this.layer3dItem.selectable
+    let selectable = this.layer3dItem.selectable
     let data
-    selectabel
-      ? (data = layer3dSettingCanSelect)
-      : (data = layer3dSettingCanNotSelect)
+    selectable
+      ? (data = layer3dSettingCanSelect(this.props.language))
+      : (data = layer3dSettingCanNotSelect(this.props.language))
     this.setState({ data })
   }
 

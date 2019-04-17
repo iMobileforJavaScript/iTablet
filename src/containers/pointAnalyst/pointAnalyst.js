@@ -9,11 +9,12 @@ import {
 } from 'react-native'
 import { Container, SearchBar } from '../../components'
 // import { scaleSize} from '../../utils'
-import { ConstInfo } from '../../constants'
+// import { ConstInfo } from '../../constants'
 import { SScene } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 import { Toast } from '../../utils'
 import styles from './styles'
+import { getLanguage } from '../../language/index'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
@@ -113,7 +114,11 @@ export default class PointAnalyst extends Component {
           this.setState({ firstPoint: pointName, analystData: [] })
         } else {
           await SScene.savePoint(index, this.PointType)
-          this.container.setLoading(true, '路径分析中')
+          this.container.setLoading(
+            true,
+            getLanguage(global.language).Prompt.ANALYSING,
+          )
+          //'路径分析中')
           this.setState({ secondPoint: pointName, analystData: [] })
           let result = await SScene.navigationLine()
           if (result) {
@@ -124,7 +129,11 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
-        this.container.setLoading(true, '位置搜索中')
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.SERCHING,
+        )
+        // '位置搜索中')
         this.setState({ searchValue: pointName, searchData: [] })
         let result = await SScene.toLocationPoint(index)
         if (result) {
@@ -162,7 +171,10 @@ export default class PointAnalyst extends Component {
                 }}
                 value={this.state.firstPoint}
                 style={styles.onInput}
-                placeholder={'请输入起点'}
+                placeholder={
+                  getLanguage(global.language).Prompt.CHOOSE_STARTING_POINT
+                }
+                //{'请输入起点'}
               />
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -183,7 +195,10 @@ export default class PointAnalyst extends Component {
                 }}
                 value={this.state.secondPoint}
                 style={styles.secondInput}
-                placeholder={'请输入终点'}
+                placeholder={
+                  getLanguage(global.language).Prompt.CHOOSE_DESTINATION
+                }
+                // {'请输入终点'}
               />
             </View>
           </View>
@@ -242,10 +257,11 @@ export default class PointAnalyst extends Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, ConstInfo.SEARCHING)
+          this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
           SScene.pointSearch(searchKey)
         }}
-        placeholder={'请输入搜索关键字'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+        //{'请输入搜索关键字'}
       />
     )
   }

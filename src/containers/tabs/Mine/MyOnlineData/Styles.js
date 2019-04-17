@@ -10,7 +10,7 @@ const largeFontSize = 18
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content_white,
+    // backgroundColor: color.content_white,
   },
   noDataViewStyle: {
     flex: 1,

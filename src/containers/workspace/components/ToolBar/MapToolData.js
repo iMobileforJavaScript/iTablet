@@ -8,6 +8,7 @@ import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import NavigationService from '../../../NavigationService'
+import { getLanguage } from '../../../../language/index'
 
 let _params = {}
 
@@ -32,12 +33,25 @@ function getMapTool(type, params) {
     case ConstToolType.MAP_TOOL_TAGGING_SETTING:
       data = [
         {
-          title: '属性记录',
+          title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+          //'属性记录',
           data: [
-            { title: '名称', action: name },
-            { title: '备注', action: remark },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+              //'名称',
+              action: name,
+            },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+              //'备注',
+              action: remark,
+            },
             // { title: '风格', action: remark },
-            { title: 'http地址', action: address },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+              //'http地址',
+              action: address,
+            },
             // { title: '图片', action: address },
           ],
         },
@@ -53,49 +67,62 @@ function getMapTool(type, params) {
       data = [
         {
           key: 'distanceComput',
-          title: '距离量算',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_DISTANCE_MEASUREMENT,
+          //'距离量算',
           action: measureLength,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_length_black.png'),
         },
         {
           key: 'coverComput',
-          title: '面积量算',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AREA_MEASUREMENT,
+          //'面积量算',
           action: measureArea,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_area_black.png'),
         },
         {
           key: 'azimuthComput',
-          title: '方位角量算',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AZIMUTH_MEASUREMENT,
+          //'方位角量算',
           action: measureAngle,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_angle_black.png'),
         },
         {
           key: 'pointSelect',
-          title: '点选',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT,
+          //'点选',
           action: pointSelect,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
         },
         {
           key: 'selectByRectangle',
-          title: '框选',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_SELECT,
+          //'框选',
           action: selectByRectangle,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_select_by_rectangle.png'),
         },
         {
           key: 'pointSelect',
-          title: '全幅',
+          title: getLanguage(global.language).Map_Main_Menu.FULL_SCREEN,
+          //'全幅',
+          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //'全幅',
           action: viewEntire,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_full_screen.png'),
         },
         {
           key: constants.POINT,
-          title: constants.POINT,
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
+          //constants.POINT,
           action: point,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_point_black.png'),
@@ -103,7 +130,8 @@ function getMapTool(type, params) {
         },
         {
           key: constants.WORDS,
-          title: constants.WORDS,
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_TEXT,
+          //constants.WORDS,
           size: 'large',
           action: words,
           image: require('../../../../assets/mapTools/icon_words_black.png'),
@@ -111,7 +139,8 @@ function getMapTool(type, params) {
         },
         {
           key: constants.POINTLINE,
-          title: constants.POINTLINE,
+          title: getLanguage(global.language).Map_Main_Menu.DOT_LINE,
+          //constants.POINTLINE,
           size: 'large',
           action: pointline,
           image: require('../../../../assets/mapTools/icon_point_line_black.png'),
@@ -119,7 +148,8 @@ function getMapTool(type, params) {
         },
         {
           key: constants.FREELINE,
-          title: constants.FREELINE,
+          title: getLanguage(global.language).Map_Main_Menu.FREE_LINE,
+          //constants.FREELINE,
           size: 'large',
           action: freeline,
           image: require('../../../../assets/mapTools/icon_free_line_black.png'),
@@ -127,7 +157,8 @@ function getMapTool(type, params) {
         },
         {
           key: constants.POINTCOVER,
-          title: constants.POINTCOVER,
+          title: getLanguage(global.language).Map_Main_Menu.DOT_REGION,
+          //constants.POINTCOVER,
           size: 'large',
           action: pointcover,
           image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
@@ -135,7 +166,8 @@ function getMapTool(type, params) {
         },
         {
           key: constants.FREECOVER,
-          title: constants.FREECOVER,
+          title: getLanguage(global.language).Map_Main_Menu.FREE_REGION,
+          //constants.FREECOVER,
           size: 'large',
           action: freecover,
           image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
@@ -157,7 +189,9 @@ function getMapTool(type, params) {
         // },
         {
           key: 'rectangularCut',
-          title: '矩形裁剪',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_CLIP,
+          //'矩形裁剪',
           action: rectangleCut,
           size: 'large',
           image: getPublicAssets().mapTools.tools_rectangle_cut,
@@ -246,7 +280,8 @@ function getMapTool(type, params) {
         // },
         {
           key: constants.CANCEL_SELECT,
-          title: constants.CANCEL_SELECT,
+          title: getLanguage(global.language).Prompt.CANCEL,
+          //constants.CANCEL_SELECT,
           action: cancelSelect,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),
@@ -428,7 +463,7 @@ function words() {
 
 function setwords(event) {
   NavigationService.navigate('InputPage', {
-    headerTitle: '标注名称',
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
     cb: async value => {
       if (value !== '') {
         await SMap.addTextRecordset(
@@ -486,7 +521,7 @@ function freecover() {
 
 function name() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: '名称',
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
     cb: async value => {
       if (value !== '') {
         (async function() {
@@ -505,7 +540,7 @@ function name() {
 
 function remark() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: '名称',
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
     cb: async value => {
       if (value !== '') {
         (async function() {
@@ -524,7 +559,7 @@ function remark() {
 
 function address() {
   return NavigationService.navigate('InputPage', {
-    headerTitle: '名称',
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
     cb: async value => {
       if (value !== '') {
         (async function() {

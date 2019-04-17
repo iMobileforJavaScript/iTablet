@@ -5,6 +5,7 @@ import { Container } from '../../../../components'
 import styles from './styles'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 export default class SuperMapKnown extends Component {
   props: {
     navigation: Object,
@@ -62,7 +63,8 @@ export default class SuperMapKnown extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '超图知道',
+          title: getLanguage(global.language).Prompt.SUPERMAP_KNOW,
+          //'超图知道',
           navigation: this.props.navigation,
         }}
       >

@@ -5,15 +5,8 @@ import HomeUsualTitle from './Home_usual_title'
 import BtnbarLoad from './Btnbar_load'
 import ExampleMapList from './ExampleMapList'
 import OffLineList from './OffLineList'
+//eslint-disable-next-line
 import ModuleList from './ModuleList'
-// import RenderModuleListItem from './RenderModuleListItem'
-// import connect from "react-redux/es/connect/connect"
-// const mapStateToProps = state => ({
-//   currentUser: state.user.toJS().currentUser,
-// })
-// export default connect(
-//   mapStateToProps,
-// )(RenderModuleListItem)
 
 export {
   BtnbarHome,

@@ -8,6 +8,7 @@ import * as React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { Button, RadioGroup, TextBtn } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 
 import styles from './styles'
 
@@ -34,13 +35,15 @@ export default class LocationView extends React.Component {
 
     this.options = [
       {
-        title: '相对位置',
+        title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_RELATIVE,
+        //'相对位置',
         value: 'relative',
         hasInput: true,
         keyboardType: 'numeric',
       },
       {
-        title: '绝对位置',
+        title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_ABSOLUTE,
+        //'绝对位置',
         value: 'absolute',
         hasInput: true,
         keyboardType: 'numeric',
@@ -112,7 +115,9 @@ export default class LocationView extends React.Component {
     return (
       <View style={styles.topView}>
         <Text style={styles.text}>
-          {'当前位置 ' + (this.props.currentIndex + 1 || '')}
+          {getLanguage(global.language).Map_Attribute.ATTRIBUTE_CURRENT +
+            //'当前位置 '
+            (this.props.currentIndex + 1 || '')}
         </Text>
       </View>
     )
@@ -124,13 +129,19 @@ export default class LocationView extends React.Component {
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title="定位到首位"
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_FIRST_RECORD
+          }
+          //"定位到首位"
           onPress={this.locateToTop}
         />
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title="定位到末行"
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LAST_RECORD
+          }
+          //"定位到末行"
           onPress={this.locateToBottom}
         />
       </View>
@@ -156,12 +167,16 @@ export default class LocationView extends React.Component {
       <View style={styles.bottomButtons}>
         <TextBtn
           textStyle={styles.bottomBtnTxt}
-          btnText="取消"
+          btnText={getLanguage(global.language).Prompt.ATTRIBUTE_LOCATION}
+          //"取消"
           btnClick={() => this.show(false)}
         />
         <TextBtn
           textStyle={styles.bottomBtnTxt}
-          btnText="定位"
+          btnText={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION
+          }
+          //"定位"
           btnClick={this.locateToPosition}
         />
       </View>
