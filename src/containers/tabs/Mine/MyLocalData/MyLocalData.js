@@ -415,6 +415,7 @@ export default class MyLocalData extends Component {
         sectionData.push(online)
         this.setState({ sectionData: sectionData, activityShow: false })
       } else {
+        this.currentPage = this.currentPage - 1
         Toast.show('网络异常')
         this.setState({ activityShow: false })
         // this.currentPage=this.currentPage-1

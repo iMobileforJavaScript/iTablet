@@ -1,5 +1,4 @@
 import { NetInfo } from 'react-native'
-//eslint-disable-next-line
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -219,6 +218,7 @@ async function downFileAction(
           async () => {
             let unzipRes = await FileTools.unZipFile(filePath, toPath)
             if (unzipRes === false) {
+              await FileTools.deleteFile(filePath)
               Toast.show('网络数据已损坏，无法正常使用')
             } else {
               await FileTools.deleteFile(filePath)
