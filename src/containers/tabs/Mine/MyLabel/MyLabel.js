@@ -41,7 +41,7 @@ export default class MyLabel extends Component {
   }
 
   componentDidMount() {
-    this.container.setLoading(true)
+    this.container.setLoading(true, getLanguage(global.language).Prompt.LOADING)
     this.getData()
   }
 

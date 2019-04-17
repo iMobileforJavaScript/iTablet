@@ -371,7 +371,8 @@ export default class PublicMap extends Component {
               color: 'orange',
             }}
           >
-            加载中...
+            {getLanguage(global.language).Prompt.LOADING}
+            {/* 加载中... */}
           </Text>
         </View>
       )

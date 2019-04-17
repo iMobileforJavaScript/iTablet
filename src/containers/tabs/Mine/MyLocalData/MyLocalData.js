@@ -66,7 +66,10 @@ export default class MyLocalData extends Component {
 
   _setSectionDataState3 = async () => {
     try {
-      this.container.setLoading(true)
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+      )
       let cacheSectionData = await _constructCacheSectionData(
         this.props.language,
       )
@@ -331,7 +334,8 @@ export default class MyLocalData extends Component {
   }
 
   deleteDataOfOnline = async () => {
-    this.setLoading(true, '删除数据中...')
+    this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING)
+    //'删除数据中...')
     this.setState({ modalIsVisible: false })
     this.deleteDataing = true
     try {
@@ -348,7 +352,8 @@ export default class MyLocalData extends Component {
         })
       } else {
         this.deleteDataing = false
-        Toast.show('数据删除失败')
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
+        //'数据删除失败')
       }
     } catch (e) {
       this.deleteDataing = false
