@@ -23,6 +23,11 @@ export default class RenderFindItem extends Component {
 
   constructor(props) {
     super(props)
+    this.path = undefined
+    this.exist = false
+    this.downloading = false
+    this.downloadingPath = false
+    this.titleName
     this.state = {
       progress: getLanguage(global.language).Prompt.DOWNLOAD,
       // '下载',
@@ -30,6 +35,64 @@ export default class RenderFindItem extends Component {
     }
   }
 
+  async componentDidMount() {
+    this.path =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.props.data.fileName
+
+    let exist = await FileTools.fileIsExist(this.path)
+    if (exist) {
+      this.exist = true
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+        //'下载完成',
+        isDownloading: false,
+      })
+    }
+
+    this.downloadingPath =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.props.data.MD5
+
+    exist = await FileTools.fileIsExist(this.downloadingPath)
+    if (exist) {
+      this.downloading = true
+      let timer = setInterval(async () => {
+        exist = await FileTools.fileIsExist(this.path)
+        if (exist) {
+          clearInterval(timer)
+          this.exist = true
+          this.setState({
+            progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+            //'下载完成',
+            isDownloading: false,
+          })
+        }
+      }, 2000)
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOADING,
+        //'下载完成',
+        isDownloading: true,
+      })
+    }
+
+    this.titleName = ''
+    if (this.props.data.fileName) {
+      let index = this.props.data.fileName.lastIndexOf('.')
+      this.titleName =
+        index === -1
+          ? this.props.data.fileName
+          : this.props.data.fileName.substring(0, index)
+    }
+  }
   _navigator = uri => {
     NavigationService.navigate('MyOnlineMap', {
       uri: uri,
@@ -50,6 +113,11 @@ export default class RenderFindItem extends Component {
     }
   }
   _downloadFile = async () => {
+    if (this.exist) {
+      this.unZipFile()
+      Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
+      return
+    }
     if (
       this.props.user &&
       this.props.user.currentUser &&
@@ -62,34 +130,21 @@ export default class RenderFindItem extends Component {
         //'正在下载...')
         return
       }
-      this.setState({ progress: getLanguage(global.language).Prompt.DOWNLOADING, isDownloading: true })
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOADING,
+        isDownloading: true,
+      })
+      RNFS.writeFile(this.downloadingPath, '----', 'utf8')
+        .then(() => {})
+        .catch(() => {})
+
       let dataId = this.props.data.id
       let dataUrl =
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
-      let fileName = this.props.data.fileName
-      let appHome = await FileTools.appendingHomeDirectory()
-      let userName =
-        this.props.user.currentUser.userType === UserType.PROBATION_USER
-          ? 'Customer'
-          : this.props.user.currentUser.userName
-      let fileDir =
-        appHome +
-        ConstPath.UserPath +
-        userName +
-        '/' +
-        ConstPath.RelativePath.ExternalData
-      let exists = await RNFS.exists(fileDir)
-      if (!exists) {
-        await RNFS.mkdir(fileDir)
-      }
-      let filePath = fileDir + fileName
       const downloadOptions = {
         fromUrl: dataUrl,
-        toFile: filePath,
+        toFile: this.path,
         background: true,
-        // begin: result => {
-        //
-        // },
         progress: res => {
           let value = ~~res.progress.toFixed(0)
           // console.warn("value:"+value)
@@ -104,38 +159,57 @@ export default class RenderFindItem extends Component {
         ret.promise
           .then(async () => {
             this.setState({
-              progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+              progress: getLanguage(global.language).Prompt
+                .DOWNLOAD_SUCCESSFULLY,
               //'下载完成',
-              isDownloading: false })
-            let savePath =
-              appHome +
-              ConstPath.UserPath +
-              userName +
-              '/' +
-              ConstPath.RelativePath.ExternalData +
-              fileName
-            let result = await FileTools.unZipFile(
-              filePath,
-              savePath.substring(0, savePath.length - 4),
-            )
+              isDownloading: false,
+            })
+            let result = this.unZipFile()
             if (result === false) {
               Toast.show('网络数据已损坏，无法正常使用')
+            } else {
+              this.exist = true
             }
-            FileTools.deleteFile(filePath)
+            FileTools.deleteFile(this.downloadingPath)
           })
           .catch(() => {
             Toast.show('下载失败')
-            FileTools.deleteFile(filePath)
+            FileTools.deleteFile(this.path)
             this.setState({ progress: '下载', isDownloading: false })
           })
       } catch (e) {
         Toast.show('网络错误')
-        FileTools.deleteFile(filePath)
+        FileTools.deleteFile(this.path)
         this.setState({ progress: '下载', isDownloading: false })
       }
     } else {
       Toast.show('登录后可下载')
     }
+  }
+
+  unZipFile = async () => {
+    let appHome = await FileTools.appendingHomeDirectory()
+    let userName =
+      this.props.user.currentUser.userType === UserType.PROBATION_USER
+        ? 'Customer'
+        : this.props.user.currentUser.userName
+    let fileDir =
+      appHome +
+      ConstPath.UserPath +
+      userName +
+      '/' +
+      ConstPath.RelativePath.ExternalData +
+      this.titleName
+
+    let exists = await RNFS.exists(fileDir)
+    if (!exists) {
+      await RNFS.mkdir(fileDir)
+    }
+
+    let savePath = fileDir
+    let result = await FileTools.unZipFile(this.path, savePath)
+
+    return result
   }
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
@@ -157,11 +231,6 @@ export default class RenderFindItem extends Component {
         : (this.props.data.size / 1024).toFixed(2) + 'K'
     let fontColor = color.fontColorGray
     let titleFontColor = color.fontColorBlack
-    let index = this.props.data.fileName.lastIndexOf('.')
-    let titleName =
-      index === -1
-        ? this.props.data.fileName
-        : this.props.data.fileName.substring(0, index)
     return (
       <View>
         <View style={styles.itemViewStyle}>
@@ -182,7 +251,7 @@ export default class RenderFindItem extends Component {
               style={[styles.restTitleTextStyle, { color: titleFontColor }]}
               numberOfLines={2}
             >
-              {titleName}
+              {this.titleName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image

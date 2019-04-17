@@ -25,7 +25,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class MyLocalData extends Component {
   props: {
-    language: Object,
+    language: String,
     user: Object,
     navigation: Object,
     importWorkspace: () => {},

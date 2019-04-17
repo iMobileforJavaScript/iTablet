@@ -5,7 +5,7 @@ import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
-    language: Object,
+    language: String,
     modalVisible: boolean,
     onCloseModal: () => {},
     onDeleteData: () => {},

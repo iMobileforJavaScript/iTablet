@@ -29,7 +29,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class Register extends React.Component {
   props: {
-    language: Object,
+    language: String,
     navigation: Object,
   }
 

@@ -20,7 +20,7 @@ import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 
 const mapStateToProps = state => ({
-  language:state.setting.toJS().language,
+  language: state.setting.toJS().language,
   symbol: state.symbol.toJS(),
   user: state.user.toJS(),
   map: state.map.toJS(),
@@ -41,7 +41,7 @@ const mapDispatchToProps = {
 
 class SymbolTabs extends React.Component {
   props: {
-    language:Object,
+    language: String,
     style: Object,
     symbol: Object,
     template: Object,
@@ -176,7 +176,9 @@ class SymbolTabs extends React.Component {
         }}
       >
         <SymbolTab
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT
+          }
           //"最近"
           data={this.props.symbol.latestSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
@@ -184,7 +186,9 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <SymbolTab
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL
+          }
           //"符号"
           data={this.props.symbol.currentSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
@@ -192,7 +196,9 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <GroupTab
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP
+          }
           //"分组"
           goToPage={this.goToPage}
           setCurrentSymbols={this.props.setCurrentSymbols}
@@ -229,7 +235,9 @@ class SymbolTabs extends React.Component {
         }}
       >
         <TemplateTab
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT
+          }
           //"最近"
           style={styles.temple}
           user={this.props.user}
@@ -243,7 +251,9 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <TemplateTab
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL
+          }
           //"符号"
           style={styles.temple}
           user={this.props.user}
@@ -257,7 +267,9 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <TemplateList
-          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP}
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP
+          }
           //"分组"
           style={styles.temple}
           user={this.props.user}

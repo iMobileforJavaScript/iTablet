@@ -36,7 +36,7 @@ export default class PublicMap extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.state = {
-      data: [{}],
+      data: [],
       isRefresh: false,
       progressWidth: this.screenWidth * 0.4,
       isLoadingData: false,
@@ -57,7 +57,7 @@ export default class PublicMap extends Component {
   componentDidMount() {
     // this._loadFirstUserData()
     this.currentLoadPage2 = 1
-    this._loadFirstUserData2(this.currentLoadPage2, 100)
+    this._loadFirstUserData2(this.currentLoadPage2, 300)
   }
   componentWillUnmount() {
     this._clearInterval()
@@ -87,7 +87,7 @@ export default class PublicMap extends Component {
           let data = JSON.parse(result)
           let mapList = []
 
-          if (!data[0].id) {
+          if (data && data.length === 0) {
             this._showLoadProgressView()
 
             this.getCurrentLoadData2(currentPage, totalPage)
@@ -375,8 +375,7 @@ export default class PublicMap extends Component {
               color: 'orange',
             }}
           >
-            {getLanguage(global.language).Prompt.LOADING}
-            {/* 加载中... */}
+            加载中...
           </Text>
         </View>
       )

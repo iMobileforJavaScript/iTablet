@@ -30,7 +30,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class Login extends React.Component {
   props: {
-    language: Object,
+    language: String,
     navigation: Object,
     user: Object,
     setUser: () => {},
