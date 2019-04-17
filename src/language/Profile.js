@@ -1,6 +1,7 @@
 //我的、发现
 const Profile_Chinese = {
   //我的  主页面
+  LOGIN_NOW:'立即登录',
   IMPORT: '导入',
   DATA: '数据',
   MARK: '标注',
@@ -87,6 +88,7 @@ const Profile_Chinese = {
   PRIVACY_POLICY: '服务协议',
 }
 const Profile_English = {
+  LOGIN_NOW:'Login',
   IMPORT: 'Import',
   DATA: 'Data',
   MARK: 'Mark',
