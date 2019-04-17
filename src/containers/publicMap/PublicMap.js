@@ -5,7 +5,14 @@
 */
 import React, { Component } from 'react'
 import Container from '../../components/Container'
-import { View, Text, FlatList, RefreshControl, Dimensions,ActivityIndicator } from 'react-native'
+import {
+  View,
+  Text,
+  FlatList,
+  RefreshControl,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../utils'
 import styles from './Styles'
@@ -82,7 +89,7 @@ export default class PublicMap extends Component {
 
           if (!data[0].id) {
             this._showLoadProgressView()
-            debugger
+
             this.getCurrentLoadData2(currentPage, totalPage)
             this._clearInterval()
           } else {
@@ -101,7 +108,7 @@ export default class PublicMap extends Component {
                   bValid = true
                 }
               }
-              if(!bValid){
+              if (!bValid) {
                 this.removeMapCache([element])
               }
               this.setState({ data: mapList })
@@ -111,7 +118,7 @@ export default class PublicMap extends Component {
         }
       } else {
         this._showLoadProgressView()
-        debugger
+
         await this.getCurrentLoadData2(currentPage, totalPage)
 
         this._clearInterval()
@@ -123,10 +130,10 @@ export default class PublicMap extends Component {
 
   async getCurrentLoadData2(currentPage, totalPage) {
     await SOnlineService.syncAndroidCookie()
-    if(!totalPage){
+    if (!totalPage) {
       totalPage = 100
     }
-    if(this.isLoading === true){
+    if (this.isLoading === true) {
       return
     }
 
@@ -142,14 +149,14 @@ export default class PublicMap extends Component {
       currentPage = currentPage + 1
       this.currentLoadPage2 = currentPage
       //加载15条跳出
-      if(data.length > 5){
+      if (data.length > 5) {
         break
       }
     }
     this.isLoading = false
     return data
   }
-  _showLoadProgressView(){
+  _showLoadProgressView() {
     let thisHandle = this
     this.objProgressWidth = setInterval(() => {
       let prevProgressWidth = thisHandle.state.progressWidth
@@ -166,7 +173,7 @@ export default class PublicMap extends Component {
       thisHandle.setState({ progressWidth: currentPorWidth })
     }, 100)
   }
-  async _loadUserData2(currentPage, currentData){
+  async _loadUserData2(currentPage, currentData) {
     if (!currentData) {
       currentData = []
     }
@@ -248,7 +255,7 @@ export default class PublicMap extends Component {
     let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
     return FetchUtils.getObjJson(uri)
   }
-  async saveMapCache(){
+  async saveMapCache() {
     if (this.state.length < 1) return
     let data = JSON.stringify(this.state.data)
     let path =
@@ -263,60 +270,60 @@ export default class PublicMap extends Component {
       .catch(() => {})
   }
 
-  removeMapCache(newMapData){
-    if(!newMapData){
+  removeMapCache(newMapData) {
+    if (!newMapData) {
       return
     }
     let srcData = [...this.state.data]
-    for(let i=0;i<newMapData.length;i++){
+    for (let i = 0; i < newMapData.length; i++) {
       let map = newMapData[i]
 
       let bFound = false
       let index
-      for(let n=0;n<srcData.length;n++){
-        if(srcData[n].MD5 === map.MD5){
+      for (let n = 0; n < srcData.length; n++) {
+        if (srcData[n].MD5 === map.MD5) {
           bFound = true
           index = n
           break
         }
       }
 
-      if(!bFound){
-        srcData.splice(index,1)
+      if (!bFound) {
+        srcData.splice(index, 1)
       }
     }
 
     return srcData
   }
-  addMapCache(newMapData){
-    if(!newMapData){
+  addMapCache(newMapData) {
+    if (!newMapData) {
       return
     }
     let srcData = [...this.state.data]
-    for(let i=0;i<newMapData.length;i++){
+    for (let i = 0; i < newMapData.length; i++) {
       let map = newMapData[i]
 
       let bFound = false
-      for(let n=0;n<srcData.length;n++){
-        if(srcData[n].MD5 === map.MD5){
+      for (let n = 0; n < srcData.length; n++) {
+        if (srcData[n].MD5 === map.MD5) {
           bFound = true
           break
         }
       }
 
-      if(!bFound){
+      if (!bFound) {
         srcData.push(map)
       }
     }
 
     return srcData
   }
-  async _onRefresh(){
+  async _onRefresh() {
     try {
       this.setState({ isRefresh: true })
-      setTimeout(()=>{
+      setTimeout(() => {
         this.setState({ isRefresh: false })
-      },3000)
+      }, 3000)
       // this.currentLoadPage2 = 1
       await this.getCurrentLoadData2(1, 100)
       await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
@@ -325,12 +332,12 @@ export default class PublicMap extends Component {
       this.setState({ isRefresh: false })
     }
   }
-  async _loadData2(){
+  async _loadData2() {
     try {
-      if(!this.state.isLoadingData){
+      if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
         this.currentLoadPage2 = this.currentLoadPage2 + 1
-        await this.getCurrentLoadData2(this.currentLoadPage2,this.totalPage)
+        await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
         this.setState({ isLoadingData: false })
       }
     } catch (e) {
