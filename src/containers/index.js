@@ -4,7 +4,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import MapLoad from './mapLoad'
 
 //我的
-import  {
+import {
   Tabs,
   MyService,
   MyOnlineData,

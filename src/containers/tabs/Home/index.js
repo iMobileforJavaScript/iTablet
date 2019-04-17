@@ -46,7 +46,4 @@ export default connect(
 //   languageDispatchToProps,
 // )(HomePopupModal)
 
-
-
-
 export { AboutITablet, Setting }

@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize, setSpText } from '../../utils'
+import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
@@ -25,14 +25,16 @@ import {
   ConstPath,
   getHeaderTitle,
   ConstOnline,
+  UserType,
+  ConstInfo,
 } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
+import NavigationService from '../../containers/NavigationService'
 import { getLanguage } from '../../language/index'
-// import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -50,6 +52,7 @@ export default class MT_layerManager extends React.Component {
     device: Object,
     currentLayer: Object,
     setMapLegend: () => {},
+    user: Object,
   }
 
   constructor(props) {
@@ -88,11 +91,16 @@ export default class MT_layerManager extends React.Component {
         baseData = [this.props.layers[this.props.layers.length - 1]]
       }
       (async function() {
-        let udbPath = await FileTools.appendingHomeDirectory(
-          ConstPath.CustomerPath + 'Data/Label/Label.udb',
+        dataList = await SMap.getTaggingLayers(
+          this.props.user.currentUser.userName,
         )
-        dataList = await SMap.getUDBName(udbPath)
         newState.data = [
+          {
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
+            data: dataList,
+            visible: true,
+          },
           {
             title: getLanguage(this.props.language).Map_Layer.LAYERS,
             //'我的图层',
@@ -103,12 +111,6 @@ export default class MT_layerManager extends React.Component {
             title: getLanguage(this.props.language).Map_Layer.BASEMAP,
             //'我的底图',
             data: baseData,
-            visible: true,
-          },
-          {
-            title: getLanguage(this.props.language).Map_Layer.PLOTS,
-            //'我的标注',
-            data: dataList,
             visible: true,
           },
         ]
@@ -169,12 +171,17 @@ export default class MT_layerManager extends React.Component {
       ) {
         baseMap = [layers[layers.length - 1]]
       }
-      let udbPath = await FileTools.appendingHomeDirectory(
-        ConstPath.CustomerPath + 'Data/Label/Label.udb',
+      dataList = await SMap.getTaggingLayers(
+        this.props.user.currentUser.userName,
       )
-      dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
+          {
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
+            data: dataList,
+            visible: true,
+          },
           {
             title: getLanguage(this.props.language).Map_Layer.LAYERS,
             //'我的图层',
@@ -185,12 +192,6 @@ export default class MT_layerManager extends React.Component {
             title: getLanguage(this.props.language).Map_Layer.BASEMAP,
             // '我的底图',
             data: baseMap,
-            visible: true,
-          },
-          {
-            title: getLanguage(this.props.language).Map_Layer.PLOTS,
-            //'我的标注',
-            data: dataList,
             visible: true,
           },
         ],
@@ -450,6 +451,11 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  updateTagging = async () => {
+    this.setRefreshing(true)
+    this.getData()
+  }
+
   /**地图制图修改风格 */
   mapEdit = data => {
     SMap.setLayerEditable(data.path, true)
@@ -580,10 +586,11 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  taggingTool = title => {
+  taggingTool = async ({ data, index }) => {
     this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
       height: ConstToolType.TOOLBAR_HEIGHT[1],
-      layerdata: title,
+      layerdata: data,
+      index: index,
     })
   }
 
@@ -642,14 +649,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
-    let layers = this.state.data[0].data
-    let backMaps = this.state.data[1].data
+    let layers = this.state.data[1].data
+    let backMaps = this.state.data[2].data
+    let Label = this.state.data[0].data
     let hasDeal = false
     let caption = data.caption
     let curData = this.state.data.concat()
     for (let i = 0, l = layers.length; i < l; i++) {
       if (caption === layers[i].caption) {
-        curData[0].data[i].isVisible = value
+        curData[1].data[i].isVisible = value
         hasDeal = true
         break
       }
@@ -657,7 +665,15 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
         if (caption === backMaps[j].caption) {
-          curData[1].data.isVisible = value
+          curData[2].data.isVisible = value
+          hasDeal = true
+          break
+        }
+      }
+    if (!hasDeal)
+      for (let j = 0, l = Label.length; j < l; j++) {
+        if (caption === Label[j].caption) {
+          curData[0].data.isVisible = value
           hasDeal = true
           break
         }
@@ -729,6 +745,40 @@ export default class MT_layerManager extends React.Component {
     return icon
   }
 
+  tool_row = async () => {
+    let userPath =
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+        ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath
+    let mapPath = await FileTools.appendingHomeDirectory(
+      userPath + ConstPath.RelativePath.Map,
+    )
+    let newName = await FileTools.getAvailableMapName(
+      mapPath,
+      this.props.map.currentMap.name || 'DefaultMap',
+    )
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
+      value: newName,
+      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      cb: async value => {
+        if (value !== '') {
+          (async function() {
+            await SMap.setLabelColor()
+            GLOBAL.TaggingDatasetName = await SMap.newTaggingDataset(
+              value,
+              this.props.user.currentUser.userName,
+            )
+            this.setRefreshing(true)
+            this.getData()
+          }.bind(this)())
+        }
+        NavigationService.goBack()
+      },
+    })
+  }
+
   getLayerIconByType = type => {
     let icon
     switch (type) {
@@ -766,135 +816,80 @@ export default class MT_layerManager extends React.Component {
     return icon
   }
 
-  _renderItem = ({ item, section }) => {
+  _renderItem = ({ item, section, index }) => {
     // sectionID = sectionID || 0
     if (section.visible) {
       if (item) {
         let action
         if (
+          section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+        ) {
+          action = this.onToolPress
+          if (
+            this.props.layers.length > 0 &&
+            item.name === this.props.layers[this.props.layers.length - 1].name
+          ) {
+            if (LayerUtils.isBaseLayer(item.name)) return true
+          }
+          if (
+            this.props.layers.length > 1 &&
+            item.name === this.props.layers[this.props.layers.length - 2].name
+          ) {
+            if (LayerUtils.isBaseLayer(item.name)) return true
+          }
+          if (
+            this.props.layers.length > 0 &&
+            item.name.indexOf('@Label') >= 0
+          ) {
+            return true
+          }
+        } else if (
+          section.title === getLanguage(this.props.language).Map_Layer.BASEMAP
+        ) {
+          action = this.onToolBasePress
+        } else if (
           section.title === getLanguage(this.props.language).Map_Layer.PLOTS
         ) {
-          return (
-            <TouchableOpacity
-              key={item.name}
-              style={{
-                height: scaleSize(80),
-                padding: scaleSize(6),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <View
-                style={{
-                  marginLeft: scaleSize(6),
-                  marginRight: scaleSize(6),
-                  height: scaleSize(50),
-                  width: scaleSize(100),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  style={{
-                    height: scaleSize(40),
-                    width: scaleSize(40),
-                  }}
-                  source={require('../../assets/map/icon-cad_black.png')}
-                />
-              </View>
-              <View style={{ flex: 1, marginLeft: scaleSize(30) }}>
-                <Text
-                  style={{
-                    fontSize: setSpText(24),
-                    color: color.black,
-                    backgroundColor: 'transparent',
-                  }}
-                >
-                  {item.title}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={{
-                  height: scaleSize(50),
-                  width: scaleSize(100),
-                  marginLeft: scaleSize(6),
-                  marginRight: scaleSize(6),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => this.taggingTool(item.title)}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  style={{
-                    height: scaleSize(60),
-                    width: scaleSize(60),
-                  }}
-                  source={require('../../assets/function/icon_shallow_more_black.png')}
-                />
-              </TouchableOpacity>
-            </TouchableOpacity>
-          )
-        } else {
-          if (
-            section.title === getLanguage(this.props.language).Map_Layer.LAYERS
-          ) {
-            action = this.onToolPress
-            if (
-              this.props.layers.length > 0 &&
-              item.name === this.props.layers[this.props.layers.length - 1].name
-            ) {
-              if (LayerUtils.isBaseLayer(item.name)) return true
-            }
-            if (
-              this.props.layers.length > 1 &&
-              item.name === this.props.layers[this.props.layers.length - 2].name
-            ) {
-              if (LayerUtils.isBaseLayer(item.name)) return true
-            }
-          } else {
-            action = this.onToolBasePress
-            if (!LayerUtils.isBaseLayer(item.name)) return true
-          }
-          return (
-            <LayerManager_item
-              key={item.name}
-              // sectionID={sectionID}
-              // rowID={item.index}
-              ref={ref => {
-                if (!this.itemRefs) {
-                  this.itemRefs = {}
-                }
-                this.itemRefs[item.name] = ref
-                return this.itemRefs[item.name]
-              }}
-              layer={item.layer}
-              // map={this.map}
-              data={item}
-              isClose={this.state.currentOpenItemName !== item.name}
-              mapControl={this.mapControl}
-              setLayerVisible={this.setLayerVisible}
-              onOpen={data => {
-                // data, sectionID, rowID
-                if (this.state.currentOpenItemName !== data.name) {
-                  let item = this.itemRefs[this.state.currentOpenItemName]
-                  item && item.close()
-                }
-                this.setState({
-                  currentOpenItemName: data.name,
-                })
-              }}
-              selectLayer={this.state.selectLayer}
-              onPress={this.onPressRow}
-              onAllPress={this.onAllPressRow}
-              onArrowPress={({ data, layer }) =>
-                this.getChildList({ data, layer, section })
-              }
-              onToolPress={action}
-            />
-          )
+          action = this.taggingTool
         }
+        return (
+          <LayerManager_item
+            key={item.name}
+            // sectionID={sectionID}
+            // rowID={item.index}
+            ref={ref => {
+              if (!this.itemRefs) {
+                this.itemRefs = {}
+              }
+              this.itemRefs[item.name] = ref
+              return this.itemRefs[item.name]
+            }}
+            layer={item.layer}
+            // map={this.map}
+            data={item}
+            index={index}
+            isClose={this.state.currentOpenItemName !== item.name}
+            mapControl={this.mapControl}
+            setLayerVisible={this.setLayerVisible}
+            onOpen={data => {
+              // data, sectionID, rowID
+              if (this.state.currentOpenItemName !== data.name) {
+                let item = this.itemRefs[this.state.currentOpenItemName]
+                item && item.close()
+              }
+              this.setState({
+                currentOpenItemName: data.name,
+              })
+            }}
+            selectLayer={this.state.selectLayer}
+            onPress={this.onPressRow}
+            onAllPress={this.onAllPressRow}
+            onArrowPress={({ data, layer }) =>
+              this.getChildList({ data, layer, section })
+            }
+            onToolPress={action}
+          />
+        )
       } else {
         return <View />
       }
@@ -916,39 +911,100 @@ export default class MT_layerManager extends React.Component {
     let image = section.visible
       ? (image = getThemeAssets().publicAssets.list_section_packup)
       : (image = getThemeAssets().publicAssets.list_section_spread)
-    return (
-      <TouchableOpacity
-        style={{
-          height: scaleSize(80),
-          backgroundColor: color.content,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-        onPress={() => {
-          this.refreshList(section)
-        }}
-      >
-        <Image
-          source={image}
+    if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
+      return (
+        <TouchableOpacity
           style={{
-            width: scaleSize(40),
-            height: scaleSize(40),
-            marginLeft: scaleSize(20),
-          }}
-        />
-        <Text
-          style={{
-            marginLeft: scaleSize(25),
-            justifyContent: 'center',
+            height: scaleSize(80),
+            backgroundColor: color.content,
+            flexDirection: 'row',
             alignItems: 'center',
-            fontSize: size.fontSize.fontSizeXXl,
-            color: color.white,
+          }}
+          onPress={() => {
+            this.refreshList(section)
           }}
         >
-          {section.title}
-        </Text>
-      </TouchableOpacity>
-    )
+          <Image
+            source={image}
+            style={{
+              width: scaleSize(40),
+              height: scaleSize(40),
+              marginLeft: scaleSize(20),
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: scaleSize(25),
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: size.fontSize.fontSizeXXl,
+              color: color.white,
+            }}
+          >
+            {section.title}
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                height: scaleSize(50),
+                width: scaleSize(60),
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: scaleSize(10),
+              }}
+              onPress={this.tool_row}
+            >
+              <Image
+                resizeMode={'contain'}
+                style={{ height: scaleSize(60), width: scaleSize(60) }}
+                source={require('../../assets/function/new_tagging_white.png')}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <TouchableOpacity
+          style={{
+            height: scaleSize(80),
+            backgroundColor: color.content,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            this.refreshList(section)
+          }}
+        >
+          <Image
+            source={image}
+            style={{
+              width: scaleSize(40),
+              height: scaleSize(40),
+              marginLeft: scaleSize(20),
+            }}
+          />
+          <Text
+            style={{
+              marginLeft: scaleSize(25),
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: size.fontSize.fontSizeXXl,
+              color: color.white,
+            }}
+          >
+            {section.title}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
   }
 
   renderToolBar = () => {
@@ -1025,6 +1081,7 @@ export default class MT_layerManager extends React.Component {
         {...this.props}
         onPress={this.onPressRow}
         onThisPress={this.onThisPress}
+        updateTagging={this.updateTagging}
       />
     )
   }

@@ -433,6 +433,7 @@ const Map_Layer_Chinese = {
   PLOTS: '我的标注',
   PLOTS_IMPORT: '导入标注',
   PLOTS_DELETE: '删除标注',
+  PLOTS_SET_AS_CURRENT: '设置为当前标注',
 
   LAYERS: '我的图层',
   LAYERS_MOVE_UP: '上移',
@@ -477,6 +478,7 @@ const Map_Layer_English = {
   PLOTS: 'My Plots',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
+  PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
 
   LAYERS: 'My Layers',
   LAYERS_MOVE_UP: 'Move up',
