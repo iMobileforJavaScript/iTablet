@@ -188,17 +188,22 @@ async function downFileAction(
         let dataUrl = `https://www.supermapol.com/web/datas/${
           itemInfo.id
         }/download`
+        let headers = {}
+        if (cookie) {
+          headers = {
+            Cookie: 'JSESSIONID=' + cookie,
+            'Cache-Control': 'no-cache',
+          }
+        }
         let downloadOptions = {
           fromUrl: dataUrl,
           toFile: filePath,
           background: true,
-          headers: {
-            Cookie: 'JSESSIONID=' + cookie,
-            'Cache-Control': 'no-cache',
-          },
+          headers: headers,
           progressDivider: 2,
           begin: () => {
-            Toast.show('开始导入')
+            Toast.show(getLanguage(global.language).Prompt.IMPORTING_DATA)
+            //'开始导入')
           },
           progress: res => {
             let value = ~~res.progress.toFixed(0)
@@ -263,8 +268,12 @@ async function downFileAction(
             //   }
             // }
           },
-          //eslint-disable-next-line
-          e => {
+          () => {
+            updateDownList({
+              id: itemInfo.id,
+              progress: 0,
+              downed: false,
+            })
             Toast.show('请求异常，导入失败')
           },
         )
@@ -306,8 +315,11 @@ async function setFilterDatas(
             importWorkspace &&
               (await importWorkspace({ path: newPath }).then(result => {
                 result.mapsInfo.length > 0
-                  ? Toast.show('数据导入成功')
-                  : Toast.show('数据导入失败')
+                  ? Toast.show(
+                    getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                  )
+                  : //'数据导入成功')
+                  Toast.show('数据导入失败')
               }))
             isRecordFile = true
             break
@@ -316,8 +328,11 @@ async function setFilterDatas(
           await SMap.importDatasourceFile(newPath).then(
             result => {
               result.length > 0
-                ? Toast.show('数据导入成功')
-                : Toast.show('数据导入失败')
+                ? Toast.show(
+                  getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                )
+                : //'数据导入成功')
+                Toast.show('数据导入失败')
             },
             () => {
               Toast.show('数据导入失败')

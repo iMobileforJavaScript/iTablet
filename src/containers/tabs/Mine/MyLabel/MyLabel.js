@@ -41,7 +41,7 @@ export default class MyLabel extends Component {
   }
 
   componentDidMount() {
-    this.container.setLoading(true)
+    this.container.setLoading(true, getLanguage(global.language).Prompt.LOADING)
     this.getData()
   }
 
@@ -204,7 +204,12 @@ export default class MyLabel extends Component {
         title: getLanguage(global.language).Profile.DELETE_DATA,
         //'删除数据',
         action: () => {
-          SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
+          SMap.removeDatasetByName(
+            this.state.udbPath,
+            this.itemInfo.item.title,
+          ).then(() => {
+            this.getData()
+          })
         },
       },
     ]

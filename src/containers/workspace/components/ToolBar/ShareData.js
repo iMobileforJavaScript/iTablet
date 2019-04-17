@@ -105,7 +105,8 @@ function getShareData(type, params) {
 
 function showSaveDialog(type) {
   if (!_params.user.currentUser.userName) {
-    Toast.show('请登陆后再分享')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+    //'请登陆后再分享')
     return
   }
   if (type !== ConstToolType.MAP_SHARE_MAP3D && !_params.map.currentMap.name) {
@@ -113,14 +114,15 @@ function showSaveDialog(type) {
     return
   }
   if (isSharing) {
-    Toast.show('分享中，请稍后')
+    Toast.show(getLanguage(global.language).Prompt.SHARING)
+    //'分享中，请稍后')
     return
   }
   NavigationService.navigate('InputPage', {
     headerTitle: getLanguage(global.language).Map_Main_Menu.SHARE,
     //'分享',
     value: _params.map.currentMap.name,
-    placeholder: ConstInfo.PLEASE_INPUT_NAME,
+    placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
     cb: async value => {
       if (type === constants.SUPERMAP_ONLINE) {
         let list = [_params.map.currentMap.name]
@@ -229,15 +231,17 @@ async function shareToSuperMapOnline(list = [], name = '') {
       !_params.user.currentUser.userName ||
       _params.user.currentUser.userType === UserType.PROBATION_USER
     ) {
-      Toast.show(ConstInfo.SHARE_NEED_LOGIN)
+      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+      //ConstInfo.SHARE_NEED_LOGIN)
       return
     }
     if (isSharing) {
-      Toast.show(ConstInfo.SHARE_WAIT)
+      Toast.show(getLanguage(global.language).Prompt.SHARING)
+      //ConstInfo.SHARE_WAIT)
       return
     }
     _params.setToolbarVisible && _params.setToolbarVisible(false)
-    Toast.show(ConstInfo.SHARE_PREPARE)
+    Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
 
     setTimeout(async () => {
       _params.setSharing({
@@ -269,7 +273,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
           let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
 
           SOnlineService.deleteData(dataName).then(async () => {
-            Toast.show(ConstInfo.SHARE_START)
+            Toast.show(getLanguage(global.language).Prompt.SHARE_START)
             await SOnlineService.uploadFile(path, dataName, {
               onProgress: progress => {
                 progress = parseInt(progress)
@@ -313,7 +317,10 @@ async function shareToSuperMapOnline(list = [], name = '') {
                 }, 2000)
                 GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
                 Toast.show(
-                  result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+                  result
+                    ? getLanguage(global.language).Prompt.SHARE_SUCCESS
+                    : //ConstInfo.SHARE_SUCCESS
+                    ConstInfo.SHARE_FAILED,
                 )
                 FileTools.deleteFile(path)
                 isSharing = false
@@ -337,11 +344,13 @@ async function share3DToSuperMapOnline(list = []) {
     // GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
     let isSharing = false
     if (_params.user.users.length <= 1) {
-      Toast.show('请登陆后再分享')
+      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+      //'请登陆后再分享')
       return
     }
     if (isSharing) {
-      Toast.show('分享中，请稍后')
+      Toast.show(getLanguage(global.language).Prompt.SHARING)
+      //'分享中，请稍后')
       return
     }
     _params.setToolbarVisible && _params.setToolbarVisible(false)
@@ -370,7 +379,8 @@ async function share3DToSuperMapOnline(list = []) {
                   GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
                   Toast.show(
                     // result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
-                    ConstInfo.SHARE_SUCCESS,
+                    getLanguage(global.language).Prompt.SHARE_SUCCESS,
+                    //ConstInfo.SHARE_SUCCESS,
                   )
                   FileTools.deleteFile(zipPath)
                   isSharing = false

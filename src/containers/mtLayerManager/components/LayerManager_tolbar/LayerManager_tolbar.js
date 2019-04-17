@@ -46,9 +46,11 @@ export default class LayerManager_tolbar extends React.Component {
     setCurrentLayer: () => {},
     onPress: () => {},
     onThisPress: () => {},
+    updateTagging: () => {},
     getOverlayView: () => {},
     device: Object,
     layers: Object,
+    user: Object,
   }
 
   static defaultProps = {
@@ -77,6 +79,7 @@ export default class LayerManager_tolbar extends React.Component {
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       layerdata: props.layerdata || '',
+      index: 0,
       // layerName: '',
     }
     this.isShow = false
@@ -198,6 +201,7 @@ export default class LayerManager_tolbar extends React.Component {
         data: data,
         type: type,
         layerdata: params.layerdata,
+        index: params.index,
       },
       () => {
         this.showToolbarAndBox(isShow)
@@ -233,6 +237,14 @@ export default class LayerManager_tolbar extends React.Component {
     if (this.props.onThisPress) {
       await this.props.onThisPress({
         data: this.state.layerdata,
+      })
+    } else return
+  }
+
+  updateTagging = async () => {
+    if (this.props.updateTagging) {
+      await this.props.updateTagging({
+        index: this.state.index,
       })
     } else return
   }
@@ -445,28 +457,16 @@ export default class LayerManager_tolbar extends React.Component {
       this.props.getLayers()
       this.setVisible(false)
     } else if (
-      section.title === getLanguage(global.language).Map_Layer.PLOTS_IMPORT
+      section.title ===
+      getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
     ) {
-      //''导入标注') {
       (async function() {
-        GLOBAL.value = this.state.layerdata
-        await SMap.openTaggingDataset(this.state.layerdata)
-        await this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
+        GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
+          this.state.layerdata.name,
+        )
+        this.updateTagging()
+        this.setVisible(false)
       }.bind(this)())
-      this.setVisible(false)
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.PLOTS_DELETE
-    ) {
-      //''删除标注') {
-      (async function() {
-        await SMap.removeTaggingDataset(this.state.layerdata)
-        await this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
-      }.bind(this)())
-      this.setVisible(false)
     } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER

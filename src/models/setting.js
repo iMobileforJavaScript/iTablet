@@ -196,6 +196,5 @@ export default handleActions(
       return payload && payload.setting ? fromJS(payload.setting) : state
     },
   },
-  initialState
+  initialState,
 )
-

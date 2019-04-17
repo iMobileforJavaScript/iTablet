@@ -84,6 +84,19 @@ const Chinese = {
   ANALYSING: '路径分析中',
   CHOOSE_STARTING_POINT: '请输入起点',
   CHOOSE_DESTINATION: '请输入终点',
+
+  LATEST: '最后修改时间: ',
+  GEOGRAPHIC_COORDINATE_SYSTEM: '地理坐标系: ',
+  PROJECTED_COORDINATE_SYSTEM: '投影坐标系: ',
+  FIELD_TYPE: '字段类型: ',
+
+  PLEASE_LOGIN_AND_SHARE: '请登陆后再分享',
+  SHARING: '分享中',
+  SHARE_SUCCESS: '分享成功',
+  SHARE_PREPARE: '准备分享',
+  SHARE_START: '开始分享',
+
+  EXPORT_SUCCESS: '导出成功',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -173,6 +186,19 @@ const English = {
   ANALYSING: 'Analysing',
   CHOOSE_STARTING_POINT: 'Choose starting point',
   CHOOSE_DESTINATION: 'Choose destination',
+
+  LATEST: 'Latest: ',
+  GEOGRAPHIC_COORDINATE_SYSTEM: 'Geographic Coordinate System: ',
+  PROJECTED_COORDINATE_SYSTEM: 'Projected Coordinate System: ',
+  FIELD_TYPE: 'Field Type: ',
+
+  PLEASE_LOGIN_AND_SHARE: 'Please log in and share',
+  SHARING: 'Sharing',
+  SHARE_SUCCESS: 'Shared Successfully',
+  SHARE_PREPARE: 'Preparing for sharing',
+  SHARE_START: 'Start sharing',
+
+  EXPORT_SUCCESS: 'Exported Successfully',
 }
 
 export { Chinese, English }
