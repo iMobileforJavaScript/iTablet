@@ -365,7 +365,6 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
-    Utils.setSelectionStyle(event.layerInfo.path)
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -374,14 +373,15 @@ export default class MapView extends React.Component {
         },
       ])
     switch (GLOBAL.currentToolbarType) {
-      case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
-      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      case ConstToolType.MAP_TOOL_POINT_SELECT:
-        break
+      // case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
+      // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+      // case ConstToolType.MAP_TOOL_POINT_SELECT:
+      //   break
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
       case ConstToolType.MAP_EDIT_DEFAULT: {
+        Utils.setSelectionStyle(event.layerInfo.path)
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
             height = ConstToolType.HEIGHT[3],
@@ -415,12 +415,25 @@ export default class MapView extends React.Component {
         }
         break
       }
+      default:
+        // 除了编辑状态，其余点选对象所在图层全设置为选择状态
+        if (event.layerInfo.editable) {
+          SMap.setLayerEditable(event.layerInfo.path, false).then(() => {
+            Utils.setSelectionStyle(event.layerInfo.path)
+          })
+        } else {
+          Utils.setSelectionStyle(event.layerInfo.path)
+        }
+        break
     }
   }
 
   geometryMultiSelected = event => {
     let data = []
     for (let i = 0; i < event.geometries.length; i++) {
+      if (event.geometries[i].layerInfo.editable) {
+        SMap.setLayerEditable(event.geometries[i].layerInfo.path, false)
+      }
       Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,

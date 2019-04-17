@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
-import { View, SectionList, AsyncStorage, RefreshControl } from 'react-native'
+import {
+  View,
+  Text,
+  SectionList,
+  AsyncStorage,
+  RefreshControl,
+  Platform,
+  ActivityIndicator,
+} from 'react-native'
 import { Container } from '../../../../components'
 //eslint-disable-next-line
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SScene } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color } from '../../../../styles'
-import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { getLanguage } from '../../../../language/index'
 import LocalDataItem from './LocalDataItem'
@@ -20,6 +27,7 @@ import {
 } from './Method'
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
+import { scaleSize } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
     language: String,
@@ -40,6 +48,7 @@ export default class MyLocalData extends Component {
       isFirstLoadingModal: true,
       textDisplay: 'none',
       isRefreshing: false,
+      activityShow: false,
     }
     this.pageSize = 10
     this.dataListTotal = null
@@ -48,9 +57,11 @@ export default class MyLocalData extends Component {
   }
   componentDidMount() {
     this._setSectionDataState3()
-    SOnlineService.getAndroidSessionID().then(cookie => {
-      this.cookie = cookie
-    })
+    if (Platform.OS === 'android') {
+      SOnlineService.getAndroidSessionID().then(cookie => {
+        this.cookie = cookie
+      })
+    }
   }
 
   _setSectionDataState3 = async () => {
@@ -369,7 +380,7 @@ export default class MyLocalData extends Component {
     try {
       //防止data为空时调用
       //数据删除时不调用
-      if (this.deleteDataing) return
+      if (this.state.activityShow) return
       let section = this.state.sectionData[this.state.sectionData.length - 1]
       if (section.title !== '在线数据') return
       if (
@@ -378,9 +389,15 @@ export default class MyLocalData extends Component {
         section.data.length < 10
       )
         return
-      if (this.dataListTotal && section.data.length >= this.dataListTotal)
+      if (
+        this.dataListTotal &&
+        this.state.sectionData[this.state.sectionData.length - 1].data.length >=
+          this.dataListTotal
+      )
         return
       //构建新数据
+
+      this.setState({ activityShow: true })
       let sectionData = [...this.state.sectionData]
       let oldOnlineData = sectionData[sectionData.length - 1]
       let oldData = oldOnlineData.data
@@ -396,9 +413,15 @@ export default class MyLocalData extends Component {
           dataType: 'online',
         }
         sectionData.push(online)
-        this.setState({ sectionData: sectionData })
+        this.setState({ sectionData: sectionData, activityShow: false })
+      } else {
+        Toast.show('网络异常')
+        this.setState({ activityShow: false })
+        // this.currentPage=this.currentPage-1
+        // this._onLoadData()
       }
     } catch (error) {
+      this.setState({ activityShow: false })
       Toast.show('网络异常')
     }
   }
@@ -413,6 +436,26 @@ export default class MyLocalData extends Component {
         }}
       />
     )
+  }
+
+  renderActivityIndicator = () => {
+    if (this.state.activityShow) {
+      return (
+        <View
+          style={{
+            flexDirection: 'column',
+            flex: 1,
+            marginTop: scaleSize(10),
+            alignItems: 'center',
+          }}
+        >
+          <ActivityIndicator animating={true} color="#4680DF" size="large" />
+          <Text style={{ fontSize: scaleSize(20) }}>{'数据加载中...'}</Text>
+        </View>
+      )
+    } else {
+      return <View />
+    }
   }
 
   render() {
@@ -450,6 +493,7 @@ export default class MyLocalData extends Component {
           }
           onEndReached={this._onLoadData}
           onEndReachedThreshold={0.5}
+          ListFooterComponent={this.renderActivityIndicator()}
         />
         {this._showLocalDataPopupModal()}
       </Container>

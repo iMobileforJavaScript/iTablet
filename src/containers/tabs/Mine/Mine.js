@@ -338,7 +338,7 @@ export default class Mine extends Component {
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
         : Customer
-      : getLanguage(this.props.language).Profile.LOGIN
+      : getLanguage(this.props.language).Profile.LOGIN_NOW
     return (
       <View
         style={{
@@ -351,7 +351,7 @@ export default class Mine extends Component {
         <TouchableOpacity
           onPress={() => {
             if (
-              headerTitle !== getLanguage(this.props.language).Profile.LOGIN
+              headerTitle !== getLanguage(this.props.language).Profile.LOGIN_NOW
             ) {
               this.goToPersonal()
             }
@@ -378,7 +378,7 @@ export default class Mine extends Component {
           style={{ flex: 1 }}
           onPress={() => {
             if (
-              headerTitle === getLanguage(this.props.language).Profile.LOGIN
+              headerTitle === getLanguage(this.props.language).Profile.LOGIN_NOW
             ) {
               this.goToLogin()
             }
