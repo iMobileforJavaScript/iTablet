@@ -8,6 +8,8 @@ import { FileTools } from '../native'
 export const SHARING = 'SHARING'
 
 export const UPLOADING = 'UPLOADING'
+export const UPDATEDOWNLIST = 'UPDATEDOWNLIST'
+
 // export const UPLOADED = 'UPLOADED'
 // Actions
 // ---------------------------------.3-----------------
@@ -68,9 +70,21 @@ export const uploading = (params = {}, cb = () => {}) => async dispatch => {
   cb && cb(uploadResult)
 }
 
+export const updateDownList = (
+  params = {},
+  cb = () => {},
+) => async dispatch => {
+  await dispatch({
+    type: UPDATEDOWNLIST,
+    payload: params,
+  })
+  cb && cb()
+}
+
 const initialState = fromJS({
   share: [], // { module: '', name: '', progress: 0}
   upload: [], // { module: '', name: '', progress: 0}
+  down: [{}],
 })
 
 export default handleActions(
@@ -119,6 +133,13 @@ export default handleActions(
         list.unshift(payload)
       }
       return state.setIn(['upload'], fromJS(list))
+    },
+    [`${UPDATEDOWNLIST}`]: (state, { payload }) => {
+      let down = state.toJS().down
+      if (payload) {
+        down[0] = payload
+      }
+      return state.setIn(['down'], fromJS(down))
     },
     // [REHYDRATE]: () => {
     //   // return payload && payload.online ? fromJS(payload.online) : state

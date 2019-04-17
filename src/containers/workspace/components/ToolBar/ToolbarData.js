@@ -181,8 +181,7 @@ function getMap3DData(type, params) {
             try {
               SScene.saveCurrentRoutStop().then(result => {
                 if (result) {
-                  Toast.show(
-                    getLanguage(global.language).Prompt.ADD_SUCCESS)
+                  Toast.show(getLanguage(global.language).Prompt.ADD_SUCCESS)
                   //'添加站点成功')
                 }
               })
