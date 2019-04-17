@@ -3850,7 +3850,7 @@ export default class ToolBar extends React.PureComponent {
       value: newName,
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
       //'新建地图',
-      placeholder: getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT,
+      placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&

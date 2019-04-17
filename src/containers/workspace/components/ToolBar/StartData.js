@@ -660,7 +660,7 @@ function create() {
         headerTitle: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
         //'新建地图',
         value: newName,
-        placeholder: ConstInfo.PLEASE_INPUT_NAME,
+        placeholder:getLanguage(global.language).Prompt.ENTER_MAP_NAME,
         cb: async value => {
           GLOBAL.Loading &&
             GLOBAL.Loading.setLoading(

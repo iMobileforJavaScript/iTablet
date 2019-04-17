@@ -473,7 +473,8 @@ export default class MT_layerManager extends React.Component {
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else {
-      Toast.show('当前图层无法设置风格')
+      Toast.show(getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER_CANNOT_BE_STYLED)
+      //'当前图层无法设置风格')
     }
   }
 
@@ -557,7 +558,8 @@ export default class MT_layerManager extends React.Component {
       if (data.themeType <= 0) {
         this.mapEdit(data)
       } else {
-        Toast.show('当前图层无法设置风格')
+        Toast.show(getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER_CANNOT_BE_STYLED)
+        //'当前图层无法设置风格')
       }
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (data.themeType <= 0) {

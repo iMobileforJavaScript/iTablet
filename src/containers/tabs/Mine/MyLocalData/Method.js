@@ -198,7 +198,8 @@ async function downFileAction(
           },
           progressDivider: 2,
           begin: () => {
-            Toast.show('开始导入')
+            Toast.show(getLanguage(global.language).Prompt.IMPORTING_DATA)
+            //'开始导入')
           },
           progress: res => {
             let value = ~~res.progress.toFixed(0)
@@ -306,7 +307,8 @@ async function setFilterDatas(
             importWorkspace &&
               (await importWorkspace({ path: newPath }).then(result => {
                 result.mapsInfo.length > 0
-                  ? Toast.show('数据导入成功')
+                  ? Toast.show(getLanguage(global.language).Prompt.IMPORTED_SUCCESS)
+                  //'数据导入成功')
                   : Toast.show('数据导入失败')
               }))
             isRecordFile = true
@@ -316,7 +318,8 @@ async function setFilterDatas(
           await SMap.importDatasourceFile(newPath).then(
             result => {
               result.length > 0
-                ? Toast.show('数据导入成功')
+                ? Toast.show(getLanguage(global.language).Prompt.IMPORTED_SUCCESS)
+                //'数据导入成功')
                 : Toast.show('数据导入失败')
             },
             () => {

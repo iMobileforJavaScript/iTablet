@@ -315,10 +315,10 @@ export default class MyLocalData extends Component {
       isShowMore = false
     }
     switch (this.state.title) {
-      case Const.MAP:
+      case getLanguage(this.props.language).Profile.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.SYMBOL:
+      case getLanguage(this.props.language).Profile.SYMBOL:
         if (txtType === 'sym') {
           // 点
           img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -333,10 +333,10 @@ export default class MyLocalData extends Component {
           img = require('../../../../assets/Mine/mine_my_online_data.png')
         }
         break
-      case Const.SCENE:
+      case getLanguage(this.props.language).Profile.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.TEMPLATE:
+      case getLanguage(this.props.language).Profile.TEMPLATE:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
       default:
@@ -394,10 +394,10 @@ export default class MyLocalData extends Component {
     let img,
       isShowMore = true
     switch (this.state.title) {
-      case Const.MAP:
+      case getLanguage(this.props.language).Profile.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.SYMBOL:
+      case getLanguage(this.props.language).Profile.SYMBOL:
         if (txtType === 'sym') {
           // 点
           img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -412,10 +412,10 @@ export default class MyLocalData extends Component {
           img = require('../../../../assets/Mine/mine_my_online_data.png')
         }
         break
-      case Const.SCENE:
+      case getLanguage(this.props.language).Profile.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.DATA:
+      case getLanguage(this.props.language).Profile.DATA:
       default:
         img = require('../../../../assets/Mine/mine_my_online_data.png')
         break
@@ -479,7 +479,8 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
-      this.setLoading(true, '分享中')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
+      //'分享中')
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
@@ -539,12 +540,12 @@ export default class MyLocalData extends Component {
           }
         }
         if (type === 'weChat') {
-          if (this.state.title === Const.SCENE) {
+          if (this.state.title === getLanguage(this.props.language).Profile.SCENE) {
             Toast.show('所分享文件超过10MB')
             return
           }
           let zipResult
-          if (this.state.title === Const.MAP) {
+          if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
             let result = await this._exportData()
             if (!result) {
               Toast.show('分享失败')
@@ -579,7 +580,7 @@ export default class MyLocalData extends Component {
                 !result && FileTools.deleteFile(targetPath)
               })
         } else if (type === 'online') {
-          if (this.state.title === Const.MAP) {
+          if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
             let result = await this._exportData()
             if (!result) {
               Toast.show('分享失败')
@@ -599,7 +600,8 @@ export default class MyLocalData extends Component {
             await SOnlineService.uploadFile(targetPath, fileName, {
               onResult: result => {
                 this.setLoading(false)
-                result && Toast.show('分享成功')
+                result && Toast.show( getLanguage(this.props.language).Prompt.SHARE_SUCCESS)
+                //'分享成功')
                 this.ModalBtns && this.ModalBtns.setVisible(false)
                 FileTools.deleteFile(targetPath)
               },
@@ -614,7 +616,8 @@ export default class MyLocalData extends Component {
                 this.setLoading(false)
                 Toast.show(
                   name + ' ' + result || result === undefined
-                    ? '分享成功'
+                    ? getLanguage(this.props.language).Prompt.SHARE_SUCCESS
+                    //'分享成功'
                     : '分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
@@ -622,7 +625,7 @@ export default class MyLocalData extends Component {
             })
           }
         } else if (this.formChat) {
-          if (this.state.title === Const.MAP) {
+          if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
             await this._exportData()
             let homePath = await FileTools.appendingHomeDirectory()
             targetPath =
@@ -780,7 +783,8 @@ export default class MyLocalData extends Component {
       { maps: [mapName], outPath: path, isOpenMap: true },
       result => {
         if (result === true) {
-          showToast && Toast.show('导出成功')
+          showToast && Toast.show(getLanguage(this.props.language).Prompt.EXPORT_SUCCESS)
+          //'导出成功')
         } else {
           showToast && Toast.show('导出失败')
         }
