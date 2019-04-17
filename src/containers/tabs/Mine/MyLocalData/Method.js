@@ -215,7 +215,9 @@ async function downFileAction(
           async result => {
             // console.warn(result)
             let unzipRes = await FileTools.unZipFile(filePath, toPath)
+            debugger
             if (unzipRes === false) {
+              await FileTools.deleteFile(filePath)
               Toast.show('网络数据已损坏，无法正常使用')
             } else {
               await FileTools.deleteFile(filePath)
