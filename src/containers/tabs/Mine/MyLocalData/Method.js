@@ -213,7 +213,7 @@ async function downFileAction(
         let result = downloadFile(downloadOptions)
         result.promise.then(
           async result => {
-            console.warn(result)
+            // console.warn(result)
             let unzipRes = await FileTools.unZipFile(filePath, toPath)
             if (unzipRes === false) {
               Toast.show('网络数据已损坏，无法正常使用')
@@ -281,7 +281,6 @@ async function setFilterDatas(
   fileType,
   importWorkspace = () => {},
 ) {
-  debugger
   try {
     let isRecordFile = false
     let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
