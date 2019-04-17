@@ -71,9 +71,8 @@ public class FileTools extends ReactContextBaseJavaModule {
     public FileTools(ReactApplicationContext context) {
         super(context);
         reactContext = context;
-        mReactContext=context;
+        mReactContext = context;
     }
-
     @Override
     public String getName() {
         return REACT_CLASS;
@@ -755,10 +754,16 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
+        String commonCachePath = SDCARD + "/iTablet/Cache/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
         String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
+
+        String srclic = "publicMap.txt";
+        if (!Utils.fileIsExit(commonCachePath + srclic)) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
+        }
 
         String lableUDB=dataPath+"Label/Label.udb";
         File file=new File(lableUDB);

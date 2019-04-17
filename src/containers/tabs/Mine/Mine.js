@@ -290,7 +290,7 @@ export default class Mine extends Component {
               this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
             //Const.SYMBOL),
           })}
-          {this._renderItem({
+          {/* {this._renderItem({
             title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
             leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
             onClick: () =>
@@ -298,7 +298,7 @@ export default class Mine extends Component {
                 getLanguage(this.props.language).Profile.COLOR_SCHEME,
               ),
             //Const.MINE_COLOR),
-          })}
+          })} */}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
@@ -338,7 +338,7 @@ export default class Mine extends Component {
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
         : Customer
-      : getLanguage(this.props.language).Profile.LOGIN
+      : getLanguage(this.props.language).Profile.LOGIN_NOW
     return (
       <View
         style={{
@@ -351,7 +351,7 @@ export default class Mine extends Component {
         <TouchableOpacity
           onPress={() => {
             if (
-              headerTitle !== getLanguage(this.props.language).Profile.LOGIN
+              headerTitle !== getLanguage(this.props.language).Profile.LOGIN_NOW
             ) {
               this.goToPersonal()
             }
@@ -378,7 +378,7 @@ export default class Mine extends Component {
           style={{ flex: 1 }}
           onPress={() => {
             if (
-              headerTitle === getLanguage(this.props.language).Profile.LOGIN
+              headerTitle === getLanguage(this.props.language).Profile.LOGIN_NOW
             ) {
               this.goToLogin()
             }

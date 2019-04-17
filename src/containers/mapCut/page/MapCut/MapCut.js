@@ -154,24 +154,41 @@ export default class MapCut extends React.Component {
             addition.Template = this.props.map.currentMap.Template
           }
 
-          let result = await SMap.clipMap(
+          SMap.clipMap(
             this.state.points,
             layersInfo,
             this.state.saveAsName,
             '',
             addition,
             true,
+          ).then(
+            () => {
+              this.container && this.container.setLoading(false)
+              this.isCutting = false
+
+              GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+              GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+              NavigationService.goBack()
+              Toast.show(
+                getLanguage(this.props.language).Prompt.CLIPPED_SUCCESS,
+              )
+            },
+            () => {
+              this.container && this.container.setLoading(false)
+              this.isCutting = false
+              Toast.show(ConstInfo.CLIP_FAILED)
+            },
           )
-          this.container && this.container.setLoading(false)
-          this.isCutting = false
-          if (result) {
-            GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
-            GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
-            NavigationService.goBack()
-            Toast.show(getLanguage(this.props.language).Prompt.CLIPPED_SUCCESS)
-          } else {
-            Toast.show(ConstInfo.CLIP_FAILED)
-          }
+          // this.container && this.container.setLoading(false)
+          // this.isCutting = false
+          // if (result) {
+          //   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+          //   GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+          //   NavigationService.goBack()
+          //   Toast.show(getLanguage(this.props.language).Prompt.CLIPPED_SUCCESS)
+          // } else {
+          //   Toast.show(ConstInfo.CLIP_FAILED)
+          // }
         }, 0)
       } catch (e) {
         this.isCutting = false

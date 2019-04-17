@@ -12,6 +12,7 @@ import { SMap, GeoStyle } from 'imobile_for_reactnative'
 async function setSelectionStyle(layerPath = '', geoStyle) {
   if (!geoStyle) {
     geoStyle = new GeoStyle()
+    geoStyle.setFillForeColor(0, 255, 0, 0.5)
     geoStyle.setLineWidth(1)
     geoStyle.setLineColor(70, 128, 223)
     geoStyle.setMarkerHeight(1)
