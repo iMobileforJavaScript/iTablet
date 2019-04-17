@@ -2442,7 +2442,7 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-      // if (type === ConstToolType.MAP_EDIT_TAGGING) {
+      // if (type === ConstToolType.) {
       //   SMap.setAction(Action.PAN)
       // } else if (
       //   typeof type === 'number' ||
@@ -2455,8 +2455,8 @@ export default class ToolBar extends React.PureComponent {
         typeof type === 'string' &&
         type.indexOf('MAP_EDIT_') >= 0 &&
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING &&
-        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
+        type !== ConstToolType.MAP_TOOL_TAGGING &&
+        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -2495,11 +2495,6 @@ export default class ToolBar extends React.PureComponent {
 
       // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
-      if (type === ConstToolType.MAP_EDIT_TAGGING) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
-      }
     }.bind(this)())
   }
 
@@ -2641,12 +2636,12 @@ export default class ToolBar extends React.PureComponent {
   }
 
   taggingback = () => {
-    this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+    this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height:
         this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[0]
-          : ConstToolType.THEME_HEIGHT[2],
+          ? ConstToolType.HEIGHT[4]
+          : ConstToolType.HEIGHT[4],
       column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
     })
   }
@@ -2790,8 +2785,8 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else if (
-        type !== ConstToolType.MAP_EDIT_TAGGING &&
-        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
+        type !== ConstToolType.MAP_TOOL_TAGGING &&
+        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
         // 编辑完成关闭Toolbar
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -2804,25 +2799,26 @@ export default class ToolBar extends React.PureComponent {
             SMap.setAction(Action.SELECT)
           },
         })
-      } else {
-        SMap.setTaggingGrid(GLOBAL.value)
-        SMap.submit()
-        SMap.setAction(Action.PAN)
-        if (type === ConstToolType.MAP_EDIT_TAGGING) {
-          this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
-            isFullScreen: false,
-            containerType: 'list',
-            height:
-              this.props.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.NEWTHEME_HEIGHT[3]
-                : ConstToolType.NEWTHEME_HEIGHT[3],
-            column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-          })
-        }
-        if (type === ConstToolType.MAP_EDIT_TAGGING_SETTING) {
-          this.taggingback()
-        }
       }
+    } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
+      SMap.setTaggingGrid(GLOBAL.TaggingDatasetName)
+      SMap.submit()
+      SMap.setAction(Action.PAN)
+      if (type === ConstToolType.MAP_TOOL_TAGGING) {
+        this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
+          isFullScreen: false,
+          containerType: 'list',
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.NEWTHEME_HEIGHT[3]
+              : ConstToolType.NEWTHEME_HEIGHT[3],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        })
+      }
+    }
+    if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      // this.taggingback()
+      this.close()
     }
     // this.props.existFullMap && this.props.existFullMap()
   }

@@ -40,6 +40,7 @@ export default class LayerManager_item extends React.Component {
     sectionID: number,
     rowID: number,
     selectLayer: Object,
+    index: number,
 
     setLayerVisible: () => {},
   }
@@ -342,6 +343,7 @@ export default class LayerManager_item extends React.Component {
     if (this.props.onToolPress) {
       await this.props.onToolPress({
         data: this.props.data,
+        index: this.props.index,
       })
     } else return
   }

@@ -68,6 +68,8 @@ export default {
   Import: AppPath + 'Import', //导入外部数据文件夹
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
+  //标注目录
+  LabelPath: AppPath + 'User/' + GLOBAL.CurrentUserName + '/',
   RelativePath,
   RelativeFilePath,
   Module,

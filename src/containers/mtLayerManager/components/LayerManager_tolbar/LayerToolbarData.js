@@ -264,14 +264,14 @@ const layerCollectionSetting = [
 
 const taggingData = [
   {
-    title: '导入标注',
+    title: '设置为当前标注',
     data: [],
     image: require('../../../../assets/function/icon_function_Tagging.png'),
   },
   {
-    title: '删除标注',
+    title: '设置为当前图层',
     data: [],
-    image: require('../../../../assets/layerToolbar/layer_remove.png'),
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
 ]
 

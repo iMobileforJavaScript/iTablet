@@ -16,6 +16,7 @@ const mapStateToProps = state => ({
   device: state.device.toJS().device,
   collection: state.collection.toJS(),
   currentLayer: state.layers.toJS().currentLayer,
+  user: state.user.toJS(),
 })
 
 const mapDispatchToProps = {

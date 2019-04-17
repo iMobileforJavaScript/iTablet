@@ -62,7 +62,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
-    mapLegend: PropTypes.boolean,
+    mapLegend: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -892,6 +892,11 @@ export default class MapView extends React.Component {
       }
       this.showMarker &&
         SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
+      SMap.openTaggingDataset(this.props.user.currentUser.userName)
+
+      GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
+        this.props.user.currentUser.userName,
+      )
     }.bind(this)())
   }
 
@@ -1160,7 +1165,7 @@ export default class MapView extends React.Component {
   renderTool = () => {
     return (
       <ToolBar
-        ref={ref => (this.toolBox = ref)}
+        ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
