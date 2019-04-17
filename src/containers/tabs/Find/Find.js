@@ -20,7 +20,7 @@ import { getLanguage } from '../../../language/index'
 
 export default class Find extends Component {
   props: {
-    language: Object,
+    language: String,
     navigation: Object,
     user: Object,
   }

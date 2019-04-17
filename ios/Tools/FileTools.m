@@ -31,6 +31,34 @@ RCT_EXPORT_MODULE();
   return filetools;
 }
 
++(NSString *)getFilePath:(NSString *)path{
+  NSString *realPath = path;
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  BOOL isDir = YES;
+  BOOL hasDirInPath = NO;
+  NSString *dirpath;
+  if([filemanager fileExistsAtPath:realPath isDirectory:&isDir]){
+    NSArray *contents = [filemanager contentsOfDirectoryAtPath:realPath error:nil];
+    for(NSString * item in contents){
+      NSString *curPath = [NSString stringWithFormat:@"%@%@%@",realPath,item,@"/"];
+      if([filemanager fileExistsAtPath:curPath isDirectory:&isDir]){
+        hasDirInPath = YES;
+        dirpath = curPath;
+      }
+      if([item hasSuffix:@".smwu"]){
+        return realPath;
+      }
+    }
+    if(hasDirInPath){
+      return [FileTools getFilePath:dirpath];
+    }else{
+      return realPath;
+    }
+  }else{
+    return realPath;
+  }
+}
+
 RCT_REMAP_METHOD(getHomeDirectory,getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   NSString* home = [NSHomeDirectory() stringByAppendingString:@"/Documents"];
   if (home) {
@@ -553,16 +581,10 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
     @try {
       NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
       NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+      NSString *deletepath = destinationPath;
+      destinationPath = [FileTools getFilePath:destinationPath];
       NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
-      
       NSString *suffix = @"";
-      BOOL isDirectory = YES;
-      NSString *toPath = destinationPath;
-      NSString *fileDirPath = [destinationPath stringByAppendingString:[dirArray objectAtIndex:0]];
-      if([filemanager fileExistsAtPath:fileDirPath isDirectory:&isDirectory]){
-        dirArray = [filemanager contentsOfDirectoryAtPath:fileDirPath error:nil];
-        toPath = [fileDirPath stringByAppendingString:@"/"];
-      }
       
       for(NSString *str in dirArray){
         NSArray *splitArr = [str componentsSeparatedByString:@"."];
@@ -578,13 +600,13 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           // workspace add
           NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
           
-          [dic setValue:[toPath stringByAppendingString:str] forKey:@"server"];
+          [dic setValue:[destinationPath stringByAppendingString:str] forKey:@"server"];
           [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
           
           [workSpaceFile addObject:dic];
         }else{
           //udb add
-          [dataSourceFile addObject:[toPath stringByAppendingString:str]];
+          [dataSourceFile addObject:[destinationPath stringByAppendingString:str]];
         }
       }
       SMap *smap = [SMap singletonInstance];
@@ -595,7 +617,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         if(importResult){
           hasImportedData = NO;
           isImportSuccess = YES;
-          [FileTools deleteFile:toPath];
+          [FileTools deleteFile:deletepath];
         }
       }else if([dataSourceFile count]){
         //导入udb文件

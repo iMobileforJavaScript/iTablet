@@ -50,11 +50,11 @@ import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import LegendView from '../../components/LegendView/LegendView'
 //eslint-disable-next-line
-const SAVE_TITLE = '是否保存当前地图?'
+
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
-    language: PropTypes.object,
+    language: PropTypes.string,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -453,11 +453,15 @@ export default class MapView extends React.Component {
     cb = () => {},
   ) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+          Toast.show(
+            result
+              ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+              : ConstInfo.MAP_EXIST,
+          )
           cb && cb()
         },
         () => {
@@ -484,10 +488,15 @@ export default class MapView extends React.Component {
   // 地图保存
   saveMap = (name = '', cb = () => {}) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
+      //'正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : ConstInfo.MAP_EXIST,
+        )
         cb && cb()
       })
     } catch (e) {
@@ -658,7 +667,10 @@ export default class MapView extends React.Component {
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.container.setLoading(true, '正在保存')
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.SAVING,
+    )
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -674,7 +686,9 @@ export default class MapView extends React.Component {
             this.AlertDialog.setDialogVisible(false)
             this.container.setLoading(false)
           } else {
-            Toast.show('保存成功')
+            Toast.show(
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+            )
             this.container.setLoading(false)
             this.AlertDialog.setDialogVisible(false)
             //获取数据源
@@ -722,7 +736,7 @@ export default class MapView extends React.Component {
         })
 
         if (result) {
-          Toast.show('删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
           // 删除对象后，编辑设为为选择状态
@@ -1377,11 +1391,12 @@ export default class MapView extends React.Component {
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
+          // title={'提示'}
+          info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
+          // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
+          cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveXMLDialog = ref)}
@@ -1398,7 +1413,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图?'}
+          Alerttitle={getLanguage(this.props.language).Prompt.SAVE_TITLE}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

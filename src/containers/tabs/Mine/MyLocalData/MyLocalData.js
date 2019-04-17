@@ -22,7 +22,7 @@ import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 export default class MyLocalData extends Component {
   props: {
-    language: Object,
+    language: String,
     user: Object,
     navigation: Object,
     down: Object,

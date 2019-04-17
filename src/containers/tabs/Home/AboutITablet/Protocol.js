@@ -103,7 +103,7 @@ export default class protocol extends Component {
         source = {
           uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
         }
-        title = '服务协议'
+        title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
       case 'superMapForum':
         source = {

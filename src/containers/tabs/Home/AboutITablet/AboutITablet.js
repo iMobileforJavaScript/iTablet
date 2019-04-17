@@ -6,7 +6,7 @@ import styles from './styles'
 import { getLanguage } from '../../../../language/index'
 export default class AboutITablet extends Component {
   props: {
-    language: Object,
+    language: String,
     navigation: Object,
     device: Object,
   }

@@ -39,7 +39,7 @@ const Profile_Chinese = {
 
   //我的服务
   SERVICE: '服务',
-  MY_SERVICE: '我的服务',
+  MY_SERVICE: '服务',
   PRIVATE_SERVICE: '私有服务',
   PUBLIC_SERVICE: '公有服务',
 
@@ -147,7 +147,7 @@ const Profile_English = {
 
   //我的服务
   SERVICE: 'Service',
-  MY_SERVICE: 'My Service',
+  MY_SERVICE: 'Service',
   PRIVATE_SERVICE: 'Private Service',
   PUBLIC_SERVICE: 'Public Service',
   DELETE: 'Delete',

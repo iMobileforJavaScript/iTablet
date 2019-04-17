@@ -24,7 +24,7 @@ import { getLanguage } from '../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
-    language: Object,
+    language: String,
     setLanguage: () => {},
     nav: Object,
     latestMap: Object,

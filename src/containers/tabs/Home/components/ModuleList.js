@@ -64,7 +64,7 @@ class RenderModuleItem extends Component {
     let progress =
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
-        : `下载${this.state.progress}`
+        : `${this.state.progress}`
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -132,7 +132,7 @@ class RenderModuleItem extends Component {
 
 export class ModuleList extends Component {
   props: {
-    language: Object,
+    language: String,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -367,7 +367,7 @@ export class ModuleList extends Component {
         })
 
         let module
-        switch (item.title) {
+        switch (item.key) {
           case MAP_MODULE.MAP_COLLECTION:
             module = constants.COLLECTION
             break

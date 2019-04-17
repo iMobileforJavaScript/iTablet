@@ -37,8 +37,8 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstans from "./src/containers/tabs/Friend/MsgConstans";
-import { language, getLanguage } from './src/language/index'
+import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
+import { getLanguage } from './src/language/index'
 
 const {persistor, store} = ConfigStore()
 
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 class AppRoot extends Component {
   props:{
-    language:Object,
+    language: String,
   }
   static propTypes = {
     nav: PropTypes.object,
@@ -145,11 +145,11 @@ class AppRoot extends Component {
     }
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
       SMessageService.connectService(
-        MSGConstans.MSG_IP,
-        MSGConstans.MSG_Port,
-        MSGConstans.MSG_HostName,
-        MSGConstans.MSG_UserName,
-        MSGConstans.MSG_Password,
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
     }
@@ -167,7 +167,7 @@ class AppRoot extends Component {
           bLogin = await SOnlineService.login(userName, password)
         }
         if (!bLogin) {
-         // Toast.show('登陆状态失效')
+          // Toast.show('登陆状态失效')
         }
 
       }
@@ -302,7 +302,7 @@ class AppRoot extends Component {
 
   addGetShareResultListener = async () => {
     await FileTools.getShareResult({
-      callback: result => {
+      callback: () => {
         if(GLOBAL.shareFilePath&&GLOBAL.shareFilePath.length>1){
           // FileTools.deleteFile(GLOBAL.shareFilePath)
         }
@@ -393,7 +393,8 @@ class AppRoot extends Component {
   // 导出(保存)工作空间中地图到模块
   saveMapName = async (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
     try {
-      this.setSaveMapViewLoading(true, '正在保存地图')
+      this.setSaveMapViewLoading(true,getLanguage(this.props.language).Prompt.SAVING)
+      //'正在保存地图')
       let result = await this.props.saveMap({mapName, nModule, addition})
       //   .then(result => {
       //   this.setSaveMapViewLoading(false)
@@ -407,7 +408,9 @@ class AppRoot extends Component {
       if (result) {
         this.setSaveMapViewLoading(false)
         Toast.show(
-          result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.SAVE_MAP_FAILED,
+          result ?
+            getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : ConstInfo.SAVE_MAP_FAILED,
         )
         cb && cb()
       } else {
@@ -429,10 +432,10 @@ class AppRoot extends Component {
     }
     if (GLOBAL.isBackHome) {
       try {
-        this.setSaveMapViewLoading(true, 
+        this.setSaveMapViewLoading(true,
           getLanguage(this.props.language).Prompt.CLOSING,
           //'正在关闭地图'
-          )
+        )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setSaveMapViewLoading(false)
@@ -491,7 +494,7 @@ class AppRoot extends Component {
             result && Toast.show('导入成功')
           }, () => {
             GLOBAL.Loading.setLoading(false)
-            result && Toast.show('导入失败')
+            Toast.show('导入失败')
           })
         }}
         cancelAction={ async () => {

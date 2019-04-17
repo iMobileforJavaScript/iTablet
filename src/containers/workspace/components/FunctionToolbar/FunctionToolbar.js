@@ -40,7 +40,7 @@ const BottomHeight = scaleSize(100)
 
 export default class FunctionToolbar extends React.Component {
   props: {
-    language: Object,
+    language: String,
     style?: any,
     hide?: boolean,
     direction?: string,
@@ -735,7 +735,8 @@ export default class FunctionToolbar extends React.Component {
           data: userUDBs,
         },
         {
-          title: Const.MAP,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
+          //Const.MAP,
           image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: mapData,
         },
@@ -767,7 +768,8 @@ export default class FunctionToolbar extends React.Component {
           data: customerUDBs,
         },
         {
-          title: Const.MAP,
+          title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
+          //Const.MAP,
           image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: mapData,
         },

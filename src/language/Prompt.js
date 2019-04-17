@@ -5,25 +5,34 @@ const Chinese = {
   SAVE_NO: '不保存',
   CANCEL: '取消',
   SHARE: '分享',
+  DELETE: '删除',
+  WECHAT: '微信',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
+  DOWNLOADING: '下载中',
+  DOWNLOAD_SUCCESSFULLY: '已下载',
 
   NO_REMINDER: '下次不再提醒',
 
   LOG_OUT: '是否退出登录？',
 
   DELETE_STOP: '确认删除站点？',
+  DELETE_OBJECT: '确定要永久删除该对象吗?',
 
   CONFIRM: '确定',
 
   QUIT: '确认退出SuperMap iTablet?',
   MAP_LOADING: '地图加载中',
   LOADING: '加载中',
+  THE_MAP_IS_OPENED: '该地图已打开',
+  THE_SCENE_IS_OPENED: '该场景已打开',
   SWITCHING: '正在切换地图',
   CLOSING: '正在关闭地图',
   CLOSING_3D: '正在关闭地图',
+  SAVING: '正在保存地图',
   SWITCHING_SUCCESS: '切换成功',
+  ADD_SUCCESS: '添加成功',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
 
   PUBLIC_MAP: '公共地图',
@@ -32,9 +41,10 @@ const Chinese = {
 
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
+  SERCHING: '搜索中',
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
-  SAVE_SUCCESSFULLY: '地图保存成功',
+  SAVE_SUCCESSFULLY: '保存成功',
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',
 
@@ -70,6 +80,10 @@ const Chinese = {
   CLIPPED_SUCCESS: '裁剪成功',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP: '不支持由该图层创建专题图',
+
+  ANALYSING: '路径分析中',
+  CHOOSE_STARTING_POINT: '请输入起点',
+  CHOOSE_DESTINATION: '请输入终点',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -77,25 +91,34 @@ const English = {
   SAVE_NO: 'No',
   CANCEL: 'Cancel',
   SHARE: 'Share',
+  DELETE: 'Delete',
+  WECHAT: 'Wechat',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',
+  DOWNLOADING: 'Loading',
+  DOWNLOAD_SUCCESSFULLY: 'Done',
 
   NO_REMINDER: 'No reminder',
 
   LOG_OUT: 'Are you sure you want to log out?',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
+  DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
 
   CONFIRM: 'Confirm',
 
   QUIT: 'Quit SuperMap iTablet?',
   MAP_LOADING: 'Loading',
   LOADING: 'Loading',
+  THE_MAP_IS_OPENED: 'The map is opened',
+  THE_SCENE_IS_OPENED: 'The scene is opened',
   SWITCHING: 'Switching',
   CLOSING: 'Closing',
   CLOSING_3D: 'Closing',
+  SAVING: 'Saving',
   SWITCHING_SUCCESS: 'Switch Successfully',
+  ADD_SUCCESS: 'Added Successfully',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
 
   PUBLIC_MAP: 'Public Map',
@@ -104,9 +127,10 @@ const English = {
 
   THE_CURRENT_LAYER: 'The current layer is',
   ENTER_KEY_WORDS: 'Please enter key words',
+  SEARCHING: 'Searching',
   READING_DATA: 'Reading Data',
-  CREATE_SUCCESSFULLY: 'Create Successfully',
-  SAVE_SUCCESSFULLY: 'Save Successfully',
+  CREATE_SUCCESSFULLY: 'Created Successfully',
+  SAVE_SUCCESSFULLY: 'Saved Successfully',
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',
 
@@ -145,6 +169,10 @@ const English = {
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP:
     'The current layer cannot be used to create a thematic map.',
+
+  ANALYSING: 'Analysing',
+  CHOOSE_STARTING_POINT: 'Choose starting point',
+  CHOOSE_DESTINATION: 'Choose destination',
 }
 
 export { Chinese, English }

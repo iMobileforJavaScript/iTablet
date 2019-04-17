@@ -6,7 +6,7 @@ import { getLanguage } from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
   props: {
-    language: Object,
+    language: String,
     setLanguage: () => {},
     modalVisible: Boolean,
     isLogin: Boolean,
@@ -157,7 +157,7 @@ export default class HomePopupModal extends PureComponent {
           )}
 
           {this._renderItem(
-            this.props.language == 'EN' ? 'Chinese' : '英文版',
+            this.props.language == 'EN' ? '中文' : 'English',
             () => {
               if (this.props.language == 'EN') {
                 this.props.setLanguage('CN')
@@ -168,10 +168,10 @@ export default class HomePopupModal extends PureComponent {
               }
             },
           )}
-          {this._renderItem(
+          {/* {this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_SETTING,
             this.props.onSetting,
-          )}
+          )} */}
           {this._renderItem(
             getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_EXIT,
             this.closeApp,

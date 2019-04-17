@@ -29,7 +29,7 @@ const PAGE_SIZE = 30
 
 export default class LayerAttribute extends React.Component {
   props: {
-    language: Object,
+    language: String,
     nav: Object,
     navigation: Object,
     currentAttribute: Object,
@@ -80,7 +80,8 @@ export default class LayerAttribute extends React.Component {
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
-      this.setLoading(true, ConstInfo.LOADING_DATA)
+      this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
+      //ConstInfo.LOADING_DATA)
       this.refresh()
     }
   }
