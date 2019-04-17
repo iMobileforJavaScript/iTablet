@@ -1,5 +1,4 @@
 import { NetInfo } from 'react-native'
-//eslint-disable-next-line
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -212,10 +211,8 @@ async function downFileAction(
         }
         let result = downloadFile(downloadOptions)
         result.promise.then(
-          async result => {
-            // console.warn(result)
+          async () => {
             let unzipRes = await FileTools.unZipFile(filePath, toPath)
-            debugger
             if (unzipRes === false) {
               await FileTools.deleteFile(filePath)
               Toast.show('网络数据已损坏，无法正常使用')
@@ -238,7 +235,7 @@ async function downFileAction(
             }
             // if (result.statusCode) {
             //   //下载成功后解压导入
-            //   if (result.statusCode >= 200 && result.statusCode < 300) 
+            //   if (result.statusCode >= 200 && result.statusCode < 300)
             //   {
             //     Toast.show('文件导入中')
             //     debugger
@@ -329,7 +326,7 @@ async function setFilterDatas(
           break
         }
       } else if (isFile === 'directory') {
-        await setFilterDatas(newPath, fileType,importWorkspace)
+        await setFilterDatas(newPath, fileType, importWorkspace)
       }
     }
   } catch (e) {

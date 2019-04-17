@@ -98,7 +98,7 @@ export default class PublicMap extends Component {
               // 'https://www.supermapol.com/web/datas/1916243026.json'
 
               let bValid = false
-              if (element.serviceStatus !== 'UNPUBLISHED'){
+              if (element.serviceStatus !== 'UNPUBLISHED') {
                 this.removeMapCache([element])
                 continue
               }
