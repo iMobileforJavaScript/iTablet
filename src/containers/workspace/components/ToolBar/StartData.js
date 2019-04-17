@@ -864,8 +864,11 @@ function saveMap() {
       }
 
       _params.setContainerLoading &&
-        _params.setContainerLoading(true, getLanguage(global.language).Prompt.SAVING)
-        //'正在保存地图')
+        _params.setContainerLoading(
+          true,
+          getLanguage(global.language).Prompt.SAVING,
+        )
+      //'正在保存地图')
       let mapName = ''
       if (_params.map.currentMap.name) {
         // 获取当前打开的地图xml的名称
@@ -892,7 +895,9 @@ function saveMap() {
       _params.setContainerLoading && _params.setContainerLoading(false)
       result && _params.setToolbarVisible && _params.setToolbarVisible(false)
       Toast.show(
-        result ? getLanguage(global.language).Prompt.SAVE_SUCCESSFULLY : ConstInfo.SAVE_MAP_FAILED,
+        result
+          ? getLanguage(global.language).Prompt.SAVE_SUCCESSFULLY
+          : ConstInfo.SAVE_MAP_FAILED,
       )
     } catch (e) {
       _params.setContainerLoading && _params.setContainerLoading(false)
@@ -922,7 +927,7 @@ function saveMapAs() {
       value: newName,
       headerTitle: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
       //'地图另存',
-      placeholder:getLanguage(global.language).Prompt.ENTER_MAP_NAME,
+      placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
       cb: async value => {
         let addition = {}
         if (
@@ -933,7 +938,10 @@ function saveMapAs() {
           addition.Template = _params.map.currentMap.Template
         }
         _params.setToolbarVisible &&
-          _params.setToolbarVisible(true,  getLanguage(global.language).Prompt.SAVING)
+          _params.setToolbarVisible(
+            true,
+            getLanguage(global.language).Prompt.SAVING,
+          )
         _params.saveMap &&
           _params.saveMap({ mapName: value, addition, isNew: true }).then(
             result => {
@@ -941,7 +949,9 @@ function saveMapAs() {
               if (result) {
                 NavigationService.goBack()
                 setTimeout(() => {
-                  Toast.show( getLanguage(global.language).Prompt.SAVE_SUCCESSFULLY)
+                  Toast.show(
+                    getLanguage(global.language).Prompt.SAVE_SUCCESSFULLY,
+                  )
                 }, 1000)
               } else {
                 Toast.show(ConstInfo.MAP_EXIST)

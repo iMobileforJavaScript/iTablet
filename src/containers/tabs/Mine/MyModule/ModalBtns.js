@@ -3,8 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
-import { getLanguage } from '../../../../language';
-
+import { getLanguage } from '../../../../language'
 
 export default class ModalBtns extends Component {
   props: {

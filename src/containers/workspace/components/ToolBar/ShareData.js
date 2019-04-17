@@ -7,7 +7,7 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
 import NavigationService from '../../../NavigationService'
-import { getLanguage } from '../../../../language';
+import { getLanguage } from '../../../../language'
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}

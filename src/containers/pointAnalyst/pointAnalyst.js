@@ -114,7 +114,10 @@ export default class PointAnalyst extends Component {
           this.setState({ firstPoint: pointName, analystData: [] })
         } else {
           await SScene.savePoint(index, this.PointType)
-          this.container.setLoading(true, getLanguage(global.language).Prompt.ANALYSING)
+          this.container.setLoading(
+            true,
+            getLanguage(global.language).Prompt.ANALYSING,
+          )
           //'路径分析中')
           this.setState({ secondPoint: pointName, analystData: [] })
           let result = await SScene.navigationLine()
@@ -126,7 +129,10 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
-        this.container.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.SERCHING,
+        )
         // '位置搜索中')
         this.setState({ searchValue: pointName, searchData: [] })
         let result = await SScene.toLocationPoint(index)
@@ -165,7 +171,9 @@ export default class PointAnalyst extends Component {
                 }}
                 value={this.state.firstPoint}
                 style={styles.onInput}
-                placeholder={getLanguage(global.language).Prompt.CHOOSE_STARTING_POINT}
+                placeholder={
+                  getLanguage(global.language).Prompt.CHOOSE_STARTING_POINT
+                }
                 //{'请输入起点'}
               />
             </View>
@@ -187,7 +195,9 @@ export default class PointAnalyst extends Component {
                 }}
                 value={this.state.secondPoint}
                 style={styles.secondInput}
-                placeholder={getLanguage(global.language).Prompt.CHOOSE_DESTINATION}
+                placeholder={
+                  getLanguage(global.language).Prompt.CHOOSE_DESTINATION
+                }
                 // {'请输入终点'}
               />
             </View>
@@ -247,7 +257,7 @@ export default class PointAnalyst extends Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true,getLanguage(global.language).Prompt.SERCHING)
+          this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
           SScene.pointSearch(searchKey)
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}

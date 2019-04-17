@@ -54,7 +54,7 @@ import LegendView from '../../components/LegendView/LegendView'
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
-    language: PropTypes.object,
+    language: PropTypes.string,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -457,9 +457,11 @@ export default class MapView extends React.Component {
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(result ?
-            getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
-            : ConstInfo.MAP_EXIST)
+          Toast.show(
+            result
+              ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+              : ConstInfo.MAP_EXIST,
+          )
           cb && cb()
         },
         () => {
@@ -490,9 +492,11 @@ export default class MapView extends React.Component {
       //'正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(result ?
-          getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
-          : ConstInfo.MAP_EXIST)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : ConstInfo.MAP_EXIST,
+        )
         cb && cb()
       })
     } catch (e) {
@@ -663,7 +667,10 @@ export default class MapView extends React.Component {
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.container.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.SAVING,
+    )
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -679,7 +686,9 @@ export default class MapView extends React.Component {
             this.AlertDialog.setDialogVisible(false)
             this.container.setLoading(false)
           } else {
-            Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+            Toast.show(
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+            )
             this.container.setLoading(false)
             this.AlertDialog.setDialogVisible(false)
             //获取数据源

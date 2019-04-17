@@ -37,12 +37,12 @@ export default class RenderFindItem extends Component {
 
   async componentDidMount() {
     this.path =
-    (await FileTools.getHomeDirectory()) +
-    ConstPath.UserPath +
-    this.props.user.currentUser.userName +
-    '/' +
-    ConstPath.RelativePath.Temp +
-    this.props.data.fileName
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.props.data.fileName
 
     let exist = await FileTools.fileIsExist(this.path)
     if (exist) {
@@ -50,21 +50,22 @@ export default class RenderFindItem extends Component {
       this.setState({
         progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
         //'下载完成',
-        isDownloading: false })
+        isDownloading: false,
+      })
     }
 
     this.downloadingPath =
-    (await FileTools.getHomeDirectory()) +
-    ConstPath.UserPath +
-    this.props.user.currentUser.userName +
-    '/' +
-    ConstPath.RelativePath.Temp +
-    this.props.data.MD5
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.props.data.MD5
 
     exist = await FileTools.fileIsExist(this.downloadingPath)
     if (exist) {
       this.downloading = true
-      let timer = setInterval( async()=>{
+      let timer = setInterval(async () => {
         exist = await FileTools.fileIsExist(this.path)
         if (exist) {
           clearInterval(timer)
@@ -72,19 +73,24 @@ export default class RenderFindItem extends Component {
           this.setState({
             progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
             //'下载完成',
-            isDownloading: false })
+            isDownloading: false,
+          })
         }
-      },2000)
+      }, 2000)
       this.setState({
         progress: getLanguage(global.language).Prompt.DOWNLOADING,
         //'下载完成',
-        isDownloading: true })
+        isDownloading: true,
+      })
     }
 
     this.titleName = ''
-    if(this.props.data.fileName){
+    if (this.props.data.fileName) {
       let index = this.props.data.fileName.lastIndexOf('.')
-      this.titleName = index === -1 ? this.props.data.fileName : this.props.data.fileName.substring(0, index)
+      this.titleName =
+        index === -1
+          ? this.props.data.fileName
+          : this.props.data.fileName.substring(0, index)
     }
   }
   _navigator = uri => {
@@ -107,7 +113,7 @@ export default class RenderFindItem extends Component {
     }
   }
   _downloadFile = async () => {
-    if(this.exist){
+    if (this.exist) {
       this.unZipFile()
       Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
       return
@@ -124,7 +130,10 @@ export default class RenderFindItem extends Component {
         //'正在下载...')
         return
       }
-      this.setState({ progress: getLanguage(global.language).Prompt.DOWNLOADING, isDownloading: true })
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOADING,
+        isDownloading: true,
+      })
       RNFS.writeFile(this.downloadingPath, '----', 'utf8')
         .then(() => {})
         .catch(() => {})
@@ -150,13 +159,15 @@ export default class RenderFindItem extends Component {
         ret.promise
           .then(async () => {
             this.setState({
-              progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+              progress: getLanguage(global.language).Prompt
+                .DOWNLOAD_SUCCESSFULLY,
               //'下载完成',
-              isDownloading: false })
+              isDownloading: false,
+            })
             let result = this.unZipFile()
             if (result === false) {
               Toast.show('网络数据已损坏，无法正常使用')
-            }else{
+            } else {
               this.exist = true
             }
             FileTools.deleteFile(this.downloadingPath)
@@ -176,7 +187,7 @@ export default class RenderFindItem extends Component {
     }
   }
 
-  unZipFile = async ()=>{
+  unZipFile = async () => {
     let appHome = await FileTools.appendingHomeDirectory()
     let userName =
       this.props.user.currentUser.userType === UserType.PROBATION_USER
@@ -187,7 +198,8 @@ export default class RenderFindItem extends Component {
       ConstPath.UserPath +
       userName +
       '/' +
-      ConstPath.RelativePath.ExternalData + this.titleName
+      ConstPath.RelativePath.ExternalData +
+      this.titleName
 
     let exists = await RNFS.exists(fileDir)
     if (!exists) {
@@ -195,10 +207,7 @@ export default class RenderFindItem extends Component {
     }
 
     let savePath = fileDir
-    let result = await FileTools.unZipFile(
-      this.path,
-      savePath
-    )
+    let result = await FileTools.unZipFile(this.path, savePath)
 
     return result
   }

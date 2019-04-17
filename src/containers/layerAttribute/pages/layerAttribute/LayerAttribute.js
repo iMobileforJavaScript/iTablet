@@ -80,8 +80,7 @@ export default class LayerAttribute extends React.Component {
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
-      this.setLoading(true,
-        getLanguage(this.props.language).Prompt.LOADING)
+      this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
       //ConstInfo.LOADING_DATA)
       this.refresh()
     }
@@ -537,7 +536,7 @@ export default class LayerAttribute extends React.Component {
               filter: `SmID=${
                 isSingleData
                   ? this.state.attributes.data[0][0].value
-                  : data.rowData[0].value
+                  : data.rowData[1].value // 0为序号
               }`, // 过滤条件
               cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },

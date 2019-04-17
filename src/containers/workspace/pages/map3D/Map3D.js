@@ -127,7 +127,10 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    this.container.setLoading(true,getLanguage(this.props.language).Prompt.LOADING)
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.LOADING,
+    )
     if (!this.name) {
       setTimeout(() => {
         this.container.setLoading(false)
