@@ -262,64 +262,61 @@ async function shareToSuperMapOnline(list = [], name = '') {
             notExport,
           },
         },
-        (result, path) => {
+        async (result, path) => {
           !result && Toast.show(ConstInfo.EXPORT_WORKSPACE_FAILED)
           // 分享
           let fileName = path.substr(path.lastIndexOf('/') + 1)
           let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
 
-          SOnlineService.deleteData(dataName).then(async () => {
-            Toast.show(ConstInfo.SHARE_START)
-            await SOnlineService.uploadFile(path, dataName, {
-              onProgress: progress => {
-                progress = parseInt(progress)
-                let currentSharingProgress = 0
-                for (let i = 0; i < _params.online.share.length; i++) {
-                  if (
-                    _params.online.share[i].module === GLOBAL.Type &&
-                    _params.online.share[i].name === dataName
-                  ) {
-                    currentSharingProgress = _params.online.share[i].progress
-                    break
-                  }
-                }
+          // SOnlineService.deleteData(dataName).then(async () => {
+          Toast.show(ConstInfo.SHARE_START)
+          await SOnlineService.uploadFile(path, dataName, {
+            onProgress: progress => {
+              progress = parseInt(progress)
+              let currentSharingProgress = 0
+              for (let i = 0; i < _params.online.share.length; i++) {
                 if (
-                  progress < 100 &&
-                  currentSharingProgress !== progress / 100
+                  _params.online.share[i].module === GLOBAL.Type &&
+                  _params.online.share[i].name === dataName
                 ) {
-                  // console.warn('uploading: ' + progress)
-                  _params.setSharing({
-                    module: GLOBAL.Type,
-                    name: dataName,
-                    progress: (progress > 95 ? 95 : progress) / 100,
-                  })
+                  currentSharingProgress = _params.online.share[i].progress
+                  break
                 }
-              },
-              onResult: async () => {
-                let result = await SOnlineService.publishService(dataName)
-                // SOnlineService.changeServiceVisibility()
-                if (result) {
-                  _params.setSharing({
-                    module: GLOBAL.Type,
-                    name: dataName,
-                    progress: 1,
-                  })
-                }
-                setTimeout(() => {
-                  _params.setSharing({
-                    module: GLOBAL.Type,
-                    name: dataName,
-                  })
-                }, 2000)
-                GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
-                Toast.show(
-                  result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
-                )
-                FileTools.deleteFile(path)
-                isSharing = false
-              },
-            })
+              }
+              if (progress < 100 && currentSharingProgress !== progress / 100) {
+                // console.warn('uploading: ' + progress)
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                  progress: (progress > 95 ? 95 : progress) / 100,
+                })
+              }
+            },
+            onResult: async () => {
+              let result = await SOnlineService.publishService(dataName)
+              // SOnlineService.changeServiceVisibility()
+              if (result) {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                  progress: 1,
+                })
+              }
+              setTimeout(() => {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                })
+              }, 2000)
+              GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+              Toast.show(
+                result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+              )
+              FileTools.deleteFile(path)
+              isSharing = false
+            },
           })
+          // })
         },
       )
     }, 500)
