@@ -536,7 +536,7 @@ export default class LayerAttribute extends React.Component {
               filter: `SmID=${
                 isSingleData
                   ? this.state.attributes.data[0][0].value
-                  : data.rowData[0].value
+                  : data.rowData[1].value // 0为序号
               }`, // 过滤条件
               cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },
