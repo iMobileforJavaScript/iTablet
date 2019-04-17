@@ -16,7 +16,7 @@ import { Container, Dialog } from '../../../../components'
 import { dialogStyles } from './../Styles'
 import { styles } from './Styles'
 import AddFriend from './../AddFriend'
-import{getLanguage}from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 export default class InformMessage extends React.Component {
   props: {

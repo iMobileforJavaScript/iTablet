@@ -62,7 +62,10 @@ export default class RenderFindItem extends Component {
         //'正在下载...')
         return
       }
-      this.setState({ progress: getLanguage(global.language).Prompt.DOWNLOADING, isDownloading: true })
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOADING,
+        isDownloading: true,
+      })
       let dataId = this.props.data.id
       let dataUrl =
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
@@ -104,9 +107,11 @@ export default class RenderFindItem extends Component {
         ret.promise
           .then(async () => {
             this.setState({
-              progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+              progress: getLanguage(global.language).Prompt
+                .DOWNLOAD_SUCCESSFULLY,
               //'下载完成',
-              isDownloading: false })
+              isDownloading: false,
+            })
             let savePath =
               appHome +
               ConstPath.UserPath +

@@ -10,6 +10,10 @@ export default StyleSheet.create({
     color: 'white',
     fontSize: size.fontSize.fontSizeXXl,
   },
+  headerBtnTitleDisable: {
+    color: color.fontColorGray,
+    fontSize: size.fontSize.fontSizeXXl,
+  },
   tabView: {
     height: scaleSize(80),
   },

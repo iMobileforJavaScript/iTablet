@@ -1406,8 +1406,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1618"
             endingLineNumber = "1618"
-            landmarkName = "-touchesBegan:withEvent:"
-            landmarkType = "7">
+            landmarkName = "SMap"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1422,8 +1422,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1607"
             endingLineNumber = "1607"
-            landmarkName = "-onDoubleTap:"
-            landmarkType = "7">
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

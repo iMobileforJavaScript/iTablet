@@ -6,8 +6,8 @@ function getData() {
     {
       key: ConstAnalyst.BUFFER_ANALYST,
       title: ConstAnalyst.BUFFER_ANALYST,
-      action: () => {
-        NavigationService.navigate('BufferAnalystView')
+      action: (params = {}) => {
+        NavigationService.navigate('BufferAnalystView', params)
       },
       size: 'large',
       image: getThemeAssets().analyst.analysis_buffer,

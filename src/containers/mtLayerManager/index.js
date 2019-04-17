@@ -10,7 +10,7 @@ import { setMapLegend } from '../../models/setting'
 import { closeMap } from '../../models/map'
 
 const mapStateToProps = state => ({
-  language:state.setting.toJS().language,
+  language: state.setting.toJS().language,
   editLayer: state.layers.toJS().editLayer,
   layers: state.layers.toJS().layers,
   map: state.map.toJS(),

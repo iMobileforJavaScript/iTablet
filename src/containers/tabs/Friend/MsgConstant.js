@@ -1,6 +1,6 @@
 export default {
-  MSG_IP:  '192.168.0.111',
-  MSG_Port:  5672,
+  MSG_IP: '192.168.0.111',
+  MSG_Port: 5672,
   MSG_HostName: '/',
   MSG_UserName: 'androidtest',
   MSG_Password: 'androidtest',

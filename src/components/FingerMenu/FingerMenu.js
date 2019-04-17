@@ -55,11 +55,12 @@ export default class MenuDialog extends React.Component {
       //
       // })
       setTimeout(() => {
-        this.list.scrollToIndex({
-          index: this.state.currentIndex,
-          viewPosition: 0.5,
-          animated: false,
-        })
+        this.list &&
+          this.list.scrollToIndex({
+            index: this.state.currentIndex,
+            viewPosition: 0.5,
+            animated: false,
+          })
       }, 500)
     }
   }

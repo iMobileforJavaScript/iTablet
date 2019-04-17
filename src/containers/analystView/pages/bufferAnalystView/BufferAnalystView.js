@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import { Dimensions } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import { MAP_MODULE } from '../../../../constants/ConstModule'
+import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, Toast } from '../../../../utils'
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
+import { SAnalyst } from 'imobile_for_reactnative'
+import NavigationService from '../../../NavigationService'
 
 import BufferAnalystViewTab from './BufferAnalystViewTab'
 
@@ -24,7 +27,106 @@ export default class BufferAnalystView extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
+    const { params } = props.navigation.state
+    this.cb = params && params.cb
+    this.state = {
+      canBeAnalyst: false,
+    }
+    this.currentTabIndex = 0
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  checkData = result => {
+    if (result !== this.state.canBeAnalyst) {
+      this.setState({
+        canBeAnalyst: result,
+      })
+    }
+  }
+
+  analyst = async () => {
+    if (!this.state.canBeAnalyst) return
+    if (!this.currentTab && this.singleBuffer)
+      this.currentTab = this.singleBuffer
+    if (this.currentTab) {
+      Toast.show(ConstInfo.ANALYST_START)
+      // this.setLoading(ConstInfo.ANALYST_START)
+      if (this.currentTabIndex === 0) {
+        let {
+          sourceData,
+          resultData,
+          bufferParameter,
+          isUnion,
+          isAttributeRetained,
+          optionParameter,
+        } = this.currentTab.getAnalystParams()
+        SAnalyst.createBuffer(
+          sourceData,
+          resultData,
+          bufferParameter,
+          isUnion,
+          isAttributeRetained,
+          optionParameter,
+        ).then(
+          res => {
+            Toast.show(
+              res.result
+                ? ConstInfo.ANALYST_SUCCESS
+                : res.errorMsg || ConstInfo.ANALYST_FAIL,
+            )
+
+            if (res.result) {
+              NavigationService.goBack()
+              if (optionParameter.showResult) {
+                this.cb && this.cb()
+              }
+            }
+          },
+          res => {
+            Toast.show(res && res.errorMsg)
+          },
+        )
+      } else {
+        // let { sourceData, resultData, bufferRadiuses, bufferRadiusUnit, semicircleSegments, isUnion, isAttributeRetained, isRing, optionParameter } = this.currentTab.getAnalystParams()
+        let params = this.currentTab.getAnalystParams()
+        SAnalyst.createMultiBuffer(
+          params.sourceData,
+          params.resultData,
+          params.bufferRadiuses,
+          params.bufferRadiusUnit,
+          params.semicircleSegments,
+          params.isUnion,
+          params.isAttributeRetained,
+          params.isRing,
+          params.optionParameter,
+        ).then(
+          res => {
+            Toast.show(
+              res.result
+                ? ConstInfo.ANALYST_SUCCESS
+                : res.errorMsg || ConstInfo.ANALYST_FAIL,
+            )
+
+            if (res.result) {
+              NavigationService.goBack()
+              if (params.optionParameter.showResult) {
+                this.cb && this.cb()
+              }
+            }
+          },
+          res => {
+            Toast.show(res && res.errorMsg)
+          },
+        )
+      }
+    }
+  }
+
+  back = () => {
+    NavigationService.goBack()
   }
 
   renderToolBar = () => {
@@ -44,11 +146,16 @@ export default class BufferAnalystView extends Component {
         headerProps={{
           title: MAP_MODULE.MAP_ANALYST,
           navigation: this.props.navigation,
+          backAction: this.back,
           headerRight: (
             <TextBtn
               btnText={'分析'}
-              textStyle={styles.headerBtnTitle}
-              btnClick={this.headerBtnAction}
+              textStyle={
+                this.state.canBeAnalyst
+                  ? styles.headerBtnTitle
+                  : styles.headerBtnTitleDisable
+              }
+              btnClick={this.analyst}
             />
           ),
         }}
@@ -70,14 +177,39 @@ export default class BufferAnalystView extends Component {
             textAlign: 'center',
             marginTop: 10,
           }}
+          onChangeTab={({ i }) => {
+            this.currentTabIndex = i
+            switch (i) {
+              case 0:
+                this.currentTab = this.singleBuffer
+                break
+              case 1:
+                this.currentTab = this.multiBuffer
+                break
+            }
+          }}
         >
           <BufferAnalystViewTab
+            ref={ref => (this.singleBuffer = ref)}
             tabLabel="缓冲区"
+            type="single"
             currentUser={this.props.currentUser}
+            checkData={result => {
+              if (this.currentTabIndex === 0) {
+                this.checkData(result)
+              }
+            }}
           />
           <BufferAnalystViewTab
+            ref={ref => (this.multiBuffer = ref)}
             tabLabel="多重缓冲区"
+            type="multiple"
             currentUser={this.props.currentUser}
+            checkData={result => {
+              if (this.currentTabIndex === 1) {
+                this.checkData(result)
+              }
+            }}
           />
         </ScrollableTabView>
       </Container>

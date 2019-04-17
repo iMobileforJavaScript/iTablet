@@ -5,7 +5,7 @@ import { CheckStatus, ConstPath, ConstInfo } from '../../../../constants'
 import { CheckBox, PopModal, FingerMenu } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils'
-import { SMap, EngineType } from 'imobile_for_reactnative'
+import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
 import styles from './styles'
@@ -13,11 +13,26 @@ import styles from './styles'
 const popTypes = {
   DataSource: 'DataSource',
   DataSet: 'DataSet',
-  FlatTypeStatus: 'FlatTypeStatus',
+  BufferType: 'BufferType',
   ResultDataSource: 'ResultDataSource',
   ResultDataSet: 'ResultDataSet',
   SemicircleArcNum: 'SemicircleArcNum',
 }
+
+const FlatType = [
+  {
+    key: '双侧缓冲',
+    value: '双侧缓冲',
+  },
+  {
+    key: '左缓冲',
+    value: '左缓冲',
+  },
+  {
+    key: '右缓冲',
+    value: '右缓冲',
+  },
+]
 
 const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
   value: k,
@@ -30,6 +45,7 @@ export default class BufferAnalystViewTab extends Component {
     currentUser: Object,
     data: Array,
     type: string, // single, multiple
+    checkData: () => {},
   }
 
   constructor(props) {
@@ -42,9 +58,11 @@ export default class BufferAnalystViewTab extends Component {
       // 缓冲类型
       roundTypeStatus: CheckStatus.CHECKED,
       flatTypeStatus: CheckStatus.UN_CHECK,
-      flatType: '左缓冲',
+      flatType: FlatType[0],
       // 缓冲半径
-      bufferRadio: 10,
+      bufferRadius: 10,
+      bufferRadiuses: [10, 20, 30],
+      bufferRadiusUnit: 'Meter',
       // 结果设置
       isUnionBuffer: false,
       isRetainAttribute: true,
@@ -54,6 +72,7 @@ export default class BufferAnalystViewTab extends Component {
         key: 100,
         value: 100,
       },
+      isRing: false,
       // 结果数据
       resultDataSource: null,
       resultDataSet: null,
@@ -61,6 +80,8 @@ export default class BufferAnalystViewTab extends Component {
       // 弹出框数据
       popData: [],
       currentPopData: null,
+
+      showAdvance: false,
     }
 
     // this.dataSources = []
@@ -78,6 +99,113 @@ export default class BufferAnalystViewTab extends Component {
         value: i,
       })
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      JSON.stringify(nextProps) !== JSON.stringify(this.props)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevState.dataSource) !==
+        JSON.stringify(this.state.dataSource) ||
+      JSON.stringify(prevState.dataSet) !==
+        JSON.stringify(this.state.dataSet) ||
+      JSON.stringify(prevState.resultDataSource) !==
+        JSON.stringify(this.state.resultDataSource) ||
+      JSON.stringify(prevState.resultDataSet) !==
+        JSON.stringify(this.state.resultDataSet)
+    ) {
+      this.checkData()
+    }
+  }
+
+  showAdvance = () => {
+    if (!this.state.dataSource || !this.state.dataSet) return
+    this.setState({
+      showAdvance: true,
+    })
+  }
+
+  checkData = () => {
+    let available = false
+    if (
+      this.state.dataSource &&
+      this.state.dataSet &&
+      this.state.resultDataSource &&
+      this.state.resultDataSet
+    ) {
+      available = true
+    }
+
+    if (this.props.checkData && typeof this.props.checkData === 'function') {
+      this.props.checkData(available)
+    }
+    return available
+  }
+
+  getAnalystParams = () => {
+    let params = {
+      sourceData: {
+        datasource: this.state.dataSource.value,
+        dataset: this.state.dataSet.value,
+      },
+      resultData: {
+        datasource: this.state.resultDataSource.value,
+        dataset: this.state.resultDataSet.value,
+      },
+      isUnion: this.state.isUnionBuffer,
+      isAttributeRetained: this.state.isRetainAttribute,
+      optionParameter: {
+        showResult: this.state.isShowOnMap,
+      },
+    }
+    if (this.props.type === 'single') {
+      let bufferParameter = {}
+      // 缓冲分析
+      if (this.state.flatTypeStatus === CheckStatus.CHECKED) {
+        switch (this.state.flatType.value) {
+          case '左缓冲':
+            bufferParameter.leftDistance = this.state.bufferRadius
+            bufferParameter.rightDistance = 0
+            break
+          case '右缓冲':
+            bufferParameter.leftDistance = 0
+            bufferParameter.rightDistance = this.state.bufferRadius
+            break
+          case '双侧缓冲':
+          default:
+            bufferParameter.leftDistance = this.state.bufferRadius
+            bufferParameter.rightDistance = this.state.bufferRadius
+            break
+        }
+      } else {
+        bufferParameter.leftDistance = this.state.bufferRadius
+        bufferParameter.rightDistance = this.state.bufferRadius
+      }
+      bufferParameter.endType =
+        this.state.roundTypeStatus === CheckStatus.CHECKED ||
+        this.state.roundTypeStatus === CheckStatus.CHECKED_DISABLE
+          ? 1
+          : 2 // 1是圆头， 2是平头
+      bufferParameter.semicircleSegments = this.state.semicircleArcNum.value
+
+      params.bufferParameter = bufferParameter
+    } else {
+      // 多重缓冲分析
+      params.bufferRadiuses = this.state.bufferRadiuses
+      params.bufferRadiusUnit = this.state.bufferRadiusUnit
+      params.isRing = this.state.isRing
+      params.semicircleSegments = this.state.semicircleArcNum.value
+    }
+
+    return params
   }
 
   getDataSources = async () => {
@@ -154,8 +282,11 @@ export default class BufferAnalystViewTab extends Component {
           title={'数据集'}
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
-            if (!this.state.dataSource)
+            if (!this.state.dataSource) {
               Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              return
+            }
+
             this.currentPop = popTypes.DataSet
             let udbPath = await FileTools.appendingHomeDirectory(
               this.state.dataSource.path,
@@ -207,13 +338,15 @@ export default class BufferAnalystViewTab extends Component {
         <AnalystItem
           radioStatus={this.state.flatTypeStatus}
           title={'平头缓冲'}
-          value={this.state.flatType}
+          value={this.state.flatType && this.state.flatType.value}
           onRadioPress={() => this.changeBufferType('平头缓冲')}
           onPress={async () => {
-            this.currentPop = popTypes.FlatTypeStatus
+            if (this.state.flatTypeStatus !== CheckStatus.CHECKED) return
+            this.currentPop = popTypes.BufferType
             this.setState(
               {
-                currentPopData: this.state.flatTypeStatus,
+                popData: FlatType,
+                currentPopData: this.state.flatType,
               },
               () => {
                 this.dsModal && this.dsModal.setVisible(true)
@@ -225,7 +358,7 @@ export default class BufferAnalystViewTab extends Component {
     )
   }
 
-  renderBufferRadio = () => {
+  renderBufferRadius = () => {
     return (
       <View key="optionView" style={styles.topView}>
         <View style={styles.subTitleView}>
@@ -233,20 +366,39 @@ export default class BufferAnalystViewTab extends Component {
         </View>
         <AnalystItem
           title={'缓冲半径'}
-          value={this.state.bufferRadio + '米'}
+          value={
+            this.props.type === 'single'
+              ? this.state.bufferRadius + '米'
+              : '去设置'
+          }
           onPress={() => {
-            NavigationService.navigate('InputPage', {
-              value: this.state.bufferRadio,
-              headerTitle: '缓冲半径',
-              placeholder: '请输入缓冲半径',
-              keyboardType: 'numeric',
-              cb: async value => {
-                NavigationService.goBack()
-                this.setState({
-                  bufferRadio: value,
-                })
-              },
-            })
+            if (this.props.type === 'single') {
+              NavigationService.navigate('InputPage', {
+                value: this.state.bufferRadius,
+                headerTitle: '缓冲半径',
+                placeholder: '请输入缓冲半径',
+                keyboardType: 'numeric',
+                cb: async value => {
+                  NavigationService.goBack()
+                  this.setState({
+                    bufferRadius: parseInt(value),
+                  })
+                },
+              })
+            } else {
+              NavigationService.navigate('AnalystRadiusSetting', {
+                value: this.state.bufferRadius,
+                headerTitle: '批量添加',
+                keyboardType: 'numeric',
+                cb: async data => {
+                  NavigationService.goBack()
+                  this.setState({
+                    bufferRadiuses: data.radiuses,
+                    bufferRadiusUnit: data.unit,
+                  })
+                },
+              })
+            }
           }}
         />
       </View>
@@ -286,15 +438,15 @@ export default class BufferAnalystViewTab extends Component {
             })
           }}
         />
-        <AnalystItem
-          title={'在场景中展示'}
-          value={this.state.isShowOnScene}
-          onChange={value => {
-            this.setState({
-              isShowOnScene: value,
-            })
-          }}
-        />
+        {/*<AnalystItem*/}
+        {/*title={'在场景中展示'}*/}
+        {/*value={this.state.isShowOnScene}*/}
+        {/*onChange={value => {*/}
+        {/*this.setState({*/}
+        {/*isShowOnScene: value,*/}
+        {/*})*/}
+        {/*}}*/}
+        {/*/>*/}
         <AnalystItem
           title={'半圆弧线段数'}
           value={this.state.semicircleArcNum.value}
@@ -309,6 +461,15 @@ export default class BufferAnalystViewTab extends Component {
                 this.dsModal && this.dsModal.setVisible(true)
               },
             )
+          }}
+        />
+        <AnalystItem
+          title={'生成环状缓冲区'}
+          value={this.state.isRing}
+          onChange={value => {
+            this.setState({
+              isRing: value,
+            })
           }}
         />
       </View>
@@ -348,29 +509,48 @@ export default class BufferAnalystViewTab extends Component {
             (this.state.resultDataSet && this.state.resultDataSet.value) || ''
           }
           onPress={async () => {
-            if (!this.state.resultDataSource)
+            if (!this.state.resultDataSource) {
               Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
-            this.currentPop = popTypes.ResultDataSet
-            let udbPath = await FileTools.appendingHomeDirectory(
-              this.state.dataSource.path,
-            )
-            let dataSets = await this.getDataSets(
-              {
-                server: udbPath,
-                engineType: EngineType.UDB,
-                alias: this.state.dataSource.key,
+              return
+            }
+
+            // this.currentPop = popTypes.ResultDataSet
+            // let udbPath = await FileTools.appendingHomeDirectory(
+            //   this.state.dataSource.path,
+            // )
+            // let dataSets = await this.getDataSets(
+            //   {
+            //     server: udbPath,
+            //     engineType: EngineType.UDB,
+            //     alias: this.state.dataSource.key,
+            //   },
+            //   true,
+            // )
+            // this.setState(
+            //   {
+            //     popData: dataSets,
+            //     currentPopData: this.state.resultDataSet,
+            //   },
+            //   () => {
+            //     this.dsModal && this.dsModal.setVisible(true)
+            //   },
+            // )
+
+            NavigationService.navigate('InputPage', {
+              value: this.state.resultDataSet
+                ? this.state.resultDataSet.value
+                : '',
+              headerTitle: '结果数据集名称',
+              placeholder: '',
+              cb: async value => {
+                NavigationService.goBack()
+                this.setState({
+                  resultDataSet: {
+                    value: value.toString().trim(),
+                  },
+                })
               },
-              true,
-            )
-            this.setState(
-              {
-                popData: dataSets,
-                currentPopData: this.state.resultDataSet,
-              },
-              () => {
-                this.dsModal && this.dsModal.setVisible(true)
-              },
-            )
+            })
           }}
         />
       </View>
@@ -404,11 +584,30 @@ export default class BufferAnalystViewTab extends Component {
                 case popTypes.DataSource:
                   newStateData = { dataSource: data }
                   break
-                case popTypes.DataSet:
-                  newStateData = { dataSet: data }
+                case popTypes.DataSet: {
+                  let roundTypeStatus = CheckStatus.CHECKED
+                  let flatTypeStatus = CheckStatus.UN_CHECK
+
+                  if (
+                    data.datasetType === DatasetType.REGION ||
+                    data.datasetType === DatasetType.POINT
+                  ) {
+                    roundTypeStatus = CheckStatus.CHECKED_DISABLE
+                    flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
+                  }
+
+                  newStateData = this.state.showAdvance
+                    ? { dataSet: data, roundTypeStatus, flatTypeStatus }
+                    : {
+                      dataSet: data,
+                      showAdvance: true,
+                      roundTypeStatus,
+                      flatTypeStatus,
+                    }
                   break
-                case popTypes.FlatTypeStatus:
-                  newStateData = { flatTypeStatus: data }
+                }
+                case popTypes.BufferType:
+                  newStateData = { flatType: data }
                   break
                 case popTypes.SemicircleArcNum:
                   newStateData = { semicircleArcNum: data }
@@ -437,10 +636,10 @@ export default class BufferAnalystViewTab extends Component {
       <View>
         <ScrollView style={styles.container}>
           {this.renderTop()}
-          {this.renderType()}
-          {this.renderBufferRadio()}
-          {this.renderResultSetting()}
-          {this.renderResultData()}
+          {this.state.showAdvance && this.renderType()}
+          {this.state.showAdvance && this.renderBufferRadius()}
+          {this.state.showAdvance && this.renderResultSetting()}
+          {this.state.showAdvance && this.renderResultData()}
         </ScrollView>
         <PopModal ref={ref => (this.dsModal = ref)}>
           {this.renderPopList()}

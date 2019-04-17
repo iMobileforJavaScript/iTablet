@@ -102,4 +102,8 @@ export default {
   CLIP_FAILED: '裁剪失败',
 
   SELECT_DATA_SOURCE_FIRST: '请先选择数据源',
+
+  ANALYST_START: '开始分析',
+  ANALYST_SUCCESS: '分析成功',
+  ANALYST_FAIL: '分析失败',
 }

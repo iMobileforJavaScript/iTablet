@@ -157,6 +157,29 @@ export default class ToolBarSectionList extends React.Component {
     return commitArr
   }
 
+  getItemByTitle = (sectionTitle, itemTitle) => {
+    let item = null
+    for (let i = 0; i < this.state.sections.length; i++) {
+      if (this.state.sections[i].title === sectionTitle) {
+        for (let j = 0; j < this.state.sections[i].data.length; j++) {
+          if (
+            this.state.sections[i].data[j].colorSchemeName === itemTitle ||
+            this.state.sections[i].data[j].expression === itemTitle ||
+            this.state.sections[i].data[j].datasetName === itemTitle ||
+            this.state.sections[i].data[j].name === itemTitle ||
+            this.state.sections[i].data[j].title === itemTitle
+          ) {
+            item = this.state.sections[i].data[j]
+            break
+          }
+        }
+        break
+      }
+    }
+
+    return item
+  }
+
   scrollToLocation = params => {
     this.sectionList.scrollToLocation(params)
   }

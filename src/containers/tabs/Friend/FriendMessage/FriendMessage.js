@@ -20,7 +20,7 @@ import { styles } from './Styles'
 import { dialogStyles } from './../Styles'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from './../MessageDataHandle'
-import{getLanguage}from '../../../../language/index'
+import { getLanguage } from '../../../../language/index'
 
 // import Friend from './../Friend'
 
@@ -58,7 +58,7 @@ class FriendMessage extends Component {
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language!==this.props.language
+      prevProps.language !== this.props.language
     ) {
       return true
     }
@@ -334,7 +334,8 @@ class FriendMessage extends Component {
         </View>
         <View style={styles.ITemTextViewStyle}>
           <Text style={styles.ITemTextStyle}>
-            {getLanguage(this.props.language).Friends.NOTIFICATION}</Text>
+            {getLanguage(this.props.language).Friends.NOTIFICATION}
+          </Text>
         </View>
         <View
           style={{
