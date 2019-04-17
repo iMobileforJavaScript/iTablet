@@ -91,11 +91,15 @@ export default class MyLocalData extends Component {
             this.dataListTotal = result
           },
         )
-        online = {
-          title: '在线数据',
-          data: onlineData,
-          isShowItem: true,
-          dataType: 'online',
+        if (onlineData.length > 0) {
+          online = {
+            title: '在线数据',
+            data: onlineData,
+            isShowItem: true,
+            dataType: 'online',
+          }
+        } else {
+          Toast.show('网络请求失败')
         }
       }
       let newData = userData.concat(customerSectionData)
@@ -324,24 +328,18 @@ export default class MyLocalData extends Component {
       let dataId = objContent.id + ''
       let result = await SOnlineService.deleteDataWithDataId(dataId)
       if (typeof result === 'boolean' && result) {
-        let sectionData = [...this.state.sectionData]
+        let sectionData = JSON.parse(JSON.stringify(this.state.sectionData)) // [...this.state.sectionData]
         let oldOnline = sectionData[sectionData.length - 1]
         oldOnline.data.splice(this.itemInfo.index, 1)
-        let newData = JSON.stringify(sectionData)
-        let data = JSON.parse(newData)
-        this.setState({ sectionData: data }, () => {
-          // console.log(this.state.sectionData)
-          // console.log('数据删除成功')
+        this.setState({ sectionData }, () => {
           Toast.show('数据删除成功')
           this.deleteDataing = false
         })
       } else {
-        // console.log('数据删除失败')
         this.deleteDataing = false
         Toast.show('数据删除失败')
       }
     } catch (e) {
-      // console.log(e)
       this.deleteDataing = false
       Toast.show('网络错误')
     } finally {
@@ -371,8 +369,7 @@ export default class MyLocalData extends Component {
     try {
       //防止data为空时调用
       //数据删除时不调用
-      if (this.deleteData) return
-      if (!this.state.sectionData.length > 0) return
+      if (this.deleteDataing) return
       let section = this.state.sectionData[this.state.sectionData.length - 1]
       if (section.title !== '在线数据') return
       if (

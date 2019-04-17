@@ -235,12 +235,21 @@ async function downFileAction(
                   })
                 }
               } else {
+                updateDownList({
+                  id: itemInfo.id,
+                  progress: 0,
+                  downed: false,
+                })
                 Toast.show('请求异常，导入失败')
               }
             }
           },
-          //eslint-disable-next-line
-          e => {
+          () => {
+            updateDownList({
+              id: itemInfo.id,
+              progress: 0,
+              downed: false,
+            })
             Toast.show('请求异常，导入失败')
           },
         )
@@ -251,11 +260,7 @@ async function downFileAction(
   }
 }
 
-async function setFilterDatas(
-  fullFileDir,
-  fileType,
-  importWorkspace = () => {},
-) {
+async function setFilterDatas(fullFileDir, fileType, importWorkspace) {
   try {
     let isRecordFile = false
     let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
@@ -302,7 +307,7 @@ async function setFilterDatas(
           break
         }
       } else if (isFile === 'directory') {
-        await setFilterDatas(newPath, fileType)
+        await setFilterDatas(newPath, fileType, importWorkspace)
       }
     }
   } catch (e) {

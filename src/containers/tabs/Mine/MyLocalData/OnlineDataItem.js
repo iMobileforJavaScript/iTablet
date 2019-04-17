@@ -22,10 +22,6 @@ export default class OnlineDataItem extends Component {
     this.downloading = false
   }
 
-  shouldComponentUpdate(nextProps) {
-    return JSON.stringify(nextProps.down) !== JSON.stringify(this.props.down)
-  }
-
   componentDidUpdate() {
     if (this.props.down[0].id === this.props.item.id) {
       this.itemProgress.progress = this.props.down[0].progress / 100
