@@ -40,7 +40,7 @@ const BottomHeight = scaleSize(100)
 
 export default class FunctionToolbar extends React.Component {
   props: {
-    language: Object,
+    language: String,
     style?: any,
     hide?: boolean,
     direction?: string,

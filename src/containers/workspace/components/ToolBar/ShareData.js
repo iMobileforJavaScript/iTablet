@@ -7,6 +7,7 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
 import NavigationService from '../../../NavigationService'
+import { getLanguage } from '../../../../language';
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
@@ -116,7 +117,8 @@ function showSaveDialog(type) {
     return
   }
   NavigationService.navigate('InputPage', {
-    headerTitle: '分享',
+    headerTitle: getLanguage(global.language).Map_Main_Menu.SHARE,
+    //'分享',
     value: _params.map.currentMap.name,
     placeholder: ConstInfo.PLEASE_INPUT_NAME,
     cb: async value => {

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 class AppRoot extends Component {
   props:{
-    language:Object,
+    language: String,
   }
   static propTypes = {
     nav: PropTypes.object,

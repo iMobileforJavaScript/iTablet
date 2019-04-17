@@ -36,7 +36,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MT_layerManager extends React.Component {
   props: {
-    language: Object,
+    language: String,
     navigation: Object,
     editLayer: Object,
     map: Object,

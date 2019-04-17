@@ -29,7 +29,7 @@ const PAGE_SIZE = 30
 
 export default class LayerAttribute extends React.Component {
   props: {
-    language: Object,
+    language: String,
     nav: Object,
     navigation: Object,
     currentAttribute: Object,

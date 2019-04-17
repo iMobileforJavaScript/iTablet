@@ -41,7 +41,7 @@ const mapDispatchToProps = {
 
 class SymbolTabs extends React.Component {
   props: {
-    language:Object,
+    language: String,
     style: Object,
     symbol: Object,
     template: Object,
