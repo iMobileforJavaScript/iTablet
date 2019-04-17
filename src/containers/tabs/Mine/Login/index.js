@@ -2,7 +2,7 @@ import Login from './Login'
 import { setUser } from '../../../../models/user'
 import { connect } from 'react-redux'
 const mapStateToProps = state => ({
-  language:state.setting.toJS().language,
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
 })
 

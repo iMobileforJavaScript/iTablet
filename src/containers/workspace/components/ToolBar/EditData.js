@@ -421,7 +421,12 @@ function name() {
     cb: async value => {
       if (value !== '') {
         (async function() {
-          await SMap.addRecordset(GLOBAL.value, 'name', value)
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'name',
+            value,
+            GLOBAL.CurrentUserName,
+          )
         }.bind(this)())
       }
       NavigationService.goBack()
@@ -436,7 +441,12 @@ function remark() {
     cb: async value => {
       if (value !== '') {
         (async function() {
-          await SMap.addRecordset(GLOBAL.value, 'remark', value)
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'remark',
+            value,
+            GLOBAL.CurrentUserName,
+          )
         }.bind(this)())
       }
       NavigationService.goBack()
@@ -451,7 +461,12 @@ function address() {
     cb: async value => {
       if (value !== '') {
         (async function() {
-          await SMap.addRecordset(GLOBAL.value, 'address', value)
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'address',
+            value,
+            GLOBAL.CurrentUserName,
+          )
         }.bind(this)())
       }
       NavigationService.goBack()
@@ -476,7 +491,12 @@ function setwords(event) {
     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
     cb: async value => {
       if (value !== '') {
-        await SMap.addTextRecordset(GLOBAL.value, value, event.x, event.y)
+        await SMap.addTextRecordset(
+          GLOBAL.TaggingDatasetName,
+          value,
+          event.x,
+          event.y,
+        )
       }
       await SMap.deleteGestureDetector()
       NavigationService.goBack()

@@ -241,6 +241,20 @@ function layereditsetting(param) {
   ]
 }
 
+function taggingData(param) {
+  return [
+    {
+      title: getLanguage(param).Map_Layer.PLOTS_SET_AS_CURRENT,
+      data: [],
+      image: require('../../../../assets/function/icon_function_Tagging.png'),
+    },
+    {
+      title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      data: [],
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    },
+  ]
+}
 function layerCollectionSetting(param) {
   return [
     {
@@ -284,22 +298,6 @@ function layerCollectionSetting(param) {
     {
       title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
       //'移除',
-      data: [],
-      image: require('../../../../assets/layerToolbar/layer_remove.png'),
-    },
-  ]
-}
-function taggingData(param) {
-  return [
-    {
-      title: getLanguage(param).Map_Layer.PLOTS_IMPORT,
-      //'导入标注',
-      data: [],
-      image: require('../../../../assets/function/icon_function_Tagging.png'),
-    },
-    {
-      title: getLanguage(param).Map_Layer.PLOTS_DELETE,
-      //'删除标注',
       data: [],
       image: require('../../../../assets/layerToolbar/layer_remove.png'),
     },
