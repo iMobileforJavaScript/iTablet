@@ -1808,21 +1808,25 @@ export default class ToolBar extends React.PureComponent {
   getflylist = async () => {
     try {
       let flydata = await SScene.getFlyRouteNames()
-      let data = [{
-        title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
-        // '飞行轨迹列表',
-        data: flydata,
-      }]
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
+          // '飞行轨迹列表',
+          data: flydata,
+        },
+      ]
       // let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
       let buttons = []
       return { data, buttons }
     } catch (error) {
       let buttons = []
-      let data = [{
-        title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
-        // '飞行轨迹列表',
-        data: [],
-      }]
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
+          // '飞行轨迹列表',
+          data: [],
+        },
+      ]
       Toast.show(
         getLanguage(this.props.language).Prompt.NO_FLY,
         //'当前场景无飞行轨迹'
@@ -2355,7 +2359,7 @@ export default class ToolBar extends React.PureComponent {
         if (result) {
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
-          Toast.show( getLanguage(this.props.language).Prompt.ADD_SUCCESS)
+          Toast.show(getLanguage(this.props.language).Prompt.ADD_SUCCESS)
         } else {
           Toast.show('添加失败')
         }
@@ -2549,6 +2553,11 @@ export default class ToolBar extends React.PureComponent {
           height: 0,
         })
       } else {
+        // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
+        if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+          GLOBAL.currentToolbarType = ''
+        }
+
         this.showToolbar(false)
         if (
           this.state.isTouchProgress === true ||
@@ -2587,10 +2596,6 @@ export default class ToolBar extends React.PureComponent {
   }
 
   closeSubAction = async (type, actionType) => {
-    // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
-    if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-      GLOBAL.currentToolbarType = ''
-    }
     if (
       typeof type === 'number' ||
       (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
@@ -3441,7 +3446,10 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        if (section.title === getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE) {
+        if (
+          section.title ===
+          getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE
+        ) {
           // 添加数据集
           this.lastUdbList = this.state.data //保存上次的数据源数据
           this.props.setContainerLoading &&
@@ -3508,7 +3516,10 @@ export default class ToolBar extends React.PureComponent {
             )
             // this.setLastState()
           })
-        } else if (section.title === getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP) {
+        } else if (
+          section.title ===
+          getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP
+        ) {
           // 添加地图
           this.props.setContainerLoading &&
             this.props.setContainerLoading(
@@ -3518,9 +3529,11 @@ export default class ToolBar extends React.PureComponent {
           SMap.addMap(item.name || item.title).then(async result => {
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
-            Toast.show(result ?
-              getLanguage(this.props.language).Prompt.ADD_SUCCESS
-              : ConstInfo.ADD_FAILED)
+            Toast.show(
+              result
+                ? getLanguage(this.props.language).Prompt.ADD_SUCCESS
+                : ConstInfo.ADD_FAILED,
+            )
             if (result) {
               await this.props.getLayers(-1, layers => {
                 this.props.setCurrentLayer(layers.length > 0 && layers[0])
@@ -3540,8 +3553,8 @@ export default class ToolBar extends React.PureComponent {
         }
         let result = await SMap.openDatasource(udbpath, index)
         Toast.show(
-          result === true ?
-            getLanguage(this.props.language).Prompt.ADD_SUCCESS
+          result === true
+            ? getLanguage(this.props.language).Prompt.ADD_SUCCESS
             : ConstInfo.ADD_FAILED,
         )
       }.bind(this)())
@@ -3696,8 +3709,10 @@ export default class ToolBar extends React.PureComponent {
 
   headerAction = ({ section }) => {
     (async function() {
-      if (section.title === getLanguage(this.props.language).Map_Main_Menu
-        .CREATE_WITH_SYMBOLS) {
+      if (
+        section.title ===
+        getLanguage(this.props.language).Map_Main_Menu.CREATE_WITH_SYMBOLS
+      ) {
         // let defaultWorkspacePath = await Utility.appendingHomeDirectory(
         //   (this.props.user.currentUser.userName
         //     ? ConstPath.UserPath + this.props.user.currentUser.userName
@@ -3723,8 +3738,7 @@ export default class ToolBar extends React.PureComponent {
             .START_NEW_MAP,
           //'新建地图',
           value: newName,
-          placeholder: getLanguage(this.props.language).Prompt
-            .ENTER_MAP_NAME,
+          placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
           cb: async value => {
             GLOBAL.Loading &&
               GLOBAL.Loading.setLoading(
@@ -3779,8 +3793,9 @@ export default class ToolBar extends React.PureComponent {
             NavigationService.goBack()
             setTimeout(() => {
               this.setVisible(false)
-              Toast.show( getLanguage(this.props.language).Prompt
-                .CREATE_SUCCESSFULLY)
+              Toast.show(
+                getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
+              )
             }, 1000)
           },
         })
@@ -3901,7 +3916,9 @@ export default class ToolBar extends React.PureComponent {
                   // this.props.getLayers(-1, layers => {
                   //   this.props.setCurrentLayer(layers.length > 0 && layers[0])
                   // })
-                  Toast.show(getLanguage(this.props.language).Prompt.THE_MAP_IS_OPENED)
+                  Toast.show(
+                    getLanguage(this.props.language).Prompt.THE_MAP_IS_OPENED,
+                  )
                   //ConstInfo.MAP_ALREADY_OPENED)
                   // this.props.setContainerLoading(false)
                 }
@@ -3964,7 +3981,9 @@ export default class ToolBar extends React.PureComponent {
         NavigationService.goBack()
         setTimeout(() => {
           this.setVisible(false)
-          Toast.show( getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
+          Toast.show(
+            getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
+          )
           //ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
         }, 1000)
       },

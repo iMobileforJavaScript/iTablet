@@ -263,6 +263,7 @@ export default class LayerSelectionAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
+          this.setLoading(false)
         },
       )
     } else {
