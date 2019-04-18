@@ -7,8 +7,8 @@ import { dataUtil } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
+import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
-// import NavigationService from '../../../NavigationService'
 
 let _params = {}
 
@@ -23,6 +23,46 @@ function getMapTool(type, params) {
   _params = params
   if (type.indexOf(ConstToolType.MAP_TOOL) === -1) return { data, buttons }
   switch (type) {
+    case ConstToolType.MAP_TOOL_TAGGING:
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+      data = [
+        {
+          title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+          //'属性记录',
+          data: [
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+              //'名称',
+              action: name,
+            },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+              //'备注',
+              action: remark,
+            },
+            // { title: '风格', action: remark },
+            {
+              title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+              //'http地址',
+              action: address,
+            },
+            // { title: '图片', action: address },
+          ],
+        },
+      ]
+      buttons = [
+        // ToolbarBtnType.TAGGING_BACK,
+        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.COMMIT,
+      ]
+      break
     case ConstToolType.MAP_TOOL:
       data = [
         {
@@ -79,54 +119,60 @@ function getMapTool(type, params) {
           size: 'large',
           image: require('../../../../assets/mapTools/icon_full_screen.png'),
         },
-        // {
-        //   key: constants.POINT,
-        //   title: constants.POINT,
-        //   action: point,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_point_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
-        // },
-        // {
-        //   key: constants.WORDS,
-        //   title: constants.WORDS,
-        //   size: 'large',
-        //   action: words,
-        //   image: require('../../../../assets/mapTools/icon_words_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
-        // },
-        // {
-        //   key: constants.POINTLINE,
-        //   title: constants.POINTLINE,
-        //   size: 'large',
-        //   action: pointline,
-        //   image: require('../../../../assets/mapTools/icon_point_line_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
-        // },
-        // {
-        //   key: constants.FREELINE,
-        //   title: constants.FREELINE,
-        //   size: 'large',
-        //   action: freeline,
-        //   image: require('../../../../assets/mapTools/icon_free_line_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
-        // },
-        // {
-        //   key: constants.POINTCOVER,
-        //   title: constants.POINTCOVER,
-        //   size: 'large',
-        //   action: pointcover,
-        //   image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
-        // },
-        // {
-        //   key: constants.FREECOVER,
-        //   title: constants.FREECOVER,
-        //   size: 'large',
-        //   action: freecover,
-        //   image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
-        // },
+        {
+          key: constants.POINT,
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
+          //constants.POINT,
+          action: point,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
+        },
+        {
+          key: constants.WORDS,
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_TEXT,
+          //constants.WORDS,
+          size: 'large',
+          action: words,
+          image: require('../../../../assets/mapTools/icon_words_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
+        },
+        {
+          key: constants.POINTLINE,
+          title: getLanguage(global.language).Map_Main_Menu.DOT_LINE,
+          //constants.POINTLINE,
+          size: 'large',
+          action: pointline,
+          image: require('../../../../assets/mapTools/icon_point_line_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
+        },
+        {
+          key: constants.FREELINE,
+          title: getLanguage(global.language).Map_Main_Menu.FREE_LINE,
+          //constants.FREELINE,
+          size: 'large',
+          action: freeline,
+          image: require('../../../../assets/mapTools/icon_free_line_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
+        },
+        {
+          key: constants.POINTCOVER,
+          title: getLanguage(global.language).Map_Main_Menu.DOT_REGION,
+          //constants.POINTCOVER,
+          size: 'large',
+          action: pointcover,
+          image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+        },
+        {
+          key: constants.FREECOVER,
+          title: getLanguage(global.language).Map_Main_Menu.FREE_REGION,
+          //constants.FREECOVER,
+          size: 'large',
+          action: freecover,
+          image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+        },
         // {
         //   key: 'boxSelect',
         //   title: '框选',
@@ -392,44 +438,143 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
   }
 }
 
-// function point() {
-//   if (!_params.setToolbarVisible) return
-//   _params.showFullMap && _params.showFullMap(true)
-//   SMap.setAction(Action.CREATEPOINT)
-// }
-//
-// function words() {
-//   (async function() {
-//     let x = await SMap.getGestureDetector()
-//     if (x !== null) {
-//       NavigationService.navigate('InputPage', {
-//         headerTitle: '标注名称',
-//         cb: async value => {
-//           if (value !== '') {
-//             await SMap.addTextRecordset(GLOBAL.value, value, x.x, x.y)
-//           }
-//           NavigationService.goBack()
-//         },
-//       })
-//     }
-//   }.bind(this)())
-// }
-//
-// function pointline() {
-//   return SMap.setAction(Action.CREATEPOLYLINE)
-// }
-//
-// function freeline() {
-//   return SMap.setAction(Action.DRAWLINE)
-// }
-//
-// function pointcover() {
-//   return SMap.setAction(Action.CREATEPOLYGON)
-// }
-//
-// function freecover() {
-//   return SMap.setAction(Action.DRAWPLOYGON)
-// }
+function point() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  SMap.deleteGestureDetector()
+  SMap.setAction(Action.CREATEPOINT)
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+}
+
+function words() {
+  (async function() {
+    await SMap.setGestureDetector({
+      singleTapHandler: setwords,
+    })
+  }.bind(this)())
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+}
+
+function setwords(event) {
+  NavigationService.navigate('InputPage', {
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+    cb: async value => {
+      if (value !== '') {
+        await SMap.addTextRecordset(
+          GLOBAL.TaggingDatasetName,
+          value,
+          event.x,
+          event.y,
+        )
+      }
+      await SMap.deleteGestureDetector()
+      NavigationService.goBack()
+    },
+    backcb: async () => {
+      await SMap.deleteGestureDetector()
+      NavigationService.goBack()
+    },
+  })
+}
+
+function pointline() {
+  SMap.deleteGestureDetector()
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+  SMap.setAction(Action.CREATEPOLYLINE)
+}
+
+function freeline() {
+  SMap.deleteGestureDetector()
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+  SMap.setAction(Action.DRAWLINE)
+}
+
+function pointcover() {
+  SMap.deleteGestureDetector()
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+  SMap.setAction(Action.CREATEPOLYGON)
+}
+
+function freecover() {
+  SMap.deleteGestureDetector()
+  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[4],
+  })
+  SMap.setAction(Action.DRAWPLOYGON)
+}
+
+function name() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'name',
+            value,
+            GLOBAL.CurrentUserName,
+          )
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
+
+function remark() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'remark',
+            value,
+            GLOBAL.CurrentUserName,
+          )
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
+
+function address() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'address',
+            value,
+            GLOBAL.CurrentUserName,
+          )
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
 
 /********** 裁剪手势监听 ************/
 // async function addMapCutListener() {

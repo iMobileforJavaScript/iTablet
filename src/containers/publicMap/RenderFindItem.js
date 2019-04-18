@@ -33,6 +33,8 @@ export default class RenderFindItem extends Component {
       // '下载',
       isDownloading: false,
     }
+
+    this.unZipFile = this.unZipFile.bind(this)
   }
 
   async componentDidMount() {
@@ -44,7 +46,16 @@ export default class RenderFindItem extends Component {
       ConstPath.RelativePath.Temp +
       this.props.data.fileName
 
-    let exist = await FileTools.fileIsExist(this.path)
+    this.downloadingPath =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.props.data.MD5
+
+    this.exist = false
+    let exist = await FileTools.fileIsExist(this.downloadingPath + '_')
     if (exist) {
       this.exist = true
       this.setState({
@@ -54,19 +65,12 @@ export default class RenderFindItem extends Component {
       })
     }
 
-    this.downloadingPath =
-      (await FileTools.getHomeDirectory()) +
-      ConstPath.UserPath +
-      this.props.user.currentUser.userName +
-      '/' +
-      ConstPath.RelativePath.Temp +
-      this.props.data.MD5
-
+    //检测是否下载完成
     exist = await FileTools.fileIsExist(this.downloadingPath)
     if (exist) {
       this.downloading = true
       let timer = setInterval(async () => {
-        exist = await FileTools.fileIsExist(this.path)
+        exist = await FileTools.fileIsExist(this.downloadingPath + '_')
         if (exist) {
           clearInterval(timer)
           this.exist = true
@@ -74,6 +78,13 @@ export default class RenderFindItem extends Component {
             progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
             //'下载完成',
             isDownloading: false,
+          })
+        } else {
+          let result = await RNFS.readFile(this.downloadingPath)
+          this.setState({
+            progress: result,
+            //'下载完成',
+            isDownloading: true,
           })
         }
       }, 2000)
@@ -114,7 +125,7 @@ export default class RenderFindItem extends Component {
   }
   _downloadFile = async () => {
     if (this.exist) {
-      this.unZipFile()
+      await this.unZipFile()
       Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
       return
     }
@@ -134,9 +145,7 @@ export default class RenderFindItem extends Component {
         progress: getLanguage(global.language).Prompt.DOWNLOADING,
         isDownloading: true,
       })
-      RNFS.writeFile(this.downloadingPath, '----', 'utf8')
-        .then(() => {})
-        .catch(() => {})
+      RNFS.writeFile(this.downloadingPath, '0%', 'utf8')
 
       let dataId = this.props.data.id
       let dataUrl =
@@ -147,11 +156,12 @@ export default class RenderFindItem extends Component {
         background: true,
         progress: res => {
           let value = ~~res.progress.toFixed(0)
-          // console.warn("value:"+value)
+          //  console.warn("value:"+value)
           let progress = value + '%'
           if (this.state.progress !== progress) {
             this.setState({ progress })
           }
+          RNFS.writeFile(this.downloadingPath, progress, 'utf8')
         },
       }
       try {
@@ -164,13 +174,14 @@ export default class RenderFindItem extends Component {
               //'下载完成',
               isDownloading: false,
             })
-            let result = this.unZipFile()
+            let result = await this.unZipFile()
             if (result === false) {
               Toast.show('网络数据已损坏，无法正常使用')
             } else {
               this.exist = true
             }
             FileTools.deleteFile(this.downloadingPath)
+            RNFS.writeFile(this.downloadingPath + '_', '100%', 'utf8')
           })
           .catch(() => {
             Toast.show('下载失败')
@@ -187,7 +198,7 @@ export default class RenderFindItem extends Component {
     }
   }
 
-  unZipFile = async () => {
+  async unZipFile() {
     let appHome = await FileTools.appendingHomeDirectory()
     let userName =
       this.props.user.currentUser.userType === UserType.PROBATION_USER
@@ -200,15 +211,14 @@ export default class RenderFindItem extends Component {
       '/' +
       ConstPath.RelativePath.ExternalData +
       this.titleName
-
     let exists = await RNFS.exists(fileDir)
     if (!exists) {
       await RNFS.mkdir(fileDir)
     }
-
-    let savePath = fileDir
-    let result = await FileTools.unZipFile(this.path, savePath)
-
+    let result = await FileTools.unZipFile(this.path, fileDir)
+    if (!result) {
+      FileTools.deleteFile(this.path)
+    }
     return result
   }
   render() {

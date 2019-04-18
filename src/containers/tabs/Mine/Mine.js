@@ -290,7 +290,7 @@ export default class Mine extends Component {
               this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
             //Const.SYMBOL),
           })}
-          {this._renderItem({
+          {/* {this._renderItem({
             title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
             leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
             onClick: () =>
@@ -298,7 +298,7 @@ export default class Mine extends Component {
                 getLanguage(this.props.language).Profile.COLOR_SCHEME,
               ),
             //Const.MINE_COLOR),
-          })}
+          })} */}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
