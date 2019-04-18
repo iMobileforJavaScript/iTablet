@@ -37,6 +37,7 @@ async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
               filePath: newPath,
               fileName: fileName,
               directory: fullFileDir,
+              fileType: 'workspace',
             })
             isRecordFile = true
             isWorkspace = true
@@ -47,6 +48,7 @@ async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
             filePath: newPath,
             fileName: fileName,
             directory: fullFileDir,
+            fileType: 'datasource',
           }
         }
         if (i === arrDirContent.length - 1) {
@@ -69,7 +71,15 @@ async function _constructAllUserSectionData() {
   let homePath = await _getHomePath()
   let path = homePath + ConstPath.UserPath2
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 /** 构造样例数据数据*/
@@ -77,14 +87,28 @@ async function _constructCacheSectionData(language) {
   let homePath = await _getHomePath()
   let path = homePath + ConstPath.CachePath2
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   //'样例数据'
   let titleWorkspace = getLanguage(language).Profile.SAMPLEDATA
   let sectionData
   if (newData.length === 0) {
     sectionData = []
   } else {
-    sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    sectionData = [
+      {
+        title: titleWorkspace,
+        data: newData,
+        isShowItem: true,
+      },
+    ]
   }
   return sectionData
 }
@@ -99,7 +123,15 @@ async function _constructUserSectionData(userName) {
     '/' +
     ConstPath.RelativeFilePath.ExternalData
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 /** 构造游客数据*/
@@ -108,7 +140,15 @@ async function _constructCustomerSectionData() {
   let path =
     homePath + ConstPath.CustomerPath + ConstPath.RelativeFilePath.ExternalData
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 
@@ -116,7 +156,15 @@ async function _constructTecentOfQQ() {
   let homePath = await _getHomePath()
   let path = homePath + '/Tencent/QQfile_recv'
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 
@@ -124,7 +172,15 @@ async function _constructTecentOfweixin() {
   let homePath = await _getHomePath()
   let path = homePath + '/Tencent/MicroMsg/Download'
   let newData = []
-  await _setFilterDatas(path, { smwu: 'smwu', sxwu: 'sxwu' }, newData, false)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 
@@ -227,15 +283,43 @@ async function downFileAction(
             Toast.show('网络数据已损坏，无法正常使用')
           } else {
             await FileTools.deleteFile(filePath)
-            setFilterDatas(
+            let newData = []
+            await _setFilterDatas(
               toPath,
               {
                 smwu: 'smwu',
                 sxwu: 'sxwu',
                 udb: 'udb',
               },
-              importWorkspace,
+              newData,
             )
+            for (let i in newData) {
+              if (newData[i].fileType === 'workspace') {
+                importWorkspace &&
+                  (await importWorkspace({
+                    path: newData[i].filePath,
+                  }).then(result => {
+                    result.mapsInfo.length > 0
+                      ? Toast.show(
+                        getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                      ) //'数据导入成功')
+                      : Toast.show('数据导入失败')
+                  }))
+              } else if (newData[i].fileType === 'datasource') {
+                await SMap.importDatasourceFile(newData[i].filePath).then(
+                  result => {
+                    result.length > 0
+                      ? Toast.show(
+                        getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                      ) //'数据导入成功')
+                      : Toast.show('数据导入失败')
+                  },
+                  () => {
+                    Toast.show('数据导入失败')
+                  },
+                )
+              }
+            }
             updateDownList({
               id: itemInfo.id,
               progress: 0,
@@ -255,71 +339,6 @@ async function downFileAction(
     }
   } catch (error) {
     Toast.show('导入失败')
-  }
-}
-
-async function setFilterDatas(
-  fullFileDir,
-  fileType,
-  importWorkspace = () => {},
-) {
-  try {
-    let isRecordFile = false
-    let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
-    for (let i = 0; i < arrDirContent.length; i++) {
-      let fileContent = arrDirContent[i]
-      let isFile = fileContent.type
-      let fileName = fileContent.name
-      let newPath = fullFileDir + '/' + fileName
-      if (isFile === 'file' && !isRecordFile) {
-        // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
-        if (
-          (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
-          (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
-          (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
-          (fileType.smw && fileName.indexOf(fileType.smw) !== -1)
-        ) {
-          if (
-            !(
-              fileName.indexOf('~[') !== -1 &&
-              fileName.indexOf(']') !== -1 &&
-              fileName.indexOf('@') !== -1
-            )
-          ) {
-            importWorkspace &&
-              (await importWorkspace({ path: newPath }).then(result => {
-                result.mapsInfo.length > 0
-                  ? Toast.show(
-                    getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
-                  )
-                  : //'数据导入成功')
-                  Toast.show('数据导入失败')
-              }))
-            isRecordFile = true
-            break
-          }
-        } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
-          await SMap.importDatasourceFile(newPath).then(
-            result => {
-              result.length > 0
-                ? Toast.show(
-                  getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
-                )
-                : //'数据导入成功')
-                Toast.show('数据导入失败')
-            },
-            () => {
-              Toast.show('数据导入失败')
-            },
-          )
-          break
-        }
-      } else if (isFile === 'directory') {
-        await setFilterDatas(newPath, fileType, importWorkspace)
-      }
-    }
-  } catch (e) {
-    Toast.show('数据导入失败')
   }
 }
 

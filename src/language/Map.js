@@ -522,6 +522,7 @@ const Map_Layer_English = {
 const Map_Attribute_Chinese = {
   ATTRIBUTE_SORT: '排序',
   ATTRIBUTE_LOCATION: '定位',
+  ATTRIBUTE_CANCEL: '取消',
   ATTRIBUTE_EDIT: '编辑',
   ATTRIBUTE_STATISTIC: '统计',
   ATTRIBUTE_ASSOCIATION: '关联',
@@ -539,6 +540,7 @@ const Map_Attribute_Chinese = {
 const Map_Attribute_English = {
   ATTRIBUTE_SORT: 'Sort',
   ATTRIBUTE_LOCATION: 'Location',
+  ATTRIBUTE_CANCEL: 'Cancel',
   ATTRIBUTE_EDIT: 'Edit',
   ATTRIBUTE_STATISTIC: 'Statistic',
   ATTRIBUTE_ASSOCIATION: 'Association',

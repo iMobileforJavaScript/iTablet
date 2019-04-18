@@ -7,7 +7,6 @@ import MapLoad from './mapLoad'
 import {
   Tabs,
   MyService,
-  MyOnlineData,
   Register,
   MyOnlineMap,
   ScanOnlineMap,
@@ -361,13 +360,6 @@ export default StackNavigator(
     },
     MyData: {
       screen: MyData,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyOnlineData: {
-      screen: MyOnlineData,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

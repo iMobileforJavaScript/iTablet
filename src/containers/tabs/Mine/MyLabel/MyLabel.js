@@ -208,7 +208,11 @@ export default class MyLabel extends Component {
             this.state.udbPath,
             this.itemInfo.item.title,
           ).then(() => {
-            this.getData()
+            this._closeModal()
+            Toast.show('删除成功')
+            let newData = JSON.parse(JSON.stringify(this.state.data)) //[...this.state.data]
+            newData.splice(this.itemInfo.index, 1)
+            this.setState({ data: newData }, () => {})
           })
         },
       },
