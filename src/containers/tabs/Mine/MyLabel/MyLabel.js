@@ -51,7 +51,16 @@ export default class MyLabel extends Component {
         ? ConstPath.CustomerPath
         : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
     )
-    let path = userPath + ConstPath.RelativePath.Label + 'Label.udb'
+    let path =
+      userPath +
+      ConstPath.RelativePath.Datasource +
+      'Label_' +
+      this.props.user.currentUser.userName +
+      '#.udb'
+    let result = await FileTools.fileIsExist(path)
+    if (!result) {
+      this.creatDatasource(path)
+    }
     let data = await SMap.getUDBName(path)
     this.setState({ data: data, udbPath: path }, () => {
       this.container.setLoading(false)
@@ -102,7 +111,7 @@ export default class MyLabel extends Component {
     let result = await SMap.createDatasource({
       server: datasourcePath,
       engineType: EngineType.UDB,
-      alias: 'labelDatasource',
+      alias: 'Label_' + this.props.user.currentUser.userName + '#',
       description: 'Label',
     })
     return result
