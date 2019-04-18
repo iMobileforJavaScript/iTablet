@@ -37,6 +37,7 @@ export default class MyLocalData extends Component {
     importWorkspace: () => {},
     importSceneWorkspace: () => {},
     updateDownList: () => {},
+    removeItemOfDownList: () => {},
   }
 
   constructor(props) {
@@ -197,6 +198,7 @@ export default class MyLocalData extends Component {
           down={this.props.down}
           updateDownList={this.props.updateDownList}
           index={info.index}
+          removeItemOfDownList={this.props.removeItemOfDownList}
         />
       )
     } else {
@@ -386,6 +388,7 @@ export default class MyLocalData extends Component {
       //防止data为空时调用
       //数据删除时不调用
       if (this.state.activityShow) return
+      if (this.state.sectionData.length === 0) return
       let section = this.state.sectionData[this.state.sectionData.length - 1]
       if (section.title !== '在线数据') return
       if (

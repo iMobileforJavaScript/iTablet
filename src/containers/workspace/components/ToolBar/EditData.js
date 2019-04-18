@@ -2,7 +2,7 @@ import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
-import NavigationService from '../../../NavigationService'
+// import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
 
 /**
@@ -16,131 +16,131 @@ function getEditData(type) {
   if (typeof type === 'string' && type.indexOf('MAP_EDIT_') === -1)
     return { data, buttons }
   switch (type) {
-    case ConstToolType.MAP_EDIT_TAGGING_SETTING:
-      data = [
-        {
-          title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
-          //'属性记录',
-          data: [
-            {
-              title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-              //'名称',
-              action: name,
-            },
-            {
-              title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
-              //'备注',
-              action: remark,
-            },
-            // { title: '风格', action: remark },
-            {
-              title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
-              //'http地址',
-              action: address,
-            },
-            // { title: '图片', action: address },
-          ],
-        },
-      ]
-      break
-    case ConstToolType.MAP_EDIT_TAGGING:
-      data = [
-        {
-          key: constants.POINT,
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
-          //constants.POINT,
-          action: point,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
-        },
-        {
-          key: constants.WORDS,
-          title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_TEXT,
-          //constants.WORDS,
-          size: 'large',
-          action: words,
-          image: require('../../../../assets/mapTools/icon_words_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
-        },
-        {
-          key: constants.POINTLINE,
-          title: getLanguage(global.language).Map_Main_Menu.DOT_LINE,
-          //constants.POINTLINE,
-          size: 'large',
-          action: pointline,
-          image: require('../../../../assets/mapTools/icon_point_line_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
-        },
-        {
-          key: constants.FREELINE,
-          title: getLanguage(global.language).Map_Main_Menu.FREE_LINE,
-          //constants.FREELINE,
-          size: 'large',
-          action: freeline,
-          image: require('../../../../assets/mapTools/icon_free_line_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
-        },
-        {
-          key: constants.POINTCOVER,
-          title: getLanguage(global.language).Map_Main_Menu.DOT_REGION,
-          //constants.POINTCOVER,
-          size: 'large',
-          action: pointcover,
-          image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
-        },
-        {
-          key: constants.FREECOVER,
-          title: getLanguage(global.language).Map_Main_Menu.FREE_REGION,
-          //constants.FREECOVER,
-          size: 'large',
-          action: freecover,
-          image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
-        },
-        // {
-        //   key: constants.COMMONTRACK,
-        //   title: constants.COMMONTRACK,
-        //   size: 'large',
-        //   action: addNode,
-        //   image: require('../../../../assets/mapTools/icon_common_track.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_common_track.png'),
-        // },
-        // {
-        //   key: constants.ROADTRACK,
-        //   title: constants.ROADTRACK,
-        //   size: 'large',
-        //   action: eraseRegion,
-        //   image: require('../../../../assets/mapTools/icon_road_track.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_road_track.png'),
-        // },
-        // {
-        //   key: constants.EQUALTRACK,
-        //   title: constants.EQUALTRACK,
-        //   size: 'large',
-        //   action: splitRegion,
-        //   image: require('../../../../assets/mapTools/icon_equal_track.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_equal_track.png'),
-        // },
-        // {
-        //   key: constants.TIMETRACK,
-        //   title: constants.TIMETRACK,
-        //   size: 'large',
-        //   action: merge,
-        //   image: require('../../../../assets/mapTools/icon_time_track.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_time_track.png'),
-        // },
-        // {
-        //   key: constants.INTELLIGENCETRACK,
-        //   title: constants.INTELLIGENCETRACK,
-        //   size: 'large',
-        //   action: drawRegionEraseRegion,
-        //   image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_intelligence_track.png'),
-        // },
-      ]
-      break
+    // case ConstToolType.MAP_EDIT_TAGGING_SETTING:
+    //   data = [
+    //     {
+    //       title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+    //       //'属性记录',
+    //       data: [
+    //         {
+    //           title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+    //           //'名称',
+    //           action: name,
+    //         },
+    //         {
+    //           title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+    //           //'备注',
+    //           action: remark,
+    //         },
+    //         // { title: '风格', action: remark },
+    //         {
+    //           title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+    //           //'http地址',
+    //           action: address,
+    //         },
+    //         // { title: '图片', action: address },
+    //       ],
+    //     },
+    //   ]
+    //   break
+    // case ConstToolType.MAP_EDIT_TAGGING:
+    //   data = [
+    //     {
+    //       key: constants.POINT,
+    //       title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
+    //       //constants.POINT,
+    //       action: point,
+    //       size: 'large',
+    //       image: require('../../../../assets/mapTools/icon_point_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
+    //     },
+    //     {
+    //       key: constants.WORDS,
+    //       title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_TEXT,
+    //       //constants.WORDS,
+    //       size: 'large',
+    //       action: words,
+    //       image: require('../../../../assets/mapTools/icon_words_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
+    //     },
+    //     {
+    //       key: constants.POINTLINE,
+    //       title: getLanguage(global.language).Map_Main_Menu.DOT_LINE,
+    //       //constants.POINTLINE,
+    //       size: 'large',
+    //       action: pointline,
+    //       image: require('../../../../assets/mapTools/icon_point_line_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
+    //     },
+    //     {
+    //       key: constants.FREELINE,
+    //       title: getLanguage(global.language).Map_Main_Menu.FREE_LINE,
+    //       //constants.FREELINE,
+    //       size: 'large',
+    //       action: freeline,
+    //       image: require('../../../../assets/mapTools/icon_free_line_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
+    //     },
+    //     {
+    //       key: constants.POINTCOVER,
+    //       title: getLanguage(global.language).Map_Main_Menu.DOT_REGION,
+    //       //constants.POINTCOVER,
+    //       size: 'large',
+    //       action: pointcover,
+    //       image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+    //     },
+    //     {
+    //       key: constants.FREECOVER,
+    //       title: getLanguage(global.language).Map_Main_Menu.FREE_REGION,
+    //       //constants.FREECOVER,
+    //       size: 'large',
+    //       action: freecover,
+    //       image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+    //       selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+    //     },
+    // {
+    //   key: constants.COMMONTRACK,
+    //   title: constants.COMMONTRACK,
+    //   size: 'large',
+    //   action: addNode,
+    //   image: require('../../../../assets/mapTools/icon_common_track.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_common_track.png'),
+    // },
+    // {
+    //   key: constants.ROADTRACK,
+    //   title: constants.ROADTRACK,
+    //   size: 'large',
+    //   action: eraseRegion,
+    //   image: require('../../../../assets/mapTools/icon_road_track.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_road_track.png'),
+    // },
+    // {
+    //   key: constants.EQUALTRACK,
+    //   title: constants.EQUALTRACK,
+    //   size: 'large',
+    //   action: splitRegion,
+    //   image: require('../../../../assets/mapTools/icon_equal_track.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_equal_track.png'),
+    // },
+    // {
+    //   key: constants.TIMETRACK,
+    //   title: constants.TIMETRACK,
+    //   size: 'large',
+    //   action: merge,
+    //   image: require('../../../../assets/mapTools/icon_time_track.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_time_track.png'),
+    // },
+    // {
+    //   key: constants.INTELLIGENCETRACK,
+    //   title: constants.INTELLIGENCETRACK,
+    //   size: 'large',
+    //   action: drawRegionEraseRegion,
+    //   image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+    // },
+    // ]
+    // break
     case ConstToolType.MAP_EDIT_POINT:
       data = [
         // { key: '选择', action: select },
@@ -414,115 +414,115 @@ function getEditData(type) {
 //   return result
 // }
 
-function name() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-    //'名称',
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'name',
-            value,
-            GLOBAL.CurrentUserName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function name() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+//     //'名称',
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'name',
+//             value,
+//             GLOBAL.CurrentUserName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
+//
+// function remark() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+//     //'名称',
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'remark',
+//             value,
+//             GLOBAL.CurrentUserName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
+//
+// function address() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+//     //'名称',
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'address',
+//             value,
+//             GLOBAL.CurrentUserName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
-function remark() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
-    //'名称',
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'remark',
-            value,
-            GLOBAL.CurrentUserName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function point() {
+//   return SMap.setAction(Action.CREATEPOINT)
+// }
+//
+// function words() {
+//   (async function() {
+//     await SMap.setGestureDetector({
+//       singleTapHandler: setwords,
+//     })
+//   }.bind(this)())
+// }
 
-function address() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
-    //'名称',
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'address',
-            value,
-            GLOBAL.CurrentUserName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function setwords(event) {
+//   NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+//     cb: async value => {
+//       if (value !== '') {
+//         await SMap.addTextRecordset(
+//           GLOBAL.TaggingDatasetName,
+//           value,
+//           event.x,
+//           event.y,
+//         )
+//       }
+//       await SMap.deleteGestureDetector()
+//       NavigationService.goBack()
+//     },
+//     backcb: async () => {
+//       await SMap.deleteGestureDetector()
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
-function point() {
-  return SMap.setAction(Action.CREATEPOINT)
-}
-
-function words() {
-  (async function() {
-    await SMap.setGestureDetector({
-      singleTapHandler: setwords,
-    })
-  }.bind(this)())
-}
-
-function setwords(event) {
-  NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-    cb: async value => {
-      if (value !== '') {
-        await SMap.addTextRecordset(
-          GLOBAL.TaggingDatasetName,
-          value,
-          event.x,
-          event.y,
-        )
-      }
-      await SMap.deleteGestureDetector()
-      NavigationService.goBack()
-    },
-    backcb: async () => {
-      await SMap.deleteGestureDetector()
-      NavigationService.goBack()
-    },
-  })
-}
-
-function pointline() {
-  return SMap.setAction(Action.CREATEPOLYLINE)
-}
-
-function freeline() {
-  return SMap.setAction(Action.DRAWLINE)
-}
-
-function pointcover() {
-  return SMap.setAction(Action.CREATEPOLYGON)
-}
-
-function freecover() {
-  return SMap.setAction(Action.DRAWPLOYGON)
-}
+// function pointline() {
+//   return SMap.setAction(Action.CREATEPOLYLINE)
+// }
+//
+// function freeline() {
+//   return SMap.setAction(Action.DRAWLINE)
+// }
+//
+// function pointcover() {
+//   return SMap.setAction(Action.CREATEPOLYGON)
+// }
+//
+// function freecover() {
+//   return SMap.setAction(Action.DRAWPLOYGON)
+// }
 
 function move() {
   return SMap.setAction(Action.MOVE_GEOMETRY)

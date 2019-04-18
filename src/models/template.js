@@ -112,7 +112,6 @@ export const importWorkspace = (params, cb = () => {}) => async (
       .split('.')[1]
       .toString()
       .toUpperCase()
-
     let type
     switch (fileType) {
       case 'SXW':

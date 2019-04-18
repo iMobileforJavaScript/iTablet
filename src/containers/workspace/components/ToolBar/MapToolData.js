@@ -441,7 +441,6 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
 function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  SMap.deleteGestureDetector()
   SMap.setAction(Action.CREATEPOINT)
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
@@ -469,6 +468,7 @@ function setwords(event) {
         await SMap.addTextRecordset(
           GLOBAL.TaggingDatasetName,
           value,
+          _params.user.currentUser.userName,
           event.x,
           event.y,
         )
@@ -484,7 +484,6 @@ function setwords(event) {
 }
 
 function pointline() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -493,7 +492,6 @@ function pointline() {
 }
 
 function freeline() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -502,7 +500,6 @@ function freeline() {
 }
 
 function pointcover() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -511,7 +508,6 @@ function pointcover() {
 }
 
 function freecover() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -529,7 +525,7 @@ function name() {
             GLOBAL.TaggingDatasetName,
             'name',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -548,7 +544,7 @@ function remark() {
             GLOBAL.TaggingDatasetName,
             'remark',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -567,7 +563,7 @@ function address() {
             GLOBAL.TaggingDatasetName,
             'address',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }

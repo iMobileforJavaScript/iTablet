@@ -845,7 +845,7 @@ export default class MT_layerManager extends React.Component {
           }
           if (
             this.props.layers.length > 0 &&
-            item.name.indexOf('@Label') >= 0
+            item.name.indexOf('@Label_') >= 0
           ) {
             return true
           }

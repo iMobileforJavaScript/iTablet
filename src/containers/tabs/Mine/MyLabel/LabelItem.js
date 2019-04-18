@@ -13,8 +13,6 @@ export default class LabelItem extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: props.item.title,
-      index: props.index,
       select: false,
     }
   }
@@ -31,9 +29,9 @@ export default class LabelItem extends Component {
             onPress={() => {
               this.setState({ select: !this.state.select }, () => {
                 if (this.state.select) {
-                  this.props.uploadListOfAdd(this.state.title)
+                  this.props.uploadListOfAdd(this.props.item.title)
                 } else {
-                  this.props.removeDataFromUpList(this.state.title)
+                  this.props.removeDataFromUpList(this.props.item.title)
                 }
               })
             }}
@@ -46,7 +44,7 @@ export default class LabelItem extends Component {
             )}
           </TouchableOpacity>
           <Image source={Img} style={styles.Img} />
-          <Text style={styles.title}>{this.state.title}</Text>
+          <Text style={styles.title}>{this.props.item.title}</Text>
           <TouchableOpacity
             style={styles.moreImgBtn}
             onPress={() => {
