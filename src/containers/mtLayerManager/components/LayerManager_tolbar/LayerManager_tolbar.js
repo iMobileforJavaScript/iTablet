@@ -460,6 +460,7 @@ export default class LayerManager_tolbar extends React.Component {
       section.title ===
       getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
     ) {
+      //'设置为当前标注'
       (async function() {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
           this.state.layerdata.name,

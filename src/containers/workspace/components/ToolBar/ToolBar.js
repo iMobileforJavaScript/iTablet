@@ -2894,8 +2894,12 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
-      SMap.setTaggingGrid(GLOBAL.TaggingDatasetName)
+      SMap.setTaggingGrid(
+        GLOBAL.TaggingDatasetName,
+        this.props.user.currentUser.userName,
+      )
       SMap.submit()
+      SMap.refreshMap()
       SMap.setAction(Action.PAN)
       if (type === ConstToolType.MAP_TOOL_TAGGING) {
         this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
@@ -3666,6 +3670,7 @@ export default class ToolBar extends React.PureComponent {
               Toast.show('该地图已打开')
               this.props.setContainerLoading(false)
             }
+            await SMap.openTaggingDataset(this.props.user.currentUser.userName)
             // 重新加载图层
             this.props.getLayers({
               type: -1,
@@ -4030,7 +4035,7 @@ export default class ToolBar extends React.PureComponent {
         } else {
           await this.props.setTemplate()
         }
-
+        await SMap.openTaggingDataset(this.props.user.currentUser.userName)
         await this.props.getLayers(-1, async layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
           // 若没有底图，默认添加地图

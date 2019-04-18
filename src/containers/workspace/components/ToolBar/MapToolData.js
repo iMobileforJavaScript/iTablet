@@ -469,6 +469,7 @@ function setwords(event) {
         await SMap.addTextRecordset(
           GLOBAL.TaggingDatasetName,
           value,
+          _params.user.currentUser.userName,
           event.x,
           event.y,
         )
@@ -529,7 +530,7 @@ function name() {
             GLOBAL.TaggingDatasetName,
             'name',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -548,7 +549,7 @@ function remark() {
             GLOBAL.TaggingDatasetName,
             'remark',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -567,7 +568,7 @@ function address() {
             GLOBAL.TaggingDatasetName,
             'address',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
