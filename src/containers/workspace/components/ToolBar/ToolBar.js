@@ -2587,6 +2587,7 @@ export default class ToolBar extends React.PureComponent {
 
       // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
+      SMap.deleteGestureDetector()
     }.bind(this)())
   }
 
