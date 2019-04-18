@@ -14,7 +14,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class MapToolbar extends React.Component {
   static propTypes = {
-    language: String,
+    language: PropTypes.string,
     type: PropTypes.string,
     navigation: PropTypes.object,
     initIndex: PropTypes.number,

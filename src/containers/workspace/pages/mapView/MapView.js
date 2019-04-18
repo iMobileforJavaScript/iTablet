@@ -23,7 +23,6 @@ import {
   AlertDialog,
   OverlayView,
 } from '../../components'
-import constants from '../../constants'
 import {
   Container,
   MTBtn,
@@ -900,7 +899,7 @@ export default class MapView extends React.Component {
           // }
         }
 
-        GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
+        // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
         this.props.getLayers(

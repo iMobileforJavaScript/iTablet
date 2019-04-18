@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
 export default class LayerAttributeTabs extends React.Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,

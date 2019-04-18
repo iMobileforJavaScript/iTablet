@@ -37,7 +37,7 @@ let EDIT = ''
 
 export default class MapCut extends React.Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     nav: Object,
     map: Array,
