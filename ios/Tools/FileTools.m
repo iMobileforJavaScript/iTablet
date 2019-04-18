@@ -516,8 +516,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
     }
   }
   
-  
-  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", dataPath, @"Datasource/Label_",[FileTools getUserName],@"#.udb"];
+  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", dataPath, @"Datasource/Label_",userName,@"#.udb"];
   
   if(![[NSFileManager defaultManager]fileExistsAtPath:labelUDB]){
     Workspace *workspace = [[Workspace alloc] init];
