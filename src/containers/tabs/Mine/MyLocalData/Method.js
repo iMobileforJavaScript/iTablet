@@ -5,7 +5,6 @@ import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language/index'
 import { downloadFile } from 'react-native-fs'
 import { SOnlineService, SMap } from 'imobile_for_reactnative'
-// import console = require('console');
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -171,113 +170,88 @@ async function downFileAction(
   importWorkspace,
 ) {
   try {
-    if (down[0].id && itemInfo.id === down[0].id && down[0].progress > 0) {
-      Toast.show('文件正在导入，请稍后')
-      return
-    } else {
-      if (itemInfo.id) {
-        let path =
-          ConstPath.UserPath +
-          userName +
-          '/' +
-          ConstPath.RelativePath.ExternalData +
-          itemInfo.fileName
-        let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
-        let toPath = await FileTools.appendingHomeDirectory(path)
-        // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-        let dataUrl = `https://www.supermapol.com/web/datas/${
-          itemInfo.id
-        }/download`
-        let headers = {}
-        if (cookie) {
-          headers = {
-            Cookie: 'JSESSIONID=' + cookie,
-            'Cache-Control': 'no-cache',
-          }
+    if (down.length > 0) {
+      for (let index = 0; index < down.length; index++) {
+        const element = down[index]
+        if (element.id && itemInfo.id === element.id && element.progress >= 0) {
+          Toast.show('文件正在导入，请稍后')
+          return
         }
-        let downloadOptions = {
-          fromUrl: dataUrl,
-          toFile: filePath,
-          background: true,
-          headers: headers,
-          progressDivider: 2,
-          begin: () => {
-            Toast.show(getLanguage(global.language).Prompt.IMPORTING_DATA)
-            //'开始导入')
-          },
-          progress: res => {
-            let value = ~~res.progress.toFixed(0)
-            updateDownList({
-              id: itemInfo.id,
-              progress: value,
-              downed: false,
-            })
-          },
+      }
+    }
+    if (itemInfo.id) {
+      let path =
+        ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        itemInfo.fileName
+      let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
+      let toPath = await FileTools.appendingHomeDirectory(path)
+      // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
+      let dataUrl = `https://www.supermapol.com/web/datas/${
+        itemInfo.id
+      }/download`
+      let headers = {}
+      if (cookie) {
+        headers = {
+          Cookie: 'JSESSIONID=' + cookie,
+          'Cache-Control': 'no-cache',
         }
-        let result = downloadFile(downloadOptions)
-        result.promise.then(
-          async () => {
-            let unzipRes = await FileTools.unZipFile(filePath, toPath)
-            if (unzipRes === false) {
-              await FileTools.deleteFile(filePath)
-              Toast.show('网络数据已损坏，无法正常使用')
-            } else {
-              await FileTools.deleteFile(filePath)
-              setFilterDatas(
-                toPath,
-                {
-                  smwu: 'smwu',
-                  sxwu: 'sxwu',
-                  udb: 'udb',
-                },
-                importWorkspace,
-              )
-              updateDownList({
-                id: itemInfo.id,
-                progress: 0,
-                downed: true,
-              })
-            }
-            // if (result.statusCode) {
-            //   //下载成功后解压导入
-            //   if (result.statusCode >= 200 && result.statusCode < 300)
-            //   {
-            //     Toast.show('文件导入中')
-            //     debugger
-            //     let result = await FileTools.unZipFile(filePath, toPath)
-            //     debugger
-            //     if (result) {
-            //       await FileTools.deleteFile(filePath)
-            //       setFilterDatas(
-            //         toPath,
-            //         {
-            //           smwu: 'smwu',
-            //           sxwu: 'sxwu',
-            //           udb: 'udb',
-            //         },
-            //         importWorkspace,
-            //       )
-            //       updateDownList({
-            //         id: itemInfo.id,
-            //         progress: 0,
-            //         downed: true,
-            //       })
-            //     }
-            //   } else {
-            //     Toast.show('请求异常，导入失败')
-            //   }
-            // }
-          },
-          () => {
+      }
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: filePath,
+        background: true,
+        headers: headers,
+        progressDivider: 2,
+        begin: () => {
+          Toast.show(getLanguage(global.language).Prompt.IMPORTING_DATA)
+          //'开始导入')
+        },
+        progress: res => {
+          let value = ~~res.progress.toFixed(0)
+          updateDownList({
+            id: itemInfo.id,
+            progress: value,
+            downed: false,
+          })
+        },
+      }
+      let result = downloadFile(downloadOptions)
+      result.promise.then(
+        async () => {
+          let unzipRes = await FileTools.unZipFile(filePath, toPath)
+          if (unzipRes === false) {
+            await FileTools.deleteFile(filePath)
+            Toast.show('网络数据已损坏，无法正常使用')
+          } else {
+            await FileTools.deleteFile(filePath)
+            setFilterDatas(
+              toPath,
+              {
+                smwu: 'smwu',
+                sxwu: 'sxwu',
+                udb: 'udb',
+              },
+              importWorkspace,
+            )
             updateDownList({
               id: itemInfo.id,
               progress: 0,
-              downed: false,
+              downed: true,
             })
-            Toast.show('请求异常，导入失败')
-          },
-        )
-      }
+          }
+        },
+        () => {
+          updateDownList({
+            id: itemInfo.id,
+            progress: 0,
+            downed: false,
+          })
+          Toast.show('请求异常，导入失败')
+        },
+      )
     }
   } catch (error) {
     Toast.show('导入失败')

@@ -37,6 +37,7 @@ export default class MyLocalData extends Component {
     importWorkspace: () => {},
     importSceneWorkspace: () => {},
     updateDownList: () => {},
+    removeItemOfDownList: () => {},
   }
 
   constructor(props) {
@@ -197,6 +198,7 @@ export default class MyLocalData extends Component {
           down={this.props.down}
           updateDownList={this.props.updateDownList}
           index={info.index}
+          removeItemOfDownList={this.props.removeItemOfDownList}
         />
       )
     } else {

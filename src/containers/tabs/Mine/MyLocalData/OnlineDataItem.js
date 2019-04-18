@@ -14,6 +14,7 @@ export default class OnlineDataItem extends Component {
     itemOnPress: () => {},
     down: Array,
     updateDownList: () => {},
+    removeItemOfDownList: () => {},
     index: number,
   }
 
@@ -23,12 +24,16 @@ export default class OnlineDataItem extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.down[0].id === this.props.item.id) {
-      this.itemProgress.progress = this.props.down[0].progress / 100
-      if (this.props.down[0].downed || this.props.down[0].progress === 100) {
-        this.props.updateDownList({}).then(() => {
-          this.itemProgress.progress = 0
-        })
+    for (let index = 0; index < this.props.down.length; index++) {
+      const element = this.props.down[index]
+      if (element.id && element.id === this.props.item.id) {
+        this.itemProgress.progress = element.progress / 100
+        if (element.downed || element.progress === 100) {
+          this.props.removeItemOfDownList(element).then(() => {
+            this.itemProgress.progress = 0
+          })
+        }
+        break
       }
     }
   }
