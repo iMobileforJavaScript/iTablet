@@ -479,7 +479,6 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Label"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Color"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Map"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", externalDataPath, @""]];
@@ -518,7 +517,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   }
   
   
-  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Label/Label.udb"];
+  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", dataPath, @"Datasource/Label_",[FileTools getUserName],@"#.udb"];
   
   if(![[NSFileManager defaultManager]fileExistsAtPath:labelUDB]){
     Workspace *workspace = [[Workspace alloc] init];
@@ -643,7 +642,8 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           dsci.engineType = ET_UDB;
           Datasource *datasource = [[ws datasources]open:dsci];
           if([datasource.description isEqualToString:@"Label"]){
-            NSString *todatasource = [[NSString alloc] initWithFormat:@"%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Label/Label.udb"];
+            NSString *udbName = [NSString stringWithFormat:@"%@%@%@",@"Label_",[FileTools getUserName],@"#"];
+            NSString *todatasource = [NSString stringWithFormat:@"%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Datasource/",udbName];
             [filemanager createFileAtPath:todatasource contents:nil attributes:nil];
             if([filemanager fileExistsAtPath:todatasource]){
               [smap.smMapWC copyDatasetsFrom:[dataSourceFile objectAtIndex:i] to:todatasource];
