@@ -55,7 +55,7 @@ export default class RenderFindItem extends Component {
       this.props.data.MD5
 
     this.exist = false
-    let exist = await FileTools.fileIsExist(this.downloadingPath+'_')
+    let exist = await FileTools.fileIsExist(this.downloadingPath + '_')
     if (exist) {
       this.exist = true
       this.setState({
@@ -70,7 +70,7 @@ export default class RenderFindItem extends Component {
     if (exist) {
       this.downloading = true
       let timer = setInterval(async () => {
-        exist = await FileTools.fileIsExist(this.downloadingPath+'_')
+        exist = await FileTools.fileIsExist(this.downloadingPath + '_')
         if (exist) {
           clearInterval(timer)
           this.exist = true
@@ -79,7 +79,7 @@ export default class RenderFindItem extends Component {
             //'下载完成',
             isDownloading: false,
           })
-        }else{
+        } else {
           let result = await RNFS.readFile(this.downloadingPath)
           this.setState({
             progress: result,
@@ -181,7 +181,7 @@ export default class RenderFindItem extends Component {
               this.exist = true
             }
             FileTools.deleteFile(this.downloadingPath)
-            RNFS.writeFile(this.downloadingPath+'_', '100%', 'utf8')
+            RNFS.writeFile(this.downloadingPath + '_', '100%', 'utf8')
           })
           .catch(() => {
             Toast.show('下载失败')
@@ -198,7 +198,7 @@ export default class RenderFindItem extends Component {
     }
   }
 
-  async unZipFile(){
+  async unZipFile() {
     let appHome = await FileTools.appendingHomeDirectory()
     let userName =
       this.props.user.currentUser.userType === UserType.PROBATION_USER
@@ -216,7 +216,7 @@ export default class RenderFindItem extends Component {
       await RNFS.mkdir(fileDir)
     }
     let result = await FileTools.unZipFile(this.path, fileDir)
-    if(!result){
+    if (!result) {
       FileTools.deleteFile(this.path)
     }
     return result

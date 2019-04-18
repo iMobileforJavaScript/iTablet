@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00613450224CD0B400C2C781 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0061344F224CD0B300C2C781 /* Trial_License.slm */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -78,6 +77,8 @@
 		0A8F7C8721D1BA320003595E /* ZipArchive.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C8421D1BA250003595E /* ZipArchive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A95738821BFA38500B5853A /* libRNFS.a */; };
 		0A9573C821C0B8EE00B5853A /* NativeMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9573C721C0B8EE00B5853A /* NativeMethod.m */; };
+		0AA134922267431F00606012 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134912267431F00606012 /* Trial_License.slm */; };
+		0AA134942267432500606012 /* publicMap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134932267432500606012 /* publicMap.txt */; };
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
@@ -437,7 +438,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0061344F224CD0B300C2C781 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -509,6 +509,8 @@
 		0A8F7C8421D1BA250003595E /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZipArchive.framework; sourceTree = "<group>"; };
 		0A9573C621C0B8EE00B5853A /* NativeMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethod.h; sourceTree = "<group>"; };
 		0A9573C721C0B8EE00B5853A /* NativeMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethod.m; sourceTree = "<group>"; };
+		0AA134912267431F00606012 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../Trial_License.slm; sourceTree = "<group>"; };
+		0AA134932267432500606012 /* publicMap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicMap.txt; path = ../../publicMap.txt; sourceTree = "<group>"; };
 		0ABCB8C22246056500992994 /* WeiXinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXinUtils.h; sourceTree = "<group>"; };
 		0ABCB8C32246056500992994 /* WeiXinUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXinUtils.m; sourceTree = "<group>"; };
 		0ABCB8C6224605E300992994 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
@@ -751,10 +753,12 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
 				0A11D9E821F9641D00AFE6D6 /* logo.png */,
 				0A177FE821F7092D00EA39D6 /* Workspace.zip */,
+				0AA134912267431F00606012 /* Trial_License.slm */,
 				0A177FBC21F0A8B900EA39D6 /* resources.bundle */,
 			);
 			path = assets;
@@ -980,7 +984,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0061344F224CD0B300C2C781 /* Trial_License.slm */,
 				13B07FAE1A68108700A75B9A /* iTablet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* iTabletTests */,
@@ -1506,7 +1509,7 @@
 				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
 				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
-				00613450224CD0B400C2C781 /* Trial_License.slm in Resources */,
+				0AA134922267431F00606012 /* Trial_License.slm in Resources */,
 				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
@@ -1523,6 +1526,7 @@
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
+				0AA134942267432500606012 /* publicMap.txt in Resources */,
 				0A0A204A212FA22300BEBC1C /* 聚合图－选中.png in Resources */,
 				0A0A2042212FA22300BEBC1C /* 密度图－选中.png in Resources */,
 				0A0A204B212FA22300BEBC1C /* 背景头加一个.png in Resources */,
