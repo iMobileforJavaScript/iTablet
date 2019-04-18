@@ -187,7 +187,7 @@ export class ModuleList extends Component {
         // disabled: true,
       })
       let fileCachePath = fileDirPath + '.zip'
-      await FileTools.deleteFile(fileCachePath)
+      // await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
         // headers: {
         //   Range: `bytes=${this.bytesInfo}-`,
