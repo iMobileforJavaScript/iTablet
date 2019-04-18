@@ -173,21 +173,7 @@ export default class Friend extends Component {
 
     // console.warn(members + groupId)
   }
-  // eslint-disable-next-line
-  // componentWillReceiveProps(nextProps) {
-  //   if (this.friendMessage.refresh) {
-  //     this.friendMessage.refresh(nextProps.chat)
-  //   }
-  // }
 
-  //message {{
-  //type 1+:通知类(暂定大于10,10申请添加,11同意添加)  2.单人消息 3.群组消息
-  //message: str
-  //use:{name:curUserName,id:uuid}
-  //time:time
-  //}}
-
-  //targetId
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
@@ -209,32 +195,25 @@ export default class Friend extends Component {
       SMessageService.sendMessage(messageStr, talkId)
     }
     if (!bInform) {
-      let messageObj = JSON.parse(messageStr)
-      //message {{
-      //talkId:talkId
-      //type 10+:通知类 单人消息1 群组消息2
-      //message: str
-      //use:{name:curUserName,id:uuid}
-      //time:time
-      //system:n, 0:非系统消息 1：拒收 2:删除操作
-      //}}
-      let userId = this.props.user.currentUser.userId
-      let msgId = this._getMsgId(talkId)
-      MessageDataHandle.pushMessage({
-        userId: userId, //当前登录账户的id
-        talkId: talkId,
-        messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-        message: messageObj.message,
-        time: messageObj.time,
-        type: messageObj.type, //消息类型
-        system: messageObj.system,
-        msgId: msgId,
-      })
+      //todo
     }
-    // this.refresh()
   }
 
-  _getMsgId = talkId => {
+  storeMessage = (messageObj, talkId, msgId) => {
+    let userId = this.props.user.currentUser.userId
+    MessageDataHandle.pushMessage({
+      userId: userId,
+      talkId: talkId,
+      messageUsr: messageObj.user,
+      message: messageObj.message,
+      time: messageObj.time,
+      type: messageObj.type,
+      system: messageObj.system,
+      msgId: msgId,
+    })
+  }
+
+  getMsgId = talkId => {
     let userId = this.props.user.currentUser.userId
     let msgId = 0
     let chatHistory = []
@@ -247,7 +226,20 @@ export default class Friend extends Component {
     return msgId
   }
 
-  _sendFile = (messageStr, filepath, talkId, msgId) => {
+  getMsgByMsgId = (talkId, msgId) => {
+    let userId = this.props.user.currentUser.userId
+    let chatHistory = []
+    let msg = undefined
+    if (this.props.chat[userId] && this.props.chat[userId][talkId]) {
+      chatHistory = this.props.chat[userId][talkId].history
+    }
+    if (chatHistory.length !== 0) {
+      msg = chatHistory[msgId]
+    }
+    return msg
+  }
+
+  _sendFile = (messageStr, filepath, talkId, msgId, informMsg) => {
     let connectInfo = {
       serverIP: MSGConstant.MSG_IP,
       port: MSGConstant.MSG_Port,
@@ -263,40 +255,31 @@ export default class Friend extends Component {
       talkId,
       msgId,
     ).then(res => {
-      let messageObj = JSON.parse(messageStr)
-      let ctime = new Date()
-      let time = Date.parse(ctime)
-      let informMsg = {
-        type: messageObj.type,
-        user: messageObj.user,
-        time: time,
-        system: 0,
-        message: {
-          type: MSGConstant.MSG_FILE_NOTIFY, //文件接收通知
-          message: {
-            message: '[文件]',
-            fileName: res.fileName,
-            fileSize: res.fileSize,
-            queueName: res.queueName,
-            progress: 0,
-          },
-        },
-      }
+      let msg = this.getMsgByMsgId(talkId, msgId)
+      msg.msg.message.queueName = res.queueName
+      MessageDataHandle.editMessage({
+        userId: this.props.user.currentUser.userId,
+        talkId: talkId,
+        msgId: msgId,
+        editItem: msg,
+      })
+
+      informMsg.message.message.queueName = res.queueName
+      informMsg.message.message.filePath = ''
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
       Toast.show('分享完成')
     })
   }
 
-  _onReceiveProgress = value => {
-    let reduxMessage = this.props.chat[this.props.user.currentUser.userId][
-      value.talkId
-    ].history[value.msgId]
-    reduxMessage.message.message.progress = value.percentage
+  onReceiveProgress = value => {
+    let msg = this.props.chat[this.props.user.currentUser.userId][value.talkId]
+      .history[value.msgId]
+    msg.msg.message.progress = value.percentage
     MessageDataHandle.editMessage({
       userId: this.props.user.currentUser.userId,
       talkId: value.talkId,
       msgId: value.msgId,
-      editItem: reduxMessage,
+      editItem: msg,
     })
   }
   _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
@@ -409,9 +392,9 @@ export default class Friend extends Component {
         // }
         let msgId = 0
         if (messageObj.type === 2) {
-          msgId = this._getMsgId(messageObj.user.groupID)
+          msgId = this.getMsgId(messageObj.user.groupID)
         } else {
-          msgId = this._getMsgId(messageObj.user.id)
+          msgId = this.getMsgId(messageObj.user.id)
         }
 
         //文件通知消息

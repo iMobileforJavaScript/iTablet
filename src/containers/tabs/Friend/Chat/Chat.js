@@ -91,10 +91,9 @@ class Chat extends React.Component {
         break
       }
       let msg = this.targetUser.message[i]
-      let chatMsg = this.loadMsgByType(msg)
+      let chatMsg = this._loadChatMsg(msg)
       curMsg.push(chatMsg)
     }
-    // curMsg.push({_id: Math.round(Math.random() * 1000000), text: '上次聊天到这', system: true})
 
     this._isMounted = true
     this.setState(() => {
@@ -122,22 +121,6 @@ class Chat extends React.Component {
         this.onReceiveProgress,
       )
     }
-
-    // this.setState({
-    //   messageInfo:this.props.navigation.getParam('messageInfo'),
-    //   messages: [
-    //     {
-    //       _id: 1,
-    //       text: 'Hello developer',
-    //       createdAt: new Date(),
-    //       user: {
-    //         _id: 2,
-    //         name: 'React Native',
-    //         avatar: 'https://placeimg.com/140/140/any',
-    //       },
-    //     },
-    //   ],
-    // })
   }
 
   onReceiveProgress(value) {
@@ -151,17 +134,8 @@ class Chat extends React.Component {
         }
       }),
     })
-    //todo input to redux
-    // this.friend._onReceiveProgress(value)
-    // let reduxMessage =  this.friend.props.chat[this.curUser.userId][value.talkId].history[value.msgId]
-    // reduxMessage.message.message.progress = value.percentage
-    // this.friend.props.editChat &&
-    //   this.friend.props.props.editChat({
-    //     userId: this.curUser.userId,
-    //     talkId: value.talkId,
-    //     msgId: value.msgId,
-    //     editItem: reduxMessage,
-    //   })
+
+    this.friend.onReceiveProgress(value)
   }
 
   componentWillUnmount() {
@@ -184,7 +158,7 @@ class Chat extends React.Component {
     if (this.targetUser.message.length > 4) {
       for (let i = this.targetUser.message.length - 1 - 4; i >= 0; i--) {
         let msg = this.targetUser.message[i]
-        let chatMsg = this.loadMsgByType(msg)
+        let chatMsg = this._loadChatMsg(msg)
         oldMsg.push(chatMsg)
       }
     }
@@ -199,49 +173,57 @@ class Chat extends React.Component {
       })
     }
   }
-
-  loadMsgByType(msg) {
-    if (msg.msg.type) {
-      switch (msg.msg.type) {
-        default:
-          return {
-            _id: msg.msgId,
-            text: ' ',
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-          }
-        case MSGConstant.MSG_FILE_NOTIFY: //文件
-          return {
-            _id: msg.msgId,
-            text: msg.msg.message.message,
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-          }
-        case MSGConstant.MSG_LOCATION: //位置
-          return {
-            _id: msg.msgId,
-            text: msg.msg.message.message,
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-          }
-      }
-    }
-    return {
+  //将redux中取出消息转为chat消息
+  _loadChatMsg(msg) {
+    let chatMsg = {
       _id: msg.msgId,
-      text: msg.msg,
       createdAt: new Date(msg.time),
-      user: { _id: msg.id, name: msg.name },
+      user: {
+        _id: msg.id,
+        name: msg.name,
+      },
       type: msg.type,
       message: msg.msg,
     }
+
+    if (msg.msg.type) {
+      if (msg.msg.message.message) {
+        chatMsg.text = msg.msg.message.message
+      } else {
+        chatMsg.text = ' '
+      }
+    } else {
+      chatMsg.text = msg.msg
+    }
+    return chatMsg
+  }
+  //将接收或要发送的消息转为chat消息
+  _getChatMsg(messageStr, msgId) {
+    let message = JSON.parse(messageStr)
+    let chatMsg = {
+      _id: msgId,
+      createdAt: new Date(message.time),
+      user: {
+        _id: message.user.id,
+        name: message.user.name,
+      },
+      type: message.type,
+      message: message.message,
+    }
+
+    if (message.message.type) {
+      if (message.message.message.message) {
+        chatMsg.text = message.message.message.message
+      } else {
+        chatMsg.text = ' '
+      }
+    } else {
+      chatMsg.text = message.message
+    }
+    return chatMsg
   }
 
+  //发送普通消息
   onSend(messages = []) {
     let bGroup = 1
     let groupID = messages[0].user._id
@@ -251,6 +233,7 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
+    //要发送/保存的消息
     let message = {
       message: messages[0].text,
       type: bGroup,
@@ -261,18 +244,17 @@ class Chat extends React.Component {
       },
       time: time,
     }
-    // for demo purpose
-    // this.answerDemo(messages)
-    messages[0].message = messages[0].text
-    messages[0].type = bGroup
-    let msgId = this.friend._getMsgId(this.targetUser.id)
-    messages[0]._id = msgId
+    let msgId = this.friend.getMsgId(this.targetUser.id)
+    //保存
+    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let chatMsg = this._getChatMsg(JSON.stringify(message), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, messages),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
       }
     })
-
+    //发送
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -303,36 +285,20 @@ class Chat extends React.Component {
       },
       time: time,
     }
-    let msgId = this.friend._getMsgId(this.targetUser.id)
-    let msg = {
-      //添加到giftedchat的消息
-      _id: msgId,
-      text: positionStr,
-      type: 1,
-      user: { name: this.curUser.nickname, _id: this.curUser.userId },
-      createdAt: time,
-      system: 0,
-      // location: {
-      //   latitude: value.latitude,
-      //   longitude: value.longitude,
-      // },
-      message: {
-        type: MSGConstant.MSG_LOCATION,
-        message: {
-          message: positionStr,
-          longitude: value.longitude,
-          latitude: value.latitude,
-        },
-      },
-    }
+    let msgId = this.friend.getMsgId(this.targetUser.id)
+    //保存
+    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let Chatmsg = this._getChatMsg(JSON.stringify(message), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, Chatmsg),
       }
     })
-
+    //发送
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
+
   async onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
@@ -342,8 +308,8 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
+    //要发送的文件
     let message = {
-      //要发送的消息
       type: bGroup,
       user: {
         name: this.curUser.nickname,
@@ -351,7 +317,6 @@ class Chat extends React.Component {
         groupID: groupID,
       },
       time: time,
-      system: 0,
       message: {
         type: MSGConstant.MSG_FILE, //文件本体
         message: {
@@ -362,41 +327,45 @@ class Chat extends React.Component {
       },
     }
 
-    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msgId = this.friend.getMsgId(this.targetUser.id)
     let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
-
     let statResult = await stat(filepath)
-    let msg = {
-      //添加到giftedchat的消息
-      _id: msgId,
-      text: '[文件]',
-      type: 1, //文件接收通知
-      user: { name: this.curUser.nickname, _id: this.curUser.userId },
-      createdAt: time,
-      system: 0,
+    //文件接收提醒
+    let informMsg = {
+      type: bGroup,
+      time: time,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
       message: {
         type: MSGConstant.MSG_FILE_NOTIFY,
         message: {
           message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
-          queueName: '',
           filePath: filepath,
           progress: 0,
         },
       },
     }
+    //保存
+    this.friend.storeMessage(informMsg, this.targetUser.id, msgId)
+    //显示
+    let ChatMsg = this._getChatMsg(JSON.stringify(informMsg), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, ChatMsg),
       }
     })
-
+    //发送文件及提醒
     this.friend._sendFile(
       JSON.stringify(message),
       filepath,
       this.targetUser.id,
       msgId,
+      informMsg,
     )
   }
 
@@ -405,7 +374,7 @@ class Chat extends React.Component {
   }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
-    let msgId = this.friend._getMsgId(this.targetUser.id) - 1
+    let msgId = this.friend.getMsgId(this.targetUser.id) - 1
     let msg = {}
     if (!messageObj.message.type) {
       //特殊处理文本消息
