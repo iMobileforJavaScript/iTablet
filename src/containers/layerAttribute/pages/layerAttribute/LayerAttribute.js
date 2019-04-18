@@ -285,7 +285,7 @@ export default class LayerAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          this.table.setSelected(0)
+          this.table.setSelected(0, false)
           this.locationView && this.locationView.show(false)
           this.table &&
             this.table.scrollToLocation({
@@ -307,7 +307,7 @@ export default class LayerAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          let item = this.table.setSelected(0)
+          let item = this.table.setSelected(0, false)
           this.setState({
             currentFieldInfo: item.data,
           })
@@ -350,7 +350,7 @@ export default class LayerAttribute extends React.Component {
       },
       () => {
         if (this.table) {
-          let item = this.table.setSelected(remainder)
+          let item = this.table.setSelected(remainder, false)
           this.setState({
             currentFieldInfo: item.data,
           })
@@ -429,7 +429,7 @@ export default class LayerAttribute extends React.Component {
       },
       () => {
         if (this.table) {
-          let item = this.table.setSelected(remainder)
+          let item = this.table.setSelected(remainder, false)
           this.setState({
             currentFieldInfo: item.data,
           })

@@ -339,7 +339,7 @@ export default class LayerAttributeTabs extends React.Component {
       // TODO 选中对象跳转到地图
       // this.props.navigation && this.props.navigation.navigate('MapView')
       // NavigationService.navigate('MapView')
-      NavigationService.goBack()
+      this.props.navigation.goBack()
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(
           true,
@@ -362,8 +362,6 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   drawerOnChange = ({ index }) => {
-    // this.scrollTab && this.scrollTab.goToPage(index)
-
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
@@ -373,8 +371,9 @@ export default class LayerAttributeTabs extends React.Component {
       if (this.currentTabRefs[index]) {
         let attributes = this.currentTabRefs[index].getAttributes()
         newState.attributes = attributes
-        newState.currentIndex =
-          attributes.data.length === 1 && this.state.currentIndex !== 0 ? 0 : -1
+        newState.currentIndex = attributes.data.length === 1 ? 0 : -1
+      } else {
+        newState.currentIndex = -1
       }
       this.setState(newState)
     }

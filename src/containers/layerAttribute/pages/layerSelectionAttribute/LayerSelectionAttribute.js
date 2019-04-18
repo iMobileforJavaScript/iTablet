@@ -249,7 +249,7 @@ export default class LayerSelectionAttribute extends React.Component {
           currentFieldInfo: this.state.attributes.data[0],
         },
         () => {
-          let item = this.table.setSelected(0)
+          let item = this.table.setSelected(0, false)
           cb &&
             cb({
               currentIndex: 0,
@@ -276,7 +276,7 @@ export default class LayerSelectionAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          let item = this.table.setSelected(0)
+          let item = this.table.setSelected(0, false)
           this.setState({
             currentFieldInfo: item.data,
           })
@@ -326,7 +326,7 @@ export default class LayerSelectionAttribute extends React.Component {
       },
       () => {
         if (this.table) {
-          let item = this.table.setSelected(remainder)
+          let item = this.table.setSelected(remainder, false)
           this.setState({
             currentFieldInfo: item.data,
           })
@@ -412,7 +412,7 @@ export default class LayerSelectionAttribute extends React.Component {
       },
       () => {
         if (this.table) {
-          let item = this.table.setSelected(remainder)
+          let item = this.table.setSelected(remainder, false)
           this.setState({
             currentFieldInfo: item.data,
           })
