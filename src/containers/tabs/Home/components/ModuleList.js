@@ -132,7 +132,7 @@ class RenderModuleItem extends Component {
 
 export class ModuleList extends Component {
   props: {
-    language: String,
+    language: string,
     device: Object,
     currentUser: Object,
     latestMap: Object,

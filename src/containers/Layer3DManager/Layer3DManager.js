@@ -19,7 +19,7 @@ import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     type: string,
     data: Array,

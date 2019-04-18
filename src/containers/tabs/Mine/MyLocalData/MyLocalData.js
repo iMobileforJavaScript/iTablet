@@ -30,7 +30,7 @@ import OnlineDataItem from './OnlineDataItem'
 import { scaleSize } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
-    language: String,
+    language: string,
     user: Object,
     navigation: Object,
     down: Object,
