@@ -4,6 +4,8 @@ import { Container } from '../../../../components'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
 import { getLanguage } from '../../../../language/index'
+import { getPublicAssets } from '../../../../assets'
+import { scaleSize } from '../../../../utils'
 export default class AboutITablet extends Component {
   props: {
     language: String,
@@ -24,6 +26,9 @@ export default class AboutITablet extends Component {
   Protocol = () => {
     NavigationService.navigate('Protocol', { type: 'protocol' })
   }
+  userHelp = () => {
+    NavigationService.navigate('Protocol', { type: 'userHelp' })
+  }
 
   render() {
     let marginLeft = {
@@ -33,6 +38,10 @@ export default class AboutITablet extends Component {
     let marginRight = {
       position: 'absolute',
       right: 0.0417 * this.props.device.width,
+    }
+    let imgMarginRight = {
+      position: 'absolute',
+      right: 0.04 * this.props.device.width,
     }
     let footerBottom = {
       position: 'absolute',
@@ -112,7 +121,39 @@ export default class AboutITablet extends Component {
             </Text>
             <Text style={[styles.phone, marginRight]}>01059896655转6156</Text>
           </TouchableOpacity>
+          <View
+            style={[
+              styles.separator,
+              {
+                width: 0.956 * this.props.device.width,
+                marginLeft: 0.022 * this.props.device.width,
+              },
+            ]}
+          />
+          <TouchableOpacity
+            style={[
+              styles.consult,
+              { height: 0.06 * this.props.device.height },
+            ]}
+            onPress={this.userHelp}
+          >
+            <Text style={[styles.consultTitle, marginLeft]}>
+              {/* {getLanguage(this.props.language).Profile.SALES_CONSULTATION} */}
+              {/* 销售咨询 */}
+              {'使用帮助'}
+            </Text>
+            <Image
+              style={[
+                styles.phone,
+                imgMarginRight,
+                { width: scaleSize(40), height: scaleSize(40) },
+              ]}
+              source={getPublicAssets().common.icon_about_itablet_more}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
         </View>
+
         <View style={[styles.footerView, footerBottom]}>
           <TouchableOpacity style={[styles.offcial]} onPress={this.offcial}>
             {/* <Text

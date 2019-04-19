@@ -128,6 +128,10 @@ export default class protocol extends Component {
         title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
         //'超图知道'
         break
+      case 'userHelp':
+        source = require('./iTablet_Help_CHN/iTablet使用帮助_ver2.html')
+        title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
+        break
       default:
         break
     }
