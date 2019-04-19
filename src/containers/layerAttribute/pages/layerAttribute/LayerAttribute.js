@@ -9,8 +9,7 @@ import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
-//eslint-disable-next-line
-import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import {
@@ -251,15 +250,27 @@ export default class LayerAttribute extends React.Component {
             ...others,
           })
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
+          let startIndex = others.startIndex || this.state.startIndex || 0
+          let currentIndex = resetCurrent
+            ? -1
+            : others.currentIndex !== undefined
+              ? others.currentIndex
+              : this.state.currentIndex
+          let relativeIndex =
+            resetCurrent || currentIndex < 0
+              ? -1
+              : currentIndex - startIndex - 1
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
-            currentFieldInfo: attributes.data[relativeIndex],
-            ...others,
+            currentIndex,
+            relativeIndex,
+            currentFieldInfo:
+              relativeIndex >= 0
+                ? attributes.data[relativeIndex]
+                : this.state.currentFieldInfo,
+            startIndex,
+            // ...others,
           })
         }
         this.setLoading(false)
@@ -457,7 +468,7 @@ export default class LayerAttribute extends React.Component {
       this.setState({
         currentFieldInfo: data,
         relativeIndex: index,
-        currentIndex: this.currentPage * PAGE_SIZE + index,
+        currentIndex: this.state.startIndex + index,
       })
     } else {
       this.setState({

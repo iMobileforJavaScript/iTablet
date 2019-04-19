@@ -151,15 +151,27 @@ export default class LayerSelectionAttribute extends React.Component {
             ...others,
           })
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
+          let startIndex = others.startIndex || this.state.startIndex || 0
+          let currentIndex = resetCurrent
+            ? -1
+            : others.currentIndex !== undefined
+              ? others.currentIndex
+              : this.state.currentIndex
+          let relativeIndex =
+            resetCurrent || currentIndex < 0
+              ? -1
+              : currentIndex - startIndex - 1
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
-            currentFieldInfo: attributes.data[relativeIndex],
-            ...others,
+            currentIndex,
+            relativeIndex,
+            currentFieldInfo:
+              relativeIndex >= 0
+                ? attributes.data[relativeIndex]
+                : this.state.currentFieldInfo,
+            startIndex,
+            // ...others,
           })
         }
         this.props.onGetAttribute && this.props.onGetAttribute(attributes)

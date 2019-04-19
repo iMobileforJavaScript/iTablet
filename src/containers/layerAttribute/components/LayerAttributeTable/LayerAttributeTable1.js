@@ -342,7 +342,7 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
-    return index
+    return index.toString()
   }
 
   _renderSectionHeader = ({ section }) => {
