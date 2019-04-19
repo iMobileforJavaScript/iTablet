@@ -22,7 +22,7 @@ const MARGIN = scaleSize(30)
 
 export default class TouchProgress extends Component {
   props: {
-    language: String,
+    language: string,
     currentLayer: Object,
     selectName: '',
     value: '',

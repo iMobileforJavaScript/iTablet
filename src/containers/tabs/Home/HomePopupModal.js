@@ -6,7 +6,7 @@ import { getLanguage } from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
   props: {
-    language: String,
+    language: string,
     setLanguage: () => {},
     modalVisible: Boolean,
     isLogin: Boolean,

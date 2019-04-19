@@ -19,7 +19,7 @@ import { color } from '../../styles'
 import { getLanguage } from '../../language/index'
 export default class setting extends Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     data: Array,
     setSettingData: () => {},

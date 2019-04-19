@@ -81,7 +81,7 @@ const DEFAULT_FULL_SCREEN = true
 
 export default class ToolBar extends React.PureComponent {
   props: {
-    language: String,
+    language: string,
     children: any,
     type: string,
     containerProps?: Object,

@@ -36,7 +36,7 @@ const list = 'list'
 
 export default class LayerManager_tolbar extends React.Component {
   props: {
-    language: String,
+    language: string,
     type?: string,
     containerProps?: Object,
     data: Array,
