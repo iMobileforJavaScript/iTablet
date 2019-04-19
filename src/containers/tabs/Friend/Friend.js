@@ -28,6 +28,8 @@ import AddMore from './AddMore'
 import MSGConstant from './MsgConstant'
 import { getLanguage } from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
+import { FileTools } from '../../../native'
+import ConstPath from '../../../constants/ConstPath'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -309,29 +311,23 @@ export default class Friend extends Component {
     }
   }
 
-  _receiveMessage(message) {
+  async _receiveMessage(message) {
     if (g_connectService) {
-      //  DataHandler.dealWhgjgithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
-
       let userId = this.props.user.currentUser.userId
       if (userId === messageObj.user.id) {
         //自己的消息，返回
         return
       }
 
-      //message {{
-      //type 1:通知类 2.单人消息 3.群组消息
-      //message: str
-      //use:{name:curUserName,id:uuid}
-      //time:time
-      //system:n, 0:非系统消息 1：拒收 2:删除操作
-      //}}
-
       let bSystem = false
       //系统消息
       if (messageObj.type > 910 && messageObj.type < 930) {
         bSystem = true
+      }
+
+      if (!FriendListFileHandle.friends) {
+        await this.getContacts()
       }
 
       //个人,或者群组
@@ -447,6 +443,14 @@ export default class Friend extends Component {
       // this.refresh()
     }
   }
+
+  getContacts = async () => {
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + this.props.user.currentUser.userName + '/Data/Temp',
+    )
+    await FriendListFileHandle.getContacts(userPath, 'friend.list', () => {})
+  }
+
   connectService = () => {
     let bHasUserInfo = false
 
