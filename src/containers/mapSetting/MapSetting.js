@@ -15,7 +15,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MapSetting extends Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     currentMap: Object,
     data: Array,

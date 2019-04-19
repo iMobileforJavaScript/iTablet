@@ -128,7 +128,8 @@ export const saveMap = (params = {}, cb = () => {}) => async (
 ) => {
   try {
     let mapName = params.mapName
-    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let curMapName = getState().map.toJS().currentMap.name
+    let userName = getState().user.toJS().currentUser.userName
     let path = ''
     if (!params.notSaveToXML) {
       mapName = await SMap.saveMapName(
@@ -146,7 +147,8 @@ export const saveMap = (params = {}, cb = () => {}) => async (
         '.xml'
     }
 
-    if (!params.isNew) {
+    // 另存为 和 未打开一幅已命名的地图，则需要重新设置当前地图
+    if (!params.isNew && curMapName !== mapName) {
       await dispatch({
         type: SET_CURRENT_MAP,
         payload: { path, name: mapName },

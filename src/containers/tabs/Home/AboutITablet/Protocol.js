@@ -129,7 +129,7 @@ export default class protocol extends Component {
         //'超图知道'
         break
       case 'userHelp':
-        source = require('./iTablet_Help_CHN/iTablet使用帮助_ver2.html')
+        source = require('./help/index.html')
         title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
         break
       default:

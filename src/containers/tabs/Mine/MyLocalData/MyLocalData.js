@@ -30,7 +30,7 @@ import OnlineDataItem from './OnlineDataItem'
 import { scaleSize } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
-    language: String,
+    language: string,
     user: Object,
     navigation: Object,
     down: Object,
@@ -47,7 +47,6 @@ export default class MyLocalData extends Component {
       userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
       isFirstLoadingModal: true,
-      textDisplay: 'none',
       isRefreshing: false,
       activityShow: false,
     }
@@ -76,7 +75,6 @@ export default class MyLocalData extends Component {
       )
       this.setState({
         sectionData: cacheSectionData,
-        textDisplay: 'none',
       })
 
       let userData
@@ -137,7 +135,6 @@ export default class MyLocalData extends Component {
       )
     } catch (e) {
       this.setLoading(false)
-      this.setState({ textDisplay: 'none' })
     }
   }
 
@@ -150,7 +147,6 @@ export default class MyLocalData extends Component {
           sectionData[sectionData.length - 1].isShowItem = !data.isShowItem
         }
         data.isShowItem = !data.isShowItem
-        break
       }
     }
     this.setState({ sectionData: sectionData })

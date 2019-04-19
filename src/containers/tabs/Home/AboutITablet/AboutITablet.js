@@ -8,7 +8,7 @@ import { getPublicAssets } from '../../../../assets'
 import { scaleSize } from '../../../../utils'
 export default class AboutITablet extends Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     device: Object,
   }
