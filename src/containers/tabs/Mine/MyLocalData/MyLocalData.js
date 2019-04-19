@@ -47,7 +47,6 @@ export default class MyLocalData extends Component {
       userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
       isFirstLoadingModal: true,
-      textDisplay: 'none',
       isRefreshing: false,
       activityShow: false,
     }
@@ -120,7 +119,7 @@ export default class MyLocalData extends Component {
           dataType: 'online',
         }
       }
-      newSectionData= cacheSectionData.concat([
+      newSectionData = cacheSectionData.concat([
         {
           //'外部数据'
           title: getLanguage(this.props.language).Profile.ON_DEVICE,
@@ -139,20 +138,18 @@ export default class MyLocalData extends Component {
       )
     } catch (e) {
       this.setLoading(false)
-      this.setState({ textDisplay: 'none' })
     }
   }
 
   changgeHearShowItem = title => {
     let sectionData = [...this.state.sectionData]
-    for (let i = 0; i < sectionData&&sectionData.length; i++) {
+    for (let i = 0; i < sectionData && sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
         if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
           sectionData[sectionData.length - 1].isShowItem = !data.isShowItem
         }
         data.isShowItem = !data.isShowItem
-        break
       }
     }
     this.setState({ sectionData: sectionData })

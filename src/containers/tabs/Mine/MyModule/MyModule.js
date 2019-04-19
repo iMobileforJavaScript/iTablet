@@ -233,8 +233,10 @@ export default class MyModule extends Component {
         ConstPath.RelativeFilePath.ExportData +
         this.itemInfo.item.name +
         '.zip'
+      // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
+        // console.warn(result, '!!!!!!!')
         let fileName = this.itemInfo.item.name
         if (type === 'weChat') {
           GLOBAL.shareFilePath = toPath
@@ -272,6 +274,7 @@ export default class MyModule extends Component {
         }
       }
     } catch (error) {
+      // console.warn(error)
       Toast.show('分享失败')
     }
   }
