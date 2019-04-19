@@ -132,7 +132,7 @@ class RenderModuleItem extends Component {
 
 export class ModuleList extends Component {
   props: {
-    language: String,
+    language: string,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -187,7 +187,7 @@ export class ModuleList extends Component {
         // disabled: true,
       })
       let fileCachePath = fileDirPath + '.zip'
-      await FileTools.deleteFile(fileCachePath)
+      // await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
         // headers: {
         //   Range: `bytes=${this.bytesInfo}-`,

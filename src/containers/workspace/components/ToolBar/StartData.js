@@ -700,6 +700,7 @@ function create() {
             // ConstOnline['Google'].layerIndex,
             1,
           )
+          await SMap.openTaggingDataset(_params.user.currentUser.userName)
           _params.getLayers && (await _params.getLayers())
 
           _params.saveMap &&

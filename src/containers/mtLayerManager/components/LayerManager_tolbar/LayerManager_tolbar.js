@@ -36,7 +36,7 @@ const list = 'list'
 
 export default class LayerManager_tolbar extends React.Component {
   props: {
-    language: String,
+    language: string,
     type?: string,
     containerProps?: Object,
     data: Array,
@@ -460,10 +460,12 @@ export default class LayerManager_tolbar extends React.Component {
       section.title ===
       getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
     ) {
+      //'设置为当前标注'
       (async function() {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
           this.state.layerdata.name,
         )
+        GLOBAL.TaggingLayerName = this.state.layerdata.name
         this.updateTagging()
         this.setVisible(false)
       }.bind(this)())

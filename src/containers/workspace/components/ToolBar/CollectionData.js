@@ -331,24 +331,32 @@ async function createCollector(type) {
         '_' +
         _params.symbol.currentSymbol.id
       : ''
-    let datasourcePath = await FileTools.appendingHomeDirectory(
-      _params.user && _params.user.currentUser && _params.user.currentUser.name
-        ? ConstPath.UserPath +
-            _params.user.currentUser.name +
-            '/' +
-            ConstPath.RelativePath.Datasource
-        : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-    )
+    let datasourcePath =
+      _params.collection.datasourceParentPath ||
+      (await FileTools.appendingHomeDirectory(
+        _params.user &&
+          _params.user.currentUser &&
+          _params.user.currentUser.name
+          ? ConstPath.UserPath +
+              _params.user.currentUser.name +
+              '/' +
+              ConstPath.RelativePath.Datasource
+          : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+      ))
 
     let mapInfo = await SMap.getMapInfo()
 
     let datasourceName =
-      (_params.map && _params.map.currentMap.name) ||
-      mapInfo.name ||
+      _params.collection.datasourceName ||
+      (_params.map &&
+        _params.map.currentMap.name &&
+        _params.map.currentMap.name + '_collection') ||
+      mapInfo.name + '_collection' ||
       'Collection-' + new Date().getTime()
+
     params = {
-      datasourcePath: _params.collection.datasourceParentPath || datasourcePath,
-      datasourceName: _params.collection.datasourceName || datasourceName,
+      datasourcePath: datasourcePath,
+      datasourceName: datasourceName,
       datasetName,
       datasetType: mType,
       style: geoStyle,

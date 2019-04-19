@@ -229,7 +229,7 @@ async function downFileAction(
     if (down.length > 0) {
       for (let index = 0; index < down.length; index++) {
         const element = down[index]
-        if (element.id && itemInfo.id === element.id && element.progress >= 0) {
+        if (element.id && itemInfo.id === element.id && element.progress > 0) {
           Toast.show('文件正在导入，请稍后')
           return
         }
@@ -282,6 +282,11 @@ async function downFileAction(
             await FileTools.deleteFile(filePath)
             Toast.show('网络数据已损坏，无法正常使用')
           } else {
+            updateDownList({
+              id: itemInfo.id,
+              progress: 0,
+              downed: true,
+            })
             await FileTools.deleteFile(filePath)
             let newData = []
             await _setFilterDatas(
@@ -320,11 +325,6 @@ async function downFileAction(
                 )
               }
             }
-            updateDownList({
-              id: itemInfo.id,
-              progress: 0,
-              downed: true,
-            })
           }
         },
         () => {

@@ -28,7 +28,7 @@ import { getLanguage } from '../../../language/index'
 const Customer = 'Customer'
 export default class Mine extends Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     user: Object,
     workspace: Object,

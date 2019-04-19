@@ -30,7 +30,7 @@ import OnlineDataItem from './OnlineDataItem'
 import { scaleSize } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
-    language: String,
+    language: string,
     user: Object,
     navigation: Object,
     down: Object,
@@ -74,11 +74,6 @@ export default class MyLocalData extends Component {
       let cacheSectionData = await _constructCacheSectionData(
         this.props.language,
       )
-      this.setState({
-        sectionData: cacheSectionData,
-        textDisplay: 'none',
-      })
-
       let userData
       if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
         userData = []
@@ -87,38 +82,45 @@ export default class MyLocalData extends Component {
       }
       // this.setState({ sectionData: userSectionData })
       let customerSectionData = await _constructCustomerSectionData()
+
+      let newData = userData.concat(customerSectionData)
+      let newSectionData = cacheSectionData.concat([
+        {
+          //'外部数据'
+          title: getLanguage(this.props.language).Profile.ON_DEVICE,
+          data: newData,
+          isShowItem: true,
+        },
+      ])
+      this.setState({
+        sectionData: newSectionData,
+      })
+
       // let qqData = await _constructTecentOfQQ()
       // let weixinData = await _constructTecentOfweixin()
-      let online = {}
-      if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+      let online = {
+        title: '在线数据',
+        data: [],
+        isShowItem: true,
+        dataType: 'online',
+      }
+      this.currentPage = 1
+      let onlineData = await getOnlineData(
+        this.currentPage,
+        this.pageSize,
+        result => {
+          this.dataListTotal = result
+        },
+      )
+      if (onlineData && onlineData.length > 0) {
         online = {
           title: '在线数据',
-          data: [],
+          data: onlineData,
           isShowItem: true,
           dataType: 'online',
         }
-      } else {
-        this.currentPage = 1
-        let onlineData = await getOnlineData(
-          this.currentPage,
-          this.pageSize,
-          result => {
-            this.dataListTotal = result
-          },
-        )
-        if (onlineData.length > 0) {
-          online = {
-            title: '在线数据',
-            data: onlineData,
-            isShowItem: true,
-            dataType: 'online',
-          }
-        } else {
-          Toast.show('网络请求失败')
-        }
       }
-      let newData = userData.concat(customerSectionData)
-      let newSectionData = cacheSectionData.concat([
+      newSectionData= cacheSectionData.concat([
         {
           //'外部数据'
           title: getLanguage(this.props.language).Profile.ON_DEVICE,
@@ -143,7 +145,7 @@ export default class MyLocalData extends Component {
 
   changgeHearShowItem = title => {
     let sectionData = [...this.state.sectionData]
-    for (let i = 0; i < sectionData.length; i++) {
+    for (let i = 0; i < sectionData&&sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
         if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
@@ -188,7 +190,7 @@ export default class MyLocalData extends Component {
 
   _renderItem = info => {
     if (info.section.title === '在线数据') {
-      if (!info.section.data.length > 0) {
+      if (info.section.data && !info.section.data.length > 0) {
         return <View />
       }
       return (
@@ -238,7 +240,7 @@ export default class MyLocalData extends Component {
             getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
           )
           let sectionData = [...this.state.sectionData]
-          for (let i = 0; i < sectionData.length; i++) {
+          for (let i = 0; i < sectionData && sectionData.length; i++) {
             let data = sectionData[i]
             if (data.title === this.itemInfo.section.title) {
               data.data.splice(this.itemInfo.index, 1)
@@ -388,6 +390,7 @@ export default class MyLocalData extends Component {
       //防止data为空时调用
       //数据删除时不调用
       if (this.state.activityShow) return
+      if (this.state.sectionData && this.state.sectionData.length === 0) return
       let section = this.state.sectionData[this.state.sectionData.length - 1]
       if (section.title !== '在线数据') return
       if (
@@ -411,7 +414,7 @@ export default class MyLocalData extends Component {
       sectionData.splice(sectionData.length - 1, 1)
       this.currentPage = this.currentPage + 1
       let data = await getOnlineData(this.currentPage, 10)
-      if (data.length > 1) {
+      if (data.length > 0) {
         let newData = oldData.concat(data)
         let online = {
           title: '在线数据',
@@ -423,7 +426,6 @@ export default class MyLocalData extends Component {
         this.setState({ sectionData: sectionData, activityShow: false })
       } else {
         this.currentPage = this.currentPage - 1
-        Toast.show('网络异常')
         this.setState({ activityShow: false })
         // this.currentPage=this.currentPage-1
         // this._onLoadData()

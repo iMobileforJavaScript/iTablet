@@ -63,7 +63,7 @@ function getMapTool(type, params) {
         ToolbarBtnType.COMMIT,
       ]
       break
-    case ConstToolType.MAP_TOOL:
+    case ConstToolType.MAP_TOOLS:
       data = [
         {
           key: 'distanceComput',
@@ -172,6 +172,141 @@ function getMapTool(type, params) {
           action: freecover,
           image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+        },
+        // {
+        //   key: 'boxSelect',
+        //   title: '框选',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point_cover.png'),
+        // },
+        // {
+        //   key: 'roundSelect',
+        //   title: '圆选',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_free_cover.png'),
+        // },
+        {
+          key: 'rectangularCut',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_CLIP,
+          //'矩形裁剪',
+          action: rectangleCut,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_rectangle_cut,
+        },
+        // {
+        //   key: 'roundCut',
+        //   title: '圆形裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_road_track.png'),
+        // },
+        // {
+        //   key: 'polygonCut',
+        //   title: '多边形裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_equal_track.png'),
+        // },
+        // {
+        //   key: 'selectCut',
+        //   title: '选中对象裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_time_track.png'),
+        // },
+        // {
+        //   key: 'magnifier',
+        //   title: '放大镜',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+        // },
+        // {
+        //   key: 'eagleChart',
+        //   title: '鹰眼图',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_eagle_chart.png'),
+        // },
+        // {
+        //   key: 'play',
+        //   title: '播放',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_play.png'),
+        // },
+        // {
+        //   key: 'fullAmplitude',
+        //   title: '全幅',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
+        // },
+      ]
+      // buttons = [
+      //   ToolbarBtnType.CANCEL,
+      //   ToolbarBtnType.PLACEHOLDER,
+      //   ToolbarBtnType.PLACEHOLDER,
+      // ]
+      break
+    case ConstToolType.MAP_TOOL:
+      data = [
+        {
+          key: 'distanceComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_DISTANCE_MEASUREMENT,
+          //'距离量算',
+          action: measureLength,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_length_black.png'),
+        },
+        {
+          key: 'coverComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AREA_MEASUREMENT,
+          //'面积量算',
+          action: measureArea,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_area_black.png'),
+        },
+        {
+          key: 'azimuthComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AZIMUTH_MEASUREMENT,
+          //'方位角量算',
+          action: measureAngle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_angle_black.png'),
+        },
+        {
+          key: 'pointSelect',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT,
+          //'点选',
+          action: pointSelect,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
+        },
+        {
+          key: 'selectByRectangle',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_SELECT,
+          //'框选',
+          action: selectByRectangle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_select_by_rectangle.png'),
+        },
+        {
+          key: 'pointSelect',
+          title: getLanguage(global.language).Map_Main_Menu.FULL_SCREEN,
+          //'全幅',
+          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //'全幅',
+          action: viewEntire,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_full_screen.png'),
         },
         // {
         //   key: 'boxSelect',
@@ -441,7 +576,6 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
 function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  SMap.deleteGestureDetector()
   SMap.setAction(Action.CREATEPOINT)
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
@@ -469,6 +603,7 @@ function setwords(event) {
         await SMap.addTextRecordset(
           GLOBAL.TaggingDatasetName,
           value,
+          _params.user.currentUser.userName,
           event.x,
           event.y,
         )
@@ -477,14 +612,13 @@ function setwords(event) {
       NavigationService.goBack()
     },
     backcb: async () => {
-      await SMap.deleteGestureDetector()
+      // await SMap.deleteGestureDetector()
       NavigationService.goBack()
     },
   })
 }
 
 function pointline() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -493,7 +627,6 @@ function pointline() {
 }
 
 function freeline() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -502,7 +635,6 @@ function freeline() {
 }
 
 function pointcover() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -511,7 +643,6 @@ function pointcover() {
 }
 
 function freecover() {
-  SMap.deleteGestureDetector()
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
@@ -529,7 +660,7 @@ function name() {
             GLOBAL.TaggingDatasetName,
             'name',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -548,7 +679,7 @@ function remark() {
             GLOBAL.TaggingDatasetName,
             'remark',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }
@@ -567,7 +698,7 @@ function address() {
             GLOBAL.TaggingDatasetName,
             'address',
             value,
-            GLOBAL.CurrentUserName,
+            _params.user.currentUser.userName,
           )
         }.bind(this)())
       }

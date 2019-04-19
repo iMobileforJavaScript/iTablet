@@ -596,7 +596,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                             datasourceConnectionInfo.setEngineType(EngineType.UDB);
                             Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
                             if(datasource1.getDescription().equals("Label")){
-                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Label/Label.udb";
+                                String udbName="Label_"+getUserName()+"#.udb";
+                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Datasource/"+udbName;
                                 File udb=new File(todatasource);
                                 if(udb.exists()){
                                     sMap.getSmMapWC().copyDataset(datasource.get(i),todatasource);
@@ -744,7 +745,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
-        createDirectory(dataPath + "Label");
         createDirectory(dataPath + "Color");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
@@ -765,7 +765,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
         }
 
-        String lableUDB=dataPath+"Label/Label.udb";
+        String lableUDB=dataPath+"Datasource/Label_"+userName+"#.udb";
         File file=new File(lableUDB);
         if(!file.exists()){
             Workspace workspace=new Workspace();

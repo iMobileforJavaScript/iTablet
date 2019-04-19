@@ -37,7 +37,7 @@ import { connect } from 'react-redux'
 
 class tabItem extends PureComponent {
   props: {
-    language: String,
+    language: string,
     data: Object,
     title: Object,
     source_focuse: Object,

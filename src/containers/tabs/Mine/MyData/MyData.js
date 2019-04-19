@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 export default class MyLocalData extends Component {
   props: {
-    language: String,
+    language: string,
     user: Object,
     navigation: Object,
     upload: Object,

@@ -38,7 +38,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MT_layerManager extends React.Component {
   props: {
-    language: String,
+    language: string,
     navigation: Object,
     editLayer: Object,
     map: Object,
@@ -776,6 +776,11 @@ export default class MT_layerManager extends React.Component {
               value,
               this.props.user.currentUser.userName,
             )
+            GLOBAL.TaggingLayerName =
+              GLOBAL.TaggingDatasetName +
+              '@Label_' +
+              this.props.user.currentUser.userName +
+              '#'
             this.setRefreshing(true)
             this.getData()
           }.bind(this)())
@@ -845,7 +850,7 @@ export default class MT_layerManager extends React.Component {
           }
           if (
             this.props.layers.length > 0 &&
-            item.name.indexOf('@Label') >= 0
+            item.name.indexOf('@Label_') >= 0
           ) {
             return true
           }
