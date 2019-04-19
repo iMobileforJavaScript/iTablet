@@ -494,9 +494,27 @@ export default class FunctionToolbar extends React.Component {
   showTool = async () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
-      await SMap.setLabelColor()
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+        isFullScreen: true,
+        height: ConstToolType.NEWTHEME_HEIGHT[2],
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[0]
+        //   : ConstToolType.HEIGHT[2],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[2]
+        //   : ConstToolType.HEIGHT[3],
+      })
+    }
+  }
+
+  showTools = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      await SMap.setLabelColor()
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_TOOLS, {
         isFullScreen: true,
         height: ConstToolType.NEWTHEME_HEIGHT[4],
         // this.props.device.orientation === 'LANDSCAPE'
@@ -887,7 +905,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
-            action: this.showTool,
+            action: this.showTools,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
@@ -993,7 +1011,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
-            action: this.showTool,
+            action: this.showTools,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
