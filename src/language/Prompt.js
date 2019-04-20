@@ -38,7 +38,7 @@ const Chinese = {
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',
   SUPERMAP_KNOW: '超图知道',
-
+  INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
   SERCHING: '搜索中',
@@ -137,7 +137,7 @@ const English = {
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
   SUPERMAP_KNOW: 'SuperMap Know',
-
+  INSTRUCTION_MANUAL: 'Instruction Manual',
   THE_CURRENT_LAYER: 'The current layer is',
   ENTER_KEY_WORDS: 'Please enter key words',
   SEARCHING: 'Searching',

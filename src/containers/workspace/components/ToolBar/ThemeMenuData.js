@@ -76,7 +76,7 @@ function showExpressionList(type) {
   } else {
     listSelectable = false
   }
-  SThemeCartography.getThemeExpressionByLayerName(_createThemeByLayer).then(
+  SThemeCartography.getThemeExpressionByLayerName(global.language,_createThemeByLayer).then(
     getdata => {
       let dataset = getdata.dataset
       let allExpressions = getdata.list
@@ -3089,7 +3089,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
       break
   }
   if (isSuccess) {
-    Toast.show(getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
+    Toast.show(getLanguage(ToolbarParams.language).Prompt.CREATE_SUCCESSFULLY)
     //设置当前图层
     ToolbarParams.getLayers(-1, layers => {
       ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
@@ -3232,7 +3232,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
       break
   }
   if (isSuccess) {
-    Toast.show(getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY)
+    Toast.show(getLanguage(ToolbarParams.language).Prompt.CREATE_SUCCESSFULLY)
     //设置当前图层
     ToolbarParams.getLayers(-1, layers => {
       ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])

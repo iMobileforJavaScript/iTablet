@@ -3,12 +3,16 @@ package com.supermap.itablet;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.rnfs.RNFSManager;
 import com.supermap.RN.FileTools;
 import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
@@ -47,6 +51,15 @@ public class MainActivity extends ReactActivity {
         appManager.getAppManager().addActivity(this);
         IWXAPI iwxapi=appManager.getAppManager().registerWechat(this);
         FileTools.getUriState(this);
+
+
+        //注册网络状态监听广播
+        RNFSManager.NetWorkChangReceiver netWorkChangReceiver = new RNFSManager.NetWorkChangReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkChangReceiver, filter);
     }
 
     @Override
