@@ -249,6 +249,14 @@ export default class Home extends Component {
           fileName = 'OlympicGreen'
           storage = '  25.57MB'
           break
+        case 'USA':
+          fileName = 'USA'
+          storage = '  39.76MB'
+          break
+        case 'SanFrancisco':
+          fileName = 'SanFrancisco'
+          storage = '  1.99MB'
+          break
       }
     }
     let Img = this.state.dialogCheck

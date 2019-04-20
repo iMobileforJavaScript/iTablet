@@ -376,6 +376,9 @@ export default class MapView extends React.Component {
       // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       // case ConstToolType.MAP_TOOL_POINT_SELECT:
       //   break
+      case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+      case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
+        break
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
