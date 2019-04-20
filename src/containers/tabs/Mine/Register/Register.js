@@ -53,7 +53,7 @@ export default class Register extends React.Component {
     try {
       let result
       let isEmail = this.state.onEmailTitleFocus
-      if (!isEmail) {
+      if (isEmail) {
         if (!this.txtEmail) {
           //请输入QQ邮箱
           Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
@@ -252,7 +252,7 @@ export default class Register extends React.Component {
   }
 
   _onSelectTitle = () => {
-    if (!this.state.onEmailTitleFocus) {
+    if (this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {
       return this._renderPhone()
@@ -292,7 +292,7 @@ export default class Register extends React.Component {
               <View style={styles.titleStyle}>
                 <TouchableOpacity
                   onPress={() => {
-                    this._onEmailPress()
+                    this._onPhonePress()
                   }}
                   style={[
                     {
@@ -305,7 +305,7 @@ export default class Register extends React.Component {
                       borderBottomRightRadius: 0,
                       borderColor: color.theme,
                       justifyContent: 'center',
-                      backgroundColor: this.state.titleEmailDefaultBg,
+                      backgroundColor: this.state.titlePhoneBg,
                     },
                   ]}
                 >
@@ -316,7 +316,7 @@ export default class Register extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this._onPhonePress()
+                    this._onEmailPress()
                   }}
                   style={{
                     flex: 1,
@@ -327,7 +327,7 @@ export default class Register extends React.Component {
                     borderTopRightRadius: 4,
                     borderBottomRightRadius: 4,
                     justifyContent: 'center',
-                    backgroundColor: this.state.titlePhoneBg,
+                    backgroundColor: this.state.titleEmailDefaultBg,
                   }}
                 >
                   <Text style={[styles.titleContainerStyle]}>

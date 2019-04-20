@@ -133,6 +133,7 @@ class AppRoot extends Component {
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
+    GLOBAL.TaggingLayerName = ''
     GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
   }
