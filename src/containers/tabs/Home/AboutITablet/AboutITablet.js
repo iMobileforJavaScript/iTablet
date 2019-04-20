@@ -140,7 +140,8 @@ export default class AboutITablet extends Component {
             <Text style={[styles.consultTitle, marginLeft]}>
               {/* {getLanguage(this.props.language).Profile.SALES_CONSULTATION} */}
               {/* 销售咨询 */}
-              {'使用帮助'}
+              {getLanguage(this.props.language).Profile.HELP_MANUAL}
+              {/* {'使用帮助'} */}
             </Text>
             <Image
               style={[
