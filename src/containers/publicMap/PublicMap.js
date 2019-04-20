@@ -46,6 +46,7 @@ export default class PublicMap extends Component {
     this.flatListData = []
     this.allUserDataCount = -1
     this.currentLoadDataCount = 0
+    this.loadCacheEnd = false
     this._onRefresh = this._onRefresh.bind(this)
     this._loadData2 = this._loadData2.bind(this)
     this.getCurrentLoadData2 = this.getCurrentLoadData2.bind(this)
@@ -63,6 +64,15 @@ export default class PublicMap extends Component {
     this._clearInterval()
     this.saveMapCache()
   }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (
+  //     JSON.stringify(prevState) !== JSON.stringify(this.state)
+  //   ) {
+  //     return true
+  //   }
+  //   return false
+  // }
 
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
@@ -85,6 +95,7 @@ export default class PublicMap extends Component {
           let mapList = []
 
           if (data && data.length === 0) {
+            this.loadCacheEnd = true
             this._showLoadProgressView()
 
             this.getCurrentLoadData2(currentPage, totalPage)
@@ -115,9 +126,11 @@ export default class PublicMap extends Component {
               this.setState({ data: mapList })
             }
             this._clearInterval()
+            this.loadCacheEnd = true
           }
         }
       } else {
+        this.loadCacheEnd = true
         this._showLoadProgressView()
 
         await this.getCurrentLoadData2(currentPage, totalPage)
@@ -134,7 +147,7 @@ export default class PublicMap extends Component {
     if (!totalPage) {
       totalPage = 100
     }
-    if (this.isLoading === true) {
+    if (this.isLoading === true || this.loadCacheEnd === false) {
       return
     }
 
@@ -309,9 +322,14 @@ export default class PublicMap extends Component {
       }
 
       if (!bFound) {
-        srcData.unshift(map)
+        srcData.push(map)
       }
     }
+    srcData = srcData.sort((obj1, obj2) => {
+      let time1 = obj1.createTime
+      let time2 = obj2.createTime
+      return time2 - time1
+    })
     return srcData
   }
   async _onRefresh() {
@@ -322,7 +340,7 @@ export default class PublicMap extends Component {
       }, 3000)
       // this.currentLoadPage2 = 1
       await this.getCurrentLoadData2(1, 100)
-      await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
+      // await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
     } catch (e) {
       Toast.show('网络错误')
       this.setState({ isRefresh: false })
@@ -332,7 +350,7 @@ export default class PublicMap extends Component {
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
-        this.currentLoadPage2 = this.currentLoadPage2 + 1
+        // this.currentLoadPage2 = this.currentLoadPage2 + 1
         await this.getCurrentLoadData2(this.currentLoadPage2, this.totalPage)
         this.setState({ isLoadingData: false })
       }

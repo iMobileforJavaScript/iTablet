@@ -275,7 +275,7 @@ export class ModuleList extends Component {
     try {
 
       let fileName
-      let mapname
+      // let mapname
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === MAP_MODULE.MAP_ANALYST) {
@@ -283,10 +283,10 @@ export class ModuleList extends Component {
         return
       } else if (moduleKey === '地图制图') {
         fileName =  language==='CN'?'湖南':'SanFrancisco'
-        mapname =  language==='CN'?'SanFrancisco':'湖南'
+        // mapname =  language==='CN'?'SanFrancisco':'湖南'
       } else if (moduleKey === '专题制图') {
         fileName = language==='CN'?'湖北':'USA'
-        mapname =  language==='CN'?'Precipitation':'LandBuild'
+        // mapname =  language==='CN'?'Precipitation':'LandBuild'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
       } else if (moduleKey === '三维场景') {
