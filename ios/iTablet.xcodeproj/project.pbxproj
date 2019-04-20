@@ -77,12 +77,12 @@
 		0A8F7C8721D1BA320003595E /* ZipArchive.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C8421D1BA250003595E /* ZipArchive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A95738821BFA38500B5853A /* libRNFS.a */; };
 		0A9573C821C0B8EE00B5853A /* NativeMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9573C721C0B8EE00B5853A /* NativeMethod.m */; };
-		0AA134922267431F00606012 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134912267431F00606012 /* Trial_License.slm */; };
 		0AA134942267432500606012 /* publicMap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134932267432500606012 /* publicMap.txt */; };
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
 		0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */; };
+		0AF3471422697C4A004D6D09 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0AF3471322697C4A004D6D09 /* Trial_License.slm */; };
 		0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF433CA224C78E4003FDADE /* SuperMap.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -509,7 +509,6 @@
 		0A8F7C8421D1BA250003595E /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZipArchive.framework; sourceTree = "<group>"; };
 		0A9573C621C0B8EE00B5853A /* NativeMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethod.h; sourceTree = "<group>"; };
 		0A9573C721C0B8EE00B5853A /* NativeMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethod.m; sourceTree = "<group>"; };
-		0AA134912267431F00606012 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../Trial_License.slm; sourceTree = "<group>"; };
 		0AA134932267432500606012 /* publicMap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicMap.txt; path = ../../publicMap.txt; sourceTree = "<group>"; };
 		0ABCB8C22246056500992994 /* WeiXinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXinUtils.h; sourceTree = "<group>"; };
 		0ABCB8C32246056500992994 /* WeiXinUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXinUtils.m; sourceTree = "<group>"; };
@@ -519,6 +518,7 @@
 		0AC1FA172154872E00490605 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSampleCodeBridgeModule.h; sourceTree = "<group>"; };
 		0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSampleCodeBridgeModule.m; sourceTree = "<group>"; };
+		0AF3471322697C4A004D6D09 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = SOURCE_ROOT; };
 		0AF433CA224C78E4003FDADE /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -753,12 +753,12 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0AF3471322697C4A004D6D09 /* Trial_License.slm */,
 				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
 				0A11D9E821F9641D00AFE6D6 /* logo.png */,
 				0A177FE821F7092D00EA39D6 /* Workspace.zip */,
-				0AA134912267431F00606012 /* Trial_License.slm */,
 				0A177FBC21F0A8B900EA39D6 /* resources.bundle */,
 			);
 			path = assets;
@@ -1509,7 +1509,6 @@
 				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
 				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
-				0AA134922267431F00606012 /* Trial_License.slm in Resources */,
 				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
@@ -1524,6 +1523,7 @@
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
+				0AF3471422697C4A004D6D09 /* Trial_License.slm in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,

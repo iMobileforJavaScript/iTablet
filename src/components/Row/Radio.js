@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Platform,
 } from 'react-native'
 import { color } from '../../styles'
 
@@ -53,6 +54,7 @@ export default class Radio extends PureComponent {
       selected: props.selected,
       inputValue: props.inputValue !== undefined ? props.inputValue : '',
     }
+    this.submitting = false // android防止onblur和submit依次触发
   }
 
   componentDidUpdate(prevProps) {
@@ -105,14 +107,33 @@ export default class Radio extends PureComponent {
   }
 
   onSubmitEditing = () => {
-    this.props.onSubmitEditing &&
-      this.props.onSubmitEditing({
-        title: this.props.title,
-        value: this.props.value,
-        inputValue: this.state.inputValue,
-        selected: this.state.selected,
-        index: this.props.index,
-      })
+    if (Platform.OS === 'ios' || !this.submitting) {
+      this.props.onSubmitEditing &&
+        this.props.onSubmitEditing({
+          title: this.props.title,
+          value: this.props.value,
+          inputValue: this.state.inputValue,
+          selected: this.state.selected,
+          index: this.props.index,
+        })
+    } else {
+      this.submitting = false
+    }
+  }
+
+  onBlur = () => {
+    // Android blur不会触发onSubmitEditing
+    if (Platform.OS === 'android') {
+      this.submitting = true
+      this.props.onSubmitEditing &&
+        this.props.onSubmitEditing({
+          title: this.props.title,
+          value: this.props.value,
+          inputValue: this.state.inputValue,
+          selected: this.state.selected,
+          index: this.props.index,
+        })
+    }
   }
 
   render() {
@@ -164,6 +185,7 @@ export default class Radio extends PureComponent {
                   this.setState({ inputValue: text })
                 }}
                 onSubmitEditing={this.onSubmitEditing}
+                onBlur={this.onBlur}
               />
             ) : (
               <View
