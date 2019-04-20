@@ -86,6 +86,7 @@ const Profile_Chinese = {
   SALES_CONSULTATION: '销售咨询',
   BUSINESS_WEBSITE: '进入官网',
   PRIVACY_POLICY: '服务协议',
+  HELP_MANUAL: '使用帮助',
 }
 const Profile_English = {
   LOGIN_NOW: 'Login',
@@ -137,6 +138,7 @@ const Profile_English = {
   SALES_CONSULTATION: 'Sales Consultation',
   BUSINESS_WEBSITE: 'Business Website',
   PRIVACY_POLICY: 'Privacy Policy',
+  HELP_MANUAL: 'Help Manual',
 
   SWITCH_ACCOUNT: 'Switch Account',
   LOG_OUT: 'Log out',

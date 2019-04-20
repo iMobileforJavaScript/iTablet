@@ -21,6 +21,7 @@ function getMapTool(type, params) {
   let data = [],
     buttons = []
   _params = params
+  GLOBAL.MapToolType = type
   if (type.indexOf(ConstToolType.MAP_TOOL) === -1) return { data, buttons }
   switch (type) {
     case ConstToolType.MAP_TOOL_TAGGING:
@@ -63,7 +64,7 @@ function getMapTool(type, params) {
         ToolbarBtnType.COMMIT,
       ]
       break
-    case ConstToolType.MAP_TOOL:
+    case ConstToolType.MAP_TOOLS:
       data = [
         {
           key: 'distanceComput',
@@ -252,6 +253,141 @@ function getMapTool(type, params) {
       //   ToolbarBtnType.PLACEHOLDER,
       // ]
       break
+    case ConstToolType.MAP_TOOL:
+      data = [
+        {
+          key: 'distanceComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_DISTANCE_MEASUREMENT,
+          //'距离量算',
+          action: measureLength,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_length_black.png'),
+        },
+        {
+          key: 'coverComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AREA_MEASUREMENT,
+          //'面积量算',
+          action: measureArea,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_area_black.png'),
+        },
+        {
+          key: 'azimuthComput',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_AZIMUTH_MEASUREMENT,
+          //'方位角量算',
+          action: measureAngle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_measure_angle_black.png'),
+        },
+        {
+          key: 'pointSelect',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT,
+          //'点选',
+          action: pointSelect,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
+        },
+        {
+          key: 'selectByRectangle',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_SELECT,
+          //'框选',
+          action: selectByRectangle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_select_by_rectangle.png'),
+        },
+        {
+          key: 'pointSelect',
+          title: getLanguage(global.language).Map_Main_Menu.FULL_SCREEN,
+          //'全幅',
+          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //'全幅',
+          action: viewEntire,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_full_screen.png'),
+        },
+        // {
+        //   key: 'boxSelect',
+        //   title: '框选',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point_cover.png'),
+        // },
+        // {
+        //   key: 'roundSelect',
+        //   title: '圆选',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_free_cover.png'),
+        // },
+        {
+          key: 'rectangularCut',
+          title: getLanguage(global.language).Map_Main_Menu
+            .TOOLS_RECTANGLE_CLIP,
+          //'矩形裁剪',
+          action: rectangleCut,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_rectangle_cut,
+        },
+        // {
+        //   key: 'roundCut',
+        //   title: '圆形裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_road_track.png'),
+        // },
+        // {
+        //   key: 'polygonCut',
+        //   title: '多边形裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_equal_track.png'),
+        // },
+        // {
+        //   key: 'selectCut',
+        //   title: '选中对象裁剪',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_time_track.png'),
+        // },
+        // {
+        //   key: 'magnifier',
+        //   title: '放大镜',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+        // },
+        // {
+        //   key: 'eagleChart',
+        //   title: '鹰眼图',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_eagle_chart.png'),
+        // },
+        // {
+        //   key: 'play',
+        //   title: '播放',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_play.png'),
+        // },
+        // {
+        //   key: 'fullAmplitude',
+        //   title: '全幅',
+        //   action: this.showBox,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
+        // },
+      ]
+      // buttons = [
+      //   ToolbarBtnType.CANCEL,
+      //   ToolbarBtnType.PLACEHOLDER,
+      //   ToolbarBtnType.PLACEHOLDER,
+      // ]
+      break
     case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
     case ConstToolType.MAP_TOOL_MEASURE_AREA:
     case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
@@ -261,6 +397,8 @@ function getMapTool(type, params) {
         ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       data = [
@@ -298,9 +436,11 @@ function getMapTool(type, params) {
 
 function select() {
   switch (GLOBAL.currentToolbarType) {
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       SMap.setAction(Action.SELECT)
       break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
@@ -323,7 +463,12 @@ function viewEntire() {
 function pointSelect() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+
+  if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
+  } else {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+  }
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_POINT_SELECT, {
     containerType: 'table',
@@ -338,7 +483,13 @@ function pointSelect() {
 function selectByRectangle() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+
+  if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
+    GLOBAL.currentToolbarType =
+      ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
+  } else {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+  }
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE, {
     containerType: 'table',
@@ -373,6 +524,7 @@ function measureLength() {
   SMap.measureLength(obj => {
     _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
   })
+
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
 
   _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
@@ -477,7 +629,7 @@ function setwords(event) {
       NavigationService.goBack()
     },
     backcb: async () => {
-      await SMap.deleteGestureDetector()
+      // await SMap.deleteGestureDetector()
       NavigationService.goBack()
     },
   })

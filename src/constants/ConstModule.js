@@ -82,7 +82,7 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = '湖南'
+          let moduleMapName = param === 'CN' ? '湖南' : 'SanFrancisco'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
@@ -212,7 +212,7 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = 'LandBuild'
+          let moduleMapName = param === 'CN' ? 'LandBuild' : 'Precipitation'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =

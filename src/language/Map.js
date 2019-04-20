@@ -243,7 +243,7 @@ const Map_Main_Menu_English = {
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
 
-  OPEN: 'Open',
+  OPEN: 'Add',
   OPEN_DATASOURCE: 'Datasource',
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',

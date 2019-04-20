@@ -9,7 +9,7 @@ const icon_radio_selected = require('../../publicTheme/common/icon_radio_selecte
 const icon_radio_selected_disable = require('../../publicTheme/common/icon_radio_selected_disable.png')
 const icon_radio_unselected = require('../../publicTheme/common/icon_radio_unselected.png')
 const icon_radio_unselected_disable = require('../../publicTheme/common/icon_radio_unselected_disable.png')
-
+const icon_about_itablet_more = require('./icon_aboutitablet_more.png')
 export default {
   icon_undo,
   icon_search,
@@ -22,4 +22,5 @@ export default {
   icon_radio_selected_disable,
   icon_radio_unselected,
   icon_radio_unselected_disable,
+  icon_about_itablet_more,
 }
