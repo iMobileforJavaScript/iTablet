@@ -272,16 +272,20 @@ export class ModuleList extends Component {
 
   itemAction = async (language, { item, index }) => {
     try {
+
       let fileName
+      let mapname
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === MAP_MODULE.MAP_ANALYST) {
         item.action && item.action(this.props.currentUser)
         return
       } else if (moduleKey === '地图制图') {
-        fileName = '湖南'
+        fileName =  language==='CN'?'湖南':'SanFrancisco'
+        mapname =  language==='CN'?'SanFrancisco':'湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = '湖北'
+        fileName = language==='CN'?'湖北':'USA'
+        mapname =  language==='CN'?'Precipitation':'LandBuild'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
       } else if (moduleKey === '三维场景') {
@@ -299,6 +303,39 @@ export class ModuleList extends Component {
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
         : 'Customer'
+
+      let module
+      switch (item.key) {
+        case MAP_MODULE.MAP_COLLECTION:
+          module = constants.COLLECTION
+          break
+        case MAP_MODULE.MAP_EDIT:
+          module = constants.MAP_EDIT
+          break
+        case MAP_MODULE.MAP_3D:
+          module = constants.MAP_3D
+          break
+        case MAP_MODULE.MAP_THEME:
+          module = constants.MAP_THEME
+          break
+        case MAP_MODULE.MAP_PLOTTING:
+          module = constants.MAP_PLOTTING
+          break
+      }
+      let latestMap
+      if (
+        this.props.latestMap[currentUserName] &&
+          this.props.latestMap[currentUserName][module] &&
+          this.props.latestMap[currentUserName][module].length > 0
+      ) {
+        latestMap = this.props.latestMap[currentUserName][module][0]
+        if(latestMap.name===mapname){
+          latestMap=null
+        }
+      }
+      item.action && item.action(tmpCurrentUser, latestMap)
+
+
       // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
       let toPath = homePath + ConstPath.CachePath + fileName
 
@@ -365,35 +402,8 @@ export class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-
-        let module
-        switch (item.key) {
-          case MAP_MODULE.MAP_COLLECTION:
-            module = constants.COLLECTION
-            break
-          case MAP_MODULE.MAP_EDIT:
-            module = constants.MAP_EDIT
-            break
-          case MAP_MODULE.MAP_3D:
-            module = constants.MAP_3D
-            break
-          case MAP_MODULE.MAP_THEME:
-            module = constants.MAP_THEME
-            break
-          case MAP_MODULE.MAP_PLOTTING:
-            module = constants.MAP_PLOTTING
-            break
-        }
-        let latestMap
-        if (
-          this.props.latestMap[currentUserName] &&
-          this.props.latestMap[currentUserName][module] &&
-          this.props.latestMap[currentUserName][module].length > 0
-        ) {
-          latestMap = this.props.latestMap[currentUserName][module][0]
-        }
-        item.action && item.action(tmpCurrentUser, latestMap)
       }
+
     } catch (e) {
       this.moduleItems[index].setNewState({
         disabled: false,

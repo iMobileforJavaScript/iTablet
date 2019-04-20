@@ -692,6 +692,7 @@ export default class ToolBar extends React.PureComponent {
             getLanguage(this.props.language).Prompt.READING_DATA,
           )
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          global.language,
           GLOBAL.currentLayer.name,
         )
         let selectedExpression
@@ -808,6 +809,7 @@ export default class ToolBar extends React.PureComponent {
             getLanguage(this.props.language).Prompt.READING_DATA,
           )
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          global.language,
           GLOBAL.currentLayer.name,
         )
         let dataset = this.expressionData.dataset
@@ -3285,6 +3287,7 @@ export default class ToolBar extends React.PureComponent {
               getLanguage(this.props.language).Prompt.READING_DATA,
             )
           let data = await SThemeCartography.getThemeExpressionByDatasetName(
+            global.language,
             item.datasourceName,
             item.datasetName,
           )

@@ -76,7 +76,7 @@ function showExpressionList(type) {
   } else {
     listSelectable = false
   }
-  SThemeCartography.getThemeExpressionByLayerName(_createThemeByLayer).then(
+  SThemeCartography.getThemeExpressionByLayerName(global.language,_createThemeByLayer).then(
     getdata => {
       let dataset = getdata.dataset
       let allExpressions = getdata.list
