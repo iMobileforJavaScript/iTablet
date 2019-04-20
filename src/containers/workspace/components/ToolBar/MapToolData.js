@@ -21,6 +21,7 @@ function getMapTool(type, params) {
   let data = [],
     buttons = []
   _params = params
+  GLOBAL.MapToolType = type
   if (type.indexOf(ConstToolType.MAP_TOOL) === -1) return { data, buttons }
   switch (type) {
     case ConstToolType.MAP_TOOL_TAGGING:
@@ -396,6 +397,8 @@ function getMapTool(type, params) {
         ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       data = [
@@ -433,9 +436,11 @@ function getMapTool(type, params) {
 
 function select() {
   switch (GLOBAL.currentToolbarType) {
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       SMap.setAction(Action.SELECT)
       break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
@@ -458,7 +463,12 @@ function viewEntire() {
 function pointSelect() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+
+  if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
+  } else {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+  }
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_POINT_SELECT, {
     containerType: 'table',
@@ -473,7 +483,13 @@ function pointSelect() {
 function selectByRectangle() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+
+  if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
+    GLOBAL.currentToolbarType =
+      ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
+  } else {
+    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+  }
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE, {
     containerType: 'table',
@@ -508,6 +524,7 @@ function measureLength() {
   SMap.measureLength(obj => {
     _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
   })
+
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
 
   _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {

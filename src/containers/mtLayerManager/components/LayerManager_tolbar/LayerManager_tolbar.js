@@ -465,7 +465,6 @@ export default class LayerManager_tolbar extends React.Component {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
           this.state.layerdata.name,
         )
-        GLOBAL.TaggingLayerName = this.state.layerdata.name
         this.updateTagging()
         this.setVisible(false)
       }.bind(this)())
