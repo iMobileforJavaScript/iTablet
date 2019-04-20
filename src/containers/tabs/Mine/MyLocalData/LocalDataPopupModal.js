@@ -3,6 +3,7 @@ import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+const screenWidth = '100%'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
     language: string,
@@ -10,6 +11,9 @@ export default class LocalDataPopupModal extends PureComponent {
     onCloseModal: () => {},
     onDeleteData: () => {},
     onImportWorkspace: () => {},
+    onPublishService: () => {},
+    onDeleteService: () => {},
+    data: Object,
   }
 
   defaultProps: {
@@ -94,6 +98,58 @@ export default class LocalDataPopupModal extends PureComponent {
       </TouchableOpacity>
     )
   }
+
+  _publishServiceButton = () => {
+    let title = getLanguage(global.language).Profile.PUBLISH_SERVICE
+    //'发布服务'
+    let objContent = this.props.data
+    if (objContent && objContent.dataItemServices) {
+      let dataItemServices = objContent.dataItemServices
+      for (let i = 0; i < dataItemServices.length; i++) {
+        let serviceType = dataItemServices[i].serviceType
+        if (serviceType === 'RESTMAP') {
+          // title =
+          //   getLanguage(global.language).Profile.DELETE +
+          //   dataItemServices[i].serviceName +
+          //   getLanguage(global.language).Profile.SERVICE
+          title =
+            getLanguage(global.language).Profile.DELETE +
+            getLanguage(global.language).Profile.SERVICE
+        }
+      }
+      return (
+        <TouchableOpacity
+          style={{ backgroundColor: color.itemColorWhite }}
+          onPress={async () => {
+            if (
+              title === getLanguage(global.language).Profile.PUBLISH_SERVICE
+            ) {
+              this.props.onPublishService()
+            } else {
+              this.props.onDeleteService()
+            }
+          }}
+        >
+          <Text
+            style={{
+              lineHeight: scaleSize(80),
+              width: screenWidth,
+              position: 'relative',
+              textAlign: 'center',
+              fontSize: this.fontSize,
+            }}
+            numberOfLines={1}
+          >
+            {title}
+          </Text>
+          {this._renderSeparatorLine()}
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
+  }
+
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
@@ -129,6 +185,7 @@ export default class LocalDataPopupModal extends PureComponent {
             }}
           >
             {this.props.onImportWorkspace && this._onImportWorkspace()}
+            {this._publishServiceButton()}
             {this._onDeleteButton()}
           </View>
         </TouchableOpacity>
