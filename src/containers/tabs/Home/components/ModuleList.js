@@ -148,6 +148,7 @@ export class ModuleList extends Component {
     }
     this.moduleItems = []
     //this.bytesInfo = 0
+    this.itemAction = this.itemAction.bind(this)
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
@@ -270,7 +271,7 @@ export class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  itemAction = async (language, { item, index }) => {
+  async itemAction(language, { item, index }){
     try {
 
       let fileName
@@ -329,9 +330,9 @@ export class ModuleList extends Component {
           this.props.latestMap[currentUserName][module].length > 0
       ) {
         latestMap = this.props.latestMap[currentUserName][module][0]
-        if(latestMap.name===mapname){
-          latestMap=null
-        }
+        // if(latestMap.name===mapname){
+        //   latestMap=null
+        // }
       }
       item.action && item.action(tmpCurrentUser, latestMap)
 
