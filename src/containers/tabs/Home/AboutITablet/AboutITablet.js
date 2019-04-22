@@ -119,7 +119,11 @@ export default class AboutITablet extends Component {
               {getLanguage(this.props.language).Profile.SALES_CONSULTATION}
               {/* 销售咨询 */}
             </Text>
-            <Text style={[styles.phone, marginRight]}>01059896655转6156</Text>
+            <Text style={[styles.phone, marginRight]}>
+              01059896655
+              {this.props.language === 'CN' ? '转' : '-'}
+              6156
+            </Text>
           </TouchableOpacity>
           <View
             style={[

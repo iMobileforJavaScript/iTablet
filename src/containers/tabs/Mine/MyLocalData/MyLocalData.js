@@ -566,7 +566,10 @@ export default class MyLocalData extends Component {
           }}
         >
           <ActivityIndicator animating={true} color="#4680DF" size="large" />
-          <Text style={{ fontSize: scaleSize(20) }}>{'数据加载中...'}</Text>
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(this.props.language).Prompt.LOADING}
+            {/* {'数据加载中...'} */}
+          </Text>
         </View>
       )
     } else {
