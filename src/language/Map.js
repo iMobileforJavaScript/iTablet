@@ -243,7 +243,7 @@ const Map_Main_Menu_English = {
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
 
-  OPEN: 'Open',
+  OPEN: 'Add',
   OPEN_DATASOURCE: 'Datasource',
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
@@ -540,7 +540,6 @@ const Map_Attribute_Chinese = {
 const Map_Attribute_English = {
   ATTRIBUTE_SORT: 'Sort',
   ATTRIBUTE_LOCATION: 'Location',
-  ATTRIBUTE_CANCEL: 'Cancel',
   ATTRIBUTE_EDIT: 'Edit',
   ATTRIBUTE_STATISTIC: 'Statistic',
   ATTRIBUTE_ASSOCIATION: 'Association',

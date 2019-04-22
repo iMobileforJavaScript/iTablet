@@ -140,7 +140,8 @@ export default class AboutITablet extends Component {
             <Text style={[styles.consultTitle, marginLeft]}>
               {/* {getLanguage(this.props.language).Profile.SALES_CONSULTATION} */}
               {/* 销售咨询 */}
-              {'使用帮助'}
+              {getLanguage(this.props.language).Profile.HELP_MANUAL}
+              {/* {'使用帮助'} */}
             </Text>
             <Image
               style={[
@@ -184,7 +185,7 @@ export default class AboutITablet extends Component {
         </View>
         <View style={[styles.informationView, informationBottom]}>
           <Text style={styles.information}>
-            Copyright 1997-2019 SuperMap Software Co.,Ltd.All rights reserved
+            Copyright 2018-2019 SuperMap Software Co.,Ltd.All rights reserved
           </Text>
         </View>
       </Container>
