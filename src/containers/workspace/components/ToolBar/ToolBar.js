@@ -2658,21 +2658,15 @@ export default class ToolBar extends React.PureComponent {
 
   changeCollection = () => {
     SCollector.stopCollect()
-    let toolbarType, action
+    let toolbarType
     switch (this.lastState.type) {
       case SMCollectorType.REGION_GPS_PATH:
-        toolbarType = ConstToolType.MAP_COLLECTION_REGION
-        action = () => SCollector.stopCollect()
-        break
       case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_HAND_PATH:
       case SMCollectorType.REGION_HAND_POINT:
         toolbarType = ConstToolType.MAP_COLLECTION_REGION
         break
       case SMCollectorType.LINE_GPS_PATH:
-        toolbarType = ConstToolType.MAP_COLLECTION_LINE
-        action = () => SCollector.stopCollect()
-        break
       case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_HAND_POINT:
       case SMCollectorType.LINE_HAND_PATH:
@@ -2689,9 +2683,6 @@ export default class ToolBar extends React.PureComponent {
       height: ConstToolType.HEIGHT[0],
       cb: () => {
         this.setLastState()
-        if (action && typeof action === 'function') {
-          action()
-        }
       },
     })
   }
