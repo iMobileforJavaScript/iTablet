@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   NativeModules,
+  RefreshControl,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -35,6 +36,7 @@ export default class MyLabel extends Component {
       modalIsVisible: false,
       udbPath: '',
       showselect: false,
+      isRefreshing: false,
     }
     this.uploadList = []
     this.uploadType = null
@@ -118,6 +120,10 @@ export default class MyLabel extends Component {
   }
 
   uploadDialog = name => {
+    if (name === null || name === '') {
+      Toast.show('请输入数据名称')
+      return
+    }
     this.dialog.setDialogVisible(false)
     this.upload(name)
   }
@@ -265,7 +271,7 @@ export default class MyLabel extends Component {
           this.dialog.setDialogVisible(false)
           this.setState({ showselect: false })
         }}
-        confirmBtnTitle={'上传'}
+        confirmBtnTitle={'分享'}
         cancelBtnTitle={'取消'}
       />
     )
@@ -295,6 +301,26 @@ export default class MyLabel extends Component {
               }}
             />
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={() => {
+                try {
+                  this.setState({ isRefreshing: true })
+                  this.getData().then(() => {
+                    this.setState({ isRefreshing: false })
+                  })
+                } catch (error) {
+                  Toast.show('刷新失败')
+                }
+              }}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}
