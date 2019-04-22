@@ -274,6 +274,8 @@ export default class MyModule extends Component {
       }
     } catch (error) {
       Toast.show('分享失败')
+    } finally {
+      this.container.setLoading(false)
     }
   }
 

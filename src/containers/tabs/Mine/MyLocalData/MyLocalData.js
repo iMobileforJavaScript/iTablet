@@ -351,7 +351,7 @@ export default class MyLocalData extends Component {
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '服务发布成功')
+        Toast.show(this.itemInfo.fileName + '  服务发布成功')
       } else {
         Toast.show('服务发布失败')
       }
@@ -383,7 +383,7 @@ export default class MyLocalData extends Component {
           }
         }
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '服务删除成功')
+        Toast.show(this.itemInfo.fileName + '  服务删除成功')
       } else {
         Toast.show('服务删除失败')
       }
@@ -424,6 +424,51 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onChangeDataVisibility = async () => {
+    this.setLoading(true, '改变数据可见性中...')
+    this.setState({ modalIsVisible: false })
+    try {
+      let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
+      let oldOnline = sectionData[sectionData.length - 1]
+      let objContent = oldOnline.data[this.itemInfo.index]
+      let authorizeSetting = objContent.authorizeSetting
+      let isPublish = false
+      let splice = 0
+      for (let i = 0; i < authorizeSetting.length; i++) {
+        let dataPermissionType = authorizeSetting[i].dataPermissionType
+        if (dataPermissionType === 'DOWNLOAD') {
+          isPublish = true
+          splice = i
+          break
+        }
+      }
+      let result = await SOnlineService.changeDataVisibilityWithDataId(
+        this.itemInfo.id,
+        !isPublish,
+      )
+      if (typeof result === 'boolean' && result) {
+        if (isPublish) {
+          authorizeSetting.splice(splice, 1)
+          Toast.show('成功设置为私有数据')
+        } else {
+          let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
+          authorizeSetting.push(dataPermissionType)
+          Toast.show('成功设置为公有数据')
+        }
+        this.setState({ sectionData: sectionData })
+      } else {
+        if (result === undefined || result === '') {
+          result = '设置失败'
+        }
+        Toast.show('设置失败')
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
   _showLocalDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       return (
@@ -434,6 +479,7 @@ export default class MyLocalData extends Component {
           onPublishService={this._onPublishService}
           onDeleteService={this._onDeleteService}
           onImportWorkspace={this.importData}
+          onChangeDataVisibility={this._onChangeDataVisibility}
           onCloseModal={this._closeModal}
           modalVisible={this.state.modalIsVisible}
         />

@@ -13,6 +13,7 @@ export default class LocalDataPopupModal extends PureComponent {
     onImportWorkspace: () => {},
     onPublishService: () => {},
     onDeleteService: () => {},
+    onChangeDataVisibility: () => {},
     data: Object,
   }
 
@@ -150,6 +151,51 @@ export default class LocalDataPopupModal extends PureComponent {
     }
   }
 
+  _dataVisibleButton = () => {
+    if (this.props.data && this.props.data.authorizeSetting) {
+      let isPublish = false
+      let authorizeSetting = this.props.data.authorizeSetting
+      for (let i = 0; i < authorizeSetting.length; i++) {
+        let dataPermissionType = authorizeSetting[i].dataPermissionType
+        if (dataPermissionType === 'DOWNLOAD') {
+          isPublish = true
+          break
+        }
+      }
+      let title
+      if (isPublish) {
+        title = getLanguage(global.language).Profile.SET_AS_PRIVATE_DATA
+        //'设为私有数据'
+      } else {
+        title = getLanguage(global.language).Profile.SET_AS_PUBLIC_DATA
+        //'设为公有数据'
+      }
+      return (
+        <TouchableOpacity
+          style={{ backgroundColor: color.itemColorWhite }}
+          onPress={async () => {
+            this.props.onChangeDataVisibility()
+          }}
+        >
+          <Text
+            style={{
+              lineHeight: scaleSize(80),
+              width: screenWidth,
+              position: 'relative',
+              textAlign: 'center',
+              fontSize: this.fontSize,
+            }}
+          >
+            {title}
+          </Text>
+          {this._renderSeparatorLine()}
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
+  }
+
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
@@ -187,6 +233,7 @@ export default class LocalDataPopupModal extends PureComponent {
             {this.props.onImportWorkspace && this._onImportWorkspace()}
             {this._publishServiceButton()}
             {this._onDeleteButton()}
+            {this._dataVisibleButton()}
           </View>
         </TouchableOpacity>
       </Modal>
