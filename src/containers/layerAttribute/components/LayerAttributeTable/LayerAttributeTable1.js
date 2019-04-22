@@ -95,6 +95,7 @@ export default class LayerAttributeTable extends React.Component {
       isMultiData,
     }
     this.canBeLoadMore = true // 控制是否可以加载更多
+    this.isScrolling = false // 防止连续定位滚动
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -150,7 +151,9 @@ export default class LayerAttributeTable extends React.Component {
 
   scrollToLocation = params => {
     if (!params) return
-    if (this.table) {
+    // 防止2秒内连续定位滚动
+    if (this.table && !this.isScrolling) {
+      this.isScrolling = true
       this.table.scrollToLocation({
         animated: params.animated || false,
         itemIndex: params.itemIndex || 0,
@@ -159,6 +162,10 @@ export default class LayerAttributeTable extends React.Component {
           params.viewOffset !== undefined ? params.viewOffset : COL_HEIGHT,
         viewPosition: params.viewPosition || 0,
       })
+      let timer = setTimeout(() => {
+        this.isScrolling = false
+        clearTimeout(timer)
+      }, 2000)
     }
   }
 
@@ -342,7 +349,7 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
-    return index
+    return index.toString()
   }
 
   _renderSectionHeader = ({ section }) => {

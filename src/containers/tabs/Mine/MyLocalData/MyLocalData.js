@@ -54,6 +54,7 @@ export default class MyLocalData extends Component {
     this.dataListTotal = null
     this.currentPage = 1
     this.deleteDataing = false
+    this.itemInfo = {}
   }
   componentDidMount() {
     this._setSectionDataState3()
@@ -334,6 +335,65 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onPublishService = async () => {
+    // this.setLoading(true, '发布服务中...')
+    Toast.show('发布服务中...')
+    this.setState({ modalIsVisible: false })
+    try {
+      let dataId = this.itemInfo.id + ''
+      let result = await SOnlineService.publishServiceWithDataId(dataId)
+      if (typeof result === 'boolean' && result) {
+        let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
+        let oldOnline = sectionData[sectionData.length - 1]
+        let oldData = oldOnline.data
+        let objContent = oldData[this.itemInfo.index]
+        let arrDataItemServices = objContent.dataItemServices
+        let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
+        arrDataItemServices.push(dataItemServices)
+        this.setState({ sectionData: sectionData })
+        Toast.show(this.itemInfo.fileName + '  服务发布成功')
+      } else {
+        Toast.show('服务发布失败')
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
+  _onDeleteService = async () => {
+    // this.setLoading(true, '删除服务中...')
+    Toast.show('删除服务中...')
+    this.setState({ modalIsVisible: false })
+    try {
+      let result = await SOnlineService.deleteServiceWithDataName(
+        this.itemInfo.fileName,
+      )
+      if (typeof result === 'boolean' && result) {
+        let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
+        let oldOnline = sectionData[sectionData.length - 1]
+        let oldData = oldOnline.data
+        let objContent = oldData[this.itemInfo.index]
+        let dataItemServices = objContent.dataItemServices
+        for (let i = 0; i < dataItemServices.length; i++) {
+          let serviceType = dataItemServices[i].serviceType
+          if (serviceType === 'RESTMAP') {
+            dataItemServices.splice(i, 1)
+          }
+        }
+        this.setState({ sectionData: sectionData })
+        Toast.show(this.itemInfo.fileName + '  服务删除成功')
+      } else {
+        Toast.show('服务删除失败')
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    } finally {
+      // this.setLoading(false)
+    }
+  }
+
   deleteDataOfOnline = async () => {
     this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING)
     //'删除数据中...')
@@ -347,7 +407,7 @@ export default class MyLocalData extends Component {
         let sectionData = JSON.parse(JSON.stringify(this.state.sectionData)) // [...this.state.sectionData]
         let oldOnline = sectionData[sectionData.length - 1]
         oldOnline.data.splice(this.itemInfo.index, 1)
-        this.setState({ sectionData }, () => {
+        this.setState({ sectionData: sectionData }, () => {
           Toast.show('数据删除成功')
           this.deleteDataing = false
         })
@@ -364,13 +424,62 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onChangeDataVisibility = async () => {
+    this.setLoading(true, '改变数据可见性中...')
+    this.setState({ modalIsVisible: false })
+    try {
+      let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
+      let oldOnline = sectionData[sectionData.length - 1]
+      let objContent = oldOnline.data[this.itemInfo.index]
+      let authorizeSetting = objContent.authorizeSetting
+      let isPublish = false
+      let splice = 0
+      for (let i = 0; i < authorizeSetting.length; i++) {
+        let dataPermissionType = authorizeSetting[i].dataPermissionType
+        if (dataPermissionType === 'DOWNLOAD') {
+          isPublish = true
+          splice = i
+          break
+        }
+      }
+      let result = await SOnlineService.changeDataVisibilityWithDataId(
+        this.itemInfo.id,
+        !isPublish,
+      )
+      if (typeof result === 'boolean' && result) {
+        if (isPublish) {
+          authorizeSetting.splice(splice, 1)
+          Toast.show('成功设置为私有数据')
+        } else {
+          let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
+          authorizeSetting.push(dataPermissionType)
+          Toast.show('成功设置为公有数据')
+        }
+        this.setState({ sectionData: sectionData })
+      } else {
+        if (result === undefined || result === '') {
+          result = '设置失败'
+        }
+        Toast.show('设置失败')
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
   _showLocalDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       return (
         <LocalDataPopupModal
+          data={this.itemInfo}
           language={this.props.language}
           onDeleteData={this.deleteData}
+          onPublishService={this._onPublishService}
+          onDeleteService={this._onDeleteService}
           onImportWorkspace={this.importData}
+          onChangeDataVisibility={this._onChangeDataVisibility}
           onCloseModal={this._closeModal}
           modalVisible={this.state.modalIsVisible}
         />

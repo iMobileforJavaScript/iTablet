@@ -170,7 +170,6 @@ export default class Map3D extends React.Component {
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
-    this._addScene()
   }
 
   _pop_list = (show, type) => {

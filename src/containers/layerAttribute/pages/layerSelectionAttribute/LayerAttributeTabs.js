@@ -117,6 +117,9 @@ export default class LayerAttributeTabs extends React.Component {
         head: [],
         data: [],
       },
+      canBeUndo: false,
+      canBeRedo: false,
+      canBeRevert: false,
     }
 
     // 选择集中当前选中的属性
@@ -227,6 +230,18 @@ export default class LayerAttributeTabs extends React.Component {
       this.locateToPosition({
         type: 'absolute',
         index: this.state.currentIndex + 1, // currentIndex从0开始，表格序号从1开始
+      })
+    }
+  }
+
+  onGetToolVisible = (toolVisible = {}) => {
+    if (
+      this.state.canBeUndo !== toolVisible.canBeUndo ||
+      this.state.canBeRedo !== toolVisible.canBeRedo ||
+      this.state.canBeRevert !== toolVisible.canBeRevert
+    ) {
+      this.setState({
+        ...toolVisible,
       })
     }
   }
@@ -368,14 +383,21 @@ export default class LayerAttributeTabs extends React.Component {
       let newState = {
         currentTabIndex: index,
       }
-      if (this.currentTabRefs[index]) {
+      let toolVisible = {}
+      if (this.currentTabRefs && this.currentTabRefs[index]) {
         let attributes = this.currentTabRefs[index].getAttributes()
         newState.attributes = attributes
         newState.currentIndex = attributes.data.length === 1 ? 0 : -1
+        toolVisible = this.currentTabRefs[index].getToolIsViable() || {}
       } else {
         newState.currentIndex = -1
+        toolVisible = {
+          canBeUndo: false,
+          canBeRedo: false,
+          canBeRevert: false,
+        }
       }
-      this.setState(newState)
+      this.setState(Object.assign(newState, toolVisible))
     }
 
     let timer = setTimeout(() => {
@@ -513,6 +535,7 @@ export default class LayerAttributeTabs extends React.Component {
         setAttributeHistory={this.props.setAttributeHistory}
         selectAction={this.selectAction}
         onGetAttribute={this.onGetAttribute}
+        onGetToolVisible={this.onGetToolVisible}
       />
     )
   }
@@ -523,9 +546,14 @@ export default class LayerAttributeTabs extends React.Component {
         <MTBtn
           key={'undo'}
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
-          // {'撤销'}
+          //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('undo')}
         />
@@ -534,8 +562,13 @@ export default class LayerAttributeTabs extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
           //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
           onPress={() => this.setAttributeHistory('redo')}
         />
         <MTBtn
@@ -545,7 +578,12 @@ export default class LayerAttributeTabs extends React.Component {
           }
           //{'还原'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_revert}
+          textColor={!this.state.canBeRevert && color.contentColorGray}
+          image={
+            this.state.canBeRevert
+              ? getThemeAssets().publicAssets.icon_revert
+              : getPublicAssets().attribute.icon_revert_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('revert')}
         />

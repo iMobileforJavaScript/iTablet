@@ -97,6 +97,10 @@ const Chinese = {
   SHARE_START: '开始分享',
 
   EXPORT_SUCCESS: '导出成功',
+
+  UNDO_FAILED: '撤销失败',
+  REDO_FAILED: '恢复失败',
+  RECOVER_FAILED: '还原失败',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -199,6 +203,10 @@ const English = {
   SHARE_START: 'Start sharing',
 
   EXPORT_SUCCESS: 'Exported Successfully',
+
+  UNDO_FAILED: 'Undo Failed',
+  REDO_FAILED: 'Redo Failed',
+  RECOVER_FAILED: 'Recover Failed',
 }
 
 export { Chinese, English }

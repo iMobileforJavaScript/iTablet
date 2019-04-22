@@ -76,48 +76,48 @@ function showExpressionList(type) {
   } else {
     listSelectable = false
   }
-  SThemeCartography.getThemeExpressionByLayerName(global.language,_createThemeByLayer).then(
-    getdata => {
-      let dataset = getdata.dataset
-      let allExpressions = getdata.list
-      allExpressions.forEach(item => {
-        item.info = {
-          infoType: 'fieldType',
-          fieldType: item.fieldType,
-        }
-      })
-      let data = [
+  SThemeCartography.getThemeExpressionByLayerName(
+    global.language,
+    _createThemeByLayer,
+  ).then(getdata => {
+    let dataset = getdata.dataset
+    let allExpressions = getdata.list
+    allExpressions.forEach(item => {
+      item.info = {
+        infoType: 'fieldType',
+        fieldType: item.fieldType,
+      }
+    })
+    let data = [
+      {
+        title: dataset.datasetName,
+        datasetType: dataset.datasetType,
+        expressionType: true,
+        data: allExpressions,
+      },
+    ]
+    _toolbarParams.setToolbarVisible &&
+      _toolbarParams.setToolbarVisible(
+        true,
+        ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME,
         {
-          title: dataset.datasetName,
-          datasetType: dataset.datasetType,
-          expressionType: true,
-          data: allExpressions,
+          containerType: 'list',
+          isFullScreen: true,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          listSelectable: listSelectable, //单选框
+          height:
+            _toolbarParams.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5],
+          data,
+          buttons: listSelectable
+            ? [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT]
+            : [ToolbarBtnType.THEME_CANCEL],
         },
-      ]
-      _toolbarParams.setToolbarVisible &&
-        _toolbarParams.setToolbarVisible(
-          true,
-          ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME,
-          {
-            containerType: 'list',
-            isFullScreen: true,
-            isTouchProgress: false,
-            showMenuDialog: false,
-            listSelectable: listSelectable, //单选框
-            height:
-              _toolbarParams.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[5],
-            data,
-            buttons: listSelectable
-              ? [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT]
-              : [ToolbarBtnType.THEME_CANCEL],
-          },
-        )
-      _toolbarParams.scrollListToLocation &&
-        _toolbarParams.scrollListToLocation()
-    },
-  )
+      )
+    _toolbarParams.scrollListToLocation && _toolbarParams.scrollListToLocation()
+  })
 }
 
 //通过数据集->创建栅格单值专题图

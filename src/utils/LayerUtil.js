@@ -82,7 +82,8 @@ async function getSelectionAttributeByLayer(
 
 function dealData(attributes, result = {}, page, type) {
   let tableHead = []
-  if (result.data && result.data.length > 0) {
+  let resLength = (result.data && result.data.length) || 0
+  if (resLength > 0) {
     result.data[0].forEach(item => {
       item.selected = false
       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
@@ -106,6 +107,8 @@ function dealData(attributes, result = {}, page, type) {
     attributes,
     total: result.total,
     currentPage: result.currentPage,
+    startIndex: result.startIndex,
+    resLength,
   }
 }
 

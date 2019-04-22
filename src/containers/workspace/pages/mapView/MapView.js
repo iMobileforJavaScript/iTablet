@@ -43,6 +43,7 @@ import {
   ConstInfo,
   getHeaderTitle,
 } from '../../../../constants'
+import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import { getLanguage } from '../../../../language/index'
@@ -383,7 +384,6 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
       case ConstToolType.MAP_EDIT_DEFAULT: {
-        Utils.setSelectionStyle(event.layerInfo.path)
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
             height = ConstToolType.HEIGHT[3],
@@ -982,7 +982,7 @@ export default class MapView extends React.Component {
       })
       if (mapInfo) {
         // 如果是模板地图，则加载模板
-        if (mapInfo.Template) {
+        if (mapInfo.Template && GLOBAL.Type === constants.COLLECTION) {
           this.setLoading(
             true,
             //ConstInfo.TEMPLATE_READING

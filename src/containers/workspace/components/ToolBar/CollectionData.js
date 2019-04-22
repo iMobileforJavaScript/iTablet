@@ -198,7 +198,7 @@ function getCollectionData(type, params) {
       key: 'stop',
       title: getLanguage(global.language).Map_Main_Menu.COLLECTION_STOP,
       //'停止',
-      action: () => {},
+      action: () => SCollector.stopCollect(type),
       size: 'large',
       image: require('../../../../assets/mapTools/icon_pause.png'),
       selectedImage: require('../../../../assets/mapTools/icon_collection_path_pause.png'),
@@ -364,7 +364,7 @@ async function createCollector(type) {
   }
 
   SCollector.setDataset(params).then(() => {
-    SCollector.startCollect(type)
+    // SCollector.startCollect(type)
     _params.getLayers(-1, layers => {
       _params.setCurrentLayer(layers.length > 0 && layers[0])
     })
@@ -373,6 +373,12 @@ async function createCollector(type) {
 
 async function collectionSubmit(type) {
   let result = await SCollector.submit(type)
+  switch (type) {
+    case SMCollectorType.LINE_GPS_PATH:
+    case SMCollectorType.REGION_GPS_PATH:
+      await SCollector.stopCollect()
+      break
+  }
   if (_params.template.currentTemplateInfo.layerPath) {
     SMap.setLayerFieldInfo(
       _params.template.currentTemplateInfo.layerPath,
@@ -382,12 +388,18 @@ async function collectionSubmit(type) {
   return result
 }
 
-function cancel(type) {
+async function cancel(type) {
   if (
     typeof type === 'string' &&
     type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
   ) {
     type = -1
+  }
+  switch (type) {
+    case SMCollectorType.LINE_GPS_PATH:
+    case SMCollectorType.REGION_GPS_PATH:
+      await SCollector.stopCollect()
+      break
   }
   return SCollector.cancel(type)
 }
