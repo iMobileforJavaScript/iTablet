@@ -14,7 +14,7 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 
 import { Container } from '../../../../components'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -197,7 +197,7 @@ export default class Register extends React.Component {
             clearButtonMode={'while-editing'}
             //'请输入验证码'
             placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
-            style={{ flex: 1, fontSize: fontSize }}
+            style={{ flex: 1, fontSize: scaleSize(fontSize)  }}
             defaultValue={this.txtVerifyCode}
             onChangeText={text => {
               this.txtVerifyCode = text

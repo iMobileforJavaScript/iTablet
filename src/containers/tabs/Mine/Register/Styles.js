@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
+import { scaleSize } from '../../../../utils';
 const itemWidth = '70%'
 const itemHeight = 40
-const fontSize = 16
+const fontSize = 23
 const titleOnFocusBackgroundColor = color.itemColorBlack
 const titleOnBlurBackgroundColor = color.itemColorWhite
 const styles = StyleSheet.create({
@@ -27,14 +28,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   titleContainerStyle: {
-    fontSize: fontSize,
+    fontSize: scaleSize(fontSize),
     color: color.fontColorGray,
     textAlign: 'center',
   },
   textInputStyle: {
     width: '100%',
     height: itemHeight,
-    fontSize: fontSize,
+    fontSize: scaleSize(fontSize),
     borderBottomColor: color.borderLight,
     color: color.fontColorGray,
     borderBottomWidth: 1,

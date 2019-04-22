@@ -21,7 +21,8 @@ import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import { SMap, Action } from 'imobile_for_reactnative'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
+import { color } from '../../../../styles'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
@@ -682,22 +683,22 @@ export default class LayerAttribute extends React.Component {
     switch (type) {
       case 'undo':
         if (!this.state.canBeUndo) {
-          Toast.show('已经无法回撤')
-          this.setLoading(false)
+          // Toast.show('已经无法回撤')
+          // this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
-          Toast.show('已经无法恢复')
-          this.setLoading(false)
+          // Toast.show('已经无法恢复')
+          // this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
-          Toast.show('已经无法还原')
-          this.setLoading(false)
+          // Toast.show('已经无法还原')
+          // this.setLoading(false)
           return
         }
         break
@@ -894,7 +895,12 @@ export default class LayerAttribute extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
           //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('undo')}
         />
@@ -903,7 +909,12 @@ export default class LayerAttribute extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
           //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('redo')}
         />
@@ -914,7 +925,12 @@ export default class LayerAttribute extends React.Component {
           }
           //{'还原'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_revert}
+          textColor={!this.state.canBeRevert && color.contentColorGray}
+          image={
+            this.state.canBeRevert
+              ? getThemeAssets().publicAssets.icon_revert
+              : getPublicAssets().attribute.icon_revert_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('revert')}
         />

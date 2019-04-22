@@ -209,12 +209,12 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
   }
   try {
     if (!params || !params.mapName || !params.layerPath)
-      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+      return { msg: getLanguage(global.language).Prompt[`${_type}_FAILED`], result: false }
     let attributesHistory = getState().layers.toJS().attributesHistory
     let layerHistory = {}
 
     if (attributesHistory.length === 0)
-      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+      return { msg: getLanguage(global.language).Prompt[`${_type}_FAILED`], result: false }
 
     for (let i = 0; i < attributesHistory.length; i++) {
       if (attributesHistory[i].mapName === params.mapName) {
@@ -345,17 +345,17 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
     })
     cb &&
       cb({
-        msg: ConstInfo[`${_type}_SUCCESS`],
+        msg: '成功',
         result: true,
         data: currentHistory,
       })
     return {
-      msg: ConstInfo[`${_type}_SUCCESS`],
+      msg: '成功',
       result: true,
       data: currentHistory,
     }
   } catch (e) {
-    return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+    return { msg: getLanguage(global.language).Prompt[`${_type}_FAILED`], result: false }
   }
 }
 

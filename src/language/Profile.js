@@ -108,7 +108,7 @@ const Profile_English = {
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
   ENTER_MOBILE: 'Please enter your mobile number',
-  ENTER_PASSWORD: 'Pleasr enter your password',
+  ENTER_PASSWORD: 'Please enter your password',
   REGISTER: 'Register',
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
