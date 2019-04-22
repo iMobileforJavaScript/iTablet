@@ -101,6 +101,9 @@ const Chinese = {
   UNDO_FAILED: '撤销失败',
   REDO_FAILED: '恢复失败',
   RECOVER_FAILED: '还原失败',
+
+  SETTING_SUCCESS: '设置成功',
+  SETTING_FAILED: '设置失败',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -207,6 +210,9 @@ const English = {
   UNDO_FAILED: 'Undo Failed',
   REDO_FAILED: 'Redo Failed',
   RECOVER_FAILED: 'Recover Failed',
+
+  SETTING_SUCCESS: 'Setted Successfully',
+  SETTING_FAILED: 'Setted Failed',
 }
 
 export { Chinese, English }

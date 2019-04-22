@@ -201,7 +201,7 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
-        title: getLanguage(global.language).Profile.SHARE,
+        title: getLanguage(global.language).Profile.UPLOAD_MARK,
         //'分享',
         action: () => {
           this._closeModal()
@@ -210,7 +210,7 @@ export default class MyLabel extends Component {
         },
       },
       {
-        title: getLanguage(global.language).Profile.DELETE_DATA,
+        title: getLanguage(global.language).Profile.DELETE_MARK,
         //'删除数据',
         action: () => {
           SMap.removeDatasetByName(
