@@ -197,7 +197,7 @@ export default class Register extends React.Component {
             clearButtonMode={'while-editing'}
             //'请输入验证码'
             placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
-            style={{ flex: 1, fontSize: scaleSize(fontSize)  }}
+            style={{ flex: 1, fontSize: scaleSize(fontSize) }}
             defaultValue={this.txtVerifyCode}
             onChangeText={text => {
               this.txtVerifyCode = text

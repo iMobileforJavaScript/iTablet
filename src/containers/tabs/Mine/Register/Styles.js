@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-import { scaleSize } from '../../../../utils';
+import { scaleSize } from '../../../../utils'
 const itemWidth = '70%'
 const itemHeight = 40
 const fontSize = 23

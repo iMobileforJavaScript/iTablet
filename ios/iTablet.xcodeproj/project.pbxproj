@@ -48,7 +48,6 @@
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
-		0A5F9575226D43EF00B16E89 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A5F9574226D43EF00B16E89 /* Trial_License.slm */; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
 		0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */; };
@@ -83,6 +82,7 @@
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
 		0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */; };
+		0AF34754226D9E95004D6D09 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0AF34753226D9E95004D6D09 /* Trial_License.slm */; };
 		0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF433CA224C78E4003FDADE /* SuperMap.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -531,7 +531,6 @@
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
-		0A5F9574226D43EF00B16E89 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../Trial_License.slm; sourceTree = "<group>"; };
 		0A5F9587226D662800B16E89 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
@@ -569,6 +568,7 @@
 		0AC1FA172154872E00490605 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSampleCodeBridgeModule.h; sourceTree = "<group>"; };
 		0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSampleCodeBridgeModule.m; sourceTree = "<group>"; };
+		0AF34753226D9E95004D6D09 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = SOURCE_ROOT; };
 		0AF433CA224C78E4003FDADE /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -803,7 +803,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0A5F9574226D43EF00B16E89 /* Trial_License.slm */,
+				0AF34753226D9E95004D6D09 /* Trial_License.slm */,
 				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
@@ -1641,7 +1641,7 @@
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
-				0A5F9575226D43EF00B16E89 /* Trial_License.slm in Resources */,
+				0AF34754226D9E95004D6D09 /* Trial_License.slm in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,
