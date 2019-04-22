@@ -149,6 +149,7 @@ export default class LayerSelectionAttribute extends React.Component {
             startIndex: 0,
             ...others,
           })
+          this.props.onGetAttribute && this.props.onGetAttribute(attributes)
         } else {
           let newAttributes = JSON.parse(JSON.stringify(attributes))
           let startIndex =

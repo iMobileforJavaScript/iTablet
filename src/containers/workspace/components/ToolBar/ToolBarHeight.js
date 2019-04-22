@@ -289,13 +289,13 @@ function getToorbarHeight(orientation, type) {
       break
     case SMCollectorType.LINE_GPS_PATH:
     case SMCollectorType.REGION_GPS_PATH:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[0]
-        column = 6
-      }
+      // if (orientation === 'PORTRAIT') {
+      // height = ConstToolType.HEIGHT[2]
+      column = 4
+      // } else {
+      height = ConstToolType.HEIGHT[0]
+      //   column = 6
+      // }
       break
     case SMCollectorType.LINE_HAND_PATH:
     case SMCollectorType.LINE_HAND_POINT:
