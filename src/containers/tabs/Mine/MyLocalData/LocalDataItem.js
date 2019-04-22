@@ -16,6 +16,8 @@ export default class LocalDataItem extends Component {
     let txtInfo = this.props.info.item.fileName
     let homePath = _getHomePath()
     let path = this.props.info.item.directory.substring(homePath.length)
+    let index = path.indexOf('iTablet')
+    path = path.slice(index)
     let itemHeight = scaleSize(80)
     let imageWidth = scaleSize(40),
       imageHeight = scaleSize(40)
