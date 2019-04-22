@@ -198,7 +198,7 @@ function getCollectionData(type, params) {
       key: 'stop',
       title: getLanguage(global.language).Map_Main_Menu.COLLECTION_STOP,
       //'停止',
-      action: () => SCollector.stopCollect(type),
+      action: () => SCollector.pauseCollect(type),
       size: 'large',
       image: require('../../../../assets/mapTools/icon_pause.png'),
       selectedImage: require('../../../../assets/mapTools/icon_collection_path_pause.png'),
@@ -319,8 +319,6 @@ async function createCollector(type) {
       break
     }
   }
-  //设置绘制风格
-  await SCollector.setStyle(collectorStyle)
 
   let params = {}
   if (_params.template.currentTemplateInfo.layerPath) {
@@ -363,8 +361,10 @@ async function createCollector(type) {
     }
   }
 
-  SCollector.setDataset(params).then(() => {
-    // SCollector.startCollect(type)
+  SCollector.setDataset(params).then(async () => {
+    //设置绘制风格
+    await SCollector.setStyle(collectorStyle)
+    await SCollector.initCollect(type)
     _params.getLayers(-1, layers => {
       _params.setCurrentLayer(layers.length > 0 && layers[0])
     })
