@@ -306,9 +306,11 @@ async function downFileAction(
                   }).then(result => {
                     result.mapsInfo.length > 0
                       ? Toast.show(
-                        getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                        getLanguage(global.language).Prompt.IMPORTED_SUCCESS
                       ) //'数据导入成功')
-                      : Toast.show('数据导入失败')
+                      : Toast.show(
+                        getLanguage(global.language).Prompt.FAILED_TO_IMPORT
+                      ) //'数据导入失败')
                   }))
               } else if (newData[i].fileType === 'datasource') {
                 await SMap.importDatasourceFile(newData[i].filePath).then(
@@ -317,10 +319,12 @@ async function downFileAction(
                       ? Toast.show(
                         getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
                       ) //'数据导入成功')
-                      : Toast.show('数据导入失败')
+                      : Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT
+                      ) //'数据导入失败')
                   },
                   () => {
-                    Toast.show('数据导入失败')
+                    Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT
+                    ) //'数据导入失败')
                   },
                 )
               }
@@ -333,12 +337,14 @@ async function downFileAction(
             progress: 0,
             downed: false,
           })
-          Toast.show('请求异常，导入失败')
+          Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT)
+          //'请求异常，导入失败')
         },
       )
     }
   } catch (error) {
-    Toast.show('导入失败')
+    Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT)
+    //'导入失败')
   }
 }
 

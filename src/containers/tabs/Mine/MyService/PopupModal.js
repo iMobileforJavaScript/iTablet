@@ -73,10 +73,12 @@ export default class PopupModal extends PureComponent {
             isPublish,
           )
           if (typeof result === 'boolean' && result) {
-            Toast.show('设置成功')
+            Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
+            //'设置成功')
             this._onRefresh()
           } else {
-            Toast.show('设置失败')
+            Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
+            //'设置失败')
           }
         }}
       >
@@ -110,16 +112,20 @@ export default class PopupModal extends PureComponent {
             if (typeof result === 'boolean' && result) {
               this.deleteService = true
               this._onRefresh()
-              Toast.show('删除成功')
+              Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+              //'删除成功')
             } else if (typeof result === 'boolean' && !result) {
               this.deleteService = true
               this._onRefresh()
-              Toast.show('删除成功')
+              Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+              //'删除成功')
             } else {
-              Toast.show('删除失败')
+              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+              //'删除失败')
             }
           } catch (error) {
-            Toast.show('删除失败')
+            Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+            //'删除失败')
           }
         }}
       >
