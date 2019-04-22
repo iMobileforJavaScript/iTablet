@@ -599,10 +599,10 @@ export default class LayerManager_item extends React.Component {
     let select = 'transparent'
     let selectcolor = color.black
     let visibleImg = visibleImgBlack
-    let moreImg = require('../../../../assets/function/icon_shallow_more_black.png')
+    let moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     let image = this.getStyleIconByType(this.props.data)
     if (this.props.selectLayer === this.props.data.caption) {
-      select = '#rgba(0,157,249,1)'
+      select = '#4680df'
       selectcolor = color.white
       visibleImg = visibleImgWhite
       moreImg = require('../../../../assets/function/icon_shallow_more.png')
@@ -610,7 +610,7 @@ export default class LayerManager_item extends React.Component {
       select = 'transparent'
       selectcolor = color.black
       visibleImg = visibleImgBlack
-      moreImg = require('../../../../assets/function/icon_shallow_more_black.png')
+      moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     }
     return (
       <TouchableOpacity
