@@ -28,11 +28,12 @@ export default class LayerSelectionAttribute extends React.Component {
     selectAction: () => {},
     setAttributeHistory: () => {},
     onGetAttribute?: () => {},
+    onGetToolVisible?: () => {},
   }
 
   constructor(props) {
     super(props)
-    let checkData = this.checkToolIsViable()
+    this.checkToolIsViable()
     this.state = {
       attributes: {
         head: [],
@@ -44,10 +45,6 @@ export default class LayerSelectionAttribute extends React.Component {
       startIndex: 0,
       relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
-
-      canBeUndo: checkData.canBeUndo,
-      canBeRedo: checkData.canBeRedo,
-      canBeRevert: checkData.canBeRevert,
     }
 
     this.total = 0
@@ -604,10 +601,27 @@ export default class LayerSelectionAttribute extends React.Component {
       }
     }
 
+    this.canBeUndo = LayerUtil.canBeUndo(historyObj)
+    this.canBeRedo = LayerUtil.canBeRedo(historyObj)
+    this.canBeRevert = LayerUtil.canBeRevert(historyObj)
+
+    if (
+      this.props.onGetToolVisible &&
+      typeof this.props.onGetToolVisible === 'function'
+    ) {
+      this.props.onGetToolVisible({
+        canBeUndo: this.canBeUndo,
+        canBeRedo: this.canBeRedo,
+        canBeRevert: this.canBeRevert,
+      })
+    }
+  }
+
+  getToolIsViable = () => {
     return {
-      canBeUndo: LayerUtil.canBeUndo(historyObj),
-      canBeRedo: LayerUtil.canBeRedo(historyObj),
-      canBeRevert: LayerUtil.canBeRevert(historyObj),
+      canBeUndo: this.canBeUndo,
+      canBeRedo: this.canBeRedo,
+      canBeRevert: this.canBeRevert,
     }
   }
 
@@ -670,10 +684,9 @@ export default class LayerSelectionAttribute extends React.Component {
               attributes.data[0][data.index].value = data.value
             }
 
-            let checkData = this.checkToolIsViable()
+            this.checkToolIsViable()
             this.setState({
               attributes,
-              ...checkData,
             })
           }
         })
@@ -684,23 +697,23 @@ export default class LayerSelectionAttribute extends React.Component {
     if (!type) return
     switch (type) {
       case 'undo':
-        if (!this.state.canBeUndo) {
-          Toast.show('已经无法回撤')
-          this.setLoading(false)
+        if (!this.canBeUndo) {
+          // Toast.show('已经无法回撤')
+          // this.setLoading(false)
           return
         }
         break
       case 'redo':
-        if (!this.state.canBeRedo) {
-          Toast.show('已经无法恢复')
-          this.setLoading(false)
+        if (!this.canBeRedo) {
+          // Toast.show('已经无法恢复')
+          // this.setLoading(false)
           return
         }
         break
       case 'revert':
-        if (!this.state.canBeRevert) {
-          Toast.show('已经无法还原')
-          this.setLoading(false)
+        if (!this.canBeRevert) {
+          // Toast.show('已经无法还原')
+          // this.setLoading(false)
           return
         }
         break
@@ -732,10 +745,9 @@ export default class LayerSelectionAttribute extends React.Component {
                         if (_data[0].value === fieldInfo[j].smID) {
                           _data[fieldInfo[j].columnIndex - 1].value =
                             fieldInfo[j].value
-                          let checkData = this.checkToolIsViable()
+                          this.checkToolIsViable()
                           this.setState({
                             attributes,
-                            ...checkData,
                           })
                           break
                         }
@@ -754,11 +766,10 @@ export default class LayerSelectionAttribute extends React.Component {
                   }
                 }
               }
-              let checkData = this.checkToolIsViable()
+              this.checkToolIsViable()
               this.setState(
                 {
                   attributes,
-                  ...checkData,
                 },
                 () => {
                   this.setLoading(false)
