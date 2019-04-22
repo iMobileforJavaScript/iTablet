@@ -184,6 +184,7 @@ class Chat extends React.Component {
       },
       type: msg.type,
       message: msg.msg,
+      system: msg.system,
     }
 
     if (msg.msg.type) {
@@ -372,54 +373,13 @@ class Chat extends React.Component {
   showInformSpot = b => {
     this.setState({ showInformSpot: b })
   }
-  onReceive(text, bSystem) {
-    let messageObj = JSON.parse(text)
-    let msgId = this.friend.getMsgId(this.targetUser.id) - 1
-    let msg = {}
-    if (!messageObj.message.type) {
-      //特殊处理文本消息
-      msg = {
-        _id: msgId,
-        text: messageObj.message,
-        createdAt: new Date(messageObj.time),
-        system: bSystem,
-        user: {
-          _id: messageObj.user.id,
-          name: messageObj.user.name,
-          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-        },
-        type: messageObj.type,
-        message: messageObj.message,
-      }
-    } else {
-      msg = {
-        _id: msgId,
-        text: messageObj.message.message.message,
-        createdAt: new Date(messageObj.time),
-        system: bSystem,
-        user: {
-          _id: messageObj.user.id,
-          name: messageObj.user.name,
-          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-        },
-        type: messageObj.type,
-        message: messageObj.message,
-      }
-      if (messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
-        //文件通知
-        msg.message.message.isReceived = 0
-      } else if (messageObj.message.type === MSGConstant.MSG_LOCATION) {
-        //位置
-        msg.location = {
-          latitude: messageObj.message.message.latitude,
-          longitude: messageObj.message.message.longitude,
-        }
-      }
-    }
-
+  onReceive(msgId) {
+    let talkId = this.targetUser.id
+    let msg = this.friend.getMsgByMsgId(talkId, msgId)
+    let chatMsg = this._loadChatMsg(msg)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
         showInformSpot: false,
       }
     })

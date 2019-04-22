@@ -210,7 +210,7 @@ export default class Friend extends Component {
       message: messageObj.message,
       time: messageObj.time,
       type: messageObj.type,
-      system: messageObj.system,
+      unReadMsg: messageObj.unReadMsg,
       msgId: msgId,
     })
   }
@@ -320,21 +320,35 @@ export default class Friend extends Component {
         return
       }
 
-      let bSystem = false
-      //系统消息
-      if (messageObj.type > 910 && messageObj.type < 930) {
-        bSystem = true
-      }
-
       if (!FriendListFileHandle.friends) {
         await this.getContacts()
       }
 
-      //个人,或者群组
-      if (messageObj.type < 9) {
+      let bSystem = false
+      let bUnReadMsg = false
+      let msgId = 0
+      let bSysStore = false //系统消息是否保存
+      let bSysShow = false //系统消息是否显示在聊天窗口
+      //系统消息
+      if (messageObj.type > 9) {
+        bSystem = true
+      }
+      if (
+        !this.curChat ||
+        this.curChat.targetUser.id !== messageObj.user.groupID //个人会话这个ID和groupID是同一个，就用一个吧
+      ) {
+        bUnReadMsg = true
+      }
+      if (messageObj.type === 2) {
+        msgId = this.getMsgId(messageObj.user.groupID)
+      } else {
+        msgId = this.getMsgId(messageObj.user.id)
+      }
+
+      if (!bSystem) {
         //非通知消息，判断是否接收
         let obj = undefined
-        if (messageObj.type === 1 || messageObj.type === 4) {
+        if (messageObj.type === 1) {
           obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
         } else if (messageObj.type === 2) {
           obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
@@ -348,9 +362,9 @@ export default class Friend extends Component {
           let time = Date.parse(ctime)
           let message = {
             message: '对方还未添加您为好友',
-            type: 920,
+            type: MSGConstant.MSG_REJECT,
             user: {
-              name: this.props.user.currentUser.name,
+              name: this.props.user.currentUser.userName,
               id: this.props.user.currentUser.userId,
               groupID: this.props.user.currentUser.userId,
             },
@@ -362,36 +376,6 @@ export default class Friend extends Component {
           )
           return
         }
-      }
-
-      if (!bSystem) {
-        let bUnReadMsg = false
-        if (
-          !this.curChat ||
-          this.curChat.targetUser.id !== messageObj.user.groupID || //个人会话这个ID和groupID是同一个，就用一个吧
-          messageObj.type > 9
-        ) {
-          bUnReadMsg = true
-        }
-
-        // let chatHistory = []
-        // let msgId = 0
-        // if (messageObj.type === 2 && this.props.chat[userId]
-        //     && this.props.chat[userId][messageObj.user.groupID]) {
-        //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
-        //       .history
-        // } else if ( this.props.chat[userId] && this.props.chat[userId][messageObj.user.id] ) {
-        //     chatHistory = this.props.chat[userId][messageObj.user.id].history
-        // }
-        // if (chatHistory.length !== 0) {
-        //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
-        // }
-        let msgId = 0
-        if (messageObj.type === 2) {
-          msgId = this.getMsgId(messageObj.user.groupID)
-        } else {
-          msgId = this.getMsgId(messageObj.user.id)
-        }
 
         //文件通知消息
         if (
@@ -400,21 +384,12 @@ export default class Friend extends Component {
         ) {
           messageObj.message.message.isReceived = 0
         }
-
-        MessageDataHandle.pushMessage({
-          userId: userId, //当前登录账户的id
-          talkId: messageObj.user.groupID, //会话ID
-          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type, //消息类型
-          unReadMsg: bUnReadMsg,
-          msgId: msgId,
-          isReceived: 0,
-        })
       } else {
         //to do 系统消息，做处理机制
-        if (messageObj.type === 912) {
+        if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
+          bSysStore = true
+        }
+        if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
           //加入群
           let groupName = ''
           for (let i in messageObj.members) {
@@ -430,17 +405,27 @@ export default class Friend extends Component {
           })
           return
         }
-      }
-      // eslint-disable-next-line
-      if (this.curChat) {
-        if (this.curChat.targetUser.id === messageObj.user.groupID) {
-          this.curChat.onReceive(message['message'], bSystem)
-        } else {
-          this.curChat.showInformSpot(true)
+        if (messageObj.type === MSGConstant.MSG_REJECT) {
+          bSysStore = true
+          bSysShow = true
         }
       }
-
-      // this.refresh()
+      //保存
+      if ((bSystem && bSysStore) || !bSystem) {
+        messageObj.unReadMsg = bUnReadMsg
+        this.storeMessage(messageObj, messageObj.user.groupID, msgId)
+      }
+      //显示
+      if ((bSystem && bSysShow) || !bSystem) {
+        if (this.curChat) {
+          //在当前聊天窗口,则显示这条消息
+          if (this.curChat.targetUser.id === messageObj.user.groupID) {
+            this.curChat.onReceive(msgId)
+          } else {
+            this.curChat.showInformSpot(true)
+          }
+        }
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
+import MSGConstant from '../../src/containers/tabs/Friend/MsgConstant'
 // Constants
 // --------------------------------------------------
 export const ADD_CHAT = 'ADD_CHAT'
@@ -75,7 +76,7 @@ export default handleActions(
 
       let chats
 
-      if (payload.type > 9) {
+      if (payload.type === MSGConstant.MSG_ADD_FRIEND) {
         //inform
         if (currentUser.hasOwnProperty(1) === false) {
           currentUser[1] = { unReadMsg: 0, history: [] }
@@ -97,6 +98,10 @@ export default handleActions(
       } else if (payload.operate === 'del') {
         delete currentUser[payload.talkId]
       } else if (payload.operate === 'add') {
+        let bSystem = true
+        if (payload.type < 9) {
+          bSystem = false
+        }
         let pushMsg = {
           msg: payload.message,
           time: payload.time,
@@ -105,6 +110,7 @@ export default handleActions(
           id: payload.messageUsr.id,
           unReadMsg: payload.unReadMsg,
           msgId: payload.msgId,
+          system: bSystem,
         }
         chats.history.push(pushMsg)
 

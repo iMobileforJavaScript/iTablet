@@ -99,7 +99,7 @@ class FriendGroup extends Component {
 
   getContacts = async () => {
     let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + this.props.user.userName,
+      ConstPath.UserPath + this.props.user.userName + '/Data/Temp',
     )
 
     FriendListFileHandle.getContacts(userPath, 'friend.list', results => {

@@ -9,8 +9,13 @@ export default {
   // MSG_HostName: '/',
   // MSG_UserName: 'admin',
   // MSG_Password: 'admin',
+  //整个message的type
   MSG_SINGLE: 1, //单人消息
   MSG_GROUP: 2, //群组消息
+  MSG_ADD_FRIEND: 901, //添加好友
+  MSG_CREATE_GROUP: 912, //创建群
+  MSG_REJECT: 920, //拒收
+  //message中的message的type
   MSG_FILE: 3, //文件本体
   MSG_FILE_NOTIFY: 6, //文件接收通知
   MSG_LOCATION: 10, //位置
