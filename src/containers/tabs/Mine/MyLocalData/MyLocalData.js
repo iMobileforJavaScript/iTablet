@@ -27,7 +27,7 @@ import {
 } from './Method'
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, FetchUtils } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
     language: string,
@@ -351,14 +351,29 @@ export default class MyLocalData extends Component {
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '  服务发布成功')
+        // Toast.show(this.itemInfo.fileName + '  服务发布成功')
       } else {
-        Toast.show('服务发布失败')
+        // Toast.show('服务发布失败')
       }
     } catch (e) {
       Toast.show('网络错误')
     } finally {
       this.setLoading(false)
+    }
+  }
+
+  //发布服务后可以通过id获取item发布服务状态
+  addListenOfPublish = async id => {
+    let dataUrl = 'https://www.supermapol.com/web/datas/' + id + '.json'
+    let objDataJson = await FetchUtils.getObjJson(dataUrl)
+    if (objDataJson) {
+      if (objDataJson.serviceStatus === 'PUBLISHED') {
+        Toast.show('服务发布成功')
+        return true
+      } else if (objDataJson.serviceStatus === 'PUBLISH_FAILED') {
+        Toast.show('服务发布失败')
+        return false
+      }
     }
   }
 

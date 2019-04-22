@@ -119,7 +119,6 @@ export default class MyLabel extends Component {
 
   uploadDialog = name => {
     this.dialog.setDialogVisible(false)
-    Toast.show('分享中')
     this.upload(name)
   }
 
@@ -193,7 +192,7 @@ export default class MyLabel extends Component {
         }
       }
     } catch (error) {
-      Toast.show('分享失败，请检查网络')
+      Toast.show('分享失败')
       this.container.setLoading(false)
     }
   }
