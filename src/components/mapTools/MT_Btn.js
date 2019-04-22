@@ -147,8 +147,8 @@ export default class MT_Btn extends React.Component {
               style={[
                 textStyle,
                 this.props.textStyle,
-                { color: this.props.textColor },
-                { marginTop: this.props.separator },
+                this.props.textColor && { color: this.props.textColor },
+                this.props.separator && { marginTop: this.props.separator },
               ]}
             >
               {this.props.title}
