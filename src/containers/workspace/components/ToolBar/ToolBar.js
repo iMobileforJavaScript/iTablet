@@ -2531,15 +2531,12 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-      // if (type === ConstToolType.) {
-      //   SMap.setAction(Action.PAN)
-      // } else if (
-      //   typeof type === 'number' ||
-      //   (typeof type === 'string' && type.indexOf('MAP_') >= -1)
-      // ) {
-      //   // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-      //   SMap.setAction(Action.PAN)
-      // }
+
+      // 当前为采集状态
+      if (typeof type === 'number') {
+        await SCollector.stopCollect()
+      }
+
       if (
         typeof type === 'string' &&
         type.indexOf('MAP_EDIT_') >= 0 &&
@@ -2661,16 +2658,22 @@ export default class ToolBar extends React.PureComponent {
 
   changeCollection = () => {
     SCollector.stopCollect()
-    let toolbarType
+    let toolbarType, action
     switch (this.lastState.type) {
-      case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_GPS_PATH:
+        toolbarType = ConstToolType.MAP_COLLECTION_REGION
+        action = () => SCollector.stopCollect()
+        break
+      case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_HAND_PATH:
       case SMCollectorType.REGION_HAND_POINT:
         toolbarType = ConstToolType.MAP_COLLECTION_REGION
         break
-      case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_GPS_PATH:
+        toolbarType = ConstToolType.MAP_COLLECTION_LINE
+        action = () => SCollector.stopCollect()
+        break
+      case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_HAND_POINT:
       case SMCollectorType.LINE_HAND_PATH:
         toolbarType = ConstToolType.MAP_COLLECTION_LINE
@@ -2686,6 +2689,9 @@ export default class ToolBar extends React.PureComponent {
       height: ConstToolType.HEIGHT[0],
       cb: () => {
         this.setLastState()
+        if (action && typeof action === 'function') {
+          action()
+        }
       },
     })
   }
