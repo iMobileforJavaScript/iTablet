@@ -9,8 +9,7 @@ import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
-//eslint-disable-next-line
-import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import {
@@ -26,6 +25,8 @@ import { getLanguage } from '../../../../language/index'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
+const ROWS_LIMIT = 100
+const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttribute extends React.Component {
   props: {
@@ -200,6 +201,7 @@ export default class LayerAttribute extends React.Component {
       attributes => {
         cb && cb()
         this.isLoading = false
+        this.canBeRefresh = this.state.startIndex > 0
         if (!attributes || !attributes.data || attributes.data.length <= 0) {
           this.noMore = true
           Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -251,19 +253,84 @@ export default class LayerAttribute extends React.Component {
             ...others,
           })
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
-          this.setState({
-            showTable: true,
-            attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
-            currentFieldInfo: attributes.data[relativeIndex],
-            ...others,
-          })
+          let newAttributes = JSON.parse(JSON.stringify(attributes))
+          let startIndex =
+            others.startIndex >= 0
+              ? others.startIndex
+              : this.state.startIndex || 0
+          // 截取数据，最多显示 ROWS_LIMIT 行
+          if (attributes.data.length > ROWS_LIMIT) {
+            if (type === 'refresh') {
+              newAttributes.data = newAttributes.data.slice(0, ROWS_LIMIT)
+              startIndex = result.startIndex
+            } else {
+              startIndex = result.startIndex + result.resLength - ROWS_LIMIT
+              startIndex =
+                parseInt((startIndex / PAGE_SIZE).toFixed()) * PAGE_SIZE
+
+              let sliceStartIndex = 0
+              if (attributes.data.length >= ROWS_LIMIT) {
+                sliceStartIndex =
+                  parseInt(
+                    (
+                      (attributes.data.length - ROWS_LIMIT) /
+                      PAGE_SIZE
+                    ).toFixed(),
+                  ) * PAGE_SIZE
+              }
+              newAttributes.data = newAttributes.data.slice(
+                sliceStartIndex,
+                attributes.data.length,
+              )
+            }
+          }
+
+          let currentIndex = resetCurrent
+            ? -1
+            : others.currentIndex !== undefined
+              ? others.currentIndex
+              : this.state.currentIndex
+          let relativeIndex =
+            resetCurrent || currentIndex < 0 ? -1 : currentIndex - startIndex
+          // : currentIndex - startIndex - 1
+          let prevStartIndex = this.state.startIndex
+          this.setState(
+            {
+              showTable: true,
+              attributes: newAttributes,
+              currentIndex,
+              relativeIndex,
+              currentFieldInfo:
+                relativeIndex >= 0 && relativeIndex < newAttributes.data.length
+                  ? newAttributes.data[relativeIndex]
+                  : this.state.currentFieldInfo,
+              startIndex,
+              // ...others,
+            },
+            () => {
+              if (type === 'refresh') {
+                this.table &&
+                  this.table.scrollToLocation({
+                    animated: false,
+                    itemIndex: prevStartIndex - startIndex,
+                    sectionIndex: 0,
+                    viewPosition: 0,
+                    viewOffset: COL_HEIGHT,
+                  })
+              } else if (type === 'loadMore') {
+                this.table &&
+                  this.table.scrollToLocation({
+                    animated: false,
+                    itemIndex: newAttributes.data.length - result.resLength,
+                    sectionIndex: 0,
+                    viewPosition: 1,
+                  })
+              }
+              this.setLoading(false)
+              cb && cb(attributes)
+            },
+          )
         }
-        this.setLoading(false)
-        cb && cb(attributes)
       } catch (e) {
         this.isLoading = false
         this.setLoading(false)
@@ -289,7 +356,7 @@ export default class LayerAttribute extends React.Component {
           this.locationView && this.locationView.show(false)
           this.table &&
             this.table.scrollToLocation({
-              animated: true,
+              animated: false,
               itemIndex: 0,
               sectionIndex: 0,
               viewPosition: 0,
@@ -307,20 +374,23 @@ export default class LayerAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          let item = this.table.setSelected(0, false)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          this.locationView && this.locationView.show(false)
-          this.canBeRefresh = false
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: 0,
-              sectionIndex: 0,
-              viewPosition: 0,
+          // 等表格中的数据变化
+          setTimeout(() => {
+            let item = this.table.setSelected(0, false)
+            this.setState({
+              currentFieldInfo: item.data,
             })
-          this.setLoading(false)
+            this.locationView && this.locationView.show(false)
+            this.canBeRefresh = false
+            this.table &&
+              this.table.scrollToLocation({
+                animated: false,
+                itemIndex: 0,
+                sectionIndex: 0,
+                viewPosition: 0,
+              })
+            this.setLoading(false)
+          }, 0)
         },
       )
     }
@@ -349,21 +419,24 @@ export default class LayerAttribute extends React.Component {
         currentIndex: this.total - 1,
       },
       () => {
-        if (this.table) {
-          let item = this.table.setSelected(remainder, false)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: remainder,
-              sectionIndex: 0,
-              viewOffset: 0,
-              viewPosition: 1,
+        // 等表格中的数据变化
+        setTimeout(() => {
+          if (this.table) {
+            let item = this.table.setSelected(remainder, false)
+            this.setState({
+              currentFieldInfo: item.data,
             })
-        }
-        this.setLoading(false)
+            this.table &&
+              this.table.scrollToLocation({
+                animated: false,
+                itemIndex: remainder,
+                sectionIndex: 0,
+                viewOffset: 0,
+                viewPosition: 1,
+              })
+          }
+          this.setLoading(false)
+        }, 100)
       },
     )
     this.locationView && this.locationView.show(false)
@@ -374,47 +447,52 @@ export default class LayerAttribute extends React.Component {
    * @param data {value, inputValue}
    */
   locateToPosition = (data = {}) => {
-    let remainder = 0,
-      viewPosition = 0.3,
+    let viewPosition = 0.3,
       relativeIndex,
-      currentIndex
+      currentIndex,
+      startIndex = this.state.startIndex
     if (data.type === 'relative') {
-      relativeIndex =
-        (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
-        // this.currentPage * PAGE_SIZE +
-        this.state.startIndex +
-        data.index
-      if (relativeIndex < 0 || relativeIndex >= this.total) {
+      // 相对定位
+      currentIndex = this.state.currentIndex + data.index
+      if (currentIndex < 0 || currentIndex >= this.total) {
         Toast.show('位置越界')
         return
       }
-      currentIndex = this.state.currentIndex + data.index
-      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
-      remainder = relativeIndex % PAGE_SIZE
+      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
+
+      if (
+        currentIndex >= this.state.startIndex &&
+        currentIndex < this.state.startIndex + this.state.attributes.data.length
+      ) {
+        // 定位在当前显示数据范围内
+        relativeIndex = this.state.relativeIndex + data.index
+      } else {
+        // 定位在当前显示数据范围外
+        startIndex = this.currentPage * PAGE_SIZE
+        relativeIndex = currentIndex - startIndex
+      }
     } else if (data.type === 'absolute') {
+      // 绝对定位
       if (data.index <= 0 || data.index > this.total) {
         Toast.show('位置越界')
         return
       }
-      relativeIndex = data.index - 1
-      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
-      remainder = relativeIndex % PAGE_SIZE
-      currentIndex = data.index
+      this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
+      if (
+        data.index >= this.state.startIndex &&
+        data.index < this.state.startIndex + this.state.attributes.data.length
+      ) {
+        // 定位在当前显示数据范围内
+        relativeIndex = data.index - 1 - this.state.startIndex
+      } else {
+        // 定位在当前显示数据范围外
+        startIndex = this.currentPage * PAGE_SIZE
+        relativeIndex = data.index - 1 - startIndex
+      }
+      currentIndex = data.index - 1
     }
 
     this.setLoading(true, ConstInfo.LOCATING)
-    // if (this.currentPage > 0) {
-    //   this.canBeRefresh = true
-    // }
-
-    let restLength = this.total - relativeIndex - 1
-    if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
-      viewPosition = 0
-    } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
-      viewPosition = 1
-    }
-
-    let startIndex = this.currentPage * PAGE_SIZE
     if (startIndex !== 0) {
       this.canBeRefresh = true
     }
@@ -424,21 +502,21 @@ export default class LayerAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        relativeIndex: remainder,
+        relativeIndex: relativeIndex,
         currentIndex,
       },
       () => {
         if (this.table) {
-          let item = this.table.setSelected(remainder, false)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          // 避免 Android 更新数据后无法滚动
           setTimeout(() => {
+            // 避免 Android 更新数据后无法滚动
+            let item = this.table.setSelected(relativeIndex, false)
+            this.setState({
+              currentFieldInfo: item.data,
+            })
             this.table &&
               this.table.scrollToLocation({
-                animated: true,
-                itemIndex: remainder,
+                animated: false,
+                itemIndex: relativeIndex,
                 sectionIndex: 0,
                 viewPosition: viewPosition,
                 viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
@@ -457,7 +535,7 @@ export default class LayerAttribute extends React.Component {
       this.setState({
         currentFieldInfo: data,
         relativeIndex: index,
-        currentIndex: this.currentPage * PAGE_SIZE + index,
+        currentIndex: this.state.startIndex + index,
       })
     } else {
       this.setState({
@@ -521,6 +599,9 @@ export default class LayerAttribute extends React.Component {
                 value: data.value,
                 index: data.index,
                 columnIndex: data.columnIndex,
+                smID: isSingleData
+                  ? this.state.attributes.data[0][0].value
+                  : data.rowData[1].value,
               },
             ],
             prevData: [
@@ -529,6 +610,9 @@ export default class LayerAttribute extends React.Component {
                 value: isSingleData ? data.rowData.value : data.cellData.value,
                 index: data.index,
                 columnIndex: data.columnIndex,
+                smID: isSingleData
+                  ? this.state.attributes.data[0][0].value
+                  : data.rowData[1].value,
               },
             ],
             params: {
@@ -553,6 +637,7 @@ export default class LayerAttribute extends React.Component {
               attributes.data[data.index][data.columnIndex - 1].value =
                 data.value
             } else {
+              // 单条数据修改属性
               attributes.data[0][data.index].value = data.value
             }
 
@@ -631,49 +716,68 @@ export default class LayerAttribute extends React.Component {
             if (result) {
               let attributes = JSON.parse(JSON.stringify(this.state.attributes))
 
-              if (data.length === 1) {
-                let fieldInfo = data[0].fieldInfo
-                if (this.state.attributes.data.length > 1) {
-                  if (
-                    attributes.data[fieldInfo[0].index][
-                      fieldInfo[0].columnIndex - 1
-                    ].name === fieldInfo[0].name &&
-                    attributes.data[fieldInfo[0].index][
-                      fieldInfo[0].columnIndex - 1
-                    ].value === fieldInfo[0].value
-                  ) {
-                    this.setAttributeHistory(type)
-                    return
-                  }
-                } else {
-                  if (
-                    attributes.data[0][fieldInfo[0].index].name ===
-                      fieldInfo[0].name &&
-                    attributes.data[0][fieldInfo[0].index].value ===
-                      fieldInfo[0].value
-                  ) {
-                    this.setAttributeHistory(type)
-                    return
-                  }
-                }
-              }
+              // if (data.length === 1) {
+              //   let fieldInfo = data[0].fieldInfo
+              //   if (this.state.attributes.data.length > 1) {
+              //     if (
+              //       attributes.data[fieldInfo[0].index][
+              //         fieldInfo[0].columnIndex - 1
+              //       ].name === fieldInfo[0].name &&
+              //       attributes.data[fieldInfo[0].index][
+              //         fieldInfo[0].columnIndex - 1
+              //       ].value === fieldInfo[0].value
+              //     ) {
+              //       this.setAttributeHistory(type)
+              //       return
+              //     }
+              //   } else {
+              //     if (
+              //       attributes.data[0][fieldInfo[0].index].name ===
+              //         fieldInfo[0].name &&
+              //       attributes.data[0][fieldInfo[0].index].value ===
+              //         fieldInfo[0].value
+              //     ) {
+              //       this.setAttributeHistory(type)
+              //       return
+              //     }
+              //   }
+              // }
 
               for (let i = 0; i < data.length; i++) {
                 let fieldInfo = data[i].fieldInfo
                 for (let j = 0; j < fieldInfo.length; j++) {
                   if (this.state.attributes.data.length > 1) {
                     if (
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].name === fieldInfo[j].name &&
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].value !== fieldInfo[j].value
+                      attributes.data[0][0].value <= fieldInfo[j].smID &&
+                      attributes.data[attributes.data.length - 1][0].value >=
+                        fieldInfo[j].smID
                     ) {
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].value = fieldInfo[j].value
+                      for (let _data of attributes.data) {
+                        if (_data[0].value === fieldInfo[j].smID) {
+                          _data[fieldInfo[j].columnIndex - 1].value =
+                            fieldInfo[j].value
+                          let checkData = this.checkToolIsViable()
+                          this.setState({
+                            attributes,
+                            ...checkData,
+                          })
+                          break
+                        }
+                      }
                     }
+
+                    // if (
+                    //   attributes.data[fieldInfo[j].index][
+                    //     fieldInfo[j].columnIndex - 1
+                    //   ].name === fieldInfo[j].name &&
+                    //   attributes.data[fieldInfo[j].index][
+                    //     fieldInfo[j].columnIndex - 1
+                    //   ].value !== fieldInfo[j].value
+                    // ) {
+                    //   attributes.data[fieldInfo[j].index][
+                    //     fieldInfo[j].columnIndex - 1
+                    //   ].value = fieldInfo[j].value
+                    // }
                   } else {
                     if (
                       attributes.data[0][fieldInfo[j].index].name ===

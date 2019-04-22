@@ -383,7 +383,6 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
       case ConstToolType.MAP_EDIT_DEFAULT: {
-        Utils.setSelectionStyle(event.layerInfo.path)
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
             height = ConstToolType.HEIGHT[3],

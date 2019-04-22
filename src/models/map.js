@@ -148,7 +148,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
     }
 
     // 另存为 和 未打开一幅已命名的地图，则需要重新设置当前地图
-    if (!params.isNew && curMapName !== mapName) {
+    if (!params.isNew || curMapName !== mapName) {
       await dispatch({
         type: SET_CURRENT_MAP,
         payload: { path, name: mapName },
