@@ -10,8 +10,6 @@ import {
   Image,
   TouchableOpacity,
   Animated,
-  NativeModules,
-  NativeEventEmitter,
 } from 'react-native'
 import {
   GiftedChat,
@@ -25,9 +23,7 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
-// eslint-disable-next-line import/no-unresolved
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
-import { ConstPath, EventConst } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
@@ -39,9 +35,6 @@ let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
   Top = scaleSize(80)
 }
-
-const SMessageServiceiOS = NativeModules.SMessageService
-const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 
 class Chat extends React.Component {
   props: {
@@ -101,26 +94,6 @@ class Chat extends React.Component {
         messages: curMsg,
       }
     })
-
-    if (Platform.OS === 'iOS') {
-      this.listener = iOSEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-        this.onReceiveProgress,
-      )
-      this.listener = iOSEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_SEND_FILE,
-        this.onReceiveProgress,
-      )
-    } else {
-      this.listener = RCTDeviceEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-        this.onReceiveProgress,
-      )
-      this.listener = RCTDeviceEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_SEND_FILE,
-        this.onReceiveProgress,
-      )
-    }
   }
 
   onReceiveProgress(value) {
@@ -128,20 +101,20 @@ class Chat extends React.Component {
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
           m.message.message.progress = value.percentage
+          if (value.percentage === 100) {
+            m.message.message.isReceived = 1
+          }
         }
         return {
           ...m,
         }
       }),
     })
-
-    this.friend.onReceiveProgress(value)
   }
 
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
-    this.listener.remove()
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -393,19 +366,6 @@ class Chat extends React.Component {
       this.targetUser.id,
       message._id,
     )
-    this.setState(previousState => {
-      let length = previousState.messages
-      let i = 0
-      for (; i < length; i++) {
-        if (previousState.messages[i]._id === message._id) {
-          break
-        }
-      }
-      previousState.messages[i].message.message.isReceived = 1
-      return {
-        messages: previousState.messages,
-      }
-    })
   }
   async onLongPress(context, message) {
     if (message.message.type) {
