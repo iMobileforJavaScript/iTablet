@@ -253,9 +253,10 @@ export default class LayerManager_tolbar extends React.Component {
     if (section.action) {
       (async function() {
         await section.action()
-        this.props.getLayers()
+        // this.props.getLayers()
         this.setVisible(false)
       }.bind(this)())
+      this.props.getLayers()
     }
     if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_REMOVE
