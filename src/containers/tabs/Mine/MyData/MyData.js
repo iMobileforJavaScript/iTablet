@@ -567,7 +567,6 @@ export default class MyLocalData extends Component {
               ConstPath.RelativeFilePath.ExportData +
               fileName +
               '.zip'
-            GLOBAL.shareFilePath = targetPath
           } else {
             zipResult = await FileTools.zipFiles(archivePaths, targetPath)
           }
@@ -582,6 +581,7 @@ export default class MyLocalData extends Component {
               .then(result => {
                 !result && Toast.show('所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
+                this.setLoading(false)
               })
         } else if (type === 'online') {
           if (
@@ -628,8 +628,8 @@ export default class MyLocalData extends Component {
                   name + ' ' + result || result === undefined
                     ? getLanguage(this.props.language).Prompt.SHARE_SUCCESS
                     : //'分享成功'
-                    getLanguage(this.props.language).Prompt.SHARE_FAILED
-                    //'分享失败',
+                    getLanguage(this.props.language).Prompt.SHARE_FAILED,
+                  //'分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
               },
@@ -801,7 +801,8 @@ export default class MyLocalData extends Component {
             Toast.show(getLanguage(this.props.language).Prompt.EXPORT_SUCCESS)
           //'导出成功')
         } else {
-          showToast && Toast.show(getLanguage(this.props.language).Prompt.EXPORT_FAILED)
+          showToast &&
+            Toast.show(getLanguage(this.props.language).Prompt.EXPORT_FAILED)
           //'导出失败')
         }
         exportResult = result

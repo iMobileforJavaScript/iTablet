@@ -27,7 +27,7 @@ import {
 } from './Method'
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, FetchUtils } from '../../../../utils'
 export default class MyLocalData extends Component {
   props: {
     language: string,
@@ -142,9 +142,9 @@ export default class MyLocalData extends Component {
     }
   }
 
-  changgeHearShowItem = title => {
+  changeHearShowItem = title => {
     let sectionData = [...this.state.sectionData]
-    for (let i = 0; i < sectionData && sectionData.length; i++) {
+    for (let i = 0; i < sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
         if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
@@ -181,7 +181,7 @@ export default class MyLocalData extends Component {
     return (
       <LocalDtaHeader
         info={info}
-        changgeHearShowItem={this.changgeHearShowItem}
+        changeHearShowItem={this.changeHearShowItem}
       />
     )
   }
@@ -337,7 +337,7 @@ export default class MyLocalData extends Component {
 
   _onPublishService = async () => {
     // this.setLoading(true, '发布服务中...')
-    Toast.show( getLanguage(this.props.language).Prompt.PUBLISHING )
+    Toast.show(getLanguage(this.props.language).Prompt.PUBLISHING)
     //'发布服务中...')
     this.setState({ modalIsVisible: false })
     try {
@@ -348,16 +348,14 @@ export default class MyLocalData extends Component {
         let oldOnline = sectionData[sectionData.length - 1]
         let oldData = oldOnline.data
         let objContent = oldData[this.itemInfo.index]
+        objContent.serviceStatus = 'PUBLISHED'
         let arrDataItemServices = objContent.dataItemServices
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '  '+
-        getLanguage(this.props.language).Prompt.PUBLISH_SUCCESS )
-        //服务发布成功')
+        // Toast.show(this.itemInfo.fileName + '  服务发布成功')
       } else {
-        Toast.show(getLanguage(this.props.language).Prompt.PUBLISH_FAILED )
-        //'服务发布失败')
+        // Toast.show('服务发布失败')
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -366,9 +364,24 @@ export default class MyLocalData extends Component {
     }
   }
 
+  //发布服务后可以通过id获取item发布服务状态
+  addListenOfPublish = async id => {
+    let dataUrl = 'https://www.supermapol.com/web/datas/' + id + '.json'
+    let objDataJson = await FetchUtils.getObjJson(dataUrl)
+    if (objDataJson) {
+      if (objDataJson.serviceStatus === 'PUBLISHED') {
+        Toast.show('服务发布成功')
+        return true
+      } else if (objDataJson.serviceStatus === 'PUBLISH_FAILED') {
+        Toast.show('服务发布失败')
+        return false
+      }
+    }
+  }
+
   _onDeleteService = async () => {
     // this.setLoading(true, '删除服务中...')
-    Toast.show(getLanguage(this.props.language).Prompt.DELETING_SERVICE )
+    Toast.show(getLanguage(this.props.language).Prompt.DELETING_SERVICE)
     //'删除服务中...')
     this.setState({ modalIsVisible: false })
     try {
@@ -388,11 +401,14 @@ export default class MyLocalData extends Component {
           }
         }
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '  '+
-        getLanguage(this.props.language).Prompt.DELETED_SUCCESS )
+        Toast.show(
+          this.itemInfo.fileName +
+            '  ' +
+            getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
+        )
         //服务删除成功')
       } else {
-        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE )
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
         //'服务删除失败')
       }
     } catch (e) {

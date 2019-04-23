@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   NativeModules,
+  RefreshControl,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -35,6 +36,7 @@ export default class MyLabel extends Component {
       modalIsVisible: false,
       udbPath: '',
       showselect: false,
+      isRefreshing: false,
     }
     this.uploadList = []
     this.uploadType = null
@@ -108,7 +110,7 @@ export default class MyLabel extends Component {
   }
 
   creatDatasource = async datasourcePath => {
-    let result = await SMap.createDatasource({
+    let result = await SMap.createDatasourceOfLabel({
       server: datasourcePath,
       engineType: EngineType.UDB,
       alias: 'Label_' + this.props.user.currentUser.userName + '#',
@@ -118,8 +120,11 @@ export default class MyLabel extends Component {
   }
 
   uploadDialog = name => {
+    if (name === null || name === '') {
+      Toast.show('请输入数据名称')
+      return
+    }
     this.dialog.setDialogVisible(false)
-    Toast.show('分享中')
     this.upload(name)
   }
 
@@ -158,7 +163,6 @@ export default class MyLabel extends Component {
         if (zipResult) {
           let fileName = name + '_标注.zip'
           if (this.uploadType === 'weChat') {
-            GLOBAL.shareFilePath = targetPath
             appUtilsModule
               .sendFileOfWechat({
                 filePath: targetPath,
@@ -168,7 +172,7 @@ export default class MyLabel extends Component {
               .then(
                 result => {
                   this.container.setLoading(false)
-                  !result && Toast.show('所分享文件超过10MB')
+                  !result && Toast.show('分享失败')
                   !result && FileTools.deleteFile(targetPath)
                 },
                 () => {
@@ -193,7 +197,7 @@ export default class MyLabel extends Component {
         }
       }
     } catch (error) {
-      Toast.show('分享失败，请检查网络')
+      Toast.show('分享失败')
       this.container.setLoading(false)
     }
   }
@@ -266,7 +270,7 @@ export default class MyLabel extends Component {
           this.dialog.setDialogVisible(false)
           this.setState({ showselect: false })
         }}
-        confirmBtnTitle={'上传'}
+        confirmBtnTitle={'分享'}
         cancelBtnTitle={'取消'}
       />
     )
@@ -296,6 +300,26 @@ export default class MyLabel extends Component {
               }}
             />
           )}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={() => {
+                try {
+                  this.setState({ isRefreshing: true })
+                  this.getData().then(() => {
+                    this.setState({ isRefreshing: false })
+                  })
+                } catch (error) {
+                  Toast.show('刷新失败')
+                }
+              }}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}

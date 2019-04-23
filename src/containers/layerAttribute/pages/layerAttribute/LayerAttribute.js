@@ -733,7 +733,8 @@ export default class LayerAttribute extends React.Component {
         }
         break
     }
-    this.setLoading(true, '修改中')
+    this.setLoading(true, getLanguage(global.language).Prompt.LOADING)
+    //'修改中')
     try {
       this.props.setAttributeHistory &&
         (await this.props
@@ -743,7 +744,7 @@ export default class LayerAttribute extends React.Component {
             type,
           })
           .then(({ msg, result, data }) => {
-            Toast.show(msg)
+            if (!msg === '成功') Toast.show(msg)
             if (result) {
               let attributes = JSON.parse(JSON.stringify(this.state.attributes))
 
@@ -825,6 +826,13 @@ export default class LayerAttribute extends React.Component {
                   }, 0)
                 },
               )
+
+              if (this.state.attributes.data.length > 1 && data.length == 1) {
+                this.locateToPosition({
+                  type: 'absolute',
+                  index: data[0].fieldInfo[0].index + 1,
+                })
+              }
             } else {
               this.setLoading(false)
             }

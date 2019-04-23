@@ -56,6 +56,8 @@ const Chinese = {
   PLEASE_SELECT_THEMATIC_LAYER: '请先选择专题图层',
   THE_CURRENT_LAYER_CANNOT_BE_STYLED: '当前图层无法设置风格，请重新选择图层',
 
+  NETWORK_REQUEST_FAILED: '网络请求失败',
+
   CREATING: '正在创建',
   PLEASE_ADD_DATASOURCE: '请先添加数据源',
   NO_ATTRIBUTES: '暂无属性',
@@ -110,7 +112,7 @@ const Chinese = {
 
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
-  NETWORK_ERROR:'网络错误',
+  NETWORK_ERROR: '网络错误',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -171,6 +173,8 @@ const English = {
   THE_CURRENT_LAYER_CANNOT_BE_STYLED:
     'The current layer cannot be styled, and please reselect another one',
 
+  NETWORK_REQUEST_FAILED: 'Network Request Failed',
+
   CREATING: 'Creating',
   PLEASE_ADD_DATASOURCE: 'Please Add a Datasource',
   NO_ATTRIBUTES: 'No Attributes',
@@ -227,7 +231,7 @@ const English = {
   SETTING_SUCCESS: 'Setted Successfully',
   SETTING_FAILED: 'Failed to Set',
 
-  NETWORK_ERROR:'Network Error',
+  NETWORK_ERROR: 'Network Error',
 }
 
 export { Chinese, English }
