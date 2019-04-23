@@ -3,7 +3,7 @@ import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 // import { scaleSize } from '../../../../utils'
 let itemWidth = '70%'
-const itemHeight = 60
+const itemHeight = 80
 const fontSize = 23
 const titleOnFocusBackgroundColor = color.itemColorBlack
 const titleOnBlurBackgroundColor = color.itemColorWhite
@@ -23,7 +23,7 @@ let styles = StyleSheet.create({
     marginBottom: 20,
     flexDirection: 'row',
     width: itemWidth,
-    height: scaleSize(itemHeight - 8),
+    height: scaleSize(itemHeight),
     alignItems: 'center',
     justifyContent: 'center',
   },
