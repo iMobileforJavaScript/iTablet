@@ -594,8 +594,8 @@ export default class LayerManager_tolbar extends React.Component {
     let selectable = this.layer3dItem.selectable
     let data
     selectable
-      ? (data = layer3dSettingCanSelect(this.props.language))
-      : (data = layer3dSettingCanNotSelect(this.props.language))
+      ? (data = layer3dSettingCanNotSelect(this.props.language))
+      : (data = layer3dSettingCanSelect(this.props.language))
     this.setState({ data })
   }
 
