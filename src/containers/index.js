@@ -65,7 +65,12 @@ import PublicMap from './publicMap'
 import FriendMap from './friendMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 import { MapCut, MapCutDS } from './mapCut/page'
-import { BufferAnalystView, AnalystRadiusSetting } from './analystView/pages'
+import {
+  BufferAnalystView,
+  AnalystRadiusSetting,
+  OverlayAnalystEntry,
+  OverlayAnalystView,
+} from './analystView/pages'
 
 export default StackNavigator(
   {
@@ -488,6 +493,20 @@ export default StackNavigator(
     },
     AnalystRadiusSetting: {
       screen: AnalystRadiusSetting,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    OverlayAnalystEntry: {
+      screen: OverlayAnalystEntry,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    OverlayAnalystView: {
+      screen: OverlayAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

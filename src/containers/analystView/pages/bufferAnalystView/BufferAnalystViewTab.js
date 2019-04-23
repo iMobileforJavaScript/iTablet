@@ -4,7 +4,7 @@ import { AnalystItem } from '../../components'
 import { CheckStatus, ConstPath, ConstInfo } from '../../../../constants'
 import { CheckBox, PopModal, FingerMenu } from '../../../../components'
 import { FileTools } from '../../../../native'
-import { Toast } from '../../../../utils'
+import { Toast, LayerUtil } from '../../../../utils'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
@@ -84,21 +84,7 @@ export default class BufferAnalystViewTab extends Component {
       showAdvance: false,
     }
 
-    // this.dataSources = []
-    // this.dataSets = []
-    //
-    // this.resultDataSources = []
-    // this.resultDataSets = []
-
     this.currentPop = ''
-
-    this.testData = []
-    for (let i = 0; i < 100; i++) {
-      this.testData.push({
-        key: i,
-        value: i,
-      })
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -299,9 +285,19 @@ export default class BufferAnalystViewTab extends Component {
               },
               true,
             )
+
+            let newDataSets = []
+            dataSets.forEach(item => {
+              let _item = Object.assign({}, item)
+              _item.icon = LayerUtil.getLayerIconByType(_item.datasetType)
+              _item.highLightIcon = LayerUtil.getLayerWhiteIconByType(
+                _item.datasetType,
+              )
+              newDataSets.push(_item)
+            })
             this.setState(
               {
-                popData: dataSets,
+                popData: newDataSets,
                 currentPopData: this.state.dataSet,
               },
               () => {

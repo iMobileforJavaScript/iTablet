@@ -16,7 +16,9 @@ function getData() {
       key: ConstAnalyst.OVERLAY_ANALYST,
       title: ConstAnalyst.OVERLAY_ANALYST,
       size: 'large',
-      action: () => {},
+      action: (params = {}) => {
+        NavigationService.navigate('OverlayAnalystEntry', params)
+      },
       image: getThemeAssets().analyst.analysis_overlay,
     },
   ]
