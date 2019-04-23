@@ -142,9 +142,9 @@ export default class MyLocalData extends Component {
     }
   }
 
-  changgeHearShowItem = title => {
+  changeHearShowItem = title => {
     let sectionData = [...this.state.sectionData]
-    for (let i = 0; i < sectionData && sectionData.length; i++) {
+    for (let i = 0; i < sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
         if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
@@ -181,7 +181,7 @@ export default class MyLocalData extends Component {
     return (
       <LocalDtaHeader
         info={info}
-        changgeHearShowItem={this.changgeHearShowItem}
+        changeHearShowItem={this.changeHearShowItem}
       />
     )
   }

@@ -91,6 +91,9 @@ export default class DrawerBar extends React.Component {
       case DatasetType.Network:
         icon = require('../../../../assets/map/icon-network.png')
         break
+      case DatasetType.CAD: // 复合数据集
+        icon = require('../../../../assets/Mine/mine_my_plot.png')
+        break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
         break
