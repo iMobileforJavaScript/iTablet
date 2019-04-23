@@ -349,16 +349,17 @@ export class ModuleList extends Component {
           !(
             this.moduleItems &&
             this.moduleItems[index] &&
-            (this.moduleItems[index].getDialogCheck() || this.moduleItems[index].getDownloading())
+            (this.moduleItems[index].getDialogCheck() ||
+              this.moduleItems[index].getDownloading())
           )
         ) {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
-        } 
-        if(latestMap){
-          item.action && item.action(tmpCurrentUser,latestMap)
-        }else{
+        }
+        if (latestMap) {
+          item.action && item.action(tmpCurrentUser, latestMap)
+        } else {
           item.action && item.action(tmpCurrentUser)
-        }      
+        }
       } else {
         let filePath2
         let filePath = arrFile[0].filePath
@@ -396,8 +397,6 @@ export class ModuleList extends Component {
         })
         item.action && item.action(tmpCurrentUser, latestMap)
       }
-      
-      
     } catch (e) {
       this.moduleItems[index].setNewState({
         disabled: false,
