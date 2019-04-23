@@ -113,9 +113,10 @@ export default class LocalDataPopupModal extends PureComponent {
           //   getLanguage(global.language).Profile.DELETE +
           //   dataItemServices[i].serviceName +
           //   getLanguage(global.language).Profile.SERVICE
-          title =
-            getLanguage(global.language).Profile.DELETE +' '+
-            getLanguage(global.language).Profile.SERVICE
+          // title =
+          //     getLanguage(global.language).Profile.DELETE +
+          //     getLanguage(global.language).Profile.SERVICE
+          return <View />
         }
       }
       return (

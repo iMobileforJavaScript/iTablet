@@ -539,7 +539,6 @@ public class FileTools extends ReactContextBaseJavaModule {
     public void importData(Promise promise){
         try {
             SMap sMap=SMap.getInstance();
-            String userName=getUserName();
             String importPath=SDCARD+"/iTablet/Import";
             String filePath=importPath+"/weChat.zip";
             String toPath=importPath;
@@ -553,6 +552,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                     getFilePath(toPath,arrayList);
                     ArrayList<Map> workspace =new ArrayList();
                     ArrayList<String> datasource =new ArrayList();
+                    ArrayList<String> xml =new ArrayList();
+                    ArrayList<String> symbol =new ArrayList();
                     for (int i = 0; i <arrayList.size() ; i++) {
                         String path= arrayList.get(i);
                         String fileType=path.substring(path.indexOf('.')+1);
@@ -580,8 +581,33 @@ public class FileTools extends ReactContextBaseJavaModule {
                         if(fileType.equals("udb")){
                             datasource.add(arrayList.get(i));
                         }
+                        if(fileType.equals("xml")){
+                            xml.add(arrayList.get(i));
+                        }
+                        if(fileType.equals("sym")||fileType.equals("lsl")||fileType.equals("bru")){
+                            symbol.add(arrayList.get(i));
+                        }
                     }
-                    if(workspace.size()>0){
+                    if(xml.size()>0){
+                        String path=xml.get(0).substring(xml.get(0).lastIndexOf("/")+1);
+                        String fileDirectory=path.substring(0,path.indexOf("."));
+                        String collection=SDCARD+"/iTablet/User/"+getUserName()+"/ExternalData/Collection/"+fileDirectory+"/";
+                        File file1=new File(collection);
+                        if(!file1.exists()){
+                            file1.mkdirs();
+                        }
+                        for (int i = 0; i <arrayList.size() ; i++) {
+                            String fileName=arrayList.get(i).substring(arrayList.get(i).lastIndexOf("/")+1);
+                            FileManager.getInstance().copy(arrayList.get(i), collection+fileName);
+                        }
+                        if(workspace.size()>0){
+                            sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
+                        }
+                        importResult=true;
+                        importData=false;
+                        deleteDirectory(importPath);
+                    }
+                    else if(workspace.size()>0){
                         List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
                         if(result.size()>0){
                             importResult=true;
@@ -610,6 +636,15 @@ public class FileTools extends ReactContextBaseJavaModule {
                                 importData=false;
                             }
                         }
+                        deleteDirectory(importPath);
+                    }else if (symbol.size()>0){
+                        String symbolPath=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Symbol/";
+                        for (int i = 0; i <symbol.size() ; i++) {
+                            String fileName=symbol.get(i).substring(symbol.get(i).lastIndexOf("/")+1);
+                            FileManager.getInstance().copy(symbol.get(i), symbolPath+fileName);
+                        }
+                        importResult=true;
+                        importData=false;
                         deleteDirectory(importPath);
                     }
                     promise.resolve(importResult);

@@ -110,7 +110,7 @@ const Chinese = {
 
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
-  NETWORK_ERROR:'网络错误',
+  NETWORK_ERROR: '网络错误',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -227,7 +227,7 @@ const English = {
   SETTING_SUCCESS: 'Setted Successfully',
   SETTING_FAILED: 'Failed to Set',
 
-  NETWORK_ERROR:'Network Error',
+  NETWORK_ERROR: 'Network Error',
 }
 
 export { Chinese, English }
