@@ -551,7 +551,8 @@ export default class MyLocalData extends Component {
           ) {
             let result = await this._exportData()
             if (!result) {
-              Toast.show('分享失败')
+              Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+              //'分享失败')
               this.setLoading(false)
               return
             }
@@ -588,7 +589,8 @@ export default class MyLocalData extends Component {
           ) {
             let result = await this._exportData()
             if (!result) {
-              Toast.show('分享失败')
+              Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+              //'分享失败')
               this.setLoading(false)
               return
             }
@@ -626,7 +628,8 @@ export default class MyLocalData extends Component {
                   name + ' ' + result || result === undefined
                     ? getLanguage(this.props.language).Prompt.SHARE_SUCCESS
                     : //'分享成功'
-                    '分享失败',
+                    getLanguage(this.props.language).Prompt.SHARE_FAILED
+                    //'分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
               },
@@ -660,7 +663,8 @@ export default class MyLocalData extends Component {
         }
       }
     } catch (e) {
-      Toast.show('分享失败')
+      Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+      //'分享失败')
       this.ModalBtns && this.ModalBtns.setVisible(false)
       this._closeModal()
       this.setLoading(false)
@@ -674,7 +678,7 @@ export default class MyLocalData extends Component {
         this.setLoading(
           true,
           //ConstInfo.DELETING_DATA
-          getLanguage(this.props.language).Prompt.DELETING,
+          getLanguage(this.props.language).Prompt.DELETING_DATA,
         )
         let result = false
         switch (this.state.title) {
@@ -797,7 +801,8 @@ export default class MyLocalData extends Component {
             Toast.show(getLanguage(this.props.language).Prompt.EXPORT_SUCCESS)
           //'导出成功')
         } else {
-          showToast && Toast.show('导出失败')
+          showToast && Toast.show(getLanguage(this.props.language).Prompt.EXPORT_FAILED)
+          //'导出失败')
         }
         exportResult = result
       },

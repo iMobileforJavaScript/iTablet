@@ -548,15 +548,21 @@ export default class LayerManager_tolbar extends React.Component {
         )
       }
     } else if (
-      section.title === '设置图层可选' ||
-      section.title === '设置图层不可选'
+      section.title ===  getLanguage(global.language).Map_Layer.OPTIONAL
+      //设置图层可选'
+      || section.title === getLanguage(global.language).Map_Layer.NOT_OPTIONAL
+      //'设置图层不可选'
     ) {
       //console.warn(this.state.data)
       let _title = section.title
       let canChoose = true
-      _title.indexOf('不') > 0 && (canChoose = false)
+      if(_title === getLanguage(global.language).Map_Layer.NOT_OPTIONAL)
+        canChoose = false
       SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
-        result ? Toast.show(`${_title}成功`) : Toast.show(`${_title}失败`)
+        result ? Toast.show( getLanguage(global.language).Prompt.SETTING_SUCCESS)
+        //`${_title}成功`)
+          :Toast.show( getLanguage(global.language).Prompt.SETTING_FAILED)
+        //`${_title}失败`)
         // this.overlayView&&this.overlayView.setVisible(false)
         this.setVisible(false)
         let overlayView = this.props.getOverlayView

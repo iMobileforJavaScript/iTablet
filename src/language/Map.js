@@ -472,6 +472,11 @@ const Map_Layer_Chinese = {
   BASEMAP: '我的底图',
   BASEMAP_SWITH: '切换底图',
   MY_TERRAIN: '我的地形',
+
+  //3D图层
+  OPTIONAL:'设置图层可选',
+  NOT_OPTIONAL:'设置图层不可选',
+
 }
 
 const Map_Layer_English = {
@@ -516,6 +521,9 @@ const Map_Layer_English = {
   BASEMAP: 'My Basemap',
   BASEMAP_SWITH: 'Switch Basemap',
   MY_TERRAIN: 'My Terrain',
+
+  OPTIONAL:'Optional',
+  NOT_OPTIONAL:'Not Optional',
 }
 
 //属性
