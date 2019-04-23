@@ -12,7 +12,7 @@ export default StyleSheet.create({
   Img: {
     width: scaleSize(30),
     height: scaleSize(30),
-    marginLeft: 10,
+    marginLeft: 20,
     tintColor: color.fontColorBlack,
   },
   title: {

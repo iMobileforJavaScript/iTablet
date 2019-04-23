@@ -71,9 +71,13 @@ const Chinese = {
   FAILED_TO_IMPORT: '导入失败',
   IMPORTED_3D_SUCCESS: '导入3D成功',
   FAILED_TO_IMPORT_3D: '导入3D失败',
-  DELETING: '删除数据中',
+  DELETING_DATA: '删除数据中',
+  DELETING_SERVICE: '删除服务中',
   DELETED_SUCCESS: '删除成功',
   FAILED_TO_DELETE: '删除失败',
+  PUBLISHING: '发布服务中',
+  PUBLISH_SUCCESS: '发布成功',
+  PUBLISH_FAILED: '发布失败',
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
@@ -95,10 +99,12 @@ const Chinese = {
   PLEASE_LOGIN_AND_SHARE: '请登陆后再分享',
   SHARING: '分享中',
   SHARE_SUCCESS: '分享成功',
+  SHARE_FAILED: '分享失败',
   SHARE_PREPARE: '准备分享',
   SHARE_START: '开始分享',
 
   EXPORT_SUCCESS: '导出成功',
+  EXPORT_FAILED: '导出失败',
 
   UNDO_FAILED: '撤销失败',
   REDO_FAILED: '恢复失败',
@@ -106,6 +112,7 @@ const Chinese = {
 
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
+  NETWORK_ERROR: '网络错误',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -181,9 +188,13 @@ const English = {
   FAILED_TO_IMPORT: 'Failed to Import',
   IMPORTED_3D_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT_3D: 'Failed to Import',
-  DELETING: 'Deleting',
+  DELETING_DATA: 'Deleting Data',
+  DELETING_SERVICE: 'Deleting Service',
   DELETED_SUCCESS: 'Deleted Successfully',
   FAILED_TO_DELETE: 'Failed to Delete',
+  PUBLISHING: 'Publishing',
+  PUBLISH_SUCCESS: 'Published Successfully',
+  PUBLISH_FAILED: 'Failed to Publish',
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
@@ -206,17 +217,21 @@ const English = {
   PLEASE_LOGIN_AND_SHARE: 'Please log in and share',
   SHARING: 'Sharing',
   SHARE_SUCCESS: 'Shared Successfully',
+  SHARE_FAILED: 'Failed to Share',
   SHARE_PREPARE: 'Preparing for sharing',
   SHARE_START: 'Start sharing',
 
   EXPORT_SUCCESS: 'Exported Successfully',
+  EXPORT_FAILED: 'Failed to Export',
 
-  UNDO_FAILED: 'Undo Failed',
-  REDO_FAILED: 'Redo Failed',
-  RECOVER_FAILED: 'Recover Failed',
+  UNDO_FAILED: 'Failed to Undo',
+  REDO_FAILED: 'Failed to Redo',
+  RECOVER_FAILED: 'Failed to Recover',
 
   SETTING_SUCCESS: 'Setted Successfully',
-  SETTING_FAILED: 'Setted Failed',
+  SETTING_FAILED: 'Failed to Set',
+
+  NETWORK_ERROR: 'Network Error',
 }
 
 export { Chinese, English }

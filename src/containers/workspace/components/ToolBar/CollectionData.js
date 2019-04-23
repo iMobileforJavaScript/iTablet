@@ -204,22 +204,27 @@ function getCollectionData(type, params) {
       selectedImage: require('../../../../assets/mapTools/icon_collection_path_pause.png'),
     })
   }
-  data.push({
-    key: constants.UNDO,
-    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
-    // constants.UNDO,
-    action: () => undo(type),
-    size: 'large',
-    image: require('../../../../assets/mapTools/icon_undo_black.png'),
-  })
-  data.push({
-    key: constants.REDO,
-    title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
-    //constants.REDO,
-    action: () => redo(type),
-    size: 'large',
-    image: require('../../../../assets/mapTools/icon_recover_black.png'),
-  })
+  if (
+    type !== SMCollectorType.LINE_GPS_PATH &&
+    type !== SMCollectorType.REGION_GPS_PATH
+  ) {
+    data.push({
+      key: constants.UNDO,
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+      // constants.UNDO,
+      action: () => undo(type),
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_undo_black.png'),
+    })
+    data.push({
+      key: constants.REDO,
+      title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+      //constants.REDO,
+      action: () => redo(type),
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_recover_black.png'),
+    })
+  }
   data.push({
     key: constants.CANCEL,
     title: getLanguage(global.language).Map_Main_Menu.COLLECTION_CANCEL,

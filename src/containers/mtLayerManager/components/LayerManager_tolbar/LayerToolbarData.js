@@ -212,7 +212,7 @@ const layer3dSettingCanSelect = param => [
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
-    title: '设置图层可选',
+    title: getLanguage(param).Map_Layer.OPTIONAL,
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
@@ -225,7 +225,7 @@ const layer3dSettingCanNotSelect = param => [
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
-    title: '设置图层不可选',
+    title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
