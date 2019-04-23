@@ -4,21 +4,34 @@ import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBt
 import { ConstToolType } from '../constants'
 import constants from '../containers/workspace/constants'
 import { getLanguage } from '../language/index'
+import { Toast } from '../utils'
 
 async function OpenData(data, index) {
   let layers = await SMap.getLayersByType()
-  // Layer index = 0 为顶层
-  for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-    await SMap.removeLayer(layers.length - i)
-  }
+  let isOpen
   if (data instanceof Array) {
     for (let i = data.length - 1; i >= 0; i--) {
-      await SMap.openDatasource(data[i].DSParams, index, false)
+      isOpen = await SMap.isDatasourceOpen(data[i].DSParams)
     }
-    GLOBAL.BaseMapSize = data.length
   } else {
-    await SMap.openDatasource(data.DSParams, index, false)
-    GLOBAL.BaseMapSize = 1
+    isOpen = await SMap.isDatasourceOpen(data.DSParams)
+  }
+  // Layer index = 0 为顶层
+  if (isOpen) {
+    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+      await SMap.removeLayer(layers.length - i)
+    }
+    if (data instanceof Array) {
+      for (let i = data.length - 1; i >= 0; i--) {
+        await SMap.openDatasource(data[i].DSParams, index, false)
+      }
+      GLOBAL.BaseMapSize = data.length
+    } else {
+      await SMap.openDatasource(data.DSParams, index, false)
+      GLOBAL.BaseMapSize = 1
+    }
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.NETWORK_REQUEST_FAILED)
   }
   return true
 }

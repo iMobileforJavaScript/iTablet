@@ -76,7 +76,7 @@ export default class MT_layerManager extends React.Component {
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
     ) {
-      newState.selectLayer = this.props.currentLayer.caption
+      newState.selectLayer = this.props.currentLayer.name
     }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
@@ -195,7 +195,7 @@ export default class MT_layerManager extends React.Component {
             visible: true,
           },
         ],
-        selectLayer: this.props.currentLayer.caption,
+        selectLayer: this.props.currentLayer.name,
         refreshing: false,
       })
       // let mapName = await this.map.getName()
@@ -441,13 +441,13 @@ export default class MT_layerManager extends React.Component {
         }
       })
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 
   onThisPress = async ({ data }) => {
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 
@@ -581,7 +581,7 @@ export default class MT_layerManager extends React.Component {
       }
     }
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 

@@ -238,7 +238,6 @@ export default class MyModule extends Component {
       if (result) {
         let fileName = this.itemInfo.item.name
         if (type === 'weChat') {
-          GLOBAL.shareFilePath = toPath
           appUtilsModule
             .sendFileOfWechat({
               filePath: toPath,
