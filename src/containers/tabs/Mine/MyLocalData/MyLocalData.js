@@ -348,6 +348,7 @@ export default class MyLocalData extends Component {
         let oldOnline = sectionData[sectionData.length - 1]
         let oldData = oldOnline.data
         let objContent = oldData[this.itemInfo.index]
+        objContent.serviceStatus = 'PUBLISHED'
         let arrDataItemServices = objContent.dataItemServices
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)

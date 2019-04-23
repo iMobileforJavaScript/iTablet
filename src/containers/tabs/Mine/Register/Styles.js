@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 const itemWidth = '70%'
-const itemHeight = 40
+const itemHeight = 80
 const fontSize = 23
 const titleOnFocusBackgroundColor = color.itemColorBlack
 const titleOnBlurBackgroundColor = color.itemColorWhite
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     width: itemWidth,
-    height: itemHeight - 8,
+    height: scaleSize(itemHeight),
     marginTop: 20,
     marginBottom: 20,
     alignItems: 'center',
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     width: '100%',
-    height: itemHeight,
+    height: scaleSize(itemHeight),
     fontSize: scaleSize(fontSize),
     borderBottomColor: color.borderLight,
     color: color.fontColorGray,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   registerStyle: {
-    height: itemHeight,
+    height: scaleSize(itemHeight),
     width: '50%',
     backgroundColor: color.itemColorBlack,
     marginTop: 40,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   verifyCodeViewStyle: {
     width: '100%',
-    height: itemHeight,
+    height: scaleSize(itemHeight),
     marginTop: 10,
     borderBottomColor: color.borderLight,
     borderBottomWidth: 1,
@@ -62,13 +62,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: fontSize,
     color: color.fontColorBlack,
-    height: itemHeight,
+    height: scaleSize(itemHeight),
   },
   verifyCodeRTextStyle: {
     width: 100,
     fontSize: 12,
     color: color.blue1,
-    lineHeight: itemHeight,
+    lineHeight: scaleSize(itemHeight),
     textAlign: 'right',
   },
 })
