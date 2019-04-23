@@ -4,7 +4,16 @@
 
 import React, { Component } from 'react'
 import Container from '../../../components/Container'
-import { Dimensions, TouchableOpacity, Image, View, Text } from 'react-native'
+import {
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  View,
+  Text,
+  NativeModules,
+  NativeEventEmitter,
+  Platform,
+} from 'react-native'
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
@@ -30,7 +39,11 @@ import { getLanguage } from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
-
+// eslint-disable-next-line import/no-unresolved
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
+import { EventConst } from '../../../constants'
+const SMessageServiceiOS = NativeModules.SMessageService
+const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
@@ -68,6 +81,7 @@ export default class Friend extends Component {
 
   componentDidMount() {
     this.connectService()
+    this.addFileListener()
   }
 
   componentDidUpdate(prevProps) {
@@ -84,6 +98,22 @@ export default class Friend extends Component {
     ) {
       this.refreshList()
     }
+  }
+
+  componentWillUnmount() {
+    this.removeFileListener()
+  }
+  // eslint-disable-next-line
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language !== this.props.language
+    ) {
+      return true
+    }
+    return false
   }
 
   refreshMsg = () => {
@@ -107,29 +137,46 @@ export default class Friend extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
-  //   //  // this
-  //   //  // this
-  //   // }
-  //
-  //   return true
-  // }
-
-  componentWillUnmount() {
-    // this.connectService()
-  }
-  // eslint-disable-next-line
-  shouldComponentUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language !== this.props.language
-    ) {
-      return true
+  addFileListener = () => {
+    if (Platform.OS === 'iOS') {
+      this.receiveFileListener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.sendFileListener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    } else {
+      this.receiveFileListener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.sendFileListener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
     }
-    return false
+  }
+
+  removeFileListener = () => {
+    this.receiveFileListener && this.receiveFileListener.remove()
+    this.sendFileListener && this.sendFileListener.remove()
+  }
+
+  onReceiveProgress = value => {
+    let msg = this.getMsgByMsgId(value.talkId, value.msgId)
+    msg.msg.message.progress = value.percentage
+    MessageDataHandle.editMessage({
+      userId: this.props.user.currentUser.userId,
+      talkId: value.talkId,
+      msgId: value.msgId,
+      editItem: msg,
+    })
+
+    if (this.curChat && this.curChat.targetUser.id === value.talkId) {
+      this.curChat.onReceiveProgress(value)
+    }
   }
   // eslint-disable-next-line
   createGroupTalk = members => {
@@ -273,17 +320,6 @@ export default class Friend extends Component {
     })
   }
 
-  onReceiveProgress = value => {
-    let msg = this.props.chat[this.props.user.currentUser.userId][value.talkId]
-      .history[value.msgId]
-    msg.msg.message.progress = value.percentage
-    MessageDataHandle.editMessage({
-      userId: this.props.user.currentUser.userId,
-      talkId: value.talkId,
-      msgId: value.msgId,
-      editItem: msg,
-    })
-  }
   _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
       SMessageService.receiveFile(
