@@ -220,7 +220,7 @@ export default class MyLocalData extends Component {
       this.setLoading(
         true,
         //'删除数据中...'
-        getLanguage(this.props.language).Prompt.DELETING,
+        getLanguage(this.props.language).Prompt.DELETING_DATA,
       )
       if (this.itemInfo !== undefined) {
         let directory = this.itemInfo.item.directory
@@ -337,7 +337,8 @@ export default class MyLocalData extends Component {
 
   _onPublishService = async () => {
     // this.setLoading(true, '发布服务中...')
-    Toast.show('发布服务中...')
+    Toast.show(getLanguage(this.props.language).Prompt.PUBLISHING)
+    //'发布服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let dataId = this.itemInfo.id + ''
@@ -379,7 +380,8 @@ export default class MyLocalData extends Component {
 
   _onDeleteService = async () => {
     // this.setLoading(true, '删除服务中...')
-    Toast.show('删除服务中...')
+    Toast.show(getLanguage(this.props.language).Prompt.DELETING_SERVICE)
+    //'删除服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let result = await SOnlineService.deleteServiceWithDataName(
@@ -398,9 +400,15 @@ export default class MyLocalData extends Component {
           }
         }
         this.setState({ sectionData: sectionData })
-        Toast.show(this.itemInfo.fileName + '  服务删除成功')
+        Toast.show(
+          this.itemInfo.fileName +
+            '  ' +
+            getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
+        )
+        //服务删除成功')
       } else {
-        Toast.show('服务删除失败')
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
+        //'服务删除失败')
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -410,7 +418,7 @@ export default class MyLocalData extends Component {
   }
 
   deleteDataOfOnline = async () => {
-    this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING)
+    this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING_DATA)
     //'删除数据中...')
     this.setState({ modalIsVisible: false })
     this.deleteDataing = true
@@ -423,7 +431,8 @@ export default class MyLocalData extends Component {
         let oldOnline = sectionData[sectionData.length - 1]
         oldOnline.data.splice(this.itemInfo.index, 1)
         this.setState({ sectionData: sectionData }, () => {
-          Toast.show('数据删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
+          //'数据删除成功')
           this.deleteDataing = false
         })
       } else {
@@ -440,7 +449,8 @@ export default class MyLocalData extends Component {
   }
 
   _onChangeDataVisibility = async () => {
-    this.setLoading(true, '改变数据可见性中...')
+    //this.setLoading(true, getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
+    //'改变数据可见性中...')
     this.setState({ modalIsVisible: false })
     try {
       let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
@@ -464,18 +474,22 @@ export default class MyLocalData extends Component {
       if (typeof result === 'boolean' && result) {
         if (isPublish) {
           authorizeSetting.splice(splice, 1)
-          Toast.show('成功设置为私有数据')
+          Toast.show(getLanguage(this.props.language).Prompt.SETTING_SUCCESS)
+          //'成功设置为私有数据')
         } else {
           let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
           authorizeSetting.push(dataPermissionType)
-          Toast.show('成功设置为公有数据')
+          Toast.show(getLanguage(this.props.language).Prompt.SETTING_SUCCESS)
+          //'成功设置为公有数据')
         }
         this.setState({ sectionData: sectionData })
       } else {
         if (result === undefined || result === '') {
-          result = '设置失败'
+          result = getLanguage(this.props.language).Prompt.SETTING_FAILED
+          //'设置失败'
         }
-        Toast.show('设置失败')
+        Toast.show(getLanguage(this.props.language).Prompt.SETTING_FAILED)
+        //'设置失败')
       }
     } catch (e) {
       Toast.show('网络错误')

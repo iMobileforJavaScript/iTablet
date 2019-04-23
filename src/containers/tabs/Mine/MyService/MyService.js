@@ -264,7 +264,8 @@ export default class MyService extends Component {
             { backgroundColor: color.content_white, textAlign: 'center' },
           ]}
         >
-          没有服务
+          {getLanguage(global.language).Profile.NO_SERVICE}
+          {/* 没有服务 */}
         </Text>
       </View>
     )

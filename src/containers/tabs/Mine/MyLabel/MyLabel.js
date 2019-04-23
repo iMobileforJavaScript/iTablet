@@ -110,7 +110,7 @@ export default class MyLabel extends Component {
   }
 
   creatDatasource = async datasourcePath => {
-    let result = await SMap.createDatasource({
+    let result = await SMap.createDatasourceOfLabel({
       server: datasourcePath,
       engineType: EngineType.UDB,
       alias: 'Label_' + this.props.user.currentUser.userName + '#',
@@ -163,7 +163,6 @@ export default class MyLabel extends Component {
         if (zipResult) {
           let fileName = name + '_标注.zip'
           if (this.uploadType === 'weChat') {
-            GLOBAL.shareFilePath = targetPath
             appUtilsModule
               .sendFileOfWechat({
                 filePath: targetPath,
