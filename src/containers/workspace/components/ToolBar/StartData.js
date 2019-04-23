@@ -1,16 +1,15 @@
 import { FileTools, NativeMethod } from '../../../../native'
+
 import {
   ConstToolType,
   ConstInfo,
   ConstPath,
-  // Const,
   UserType,
   ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-// import Orientation from 'react-native-orientation'
 let _params = {}
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
@@ -658,7 +657,7 @@ function create() {
         headerTitle: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
         //'新建地图',
         value: newName,
-        placeholder: ConstInfo.PLEASE_INPUT_NAME,
+        placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
         cb: async value => {
           GLOBAL.Loading &&
             GLOBAL.Loading.setLoading(
@@ -698,6 +697,7 @@ function create() {
             // ConstOnline['Google'].layerIndex,
             1,
           )
+          await SMap.openTaggingDataset(_params.user.currentUser.userName)
           _params.getLayers && (await _params.getLayers())
 
           _params.saveMap &&

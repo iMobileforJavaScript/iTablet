@@ -9,9 +9,9 @@ import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
   Const,
-  ConstInfo,
+  // ConstInfo,
   ConstPath,
-  UserType,
+  // UserType,
 } from '../../../../constants'
 import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
@@ -40,7 +40,7 @@ const BottomHeight = scaleSize(100)
 
 export default class FunctionToolbar extends React.Component {
   props: {
-    language: Object,
+    language: string,
     style?: any,
     hide?: boolean,
     direction?: string,
@@ -497,7 +497,26 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.NEWTHEME_HEIGHT[2],
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[0]
+        //   : ConstToolType.HEIGHT[2],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[2]
+        //   : ConstToolType.HEIGHT[3],
+      })
+    }
+  }
+
+  showTools = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      await SMap.setLabelColor()
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_TOOLS, {
+        isFullScreen: true,
+        height: ConstToolType.NEWTHEME_HEIGHT[4],
         // this.props.device.orientation === 'LANDSCAPE'
         //   ? ConstToolType.HEIGHT[0]
         //   : ConstToolType.HEIGHT[2],
@@ -684,11 +703,7 @@ export default class FunctionToolbar extends React.Component {
     })
 
     let userUDBPath, userUDBs
-    if (
-      this.props.user &&
-      this.props.user.currentUser.userName &&
-      this.props.user.currentUser.userType === UserType.PROBATION_USER
-    ) {
+    if (this.props.user && this.props.user.currentUser.userName) {
       let userPath =
         (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
         this.props.user.currentUser.userName +
@@ -797,49 +812,6 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  Tagging = async () => {
-    let userPath =
-      this.props.user.currentUser.userName &&
-      this.props.user.currentUser.userType !== UserType.PROBATION_USER
-        ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-        : ConstPath.CustomerPath
-    let mapPath = await FileTools.appendingHomeDirectory(
-      userPath + ConstPath.RelativePath.Map,
-    )
-    let newName = await FileTools.getAvailableMapName(
-      mapPath,
-      this.props.map.currentMap.name || 'DefaultMap',
-    )
-    NavigationService.navigate('InputPage', {
-      headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
-      // '标注名称',
-      value: newName,
-      placeholder: ConstInfo.PLEASE_INPUT_NAME,
-      cb: async value => {
-        if (value !== '') {
-          (async function() {
-            await SMap.setLabelColor()
-            GLOBAL.value = await SMap.newTaggingDataset(value)
-          }.bind(this)())
-        }
-        NavigationService.goBack()
-      },
-    })
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-        isFullScreen: false,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-      })
-    }
-  }
-
   /** 二级事件 **/
   openOneMap = async e => {
     this.showDataLists()
@@ -897,15 +869,6 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
-            key: '标注',
-            title: getLanguage(this.props.language).Map_Main_Menu.PLOTS,
-            //'标注',
-            action: this.Tagging,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
-            selectMode: 'flash',
-          },
-          {
             key: '风格',
             title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
             //'风格',
@@ -917,7 +880,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
-            action: this.showTool,
+            action: this.showTools,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
@@ -1023,7 +986,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
-            action: this.showTool,
+            action: this.showTools,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {

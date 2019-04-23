@@ -208,7 +208,7 @@ export default class LayerAttributeSearch extends React.Component {
             filter: `SmID=${
               isSingleData
                 ? this.state.attributes.data[0][0].value
-                : data.rowData[0].value
+                : data.rowData[1].value // 0为序号
             }`, // 过滤条件
             cursorType: 2, // 2: DYNAMIC, 3: STATIC
           },
@@ -278,7 +278,7 @@ export default class LayerAttributeSearch extends React.Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, ConstInfo.SEARCHING)
+          this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
           this.search(searchKey)
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}

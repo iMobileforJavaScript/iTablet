@@ -41,7 +41,7 @@ export default class MyLabel extends Component {
   }
 
   componentDidMount() {
-    this.container.setLoading(true)
+    this.container.setLoading(true, getLanguage(global.language).Prompt.LOADING)
     this.getData()
   }
 
@@ -51,7 +51,16 @@ export default class MyLabel extends Component {
         ? ConstPath.CustomerPath
         : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
     )
-    let path = userPath + ConstPath.RelativePath.Label + 'Label.udb'
+    let path =
+      userPath +
+      ConstPath.RelativePath.Datasource +
+      'Label_' +
+      this.props.user.currentUser.userName +
+      '#.udb'
+    let result = await FileTools.fileIsExist(path)
+    if (!result) {
+      this.creatDatasource(path)
+    }
     let data = await SMap.getUDBName(path)
     this.setState({ data: data, udbPath: path }, () => {
       this.container.setLoading(false)
@@ -102,7 +111,7 @@ export default class MyLabel extends Component {
     let result = await SMap.createDatasource({
       server: datasourcePath,
       engineType: EngineType.UDB,
-      alias: 'labelDatasource',
+      alias: 'Label_' + this.props.user.currentUser.userName + '#',
       description: 'Label',
     })
     return result
@@ -192,7 +201,7 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
-        title: getLanguage(global.language).Profile.SHARE,
+        title: getLanguage(global.language).Profile.UPLOAD_MARK,
         //'分享',
         action: () => {
           this._closeModal()
@@ -201,10 +210,19 @@ export default class MyLabel extends Component {
         },
       },
       {
-        title: getLanguage(global.language).Profile.DELETE_DATA,
+        title: getLanguage(global.language).Profile.DELETE_MARK,
         //'删除数据',
         action: () => {
-          SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
+          SMap.removeDatasetByName(
+            this.state.udbPath,
+            this.itemInfo.item.title,
+          ).then(() => {
+            this._closeModal()
+            Toast.show('删除成功')
+            let newData = JSON.parse(JSON.stringify(this.state.data)) //[...this.state.data]
+            newData.splice(this.itemInfo.index, 1)
+            this.setState({ data: newData }, () => {})
+          })
         },
       },
     ]

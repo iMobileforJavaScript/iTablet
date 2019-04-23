@@ -1,6 +1,7 @@
 //我的、发现
 const Profile_Chinese = {
   //我的  主页面
+  LOGIN_NOW: '立即登录',
   IMPORT: '导入',
   DATA: '数据',
   MARK: '标注',
@@ -39,7 +40,7 @@ const Profile_Chinese = {
 
   //我的服务
   SERVICE: '服务',
-  MY_SERVICE: '我的服务',
+  MY_SERVICE: '服务',
   PRIVATE_SERVICE: '私有服务',
   PUBLIC_SERVICE: '公有服务',
 
@@ -71,6 +72,12 @@ const Profile_Chinese = {
   DELETE_SCENE: '删除场景',
   UPLOAD_SYMBOL: '上传符号',
   DELETE_SYMBOL: '删除符号',
+  UPLOAD_TEMPLATE: '上传模板',
+  DELETE_TEMPLATE: '删除模板',
+  UPLOAD_MARK: '上传标注',
+  DELETE_MARK: '删除标注',
+  UPLOAD_COLOR_SCHEME: '上传色带',
+  DELETE_COLOR_SCHEME: '删除色带',
 
   DELETE_SERVICE: '删除服务',
   PUBLISH_SERVICE: '发布服务',
@@ -78,6 +85,7 @@ const Profile_Chinese = {
   SET_AS_PUBLIC_SERVICE: '设为公有服务',
   SET_AS_PRIVATE_DATA: '设为私有数据',
   SET_AS_PUBLIC_DATA: '设为公有数据',
+  NO_SERVICE: '没有服务',
 
   //关于
   ABOUT: '关于',
@@ -85,8 +93,10 @@ const Profile_Chinese = {
   SALES_CONSULTATION: '销售咨询',
   BUSINESS_WEBSITE: '进入官网',
   PRIVACY_POLICY: '服务协议',
+  HELP_MANUAL: '使用帮助',
 }
 const Profile_English = {
+  LOGIN_NOW: 'Login',
   IMPORT: 'Import',
   DATA: 'Data',
   MARK: 'Mark',
@@ -105,7 +115,7 @@ const Profile_English = {
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
   ENTER_MOBILE: 'Please enter your mobile number',
-  ENTER_PASSWORD: 'Pleasr enter your password',
+  ENTER_PASSWORD: 'Please enter your password',
   REGISTER: 'Register',
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
@@ -129,12 +139,19 @@ const Profile_English = {
   DELETE_SCENE: 'Delete Scene',
   UPLOAD_SYMBOL: 'Upload Symbol',
   DELETE_SYMBOL: 'Delete Symbol',
+  UPLOAD_TEMPLATE: 'Upload Template',
+  DELETE_TEMPLATE: 'Delete Template',
+  UPLOAD_MARK: 'Upload Mark',
+  DELETE_MARK: 'Delete Mark',
+  UPLOAD_COLOR_SCHEME: 'Upload Color Scheme',
+  DELETE_COLOR_SCHEME: 'Delete Color Scheme',
 
   ABOUT: 'About',
   SERVICE_HOTLINE: 'Service Hotline',
   SALES_CONSULTATION: 'Sales Consultation',
   BUSINESS_WEBSITE: 'Business Website',
   PRIVACY_POLICY: 'Privacy Policy',
+  HELP_MANUAL: 'Help Manual',
 
   SWITCH_ACCOUNT: 'Switch Account',
   LOG_OUT: 'Log out',
@@ -147,7 +164,7 @@ const Profile_English = {
 
   //我的服务
   SERVICE: 'Service',
-  MY_SERVICE: 'My Service',
+  MY_SERVICE: 'Service',
   PRIVATE_SERVICE: 'Private Service',
   PUBLIC_SERVICE: 'Public Service',
   DELETE: 'Delete',
@@ -167,5 +184,7 @@ const Profile_English = {
   SET_AS_PUBLIC_SERVICE: 'Set as Public Service',
   SET_AS_PRIVATE_DATA: 'Set as Private Data',
   SET_AS_PUBLIC_DATA: 'Set as Public Data',
+
+  NO_SERVICE: 'No Service',
 }
 export { Profile_Chinese, Profile_English }

@@ -30,7 +30,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class Login extends React.Component {
   props: {
-    language: Object,
+    language: string,
     navigation: Object,
     user: Object,
     setUser: () => {},
@@ -94,7 +94,7 @@ export default class Login extends React.Component {
     let password = ''
 
     try {
-      if (!isEmail) {
+      if (isEmail) {
         if (!this.txtEmail) {
           //请输入邮箱或昵称
           Toast.show(
@@ -264,9 +264,9 @@ export default class Login extends React.Component {
       })
     }
   }
-  _renderEmail() {
+  _renderEmail = () => {
     return (
-      <View style={{ width: '70%' }}>
+      <View key={'email'} style={{ width: '70%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           keyboardType={'email-address'}
@@ -275,6 +275,7 @@ export default class Login extends React.Component {
             getLanguage(this.props.language).Profile.ENTER_EMAIL_OR_USERNAME
           }
           multiline={false}
+          defaultValue={this.txtEmail || ''}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text
@@ -288,6 +289,7 @@ export default class Login extends React.Component {
           multiline={false}
           password={true}
           style={styles.textInputStyle}
+          defaultValue={this.txtEmailPassword || ''}
           onChangeText={text => {
             this.txtEmailPassword = text
           }}
@@ -295,14 +297,14 @@ export default class Login extends React.Component {
       </View>
     )
   }
-  _renderPhone() {
+  _renderPhone = () => {
     return (
-      <View style={{ width: '70%' }}>
+      <View key={'phone'} style={{ width: '70%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           //请输入手机号
           placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
-          defaultValue={''}
+          defaultValue={this.txtPhoneNumber}
           keyboardType={'number-pad'}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -315,7 +317,7 @@ export default class Login extends React.Component {
           textContentType={'password'}
           //请输入密码
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
-          defaultValue={''}
+          defaultValue={this.txtPhoneNumberPassword}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtPhoneNumberPassword = text
@@ -345,7 +347,7 @@ export default class Login extends React.Component {
     }
   }
   _onSelectTitle = () => {
-    if (!this.state.onEmailTitleFocus) {
+    if (this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {
       return this._renderPhone()
@@ -395,7 +397,7 @@ export default class Login extends React.Component {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    this._onEmailPress()
+                    this._onPhonePress()
                   }}
                   style={[
                     {
@@ -408,7 +410,7 @@ export default class Login extends React.Component {
                       borderBottomRightRadius: 0,
                       borderColor: color.borderColorBlack,
                       justifyContent: 'center',
-                      backgroundColor: this.state.titleEmailDefaultBg,
+                      backgroundColor: this.state.titlePhoneBg,
                     },
                   ]}
                 >
@@ -419,7 +421,7 @@ export default class Login extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this._onPhonePress()
+                    this._onEmailPress()
                   }}
                   style={{
                     flex: 1,
@@ -431,7 +433,7 @@ export default class Login extends React.Component {
                     borderBottomRightRadius: 1,
                     borderColor: color.borderColorBlack,
                     justifyContent: 'center',
-                    backgroundColor: this.state.titlePhoneBg,
+                    backgroundColor: this.state.titleEmailDefaultBg,
                   }}
                 >
                   <Text style={[styles.titleContainerStyle]}>

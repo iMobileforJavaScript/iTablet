@@ -167,7 +167,7 @@ export default class LocationView extends React.Component {
       <View style={styles.bottomButtons}>
         <TextBtn
           textStyle={styles.bottomBtnTxt}
-          btnText={getLanguage(global.language).Prompt.ATTRIBUTE_LOCATION}
+          btnText={getLanguage(global.language).Prompt.CANCEL}
           //"取消"
           btnClick={() => this.show(false)}
         />

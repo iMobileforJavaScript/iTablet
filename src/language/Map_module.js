@@ -7,7 +7,7 @@ const Map_Module_Chinese = {
   MAP_THEME: '专题制图',
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
-  TADA_ANALYSIS: '数据分析',
+  DATA_ANALYSIS: '数据分析',
 }
 const Map_Module_English = {
   MAP_EDIT: 'Mapping',
@@ -17,6 +17,6 @@ const Map_Module_English = {
   MAP_THEME: 'Thematic Map',
   MAP_COLLECTION: 'Collection',
   MAP_PLOTTING: 'Plotting',
-  TADA_ANALYSIS: 'Data Analysis',
+  DATA_ANALYSIS: 'Data Analysis',
 }
 export { Map_Module_Chinese, Map_Module_English }

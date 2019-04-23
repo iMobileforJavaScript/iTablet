@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-// import { MAP_MODULE } from '../../constants'
 import Layer3DItem from './Layer3DItem'
 import {
   View,
@@ -18,7 +17,7 @@ import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
-    language: Object,
+    language: string,
     navigation: Object,
     type: string,
     data: Array,
@@ -111,7 +110,9 @@ export default class Map3DToolBar extends Component {
   }
 
   renderListSectionHeader = ({ section }) => {
-    let image = section.visible
+    let image
+    let visible = section.visible
+    visible
       ? (image = require('../../assets/mapEdit/icon_spread.png'))
       : (image = require('../../assets/mapEdit/icon_packUP.png'))
     return (
@@ -172,6 +173,7 @@ export default class Map3DToolBar extends Component {
   renderLayerToolbar = () => {
     return (
       <LayerManager_tolbar
+        language={this.props.language}
         ref={ref => (this.layer3dToolbar = ref)}
         getOverlayView={this.getOverlayView}
         device={this.props.device}

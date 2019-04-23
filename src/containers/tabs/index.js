@@ -5,12 +5,10 @@ import { scaleSize, setSpText } from '../../utils'
 import { getThemeAssets } from '../../assets'
 import { color } from '../../styles'
 import Home, { Setting, AboutITablet } from './Home'
-// import { TabItem } from './TabItem'
 import Mine, {
   MyService,
   MyLocalData,
   MyData,
-  MyOnlineData,
   Register,
   MyOnlineMap,
   ScanOnlineMap,
@@ -23,21 +21,19 @@ import Mine, {
 } from './Mine'
 import Find from './Find'
 import SuperMapKnown from './Find/superMapKnown'
-// eslint-disable-next-line
 import Friend, {
   Chat,
   AddFriend,
   InformMessage,
   CreateGroupChat,
 } from './Friend'
-// eslint-disable-next-line no-unused-vars
 import InformSpot from './Friend/InformSpot'
 import { getLanguage } from '../../language/index'
 import { connect } from 'react-redux'
 
 class tabItem extends PureComponent {
   props: {
-    language: Object,
+    language: string,
     data: Object,
     title: Object,
     source_focuse: Object,
@@ -266,7 +262,6 @@ export {
   MyService,
   MyLocalData,
   MyData,
-  MyOnlineData,
   Register,
   MyOnlineMap,
   ScanOnlineMap,

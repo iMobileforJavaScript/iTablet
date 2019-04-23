@@ -31,7 +31,7 @@ import { getLanguage } from '../../../../language/index'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
-    language: Object,
+    language: string,
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
@@ -127,7 +127,10 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    this.container.setLoading(true)
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.LOADING,
+    )
     if (!this.name) {
       setTimeout(() => {
         this.container.setLoading(false)
@@ -167,7 +170,6 @@ export default class Map3D extends React.Component {
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
-    this._addScene()
   }
 
   _pop_list = (show, type) => {

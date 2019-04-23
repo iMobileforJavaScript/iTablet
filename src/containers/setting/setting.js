@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-// import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -18,8 +17,7 @@ import { color } from '../../styles'
 import { getLanguage } from '../../language/index'
 export default class setting extends Component {
   props: {
-    // eslint-disable-next-line no-undef
-    language: object,
+    language: string,
     navigation: Object,
     data: Array,
     setSettingData: () => {},

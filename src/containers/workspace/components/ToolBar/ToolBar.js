@@ -81,7 +81,7 @@ const DEFAULT_FULL_SCREEN = true
 
 export default class ToolBar extends React.PureComponent {
   props: {
-    language: Object,
+    language: string,
     children: any,
     type: string,
     containerProps?: Object,
@@ -692,6 +692,7 @@ export default class ToolBar extends React.PureComponent {
             getLanguage(this.props.language).Prompt.READING_DATA,
           )
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          global.language,
           GLOBAL.currentLayer.name,
         )
         let selectedExpression
@@ -808,6 +809,7 @@ export default class ToolBar extends React.PureComponent {
             getLanguage(this.props.language).Prompt.READING_DATA,
           )
         this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          global.language,
           GLOBAL.currentLayer.name,
         )
         let dataset = this.expressionData.dataset
@@ -1808,13 +1810,25 @@ export default class ToolBar extends React.PureComponent {
   getflylist = async () => {
     try {
       let flydata = await SScene.getFlyRouteNames()
-      let data = [{ title: '飞行轨迹列表', data: flydata }]
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
+          // '飞行轨迹列表',
+          data: flydata,
+        },
+      ]
       // let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
       let buttons = []
       return { data, buttons }
     } catch (error) {
       let buttons = []
-      let data = []
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu.FLY_ROUTE,
+          // '飞行轨迹列表',
+          data: [],
+        },
+      ]
       Toast.show(
         getLanguage(this.props.language).Prompt.NO_FLY,
         //'当前场景无飞行轨迹'
@@ -2530,21 +2544,18 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-      // if (type === ConstToolType.MAP_EDIT_TAGGING) {
-      //   SMap.setAction(Action.PAN)
-      // } else if (
-      //   typeof type === 'number' ||
-      //   (typeof type === 'string' && type.indexOf('MAP_') >= -1)
-      // ) {
-      //   // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-      //   SMap.setAction(Action.PAN)
-      // }
+
+      // 当前为采集状态
+      if (typeof type === 'number') {
+        await SCollector.stopCollect()
+      }
+
       if (
         typeof type === 'string' &&
         type.indexOf('MAP_EDIT_') >= 0 &&
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING &&
-        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
+        type !== ConstToolType.MAP_TOOL_TAGGING &&
+        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -2554,6 +2565,11 @@ export default class ToolBar extends React.PureComponent {
           height: 0,
         })
       } else {
+        // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
+        if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+          GLOBAL.currentToolbarType = ''
+        }
+
         this.showToolbar(false)
         if (
           this.state.isTouchProgress === true ||
@@ -2583,19 +2599,11 @@ export default class ToolBar extends React.PureComponent {
 
       // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
-      if (type === ConstToolType.MAP_EDIT_TAGGING) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
-      }
+      SMap.deleteGestureDetector()
     }.bind(this)())
   }
 
   closeSubAction = async (type, actionType) => {
-    // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
-    if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-      GLOBAL.currentToolbarType = ''
-    }
     if (
       typeof type === 'number' ||
       (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
@@ -2665,14 +2673,14 @@ export default class ToolBar extends React.PureComponent {
     SCollector.stopCollect()
     let toolbarType
     switch (this.lastState.type) {
-      case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_GPS_PATH:
+      case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_HAND_PATH:
       case SMCollectorType.REGION_HAND_POINT:
         toolbarType = ConstToolType.MAP_COLLECTION_REGION
         break
-      case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_GPS_PATH:
+      case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_HAND_POINT:
       case SMCollectorType.LINE_HAND_PATH:
         toolbarType = ConstToolType.MAP_COLLECTION_LINE
@@ -2722,7 +2730,8 @@ export default class ToolBar extends React.PureComponent {
     try {
       SScene.save()
       this.getMap3DAttribute()
-      Toast.show('保存成功')
+      Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      //'保存成功')
     } catch (error) {
       Toast.show('保存失败')
     }
@@ -2733,12 +2742,12 @@ export default class ToolBar extends React.PureComponent {
   }
 
   taggingback = () => {
-    this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+    this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height:
         this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[0]
-          : ConstToolType.THEME_HEIGHT[2],
+          ? ConstToolType.HEIGHT[4]
+          : ConstToolType.HEIGHT[4],
       column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
     })
   }
@@ -2882,8 +2891,8 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else if (
-        type !== ConstToolType.MAP_EDIT_TAGGING &&
-        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
+        type !== ConstToolType.MAP_TOOL_TAGGING &&
+        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
         // 编辑完成关闭Toolbar
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -2896,25 +2905,30 @@ export default class ToolBar extends React.PureComponent {
             SMap.setAction(Action.SELECT)
           },
         })
-      } else {
-        SMap.setTaggingGrid(GLOBAL.value)
-        SMap.submit()
-        SMap.setAction(Action.PAN)
-        if (type === ConstToolType.MAP_EDIT_TAGGING) {
-          this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
-            isFullScreen: false,
-            containerType: 'list',
-            height:
-              this.props.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.NEWTHEME_HEIGHT[3]
-                : ConstToolType.NEWTHEME_HEIGHT[3],
-            column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-          })
-        }
-        if (type === ConstToolType.MAP_EDIT_TAGGING_SETTING) {
-          this.taggingback()
-        }
       }
+    } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
+      SMap.setTaggingGrid(
+        GLOBAL.TaggingDatasetName,
+        this.props.user.currentUser.userName,
+      )
+      SMap.submit()
+      SMap.refreshMap()
+      SMap.setAction(Action.PAN)
+      if (type === ConstToolType.MAP_TOOL_TAGGING) {
+        this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
+          isFullScreen: false,
+          containerType: 'list',
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.NEWTHEME_HEIGHT[3]
+              : ConstToolType.NEWTHEME_HEIGHT[3],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        })
+      }
+    }
+    if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      // this.taggingback()
+      this.close()
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -3283,6 +3297,7 @@ export default class ToolBar extends React.PureComponent {
               getLanguage(this.props.language).Prompt.READING_DATA,
             )
           let data = await SThemeCartography.getThemeExpressionByDatasetName(
+            global.language,
             item.datasourceName,
             item.datasetName,
           )
@@ -3494,10 +3509,13 @@ export default class ToolBar extends React.PureComponent {
                 if (les && alias in les && data) {
                   let names = les[alias]
                   for (let j = 0, dataLen = data.length; j < dataLen; j++) {
-                    if (
-                      JSON.stringify(names).indexOf(data[j].datasetName) >= 0
-                    ) {
-                      data[j].isSelected = true
+                    let curDataSetName = data[j].datasetName
+                    if (JSON.stringify(names).indexOf(curDataSetName) >= 0) {
+                      for (let i = 0, l = names.length; i < l; i++) {
+                        if (curDataSetName in names[i]) {
+                          data[j].isSelected = !names[i][curDataSetName]
+                        }
+                      }
                     }
                   }
                 }
@@ -3666,6 +3684,7 @@ export default class ToolBar extends React.PureComponent {
               Toast.show('该地图已打开')
               this.props.setContainerLoading(false)
             }
+            await SMap.openTaggingDataset(this.props.user.currentUser.userName)
             // 重新加载图层
             this.props.getLayers({
               type: -1,
@@ -3705,7 +3724,10 @@ export default class ToolBar extends React.PureComponent {
 
   headerAction = ({ section }) => {
     (async function() {
-      if (section.title === Const.CREATE_SYMBOL_COLLECTION) {
+      if (
+        section.title ===
+        getLanguage(this.props.language).Map_Main_Menu.CREATE_WITH_SYMBOLS
+      ) {
         // let defaultWorkspacePath = await Utility.appendingHomeDirectory(
         //   (this.props.user.currentUser.userName
         //     ? ConstPath.UserPath + this.props.user.currentUser.userName
@@ -3731,7 +3753,7 @@ export default class ToolBar extends React.PureComponent {
             .START_NEW_MAP,
           //'新建地图',
           value: newName,
-          placeholder: ConstInfo.PLEASE_INPUT_NAME,
+          placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
           cb: async value => {
             GLOBAL.Loading &&
               GLOBAL.Loading.setLoading(
@@ -3786,7 +3808,9 @@ export default class ToolBar extends React.PureComponent {
             NavigationService.goBack()
             setTimeout(() => {
               this.setVisible(false)
-              Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+              Toast.show(
+                getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
+              )
             }, 1000)
           },
         })
@@ -3841,7 +3865,7 @@ export default class ToolBar extends React.PureComponent {
       value: newName,
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
       //'新建地图',
-      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&
@@ -3907,7 +3931,10 @@ export default class ToolBar extends React.PureComponent {
                   // this.props.getLayers(-1, layers => {
                   //   this.props.setCurrentLayer(layers.length > 0 && layers[0])
                   // })
-                  Toast.show(ConstInfo.MAP_ALREADY_OPENED)
+                  Toast.show(
+                    getLanguage(this.props.language).Prompt.THE_MAP_IS_OPENED,
+                  )
+                  //ConstInfo.MAP_ALREADY_OPENED)
                   // this.props.setContainerLoading(false)
                 }
 
@@ -3951,7 +3978,7 @@ export default class ToolBar extends React.PureComponent {
                   this.props.setContainerLoading &&
                     this.props.setContainerLoading(false)
                   Toast.show(
-                    getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+                    getLanguage(this.props.language).Prompt.SWITCHED_TEMPLATE,
                   )
                   //ConstInfo.TEMPLATE_CHANGE_SUCCESS
                 })
@@ -3969,7 +3996,10 @@ export default class ToolBar extends React.PureComponent {
         NavigationService.goBack()
         setTimeout(() => {
           this.setVisible(false)
-          Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+          Toast.show(
+            getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
+          )
+          //ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
         }, 1000)
       },
     })
@@ -3982,7 +4012,8 @@ export default class ToolBar extends React.PureComponent {
         this.props.map.currentMap &&
         this.props.map.currentMap.path === item.path
       ) {
-        Toast.show(ConstInfo.MAP_ALREADY_OPENED)
+        Toast.show(getLanguage(this.props.language).Prompt.THE_MAP_IS_OPENED)
+        //ConstInfo.MAP_ALREADY_OPENED)
         return
       }
       this.props.setContainerLoading(
@@ -4018,7 +4049,7 @@ export default class ToolBar extends React.PureComponent {
         } else {
           await this.props.setTemplate()
         }
-
+        await SMap.openTaggingDataset(this.props.user.currentUser.userName)
         await this.props.getLayers(-1, async layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
           // 若没有底图，默认添加地图

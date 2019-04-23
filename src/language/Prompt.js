@@ -5,23 +5,28 @@ const Chinese = {
   SAVE_NO: '不保存',
   CANCEL: '取消',
   SHARE: '分享',
+  DELETE: '删除',
+  WECHAT: '微信',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
   DOWNLOADING: '下载中',
-  DOWNLOAD_SUCCESSFULLY: '下载完成',
+  DOWNLOAD_SUCCESSFULLY: '已下载',
 
   NO_REMINDER: '下次不再提醒',
 
   LOG_OUT: '是否退出登录？',
 
   DELETE_STOP: '确认删除站点？',
+  DELETE_OBJECT: '确定要永久删除该对象吗?',
 
   CONFIRM: '确定',
 
   QUIT: '确认退出SuperMap iTablet?',
   MAP_LOADING: '地图加载中',
   LOADING: '加载中',
+  THE_MAP_IS_OPENED: '该地图已打开',
+  THE_SCENE_IS_OPENED: '该场景已打开',
   SWITCHING: '正在切换地图',
   CLOSING: '正在关闭地图',
   CLOSING_3D: '正在关闭地图',
@@ -33,12 +38,13 @@ const Chinese = {
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',
   SUPERMAP_KNOW: '超图知道',
-
+  INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
+  SERCHING: '搜索中',
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
-  SAVE_SUCCESSFULLY: '地图保存成功',
+  SAVE_SUCCESSFULLY: '保存成功',
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',
 
@@ -74,6 +80,30 @@ const Chinese = {
   CLIPPED_SUCCESS: '裁剪成功',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP: '不支持由该图层创建专题图',
+
+  ANALYSING: '路径分析中',
+  CHOOSE_STARTING_POINT: '请输入起点',
+  CHOOSE_DESTINATION: '请输入终点',
+
+  LATEST: '最后修改时间: ',
+  GEOGRAPHIC_COORDINATE_SYSTEM: '地理坐标系: ',
+  PROJECTED_COORDINATE_SYSTEM: '投影坐标系: ',
+  FIELD_TYPE: '字段类型: ',
+
+  PLEASE_LOGIN_AND_SHARE: '请登陆后再分享',
+  SHARING: '分享中',
+  SHARE_SUCCESS: '分享成功',
+  SHARE_PREPARE: '准备分享',
+  SHARE_START: '开始分享',
+
+  EXPORT_SUCCESS: '导出成功',
+
+  UNDO_FAILED: '撤销失败',
+  REDO_FAILED: '恢复失败',
+  RECOVER_FAILED: '还原失败',
+
+  SETTING_SUCCESS: '设置成功',
+  SETTING_FAILED: '设置失败',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -81,23 +111,27 @@ const English = {
   SAVE_NO: 'No',
   CANCEL: 'Cancel',
   SHARE: 'Share',
+  WECHAT: 'Wechat',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',
   DOWNLOADING: 'Loading',
-  DOWNLOAD_SUCCESSFULLY: 'Download Successfully',
+  DOWNLOAD_SUCCESSFULLY: 'Done',
 
   NO_REMINDER: 'No reminder',
 
   LOG_OUT: 'Are you sure you want to log out?',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
+  DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
 
   CONFIRM: 'Confirm',
 
   QUIT: 'Quit SuperMap iTablet?',
   MAP_LOADING: 'Loading',
   LOADING: 'Loading',
+  THE_MAP_IS_OPENED: 'The map is opened',
+  THE_SCENE_IS_OPENED: 'The scene is opened',
   SWITCHING: 'Switching',
   CLOSING: 'Closing',
   CLOSING_3D: 'Closing',
@@ -110,11 +144,13 @@ const English = {
   SUPERMAP_FORUM: 'SuperMap Forum',
   SUPERMAP_KNOW: 'SuperMap Know',
 
+  INSTRUCTION_MANUAL: 'Instruction Manual',
   THE_CURRENT_LAYER: 'The current layer is',
   ENTER_KEY_WORDS: 'Please enter key words',
+  SEARCHING: 'Searching',
   READING_DATA: 'Reading Data',
-  CREATE_SUCCESSFULLY: 'Create Successfully',
-  SAVE_SUCCESSFULLY: 'Save Successfully',
+  CREATE_SUCCESSFULLY: 'Created Successfully',
+  SAVE_SUCCESSFULLY: 'Saved Successfully',
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',
 
@@ -153,6 +189,30 @@ const English = {
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP:
     'The current layer cannot be used to create a thematic map.',
+
+  ANALYSING: 'Analysing',
+  CHOOSE_STARTING_POINT: 'Choose starting point',
+  CHOOSE_DESTINATION: 'Choose destination',
+
+  LATEST: 'Latest: ',
+  GEOGRAPHIC_COORDINATE_SYSTEM: 'Geographic Coordinate System: ',
+  PROJECTED_COORDINATE_SYSTEM: 'Projected Coordinate System: ',
+  FIELD_TYPE: 'Field Type: ',
+
+  PLEASE_LOGIN_AND_SHARE: 'Please log in and share',
+  SHARING: 'Sharing',
+  SHARE_SUCCESS: 'Shared Successfully',
+  SHARE_PREPARE: 'Preparing for sharing',
+  SHARE_START: 'Start sharing',
+
+  EXPORT_SUCCESS: 'Exported Successfully',
+
+  UNDO_FAILED: 'Undo Failed',
+  REDO_FAILED: 'Redo Failed',
+  RECOVER_FAILED: 'Recover Failed',
+
+  SETTING_SUCCESS: 'Setted Successfully',
+  SETTING_FAILED: 'Setted Failed',
 }
 
 export { Chinese, English }

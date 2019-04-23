@@ -23,7 +23,6 @@ import {
   AlertDialog,
   OverlayView,
 } from '../../components'
-import constants from '../../constants'
 import {
   Container,
   MTBtn,
@@ -44,6 +43,7 @@ import {
   ConstInfo,
   getHeaderTitle,
 } from '../../../../constants'
+import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import { getLanguage } from '../../../../language/index'
@@ -54,7 +54,7 @@ import LegendView from '../../components/LegendView/LegendView'
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
-    language: PropTypes.object,
+    language: PropTypes.string,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -364,7 +364,6 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
-    Utils.setSelectionStyle(event.layerInfo.path)
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -373,9 +372,12 @@ export default class MapView extends React.Component {
         },
       ])
     switch (GLOBAL.currentToolbarType) {
-      case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
-      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      case ConstToolType.MAP_TOOL_POINT_SELECT:
+      // case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
+      // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+      // case ConstToolType.MAP_TOOL_POINT_SELECT:
+      //   break
+      case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+      case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
         break
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
@@ -414,12 +416,25 @@ export default class MapView extends React.Component {
         }
         break
       }
+      default:
+        // 除了编辑状态，其余点选对象所在图层全设置为选择状态
+        if (event.layerInfo.editable) {
+          SMap.setLayerEditable(event.layerInfo.path, false).then(() => {
+            Utils.setSelectionStyle(event.layerInfo.path)
+          })
+        } else {
+          Utils.setSelectionStyle(event.layerInfo.path)
+        }
+        break
     }
   }
 
   geometryMultiSelected = event => {
     let data = []
     for (let i = 0; i < event.geometries.length; i++) {
+      if (event.geometries[i].layerInfo.editable) {
+        SMap.setLayerEditable(event.geometries[i].layerInfo.path, false)
+      }
       Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,
@@ -666,7 +681,10 @@ export default class MapView extends React.Component {
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.SAVING,
+    )
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -732,7 +750,7 @@ export default class MapView extends React.Component {
         })
 
         if (result) {
-          Toast.show('删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
           // 删除对象后，编辑设为为选择状态
@@ -886,7 +904,7 @@ export default class MapView extends React.Component {
           // }
         }
 
-        GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
+        // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
         this.props.getLayers(
@@ -922,6 +940,11 @@ export default class MapView extends React.Component {
       }
       this.showMarker &&
         SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
+      SMap.openTaggingDataset(this.props.user.currentUser.userName)
+
+      GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
+        this.props.user.currentUser.userName,
+      )
     }.bind(this)())
   }
 
@@ -961,7 +984,7 @@ export default class MapView extends React.Component {
       })
       if (mapInfo) {
         // 如果是模板地图，则加载模板
-        if (mapInfo.Template) {
+        if (mapInfo.Template && GLOBAL.Type === constants.COLLECTION) {
           this.setLoading(
             true,
             //ConstInfo.TEMPLATE_READING
@@ -1195,8 +1218,8 @@ export default class MapView extends React.Component {
   renderTool = () => {
     return (
       <ToolBar
+        ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
         language={this.props.language}
-        ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1390,11 +1413,12 @@ export default class MapView extends React.Component {
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
+          // title={'提示'}
+          info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
+          // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
+          cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveXMLDialog = ref)}
@@ -1411,7 +1435,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图?'}
+          Alerttitle={getLanguage(this.props.language).Prompt.SAVE_TITLE}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

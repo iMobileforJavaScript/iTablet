@@ -31,8 +31,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-
             new AMapGeolocationPackage(),
+//            new MapsPackage(),
             new OrientationPackage(),
             new RNFSPackage(),
             new SplashScreenReactPackage(),

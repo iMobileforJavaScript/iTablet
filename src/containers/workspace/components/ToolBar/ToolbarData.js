@@ -147,7 +147,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'startFly',
-          title: '开始飞行',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_START,
+          //'开始飞行',
           action: () => {
             SScene.flyStart()
           },
@@ -157,7 +158,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'stop',
-          title: '暂停',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
           action: () => {
             SScene.flyPause()
           },
@@ -179,7 +181,8 @@ function getMap3DData(type, params) {
             try {
               SScene.saveCurrentRoutStop().then(result => {
                 if (result) {
-                  Toast.show('添加站点成功')
+                  Toast.show(getLanguage(global.language).Prompt.ADD_SUCCESS)
+                  //'添加站点成功')
                 }
               })
             } catch (error) {
@@ -192,7 +195,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'stop',
-          title: '飞行',
+          title: getLanguage(global.language).Map_Main_Menu.FLY,
+          //'飞行',
           action: () => {
             try {
               SScene.saveRoutStop()
@@ -207,7 +211,8 @@ function getMap3DData(type, params) {
         },
         {
           key: 'pause',
-          title: '暂停',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
           action: () => {
             try {
               SScene.pasueRoutStop()

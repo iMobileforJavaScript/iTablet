@@ -124,7 +124,7 @@ export default class MyModule extends Component {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       data = [
         {
-          title: getLanguage(global.language).Profile.DELETE_DATA,
+          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
           //'删除数据',
           action: async () => {
             try {
@@ -149,7 +149,7 @@ export default class MyModule extends Component {
     } else {
       data = [
         {
-          title: getLanguage(global.language).Profile.SHARE,
+          title: getLanguage(global.language).Profile.UPLOAD_TEMPLATE,
           //''分享',
           action: async () => {
             this._closeModal()
@@ -181,7 +181,7 @@ export default class MyModule extends Component {
           },
         },
         {
-          title: getLanguage(global.language).Profile.DELETE_DATA,
+          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
           //'删除数据',
           action: async () => {
             try {
@@ -233,6 +233,7 @@ export default class MyModule extends Component {
         ConstPath.RelativeFilePath.ExportData +
         this.itemInfo.item.name +
         '.zip'
+      // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
         let fileName = this.itemInfo.item.name
@@ -273,6 +274,8 @@ export default class MyModule extends Component {
       }
     } catch (error) {
       Toast.show('分享失败')
+    } finally {
+      this.container.setLoading(false)
     }
   }
 

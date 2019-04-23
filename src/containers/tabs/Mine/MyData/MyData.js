@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 export default class MyLocalData extends Component {
   props: {
-    language: Object,
+    language: string,
     user: Object,
     navigation: Object,
     upload: Object,
@@ -192,8 +192,7 @@ export default class MyLocalData extends Component {
    */
   getSectionData = async (path, isUser = false) => {
     try {
-      let filter,
-        title = '我的数据'
+      let filter, title
       switch (this.state.title) {
         case getLanguage(this.props.language).Profile.MAP:
           path += ConstPath.RelativePath.Map
@@ -201,7 +200,7 @@ export default class MyLocalData extends Component {
             extension: 'xml',
             type: 'file',
           }
-          title = isUser ? '我的地图' : '游客地图'
+          title = isUser ? 'MY_MAP' : 'MAP'
           break
         case getLanguage(this.props.language).Profile.DATA:
           path += ConstPath.RelativePath.Datasource
@@ -209,21 +208,21 @@ export default class MyLocalData extends Component {
             extension: 'udb',
             type: 'file',
           }
-          title = isUser ? '我的数据' : '游客数据'
+          title = isUser ? 'MY_DATA' : 'DATA'
           break
         case getLanguage(this.props.language).Profile.SCENE:
           path += ConstPath.RelativePath.Scene
           filter = {
             type: 'Directory',
           }
-          title = isUser ? '我的场景' : '游客场景'
+          title = isUser ? 'MY_SCENE' : 'SCENE'
           break
         case getLanguage(this.props.language).Profile.SYMBOL:
           path += ConstPath.RelativePath.Symbol
           filter = {
             type: 'file',
           }
-          title = isUser ? '我的符号' : '游客符号'
+          title = isUser ? 'MY_SYMBOL' : 'SYMBOL'
           break
         case getLanguage(this.props.language).Profile.COLOR_SCHEME:
           //Const.MINE_COLOR:
@@ -232,7 +231,7 @@ export default class MyLocalData extends Component {
             extension: 'scs',
             type: 'file',
           }
-          title = isUser ? '我的色带' : '游客色带'
+          title = isUser ? 'MY_COLOR_SCHEME' : 'COLOR_SCHEME'
           break
       }
       let data = await FileTools.getPathListByFilter(path, filter)
@@ -315,10 +314,10 @@ export default class MyLocalData extends Component {
       isShowMore = false
     }
     switch (this.state.title) {
-      case Const.MAP:
+      case getLanguage(this.props.language).Profile.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.SYMBOL:
+      case getLanguage(this.props.language).Profile.SYMBOL:
         if (txtType === 'sym') {
           // 点
           img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -333,10 +332,10 @@ export default class MyLocalData extends Component {
           img = require('../../../../assets/Mine/mine_my_online_data.png')
         }
         break
-      case Const.SCENE:
+      case getLanguage(this.props.language).Profile.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.TEMPLATE:
+      case getLanguage(this.props.language).Profile.TEMPLATE:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
       default:
@@ -394,10 +393,10 @@ export default class MyLocalData extends Component {
     let img,
       isShowMore = true
     switch (this.state.title) {
-      case Const.MAP:
+      case getLanguage(this.props.language).Profile.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.SYMBOL:
+      case getLanguage(this.props.language).Profile.SYMBOL:
         if (txtType === 'sym') {
           // 点
           img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -412,10 +411,10 @@ export default class MyLocalData extends Component {
           img = require('../../../../assets/Mine/mine_my_online_data.png')
         }
         break
-      case Const.SCENE:
+      case getLanguage(this.props.language).Profile.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.DATA:
+      case getLanguage(this.props.language).Profile.DATA:
       default:
         img = require('../../../../assets/Mine/mine_my_online_data.png')
         break
@@ -479,7 +478,8 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
-      this.setLoading(true, '分享中')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
+      //'分享中')
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
@@ -539,12 +539,16 @@ export default class MyLocalData extends Component {
           }
         }
         if (type === 'weChat') {
-          if (this.state.title === Const.SCENE) {
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.SCENE
+          ) {
             Toast.show('所分享文件超过10MB')
             return
           }
           let zipResult
-          if (this.state.title === Const.MAP) {
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
             let result = await this._exportData()
             if (!result) {
               Toast.show('分享失败')
@@ -579,7 +583,9 @@ export default class MyLocalData extends Component {
                 !result && FileTools.deleteFile(targetPath)
               })
         } else if (type === 'online') {
-          if (this.state.title === Const.MAP) {
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
             let result = await this._exportData()
             if (!result) {
               Toast.show('分享失败')
@@ -599,7 +605,11 @@ export default class MyLocalData extends Component {
             await SOnlineService.uploadFile(targetPath, fileName, {
               onResult: result => {
                 this.setLoading(false)
-                result && Toast.show('分享成功')
+                result &&
+                  Toast.show(
+                    getLanguage(this.props.language).Prompt.SHARE_SUCCESS,
+                  )
+                //'分享成功')
                 this.ModalBtns && this.ModalBtns.setVisible(false)
                 FileTools.deleteFile(targetPath)
               },
@@ -614,15 +624,18 @@ export default class MyLocalData extends Component {
                 this.setLoading(false)
                 Toast.show(
                   name + ' ' + result || result === undefined
-                    ? '分享成功'
-                    : '分享失败',
+                    ? getLanguage(this.props.language).Prompt.SHARE_SUCCESS
+                    : //'分享成功'
+                    '分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
               },
             })
           }
         } else if (this.formChat) {
-          if (this.state.title === Const.MAP) {
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
             await this._exportData()
             let homePath = await FileTools.appendingHomeDirectory()
             targetPath =
@@ -780,7 +793,9 @@ export default class MyLocalData extends Component {
       { maps: [mapName], outPath: path, isOpenMap: true },
       result => {
         if (result === true) {
-          showToast && Toast.show('导出成功')
+          showToast &&
+            Toast.show(getLanguage(this.props.language).Prompt.EXPORT_SUCCESS)
+          //'导出成功')
         } else {
           showToast && Toast.show('导出失败')
         }
@@ -813,28 +828,27 @@ export default class MyLocalData extends Component {
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       let data
-      // eslint-disable-next-line no-unused-vars
-      let title = getLanguage(this.props.language).Profile.SHARE
+      // let title = getLanguage(this.props.language).Profile.UPLOAD_DATA
       //'分享'
       if (
         this.props.user.currentUser.userName &&
         this.props.user.currentUser.userType !== UserType.PROBATION_USER
       ) {
-        let uploadingData = this.getUploadingData()
-        if (uploadingData && uploadingData.progress >= 0) {
-          title += '  ' + uploadingData.progress + '%'
-        }
-        if (this.state.sectionData[0].title.indexOf('我的地图') !== -1) {
+        // let uploadingData = this.getUploadingData()
+        // if (uploadingData && uploadingData.progress >= 0) {
+        //   title += '  ' + uploadingData.progress + '%'
+        // }
+        if (this.state.sectionData[0].title.indexOf('MY_MAP') !== -1) {
           data = [
             {
-              title: getLanguage(this.props.language).Profile.SHARE,
+              title: getLanguage(this.props.language).Profile.UPLOAD_MAP,
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
-              title: getLanguage(this.props.language).Profile.EXPORT_DATA,
+              title: getLanguage(this.props.language).Profile.EXPORT_MAP,
               // '导出数据',
               action: () => {
                 this._exportData(true)
@@ -842,14 +856,17 @@ export default class MyLocalData extends Component {
             },
             {
               //'删除数据'
-              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              title: getLanguage(this.props.language).Profile.DELETE_MAP,
               action: this._onDeleteData,
             },
           ]
-        } else {
+        } else if (this.state.sectionData[0].title.indexOf('MY') !== -1) {
+          let _type = this.state.sectionData[0].title.split('_')[1]
           data = [
             {
-              title: getLanguage(this.props.language).Profile.SHARE,
+              title: getLanguage(this.props.language).Profile[
+                `UPLOAD_${_type}`
+              ],
               //'分享',
               action: () => {
                 this._closeModal()
@@ -858,16 +875,18 @@ export default class MyLocalData extends Component {
             },
             {
               //'删除数据'
-              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              title: getLanguage(this.props.language).Profile[
+                `DELETE_${_type}`
+              ],
               action: this._onDeleteData,
             },
           ]
         }
       } else {
-        if (this.state.sectionData[0].title.indexOf('地图') !== -1) {
+        if (this.state.sectionData[0].title.indexOf('MAP') !== -1) {
           data = [
             {
-              title: getLanguage(this.props.language).Profile.EXPORT_DATA,
+              title: getLanguage(this.props.language).Profile.EXPORT_MAP,
               //'导出数据',
               action: () => {
                 this._exportData(true)
@@ -875,15 +894,18 @@ export default class MyLocalData extends Component {
             },
             {
               //'删除数据'
-              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              title: getLanguage(this.props.language).Profile.DELETE_MAP,
               action: this._onDeleteData,
             },
           ]
         } else {
+          let _type = this.state.sectionData[0].title.split('_')
           data = [
             {
               //'删除数据'
-              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              title: getLanguage(this.props.language).Profile[
+                `DELETE_${_type}`
+              ],
               action: this._onDeleteData,
             },
           ]

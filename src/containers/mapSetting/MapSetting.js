@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-// import { MAP_MODULE } from '../../constants'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
@@ -14,7 +13,7 @@ import { getLanguage } from '../../language/index'
 
 export default class MapSetting extends Component {
   props: {
-    language: Object,
+    language: string,
     navigation: Object,
     currentMap: Object,
     data: Array,

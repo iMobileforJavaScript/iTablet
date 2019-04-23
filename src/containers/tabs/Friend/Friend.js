@@ -37,7 +37,7 @@ let addFriendImg = getThemeAssets().friend.friend_add
 let g_connectService = false
 export default class Friend extends Component {
   props: {
-    language: Object,
+    language: string,
     navigation: Object,
     user: Object,
     chat: Array,

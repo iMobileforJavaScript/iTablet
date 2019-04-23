@@ -101,9 +101,9 @@ export default class protocol extends Component {
         break
       case 'protocol':
         source = {
-          uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
+          uri: `http://111.202.121.144:8088/iTablet/home/home/help/protocol.html`,
         }
-        title = '服务协议'
+        title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
       case 'superMapForum':
         source = {
@@ -127,6 +127,12 @@ export default class protocol extends Component {
         }
         title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
         //'超图知道'
+        break
+      case 'userHelp':
+        source = {
+          uri: 'http://111.202.121.144:8088/iTablet/home/home/help/index.html',
+        }
+        title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
         break
       default:
         break

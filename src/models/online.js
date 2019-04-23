@@ -8,6 +8,8 @@ import { FileTools } from '../native'
 export const SHARING = 'SHARING'
 
 export const UPLOADING = 'UPLOADING'
+export const UPDATEDOWNLIST = 'UPDATEDOWNLIST'
+export const REMOVEITEMPFDOWNLIST = 'REMOVEITEMPFDOWNLIST'
 // export const UPLOADED = 'UPLOADED'
 // Actions
 // ---------------------------------.3-----------------
@@ -68,9 +70,32 @@ export const uploading = (params = {}, cb = () => {}) => async dispatch => {
   cb && cb(uploadResult)
 }
 
+export const updateDownList = (
+  params = {},
+  cb = () => {},
+) => async dispatch => {
+  await dispatch({
+    type: UPDATEDOWNLIST,
+    payload: params,
+  })
+  cb && cb()
+}
+
+export const removeItemOfDownList = (
+  params = {},
+  cb = () => {},
+) => async dispatch => {
+  await dispatch({
+    type: REMOVEITEMPFDOWNLIST,
+    payload: params,
+  })
+  cb && cb()
+}
+
 const initialState = fromJS({
   share: [], // { module: '', name: '', progress: 0}
   upload: [], // { module: '', name: '', progress: 0}
+  down: [],
 })
 
 export default handleActions(
@@ -119,6 +144,42 @@ export default handleActions(
         list.unshift(payload)
       }
       return state.setIn(['upload'], fromJS(list))
+    },
+    [`${UPDATEDOWNLIST}`]: (state, { payload }) => {
+      let down = state.toJS().down
+      if (payload.id) {
+        if (down.length > 0) {
+          let isItem = false
+          for (let index = 0; index < down.length; index++) {
+            const element = down[index]
+            if (element.id === payload.id) {
+              down[index] = payload
+              isItem = true
+              break
+            }
+          }
+          if (!isItem) {
+            down.push(payload)
+          }
+        } else {
+          down.push(payload)
+        }
+      }
+      return state.setIn(['down'], fromJS(down))
+    },
+
+    [`${REMOVEITEMPFDOWNLIST}`]: (state, { payload }) => {
+      let down = state.toJS().down
+      if (payload.id) {
+        for (let index = 0; index < down.length; index++) {
+          const element = down[index]
+          if (element.id === payload.id) {
+            down.splice(index, 1)
+            break
+          }
+        }
+      }
+      return state.setIn(['down'], fromJS(down))
     },
     // [REHYDRATE]: () => {
     //   // return payload && payload.online ? fromJS(payload.online) : state

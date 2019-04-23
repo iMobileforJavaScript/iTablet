@@ -94,17 +94,19 @@ export default class ToolBarSectionList extends React.Component {
             selectList[title][pushName] !== true
           ) {
             selectList[title].push(pushObj)
+          } else {
+            for (let i = 0, l = selectList[title].length; i < l; i++)
+              if (pushName in selectList[title][i]) {
+                selectList[title][i][pushName] = false
+                break
+              }
           }
-        }
-      } else {
-        for (let j = 0; j < selectList[title].length; j++) {
-          if (
-            selectList[title][j] === sections[i].data[index].title ||
-            selectList[title][j] === sections[i].data[index].name ||
-            selectList[title][j] === sections[i].data[index].expression ||
-            selectList[title][j] === sections[i].data[index].datasetName
-          ) {
-            selectList[title].splice(j, 1)
+        } else {
+          for (let j = 0; j < selectList[title].length; j++) {
+            let pushName = section.data[index].datasetName
+            if (pushName in selectList[title][j]) {
+              selectList[title][j][pushName] = true
+            }
           }
         }
       }
@@ -348,14 +350,35 @@ export default class ToolBarSectionList extends React.Component {
     // }
     let info
     if (item.info.infoType === 'mtime') {
-      info = '最后修改时间: ' + item.info.lastModifiedDate
+      info = getLanguage(global.language).Prompt.LATEST
+      if (global.language === 'CN') info = info + item.info.lastModifiedDate
+      else if (global.language === 'EN') {
+        let day = item.info.lastModifiedDate
+          .replace(/年|月|日/g, '/')
+          .split('  ')[0]
+          .split('/')
+        info =
+          info +
+          day[2] +
+          '/' +
+          day[1] +
+          '/' +
+          day[0] +
+          '  ' +
+          item.info.lastModifiedDate.split('  ')[1]
+      }
     } else if (item.info.infoType === 'fieldType') {
-      info = '字段类型: ' + item.info.fieldType
+      info =
+        getLanguage(global.language).Prompt.FIELD_TYPE + item.info.fieldType
     } else if (item.info.infoType === 'dataset') {
       let geoCoordSysType = item.info.geoCoordSysType
       let prjCoordSysType = item.info.prjCoordSysType
       info =
-        '地理坐标系: ' + geoCoordSysType + ', 投影坐标系: ' + prjCoordSysType
+        getLanguage(global.language).Prompt.GEOGRAPHIC_COORDINATE_SYSTEM +
+        geoCoordSysType +
+        ', ' +
+        getLanguage(global.language).Prompt.PROJECTED_COORDINATE_SYSTEM +
+        prjCoordSysType
     } else {
       return
     }

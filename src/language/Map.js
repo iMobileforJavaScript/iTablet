@@ -243,7 +243,7 @@ const Map_Main_Menu_English = {
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
 
-  OPEN: 'Open',
+  OPEN: 'Add',
   OPEN_DATASOURCE: 'Datasource',
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
@@ -433,6 +433,7 @@ const Map_Layer_Chinese = {
   PLOTS: '我的标注',
   PLOTS_IMPORT: '导入标注',
   PLOTS_DELETE: '删除标注',
+  PLOTS_SET_AS_CURRENT: '设置为当前标注',
 
   LAYERS: '我的图层',
   LAYERS_MOVE_UP: '上移',
@@ -477,6 +478,7 @@ const Map_Layer_English = {
   PLOTS: 'My Plots',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
+  PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
 
   LAYERS: 'My Layers',
   LAYERS_MOVE_UP: 'Move up',
@@ -520,6 +522,7 @@ const Map_Layer_English = {
 const Map_Attribute_Chinese = {
   ATTRIBUTE_SORT: '排序',
   ATTRIBUTE_LOCATION: '定位',
+  ATTRIBUTE_CANCEL: '取消',
   ATTRIBUTE_EDIT: '编辑',
   ATTRIBUTE_STATISTIC: '统计',
   ATTRIBUTE_ASSOCIATION: '关联',

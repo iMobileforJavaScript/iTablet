@@ -15,6 +15,7 @@
 #import "VCViewController.h"
 #import "RNFSManager.h"
 //#import "RNSplashScreen.h"
+#import "Common/HWNetworkReachabilityManager.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -67,6 +68,11 @@ static NSString* g_sampleCodeName = @"#";;
   //  [RNSplashScreen show];
   //注册微信
   [WeiXinUtils registerApp];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"dowloadFile"
+                                                      object:nil];
+  // 开启网络监听
+  [[HWNetworkReachabilityManager shareManager] monitorNetworkStatus];
+  
   return YES;
 }
 

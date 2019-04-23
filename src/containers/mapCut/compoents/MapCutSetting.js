@@ -16,7 +16,7 @@ import { getLanguage } from '../../../language'
 
 export default class MapCutSetting extends React.Component {
   props: {
-    language: Object,
+    language: string,
     datasources: Array,
     configAction?: () => {},
   }

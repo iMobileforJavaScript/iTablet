@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
 class AppRoot extends Component {
   props:{
-    language:Object,
+    language: String,
   }
   static propTypes = {
     nav: PropTypes.object,
@@ -132,12 +132,16 @@ class AppRoot extends Component {
     GLOBAL.loginTimer = undefined
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
+    GLOBAL.TaggingDatasetName = ''
+    GLOBAL.TaggingLayerName = ''
+    GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
   }
   UNSAFE_componentWillMount(){
     SOnlineService.init()
   }
   componentDidMount () {
+
 
     if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)

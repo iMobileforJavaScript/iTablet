@@ -14,7 +14,7 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 
 import { Container } from '../../../../components'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -29,7 +29,7 @@ import { getLanguage } from '../../../../language/index'
 
 export default class Register extends React.Component {
   props: {
-    language: Object,
+    language: string,
     navigation: Object,
   }
 
@@ -53,7 +53,7 @@ export default class Register extends React.Component {
     try {
       let result
       let isEmail = this.state.onEmailTitleFocus
-      if (!isEmail) {
+      if (isEmail) {
         if (!this.txtEmail) {
           //请输入QQ邮箱
           Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
@@ -129,13 +129,14 @@ export default class Register extends React.Component {
 
   _renderEmail() {
     return (
-      <View style={{ width: '70%' }}>
+      <View key={'email'} style={{ width: '70%' }}>
         <TextInput
           keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
-          //'请输入QQ邮箱'
+          //'请输入邮箱'
           placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL}
           style={styles.textInputStyle}
+          defaultValue={this.txtEmail}
           onChangeText={text => {
             this.txtEmail = text
           }}
@@ -145,6 +146,7 @@ export default class Register extends React.Component {
           //'请输入昵称'
           placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
           style={styles.textInputStyle}
+          defaultValue={this.txtEmailNickname}
           onChangeText={text => {
             this.txtEmailNickname = text
           }}
@@ -155,6 +157,7 @@ export default class Register extends React.Component {
           // 请输入密码
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           style={styles.textInputStyle}
+          defaultValue={this.txtEmailPassword}
           onChangeText={text => {
             this.txtEmailPassword = text
           }}
@@ -165,13 +168,14 @@ export default class Register extends React.Component {
 
   _renderPhone() {
     return (
-      <View style={{ width: '70%' }}>
+      <View key={'phone'} style={{ width: '70%' }}>
         <TextInput
           keyboardType={'phone-pad'}
           //'请输入手机号'
           placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
           style={styles.textInputStyle}
           clearButtonMode={'while-editing'}
+          defaultValue={this.txtPhoneNumber}
           onChangeText={text => {
             this.txtPhoneNumber = text
           }}
@@ -182,6 +186,7 @@ export default class Register extends React.Component {
           placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberNickname}
           onChangeText={text => {
             this.txtPhoneNumberNickname = text
           }}
@@ -192,7 +197,8 @@ export default class Register extends React.Component {
             clearButtonMode={'while-editing'}
             //'请输入验证码'
             placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
-            style={{ flex: 1, fontSize: fontSize }}
+            style={{ flex: 1, fontSize: scaleSize(fontSize) }}
+            defaultValue={this.txtVerifyCode}
             onChangeText={text => {
               this.txtVerifyCode = text
             }}
@@ -222,6 +228,7 @@ export default class Register extends React.Component {
           //'请输入密码'
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberPassword}
           onChangeText={text => {
             this.txtPhoneNumberPassword = text
           }}
@@ -252,7 +259,7 @@ export default class Register extends React.Component {
   }
 
   _onSelectTitle = () => {
-    if (!this.state.onEmailTitleFocus) {
+    if (this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {
       return this._renderPhone()
@@ -292,7 +299,7 @@ export default class Register extends React.Component {
               <View style={styles.titleStyle}>
                 <TouchableOpacity
                   onPress={() => {
-                    this._onEmailPress()
+                    this._onPhonePress()
                   }}
                   style={[
                     {
@@ -305,7 +312,7 @@ export default class Register extends React.Component {
                       borderBottomRightRadius: 0,
                       borderColor: color.theme,
                       justifyContent: 'center',
-                      backgroundColor: this.state.titleEmailDefaultBg,
+                      backgroundColor: this.state.titlePhoneBg,
                     },
                   ]}
                 >
@@ -316,7 +323,7 @@ export default class Register extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this._onPhonePress()
+                    this._onEmailPress()
                   }}
                   style={{
                     flex: 1,
@@ -327,7 +334,7 @@ export default class Register extends React.Component {
                     borderTopRightRadius: 4,
                     borderBottomRightRadius: 4,
                     justifyContent: 'center',
-                    backgroundColor: this.state.titlePhoneBg,
+                    backgroundColor: this.state.titleEmailDefaultBg,
                   }}
                 >
                   <Text style={[styles.titleContainerStyle]}>

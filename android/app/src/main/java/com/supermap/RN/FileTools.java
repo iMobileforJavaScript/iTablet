@@ -71,9 +71,8 @@ public class FileTools extends ReactContextBaseJavaModule {
     public FileTools(ReactApplicationContext context) {
         super(context);
         reactContext = context;
-        mReactContext=context;
+        mReactContext = context;
     }
-
     @Override
     public String getName() {
         return REACT_CLASS;
@@ -597,7 +596,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                             datasourceConnectionInfo.setEngineType(EngineType.UDB);
                             Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
                             if(datasource1.getDescription().equals("Label")){
-                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Label/Label.udb";
+                                String udbName="Label_"+getUserName()+"#.udb";
+                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Datasource/"+udbName;
                                 File udb=new File(todatasource);
                                 if(udb.exists()){
                                     sMap.getSmMapWC().copyDataset(datasource.get(i),todatasource);
@@ -745,7 +745,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
-        createDirectory(dataPath + "Label");
         createDirectory(dataPath + "Color");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
@@ -755,12 +754,18 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
+        String commonCachePath = SDCARD + "/iTablet/Cache/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
         String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
-        String lableUDB=dataPath+"Label/Label.udb";
+        String srclic = "publicMap.txt";
+        if (!Utils.fileIsExit(commonCachePath + srclic)) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
+        }
+
+        String lableUDB=dataPath+"Datasource/Label_"+userName+"#.udb";
         File file=new File(lableUDB);
         if(!file.exists()){
             Workspace workspace=new Workspace();

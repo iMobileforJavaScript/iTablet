@@ -241,7 +241,8 @@ export default class Map3DToolBar extends React.Component {
 
   openWorkspace = item => {
     if (item.name === GLOBAL.sceneName) {
-      Toast.show('场景已打开,请勿重复打开场景')
+      Toast.show(getLanguage(global.language).Prompt.THE_SCENE_IS_OPENED)
+      //'场景已打开,请勿重复打开场景')
       return
     }
     SScene.openScence(item.name).then(() => {

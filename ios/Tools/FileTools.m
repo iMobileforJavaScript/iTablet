@@ -31,6 +31,34 @@ RCT_EXPORT_MODULE();
   return filetools;
 }
 
++(NSString *)getFilePath:(NSString *)path{
+  NSString *realPath = path;
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  BOOL isDir = YES;
+  BOOL hasDirInPath = NO;
+  NSString *dirpath;
+  if([filemanager fileExistsAtPath:realPath isDirectory:&isDir]){
+    NSArray *contents = [filemanager contentsOfDirectoryAtPath:realPath error:nil];
+    for(NSString * item in contents){
+      NSString *curPath = [NSString stringWithFormat:@"%@%@%@",realPath,item,@"/"];
+      if([filemanager fileExistsAtPath:curPath isDirectory:&isDir]){
+        hasDirInPath = YES;
+        dirpath = curPath;
+      }
+      if([item hasSuffix:@".smwu"]){
+        return realPath;
+      }
+    }
+    if(hasDirInPath){
+      return [FileTools getFilePath:dirpath];
+    }else{
+      return realPath;
+    }
+  }else{
+    return realPath;
+  }
+}
+
 RCT_REMAP_METHOD(getHomeDirectory,getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   NSString* home = [NSHomeDirectory() stringByAppendingString:@"/Documents"];
   if (home) {
@@ -435,12 +463,15 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:importFilePath];
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
+  NSString* CachePath = @"/Documents/iTablet/Cache/";
+  
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
   NSString* externalDataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData/"];
   NSString* plottingExtDataPath = [NSString stringWithFormat:@"%@%@", externalDataPath, @"/Plotting/"];
   NSString* collectionExtDataPath = [NSString stringWithFormat:@"%@%@", externalDataPath, @"/Collection/"];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", dataPath]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", commonPath]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", CachePath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Datasource"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Scene"]];
@@ -448,21 +479,45 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
-    [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Label"]];
-    [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Color"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Color"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Map"]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", externalDataPath, @""]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", plottingExtDataPath, @""]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", collectionExtDataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", plottingExtDataPath]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath]];
   
   // 初始化模板数据
   NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
   NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
   NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath];
   NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", collectionExtDataPath, @"地理国情普查"];
-
-  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Label/Label.udb"];
-
+  
+  BOOL isUnZip = NO;
+  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
+      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+    } else {
+      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
+        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+      }
+    }
+  } else {
+    isUnZip = YES;
+  }
+  
+  NSString* commonCache = [NSHomeDirectory() stringByAppendingFormat:@"%@/%@",CachePath,@"publicMap.txt"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:commonCache isDirectory:nil]) {
+    srclic = [[NSBundle mainBundle] pathForResource:@"publicMap" ofType:@"txt"];
+    if (srclic) {
+      
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:commonCache error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+  
+  NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", dataPath, @"Datasource/Label_",userName,@"#.udb"];
+  
   if(![[NSFileManager defaultManager]fileExistsAtPath:labelUDB]){
     Workspace *workspace = [[Workspace alloc] init];
     DatasourceConnectionInfo *info = [[DatasourceConnectionInfo alloc]init];
@@ -477,20 +532,6 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
       NSLog(@"数据源创建失败");
     }
     [workspace dispose];
-  }
-  BOOL isUnZip = NO;
-  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
-      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-    } else {
-      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
-        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-      }
-    }
-  } else {
-    isUnZip = YES;
   }
 
 //   NSString* sceneData = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios.zip"];
@@ -553,8 +594,9 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
     @try {
       NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
       NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+      NSString *deletepath = destinationPath;
+      destinationPath = [FileTools getFilePath:destinationPath];
       NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
-      
       NSString *suffix = @"";
       
       for(NSString *str in dirArray){
@@ -588,7 +630,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         if(importResult){
           hasImportedData = NO;
           isImportSuccess = YES;
-          [FileTools deleteFile:destinationPath];
+          [FileTools deleteFile:deletepath];
         }
       }else if([dataSourceFile count]){
         //导入udb文件
@@ -599,7 +641,8 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           dsci.engineType = ET_UDB;
           Datasource *datasource = [[ws datasources]open:dsci];
           if([datasource.description isEqualToString:@"Label"]){
-            NSString *todatasource = [[NSString alloc] initWithFormat:@"%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Label/Label.udb"];
+            NSString *udbName = [NSString stringWithFormat:@"%@%@%@",@"Label_",[FileTools getUserName],@"#"];
+            NSString *todatasource = [NSString stringWithFormat:@"%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Datasource/",udbName];
             [filemanager createFileAtPath:todatasource contents:nil attributes:nil];
             if([filemanager fileExistsAtPath:todatasource]){
               [smap.smMapWC copyDatasetsFrom:[dataSourceFile objectAtIndex:i] to:todatasource];

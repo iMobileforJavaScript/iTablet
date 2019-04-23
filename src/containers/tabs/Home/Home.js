@@ -24,7 +24,7 @@ import { getLanguage } from '../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
-    language: Object,
+    language: string,
     setLanguage: () => {},
     nav: Object,
     latestMap: Object,
@@ -248,6 +248,14 @@ export default class Home extends Component {
         case 'OlympicGreen_ios':
           fileName = 'OlympicGreen'
           storage = '  25.57MB'
+          break
+        case 'USA':
+          fileName = 'USA'
+          storage = '  39.76MB'
+          break
+        case 'SanFrancisco':
+          fileName = 'SanFrancisco'
+          storage = '  1.99MB'
           break
       }
     }
