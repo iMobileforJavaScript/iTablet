@@ -388,13 +388,13 @@ export default class LayerManager_item extends React.Component {
 
   getStyleIconByType = item => {
     if (item.themeType > 0) {
-      if (this.props.selectLayer === this.props.data.caption) {
+      if (this.props.selectLayer === this.props.data.name) {
         return this.getThemeWhiteIconByType(item.themeType)
       } else {
         return this.getThemeIconByType(item.themeType)
       }
     } else {
-      if (this.props.selectLayer === this.props.data.caption) {
+      if (this.props.selectLayer === this.props.data.name) {
         return this.getLayerWhiteIconByType(item.type)
       } else {
         return this.getLayerIconByType(item.type)
@@ -492,7 +492,8 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-shallow-image.png')
         break
       case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/map/icon-cad.png')
+        // icon = require('../../../../assets/map/icon-cad.png')
+        icon = require('../../../../assets/Mine/mine_my_plot_white.png')
         break
       case DatasetType.Network: // 复合数据集
         icon = require('../../../../assets/map/icon-network.png')
@@ -529,7 +530,8 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-shallow-image_black.png')
         break
       case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/map/icon-cad_black.png')
+        // icon = require('../../../../assets/map/icon-cad_black.png')
+        icon = require('../../../../assets/Mine/mine_my_plot.png')
         break
       case DatasetType.Network: // 复合数据集
         icon = require('../../../../assets/map/icon-network.png')
@@ -601,7 +603,7 @@ export default class LayerManager_item extends React.Component {
     let visibleImg = visibleImgBlack
     let moreImg = require('../../../../assets/function/icon_shallow_more_black.png')
     let image = this.getStyleIconByType(this.props.data)
-    if (this.props.selectLayer === this.props.data.caption) {
+    if (this.props.selectLayer === this.props.data.name) {
       select = '#rgba(0,157,249,1)'
       selectcolor = color.white
       visibleImg = visibleImgWhite
