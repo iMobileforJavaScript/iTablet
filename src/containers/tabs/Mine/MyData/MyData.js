@@ -581,6 +581,7 @@ export default class MyLocalData extends Component {
               .then(result => {
                 !result && Toast.show('所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
+                this.setLoading(false)
               })
         } else if (type === 'online') {
           if (
