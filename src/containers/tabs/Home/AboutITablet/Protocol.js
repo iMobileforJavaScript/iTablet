@@ -100,8 +100,15 @@ export default class protocol extends Component {
         title = 'SuperMap'
         break
       case 'protocol':
-        source = {
-          uri: `http://111.202.121.144:8088/iTablet/home/home/help/protocol.html`,
+        if (global.language === 'CN') {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/protocol.html',
+          }
+        } else {
+          source = {
+            uri:
+              'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
+          }
         }
         title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
@@ -129,8 +136,14 @@ export default class protocol extends Component {
         //'超图知道'
         break
       case 'userHelp':
-        source = {
-          uri: 'http://111.202.121.144:8088/iTablet/home/home/help/index.html',
+        if (global.language === 'CN') {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/help.html',
+          }
+        } else {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/help_en.html',
+          }
         }
         title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
         break
