@@ -600,6 +600,9 @@ public class FileTools extends ReactContextBaseJavaModule {
                             String fileName=arrayList.get(i).substring(arrayList.get(i).lastIndexOf("/")+1);
                             FileManager.getInstance().copy(arrayList.get(i), collection+fileName);
                         }
+                        if(workspace.size()>0){
+                            sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
+                        }
                         importResult=true;
                         importData=false;
                         deleteDirectory(importPath);

@@ -173,7 +173,7 @@ export default class MyLabel extends Component {
               .then(
                 result => {
                   this.container.setLoading(false)
-                  !result && Toast.show('所分享文件超过10MB')
+                  !result && Toast.show('分享失败')
                   !result && FileTools.deleteFile(targetPath)
                 },
                 () => {
