@@ -28,6 +28,7 @@ export default class LayerAttributeTable extends React.Component {
     loadMore?: () => {},
     selectRow?: () => {},
     changeAction?: () => {}, // 修改表格中的值的回调
+    onViewableItemsChanged?: () => {},
 
     selectable: boolean,
     stickySectionHeadersEnabled?: boolean,
@@ -96,6 +97,11 @@ export default class LayerAttributeTable extends React.Component {
     }
     this.canBeLoadMore = true // 控制是否可以加载更多
     this.isScrolling = false // 防止连续定位滚动
+
+    this.viewabilityConfig = {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95,
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -349,6 +355,9 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
+    if (index === null) {
+      return null
+    }
     return index.toString()
   }
 
@@ -370,6 +379,15 @@ export default class LayerAttributeTable extends React.Component {
         onPress={() => {}}
       />
     )
+  }
+
+  _onViewableItemsChanged = changed => {
+    if (
+      this.props.onViewableItemsChanged &&
+      typeof this.props.onViewableItemsChanged === 'function'
+    ) {
+      this.props.onViewableItemsChanged(changed)
+    }
   }
 
   getItemLayout = (data, index) => {
@@ -401,6 +419,8 @@ export default class LayerAttributeTable extends React.Component {
           renderSectionFooter={this.renderFooter}
           onScroll={() => (this.canBeLoadMore = true)}
           removeClippedSubviews={true}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
         />
       </ScrollView>
     )
