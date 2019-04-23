@@ -584,7 +584,6 @@ RCT_REMAP_METHOD(getImportResult, getImportResult:(RCTPromiseResolveBlock)resolv
 }
 
 RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
-  //压缩包地址
   
   NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   NSString * destinationPath = [head stringByAppendingString:@"/iTablet/Import/"];
@@ -594,14 +593,15 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
     @try {
       NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
       NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+      NSMutableArray *xmlSourceFile = [[NSMutableArray alloc]init];
+      NSMutableArray *symbolSourceFile = [[NSMutableArray alloc]init];
       NSString *deletepath = destinationPath;
       destinationPath = [FileTools getFilePath:destinationPath];
       NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
       NSString *suffix = @"";
       
       for(NSString *str in dirArray){
-        NSArray *splitArr = [str componentsSeparatedByString:@"."];
-        suffix = [splitArr objectAtIndex:(splitArr.count-1)];
+        suffix = [str pathExtension];
         
         NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
                                     @"9.0",@"smwu",
@@ -617,15 +617,38 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
           
           [workSpaceFile addObject:dic];
-        }else{
+        }
+        if([suffix isEqualToString:@"udb"]){
           //udb add
           [dataSourceFile addObject:[destinationPath stringByAppendingString:str]];
         }
+        if([suffix isEqualToString:@"xml"]){
+          [xmlSourceFile addObject:[destinationPath stringByAppendingString:str]];
+        }
+        if([suffix isEqualToString:@"sym"] || [suffix isEqualToString:@"lsl"] || [suffix isEqualToString:@"bru"]){
+           [symbolSourceFile addObject:[destinationPath stringByAppendingString:str]];
+        }
       }
-      SMap *smap = [SMap singletonInstance];
-      if(workSpaceFile.count){
+      SMap *sMap = [SMap singletonInstance];
+      if(xmlSourceFile.count ){
+        NSString *fileDir = [[[xmlSourceFile objectAtIndex:0]lastPathComponent] stringByDeletingPathExtension];
+        NSString *collection = [NSString stringWithFormat:@"%@%@%@%@%@%@",head,@"/iTablet/User",[FileTools getUserName],@"/ExternalData/Collection/",fileDir,@"/"];
+        if(![filemanager fileExistsAtPath:collection]){
+          [FileTools createFileDirectories:collection];
+        }
+        for(int i = 0; i < dirArray.count; i++){
+          NSString *fileName = [dirArray objectAtIndex:i];
+          [FileTools copyFile:[destinationPath stringByAppendingString:fileName] targetPath:[collection stringByAppendingString:fileName]];
+        }
+        if (workSpaceFile.count) {
+          [sMap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:@(YES)];
+        }
+        isImportSuccess = YES;
+        hasImportedData = NO;
+      }
+      else if(workSpaceFile.count){
         //导入工作空间
-        BOOL importResult = [smap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:YES];
+        BOOL importResult = [sMap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:YES];
         
         if(importResult){
           hasImportedData = NO;
@@ -634,7 +657,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         }
       }else if([dataSourceFile count]){
         //导入udb文件
-        for(int i = 0,len = (int)dataSourceFile.count; i < len; i++){
+        for(int i = 0,len = dataSourceFile.count; i < len; i++){
           Workspace *ws = [[Workspace alloc]init];
           DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
           dsci.server = [dataSourceFile objectAtIndex:i];
@@ -645,16 +668,24 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
             NSString *todatasource = [NSString stringWithFormat:@"%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Datasource/",udbName];
             [filemanager createFileAtPath:todatasource contents:nil attributes:nil];
             if([filemanager fileExistsAtPath:todatasource]){
-              [smap.smMapWC copyDatasetsFrom:[dataSourceFile objectAtIndex:i] to:todatasource];
+              [sMap.smMapWC copyDatasetsFrom:[dataSourceFile objectAtIndex:i] to:todatasource];
               isImportSuccess = YES;
               hasImportedData = NO;
             }
           }else{
-            [smap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
+            [sMap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
             isImportSuccess = YES;
-            hasImportedData =NO;
+            hasImportedData = NO;
           }
         }
+      }else if(symbolSourceFile.count){
+        NSString *symbolPath = [NSString stringWithFormat:@"%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Symbol/"];
+        for(int i = 0; i < symbolSourceFile.count; i++){
+          NSString *fileName = [symbolSourceFile objectAtIndex:i];
+          [FileTools copyFile:[destinationPath stringByAppendingString:fileName] targetPath:[symbolPath stringByAppendingString:fileName]];
+        }
+        isImportSuccess = YES;
+        hasImportedData = NO;
       }
       resolve(@(isImportSuccess));
     } @catch (NSException *exception) {
