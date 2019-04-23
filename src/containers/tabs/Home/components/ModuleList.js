@@ -388,20 +388,19 @@ export class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-
-        let latestMap
-        if (
-          this.props.latestMap[currentUserName] &&
-          this.props.latestMap[currentUserName][module] &&
-          this.props.latestMap[currentUserName][module].length > 0
-        ) {
-          latestMap = this.props.latestMap[currentUserName][module][0]
-          // if(latestMap.name===mapname){
-          //   latestMap=null
-          // }
-        }
-        item.action && item.action(tmpCurrentUser, latestMap)
       }
+      let latestMap
+      if (
+        this.props.latestMap[currentUserName] &&
+        this.props.latestMap[currentUserName][module] &&
+        this.props.latestMap[currentUserName][module].length > 0
+      ) {
+        latestMap = this.props.latestMap[currentUserName][module][0]
+        // if(latestMap.name===mapname){
+        //   latestMap=null
+        // }
+      }
+      item.action && item.action(tmpCurrentUser, latestMap)
     } catch (e) {
       this.moduleItems[index].setNewState({
         disabled: false,
