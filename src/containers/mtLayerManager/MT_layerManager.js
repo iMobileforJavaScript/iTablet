@@ -26,7 +26,6 @@ import {
   getHeaderTitle,
   ConstOnline,
   UserType,
-  ConstInfo,
 } from '../../constants'
 import { color, size } from '../../styles'
 import * as LayerUtils from './LayerUtils'
@@ -751,7 +750,7 @@ export default class MT_layerManager extends React.Component {
     NavigationService.navigate('InputPage', {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
-      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
       cb: async value => {
         if (value !== '') {
           (async function() {

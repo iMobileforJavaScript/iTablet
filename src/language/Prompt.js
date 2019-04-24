@@ -12,6 +12,7 @@ const Chinese = {
   DOWNLOAD: '下载',
   DOWNLOADING: '下载中',
   DOWNLOAD_SUCCESSFULLY: '已下载',
+  DOWNLOAD_FAILED: '下载失败',
 
   NO_REMINDER: '下次不再提醒',
 
@@ -33,6 +34,7 @@ const Chinese = {
   SAVING: '正在保存地图',
   SWITCHING_SUCCESS: '切换成功',
   ADD_SUCCESS: '添加成功',
+  ADD_FAILED: '添加失败',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
 
   PUBLIC_MAP: '公共地图',
@@ -67,6 +69,7 @@ const Chinese = {
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',
   IMPORTED_3D_SUCCESS: '导入3D成功',
@@ -81,6 +84,7 @@ const Chinese = {
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
+  ENTER_NAME: '请输入名称',
 
   CLIPPING: '地图裁剪中',
   CLIPPED_SUCCESS: '裁剪成功',
@@ -113,6 +117,8 @@ const Chinese = {
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
+
+  LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -127,6 +133,7 @@ const English = {
   DOWNLOAD: 'Download',
   DOWNLOADING: 'Loading',
   DOWNLOAD_SUCCESSFULLY: 'Done',
+  DOWNLOAD_FAILED: 'Failed to Download',
 
   NO_REMINDER: 'No reminder',
 
@@ -148,6 +155,7 @@ const English = {
   SAVING: 'Saving',
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
+  ADD_FAILED: 'Failed to Add',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
 
   PUBLIC_MAP: 'Public Map',
@@ -184,6 +192,7 @@ const English = {
   THE_CURRENT_SELECTION: 'The current selection is ',
 
   IMPORTING_DATA: 'Importing Data',
+  IMPORTING: 'Importing',
   IMPORTED_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT: 'Failed to Import',
   IMPORTED_3D_SUCCESS: 'Imported Successfully',
@@ -198,6 +207,7 @@ const English = {
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
+  ENTER_NAME: 'Please enter the name',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
@@ -232,6 +242,9 @@ const English = {
   SETTING_FAILED: 'Failed to Set',
 
   NETWORK_ERROR: 'Network Error',
+
+  LICENSE_EXPIRED:
+    'Trial license has expired. Please apply for a new one and restart.',
 }
 
 export { Chinese, English }
