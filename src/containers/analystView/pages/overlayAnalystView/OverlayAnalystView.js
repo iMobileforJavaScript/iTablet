@@ -34,6 +34,7 @@ export default class OverlayAnalystView extends Component {
     navigation: Object,
     device: Object,
     currentUser: Object,
+    getLayers: () => {},
   }
 
   constructor(props) {
@@ -129,7 +130,7 @@ export default class OverlayAnalystView extends Component {
 
   analyst = () => {
     if (!this.checkData) return
-    this.setLoading(ConstInfo.ANALYST_START)
+    Toast.show(ConstInfo.ANALYST_START)
     ;(async function() {
       try {
         let sourceData = {
@@ -172,20 +173,18 @@ export default class OverlayAnalystView extends Component {
             result = await SAnalyst.xOR(sourceData, targetData, resultData)
             break
         }
-        this.setLoading(false)
+
+        Toast.show(result ? ConstInfo.ANALYST_SUCCESS : ConstInfo.ANALYST_FAIL)
         if (result) {
-          Toast.show('分析成功')
+          await this.props.getLayers()
 
           NavigationService.goBack('OverlayAnalystEntry')
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
           }
-        } else {
-          Toast.show('分析失败')
         }
       } catch (e) {
-        Toast.show('分析失败')
-        this.setLoading(false)
+        Toast.show(ConstInfo.ANALYST_FAIL)
       }
     }.bind(this)())
   }

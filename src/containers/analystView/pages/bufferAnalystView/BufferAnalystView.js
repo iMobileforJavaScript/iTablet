@@ -19,6 +19,7 @@ export default class BufferAnalystView extends Component {
     navigation: Object,
     data: Array,
     setSettingData: () => {},
+    getLayers: () => {},
     settingData: any,
     device: Object,
     currentUser: Object,
@@ -102,7 +103,7 @@ export default class BufferAnalystView extends Component {
           params.isRing,
           params.optionParameter,
         ).then(
-          res => {
+          async res => {
             Toast.show(
               res.result
                 ? ConstInfo.ANALYST_SUCCESS
@@ -110,6 +111,7 @@ export default class BufferAnalystView extends Component {
             )
 
             if (res.result) {
+              await this.props.getLayers()
               NavigationService.goBack()
               if (params.optionParameter.showResult) {
                 this.cb && this.cb()
