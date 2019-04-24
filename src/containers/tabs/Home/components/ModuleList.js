@@ -22,6 +22,7 @@ import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
 import { connect } from 'react-redux'
+import { getLanguage } from '../../../../language';
 
 class RenderModuleItem extends Component {
   props: {
@@ -209,12 +210,11 @@ export class ModuleList extends Component {
           let value = ~~res.progress.toFixed(0) + '%'
           if (~~res.progress >= 100) {
             ref.setNewState({
-              progress: '导入中...',
+              progress: getLanguage(this.props.language).Prompt.IMPORTING,
               isShowProgressView: true,
               // disabled: true,
             })
             // this.downloading = false
-            ref.setDownloading(false)
           } else if (value !== this.state.progress) {
             ref.setNewState({
               progress: value,
@@ -236,18 +236,22 @@ export class ModuleList extends Component {
           ref.setNewState({ isShowProgressView: false, disabled: false })
 
           FileTools.deleteFile(fileDirPath + '.zip')
+          ref.setDownloading(false)
         })
         .catch(() => {
-          Toast.show('下载失败')
+          Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+          //'下载失败')
           FileTools.deleteFile(fileCachePath)
           ref.setNewState({ isShowProgressView: false, disabled: false })
           // this.downloading = false
           ref.setDownloading(false)
         })
     } catch (e) {
-      Toast.show('网络错误，下载失败')
+      Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+      //'网络错误，下载失败')
       FileTools.deleteFile(fileDirPath + '.zip')
       ref.setNewState({ isShowProgressView: false, disabled: false })
+      ref.setDownloading(false)
     }
   }
 

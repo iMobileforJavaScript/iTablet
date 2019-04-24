@@ -459,7 +459,10 @@ class AppRoot extends Component {
           source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>试用许可已过期,请更换许可后重启</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.LICENSE_EXPIRED}
+          {/* 试用许可已过期,请更换许可后重启 */}
+        </Text>
       </View>
     )
   }
@@ -474,6 +477,7 @@ class AppRoot extends Component {
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
+      confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
     >
       {this.renderExitDialogChildren()}
     </Dialog>
