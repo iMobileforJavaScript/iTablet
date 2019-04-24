@@ -94,7 +94,7 @@ function getLayerIconByType(type) {
   let icon
   switch (type) {
     case LAYER_GROUP:
-      icon = require('./map/icon-directory.png')
+      icon = require('./map/icon-layer-group.png')
       break
     case DatasetType.POINT: // 点数据集
       icon = require('./map/icon-shallow-dot_black.png')
