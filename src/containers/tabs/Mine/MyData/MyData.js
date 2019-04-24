@@ -478,8 +478,9 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
-      this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
+      // this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       //'分享中')
+      Toast.show(getLanguage(this.props.language).Prompt.SHARING)
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
