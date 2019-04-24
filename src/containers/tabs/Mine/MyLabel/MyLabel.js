@@ -223,7 +223,8 @@ export default class MyLabel extends Component {
             this.itemInfo.item.title,
           ).then(() => {
             this._closeModal()
-            Toast.show('删除成功')
+            Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+            //'删除成功')
             let newData = JSON.parse(JSON.stringify(this.state.data)) //[...this.state.data]
             newData.splice(this.itemInfo.index, 1)
             this.setState({ data: newData }, () => {})
