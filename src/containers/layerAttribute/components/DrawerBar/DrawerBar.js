@@ -8,7 +8,7 @@ import * as React from 'react'
 import { FlatList, Animated } from 'react-native'
 import { ListSeparator, ImageButton } from '../../../../components'
 import { scaleSize } from '../../../../utils'
-import { DatasetType } from 'imobile_for_reactnative'
+import { getLayerIconByType } from '../../../../assets'
 
 import styles from './styles'
 
@@ -74,38 +74,8 @@ export default class DrawerBar extends React.Component {
       textStyle = styles.selectedText
       iconBtnStyle = styles.selectedIconBtn
     }
-    switch (item.layerInfo.type) {
-      case DatasetType.LINE:
-        icon = require('../../../../assets/map/icon-shallow-line_black.png')
-        break
-      case DatasetType.POINT:
-        icon = require('../../../../assets/map/icon-dot.png')
-        iconStyle = styles.dotIcon
-        break
-      case DatasetType.REGION:
-        icon = require('../../../../assets/map/icon-polygon.png')
-        break
-      case DatasetType.IMAGE:
-        icon = require('../../../../assets/map/icon-shallow-image_black.png')
-        break
-      case DatasetType.Network:
-        icon = require('../../../../assets/map/icon-network.png')
-        break
-      case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/Mine/mine_my_plot.png')
-        break
-      default:
-        icon = require('../../../../assets/public/mapLoad.png')
-        break
-    }
-    // return (
-    //   <TouchableOpacity
-    //     style={itemStyle}
-    //     onPress={() => this.action({ item, index })}
-    //   >
-    //     <Text style={styles.text}>{item.layerInfo.name}</Text>
-    //   </TouchableOpacity>
-    // )
+    icon = getLayerIconByType(item.layerInfo.type)
+
     return (
       <ImageButton
         containerStyle={containerStyle}
