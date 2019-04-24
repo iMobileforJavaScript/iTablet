@@ -624,14 +624,12 @@ export default class MT_layerManager extends React.Component {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
       })
-    }
-    if (GLOBAL.Type === constants.MAP_EDIT) {
+    } else if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
       })
-    }
-    if (GLOBAL.Type === constants.COLLECTION) {
+    } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
