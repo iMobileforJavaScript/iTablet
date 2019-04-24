@@ -26,6 +26,7 @@ import Friend, {
   AddFriend,
   InformMessage,
   CreateGroupChat,
+  RecommendFriend,
 } from './Friend'
 import InformSpot from './Friend/InformSpot'
 import { getLanguage } from '../../language/index'
@@ -276,6 +277,7 @@ export {
   InformMessage,
   AddFriend,
   CreateGroupChat,
+  RecommendFriend,
   //-----------
   MyLabel,
   MyBaseMap,

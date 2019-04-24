@@ -21,6 +21,7 @@ import {
   AddFriend,
   InformMessage,
   CreateGroupChat,
+  RecommendFriend,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -322,6 +323,13 @@ export default StackNavigator(
     },
     CreateGroupChat: {
       screen: CreateGroupChat,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    RecommendFriend: {
+      screen: RecommendFriend,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

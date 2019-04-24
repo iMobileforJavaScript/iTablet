@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ViewPropTypes,
   Text,
   View,
@@ -18,6 +19,11 @@ export default class CustomView extends React.Component {
     user: Object,
     currentMessage: any,
     position: '',
+    onFileTouch: () => {},
+  }
+
+  touchFileCallback = message => {
+    this.props.onFileTouch(message)
   }
 
   render() {
@@ -36,32 +42,38 @@ export default class CustomView extends React.Component {
         fileSizeText = fileSize.toFixed(2) + 'MB'
       }
       return (
-        <View
-          style={
-            this.props.currentMessage.user._id !== this.props.user._id
-              ? [styles.fileContainer, styles.fileContainerLeft]
-              : [styles.fileContainer, styles.fileContainerRight]
-          }
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.touchFileCallback(this.props.currentMessage)
+          }}
         >
-          <Text
+          <View
             style={
-              this.props.position === 'left'
-                ? styles.fileName
-                : [styles.fileName, { color: 'white' }]
+              this.props.currentMessage.user._id !== this.props.user._id
+                ? [styles.fileContainer, styles.fileContainerLeft]
+                : [styles.fileContainer, styles.fileContainerRight]
             }
           >
-            {this.props.currentMessage.message.message.fileName}
-          </Text>
-          <Text
-            style={
-              this.props.position === 'left'
-                ? styles.fileSize
-                : [styles.fileSize, { color: 'white' }]
-            }
-          >
-            {fileSizeText}
-          </Text>
-        </View>
+            <Text
+              style={
+                this.props.position === 'left'
+                  ? styles.fileName
+                  : [styles.fileName, { color: 'white' }]
+              }
+            >
+              {this.props.currentMessage.message.message.fileName}
+            </Text>
+            <Text
+              style={
+                this.props.position === 'left'
+                  ? styles.fileSize
+                  : [styles.fileSize, { color: 'white' }]
+              }
+            >
+              {fileSizeText}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
       )
     }
     if (

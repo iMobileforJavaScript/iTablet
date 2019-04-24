@@ -5,6 +5,7 @@ const Friends_Chinese = {
   GROUPS: '群组',
   ADD_FRIENDS: '添加好友',
   NEW_GROUP_CHAT: '发起群聊',
+  RECOMMEND_FRIEND: '好友推荐',
   //FriendMessage
   MARK_READ: '标记已读',
   MARK_UNREAD: '标记未读',
@@ -57,6 +58,7 @@ const Friends_English = {
   GROUPS: 'Groups',
   ADD_FRIENDS: 'Add Friends',
   NEW_GROUP_CHAT: 'New Group Chat',
+  RECOMMEND_FRIEND: 'Recommend Friends',
   //FriendMessage
   MARK_READ: 'Mark read', //*
   MARK_UNREAD: 'Mark unread', //*

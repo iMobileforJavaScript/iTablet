@@ -6,6 +6,7 @@ import Chat from './Chat/Chat'
 import AddFriend from './AddFriend'
 import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
+import RecommendFriend from './RecommendFriend'
 
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
@@ -28,4 +29,4 @@ export default connect(
   mapDispatchToProps,
 )(Friend)
 
-export { Chat, AddFriend, InformMessage, CreateGroupChat }
+export { Chat, AddFriend, InformMessage, CreateGroupChat, RecommendFriend }
