@@ -1043,18 +1043,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   /**行与行之间的分隔线组件 */
-  renderItemSeparator = ({ section }) => {
+  renderItemSeparator = ({ section, leadingItem }) => {
     if (section.visible) {
-      return (
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
-      )
+      if (
+        this.props.layers.length > 0 &&
+        leadingItem.name.indexOf('@Label_') >= 0 &&
+        section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+      ) {
+        return <View />
+      } else {
+        return (
+          <View
+            style={{
+              flexDirection: 'column',
+              width: '100%',
+              height: 1,
+              backgroundColor: color.bgG,
+            }}
+          />
+        )
+      }
     } else {
       return <View />
     }
