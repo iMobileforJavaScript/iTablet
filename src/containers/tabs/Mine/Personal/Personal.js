@@ -166,8 +166,8 @@ export default class Personal extends Component {
         {this._renderItem(
           //'邮箱'
           getLanguage(global.language).Profile.E_MAIL,
-          this.props.user.currentUser.email===' 立即绑定'?
-            getLanguage(global.language).Profile.CONNECT
+          this.props.user.currentUser.email === ' 立即绑定'
+            ? getLanguage(global.language).Profile.CONNECT
             : this.props.user.currentUser.email,
         )}
       </View>

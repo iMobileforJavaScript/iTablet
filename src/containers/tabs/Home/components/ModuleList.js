@@ -22,7 +22,7 @@ import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
 import { connect } from 'react-redux'
-import { getLanguage } from '../../../../language';
+import { getLanguage } from '../../../../language'
 
 class RenderModuleItem extends Component {
   props: {

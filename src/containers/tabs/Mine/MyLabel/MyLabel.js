@@ -134,7 +134,8 @@ export default class MyLabel extends Component {
       return
     }
     try {
-      this.container.setLoading(true, '正在分享')
+      // this.container.setLoading(true, '正在分享')
+      Toast.show('正在分享')
       let userPath = await FileTools.appendingHomeDirectory(
         this.props.user.currentUser.userType === UserType.PROBATION_USER
           ? ConstPath.CustomerPath
