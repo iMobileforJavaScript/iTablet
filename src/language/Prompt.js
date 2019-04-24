@@ -119,6 +119,7 @@ const Chinese = {
   NETWORK_ERROR: '网络错误',
 
   LICENSE_EXPIRED:'试用许可已过期,请更换许可后重启',
+  APPLY_LICENSE:'申请许可',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -244,6 +245,7 @@ const English = {
   NETWORK_ERROR: 'Network Error',
 
   LICENSE_EXPIRED:'Trial license has expired. Please apply for a new one and restart.',
+  APPLY_LICENSE:'Apply License',
 }
 
 export { Chinese, English }

@@ -471,13 +471,15 @@ class AppRoot extends Component {
     return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      onlyOneBtn={true}
-      cancelBtnVisible={false}
-      confirmAction={() => {this.exit.setDialogVisible(false)}}
+      confirmAction={() => {
+        this.exit.setDialogVisible(false)
+        NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
+      }}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
       confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+      cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
       {this.renderExitDialogChildren()}
     </Dialog>
