@@ -448,10 +448,11 @@ export default class LayerAttribute extends React.Component {
    * @param data {value, inputValue}
    */
   locateToPosition = (data = {}) => {
-    let viewPosition = 0.3,
+    let viewPosition = 0,
       relativeIndex,
       currentIndex,
-      startIndex = this.state.startIndex
+      startIndex = this.state.startIndex,
+      isInViewableData = false
     if (data.type === 'relative') {
       // 相对定位
       currentIndex = this.state.currentIndex + data.index
@@ -467,6 +468,7 @@ export default class LayerAttribute extends React.Component {
       ) {
         // 定位在当前显示数据范围内
         relativeIndex = this.state.relativeIndex + data.index
+        isInViewableData = true
       } else {
         // 定位在当前显示数据范围外
         startIndex = this.currentPage * PAGE_SIZE
@@ -485,6 +487,7 @@ export default class LayerAttribute extends React.Component {
       ) {
         // 定位在当前显示数据范围内
         relativeIndex = data.index - 1 - this.state.startIndex
+        isInViewableData = true
       } else {
         // 定位在当前显示数据范围外
         startIndex = this.currentPage * PAGE_SIZE
@@ -498,35 +501,62 @@ export default class LayerAttribute extends React.Component {
       this.canBeRefresh = true
     }
 
-    this.getAttribute(
-      {
-        type: 'reset',
-        currentPage: this.currentPage,
-        startIndex: startIndex,
-        relativeIndex: relativeIndex,
-        currentIndex,
-      },
-      () => {
-        if (this.table) {
-          setTimeout(() => {
-            // 避免 Android 更新数据后无法滚动
-            let item = this.table.setSelected(relativeIndex, false)
-            this.setState({
-              currentFieldInfo: item.data,
+    if (isInViewableData) {
+      let item = this.table.setSelected(relativeIndex, false)
+      this.setState(
+        {
+          currentFieldInfo: item.data,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          this.table &&
+            this.table.scrollToLocation({
+              animated: false,
+              itemIndex: relativeIndex,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
             })
-            this.table &&
-              this.table.scrollToLocation({
-                animated: false,
-                itemIndex: relativeIndex,
-                sectionIndex: 0,
-                viewPosition: viewPosition,
-                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-              })
-          }, 0)
-        }
-        this.setLoading(false)
-      },
-    )
+        },
+      )
+      this.setLoading(false)
+    } else {
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: this.currentPage,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          if (this.table) {
+            setTimeout(() => {
+              // 避免 Android 更新数据后无法滚动
+              let item = this.table.setSelected(relativeIndex, false)
+              this.setState(
+                {
+                  currentFieldInfo: item.data,
+                },
+                () => {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: relativeIndex,
+                      sectionIndex: 0,
+                      viewPosition: viewPosition,
+                      viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+                    })
+                },
+              )
+            }, 0)
+          }
+          this.setLoading(false)
+        },
+      )
+    }
   }
 
   selectRow = ({ data, index }) => {
@@ -703,7 +733,8 @@ export default class LayerAttribute extends React.Component {
         }
         break
     }
-    this.setLoading(true, '修改中')
+    this.setLoading(true, getLanguage(global.language).Prompt.LOADING)
+    //'修改中')
     try {
       this.props.setAttributeHistory &&
         (await this.props
@@ -713,7 +744,7 @@ export default class LayerAttribute extends React.Component {
             type,
           })
           .then(({ msg, result, data }) => {
-            Toast.show(msg)
+            if (!msg === '成功') Toast.show(msg)
             if (result) {
               let attributes = JSON.parse(JSON.stringify(this.state.attributes))
 
@@ -757,28 +788,10 @@ export default class LayerAttribute extends React.Component {
                         if (_data[0].value === fieldInfo[j].smID) {
                           _data[fieldInfo[j].columnIndex - 1].value =
                             fieldInfo[j].value
-                          let checkData = this.checkToolIsViable()
-                          this.setState({
-                            attributes,
-                            ...checkData,
-                          })
-                          break
+                          continue
                         }
                       }
                     }
-
-                    // if (
-                    //   attributes.data[fieldInfo[j].index][
-                    //     fieldInfo[j].columnIndex - 1
-                    //   ].name === fieldInfo[j].name &&
-                    //   attributes.data[fieldInfo[j].index][
-                    //     fieldInfo[j].columnIndex - 1
-                    //   ].value !== fieldInfo[j].value
-                    // ) {
-                    //   attributes.data[fieldInfo[j].index][
-                    //     fieldInfo[j].columnIndex - 1
-                    //   ].value = fieldInfo[j].value
-                    // }
                   } else {
                     if (
                       attributes.data[0][fieldInfo[j].index].name ===
@@ -799,9 +812,27 @@ export default class LayerAttribute extends React.Component {
                   ...checkData,
                 },
                 () => {
-                  this.setLoading(false)
+                  setTimeout(() => {
+                    this.setLoading(false)
+                    if (
+                      this.state.attributes.data.length > 1 &&
+                      data.length == 1
+                    ) {
+                      this.locateToPosition({
+                        type: 'absolute',
+                        index: data[0].fieldInfo[0].index + 1,
+                      })
+                    }
+                  }, 0)
                 },
               )
+
+              if (this.state.attributes.data.length > 1 && data.length == 1) {
+                this.locateToPosition({
+                  type: 'absolute',
+                  index: data[0].fieldInfo[0].index + 1,
+                })
+              }
             } else {
               this.setLoading(false)
             }

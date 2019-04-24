@@ -271,7 +271,18 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
             layerHistory.history.splice(currentIndex, 2)
             currentIndex = layerHistory.currentIndex + 1
           } else {
+            // 在undo中，当前对象 和 之前的对象是同一个，则可以直接undo
+            // 若当前对象和上一个不是一个对象，则表明该对象为当前属性表中显示的对象，则找下一个对象
             currentHistory = [layerHistory.history[currentIndex]]
+            if (currentIndex > 0) {
+              if (
+                layerHistory.history[currentIndex - 1].fieldInfo[0].smID !==
+                currentHistory[0].fieldInfo[0].smID
+              ) {
+                currentIndex++
+                currentHistory = [layerHistory.history[currentIndex]]
+              }
+            }
           }
 
           // currentHistory =
@@ -285,6 +296,26 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
       case 'redo':
         if (layerHistory.currentIndex > 0) {
           currentIndex = layerHistory.currentIndex - 1
+
+          if (layerHistory.history[currentIndex] instanceof Array) {
+            currentHistory = layerHistory.history[currentIndex]
+          } else {
+            // redo，当前对象 和 上一个对象是同一个，则可以直接undo
+            // 若当前对象和上一个不是一个对象，则表明该对象为当前属性表中显示的对象，则找下一个对象
+            currentHistory = [layerHistory.history[currentIndex]]
+            if (
+              currentIndex < layerHistory.history.length - 1 &&
+              currentIndex > 0
+            ) {
+              if (
+                layerHistory.history[currentIndex + 1].fieldInfo[0].smID !==
+                currentHistory[0].fieldInfo[0].smID
+              ) {
+                currentIndex--
+                currentHistory = [layerHistory.history[currentIndex]]
+              }
+            }
+          }
 
           currentHistory =
             layerHistory.history[currentIndex] instanceof Array
@@ -638,17 +669,17 @@ export default handleActions(
       let attributesHistory = state.toJS().attributesHistory
       let attributesHistoryKey = state.toJS().attributesHistoryKey
 
-      let checkIsIncludeKey = function(data) {
-        for (let i = 0; i < attributesHistoryKey.length; i++) {
-          if (
-            attributesHistoryKey[i].filter === data.params.filter &&
-            attributesHistoryKey[i].name === data.fieldInfo[0].name
-          ) {
-            return true
-          }
-        }
-        return false
-      }
+      // let checkIsIncludeKey = function(data) {
+      //   for (let i = 0; i < attributesHistoryKey.length; i++) {
+      //     if (
+      //       attributesHistoryKey[i].filter === data.params.filter &&
+      //       attributesHistoryKey[i].name === data.fieldInfo[0].name
+      //     ) {
+      //       return true
+      //     }
+      //   }
+      //   return false
+      // }
 
       payload.forEach(item => {
         item.params = item.params || {}
@@ -667,20 +698,25 @@ export default handleActions(
                   layers[j].history.splice(0, layers[j].currentIndex)
                   layers[j].currentIndex = 0
                 }
-                if (!checkIsIncludeKey(item)) {
+                // if (!checkIsIncludeKey(item)) {
+                //   layers[j].history.unshift({
+                //     fieldInfo: item.prevData,
+                //     params: item.params,
+                //   })
+                //   attributesHistoryKey.unshift({
+                //     name: item.fieldInfo[0].name,
+                //     filter: item.params.filter,
+                //   })
+                // }
+
+                // 若修改的对象和之前最新的对象不是一个对象，则把被修改对象之前的值加入到历史记录中
+                if (layers[j].history[0].params.filter !== item.params.filter) {
                   layers[j].history.unshift({
                     fieldInfo: item.prevData,
                     params: item.params,
                   })
-                  attributesHistoryKey.unshift({
-                    name: item.fieldInfo[0].name,
-                    filter: item.params.filter,
-                  })
                 }
-                // layers[j].history.unshift({
-                //   fieldInfo: item.prevData,
-                //   params: item.params,
-                // })
+
                 layers[j].history.unshift({
                   fieldInfo: item.fieldInfo,
                   params: item.params,

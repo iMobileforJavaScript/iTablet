@@ -348,6 +348,7 @@ export default class MyLocalData extends Component {
         let oldOnline = sectionData[sectionData.length - 1]
         let oldData = oldOnline.data
         let objContent = oldData[this.itemInfo.index]
+        objContent.serviceStatus = 'PUBLISHED'
         let arrDataItemServices = objContent.dataItemServices
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)
@@ -418,8 +419,9 @@ export default class MyLocalData extends Component {
   }
 
   deleteDataOfOnline = async () => {
-    this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING_DATA)
+    // this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING_DATA)
     //'删除数据中...')
+    Toast.show(getLanguage(this.props.language).Prompt.DELETING_DATA)
     this.setState({ modalIsVisible: false })
     this.deleteDataing = true
     try {
@@ -444,7 +446,7 @@ export default class MyLocalData extends Component {
       this.deleteDataing = false
       Toast.show('网络错误')
     } finally {
-      this.setLoading(false)
+      // this.setLoading(false)
     }
   }
 

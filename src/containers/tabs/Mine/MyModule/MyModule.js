@@ -217,7 +217,8 @@ export default class MyModule extends Component {
   shareData = async type => {
     try {
       this.ModalBtns.setVisible(false)
-      this.container.setLoading(true, '正在分享')
+      // this.container.setLoading(true, '正在分享')
+      Toast.show('正在分享')
       let fromPath = this.itemInfo.item.path.substring(
         0,
         this.itemInfo.item.path.lastIndexOf('/'),

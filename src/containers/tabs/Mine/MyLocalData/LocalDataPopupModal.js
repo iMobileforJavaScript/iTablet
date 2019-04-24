@@ -105,20 +105,26 @@ export default class LocalDataPopupModal extends PureComponent {
     //'发布服务'
     let objContent = this.props.data
     if (objContent && objContent.dataItemServices) {
-      let dataItemServices = objContent.dataItemServices
-      for (let i = 0; i < dataItemServices.length; i++) {
-        let serviceType = dataItemServices[i].serviceType
-        if (serviceType === 'RESTMAP') {
-          // title =
-          //   getLanguage(global.language).Profile.DELETE +
-          //   dataItemServices[i].serviceName +
-          //   getLanguage(global.language).Profile.SERVICE
-          // title =
-          //     getLanguage(global.language).Profile.DELETE +
-          //     getLanguage(global.language).Profile.SERVICE
-          return <View />
-        }
+      if (
+        objContent.serviceStatus === 'PUBLISHED' ||
+        objContent.serviceStatus === 'PUBLISHING'
+      ) {
+        return <View />
       }
+      // let dataItemServices = objContent.dataItemServices
+      // for (let i = 0; i < dataItemServices.length; i++) {
+      //   let serviceType = dataItemServices[i].serviceType
+      //   if (serviceType === 'RESTMAP') {
+      // title =
+      //   getLanguage(global.language).Profile.DELETE +
+      //   dataItemServices[i].serviceName +
+      //   getLanguage(global.language).Profile.SERVICE
+      // title =
+      //     getLanguage(global.language).Profile.DELETE +
+      //     getLanguage(global.language).Profile.SERVICE
+      //   return <View />
+      // }
+      // }
       return (
         <TouchableOpacity
           style={{ backgroundColor: color.itemColorWhite }}

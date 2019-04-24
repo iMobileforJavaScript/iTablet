@@ -35,7 +35,7 @@ export default StyleSheet.create({
   btn: {
     backgroundColor: color.white,
     height: scaleSize(80),
-    width: scaleSize(200),
+    width: scaleSize(230),
     alignItems: 'center',
     justifyContent: 'center',
   },
