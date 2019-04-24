@@ -666,7 +666,11 @@ export default class MT_layerManager extends React.Component {
     for (let i = 0, l = layers.length; i < l; i++) {
       if (caption === layers[i].caption) {
         curData[1].data[i].isVisible = value
-        hasDeal = true
+        /*
+         *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+         *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+         */
+        //hasDeal = true
         break
       }
     }
@@ -989,18 +993,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   /**行与行之间的分隔线组件 */
-  renderItemSeparator = ({ section }) => {
+  renderItemSeparator = ({ section, leadingItem }) => {
     if (section.visible) {
-      return (
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
-      )
+      if (
+        this.props.layers.length > 0 &&
+        leadingItem.name.indexOf('@Label_') >= 0 &&
+        section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+      ) {
+        return <View />
+      } else {
+        return (
+          <View
+            style={{
+              flexDirection: 'column',
+              width: '100%',
+              height: 1,
+              backgroundColor: color.bgG,
+            }}
+          />
+        )
+      }
     } else {
       return <View />
     }

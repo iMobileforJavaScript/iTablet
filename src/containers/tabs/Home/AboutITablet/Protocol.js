@@ -147,6 +147,13 @@ export default class protocol extends Component {
         }
         title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
         break
+      case 'ApplyLicense':
+        source = {
+          uri: `https://www.supermapol.com/web/pricing/triallicense`,
+        }
+        title = getLanguage(global.language).Prompt.APPLY_LICENSE
+        //'申请许可'
+        break
       default:
         break
     }

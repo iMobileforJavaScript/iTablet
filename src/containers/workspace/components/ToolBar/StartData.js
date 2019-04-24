@@ -701,6 +701,7 @@ function create() {
             1,
           )
           await SMap.openTaggingDataset(_params.user.currentUser.userName)
+          GLOBAL.TaggingDatasetName = ''
           _params.getLayers && (await _params.getLayers())
 
           _params.saveMap &&
