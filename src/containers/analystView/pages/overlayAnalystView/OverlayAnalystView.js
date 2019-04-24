@@ -9,11 +9,16 @@ import {
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import { AnalystItem } from '../../components'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { ConstPath, ConstInfo, ConstAnalyst } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
-import { SMap, EngineType } from 'imobile_for_reactnative'
+import {
+  SMap,
+  EngineType,
+  SAnalyst,
+  DatasetType,
+} from 'imobile_for_reactnative'
 
 const popTypes = {
   DataSource: 'DataSource',
@@ -34,6 +39,7 @@ export default class OverlayAnalystView extends Component {
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
+    this.cb = params && params.cb
     this.state = {
       title: (params && params.title) || '',
       // 源数据
@@ -79,6 +85,33 @@ export default class OverlayAnalystView extends Component {
     }
   }
 
+  /**
+   * 获取源数据过滤数据类型
+   * @returns {Array}
+   */
+  getDataLimit = () => {
+    let limit = []
+    switch (this.state.title) {
+      case ConstAnalyst.UPDATE:
+      case ConstAnalyst.UNION:
+      case ConstAnalyst.XOR:
+        limit = [DatasetType.REGION]
+        break
+      case ConstAnalyst.CLIP:
+      case ConstAnalyst.ERASE:
+      case ConstAnalyst.IDENTITY:
+      case ConstAnalyst.INTERSECT:
+      default:
+        limit = []
+        break
+    }
+    return limit
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
   checkData = () => {
     let available = false
     if (
@@ -94,7 +127,68 @@ export default class OverlayAnalystView extends Component {
     return available
   }
 
-  analyst = () => {}
+  analyst = () => {
+    if (!this.checkData) return
+    this.setLoading(ConstInfo.ANALYST_START)
+    ;(async function() {
+      try {
+        let sourceData = {
+            datasource: this.state.dataSource.value,
+            dataset: this.state.dataSet.value,
+          },
+          targetData = {
+            datasource: this.state.overlayDataSource.value,
+            dataset: this.state.overlayDataSet.value,
+          },
+          resultData = {
+            datasource: this.state.resultDataSource.value,
+            dataset: this.state.resultDataSet.value,
+          },
+          result = false
+        switch (this.state.title) {
+          case ConstAnalyst.CLIP:
+            result = await SAnalyst.clip(sourceData, targetData, resultData)
+            break
+          case ConstAnalyst.ERASE:
+            result = await SAnalyst.erase(sourceData, targetData, resultData)
+            break
+          case ConstAnalyst.IDENTITY:
+            result = await SAnalyst.identity(sourceData, targetData, resultData)
+            break
+          case ConstAnalyst.INTERSECT:
+            result = await SAnalyst.intersect(
+              sourceData,
+              targetData,
+              resultData,
+            )
+            break
+          case ConstAnalyst.UNION:
+            result = await SAnalyst.union(sourceData, targetData, resultData)
+            break
+          case ConstAnalyst.UPDATE:
+            result = await SAnalyst.update(sourceData, targetData, resultData)
+            break
+          case ConstAnalyst.XOR:
+            result = await SAnalyst.xOR(sourceData, targetData, resultData)
+            break
+        }
+        this.setLoading(false)
+        if (result) {
+          Toast.show('分析成功')
+
+          NavigationService.goBack('OverlayAnalystEntry')
+          if (this.cb && typeof this.cb === 'function') {
+            this.cb()
+          }
+        } else {
+          Toast.show('分析失败')
+        }
+      } catch (e) {
+        Toast.show('分析失败')
+        this.setLoading(false)
+      }
+    }.bind(this)())
+  }
 
   back = () => {
     NavigationService.goBack()
@@ -120,13 +214,39 @@ export default class OverlayAnalystView extends Component {
     return dss
   }
 
-  getDataSets = async info => {
+  getDataSets = async (info, filter = {}) => {
     let dss = []
     let dataSets = await SMap.getDatasetsByDatasource(info, true)
+
     dataSets.list.forEach(item => {
-      item.key = item.datasetName
-      item.value = item.key
-      dss.push(item)
+      if (filter.typeFilter && filter.typeFilter.length > 0) {
+        for (let type of filter.typeFilter) {
+          if (type === item.datasetType) {
+            if (
+              filter.exclude &&
+              filter.exclude.dataSource === item.datasourceName &&
+              filter.exclude.dataSet === item.datasetName
+            )
+              continue
+            item.key = item.datasetName
+            item.value = item.key
+            item.icon = getLayerIconByType(item.datasetType)
+            item.highLightIcon = getLayerWhiteIconByType(item.datasetType)
+            dss.push(item)
+            break
+          }
+        }
+      } else {
+        if (
+          !filter.exclude ||
+          filter.exclude.dataSource !== item.datasourceName ||
+          filter.exclude.dataset !== item.datasetName
+        ) {
+          item.key = item.datasetName
+          item.value = item.key
+          dss.push(item)
+        }
+      }
     })
     return dss
   }
@@ -167,24 +287,25 @@ export default class OverlayAnalystView extends Component {
             let udbPath = await FileTools.appendingHomeDirectory(
               this.state.dataSource.path,
             )
+            let filter = {}
+            filter.typeFilter = this.getDataLimit()
+            if (this.state.overlayDataSet && this.state.overlayDataSet.value) {
+              filter.exclude = {
+                dataSource: this.state.overlayDataSource.value,
+                dataSet: this.state.overlayDataSet.value,
+              }
+            }
             let dataSets = await this.getDataSets(
               {
                 server: udbPath,
                 engineType: EngineType.UDB,
                 alias: this.state.dataSource.key,
               },
-              true,
+              filter,
             )
-            let newDataSets = []
-            dataSets.forEach(item => {
-              let _item = Object.assign({}, item)
-              _item.icon = getLayerIconByType(_item.datasetType)
-              _item.highLightIcon = getLayerWhiteIconByType(_item.datasetType)
-              newDataSets.push(_item)
-            })
             this.setState(
               {
-                popData: newDataSets,
+                popData: dataSets,
                 currentPopData: this.state.dataSet,
               },
               () => {
@@ -239,25 +360,26 @@ export default class OverlayAnalystView extends Component {
             let udbPath = await FileTools.appendingHomeDirectory(
               this.state.overlayDataSource.path,
             )
+            let filter = {}
+            filter.typeFilter = [DatasetType.REGION]
+            if (this.state.dataSet && this.state.dataSet.value) {
+              filter.exclude = {
+                dataSource: this.state.dataSource.value,
+                dataSet: this.state.dataSet.value,
+              }
+            }
             let dataSets = await this.getDataSets(
               {
                 server: udbPath,
                 engineType: EngineType.UDB,
                 alias: this.state.overlayDataSource.key,
               },
-              true,
+              filter,
             )
 
-            let newDataSets = []
-            dataSets.forEach(item => {
-              let _item = Object.assign({}, item)
-              _item.icon = getLayerIconByType(_item.datasetType)
-              _item.highLightIcon = getLayerWhiteIconByType(_item.datasetType)
-              newDataSets.push(_item)
-            })
             this.setState(
               {
-                popData: newDataSets,
+                popData: dataSets,
                 currentPopData: this.state.overlayDataSet,
               },
               () => {
@@ -274,7 +396,7 @@ export default class OverlayAnalystView extends Component {
     return (
       <View key="resultData" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>叠加数据</Text>
+          <Text style={styles.subTitle}>结果数据</Text>
         </View>
         <AnalystItem
           title={'数据源'}

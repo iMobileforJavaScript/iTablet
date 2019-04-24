@@ -149,6 +149,7 @@ export default class LayerSelectionAttribute extends React.Component {
             startIndex: 0,
             ...others,
           })
+          this.setLoading(false)
           this.props.onGetAttribute && this.props.onGetAttribute(attributes)
         } else {
           let newAttributes = JSON.parse(JSON.stringify(attributes))
@@ -234,7 +235,6 @@ export default class LayerSelectionAttribute extends React.Component {
             },
           )
         }
-        this.setLoading(false)
       } catch (e) {
         cb && cb()
         this.isLoading = false

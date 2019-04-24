@@ -244,15 +244,20 @@ export default class LayerAttribute extends React.Component {
           attributes.data.length < PAGE_SIZE
 
         if (attributes.data.length === 1) {
-          this.setState({
-            showTable: true,
-            attributes,
-            currentIndex: 0,
-            relativeIndex: 0,
-            currentFieldInfo: attributes.data[0],
-            startIndex: 0,
-            ...others,
-          })
+          this.setState(
+            {
+              showTable: true,
+              attributes,
+              currentIndex: 0,
+              relativeIndex: 0,
+              currentFieldInfo: attributes.data[0],
+              startIndex: 0,
+              ...others,
+            },
+            () => {
+              this.setLoading(false)
+            },
+          )
         } else {
           let newAttributes = JSON.parse(JSON.stringify(attributes))
           let startIndex =

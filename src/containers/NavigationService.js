@@ -27,8 +27,23 @@ function navigate(routeName, params) {
   })()
 }
 
-function goBack(key, immediate) {
+/**
+ *
+ * @param routeName 从该页面返回
+ * @param immediate
+ */
+function goBack(routeName, immediate) {
   (async function _goBack() {
+    let key
+    if (routeName) {
+      let routes = _navigator.state.nav.routes
+      for (let i = routes.length - 1; i >= 0; i--) {
+        if (routes[i].routeName === routeName) {
+          key = routes[i].key
+          break
+        }
+      }
+    }
     await _navigator.dispatch(
       NavigationActions.back({
         key,

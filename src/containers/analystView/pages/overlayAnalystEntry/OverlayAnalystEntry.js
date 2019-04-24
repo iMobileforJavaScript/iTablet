@@ -7,7 +7,7 @@ import { OverlayAnalystItem } from '../../components'
 import { ConstAnalyst } from '../../../../constants'
 import overlayAnalystEntryData from './overlayAnalystEntryData'
 
-export default class O extends Component {
+export default class OverlayAnalystEntry extends Component {
   props: {
     navigation: Object,
     data: Array,
@@ -19,7 +19,8 @@ export default class O extends Component {
 
   constructor(props) {
     super(props)
-    // const { params } = props.navigation.state
+    const { params } = props.navigation.state
+    this.cb = params && params.cb
     this.state = {
       data: overlayAnalystEntryData.getData() || [],
     }
@@ -31,7 +32,7 @@ export default class O extends Component {
 
   _action = item => {
     if (item && item.action && typeof item.action === 'function') {
-      item.action(item)
+      item.action(this.cb)
     }
   }
 

@@ -6,9 +6,10 @@ function getData() {
     {
       key: ConstAnalyst.CLIP,
       title: ConstAnalyst.CLIP,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.CLIP,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_clip,
@@ -16,9 +17,10 @@ function getData() {
     {
       key: ConstAnalyst.UNION,
       title: ConstAnalyst.UNION,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.UNION,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_union,
@@ -26,9 +28,10 @@ function getData() {
     {
       key: ConstAnalyst.ERASE,
       title: ConstAnalyst.ERASE,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.ERASE,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_erase,
@@ -36,9 +39,10 @@ function getData() {
     {
       key: ConstAnalyst.INTERSECT,
       title: ConstAnalyst.INTERSECT,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.INTERSECT,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_intersect,
@@ -46,9 +50,10 @@ function getData() {
     {
       key: ConstAnalyst.IDENTITY,
       title: ConstAnalyst.IDENTITY,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.IDENTITY,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_identity,
@@ -56,9 +61,10 @@ function getData() {
     {
       key: ConstAnalyst.XOR,
       title: ConstAnalyst.XOR,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.XOR,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_xor,
@@ -66,9 +72,10 @@ function getData() {
     {
       key: ConstAnalyst.UPDATE,
       title: ConstAnalyst.UPDATE,
-      action: () => {
+      action: (cb = () => {}) => {
         NavigationService.navigate('OverlayAnalystView', {
           title: ConstAnalyst.UPDATE,
+          cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay_update,
