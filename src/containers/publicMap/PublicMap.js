@@ -309,6 +309,7 @@ export default class PublicMap extends Component {
     if (!newMapData) {
       return
     }
+    let bAddNew = false
     let srcData = [...this.state.data]
     for (let i = 0; i < newMapData.length; i++) {
       let map = newMapData[i]
@@ -322,6 +323,7 @@ export default class PublicMap extends Component {
       }
 
       if (!bFound) {
+        bAddNew = true
         srcData.push(map)
       }
     }
@@ -330,6 +332,14 @@ export default class PublicMap extends Component {
       let time2 = obj2.createTime
       return time2 - time1
     })
+
+    if (bAddNew) {
+      let data = JSON.stringify(srcData)
+      FileTools.getHomeDirectory().then(value => {
+        let path = value + ConstPath.CachePath + 'publicMap.txt'
+        RNFS.writeFile(path, data, 'utf8')
+      })
+    }
     return srcData
   }
   async _onRefresh() {

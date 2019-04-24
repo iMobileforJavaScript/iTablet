@@ -4,7 +4,8 @@ import { AnalystItem } from '../../components'
 import { CheckStatus, ConstPath, ConstInfo } from '../../../../constants'
 import { CheckBox, PopModal, FingerMenu } from '../../../../components'
 import { FileTools } from '../../../../native'
-import { Toast, LayerUtil } from '../../../../utils'
+import { Toast } from '../../../../utils'
+import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
@@ -289,10 +290,8 @@ export default class BufferAnalystViewTab extends Component {
             let newDataSets = []
             dataSets.forEach(item => {
               let _item = Object.assign({}, item)
-              _item.icon = LayerUtil.getLayerIconByType(_item.datasetType)
-              _item.highLightIcon = LayerUtil.getLayerWhiteIconByType(
-                _item.datasetType,
-              )
+              _item.icon = getLayerIconByType(_item.datasetType)
+              _item.highLightIcon = getLayerWhiteIconByType(_item.datasetType)
               newDataSets.push(_item)
             })
             this.setState(

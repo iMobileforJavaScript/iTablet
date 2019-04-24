@@ -10,8 +10,9 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import { AnalystItem } from '../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
-import { Toast, LayerUtil } from '../../../../utils'
+import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
+import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
 import { SMap, EngineType } from 'imobile_for_reactnative'
 
 const popTypes = {
@@ -177,10 +178,8 @@ export default class OverlayAnalystView extends Component {
             let newDataSets = []
             dataSets.forEach(item => {
               let _item = Object.assign({}, item)
-              _item.icon = LayerUtil.getLayerIconByType(_item.datasetType)
-              _item.highLightIcon = LayerUtil.getLayerWhiteIconByType(
-                _item.datasetType,
-              )
+              _item.icon = getLayerIconByType(_item.datasetType)
+              _item.highLightIcon = getLayerWhiteIconByType(_item.datasetType)
               newDataSets.push(_item)
             })
             this.setState(
@@ -252,10 +251,8 @@ export default class OverlayAnalystView extends Component {
             let newDataSets = []
             dataSets.forEach(item => {
               let _item = Object.assign({}, item)
-              _item.icon = LayerUtil.getLayerIconByType(_item.datasetType)
-              _item.highLightIcon = LayerUtil.getLayerWhiteIconByType(
-                _item.datasetType,
-              )
+              _item.icon = getLayerIconByType(_item.datasetType)
+              _item.highLightIcon = getLayerWhiteIconByType(_item.datasetType)
               newDataSets.push(_item)
             })
             this.setState(
