@@ -51,6 +51,7 @@ import {
   SThemeCartography,
   // SOnlineService,
   SMCollectorType,
+  SCartography,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -2142,6 +2143,14 @@ export default class ToolBar extends React.PureComponent {
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
     this.setOverlayViewVisible(isShow)
+
+    if (type === ConstToolType.MAP_STYLE) {
+      if (this.props.currentLayer) {
+        SCartography.getLayerStyle(this.props.currentLayer.name).then(value => {
+          this.currentLayerStyle = value
+        })
+      }
+    }
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
@@ -2545,6 +2554,16 @@ export default class ToolBar extends React.PureComponent {
         })
       }
 
+      if (type === ConstToolType.MAP_STYLE) {
+        if (this.currentLayerStyle) {
+          SCartography.setLayerStyle(
+            this.props.currentLayer.name,
+            this.currentLayerStyle,
+          ).then(() => {
+            this.currentLayerStyle = undefined
+          })
+        }
+      }
       // 当前为采集状态
       if (typeof type === 'number') {
         await SCollector.stopCollect()
@@ -2876,10 +2895,95 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  menuCommit = () => {
-    this.menuDialog && this.menuDialog.callCurrentAction()
-  }
+  // menuCommit = () => {
+  //   this.menuDialog && this.menuDialog.callCurrentAction()
+  // }
+  menuCommit = (type = this.state.type, actionFirst = false) => {
+    (async function() {
+      let actionType = Action.PAN
 
+      if (actionFirst) {
+        await this.closeSubAction(type, actionType)
+      }
+
+      if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
+        // 去掉量算监听
+        SMap.removeMeasureListener()
+      }
+      if (GLOBAL.Type !== constants.MAP_3D) {
+        this.props.showMeasureResult(false)
+      }
+      if (GLOBAL.Type === constants.MAP_EDIT) {
+        GLOBAL.showMenu = true
+        // GLOBAL.showFlex = true
+        this.setState({ selectKey: '' })
+      }
+      if (
+        type === ConstToolType.MAP_ADD_DATASET ||
+        type === ConstToolType.MAP_THEME_ADD_DATASET
+      ) {
+        this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+      }
+
+      // 当前为采集状态
+      if (typeof type === 'number') {
+        await SCollector.stopCollect()
+      }
+
+      if (
+        typeof type === 'string' &&
+        type.indexOf('MAP_EDIT_') >= 0 &&
+        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+        type !== ConstToolType.MAP_TOOL_TAGGING &&
+        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
+      ) {
+        actionType = Action.SELECT
+        GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
+        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+        this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+          isFullScreen: false,
+          height: 0,
+        })
+      } else {
+        // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
+        if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+          GLOBAL.currentToolbarType = ''
+        }
+
+        this.showToolbar(false)
+        if (
+          this.state.isTouchProgress === true ||
+          this.state.showMenuDialog === true
+        ) {
+          this.setState(
+            { isTouchProgress: false, showMenuDialog: false },
+            () => {
+              this.updateOverlayerView()
+            },
+          )
+        }
+        this.props.existFullMap && this.props.existFullMap()
+        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+        this.setState({
+          data: [],
+          // buttons: [],
+        })
+        this.height = 0
+      }
+      if (!actionFirst) {
+        setTimeout(async () => {
+          // 关闭采集, type 为number时为采集类型，若有冲突再更改
+          await this.closeSubAction(type, actionType)
+        }, Const.ANIMATED_DURATION_2)
+      }
+
+      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
+      this.updateOverlayerView()
+      SMap.deleteGestureDetector()
+    }.bind(this)())
+  }
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
@@ -4837,8 +4941,8 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.MENU_COMMIT:
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          // action = this.menuCommit
-          action = this.close
+          action = this.menuCommit
+          // action = this.close
           break
         case ToolbarBtnType.THEME_ADD_BACK:
           //返回上一级

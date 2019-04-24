@@ -207,27 +207,30 @@ export default class LayerSelectionAttribute extends React.Component {
               // ...others,
             },
             () => {
-              if (type === 'refresh') {
-                this.table &&
-                  this.table.scrollToLocation({
-                    animated: false,
-                    itemIndex: prevStartIndex - startIndex,
-                    sectionIndex: 0,
-                    viewPosition: 0,
-                    viewOffset: COL_HEIGHT,
-                  })
-              } else if (type === 'loadMore') {
-                this.table &&
-                  this.table.scrollToLocation({
-                    animated: false,
-                    itemIndex: newAttributes.data.length - result.resLength,
-                    sectionIndex: 0,
-                    viewPosition: 1,
-                  })
-              }
-              this.setLoading(false)
-              this.props.onGetAttribute && this.props.onGetAttribute(attributes)
-              cb && cb(attributes)
+              setTimeout(() => {
+                if (type === 'refresh') {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: prevStartIndex - startIndex,
+                      sectionIndex: 0,
+                      viewPosition: 0,
+                      viewOffset: COL_HEIGHT,
+                    })
+                } else if (type === 'loadMore') {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: newAttributes.data.length - result.resLength,
+                      sectionIndex: 0,
+                      viewPosition: 1,
+                    })
+                }
+                this.setLoading(false)
+                this.props.onGetAttribute &&
+                  this.props.onGetAttribute(attributes)
+                cb && cb(attributes)
+              }, 0)
             },
           )
         }
@@ -432,10 +435,11 @@ export default class LayerSelectionAttribute extends React.Component {
       Toast.show(ConstInfo.CANNOT_LOCATION)
       return
     }
-    let viewPosition = 0.3,
+    let viewPosition = 0,
       relativeIndex,
       currentIndex,
-      startIndex = this.state.startIndex
+      startIndex = this.state.startIndex,
+      isInViewableData = false
     if (data.type === 'relative') {
       // 相对定位
       currentIndex = this.state.currentIndex + data.index
@@ -451,6 +455,7 @@ export default class LayerSelectionAttribute extends React.Component {
       ) {
         // 定位在当前显示数据范围内
         relativeIndex = this.state.relativeIndex + data.index
+        isInViewableData = true
       } else {
         // 定位在当前显示数据范围外
         startIndex = this.currentPage * PAGE_SIZE
@@ -469,6 +474,7 @@ export default class LayerSelectionAttribute extends React.Component {
       ) {
         // 定位在当前显示数据范围内
         relativeIndex = data.index - 1 - this.state.startIndex
+        isInViewableData = true
       } else {
         // 定位在当前显示数据范围外
         startIndex = this.currentPage * PAGE_SIZE
@@ -482,40 +488,67 @@ export default class LayerSelectionAttribute extends React.Component {
     //   this.canBeRefresh = true
     // }
 
-    this.getAttribute(
-      {
-        type: 'reset',
-        currentPage: this.currentPage,
-        startIndex: startIndex,
-        relativeIndex: relativeIndex,
-        currentIndex,
-      },
-      () => {
-        if (this.table) {
-          // 避免 Android 更新数据后无法滚动
-          setTimeout(() => {
-            let item = this.table.setSelected(relativeIndex, false)
-            this.setState({
-              currentFieldInfo: item.data,
+    if (isInViewableData) {
+      let item = this.table.setSelected(relativeIndex, false)
+      this.setState(
+        {
+          currentFieldInfo: item.data,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          this.table &&
+            this.table.scrollToLocation({
+              animated: false,
+              itemIndex: relativeIndex,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
             })
-            cb &&
-              cb({
-                currentIndex,
-                currentFieldInfo: item.data,
-                layerInfo: this.props.layerSelection.layerInfo,
-              })
-            this.table &&
-              this.table.scrollToLocation({
-                animated: false,
-                itemIndex: relativeIndex,
-                sectionIndex: 0,
-                viewPosition: viewPosition,
-                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-              })
-          }, 0)
-        }
-      },
-    )
+        },
+      )
+      this.setLoading(false)
+    } else {
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: this.currentPage,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          if (this.table) {
+            // 避免 Android 更新数据后无法滚动
+            setTimeout(() => {
+              let item = this.table.setSelected(relativeIndex, false)
+              this.setState(
+                {
+                  currentFieldInfo: item.data,
+                },
+                () => {
+                  cb &&
+                    cb({
+                      currentIndex,
+                      currentFieldInfo: item.data,
+                      layerInfo: this.props.layerSelection.layerInfo,
+                    })
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: relativeIndex,
+                      sectionIndex: 0,
+                      viewPosition: viewPosition,
+                      viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+                    })
+                },
+              )
+            }, 0)
+          }
+        },
+      )
+    }
   }
 
   selectRow = ({ data, index = -1 }) => {
@@ -747,11 +780,11 @@ export default class LayerSelectionAttribute extends React.Component {
                         if (_data[0].value === fieldInfo[j].smID) {
                           _data[fieldInfo[j].columnIndex - 1].value =
                             fieldInfo[j].value
-                          this.checkToolIsViable()
-                          this.setState({
-                            attributes,
-                          })
-                          break
+                          // this.checkToolIsViable()
+                          // this.setState({
+                          //   attributes,
+                          // })
+                          continue
                         }
                       }
                     }
@@ -775,14 +808,17 @@ export default class LayerSelectionAttribute extends React.Component {
                 },
                 () => {
                   this.setLoading(false)
+                  if (
+                    this.state.attributes.data.length > 1 &&
+                    data.length == 1
+                  ) {
+                    this.locateToPosition({
+                      type: 'absolute',
+                      index: data[0].fieldInfo[0].index + 1,
+                    })
+                  }
                 },
               )
-              if (this.state.attributes.data.length > 1 && data.length == 1) {
-                this.locateToPosition({
-                  type: 'absolute',
-                  index: data[0].fieldInfo[0].index + 1,
-                })
-              }
             } else {
               this.setLoading(false)
             }

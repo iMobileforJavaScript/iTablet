@@ -322,6 +322,7 @@ class ModuleList extends Component {
           module = constants.MAP_PLOTTING
           break
       }
+      // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
       let latestMap
       if (
         this.props.latestMap[currentUserName] &&
@@ -329,13 +330,7 @@ class ModuleList extends Component {
         this.props.latestMap[currentUserName][module].length > 0
       ) {
         latestMap = this.props.latestMap[currentUserName][module][0]
-        // if(latestMap.name===mapname){
-        //   latestMap=null
-        // }
       }
-      item.action && item.action(tmpCurrentUser, latestMap)
-
-      // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
       let toPath = homePath + ConstPath.CachePath + fileName
 
       let cachePath = homePath + ConstPath.CachePath
@@ -351,20 +346,19 @@ class ModuleList extends Component {
         }
         // if (this.state.dialogCheck) {
         if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDialogCheck()
+          !(
+            this.moduleItems &&
+            this.moduleItems[index] &&
+            (this.moduleItems[index].getDialogCheck() ||
+              this.moduleItems[index].getDownloading())
+          )
         ) {
-          item.action && item.action(tmpCurrentUser)
-        } else if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDownloading()
-        ) {
-          item.action && item.action(tmpCurrentUser)
+          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
+        }
+        if (latestMap) {
+          item.action && item.action(tmpCurrentUser, latestMap)
         } else {
           item.action && item.action(tmpCurrentUser)
-          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
         let filePath2
@@ -401,6 +395,7 @@ class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
+        item.action && item.action(tmpCurrentUser, latestMap)
       }
     } catch (e) {
       this.moduleItems[index].setNewState({

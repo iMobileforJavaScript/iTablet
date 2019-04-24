@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Dimensions } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
-import { MAP_MODULE } from '../../../../constants/ConstModule'
-import { ConstInfo } from '../../../../constants'
+import { ConstInfo, ConstAnalyst } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
@@ -144,7 +143,7 @@ export default class BufferAnalystView extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: MAP_MODULE.MAP_ANALYST,
+          title: ConstAnalyst.BUFFER_ANALYST_2,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: (
