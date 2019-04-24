@@ -333,9 +333,9 @@ export default class PublicMap extends Component {
       return time2 - time1
     })
 
-    if(bAddNew){
+    if (bAddNew) {
       let data = JSON.stringify(srcData)
-      FileTools.getHomeDirectory().then(value=>{
+      FileTools.getHomeDirectory().then(value => {
         let path = value + ConstPath.CachePath + 'publicMap.txt'
         RNFS.writeFile(path, data, 'utf8')
       })

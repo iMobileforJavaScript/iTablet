@@ -133,7 +133,6 @@ class AppRoot extends Component {
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
-    GLOBAL.TaggingLayerName = ''
     GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
   }
@@ -459,7 +458,10 @@ class AppRoot extends Component {
           source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>试用许可已过期,请更换许可后重启</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.LICENSE_EXPIRED}
+          {/* 试用许可已过期,请更换许可后重启 */}
+        </Text>
       </View>
     )
   }
@@ -468,12 +470,15 @@ class AppRoot extends Component {
     return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      onlyOneBtn={true}
-      cancelBtnVisible={false}
-      confirmAction={() => {this.exit.setDialogVisible(false)}}
+      confirmAction={() => {
+        this.exit.setDialogVisible(false)
+        NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
+      }}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
+      confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+      cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
       {this.renderExitDialogChildren()}
     </Dialog>
