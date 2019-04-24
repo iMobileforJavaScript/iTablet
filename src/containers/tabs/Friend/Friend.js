@@ -531,6 +531,12 @@ export default class Friend extends Component {
         friend: this,
         language: this.props.language,
       })
+    } else if (index === 3) {
+      NavigationService.navigate('RecommendFriend', {
+        user: this.props.user.currentUser,
+        friend: this,
+        language: this.props.language,
+      })
     }
   }
   render() {

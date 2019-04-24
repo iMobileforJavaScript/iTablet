@@ -63,7 +63,6 @@ class Chat extends React.Component {
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
     this.onSendLocation = this.onSendLocation.bind(this)
-    this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
@@ -367,36 +366,27 @@ class Chat extends React.Component {
       message._id,
     )
   }
-  async onLongPress(context, message) {
-    if (message.message.type) {
-      switch (message.message.type) {
-        case MSGConstant.MSG_FILE_NOTIFY:
-          if (message.user._id !== this.curUser.userId) {
-            let userPath = await FileTools.appendingHomeDirectory(
-              ConstPath.UserPath + this.curUser.userName,
-            )
-            let receivePath = userPath + '/ReceivedFiles'
-            if (message.message.message.isReceived === 0) {
-              this.downloadmessage = message
-              this.downloadreceivePath = receivePath
-              this.download.setDialogVisible(true)
-            } else {
-              let toPath = await FileTools.appendingHomeDirectory(
-                ConstPath.Import + '/weChat.zip',
-              )
-              FileTools.copyFile(
-                receivePath + '/' + message.message.message.fileName,
-                toPath,
-              )
-              this.import.setDialogVisible(true)
-            }
-          }
-          break
-        default:
-          alert('undefined')
+
+  onFileTouch = async message => {
+    if (message.user._id !== this.curUser.userId) {
+      let userPath = await FileTools.appendingHomeDirectory(
+        ConstPath.UserPath + this.curUser.userName,
+      )
+      let receivePath = userPath + '/ReceivedFiles'
+      if (message.message.message.isReceived === 0) {
+        this.downloadmessage = message
+        this.downloadreceivePath = receivePath
+        this.download.setDialogVisible(true)
+      } else {
+        let toPath = await FileTools.appendingHomeDirectory(
+          ConstPath.Import + '/weChat.zip',
+        )
+        FileTools.copyFile(
+          receivePath + '/' + message.message.message.fileName,
+          toPath,
+        )
+        this.import.setDialogVisible(true)
       }
-    } else {
-      alert('1')
     }
   }
 
@@ -439,7 +429,6 @@ class Chat extends React.Component {
               _id: this.curUser.userId, // sent messages should have same user._id
               name: this.curUser.nickname,
             }}
-            onLongPress={this.onLongPress}
             renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
             renderTicks={this.renderTicks}
@@ -616,8 +605,8 @@ class Chat extends React.Component {
     )
   }
 
-  renderCustomView(props) {
-    return <CustomView {...props} />
+  renderCustomView = props => {
+    return <CustomView {...props} onFileTouch={this.onFileTouch} />
   }
 
   // eslint-disable-next-line

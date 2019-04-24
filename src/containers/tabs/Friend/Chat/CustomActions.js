@@ -17,7 +17,6 @@ import { getLanguage } from '../../../../language/index'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
-import { Const } from '../../../../constants'
 var Geolocation = undefined
 if (Platform.OS === 'ios') {
   var GeolocationIOS = require('Geolocation')
@@ -35,7 +34,7 @@ const ICONS = context => [
     text: getLanguage(global.language).Friends.MAP,
     onPress: () => {
       NavigationService.navigate('MyData', {
-        title: Const.MAP,
+        title: getLanguage(global.language).Profile.MAP,
         formChat: true,
         // eslint-disable-next-line
         chatCallBack: _path => {
