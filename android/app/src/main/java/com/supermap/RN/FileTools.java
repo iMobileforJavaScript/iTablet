@@ -535,7 +535,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-
     @ReactMethod
     public void importData(Promise promise){
         try {
