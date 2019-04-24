@@ -658,6 +658,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)

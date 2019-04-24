@@ -18,7 +18,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
-import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
+import { SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import {
   ConstToolType,
@@ -26,12 +26,14 @@ import {
   getHeaderTitle,
   ConstOnline,
   UserType,
-  ConstInfo,
 } from '../../constants'
 import { color, size } from '../../styles'
-const LAYER_GROUP = 'layerGroup'
 import * as LayerUtils from './LayerUtils'
-import { getThemeAssets } from '../../assets'
+import {
+  getThemeAssets,
+  getLayerIconByType,
+  getThemeIconByType,
+} from '../../assets'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
 import { getLanguage } from '../../language/index'
@@ -64,7 +66,7 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
-      selectLayer: this.props.currentLayer.caption,
+      selectLayer: this.props.currentLayer.name,
       type: params && params.type, // 底部Tabbar类型
     }
   }
@@ -76,7 +78,7 @@ export default class MT_layerManager extends React.Component {
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
     ) {
-      newState.selectLayer = this.props.currentLayer.caption
+      newState.selectLayer = this.props.currentLayer.name
     }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
@@ -195,7 +197,7 @@ export default class MT_layerManager extends React.Component {
             visible: true,
           },
         ],
-        selectLayer: this.props.currentLayer.caption,
+        selectLayer: this.props.currentLayer.name,
         refreshing: false,
       })
       // let mapName = await this.map.getName()
@@ -441,13 +443,13 @@ export default class MT_layerManager extends React.Component {
         }
       })
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 
   onThisPress = async ({ data }) => {
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 
@@ -581,7 +583,7 @@ export default class MT_layerManager extends React.Component {
       }
     }
     this.setState({
-      selectLayer: data.caption,
+      selectLayer: data.name,
     })
   }
 
@@ -664,7 +666,11 @@ export default class MT_layerManager extends React.Component {
     for (let i = 0, l = layers.length; i < l; i++) {
       if (caption === layers[i].caption) {
         curData[1].data[i].isVisible = value
-        hasDeal = true
+        /*
+         *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+         *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+         */
+        //hasDeal = true
         break
       }
     }
@@ -726,29 +732,10 @@ export default class MT_layerManager extends React.Component {
 
   getStyleIconByType = item => {
     if (item.themeType > 0) {
-      return this.getThemeIconByType(item.themeType)
+      return getThemeIconByType(item.themeType)
     } else {
-      return this.getLayerIconByType(item.type)
+      return getLayerIconByType(item.type)
     }
-  }
-
-  getThemeIconByType = type => {
-    let icon
-    switch (type) {
-      case ThemeType.UNIQUE: // 单值专题图
-        icon = require('../../assets/map/layers_theme_unique_style_black.png')
-        break
-      case ThemeType.RANGE: // 分段专题图
-        icon = require('../../assets/map/layers_theme_range_style_black.png')
-        break
-      case ThemeType.LABEL: // 标签专题图
-        icon = require('../../assets/map/layers_theme_unify_label_style_black.png')
-        break
-      default:
-        icon = require('../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
   }
 
   tool_row = async () => {
@@ -767,7 +754,7 @@ export default class MT_layerManager extends React.Component {
     NavigationService.navigate('InputPage', {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
-      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
       cb: async value => {
         if (value !== '') {
           (async function() {
@@ -783,43 +770,6 @@ export default class MT_layerManager extends React.Component {
         NavigationService.goBack()
       },
     })
-  }
-
-  getLayerIconByType = type => {
-    let icon
-    switch (type) {
-      case LAYER_GROUP:
-        icon = require('../../assets/map/icon-directory.png')
-        break
-      case DatasetType.POINT: // 点数据集
-        icon = require('../../assets/map/icon-shallow-dot_black.png')
-        break
-      case DatasetType.LINE: // 线数据集
-        icon = require('../../assets/map/icon-shallow-line_black.png')
-        break
-      case DatasetType.REGION: // 多边形数据集
-        icon = require('../../assets/map/icon-shallow-polygon_black.png')
-        break
-      case DatasetType.TEXT: // 文本数据集
-        icon = require('../../assets/map/icon-shallow-text_black.png')
-        break
-      case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../assets/map/icon-shallow-image_black.png')
-        break
-      case DatasetType.CAD: // 复合数据集
-        icon = require('../../assets/map/icon-cad.png')
-        break
-      case DatasetType.Network: // 复合数据集
-        icon = require('../../assets/map/icon-network.png')
-        break
-      case DatasetType.GRID: // GRID数据集
-        icon = require('../../assets/map/icon-grid_black.png')
-        break
-      default:
-        icon = require('../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
   }
 
   _renderItem = ({ item, section, index }) => {
@@ -1043,18 +993,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   /**行与行之间的分隔线组件 */
-  renderItemSeparator = ({ section }) => {
+  renderItemSeparator = ({ section, leadingItem }) => {
     if (section.visible) {
-      return (
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
-      )
+      if (
+        this.props.layers.length > 0 &&
+        leadingItem.name.indexOf('@Label_') >= 0 &&
+        section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+      ) {
+        return <View />
+      } else {
+        return (
+          <View
+            style={{
+              flexDirection: 'column',
+              width: '100%',
+              height: 1,
+              backgroundColor: color.bgG,
+            }}
+          />
+        )
+      }
     } else {
       return <View />
     }

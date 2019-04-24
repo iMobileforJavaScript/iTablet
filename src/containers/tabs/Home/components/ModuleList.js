@@ -22,6 +22,7 @@ import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
 import { connect } from 'react-redux'
+import { getLanguage } from '../../../../language'
 
 class RenderModuleItem extends Component {
   props: {
@@ -209,12 +210,11 @@ export class ModuleList extends Component {
           let value = ~~res.progress.toFixed(0) + '%'
           if (~~res.progress >= 100) {
             ref.setNewState({
-              progress: '导入中...',
+              progress: getLanguage(this.props.language).Prompt.IMPORTING,
               isShowProgressView: true,
               // disabled: true,
             })
             // this.downloading = false
-            ref.setDownloading(false)
           } else if (value !== this.state.progress) {
             ref.setNewState({
               progress: value,
@@ -236,18 +236,22 @@ export class ModuleList extends Component {
           ref.setNewState({ isShowProgressView: false, disabled: false })
 
           FileTools.deleteFile(fileDirPath + '.zip')
+          ref.setDownloading(false)
         })
         .catch(() => {
-          Toast.show('下载失败')
+          Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+          //'下载失败')
           FileTools.deleteFile(fileCachePath)
           ref.setNewState({ isShowProgressView: false, disabled: false })
           // this.downloading = false
           ref.setDownloading(false)
         })
     } catch (e) {
-      Toast.show('网络错误，下载失败')
+      Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+      //'网络错误，下载失败')
       FileTools.deleteFile(fileDirPath + '.zip')
       ref.setNewState({ isShowProgressView: false, disabled: false })
+      ref.setDownloading(false)
     }
   }
 
@@ -323,6 +327,14 @@ export class ModuleList extends Component {
           break
       }
       // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
+      let latestMap
+      if (
+        this.props.latestMap[currentUserName] &&
+        this.props.latestMap[currentUserName][module] &&
+        this.props.latestMap[currentUserName][module].length > 0
+      ) {
+        latestMap = this.props.latestMap[currentUserName][module][0]
+      }
       let toPath = homePath + ConstPath.CachePath + fileName
 
       let cachePath = homePath + ConstPath.CachePath
@@ -338,20 +350,19 @@ export class ModuleList extends Component {
         }
         // if (this.state.dialogCheck) {
         if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDialogCheck()
+          !(
+            this.moduleItems &&
+            this.moduleItems[index] &&
+            (this.moduleItems[index].getDialogCheck() ||
+              this.moduleItems[index].getDownloading())
+          )
         ) {
-          item.action && item.action(tmpCurrentUser)
-        } else if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDownloading()
-        ) {
-          item.action && item.action(tmpCurrentUser)
+          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
+        }
+        if (latestMap) {
+          item.action && item.action(tmpCurrentUser, latestMap)
         } else {
           item.action && item.action(tmpCurrentUser)
-          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
         let filePath2
@@ -388,19 +399,8 @@ export class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
+        item.action && item.action(tmpCurrentUser, latestMap)
       }
-      let latestMap
-      if (
-        this.props.latestMap[currentUserName] &&
-        this.props.latestMap[currentUserName][module] &&
-        this.props.latestMap[currentUserName][module].length > 0
-      ) {
-        latestMap = this.props.latestMap[currentUserName][module][0]
-        // if(latestMap.name===mapname){
-        //   latestMap=null
-        // }
-      }
-      item.action && item.action(tmpCurrentUser, latestMap)
     } catch (e) {
       this.moduleItems[index].setNewState({
         disabled: false,

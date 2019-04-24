@@ -7,7 +7,7 @@ import { scaleSize } from '../../../../utils'
 export default class LocalDtaHeader extends Component {
   props: {
     info: Object,
-    changgeHearShowItem: () => {},
+    changeHearShowItem: () => {},
   }
   constructor(props) {
     super(props)
@@ -25,8 +25,8 @@ export default class LocalDtaHeader extends Component {
       return (
         <TouchableOpacity
           onPress={() => {
-            this.props.changgeHearShowItem &&
-              this.props.changgeHearShowItem(title)
+            this.props.changeHearShowItem &&
+              this.props.changeHearShowItem(title)
           }}
           style={{
             width: '100%',
