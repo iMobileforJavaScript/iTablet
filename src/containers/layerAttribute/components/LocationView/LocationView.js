@@ -133,7 +133,10 @@ export default class LocationView extends React.Component {
           index: parseInt(this.currentData.inputValue),
         })
       } else {
-        // Toast.show('请选择定位信息')
+        // Toast.show(
+        //   getLanguage(global.language).Prompt
+        //     .PLEASE_SELECT_LICATION_INFORMATION,
+        // )
       }
     }
     this.show(false)

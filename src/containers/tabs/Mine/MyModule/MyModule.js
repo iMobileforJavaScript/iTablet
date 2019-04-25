@@ -154,30 +154,6 @@ export default class MyModule extends Component {
           action: async () => {
             this._closeModal()
             this.ModalBtns.setVisible(true)
-
-            // let expListPath = userPath + ConstPath.RelativePath.Map
-            // let expList=await FileTools.getPathListByFilter(expListPath, {extension: 'exp',type: 'file',})
-            // for (let index = 0; index < expList.length; index++) {
-            //   const element = expList[index];
-            //   let expPath=await FileTools.appendingHomeDirectory(element.path)
-            //   let result=await SMap.getExpJson(expPath)
-            //   let Json=JSON.parse(result)
-            //   if(Json.Template){
-            //     let xmlPath=await FileTools.appendingHomeDirectory(ConstPath.UserPath+Json.Template)
-            //     let fileName=Json.Template.substring(Json.Template.lastIndexOf('/')+1)
-            //     if(this.itemInfo.item.name.indexOf(fileName)>-1){
-            //       let name=element.name.substring(0,element.name.indexOf('.'))
-            //       let workspacePath=userPath+ConstPath.RelativePath.ExternalData +ConstPath.RelativeFilePath.ExportData +name+'/'+name+".smwu"
-            //       this.props.exportModule&&this.props.exportModule({ maps: [name], outPath: workspacePath, isOpenMap: true ,xmlPath:xmlPath}).then((result)=>{
-            //           this.container.setLoading(false)
-            //           Toast.show("分享成功")
-            //         },()=>{
-            //           Toast.show("分享失败")
-            //         })
-            //       break
-            //     }
-            //   }
-            // }
           },
         },
         {
@@ -185,10 +161,10 @@ export default class MyModule extends Component {
           //'删除数据',
           action: async () => {
             try {
-              let filePath = await FileTools.appendingHomeDirectory(
-                this.itemInfo.item.path,
+              let filePath = this.itemInfo.item.path.substring(
+                0,
+                this.itemInfo.item.path.lastIndexOf('/'),
               )
-
               let result = await FileTools.deleteFile(filePath)
               if (result) {
                 this._closeModal()
