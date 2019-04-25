@@ -34,7 +34,9 @@ export default class Radio extends PureComponent {
     returnKeyType?: string,
     index?: number,
     onPress?: () => {},
+    onFocus?: () => {},
     onSubmitEditing?: () => {},
+    onChangeText?: () => {},
   }
 
   static defaultProps = {
@@ -50,9 +52,11 @@ export default class Radio extends PureComponent {
 
   constructor(props) {
     super(props)
+    let inputValue = props.inputValue !== undefined ? props.inputValue : ''
     this.state = {
       selected: props.selected,
-      inputValue: props.inputValue !== undefined ? props.inputValue : '',
+      inputValue,
+      selection: { start: 0, end: inputValue.length - 1 },
     }
     this.submitting = false // android防止onblur和submit依次触发
   }
@@ -62,9 +66,12 @@ export default class Radio extends PureComponent {
       this.state.selected !== this.props.selected &&
       prevProps.selected !== this.props.selected
     ) {
-      this.setState({
-        selected: this.props.selected,
-      })
+      let state = {}
+      state.selected = this.props.selected
+      if (this.props.selected) {
+        state.selection = { start: 0, end: this.state.inputValue.length - 1 }
+      }
+      this.setState(state)
     }
   }
 
@@ -106,6 +113,18 @@ export default class Radio extends PureComponent {
       })
   }
 
+  onFocus = () => {
+    this.props.onFocus &&
+      this.props.onFocus({
+        title: this.props.title,
+        value: this.props.value,
+        inputValue: this.state.inputValue,
+        selected: this.state.selected,
+        index: this.props.index,
+      })
+    this.input && this.input.focus()
+  }
+
   onSubmitEditing = () => {
     if (Platform.OS === 'ios' || !this.submitting) {
       this.props.onSubmitEditing &&
@@ -119,6 +138,31 @@ export default class Radio extends PureComponent {
     } else {
       this.submitting = false
     }
+  }
+
+  onChangeText = text => {
+    if (
+      this.props.keyboardType === 'number-pad' ||
+      this.props.keyboardType === 'decimal-pad' ||
+      this.props.keyboardType === 'numeric'
+    ) {
+      if (isNaN(text) && text !== '' && text !== '-') {
+        text = this.state.inputValue
+      }
+    }
+    if (
+      this.props.onChangeText &&
+      typeof this.props.onChangeText === 'function'
+    ) {
+      this.props.onChangeText({
+        title: this.props.title,
+        value: text,
+        inputValue: this.state.inputValue,
+        selected: this.state.selected,
+        index: this.props.index,
+      })
+    }
+    this.setState({ inputValue: text })
   }
 
   onBlur = () => {
@@ -172,20 +216,11 @@ export default class Radio extends PureComponent {
                 value={this.state.inputValue + ''}
                 returnKeyLabel={this.props.returnKeyLabel}
                 returnKeyType={this.props.returnKeyType}
-                onChangeText={text => {
-                  if (
-                    this.props.keyboardType === 'number-pad' ||
-                    this.props.keyboardType === 'decimal-pad' ||
-                    this.props.keyboardType === 'numeric'
-                  ) {
-                    if (isNaN(text) && text !== '' && text !== '-') {
-                      text = this.state.inputValue
-                    }
-                  }
-                  this.setState({ inputValue: text })
-                }}
+                onChangeText={this.onChangeText}
                 onSubmitEditing={this.onSubmitEditing}
                 onBlur={this.onBlur}
+                onFocus={this.onFocus}
+                selectTextOnFocus={true}
               />
             ) : (
               <View

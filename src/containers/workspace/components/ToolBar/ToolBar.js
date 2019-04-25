@@ -446,7 +446,7 @@ export default class ToolBar extends React.PureComponent {
                     callback: () => {
                       this.showToolbar()
                     },
-                  }
+                  },
                 )
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
               } catch (error) {

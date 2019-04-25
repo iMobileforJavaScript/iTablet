@@ -135,6 +135,8 @@ class AppRoot extends Component {
     GLOBAL.TaggingDatasetName = ''
     GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
+    this.login = this.login.bind(this)
+    this.reCircleLogin = this.reCircleLogin.bind(this)
   }
   UNSAFE_componentWillMount(){
     SOnlineService.init()
@@ -169,7 +171,7 @@ class AppRoot extends Component {
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
-    GLOBAL.loginTimer = setInterval(this.login, 30000)
+    GLOBAL.loginTimer = setInterval(this.login,60000 )
   }
   componentDidMount () {
 
