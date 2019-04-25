@@ -152,8 +152,9 @@ export default class MT_layerManager extends React.Component {
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       if (
-        layers.length > 0 &&
-        !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+        (layers.length > 0 &&
+          !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
+        layers.length === 0
       ) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
@@ -167,14 +168,13 @@ export default class MT_layerManager extends React.Component {
       }
 
       let baseMap = []
-      let dataList = []
       if (
         layers.length > 0 &&
         LayerUtils.isBaseLayer(layers[layers.length - 1].name)
       ) {
         baseMap = [layers[layers.length - 1]]
       }
-      dataList = await SMap.getTaggingLayers(
+      let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
       this.setState({

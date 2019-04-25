@@ -243,6 +243,8 @@ export default class OverlayAnalystView extends Component {
         ) {
           item.key = item.datasetName
           item.value = item.key
+          item.icon = getLayerIconByType(item.datasetType)
+          item.highLightIcon = getLayerWhiteIconByType(item.datasetType)
           dss.push(item)
         }
       }

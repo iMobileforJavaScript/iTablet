@@ -55,7 +55,7 @@ function SetMap(param) {
         left: 0,
       },
       action: async (user, lastMap) => {
-        let data = ConstOnline['Google']
+        let data = Object.assign({}, ConstOnline['Google'])
         GLOBAL.Type = constants.MAP_EDIT
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         GLOBAL.showMenu = true
@@ -187,7 +187,7 @@ function SetMap(param) {
         left: 0,
       },
       action: async (user, lastMap) => {
-        let data = ConstOnline['Google']
+        let data = Object.assign({}, ConstOnline['Google'])
         GLOBAL.Type = constants.MAP_THEME
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         let homePath = await FileTools.appendingHomeDirectory()
@@ -254,7 +254,7 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async (user, lastMap) => {
-        let data = ConstOnline['Google']
+        let data = Object.assign({}, ConstOnline['Google'])
         data.layerIndex = 1
         GLOBAL.Type = constants.COLLECTION
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
@@ -324,7 +324,7 @@ function SetMap(param) {
     //     bottom: 0,
     //   },
     //   action: async (user, lastMap) => {
-    //     let data = ConstOnline['Google']
+    //     let data = Object.assign({}, ConstOnline['Google'])
     //     data.layerIndex = 1
     //     GLOBAL.Type = constants.MAP_PLOTTING
     //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
@@ -407,7 +407,7 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async user => {
-        let data = ConstOnline['Google']
+        let data = Object.assign({}, ConstOnline['Google'])
         data.layerIndex = 1
         GLOBAL.Type = constants.MAP_ANALYST
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
