@@ -257,8 +257,10 @@ export default class PointAnalyst extends Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
-          SScene.pointSearch(searchKey)
+          // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
+          SScene.pointSearch(searchKey).then(() => {
+            // this.setLoading(false)
+          })
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
         //{'请输入搜索关键字'}

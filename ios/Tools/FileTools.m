@@ -664,7 +664,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           dsci.engineType = ET_UDB;
           Datasource *datasource = [[ws datasources]open:dsci];
           if([datasource.description isEqualToString:@"Label"]){
-            NSString *udbName = [NSString stringWithFormat:@"%@%@%@",@"Label_",[FileTools getUserName],@"#"];
+            NSString *udbName = [NSString stringWithFormat:@"%@%@%@",@"Label_",[FileTools getUserName],@"#.udb"];
             NSString *todatasource = [NSString stringWithFormat:@"%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Datasource/",udbName];
             [filemanager createFileAtPath:todatasource contents:nil attributes:nil];
             if([filemanager fileExistsAtPath:todatasource]){

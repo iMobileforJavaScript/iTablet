@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   NativeModules,
+  RefreshControl,
 } from 'react-native'
 import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
@@ -113,6 +114,7 @@ export default class MyLocalData extends Component {
       textValue: '扫描文件:',
       textDisplay: 'none',
       title: (params && params.title) || '',
+      isRefreshing: false,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -1015,6 +1017,26 @@ export default class MyLocalData extends Component {
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={() => {
+                try {
+                  this.setState({ isRefreshing: true })
+                  this.getData().then(() => {
+                    this.setState({ isRefreshing: false })
+                  })
+                } catch (error) {
+                  Toast.show('刷新失败')
+                }
+              }}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {/* <FlatList
           style={{

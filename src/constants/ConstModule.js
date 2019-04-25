@@ -56,6 +56,7 @@ function SetMap(param) {
       },
       action: async (user, lastMap) => {
         let data = ConstOnline['Google']
+        data.layerIndex = 3
         GLOBAL.Type = constants.MAP_EDIT
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         GLOBAL.showMenu = true
@@ -188,6 +189,7 @@ function SetMap(param) {
       },
       action: async (user, lastMap) => {
         let data = ConstOnline['Google']
+        data.layerIndex = 3
         GLOBAL.Type = constants.MAP_THEME
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         let homePath = await FileTools.appendingHomeDirectory()
