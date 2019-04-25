@@ -154,7 +154,7 @@ export default class LayerAttribute extends React.Component {
   /** 下拉刷新 **/
   refresh = (cb = () => {}, resetCurrent = false) => {
     if (!this.canBeRefresh) {
-      Toast.show('已经是最新的了')
+      //Toast.show('已经是最新的了')
       this.getAttribute(
         {
           type: 'reset',
@@ -345,7 +345,8 @@ export default class LayerAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = () => {
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -403,7 +404,8 @@ export default class LayerAttribute extends React.Component {
    */
   locateToBottom = () => {
     if (this.total <= 0) return
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -458,7 +460,8 @@ export default class LayerAttribute extends React.Component {
       // 相对定位
       currentIndex = this.state.currentIndex + data.index
       if (currentIndex < 0 || currentIndex >= this.total) {
-        Toast.show('位置越界')
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
         return
       }
       this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
@@ -478,7 +481,8 @@ export default class LayerAttribute extends React.Component {
     } else if (data.type === 'absolute') {
       // 绝对定位
       if (data.index <= 0 || data.index > this.total) {
-        Toast.show('位置越界')
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
         return
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
@@ -497,7 +501,8 @@ export default class LayerAttribute extends React.Component {
       currentIndex = data.index - 1
     }
 
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     if (startIndex !== 0) {
       this.canBeRefresh = true
     }
@@ -827,13 +832,6 @@ export default class LayerAttribute extends React.Component {
                   }, 0)
                 },
               )
-
-              if (this.state.attributes.data.length > 1 && data.length == 1) {
-                this.locateToPosition({
-                  type: 'absolute',
-                  index: data[0].fieldInfo[0].index + 1,
-                })
-              }
             } else {
               this.setLoading(false)
             }

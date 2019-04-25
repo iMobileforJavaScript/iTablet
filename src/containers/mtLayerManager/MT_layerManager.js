@@ -651,7 +651,8 @@ export default class MT_layerManager extends React.Component {
       return child
     } catch (e) {
       this.container.setLoading(false)
-      Toast.show('获取失败')
+      Toast.show(getLanguage(this.props.language).Prompt.GET_LAYER_GROUP_FAILD)
+      //'获取失败')
       return []
     }
   }
