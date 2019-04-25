@@ -651,7 +651,8 @@ export default class MT_layerManager extends React.Component {
       return child
     } catch (e) {
       this.container.setLoading(false)
-      Toast.show('获取失败')
+      Toast.show(getLanguage(this.props.language).Prompt.GET_LAYER_GROUP_FAILD)
+      //'获取失败')
       return []
     }
   }
@@ -677,7 +678,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
         if (caption === backMaps[j].caption) {
-          curData[2].data.isVisible = value
+          curData[2].data[j].isVisible = value
           hasDeal = true
           break
         }
@@ -685,7 +686,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = Label.length; j < l; j++) {
         if (caption === Label[j].caption) {
-          curData[0].data.isVisible = value
+          curData[0].data[j].isVisible = value
           hasDeal = true
           break
         }
