@@ -653,7 +653,6 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         if(importResult){
           hasImportedData = NO;
           isImportSuccess = YES;
-          [FileTools deleteFile:deletepath];
         }
       }else if([dataSourceFile count]){
         //导入udb文件
@@ -686,6 +685,9 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         }
         isImportSuccess = YES;
         hasImportedData = NO;
+      }
+      if(isImportSuccess){
+        [FileTools deleteFile:deletepath];
       }
       resolve(@(isImportSuccess));
     } @catch (NSException *exception) {
