@@ -680,7 +680,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
       }else if(symbolSourceFile.count){
         NSString *symbolPath = [NSString stringWithFormat:@"%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Symbol/"];
         for(int i = 0; i < symbolSourceFile.count; i++){
-          NSString *fileName = [symbolSourceFile objectAtIndex:i];
+          NSString *fileName = [[symbolSourceFile objectAtIndex:i]lastPathComponent];
           [FileTools copyFile:[destinationPath stringByAppendingString:fileName] targetPath:[symbolPath stringByAppendingString:fileName]];
         }
         isImportSuccess = YES;
