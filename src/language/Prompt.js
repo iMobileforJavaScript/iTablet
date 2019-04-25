@@ -17,6 +17,7 @@ const Chinese = {
   NO_REMINDER: '下次不再提醒',
 
   LOG_OUT: '是否退出登录？',
+  FAILED_TO_LOG:'登录失败',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
@@ -127,6 +128,8 @@ const Chinese = {
   CANNOT_LOCATION: '无法定位',
   INDEX_OUT_OF_BOUNDS: '位置越界',
   PLEASE_SELECT_LICATION_INFORMATION: '请选择定位信息',
+
+  POI:'兴趣点',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -146,6 +149,7 @@ const English = {
   NO_REMINDER: 'No reminder',
 
   LOG_OUT: 'Are you sure you want to log out?',
+  FAILED_TO_LOG:'Failed to Login',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
@@ -262,6 +266,8 @@ const English = {
   CANNOT_LOCATION: 'Failed to locat',
   INDEX_OUT_OF_BOUNDS: 'Index out of bounds',
   PLEASE_SELECT_LICATION_INFORMATION: 'Please set up Location',
+
+  POI:'POI',
 }
 
 export { Chinese, English }

@@ -659,7 +659,7 @@ export default handleActions(
         currentLayer3d = payload
         Toast.show(
           //'当前图层为 '
-          getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
+          getLanguage(global.language).Prompt.THE_CURRENT_LAYER +'  '+
             currentLayer3d.name,
         )
       }

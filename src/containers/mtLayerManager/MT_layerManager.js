@@ -549,7 +549,7 @@ export default class MT_layerManager extends React.Component {
       this.props.navigation.navigate('MapView')
       Toast.show(
         //'当前图层为:'
-        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER + data.name,
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER+'  ' + data.name,
       )
     }
   }

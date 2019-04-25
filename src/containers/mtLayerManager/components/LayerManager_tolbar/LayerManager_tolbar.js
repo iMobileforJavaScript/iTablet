@@ -579,7 +579,7 @@ export default class LayerManager_tolbar extends React.Component {
           overlayView.setVisible(false)
         }
         if (result) {
-          this.changeState(!canChoose)
+          this.changeState(canChoose)
         }
       })
     }

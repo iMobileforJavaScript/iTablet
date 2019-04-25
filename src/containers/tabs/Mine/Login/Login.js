@@ -250,13 +250,15 @@ export default class Login extends React.Component {
           password: '',
           // userType:UserType.COMMON_USER,
         })
-        Toast.show('登录失败')
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
+        //'登录失败')
         this.container.setLoading(false)
       }
     } catch (e) {
       //console.warn(e)
       this.container.setLoading(false)
-      Toast.show('登录异常')
+      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
+      //'登录异常')
       this.props.setUser({
         userName: '',
         password: '',
