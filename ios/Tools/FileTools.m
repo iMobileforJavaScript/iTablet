@@ -632,7 +632,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
       SMap *sMap = [SMap singletonInstance];
       if(xmlSourceFile.count ){
         NSString *fileDir = [[[xmlSourceFile objectAtIndex:0]lastPathComponent] stringByDeletingPathExtension];
-        NSString *collection = [NSString stringWithFormat:@"%@%@%@%@%@%@",head,@"/iTablet/User",[FileTools getUserName],@"/ExternalData/Collection/",fileDir,@"/"];
+        NSString *collection = [NSString stringWithFormat:@"%@%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/ExternalData/Collection/",fileDir,@"/"];
         if(![filemanager fileExistsAtPath:collection]){
           [FileTools createFileDirectories:collection];
         }
