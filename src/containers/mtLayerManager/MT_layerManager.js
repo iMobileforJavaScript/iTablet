@@ -651,7 +651,8 @@ export default class MT_layerManager extends React.Component {
       return child
     } catch (e) {
       this.container.setLoading(false)
-      Toast.show('获取失败')
+      Toast.show(getLanguage(this.props.language).Prompt.GET_LAYER_GROUP_FAILD)
+      //'获取失败')
       return []
     }
   }
@@ -661,10 +662,10 @@ export default class MT_layerManager extends React.Component {
     let backMaps = this.state.data[2].data
     let Label = this.state.data[0].data
     let hasDeal = false
-    let caption = data.caption
+    let name = data.name
     let curData = this.state.data.concat()
     for (let i = 0, l = layers.length; i < l; i++) {
-      if (caption === layers[i].caption) {
+      if (name === layers[i].name) {
         curData[1].data[i].isVisible = value
         /*
          *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
@@ -676,7 +677,7 @@ export default class MT_layerManager extends React.Component {
     }
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
-        if (caption === backMaps[j].caption) {
+        if (name === backMaps[j].name) {
           curData[2].data[j].isVisible = value
           hasDeal = true
           break
@@ -684,7 +685,7 @@ export default class MT_layerManager extends React.Component {
       }
     if (!hasDeal)
       for (let j = 0, l = Label.length; j < l; j++) {
-        if (caption === Label[j].caption) {
+        if (name === Label[j].name) {
           curData[0].data[j].isVisible = value
           hasDeal = true
           break
