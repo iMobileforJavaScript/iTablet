@@ -246,7 +246,7 @@ export default class LayerSelectionAttribute extends React.Component {
   /** 下拉刷新 **/
   refresh = (cb = () => {}, resetCurrent = false) => {
     if (!this.canBeRefresh) {
-      Toast.show('已经是最新的了')
+      //Toast.show('已经是最新的了')
       cb && cb()
       return
     }
@@ -307,10 +307,12 @@ export default class LayerSelectionAttribute extends React.Component {
    */
   locateToTop = (cb = () => {}) => {
     if (this.state.attributes.data.length === 0 || this.total <= 0) {
-      Toast.show(ConstInfo.CANNOT_LOCATION)
+      Toast.show(getLanguage(global.language).Prompt.CANNOT_LOCATION)
+      //ConstInfo.CANNOT_LOCATION)
       return
     }
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true,getLanguage(global.language).Prompt.LOCATING)
+    // ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -378,10 +380,12 @@ export default class LayerSelectionAttribute extends React.Component {
    */
   locateToBottom = (cb = () => {}) => {
     if (this.state.attributes.data.length === 0 || this.total <= 0) {
-      Toast.show(ConstInfo.CANNOT_LOCATION)
+      Toast.show(getLanguage(global.language).Prompt.CANNOT_LOCATION)
+      // ConstInfo.CANNOT_LOCATION)
       return
     }
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    // ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -432,7 +436,8 @@ export default class LayerSelectionAttribute extends React.Component {
    */
   locateToPosition = (data = {}, cb = () => {}) => {
     if (this.state.attributes.data.length === 0 || this.total <= 0) {
-      Toast.show(ConstInfo.CANNOT_LOCATION)
+      Toast.show(getLanguage(global.language).Prompt.CANNOT_LOCATION)
+      //ConstInfo.CANNOT_LOCATION)
       return
     }
     let viewPosition = 0,
@@ -444,7 +449,8 @@ export default class LayerSelectionAttribute extends React.Component {
       // 相对定位
       currentIndex = this.state.currentIndex + data.index
       if (currentIndex < 0 || currentIndex >= this.total) {
-        Toast.show('位置越界')
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
         return
       }
       this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
@@ -464,7 +470,8 @@ export default class LayerSelectionAttribute extends React.Component {
     } else if (data.type === 'absolute') {
       // 绝对定位
       if (data.index <= 0 || data.index > this.total) {
-        Toast.show('位置越界')
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
         return
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
@@ -483,7 +490,8 @@ export default class LayerSelectionAttribute extends React.Component {
       currentIndex = data.index - 1
     }
 
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     // if (this.currentPage > 0) {
     //   this.canBeRefresh = true
     // }

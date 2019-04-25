@@ -120,6 +120,13 @@ const Chinese = {
 
   LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
   APPLY_LICENSE: '申请许可',
+  GET_LAYER_GROUP_FAILD:'获取图层组失败',
+  TYR_AGAIN_LATER:'请稍后再试',
+
+  LOCATING:'定位中',
+  CANNOT_LOCATION:'无法定位',
+  INDEX_OUT_OF_BOUNDS:'位置越界',
+  PLEASE_SELECT_LICATION_INFORMATION:'请选择定位信息',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -247,6 +254,14 @@ const English = {
   LICENSE_EXPIRED:
     'Trial license has expired. Please apply for a new one and restart.',
   APPLY_LICENSE: 'Apply License',
+
+  GET_LAYER_GROUP_FAILD:'Failed to get layer group',
+  TYR_AGAIN_LATER:' Please try again later',
+
+  LOCATING:'locating',
+  CANNOT_LOCATION:'Failed to locat',
+  INDEX_OUT_OF_BOUNDS:'Index out of bounds',
+  PLEASE_SELECT_LICATION_INFORMATION:'Please set up Location',
 }
 
 export { Chinese, English }
