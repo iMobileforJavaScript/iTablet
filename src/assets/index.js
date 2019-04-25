@@ -114,7 +114,8 @@ function getLayerIconByType(type) {
       icon = require('./Mine/my_basemap.png')
       break
     case DatasetType.CAD: // 复合数据集
-      icon = require('./map/icon-cad_black.png')
+      // icon = require('./map/icon-cad_black.png')
+      icon = require('./Mine/mine_my_plot.png')
       break
     case DatasetType.Network: // 复合数据集
       icon = require('./map/icon-network.png')

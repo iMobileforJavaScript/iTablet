@@ -63,7 +63,7 @@ export default class MyLabel extends Component {
     if (!result) {
       this.creatDatasource(path)
     }
-    let data = await SMap.getUDBName(path)
+    let data = await SMap.getUDBNameOfLabel(path)
     this.setState({ data: data, udbPath: path }, () => {
       this.container.setLoading(false)
     })
