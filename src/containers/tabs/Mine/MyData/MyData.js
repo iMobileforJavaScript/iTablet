@@ -312,6 +312,10 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
+    let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
+    if (labelUDBName === txtInfo) {
+      return <View />
+    }
     if (this.formChat && this.chatCallBack) {
       isShowMore = false
     }
