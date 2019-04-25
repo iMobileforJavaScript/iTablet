@@ -17,6 +17,7 @@ const Chinese = {
   NO_REMINDER: '下次不再提醒',
 
   LOG_OUT: '是否退出登录？',
+  FAILED_TO_LOG: '登录失败',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
@@ -84,10 +85,12 @@ const Chinese = {
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
+  CLIP_ENTER_MAP_NAME: '请输入地图名字',
   ENTER_NAME: '请输入名称',
 
   CLIPPING: '地图裁剪中',
   CLIPPED_SUCCESS: '裁剪成功',
+  CLIP_FAILED: '裁剪失败',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP: '不支持由该图层创建专题图',
 
@@ -127,6 +130,9 @@ const Chinese = {
   CANNOT_LOCATION: '无法定位',
   INDEX_OUT_OF_BOUNDS: '位置越界',
   PLEASE_SELECT_LICATION_INFORMATION: '请选择定位信息',
+  OUT_OF_MAP_BOUNDS: '不在地图范围内',
+
+  POI: '兴趣点',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -146,6 +152,7 @@ const English = {
   NO_REMINDER: 'No reminder',
 
   LOG_OUT: 'Are you sure you want to log out?',
+  FAILED_TO_LOG: 'Failed to Login',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
@@ -215,10 +222,12 @@ const English = {
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
+  CLIP_ENTER_MAP_NAME: 'Enter the map name',
   ENTER_NAME: 'Please enter the name',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
+  CLIP_FAILED: 'Failed to Clip',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP:
     'The current layer cannot be used to create a thematic map.',
@@ -262,6 +271,9 @@ const English = {
   CANNOT_LOCATION: 'Failed to locat',
   INDEX_OUT_OF_BOUNDS: 'Index out of bounds',
   PLEASE_SELECT_LICATION_INFORMATION: 'Please set up Location',
+  OUT_OF_MAP_BOUNDS: 'Out of map bounds',
+
+  POI: 'POI',
 }
 
 export { Chinese, English }

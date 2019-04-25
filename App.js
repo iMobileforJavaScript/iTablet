@@ -135,39 +135,43 @@ class AppRoot extends Component {
     GLOBAL.TaggingDatasetName = ''
     GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
+    this.login = this.login.bind(this)
+    this.reCircleLogin = this.reCircleLogin.bind(this)
   }
   UNSAFE_componentWillMount(){
     SOnlineService.init()
+  }
+  async login(){
+    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+
+      let isEmail = this.props.user.currentUser.isEmail
+      let userName = this.props.user.currentUser.userName
+      let password = this.props.user.currentUser.password
+      let bLogin = false
+      if (isEmail === true) {
+        bLogin = await SOnlineService.login(userName, password)
+      } else if (isEmail === false) {
+        bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+      }
+      if (!bLogin) {
+        if (isEmail === true) {
+          bLogin = await SOnlineService.login(userName, password)
+        } else if (isEmail === false) {
+          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+        }
+       // Toast.show('登陆状态失效')
+      }else{
+       // Toast.show('登陆')
+      }
+
+    }
   }
   reCircleLogin(){
     if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
-    GLOBAL.loginTimer = setInterval(async () => {
-      if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
-
-        let isEmail = this.props.user.currentUser.isEmail
-        let userName = this.props.user.currentUser.userName
-        let password = this.props.user.currentUser.password
-        let bLogin = false
-        if (isEmail === true) {
-          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-        } else if (isEmail === false) {
-          bLogin = await SOnlineService.login(userName, password)
-        }
-        //Toast.show('登陆')
-        if (!bLogin) {
-          if (isEmail === true) {
-            bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-          } else if (isEmail === false) {
-            bLogin = await SOnlineService.login(userName, password)
-          }
-          // Toast.show('登陆状态失效')
-        }
-
-      }
-    }, 3000)
+    GLOBAL.loginTimer = setInterval(this.login,60000 )
   }
   componentDidMount () {
 
@@ -181,7 +185,7 @@ class AppRoot extends Component {
         this.props.user.currentUser.userId,
       )
     }
-
+    this.login()
     this.reCircleLogin()
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {

@@ -125,7 +125,8 @@ export default class PointAnalyst extends Component {
             this.container.setLoading(false)
             NavigationService.goBack()
           } else {
-            Toast.show('网络错误')
+            Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+            //'网络错误')
           }
         }
       } else {
@@ -140,11 +141,13 @@ export default class PointAnalyst extends Component {
           this.container.setLoading(false)
           NavigationService.goBack()
         } else {
-          Toast.show('网络错误')
+          Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+          //'网络错误')
         }
       }
     } catch (error) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+      //'网络错误')
     }
   }
 

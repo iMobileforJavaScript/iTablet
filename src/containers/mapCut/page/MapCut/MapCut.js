@@ -23,7 +23,7 @@ import {
   PopModal,
 } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { CheckStatus, ConstInfo } from '../../../../constants'
+import { CheckStatus } from '../../../../constants'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
@@ -176,7 +176,7 @@ export default class MapCut extends React.Component {
             () => {
               this.container && this.container.setLoading(false)
               this.isCutting = false
-              Toast.show(ConstInfo.CLIP_FAILED)
+              Toast.show(getLanguage(this.props.language).Prompt.CLIP_FAILED)
             },
           )
           // this.container && this.container.setLoading(false)
@@ -193,7 +193,7 @@ export default class MapCut extends React.Component {
       } catch (e) {
         this.isCutting = false
         this.container && this.container.setLoading(false)
-        Toast.show(ConstInfo.CLIP_FAILED)
+        Toast.show(getLanguage(this.props.language).Prompt.CLIP_FAILED)
       }
     }.bind(this)())
   }
@@ -625,7 +625,7 @@ export default class MapCut extends React.Component {
                   value={this.state.text}
                   style={styles.input}
                   placeholder={
-                    getLanguage(this.props.language).Prompt.ENTER_MAP_NAME
+                    getLanguage(this.props.language).Prompt.CLIP_ENTER_MAP_NAME
                   }
                   // {'请输入地图名字'}
                   underlineColorAndroid="transparent"

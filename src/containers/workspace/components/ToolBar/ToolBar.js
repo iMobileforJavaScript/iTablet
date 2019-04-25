@@ -440,11 +440,14 @@ export default class ToolBar extends React.PureComponent {
                 }
                 SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
-                SScene.startDrawFavorite({
-                  callback: () => {
-                    this.showToolbar()
+                SScene.startDrawFavorite(
+                  getLanguage(this.props.language).Prompt.POI,
+                  {
+                    callback: () => {
+                      this.showToolbar()
+                    },
                   },
-                })
+                )
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
               } catch (error) {
                 Toast.show('兴趣点失败')
