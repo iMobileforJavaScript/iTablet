@@ -7,8 +7,8 @@
 import * as React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { Button, RadioGroup, TextBtn } from '../../../../components'
-import { Toast } from '../../../../utils'
-import { getLanguage } from '../../../../language/index'
+// import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 
 import styles from './styles'
 
@@ -29,11 +29,8 @@ export default class LocationView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      isShow: false,
-    }
-
-    this.options = [
+    this.currentData = {}
+    let options = [
       {
         title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_RELATIVE,
         //'相对位置',
@@ -47,9 +44,39 @@ export default class LocationView extends React.Component {
         value: 'absolute',
         hasInput: true,
         keyboardType: 'numeric',
+        inputValue: props.currentIndex >= 0 ? props.currentIndex + 1 : '',
       },
     ]
-    this.currentData = {}
+    this.state = {
+      isShow: false,
+      options,
+      canBeLocated: this.checkLocated(options),
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentIndex !== this.props.currentIndex) {
+      let state = {}
+      state.options = JSON.parse(JSON.stringify(this.state.options))
+      state.options[1].inputValue =
+        this.props.currentIndex >= 0 ? this.props.currentIndex + 1 : ''
+      this.currentData = state.options[1]
+      state.canBeLocated = this.checkLocated(state.options)
+      this.setState(state)
+    }
+  }
+
+  checkLocated = (options = this.state.options) => {
+    for (let i = 0; i < options.length; i++) {
+      if (
+        options[i].title === this.currentData.title &&
+        this.currentData.inputValue !== '' &&
+        this.currentData.inputValue !== undefined
+      ) {
+        return true
+      }
+    }
+    return false
   }
 
   isShow = () => this.state.isShow
@@ -91,6 +118,7 @@ export default class LocationView extends React.Component {
   }
 
   locateToPosition = () => {
+    if (!this.state.canBeLocated) return
     if (
       this.props.locateToPosition &&
       typeof this.props.locateToPosition === 'function'
@@ -105,7 +133,7 @@ export default class LocationView extends React.Component {
           index: parseInt(this.currentData.inputValue),
         })
       } else {
-        Toast.show('请选择定位信息')
+        // Toast.show('请选择定位信息')
       }
     }
     this.show(false)
@@ -116,6 +144,7 @@ export default class LocationView extends React.Component {
       <View style={styles.topView}>
         <Text style={styles.text}>
           {getLanguage(global.language).Map_Attribute.ATTRIBUTE_CURRENT +
+            ': ' +
             //'当前位置 '
             (this.props.currentIndex + 1 || '')}
         </Text>
@@ -152,10 +181,26 @@ export default class LocationView extends React.Component {
     return (
       <View style={styles.options}>
         <RadioGroup
-          data={this.options}
+          data={this.state.options}
           column={1}
+          defaultValue={this.state.options[1].value}
           onSubmitEditing={data => {
             this.currentData = data
+            let canBeLocated = this.checkLocated()
+            if (canBeLocated !== this.state.canBeLocated) {
+              this.setState({
+                canBeLocated,
+              })
+            }
+          }}
+          onFocus={data => {
+            this.currentData = data
+            let canBeLocated = this.checkLocated()
+            if (canBeLocated !== this.state.canBeLocated) {
+              this.setState({
+                canBeLocated,
+              })
+            }
           }}
         />
       </View>
@@ -172,7 +217,11 @@ export default class LocationView extends React.Component {
           btnClick={() => this.show(false)}
         />
         <TextBtn
-          textStyle={styles.bottomBtnTxt}
+          textStyle={
+            this.state.canBeLocated
+              ? styles.bottomBtnTxt
+              : styles.bottomBtnTxtDisable
+          }
           btnText={
             getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION
           }
