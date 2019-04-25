@@ -680,7 +680,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
         if (caption === backMaps[j].caption) {
-          curData[2].data.isVisible = value
+          curData[2].data[j].isVisible = value
           hasDeal = true
           break
         }
@@ -688,7 +688,7 @@ export default class MT_layerManager extends React.Component {
     if (!hasDeal)
       for (let j = 0, l = Label.length; j < l; j++) {
         if (caption === Label[j].caption) {
-          curData[0].data.isVisible = value
+          curData[0].data[j].isVisible = value
           hasDeal = true
           break
         }
