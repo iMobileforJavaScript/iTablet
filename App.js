@@ -139,24 +139,11 @@ class AppRoot extends Component {
   UNSAFE_componentWillMount(){
     SOnlineService.init()
   }
-  componentDidMount () {
-
-
+  reCircleLogin(){
     if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
-      SMessageService.connectService(
-        MSGConstant.MSG_IP,
-        MSGConstant.MSG_Port,
-        MSGConstant.MSG_HostName,
-        MSGConstant.MSG_UserName,
-        MSGConstant.MSG_Password,
-        this.props.user.currentUser.userId,
-      )
-    }
-
     GLOBAL.loginTimer = setInterval(async () => {
       if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 
@@ -169,13 +156,33 @@ class AppRoot extends Component {
         } else if (isEmail === false) {
           bLogin = await SOnlineService.login(userName, password)
         }
+        //Toast.show('登陆')
         if (!bLogin) {
+          if (isEmail === true) {
+            bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+          } else if (isEmail === false) {
+            bLogin = await SOnlineService.login(userName, password)
+          }
           // Toast.show('登陆状态失效')
         }
 
       }
-    }, 30000)
+    }, 3000)
+  }
+  componentDidMount () {
 
+    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
+      SMessageService.connectService(
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
+        this.props.user.currentUser.userId,
+      )
+    }
+
+    this.reCircleLogin()
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
@@ -222,6 +229,7 @@ class AppRoot extends Component {
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
       if (appState === 'active') {
         SMessageService.resume()
+        this.reCircleLogin()
       }else if(appState === 'background'){
         SMessageService.suspend()
       }
