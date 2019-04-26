@@ -140,6 +140,12 @@ export default class Register extends React.Component {
           case '注册失败':
             info=getLanguage(this.props.language).Prompt.REGIST_FAILED
             break
+          case '请输入正确的手机号':
+            info=getLanguage(this.props.language).Prompt.ENTER_CORRECT_MOBILE
+            break
+          case '请输入正确的邮箱号':
+            info=getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
+            break
         }
         Toast.show(info)
       }

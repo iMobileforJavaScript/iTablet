@@ -151,6 +151,8 @@ const Chinese = {
   REGIST_SUCCESS:'注册成功',
   REGIST_FAILED:'注册失败',
   GOTO_ACTIVATE:'请前往邮箱激活',
+  ENTER_CORRECT_MOBILE:'请输入正确的手机号',
+  ENTER_CORRECT_EMAIL:'请输入正确的邮箱号',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -309,6 +311,8 @@ const English = {
   REGIST_SUCCESS:'Registered Successfully',
   REGIST_FAILED:'Failed to Register',
   GOTO_ACTIVATE:'Please download the Trial License to the mailbox',
+  ENTER_CORRECT_MOBILE:'Please enter the correct mobile phone number',
+  ENTER_CORRECT_EMAIL:'Please enter the correct email address',
 }
 
 export { Chinese, English }
