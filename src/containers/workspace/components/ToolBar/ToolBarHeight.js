@@ -71,10 +71,10 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_CREATE:
     case ConstToolType.MAP_THEME_CREATE_BY_LAYER:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[10]
         column = 4
       } else {
-        height = ConstToolType.THEME_HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[4]
         column = 8
       }
       break
@@ -115,10 +115,10 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_THEME_PARAM_RANGE_MODE:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[2]
         column = 4
       } else {
-        height = ConstToolType.THEME_HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[0]
         column = 8
       }
       break
