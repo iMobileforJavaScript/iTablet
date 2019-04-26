@@ -4,7 +4,7 @@ import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language/index'
 import { downloadFile } from 'react-native-fs'
-import { SOnlineService, SMap } from 'imobile_for_reactnative'
+import { SOnlineService, SMap,SScene } from 'imobile_for_reactnative'
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -224,6 +224,7 @@ async function downFileAction(
   cookie,
   updateDownList,
   importWorkspace,
+  importSceneWorkspace,
 ) {
   try {
     if (down.length > 0) {
@@ -300,18 +301,33 @@ async function downFileAction(
             )
             for (let i in newData) {
               if (newData[i].fileType === 'workspace') {
-                importWorkspace &&
-                  (await importWorkspace({
-                    path: newData[i].filePath,
-                  }).then(result => {
-                    result.mapsInfo.length > 0
-                      ? Toast.show(
-                        getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
-                      ) //'数据导入成功')
-                      : Toast.show(
-                        getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
-                      ) //'数据导入失败')
-                  }))
+                let filePath = newData[i].filePath
+                let is3D = await SScene.is3DWorkspace({ server: filePath })
+                if (is3D === true) {
+                  let result = await importSceneWorkspace({
+                    server: filePath,
+                  })
+                  if (result === true) {
+                    Toast.show(
+                      getLanguage(global.language).Prompt.IMPORTED_SUCCESS
+                    )
+                  } else {
+                    Toast.show(
+                      getLanguage(global.language).Prompt.FAILED_TO_IMPORT
+                    )
+                  }
+                } else {
+                  let result = await importWorkspace({ path: filePath })
+                  if (result.msg !== undefined) {
+                    Toast.show(
+                      getLanguage(global.language).Prompt.FAILED_TO_IMPORT
+                    )
+                  } else {
+                    Toast.show(
+                      getLanguage(global.language).Prompt.IMPORTED_SUCCESS
+                    )
+                  }
+                }
               } else if (newData[i].fileType === 'datasource') {
                 await SMap.importDatasourceFile(newData[i].filePath).then(
                   result => {
