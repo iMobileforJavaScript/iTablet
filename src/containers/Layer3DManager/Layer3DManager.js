@@ -9,7 +9,7 @@ import {
   Text,
   SectionList,
   Image,
-  BackHandler,
+  InteractionManager,
   Platform,
 } from 'react-native'
 import styles from './styles'
@@ -25,6 +25,8 @@ export default class Map3DToolBar extends Component {
     data: Array,
     refreshLayer3dList: () => {},
     setCurrentLayer3d: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
     layer3dList: Array,
     device: Object,
     currentLayer3d: Object,
@@ -38,8 +40,13 @@ export default class Map3DToolBar extends Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({
+          action: () => this.back(),
+        })
+      }
+    })
   }
 
   // eslint-disable-next-line
@@ -53,7 +60,9 @@ export default class Map3DToolBar extends Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
     this.props.setCurrentLayer3d({})
   }

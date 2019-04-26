@@ -1,6 +1,7 @@
 import Setting from './setting'
 import { connect } from 'react-redux'
 import { setSettingData } from '../../models/setting'
+import { setBackAction, removeBackAction } from '../../models/backActions'
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
   nav: state.nav.toJS(),
@@ -9,6 +10,8 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = {
   setSettingData,
+  setBackAction,
+  removeBackAction,
 }
 export default connect(
   mapStateToProps,

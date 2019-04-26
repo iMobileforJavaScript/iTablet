@@ -5,16 +5,14 @@
  */
 
 import * as React from 'react'
-import { View, Text, Platform, BackHandler } from 'react-native'
+import { View, Text } from 'react-native'
 import { Container, SearchBar } from '../../../../components'
-import NavigationService from '../../../NavigationService'
 import { Toast, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-// import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 
 const PAGE_SIZE = 30
@@ -57,18 +55,6 @@ export default class LayerAttributeSearch extends React.Component {
 
   componentDidMount() {
     this.searchBar && this.searchBar.focus()
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
-    // this.props.setCurrentAttribute({})
-  }
-
-  back = () => {
-    NavigationService.goBack()
-    return true
   }
 
   /** 下拉刷新 **/

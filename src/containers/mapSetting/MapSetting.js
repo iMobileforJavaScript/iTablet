@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-//eslint-disable-next-line
-import { MAP_MODULE } from '../../constants'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, Platform, BackHandler } from 'react-native'
+import { SectionList, View, Platform, InteractionManager } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -25,6 +23,8 @@ export default class MapSetting extends Component {
     device: Object,
     mapLegend: boolean,
     setMapLegend: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -37,9 +37,12 @@ export default class MapSetting extends Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.getData()
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.back() })
+      }
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -65,7 +68,9 @@ export default class MapSetting extends Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
   }
 
@@ -121,29 +126,6 @@ export default class MapSetting extends Component {
 
   back = () => {
     this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
     return true
   }
 

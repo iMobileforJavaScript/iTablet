@@ -8,6 +8,7 @@ import {
 } from '../../models/layers'
 import { setMapLegend } from '../../models/setting'
 import { closeMap } from '../../models/map'
+import { setBackAction, removeBackAction } from '../../models/backActions'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -27,6 +28,8 @@ const mapDispatchToProps = {
   closeMap,
   clearAttributeHistory,
   setMapLegend,
+  setBackAction,
+  removeBackAction,
 }
 
 export default connect(

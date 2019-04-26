@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Platform, BackHandler } from 'react-native'
+import { View, Platform, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
@@ -45,6 +45,8 @@ export default class LayerAttribute extends React.Component {
     // getAttributes: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -77,15 +79,18 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    if (this.type === 'MAP_3D') {
-      this.getMap3DAttribute()
-    } else {
-      this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
-      //ConstInfo.LOADING_DATA)
-      this.refresh()
-    }
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.back() })
+      }
+      if (this.type === 'MAP_3D') {
+        this.getMap3DAttribute()
+      } else {
+        this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
+        //ConstInfo.LOADING_DATA)
+        this.refresh()
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -137,7 +142,9 @@ export default class LayerAttribute extends React.Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
     this.props.setCurrentAttribute({})
   }

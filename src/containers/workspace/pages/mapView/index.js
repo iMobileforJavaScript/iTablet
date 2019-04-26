@@ -36,6 +36,7 @@ import {
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
+import { setBackAction, removeBackAction } from '../../../../models/backActions'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -89,6 +90,8 @@ const mapDispatchToProps = {
   setSharing,
   setCurrentSymbols,
   setMapLegend,
+  setBackAction,
+  removeBackAction,
 }
 
 export default connect(
