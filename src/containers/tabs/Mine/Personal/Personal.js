@@ -60,7 +60,8 @@ export default class Personal extends Component {
     let marginLeft = 15
     let marginRight = 20
     let fontSize = size.fontSize.fontSizeXl
-    if (key !== '头像') {
+    if (key !==  getLanguage(global.language).Profile.PROFILE_PHOTO){
+    //'头像') {
       return (
         <View style={{ width: '100%' }}>
           <View

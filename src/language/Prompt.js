@@ -48,6 +48,7 @@ const Chinese = {
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
+  SAVE_FAILED: '保存失败',
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',
 
@@ -86,6 +87,8 @@ const Chinese = {
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
   CLIP_ENTER_MAP_NAME: '请输入地图名字',
+  ENTER_SERVICE_ADDRESS: '请输入服务地址',
+
   ENTER_NAME: '请输入名称',
 
   CLIPPING: '地图裁剪中',
@@ -133,6 +136,10 @@ const Chinese = {
   OUT_OF_MAP_BOUNDS: '不在地图范围内',
 
   POI: '兴趣点',
+
+  SELECT_DATASET_TO_SHARE:'请选择要分享的数据集',
+  ENTER_DATA_NAME:'请输入数据名称',
+  SHARED_DATA_10M:'所分享文件超过10MB',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -183,6 +190,7 @@ const English = {
   READING_DATA: 'Reading Data',
   CREATE_SUCCESSFULLY: 'Created Successfully',
   SAVE_SUCCESSFULLY: 'Saved Successfully',
+  SAVE_FAILED: 'Failed to Save',
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',
 
@@ -224,6 +232,8 @@ const English = {
   ENTER_MAP_NAME: 'Please enter the map name',
   CLIP_ENTER_MAP_NAME: 'Enter the map name',
   ENTER_NAME: 'Please enter the name',
+  ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
+
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
@@ -274,6 +284,10 @@ const English = {
   OUT_OF_MAP_BOUNDS: 'Out of map bounds',
 
   POI: 'POI',
+
+  SELECT_DATASET_TO_SHARE:'Please select the data set to share',
+  ENTER_DATA_NAME:'Please enter the data name',
+  SHARED_DATA_10M:' The file over 10MB cannot be shared',
 }
 
 export { Chinese, English }
