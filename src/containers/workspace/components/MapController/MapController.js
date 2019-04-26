@@ -6,10 +6,11 @@
 import * as React from 'react'
 import { View, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { Const, ConstInfo } from '../../../../constants'
+import { Const } from '../../../../constants'
 import { scaleSize, Toast } from '../../../../utils'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import styles from './styles'
+import { getLanguage } from '../../../../language'
 
 export default class MapController extends React.Component {
   props: {
@@ -107,7 +108,8 @@ export default class MapController extends React.Component {
       return
     }
     SMap.moveToCurrent().then(result => {
-      !result && Toast.show(ConstInfo.OUT_OF_MAP_BOUNDS)
+      !result &&
+        Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
     })
   }
 
