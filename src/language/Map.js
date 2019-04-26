@@ -123,6 +123,8 @@ const Map_Main_Menu_Chinese = {
   FLY: '飞行',
   FLY_ROUTE: '飞行轨迹',
   FLY_ADD_STOPS: '添加站点',
+  FLY_AROUND_POINT:'绕点飞行',
+
 
   //专题制图 专题图
   THEME: '专题图',
@@ -325,6 +327,7 @@ const Map_Main_Menu_English = {
   FLY: 'Fly',
   FLY_ROUTE: 'Flying Route',
   FLY_ADD_STOPS: 'Add Stops',
+  FLY_AROUND_POINT:' Fly around point',
 
   THEME: 'Create',
   THEME_UNIFORM_MAP: 'Uniform Map',

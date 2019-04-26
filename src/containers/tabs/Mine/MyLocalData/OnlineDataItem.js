@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color, size } from '../../../../styles'
 import { Progress } from '../../../../components'
+import { getLanguage } from '../../../../language';
 // import { SMap } from 'imobile_for_reactnative'
 // import UserType from '../../../../constants/UserType'
 // import ConstPath from '../../../../constants/ConstPath'
@@ -108,7 +109,8 @@ export default class OnlineDataItem extends Component {
                 marginRight: 20,
               }}
             >
-              {`路径:https://www.supermapol.com/web/mycontent/datas/${
+              {getLanguage(global.language).Profile.PATH +
+              `:https://www.supermapol.com/web/mycontent/datas/${
                 this.props.item.id
               }`}
             </Text>

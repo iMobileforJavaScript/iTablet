@@ -126,6 +126,7 @@ const Chinese = {
 
   LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
   APPLY_LICENSE: '申请许可',
+
   GET_LAYER_GROUP_FAILD: '获取图层组失败',
   TYR_AGAIN_LATER: '请稍后再试',
 
@@ -140,6 +141,16 @@ const Chinese = {
   SELECT_DATASET_TO_SHARE:'请选择要分享的数据集',
   ENTER_DATA_NAME:'请输入数据名称',
   SHARED_DATA_10M:'所分享文件超过10MB',
+
+  PHIONE_HAS_BEEN_REGISTERED:'手机号已注册',
+  NICKNAME_IS_EXISTS:'昵称已存在',
+  VERIFICATION_CODE_ERROR:'短信验证码错误',
+  VERIFICATION_CODE_SENT:'验证码已发送',
+  EMAIL_HAS_BEEN_REGISTERED:'邮箱已注册',
+  REGISTERING:'注册中',
+  REGIST_SUCCESS:'注册成功',
+  REGIST_FAILED:'注册失败',
+  GOTO_ACTIVATE:'请前往邮箱激活',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -288,6 +299,16 @@ const English = {
   SELECT_DATASET_TO_SHARE:'Please select the data set to share',
   ENTER_DATA_NAME:'Please enter the data name',
   SHARED_DATA_10M:' The file over 10MB cannot be shared',
+
+  PHIONE_HAS_BEEN_REGISTERED:'The mobile number is registered',
+  NICKNAME_IS_EXISTS:'The username already exists',
+  VERIFICATION_CODE_ERROR:'Verification code is incorrect or invalid',
+  VERIFICATION_CODE_SENT:'Verification code has been sent.',
+  EMAIL_HAS_BEEN_REGISTERED:'The E-mail is registered',
+  REGISTERING:'Registering',
+  REGIST_SUCCESS:'Registered Successfully',
+  REGIST_FAILED:'Failed to Register',
+  GOTO_ACTIVATE:'Please download the Trial License to the mailbox',
 }
 
 export { Chinese, English }
