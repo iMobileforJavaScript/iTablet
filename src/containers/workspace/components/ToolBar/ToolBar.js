@@ -2632,6 +2632,7 @@ export default class ToolBar extends React.PureComponent {
           // 返回图层属性界面，并清除属性关联选中的对象
           this.props.navigation &&
             this.props.navigation.navigate('LayerAttribute')
+          await SMap.clearTrackingLayer()
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
@@ -2646,6 +2647,7 @@ export default class ToolBar extends React.PureComponent {
                   ids: this.props.selection[i].ids,
                 })
               }
+              await SMap.clearTrackingLayer()
               await SMap.selectObjs(selection)
             },
           })

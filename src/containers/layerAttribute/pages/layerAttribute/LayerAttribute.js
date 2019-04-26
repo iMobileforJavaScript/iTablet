@@ -20,7 +20,7 @@ import {
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
-import { SMap, Action } from 'imobile_for_reactnative'
+import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
 
@@ -587,9 +587,24 @@ export default class LayerAttribute extends React.Component {
   relateAction = () => {
     if (this.state.currentFieldInfo.length === 0) return
     SMap.setAction(Action.PAN)
-    SMap.selectObj(this.props.currentLayer.path, [
-      this.state.currentFieldInfo[0].value,
-    ]).then(data => {
+    SMap.setEditable(this.props.currentLayer.path, false)
+    let geoStyle = new GeoStyle()
+    geoStyle.setFillForeColor(0, 255, 0, 0.5)
+    geoStyle.setLineWidth(1)
+    geoStyle.setLineColor(70, 128, 223)
+    geoStyle.setMarkerHeight(5)
+    geoStyle.setMarkerWidth(5)
+    geoStyle.setMarkerSize(10)
+    SMap.setTrackingLayer(
+      [
+        {
+          layerPath: this.props.currentLayer.path,
+          ids: [this.state.currentFieldInfo[0].value],
+          style: JSON.stringify(geoStyle),
+        },
+      ],
+      true,
+    ).then(data => {
       this.props.navigation && this.props.navigation.navigate('MapView')
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
@@ -606,6 +621,25 @@ export default class LayerAttribute extends React.Component {
         })
       }
     })
+    // SMap.selectObj(this.props.currentLayer.path, [
+    //   this.state.currentFieldInfo[0].value,
+    // ]).then(data => {
+    //   this.props.navigation && this.props.navigation.navigate('MapView')
+    //   GLOBAL.toolBox &&
+    //     GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
+    //       isFullScreen: false,
+    //       height: 0,
+    //     })
+    //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+    //
+    //   Utils.setSelectionStyle(this.props.currentLayer.path)
+    //   if (data instanceof Array && data.length > 0) {
+    //     SMap.moveToPoint({
+    //       x: data[0].x,
+    //       y: data[0].y,
+    //     })
+    //   }
+    // })
   }
 
   setLoading = (loading = false, info, extra) => {
