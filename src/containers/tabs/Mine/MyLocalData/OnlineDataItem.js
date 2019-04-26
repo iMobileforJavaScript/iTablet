@@ -28,7 +28,7 @@ export default class OnlineDataItem extends Component {
       const element = this.props.down[index]
       if (element.id && element.id === this.props.item.id) {
         this.itemProgress.progress = element.progress / 100
-        if (element.downed || element.progress === 100) {
+        if (element.downed &&element.progress === 0) {
           this.props.removeItemOfDownList(element).then(() => {
             this.itemProgress.progress = 0
           })

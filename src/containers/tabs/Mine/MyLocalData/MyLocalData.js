@@ -320,6 +320,7 @@ export default class MyLocalData extends Component {
         this.cookie,
         this.props.updateDownList,
         this.props.importWorkspace,
+        this.props.importSceneWorkspace,
       )
     } else {
       this._onImportWorkspace()
