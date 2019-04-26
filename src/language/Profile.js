@@ -58,6 +58,7 @@ const Profile_Chinese = {
 
   //数据删除导出
   SHARE: '分享',
+  PATH:'路径',
 
   SAMPLEDATA: '样例数据',
   ON_DEVICE: '外部数据',
@@ -94,6 +95,12 @@ const Profile_Chinese = {
   BUSINESS_WEBSITE: '进入官网',
   PRIVACY_POLICY: '服务协议',
   HELP_MANUAL: '使用帮助',
+
+  MAP_ONLINE:'在线地图',
+  MAP_2D:'二维地图',
+  MAP_3D:'三维场景',
+  BROWSE_MAP:'浏览地图',
+
 }
 const Profile_English = {
   LOGIN_NOW: 'Login',
@@ -126,6 +133,8 @@ const Profile_English = {
 
   //
   SHARE: 'Share',
+  PATH:'Path',
+
   SAMPLEDATA: 'Sampledata',
   ON_DEVICE: 'On Device',
   EXPORT_DATA: 'Export Data',
@@ -186,5 +195,10 @@ const Profile_English = {
   SET_AS_PUBLIC_DATA: 'Set as Public Data',
 
   NO_SERVICE: 'No Service',
+
+  MAP_ONLINE:'Online Map',
+  MAP_2D:'2D Map',
+  MAP_3D:'3D Map',
+  BROWSE_MAP:'Browse',
 }
 export { Profile_Chinese, Profile_English }
