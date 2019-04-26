@@ -563,6 +563,7 @@ export default class MT_layerManager extends React.Component {
 
   onPressRow = async ({ data }) => {
     this.props.setMapLegend(false)
+
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         // 切换地图，清除历史记录
@@ -571,24 +572,24 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
+        if (GLOBAL.Type === constants.MAP_EDIT) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+            )
+            //'当前图层无法设置风格')
+          }
+        } else if (GLOBAL.Type === constants.MAP_THEME) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            this.mapTheme(data)
+          }
+        }
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        Toast.show(
-          getLanguage(this.props.language).Prompt
-            .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        )
-        //'当前图层无法设置风格')
-      }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        this.mapTheme(data)
-      }
-    }
     this.setState({
       selectLayer: data.name,
     })

@@ -153,8 +153,10 @@ export default handleActions(
           for (let index = 0; index < down.length; index++) {
             const element = down[index]
             if (element.id === payload.id) {
-              down[index] = payload
               isItem = true
+              if (payload.progress > element.progress || payload.downed) {
+                down[index] = payload
+              }
               break
             }
           }

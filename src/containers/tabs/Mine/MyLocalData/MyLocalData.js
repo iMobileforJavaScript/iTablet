@@ -238,7 +238,7 @@ export default class MyLocalData extends Component {
             getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
           )
           let sectionData = [...this.state.sectionData]
-          for (let i = 0; i < sectionData && sectionData.length; i++) {
+          for (let i = 0; i < sectionData.length; i++) {
             let data = sectionData[i]
             if (data.title === this.itemInfo.section.title) {
               data.data.splice(this.itemInfo.index, 1)
@@ -320,6 +320,7 @@ export default class MyLocalData extends Component {
         this.cookie,
         this.props.updateDownList,
         this.props.importWorkspace,
+        this.props.importSceneWorkspace,
       )
     } else {
       this._onImportWorkspace()

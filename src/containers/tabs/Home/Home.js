@@ -376,7 +376,9 @@ export default class Home extends Component {
   }
 
   _renderModal = () => {
-    let isLogin = this.props.currentUser.password !== undefined
+    let isLogin =
+      this.props.currentUser.password !== undefined &&
+      this.props.currentUser.password !== ''
     return (
       <HomePopupModal
         language={this.props.language}
