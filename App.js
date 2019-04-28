@@ -137,11 +137,11 @@ class AppRoot extends Component {
     this.login = this.login.bind(this)
     this.reCircleLogin = this.reCircleLogin.bind(this)
   }
-  
+
   UNSAFE_componentWillMount(){
     SOnlineService.init()
   }
-  
+
   async login(){
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 
@@ -160,14 +160,14 @@ class AppRoot extends Component {
         } else if (isEmail === false) {
           bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
         }
-       // Toast.show('登陆状态失效')
+        // Toast.show('登陆状态失效')
       }else{
-       // Toast.show('登陆')
+        // Toast.show('登陆')
       }
 
     }
   }
-  
+
   reCircleLogin(){
     if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
@@ -175,7 +175,7 @@ class AppRoot extends Component {
     }
     GLOBAL.loginTimer = setInterval(this.login,60000 )
   }
-  
+
   componentDidMount () {
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
       SMessageService.connectService(
@@ -248,7 +248,6 @@ class AppRoot extends Component {
       } else {
         key = current.routeName
       }
-      console.warn(key, this.props.backActions[key])
       if (this.props.backActions[key] && typeof this.props.backActions[key] === 'function') {
         this.props.backActions[key]()
         return true
