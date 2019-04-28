@@ -58,6 +58,8 @@ const Chinese = {
   PLEASE_SELECT_THEMATIC_LAYER: '请先选择专题图层',
   THE_CURRENT_LAYER_CANNOT_BE_STYLED: '当前图层无法设置风格，请重新选择图层',
 
+  PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
+
   NETWORK_REQUEST_FAILED: '网络请求失败',
 
   CREATING: '正在创建',
@@ -188,6 +190,8 @@ const English = {
   PLEASE_SELECT_THEMATIC_LAYER: 'Please select a thematic layer',
   THE_CURRENT_LAYER_CANNOT_BE_STYLED:
     'The current layer cannot be styled, and please reselect another one',
+
+  PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
 
   NETWORK_REQUEST_FAILED: 'Network Request Failed',
 
