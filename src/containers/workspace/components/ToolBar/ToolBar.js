@@ -4164,6 +4164,7 @@ export default class ToolBar extends React.PureComponent {
                 : ConstOnline['Google'].layerIndex,
               false,
             )
+            await this.props.getLayers(-1)
           }
         })
 
