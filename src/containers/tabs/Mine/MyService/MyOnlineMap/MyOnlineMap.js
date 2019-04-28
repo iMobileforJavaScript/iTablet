@@ -13,6 +13,7 @@ import NavigationService from '../../../../NavigationService'
 import { FetchUtils, scaleSize } from '../../../../../utils'
 import Toast from '../../../../../utils/Toast'
 import color from '../../../../../styles/color'
+import { getLanguage } from '../../../../../language'
 export default class MyOnlineMap extends Component {
   props: {
     navigation: Object,
@@ -170,7 +171,8 @@ export default class MyOnlineMap extends Component {
                   },
                 ]}
               >
-                浏览地图
+                {getLanguage(global.language).Profile.BROWSE_MAP}
+                {/* 浏览地图 */}
               </Text>
             </View>
           </View>
@@ -213,15 +215,36 @@ export default class MyOnlineMap extends Component {
     if (this.state.scenes.length > 0) {
       if (this.state.mapInfos.length > 0) {
         sectionsData = [
-          { title: '二维地图', data: this.state.mapInfos },
-          { title: '三维场景', data: this.state.scenes },
+          {
+            title: getLanguage(global.language).Profile.MAP_2D,
+            //'二维地图',
+            data: this.state.mapInfos,
+          },
+
+          {
+            title: getLanguage(global.language).Profile.MAP_2D,
+            //'三维场景',
+            data: this.state.scenes,
+          },
         ]
       } else {
-        sectionsData = [{ title: '三维场景', data: this.state.scenes }]
+        sectionsData = [
+          {
+            title: getLanguage(global.language).Profile.MAP_2D,
+            //'三维场景',
+            data: this.state.scenes,
+          },
+        ]
       }
     } else {
       if (this.state.mapInfos.length > 0) {
-        sectionsData = [{ title: '二维地图', data: this.state.mapInfos }]
+        sectionsData = [
+          {
+            title: getLanguage(global.language).Profile.MAP_2D,
+            //'二维地图',
+            data: this.state.mapInfos,
+          },
+        ]
       }
     }
     return sectionsData
@@ -256,7 +279,8 @@ export default class MyOnlineMap extends Component {
     return (
       <Container
         headerProps={{
-          title: '在线地图',
+          title: getLanguage(global.language).Profile.MAP_ONLINE,
+          //'在线地图',
           withoutBack: false,
           navigation: this.props.navigation,
         }}

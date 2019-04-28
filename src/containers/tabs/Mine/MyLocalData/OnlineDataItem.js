@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color, size } from '../../../../styles'
 import { Progress } from '../../../../components'
+import { getLanguage } from '../../../../language'
 // import { SMap } from 'imobile_for_reactnative'
 // import UserType from '../../../../constants/UserType'
 // import ConstPath from '../../../../constants/ConstPath'
@@ -28,7 +29,7 @@ export default class OnlineDataItem extends Component {
       const element = this.props.down[index]
       if (element.id && element.id === this.props.item.id) {
         this.itemProgress.progress = element.progress / 100
-        if (element.downed || element.progress === 100) {
+        if (element.downed && element.progress === 0) {
           this.props.removeItemOfDownList(element).then(() => {
             this.itemProgress.progress = 0
           })
@@ -108,9 +109,10 @@ export default class OnlineDataItem extends Component {
                 marginRight: 20,
               }}
             >
-              {`路径:https://www.supermapol.com/web/mycontent/datas/${
-                this.props.item.id
-              }`}
+              {getLanguage(global.language).Profile.PATH +
+                `:https://www.supermapol.com/web/mycontent/datas/${
+                  this.props.item.id
+                }`}
             </Text>
           </View>
           <Image

@@ -13,6 +13,7 @@ const mapStateToProps = state => ({
   attributes: state.layers.toJS().attributes,
   map: state.map.toJS(),
   nav: state.nav.toJS(),
+  language: state.setting.toJS().language,
 })
 
 const mapDispatchToProps = {

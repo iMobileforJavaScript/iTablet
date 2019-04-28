@@ -135,13 +135,16 @@ export default class MyModule extends Component {
               let result = await FileTools.deleteFile(filePath)
               if (result) {
                 this._closeModal()
-                Toast.show('删除成功')
+                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+                //'删除成功')
                 this.getData()
               } else {
-                Toast.show('删除失败')
+                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+                //'删除失败')
               }
             } catch (error) {
-              Toast.show('删除失败')
+              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+              //'删除失败')
             }
           },
         },
@@ -168,13 +171,16 @@ export default class MyModule extends Component {
               let result = await FileTools.deleteFile(filePath)
               if (result) {
                 this._closeModal()
-                Toast.show('删除成功')
+                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+                //'删除成功')
                 this.getData()
               } else {
-                Toast.show('删除失败')
+                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+                //'删除失败')
               }
             } catch (error) {
-              Toast.show('删除失败')
+              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+              //'删除失败')
             }
           },
         },
@@ -194,7 +200,8 @@ export default class MyModule extends Component {
     try {
       this.ModalBtns.setVisible(false)
       // this.container.setLoading(true, '正在分享')
-      Toast.show('正在分享')
+      Toast.show(getLanguage(global.language).Prompt.SHARING)
+      //'正在分享')
       let fromPath = this.itemInfo.item.path.substring(
         0,
         this.itemInfo.item.path.lastIndexOf('/'),
@@ -223,12 +230,17 @@ export default class MyModule extends Component {
             })
             .then(
               result => {
-                !result && Toast.show('所分享文件超过10MB')
+                !result &&
+                  Toast.show(
+                    getLanguage(global.language).Prompt.SHARED_DATA_10M,
+                  )
+                //'所分享文件超过10MB')
                 !result && FileTools.deleteFile(toPath)
                 this.ModalBtns.setVisible(false)
               },
               () => {
-                Toast.show('分享失败')
+                Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+                //'分享失败')
                 this.container.setLoading(false)
                 FileTools.deleteFile(toPath)
               },
@@ -236,7 +248,8 @@ export default class MyModule extends Component {
         } else if (type === 'online') {
           SOnlineService.uploadFile(toPath, fileName, {
             onResult: () => {
-              Toast.show('分享成功')
+              Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+              //'分享成功')
               FileTools.deleteFile(toPath)
               this.container.setLoading(false)
               this.ModalBtns.setVisible(false)
@@ -249,7 +262,8 @@ export default class MyModule extends Component {
         }
       }
     } catch (error) {
-      Toast.show('分享失败')
+      Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+      //'分享失败')
     } finally {
       this.container.setLoading(false)
     }
@@ -259,12 +273,15 @@ export default class MyModule extends Component {
     return (
       <InputDialog
         ref={ref => (this.dialog = ref)}
-        placeholder={'请输入数据名称'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
+        // {'请输入数据名称'}
         confirmAction={() => {
           this.uploadDialog(this.dialog.state.value)
         }}
-        confirmBtnTitle={'上传'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
+        //{'上传'}
+        cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
+        //{'取消'}
       />
     )
   }

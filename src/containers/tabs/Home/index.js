@@ -10,6 +10,7 @@ import {
 import { setDownInformation } from '../../../models/down'
 import { importWorkspace } from '../../../models/template'
 import { setUser } from '../../../models/user'
+import { setBackAction, removeBackAction } from '../../../models/backActions'
 import AboutITablet from './AboutITablet'
 import Setting from './Setting'
 const mapStateToProps = state => ({
@@ -29,6 +30,8 @@ const mapDispatchToProps = {
   closeWorkspace,
   setUser,
   setDownInformation,
+  setBackAction,
+  removeBackAction,
 }
 export default connect(
   mapStateToProps,

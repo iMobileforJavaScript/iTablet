@@ -188,6 +188,7 @@ export default class ToolBar extends React.PureComponent {
     }
     this.isShow = false
     this.isBoxShow = true
+    this.setVisible = this.setVisible.bind(this)
   }
 
   componentDidMount() {
@@ -440,11 +441,14 @@ export default class ToolBar extends React.PureComponent {
                 }
                 SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
-                SScene.startDrawFavorite({
-                  callback: () => {
-                    this.showToolbar()
+                SScene.startDrawFavorite(
+                  getLanguage(this.props.language).Prompt.POI,
+                  {
+                    callback: () => {
+                      this.showToolbar()
+                    },
                   },
-                })
+                )
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
               } catch (error) {
                 Toast.show('兴趣点失败')
@@ -2141,7 +2145,7 @@ export default class ToolBar extends React.PureComponent {
    *   containerType:   容器的类型, list | table
    * }
    **/
-  setVisible = (isShow, type = this.state.type, params = {}) => {
+  setVisible(isShow, type = this.state.type, params = {}) {
     this.setOverlayViewVisible(isShow)
 
     if (type === ConstToolType.MAP_STYLE) {
@@ -2629,6 +2633,7 @@ export default class ToolBar extends React.PureComponent {
           // 返回图层属性界面，并清除属性关联选中的对象
           this.props.navigation &&
             this.props.navigation.navigate('LayerAttribute')
+          await SMap.clearTrackingLayer()
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
@@ -2643,6 +2648,7 @@ export default class ToolBar extends React.PureComponent {
                   ids: this.props.selection[i].ids,
                 })
               }
+              await SMap.clearTrackingLayer()
               await SMap.selectObjs(selection)
             },
           })
@@ -4170,6 +4176,7 @@ export default class ToolBar extends React.PureComponent {
                 : ConstOnline['Google'].layerIndex,
               false,
             )
+            await this.props.getLayers(-1)
           }
         })
 

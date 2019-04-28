@@ -131,9 +131,22 @@ export default StyleSheet.create({
     borderColor: color.fontColorBlack,
     backgroundColor: color.white,
   },
+  cutButtonDisable: {
+    height: ROW_HEIGHT,
+    width: scaleSize(180),
+    borderRadius: scaleSize(4),
+    borderWidth: 1,
+    borderColor: color.fontColorGray,
+    backgroundColor: color.white,
+  },
   cutTitle: {
     fontSize: size.fontSize.fontSizeLg,
     color: color.fontColorBlack,
+    backgroundColor: 'transparent',
+  },
+  cutTitleDisable: {
+    fontSize: size.fontSize.fontSizeLg,
+    color: color.fontColorGray,
     backgroundColor: 'transparent',
   },
   input: {

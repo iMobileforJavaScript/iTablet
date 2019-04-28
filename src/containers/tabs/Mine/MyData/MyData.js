@@ -312,6 +312,10 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
+    let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
+    if (labelUDBName === txtInfo) {
+      return <View />
+    }
     if (this.formChat && this.chatCallBack) {
       isShowMore = false
     }
@@ -545,7 +549,8 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.SCENE
           ) {
-            Toast.show('所分享文件超过10MB')
+            Toast.show(getLanguage(this.props.language).Profile.SHARED_DATA_10M)
+            //'所分享文件超过10MB')
             return
           }
           let zipResult
@@ -582,7 +587,11 @@ export default class MyLocalData extends Component {
                 description: 'SuperMap iTablet',
               })
               .then(result => {
-                !result && Toast.show('所分享文件超过10MB')
+                !result &&
+                  Toast.show(
+                    getLanguage(this.props.language).Profile.SHARED_DATA_10M,
+                  )
+                //'所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
                 this.setLoading(false)
               })
