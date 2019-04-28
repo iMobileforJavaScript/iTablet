@@ -65,6 +65,7 @@ const Chinese = {
   CREATING: '正在创建',
   PLEASE_ADD_DATASOURCE: '请先添加数据源',
   NO_ATTRIBUTES: '暂无属性',
+  NO_SEARCH_RESULTS: '无搜索记录',
 
   READING_TEMPLATE: '正在读取模板',
   SWITCHED_TEMPLATE: '已为您切换模板',
@@ -222,6 +223,7 @@ const English = {
   CREATING: 'Creating',
   PLEASE_ADD_DATASOURCE: 'Please Add a Datasource',
   NO_ATTRIBUTES: 'No Attributes',
+  NO_SEARCH_RESULTS: 'No search results',
 
   READING_TEMPLATE: 'Reading Template',
   SWITCHED_TEMPLATE: 'Switched Template',
