@@ -6,15 +6,9 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container } from '../../../components'
-// import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
-// import Login from './Login'
 import { color, size } from '../../../styles'
-// import ConstPath from '../../../constants/ConstPath'
-// import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
-//eslint-disable-next-line
-import { Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
 

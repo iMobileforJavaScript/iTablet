@@ -7,7 +7,6 @@ import {
   setLayerAttributes,
   setAttributeHistory,
 } from '../../../../models/layers'
-import { setBackAction, removeBackAction } from '../../../../models/backActions'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -26,8 +25,6 @@ const mapDispatchToProps = {
   // setAttributes,
   setLayerAttributes,
   setAttributeHistory,
-  setBackAction,
-  removeBackAction,
 }
 
 export default connect(

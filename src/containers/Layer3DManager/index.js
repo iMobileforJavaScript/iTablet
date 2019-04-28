@@ -1,7 +1,6 @@
 import Layer3DManager from './Layer3DManager'
 import { connect } from 'react-redux'
 import { refreshLayer3dList, setCurrentLayer3d } from '../../models/layers'
-import { setBackAction, removeBackAction } from '../../models/backActions'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -13,8 +12,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   refreshLayer3dList,
   setCurrentLayer3d,
-  setBackAction,
-  removeBackAction,
 }
 
 export default connect(

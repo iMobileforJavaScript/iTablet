@@ -3,7 +3,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, Platform, InteractionManager } from 'react-native'
+import { SectionList, View, InteractionManager } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -23,8 +23,6 @@ export default class MapSetting extends Component {
     device: Object,
     mapLegend: boolean,
     setMapLegend: () => {},
-    setBackAction: () => {},
-    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -38,9 +36,6 @@ export default class MapSetting extends Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      if (Platform.OS === 'android') {
-        this.props.setBackAction({ action: () => this.back() })
-      }
       this.getData()
     })
   }
@@ -63,14 +58,6 @@ export default class MapSetting extends Component {
       JSON.stringify(this.props.mapLegend)
     ) {
       this.getLegendData()
-    }
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.props.removeBackAction({
-        key: this.props.navigation.state.routeName,
-      })
     }
   }
 
@@ -122,11 +109,6 @@ export default class MapSetting extends Component {
   setSaveViewVisible = visible => {
     GLOBAL.SaveMapView &&
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    return true
   }
 
   _onValueChange = ({ value, item, index }) => {

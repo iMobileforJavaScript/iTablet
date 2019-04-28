@@ -10,7 +10,6 @@ import {
   Text,
   SectionList,
   View,
-  Platform,
   Image,
   InteractionManager,
 } from 'react-native'
@@ -127,19 +126,8 @@ export default class MT_layerManager extends React.Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      if (Platform.OS === 'android') {
-        this.props.setBackAction({ action: () => this.back() })
-      }
       this.getData(true)
     })
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.props.removeBackAction({
-        key: this.props.navigation.state.routeName,
-      })
-    }
   }
 
   setRefreshing = refreshing => {
@@ -709,11 +697,6 @@ export default class MT_layerManager extends React.Component {
   setSaveViewVisible = visible => {
     GLOBAL.SaveMapView &&
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    return true
   }
 
   getStyleIconByType = item => {

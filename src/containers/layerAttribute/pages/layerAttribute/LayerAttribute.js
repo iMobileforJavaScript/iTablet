@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Platform, InteractionManager } from 'react-native'
+import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
@@ -45,8 +45,6 @@ export default class LayerAttribute extends React.Component {
     // getAttributes: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
-    setBackAction: () => {},
-    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -80,9 +78,6 @@ export default class LayerAttribute extends React.Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      if (Platform.OS === 'android') {
-        this.props.setBackAction({ action: () => this.back() })
-      }
       if (this.type === 'MAP_3D') {
         this.getMap3DAttribute()
       } else {
@@ -141,11 +136,6 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.props.removeBackAction({
-        key: this.props.navigation.state.routeName,
-      })
-    }
     this.props.setCurrentAttribute({})
   }
 
@@ -894,11 +884,6 @@ export default class LayerAttribute extends React.Component {
     NavigationService.navigate('LayerAttributeSearch', {
       layerPath: this.props.currentLayer.path,
     })
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    return true
   }
 
   renderToolBar = () => {
