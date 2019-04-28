@@ -113,7 +113,11 @@ export default class MapCut extends React.Component {
   cut = () => {
     (async function() {
       try {
-        if (this.isCutting) return
+        if (
+          this.isCutting ||
+          (this.state.isSaveAs && this.state.saveAsName === '')
+        )
+          return
         this.isCutting = true
 
         this.mapNameIput && this.mapNameIput.blur()
@@ -644,8 +648,16 @@ export default class MapCut extends React.Component {
             </View>
             <View style={styles.bottomRightView}>
               <Button
-                style={styles.cutButton}
-                titleStyle={styles.cutTitle}
+                style={
+                  this.state.isSaveAs && this.state.saveAsName === ''
+                    ? styles.cutButtonDisable
+                    : styles.cutButton
+                }
+                titleStyle={
+                  this.state.isSaveAs && this.state.saveAsName === ''
+                    ? styles.cutTitleDisable
+                    : styles.cutTitle
+                }
                 title={getLanguage(this.props.language).Map_Main_Menu.CLIP}
                 //"裁剪"
                 onPress={this.cut}
