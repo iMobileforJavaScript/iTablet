@@ -285,10 +285,10 @@ export class ModuleList extends Component {
         item.action && item.action(this.props.currentUser)
         return
       } else if (moduleKey === '地图制图') {
-        fileName = language === 'CN' ? '湖南' : 'SanFrancisco'
+        fileName = language === 'CN' ? '湖南' : 'LosAngeles'
         // mapname =  language==='CN'?'SanFrancisco':'湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = language === 'CN' ? '湖北' : 'USA'
+        fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
         // mapname =  language==='CN'?'Precipitation':'LandBuild'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'

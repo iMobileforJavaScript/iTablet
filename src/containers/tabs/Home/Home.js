@@ -277,13 +277,13 @@ export default class Home extends Component {
           fileName = 'OlympicGreen'
           storage = '  25.57MB'
           break
-        case 'USA':
-          fileName = 'USA'
-          storage = '  39.76MB'
+        case 'PrecipitationOfUSA':
+          fileName = 'PrecipitationOfUSA'
+          storage = '  28.93MB'
           break
-        case 'SanFrancisco':
-          fileName = 'SanFrancisco'
-          storage = '  1.99MB'
+        case 'LosAngeles':
+          fileName = 'LosAngeles'
+          storage = '  23.73MB'
           break
       }
     }
