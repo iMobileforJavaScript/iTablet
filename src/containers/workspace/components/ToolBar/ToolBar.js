@@ -2977,6 +2977,7 @@ export default class ToolBar extends React.PureComponent {
       SMap.deleteGestureDetector()
     }.bind(this)())
   }
+
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
@@ -3004,24 +3005,35 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
-      SMap.setTaggingGrid(
-        GLOBAL.TaggingDatasetName,
-        this.props.user.currentUser.userName,
-      )
-      SMap.submit()
-      SMap.refreshMap()
-      SMap.setAction(Action.PAN)
-      if (type === ConstToolType.MAP_TOOL_TAGGING) {
-        this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
-          isFullScreen: false,
-          containerType: 'list',
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.NEWTHEME_HEIGHT[3]
-              : ConstToolType.NEWTHEME_HEIGHT[3],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
+      (async function() {
+        let isTaggingLayer = await SMap.isTaggingLayer(
+          this.props.user.currentUser.userName,
+        )
+        if (isTaggingLayer) {
+          SMap.setTaggingGrid(
+            GLOBAL.TaggingDatasetName,
+            this.props.user.currentUser.userName,
+          )
+          SMap.submit()
+          SMap.refreshMap()
+          SMap.setAction(Action.PAN)
+          if (type === ConstToolType.MAP_TOOL_TAGGING) {
+            this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
+              isFullScreen: false,
+              containerType: 'list',
+              height:
+                this.props.device.orientation === 'LANDSCAPE'
+                  ? ConstToolType.NEWTHEME_HEIGHT[3]
+                  : ConstToolType.NEWTHEME_HEIGHT[3],
+              column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+            })
+          }
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+          )
+        }
+      }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
       // this.taggingback()
