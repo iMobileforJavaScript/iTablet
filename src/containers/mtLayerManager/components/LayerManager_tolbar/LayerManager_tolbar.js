@@ -632,39 +632,58 @@ export default class LayerManager_tolbar extends React.Component {
     }
   }
 
-  //header点击事件 todo update图层信息，更新状态
+  //header点击事件
   headerAction = ({ item }) => {
-    let layerdata = this.state.layerdata
+    let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
+    let rel
     switch (item.title) {
       case getLanguage(this.props.language).Map_Layer.VISIBLE:
       case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
         layerdata.isVisible = !layerdata.isVisible
+        rel = SMap.setVisible(layerdata.path, layerdata.isVisible)
         break
       case getLanguage(this.props.language).Map_Layer.EDITABLE:
       case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
         layerdata.isEditable = !layerdata.isEditable
+        rel = SMap.setEditable(layerdata.path, layerdata.isEditable)
         break
       case getLanguage(this.props.language).Map_Layer.SNAPABLE:
       case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
         layerdata.isSnapable = !layerdata.isSnapable
+        rel = SMap.setSnapable(layerdata.path, layerdata.isSnapable)
         break
       case getLanguage(this.props.language).Map_Layer.OPTIONAL:
       case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
         layerdata.isSelectable = !layerdata.isSelectable
+        rel = SMap.setSelectable(layerdata.path, layerdata.isSelectable)
         break
     }
-    this.setState(
-      {
-        layerdata,
-      },
-      () => {
-        this.updateMenuState()
-        Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
-      },
-      () => {
+    rel.then(isSuccess => {
+      if (isSuccess) {
+        this.setState(
+          {
+            layerdata,
+          },
+          () => {
+            this.updateMenuState()
+            this.props.getLayers()
+            Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
+          },
+          () => {
+            Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
+          },
+        )
+      } else {
         Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
-      },
-    )
+      }
+    })
+    this.setVisible(false)
+    let overlayView = this.props.getOverlayView
+      ? this.props.getOverlayView()
+      : null
+    if (overlayView) {
+      overlayView.setVisible(false)
+    }
   }
 
   getLayer3dItem = (
@@ -726,7 +745,7 @@ export default class LayerManager_tolbar extends React.Component {
                 alignItems: 'center',
               }}
               key={index}
-              onPress={() => this.headerAction({ item })}
+              onPress={() => this.headerAction({ item, index, section })}
             >
               <Image
                 source={item.image}

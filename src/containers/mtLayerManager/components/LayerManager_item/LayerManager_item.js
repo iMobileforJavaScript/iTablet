@@ -68,7 +68,7 @@ export default class LayerManager_item extends React.Component {
       selected: props.selected,
       options: options,
       editable: data.isEditable,
-      visable: data.isVisible,
+      visible: data.isVisible,
       selectable: data.isSelectable,
       snapable: data.isSnapable,
       rowShow: false,
@@ -137,8 +137,8 @@ export default class LayerManager_item extends React.Component {
         isVectorLayer: isVectorLayer,
         options: options,
         editable: data.isEditable && !showLevelOne,
-        // visable: data.isVisible && !showLevelOne,
-        visable: data.isVisible,
+        // visible: data.isVisible && !showLevelOne,
+        visible: data.isVisible,
         selectable: data.isSelectable && !showLevelOne,
         snapable: data.isSnapable && !showLevelOne,
         rowShow: this.state.rowShow || false,
@@ -252,13 +252,13 @@ export default class LayerManager_item extends React.Component {
     Toast.show('待做')
   }
 
-  _visable_change = () => {
+  _visible_change = () => {
     this.setState(oldstate => {
-      let oldVisibe = oldstate.visable
+      let oldVisibe = oldstate.visible
       ;(async function() {
         this.props.setLayerVisible(this.props.data, !oldVisibe)
       }.bind(this)())
-      return { visable: !oldVisibe }
+      return { visible: !oldVisibe }
     })
   }
 
@@ -445,10 +445,10 @@ export default class LayerManager_item extends React.Component {
 
   renderItem = () => {
     let name = this.props.data.caption
-    const visibleImgWhite = this.state.visable
+    const visibleImgWhite = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable.png')
-    const visibleImgBlack = this.state.visable
+    const visibleImgBlack = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
     const arrowImg = this.state.rowShow
@@ -494,7 +494,7 @@ export default class LayerManager_item extends React.Component {
             leftView
           )}
           {this.props.operable && (
-            <TouchableOpacity style={styles.btn} onPress={this._visable_change}>
+            <TouchableOpacity style={styles.btn} onPress={this._visible_change}>
               <Image
                 resizeMode={'contain'}
                 style={styles.btn_image}
