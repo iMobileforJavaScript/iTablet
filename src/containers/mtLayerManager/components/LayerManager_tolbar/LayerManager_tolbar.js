@@ -738,6 +738,26 @@ export default class LayerManager_tolbar extends React.Component {
         }}
       >
         {section.headers.map((item, index) => {
+          if (this.state.layerdata.themeType === 7 && index === 1) {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                }}
+                activeOpacity={1}
+              >
+                <Image
+                  source={item.image}
+                  style={{
+                    width: scaleSize(60),
+                    height: scaleSize(60),
+                  }}
+                />
+              </TouchableOpacity>
+            )
+          }
           return (
             <TouchableOpacity
               style={{
