@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import {
-  BackHandler,
+  InteractionManager,
   Platform,
   View,
   Text,
@@ -44,6 +44,8 @@ export default class Map3D extends React.Component {
     refreshLayer3dList: () => {},
     user: Object,
     device: Object,
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -68,25 +70,31 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.online)
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    // 三维地图只允许单例
-    this.container.setLoading(
-      true,
-      getLanguage(this.props.language).Prompt.LOADING,
-    )
-    setTimeout(this._addScene, 2000)
-    // this._addScene()
-    this.addAttributeListener()
-    this.addCircleFlyListen()
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.back() })
+      }
+      GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
+
+      // 三维地图只允许单例
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+      )
+      // setTimeout(this._addScene, 2000)
+      this._addScene()
+      this.addAttributeListener()
+      this.addCircleFlyListen()
+    })
   }
 
   componentWillUnmount() {
     // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    Platform.OS === 'android' &&
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    if (Platform.OS === 'android') {
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
+    }
     this.attributeListener && this.attributeListener.remove()
     this.circleFlyListen && this.circleFlyListen.remove()
   }

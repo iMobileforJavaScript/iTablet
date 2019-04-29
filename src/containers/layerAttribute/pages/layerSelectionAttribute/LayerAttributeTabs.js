@@ -17,8 +17,8 @@ import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Utils } from '../../../workspace/util'
-import { SMap, Action } from 'imobile_for_reactnative'
-import { getLanguage } from '../../../../language/index'
+import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 
 const styles = StyleSheet.create({
   container: {
@@ -328,7 +328,15 @@ export default class LayerAttributeTabs extends React.Component {
 
     if (!selection || !selection.data) return
 
+    SMap.setEditable(layerPath, false)
     let objs = []
+    let geoStyle = new GeoStyle()
+    geoStyle.setFillForeColor(0, 255, 0, 0.5)
+    geoStyle.setLineWidth(1)
+    geoStyle.setLineColor(70, 128, 223)
+    geoStyle.setMarkerHeight(5)
+    geoStyle.setMarkerWidth(5)
+    geoStyle.setMarkerSize(10)
     for (let i = 0; i < this.props.selection.length; i++) {
       if (this.props.selection[i].layerInfo.name === layerPath) {
         objs.push({
@@ -339,6 +347,7 @@ export default class LayerAttributeTabs extends React.Component {
               ? selection.data[0].value
               : selection.data[1].value,
           ], // 多条数据有序号时：0为序号，1为SmID；无序号时0为SmID
+          style: JSON.stringify(geoStyle),
         })
       } else {
         objs.push({
@@ -349,30 +358,33 @@ export default class LayerAttributeTabs extends React.Component {
     }
 
     SMap.setAction(Action.PAN)
-    // SMap.selectObj(layerPath, [selection.data[0].value]).then(() => {
-    SMap.selectObjs(objs).then(data => {
-      // TODO 选中对象跳转到地图
-      // this.props.navigation && this.props.navigation.navigate('MapView')
-      // NavigationService.navigate('MapView')
-      this.props.navigation.goBack()
-      GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(
-          true,
-          ConstToolType.ATTRIBUTE_SELECTION_RELATE,
-          {
-            isFullScreen: false,
-            height: 0,
-          },
-        )
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
-      Utils.setSelectionStyle(this.props.currentLayer.path)
-      if (data instanceof Array && data.length > 0) {
-        SMap.moveToPoint({
-          x: data[0].x,
-          y: data[0].y,
-        })
-      }
+    SMap.clearSelection().then(() => {
+      // SMap.selectObjs(objs).then(data => {
+      SMap.setTrackingLayer(objs, true).then(data => {
+        // TODO 选中对象跳转到地图
+        // this.props.navigation && this.props.navigation.navigate('MapView')
+        // NavigationService.navigate('MapView')
+        this.props.navigation.goBack()
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setVisible(
+            true,
+            ConstToolType.ATTRIBUTE_SELECTION_RELATE,
+            {
+              isFullScreen: false,
+              height: 0,
+            },
+          )
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+
+        Utils.setSelectionStyle(this.props.currentLayer.path)
+        if (data instanceof Array && data.length > 0) {
+          SMap.moveToPoint({
+            x: data[0].x,
+            y: data[0].y,
+          })
+        }
+      })
     })
   }
 

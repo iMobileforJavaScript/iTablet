@@ -10,7 +10,7 @@ import {
   SectionList,
   TouchableOpacity,
   Switch,
-  BackHandler,
+  InteractionManager,
   Platform,
 } from 'react-native'
 import styles from './styles'
@@ -25,6 +25,8 @@ export default class setting extends Component {
     setSettingData: () => {},
     settingData: any,
     device: Object,
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
   constructor(props) {
     super(props)
@@ -36,10 +38,12 @@ export default class setting extends Component {
   }
 
   componentDidMount() {
-    this.getdata()
-
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.back() })
+      }
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -53,7 +57,9 @@ export default class setting extends Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
   }
 
@@ -62,7 +68,7 @@ export default class setting extends Component {
     return true
   }
 
-  getdata = async () => {
+  getData = async () => {
     let data
     if (this.type === 'MAP_3D') {
       // eslint-disable-next-line
@@ -183,7 +189,7 @@ export default class setting extends Component {
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
-        onRefresh={this.getdata}
+        onRefresh={this.getData}
         refreshing={false}
       />
     )

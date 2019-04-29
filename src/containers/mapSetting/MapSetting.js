@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-//eslint-disable-next-line
-import { MAP_MODULE } from '../../constants'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, Platform, BackHandler } from 'react-native'
+import { SectionList, View, InteractionManager } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -37,9 +35,9 @@ export default class MapSetting extends Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.getData()
+    InteractionManager.runAfterInteractions(() => {
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -63,12 +61,6 @@ export default class MapSetting extends Component {
     }
   }
 
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
-  }
-
   getData = async () => {
     let isAntialias = await SMap.isAntialias()
     let isOverlapDisplayed = await SMap.isOverlapDisplayed()
@@ -89,7 +81,7 @@ export default class MapSetting extends Component {
   }
 
   getLegendData = async () => {
-    let newData = getMapSettings()
+    let newData = JSON.parse(JSON.stringify(this.state.data))
     newData[0].data[2].value = this.props.mapLegend
 
     this.setState({
@@ -97,16 +89,19 @@ export default class MapSetting extends Component {
     })
   }
 
-  refreshList = section => {
-    let newData = this.state.data
-    for (let index = 0; index < section.data.length; index++) {
-      section.data[index].isShow = !section.data[index].isShow
-    }
+  headerAction = section => {
+    let newData = JSON.parse(JSON.stringify(this.state.data))
     section.visible = !section.visible
 
-    newData[section.index] = section
+    for (let i = 0; i < newData.length; i++) {
+      if (newData[i].title === section.title) {
+        newData[i] = section
+        break
+      }
+    }
+
     this.setState({
-      data: newData.concat(),
+      data: newData,
     })
   }
 
@@ -119,38 +114,17 @@ export default class MapSetting extends Component {
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
   }
 
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
-    return true
-  }
-
-  _onValueChange = ({ value, item, index }) => {
-    let newData = this.state.data
-    newData[item.sectionIndex].data[index].value = value
-    switch (newData[item.sectionIndex].data[index].name) {
+  _onValueChange = ({ value, index, section }) => {
+    let newData = JSON.parse(JSON.stringify(this.state.data))
+    let sectionIndex = 0
+    for (let i = 0; i < newData.length; i++) {
+      if (newData[i].title === section.title) {
+        sectionIndex = i
+        break
+      }
+    }
+    newData[sectionIndex].data[index].value = value
+    switch (newData[sectionIndex].data[index].name) {
       case getLanguage(this.props.language).Map_Setting.ROTATION_GRSTURE:
         //'手势旋转':
         SMap.enableRotateTouch(value)
@@ -182,19 +156,28 @@ export default class MapSetting extends Component {
 
   renderListSectionHeader = ({ section }) => {
     return (
-      <SettingSection data={section} onPress={data => this.refreshList(data)} />
+      <SettingSection
+        data={section}
+        onPress={data => this.headerAction(data)}
+      />
     )
   }
 
-  renderListItem = ({ item, index }) => {
+  renderListItem = ({ item, index, section }) => {
+    if (!section.visible) return <View />
     return (
       <SettingItem
         device={this.props.device}
+        section={section}
         data={item}
         index={index}
         onPress={data => this._onValueChange(data)}
       />
     )
+  }
+
+  _renderItemSeparatorComponent = ({ section }) => {
+    return section.visible ? <View style={styles.itemSeparator} /> : null
   }
 
   renderSelection = () => {
@@ -204,6 +187,7 @@ export default class MapSetting extends Component {
         sections={this.state.data}
         renderItem={this.renderListItem}
         renderSectionHeader={this.renderListSectionHeader}
+        ItemSeparatorComponent={this._renderItemSeparatorComponent}
         keyExtractor={(item, index) => index}
         onRefresh={this.getData}
         refreshing={false}

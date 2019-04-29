@@ -188,6 +188,7 @@ export default class ToolBar extends React.PureComponent {
     }
     this.isShow = false
     this.isBoxShow = true
+    this.setVisible = this.setVisible.bind(this)
   }
 
   componentDidMount() {
@@ -2144,7 +2145,7 @@ export default class ToolBar extends React.PureComponent {
    *   containerType:   容器的类型, list | table
    * }
    **/
-  setVisible = (isShow, type = this.state.type, params = {}) => {
+  setVisible(isShow, type = this.state.type, params = {}) {
     this.setOverlayViewVisible(isShow)
 
     if (type === ConstToolType.MAP_STYLE) {
@@ -2632,6 +2633,7 @@ export default class ToolBar extends React.PureComponent {
           // 返回图层属性界面，并清除属性关联选中的对象
           this.props.navigation &&
             this.props.navigation.navigate('LayerAttribute')
+          await SMap.clearTrackingLayer()
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
@@ -2646,6 +2648,7 @@ export default class ToolBar extends React.PureComponent {
                   ids: this.props.selection[i].ids,
                 })
               }
+              await SMap.clearTrackingLayer()
               await SMap.selectObjs(selection)
             },
           })
@@ -2974,6 +2977,7 @@ export default class ToolBar extends React.PureComponent {
       SMap.deleteGestureDetector()
     }.bind(this)())
   }
+
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
@@ -3001,24 +3005,35 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
-      SMap.setTaggingGrid(
-        GLOBAL.TaggingDatasetName,
-        this.props.user.currentUser.userName,
-      )
-      SMap.submit()
-      SMap.refreshMap()
-      SMap.setAction(Action.PAN)
-      if (type === ConstToolType.MAP_TOOL_TAGGING) {
-        this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
-          isFullScreen: false,
-          containerType: 'list',
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.NEWTHEME_HEIGHT[3]
-              : ConstToolType.NEWTHEME_HEIGHT[3],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
+      (async function() {
+        let isTaggingLayer = await SMap.isTaggingLayer(
+          this.props.user.currentUser.userName,
+        )
+        if (isTaggingLayer) {
+          SMap.setTaggingGrid(
+            GLOBAL.TaggingDatasetName,
+            this.props.user.currentUser.userName,
+          )
+          SMap.submit()
+          SMap.refreshMap()
+          SMap.setAction(Action.PAN)
+          if (type === ConstToolType.MAP_TOOL_TAGGING) {
+            this.setVisible(true, ConstToolType.MAP_TOOL_TAGGING_SETTING, {
+              isFullScreen: false,
+              containerType: 'list',
+              height:
+                this.props.device.orientation === 'LANDSCAPE'
+                  ? ConstToolType.NEWTHEME_HEIGHT[3]
+                  : ConstToolType.NEWTHEME_HEIGHT[3],
+              column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+            })
+          }
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+          )
+        }
+      }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
       // this.taggingback()
@@ -4161,6 +4176,7 @@ export default class ToolBar extends React.PureComponent {
                 : ConstOnline['Google'].layerIndex,
               false,
             )
+            await this.props.getLayers(-1)
           }
         })
 

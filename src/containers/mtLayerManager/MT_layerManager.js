@@ -10,9 +10,8 @@ import {
   Text,
   SectionList,
   View,
-  Platform,
-  BackHandler,
   Image,
+  InteractionManager,
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
@@ -54,6 +53,8 @@ export default class MT_layerManager extends React.Component {
     device: Object,
     currentLayer: Object,
     setMapLegend: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
     user: Object,
   }
 
@@ -124,17 +125,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    ;(async function() {
+    InteractionManager.runAfterInteractions(() => {
       this.getData(true)
-    }.bind(this)())
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
+    })
   }
 
   setRefreshing = refreshing => {
@@ -558,6 +551,7 @@ export default class MT_layerManager extends React.Component {
 
   onPressRow = async ({ data }) => {
     this.props.setMapLegend(false)
+
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         // 切换地图，清除历史记录
@@ -566,24 +560,24 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
+        if (GLOBAL.Type === constants.MAP_EDIT) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+            )
+            //'当前图层无法设置风格')
+          }
+        } else if (GLOBAL.Type === constants.MAP_THEME) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            this.mapTheme(data)
+          }
+        }
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        Toast.show(
-          getLanguage(this.props.language).Prompt
-            .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        )
-        //'当前图层无法设置风格')
-      }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        this.mapTheme(data)
-      }
-    }
     this.setState({
       selectLayer: data.name,
     })
@@ -703,34 +697,6 @@ export default class MT_layerManager extends React.Component {
   setSaveViewVisible = visible => {
     GLOBAL.SaveMapView &&
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
-    return true
   }
 
   getStyleIconByType = item => {

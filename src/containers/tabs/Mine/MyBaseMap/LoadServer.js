@@ -26,11 +26,15 @@ export default class LoadServer extends Component {
         onPress={() => {
           try {
             if (this.state.name === '') {
-              Toast.show('请输入底图名称')
+              Toast.show(getLanguage(global.language).Prompt.ENTER_MAP_NAME)
+              //'请输入底图名称')
               return
             }
             if (this.state.server === '') {
-              Toast.show('请输入服务地址')
+              Toast.show(
+                getLanguage(global.language).Prompt.ENTER_SERVICE_ADDRESS,
+              )
+              //'请输入服务地址')
               return
             }
             let item = {
@@ -48,7 +52,8 @@ export default class LoadServer extends Component {
             this.setBaseMap && this.setBaseMap(list)
             NavigationService.goBack()
           } catch (error) {
-            Toast.show('保存失败')
+            Toast.show(getLanguage(global.language).Prompt.SAVE_FAILED)
+            //'保存失败')
           }
 
           // console.log(this.props.navigation.state)
