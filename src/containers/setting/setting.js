@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-//eslint-disable-next-line
-import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -11,7 +9,6 @@ import {
   TouchableOpacity,
   Switch,
   InteractionManager,
-  Platform,
 } from 'react-native'
 import styles from './styles'
 import settingData from './settingData'
@@ -25,9 +22,8 @@ export default class setting extends Component {
     setSettingData: () => {},
     settingData: any,
     device: Object,
-    setBackAction: () => {},
-    removeBackAction: () => {},
   }
+
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
@@ -39,9 +35,6 @@ export default class setting extends Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      if (Platform.OS === 'android') {
-        this.props.setBackAction({ action: () => this.back() })
-      }
       this.getData()
     })
   }
@@ -53,19 +46,6 @@ export default class setting extends Component {
     ) {
       this.setState({ data: this.props.settingData })
     }
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.props.removeBackAction({
-        key: this.props.navigation.state.routeName,
-      })
-    }
-  }
-
-  back = () => {
-    this.props.navigation.navigate('Map3D')
-    return true
   }
 
   getData = async () => {
