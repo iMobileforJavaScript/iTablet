@@ -549,7 +549,7 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.SCENE
           ) {
-            Toast.show(getLanguage(this.props.language).Profile.SHARED_DATA_10M)
+            Toast.show(getLanguage(this.props.language).Prompt.SHARED_DATA_10M)
             //'所分享文件超过10MB')
             return
           }
@@ -589,7 +589,7 @@ export default class MyLocalData extends Component {
               .then(result => {
                 !result &&
                   Toast.show(
-                    getLanguage(this.props.language).Profile.SHARED_DATA_10M,
+                    getLanguage(this.props.language).Prompt.SHARED_DATA_10M,
                   )
                 //'所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
