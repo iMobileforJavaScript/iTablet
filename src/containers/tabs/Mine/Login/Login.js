@@ -14,7 +14,7 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native'
-import { Toast } from '../../../../utils/index'
+import { Toast, scaleSize } from '../../../../utils/index'
 import { Container } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -453,6 +453,7 @@ export default class Login extends React.Component {
                     lineHeight: 40,
                     textAlign: 'left',
                     color: color.font_color_white,
+                    fontSize:scaleSize(20),
                   }}
                   onPress={() => {
                     NavigationService.navigate('Register')
