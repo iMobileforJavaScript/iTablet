@@ -818,7 +818,7 @@ export default class LayerSelectionAttribute extends React.Component {
                   this.setLoading(false)
                   if (
                     this.state.attributes.data.length > 1 &&
-                    data.length == 1
+                    data.length === 1
                   ) {
                     this.locateToPosition({
                       type: 'absolute',
@@ -864,8 +864,8 @@ export default class LayerSelectionAttribute extends React.Component {
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
             : [
-              getLanguage(global.language).Map_Lable.NAME,
-              getLanguage(global.language).Map_Lable.ATTRIBUTE,
+              getLanguage(global.language).Map_Label.NAME,
+              getLanguage(global.language).Map_Label.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]

@@ -83,12 +83,12 @@ export default class DataSourcelist extends React.Component {
     // let filelist = await OpenMapfileModule.getfilelist(path);
     // for (let i = 0; i < filelist.length; i++) {
     //   let isfile = await OpenMapfileModule.isdirectory(filelist[i]);
-    //   if (isfile == 'isfile') {
+    //   if (isfile === 'isfile') {
     //     await this._getdatasourcelist(filelist[i]);
     //   }
     //   else {
     //     let filename = filelist[i].substr(filelist[i].lastIndexOf('.')).toLowerCase();
-    //     if (filename == '.udb') {
+    //     if (filename === '.udb') {
     //       datasource = { name: filelist[i].substr(filelist[i].lastIndexOf('/', filelist[i].lastIndexOf('/')) + 1),
     //                      path:filelist[i]
     //                     };

@@ -464,7 +464,7 @@ export default class MapCut extends React.Component {
               action: this.selectAll,
             })}
             <Text style={styles.topText}>
-              {getLanguage(this.props.language).Map_Lable.LAYER}
+              {getLanguage(this.props.language).Map_Label.LAYER}
               {/* 图层 */}
             </Text>
           </View>
@@ -490,7 +490,7 @@ export default class MapCut extends React.Component {
           <View style={styles.topLeftView}>
             <View style={styles.selectImgView} />
             <Text style={styles.topText}>
-              {getLanguage(this.props.language).Map_Lable.LAYER}
+              {getLanguage(this.props.language).Map_Label.LAYER}
               {/* 图层 */}
             </Text>
           </View>

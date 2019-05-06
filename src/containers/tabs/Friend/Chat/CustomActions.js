@@ -218,7 +218,7 @@ export default class CustomActions extends React.Component {
         },
         error => {
           alert(
-            getLanguage(global.language).Friends.LOACTION_FAILED + '：' + error,
+            getLanguage(global.language).Friends.LOCATION_FAILED + '：' + error,
           )
         },
       )

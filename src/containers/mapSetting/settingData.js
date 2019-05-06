@@ -8,7 +8,7 @@ function getMapSettings() {
       visible: true,
       data: [
         {
-          name: getLanguage(global.language).Map_Setting.ROTATION_GRSTURE,
+          name: getLanguage(global.language).Map_Setting.ROTATION_GESTURE,
           //'手势旋转',
           value: false,
         },
@@ -24,7 +24,7 @@ function getMapSettings() {
       ],
     },
     {
-      title: getLanguage(global.language).Map_Setting.EFFRCT_SETTINFS,
+      title: getLanguage(global.language).Map_Setting.EFFECT_SETTINGS,
       //'效果设置',
       visible: true,
       data: [

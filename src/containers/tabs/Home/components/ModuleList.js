@@ -114,15 +114,7 @@ class RenderModuleItem extends Component {
               source={item.moduleImage}
               style={styles.moduleImage}
             />
-            <Text
-              style={
-                item.key === '专题制图' && global.language === 'EN'
-                  ? styles.longtitle
-                  : styles.title
-              }
-            >
-              {item.title}
-            </Text>
+            <Text style={styles.title}>{item.title}</Text>
           </View>
           {this._renderProgressView()}
         </TouchableOpacity>
@@ -528,7 +520,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    width: scaleSize(130),
+    width: scaleSize(200),
     height: scaleSize(37),
     fontSize: setSpText(25),
     color: '#FFFFFF',

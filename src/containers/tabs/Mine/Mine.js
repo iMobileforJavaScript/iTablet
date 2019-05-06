@@ -503,7 +503,7 @@ export default class Mine extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Navigator_Lable.PROFILE,
+          title: getLanguage(this.props.language).Navigator_Label.PROFILE,
           withoutBack: true,
           navigation: this.props.navigation,
         }}

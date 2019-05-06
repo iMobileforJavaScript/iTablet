@@ -2558,8 +2558,8 @@ export default class ToolBar extends React.PureComponent {
         })
       }
 
-     // if (type===ConstToolType.MAP_STYLE)
-       {
+      // if (type===ConstToolType.MAP_STYLE)
+      {
         if (this.currentLayerStyle) {
           SCartography.setLayerStyle(
             this.props.currentLayer.name,

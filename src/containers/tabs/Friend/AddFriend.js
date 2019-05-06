@@ -141,7 +141,7 @@ class AddFriend extends Component {
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 
-    if (this.target[0] == this.user.userId) {
+    if (this.target[0] === this.user.userId) {
       Toast.show(getLanguage(this.language).Friends.ADD_SELF)
       return
     }

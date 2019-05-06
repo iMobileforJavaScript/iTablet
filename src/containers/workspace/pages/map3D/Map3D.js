@@ -304,7 +304,11 @@ export default class Map3D extends React.Component {
     // eslint-disable-next-line
     const content = /[@#\$%\^&\*]+/g
     let result = content.test(this.state.inputText)
-    if (result || this.state.inputText === '' || this.state.inputText == null) {
+    if (
+      result ||
+      this.state.inputText === '' ||
+      this.state.inputText === null
+    ) {
       this.setState({
         inputText: null,
         placeholder: true,

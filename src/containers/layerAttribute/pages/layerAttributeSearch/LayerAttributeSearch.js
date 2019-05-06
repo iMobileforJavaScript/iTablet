@@ -235,8 +235,8 @@ export default class LayerAttributeSearch extends React.Component {
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
             : [
-              getLanguage(global.language).Map_Lable.NAME,
-              getLanguage(global.language).Map_Lable.ATTRIBUTE,
+              getLanguage(global.language).Map_Label.NAME,
+              getLanguage(global.language).Map_Label.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]

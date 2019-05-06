@@ -112,7 +112,7 @@ class FriendMessage extends Component {
           }
         } else {
           let obj = undefined
-          if (key.indexOf('Group_') == -1) {
+          if (key.indexOf('Group_') === -1) {
             obj = FriendListFileHandle.findFromFriendList(key)
             if (obj) {
               let friend = {

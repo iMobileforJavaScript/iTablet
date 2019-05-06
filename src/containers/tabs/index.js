@@ -45,16 +45,16 @@ class tabItem extends PureComponent {
     let t = ''
     switch (this.props.title) {
       case 'home':
-        t = getLanguage(this.props.language).Navigator_Lable.HOME
+        t = getLanguage(this.props.language).Navigator_Label.HOME
         break
       case 'friend':
-        t = getLanguage(this.props.language).Navigator_Lable.FRIENDS
+        t = getLanguage(this.props.language).Navigator_Label.FRIENDS
         break
       case 'find':
-        t = getLanguage(this.props.language).Navigator_Lable.EXPLORE
+        t = getLanguage(this.props.language).Navigator_Label.EXPLORE
         break
       case 'user':
-        t = getLanguage(this.props.language).Navigator_Lable.PROFILE
+        t = getLanguage(this.props.language).Navigator_Label.PROFILE
         break
     }
     return t

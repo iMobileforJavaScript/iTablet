@@ -853,7 +853,7 @@ export default class LayerAttribute extends React.Component {
                     this.setLoading(false)
                     if (
                       this.state.attributes.data.length > 1 &&
-                      data.length == 1
+                      data.length === 1
                     ) {
                       this.locateToPosition({
                         type: 'absolute',
@@ -914,8 +914,8 @@ export default class LayerAttribute extends React.Component {
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
             : [
-              getLanguage(this.props.language).Map_Lable.NAME,
-              getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
+              getLanguage(this.props.language).Map_Label.NAME,
+              getLanguage(this.props.language).Map_Label.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]

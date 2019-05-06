@@ -394,7 +394,7 @@ export default class Map3DToolBar extends React.Component {
               style={styles.sceneImg}
             />
             <Text style={styles.sceneTitle}>
-              {getLanguage(global.language).Map_Lable.SCENE}
+              {getLanguage(global.language).Map_Label.SCENE}
               {/* 场景 */}
             </Text>
           </View>

@@ -125,7 +125,7 @@ export default class MapSetting extends Component {
     }
     newData[sectionIndex].data[index].value = value
     switch (newData[sectionIndex].data[index].name) {
-      case getLanguage(this.props.language).Map_Setting.ROTATION_GRSTURE:
+      case getLanguage(this.props.language).Map_Setting.ROTATION_GESTURE:
         //'手势旋转':
         SMap.enableRotateTouch(value)
         break

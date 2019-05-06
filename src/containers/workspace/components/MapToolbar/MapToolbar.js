@@ -64,7 +64,7 @@ export default class MapToolbar extends React.Component {
         list = [
           {
             key: 'MapView',
-            title: getLanguage(global.language).Map_Lable.MAP,
+            title: getLanguage(global.language).Map_Label.MAP,
             //'地图',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
@@ -75,7 +75,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerManager',
-            title: getLanguage(global.language).Map_Lable.LAYER,
+            title: getLanguage(global.language).Map_Label.LAYER,
             //'图层',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
@@ -86,7 +86,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerAttribute',
-            title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
             //'属性',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
@@ -97,7 +97,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'MapSetting',
-            title: getLanguage(global.language).Map_Lable.SETTING,
+            title: getLanguage(global.language).Map_Label.SETTING,
             //'设置',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
@@ -146,7 +146,7 @@ export default class MapToolbar extends React.Component {
         list = [
           {
             key: 'scene',
-            title: getLanguage(global.language).Map_Lable.SCENE,
+            title: getLanguage(global.language).Map_Label.SCENE,
             //'场景',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene_selected.png'),
@@ -159,7 +159,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'Layer3DManager',
-            title: getLanguage(global.language).Map_Lable.LAYER,
+            title: getLanguage(global.language).Map_Label.LAYER,
             //'图层',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
@@ -172,7 +172,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerAttribute',
-            title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
             //'属性',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
@@ -185,7 +185,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'Setting',
-            title: getLanguage(global.language).Map_Lable.SETTING,
+            title: getLanguage(global.language).Map_Label.SETTING,
             //'设置',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),

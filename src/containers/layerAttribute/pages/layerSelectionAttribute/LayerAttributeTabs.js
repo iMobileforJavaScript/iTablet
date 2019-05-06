@@ -609,7 +609,7 @@ export default class LayerAttributeTabs extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
+          title: getLanguage(this.props.language).Map_Label.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: [
