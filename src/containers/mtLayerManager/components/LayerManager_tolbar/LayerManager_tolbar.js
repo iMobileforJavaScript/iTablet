@@ -13,6 +13,14 @@ import {
   taggingData,
   scaleData,
   mscaleData,
+  layerSettingCanVisit,
+  layerSettingCanSelect,
+  layerSettingCanEdit,
+  layerSettingCanSnap,
+  layerSettingCanNotVisit,
+  layerSettingCanNotSelect,
+  layerSettingCanNotSnap,
+  layerSettingCanNotEdit,
 } from './LayerToolbarData'
 import {
   View,
@@ -87,16 +95,22 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   getData = type => {
-    let data
+    let data = []
+    let headerData = layerSettingCanVisit(this.props.language).concat(
+      layerSettingCanSelect(this.props.language),
+    )
     switch (type) {
       case ConstToolType.MAP_STYLE:
         data = layersetting(this.props.language)
+       // data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLE:
         data = layerThemeSetting(this.props.language)
+       // data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLES:
         data = layerThemeSettings(this.props.language)
+       // data[0].headers = headerData
         break
       case ConstToolType.MAP3D_LAYER3DSELECT:
         data = layer3dSettingCanSelect(this.props.language)
@@ -105,7 +119,12 @@ export default class LayerManager_tolbar extends React.Component {
         data = layereditsetting(global.language)
         break
       case ConstToolType.COLLECTION:
+        //collection 单独处理
+        headerData = headerData
+          .concat(layerSettingCanEdit(this.props.language))
+          .concat(layerSettingCanSnap(this.props.language))
         data = layerCollectionSetting(this.props.language)
+       // data[0].headers = headerData
         break
       case ConstToolType.MAP_EDIT_STYLE:
         data = layereditsetting(global.language)
@@ -206,6 +225,7 @@ export default class LayerManager_tolbar extends React.Component {
       () => {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
+        this.updateMenuState()
         this.updateOverlayerView()
       },
     )
@@ -218,6 +238,33 @@ export default class LayerManager_tolbar extends React.Component {
   setOverlayViewVisible = visible => {
     GLOBAL.LayerManagerOverlayView &&
       GLOBAL.LayerManagerOverlayView.setVisible(visible)
+  }
+
+  //更新菜单按钮状态
+  updateMenuState = () => {
+    let layerdata = this.state.layerdata
+    let data = this.state.data
+    if (data && data[0] && data[0].headers && GLOBAL.Type !== 'MAP_3D') {
+      let tempheader0 = layerdata.isVisible
+        ? layerSettingCanVisit(this.props.language)
+        : layerSettingCanNotVisit(this.props.language)
+      let tempheader1 = layerdata.isSelectable
+        ? layerSettingCanSelect(this.props.language)
+        : layerSettingCanNotSelect(this.props.language)
+      data[0].headers = tempheader0.concat(tempheader1)
+      if (GLOBAL.Type === 'COLLECTION') {
+        let tempheader2 = layerdata.isEditable
+          ? layerSettingCanEdit(this.props.language)
+          : layerSettingCanNotEdit(this.props.language)
+        let tempheader3 = layerdata.isSnapable
+          ? layerSettingCanSnap(this.props.language)
+          : layerSettingCanNotSnap(this.props.language)
+        data[0].headers = data[0].headers.concat(tempheader2, tempheader3)
+      }
+      this.setState({
+        data,
+      })
+    }
   }
 
   //更新遮盖层状态
@@ -436,9 +483,15 @@ export default class LayerManager_tolbar extends React.Component {
       //''置顶') {
       (async function() {
         await SMap.moveToTop(this.state.layerdata.name)
+        let count = await SMap.getTaggingLayerCount(
+          this.props.user.currentUser.userName,
+        )
+        for (let i = 0; i < count; i++) {
+          await SMap.moveDownLayer(this.state.layerdata.name)
+        }
         await this.props.getLayers()
+        this.setVisible(false)
       }.bind(this)())
-      this.setVisible(false)
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
     ) {
@@ -573,9 +626,63 @@ export default class LayerManager_tolbar extends React.Component {
           overlayView.setVisible(false)
         }
         if (result) {
-          this.changeState(!canChoose)
+          this.changeState(canChoose)
         }
       })
+    }
+  }
+
+  //header点击事件
+  headerAction = ({ item }) => {
+    let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
+    let rel
+    switch (item.title) {
+      case getLanguage(this.props.language).Map_Layer.VISIBLE:
+      case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
+        layerdata.isVisible = !layerdata.isVisible
+        rel = SMap.setVisible(layerdata.path, layerdata.isVisible)
+        break
+      case getLanguage(this.props.language).Map_Layer.EDITABLE:
+      case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
+        layerdata.isEditable = !layerdata.isEditable
+        rel = SMap.setEditable(layerdata.path, layerdata.isEditable)
+        break
+      case getLanguage(this.props.language).Map_Layer.SNAPABLE:
+      case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
+        layerdata.isSnapable = !layerdata.isSnapable
+        rel = SMap.setSnapable(layerdata.path, layerdata.isSnapable)
+        break
+      case getLanguage(this.props.language).Map_Layer.OPTIONAL:
+      case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
+        layerdata.isSelectable = !layerdata.isSelectable
+        rel = SMap.setSelectable(layerdata.path, layerdata.isSelectable)
+        break
+    }
+    rel.then(isSuccess => {
+      if (isSuccess) {
+        this.setState(
+          {
+            layerdata,
+          },
+          () => {
+            this.updateMenuState()
+            this.props.getLayers()
+            Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
+          },
+          () => {
+            Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
+          },
+        )
+      } else {
+        Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
+      }
+    })
+    this.setVisible(false)
+    let overlayView = this.props.getOverlayView
+      ? this.props.getOverlayView()
+      : null
+    if (overlayView) {
+      overlayView.setVisible(false)
     }
   }
 
@@ -610,12 +717,69 @@ export default class LayerManager_tolbar extends React.Component {
     return (
       <ToolBarSectionList
         sections={this.state.data}
-        renderSectionHeader={({ section }) => this.renderHeader({ section })}
+        renderItem={this.renderItem}
+        renderSectionHeader={this.renderHeader}
         layerManager={true}
       />
     )
   }
 
+  renderHeader = ({ section }) => {
+    if (!section.headers) {
+      return <View style={{ height: 0 }} />
+    }
+    return (
+      <View
+        style={{
+          height: scaleSize(86),
+          alignItems: 'center',
+          flexDirection: 'row',
+          backgroundColor: color.bgW,
+        }}
+      >
+        {section.headers.map((item, index) => {
+          if (this.state.layerdata.themeType === 7 && index === 1) {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                }}
+                activeOpacity={1}
+              >
+                <Image
+                  source={item.image}
+                  style={{
+                    width: scaleSize(60),
+                    height: scaleSize(60),
+                  }}
+                />
+              </TouchableOpacity>
+            )
+          }
+          return (
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                alignItems: 'center',
+              }}
+              key={index}
+              onPress={() => this.headerAction({ item, index, section })}
+            >
+              <Image
+                source={item.image}
+                style={{
+                  width: scaleSize(60),
+                  height: scaleSize(60),
+                }}
+              />
+            </TouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
   renderMap3DList = () => {
     return (
       <Map3DToolBar
@@ -630,12 +794,12 @@ export default class LayerManager_tolbar extends React.Component {
     )
   }
 
-  renderHeader = ({ section }) => {
+  renderItem = ({ item }) => {
     return (
       <View>
         <TouchableHighlight
           onPress={() => {
-            this.listAction({ section })
+            this.listAction({ section: item })
           }}
           underlayColor={color.headerBackground}
         >
@@ -647,7 +811,7 @@ export default class LayerManager_tolbar extends React.Component {
               alignItems: 'center',
             }}
           >
-            {section.image && (
+            {item.image && (
               <Image
                 resizeMode={'contain'}
                 style={{
@@ -655,7 +819,7 @@ export default class LayerManager_tolbar extends React.Component {
                   height: scaleSize(60),
                   width: scaleSize(60),
                 }}
-                source={section.image}
+                source={item.image}
               />
             )}
             <Text
@@ -666,7 +830,7 @@ export default class LayerManager_tolbar extends React.Component {
                 backgroundColor: 'transparent',
               }}
             >
-              {section.title}
+              {item.title}
             </Text>
           </View>
         </TouchableHighlight>

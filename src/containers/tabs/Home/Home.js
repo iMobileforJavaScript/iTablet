@@ -7,6 +7,8 @@ import {
   AsyncStorage,
   StatusBar,
   NativeModules,
+  InteractionManager,
+  Platform,
 } from 'react-native'
 import { Container, Dialog } from '../../../components'
 import { ModuleList } from './components'
@@ -24,6 +26,7 @@ import { getLanguage } from '../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
+    navigation: Object,
     language: string,
     setLanguage: () => {},
     nav: Object,
@@ -39,6 +42,8 @@ export default class Home extends Component {
     openWorkspace: () => {},
     setUser: () => {},
     setDownInformation: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -52,7 +57,20 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    this._initStatusBarVisible()
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.showMorePop() })
+      }
+      this._initStatusBarVisible()
+    })
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
+    }
   }
 
   _initStatusBarVisible = async () => {
@@ -224,6 +242,16 @@ export default class Home extends Component {
     cancel && cancel(this.moduleItemRef, this.state.dialogCheck)
   }
 
+  showUserPop = () => {
+    this.topNavigatorBarImageId = 'left'
+    this.setState({ modalIsVisible: true })
+  }
+
+  showMorePop = () => {
+    this.topNavigatorBarImageId = 'right'
+    this.setState({ modalIsVisible: true })
+  }
+
   renderDialogChildren = () => {
     let storage = null
     let fileName = null
@@ -249,13 +277,13 @@ export default class Home extends Component {
           fileName = 'OlympicGreen'
           storage = '  25.57MB'
           break
-        case 'USA':
-          fileName = 'USA'
-          storage = '  39.76MB'
+        case 'PrecipitationOfUSA':
+          fileName = 'PrecipitationOfUSA'
+          storage = '  28.93MB'
           break
-        case 'SanFrancisco':
-          fileName = 'SanFrancisco'
-          storage = '  1.99MB'
+        case 'LosAngeles':
+          fileName = 'LosAngeles'
+          storage = '  23.73MB'
           break
       }
     }
@@ -348,7 +376,9 @@ export default class Home extends Component {
   }
 
   _renderModal = () => {
-    let isLogin = this.props.currentUser.password !== undefined
+    let isLogin =
+      this.props.currentUser.password !== undefined &&
+      this.props.currentUser.password !== ''
     return (
       <HomePopupModal
         language={this.props.language}
@@ -386,20 +416,14 @@ export default class Home extends Component {
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}
-              onPress={() => {
-                this.topNavigatorBarImageId = 'left'
-                this.setState({ modalIsVisible: true })
-              }}
+              onPress={() => this.showUserPop()}
             >
               <Image source={userImg} style={styles.userImg} />
             </TouchableOpacity>
           ),
           headerRight: (
             <TouchableOpacity
-              onPress={() => {
-                this.topNavigatorBarImageId = 'right'
-                this.setState({ modalIsVisible: true })
-              }}
+              onPress={() => this.showMorePop()}
               style={styles.moreView}
             >
               <Image

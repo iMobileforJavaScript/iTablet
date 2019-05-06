@@ -69,7 +69,11 @@ export default class Register extends React.Component {
           Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
-        this.container.setLoading(true, '注册中...')
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.REGISTERING,
+        )
+        //'注册中...')
         result = await SOnlineService.registerWithEmail(
           this.txtEmail,
           this.txtEmailNickname,
@@ -96,7 +100,11 @@ export default class Register extends React.Component {
           Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
-        this.container.setLoading(true, '注册中...')
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.REGISTERING,
+        )
+        //'注册中...')
         result = await SOnlineService.registerWithPhone(
           this.txtPhoneNumber,
           this.txtVerifyCode,
@@ -105,24 +113,53 @@ export default class Register extends React.Component {
         )
       }
 
+      let info
       if (typeof result === 'boolean' && result === true) {
-        let info
         if (isEmail) {
-          info = '注册成功，请前往邮箱激活'
+          info = getLanguage(this.props.language).Prompt.GOTO_ACTIVATE
+          //'注册成功，请前往邮箱激活'
           Toast.show(info)
         } else {
-          info = '注册成功'
+          info = getLanguage(this.props.language).Prompt.REGIST_SUCCESS
+          //'注册成功'
           Toast.show(info)
         }
         this.container.setLoading(false)
         this._goMine()
         return
       } else {
-        Toast.show(result)
+        switch (result) {
+          case '手机号已注册':
+            info = getLanguage(this.props.language).Prompt
+              .PHIONE_HAS_BEEN_REGISTERED
+            break
+          case '昵称已存在':
+            info = getLanguage(this.props.language).Prompt.NICKNAME_IS_EXISTS
+            break
+          case '短信验证码错误':
+            info = getLanguage(this.props.language).Prompt
+              .VERIFICATION_CODE_ERROR
+            break
+          case '邮箱已注册':
+            info = getLanguage(this.props.language).Prompt
+              .EMAIL_HAS_BEEN_REGISTERED
+            break
+          case '注册失败':
+            info = getLanguage(this.props.language).Prompt.REGIST_FAILED
+            break
+          case '请输入正确的手机号':
+            info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_MOBILE
+            break
+          case '请输入正确的邮箱号':
+            info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
+            break
+        }
+        Toast.show(info)
       }
       this.container.setLoading(false)
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+      //'网络错误')
       this.container.setLoading(false)
     }
   }
@@ -197,7 +234,7 @@ export default class Register extends React.Component {
             clearButtonMode={'while-editing'}
             //'请输入验证码'
             placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
-            style={{ flex: 1, fontSize: scaleSize(fontSize) }}
+            style={{ flex: 1, fontSize: scaleSize(fontSize),padding: 0 }}
             defaultValue={this.txtVerifyCode}
             onChangeText={text => {
               this.txtVerifyCode = text
@@ -212,7 +249,10 @@ export default class Register extends React.Component {
                 )
                 return
               }
-              Toast.show('验证码已发送')
+              Toast.show(
+                getLanguage(this.props.language).Prompt.VERIFICATION_CODE_SENT,
+              )
+              //'验证码已发送')
               SOnlineService.sendSMSVerifyCode(this.txtPhoneNumber)
             }}
           >

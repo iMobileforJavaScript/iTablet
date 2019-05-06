@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { _getHomePath } from './Method'
+import { getLanguage } from '../../../../language'
 export default class LocalDataItem extends Component {
   props: {
     info: Object,
@@ -77,7 +78,7 @@ export default class LocalDataItem extends Component {
                 marginRight: 20,
               }}
             >
-              {`路径:${path}`}
+              {getLanguage(global.language).Profile.PATH + `:${path}`}
             </Text>
           </View>
           <Image

@@ -44,10 +44,10 @@ export default class MyService extends Component {
     this.screenWidth = Dimensions.get('window').width
     ;(this.publishServiceTitle = getLanguage(
       global.language,
-    ).Profile.PRIVATE_SERVICE),
+    ).Profile.PUBLIC_SERVICE),
     (this.privateServiceTitle = getLanguage(
       global.language,
-    ).Profile.PUBLIC_SERVICE),
+    ).Profile.PRIVATE_SERVICE),
     (this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,

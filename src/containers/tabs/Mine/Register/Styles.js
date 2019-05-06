@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   verifyCodeRTextStyle: {
     width: 100,
-    fontSize: 12,
+    fontSize: scaleSize(18),
     color: color.blue1,
     lineHeight: scaleSize(itemHeight),
     textAlign: 'right',

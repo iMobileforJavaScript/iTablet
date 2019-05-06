@@ -133,7 +133,8 @@ export default class Row extends Component {
     let isLastCell = isSingleData
       ? index === 1
       : this.props.data.length - 1 === index
-    let isSingleData = typeof item !== 'object'
+    let isSingleData =
+      typeof item !== 'object' || item === undefined || item === null
     let value = isSingleData ? item : item.value
     let editable, isRequired, defaultValue
     if (isSingleData) {

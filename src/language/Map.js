@@ -123,6 +123,7 @@ const Map_Main_Menu_Chinese = {
   FLY: '飞行',
   FLY_ROUTE: '飞行轨迹',
   FLY_ADD_STOPS: '添加站点',
+  FLY_AROUND_POINT: '绕点飞行',
 
   //专题制图 专题图
   THEME: '专题图',
@@ -325,6 +326,7 @@ const Map_Main_Menu_English = {
   FLY: 'Fly',
   FLY_ROUTE: 'Flying Route',
   FLY_ADD_STOPS: 'Add Stops',
+  FLY_AROUND_POINT: ' Fly around point',
 
   THEME: 'Create',
   THEME_UNIFORM_MAP: 'Uniform Map',
@@ -465,6 +467,14 @@ const Map_Layer_Chinese = {
   LAYERS_MIN_OBJECT_SIZE: '对象最小尺寸',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
 
+  VISIBLE: '设置图层可见',
+  NOT_VISIBLE: '设置图层不可见',
+  OPTIONAL: '设置图层可选',
+  NOT_OPTIONAL: '设置图层不可选',
+  EDITABLE: '设置图层可编辑',
+  NOT_EDITABLE: '设置图层不可编辑',
+  SNAPABLE: '设置图层可捕获',
+  NOT_SNAPABLE: '设置图层不可捕获',
   //专题图图层
   LAYERS_CREAT_THEMATIC_MAP: '制作专题图',
   LAYERS_MODIFY_THEMATIC_MAP: '修改专题图',
@@ -472,10 +482,6 @@ const Map_Layer_Chinese = {
   BASEMAP: '我的底图',
   BASEMAP_SWITH: '切换底图',
   MY_TERRAIN: '我的地形',
-
-  //3D图层
-  OPTIONAL: '设置图层可选',
-  NOT_OPTIONAL: '设置图层不可选',
 }
 
 const Map_Layer_English = {
@@ -521,8 +527,14 @@ const Map_Layer_English = {
   BASEMAP_SWITH: 'Switch Basemap',
   MY_TERRAIN: 'My Terrain',
 
+  VISIBLE: 'Visible',
+  NOT_VISIBLE: 'Not Visible',
   OPTIONAL: 'Optional',
   NOT_OPTIONAL: 'Not Optional',
+  EDITABLE: 'Editable',
+  NOT_EDITABLE: 'Not Editable',
+  SNAPABLE: 'Snapable',
+  NOT_SNAPABLE: 'Not Snapable',
 }
 
 //属性

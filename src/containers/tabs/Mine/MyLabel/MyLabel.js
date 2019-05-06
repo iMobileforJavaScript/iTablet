@@ -63,7 +63,7 @@ export default class MyLabel extends Component {
     if (!result) {
       this.creatDatasource(path)
     }
-    let data = await SMap.getUDBName(path)
+    let data = await SMap.getUDBNameOfLabel(path)
     this.setState({ data: data, udbPath: path }, () => {
       this.container.setLoading(false)
     })
@@ -121,7 +121,8 @@ export default class MyLabel extends Component {
 
   uploadDialog = name => {
     if (name === null || name === '') {
-      Toast.show('请输入数据名称')
+      Toast.show(getLanguage(global.language).Prompt.ENTER_DATA_NAME)
+      //'请输入数据名称')
       return
     }
     this.dialog.setDialogVisible(false)
@@ -130,11 +131,14 @@ export default class MyLabel extends Component {
 
   upload = async name => {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      Toast.show('请登录')
+      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+      //'请登录')
       return
     }
     try {
-      this.container.setLoading(true, '正在分享')
+      // this.container.setLoading(true, '正在分享')
+      Toast.show(getLanguage(global.language).Prompt.SHARING)
+      //'正在分享')
       let userPath = await FileTools.appendingHomeDirectory(
         this.props.user.currentUser.userType === UserType.PROBATION_USER
           ? ConstPath.CustomerPath
@@ -172,12 +176,15 @@ export default class MyLabel extends Component {
               .then(
                 result => {
                   this.container.setLoading(false)
-                  !result && Toast.show('分享失败')
+                  !result &&
+                    Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+                  //'分享失败')
                   !result && FileTools.deleteFile(targetPath)
                 },
                 () => {
                   this.container.setLoading(false)
-                  Toast.show('分享失败')
+                  Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+                  //'分享失败')
                   FileTools.deleteFile(targetPath)
                 },
               )
@@ -187,7 +194,8 @@ export default class MyLabel extends Component {
                 return progress
               },
               onResult: async () => {
-                Toast.show('分享成功')
+                Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+                //'分享成功')
                 this.container.setLoading(false)
                 FileTools.deleteFile(targetPath)
                 FileTools.deleteFile(archivePath)
@@ -222,7 +230,8 @@ export default class MyLabel extends Component {
             this.itemInfo.item.title,
           ).then(() => {
             this._closeModal()
-            Toast.show('删除成功')
+            Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+            //'删除成功')
             let newData = JSON.parse(JSON.stringify(this.state.data)) //[...this.state.data]
             newData.splice(this.itemInfo.index, 1)
             this.setState({ data: newData }, () => {})
@@ -247,7 +256,10 @@ export default class MyLabel extends Component {
           if (this.uploadList.length > 0) {
             this.dialog.setDialogVisible(true)
           } else {
-            Toast.show('请选择要分享的数据集')
+            Toast.show(
+              getLanguage(global.language).Prompt.SELECT_DATASET_TO_SHARE,
+            )
+            //'请选择要分享的数据集')
           }
         }}
       >
@@ -261,7 +273,8 @@ export default class MyLabel extends Component {
     return (
       <InputDialog
         ref={ref => (this.dialog = ref)}
-        placeholder={'请输入数据名称'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
+        // {'请输入数据名称'}
         confirmAction={() => {
           this.setState({ showselect: false })
           this.uploadDialog(this.dialog.state.value)
@@ -270,8 +283,10 @@ export default class MyLabel extends Component {
           this.dialog.setDialogVisible(false)
           this.setState({ showselect: false })
         }}
-        confirmBtnTitle={'分享'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
+        //{'分享'}
+        cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
+        //{'取消'}
       />
     )
   }
@@ -333,7 +348,10 @@ export default class MyLabel extends Component {
               this.ModalBtns.setVisible(false)
               this.uploadType = 'online'
             } else {
-              Toast.show('请选择要分享的数据集')
+              Toast.show(
+                getLanguage(global.language).Prompt.SELECT_DATASET_TO_SHARE,
+              )
+              //'请选择要分享的数据集')
             }
           }}
           actionOfWechat={() => {
@@ -342,7 +360,10 @@ export default class MyLabel extends Component {
               this.ModalBtns.setVisible(false)
               this.uploadType = 'weChat'
             } else {
-              Toast.show('请选择要分享的数据集')
+              Toast.show(
+                getLanguage(global.language).Prompt.SELECT_DATASET_TO_SHARE,
+              )
+              //'请选择要分享的数据集')
             }
           }}
           cancel={() => {

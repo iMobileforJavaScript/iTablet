@@ -12,10 +12,12 @@ const Chinese = {
   DOWNLOAD: '下载',
   DOWNLOADING: '下载中',
   DOWNLOAD_SUCCESSFULLY: '已下载',
+  DOWNLOAD_FAILED: '下载失败',
 
   NO_REMINDER: '下次不再提醒',
 
   LOG_OUT: '是否退出登录？',
+  FAILED_TO_LOG: '登录失败',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
@@ -33,6 +35,7 @@ const Chinese = {
   SAVING: '正在保存地图',
   SWITCHING_SUCCESS: '切换成功',
   ADD_SUCCESS: '添加成功',
+  ADD_FAILED: '添加失败',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
 
   PUBLIC_MAP: '公共地图',
@@ -45,6 +48,7 @@ const Chinese = {
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
+  SAVE_FAILED: '保存失败',
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',
 
@@ -56,17 +60,21 @@ const Chinese = {
   PLEASE_SELECT_THEMATIC_LAYER: '请先选择专题图层',
   THE_CURRENT_LAYER_CANNOT_BE_STYLED: '当前图层无法设置风格，请重新选择图层',
 
+  PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
+
   NETWORK_REQUEST_FAILED: '网络请求失败',
 
   CREATING: '正在创建',
   PLEASE_ADD_DATASOURCE: '请先添加数据源',
   NO_ATTRIBUTES: '暂无属性',
+  NO_SEARCH_RESULTS: '无搜索记录',
 
   READING_TEMPLATE: '正在读取模板',
   SWITCHED_TEMPLATE: '已为您切换模板',
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',
   IMPORTED_3D_SUCCESS: '导入3D成功',
@@ -81,9 +89,14 @@ const Chinese = {
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
+  CLIP_ENTER_MAP_NAME: '请输入地图名字',
+  ENTER_SERVICE_ADDRESS: '请输入服务地址',
+
+  ENTER_NAME: '请输入名称',
 
   CLIPPING: '地图裁剪中',
   CLIPPED_SUCCESS: '裁剪成功',
+  CLIP_FAILED: '裁剪失败',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP: '不支持由该图层创建专题图',
 
@@ -113,6 +126,36 @@ const Chinese = {
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
+
+  LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
+  APPLY_LICENSE: '申请许可',
+
+  GET_LAYER_GROUP_FAILD: '获取图层组失败',
+  TYR_AGAIN_LATER: '请稍后再试',
+
+  LOCATING: '定位中',
+  CANNOT_LOCATION: '无法定位',
+  INDEX_OUT_OF_BOUNDS: '位置越界',
+  PLEASE_SELECT_LICATION_INFORMATION: '请选择定位信息',
+  OUT_OF_MAP_BOUNDS: '不在地图范围内',
+
+  POI: '兴趣点',
+
+  SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
+  ENTER_DATA_NAME: '请输入数据名称',
+  SHARED_DATA_10M: '所分享文件超过10MB',
+
+  PHIONE_HAS_BEEN_REGISTERED: '手机号已注册',
+  NICKNAME_IS_EXISTS: '昵称已存在',
+  VERIFICATION_CODE_ERROR: '短信验证码错误',
+  VERIFICATION_CODE_SENT: '验证码已发送',
+  EMAIL_HAS_BEEN_REGISTERED: '邮箱已注册',
+  REGISTERING: '注册中',
+  REGIST_SUCCESS: '注册成功',
+  REGIST_FAILED: '注册失败',
+  GOTO_ACTIVATE: '请前往邮箱激活',
+  ENTER_CORRECT_MOBILE: '请输入正确的手机号',
+  ENTER_CORRECT_EMAIL: '请输入正确的邮箱号',
 }
 const English = {
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
@@ -126,10 +169,12 @@ const English = {
   DOWNLOAD: 'Download',
   DOWNLOADING: 'Loading',
   DOWNLOAD_SUCCESSFULLY: 'Done',
+  DOWNLOAD_FAILED: 'Failed to Download',
 
   NO_REMINDER: 'No reminder',
 
   LOG_OUT: 'Are you sure you want to log out?',
+  FAILED_TO_LOG: 'Failed to Login',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
@@ -147,6 +192,7 @@ const English = {
   SAVING: 'Saving',
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
+  ADD_FAILED: 'Failed to Add',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
 
   PUBLIC_MAP: 'Public Map',
@@ -160,6 +206,7 @@ const English = {
   READING_DATA: 'Reading Data',
   CREATE_SUCCESSFULLY: 'Created Successfully',
   SAVE_SUCCESSFULLY: 'Saved Successfully',
+  SAVE_FAILED: 'Failed to Save',
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',
 
@@ -173,17 +220,21 @@ const English = {
   THE_CURRENT_LAYER_CANNOT_BE_STYLED:
     'The current layer cannot be styled, and please reselect another one',
 
+  PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
+
   NETWORK_REQUEST_FAILED: 'Network Request Failed',
 
   CREATING: 'Creating',
   PLEASE_ADD_DATASOURCE: 'Please Add a Datasource',
   NO_ATTRIBUTES: 'No Attributes',
+  NO_SEARCH_RESULTS: 'No search results',
 
   READING_TEMPLATE: 'Reading Template',
   SWITCHED_TEMPLATE: 'Switched Template',
   THE_CURRENT_SELECTION: 'The current selection is ',
 
   IMPORTING_DATA: 'Importing Data',
+  IMPORTING: 'Importing',
   IMPORTED_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT: 'Failed to Import',
   IMPORTED_3D_SUCCESS: 'Imported Successfully',
@@ -198,9 +249,13 @@ const English = {
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
+  CLIP_ENTER_MAP_NAME: 'Enter the map name',
+  ENTER_NAME: 'Please enter the name',
+  ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
+  CLIP_FAILED: 'Failed to Clip',
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP:
     'The current layer cannot be used to create a thematic map.',
@@ -232,6 +287,37 @@ const English = {
   SETTING_FAILED: 'Failed to Set',
 
   NETWORK_ERROR: 'Network Error',
+
+  LICENSE_EXPIRED:
+    'Trial license has expired. Please apply for a new one and restart.',
+  APPLY_LICENSE: 'Apply License',
+
+  GET_LAYER_GROUP_FAILD: 'Failed to get layer group',
+  TYR_AGAIN_LATER: ' Please try again later',
+
+  LOCATING: 'locating',
+  CANNOT_LOCATION: 'Failed to locat',
+  INDEX_OUT_OF_BOUNDS: 'Index out of bounds',
+  PLEASE_SELECT_LICATION_INFORMATION: 'Please set up Location',
+  OUT_OF_MAP_BOUNDS: 'Out of map bounds',
+
+  POI: 'POI',
+
+  SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
+  ENTER_DATA_NAME: 'Please enter the data name',
+  SHARED_DATA_10M: ' The file over 10MB cannot be shared',
+
+  PHIONE_HAS_BEEN_REGISTERED: 'The mobile number is registered',
+  NICKNAME_IS_EXISTS: 'The username already exists',
+  VERIFICATION_CODE_ERROR: 'Verification code is incorrect or invalid',
+  VERIFICATION_CODE_SENT: 'Verification code has been sent.',
+  EMAIL_HAS_BEEN_REGISTERED: 'The E-mail is registered',
+  REGISTERING: 'Registering',
+  REGIST_SUCCESS: 'Registered Successfully',
+  REGIST_FAILED: 'Failed to Register',
+  GOTO_ACTIVATE: 'Please download the Trial License to the mailbox',
+  ENTER_CORRECT_MOBILE: 'Please enter the correct mobile phone number',
+  ENTER_CORRECT_EMAIL: 'Please enter the correct email address',
 }
 
 export { Chinese, English }

@@ -8,8 +8,7 @@ import {
   SectionList,
   TouchableOpacity,
   Switch,
-  BackHandler,
-  Platform,
+  InteractionManager,
 } from 'react-native'
 import styles from './styles'
 import settingData from './settingData'
@@ -24,6 +23,7 @@ export default class setting extends Component {
     settingData: any,
     device: Object,
   }
+
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
@@ -34,10 +34,9 @@ export default class setting extends Component {
   }
 
   componentDidMount() {
-    this.getdata()
-
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
+    InteractionManager.runAfterInteractions(() => {
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -49,18 +48,7 @@ export default class setting extends Component {
     }
   }
 
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
-  }
-
-  back = () => {
-    this.props.navigation.navigate('Map3D')
-    return true
-  }
-
-  getdata = async () => {
+  getData = async () => {
     let data
     if (this.type === 'MAP_3D') {
       // eslint-disable-next-line
@@ -181,7 +169,7 @@ export default class setting extends Component {
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
-        onRefresh={this.getdata}
+        onRefresh={this.getData}
         refreshing={false}
       />
     )

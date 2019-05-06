@@ -110,10 +110,12 @@ function getLayerIconByType(type) {
       break
     case DatasetType.MBImage: // 多波段影像
     case DatasetType.IMAGE: // 影像数据集
-      icon = require('./map/icon-shallow-image_black.png')
+      // icon = require('./map/icon-shallow-image_black.png')
+      icon = require('./Mine/my_basemap.png')
       break
     case DatasetType.CAD: // 复合数据集
-      icon = require('./map/icon-cad_black.png')
+      // icon = require('./map/icon-cad_black.png')
+      icon = require('./Mine/mine_my_plot.png')
       break
     case DatasetType.Network: // 复合数据集
       icon = require('./map/icon-network.png')
@@ -148,7 +150,8 @@ function getLayerWhiteIconByType(type) {
       break
     case DatasetType.MBImage: // 多波段影像
     case DatasetType.IMAGE: // 影像数据集
-      icon = require('./map/icon-shallow-image.png')
+      // icon = require('./map/icon-shallow-image.png')
+      icon = require('./Mine/my_basemap.png')
       break
     case DatasetType.CAD: // 复合数据集
       // icon = require('./map/icon-cad.png')

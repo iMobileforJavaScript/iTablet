@@ -10,6 +10,7 @@ import device from './device'
 import down from './down'
 import online from './online'
 import chat from './chat'
+import backActions from './backActions'
 export {
   nav,
   layers,
@@ -23,4 +24,5 @@ export {
   down,
   online,
   chat,
+  backActions,
 }

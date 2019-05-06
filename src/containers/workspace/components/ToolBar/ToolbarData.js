@@ -186,7 +186,8 @@ function getMap3DData(type, params) {
                 }
               })
             } catch (error) {
-              Toast.show('添加站点失败')
+              Toast.show(getLanguage(global.language).Prompt.ADD_FAILED)
+              //Toast.show('添加站点失败')
             }
           },
           size: 'large',
@@ -281,7 +282,8 @@ function getMap3DData(type, params) {
       data = [
         {
           key: 'startFly',
-          title: '绕点飞行',
+          title: getLanguage(global.language).Map_Main_Menu.FLY_AROUND_POINT,
+          //'绕点飞行',
           action: () => {
             SScene.startCircleFly()
           },
