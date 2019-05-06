@@ -32,7 +32,7 @@ const Friends = {
   NO_FRIEND: '您还未添加好友哦',
   //AddFriend
   ADD_FRIEND_PLACEHOLDER: '邮箱/手机/昵称',
-  SEARCHING: '查询好友中...',
+  SEARCHING: '查询中...',
   SEARCH: '搜索',
   ADD_SELF: '不能添加自己为好友哦',
   ADD_AS_FRIEND: '添加对方为好友 ？',
@@ -51,5 +51,9 @@ const Friends = {
   TEMPLATE: '模板',
   LOCATION: '位置',
   LOCATION_FAILED: '获取位置失败',
+  //RecommendFriend
+  FIND_NONE: '未能从联系人中找到新的online好友',
+  ALREADY_FRIEND: '你们已经是好友了',
+  PERMISSION_DENIED_CONTACT: '请在手机的设置中打开iTablet访问通讯录的权限',
 }
 export { Friends }

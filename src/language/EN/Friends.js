@@ -51,5 +51,10 @@ const Friends = {
   TEMPLATE: 'Template',
   LOCATION: 'Lacation',
   LOCATION_FAILED: 'Failed to locate',
+  //RecommendFriend
+  FIND_NONE: 'Unable to find new frineds from your contacts',
+  ALREADY_FRIEND: 'Your are already friends',
+  PERMISSION_DENIED_CONTACT:
+    'Please turn on the permission of iTablet to view contacts',
 }
 export { Friends }
