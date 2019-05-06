@@ -7,12 +7,17 @@ import {
   FlatList,
   PermissionsAndroid,
   Platform,
+  TouchableOpacity,
+  Image,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
-import { Container } from '../../../components'
+import { Container, Dialog } from '../../../components'
+import { dialogStyles } from './Styles'
 import { scaleSize } from '../../../utils/screen'
 import { getLanguage } from '../../../language/index'
 import Contacts from 'react-native-contacts'
+import { Toast } from '../../../utils'
+import FriendListFileHandle from './FriendListFileHandle'
 
 class RecommendFriend extends Component {
   props: {
@@ -24,7 +29,7 @@ class RecommendFriend extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.target
-    this.friend = {}
+    this.friend = this.props.navigation.getParam('friend')
     this.user = this.props.navigation.getParam('user')
     this.state = {
       contacts: [],
@@ -32,20 +37,23 @@ class RecommendFriend extends Component {
     this.language = this.props.navigation.getParam('language')
     this.search = this.search.bind(this)
     this._renderItem = this._renderItem.bind(this)
+    this.addFriendRequest = this.addFriendRequest.bind(this)
   }
 
   componentDidMount() {
     setTimeout(this.requestPermission, 1000)
   }
 
-  requestPermission = () => {
-    if (Platform === 'android') {
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-        title: 'Contacts',
-        message: 'This app would like to view your contacts.',
-      }).then(() => {
+  requestPermission = async () => {
+    if (Platform.OS === 'android') {
+      let granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+      )
+      if (granted == PermissionsAndroid.RESULTS.GRANTED) {
         this.getContacts()
-      })
+      } else {
+        this.permissionDeniedDialog.setDialogVisible(true)
+      }
     } else {
       Contacts.checkPermission((err, permission) => {
         if (err) throw err
@@ -56,10 +64,7 @@ class RecommendFriend extends Component {
               this.getContacts()
             }
             if (permission === 'denied') {
-              alert(
-                '访问通讯录权限没打开',
-                '请在iPhone的“设置-隐私”选项中,允许访问您的通讯录',
-              )
+              this.permissionDeniedDialog.setDialogVisible(true)
             }
           })
         }
@@ -67,21 +72,23 @@ class RecommendFriend extends Component {
           this.getContacts()
         }
         if (permission === 'denied') {
-          alert(
-            '访问通讯录权限没打开',
-            '请在iPhone的“设置-隐私”选项中,允许访问您的通讯录',
-          )
+          this.permissionDeniedDialog.setDialogVisible(true)
         }
       })
     }
   }
 
   getContacts = async () => {
-    Contacts.getAll((err, contacts) => {
+    Contacts.getAll(async (err, contacts) => {
       if (err === 'denied') {
-        // error
+        this.permissionDeniedDialog.setDialogVisible(true)
       } else {
-        contacts.map(async item => {
+        GLOBAL.Loading.setLoading(
+          true,
+          getLanguage(this.language).Friends.SEARCHING,
+        )
+        for (let i = 0, len = contacts.length; i < len; i++) {
+          let item = contacts[i]
           if (item.phoneNumbers.length > 0) {
             await this.search({
               familyName: item.familyName,
@@ -89,7 +96,11 @@ class RecommendFriend extends Component {
               phoneNumbers: item.phoneNumbers,
             })
           }
-        })
+        }
+        GLOBAL.Loading.setLoading(false)
+        if (this.state.contacts.length === 0) {
+          Toast.show(getLanguage(this.language).Friends.FIND_NONE)
+        }
       }
     })
   }
@@ -105,8 +116,7 @@ class RecommendFriend extends Component {
       }
       let number = this.formatPhoneNumber(val.phoneNumbers[i].number)
       let result = await SOnlineService.getUserInfoBy(number, 0)
-      // let result =['0','a']
-      if (result !== false) {
+      if (result !== false && result !== '获取用户id失败') {
         let array = this.state.contacts
         array.push({
           familyName: val.familyName,
@@ -125,8 +135,43 @@ class RecommendFriend extends Component {
   }
 
   formatPhoneNumber = number => {
-    return number.replace(/\s+/g, '')
+    number = number.replace(/\s+/g, '')
+    number = number.replace(/\D+/g, '')
+    return number
   }
+
+  async addFriendRequest() {
+    this.dialog.setDialogVisible(false)
+
+    if (this.target.id == this.user.userId) {
+      Toast.show(getLanguage(this.language).Friends.ADD_SELF)
+      return
+    }
+
+    if (FriendListFileHandle.isFriend(this.target.id)) {
+      Toast.show(getLanguage(this.language).Friends.ALREADY_FRIEND)
+      return
+    }
+
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: this.user.nickname + ' 请求添加您为好友',
+      type: 901,
+      user: { name: this.user.nickname, id: this.user.userId },
+      time: time,
+    }
+
+    this.friend._sendMessage(JSON.stringify(message), this.target.id, true)
+
+    FriendListFileHandle.addToFriendList({
+      markName: this.target.name,
+      name: this.target.name,
+      id: this.target.id,
+      info: { isFriend: 1 },
+    })
+  }
+
   render() {
     return (
       <Container
@@ -142,37 +187,106 @@ class RecommendFriend extends Component {
             top: scaleSize(10),
           }}
           data={this.state.contacts}
-          // ItemSeparatorComponent={() => {
-          //   return <View style={styles.SectionSeparaLineStyle} />
-          // }}
-          // extraData={this.state}
-          // renderItem={this._renderItem}
-          renderItem={({ item }) => (
-            <View>
-              <Text>{item.familyName + item.givenName}</Text>
-              <Text>{item.phoneNumbers.number}</Text>
-              <Text>{item.name}</Text>
-              <Text>{item.id}</Text>
-            </View>
-          )}
-          // initialNumToRender={2}
-          // keyExtractor={(item, index) => index.toString()}
-          // ListEmptyComponent={<Loading/>}
-          // ListHeaderComponent={this._renderSearch}
-          // ListFooterComponent={this._renderFooter}
-          // onEndReached={this._fetchMoreData}
-          // onEndReachedThreshold={0.3}
-          // returnKeyType={'search'}
-          // keyboardDismissMode={'on-drag'}
+          renderItem={this._renderItem}
+          keyExtractor={(item, index) => index.toString()}
         />
+        {this.renderDialog()}
+        {this.renderPermissionDenidDialog()}
       </Container>
     )
   }
 
   _renderItem({ item }) {
-    // <View>
-    <Text>{item.name}</Text>
-    // <View>
+    return (
+      <View>
+        <TouchableOpacity
+          style={[styles.ItemViewStyle]}
+          activeOpacity={0.75}
+          onPress={() => {
+            this.target = item //[id,name]
+            this.dialog.setDialogVisible(true)
+          }}
+        >
+          <View style={[styles.ItemHeadViewStyle, { opacity: 1 }]}>
+            <Text style={styles.ItemHeadTextStyle}>{item.name[0]}</Text>
+          </View>
+          <View style={{ flexDirection: 'column' }}>
+            <View style={[styles.ItemTextViewStyle, { opacity: 1 }]}>
+              <Text style={styles.ItemTextStyle}>{item.name}</Text>
+            </View>
+            <View style={styles.ItemSubTextViewStyle}>
+              <Text style={styles.ItemSubTextStyle}>
+                {item.familyName === null || item.familyName === ''
+                  ? ''
+                  : item.familyName + ' '}
+                {item.givenName === null ? '' : item.givenName}
+              </Text>
+              <Text style={styles.ItemSubTextStyle}>
+                {item.phoneNumbers.number}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
+        confirmAction={this.addFriendRequest}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={dialogStyles.dialogBackgroundX}
+      >
+        {this.renderDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderDialogChildren = () => {
+    return (
+      <View style={dialogStyles.dialogHeaderViewX}>
+        <Image
+          source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={dialogStyles.dialogHeaderImgX}
+        />
+        <Text style={dialogStyles.promptTtileX}>
+          {getLanguage(this.language).Friends.ADD_AS_FRIEND}
+        </Text>
+      </View>
+    )
+  }
+
+  renderPermissionDenidDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.permissionDeniedDialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
+        confirmAction={() => {
+          this.permissionDeniedDialog.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={dialogStyles.dialogBackgroundX}
+      >
+        <View style={dialogStyles.dialogHeaderViewX}>
+          <Image
+            source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+            style={dialogStyles.dialogHeaderImgX}
+          />
+          <Text style={dialogStyles.promptTtileX}>
+            {getLanguage(this.language).Friends.PERMISSION_DENIED_CONTACT}
+          </Text>
+        </View>
+      </Dialog>
+    )
   }
 }
 
@@ -183,6 +297,46 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(160,160,160,1.0)',
     marginHorizontal: scaleSize(10),
     marginLeft: scaleSize(120),
+  },
+  ItemViewStyle: {
+    paddingLeft: scaleSize(20),
+    paddingRight: scaleSize(30),
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: scaleSize(30),
+  },
+  ItemHeadViewStyle: {
+    marginLeft: scaleSize(20),
+    height: scaleSize(40),
+    width: scaleSize(40),
+    borderRadius: scaleSize(40),
+    backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ItemTextStyle: {
+    fontSize: scaleSize(30),
+    color: 'black',
+  },
+  ItemTextViewStyle: {
+    marginLeft: scaleSize(20),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexGrow: 1,
+  },
+  ItemHeadTextStyle: {
+    fontSize: scaleSize(25),
+    color: 'white',
+  },
+  ItemSubTextViewStyle: {
+    marginLeft: scaleSize(20),
+    flexDirection: 'row',
+  },
+  ItemSubTextStyle: {
+    fontSize: scaleSize(25),
+    marginRight: scaleSize(10),
+    color: 'black',
   },
 })
 export default RecommendFriend
