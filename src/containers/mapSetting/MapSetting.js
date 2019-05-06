@@ -3,7 +3,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, InteractionManager } from 'react-native'
+import { SectionList, View, InteractionManager, Platform } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -146,6 +146,9 @@ export default class MapSetting extends Component {
         SMap.setVisibleScalesEnabled(value)
         break
       case '专题图图例':
+        if (Platform.OS === 'ios') {
+          SMap.legendLayer(value)
+        }
         this.props.setMapLegend(value)
         break
     }
