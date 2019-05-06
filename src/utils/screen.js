@@ -1,10 +1,10 @@
 import { Dimensions, PixelRatio } from 'react-native'
-// const pixelRatio = PixelRatio.get() //iphone6的像素密度
+const defaultPixel = PixelRatio.get() //iphone6的像素密度
 const dp2px = dp => PixelRatio.getPixelSizeForLayoutSize(dp) // DP to PX
 const px2dp = px => PixelRatio.roundToNearestPixel(px) // PX to DP
 let deviceWidth = Dimensions.get('window').width //设备的宽度
 let deviceHeight = Dimensions.get('window').height //设备的高度
-const defaultPixel = 2.25
+//const defaultPixel = 2.25
 // const fontScale = PixelRatio.getFontScale()
 
 function getScreenWidth() {
@@ -34,8 +34,8 @@ if (deviceWidth > deviceHeight) {
  * return number dp
  */
 export function scaleSize(size) {
-  size = Math.round(size * scale + 0.5)
-  return size / defaultPixel
+  size = size * scale / defaultPixel
+  return size
 }
 
 export function setSpText(size) {

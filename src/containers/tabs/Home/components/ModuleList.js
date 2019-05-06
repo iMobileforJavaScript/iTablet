@@ -468,7 +468,9 @@ export default connect(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 20,left:0,right:0,bottom:0,
+    // flex: 1,
     flexDirection: 'column',
     // marginTop: scaleSize(100),
     alignItems: 'center',
@@ -476,10 +478,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   flatList: {
-    position: 'absolute',
+     position: 'absolute',
+    // justifyContent: 'center',
     alignSelf: 'center',
-    // marginTop: '35%',
-    // backgroundColor: 'white',
+   // top: 0,left:0,right:0,bottom:0,
+    flex:1,
+    // backgroundColor: 'blue',
     // marginLeft: scaleSize(40),
   },
   module: {
@@ -511,6 +515,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor:'green',
     // paddingHorizontal: scaleSize(10),
     // marginTop: scaleSize(5),
   },
