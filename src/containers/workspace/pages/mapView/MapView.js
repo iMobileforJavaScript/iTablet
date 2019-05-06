@@ -1344,7 +1344,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && (
+        {this.props.mapLegend && Platform.OS === 'android' && (
           <View
             style={{
               position: 'absolute',
