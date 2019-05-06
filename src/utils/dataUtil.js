@@ -18,7 +18,7 @@ function pySegSort(arr) {
     arr.forEach(function(item2) {
       if (
         (!zh[i - 1] || zh[i - 1].localeCompare(item2) <= 0) &&
-        item2.localeCompare(zh[i]) == -1
+        item2.localeCompare(zh[i]) === -1
       ) {
         curr.data.push(item2)
       }

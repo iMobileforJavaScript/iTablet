@@ -22,6 +22,7 @@ import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
 import { connect } from 'react-redux'
+import { getLanguage } from '../../../../language'
 
 class RenderModuleItem extends Component {
   props: {
@@ -113,15 +114,7 @@ class RenderModuleItem extends Component {
               source={item.moduleImage}
               style={styles.moduleImage}
             />
-            <Text
-              style={
-                item.key === '专题制图' && global.language === 'EN'
-                  ? styles.longtitle
-                  : styles.title
-              }
-            >
-              {item.title}
-            </Text>
+            <Text style={styles.title}>{item.title}</Text>
           </View>
           {this._renderProgressView()}
         </TouchableOpacity>
@@ -209,12 +202,11 @@ class ModuleList extends Component {
           let value = ~~res.progress.toFixed(0) + '%'
           if (~~res.progress >= 100) {
             ref.setNewState({
-              progress: '导入中...',
+              progress: getLanguage(this.props.language).Prompt.IMPORTING,
               isShowProgressView: true,
               // disabled: true,
             })
             // this.downloading = false
-            ref.setDownloading(false)
           } else if (value !== this.state.progress) {
             ref.setNewState({
               progress: value,
@@ -236,18 +228,22 @@ class ModuleList extends Component {
           ref.setNewState({ isShowProgressView: false, disabled: false })
 
           FileTools.deleteFile(fileDirPath + '.zip')
+          ref.setDownloading(false)
         })
         .catch(() => {
-          Toast.show('下载失败')
+          Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+          //'下载失败')
           FileTools.deleteFile(fileCachePath)
           ref.setNewState({ isShowProgressView: false, disabled: false })
           // this.downloading = false
           ref.setDownloading(false)
         })
     } catch (e) {
-      Toast.show('网络错误，下载失败')
+      Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+      //'网络错误，下载失败')
       FileTools.deleteFile(fileDirPath + '.zip')
       ref.setNewState({ isShowProgressView: false, disabled: false })
+      ref.setDownloading(false)
     }
   }
 
@@ -281,10 +277,10 @@ class ModuleList extends Component {
         item.action && item.action(this.props.currentUser)
         return
       } else if (moduleKey === '地图制图') {
-        fileName = language === 'CN' ? '湖南' : 'SanFrancisco'
+        fileName = language === 'CN' ? '湖南' : 'LosAngeles'
         // mapname =  language==='CN'?'SanFrancisco':'湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = language === 'CN' ? '湖北' : 'USA'
+        fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
         // mapname =  language==='CN'?'Precipitation':'LandBuild'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
@@ -524,7 +520,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    width: scaleSize(130),
+    width: scaleSize(200),
     height: scaleSize(37),
     fontSize: setSpText(25),
     color: '#FFFFFF',

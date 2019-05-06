@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   NativeModules,
+  RefreshControl,
 } from 'react-native'
 import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
@@ -113,6 +114,7 @@ export default class MyLocalData extends Component {
       textValue: '扫描文件:',
       textDisplay: 'none',
       title: (params && params.title) || '',
+      isRefreshing: false,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -310,6 +312,10 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
+    let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
+    if (labelUDBName === txtInfo) {
+      return <View />
+    }
     if (this.formChat && this.chatCallBack) {
       isShowMore = false
     }
@@ -478,8 +484,9 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
-      this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
+      // this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       //'分享中')
+      Toast.show(getLanguage(this.props.language).Prompt.SHARING)
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
@@ -542,7 +549,8 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.SCENE
           ) {
-            Toast.show('所分享文件超过10MB')
+            Toast.show(getLanguage(this.props.language).Prompt.SHARED_DATA_10M)
+            //'所分享文件超过10MB')
             return
           }
           let zipResult
@@ -579,7 +587,11 @@ export default class MyLocalData extends Component {
                 description: 'SuperMap iTablet',
               })
               .then(result => {
-                !result && Toast.show('所分享文件超过10MB')
+                !result &&
+                  Toast.show(
+                    getLanguage(this.props.language).Prompt.SHARED_DATA_10M,
+                  )
+                //'所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
                 this.setLoading(false)
               })
@@ -1013,6 +1025,26 @@ export default class MyLocalData extends Component {
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={() => {
+                try {
+                  this.setState({ isRefreshing: true })
+                  this.getData().then(() => {
+                    this.setState({ isRefreshing: false })
+                  })
+                } catch (error) {
+                  Toast.show('刷新失败')
+                }
+              }}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {/* <FlatList
           style={{

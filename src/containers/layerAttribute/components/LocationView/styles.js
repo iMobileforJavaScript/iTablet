@@ -58,5 +58,11 @@ export default StyleSheet.create({
   bottomBtnTxt: {
     fontSize: size.fontSize.fontSizeLg,
     color: color.contentColorGray,
+    backgroundColor: 'transparent',
+  },
+  bottomBtnTxtDisable: {
+    fontSize: size.fontSize.fontSizeLg,
+    color: color.fontColorGray,
+    backgroundColor: 'transparent',
   },
 })

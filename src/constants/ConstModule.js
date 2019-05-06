@@ -30,8 +30,8 @@ function getHeaderTitle(type) {
       return getLanguage(global.language).Map_Module.MAP_COLLECTION
     case constants.MAP_PLOTTING:
       return getLanguage(global.language).Map_Module.MAP_PLOTTING
-    case constants.MAP_ANALYST:
-      return MAP_MODULE.MAP_ANALYST
+    case getLanguage(global.language).Map_Module.MAP_ANALYST:
+      return getLanguage(global.language).Map_Module.MAP_ANALYST
   }
 }
 
@@ -55,7 +55,8 @@ function SetMap(param) {
         left: 0,
       },
       action: async (user, lastMap) => {
-        let data = Object.assign({}, ConstOnline['Google'])
+        let data = ConstOnline['Google']
+        data.layerIndex = 3
         GLOBAL.Type = constants.MAP_EDIT
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         GLOBAL.showMenu = true
@@ -82,7 +83,7 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = param === 'CN' ? '湖南' : 'SanFrancisco'
+          let moduleMapName = param === 'CN' ? '湖南' : 'LosAngeles'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
@@ -187,7 +188,8 @@ function SetMap(param) {
         left: 0,
       },
       action: async (user, lastMap) => {
-        let data = Object.assign({}, ConstOnline['Google'])
+        let data = ConstOnline['Google']
+        data.layerIndex = 3
         GLOBAL.Type = constants.MAP_THEME
         GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
         let homePath = await FileTools.appendingHomeDirectory()
@@ -212,7 +214,8 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = param === 'CN' ? 'LandBuild' : 'Precipitation'
+          let moduleMapName =
+            param === 'CN' ? 'LandBuild' : 'PrecipitationOfUSA'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
@@ -396,7 +399,7 @@ function SetMap(param) {
     // },
     {
       key: '数据分析',
-      title: '数据分析',
+      title: getLanguage(param).Map_Module.DATA_ANALYSIS,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_mapanalysis.png'),
       style: {

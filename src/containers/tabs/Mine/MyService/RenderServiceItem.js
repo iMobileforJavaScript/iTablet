@@ -38,7 +38,7 @@ export default class RenderServiceItem extends PureComponent {
   }
 
   render() {
-    let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
+    let moreImg = require('../../../../assets/Mine/mine_more_white.png')
     let imageWidth = scaleSize(40),
       imageHeight = scaleSize(40)
     return (

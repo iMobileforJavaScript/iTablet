@@ -45,7 +45,7 @@ import {
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
-import { Platform, BackHandler, View, Text } from 'react-native'
+import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import LegendView from '../../components/LegendView/LegendView'
@@ -104,6 +104,8 @@ export default class MapView extends React.Component {
     setCurrentSymbols: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
+    setBackAction: PropTypes.func,
+    removeBackAction: PropTypes.func,
   }
 
   constructor(props) {
@@ -187,31 +189,34 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    GLOBAL.SaveMapView &&
-      GLOBAL.SaveMapView.setTitle(
-        getLanguage(this.props.language).Prompt.SAVE_TITLE,
-        getLanguage(this.props.language).Prompt.SAVE_YES,
-        getLanguage(this.props.language).Prompt.SAVE_NO,
-        getLanguage(this.props.language).Prompt.CANCEL,
-      )
-    this.container &&
-      this.container.setLoading(
-        true,
-        getLanguage(this.props.language).Prompt.LOADING,
-        //'地图加载中'
-      )
-    let timer = setTimeout(() => {
+    InteractionManager.runAfterInteractions(() => {
+      GLOBAL.SaveMapView &&
+        GLOBAL.SaveMapView.setTitle(
+          getLanguage(this.props.language).Prompt.SAVE_TITLE,
+          getLanguage(this.props.language).Prompt.SAVE_YES,
+          getLanguage(this.props.language).Prompt.SAVE_NO,
+          getLanguage(this.props.language).Prompt.CANCEL,
+        )
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.LOADING,
+          //'地图加载中'
+        )
+
       this.setState({
         showMap: true,
       })
-      clearTimeout(timer)
-    }, 800)
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.clearData()
-    if (this.toolBox) {
-      GLOBAL.toolBox = this.toolBox
-    }
+
+      this.props.setBackAction({
+        action: () => this.back(),
+      })
+
+      this.clearData()
+      if (this.toolBox) {
+        GLOBAL.toolBox = this.toolBox
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -259,7 +264,9 @@ export default class MapView extends React.Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
     this.props.setMapLegend(false)
 
@@ -818,14 +825,7 @@ export default class MapView extends React.Component {
         return true
       }
     }
-    if (
-      Platform.OS === 'android' &&
-      this.toolBox &&
-      this.toolBox.getState().isShow
-    ) {
-      this.toolBox.close()
-      return true
-    }
+
     this.backAction = async () => {
       try {
         this.setLoading(
@@ -846,7 +846,6 @@ export default class MapView extends React.Component {
         this.setSaveViewVisible(true)
       } else {
         this.backAction()
-        this.backAction = null
       }
     })
     this.props.setCurrentAttribute({})
@@ -1345,7 +1344,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && (
+        {this.props.mapLegend && Platform.OS === 'android' && (
           <View
             style={{
               position: 'absolute',

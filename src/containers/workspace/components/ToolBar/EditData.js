@@ -18,7 +18,7 @@ function getEditData(type) {
     // case ConstToolType.MAP_EDIT_TAGGING_SETTING:
     //   data = [
     //     {
-    //       title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
+    //       title: getLanguage(global.language).Map_Label.ATTRIBUTE,
     //       //'属性记录',
     //       data: [
     //         {

@@ -45,16 +45,16 @@ class tabItem extends PureComponent {
     let t = ''
     switch (this.props.title) {
       case 'home':
-        t = getLanguage(this.props.language).Navigator_Lable.HOME
+        t = getLanguage(this.props.language).Navigator_Label.HOME
         break
       case 'friend':
-        t = getLanguage(this.props.language).Navigator_Lable.FRIENDS
+        t = getLanguage(this.props.language).Navigator_Label.FRIENDS
         break
       case 'find':
-        t = getLanguage(this.props.language).Navigator_Lable.EXPLORE
+        t = getLanguage(this.props.language).Navigator_Label.EXPLORE
         break
       case 'user':
-        t = getLanguage(this.props.language).Navigator_Lable.PROFILE
+        t = getLanguage(this.props.language).Navigator_Label.PROFILE
         break
     }
     return t
@@ -192,7 +192,7 @@ const Tabs = TabNavigator(
     animationEnabled: false, // 切换页面时是否有动画效果
     tabBarPosition: 'bottom', // 显示在底端，android 默认是显示在页面顶端的
     swipeEnabled: false, // 是否可以左右滑动切换tab
-    backBehavior: 'none', // 按 back 键是否跳转到第一个Tab(首页)， none 为不跳转
+    backBehavior: 'initialRoute', // 按 back 键是否跳转到第一个Tab(首页)， none 为不跳转
     lazy: false,
     tabBarOptions: {
       activeTintColor: color.blue2, // 文字和图片选中颜色

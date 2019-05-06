@@ -129,11 +129,11 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             {this._renderItem(
-              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_LOG,
+              getLanguage(this.props.language).Navigator_Label.LEFT_TOP_LOG,
               this.props.onLogin,
             )}
             {this._renderItem(
-              getLanguage(this.props.language).Navigator_Lable.LEFT_TOP_REG,
+              getLanguage(this.props.language).Navigator_Label.LEFT_TOP_REG,
               this.props.onRegister,
             )}
           </View>
@@ -152,13 +152,13 @@ export default class HomePopupModal extends PureComponent {
           }}
         >
           {this._renderItem(
-            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_ABOUT,
+            getLanguage(this.props.language).Navigator_Label.RIGHT_TOP_ABOUT,
             this.props.onAbout,
           )}
           {this._renderItem(
-            this.props.language == 'EN' ? '中文' : 'English',
+            this.props.language === 'EN' ? '中文' : 'English',
             () => {
-              if (this.props.language == 'EN') {
+              if (this.props.language === 'EN') {
                 this.props.setLanguage('CN')
                 global.language = 'CN'
               } else {
@@ -168,11 +168,11 @@ export default class HomePopupModal extends PureComponent {
             },
           )}
           {/* {this._renderItem(
-            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_SETTING,
+            getLanguage(this.props.language).Navigator_Label.RIGHT_TOP_SETTING,
             this.props.onSetting,
           )} */}
           {this._renderItem(
-            getLanguage(this.props.language).Navigator_Lable.RIGHT_TOP_EXIT,
+            getLanguage(this.props.language).Navigator_Label.RIGHT_TOP_EXIT,
             this.closeApp,
           )}
         </View>

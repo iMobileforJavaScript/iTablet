@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform, Image, Text } from 'react-native'
+import { View, AppState, StyleSheet, Platform, Image, Text, BackHandler } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -93,11 +93,10 @@ const styles = StyleSheet.create({
 })
 
 class AppRoot extends Component {
-  props:{
-    language: String,
-  }
   static propTypes = {
+    language: PropTypes.string,
     nav: PropTypes.object,
+    backActions: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
     map: PropTypes.object,
@@ -133,20 +132,51 @@ class AppRoot extends Component {
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
-    GLOBAL.TaggingLayerName = ''
     GLOBAL.BaseMapSize = 1
     PT.initCustomPrototype()
+    this.login = this.login.bind(this)
+    this.reCircleLogin = this.reCircleLogin.bind(this)
   }
+
   UNSAFE_componentWillMount(){
     SOnlineService.init()
   }
-  componentDidMount () {
 
+  async login(){
+    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 
+      let isEmail = this.props.user.currentUser.isEmail
+      let userName = this.props.user.currentUser.userName
+      let password = this.props.user.currentUser.password
+      let bLogin = false
+      if (isEmail === true) {
+        bLogin = await SOnlineService.login(userName, password)
+      } else if (isEmail === false) {
+        bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+      }
+      if (!bLogin) {
+        if (isEmail === true) {
+          bLogin = await SOnlineService.login(userName, password)
+        } else if (isEmail === false) {
+          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+        }
+        // Toast.show('登陆状态失效')
+      }else{
+        // Toast.show('登陆')
+      }
+
+    }
+  }
+
+  reCircleLogin(){
     if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
+    GLOBAL.loginTimer = setInterval(this.login,60000 )
+  }
+
+  componentDidMount () {
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
       SMessageService.connectService(
         MSGConstant.MSG_IP,
@@ -157,26 +187,8 @@ class AppRoot extends Component {
         this.props.user.currentUser.userId,
       )
     }
-
-    GLOBAL.loginTimer = setInterval(async () => {
-      if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
-
-        let isEmail = this.props.user.currentUser.isEmail
-        let userName = this.props.user.currentUser.userName
-        let password = this.props.user.currentUser.password
-        let bLogin = false
-        if (isEmail === true) {
-          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-        } else if (isEmail === false) {
-          bLogin = await SOnlineService.login(userName, password)
-        }
-        if (!bLogin) {
-          // Toast.show('登陆状态失效')
-        }
-
-      }
-    }, 30000)
-
+    this.login()
+    this.reCircleLogin()
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
@@ -207,6 +219,7 @@ class AppRoot extends Component {
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
     }).bind(this)()
+
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
       this.props.setSelection(null) // 清空地图选中目标中的数据
@@ -217,12 +230,38 @@ class AppRoot extends Component {
       this.props.setCurrentMap() // 清空当前地图
     }
     Platform.OS === 'android' && SplashScreen.hide()
+
+    Platform.OS === 'android' &&
+    BackHandler.addEventListener('hardwareBackPress', this.back)
+  }
+
+  back = () => {
+    if (Platform.OS === 'android') {
+      // 防止初始化时，nav为空
+      let nav = this.props.nav && this.props.nav.routes
+        ? this.props.nav
+        : NavigationService.getTopLevelNavigator().state.nav
+      let current = nav.routes[nav.index]
+      let key
+      if (current.routes) {
+        key = current.routes[current.index].routeName
+      } else {
+        key = current.routeName
+      }
+      if (this.props.backActions[key] && typeof this.props.backActions[key] === 'function') {
+        this.props.backActions[key]()
+        return true
+      } else {
+        return false
+      }
+    }
   }
 
   handleStateChange = appState => {
     if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
       if (appState === 'active') {
         SMessageService.resume()
+        this.reCircleLogin()
       }else if(appState === 'background'){
         SMessageService.suspend()
       }
@@ -459,7 +498,10 @@ class AppRoot extends Component {
           source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>试用许可已过期,请更换许可后重启</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.LICENSE_EXPIRED}
+          {/* 试用许可已过期,请更换许可后重启 */}
+        </Text>
       </View>
     )
   }
@@ -468,12 +510,15 @@ class AppRoot extends Component {
     return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      onlyOneBtn={true}
-      cancelBtnVisible={false}
-      confirmAction={() => {this.exit.setDialogVisible(false)}}
+      confirmAction={() => {
+        this.exit.setDialogVisible(false)
+        NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
+      }}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
+      confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+      cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
       {this.renderExitDialogChildren()}
     </Dialog>
@@ -568,6 +613,7 @@ const mapStateToProps = state => {
     map: state.map.toJS(),
     collection: state.collection.toJS(),
     layers: state.layers.toJS().layers,
+    backActions: state.backActions.toJS(),
   }
 }
 

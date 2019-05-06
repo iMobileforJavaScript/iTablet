@@ -114,7 +114,12 @@ export default class PublicMap extends Component {
                 continue
               }
               let objDataJson = await FetchUtils.getObjJson(dataUrl)
-              if (objDataJson) {
+              if (
+                objDataJson &&
+                objDataJson.dataItemServices &&
+                objDataJson.dataItemServices[0] &&
+                objDataJson.dataItemServices[0].serviceType
+              ) {
                 if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
                   mapList.push(element)
                   bValid = true

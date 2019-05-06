@@ -5,6 +5,10 @@ import { NavigationActions } from 'react-navigation'
 let _navigator
 let clickAble = true
 
+function getTopLevelNavigator() {
+  return _navigator
+}
+
 function setTopLevelNavigator(navigatorRef) {
   _navigator = navigatorRef
 }
@@ -65,6 +69,7 @@ function reset(routeName, params) {
 
 export default {
   navigate,
+  getTopLevelNavigator,
   setTopLevelNavigator,
   goBack,
   reset,

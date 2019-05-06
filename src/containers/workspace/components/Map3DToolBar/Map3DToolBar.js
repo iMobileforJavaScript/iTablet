@@ -11,6 +11,7 @@ import {
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+// import ToolBarSectionList from '../../components/ToolBar/ToolBarSectionList'
 
 export default class Map3DToolBar extends React.Component {
   props: {
@@ -281,6 +282,23 @@ export default class Map3DToolBar extends React.Component {
 
   renderItem = ({ item }) => {
     if (this.props.type === 'MAP3D_WORKSPACE_LIST') {
+      let info
+      if (global.language === 'CN') info = item.mtime
+      else if (global.language === 'EN') {
+        let day = item.mtime
+          .replace(/年|月|日/g, '/')
+          .split('  ')[0]
+          .split('/')
+        info =
+          day[2] +
+          '/' +
+          day[1] +
+          '/' +
+          day[0] +
+          '  ' +
+          item.mtime.split('  ')[1]
+      }
+
       return (
         <TouchableOpacity
           onPress={() => {
@@ -295,7 +313,11 @@ export default class Map3DToolBar extends React.Component {
             />
             <View style={styles.sceneItemcontent}>
               <Text style={[styles.workspaceItem]}>{item.name}</Text>
-              <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+              <Text style={styles.itemTime}>
+                {getLanguage(global.language).Prompt.LATEST}
+                {/* 最后修改时间:  */}
+                {info}
+              </Text>
             </View>
           </View>
           {this.renderItemSeparatorComponent()}
@@ -372,7 +394,7 @@ export default class Map3DToolBar extends React.Component {
               style={styles.sceneImg}
             />
             <Text style={styles.sceneTitle}>
-              {getLanguage(global.language).Map_Lable.SCENE}
+              {getLanguage(global.language).Map_Label.SCENE}
               {/* 场景 */}
             </Text>
           </View>

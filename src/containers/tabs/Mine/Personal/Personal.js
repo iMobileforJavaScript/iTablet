@@ -60,7 +60,8 @@ export default class Personal extends Component {
     let marginLeft = 15
     let marginRight = 20
     let fontSize = size.fontSize.fontSizeXl
-    if (key !== '头像') {
+    if (key !== getLanguage(global.language).Profile.PROFILE_PHOTO) {
+      //'头像') {
       return (
         <View style={{ width: '100%' }}>
           <View
@@ -166,7 +167,9 @@ export default class Personal extends Component {
         {this._renderItem(
           //'邮箱'
           getLanguage(global.language).Profile.E_MAIL,
-          this.props.user.currentUser.email,
+          this.props.user.currentUser.email === ' 立即绑定'
+            ? getLanguage(global.language).Profile.CONNECT
+            : this.props.user.currentUser.email,
         )}
       </View>
     )

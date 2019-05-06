@@ -1244,24 +1244,24 @@ function getLabelFontRotation() {
       image: require('../../../../assets/mapTools/uniformlabel_rotation_right_black.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_right_black.png'),
     },
-    {
-      key: '180',
-      title: getLanguage(global.language).Map_Main_Menu.VERTICAL_FLIP,
-      //'上下旋转',
-      action: setLabelFontRotation,
-      size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
-    },
-    {
-      key: '-180',
-      title: getLanguage(global.language).Map_Main_Menu.HORIZONTAL_FLIP,
-      //'左右旋转',
-      action: setLabelFontRotation,
-      size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
-    },
+    // {
+    //   key: '180',
+    //   title: getLanguage(global.language).Map_Main_Menu.VERTICAL_FLIP,
+    //   //'上下旋转',
+    //   action: setLabelFontRotation,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
+    //   selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
+    // },
+    // {
+    //   key: '-180',
+    //   title: getLanguage(global.language).Map_Main_Menu.HORIZONTAL_FLIP,
+    //   //'左右旋转',
+    //   action: setLabelFontRotation,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
+    //   selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
+    // },
   ]
   return data
 }

@@ -544,7 +544,7 @@ export default class Friend extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Navigator_Lable.FRIENDS,
+          title: getLanguage(this.props.language).Navigator_Label.FRIENDS,
           headerLeft:
             this.state.bHasUserInfo === true ? (
               <TouchableOpacity

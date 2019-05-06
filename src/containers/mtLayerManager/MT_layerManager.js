@@ -10,9 +10,8 @@ import {
   Text,
   SectionList,
   View,
-  Platform,
-  BackHandler,
   Image,
+  InteractionManager,
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
@@ -26,7 +25,6 @@ import {
   getHeaderTitle,
   ConstOnline,
   UserType,
-  ConstInfo,
 } from '../../constants'
 import { color, size } from '../../styles'
 import * as LayerUtils from './LayerUtils'
@@ -55,6 +53,8 @@ export default class MT_layerManager extends React.Component {
     device: Object,
     currentLayer: Object,
     setMapLegend: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
     user: Object,
   }
 
@@ -125,17 +125,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    ;(async function() {
+    InteractionManager.runAfterInteractions(() => {
       this.getData(true)
-    }.bind(this)())
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
+    })
   }
 
   setRefreshing = refreshing => {
@@ -550,13 +542,16 @@ export default class MT_layerManager extends React.Component {
       this.props.navigation.navigate('MapView')
       Toast.show(
         //'当前图层为:'
-        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER + data.name,
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER +
+          '  ' +
+          data.name,
       )
     }
   }
 
   onPressRow = async ({ data }) => {
     this.props.setMapLegend(false)
+
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         // 切换地图，清除历史记录
@@ -565,24 +560,24 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
+        if (GLOBAL.Type === constants.MAP_EDIT) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+            )
+            //'当前图层无法设置风格')
+          }
+        } else if (GLOBAL.Type === constants.MAP_THEME) {
+          if (data.themeType <= 0) {
+            this.mapEdit(data)
+          } else {
+            this.mapTheme(data)
+          }
+        }
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        Toast.show(
-          getLanguage(this.props.language).Prompt
-            .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        )
-        //'当前图层无法设置风格')
-      }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
-      if (data.themeType <= 0) {
-        this.mapEdit(data)
-      } else {
-        this.mapTheme(data)
-      }
-    }
     this.setState({
       selectLayer: data.name,
     })
@@ -650,7 +645,8 @@ export default class MT_layerManager extends React.Component {
       return child
     } catch (e) {
       this.container.setLoading(false)
-      Toast.show('获取失败')
+      Toast.show(getLanguage(this.props.language).Prompt.GET_LAYER_GROUP_FAILD)
+      //'获取失败')
       return []
     }
   }
@@ -660,27 +656,31 @@ export default class MT_layerManager extends React.Component {
     let backMaps = this.state.data[2].data
     let Label = this.state.data[0].data
     let hasDeal = false
-    let caption = data.caption
+    let name = data.name
     let curData = this.state.data.concat()
     for (let i = 0, l = layers.length; i < l; i++) {
-      if (caption === layers[i].caption) {
+      if (name === layers[i].name) {
         curData[1].data[i].isVisible = value
-        hasDeal = true
+        /*
+         *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+         *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+         */
+        //hasDeal = true
         break
       }
     }
     if (!hasDeal)
       for (let j = 0, l = backMaps.length; j < l; j++) {
-        if (caption === backMaps[j].caption) {
-          curData[2].data.isVisible = value
+        if (name === backMaps[j].name) {
+          curData[2].data[j].isVisible = value
           hasDeal = true
           break
         }
       }
     if (!hasDeal)
       for (let j = 0, l = Label.length; j < l; j++) {
-        if (caption === Label[j].caption) {
-          curData[0].data.isVisible = value
+        if (name === Label[j].name) {
+          curData[0].data[j].isVisible = value
           hasDeal = true
           break
         }
@@ -695,34 +695,6 @@ export default class MT_layerManager extends React.Component {
   setSaveViewVisible = visible => {
     GLOBAL.SaveMapView &&
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
-    return true
   }
 
   getStyleIconByType = item => {
@@ -749,7 +721,7 @@ export default class MT_layerManager extends React.Component {
     NavigationService.navigate('InputPage', {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
-      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
       cb: async value => {
         if (value !== '') {
           (async function() {
@@ -988,18 +960,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   /**行与行之间的分隔线组件 */
-  renderItemSeparator = ({ section }) => {
+  renderItemSeparator = ({ section, leadingItem }) => {
     if (section.visible) {
-      return (
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
-      )
+      if (
+        this.props.layers.length > 0 &&
+        leadingItem.name.indexOf('@Label_') >= 0 &&
+        section.title === getLanguage(this.props.language).Map_Layer.LAYERS
+      ) {
+        return <View />
+      } else {
+        return (
+          <View
+            style={{
+              flexDirection: 'column',
+              width: '100%',
+              height: 1,
+              backgroundColor: color.bgG,
+            }}
+          />
+        )
+      }
     } else {
       return <View />
     }

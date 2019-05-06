@@ -125,7 +125,8 @@ export default class PointAnalyst extends Component {
             this.container.setLoading(false)
             NavigationService.goBack()
           } else {
-            Toast.show('网络错误')
+            Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+            //'网络错误')
           }
         }
       } else {
@@ -140,11 +141,13 @@ export default class PointAnalyst extends Component {
           this.container.setLoading(false)
           NavigationService.goBack()
         } else {
-          Toast.show('网络错误')
+          Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+          //'网络错误')
         }
       }
     } catch (error) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+      //'网络错误')
     }
   }
 
@@ -257,8 +260,10 @@ export default class PointAnalyst extends Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
-          SScene.pointSearch(searchKey)
+          // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
+          SScene.pointSearch(searchKey).then(() => {
+            // this.setLoading(false)
+          })
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
         //{'请输入搜索关键字'}

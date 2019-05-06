@@ -7,10 +7,7 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
-// import Login from './Login'
 import { color, size } from '../../../styles'
-// import ConstPath from '../../../constants/ConstPath'
-// import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
@@ -204,7 +201,7 @@ export default class Find extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Navigator_Lable.EXPLORE,
+          title: getLanguage(this.props.language).Navigator_Label.EXPLORE,
           withoutBack: true,
           navigation: this.props.navigation,
         }}
