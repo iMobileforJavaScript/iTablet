@@ -1,11 +1,17 @@
 //好友
 const Friends = {
+  LOGOUT: 'Login and keep in touch with your friends',
   MESSAGES: 'Messages',
   FRIENDS: 'Friends',
   GROUPS: 'Groups',
   ADD_FRIENDS: 'Add Friends',
   NEW_GROUP_CHAT: 'New Group Chat',
   RECOMMEND_FRIEND: 'Recommend Friends',
+  //Friend
+  MSG_SERVICE_FAILED: 'Failed to connect to message service',
+  MSG_SERVICE_NOT_CONNECT: 'Unable to connect to message service',
+  SEND_SUCCESS: 'Send successfully',
+  RECEIVE_SUCCESS: 'Receive successfully',
   //FriendMessage
   MARK_READ: 'Mark read', //*
   MARK_UNREAD: 'Mark unread', //*
@@ -29,7 +35,7 @@ const Friends = {
   CONFIRM2: 'OK',
   TITLE_CHOOSE_FRIEND: 'Choose friend',
   TOAST_CHOOSE_2: 'Add more than 2 friend to chat in group',
-  NO_FRIEND: 'No Friend',
+  NO_FRIEND: 'Oops,no friend yet',
   //AddFriend
   ADD_FRIEND_PLACEHOLDER: 'Email/Phone/Nickname',
   SEARCHING: 'Searching...',

@@ -369,7 +369,8 @@ class FriendList extends Component {
               }}
             >
               <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
-                您还未添加好友哦
+                {/* 您还未添加好友哦 */}
+                {getLanguage(this.props.language).Friends.NO_FRIEND}
               </Text>
             </View>
           )} // 数据为空时调用
@@ -380,7 +381,7 @@ class FriendList extends Component {
               colors={['orange', 'red']}
               tintColor={'orange'}
               titleColor={'orange'}
-              title={'刷新中...'}
+              title={getLanguage(this.props.language).Friends.LOADING}
               enabled={true}
             />
           }

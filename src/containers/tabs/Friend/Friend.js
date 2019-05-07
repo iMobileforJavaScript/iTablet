@@ -237,9 +237,13 @@ export default class Friend extends Component {
           SMessageService.sendMessage(messageStr, talkId)
         })
         .catch(() => {
-          Toast.show('连接消息服务失败！')
+          Toast.show(
+            getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+          )
         })
-      Toast.show('未能连接消息服务！')
+      Toast.show(
+        getLanguage(this.props.language).Friends.MSG_SERVICE_NOT_CONNECT,
+      )
     } else {
       SMessageService.sendMessage(messageStr, talkId)
     }
@@ -316,7 +320,7 @@ export default class Friend extends Component {
       informMsg.message.message.queueName = res.queueName
       informMsg.message.message.filePath = ''
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
-      Toast.show('分享完成')
+      Toast.show(getLanguage(this.props.language).Friends.SEND_SUCCESS)
     })
   }
 
@@ -330,7 +334,7 @@ export default class Friend extends Component {
         msgId,
       ).then(res => {
         if (res === true) {
-          Toast.show('接收完成')
+          Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
           let message = this.props.chat[this.props.user.currentUser.userId][
             talkId
           ].history[msgId]
@@ -490,7 +494,9 @@ export default class Friend extends Component {
           )
             .then(res => {
               if (!res) {
-                Toast.show('连接消息服务失败！')
+                Toast.show(
+                  getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+                )
               } else {
                 g_connectService = true
                 SMessageService.startReceiveMessage(
@@ -500,7 +506,9 @@ export default class Friend extends Component {
               }
             })
             .catch(() => {
-              Toast.show('连接消息服务失败！')
+              Toast.show(
+                getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+              )
             })
         }
       } else {
@@ -665,7 +673,7 @@ export default class Friend extends Component {
               margin: scaleSize(10),
             }}
           >
-            {/* 亲,您还没有好友关系哦 */}
+            {getLanguage(this.props.language).Friends.LOGOUT}
           </Text>
         </View>
       </View>
