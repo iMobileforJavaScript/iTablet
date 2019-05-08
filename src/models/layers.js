@@ -3,6 +3,7 @@ import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { Toast, dataUtil } from '../utils'
 import { ConstInfo } from '../constants'
+import { getLanguage } from '../language/index'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -208,12 +209,18 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
   }
   try {
     if (!params || !params.mapName || !params.layerPath)
-      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+      return {
+        msg: getLanguage(global.language).Prompt[`${_type}_FAILED`],
+        result: false,
+      }
     let attributesHistory = getState().layers.toJS().attributesHistory
     let layerHistory = {}
 
     if (attributesHistory.length === 0)
-      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+      return {
+        msg: getLanguage(global.language).Prompt[`${_type}_FAILED`],
+        result: false,
+      }
 
     for (let i = 0; i < attributesHistory.length; i++) {
       if (attributesHistory[i].mapName === params.mapName) {
@@ -264,7 +271,18 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
             layerHistory.history.splice(currentIndex, 2)
             currentIndex = layerHistory.currentIndex + 1
           } else {
+            // 在undo中，当前对象 和 之前的对象是同一个，则可以直接undo
+            // 若当前对象和上一个不是一个对象，则表明该对象为当前属性表中显示的对象，则找下一个对象
             currentHistory = [layerHistory.history[currentIndex]]
+            if (currentIndex > 0) {
+              if (
+                layerHistory.history[currentIndex - 1].fieldInfo[0].smID !==
+                currentHistory[0].fieldInfo[0].smID
+              ) {
+                currentIndex++
+                currentHistory = [layerHistory.history[currentIndex]]
+              }
+            }
           }
 
           // currentHistory =
@@ -278,6 +296,26 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
       case 'redo':
         if (layerHistory.currentIndex > 0) {
           currentIndex = layerHistory.currentIndex - 1
+
+          if (layerHistory.history[currentIndex] instanceof Array) {
+            currentHistory = layerHistory.history[currentIndex]
+          } else {
+            // redo，当前对象 和 上一个对象是同一个，则可以直接undo
+            // 若当前对象和上一个不是一个对象，则表明该对象为当前属性表中显示的对象，则找下一个对象
+            currentHistory = [layerHistory.history[currentIndex]]
+            if (
+              currentIndex < layerHistory.history.length - 1 &&
+              currentIndex > 0
+            ) {
+              if (
+                layerHistory.history[currentIndex + 1].fieldInfo[0].smID !==
+                currentHistory[0].fieldInfo[0].smID
+              ) {
+                currentIndex--
+                currentHistory = [layerHistory.history[currentIndex]]
+              }
+            }
+          }
 
           currentHistory =
             layerHistory.history[currentIndex] instanceof Array
@@ -344,17 +382,20 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
     })
     cb &&
       cb({
-        msg: ConstInfo[`${_type}_SUCCESS`],
+        msg: '成功',
         result: true,
         data: currentHistory,
       })
     return {
-      msg: ConstInfo[`${_type}_SUCCESS`],
+      msg: '成功',
       result: true,
       data: currentHistory,
     }
   } catch (e) {
-    return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+    return {
+      msg: getLanguage(global.language).Prompt[`${_type}_FAILED`],
+      result: false,
+    }
   }
 }
 
@@ -400,25 +441,29 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
   }
   let data = [
     {
-      title: '我的标注',
+      title: getLanguage(global.language).Map_Layer.PLOTS,
+      //'我的标注',
       data: ablelist,
       visible: true,
       index: 0,
     },
     {
-      title: '我的图层',
+      title: getLanguage(global.language).Map_Layer.LAYERS,
+      //'我的图层',
       data: layerlist,
       visible: true,
       index: 1,
     },
     {
-      title: '我的底图',
+      title: getLanguage(global.language).Map_Layer.BASEMAP,
+      //'我的底图',
       data: basemaplist,
       visible: true,
       index: 2,
     },
     {
-      title: '我的地形',
+      title: getLanguage(global.language).Map_Layer.MY_TERRAIN,
+      //'我的地形',
       data: terrainList,
       visible: true,
       index: 3,
@@ -612,7 +657,12 @@ export default handleActions(
       let currentLayer3d = state.toJS().currentLayer3d
       if (JSON.stringify(payload) !== '{}') {
         currentLayer3d = payload
-        Toast.show('当前图层为 ' + currentLayer3d.name)
+        Toast.show(
+          //'当前图层为 '
+          getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
+            '  ' +
+            currentLayer3d.name,
+        )
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
     },
@@ -620,17 +670,17 @@ export default handleActions(
       let attributesHistory = state.toJS().attributesHistory
       let attributesHistoryKey = state.toJS().attributesHistoryKey
 
-      let checkIsIncludeKey = function(data) {
-        for (let i = 0; i < attributesHistoryKey.length; i++) {
-          if (
-            attributesHistoryKey[i].filter === data.params.filter &&
-            attributesHistoryKey[i].name === data.fieldInfo[0].name
-          ) {
-            return true
-          }
-        }
-        return false
-      }
+      // let checkIsIncludeKey = function(data) {
+      //   for (let i = 0; i < attributesHistoryKey.length; i++) {
+      //     if (
+      //       attributesHistoryKey[i].filter === data.params.filter &&
+      //       attributesHistoryKey[i].name === data.fieldInfo[0].name
+      //     ) {
+      //       return true
+      //     }
+      //   }
+      //   return false
+      // }
 
       payload.forEach(item => {
         item.params = item.params || {}
@@ -649,20 +699,25 @@ export default handleActions(
                   layers[j].history.splice(0, layers[j].currentIndex)
                   layers[j].currentIndex = 0
                 }
-                if (!checkIsIncludeKey(item)) {
+                // if (!checkIsIncludeKey(item)) {
+                //   layers[j].history.unshift({
+                //     fieldInfo: item.prevData,
+                //     params: item.params,
+                //   })
+                //   attributesHistoryKey.unshift({
+                //     name: item.fieldInfo[0].name,
+                //     filter: item.params.filter,
+                //   })
+                // }
+
+                // 若修改的对象和之前最新的对象不是一个对象，则把被修改对象之前的值加入到历史记录中
+                if (layers[j].history[0].params.filter !== item.params.filter) {
                   layers[j].history.unshift({
                     fieldInfo: item.prevData,
                     params: item.params,
                   })
-                  attributesHistoryKey.unshift({
-                    name: item.fieldInfo[0].name,
-                    filter: item.params.filter,
-                  })
                 }
-                // layers[j].history.unshift({
-                //   fieldInfo: item.prevData,
-                //   params: item.params,
-                // })
+
                 layers[j].history.unshift({
                   fieldInfo: item.fieldInfo,
                   params: item.params,

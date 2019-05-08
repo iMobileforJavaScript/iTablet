@@ -23,7 +23,6 @@ import {
   AlertDialog,
   OverlayView,
 } from '../../components'
-import constants from '../../constants'
 import {
   Container,
   MTBtn,
@@ -35,7 +34,7 @@ import {
   SurfaceView,
 } from '../../../../components'
 import { Utils } from '../../util'
-import { Toast, jsonUtil, scaleSize } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize, setSpText } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -44,13 +43,28 @@ import {
   ConstInfo,
   getHeaderTitle,
 } from '../../../../constants'
+import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
-import { Platform, BackHandler, View, Text } from 'react-native'
+import {
+  Platform,
+  View,
+  Text,
+  InteractionManager,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native'
+import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-// import LegendView from '../../components/LegendView/LegendView'
-const SAVE_TITLE = '是否保存当前地图?'
+import LegendView from '../../components/LegendView/LegendView'
+//eslint-disable-next-line
+import { HEIGHT } from '../../../../utils/constUtil'
+
+export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
+export const FOOTER_HEIGHT = scaleSize(88)
 export default class MapView extends React.Component {
   static propTypes = {
+    language: PropTypes.string,
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
@@ -60,6 +74,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
+    mapLegend: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -98,6 +113,9 @@ export default class MapView extends React.Component {
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
+    setMapLegend: PropTypes.func,
+    setBackAction: PropTypes.func,
+    removeBackAction: PropTypes.func,
   }
 
   constructor(props) {
@@ -145,10 +163,97 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
-      legend: false,
+      legendConfig: {
+        title: '图例',
+        column: 2,
+        bgcolor: 'white',
+        width: 450,
+        height: 325,
+        position: 'topLeft',
+      },
+      legendPositionConfig: {
+        topLeft: { left: 0, top: HEADER_HEIGHT },
+        topRight: { right: 0, top: HEADER_HEIGHT },
+        leftBottom: { left: 0, bottom: FOOTER_HEIGHT },
+        rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
+      },
       // changeLayerBtnBottom: scaleSize(200),
     }
 
+    /**
+     * 获取图例数据方法，接口暂定为getImageSource，等待原声接口
+     * @returns {Promise<void>}
+     */
+    this.getLegend = async () => {
+      let legendArr = await SMap.getImageSource()
+      this.setState({
+        legendSource: legendArr,
+      })
+    }
+    /**
+     *  更改图例属性
+     * @param title 标题
+     * @param column 列数
+     * @param bgcolor 背景色
+     * @param width 宽度
+     * @param height 高度
+     * @param position 位置
+     * 位置的四个值 topLeft topRight leftBottom rightBottom
+     */
+    this.changeLegendConfig = ({
+      title = '图例',
+      column = 2,
+      bgcolor = 'white',
+      width = 300,
+      height = 325,
+      position = 'topLeft',
+    } = {}) => {
+      let legendConfig = { title, column, bgcolor, width, height, position }
+      this.setState({
+        legendConfig,
+      })
+    }
+    /**
+     * 渲染FlatList里面的图例项
+     * @param item
+     * @returns {*}
+     */
+    this.renderLegendItem = item => {
+      let curImageSource = `data:image/png;base64,${item.item.image}`
+      return (
+        <TouchableOpacity
+          style={{
+            width: (1 / this.state.legendConfig.column) * 100 + '%',
+            height: scaleSize(80),
+            //justifyContent:'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+          }}
+        >
+          <Image
+            source={{ uri: curImageSource }}
+            style={{
+              width: scaleSize(65),
+              height: scaleSize(30),
+              resizeMode: 'contain',
+            }}
+          />
+          <Text
+            numberOfLines={1}
+            ellipsizeMode={'tail'}
+            style={{
+              flex: 1,
+              fontSize: setSpText(18),
+              backgroundColor: 'transparent',
+              fontWeight: 'bold',
+              height: scaleSize(20),
+            }}
+          >
+            {item.item.title}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
     this.closeInfo = [
       {
         btntitle: '是',
@@ -182,20 +287,35 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    this.container && this.container.setLoading(true, '地图加载中')
-    let timer = setTimeout(() => {
+    InteractionManager.runAfterInteractions(() => {
+      GLOBAL.SaveMapView &&
+        GLOBAL.SaveMapView.setTitle(
+          getLanguage(this.props.language).Prompt.SAVE_TITLE,
+          getLanguage(this.props.language).Prompt.SAVE_YES,
+          getLanguage(this.props.language).Prompt.SAVE_NO,
+          getLanguage(this.props.language).Prompt.CANCEL,
+        )
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.LOADING,
+          //'地图加载中'
+        )
+
       this.setState({
         showMap: true,
       })
-      clearTimeout(timer)
-    }, 800)
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.clearData()
-    if (this.toolBox) {
-      GLOBAL.toolBox = this.toolBox
-    }
+
+      this.props.setBackAction({
+        action: () => this.back(),
+      })
+
+      this.clearData()
+      !this.state.legendSource && this.getLegend()
+      if (this.toolBox) {
+        GLOBAL.toolBox = this.toolBox
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -216,6 +336,7 @@ export default class MapView extends React.Component {
       //   currentLayer: this.props.currentLayer,
       // })
     }
+
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
     //   let bottom = this.popList.state.subPopShow
@@ -242,8 +363,11 @@ export default class MapView extends React.Component {
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
     }
+    this.props.setMapLegend(false)
 
     this.showMarker && SMap.deleteMarker()
   }
@@ -300,11 +424,10 @@ export default class MapView extends React.Component {
     if (!this.map || !this.mapControl || !this.workspace) return
     this.saveLatest(
       async function() {
-        this.container &&
-          this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
+        this.setLoading(true, '正在关闭', { bgColor: 'white' })
         this.clearData()
         this._removeGeometrySelectedListener()
-        this.container && this.container.setLoading(false)
+        this.setLoading(false)
         cb && cb()
       }.bind(this),
     )
@@ -347,7 +470,6 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
-    Utils.setSelectionStyle(event.layerInfo.path)
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -356,9 +478,12 @@ export default class MapView extends React.Component {
         },
       ])
     switch (GLOBAL.currentToolbarType) {
-      case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
-      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      case ConstToolType.MAP_TOOL_POINT_SELECT:
+      // case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
+      // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+      // case ConstToolType.MAP_TOOL_POINT_SELECT:
+      //   break
+      case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+      case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
         break
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
@@ -397,12 +522,25 @@ export default class MapView extends React.Component {
         }
         break
       }
+      default:
+        // 除了编辑状态，其余点选对象所在图层全设置为选择状态
+        if (event.layerInfo.editable) {
+          SMap.setLayerEditable(event.layerInfo.path, false).then(() => {
+            Utils.setSelectionStyle(event.layerInfo.path)
+          })
+        } else {
+          Utils.setSelectionStyle(event.layerInfo.path)
+        }
+        break
     }
   }
 
   geometryMultiSelected = event => {
     let data = []
     for (let i = 0; i < event.geometries.length; i++) {
+      if (event.geometries[i].layerInfo.editable) {
+        SMap.setLayerEditable(event.geometries[i].layerInfo.path, false)
+      }
       Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,
@@ -435,11 +573,15 @@ export default class MapView extends React.Component {
     cb = () => {},
   ) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+          Toast.show(
+            result
+              ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+              : ConstInfo.MAP_EXIST,
+          )
           cb && cb()
         },
         () => {
@@ -466,10 +608,15 @@ export default class MapView extends React.Component {
   // 地图保存
   saveMap = (name = '', cb = () => {}) => {
     try {
-      this.setLoading(true, '正在保存地图')
+      this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
+      //'正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : ConstInfo.MAP_EXIST,
+        )
         cb && cb()
       })
     } catch (e) {
@@ -492,7 +639,7 @@ export default class MapView extends React.Component {
 
   // 地图保存为xml(fileName, cb)
   saveMapToXML = mapName => {
-    this.container.setLoading(true, '正在保存')
+    this.setLoading(true, '正在保存')
     ;(async function() {
       try {
         const filePath =
@@ -503,10 +650,10 @@ export default class MapView extends React.Component {
         SMap.saveMapToXML(filePath).then(result => {
           if (!result) {
             Toast.show('保存失败')
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
             Toast.show('保存成功')
-            this.container.setLoading(false)
+            this.setLoading(false)
             //获取数据源
             //修改数据
             SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
@@ -530,14 +677,14 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveXMLDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
 
   // 地图保存为xml(fileName, cb)
   saveMapToXMLWithDialog = ({ mapName }) => {
-    // this.container.setLoading(true, '正在保存')
+    // this.setLoading(true, '正在保存')
     (async function() {
       try {
         const filePath =
@@ -549,11 +696,11 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.saveXMLDialog.setDialogVisible(false)
-            // this.container.setLoading(false)
+            // this.setLoading(false)
           } else {
             Toast.show('保存成功')
             this.saveXMLDialog.setDialogVisible(false)
-            // this.container.setLoading(false)
+            // this.setLoading(false)
             this.mapType = 'LOAD'
             //获取数据源
             SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
@@ -569,7 +716,7 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveXMLDialog.setDialogVisible(false)
-        // this.container.setLoading(false)
+        // this.setLoading(false)
       }
     }.bind(this)())
   }
@@ -599,7 +746,7 @@ export default class MapView extends React.Component {
 
   // 地图保存为xml 同时 关闭地图
   saveMapToXMLAndClose = () => {
-    // this.container.setLoading(true, '正在保存')
+    // this.setLoading(true, '正在保存')
     (async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -613,10 +760,10 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.saveMapDialog.setDialogVisible(false)
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
             Toast.show('保存成功')
-            this.container.setLoading(false)
+            this.setLoading(false)
             this.saveMapDialog.setDialogVisible(false)
             //获取数据源
             //修改数据
@@ -633,14 +780,17 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.saveMapDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
 
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
-    this.container.setLoading(true, '正在保存')
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.SAVING,
+    )
     ;(async function() {
       try {
         let mapName = await SMap.getMapName()
@@ -654,9 +804,11 @@ export default class MapView extends React.Component {
           if (!result) {
             Toast.show('保存失败')
             this.AlertDialog.setDialogVisible(false)
-            this.container.setLoading(false)
+            this.setLoading(false)
           } else {
-            Toast.show('保存成功')
+            Toast.show(
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+            )
             this.container.setLoading(false)
             this.AlertDialog.setDialogVisible(false)
             //获取数据源
@@ -683,7 +835,7 @@ export default class MapView extends React.Component {
       } catch (e) {
         Toast.show('保存失败')
         this.AlertDialog.setDialogVisible(false)
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
@@ -704,7 +856,7 @@ export default class MapView extends React.Component {
         })
 
         if (result) {
-          Toast.show('删除成功')
+          Toast.show(getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
           // 删除对象后，编辑设为为选择状态
@@ -772,17 +924,14 @@ export default class MapView extends React.Component {
         return true
       }
     }
-    if (
-      Platform.OS === 'android' &&
-      this.toolBox &&
-      this.toolBox.getState().isShow
-    ) {
-      this.toolBox.close()
-      return true
-    }
+
     this.backAction = async () => {
       try {
-        this.setLoading(true, '正在关闭地图')
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING,
+          //'正在关闭地图'
+        )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setLoading(false)
@@ -796,7 +945,6 @@ export default class MapView extends React.Component {
         this.setSaveViewVisible(true)
       } else {
         this.backAction()
-        this.backAction = null
       }
     })
     this.props.setCurrentAttribute({})
@@ -811,7 +959,10 @@ export default class MapView extends React.Component {
   _addMap = () => {
     (async function() {
       try {
-        if (this.wsData === null) return
+        if (this.wsData === null || this.wsData === undefined) {
+          this.setLoading(false)
+          return
+        }
 
         if (this.wsData instanceof Array) {
           for (let i = 0; i < this.wsData.length; i++) {
@@ -851,7 +1002,7 @@ export default class MapView extends React.Component {
           // }
         }
 
-        GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
+        // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
         this.props.getLayers(
@@ -881,21 +1032,23 @@ export default class MapView extends React.Component {
           },
         )
         this._addGeometrySelectedListener()
-        this.container.setLoading(false)
-        this.setState({
-          legend: true,
-        })
+        this.setLoading(false)
       } catch (e) {
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
       this.showMarker &&
         SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
+      SMap.openTaggingDataset(this.props.user.currentUser.userName)
+
+      GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
+        this.props.user.currentUser.userName,
+      )
     }.bind(this)())
   }
 
   _openWorkspace = async (wsData, index = -1) => {
     if (!wsData.DSParams || !wsData.DSParams.server) {
-      this.container.setLoading(false)
+      this.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
@@ -904,20 +1057,20 @@ export default class MapView extends React.Component {
       let result = await this.props.openWorkspace(wsData.DSParams)
       result && this.props.openMap(index)
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 
   _openDatasource = async (wsData, index = -1) => {
     if (!wsData.DSParams || !wsData.DSParams.server) {
-      this.container.setLoading(false)
+      this.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
     try {
       await SMap.openDatasource(wsData.DSParams, index)
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 
@@ -929,8 +1082,12 @@ export default class MapView extends React.Component {
       })
       if (mapInfo) {
         // 如果是模板地图，则加载模板
-        if (mapInfo.Template) {
-          this.setLoading(true, ConstInfo.TEMPLATE_READING)
+        if (mapInfo.Template && GLOBAL.Type === constants.COLLECTION) {
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
           let templatePath = await FileTools.appendingHomeDirectory(
             ConstPath.UserPath + mapInfo.Template,
           )
@@ -948,7 +1105,7 @@ export default class MapView extends React.Component {
         this.setVisible(false)
       }
     } catch (e) {
-      this.container.setLoading(false)
+      this.setLoading(false)
     }
   }
 
@@ -1036,6 +1193,7 @@ export default class MapView extends React.Component {
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
+        language={this.props.language}
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.type}
@@ -1050,6 +1208,7 @@ export default class MapView extends React.Component {
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
         setMapType={this.setMapType}
+        Label={this.showLegend}
         online={this.props.online}
         save={() => {
           //this.saveMapWithNoWorkspace()
@@ -1071,6 +1230,10 @@ export default class MapView extends React.Component {
         }}
       />
     )
+  }
+
+  showLegend = () => {
+    return this.props.setMapLegend(false)
   }
 
   //遮盖层
@@ -1153,7 +1316,8 @@ export default class MapView extends React.Component {
   renderTool = () => {
     return (
       <ToolBar
-        ref={ref => (this.toolBox = ref)}
+        ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
+        language={this.props.language}
         existFullMap={() => this.showFullMap(false)}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1188,10 +1352,13 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.dialog = ref)}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
-        title={'提示'}
-        info={'是否开启动态投影？'}
-        confirmBtnTitle={'是'}
-        cancelBtnTitle={'否'}
+        //title={'提示'}
+        info={getLanguage(this.props.language).Prompt.TURN_ON_AUTO_SPLIT_REGION}
+        //{'是否开启动态投影？'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
+        //{'是'}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        //{'否'}
       />
     )
   }
@@ -1201,7 +1368,8 @@ export default class MapView extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          //{'撤销'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_undo}
           imageStyle={styles.headerBtn}
@@ -1209,7 +1377,8 @@ export default class MapView extends React.Component {
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
           image={getThemeAssets().publicAssets.icon_redo}
           imageStyle={styles.headerBtn}
@@ -1274,18 +1443,85 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{this.state.legend&&(<View style={{*/}
-        {/*position: 'absolute',*/}
-        {/*width: scaleSize(100),*/}
-        {/*height: scaleSize(300),*/}
-        {/*left: 0 ,*/}
-        {/*top: 0 ,*/}
-        {/*backgroundColor: 'white',*/}
-        {/*zIndex: 1,*/}
-        {/*}}>*/}
-        {/*<LegendView/>*/}
-        {/*</View>)}*/}
-
+        {this.props.mapLegend && Platform.OS === 'android' && (
+          <View
+            style={{
+              position: 'absolute',
+              width: scaleSize(300),
+              height: scaleSize(325),
+              borderColor: 'black',
+              borderWidth: scaleSize(3),
+              left: 0,
+              top: HEADER_HEIGHT,
+              backgroundColor: 'white',
+              zIndex: 1,
+            }}
+          >
+            <View
+              style={{
+                width: scaleSize(300),
+                height: scaleSize(50),
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: setSpText(24),
+                  textAlign: 'center',
+                  backgroundColor: 'transparent',
+                  fontWeight: 'bold',
+                }}
+              >
+                图例
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+              }}
+            >
+              <LegendView device={this.props.device} />
+            </View>
+          </View>
+        )}
+        {this.props.mapLegend && Platform.OS === 'ios' && (
+          <View
+            style={{
+              position: 'absolute',
+              width: scaleSize(this.state.legendConfig.width),
+              height: scaleSize(this.state.legendConfig.height),
+              borderColor: 'black',
+              borderWidth: scaleSize(3),
+              paddingRight: scaleSize(5),
+              backgroundColor: this.state.legendConfig.bgcolor,
+              zIndex: 1,
+              ...this.state.legendPositionConfig[
+                this.state.legendConfig.position
+              ],
+            }}
+          >
+            <Text
+              style={{
+                fontSize: setSpText(24),
+                textAlign: 'center',
+                backgroundColor: 'transparent',
+                fontWeight: 'bold',
+              }}
+            >
+              {this.state.legendConfig.title}
+            </Text>
+            <FlatList
+              style={{
+                flex: 1,
+              }}
+              renderItem={this.renderLegendItem}
+              data={this.state.legendSource}
+              keyExtractor={(item, index) => item.title + index}
+              numColumns={this.state.legendConfig.column}
+            />
+          </View>
+        )}
         {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
@@ -1311,11 +1547,12 @@ export default class MapView extends React.Component {
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
+          // title={'提示'}
+          info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
+          // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
+          cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveXMLDialog = ref)}
@@ -1332,7 +1569,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图?'}
+          Alerttitle={getLanguage(this.props.language).Prompt.SAVE_TITLE}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

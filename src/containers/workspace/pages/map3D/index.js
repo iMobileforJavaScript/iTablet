@@ -12,7 +12,9 @@ import {
   importSceneWorkspace,
 } from '../../../../models/map'
 import { setSharing } from '../../../../models/online'
+import { setBackAction, removeBackAction } from '../../../../models/backActions'
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   editLayer: state.layers.toJS().editLayer,
   latestMap: state.map.toJS().latestMap,
   user: state.user.toJS(),
@@ -33,6 +35,8 @@ const mapDispatchToProps = {
   setSharing,
   refreshLayer3dList,
   setAttributes,
+  setBackAction,
+  removeBackAction,
 }
 
 export default connect(

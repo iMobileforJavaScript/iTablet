@@ -21,6 +21,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
+import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -79,7 +80,8 @@ export default class MyModule extends Component {
     if (collectionData.length > 0) {
       isShowItem = true
       data.push({
-        title: '采集模板',
+        title: getLanguage(global.language).Profile.COLLECTION_TEMPLATE,
+        //'采集模板',
         data: collectionData,
         isShowItem: isShowItem,
       })
@@ -122,7 +124,8 @@ export default class MyModule extends Component {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       data = [
         {
-          title: '删除数据',
+          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
+          //'删除数据',
           action: async () => {
             try {
               let filePath = this.itemInfo.item.path.substring(
@@ -132,13 +135,16 @@ export default class MyModule extends Component {
               let result = await FileTools.deleteFile(filePath)
               if (result) {
                 this._closeModal()
-                Toast.show('删除成功')
+                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+                //'删除成功')
                 this.getData()
               } else {
-                Toast.show('删除失败')
+                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+                //'删除失败')
               }
             } catch (error) {
-              Toast.show('删除失败')
+              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+              //'删除失败')
             }
           },
         },
@@ -146,54 +152,35 @@ export default class MyModule extends Component {
     } else {
       data = [
         {
-          title: '分享',
+          title: getLanguage(global.language).Profile.UPLOAD_TEMPLATE,
+          //''分享',
           action: async () => {
             this._closeModal()
             this.ModalBtns.setVisible(true)
-
-            // let expListPath = userPath + ConstPath.RelativePath.Map
-            // let expList=await FileTools.getPathListByFilter(expListPath, {extension: 'exp',type: 'file',})
-            // for (let index = 0; index < expList.length; index++) {
-            //   const element = expList[index];
-            //   let expPath=await FileTools.appendingHomeDirectory(element.path)
-            //   let result=await SMap.getExpJson(expPath)
-            //   let Json=JSON.parse(result)
-            //   if(Json.Template){
-            //     let xmlPath=await FileTools.appendingHomeDirectory(ConstPath.UserPath+Json.Template)
-            //     let fileName=Json.Template.substring(Json.Template.lastIndexOf('/')+1)
-            //     if(this.itemInfo.item.name.indexOf(fileName)>-1){
-            //       let name=element.name.substring(0,element.name.indexOf('.'))
-            //       let workspacePath=userPath+ConstPath.RelativePath.ExternalData +ConstPath.RelativeFilePath.ExportData +name+'/'+name+".smwu"
-            //       this.props.exportModule&&this.props.exportModule({ maps: [name], outPath: workspacePath, isOpenMap: true ,xmlPath:xmlPath}).then((result)=>{
-            //           this.container.setLoading(false)
-            //           Toast.show("分享成功")
-            //         },()=>{
-            //           Toast.show("分享失败")
-            //         })
-            //       break
-            //     }
-            //   }
-            // }
           },
         },
         {
-          title: '删除数据',
+          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
+          //'删除数据',
           action: async () => {
             try {
-              let filePath = await FileTools.appendingHomeDirectory(
-                this.itemInfo.item.path,
+              let filePath = this.itemInfo.item.path.substring(
+                0,
+                this.itemInfo.item.path.lastIndexOf('/'),
               )
-
               let result = await FileTools.deleteFile(filePath)
               if (result) {
                 this._closeModal()
-                Toast.show('删除成功')
+                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+                //'删除成功')
                 this.getData()
               } else {
-                Toast.show('删除失败')
+                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+                //'删除失败')
               }
             } catch (error) {
-              Toast.show('删除失败')
+              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+              //'删除失败')
             }
           },
         },
@@ -212,7 +199,9 @@ export default class MyModule extends Component {
   shareData = async type => {
     try {
       this.ModalBtns.setVisible(false)
-      this.container.setLoading(true, '正在分享')
+      // this.container.setLoading(true, '正在分享')
+      Toast.show(getLanguage(global.language).Prompt.SHARING)
+      //'正在分享')
       let fromPath = this.itemInfo.item.path.substring(
         0,
         this.itemInfo.item.path.lastIndexOf('/'),
@@ -228,11 +217,11 @@ export default class MyModule extends Component {
         ConstPath.RelativeFilePath.ExportData +
         this.itemInfo.item.name +
         '.zip'
+      // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
         let fileName = this.itemInfo.item.name
         if (type === 'weChat') {
-          GLOBAL.shareFilePath = toPath
           appUtilsModule
             .sendFileOfWechat({
               filePath: toPath,
@@ -241,12 +230,17 @@ export default class MyModule extends Component {
             })
             .then(
               result => {
-                !result && Toast.show('所分享文件超过10MB')
+                !result &&
+                  Toast.show(
+                    getLanguage(global.language).Prompt.SHARED_DATA_10M,
+                  )
+                //'所分享文件超过10MB')
                 !result && FileTools.deleteFile(toPath)
                 this.ModalBtns.setVisible(false)
               },
               () => {
-                Toast.show('分享失败')
+                Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+                //'分享失败')
                 this.container.setLoading(false)
                 FileTools.deleteFile(toPath)
               },
@@ -254,7 +248,8 @@ export default class MyModule extends Component {
         } else if (type === 'online') {
           SOnlineService.uploadFile(toPath, fileName, {
             onResult: () => {
-              Toast.show('分享成功')
+              Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+              //'分享成功')
               FileTools.deleteFile(toPath)
               this.container.setLoading(false)
               this.ModalBtns.setVisible(false)
@@ -267,7 +262,10 @@ export default class MyModule extends Component {
         }
       }
     } catch (error) {
-      Toast.show('分享失败')
+      Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+      //'分享失败')
+    } finally {
+      this.container.setLoading(false)
     }
   }
 
@@ -275,12 +273,15 @@ export default class MyModule extends Component {
     return (
       <InputDialog
         ref={ref => (this.dialog = ref)}
-        placeholder={'请输入数据名称'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
+        // {'请输入数据名称'}
         confirmAction={() => {
           this.uploadDialog(this.dialog.state.value)
         }}
-        confirmBtnTitle={'上传'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
+        //{'上传'}
+        cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
+        //{'取消'}
       />
     )
   }

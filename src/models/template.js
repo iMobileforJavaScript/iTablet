@@ -108,8 +108,10 @@ export const importWorkspace = (params, cb = () => {}) => async (
     // 拷贝模板文件
     let paths = params.path.split('/')
     let fileName = paths[paths.length - 1]
-    let fileType = fileName.split('.')[1].toString()
-
+    let fileType = fileName
+      .split('.')[1]
+      .toString()
+      .toUpperCase()
     let type
     switch (fileType) {
       case 'SXW':

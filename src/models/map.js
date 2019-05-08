@@ -8,6 +8,7 @@ import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import UserType from '../constants/UserType'
 import ConstOnline from '../constants/ConstOnline'
+import { getLanguage } from '../language'
 // import xml2js from 'react-native-xml2js'
 // let parser = new xml2js.Parser()
 // Constants
@@ -128,7 +129,8 @@ export const saveMap = (params = {}, cb = () => {}) => async (
 ) => {
   try {
     let mapName = params.mapName
-    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let curMapName = getState().map.toJS().currentMap.name
+    let userName = getState().user.toJS().currentUser.userName
     let path = ''
     if (!params.notSaveToXML) {
       mapName = await SMap.saveMapName(
@@ -146,7 +148,8 @@ export const saveMap = (params = {}, cb = () => {}) => async (
         '.xml'
     }
 
-    if (!params.isNew) {
+    // 另存为 和 未打开一幅已命名的地图，则需要重新设置当前地图
+    if (!params.isNew || curMapName !== mapName) {
       await dispatch({
         type: SET_CURRENT_MAP,
         payload: { path, name: mapName },
@@ -229,7 +232,8 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   getState,
 ) => {
   if (isExporting) {
-    Toast.show('请稍后再试')
+    Toast.show(getLanguage(global.language).Prompt.TYR_AGAIN_LATER)
+    //''请稍后再试')
     return false
   }
   isExporting = true
@@ -292,7 +296,8 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   } catch (e) {
     isExporting = false
     if (!exportResult) {
-      Toast.show(ConstInfo.EXPORT_WORKSPACE_FAILED)
+      Toast.show(getLanguage(global.language).Prompt.EXPORT_FAILED)
+      //ConstInfo.EXPORT_WORKSPACE_FAILED)
     } else if (!zipResult) {
       Toast.show(ConstInfo.ZIP_FAILED)
     }
@@ -309,7 +314,8 @@ export const exportmap3DWorkspace = (params, cb = () => {}) => async (
   let userName = getState().user.toJS().currentUser.userName || 'Customer'
   if (params.name) {
     if (isExporting) {
-      Toast.show('请稍后再试')
+      Toast.show(getLanguage(global.language).Prompt.TYR_AGAIN_LATER)
+      //'请稍后再试')
       return false
     }
     isExporting = true
@@ -326,12 +332,14 @@ export const exportmap3DWorkspace = (params, cb = () => {}) => async (
       result = await FileTools.zipFile(path, zipPath)
       if (result) {
         await FileTools.deleteFile(path)
-        Toast.show('导出成功,开始分享')
+        Toast.show(getLanguage(global.language).Prompt.SHARE_START)
+        //'导出成功,开始分享')
         isExporting = false
         cb && cb(result, zipPath)
       }
     } else {
-      Toast.show('导出失败')
+      Toast.show(getLanguage(global.language).Prompt.EXPORT_FAILED)
+      //'导出失败')
     }
     // let result = await SScene.is3DWorkspace({ server: params.server })
     // if (result) {

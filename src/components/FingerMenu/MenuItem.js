@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, Image, View } from 'react-native'
 import { scaleSize } from '../../utils'
 import { size, color } from '../../styles'
 
@@ -51,6 +51,19 @@ export default class MenuItem extends React.PureComponent {
           }
         }}
       >
+        {this.props.data.icon && (
+          <View style={styles.iconView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.icon}
+              source={
+                this.props.highLight && this.props.data.highLightIcon
+                  ? this.props.data.highLightIcon
+                  : this.props.data.icon
+              }
+            />
+          </View>
+        )}
         <Text style={this.props.highLight ? styles.textHighLight : styles.text}>
           {this.props.data.key}
         </Text>
@@ -73,6 +86,7 @@ const styles = StyleSheet.create({
     width: VIEW_WIDTH,
   },
   item: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     height: ITEM_HEIGHT,
@@ -91,5 +105,15 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeXl,
     backgroundColor: 'transparent',
     textAlign: 'center',
+  },
+  iconView: {
+    height: scaleSize(60),
+    width: scaleSize(100),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    height: scaleSize(60),
+    width: scaleSize(60),
   },
 })

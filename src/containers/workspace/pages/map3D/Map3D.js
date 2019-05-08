@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import {
-  BackHandler,
+  InteractionManager,
   Platform,
   View,
   Text,
@@ -27,9 +27,11 @@ import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
+import { getLanguage } from '../../../../language/index'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
+    language: string,
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
@@ -42,6 +44,8 @@ export default class Map3D extends React.Component {
     refreshLayer3dList: () => {},
     user: Object,
     device: Object,
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -66,20 +70,31 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.online)
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    // 三维地图只允许单例
-    this._addScene()
-    this.addAttributeListener()
-    this.addCircleFlyListen()
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.back() })
+      }
+      GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
+
+      // 三维地图只允许单例
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+      )
+      // setTimeout(this._addScene, 2000)
+      this._addScene()
+      this.addAttributeListener()
+      this.addCircleFlyListen()
+    })
   }
 
   componentWillUnmount() {
     // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
-    Platform.OS === 'android' &&
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    if (Platform.OS === 'android') {
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
+    }
     this.attributeListener && this.attributeListener.remove()
     this.circleFlyListen && this.circleFlyListen.remove()
   }
@@ -125,16 +140,20 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    this.container.setLoading(true)
     if (!this.name) {
       setTimeout(() => {
         this.container.setLoading(false)
-        Toast.show('无场景显示')
+        Toast.show(getLanguage(this.props.language).Prompt.NO_SCENE)
+        //'无场景显示')
       }, 1500)
       return
     }
     try {
-      SScene.openScence(this.name).then(() => {
+      SScene.openScence(this.name).then(result => {
+        if (!result) {
+          this.container.setLoading(false)
+          return
+        }
         SScene.setNavigationControlVisible(false)
         this.initListener()
         GLOBAL.openWorkspace = true
@@ -164,7 +183,7 @@ export default class Map3D extends React.Component {
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
-    this._addScene()
+    // this._addScene()
   }
 
   _pop_list = (show, type) => {
@@ -218,7 +237,12 @@ export default class Map3D extends React.Component {
     // }
     // GLOBAL.sceneName = ''
     try {
-      this.container && this.container.setLoading(true, '正在关闭')
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING_3D,
+          //'正在关闭'
+        )
       if (GLOBAL.openWorkspace) {
         // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
         // await SScene.saveWorkspace()
@@ -247,6 +271,7 @@ export default class Map3D extends React.Component {
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
+        language={this.props.language}
         style={styles.functionToolbar}
         ref={ref => (this.functionToolbar = ref)}
         getToolRef={() => {
@@ -279,7 +304,11 @@ export default class Map3D extends React.Component {
     // eslint-disable-next-line
     const content = /[@#\$%\^&\*]+/g
     let result = content.test(this.state.inputText)
-    if (result || this.state.inputText === '' || this.state.inputText == null) {
+    if (
+      result ||
+      this.state.inputText === '' ||
+      this.state.inputText === null
+    ) {
       this.setState({
         inputText: null,
         placeholder: true,
@@ -358,6 +387,8 @@ export default class Map3D extends React.Component {
         type={'modal'}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
       >
         <View style={styles.item}>
           {/* <Text style={styles.title}>文本内容</Text> */}
@@ -371,7 +402,10 @@ export default class Map3D extends React.Component {
               })
             }}
             value={this.state.inputText}
-            placeholder={'请输入文本内容'}
+            placeholder={
+              getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT
+            }
+            // {'请输入文本内容'}
             style={styles.textInputStyle}
           />
         </View>
@@ -407,7 +441,8 @@ export default class Map3D extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '三维场景',
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
+          //'三维场景',
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: (

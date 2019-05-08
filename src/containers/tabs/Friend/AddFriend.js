@@ -19,6 +19,7 @@ import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
 //import Friend from './Friend'
 import FriendListFileHandle from './FriendListFileHandle'
+import { getLanguage } from '../../../language/index'
 import { Toast } from '../../../utils'
 
 const dismissKeyboard = require('dismissKeyboard')
@@ -40,6 +41,7 @@ class AddFriend extends Component {
       isLoading: false,
       text: '',
     }
+    this.language = this.props.navigation.getParam('language')
   }
   componentDidMount() {
     this.friend = this.props.navigation.getParam('friend')
@@ -60,7 +62,9 @@ class AddFriend extends Component {
         {
           <TextInput
             autoCapitalize="none"
-            placeholder="邮箱/手机/昵称"
+            placeholder={
+              getLanguage(this.language).Friends.ADD_FRIEND_PLACEHOLDER
+            }
             clearButtonMode="while-editing"
             onChangeText={newWord => this.setState({ text: newWord })}
             underlineColorAndroid="white"
@@ -76,8 +80,10 @@ class AddFriend extends Component {
     if (!val) {
       return
     }
-    this.container.setLoading(true, '查询好友中...')
-
+    this.container.setLoading(
+      true,
+      getLanguage(this.language).Friends.SEARCHING,
+    )
     let result = await SOnlineService.getUserInfoBy(val, 0)
     if (result === false) {
       result = ['无', '该用户不存在']
@@ -135,8 +141,8 @@ class AddFriend extends Component {
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 
-    if (this.target[0] == this.user.userId) {
-      Toast.show('不能添加自己为好友哦')
+    if (this.target[0] === this.user.userId) {
+      Toast.show(getLanguage(this.language).Friends.ADD_SELF)
       return
     }
     this.friend._sendMessage(messageStr, item[0], true)
@@ -161,7 +167,7 @@ class AddFriend extends Component {
               { color: text.length > 0 ? '#0084ff' : '#BBB' },
             ]}
           >
-            搜索
+            {getLanguage(this.language).Friends.SEARCH}
           </Text>
         </View>
       </TouchableOpacity>
@@ -175,7 +181,9 @@ class AddFriend extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={dialogStyles.dialogHeaderImgX}
         />
-        <Text style={dialogStyles.promptTtileX}>添加对方为好友 ？</Text>
+        <Text style={dialogStyles.promptTtileX}>
+          {getLanguage(this.language).Friends.ADD_AS_FRIEND}
+        </Text>
       </View>
     )
   }
@@ -184,8 +192,8 @@ class AddFriend extends Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
         confirmAction={this.addFriendRequest}
         opacity={1}
         opacityStyle={styles.opacityView}
@@ -228,7 +236,8 @@ class AddFriend extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '添加好友',
+          title: getLanguage(global.language).Friends.ADD_FRIENDS,
+          //'添加好友',
           withoutBack: false,
           navigation: this.props.navigation,
         }}

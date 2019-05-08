@@ -31,12 +31,15 @@ import {
   setBufferSetting,
   setOverlaySetting,
   getMapSetting,
+  setMapLegend,
 } from '../../../../models/setting'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
+import { setBackAction, removeBackAction } from '../../../../models/backActions'
 
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   nav: state.nav.toJS(),
   editLayer: state.layers.toJS().editLayer,
   analystLayer: state.layers.toJS().analystLayer,
@@ -55,6 +58,7 @@ const mapStateToProps = state => ({
   template: state.template.toJS(),
   device: state.device.toJS().device,
   online: state.online.toJS(),
+  mapLegend: state.setting.toJS().mapLegend,
 })
 
 const mapDispatchToProps = {
@@ -85,6 +89,9 @@ const mapDispatchToProps = {
   getMapSetting,
   setSharing,
   setCurrentSymbols,
+  setMapLegend,
+  setBackAction,
+  removeBackAction,
 }
 
 export default connect(

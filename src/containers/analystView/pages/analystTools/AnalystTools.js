@@ -23,6 +23,10 @@ export default class AnalystTools extends Component {
     }
   }
 
+  goToMapView = () => {
+    this.props.navigation && this.props.navigation.navigate('MapAnalystView')
+  }
+
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column = this.state.column
     return (
@@ -35,7 +39,9 @@ export default class AnalystTools extends Component {
         image={item.image}
         background={item.background}
         onPress={() => {
-          item.action()
+          item.action({
+            cb: this.goToMapView,
+          })
         }}
       />
     )

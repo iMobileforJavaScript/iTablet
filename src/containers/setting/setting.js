@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -9,20 +8,22 @@ import {
   SectionList,
   TouchableOpacity,
   Switch,
-  BackHandler,
-  Platform,
+  InteractionManager,
 } from 'react-native'
 import styles from './styles'
 import settingData from './settingData'
 import { color } from '../../styles'
+import { getLanguage } from '../../language/index'
 export default class setting extends Component {
   props: {
+    language: string,
     navigation: Object,
     data: Array,
     setSettingData: () => {},
     settingData: any,
     device: Object,
   }
+
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
@@ -33,10 +34,9 @@ export default class setting extends Component {
   }
 
   componentDidMount() {
-    this.getdata()
-
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
+    InteractionManager.runAfterInteractions(() => {
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -48,18 +48,7 @@ export default class setting extends Component {
     }
   }
 
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
-  }
-
-  back = () => {
-    this.props.navigation.navigate('Map3D')
-    return true
-  }
-
-  getdata = async () => {
+  getData = async () => {
     let data
     if (this.type === 'MAP_3D') {
       // eslint-disable-next-line
@@ -180,7 +169,7 @@ export default class setting extends Component {
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
-        onRefresh={this.getdata}
+        onRefresh={this.getData}
         refreshing={false}
       />
     )
@@ -202,7 +191,7 @@ export default class setting extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: MAP_MODULE.MAP_3D,
+          title: getLanguage(this.props.language).Map_Module.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,
         }}

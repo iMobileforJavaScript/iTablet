@@ -7,7 +7,8 @@
 import * as React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { Button, RadioGroup, TextBtn } from '../../../../components'
-import { Toast } from '../../../../utils'
+// import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 
 import styles from './styles'
 
@@ -28,25 +29,54 @@ export default class LocationView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      isShow: false,
-    }
-
-    this.options = [
+    this.currentData = {}
+    let options = [
       {
-        title: '相对位置',
+        title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_RELATIVE,
+        //'相对位置',
         value: 'relative',
         hasInput: true,
         keyboardType: 'numeric',
       },
       {
-        title: '绝对位置',
+        title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_ABSOLUTE,
+        //'绝对位置',
         value: 'absolute',
         hasInput: true,
         keyboardType: 'numeric',
+        inputValue: props.currentIndex >= 0 ? props.currentIndex + 1 : '',
       },
     ]
-    this.currentData = {}
+    this.state = {
+      isShow: false,
+      options,
+      canBeLocated: this.checkLocated(options),
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentIndex !== this.props.currentIndex) {
+      let state = {}
+      state.options = JSON.parse(JSON.stringify(this.state.options))
+      state.options[1].inputValue =
+        this.props.currentIndex >= 0 ? this.props.currentIndex + 1 : ''
+      this.currentData = state.options[1]
+      state.canBeLocated = this.checkLocated(state.options)
+      this.setState(state)
+    }
+  }
+
+  checkLocated = (options = this.state.options) => {
+    for (let i = 0; i < options.length; i++) {
+      if (
+        options[i].title === this.currentData.title &&
+        this.currentData.inputValue !== '' &&
+        this.currentData.inputValue !== undefined
+      ) {
+        return true
+      }
+    }
+    return false
   }
 
   isShow = () => this.state.isShow
@@ -88,6 +118,7 @@ export default class LocationView extends React.Component {
   }
 
   locateToPosition = () => {
+    if (!this.state.canBeLocated) return
     if (
       this.props.locateToPosition &&
       typeof this.props.locateToPosition === 'function'
@@ -102,7 +133,10 @@ export default class LocationView extends React.Component {
           index: parseInt(this.currentData.inputValue),
         })
       } else {
-        Toast.show('请选择定位信息')
+        // Toast.show(
+        //   getLanguage(global.language).Prompt
+        //     .PLEASE_SELECT_LICATION_INFORMATION,
+        // )
       }
     }
     this.show(false)
@@ -112,7 +146,10 @@ export default class LocationView extends React.Component {
     return (
       <View style={styles.topView}>
         <Text style={styles.text}>
-          {'当前位置 ' + (this.props.currentIndex + 1 || '')}
+          {getLanguage(global.language).Map_Attribute.ATTRIBUTE_CURRENT +
+            ': ' +
+            //'当前位置 '
+            (this.props.currentIndex + 1 || '')}
         </Text>
       </View>
     )
@@ -124,13 +161,19 @@ export default class LocationView extends React.Component {
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title="定位到首位"
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_FIRST_RECORD
+          }
+          //"定位到首位"
           onPress={this.locateToTop}
         />
         <Button
           style={styles.button}
           titleStyle={styles.buttonTitle}
-          title="定位到末行"
+          title={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LAST_RECORD
+          }
+          //"定位到末行"
           onPress={this.locateToBottom}
         />
       </View>
@@ -141,10 +184,26 @@ export default class LocationView extends React.Component {
     return (
       <View style={styles.options}>
         <RadioGroup
-          data={this.options}
+          data={this.state.options}
           column={1}
+          defaultValue={this.state.options[1].value}
           onSubmitEditing={data => {
             this.currentData = data
+            let canBeLocated = this.checkLocated()
+            if (canBeLocated !== this.state.canBeLocated) {
+              this.setState({
+                canBeLocated,
+              })
+            }
+          }}
+          onFocus={data => {
+            this.currentData = data
+            let canBeLocated = this.checkLocated()
+            if (canBeLocated !== this.state.canBeLocated) {
+              this.setState({
+                canBeLocated,
+              })
+            }
           }}
         />
       </View>
@@ -156,12 +215,20 @@ export default class LocationView extends React.Component {
       <View style={styles.bottomButtons}>
         <TextBtn
           textStyle={styles.bottomBtnTxt}
-          btnText="取消"
+          btnText={getLanguage(global.language).Prompt.CANCEL}
+          //"取消"
           btnClick={() => this.show(false)}
         />
         <TextBtn
-          textStyle={styles.bottomBtnTxt}
-          btnText="定位"
+          textStyle={
+            this.state.canBeLocated
+              ? styles.bottomBtnTxt
+              : styles.bottomBtnTxtDisable
+          }
+          btnText={
+            getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION
+          }
+          //"定位"
           btnClick={this.locateToPosition}
         />
       </View>

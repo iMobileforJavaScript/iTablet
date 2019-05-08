@@ -7,13 +7,18 @@
 import * as React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { DatasetType, ThemeType } from 'imobile_for_reactnative'
-import { Toast, scaleSize } from '../../../../utils/index'
-import { Const } from '../../../../constants/index'
+import { Toast, scaleSize } from '../../../../utils'
+import { Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
 import { color } from '../../../../styles'
-import { getThemeAssets } from '../../../../assets'
+import {
+  getThemeIconByType,
+  getThemeWhiteIconByType,
+  getLayerIconByType,
+  getLayerWhiteIconByType,
+} from '../../../../assets'
 
 const LAYER_GROUP = 'layerGroup'
 
@@ -40,6 +45,7 @@ export default class LayerManager_item extends React.Component {
     sectionID: number,
     rowID: number,
     selectLayer: Object,
+    index: number,
 
     setLayerVisible: () => {},
   }
@@ -62,7 +68,7 @@ export default class LayerManager_item extends React.Component {
       selected: props.selected,
       options: options,
       editable: data.isEditable,
-      visable: data.isVisible,
+      visible: data.isVisible,
       selectable: data.isSelectable,
       snapable: data.isSnapable,
       rowShow: false,
@@ -131,8 +137,8 @@ export default class LayerManager_item extends React.Component {
         isVectorLayer: isVectorLayer,
         options: options,
         editable: data.isEditable && !showLevelOne,
-        // visable: data.isVisible && !showLevelOne,
-        visable: data.isVisible,
+        // visible: data.isVisible && !showLevelOne,
+        visible: data.isVisible,
         selectable: data.isSelectable && !showLevelOne,
         snapable: data.isSnapable && !showLevelOne,
         rowShow: this.state.rowShow || false,
@@ -246,13 +252,13 @@ export default class LayerManager_item extends React.Component {
     Toast.show('待做')
   }
 
-  _visable_change = () => {
+  _visible_change = () => {
     this.setState(oldstate => {
-      let oldVisibe = oldstate.visable
+      let oldVisibe = oldstate.visible
       ;(async function() {
         this.props.setLayerVisible(this.props.data, !oldVisibe)
       }.bind(this)())
-      return { visable: !oldVisibe }
+      return { visible: !oldVisibe }
     })
   }
 
@@ -342,6 +348,7 @@ export default class LayerManager_item extends React.Component {
     if (this.props.onToolPress) {
       await this.props.onToolPress({
         data: this.props.data,
+        index: this.props.index,
       })
     } else return
   }
@@ -386,160 +393,18 @@ export default class LayerManager_item extends React.Component {
 
   getStyleIconByType = item => {
     if (item.themeType > 0) {
-      if (this.props.selectLayer === this.props.data.caption) {
-        return this.getThemeWhiteIconByType(item.themeType)
+      if (this.props.selectLayer === this.props.data.name) {
+        return getThemeWhiteIconByType(item.themeType)
       } else {
-        return this.getThemeIconByType(item.themeType)
+        return getThemeIconByType(item.themeType)
       }
     } else {
-      if (this.props.selectLayer === this.props.data.caption) {
-        return this.getLayerWhiteIconByType(item.type)
+      if (this.props.selectLayer === this.props.data.name) {
+        return getLayerWhiteIconByType(item.type)
       } else {
-        return this.getLayerIconByType(item.type)
+        return getLayerIconByType(item.type)
       }
     }
-  }
-
-  getThemeWhiteIconByType = type => {
-    let icon
-    switch (type) {
-      case ThemeType.UNIQUE: // 单值专题图
-        icon = require('../../../../assets/map/layers_theme_unique_style.png')
-        break
-      case ThemeType.RANGE: // 分段专题图
-        icon = require('../../../../assets/map/layers_theme_range_style.png')
-        break
-      case ThemeType.LABEL: // 标签专题图
-        icon = require('../../../../assets/map/layers_theme_unify_label_style.png')
-        break
-      case ThemeType.GRAPH: // 统计专题图
-        icon = getThemeAssets().themeType.theme_graphmap_selected
-        break
-      case ThemeType.DOTDENSITY: // 点密度专题图
-        icon = getThemeAssets().themeType.theme_dot_density_selected
-        break
-      case ThemeType.GRADUATEDSYMBOL: // 等级符号专题图
-        icon = getThemeAssets().themeType.theme_graduated_symbol_selected
-        break
-      case ThemeType.GRIDUNIQUE: // 栅格单值专题图
-        icon = getThemeAssets().themeType.theme_grid_unique_selected
-        break
-      case ThemeType.GRIDRANGE: // 栅格分段专题图
-        icon = getThemeAssets().themeType.theme_grid_range_selected
-        break
-      default:
-        icon = require('../../../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
-  }
-
-  getThemeIconByType = type => {
-    let icon
-    switch (type) {
-      case ThemeType.UNIQUE: // 单值专题图
-        icon = require('../../../../assets/map/layers_theme_unique_style_black.png')
-        break
-      case ThemeType.RANGE: // 分段专题图
-        icon = require('../../../../assets/map/layers_theme_range_style_black.png')
-        break
-      case ThemeType.LABEL: // 标签专题图
-        icon = require('../../../../assets/map/layers_theme_unify_label_style_black.png')
-        break
-      case ThemeType.GRAPH: // 统计专题图
-        icon = getThemeAssets().themeType.theme_graphmap
-        break
-      case ThemeType.DOTDENSITY: // 点密度专题图
-        icon = getThemeAssets().themeType.theme_dot_density
-        break
-      case ThemeType.GRADUATEDSYMBOL: // 等级符号专题图
-        icon = getThemeAssets().themeType.theme_graduated_symbol
-        break
-      case ThemeType.GRIDUNIQUE: // 栅格单值专题图
-        icon = getThemeAssets().themeType.theme_grid_unique
-        break
-      case ThemeType.GRIDRANGE: // 栅格分段专题图
-        icon = getThemeAssets().themeType.theme_grid_range
-        break
-      default:
-        icon = require('../../../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
-  }
-
-  getLayerWhiteIconByType = type => {
-    let icon
-    switch (type) {
-      case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-layer-group.png')
-        break
-      case DatasetType.POINT: // 点数据集
-        icon = require('../../../../assets/map/icon-shallow-dot.png')
-        break
-      case DatasetType.LINE: // 线数据集
-        icon = require('../../../../assets/map/icon-shallow-line.png')
-        break
-      case DatasetType.REGION: // 多边形数据集
-        icon = require('../../../../assets/map/icon-shallow-polygon.png')
-        break
-      case DatasetType.TEXT: // 文本数据集
-        icon = require('../../../../assets/map/icon-shallow-text.png')
-        break
-      case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../../../assets/map/icon-shallow-image.png')
-        break
-      case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/map/icon-cad.png')
-        break
-      case DatasetType.Network: // 复合数据集
-        icon = require('../../../../assets/map/icon-network.png')
-        break
-      case DatasetType.GRID: // GRID数据集
-        icon = require('../../../../assets/map/icon-grid.png')
-        break
-      default:
-        icon = require('../../../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
-  }
-
-  getLayerIconByType = type => {
-    let icon
-    switch (type) {
-      case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-layer-group.png')
-        break
-      case DatasetType.POINT: // 点数据集
-        icon = require('../../../../assets/map/icon-shallow-dot_black.png')
-        break
-      case DatasetType.LINE: // 线数据集
-        icon = require('../../../../assets/map/icon-shallow-line_black.png')
-        break
-      case DatasetType.REGION: // 多边形数据集
-        icon = require('../../../../assets/map/icon-shallow-polygon_black.png')
-        break
-      case DatasetType.TEXT: // 文本数据集
-        icon = require('../../../../assets/map/icon-shallow-text_black.png')
-        break
-      case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../../../assets/map/icon-shallow-image_black.png')
-        break
-      case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/map/icon-cad_black.png')
-        break
-      case DatasetType.Network: // 复合数据集
-        icon = require('../../../../assets/map/icon-network.png')
-        break
-      case DatasetType.GRID: // GRID数据集
-        icon = require('../../../../assets/map/icon-grid_black.png')
-        break
-      default:
-        icon = require('../../../../assets/public/mapLoad.png')
-        break
-    }
-    return icon
   }
 
   close = () => {
@@ -580,10 +445,10 @@ export default class LayerManager_item extends React.Component {
 
   renderItem = () => {
     let name = this.props.data.caption
-    const visibleImgWhite = this.state.visable
+    const visibleImgWhite = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable.png')
-    const visibleImgBlack = this.state.visable
+    const visibleImgBlack = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
     const arrowImg = this.state.rowShow
@@ -597,10 +462,10 @@ export default class LayerManager_item extends React.Component {
     let select = 'transparent'
     let selectcolor = color.black
     let visibleImg = visibleImgBlack
-    let moreImg = require('../../../../assets/function/icon_shallow_more_black.png')
+    let moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     let image = this.getStyleIconByType(this.props.data)
-    if (this.props.selectLayer === this.props.data.caption) {
-      select = '#rgba(0,157,249,1)'
+    if (this.props.selectLayer === this.props.data.name) {
+      select = '#4680df'
       selectcolor = color.white
       visibleImg = visibleImgWhite
       moreImg = require('../../../../assets/function/icon_shallow_more.png')
@@ -608,7 +473,7 @@ export default class LayerManager_item extends React.Component {
       select = 'transparent'
       selectcolor = color.black
       visibleImg = visibleImgBlack
-      moreImg = require('../../../../assets/function/icon_shallow_more_black.png')
+      moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     }
     return (
       <TouchableOpacity
@@ -629,7 +494,7 @@ export default class LayerManager_item extends React.Component {
             leftView
           )}
           {this.props.operable && (
-            <TouchableOpacity style={styles.btn} onPress={this._visable_change}>
+            <TouchableOpacity style={styles.btn} onPress={this._visible_change}>
               <Image
                 resizeMode={'contain'}
                 style={styles.btn_image}

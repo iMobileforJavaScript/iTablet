@@ -62,7 +62,11 @@ const MapTabs = TabNavigator(
   options,
 )
 
-const analystTabsOptions = Object.assign(options, { initialRouteIndex: 1 })
+const analystTabsOptions = Object.assign(options, {
+  initialRouteIndex: 1,
+  lazy: false,
+  backBehavior: 'none',
+})
 const MapAnalystTabs = TabNavigator(
   {
     MapAnalystView: {

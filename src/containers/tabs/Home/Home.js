@@ -7,6 +7,8 @@ import {
   AsyncStorage,
   StatusBar,
   NativeModules,
+  InteractionManager,
+  Platform,
 } from 'react-native'
 import { Container, Dialog } from '../../../components'
 import { ModuleList } from './components'
@@ -19,9 +21,14 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
+import { getLanguage } from '../../../language/index'
+
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
+    navigation: Object,
+    language: string,
+    setLanguage: () => {},
     nav: Object,
     latestMap: Object,
     currentUser: Object,
@@ -35,6 +42,8 @@ export default class Home extends Component {
     openWorkspace: () => {},
     setUser: () => {},
     setDownInformation: () => {},
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
 
   constructor(props) {
@@ -48,7 +57,20 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    this._initStatusBarVisible()
+    InteractionManager.runAfterInteractions(() => {
+      if (Platform.OS === 'android') {
+        this.props.setBackAction({ action: () => this.showMorePop() })
+      }
+      this._initStatusBarVisible()
+    })
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
+    }
   }
 
   _initStatusBarVisible = async () => {
@@ -146,7 +168,7 @@ export default class Home extends Component {
 
   _onLogout = () => {
     if (this.container) {
-      this.container.setLoading(true, '注销中...')
+      //this.container.setLoading(true, '注销中...')
     }
     try {
       if (this.props.currentUser.userType !== UserType.PROBATION_USER) {
@@ -220,6 +242,16 @@ export default class Home extends Component {
     cancel && cancel(this.moduleItemRef, this.state.dialogCheck)
   }
 
+  showUserPop = () => {
+    this.topNavigatorBarImageId = 'left'
+    this.setState({ modalIsVisible: true })
+  }
+
+  showMorePop = () => {
+    this.topNavigatorBarImageId = 'right'
+    this.setState({ modalIsVisible: true })
+  }
+
   renderDialogChildren = () => {
     let storage = null
     let fileName = null
@@ -245,6 +277,14 @@ export default class Home extends Component {
           fileName = 'OlympicGreen'
           storage = '  25.57MB'
           break
+        case 'PrecipitationOfUSA':
+          fileName = 'PrecipitationOfUSA'
+          storage = '  28.93MB'
+          break
+        case 'LosAngeles':
+          fileName = 'LosAngeles'
+          storage = '  23.73MB'
+          break
       }
     }
     let Img = this.state.dialogCheck
@@ -256,7 +296,9 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否下载示例数据？'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.DOWNLOAD_SAMPLE_DATA}
+        </Text>
         <Text style={styles.depict}>
           {fileName}
           {storage}
@@ -269,7 +311,10 @@ export default class Home extends Component {
           }}
         >
           <Image source={Img} style={styles.checkImg} />
-          <Text style={styles.dialogCheck}>不再提示</Text>
+          <Text style={styles.dialogCheck}>
+            {getLanguage(this.props.language).Prompt.NO_REMINDER}
+            {/* 不再提示 */}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -282,7 +327,10 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>确定退出SuperMap iTablet ？</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Prompt.QUIT}
+          {/* 确定退出SuperMap iTablet ？ */}
+        </Text>
       </View>
     )
   }
@@ -293,8 +341,10 @@ export default class Home extends Component {
         ref={ref => (this.dialog = ref)}
         type={'modal'}
         confirmAction={this.confirm}
-        confirmBtnTitle={'下载'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.DOWNLOAD}
+        //{'下载'}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        //{'取消'}
         // backgroundStyle={styles.dialogBackground}
         opacity={0.85}
         opacityStyle={styles.opacityView}
@@ -313,8 +363,8 @@ export default class Home extends Component {
       <Dialog
         ref={ref => (this.exit = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         confirmAction={this.exitConfirm}
         opacity={1}
         opacityStyle={styles.opacityView}
@@ -326,9 +376,13 @@ export default class Home extends Component {
   }
 
   _renderModal = () => {
-    let isLogin = this.props.currentUser.password !== undefined
+    let isLogin =
+      this.props.currentUser.password !== undefined &&
+      this.props.currentUser.password !== ''
     return (
       <HomePopupModal
+        language={this.props.language}
+        setLanguage={this.props.setLanguage}
         isLogin={isLogin}
         onLogin={this._onLogin}
         onRegister={this._onRegister}
@@ -362,20 +416,14 @@ export default class Home extends Component {
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}
-              onPress={() => {
-                this.topNavigatorBarImageId = 'left'
-                this.setState({ modalIsVisible: true })
-              }}
+              onPress={() => this.showUserPop()}
             >
               <Image source={userImg} style={styles.userImg} />
             </TouchableOpacity>
           ),
           headerRight: (
             <TouchableOpacity
-              onPress={() => {
-                this.topNavigatorBarImageId = 'right'
-                this.setState({ modalIsVisible: true })
-              }}
+              onPress={() => this.showMorePop()}
               style={styles.moreView}
             >
               <Image

@@ -10,10 +10,10 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../native'
 
 function isJSON(str) {
-  if (typeof str == 'string') {
+  if (typeof str === 'string') {
     try {
       var obj = JSON.parse(str)
-      if (typeof obj == 'object' && obj) {
+      if (typeof obj === 'object' && obj) {
         return true
       } else {
         return false
@@ -235,6 +235,15 @@ export default class FriendListFileHandle {
     }
 
     return bFound
+  }
+
+  //判断是否是好友，以后可能会改变判断逻辑
+  static isFriend(id) {
+    let isFriend = false
+    if (this.findFromFriendList(id)) {
+      isFriend = true
+    }
+    return isFriend
   }
 
   static findFromGroupList(id) {

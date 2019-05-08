@@ -7,8 +7,11 @@ import {
   UIManager,
   LayoutAnimation,
 } from 'react-native'
-import { Container } from '../../../../components'
+import { Container, MTBtn } from '../../../../components'
 import Toast from '../../../../utils/Toast'
+import { getLanguage } from '../../../../language/index'
+import { scaleSize } from '../../../../utils'
+import { getPublicAssets } from '../../../../assets'
 
 export default class protocol extends Component {
   props: {
@@ -22,6 +25,7 @@ export default class protocol extends Component {
     this.state = {
       progressWidth: Dimensions.get('window').width * 0.4,
       isLoadWebView: false,
+      backButtonEnabled: false,
     }
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental &&
@@ -99,16 +103,24 @@ export default class protocol extends Component {
         title = 'SuperMap'
         break
       case 'protocol':
-        source = {
-          uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
+        if (global.language === 'CN') {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/protocol.html',
+          }
+        } else {
+          source = {
+            uri:
+              'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
+          }
         }
-        title = '服务协议'
+        title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
       case 'superMapForum':
         source = {
           uri: `https://ask.supermap.com/`,
         }
-        title = '超图论坛'
+        title = getLanguage(global.language).Prompt.SUPERMAP_FORUM
+        //'超图论坛'
         break
       case 'supermap':
         source = {
@@ -123,20 +135,72 @@ export default class protocol extends Component {
             this.knownItem.id +
             '.html',
         }
-        title = '超图知道'
+        title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
+        //'超图知道'
+        break
+      case 'userHelp':
+        if (global.language === 'CN') {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/help.html',
+          }
+        } else {
+          source = {
+            uri: 'http://111.202.121.144:8088/iTablet/home/help/help_en.html',
+          }
+        }
+        title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
+        break
+      case 'ApplyLicense':
+        source = {
+          uri: `https://www.supermapol.com/web/pricing/triallicense`,
+        }
+        title = getLanguage(global.language).Prompt.APPLY_LICENSE
+        //'申请许可'
         break
       default:
         break
     }
+
+    let webBackOpacity = this.state.backButtonEnabled ? 1 : 0
+    let headerLeft = [
+      <MTBtn
+        key={'back'}
+        image={getPublicAssets().common.icon_back}
+        customStyle={{
+          height: scaleSize(60),
+          width: scaleSize(60),
+          marginLeft: scaleSize(0),
+        }}
+        onPress={() => {
+          this.props.navigation.goBack()
+        }}
+      />,
+      <MTBtn
+        key={'webClose'}
+        image={getPublicAssets().common.icon_close}
+        customStyle={{
+          opacity: webBackOpacity,
+          height: scaleSize(60),
+          width: scaleSize(60),
+          marginLeft: scaleSize(0),
+        }}
+        onPress={() => {
+          this.webView.goBack()
+        }}
+      />,
+    ]
+    // headerLeft = this.state.backButtonEnabled ? headerLeft : null
     return (
       <Container
         headerProps={{
           title: title,
+          headerLeft: headerLeft,
           navigation: this.props.navigation,
         }}
       >
         {this.state.isLoadWebView ? (
           <WebView
+            ref={ref => (this.webView = ref)}
             style={{ flex: 1, paddingTop: 0 }}
             source={source}
             /** 保证release版本时，可加载到html*/
@@ -163,6 +227,11 @@ export default class protocol extends Component {
               if (this.objProgressWidth !== undefined) {
                 clearInterval(this.objProgressWidth)
               }
+            }}
+            onNavigationStateChange={navState => {
+              this.setState({
+                backButtonEnabled: navState.canGoBack,
+              })
             }}
           />
         ) : (

@@ -5,21 +5,21 @@
  */
 
 import * as React from 'react'
-import { View, Text, Platform, BackHandler } from 'react-native'
-import { Container, SearchBar } from '../../../../components'
-import NavigationService from '../../../NavigationService'
+import { Container, SearchBar, InfoView } from '../../../../components'
 import { Toast, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-// import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
+import { getPublicAssets } from '../../../../assets'
 
 const PAGE_SIZE = 30
 
 export default class LayerAttributeSearch extends React.Component {
   props: {
+    language: string,
     navigation: Object,
     currentAttribute: Object,
     selection: Object,
@@ -58,18 +58,6 @@ export default class LayerAttributeSearch extends React.Component {
     this.searchBar && this.searchBar.focus()
   }
 
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
-    // this.props.setCurrentAttribute({})
-  }
-
-  back = () => {
-    NavigationService.goBack()
-    return true
-  }
-
   /** 下拉刷新 **/
   // refresh = (cb = () => {}) => {
   //   this.currentPage = 0
@@ -87,7 +75,7 @@ export default class LayerAttributeSearch extends React.Component {
       return
     }
     this.currentPage += 1
-    this.search(this.searchKey, attribute => {
+    this.search(this.searchKey, 'loadMore', attribute => {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -98,8 +86,11 @@ export default class LayerAttributeSearch extends React.Component {
     })
   }
 
-  search = (searchKey = '', cb = () => {}) => {
-    if (!this.layerPath || searchKey === '') return
+  search = (searchKey = '', type = 'reset', cb = () => {}) => {
+    if (!this.layerPath || searchKey === '') {
+      this.setLoading(false)
+      return
+    }
     this.searchKey = searchKey
     let result = {},
       attributes = []
@@ -112,6 +103,7 @@ export default class LayerAttributeSearch extends React.Component {
             searchKey,
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         } else {
           result = await LayerUtil.searchLayerAttribute(
@@ -122,6 +114,7 @@ export default class LayerAttributeSearch extends React.Component {
             },
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         }
 
@@ -205,7 +198,7 @@ export default class LayerAttributeSearch extends React.Component {
             filter: `SmID=${
               isSingleData
                 ? this.state.attributes.data[0][0].value
-                : data.rowData[0].value
+                : data.rowData[1].value // 0为序号
             }`, // 过滤条件
             cursorType: 2, // 2: DYNAMIC, 3: STATIC
           },
@@ -241,7 +234,12 @@ export default class LayerAttributeSearch extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(global.language).Map_Label.NAME,
+              getLanguage(global.language).Map_Label.ATTRIBUTE,
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
@@ -270,10 +268,20 @@ export default class LayerAttributeSearch extends React.Component {
       <SearchBar
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
-          this.setLoading(true, ConstInfo.SEARCHING)
+          this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
           this.search(searchKey)
         }}
-        placeholder={'请输入搜索关键字'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+        //{'请输入搜索关键字'}
+      />
+    )
+  }
+
+  renderInfoView = ({ image, title }) => {
+    return (
+      <InfoView
+        image={image || getPublicAssets().attribute.info_no_attribute}
+        title={title}
       />
     )
   }
@@ -314,19 +322,16 @@ export default class LayerAttributeSearch extends React.Component {
       >
         {this.state.showTable &&
         this.state.attributes &&
-        this.state.attributes.head ? (
-            this.state.attributes.head.length > 0 ? (
-              this.renderMapLayerAttribute()
-            ) : (
-              <View style={styles.infoView}>
-                <Text style={styles.info}>搜索结果</Text>
-              </View>
-            )
-          ) : (
-            <View style={styles.infoView}>
-              <Text style={styles.info}>搜索结果</Text>
-            </View>
-          )}
+        this.state.attributes.head
+          ? this.state.attributes.head.length > 0
+            ? this.renderMapLayerAttribute()
+            : this.renderInfoView({
+              title: getLanguage(this.props.language).Prompt
+                .NO_SEARCH_RESULTS,
+            })
+          : this.renderInfoView({
+            title: getLanguage(this.props.language).Prompt.NO_SEARCH_RESULTS,
+          })}
       </Container>
     )
   }

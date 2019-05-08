@@ -12,9 +12,11 @@ import { color } from '../../../styles'
 import { getPublicAssets } from '../../../assets'
 import NavigationService from '../../NavigationService'
 import styles from '../styles'
+import { getLanguage } from '../../../language'
 
 export default class MapCutSetting extends React.Component {
   props: {
+    language: string,
     datasources: Array,
     configAction?: () => {},
   }
@@ -42,22 +44,27 @@ export default class MapCutSetting extends React.Component {
     const data = (new Map(): Map<string, Object>)
     data.set('ds', {
       selected: true,
-      title: '目标数据源',
+      title: getLanguage(this.props.language).Map_Main_Menu
+        .TOOLS_TARGET_DATASOURCE,
+      //'目标数据源',
       dsName: this.props.datasources[0] ? this.props.datasources[0].alias : '',
     })
     data.set('range', {
       selected: true,
-      title: '区域内裁剪',
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE,
+      //'区域内裁剪',
       value: true,
     })
     data.set('erase', {
       selected: true,
-      title: '擦除裁剪区域',
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE,
+      //'擦除裁剪区域',
       value: true,
     })
     data.set('exactCut', {
       selected: true,
-      title: '精确裁剪',
+      title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP,
+      //'精确裁剪',
       value: true,
     })
     return data
@@ -128,7 +135,10 @@ export default class MapCutSetting extends React.Component {
   renderTop = () => {
     return (
       <View style={styles.settingTopView}>
-        <Text style={styles.settingTopTitle}>统一设置</Text>
+        <Text style={styles.settingTopTitle}>
+          {getLanguage(this.props.language).Map_Main_Menu.TOOLS_UNIFIED_SETTING}
+          {/* 统一设置 */}
+        </Text>
       </View>
     )
   }
@@ -243,7 +253,10 @@ export default class MapCutSetting extends React.Component {
             this.settingModal && this.settingModal.setVisible(false)
           }
         >
-          <Text style={styles.closeText}>取消</Text>
+          <Text style={styles.closeText}>
+            {getLanguage(this.props.language).Prompt.CANCEL}
+            {/* 取消 */}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.settingBtn}
@@ -252,7 +265,10 @@ export default class MapCutSetting extends React.Component {
             this.props.configAction && this.props.configAction(this.state.data)
           }}
         >
-          <Text style={styles.closeText}>确定</Text>
+          <Text style={styles.closeText}>
+            {getLanguage(this.props.language).Prompt.CONFIRM}
+            {/* 确定 */}
+          </Text>
         </TouchableOpacity>
       </View>
     )

@@ -1,0 +1,101 @@
+//我的、发现
+const Profile = {
+  LOGIN_NOW: 'Login',
+  IMPORT: 'Import',
+  DATA: 'Data',
+  MARK: 'Mark',
+  MAP: 'Map',
+  SCENE: 'Scene',
+  BASEMAP: 'Base Map',
+  SYMBOL: 'Symbol',
+  SETTINGS: 'Settings',
+  COLOR_SCHEME: 'Color Scheme',
+  TEMPLATE: 'Template',
+  COLLECTION_TEMPLATE: 'Collection Template',
+
+  //我的——登录
+  LOGIN: 'Login',
+  MOBILE_LOGIN: 'Mobile Login',
+  EMAIL_LOGIN: 'Email Login',
+  ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
+  ENTER_MOBILE: 'Please enter your mobile number',
+  ENTER_PASSWORD: 'Please enter your password',
+  REGISTER: 'Register',
+  MOBILE_REGISTER: 'Mobile Register',
+  EMAIL_REGISTER: 'Email Register',
+  ENTER_USERNAME: 'Please enter your username',
+  ENTER_CODE: 'Please enter your code',
+  GET_CODE: 'Get Code',
+  ENTER_EMAIL: 'Please enter your email',
+
+  //
+  SHARE: 'Share',
+  PATH: 'Path',
+
+  SAMPLEDATA: 'Sampledata',
+  ON_DEVICE: 'On Device',
+  EXPORT_DATA: 'Export Data',
+  IMPORT_DATA: 'Import Data',
+  UPLOAD_DATA: 'Upload Data',
+  DELETE_DATA: 'Delete Data',
+  UPLOAD_MAP: 'Upload Map',
+  EXPORT_MAP: 'Export Map',
+  DELETE_MAP: 'Delete Map',
+  UPLOAD_SCENE: 'Upload Scene',
+  DELETE_SCENE: 'Delete Scene',
+  UPLOAD_SYMBOL: 'Upload Symbol',
+  DELETE_SYMBOL: 'Delete Symbol',
+  UPLOAD_TEMPLATE: 'Upload Template',
+  DELETE_TEMPLATE: 'Delete Template',
+  UPLOAD_MARK: 'Upload Mark',
+  DELETE_MARK: 'Delete Mark',
+  UPLOAD_COLOR_SCHEME: 'Upload Color Scheme',
+  DELETE_COLOR_SCHEME: 'Delete Color Scheme',
+
+  ABOUT: 'About',
+  SERVICE_HOTLINE: 'Service Hotline',
+  SALES_CONSULTATION: 'Sales Consultation',
+  BUSINESS_WEBSITE: 'Business Website',
+  PRIVACY_POLICY: 'Privacy Policy',
+  HELP_MANUAL: 'Help Manual',
+
+  SWITCH_ACCOUNT: 'Switch Account',
+  LOG_OUT: 'Log out',
+
+  //地图服务地址
+  SERVICE_ADDRESS: 'Service Address',
+  MAP_NAME: 'Map Name',
+  ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
+  SAVE: 'Save',
+
+  //我的服务
+  SERVICE: 'Service',
+  MY_SERVICE: 'Service',
+  PRIVATE_SERVICE: 'Private Service',
+  PUBLIC_SERVICE: 'Public Service',
+  DELETE: 'Delete',
+  //个人主页
+  MY_ACCOUNT: 'My Account',
+  PROFILE_PHOTO: 'Profile Photo',
+  USERNAME: 'Username',
+  PHONE: 'Phone',
+  E_MAIL: 'E-mail',
+  CONNECT: 'Connect',
+  MANAGE_ACCOUNT: 'Manage Account',
+  ADD_ACCOUNT: 'Add Account',
+
+  DELETE_SERVICE: 'Delete Service',
+  PUBLISH_SERVICE: 'Publish',
+  SET_AS_PRIVATE_SERVICE: 'Set as Private Service',
+  SET_AS_PUBLIC_SERVICE: 'Set as Public Service',
+  SET_AS_PRIVATE_DATA: 'Set as Private Data',
+  SET_AS_PUBLIC_DATA: 'Set as Public Data',
+
+  NO_SERVICE: 'No Service',
+
+  MAP_ONLINE: 'Online Map',
+  MAP_2D: '2D Map',
+  MAP_3D: '3D Map',
+  BROWSE_MAP: 'Browse',
+}
+export { Profile }

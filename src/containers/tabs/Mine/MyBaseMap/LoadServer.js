@@ -4,6 +4,7 @@ import { Container } from '../../../../components'
 import { color, size } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 export default class LoadServer extends Component {
   props: {
     navigation: Object,
@@ -25,11 +26,15 @@ export default class LoadServer extends Component {
         onPress={() => {
           try {
             if (this.state.name === '') {
-              Toast.show('请输入底图名称')
+              Toast.show(getLanguage(global.language).Prompt.ENTER_MAP_NAME)
+              //'请输入底图名称')
               return
             }
             if (this.state.server === '') {
-              Toast.show('请输入服务地址')
+              Toast.show(
+                getLanguage(global.language).Prompt.ENTER_SERVICE_ADDRESS,
+              )
+              //'请输入服务地址')
               return
             }
             let item = {
@@ -47,13 +52,18 @@ export default class LoadServer extends Component {
             this.setBaseMap && this.setBaseMap(list)
             NavigationService.goBack()
           } catch (error) {
-            Toast.show('保存失败')
+            Toast.show(getLanguage(global.language).Prompt.SAVE_FAILED)
+            //'保存失败')
           }
 
           // console.log(this.props.navigation.state)
         }}
       >
-        <Text style={styles.text}>{'保存'}</Text>
+        <Text style={styles.text}>
+          {getLanguage(global.language).Profile.SAVE}
+
+          {/* {'保存'} */}
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -63,19 +73,24 @@ export default class LoadServer extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '服务地址',
+          title: getLanguage(global.language).Profile.SERVICE_ADDRESS,
+          //'服务地址',
           navigation: this.props.navigation,
           headerRight: this._renderHeaderBtn(),
         }}
       >
         <TextInput
-          placeholder={'地图名称'}
+          placeholder={getLanguage(global.language).Profile.MAP_NAME}
+          // {'地图名称'}
           style={styles.textInput}
           ref={ref => (this.name = ref)}
           onChangeText={text => this.setState({ name: text })}
         />
         <TextInput
-          placeholder={'请输入服务地址'}
+          placeholder={
+            getLanguage(global.language).Profile.ENTER_SERVICE_ADDRESS
+          }
+          //{'请输入服务地址'}
           style={[styles.textInput, { marginTop: 20 }]}
           ref={ref => (this.server = ref)}
           onChangeText={text => this.setState({ server: text })}

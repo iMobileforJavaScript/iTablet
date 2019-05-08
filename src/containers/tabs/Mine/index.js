@@ -14,10 +14,10 @@ import MyLocalData from './MyLocalData'
 import MyData from './MyData'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
-import MyOnlineData from './MyOnlineData'
 import MyModule from './MyModule'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
   workspace: state.map.toJS().workspace,
 })
@@ -35,7 +35,6 @@ export default connect(
 
 export {
   Register,
-  MyOnlineData,
   MyLocalData,
   MyData,
   MyService,

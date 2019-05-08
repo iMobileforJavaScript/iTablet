@@ -9,6 +9,7 @@ import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 import { scaleSize } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 
 export default class Personal extends Component {
   props: {
@@ -25,7 +26,7 @@ export default class Personal extends Component {
 
   _logout = () => {
     if (this.container) {
-      this.container.setLoading(true, '注销中...')
+      //this.container.setLoading(true, '注销中...')
     }
     try {
       SOnlineService.logout()
@@ -59,7 +60,8 @@ export default class Personal extends Component {
     let marginLeft = 15
     let marginRight = 20
     let fontSize = size.fontSize.fontSizeXl
-    if (key !== '头像') {
+    if (key !== getLanguage(global.language).Profile.PROFILE_PHOTO) {
+      //'头像') {
       return (
         <View style={{ width: '100%' }}>
           <View
@@ -148,10 +150,27 @@ export default class Personal extends Component {
   renderHeader = () => {
     return (
       <View style={{ width: '100%' }}>
-        {this._renderItem('头像')}
-        {this._renderItem('用户名', this.props.user.currentUser.userName)}
-        {this._renderItem('手机号', this.props.user.currentUser.phone)}
-        {this._renderItem('邮箱', this.props.user.currentUser.email)}
+        {this._renderItem(
+          //'头像'
+          getLanguage(global.language).Profile.PROFILE_PHOTO,
+        )}
+        {this._renderItem(
+          //'用户名'
+          getLanguage(global.language).Profile.USERNAME,
+          this.props.user.currentUser.userName,
+        )}
+        {this._renderItem(
+          //'手机号'
+          getLanguage(global.language).Profile.PHONE,
+          this.props.user.currentUser.phone,
+        )}
+        {this._renderItem(
+          //'邮箱'
+          getLanguage(global.language).Profile.E_MAIL,
+          this.props.user.currentUser.email === ' 立即绑定'
+            ? getLanguage(global.language).Profile.CONNECT
+            : this.props.user.currentUser.email,
+        )}
       </View>
     )
   }
@@ -185,7 +204,8 @@ export default class Personal extends Component {
             color: color.fontColorBlack,
           }}
         >
-          切换账号
+          {getLanguage(global.language).Profile.SWITCH_ACCOUNT}
+          {/* 切换账号 */}
         </Text>
       </TouchableOpacity>
     )
@@ -206,7 +226,8 @@ export default class Personal extends Component {
             color: color.fontColorBlack,
           }}
         >
-          退出登录
+          {getLanguage(global.language).Profile.LOG_OUT}
+          {/* 退出登录 */}
         </Text>
       </TouchableOpacity>
     )
@@ -217,7 +238,8 @@ export default class Personal extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '个人主页',
+          title: getLanguage(global.language).Profile.MY_ACCOUNT,
+          //'个人主页',
           navigation: this.props.navigation,
         }}
       >

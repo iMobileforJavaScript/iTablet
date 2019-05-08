@@ -18,6 +18,7 @@ import { color } from '../../../../styles'
 import Row from './Row'
 
 import styles from './styles'
+import { getLanguage } from '../../../../language/index'
 
 const COL_HEIGHT = scaleSize(80)
 
@@ -27,6 +28,7 @@ export default class LayerAttributeTable extends React.Component {
     loadMore?: () => {},
     selectRow?: () => {},
     changeAction?: () => {}, // 修改表格中的值的回调
+    onViewableItemsChanged?: () => {},
 
     selectable: boolean,
     stickySectionHeadersEnabled?: boolean,
@@ -64,8 +66,14 @@ export default class LayerAttributeTable extends React.Component {
   constructor(props) {
     super(props)
     // let { dataList, colHeight } = this.dealData(props.tableTitle, props.data)
-    let titles =
+    const titles =
       props.tableTitle.length > 0 ? props.tableTitle : this.getTitle(props.data)
+
+    const isMultiData =
+      props.data instanceof Array &&
+      props.data.length > 1 &&
+      props.data[0] instanceof Array
+
     this.state = {
       colHeight: COL_HEIGHT,
       widthArr: props.widthArr,
@@ -84,8 +92,16 @@ export default class LayerAttributeTable extends React.Component {
       currentSelect: -1,
       refreshing: false,
       loading: false,
+
+      isMultiData,
     }
     this.canBeLoadMore = true // 控制是否可以加载更多
+    this.isScrolling = false // 防止连续定位滚动
+
+    this.viewabilityConfig = {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95,
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -108,7 +124,12 @@ export default class LayerAttributeTable extends React.Component {
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
-      let titles = this.getTitle(this.props.data)
+      const titles = this.getTitle(this.props.data)
+
+      const isMultiData =
+        this.props.data instanceof Array &&
+        this.props.data.length > 1 &&
+        this.props.data[0] instanceof Array
 
       this.setState({
         colHeight: COL_HEIGHT,
@@ -120,6 +141,7 @@ export default class LayerAttributeTable extends React.Component {
           },
         ],
         tableHead: this.props.tableHead,
+        isMultiData,
       })
       if (prevProps.data && this.props.data.length < prevProps.data.length) {
         this.table &&
@@ -135,7 +157,9 @@ export default class LayerAttributeTable extends React.Component {
 
   scrollToLocation = params => {
     if (!params) return
-    if (this.table) {
+    // 防止2秒内连续定位滚动
+    if (this.table && !this.isScrolling) {
+      this.isScrolling = true
       this.table.scrollToLocation({
         animated: params.animated || false,
         itemIndex: params.itemIndex || 0,
@@ -144,6 +168,10 @@ export default class LayerAttributeTable extends React.Component {
           params.viewOffset !== undefined ? params.viewOffset : COL_HEIGHT,
         viewPosition: params.viewPosition || 0,
       })
+      let timer = setTimeout(() => {
+        this.isScrolling = false
+        clearTimeout(timer)
+      }, 2000)
     }
   }
 
@@ -216,21 +244,32 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
-  setSelected = index => {
+  /**
+   * 设置/取消 选择行
+   * index:    行序号
+   * isToggle: 若行已被选中，是否取消被选择状态
+   **/
+  setSelected = (index, isToggle = true) => {
     if (index === undefined || isNaN(index) || index < 0) return
+    if (
+      isToggle ||
+      !this.state.selected.get(this.state.tableData[0].data[index][0].value)
+    ) {
+      this.setState(state => {
+        // copy the map rather than modifying state.
+        const selected = new Map(state.selected)
+        const target = selected.get(
+          this.state.tableData[0].data[index][0].value,
+        )
+        if (!this.props.multiSelect && !target) {
+          // 多选或者点击已选行
+          selected.clear()
+        }
 
-    this.setState(state => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected)
-      const target = selected.get(this.state.tableData[0].data[index][0].value)
-      if (!this.props.multiSelect && !target) {
-        // 多选或者点击已选行
-        selected.clear()
-      }
-
-      selected.set(this.state.tableData[0].data[index][0].value, !target) // toggle
-      return { selected }
-    })
+        selected.set(this.state.tableData[0].data[index][0].value, !target) // toggle
+        return { selected }
+      })
+    }
 
     return {
       data: this.state.tableData[0].data[index],
@@ -291,10 +330,10 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       data.length > 0 &&
-      data[0].name !== '序号'
+      data[0].name !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
       data.unshift({
-        name: '序号',
+        name: getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
         value: this.props.startIndex + index,
         fieldInfo: {},
       })
@@ -316,7 +355,10 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
-    return index
+    if (index === null) {
+      return null
+    }
+    return index.toString()
   }
 
   _renderSectionHeader = ({ section }) => {
@@ -324,9 +366,9 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       titles.length > 0 &&
-      titles[0] !== '序号'
+      titles[0] !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
-      titles.unshift('序号')
+      titles.unshift(getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO)
     }
     return (
       <Row
@@ -337,6 +379,15 @@ export default class LayerAttributeTable extends React.Component {
         onPress={() => {}}
       />
     )
+  }
+
+  _onViewableItemsChanged = changed => {
+    if (
+      this.props.onViewableItemsChanged &&
+      typeof this.props.onViewableItemsChanged === 'function'
+    ) {
+      this.props.onViewableItemsChanged(changed)
+    }
   }
 
   getItemLayout = (data, index) => {
@@ -359,7 +410,7 @@ export default class LayerAttributeTable extends React.Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           onRefresh={this.refresh}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={1}
           onEndReached={this.loadMore}
           initialNumToRender={20}
           getItemLayout={this.getItemLayout}
@@ -367,6 +418,9 @@ export default class LayerAttributeTable extends React.Component {
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
           onScroll={() => (this.canBeLoadMore = true)}
+          removeClippedSubviews={true}
+          onViewableItemsChanged={this._onViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
         />
       </ScrollView>
     )
@@ -404,19 +458,17 @@ export default class LayerAttributeTable extends React.Component {
           alignItems: 'center',
         }}
       >
-        <IndicatorLoading title={'加载中'} />
+        <IndicatorLoading
+          title={getLanguage(global.language).Prompt.LOADING}
+          //{'加载中'}
+        />
       </View>
     )
   }
 
   render() {
-    let isMultiData =
-      this.state.tableData[0].data instanceof Array &&
-      this.state.tableData[0].data.length > 1 &&
-      this.state.tableData[0].data[0] instanceof Array
-
     if (
-      !isMultiData &&
+      !this.state.isMultiData &&
       Object.keys(this.state.tableData[0].data).length === 0
     ) {
       return null
@@ -428,12 +480,12 @@ export default class LayerAttributeTable extends React.Component {
         enabled
         style={styles.container}
       >
-        <View style={styles.container}>
-          {this.props.type === 'MULTI_DATA' && isMultiData
-            ? this.renderMultiDataTable()
-            : this.renderSingleDataTable()}
-          {/*{this.state.loading && this.renderFooter()}*/}
-        </View>
+        {/*<View style={styles.container}>*/}
+        {this.props.type === 'MULTI_DATA' && this.state.isMultiData
+          ? this.renderMultiDataTable()
+          : this.renderSingleDataTable()}
+        {/*{this.state.loading && this.renderFooter()}*/}
+        {/*</View>*/}
       </KeyboardAvoidingView>
     )
   }

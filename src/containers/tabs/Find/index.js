@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
 
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
 })
 

@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 const itemWidth = '70%'
-const itemHeight = 40
-const fontSize = 16
+const itemHeight = 60
+const fontSize = 23
 const titleOnFocusBackgroundColor = color.itemColorBlack
 const titleOnBlurBackgroundColor = color.itemColorWhite
 const styles = StyleSheet.create({
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     width: itemWidth,
-    height: itemHeight - 8,
+    height: scaleSize(itemHeight),
     marginTop: 20,
     marginBottom: 20,
     alignItems: 'center',
@@ -27,21 +28,21 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   titleContainerStyle: {
-    fontSize: fontSize,
+    fontSize: scaleSize(fontSize),
     color: color.fontColorGray,
     textAlign: 'center',
   },
   textInputStyle: {
     width: '100%',
-    height: itemHeight,
-    fontSize: fontSize,
+    height: scaleSize(80),
+    fontSize: scaleSize(fontSize),
     borderBottomColor: color.borderLight,
     color: color.fontColorGray,
     borderBottomWidth: 1,
     marginTop: 10,
   },
   registerStyle: {
-    height: itemHeight,
+    height: scaleSize(itemHeight),
     width: '50%',
     backgroundColor: color.itemColorBlack,
     marginTop: 40,
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   },
   verifyCodeViewStyle: {
     width: '100%',
-    height: itemHeight,
+    height: scaleSize(itemHeight),
     marginTop: 10,
     borderBottomColor: color.borderLight,
     borderBottomWidth: 1,
@@ -61,13 +62,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: fontSize,
     color: color.fontColorBlack,
-    height: itemHeight,
+    height: scaleSize(itemHeight),
   },
   verifyCodeRTextStyle: {
     width: 100,
-    fontSize: 12,
+    fontSize: scaleSize(18),
     color: color.blue1,
-    lineHeight: itemHeight,
+    lineHeight: scaleSize(itemHeight),
     textAlign: 'right',
   },
 })

@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, Platform, BackHandler } from 'react-native'
+import { SectionList, View, InteractionManager } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../language/index'
 
 export default class MapSetting extends Component {
   props: {
+    language: string,
     navigation: Object,
     currentMap: Object,
     data: Array,
@@ -20,6 +21,8 @@ export default class MapSetting extends Component {
     closeMap: () => {},
     mapSetting: any,
     device: Object,
+    mapLegend: boolean,
+    setMapLegend: () => {},
   }
 
   constructor(props) {
@@ -32,9 +35,9 @@ export default class MapSetting extends Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.getData()
+    InteractionManager.runAfterInteractions(() => {
+      this.getData()
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -50,11 +53,11 @@ export default class MapSetting extends Component {
     ) {
       this.getData()
     }
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    if (
+      JSON.stringify(prevProps.mapLegend) !==
+      JSON.stringify(this.props.mapLegend)
+    ) {
+      this.getLegendData()
     }
   }
 
@@ -62,8 +65,12 @@ export default class MapSetting extends Component {
     let isAntialias = await SMap.isAntialias()
     let isOverlapDisplayed = await SMap.isOverlapDisplayed()
     let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+    let isEnableRotateTouch = SMap.isEnableRotateTouch()
+    let isEnableSlantTouch = SMap.isEnableSlantTouch()
 
     let newData = getMapSettings()
+    newData[0].data[0].value = isEnableRotateTouch
+    newData[0].data[1].value = isEnableSlantTouch
     newData[1].data[0].value = isAntialias
     newData[1].data[1].value = isOverlapDisplayed
     newData[2].data[0].value = isVisibleScalesEnabled
@@ -73,16 +80,28 @@ export default class MapSetting extends Component {
     })
   }
 
-  refreshList = section => {
-    let newData = this.state.data
-    for (let index = 0; index < section.data.length; index++) {
-      section.data[index].isShow = !section.data[index].isShow
-    }
+  getLegendData = async () => {
+    let newData = JSON.parse(JSON.stringify(this.state.data))
+    newData[0].data[2].value = this.props.mapLegend
+
+    this.setState({
+      data: newData,
+    })
+  }
+
+  headerAction = section => {
+    let newData = JSON.parse(JSON.stringify(this.state.data))
     section.visible = !section.visible
 
-    newData[section.index] = section
+    for (let i = 0; i < newData.length; i++) {
+      if (newData[i].title === section.title) {
+        newData[i] = section
+        break
+      }
+    }
+
     this.setState({
-      data: newData.concat(),
+      data: newData,
     })
   }
 
@@ -95,52 +114,39 @@ export default class MapSetting extends Component {
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
   }
 
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
-    return true
-  }
-
-  _onValueChange = ({ value, item, index }) => {
-    let newData = this.state.data
-    newData[item.sectionIndex].data[index].value = value
-    switch (newData[item.sectionIndex].data[index].name) {
-      case '手势旋转':
+  _onValueChange = ({ value, index, section }) => {
+    let newData = JSON.parse(JSON.stringify(this.state.data))
+    let sectionIndex = 0
+    for (let i = 0; i < newData.length; i++) {
+      if (newData[i].title === section.title) {
+        sectionIndex = i
+        break
+      }
+    }
+    newData[sectionIndex].data[index].value = value
+    switch (newData[sectionIndex].data[index].name) {
+      case getLanguage(this.props.language).Map_Setting.ROTATION_GESTURE:
+        //'手势旋转':
         SMap.enableRotateTouch(value)
         break
-      case '手势俯仰':
+      case getLanguage(this.props.language).Map_Setting.PITCH_GESTURE:
+        //'手势俯仰':
         SMap.enableSlantTouch(value)
         break
-      case '反走样地图':
+      case getLanguage(this.props.language).Map_Setting.ANTI_ALIASING_MAP:
+        //'反走样地图':
         SMap.setAntialias(value)
         break
-      case '显示压盖对象':
+      case getLanguage(this.props.language).Map_Setting.SHOW_OVERLAYS:
+        //'显示压盖对象':
         SMap.setOverlapDisplayed(value)
         break
-      case '固定比例尺':
+      case getLanguage(this.props.language).Map_Setting.FIX_SCALE:
+        //'固定比例尺':
         SMap.setVisibleScalesEnabled(value)
+        break
+      case '专题图图例':
+        this.props.setMapLegend(value)
         break
     }
     this.setState({
@@ -150,19 +156,28 @@ export default class MapSetting extends Component {
 
   renderListSectionHeader = ({ section }) => {
     return (
-      <SettingSection data={section} onPress={data => this.refreshList(data)} />
+      <SettingSection
+        data={section}
+        onPress={data => this.headerAction(data)}
+      />
     )
   }
 
-  renderListItem = ({ item, index }) => {
+  renderListItem = ({ item, index, section }) => {
+    if (!section.visible) return <View />
     return (
       <SettingItem
         device={this.props.device}
+        section={section}
         data={item}
         index={index}
         onPress={data => this._onValueChange(data)}
       />
     )
+  }
+
+  _renderItemSeparatorComponent = ({ section }) => {
+    return section.visible ? <View style={styles.itemSeparator} /> : null
   }
 
   renderSelection = () => {
@@ -172,6 +187,7 @@ export default class MapSetting extends Component {
         sections={this.state.data}
         renderItem={this.renderListItem}
         renderSectionHeader={this.renderListSectionHeader}
+        ItemSeparatorComponent={this._renderItemSeparatorComponent}
         keyExtractor={(item, index) => index}
         onRefresh={this.getData}
         refreshing={false}
@@ -193,19 +209,24 @@ export default class MapSetting extends Component {
     let title = ''
     switch (GLOBAL.Type) {
       case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
+        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
+        //MAP_MODULE.MAP_COLLECTION
         break
       case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
+        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
+        //MAP_MODULE.MAP_EDIT
         break
       case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
+        title = getLanguage(this.props.language).Map_Module.MAP_3D
+        //MAP_MODULE.MAP_3D
         break
       case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
+        title = getLanguage(this.props.language).Map_Module.MAP_THEME
+        //MAP_MODULE.MAP_THEME
         break
       case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
+        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
+        //MAP_MODULE.MAP_PLOTTING
         break
     }
     return (

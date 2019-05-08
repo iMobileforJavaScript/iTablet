@@ -8,66 +8,45 @@ export default class MapSetting extends Component {
     onPress: () => {},
     mapSetting: any,
     index: number,
+    section: Object,
     device: Object,
   }
 
   _onValueChange = (value, item, index) => {
-    this.props.onPress && this.props.onPress({ value, item, index })
+    this.props.onPress &&
+      this.props.onPress({ value, item, index, section: this.props.section })
   }
 
   render() {
-    if (this.props.data.isShow) {
-      if (typeof this.props.data.value === 'boolean') {
-        return (
-          <View>
-            <View style={styles.row}>
-              <Text style={styles.itemName}>{this.props.data.name}</Text>
-              <Switch
-                style={styles.switch}
-                trackColor={{ false: color.bgG, true: color.switch }}
-                thumbColor={this.props.data.value ? color.bgW : color.bgW}
-                ios_backgroundColor={
-                  this.props.data.value ? color.switch : color.bgG
-                }
-                value={this.props.data.value}
-                onValueChange={value => {
-                  this._onValueChange(value, this.props.data, this.props.index)
-                }}
-              />
-            </View>
-            <View
-              style={[
-                styles.itemSeparator,
-                {
-                  // width: 0.956 * this.props.device.width,
-                  width: '100%',
-                  // marginLeft: 0.022 * this.props.device.width,
-                },
-              ]}
+    if (typeof this.props.data.value === 'boolean') {
+      return (
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.itemName}>{this.props.data.name}</Text>
+            <Switch
+              style={styles.switch}
+              trackColor={{ false: color.bgG, true: color.switch }}
+              thumbColor={this.props.data.value ? color.bgW : color.bgW}
+              ios_backgroundColor={
+                this.props.data.value ? color.switch : color.bgG
+              }
+              value={this.props.data.value}
+              onValueChange={value => {
+                this._onValueChange(value, this.props.data, this.props.index)
+              }}
             />
           </View>
-        )
-      } else {
-        return (
-          <View>
-            <View style={styles.row}>
-              <Text style={styles.itemName}>{this.props.data.name}</Text>
-              <Text style={styles.itemValue}>{this.props.data.value}</Text>
-            </View>
-            <View
-              style={[
-                styles.itemSeparator,
-                {
-                  width: 0.956 * this.props.device.width,
-                  marginLeft: 0.022 * this.props.device.width,
-                },
-              ]}
-            />
-          </View>
-        )
-      }
+        </View>
+      )
     } else {
-      return <View />
+      return (
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.itemName}>{this.props.data.name}</Text>
+            <Text style={styles.itemValue}>{this.props.data.value}</Text>
+          </View>
+        </View>
+      )
     }
   }
 }

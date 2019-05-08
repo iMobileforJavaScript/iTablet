@@ -111,7 +111,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 2
-        versionName "2.0"
+        versionName "2.0.2"
         ndk {
             abiFilters "armeabi-v7a"
         }
@@ -160,7 +160,8 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-maps')
+    compile project(':react-native-contacts')
+    implementation project(':react-native-amap-geolocation')
     api project(':react-native-splash-screen')
     api project(':react-native-fs')
     api project(':react-native-orientation')

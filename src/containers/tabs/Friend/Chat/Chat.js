@@ -23,13 +23,13 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
-// eslint-disable-next-line import/no-unresolved
-import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
-import { ConstPath, EventConst } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
+import MSGConstant from '../MsgConstant'
+import { getLanguage } from '../../../../language/index'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -63,7 +63,6 @@ class Chat extends React.Component {
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
     this.onSendLocation = this.onSendLocation.bind(this)
-    this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
@@ -84,10 +83,9 @@ class Chat extends React.Component {
         break
       }
       let msg = this.targetUser.message[i]
-      let chatMsg = this.loadMsgByType(msg)
+      let chatMsg = this._loadChatMsg(msg)
       curMsg.push(chatMsg)
     }
-    // curMsg.push({_id: Math.round(Math.random() * 1000000), text: '上次聊天到这', system: true})
 
     this._isMounted = true
     this.setState(() => {
@@ -95,36 +93,6 @@ class Chat extends React.Component {
         messages: curMsg,
       }
     })
-
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-      this.onReceiveProgress,
-      // eslint-disable-next-line no-unused-vars
-      // value => {
-      // console.log(value)
-      // 接受到 通知后的处理
-      // },
-    )
-
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_SEND_FILE,
-      this.onReceiveProgress,
-    )
-    // this.setState({
-    //   messageInfo:this.props.navigation.getParam('messageInfo'),
-    //   messages: [
-    //     {
-    //       _id: 1,
-    //       text: 'Hello developer',
-    //       createdAt: new Date(),
-    //       user: {
-    //         _id: 2,
-    //         name: 'React Native',
-    //         avatar: 'https://placeimg.com/140/140/any',
-    //       },
-    //     },
-    //   ],
-    // })
   }
 
   onReceiveProgress(value) {
@@ -132,19 +100,21 @@ class Chat extends React.Component {
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
           m.message.message.progress = value.percentage
+
+          if (value.percentage === 100) {
+            m.message.message.isReceived = 1
+          }
         }
         return {
           ...m,
         }
       }),
     })
-    //todo input to redux
   }
 
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
-    this.listener.remove()
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -161,7 +131,7 @@ class Chat extends React.Component {
     if (this.targetUser.message.length > 4) {
       for (let i = this.targetUser.message.length - 1 - 4; i >= 0; i--) {
         let msg = this.targetUser.message[i]
-        let chatMsg = this.loadMsgByType(msg)
+        let chatMsg = this._loadChatMsg(msg)
         oldMsg.push(chatMsg)
       }
     }
@@ -176,53 +146,58 @@ class Chat extends React.Component {
       })
     }
   }
-
-  loadMsgByType(msg) {
-    if (msg.msg.type) {
-      switch (msg.msg.type) {
-        default:
-          return {
-            _id: msg.msgId,
-            text: ' ',
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-          }
-        case 6: //文件
-          return {
-            _id: msg.msgId,
-            text: msg.msg.message.message,
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-          }
-        case 10: //位置
-          return {
-            _id: msg.msgId,
-            text: msg.msg.message.message,
-            createdAt: new Date(msg.time),
-            user: { _id: msg.id, name: msg.name },
-            type: msg.type,
-            message: msg.msg,
-            // location: {
-            //   latitude: msg.msg.message.latitude,
-            //   longitude: msg.msg.message.longitude,
-            // },
-          }
-      }
-    }
-    return {
+  //将redux中取出消息转为chat消息
+  _loadChatMsg(msg) {
+    let chatMsg = {
       _id: msg.msgId,
-      text: msg.msg,
       createdAt: new Date(msg.time),
-      user: { _id: msg.id, name: msg.name },
+      user: {
+        _id: msg.id,
+        name: msg.name,
+      },
       type: msg.type,
       message: msg.msg,
+      system: msg.system,
     }
+
+    if (msg.msg.type) {
+      if (msg.msg.message.message) {
+        chatMsg.text = msg.msg.message.message
+      } else {
+        chatMsg.text = ' '
+      }
+    } else {
+      chatMsg.text = msg.msg
+    }
+    return chatMsg
+  }
+  //将接收或要发送的消息转为chat消息
+  _getChatMsg(messageStr, msgId) {
+    let message = JSON.parse(messageStr)
+    let chatMsg = {
+      _id: msgId,
+      createdAt: new Date(message.time),
+      user: {
+        _id: message.user.id,
+        name: message.user.name,
+      },
+      type: message.type,
+      message: message.message,
+    }
+
+    if (message.message.type) {
+      if (message.message.message.message) {
+        chatMsg.text = message.message.message.message
+      } else {
+        chatMsg.text = ' '
+      }
+    } else {
+      chatMsg.text = message.message
+    }
+    return chatMsg
   }
 
+  //发送普通消息
   onSend(messages = []) {
     let bGroup = 1
     let groupID = messages[0].user._id
@@ -232,6 +207,7 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
+    //要发送/保存的消息
     let message = {
       message: messages[0].text,
       type: bGroup,
@@ -242,18 +218,17 @@ class Chat extends React.Component {
       },
       time: time,
     }
-    // for demo purpose
-    // this.answerDemo(messages)
-    messages[0].message = messages[0].text
-    messages[0].type = bGroup
-    let msgId = this.friend._getMsgId(this.targetUser.id)
-    messages[0]._id = msgId
+    let msgId = this.friend.getMsgId(this.targetUser.id)
+    //保存
+    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let chatMsg = this._getChatMsg(JSON.stringify(message), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, messages),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
       }
     })
-
+    //发送
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -269,7 +244,7 @@ class Chat extends React.Component {
     let time = Date.parse(ctime)
     let message = {
       message: {
-        type: 10,
+        type: MSGConstant.MSG_LOCATION,
         message: {
           message: positionStr,
           longitude: value.longitude,
@@ -284,36 +259,20 @@ class Chat extends React.Component {
       },
       time: time,
     }
-    let msgId = this.friend._getMsgId(this.targetUser.id)
-    let msg = {
-      //添加到giftedchat的消息
-      _id: msgId,
-      text: positionStr,
-      type: 1,
-      user: { name: this.curUser.nickname, _id: this.curUser.userId },
-      createdAt: time,
-      system: 0,
-      // location: {
-      //   latitude: value.latitude,
-      //   longitude: value.longitude,
-      // },
-      message: {
-        type: 10,
-        message: {
-          message: positionStr,
-          longitude: value.longitude,
-          latitude: value.latitude,
-        },
-      },
-    }
+    let msgId = this.friend.getMsgId(this.targetUser.id)
+    //保存
+    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let Chatmsg = this._getChatMsg(JSON.stringify(message), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, Chatmsg),
       }
     })
-
+    //发送
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
+
   async onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
@@ -323,8 +282,8 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
+    //要发送的文件
     let message = {
-      //要发送的消息
       type: bGroup,
       user: {
         name: this.curUser.nickname,
@@ -332,9 +291,8 @@ class Chat extends React.Component {
         groupID: groupID,
       },
       time: time,
-      system: 0,
       message: {
-        type: 3, //文件本体
+        type: MSGConstant.MSG_FILE, //文件本体
         message: {
           data: '',
           index: 0,
@@ -343,95 +301,58 @@ class Chat extends React.Component {
       },
     }
 
-    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msgId = this.friend.getMsgId(this.targetUser.id)
     let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
-
     let statResult = await stat(filepath)
-    let msg = {
-      //添加到giftedchat的消息
-      _id: msgId,
-      text: '[文件]',
-      type: 1, //文件接收通知
-      user: { name: this.curUser.nickname, _id: this.curUser.userId },
-      createdAt: time,
-      system: 0,
+    //文件接收提醒
+    let informMsg = {
+      type: bGroup,
+      time: time,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
       message: {
-        type: 6,
+        type: MSGConstant.MSG_FILE_NOTIFY,
         message: {
           message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
-          queueName: '',
           filePath: filepath,
           progress: 0,
         },
       },
     }
+    //保存
+    this.friend.storeMessage(informMsg, this.targetUser.id, msgId)
+    //显示
+    let ChatMsg = this._getChatMsg(JSON.stringify(informMsg), msgId)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, ChatMsg),
       }
     })
-
+    //发送文件及提醒
     this.friend._sendFile(
       JSON.stringify(message),
       filepath,
       this.targetUser.id,
       msgId,
+      informMsg,
     )
   }
 
   showInformSpot = b => {
     this.setState({ showInformSpot: b })
   }
-  onReceive(text, bSystem) {
-    let messageObj = JSON.parse(text)
-    let msgId = this.friend._getMsgId(this.targetUser.id) - 1
-    let msg = {}
-    if (!messageObj.message.type) {
-      //特殊处理文本消息
-      msg = {
-        _id: msgId,
-        text: messageObj.message,
-        createdAt: new Date(messageObj.time),
-        system: bSystem,
-        user: {
-          _id: messageObj.user.id,
-          name: messageObj.user.name,
-          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-        },
-        type: messageObj.type,
-        message: messageObj.message,
-      }
-    } else {
-      msg = {
-        _id: msgId,
-        text: messageObj.message.message.message,
-        createdAt: new Date(messageObj.time),
-        system: bSystem,
-        user: {
-          _id: messageObj.user.id,
-          name: messageObj.user.name,
-          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-        },
-        type: messageObj.type,
-        message: messageObj.message,
-      }
-      if (messageObj.message.type === 6) {
-        //文件通知
-        msg.message.message.isReceived = 0
-      } else if (messageObj.message.type === 10) {
-        //位置
-        msg.location = {
-          latitude: messageObj.message.message.latitude,
-          longitude: messageObj.message.message.longitude,
-        }
-      }
-    }
-
+  onReceive(msgId) {
+    let talkId = this.targetUser.id
+    let msg = this.friend.getMsgByMsgId(talkId, msgId)
+    let chatMsg = this._loadChatMsg(msg)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, msg),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
         showInformSpot: false,
       }
     })
@@ -445,50 +366,28 @@ class Chat extends React.Component {
       this.targetUser.id,
       message._id,
     )
-    this.setState(previousState => {
-      let length = previousState.messages
-      let i = 0
-      for (; i < length; i++) {
-        if (previousState.messages[i]._id === message._id) {
-          break
-        }
-      }
-      previousState.messages[i].message.message.isReceived = 1
-      return {
-        messages: previousState.messages,
-      }
-    })
   }
-  async onLongPress(context, message) {
-    if (message.message.type) {
-      switch (message.message.type) {
-        case 6:
-          if (message.user._id !== this.curUser.userId) {
-            let userPath = await FileTools.appendingHomeDirectory(
-              ConstPath.UserPath + this.curUser.userName,
-            )
-            let receivePath = userPath + '/ReceivedFiles'
-            if (message.message.message.isReceived === 0) {
-              this.downloadmessage = message
-              this.downloadreceivePath = receivePath
-              this.download.setDialogVisible(true)
-            } else {
-              let toPath = await FileTools.appendingHomeDirectory(
-                ConstPath.Import + '/weChat.zip',
-              )
-              FileTools.copyFile(
-                receivePath + '/' + message.message.message.fileName,
-                toPath,
-              )
-              this.import.setDialogVisible(true)
-            }
-          }
-          break
-        default:
-          alert('undefined')
+
+  onFileTouch = async message => {
+    if (message.user._id !== this.curUser.userId) {
+      let userPath = await FileTools.appendingHomeDirectory(
+        ConstPath.UserPath + this.curUser.userName,
+      )
+      let receivePath = userPath + '/ReceivedFiles'
+      if (message.message.message.isReceived === 0) {
+        this.downloadmessage = message
+        this.downloadreceivePath = receivePath
+        this.download.setDialogVisible(true)
+      } else {
+        let toPath = await FileTools.appendingHomeDirectory(
+          ConstPath.Import + '/weChat.zip',
+        )
+        FileTools.copyFile(
+          receivePath + '/' + message.message.message.fileName,
+          toPath,
+        )
+        this.import.setDialogVisible(true)
       }
-    } else {
-      alert('1')
     }
   }
 
@@ -520,6 +419,7 @@ class Chat extends React.Component {
           <GiftedChat
             placeholder="message..."
             messages={this.state.messages}
+            showAvatarForEveryMessage={false}
             onSend={this.onSend}
             loadEarlier={this.state.loadEarlier}
             onLoadEarlier={this.onLoadEarlier}
@@ -530,7 +430,6 @@ class Chat extends React.Component {
               _id: this.curUser.userId, // sent messages should have same user._id
               name: this.curUser.nickname,
             }}
-            onLongPress={this.onLongPress}
             renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
             renderTicks={this.renderTicks}
@@ -541,7 +440,8 @@ class Chat extends React.Component {
             renderMessageText={props => {
               if (
                 props.currentMessage.message.type &&
-                props.currentMessage.message.type === 6
+                props.currentMessage.message.type ===
+                  MSGConstant.MSG_FILE_NOTIFY
               ) {
                 return null
               }
@@ -624,13 +524,38 @@ class Chat extends React.Component {
         wrapperStyle={{
           left: {
             //对方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'white',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
           right: {
             //我方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'blue',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
         }}
+        //与下一条自己的消息连接处的样式
+        containerToNextStyle={{
+          left: {
+            borderBottomLeftRadius: scaleSize(10),
+          },
+          right: {
+            borderBottomRightRadius: scaleSize(10),
+          },
+        }}
+        //与上一条自己的消息连接处的样式
+        containerToPreviousStyle={{
+          left: {
+            borderTopLeftRadius: scaleSize(10),
+          },
+          right: {
+            borderTopRightRadius: scaleSize(10),
+          },
+        }}
+        //底栏样式
         bottomContainerStyle={{
           right: {
             flexDirection: 'row-reverse',
@@ -646,11 +571,23 @@ class Chat extends React.Component {
   //渲染标记
   renderTicks(props) {
     let currentMessage = props
-    if (currentMessage.message.type && currentMessage.message.type === 6) {
+
+    if (
+      currentMessage.message.type &&
+      currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
+    ) {
       let progress = currentMessage.message.message.progress
       return (
         <View style={styles.tickView}>
-          <Text style={styles.tick}>{progress === 100 ? '✓' : progress}</Text>
+          <Text
+            style={
+              currentMessage.user._id !== this.curUser.userId
+                ? styles.tickLeft
+                : [styles.tickLeft, styles.tickRight]
+            }
+          >
+            {progress === 100 ? '✓' : progress === 0 ? '' : progress + '%'}
+          </Text>
         </View>
       )
     }
@@ -670,8 +607,8 @@ class Chat extends React.Component {
     )
   }
 
-  renderCustomView(props) {
-    return <CustomView {...props} />
+  renderCustomView = props => {
+    return <CustomView {...props} onFileTouch={this.onFileTouch} />
   }
 
   // eslint-disable-next-line
@@ -691,20 +628,24 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.import = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.import.setDialogVisible(false)
-          GLOBAL.Loading.setLoading(true, '数据导入中')
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Friends.IMPORT_DATA,
+          )
 
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
-              result && Toast.show('导入成功')
+              result &&
+                Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
             },
             () => {
               GLOBAL.Loading.setLoading(false)
-              Toast.show('导入失败')
+              Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
             },
           )
         }}
@@ -729,7 +670,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否导入数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.IMPORT_CONFIRM}
+        </Text>
       </View>
     )
   }
@@ -739,8 +682,8 @@ class Chat extends React.Component {
       <Dialog
         ref={ref => (this.download = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
         confirmAction={() => {
           this.download.setDialogVisible(false)
           this.receiveFile(this.downloadmessage, this.downloadreceivePath)
@@ -764,7 +707,9 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否接收数据'}</Text>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Friends.RECEIVE_CONFIRM}
+        </Text>
       </View>
     )
   }
@@ -818,9 +763,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginRight: scaleSize(20),
     marginLeft: scaleSize(20),
+    marginBottom: scaleSize(10),
   },
-  tick: {
+  tickLeft: {
     fontSize: scaleSize(18),
+    color: 'gray',
+  },
+  tickRight: {
     color: 'white',
   },
 })

@@ -23,19 +23,21 @@ import {
   PopModal,
 } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { CheckStatus, ConstInfo } from '../../../../constants'
+import { CheckStatus } from '../../../../constants'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
 import NavigationService from '../../../NavigationService'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import styles from '../../styles'
+import { getLanguage } from '../../../../language'
 
-const COMPLETE = '完成'
-const EDIT = '编辑'
+let COMPLETE = ''
+let EDIT = ''
 
 export default class MapCut extends React.Component {
   props: {
+    language: string,
     navigation: Object,
     nav: Object,
     map: Array,
@@ -46,7 +48,9 @@ export default class MapCut extends React.Component {
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
-    this.state = {
+    ;(COMPLETE = getLanguage(this.props.language).Prompt.CONFIRM),
+    (EDIT = getLanguage(this.props.language).Map_Main_Menu.EDIT),
+    (this.state = {
       headerBtnTitle: EDIT,
       selected: (new Map(): Map<string, boolean>),
       extraData: (new Map(): Map<string, Object>),
@@ -58,7 +62,7 @@ export default class MapCut extends React.Component {
       outLayers: [], // 未选中的图层
       datasources: [],
       points: (params && params.points) || [],
-    }
+    })
     this.init = true
     this.changeDSData = null
     this.isCutting = false // 判断是否正在裁剪
@@ -109,11 +113,19 @@ export default class MapCut extends React.Component {
   cut = () => {
     (async function() {
       try {
-        if (this.isCutting) return
+        if (
+          this.isCutting ||
+          (this.state.isSaveAs && this.state.saveAsName === '')
+        )
+          return
         this.isCutting = true
 
         this.mapNameIput && this.mapNameIput.blur()
-        this.container && this.container.setLoading(true, ConstInfo.CLIPPING)
+        this.container &&
+          this.container.setLoading(
+            true,
+            getLanguage(this.props.language).Prompt.CLIPPING,
+          )
         setTimeout(async () => {
           let layersInfo = []
           this.state.selected.forEach((value, key) => {
@@ -146,29 +158,46 @@ export default class MapCut extends React.Component {
             addition.Template = this.props.map.currentMap.Template
           }
 
-          let result = await SMap.clipMap(
+          SMap.clipMap(
             this.state.points,
             layersInfo,
             this.state.saveAsName,
             '',
             addition,
             true,
+          ).then(
+            () => {
+              this.container && this.container.setLoading(false)
+              this.isCutting = false
+
+              GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+              GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+              NavigationService.goBack()
+              Toast.show(
+                getLanguage(this.props.language).Prompt.CLIPPED_SUCCESS,
+              )
+            },
+            () => {
+              this.container && this.container.setLoading(false)
+              this.isCutting = false
+              Toast.show(getLanguage(this.props.language).Prompt.CLIP_FAILED)
+            },
           )
-          this.container && this.container.setLoading(false)
-          this.isCutting = false
-          if (result) {
-            GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
-            GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
-            NavigationService.goBack()
-            Toast.show(ConstInfo.CLIP_SUCCESS)
-          } else {
-            Toast.show(ConstInfo.CLIP_FAILED)
-          }
+          // this.container && this.container.setLoading(false)
+          // this.isCutting = false
+          // if (result) {
+          //   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+          //   GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+          //   NavigationService.goBack()
+          //   Toast.show(getLanguage(this.props.language).Prompt.CLIPPED_SUCCESS)
+          // } else {
+          //   Toast.show(ConstInfo.CLIP_FAILED)
+          // }
         }, 0)
       } catch (e) {
         this.isCutting = false
         this.container && this.container.setLoading(false)
-        Toast.show(ConstInfo.CLIP_FAILED)
+        Toast.show(getLanguage(this.props.language).Prompt.CLIP_FAILED)
       }
     }.bind(this)())
   }
@@ -434,7 +463,10 @@ export default class MapCut extends React.Component {
                 : CheckStatus.UN_CHECK,
               action: this.selectAll,
             })}
-            <Text style={styles.topText}>图层</Text>
+            <Text style={styles.topText}>
+              {getLanguage(this.props.language).Map_Label.LAYER}
+              {/* 图层 */}
+            </Text>
           </View>
           <View style={[styles.topRightView, { width: scaleSize(360) }]}>
             <Text
@@ -443,7 +475,11 @@ export default class MapCut extends React.Component {
                 { width: scaleSize(120), marginRight: scaleSize(30) },
               ]}
             >
-              目标数据源
+              {
+                getLanguage(this.props.language).Map_Main_Menu
+                  .TOOLS_TARGET_DATASOURCE
+              }
+              {/* 目标数据源 */}
             </Text>
           </View>
         </View>
@@ -453,17 +489,23 @@ export default class MapCut extends React.Component {
         <View style={styles.topView}>
           <View style={styles.topLeftView}>
             <View style={styles.selectImgView} />
-            <Text style={styles.topText}>图层</Text>
+            <Text style={styles.topText}>
+              {getLanguage(this.props.language).Map_Label.LAYER}
+              {/* 图层 */}
+            </Text>
           </View>
           <View style={styles.topRightView}>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-              区域内裁剪
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_CLIP_INSIDE}
+              {/* 区域内裁剪 */}
             </Text>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-              擦除
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE}
+              {/* 擦除 */}
             </Text>
             <Text style={[styles.topText, { width: scaleSize(120) }]}>
-              精确裁剪
+              {getLanguage(this.props.language).Map_Main_Menu.TOOLS_EXACT_CLIP}
+              {/* 精确裁剪 */}
             </Text>
           </View>
         </View>
@@ -586,20 +628,38 @@ export default class MapCut extends React.Component {
                   ref={ref => (this.mapNameIput = ref)}
                   value={this.state.text}
                   style={styles.input}
-                  placeholder={'请输入地图名字'}
+                  placeholder={
+                    getLanguage(this.props.language).Prompt.CLIP_ENTER_MAP_NAME
+                  }
+                  // {'请输入地图名字'}
                   underlineColorAndroid="transparent"
                   onChangeText={text => this._onChangeText(text)}
                   placeholderTextColor={color.borderColor}
                 />
               ) : (
-                <Text style={styles.topText}>另存地图</Text>
+                <Text style={styles.topText}>
+                  {
+                    getLanguage(this.props.language).Map_Main_Menu
+                      .START_SAVE_AS_MAP
+                  }
+                  {/* 另存地图 */}
+                </Text>
               )}
             </View>
             <View style={styles.bottomRightView}>
               <Button
-                style={styles.cutButton}
-                titleStyle={styles.cutTitle}
-                title="裁剪"
+                style={
+                  this.state.isSaveAs && this.state.saveAsName === ''
+                    ? styles.cutButtonDisable
+                    : styles.cutButton
+                }
+                titleStyle={
+                  this.state.isSaveAs && this.state.saveAsName === ''
+                    ? styles.cutTitleDisable
+                    : styles.cutTitle
+                }
+                title={getLanguage(this.props.language).Map_Main_Menu.CLIP}
+                //"裁剪"
                 onPress={this.cut}
               />
             </View>
@@ -648,7 +708,10 @@ export default class MapCut extends React.Component {
           style={[styles.closeDSBtn, { width: '100%' }]}
           onPress={() => this.dsModal && this.dsModal.setVisible(false)}
         >
-          <Text style={styles.closeText}>关闭</Text>
+          <Text style={styles.closeText}>
+            {getLanguage(this.props.language).Prompt.CANCEL}
+            {/* 关闭 */}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -667,6 +730,7 @@ export default class MapCut extends React.Component {
   renderSetting = () => {
     return (
       <MapCutSetting
+        language={this.props.language}
         ref={ref => (this.settingModal = ref)}
         datasources={this.state.datasources}
         configAction={settings => {
@@ -760,7 +824,8 @@ export default class MapCut extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: '地图裁剪',
+          title: getLanguage(this.props.language).Map_Main_Menu.MAP_CLIP,
+          //'地图裁剪',
           navigation: this.props.navigation,
           headerRight: (
             <TextBtn

@@ -17,7 +17,8 @@ import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { Utils } from '../../../workspace/util'
-import { SMap, Action } from 'imobile_for_reactnative'
+import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 
 const styles = StyleSheet.create({
   container: {
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
 
 export default class LayerAttributeTabs extends React.Component {
   props: {
+    language: string,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -115,6 +117,9 @@ export default class LayerAttributeTabs extends React.Component {
         head: [],
         data: [],
       },
+      canBeUndo: false,
+      canBeRedo: false,
+      canBeRevert: false,
     }
 
     // 选择集中当前选中的属性
@@ -229,6 +234,18 @@ export default class LayerAttributeTabs extends React.Component {
     }
   }
 
+  onGetToolVisible = (toolVisible = {}) => {
+    if (
+      this.state.canBeUndo !== toolVisible.canBeUndo ||
+      this.state.canBeRedo !== toolVisible.canBeRedo ||
+      this.state.canBeRevert !== toolVisible.canBeRevert
+    ) {
+      this.setState({
+        ...toolVisible,
+      })
+    }
+  }
+
   showLocationView = () => {
     this.locationView && this.locationView.show(true)
   }
@@ -311,7 +328,15 @@ export default class LayerAttributeTabs extends React.Component {
 
     if (!selection || !selection.data) return
 
+    SMap.setEditable(layerPath, false)
     let objs = []
+    let geoStyle = new GeoStyle()
+    geoStyle.setFillForeColor(0, 255, 0, 0.5)
+    geoStyle.setLineWidth(1)
+    geoStyle.setLineColor(70, 128, 223)
+    geoStyle.setMarkerHeight(5)
+    geoStyle.setMarkerWidth(5)
+    geoStyle.setMarkerSize(10)
     for (let i = 0; i < this.props.selection.length; i++) {
       if (this.props.selection[i].layerInfo.name === layerPath) {
         objs.push({
@@ -322,6 +347,7 @@ export default class LayerAttributeTabs extends React.Component {
               ? selection.data[0].value
               : selection.data[1].value,
           ], // 多条数据有序号时：0为序号，1为SmID；无序号时0为SmID
+          style: JSON.stringify(geoStyle),
         })
       } else {
         objs.push({
@@ -332,49 +358,58 @@ export default class LayerAttributeTabs extends React.Component {
     }
 
     SMap.setAction(Action.PAN)
-    // SMap.selectObj(layerPath, [selection.data[0].value]).then(() => {
-    SMap.selectObjs(objs).then(data => {
-      // TODO 选中对象跳转到地图
-      // this.props.navigation && this.props.navigation.navigate('MapView')
-      // NavigationService.navigate('MapView')
-      NavigationService.goBack()
-      GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(
-          true,
-          ConstToolType.ATTRIBUTE_SELECTION_RELATE,
-          {
-            isFullScreen: false,
-            height: 0,
-          },
-        )
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
-      Utils.setSelectionStyle(this.props.currentLayer.path)
-      if (data instanceof Array && data.length > 0) {
-        SMap.moveToPoint({
-          x: data[0].x,
-          y: data[0].y,
-        })
-      }
+    SMap.clearSelection().then(() => {
+      // SMap.selectObjs(objs).then(data => {
+      SMap.setTrackingLayer(objs, true).then(data => {
+        // TODO 选中对象跳转到地图
+        // this.props.navigation && this.props.navigation.navigate('MapView')
+        // NavigationService.navigate('MapView')
+        this.props.navigation.goBack()
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setVisible(
+            true,
+            ConstToolType.ATTRIBUTE_SELECTION_RELATE,
+            {
+              isFullScreen: false,
+              height: 0,
+            },
+          )
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+
+        Utils.setSelectionStyle(this.props.currentLayer.path)
+        if (data instanceof Array && data.length > 0) {
+          SMap.moveToPoint({
+            x: data[0].x,
+            y: data[0].y,
+          })
+        }
+      })
     })
   }
 
   drawerOnChange = ({ index }) => {
-    // this.scrollTab && this.scrollTab.goToPage(index)
-
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
       let newState = {
         currentTabIndex: index,
       }
-      if (this.currentTabRefs[index]) {
+      let toolVisible = {}
+      if (this.currentTabRefs && this.currentTabRefs[index]) {
         let attributes = this.currentTabRefs[index].getAttributes()
         newState.attributes = attributes
-        newState.currentIndex =
-          attributes.data.length === 1 && this.state.currentIndex !== 0 ? 0 : -1
+        newState.currentIndex = attributes.data.length === 1 ? 0 : -1
+        toolVisible = this.currentTabRefs[index].getToolIsViable() || {}
+      } else {
+        newState.currentIndex = -1
+        toolVisible = {
+          canBeUndo: false,
+          canBeRedo: false,
+          canBeRevert: false,
+        }
       }
-      this.setState(newState)
+      this.setState(Object.assign(newState, toolVisible))
     }
 
     let timer = setTimeout(() => {
@@ -396,7 +431,7 @@ export default class LayerAttributeTabs extends React.Component {
     GLOBAL.toolBox &&
       GLOBAL.toolBox.showFullMap &&
       GLOBAL.toolBox.showFullMap(true)
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+    // GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
     GLOBAL.toolBox &&
       GLOBAL.toolBox.setVisible(
@@ -512,6 +547,7 @@ export default class LayerAttributeTabs extends React.Component {
         setAttributeHistory={this.props.setAttributeHistory}
         selectAction={this.selectAction}
         onGetAttribute={this.onGetAttribute}
+        onGetToolVisible={this.onGetToolVisible}
       />
     )
   }
@@ -521,25 +557,45 @@ export default class LayerAttributeTabs extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('undo')}
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
           onPress={() => this.setAttributeHistory('redo')}
         />
         <MTBtn
           key={'revert'}
-          title={'还原'}
+          title={
+            getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT
+          }
+          //{'还原'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_revert}
+          textColor={!this.state.canBeRevert && color.contentColorGray}
+          image={
+            this.state.canBeRevert
+              ? getThemeAssets().publicAssets.icon_revert
+              : getPublicAssets().attribute.icon_revert_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('revert')}
         />
@@ -553,7 +609,7 @@ export default class LayerAttributeTabs extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '属性',
+          title: getLanguage(this.props.language).Map_Label.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: [
@@ -602,6 +658,7 @@ export default class LayerAttributeTabs extends React.Component {
               <View style={{ flex: 1 }} />
             )}
             <LocationView
+              language={this.props.language}
               ref={ref => (this.locationView = ref)}
               style={styles.locationView}
               currentIndex={

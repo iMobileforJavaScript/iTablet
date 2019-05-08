@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00613450224CD0B400C2C781 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0061344F224CD0B300C2C781 /* Trial_License.slm */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -49,14 +48,15 @@
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
+		0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33E226182950009CB35 /* libAsHttpRequest.a */; };
+		0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33F226182950009CB35 /* libCorePlot.a */; };
+		0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E340226182950009CB35 /* libSocketRocket.a */; };
+		0A25E345226182950009CB35 /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E341226182950009CB35 /* libflyMSC.a */; };
+		0A4CA889227705C3006BEA83 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A4CA888227705C3006BEA83 /* Trial_License.slm */; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
-		0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */; };
 		0A7E6C8E22437A9A00936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
-		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
-		0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF521104C7100F206BB /* libflyMSC.a */; };
-		0A8EEE0E21104C7100F206BB /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF621104C7100F206BB /* libSocketRocket.a */; };
 		0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */; };
 		0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFB21104C7100F206BB /* Accelerate.framework */; };
 		0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFC21104C7100F206BB /* AddressBook.framework */; };
@@ -78,6 +78,7 @@
 		0A8F7C8721D1BA320003595E /* ZipArchive.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C8421D1BA250003595E /* ZipArchive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A95738821BFA38500B5853A /* libRNFS.a */; };
 		0A9573C821C0B8EE00B5853A /* NativeMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9573C721C0B8EE00B5853A /* NativeMethod.m */; };
+		0AA134942267432500606012 /* publicMap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134932267432500606012 /* publicMap.txt */; };
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
@@ -102,6 +103,7 @@
 		2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
+		4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1853C4F095F74312930AEB4B /* libRCTContacts.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -109,7 +111,6 @@
 		D83ED3BE21704BDB00683BB3 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83ED3BB21704BDB00683BB3 /* VCMain.storyboard */; };
 		D83ED3BF21704BDB00683BB3 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83ED3BD21704BDB00683BB3 /* VCViewController.m */; };
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
-		ED155F41EBD64C0095326E93 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 370B43CEE45D4741A7D855FD /* libAirMaps.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,13 +176,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = Supermap;
-		};
-		0A2FC75E225B65AC00B18A91 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 73977F3FDAEA4EEF894D5EB4 /* AirMaps.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 11FA5C511C4A1296003AC2EE;
-			remoteInfo = AirMaps;
 		};
 		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -259,6 +253,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6456441F1EB8DA9100672408;
 			remoteInfo = "RNFS-tvOS";
+		};
+		0AF348D62270653B004D6D09 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1441618E1BD0A79300FA4F59;
+			remoteInfo = RCTContacts;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -445,7 +446,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0061344F224CD0B300C2C781 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -490,15 +490,17 @@
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
+		0A25E33E226182950009CB35 /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
+		0A25E33F226182950009CB35 /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
+		0A25E340226182950009CB35 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
+		0A25E341226182950009CB35 /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
+		0A5F9587226D662800B16E89 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
+		0A4CA888227705C3006BEA83 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../Trial_License.slm; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
 		0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneOS/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneSimulator/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
-		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
-		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
-		0A8EEDF521104C7100F206BB /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
-		0A8EEDF621104C7100F206BB /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
 		0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.A.tbd; path = usr/lib/libicucore.A.tbd; sourceTree = SDKROOT; };
 		0A8EEDFB21104C7100F206BB /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		0A8EEDFC21104C7100F206BB /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -517,6 +519,7 @@
 		0A8F7C8421D1BA250003595E /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZipArchive.framework; sourceTree = "<group>"; };
 		0A9573C621C0B8EE00B5853A /* NativeMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethod.h; sourceTree = "<group>"; };
 		0A9573C721C0B8EE00B5853A /* NativeMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethod.m; sourceTree = "<group>"; };
+		0AA134932267432500606012 /* publicMap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicMap.txt; path = ../../publicMap.txt; sourceTree = "<group>"; };
 		0ABCB8C22246056500992994 /* WeiXinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXinUtils.h; sourceTree = "<group>"; };
 		0ABCB8C32246056500992994 /* WeiXinUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXinUtils.m; sourceTree = "<group>"; };
 		0ABCB8C6224605E300992994 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
@@ -536,18 +539,19 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iTablet/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iTablet/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1853C4F095F74312930AEB4B /* libRCTContacts.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContacts.a; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTablet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E13A8DD089744C6A9A2650C /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 		370B43CEE45D4741A7D855FD /* libAirMaps.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAirMaps.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
-		73977F3FDAEA4EEF894D5EB4 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8B1D70E9B9D84EE8B72BFB60 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		995E625BA77141C79D10DBB2 /* libSupermap.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSupermap.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		B6715E489CA142739903C659 /* libRNViewShot.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNViewShot.a; sourceTree = "<group>"; };
 		CC5A76B8862342D4B30E22D6 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		D83ED3B721704BA600683BB3 /* FileTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileTools.h; sourceTree = "<group>"; };
@@ -572,27 +576,27 @@
 				0A8F7C3921C35DF60003595E /* libRCTOrientation.a in Frameworks */,
 				0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */,
 				0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */,
+				0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */,
 				0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */,
 				0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				0A8EEE1D21104C7100F206BB /* CoreTelephony.framework in Frameworks */,
-				0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				0A8EEE1B21104C7100F206BB /* CoreGraphics.framework in Frameworks */,
+				0A25E345226182950009CB35 /* libflyMSC.a in Frameworks */,
 				0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */,
+				0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				0A8EEE1C21104C7100F206BB /* CoreLocation.framework in Frameworks */,
 				0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */,
 				0A8EEE1621104C7100F206BB /* MediaPlayer.framework in Frameworks */,
 				0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */,
-				0A8EEE0E21104C7100F206BB /* libSocketRocket.a in Frameworks */,
 				0A8F7C8521D1BA260003595E /* ZipArchive.framework in Frameworks */,
 				0A8EEE1721104C7100F206BB /* MobileCoreServices.framework in Frameworks */,
-				0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */,
 				0A8F7C8621D1BA320003595E /* ZipArchive.framework in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
@@ -604,14 +608,14 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */,
 				0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */,
+				0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */,
 				0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */,
 				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
 				0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
-				0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */,
-				ED155F41EBD64C0095326E93 /* libAirMaps.a in Frameworks */,
+				4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,6 +765,8 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0A4CA888227705C3006BEA83 /* Trial_License.slm */,
+				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
 				0A11D9E821F9641D00AFE6D6 /* logo.png */,
@@ -779,16 +785,9 @@
 				08609182EB2D4528AD974136 /* libRCTOrientation.a */,
 				CC5A76B8862342D4B30E22D6 /* libSplashScreen.a */,
 				370B43CEE45D4741A7D855FD /* libAirMaps.a */,
+				1853C4F095F74312930AEB4B /* libRCTContacts.a */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		0A2FC75B225B65AC00B18A91 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A2FC75F225B65AC00B18A91 /* libAirMaps.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		0A442232211444D50087C8FE /* tools */ = {
@@ -844,6 +843,14 @@
 				0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */,
 			);
 			path = SampleCode;
+			sourceTree = "<group>";
+		};
+		0AF348D32270653B004D6D09 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0AF348D72270653B004D6D09 /* libRCTContacts.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
@@ -911,6 +918,10 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A25E33E226182950009CB35 /* libAsHttpRequest.a */,
+				0A25E33F226182950009CB35 /* libCorePlot.a */,
+				0A25E341226182950009CB35 /* libflyMSC.a */,
+				0A25E340226182950009CB35 /* libSocketRocket.a */,
 				0AF433CA224C78E4003FDADE /* SuperMap.framework */,
 				0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */,
 				0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */,
@@ -920,10 +931,6 @@
 				D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */,
 				0A0118FA2122D9CE00BC4AAB /* Contacts.framework */,
 				0A8EEDF221104C7100F206BB /* SuperMap.bundle */,
-				0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */,
-				0A8EEDF421104C7100F206BB /* libCorePlot.a */,
-				0A8EEDF521104C7100F206BB /* libflyMSC.a */,
-				0A8EEDF621104C7100F206BB /* libSocketRocket.a */,
 				0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */,
 				0A8EEDFB21104C7100F206BB /* Accelerate.framework */,
 				0A8EEDFC21104C7100F206BB /* AddressBook.framework */,
@@ -982,7 +989,7 @@
 				EEB38F0AD8D84316B33CC7A9 /* RNFS.xcodeproj */,
 				2E13A8DD089744C6A9A2650C /* RCTOrientation.xcodeproj */,
 				6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */,
-				73977F3FDAEA4EEF894D5EB4 /* AirMaps.xcodeproj */,
+				B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -999,7 +1006,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0061344F224CD0B300C2C781 /* Trial_License.slm */,
 				13B07FAE1A68108700A75B9A /* iTablet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* iTabletTests */,
@@ -1126,10 +1132,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0A2FC75B225B65AC00B18A91 /* Products */;
-					ProjectRef = 73977F3FDAEA4EEF894D5EB4 /* AirMaps.xcodeproj */;
-				},
-				{
 					ProductGroup = 0A11D99821F885A400AFE6D6 /* Products */;
 					ProjectRef = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
 				},
@@ -1144,6 +1146,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 0AF348D32270653B004D6D09 /* Products */;
+					ProjectRef = B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1270,13 +1276,6 @@
 			remoteRef = 0A15465521D710BD00347720 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0A2FC75F225B65AC00B18A91 /* libAirMaps.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libAirMaps.a;
-			remoteRef = 0A2FC75E225B65AC00B18A91 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1352,6 +1351,13 @@
 			fileType = archive.ar;
 			path = libRNFS.a;
 			remoteRef = 0A95738921BFA38500B5853A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AF348D72270653B004D6D09 /* libRCTContacts.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTContacts.a;
+			remoteRef = 0AF348D62270653B004D6D09 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -1536,7 +1542,6 @@
 				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
 				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
-				00613450224CD0B400C2C781 /* Trial_License.slm in Resources */,
 				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
@@ -1550,9 +1555,11 @@
 				0A0A2047212FA22300BEBC1C /* 热点图－当前.png in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
+				0A4CA889227705C3006BEA83 /* Trial_License.slm in Resources */,
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
+				0AA134942267432500606012 /* publicMap.txt in Resources */,
 				0A0A204A212FA22300BEBC1C /* 聚合图－选中.png in Resources */,
 				0A0A2042212FA22300BEBC1C /* 密度图－选中.png in Resources */,
 				0A0A204B212FA22300BEBC1C /* 背景头加一个.png in Resources */,
@@ -1580,7 +1587,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1588,7 +1595,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
@@ -1690,6 +1697,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1699,14 +1707,16 @@
 					"values>",
 					"$(PROJECT_DIR)/SDKExport",
 					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"\"$(SRCROOT)/iTablet\"",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
-					"$(PROJECT_DIR)/SampleCode/tools/zip",
+					"<Multiple",
+					"values>",
+					"$(PROJECT_DIR)/SDKExport",
 					"\"$(SRCROOT)/iTablet\"",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/iPhoneOS",
-					"$(PROJECT_DIR)/SDKExport/",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
@@ -1771,6 +1781,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1780,6 +1791,8 @@
 					"values>",
 					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/SDKExport/",
 					"$(PROJECT_DIR)/SDKExport",
+					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"\"$(SRCROOT)/iTablet\"",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
@@ -1836,6 +1849,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1880,6 +1894,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

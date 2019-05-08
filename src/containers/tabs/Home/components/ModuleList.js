@@ -21,6 +21,9 @@ import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
+import { connect } from 'react-redux'
+import { getLanguage } from '../../../../language'
+
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -62,7 +65,7 @@ class RenderModuleItem extends Component {
     let progress =
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
-        : `下载${this.state.progress}`
+        : `${this.state.progress}`
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -120,8 +123,9 @@ class RenderModuleItem extends Component {
   }
 }
 
-export default class ModuleList extends Component {
+class ModuleList extends Component {
   props: {
+    language: string,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -137,6 +141,7 @@ export default class ModuleList extends Component {
     }
     this.moduleItems = []
     //this.bytesInfo = 0
+    this.itemAction = this.itemAction.bind(this)
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
@@ -176,7 +181,7 @@ export default class ModuleList extends Component {
         // disabled: true,
       })
       let fileCachePath = fileDirPath + '.zip'
-      await FileTools.deleteFile(fileCachePath)
+      // await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
         // headers: {
         //   Range: `bytes=${this.bytesInfo}-`,
@@ -197,12 +202,11 @@ export default class ModuleList extends Component {
           let value = ~~res.progress.toFixed(0) + '%'
           if (~~res.progress >= 100) {
             ref.setNewState({
-              progress: '导入中...',
+              progress: getLanguage(this.props.language).Prompt.IMPORTING,
               isShowProgressView: true,
               // disabled: true,
             })
             // this.downloading = false
-            ref.setDownloading(false)
           } else if (value !== this.state.progress) {
             ref.setNewState({
               progress: value,
@@ -224,18 +228,22 @@ export default class ModuleList extends Component {
           ref.setNewState({ isShowProgressView: false, disabled: false })
 
           FileTools.deleteFile(fileDirPath + '.zip')
+          ref.setDownloading(false)
         })
         .catch(() => {
-          Toast.show('下载失败')
+          Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+          //'下载失败')
           FileTools.deleteFile(fileCachePath)
           ref.setNewState({ isShowProgressView: false, disabled: false })
           // this.downloading = false
           ref.setDownloading(false)
         })
     } catch (e) {
-      Toast.show('网络错误，下载失败')
+      Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+      //'网络错误，下载失败')
       FileTools.deleteFile(fileDirPath + '.zip')
       ref.setNewState({ isShowProgressView: false, disabled: false })
+      ref.setDownloading(false)
     }
   }
 
@@ -259,18 +267,21 @@ export default class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  itemAction = async ({ item, index }) => {
+  async itemAction(language, { item, index }) {
     try {
       let fileName
+      // let mapname
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === MAP_MODULE.MAP_ANALYST) {
         item.action && item.action(this.props.currentUser)
         return
       } else if (moduleKey === '地图制图') {
-        fileName = '湖南'
+        fileName = language === 'CN' ? '湖南' : 'LosAngeles'
+        // mapname =  language==='CN'?'SanFrancisco':'湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = '湖北'
+        fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
+        // mapname =  language==='CN'?'Precipitation':'LandBuild'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
       } else if (moduleKey === '三维场景') {
@@ -279,13 +290,43 @@ export default class ModuleList extends Component {
         } else if (Platform.OS === 'ios') {
           fileName = 'OlympicGreen_ios'
         }
+      } else if (moduleKey === '应急标绘') {
+        fileName = '湖南'
       }
+
       let homePath = await FileTools.appendingHomeDirectory()
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
         : 'Customer'
+
+      let module
+      switch (item.key) {
+        case MAP_MODULE.MAP_COLLECTION:
+          module = constants.COLLECTION
+          break
+        case MAP_MODULE.MAP_EDIT:
+          module = constants.MAP_EDIT
+          break
+        case MAP_MODULE.MAP_3D:
+          module = constants.MAP_3D
+          break
+        case MAP_MODULE.MAP_THEME:
+          module = constants.MAP_THEME
+          break
+        case MAP_MODULE.MAP_PLOTTING:
+          module = constants.MAP_PLOTTING
+          break
+      }
       // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
+      let latestMap
+      if (
+        this.props.latestMap[currentUserName] &&
+        this.props.latestMap[currentUserName][module] &&
+        this.props.latestMap[currentUserName][module].length > 0
+      ) {
+        latestMap = this.props.latestMap[currentUserName][module][0]
+      }
       let toPath = homePath + ConstPath.CachePath + fileName
 
       let cachePath = homePath + ConstPath.CachePath
@@ -301,20 +342,19 @@ export default class ModuleList extends Component {
         }
         // if (this.state.dialogCheck) {
         if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDialogCheck()
+          !(
+            this.moduleItems &&
+            this.moduleItems[index] &&
+            (this.moduleItems[index].getDialogCheck() ||
+              this.moduleItems[index].getDownloading())
+          )
         ) {
-          item.action && item.action(tmpCurrentUser)
-        } else if (
-          this.moduleItems &&
-          this.moduleItems[index] &&
-          this.moduleItems[index].getDownloading()
-        ) {
-          item.action && item.action(tmpCurrentUser)
+          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
+        }
+        if (latestMap) {
+          item.action && item.action(tmpCurrentUser, latestMap)
         } else {
           item.action && item.action(tmpCurrentUser)
-          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
         let filePath2
@@ -351,33 +391,6 @@ export default class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-
-        let module
-        switch (item.title) {
-          case MAP_MODULE.MAP_COLLECTION:
-            module = constants.COLLECTION
-            break
-          case MAP_MODULE.MAP_EDIT:
-            module = constants.MAP_EDIT
-            break
-          case MAP_MODULE.MAP_3D:
-            module = constants.MAP_3D
-            break
-          case MAP_MODULE.MAP_THEME:
-            module = constants.MAP_THEME
-            break
-          case MAP_MODULE.MAP_PLOTTING:
-            module = constants.MAP_PLOTTING
-            break
-        }
-        let latestMap
-        if (
-          this.props.latestMap[currentUserName] &&
-          this.props.latestMap[currentUserName][module] &&
-          this.props.latestMap[currentUserName][module].length > 0
-        ) {
-          latestMap = this.props.latestMap[currentUserName][module][0]
-        }
         item.action && item.action(tmpCurrentUser, latestMap)
       }
     } catch (e) {
@@ -400,7 +413,7 @@ export default class ModuleList extends Component {
         importWorkspace={this.props.importWorkspace}
         showDialog={this.props.showDialog}
         getMoudleItem={this.props.getMoudleItem}
-        itemAction={() => this.itemAction({ item, index })}
+        itemAction={() => this.itemAction(this.props.language, { item, index })}
       />
     )
   }
@@ -413,7 +426,7 @@ export default class ModuleList extends Component {
         showsHorizontalScrollIndicator={false}
       >
         <FlatList
-          data={ConstModule}
+          data={ConstModule(this.props.language)}
           horizontal={true}
           renderItem={this._renderItem}
           keyboardShouldPersistTaps={'always'}
@@ -431,7 +444,7 @@ export default class ModuleList extends Component {
         ) : (
           <FlatList
             style={styles.flatList}
-            data={ConstModule}
+            data={ConstModule(this.props.language)}
             renderItem={this._renderItem}
             horizontal={false}
             numColumns={2}
@@ -444,9 +457,23 @@ export default class ModuleList extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
+})
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ModuleList)
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // flex: 1,
     flexDirection: 'column',
     // marginTop: scaleSize(100),
     alignItems: 'center',
@@ -455,9 +482,11 @@ const styles = StyleSheet.create({
   },
   flatList: {
     position: 'absolute',
+    // justifyContent: 'center',
     alignSelf: 'center',
-    // marginTop: '35%',
-    // backgroundColor: 'white',
+    // top: 0,left:0,right:0,bottom:0,
+    flex: 1,
+    // backgroundColor: 'blue',
     // marginLeft: scaleSize(40),
   },
   module: {
@@ -489,6 +518,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor:'green',
     // paddingHorizontal: scaleSize(10),
     // marginTop: scaleSize(5),
   },
@@ -498,8 +528,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    width: scaleSize(200),
+    height: scaleSize(37),
+    fontSize: setSpText(25),
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: scaleSize(13),
+  },
+  longtitle: {
     width: scaleSize(130),
-    height: scaleSize(32),
+    height: scaleSize(70),
     fontSize: setSpText(25),
     color: '#FFFFFF',
     textAlign: 'center',

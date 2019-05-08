@@ -1,13 +1,12 @@
 import { StackNavigator } from 'react-navigation'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
-
 //主页
 import MapLoad from './mapLoad'
 
 //我的
-import Tabs, {
+import {
+  Tabs,
   MyService,
-  MyOnlineData,
   Register,
   MyOnlineMap,
   ScanOnlineMap,
@@ -22,6 +21,7 @@ import Tabs, {
   AddFriend,
   InformMessage,
   CreateGroupChat,
+  RecommendFriend,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -66,7 +66,12 @@ import PublicMap from './publicMap'
 import FriendMap from './friendMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 import { MapCut, MapCutDS } from './mapCut/page'
-import { BufferAnalystView } from './analystView/pages'
+import {
+  BufferAnalystView,
+  AnalystRadiusSetting,
+  OverlayAnalystEntry,
+  OverlayAnalystView,
+} from './analystView/pages'
 
 export default StackNavigator(
   {
@@ -323,6 +328,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    RecommendFriend: {
+      screen: RecommendFriend,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
@@ -361,13 +373,6 @@ export default StackNavigator(
     },
     MyData: {
       screen: MyData,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyOnlineData: {
-      screen: MyOnlineData,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -489,6 +494,27 @@ export default StackNavigator(
     // },
     BufferAnalystView: {
       screen: BufferAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    AnalystRadiusSetting: {
+      screen: AnalystRadiusSetting,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    OverlayAnalystEntry: {
+      screen: OverlayAnalystEntry,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    OverlayAnalystView: {
+      screen: OverlayAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

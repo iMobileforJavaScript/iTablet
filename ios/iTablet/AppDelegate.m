@@ -15,6 +15,7 @@
 #import "VCViewController.h"
 #import "RNFSManager.h"
 //#import "RNSplashScreen.h"
+#import "Common/HWNetworkReachabilityManager.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -33,7 +34,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.43.228"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.137.204"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
@@ -67,6 +68,11 @@ static NSString* g_sampleCodeName = @"#";;
   //  [RNSplashScreen show];
   //注册微信
   [WeiXinUtils registerApp];
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"dowloadFile"
+                                                      object:nil];
+  // 开启网络监听
+  [[HWNetworkReachabilityManager shareManager] monitorNetworkStatus];
+  
   return YES;
 }
 

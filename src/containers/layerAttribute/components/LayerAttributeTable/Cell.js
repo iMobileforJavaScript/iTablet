@@ -7,7 +7,6 @@
 import React, { Component } from 'react'
 import {
   Platform,
-  View,
   Text,
   TextInput,
   StyleSheet,
@@ -208,7 +207,7 @@ export default class Cell extends Component {
 
   render() {
     return (
-      <View
+      <TouchableOpacity
         // activeOpacity={1}
         style={[
           styles.cell,
@@ -217,42 +216,48 @@ export default class Cell extends Component {
           // this.props.width ? { width: this.props.width } : { flex: 1 },
         ]}
         // onLongPress={this._setEditable}
+
+        activeOpacity={1}
+        // style={styles.cellOverlay}
+        onLongPress={this._setEditable}
+        delayLongPress={this.props.delayLongPress}
+        onPress={this._onPress}
       >
         {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
-        <View>
-          {this.props.editable && this.state.editable ? (
-            <TextInput
-              ref={ref => (this.cellInput = ref)}
-              // editable={this.state.editable && this.props.editable}
-              // multiline = {true}
-              value={this.state.value + ''}
-              style={styles.input}
-              underlineColorAndroid="transparent"
-              onChangeText={this._onChangeText}
-              onBlur={this._onBlur}
-              onEndEditing={this._onEndEditing}
-              onSubmitEditing={this._onSubmitEditing}
-              returnKeyType={'done'}
-              keyboardAppearance={'dark'}
-              returnKeyLabel={this.props.returnKeyLabel}
-              keyboardType={this.props.keyboardType}
-            />
-          ) : (
-            <Text style={[styles.cellText, this.props.cellTextStyle]}>
-              {this.state.value}
-            </Text>
-          )}
-        </View>
-        {(!this.state.editable || !this.props.editable) && (
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.cellOverlay}
-            onLongPress={this._setEditable}
-            delayLongPress={this.props.delayLongPress}
-            onPress={this._onPress}
+        {/*<View>*/}
+        {this.props.editable && this.state.editable ? (
+          <TextInput
+            ref={ref => (this.cellInput = ref)}
+            // editable={this.state.editable && this.props.editable}
+            // multiline = {true}
+            value={this.state.value + ''}
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            onChangeText={this._onChangeText}
+            onBlur={this._onBlur}
+            onEndEditing={this._onEndEditing}
+            onSubmitEditing={this._onSubmitEditing}
+            returnKeyType={'done'}
+            keyboardAppearance={'dark'}
+            returnKeyLabel={this.props.returnKeyLabel}
+            keyboardType={this.props.keyboardType}
           />
+        ) : (
+          <Text style={[styles.cellText, this.props.cellTextStyle]}>
+            {this.state.value}
+          </Text>
         )}
-      </View>
+        {/*</View>*/}
+        {/*{(!this.state.editable || !this.props.editable) && (*/}
+        {/*<TouchableOpacity*/}
+        {/*activeOpacity={1}*/}
+        {/*style={styles.cellOverlay}*/}
+        {/*onLongPress={this._setEditable}*/}
+        {/*delayLongPress={this.props.delayLongPress}*/}
+        {/*onPress={this._onPress}*/}
+        {/*/>*/}
+        {/*)}*/}
+      </TouchableOpacity>
     )
   }
 }

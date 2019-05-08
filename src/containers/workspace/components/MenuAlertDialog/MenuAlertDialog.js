@@ -70,7 +70,7 @@ export default class MenuAlertDialog extends React.Component {
   }
 
   renderItem(item) {
-    if (this.state.selectedMenu == item.key) {
+    if (this.state.selectedMenu === item.key) {
       return (
         <TouchableOpacity
           style={styles.selectedbtn}

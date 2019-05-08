@@ -11,6 +11,7 @@ const analysis_interpolation = require('./analysis_interpolation_light.png')
 const analysis_overlay_clip = require('./analysis_overlay_clip_light.png')
 const analysis_overlay_erase = require('./analysis_overlay_erase_light.png')
 const analysis_overlay_identity = require('./analysis_overlay_identity_light.png')
+const analysis_overlay_intersect = require('./analysis_overlay_intersect_light.png')
 const analysis_overlay = require('./analysis_overlay_light.png')
 const analysis_overlay_union = require('./analysis_overlay_union_light.png')
 const analysis_overlay_update = require('./analysis_overlay_update_light.png')
@@ -37,6 +38,7 @@ export default {
   analysis_overlay_clip,
   analysis_overlay_erase,
   analysis_overlay_identity,
+  analysis_overlay_intersect,
   analysis_overlay,
   analysis_overlay_union,
   analysis_overlay_update,

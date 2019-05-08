@@ -8,7 +8,7 @@ import {
   Platform,
 } from 'react-native'
 import { scaleSize } from '../../../utils/screen'
-
+import { getLanguage } from '../../../language/index'
 let Top = scaleSize(88)
 if (Platform.OS === 'ios') {
   Top += 20
@@ -94,7 +94,11 @@ export default class AddMore extends React.Component {
               }}
               style={styles.itemView}
             >
-              <Text style={styles.textStyle}>添加好友</Text>
+              <Text style={styles.textStyle}>
+                {getLanguage(global.language).Friends.ADD_FRIENDS}
+
+                {/* //添加好友 */}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -104,7 +108,23 @@ export default class AddMore extends React.Component {
               }}
               style={styles.itemView}
             >
-              <Text style={styles.textStyle}>发起群聊</Text>
+              <Text style={styles.textStyle}>
+                {getLanguage(global.language).Friends.NEW_GROUP_CHAT}
+
+                {/* // 发起群聊 */}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                this.props.addMore(3), this.closeModal()
+              }}
+              style={styles.itemView}
+            >
+              <Text style={styles.textStyle}>
+                {getLanguage(global.language).Friends.RECOMMEND_FRIEND}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -123,14 +143,14 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: '#696969',
-    width: scaleSize(150),
-    height: scaleSize(170),
+    // width: scaleSize(300),
+    // height: scaleSize(170),
     position: 'absolute',
     left: scaleSize(25),
     top: Top,
     padding: scaleSize(5),
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     borderRadius: 3,
   },
   itemView: {
@@ -138,11 +158,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    marginTop: scaleSize(5),
+    marginBottom: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
   },
   textStyle: {
     color: '#fff',
-    fontSize: scaleSize(25),
-    marginLeft: scaleSize(6),
+    fontSize: scaleSize(30),
   },
   imgStyle: {
     width: 20,

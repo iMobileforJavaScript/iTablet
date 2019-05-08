@@ -114,6 +114,14 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_THEME_PARAM_RANGE_MODE:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.THEME_HEIGHT[2]
+        column = 4
+      } else {
+        height = ConstToolType.THEME_HEIGHT[0]
+        column = 8
+      }
+      break
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[2]
@@ -281,13 +289,13 @@ function getToorbarHeight(orientation, type) {
       break
     case SMCollectorType.LINE_GPS_PATH:
     case SMCollectorType.REGION_GPS_PATH:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[0]
-        column = 6
-      }
+      // if (orientation === 'PORTRAIT') {
+      // height = ConstToolType.HEIGHT[2]
+      column = 4
+      // } else {
+      height = ConstToolType.HEIGHT[0]
+      //   column = 6
+      // }
       break
     case SMCollectorType.LINE_HAND_PATH:
     case SMCollectorType.LINE_HAND_POINT:

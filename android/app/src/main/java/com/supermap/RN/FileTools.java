@@ -71,9 +71,8 @@ public class FileTools extends ReactContextBaseJavaModule {
     public FileTools(ReactApplicationContext context) {
         super(context);
         reactContext = context;
-        mReactContext=context;
+        mReactContext = context;
     }
-
     @Override
     public String getName() {
         return REACT_CLASS;
@@ -540,7 +539,6 @@ public class FileTools extends ReactContextBaseJavaModule {
     public void importData(Promise promise){
         try {
             SMap sMap=SMap.getInstance();
-            String userName=getUserName();
             String importPath=SDCARD+"/iTablet/Import";
             String filePath=importPath+"/weChat.zip";
             String toPath=importPath;
@@ -554,6 +552,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                     getFilePath(toPath,arrayList);
                     ArrayList<Map> workspace =new ArrayList();
                     ArrayList<String> datasource =new ArrayList();
+                    ArrayList<String> xml =new ArrayList();
+                    ArrayList<String> symbol =new ArrayList();
                     for (int i = 0; i <arrayList.size() ; i++) {
                         String path= arrayList.get(i);
                         String fileType=path.substring(path.indexOf('.')+1);
@@ -581,8 +581,33 @@ public class FileTools extends ReactContextBaseJavaModule {
                         if(fileType.equals("udb")){
                             datasource.add(arrayList.get(i));
                         }
+                        if(fileType.equals("xml")){
+                            xml.add(arrayList.get(i));
+                        }
+                        if(fileType.equals("sym")||fileType.equals("lsl")||fileType.equals("bru")){
+                            symbol.add(arrayList.get(i));
+                        }
                     }
-                    if(workspace.size()>0){
+                    if(xml.size()>0){
+                        String path=xml.get(0).substring(xml.get(0).lastIndexOf("/")+1);
+                        String fileDirectory=path.substring(0,path.indexOf("."));
+                        String collection=SDCARD+"/iTablet/User/"+getUserName()+"/ExternalData/Collection/"+fileDirectory+"/";
+                        File file1=new File(collection);
+                        if(!file1.exists()){
+                            file1.mkdirs();
+                        }
+                        for (int i = 0; i <arrayList.size() ; i++) {
+                            String fileName=arrayList.get(i).substring(arrayList.get(i).lastIndexOf("/")+1);
+                            FileManager.getInstance().copy(arrayList.get(i), collection+fileName);
+                        }
+                        if(workspace.size()>0){
+                            sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
+                        }
+                        importResult=true;
+                        importData=false;
+                        deleteDirectory(importPath);
+                    }
+                    else if(workspace.size()>0){
                         List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
                         if(result.size()>0){
                             importResult=true;
@@ -597,7 +622,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                             datasourceConnectionInfo.setEngineType(EngineType.UDB);
                             Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
                             if(datasource1.getDescription().equals("Label")){
-                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Label/Label.udb";
+                                String udbName="Label_"+getUserName()+"#.udb";
+                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Datasource/"+udbName;
                                 File udb=new File(todatasource);
                                 if(udb.exists()){
                                     sMap.getSmMapWC().copyDataset(datasource.get(i),todatasource);
@@ -611,6 +637,15 @@ public class FileTools extends ReactContextBaseJavaModule {
                             }
                         }
                         deleteDirectory(importPath);
+                    }else if (symbol.size()>0){
+                        String symbolPath=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Symbol/";
+                        for (int i = 0; i <symbol.size() ; i++) {
+                            String fileName=symbol.get(i).substring(symbol.get(i).lastIndexOf("/")+1);
+                            FileManager.getInstance().copy(symbol.get(i), symbolPath+fileName);
+                        }
+                        importResult=true;
+                        importData=false;
+                        deleteDirectory(importPath);
                     }
                     promise.resolve(importResult);
                 }else {
@@ -622,6 +657,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             return  ;
         }
     }
+
 
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
@@ -745,7 +781,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
-        createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
@@ -755,12 +790,18 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
+        String commonCachePath = SDCARD + "/iTablet/Cache/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
         String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
-        String lableUDB=dataPath+"Label/Label.udb";
+        String srclic = "publicMap.txt";
+        if (!Utils.fileIsExit(commonCachePath + srclic)) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
+        }
+
+        String lableUDB=dataPath+"Datasource/Label_"+userName+"#.udb";
         File file=new File(lableUDB);
         if(!file.exists()){
             Workspace workspace=new Workspace();

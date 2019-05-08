@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ViewPropTypes,
   Text,
   View,
@@ -18,6 +19,11 @@ export default class CustomView extends React.Component {
     user: Object,
     currentMessage: any,
     position: '',
+    onFileTouch: () => {},
+  }
+
+  touchFileCallback = message => {
+    this.props.onFileTouch(message)
   }
 
   render() {
@@ -36,18 +42,38 @@ export default class CustomView extends React.Component {
         fileSizeText = fileSize.toFixed(2) + 'MB'
       }
       return (
-        <View
-          style={
-            this.props.currentMessage.user._id !== this.props.user._id
-              ? styles.fileContainerLeft
-              : [styles.fileContainerLeft, styles.fileContainerRight]
-          }
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.touchFileCallback(this.props.currentMessage)
+          }}
         >
-          <Text style={styles.fileName}>
-            {this.props.currentMessage.message.message.fileName}
-          </Text>
-          <Text style={styles.fileSize}>{fileSizeText}</Text>
-        </View>
+          <View
+            style={
+              this.props.currentMessage.user._id !== this.props.user._id
+                ? [styles.fileContainer, styles.fileContainerLeft]
+                : [styles.fileContainer, styles.fileContainerRight]
+            }
+          >
+            <Text
+              style={
+                this.props.position === 'left'
+                  ? styles.fileName
+                  : [styles.fileName, { color: 'white' }]
+              }
+            >
+              {this.props.currentMessage.message.message.fileName}
+            </Text>
+            <Text
+              style={
+                this.props.position === 'left'
+                  ? styles.fileSize
+                  : [styles.fileSize, { color: 'white' }]
+              }
+            >
+              {fileSizeText}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
       )
     }
     if (
@@ -86,8 +112,6 @@ export default class CustomView extends React.Component {
             style={{
               width: scaleSize(45),
               height: scaleSize(45),
-              marginTop: scaleSize(10),
-              marginLeft: scaleSize(10),
             }}
           />
           <Text
@@ -109,19 +133,21 @@ export default class CustomView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  fileContainerLeft: {
-    backgroundColor: 'white',
+  fileContainer: {
+    // backgroundColor: 'white',
     width: scaleSize(240),
     justifyContent: 'flex-start',
+  },
+  fileContainerLeft: {
     alignItems: 'flex-end',
-    borderTopLeftRadius: scaleSize(24),
-    // borderTopRightRadius: scaleSize(24),
+    // borderTopRightRadius: scaleSize(10),
   },
   fileContainerRight: {
     alignItems: 'flex-start',
+    // borderTopLeftRadius: scaleSize(10),
   },
   fileName: {
     marginTop: scaleSize(10),

@@ -5,11 +5,11 @@
  */
 
 import * as React from 'react'
-import { View, Platform, BackHandler } from 'react-native'
+import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
-import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import {
@@ -20,13 +20,18 @@ import {
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
-import { SMap, Action } from 'imobile_for_reactnative'
+import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
+import { color } from '../../../../styles'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
+const ROWS_LIMIT = 100
+const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttribute extends React.Component {
   props: {
+    language: string,
     nav: Object,
     navigation: Object,
     currentAttribute: Object,
@@ -72,14 +77,15 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    if (this.type === 'MAP_3D') {
-      this.getMap3DAttribute()
-    } else {
-      this.setLoading(true, ConstInfo.LOADING_DATA)
-      this.refresh()
-    }
+    InteractionManager.runAfterInteractions(() => {
+      if (this.type === 'MAP_3D') {
+        this.getMap3DAttribute()
+      } else {
+        this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
+        //ConstInfo.LOADING_DATA)
+        this.refresh()
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -130,9 +136,6 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      BackHandler.removeEventListener('hardwareBackPress', this.back)
-    }
     this.props.setCurrentAttribute({})
   }
 
@@ -148,7 +151,7 @@ export default class LayerAttribute extends React.Component {
   /** 下拉刷新 **/
   refresh = (cb = () => {}, resetCurrent = false) => {
     if (!this.canBeRefresh) {
-      Toast.show('已经是最新的了')
+      //Toast.show('已经是最新的了')
       this.getAttribute(
         {
           type: 'reset',
@@ -158,6 +161,7 @@ export default class LayerAttribute extends React.Component {
         cb,
         resetCurrent,
       )
+      this.currentPage = 0
       return
     }
     let startIndex = this.state.startIndex - PAGE_SIZE
@@ -195,6 +199,7 @@ export default class LayerAttribute extends React.Component {
       attributes => {
         cb && cb()
         this.isLoading = false
+        this.canBeRefresh = this.state.startIndex > 0
         if (!attributes || !attributes.data || attributes.data.length <= 0) {
           this.noMore = true
           Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -245,20 +250,86 @@ export default class LayerAttribute extends React.Component {
             startIndex: 0,
             ...others,
           })
+          this.setLoading(false)
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
-          this.setState({
-            showTable: true,
-            attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
-            currentFieldInfo: attributes.data[relativeIndex],
-            ...others,
-          })
+          let newAttributes = JSON.parse(JSON.stringify(attributes))
+          let startIndex =
+            others.startIndex >= 0
+              ? others.startIndex
+              : this.state.startIndex || 0
+          // 截取数据，最多显示 ROWS_LIMIT 行
+          if (attributes.data.length > ROWS_LIMIT) {
+            if (type === 'refresh') {
+              newAttributes.data = newAttributes.data.slice(0, ROWS_LIMIT)
+              startIndex = result.startIndex
+            } else {
+              startIndex = result.startIndex + result.resLength - ROWS_LIMIT
+              startIndex =
+                parseInt((startIndex / PAGE_SIZE).toFixed()) * PAGE_SIZE
+
+              let sliceStartIndex = 0
+              if (attributes.data.length >= ROWS_LIMIT) {
+                sliceStartIndex =
+                  parseInt(
+                    (
+                      (attributes.data.length - ROWS_LIMIT) /
+                      PAGE_SIZE
+                    ).toFixed(),
+                  ) * PAGE_SIZE
+              }
+              newAttributes.data = newAttributes.data.slice(
+                sliceStartIndex,
+                attributes.data.length,
+              )
+            }
+          }
+
+          let currentIndex = resetCurrent
+            ? -1
+            : others.currentIndex !== undefined
+              ? others.currentIndex
+              : this.state.currentIndex
+          let relativeIndex =
+            resetCurrent || currentIndex < 0 ? -1 : currentIndex - startIndex
+          // : currentIndex - startIndex - 1
+          let prevStartIndex = this.state.startIndex
+          this.setState(
+            {
+              showTable: true,
+              attributes: newAttributes,
+              currentIndex,
+              relativeIndex,
+              currentFieldInfo:
+                relativeIndex >= 0 && relativeIndex < newAttributes.data.length
+                  ? newAttributes.data[relativeIndex]
+                  : this.state.currentFieldInfo,
+              startIndex,
+              // ...others,
+            },
+            () => {
+              if (type === 'refresh') {
+                this.table &&
+                  this.table.scrollToLocation({
+                    animated: false,
+                    itemIndex: prevStartIndex - startIndex,
+                    sectionIndex: 0,
+                    viewPosition: 0,
+                    viewOffset: COL_HEIGHT,
+                  })
+              } else if (type === 'loadMore') {
+                this.table &&
+                  this.table.scrollToLocation({
+                    animated: false,
+                    itemIndex: newAttributes.data.length - result.resLength,
+                    sectionIndex: 0,
+                    viewPosition: 1,
+                  })
+              }
+              this.setLoading(false)
+              cb && cb(attributes)
+            },
+          )
         }
-        this.setLoading(false)
-        cb && cb(attributes)
       } catch (e) {
         this.isLoading = false
         this.setLoading(false)
@@ -271,7 +342,8 @@ export default class LayerAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = () => {
-    this.setLoading(true, ConstInfo.LOCATING)
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -280,11 +352,11 @@ export default class LayerAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          this.table.setSelected(0)
+          this.table.setSelected(0, false)
           this.locationView && this.locationView.show(false)
           this.table &&
             this.table.scrollToLocation({
-              animated: true,
+              animated: false,
               itemIndex: 0,
               sectionIndex: 0,
               viewPosition: 0,
@@ -302,20 +374,23 @@ export default class LayerAttribute extends React.Component {
           currentIndex: 0,
         },
         () => {
-          let item = this.table.setSelected(0)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          this.locationView && this.locationView.show(false)
-          this.canBeRefresh = false
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: 0,
-              sectionIndex: 0,
-              viewPosition: 0,
+          // 等表格中的数据变化
+          setTimeout(() => {
+            let item = this.table.setSelected(0, false)
+            this.setState({
+              currentFieldInfo: item.data,
             })
-          this.setLoading(false)
+            this.locationView && this.locationView.show(false)
+            this.canBeRefresh = false
+            this.table &&
+              this.table.scrollToLocation({
+                animated: false,
+                itemIndex: 0,
+                sectionIndex: 0,
+                viewPosition: 0,
+              })
+            this.setLoading(false)
+          }, 0)
         },
       )
     }
@@ -326,6 +401,8 @@ export default class LayerAttribute extends React.Component {
    */
   locateToBottom = () => {
     if (this.total <= 0) return
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -343,21 +420,24 @@ export default class LayerAttribute extends React.Component {
         currentIndex: this.total - 1,
       },
       () => {
-        if (this.table) {
-          let item = this.table.setSelected(remainder)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: remainder,
-              sectionIndex: 0,
-              viewOffset: 0,
-              viewPosition: 1,
+        // 等表格中的数据变化
+        setTimeout(() => {
+          if (this.table) {
+            let item = this.table.setSelected(remainder, false)
+            this.setState({
+              currentFieldInfo: item.data,
             })
-        }
-        this.setLoading(false)
+            this.table &&
+              this.table.scrollToLocation({
+                animated: false,
+                itemIndex: remainder,
+                sectionIndex: 0,
+                viewOffset: 0,
+                viewPosition: 1,
+              })
+          }
+          this.setLoading(false)
+        }, 100)
       },
     )
     this.locationView && this.locationView.show(false)
@@ -368,79 +448,118 @@ export default class LayerAttribute extends React.Component {
    * @param data {value, inputValue}
    */
   locateToPosition = (data = {}) => {
-    let remainder = 0,
-      viewPosition = 0.3,
+    let viewPosition = 0,
       relativeIndex,
-      currentIndex
+      currentIndex,
+      startIndex = this.state.startIndex,
+      isInViewableData = false
     if (data.type === 'relative') {
-      relativeIndex =
-        (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
-        // this.currentPage * PAGE_SIZE +
-        this.state.startIndex +
-        data.index
-      if (relativeIndex < 0 || relativeIndex >= this.total) {
-        Toast.show('位置越界')
-        return
-      }
+      // 相对定位
       currentIndex = this.state.currentIndex + data.index
-      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
-      remainder = relativeIndex % PAGE_SIZE
-    } else if (data.type === 'absolute') {
-      if (data.index <= 0 || data.index > this.total) {
-        Toast.show('位置越界')
+      if (currentIndex < 0 || currentIndex >= this.total) {
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
         return
       }
-      relativeIndex = data.index - 1
-      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
-      remainder = relativeIndex % PAGE_SIZE
-      currentIndex = data.index
+      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
+
+      if (
+        currentIndex >= this.state.startIndex &&
+        currentIndex < this.state.startIndex + this.state.attributes.data.length
+      ) {
+        // 定位在当前显示数据范围内
+        relativeIndex = this.state.relativeIndex + data.index
+        isInViewableData = true
+      } else {
+        // 定位在当前显示数据范围外
+        startIndex = this.currentPage * PAGE_SIZE
+        relativeIndex = currentIndex - startIndex
+      }
+    } else if (data.type === 'absolute') {
+      // 绝对定位
+      if (data.index <= 0 || data.index > this.total) {
+        Toast.show(getLanguage(global.language).Prompt.INDEX_OUT_OF_BOUNDS)
+        //'位置越界')
+        return
+      }
+      this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
+      if (
+        data.index >= this.state.startIndex &&
+        data.index < this.state.startIndex + this.state.attributes.data.length
+      ) {
+        // 定位在当前显示数据范围内
+        relativeIndex = data.index - 1 - this.state.startIndex
+        isInViewableData = true
+      } else {
+        // 定位在当前显示数据范围外
+        startIndex = this.currentPage * PAGE_SIZE
+        relativeIndex = data.index - 1 - startIndex
+      }
+      currentIndex = data.index - 1
     }
 
-    // if (this.currentPage > 0) {
-    //   this.canBeRefresh = true
-    // }
-
-    let restLength = this.total - relativeIndex - 1
-    if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
-      viewPosition = 0
-    } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
-      viewPosition = 1
-    }
-
-    let startIndex = this.currentPage * PAGE_SIZE
+    this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
+    //ConstInfo.LOCATING)
     if (startIndex !== 0) {
       this.canBeRefresh = true
     }
 
-    this.getAttribute(
-      {
-        type: 'reset',
-        currentPage: this.currentPage,
-        startIndex: startIndex,
-        relativeIndex: remainder,
-        currentIndex,
-      },
-      () => {
-        if (this.table) {
-          let item = this.table.setSelected(remainder)
-          this.setState({
-            currentFieldInfo: item.data,
-          })
-          // 避免 Android 更新数据后无法滚动
-          setTimeout(() => {
-            this.table &&
-              this.table.scrollToLocation({
-                animated: true,
-                itemIndex: remainder,
-                sectionIndex: 0,
-                viewPosition: viewPosition,
-                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-              })
-          }, 0)
-        }
-        this.setLoading(false)
-      },
-    )
+    if (isInViewableData) {
+      let item = this.table.setSelected(relativeIndex, false)
+      this.setState(
+        {
+          currentFieldInfo: item.data,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          this.table &&
+            this.table.scrollToLocation({
+              animated: false,
+              itemIndex: relativeIndex,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+            })
+        },
+      )
+      this.setLoading(false)
+    } else {
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: this.currentPage,
+          startIndex: startIndex,
+          relativeIndex: relativeIndex,
+          currentIndex,
+        },
+        () => {
+          if (this.table) {
+            setTimeout(() => {
+              // 避免 Android 更新数据后无法滚动
+              let item = this.table.setSelected(relativeIndex, false)
+              this.setState(
+                {
+                  currentFieldInfo: item.data,
+                },
+                () => {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: relativeIndex,
+                      sectionIndex: 0,
+                      viewPosition: viewPosition,
+                      viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+                    })
+                },
+              )
+            }, 0)
+          }
+          this.setLoading(false)
+        },
+      )
+    }
   }
 
   selectRow = ({ data, index }) => {
@@ -450,7 +569,7 @@ export default class LayerAttribute extends React.Component {
       this.setState({
         currentFieldInfo: data,
         relativeIndex: index,
-        currentIndex: this.currentPage * PAGE_SIZE + index,
+        currentIndex: this.state.startIndex + index,
       })
     } else {
       this.setState({
@@ -465,9 +584,24 @@ export default class LayerAttribute extends React.Component {
   relateAction = () => {
     if (this.state.currentFieldInfo.length === 0) return
     SMap.setAction(Action.PAN)
-    SMap.selectObj(this.props.currentLayer.path, [
-      this.state.currentFieldInfo[0].value,
-    ]).then(data => {
+    SMap.setEditable(this.props.currentLayer.path, false)
+    let geoStyle = new GeoStyle()
+    geoStyle.setFillForeColor(0, 255, 0, 0.5)
+    geoStyle.setLineWidth(1)
+    geoStyle.setLineColor(70, 128, 223)
+    geoStyle.setMarkerHeight(5)
+    geoStyle.setMarkerWidth(5)
+    geoStyle.setMarkerSize(10)
+    SMap.setTrackingLayer(
+      [
+        {
+          layerPath: this.props.currentLayer.path,
+          ids: [this.state.currentFieldInfo[0].value],
+          style: JSON.stringify(geoStyle),
+        },
+      ],
+      true,
+    ).then(data => {
       this.props.navigation && this.props.navigation.navigate('MapView')
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
@@ -484,6 +618,25 @@ export default class LayerAttribute extends React.Component {
         })
       }
     })
+    // SMap.selectObj(this.props.currentLayer.path, [
+    //   this.state.currentFieldInfo[0].value,
+    // ]).then(data => {
+    //   this.props.navigation && this.props.navigation.navigate('MapView')
+    //   GLOBAL.toolBox &&
+    //     GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
+    //       isFullScreen: false,
+    //       height: 0,
+    //     })
+    //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+    //
+    //   Utils.setSelectionStyle(this.props.currentLayer.path)
+    //   if (data instanceof Array && data.length > 0) {
+    //     SMap.moveToPoint({
+    //       x: data[0].x,
+    //       y: data[0].y,
+    //     })
+    //   }
+    // })
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -514,6 +667,9 @@ export default class LayerAttribute extends React.Component {
                 value: data.value,
                 index: data.index,
                 columnIndex: data.columnIndex,
+                smID: isSingleData
+                  ? this.state.attributes.data[0][0].value
+                  : data.rowData[1].value,
               },
             ],
             prevData: [
@@ -522,6 +678,9 @@ export default class LayerAttribute extends React.Component {
                 value: isSingleData ? data.rowData.value : data.cellData.value,
                 index: data.index,
                 columnIndex: data.columnIndex,
+                smID: isSingleData
+                  ? this.state.attributes.data[0][0].value
+                  : data.rowData[1].value,
               },
             ],
             params: {
@@ -529,7 +688,7 @@ export default class LayerAttribute extends React.Component {
               filter: `SmID=${
                 isSingleData
                   ? this.state.attributes.data[0][0].value
-                  : data.rowData[0].value
+                  : data.rowData[1].value // 0为序号
               }`, // 过滤条件
               cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },
@@ -546,6 +705,7 @@ export default class LayerAttribute extends React.Component {
               attributes.data[data.index][data.columnIndex - 1].value =
                 data.value
             } else {
+              // 单条数据修改属性
               attributes.data[0][data.index].value = data.value
             }
 
@@ -590,27 +750,28 @@ export default class LayerAttribute extends React.Component {
     switch (type) {
       case 'undo':
         if (!this.state.canBeUndo) {
-          Toast.show('已经无法回撤')
-          this.setLoading(false)
+          // Toast.show('已经无法回撤')
+          // this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
-          Toast.show('已经无法恢复')
-          this.setLoading(false)
+          // Toast.show('已经无法恢复')
+          // this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
-          Toast.show('已经无法还原')
-          this.setLoading(false)
+          // Toast.show('已经无法还原')
+          // this.setLoading(false)
           return
         }
         break
     }
-    this.setLoading(true, '修改中')
+    this.setLoading(true, getLanguage(global.language).Prompt.LOADING)
+    //'修改中')
     try {
       this.props.setAttributeHistory &&
         (await this.props
@@ -620,52 +781,53 @@ export default class LayerAttribute extends React.Component {
             type,
           })
           .then(({ msg, result, data }) => {
-            Toast.show(msg)
+            if (!msg === '成功') Toast.show(msg)
             if (result) {
               let attributes = JSON.parse(JSON.stringify(this.state.attributes))
 
-              if (data.length === 1) {
-                let fieldInfo = data[0].fieldInfo
-                if (this.state.attributes.data.length > 1) {
-                  if (
-                    attributes.data[fieldInfo[0].index][
-                      fieldInfo[0].columnIndex - 1
-                    ].name === fieldInfo[0].name &&
-                    attributes.data[fieldInfo[0].index][
-                      fieldInfo[0].columnIndex - 1
-                    ].value === fieldInfo[0].value
-                  ) {
-                    this.setAttributeHistory(type)
-                    return
-                  }
-                } else {
-                  if (
-                    attributes.data[0][fieldInfo[0].index].name ===
-                      fieldInfo[0].name &&
-                    attributes.data[0][fieldInfo[0].index].value ===
-                      fieldInfo[0].value
-                  ) {
-                    this.setAttributeHistory(type)
-                    return
-                  }
-                }
-              }
+              // if (data.length === 1) {
+              //   let fieldInfo = data[0].fieldInfo
+              //   if (this.state.attributes.data.length > 1) {
+              //     if (
+              //       attributes.data[fieldInfo[0].index][
+              //         fieldInfo[0].columnIndex - 1
+              //       ].name === fieldInfo[0].name &&
+              //       attributes.data[fieldInfo[0].index][
+              //         fieldInfo[0].columnIndex - 1
+              //       ].value === fieldInfo[0].value
+              //     ) {
+              //       this.setAttributeHistory(type)
+              //       return
+              //     }
+              //   } else {
+              //     if (
+              //       attributes.data[0][fieldInfo[0].index].name ===
+              //         fieldInfo[0].name &&
+              //       attributes.data[0][fieldInfo[0].index].value ===
+              //         fieldInfo[0].value
+              //     ) {
+              //       this.setAttributeHistory(type)
+              //       return
+              //     }
+              //   }
+              // }
 
               for (let i = 0; i < data.length; i++) {
                 let fieldInfo = data[i].fieldInfo
                 for (let j = 0; j < fieldInfo.length; j++) {
                   if (this.state.attributes.data.length > 1) {
                     if (
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].name === fieldInfo[j].name &&
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].value !== fieldInfo[j].value
+                      attributes.data[0][0].value <= fieldInfo[j].smID &&
+                      attributes.data[attributes.data.length - 1][0].value >=
+                        fieldInfo[j].smID
                     ) {
-                      attributes.data[fieldInfo[j].index][
-                        fieldInfo[j].columnIndex - 1
-                      ].value = fieldInfo[j].value
+                      for (let _data of attributes.data) {
+                        if (_data[0].value === fieldInfo[j].smID) {
+                          _data[fieldInfo[j].columnIndex - 1].value =
+                            fieldInfo[j].value
+                          continue
+                        }
+                      }
                     }
                   } else {
                     if (
@@ -687,7 +849,18 @@ export default class LayerAttribute extends React.Component {
                   ...checkData,
                 },
                 () => {
-                  this.setLoading(false)
+                  setTimeout(() => {
+                    this.setLoading(false)
+                    if (
+                      this.state.attributes.data.length > 1 &&
+                      data.length === 1
+                    ) {
+                      this.locateToPosition({
+                        type: 'absolute',
+                        index: data[0].fieldInfo[0].index + 1,
+                      })
+                    }
+                  }, 0)
                 },
               )
             } else {
@@ -711,11 +884,6 @@ export default class LayerAttribute extends React.Component {
     NavigationService.navigate('LayerAttributeSearch', {
       layerPath: this.props.currentLayer.path,
     })
-  }
-
-  back = () => {
-    this.props.navigation.navigate('MapView')
-    return true
   }
 
   renderToolBar = () => {
@@ -745,7 +913,12 @@ export default class LayerAttribute extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(this.props.language).Map_Label.NAME,
+              getLanguage(this.props.language).Map_Label.ATTRIBUTE,
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
@@ -775,25 +948,45 @@ export default class LayerAttribute extends React.Component {
       <View style={[styles.editControllerView, { width: '100%' }]}>
         <MTBtn
           key={'undo'}
-          title={'撤销'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
+          //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('undo')}
         />
         <MTBtn
           key={'redo'}
-          title={'恢复'}
+          title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
+          //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('redo')}
         />
         <MTBtn
           key={'revert'}
-          title={'还原'}
+          title={
+            getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REVERT
+          }
+          //{'还原'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_revert}
+          textColor={!this.state.canBeRevert && color.contentColorGray}
+          image={
+            this.state.canBeRevert
+              ? getThemeAssets().publicAssets.icon_revert
+              : getPublicAssets().attribute.icon_revert_disable
+          }
           imageStyle={styles.headerBtn}
           onPress={() => this.setAttributeHistory('revert')}
         />
@@ -848,19 +1041,24 @@ export default class LayerAttribute extends React.Component {
     let title = ''
     switch (GLOBAL.Type) {
       case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
+        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
+        //MAP_MODULE.MAP_COLLECTION
         break
       case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
+        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
+        //MAP_MODULE.MAP_EDIT
         break
       case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
+        title = getLanguage(this.props.language).Map_Module.MAP_3D
+        //MAP_MODULE.MAP_3D
         break
       case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
+        title = getLanguage(this.props.language).Map_Module.MAP_THEME
+        //MAP_MODULE.MAP_THEME
         break
       case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
+        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
+        //MAP_MODULE.MAP_PLOTTING
         break
     }
     let showContent =
@@ -919,7 +1117,8 @@ export default class LayerAttribute extends React.Component {
           {showContent
             ? this.renderMapLayerAttribute()
             : this.renderInfoView({
-              title: '暂无属性',
+              title: getLanguage(this.props.language).Prompt.NO_ATTRIBUTES,
+              //'暂无属性',
             })}
           {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
           <LocationView
