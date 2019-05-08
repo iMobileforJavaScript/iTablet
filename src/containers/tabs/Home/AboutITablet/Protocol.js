@@ -7,9 +7,12 @@ import {
   UIManager,
   LayoutAnimation,
 } from 'react-native'
-import { Container } from '../../../../components'
+import { Container,MTBtn } from '../../../../components'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language/index'
+import { scaleSize } from '../../../../utils'
+import { getPublicAssets } from '../../../../assets'
+
 
 export default class protocol extends Component {
   props: {
@@ -23,6 +26,7 @@ export default class protocol extends Component {
     this.state = {
       progressWidth: Dimensions.get('window').width * 0.4,
       isLoadWebView: false,
+      backButtonEnabled:false,
     }
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental &&
@@ -157,15 +161,38 @@ export default class protocol extends Component {
       default:
         break
     }
+
+    let webBackOpacity = this.state.backButtonEnabled ? 1 : 0
+    let headerLeft = [
+      <MTBtn
+        key={'back'}
+        image={getPublicAssets().common.icon_back}
+        customStyle={{ height: scaleSize(60),width: scaleSize(60),  marginLeft: scaleSize(0) }}
+        onPress={()=>{
+          this.props.navigation.goBack()}
+        }
+      />,
+      <MTBtn
+        key={'webClose'}
+        image={getPublicAssets().common.icon_close}
+        customStyle={{ opacity:webBackOpacity,height: scaleSize(60),width: scaleSize(60),  marginLeft: scaleSize(0) }}
+        onPress={()=>{
+          this.webView.goBack()}
+        }
+      />,
+    ]
+    // headerLeft = this.state.backButtonEnabled ? headerLeft : null
     return (
       <Container
         headerProps={{
           title: title,
+          headerLeft:headerLeft,
           navigation: this.props.navigation,
         }}
       >
         {this.state.isLoadWebView ? (
           <WebView
+            ref={ref => (this.webView = ref)}
             style={{ flex: 1, paddingTop: 0 }}
             source={source}
             /** 保证release版本时，可加载到html*/
@@ -192,6 +219,11 @@ export default class protocol extends Component {
               if (this.objProgressWidth !== undefined) {
                 clearInterval(this.objProgressWidth)
               }
+            }}
+            onNavigationStateChange = {navState => {
+              this.setState({
+                backButtonEnabled: navState.canGoBack,
+              })
             }}
           />
         ) : (

@@ -1,11 +1,17 @@
 //好友
 const Friends = {
+  LOGOUT: '登录以联系好友',
   MESSAGES: '消息',
   FRIENDS: '好友',
   GROUPS: '群组',
   ADD_FRIENDS: '添加好友',
   NEW_GROUP_CHAT: '发起群聊',
   RECOMMEND_FRIEND: '好友推荐',
+  //Friend
+  MSG_SERVICE_FAILED: '连接消息服务失败！',
+  MSG_SERVICE_NOT_CONNECT: '未能连接消息服务！',
+  SEND_SUCCESS: '分享完成',
+  RECEIVE_SUCCESS: '接收完成',
   //FriendMessage
   MARK_READ: '标记已读',
   MARK_UNREAD: '标记未读',
