@@ -86,7 +86,7 @@ const Map3DTabs = TabNavigator(
     Map3DLayerManager: {
       screen: Map3DLayerManager,
     },
-    LayerAttribute: {
+    LayerAttribute3D: {
       screen: LayerAttribute,
     },
     Map3DSetting: {

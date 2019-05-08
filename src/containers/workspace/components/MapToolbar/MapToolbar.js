@@ -171,14 +171,14 @@ export default class MapToolbar extends React.Component {
             },
           },
           {
-            key: 'LayerAttribute',
+            key: 'LayerAttribute3D',
             title: getLanguage(global.language).Map_Lable.ATTRIBUTE,
             //'属性',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute', {
+                this.props.navigation.navigate('LayerAttribute3D', {
                   type: 'MAP_3D',
                 })
             },
