@@ -249,7 +249,7 @@ export default class MapView extends React.Component {
               height: scaleSize(20),
             }}
           >
-            这是一段超长的legend title 看看怎么显示
+            {item.item.title}
           </Text>
         </TouchableOpacity>
       )

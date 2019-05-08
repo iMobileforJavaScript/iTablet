@@ -17,10 +17,10 @@ function getMapSettings() {
           //'手势俯仰',
           value: false,
         },
-        {
-          name: '专题图图例',
-          value: false,
-        },
+        // {
+        //   name: '专题图图例',
+        //   value: false,
+        // },
       ],
     },
     {
