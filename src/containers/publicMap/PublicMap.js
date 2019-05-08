@@ -12,17 +12,20 @@ import {
   RefreshControl,
   Dimensions,
   ActivityIndicator,
+  Platform,
 } from 'react-native'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../utils'
 import styles from './Styles'
 import color from '../../styles/color'
 import FetchUtils from '../../utils/FetchUtils'
+import {jsonUtil} from '../../utils'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language/index'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import RNFS from 'react-native-fs'
+// import { Platform } from 'os'
 // import { FileTools } from '../../native'
 // import { ConstPath } from '../../constants'
 // import FriendListFileHandle from '../tabs/Friend/FriendListFileHandle'
@@ -43,7 +46,7 @@ export default class PublicMap extends Component {
     }
     this.isLoading = false
     this.loadCount = 1
-    this.flatListData = []
+    this.cacheData = []
     this.allUserDataCount = -1
     this.currentLoadDataCount = 0
     this.loadCacheEnd = false
@@ -54,11 +57,26 @@ export default class PublicMap extends Component {
     this.addMapCache = this.addMapCache.bind(this)
     this.saveMapCache = this.saveMapCache.bind(this)
     this._showLoadProgressView = this._showLoadProgressView.bind(this)
+    this._loadFirstUserData2 = this._loadFirstUserData2.bind(this)
+
+
   }
   componentDidMount() {
     // this._loadFirstUserData()
-    this.currentLoadPage2 = 1
-    this._loadFirstUserData2(this.currentLoadPage2, 300)
+    FileTools.getHomeDirectory().then(value=>{
+      let path = value + ConstPath.CachePath + 'publicMap.txt'
+      FileTools.fileIsExist(path).then(exist=>{
+        if (exist) {
+          RNFS.readFile(path).then(result=>{
+            if (result && jsonUtil.isJSON(result)) {
+              this.cacheData = JSON.parse(result)
+            }
+            this.currentLoadPage2 = 1
+            this._loadFirstUserData2(this.currentLoadPage2, 300)
+          })
+        }
+      })
+    })
   }
   componentWillUnmount() {
     this._clearInterval()
@@ -80,55 +98,51 @@ export default class PublicMap extends Component {
       this.setState({ progressWidth: '100%' })
     }
   }
-  _loadFirstUserData2 = async (currentPage, totalPage) => {
+  async _loadFirstUserData2(currentPage, totalPage){
     try {
-      await SOnlineService.syncAndroidCookie()
-      let path =
-        (await FileTools.getHomeDirectory()) +
-        ConstPath.CachePath +
-        'publicMap.txt'
-      let exist = await FileTools.fileIsExist(path)
-      if (exist) {
-        let result = await RNFS.readFile(path)
-        if (result) {
-          let data = JSON.parse(result)
-          let mapList = []
+      //debugger
+      if(Platform.OS === 'android'){
+        await SOnlineService.syncAndroidCookie()
+      }
+      // let path =
+      //   (await FileTools.getHomeDirectory()) +
+      //   ConstPath.CachePath +
+      //   'publicMap.txt'
+      //debugger
+      if (this.cacheData.length>0)
+      {
+        let data = [...this.cacheData]
+        let mapList = []
+        //debugger
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index]
+          let dataId = element.id
+          let dataUrl =
+            'https://www.supermapol.com/web/datas/' + dataId + '.json'
+          // 'https://www.supermapol.com/web/datas/1916243026.json'
 
-          if (data && data.length === 0) {
-            this.loadCacheEnd = true
-            this._showLoadProgressView()
-
-            this.getCurrentLoadData2(currentPage, totalPage)
-            this._clearInterval()
-          } else {
-            for (let index = 0; index < data.length; index++) {
-              const element = data[index]
-              let dataId = element.id
-              let dataUrl =
-                'https://www.supermapol.com/web/datas/' + dataId + '.json'
-              // 'https://www.supermapol.com/web/datas/1916243026.json'
-
-              let bValid = false
-              if (element.serviceStatus !== 'UNPUBLISHED') {
-                this.removeMapCache([element])
-                continue
-              }
-              let objDataJson = await FetchUtils.getObjJson(dataUrl)
-              if (objDataJson && objDataJson.dataItemServices && objDataJson.dataItemServices[0] && objDataJson.dataItemServices[0].serviceType) {
-                if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
-                  mapList.push(element)
-                  bValid = true
-                }
-              }
-              if (!bValid) {
-                this.removeMapCache([element])
-              }
-              this.setState({ data: mapList })
+          let bValid = false
+          // if (element.serviceStatus !== 'UNPUBLISHED') {
+          //   this.removeMapCache([element])
+          //   continue
+          // }
+          let objDataJson = await FetchUtils.getObjJson(dataUrl)
+          if (objDataJson && objDataJson.dataItemServices && objDataJson.dataItemServices[0] && objDataJson.dataItemServices[0].serviceType) {
+            //debugger
+            if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP' && objDataJson.serviceStatus === 'PUBLISHED') {
+              mapList.push(element)
+              bValid = true
+            }else{
+              debugger
             }
-            this._clearInterval()
-            this.loadCacheEnd = true
           }
+          if (!bValid) {
+            this.removeMapCache([element])
+          }
+          this.setState({ data: mapList })
         }
+        this._clearInterval()
+        this.loadCacheEnd = true
       } else {
         this.loadCacheEnd = true
         this._showLoadProgressView()
@@ -158,7 +172,9 @@ export default class PublicMap extends Component {
       //一条也刷新
       if (data.length >= 1) {
         let newData = this.addMapCache(data)
-        this.setState({ data: newData })
+        if(newData){
+          this.setState({ data: newData })
+        }
       }
       currentPage = currentPage + 1
       this.currentLoadPage2 = currentPage
@@ -229,6 +245,9 @@ export default class PublicMap extends Component {
                 break
               }
             }
+            if (objDataJson.serviceStatus !== 'PUBLISHED'){
+              continue
+            }
             if (restUrl && restUrl !== '') {
               restUrl = restUrl + '/maps.json'
               let arrMapJson = await FetchUtils.getObjJson(restUrl, 6000)
@@ -269,8 +288,8 @@ export default class PublicMap extends Component {
     return FetchUtils.getObjJson(uri)
   }
   async saveMapCache() {
-    if (this.state.length < 1) return
-    let data = JSON.stringify(this.state.data)
+    if (this.cacheData < 1) return
+    let data = JSON.stringify(this.cacheData)
     let path =
       (await FileTools.getHomeDirectory()) +
       ConstPath.CachePath +
@@ -284,14 +303,14 @@ export default class PublicMap extends Component {
     if (!newMapData) {
       return
     }
-    let srcData = [...this.state.data]
+    // let srcData = [...this.cacheData]
     for (let i = 0; i < newMapData.length; i++) {
       let map = newMapData[i]
 
       let bFound = false
       let index
-      for (let n = 0; n < srcData.length; n++) {
-        if (srcData[n].MD5 === map.MD5) {
+      for (let n = 0; n < this.cacheData.length; n++) {
+        if (this.cacheData[n].MD5 === map.MD5) {
           bFound = true
           index = n
           break
@@ -299,21 +318,20 @@ export default class PublicMap extends Component {
       }
 
       if (!bFound) {
-        srcData.splice(index, 1)
+        this.cacheData.splice(index, 1)
       }
     }
 
-    return srcData
+    return this.cacheData
   }
   addMapCache(newMapData) {
     if (!newMapData) {
       return
     }
     let bAddNew = false
-    let srcData = [...this.state.data]
+    let srcData = this.cacheData//[...this.state.data]
     for (let i = 0; i < newMapData.length; i++) {
       let map = newMapData[i]
-
       let bFound = false
       for (let n = 0; n < srcData.length; n++) {
         if (srcData[n].MD5 === map.MD5) {
@@ -340,7 +358,11 @@ export default class PublicMap extends Component {
         RNFS.writeFile(path, data, 'utf8')
       })
     }
-    return srcData
+    if(bAddNew){
+      return srcData
+    }else{
+      return false
+    }
   }
   async _onRefresh() {
     try {
