@@ -22,7 +22,6 @@ export default class Container extends PureComponent {
     title: string,
     header: any,
     bottomBar: any,
-    title: string,
     withoutHeader: boolean,
     headerProps: Object,
     bottomProps: Object,
