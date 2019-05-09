@@ -96,6 +96,7 @@ export default StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    flexDirection: 'row',
   },
   headerRightView: {
     position: 'absolute',
