@@ -50,7 +50,6 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     type: string,
     data?: Array,
-    Label: () => {},
     layers: PropTypes.object,
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
@@ -132,9 +131,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    if (this.props.Label) {
-      this.props.Label()
-    }
     if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show(
         getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER,

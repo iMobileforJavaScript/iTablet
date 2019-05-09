@@ -30,6 +30,12 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  //图例设置
+  LEGEND_COLUMN: '列数',
+  LEGEND_WIDTH: '宽度',
+  LEGEND_HEIGHT: '高度',
+  LEGEND_COLOR: '填充色',
+
   //地图制图及公共 风格
   STYLE: '风格',
   STYLE_SYMBOL: '符号',
@@ -303,6 +309,7 @@ const Map_Setting = {
   BASIC_SETTING: '基本设置',
   ROTATION_GESTURE: '手势旋转',
   PITCH_GESTURE: '手势俯仰',
+  THEME_LEGEND: '专题图图例',
 
   //效果设置
   EFFECT_SETTINGS: '效果设置',

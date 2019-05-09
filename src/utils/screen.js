@@ -34,7 +34,7 @@ if (deviceWidth > deviceHeight) {
  * return number dp
  */
 export function scaleSize(size) {
-  size = size * scale / defaultPixel
+  size = (size * scale) / defaultPixel
   return size
 }
 

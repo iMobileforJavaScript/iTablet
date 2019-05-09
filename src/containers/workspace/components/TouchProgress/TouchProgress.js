@@ -417,6 +417,37 @@ export default class TouchProgress extends Component {
           break
         }
       }
+      if (this.props.selectName === '列数') {
+        let columnnumber = value !== undefined ? value : 2
+        this._panBtnStyles.style.left =
+          (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
+        this._previousLeft = (columnnumber * 10 * progressWidth) / 40
+        this._BackLine.style.width = (columnnumber * 10 * progressWidth) / 40
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+          '     ' +
+          parseInt(columnnumber)
+      } else if (this.props.selectName === '宽度') {
+        let width = value !== undefined ? value : 50
+        this._panBtnStyles.style.left =
+          (width * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (width * progressWidth) / 100
+        this._BackLine.style.width = (width * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+          '     ' +
+          parseInt(width)
+      } else if (this.props.selectName === '高度') {
+        let height = value !== undefined ? value : 50
+        this._panBtnStyles.style.left =
+          (height * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (height * progressWidth) / 100
+        this._BackLine.style.width = (height * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+          '     ' +
+          parseInt(height)
+      }
     }
 
     this.setState({
@@ -546,6 +577,16 @@ export default class TouchProgress extends Component {
             newValue = value * 200
           }
           break
+      }
+    }
+
+    if (newValue === undefined) {
+      if (this.props.selectName === '列数') {
+        newValue = value * 40
+      } else if (this.props.selectName === '宽度') {
+        newValue = value * 100
+      } else if (this.props.selectName === '高度') {
+        newValue = value * 100
       }
     }
 
@@ -791,6 +832,39 @@ export default class TouchProgress extends Component {
           break
         }
       }
+      if (this.props.selectName === '列数') {
+        if (value > 40) {
+          value = 40
+        }
+        let newvalue = Math.ceil(value / 10)
+        GLOBAL.legend.setState({ columns: newvalue })
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+          '     ' +
+          parseInt(newvalue)
+      } else if (this.props.selectName === '宽度') {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        GLOBAL.legend.setState({ width: value })
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+          '     ' +
+          parseInt(value)
+      } else if (this.props.selectName === '高度') {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        GLOBAL.legend.setState({ height: value })
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+          '     ' +
+          parseInt(value)
+      }
     }
 
     tips !== this.state.tips &&
@@ -997,6 +1071,36 @@ export default class TouchProgress extends Component {
           }
           break
         }
+      }
+      if (this.props.selectName === '列数') {
+        if (value > 40) {
+          value = 40
+        }
+        let newvalue = Math.ceil(value / 10)
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+          '     ' +
+          parseInt(newvalue)
+      } else if (this.props.selectName === '宽度') {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+          '     ' +
+          parseInt(value)
+      } else if (this.props.selectName === '高度') {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+          '     ' +
+          parseInt(value)
       }
     }
 

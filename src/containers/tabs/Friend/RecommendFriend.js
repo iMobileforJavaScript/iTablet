@@ -15,6 +15,7 @@ import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
 import { scaleSize } from '../../../utils/screen'
 import { getLanguage } from '../../../language/index'
+// eslint-disable-next-line
 import Contacts from 'react-native-contacts'
 import { Toast } from '../../../utils'
 import FriendListFileHandle from './FriendListFileHandle'
