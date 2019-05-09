@@ -11,6 +11,10 @@ export default class LegendView extends React.Component {
     super(props)
     this.state = {
       column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      width: 50,
+      height: 50,
+      columns: 2,
+      textsize: 8,
     }
   }
 
@@ -23,13 +27,23 @@ export default class LegendView extends React.Component {
   }
 
   render() {
-    return <SMRLegendView style={styles.table} />
+    return (
+      <SMRLegendView
+        style={styles.table}
+        tableStyle={{
+          width: this.state.width,
+          height: this.state.height,
+          column: this.state.columns,
+          textsize: this.state.textsize,
+        }}
+      />
+    )
   }
 }
 
 const styles = StyleSheet.create({
   table: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
 })

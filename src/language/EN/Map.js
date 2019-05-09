@@ -26,6 +26,11 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
 
+  LEGEND_COLUMN: 'Column Number',
+  LEGEND_WIDTH: 'Width',
+  LEGEND_HEIGHT: 'Height',
+  LEGEND_COLOR: 'Color',
+
   STYLE: 'Styles',
   STYLE_SYMBOL: 'Symbol',
   STYLE_SYMBOL_SIZE: 'Symbol Size',
@@ -284,6 +289,7 @@ const Map_Setting = {
   BASIC_SETTING: 'Basic settings',
   ROTATION_GESTURE: 'Rotation Gesture',
   PITCH_GESTURE: 'Pitch Gesture',
+  THEME_LEGEND: 'Theme Legend',
 
   //效果设置
   EFFECT_SETTINGS: 'Effect Settings',

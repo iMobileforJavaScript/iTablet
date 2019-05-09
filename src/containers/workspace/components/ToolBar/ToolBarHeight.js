@@ -165,6 +165,10 @@ function getToorbarHeight(orientation, type) {
       //   column = 8
       // }
       height = ConstToolType.THEME_HEIGHT[3]
+      column = 8
+      break
+    case ConstToolType.LEGEND:
+      height = ConstToolType.THEME_HEIGHT[3]
       column = 4
       break
     case ConstToolType.LINECOLOR_SET:
