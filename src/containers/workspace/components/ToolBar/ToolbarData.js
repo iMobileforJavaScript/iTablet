@@ -216,7 +216,7 @@ function getMap3DData(type, params) {
           //'暂停',
           action: () => {
             try {
-              SScene.pasueRoutStop()
+              SScene.pauseRoutStop()
             } catch (error) {
               Toast.show('暂停失败')
             }

@@ -26,7 +26,7 @@ import { color } from '../../../../styles'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
-const ROWS_LIMIT = 100
+const ROWS_LIMIT = 120
 const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttribute extends React.Component {
@@ -236,9 +236,9 @@ export default class LayerAttribute extends React.Component {
         this.total = result.total || 0
         attributes = result.attributes || []
 
-        this.noMore =
-          Math.floor(this.total / PAGE_SIZE) === currentPage ||
-          attributes.data.length < PAGE_SIZE
+        // this.noMore =
+        //   Math.floor(this.total / PAGE_SIZE) === currentPage ||
+        //   attributes.data.length < PAGE_SIZE
 
         if (attributes.data.length === 1) {
           this.setState({
@@ -293,6 +293,10 @@ export default class LayerAttribute extends React.Component {
             resetCurrent || currentIndex < 0 ? -1 : currentIndex - startIndex
           // : currentIndex - startIndex - 1
           let prevStartIndex = this.state.startIndex
+          this.currentPage = Math.floor(
+            (startIndex + newAttributes.data.length - 1) / PAGE_SIZE,
+          )
+          this.noMore = startIndex + newAttributes.data.length === this.total
           this.setState(
             {
               showTable: true,
@@ -307,26 +311,28 @@ export default class LayerAttribute extends React.Component {
               // ...others,
             },
             () => {
-              if (type === 'refresh') {
-                this.table &&
-                  this.table.scrollToLocation({
-                    animated: false,
-                    itemIndex: prevStartIndex - startIndex,
-                    sectionIndex: 0,
-                    viewPosition: 0,
-                    viewOffset: COL_HEIGHT,
-                  })
-              } else if (type === 'loadMore') {
-                this.table &&
-                  this.table.scrollToLocation({
-                    animated: false,
-                    itemIndex: newAttributes.data.length - result.resLength,
-                    sectionIndex: 0,
-                    viewPosition: 1,
-                  })
-              }
-              this.setLoading(false)
-              cb && cb(attributes)
+              setTimeout(() => {
+                if (type === 'refresh') {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: prevStartIndex - startIndex,
+                      sectionIndex: 0,
+                      viewPosition: 0,
+                      viewOffset: COL_HEIGHT,
+                    })
+                } else if (type === 'loadMore') {
+                  this.table &&
+                    this.table.scrollToLocation({
+                      animated: false,
+                      itemIndex: newAttributes.data.length - result.resLength,
+                      sectionIndex: 0,
+                      viewPosition: 1,
+                    })
+                }
+                this.setLoading(false)
+                cb && cb(attributes)
+              }, 0)
             },
           )
         }
@@ -410,6 +416,7 @@ export default class LayerAttribute extends React.Component {
     if (startIndex !== 0) {
       this.canBeRefresh = true
     }
+    this.noMore = true
 
     this.getAttribute(
       {

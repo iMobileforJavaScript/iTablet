@@ -11,7 +11,7 @@ import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
 
 const PAGE_SIZE = 30
-const ROWS_LIMIT = 100
+const ROWS_LIMIT = 120
 const COL_HEIGHT = scaleSize(80)
 
 export default class LayerSelectionAttribute extends React.Component {
@@ -135,9 +135,7 @@ export default class LayerSelectionAttribute extends React.Component {
         this.total = result.total || 0
         let attributes = result.attributes || []
 
-        this.noMore =
-          Math.floor(this.total / PAGE_SIZE) === currentPage ||
-          attributes.data.length < PAGE_SIZE
+        // || attributes.data.length < PAGE_SIZE
 
         if (attributes.data.length === 1) {
           this.setState({
@@ -190,14 +188,17 @@ export default class LayerSelectionAttribute extends React.Component {
               ? others.currentIndex
               : this.state.currentIndex
           let relativeIndex =
-            resetCurrent || currentIndex < 0
-              ? -1
-              : currentIndex - startIndex - 1
+            resetCurrent || currentIndex < 0 ? -1 : currentIndex - startIndex
           let prevStartIndex = this.state.startIndex
+          this.currentPage = Math.floor(
+            (startIndex + newAttributes.data.length - 1) / PAGE_SIZE,
+          )
+          // this.noMore = Math.floor(this.total / PAGE_SIZE) <= this.currentPage
+          this.noMore = startIndex + newAttributes.data.length === this.total
           this.setState(
             {
               showTable: true,
-              attributes,
+              attributes: newAttributes,
               currentIndex,
               relativeIndex,
               currentFieldInfo:
@@ -393,6 +394,7 @@ export default class LayerSelectionAttribute extends React.Component {
     if (startIndex !== 0) {
       this.canBeRefresh = true
     }
+    this.noMore = true
 
     this.getAttribute(
       {

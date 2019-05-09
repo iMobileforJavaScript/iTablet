@@ -2647,8 +2647,9 @@ export default class ToolBar extends React.PureComponent {
       SCollector.stopCollect()
     } else {
       if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
-        // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
-        SMap.setAction(Action.SELECT)
+        // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN ?
+        // SMap.setAction(Action.SELECT)
+        SMap.setAction(Action.PAN)
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
@@ -4870,7 +4871,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
-            NavigationService.navigate('LayerAttribute', { type: 'MAP_3D' })
+            NavigationService.navigate('LayerAttribute3D', { type: 'MAP_3D' })
           }
           break
         // case ToolbarBtnType.SHARE:

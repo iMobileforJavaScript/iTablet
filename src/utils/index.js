@@ -7,6 +7,7 @@ import checkType from './checkType'
 import jsonUtil from './jsonUtil'
 import FetchUtils from './FetchUtils'
 import LayerUtil from './LayerUtil'
+import ModelUtils from './ModelUtils'
 export {
   screen,
   scaleSize,
@@ -20,4 +21,5 @@ export {
   setSpText,
   /** 地图公共方法 **/
   LayerUtil,
+  ModelUtils,
 }
