@@ -550,7 +550,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   onPressRow = async ({ data }) => {
-    this.props.setMapLegend(false)
+    // this.props.setMapLegend(false)
 
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {

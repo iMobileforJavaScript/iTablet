@@ -34,7 +34,7 @@ import {
   SurfaceView,
 } from '../../../../components'
 import { Utils } from '../../util'
-import { Toast, jsonUtil, scaleSize, setSpText } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -48,7 +48,7 @@ import NavigationService from '../../../NavigationService'
 import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import LegendView from '../../components/LegendView/LegendView'
+import SMLegendView from '../../components/LegendView/SMLegendView'
 //eslint-disable-next-line
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -1107,7 +1107,6 @@ export default class MapView extends React.Component {
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
         setMapType={this.setMapType}
-        Label={this.showLegend}
         online={this.props.online}
         save={() => {
           //this.saveMapWithNoWorkspace()
@@ -1129,10 +1128,6 @@ export default class MapView extends React.Component {
         }}
       />
     )
-  }
-
-  showLegend = () => {
-    return this.props.setMapLegend(false)
   }
 
   //遮盖层
@@ -1343,46 +1338,10 @@ export default class MapView extends React.Component {
         bottomProps={{ type: 'fix' }}
       >
         {this.props.mapLegend && (
-          <View
-            style={{
-              position: 'absolute',
-              width: scaleSize(300),
-              height: scaleSize(325),
-              borderColor: 'black',
-              borderWidth: scaleSize(3),
-              left: 0,
-              top: HEADER_HEIGHT,
-              backgroundColor: 'white',
-              zIndex: 1,
-            }}
-          >
-            <View
-              style={{
-                width: scaleSize(300),
-                height: scaleSize(50),
-                backgroundColor: 'transparent',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: setSpText(24),
-                  textAlign: 'center',
-                  backgroundColor: 'transparent',
-                  fontWeight: 'bold',
-                }}
-              >
-                图例
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-              }}
-            >
-              <LegendView device={this.props.device} />
-            </View>
-          </View>
+          <SMLegendView
+            device={this.props.device}
+            ref={ref => (GLOBAL.smlegend = ref)}
+          />
         )}
 
         {this.state.showMap && (

@@ -38,6 +38,12 @@ const Map_Main_Menu_Chinese = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  //图例设置
+  LEGEND_COLUMN: '列数',
+  LEGEND_WIDTH: '宽度',
+  LEGEND_HEIGHT: '高度',
+  LEGEND_COLOR: '填充色',
+
   //地图制图及公共 风格
   STYLE: '风格',
   STYLE_SYMBOL: '符号',
@@ -248,6 +254,11 @@ const Map_Main_Menu_English = {
   OPEN_DATASOURCE: 'Datasource',
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
+
+  LEGEND_COLUMN: 'Column Number',
+  LEGEND_WIDTH: 'Width',
+  LEGEND_HEIGHT: 'Height',
+  LEGEND_COLOR: 'Color',
 
   STYLE: 'Styles',
   STYLE_SYMBOL: 'Symbol',
@@ -568,6 +579,7 @@ const Map_Setting_Chinese = {
   BASIC_SETTING: '基本设置',
   ROTATION_GRSTURE: '手势旋转',
   PITCH_GESTURE: '手势俯仰',
+  THEME_LEGEND: '专题图图例',
 
   //效果设置
   EFFRCT_SETTINFS: '效果设置',
@@ -591,6 +603,7 @@ const Map_Setting_English = {
   BASIC_SETTING: 'Basic settings',
   ROTATION_GRSTURE: 'Rotation Gesture',
   PITCH_GESTURE: 'Pitch Gesture',
+  THEME_LEGEND: 'Theme Legend',
 
   //效果设置
   EFFRCT_SETTINFS: 'Effect Settings',
