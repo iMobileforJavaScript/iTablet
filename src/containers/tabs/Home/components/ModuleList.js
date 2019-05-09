@@ -469,7 +469,10 @@ export default connect(
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 20,left:0,right:0,bottom:0,
+    top: 20,
+    left: 0,
+    right: 0,
+    bottom: 0,
     // flex: 1,
     flexDirection: 'column',
     // marginTop: scaleSize(100),
@@ -478,11 +481,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   flatList: {
-     position: 'absolute',
+    position: 'absolute',
     // justifyContent: 'center',
     alignSelf: 'center',
-   // top: 0,left:0,right:0,bottom:0,
-    flex:1,
+    // top: 0,left:0,right:0,bottom:0,
+    flex: 1,
     // backgroundColor: 'blue',
     // marginLeft: scaleSize(40),
   },
