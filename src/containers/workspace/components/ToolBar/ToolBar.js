@@ -3334,6 +3334,7 @@ export default class ToolBar extends React.PureComponent {
         }
         await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
+        SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION

@@ -110,9 +110,9 @@ function layerThemeSetting(param) {
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
-          //'修改专题图',
-          image: require('../../../../assets/layerToolbar/theme_modify.png'),
+          title: getLanguage(param).Map_Layer.LAYERS_CREAT_THEMATIC_MAP,
+          //'新建专题图',
+          image: require('../../../../assets/layerToolbar/theme_new.png'),
         },
         {
           title: getLanguage(param).Map_Layer.LAYERS_RENAME,
