@@ -1,33 +1,33 @@
-##components
+## components
 
-> *AudioTools              语音面板
-> *Button                  自定义按钮
-> *ColorTableList          颜色列表
-> *Container               自定义容器组件
-> *DataSetListItem
-> *DataSetListSection
-> *Dialog                  提示框
-> *FlowTable
-> *Header                  自定义header组件(container的子组件)
-> *HorizontalTableList
-> *infoView
-> *Input                   输入框
-> *LayerItem
-> *Loading                 自定义Loading组件(container的子组件)
-> *mapTools
-> *PanAudioButton
-> *PopModal
-> *Progeress               进度条
-> *Row
-> *SaveDialog              保存提示框
-> *SaveMapNameDialog       地图保存提示框
-> *SearchBar               搜索框
-> *SurfaceView
-> *TableList
-> *TreeList
+> * AudioTools              (语音面板)
+> * Button                  (自定义按钮)
+> * ColorTableList          (颜色列表)
+> * Container               (自定义容器组件)
+> * DataSetListItem         
+> * DataSetListSection
+> * Dialog                  (提示框)
+> * FlowTable
+> * Header                  (自定义header组件(container的子组件))
+> * HorizontalTableList
+> * infoView
+> * Input                   (输入框)
+> * LayerItem
+> * Loading                 (自定义Loading组件(container的子组件))
+> * mapTools
+> * PanAudioButton
+> * PopModal
+> * Progeress               (进度条)
+> * Row
+> * SaveDialog              (保存提示框)
+> * SaveMapNameDialog       (地图保存提示框)
+> * SearchBar               (搜索框)
+> * SurfaceView
+> * TableList
+> * TreeList
 
 
-###Progeress
+### Progeress
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | progress                 |   number  |   当前进度                |
@@ -38,7 +38,7 @@
 | bufferAniDuration        |   number  |   buffer动画时长          |
 
 
-###Dialog
+### Dialog
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | type                     |   string      |   MODAL,NON_MODAL 有无蒙版 |
@@ -68,7 +68,7 @@
 | onlyOneBtn               |   boolean     | 是否仅有一个按钮(按钮样式有变化)|
 
 
-###SearchBar
+### SearchBar
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | onBlur                 |   function  |   当文本框失去焦点的时候调用此回调函数  |
@@ -86,7 +86,7 @@
 
 
 
-###SaveMapNameDialog
+### SaveMapNameDialog
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | confirmAction            |   number  |   点击确定按钮时的回调函数    |
@@ -97,7 +97,7 @@
 | showWsName               |   boolean  |   是否显示工作空间名称       |
 
 
-###SaveDialog
+### SaveDialog
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | confirmAction            |   number  |   点击确定按钮时的回调函数    |
@@ -112,7 +112,7 @@
 | navigation               |   Object  |   navigation               |
 
 
-###Loading
+### Loading
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | style               |   StyleSheet  |   样式         |
@@ -124,7 +124,7 @@
 | flexDirection       |   string  |  flexDirection    |
 
 
-###Header
+### Header
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | header                    |   any         |   自定义Header             |
@@ -150,7 +150,7 @@
 | backImg                   |   any         |   返回按钮图片              |
 
 
-###Container
+### Container
 | 属性        | 类型   |  概述  |
 | --------   | -----:  | :----:  |
 | style                    |   StyleSheet  |   样式                   |

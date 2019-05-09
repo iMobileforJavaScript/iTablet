@@ -1,36 +1,36 @@
-##containers
+## containers
 
-> *addDataset            添加数据集页面(弃用)
-> *addLayer              添加图层页面(弃用)
-> *addLayerGroup         添加图层组页面
-> *analystParams
-> *analystView           地图分析类设置页面
-> *chooseDataset         选择数据集页面
-> *chooserEditLayer      选择图层编辑页面
-> *colorPickerPage
-> *dataSets              数据集列表
-> *dataSourcelist        数据源列表
-> *direcotries
-> *friendMap             好友地图
-> *inPutPage
-> *Layer3DManager        三维图层管理页面
-> *layerAttribute        图层属性页面
-> *map3DLayerManager     三维图层管理页面(弃用)
-> *mapChange             地图切换页面(弃用)
-> *mapCut                (弃用)
-> *mapLoad               本地地图页面(弃用)
-> *mapSetting            地图设置页面
-> *mtDataCollection      数据分析页面
-> *mtDataManagement      数据管理页面
-> *mtLayerManager        (弃用)
-> *newDSet               (弃用)
-> *newDSource            (弃用)
-> *PointAnalyst          三维路径分析和位子搜索页面
-> *publicMap             公共地图页面
-> *register&getBack      注册页面
-> *setting               三维设置页面
-> *setting&data          设置页面（二维）
-> *tabs                  底部导航页面
-> *theme                 (弃用)
-> *workspace             工作空间页面(详情请进入worksapce文件夹查看)
-> *workspacelist         (弃用)
+> * addDataset            (添加数据集页面(弃用))
+> * addLayer              (添加图层页面(弃用))
+> * addLayerGroup         (添加图层组页面)
+> * analystParams
+> * analystView           (地图分析类设置页面)
+> * chooseDataset         (选择数据集页面)
+> * chooserEditLayer      (选择图层编辑页面)
+> * colorPickerPage
+> * dataSets              (数据集列表)
+> * dataSourcelist        (数据源列表)
+> * direcotries
+> * friendMap             (好友地图)
+> * inPutPage
+> * Layer3DManager        (三维图层管理页面)
+> * layerAttribute        (图层属性页面)
+> * map3DLayerManager     (三维图层管理页面)
+> * mapChange             (地图切换页面(弃用))
+> * mapCut                (弃用)
+> * mapLoad               (本地地图页面(弃用))
+> * mapSetting            (地图设置页面)
+> * mtDataCollection      (数据分析页面)
+> * mtDataManagement      (数据管理页面)
+> * mtLayerManager        (弃用)
+> * newDSet               (弃用)
+> * newDSource            (弃用)
+> * PointAnalyst          (三维路径分析和位子搜索页面)
+> * publicMap             (公共地图页面)
+> * register&getBack      (注册页面)
+> * setting               (三维设置页面)
+> * setting&data          (设置页面（二维）)
+> * tabs                  (底部导航页面)
+> * theme                 (弃用)
+> * workspace             (工作空间页面(详情请进入worksapce文件夹查看))
+> * workspacelist         (弃用)
