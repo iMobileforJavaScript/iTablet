@@ -165,7 +165,7 @@ export default class protocol extends Component {
     let webBackOpacity = this.state.backButtonEnabled ? 1 : 0
     let headerLeft = [
       <MTBtn
-        key={'back'}
+        key={'backTo'}
         image={getPublicAssets().common.icon_back}
         customStyle={{ height: scaleSize(60),width: scaleSize(60),  marginLeft: scaleSize(0) }}
         onPress={()=>{
