@@ -763,7 +763,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         String defaultDataZip = "DefaultData.zip";
         String wsName = "Workspace.sxwu";
 
-        if (!Utils.fileIsExit(defaultDataPath + wsName)) {
+        //if (!Utils.fileIsExit(defaultDataPath + wsName))
+        {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), userPath, originName, defaultDataZip);
             if (Utils.fileIsExit(userPath + defaultDataZip)) {
                 FileTools.unZipFile(userPath + defaultDataZip, defaultDataPath);

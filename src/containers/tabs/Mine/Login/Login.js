@@ -39,8 +39,8 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      onEmailTitleFocus: true,
-      onPhoneTitleFocus: false,
+      onEmailTitleFocus: false,
+      onPhoneTitleFocus: true,
       titleEmailDefaultBg: titleOnFocusBackgroundColor,
       titlePhoneBg: titleOnBlurBackgroundColor,
       behavior: 'padding',
@@ -453,7 +453,7 @@ export default class Login extends React.Component {
                     lineHeight: 40,
                     textAlign: 'left',
                     color: color.font_color_white,
-                    fontSize:scaleSize(20),
+                    fontSize: scaleSize(20),
                   }}
                   onPress={() => {
                     NavigationService.navigate('Register')
