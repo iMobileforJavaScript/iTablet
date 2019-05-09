@@ -4831,7 +4831,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
-            NavigationService.navigate('LayerAttribute', { type: 'MAP_3D' })
+            NavigationService.navigate('LayerAttribute3D', { type: 'MAP_3D' })
           }
           break
         // case ToolbarBtnType.SHARE:
