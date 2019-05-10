@@ -2922,6 +2922,9 @@ export default class ToolBar extends React.PureComponent {
         })
       }
 
+      if(this.currentLayerStyle){
+        this.currentLayerStyle = undefined
+      }
       // 当前为采集状态
       if (typeof type === 'number') {
         await SCollector.stopCollect()
