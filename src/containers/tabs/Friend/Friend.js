@@ -42,6 +42,7 @@ import ConstPath from '../../../constants/ConstPath'
 // eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
+import JPushService from './JPushService'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -82,6 +83,8 @@ export default class Friend extends Component {
   componentDidMount() {
     this.connectService()
     this.addFileListener()
+    Platform.OS === 'android' &&
+      JPushService.init(this.props.user.currentUser.userId)
   }
 
   componentDidUpdate(prevProps) {
@@ -91,6 +94,8 @@ export default class Friend extends Component {
     ) {
       this.disconnectService()
       this.connectService()
+      Platform.OS === 'android' &&
+        JPushService.init(this.props.user.currentUser.userId)
     }
     if (
       JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
@@ -235,6 +240,7 @@ export default class Friend extends Component {
       )
         .then(() => {
           SMessageService.sendMessage(messageStr, talkId)
+          JPushService.push(messageStr, talkId)
         })
         .catch(() => {
           Toast.show(
@@ -246,6 +252,7 @@ export default class Friend extends Component {
       )
     } else {
       SMessageService.sendMessage(messageStr, talkId)
+      JPushService.push(messageStr, talkId)
     }
     if (!bInform) {
       //todo

@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -111,6 +110,13 @@
 		D83ED3BE21704BDB00683BB3 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83ED3BB21704BDB00683BB3 /* VCMain.storyboard */; };
 		D83ED3BF21704BDB00683BB3 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83ED3BD21704BDB00683BB3 /* VCViewController.m */; };
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
+		53FE59234E8647D7AC780A14 /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB1780027594D1FA864B1EB /* libRCTJPushModule.a */; };
+		C61FD8C4BF344DA98D024D8B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F7CE885EB48A4A9BA42C3633 /* libz.tbd */; };
+		DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8462082C41D9417AA6132357 /* UserNotifications.framework */; };
+		053CDD8FCC7C4CC6A26CD91B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6D5193DAA24B84833654B3 /* CFNetwork.framework */; };
+		251A29C627974FD188F8B53D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1F8DBCAD8F1490FB7C28D3C /* CoreFoundation.framework */; };
+		46ACF059CE1F4179A95098F9 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E5952BB740FA4283A75D66FD /* libresolv.tbd */; };
+		A0476A16FAB8487492F6FCE0 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C12BBBFFD3E24D5480F78B10 /* libRCTJCoreModule.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -561,6 +567,15 @@
 		D83ED3BD21704BDB00683BB3 /* VCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VCViewController.m; path = SampleCode/vectorCache/VCViewController.m; sourceTree = SOURCE_ROOT; };
 		D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageQueue.framework; path = MessageQueue.sdk/MessageQueue.framework; sourceTree = "<group>"; };
 		EEB38F0AD8D84316B33CC7A9 /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
+		635B82255F7142CDB90EAD40 /* RCTJPushModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJPushModule.xcodeproj"; path = "../node_modules/jpush-react-native/ios/RCTJPushModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		EAB1780027594D1FA864B1EB /* libRCTJPushModule.a */ = {isa = PBXFileReference; name = "libRCTJPushModule.a"; path = "libRCTJPushModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		F7CE885EB48A4A9BA42C3633 /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		8462082C41D9417AA6132357 /* UserNotifications.framework */ = {isa = PBXFileReference; name = "UserNotifications.framework"; path = "System/Library/Frameworks/UserNotifications.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		6E6D5193DAA24B84833654B3 /* CFNetwork.framework */ = {isa = PBXFileReference; name = "CFNetwork.framework"; path = "System/Library/Frameworks/CFNetwork.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		B1F8DBCAD8F1490FB7C28D3C /* CoreFoundation.framework */ = {isa = PBXFileReference; name = "CoreFoundation.framework"; path = "System/Library/Frameworks/CoreFoundation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		E5952BB740FA4283A75D66FD /* libresolv.tbd */ = {isa = PBXFileReference; name = "libresolv.tbd"; path = "usr/lib/libresolv.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
+		EC291966F2A949BFB56ACFC9 /* RCTJCoreModule.xcodeproj */ = {isa = PBXFileReference; name = "RCTJCoreModule.xcodeproj"; path = "../node_modules/jcore-react-native/ios/RCTJCoreModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C12BBBFFD3E24D5480F78B10 /* libRCTJCoreModule.a */ = {isa = PBXFileReference; name = "libRCTJCoreModule.a"; path = "libRCTJCoreModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -616,6 +631,13 @@
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
 				4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */,
+				53FE59234E8647D7AC780A14 /* libRCTJPushModule.a in Frameworks */,
+				C61FD8C4BF344DA98D024D8B /* libz.tbd in Frameworks */,
+				DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */,
+				053CDD8FCC7C4CC6A26CD91B /* CFNetwork.framework in Frameworks */,
+				251A29C627974FD188F8B53D /* CoreFoundation.framework in Frameworks */,
+				46ACF059CE1F4179A95098F9 /* libresolv.tbd in Frameworks */,
+				A0476A16FAB8487492F6FCE0 /* libRCTJCoreModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -947,6 +969,11 @@
 				0A8EEE0721104C7100F206BB /* Security.framework */,
 				0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				F7CE885EB48A4A9BA42C3633 /* libz.tbd */,
+				8462082C41D9417AA6132357 /* UserNotifications.framework */,
+				6E6D5193DAA24B84833654B3 /* CFNetwork.framework */,
+				B1F8DBCAD8F1490FB7C28D3C /* CoreFoundation.framework */,
+				E5952BB740FA4283A75D66FD /* libresolv.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -990,6 +1017,8 @@
 				2E13A8DD089744C6A9A2650C /* RCTOrientation.xcodeproj */,
 				6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */,
 				B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */,
+				635B82255F7142CDB90EAD40 /* RCTJPushModule.xcodeproj */,
+				EC291966F2A949BFB56ACFC9 /* RCTJCoreModule.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1698,6 +1727,8 @@
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)\..\node_modules\jpush-react-native\ios\RCTJPushModule",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1708,6 +1739,8 @@
 					"$(PROJECT_DIR)/SDKExport",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"\"$(SRCROOT)/iTablet\"",
+					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
@@ -1782,6 +1815,8 @@
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)\..\node_modules\jpush-react-native\ios\RCTJPushModule",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1793,6 +1828,8 @@
 					"$(PROJECT_DIR)/SDKExport",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"\"$(SRCROOT)/iTablet\"",
+					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
@@ -1850,6 +1887,8 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)\..\node_modules\jpush-react-native\ios\RCTJPushModule",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1895,6 +1934,8 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)\..\node_modules\jpush-react-native\ios\RCTJPushModule",
+					"$(SRCROOT)\..\node_modules\jcore-react-native\ios\RCTJCoreModule",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
