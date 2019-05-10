@@ -19,6 +19,7 @@ import {
   openData,
   lineColorSet,
   pointColorSet,
+  legendColor,
   regionBeforeColorSet,
   regionAfterColorSet,
   Map3DBaseMapList,
@@ -33,6 +34,7 @@ import {
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
   UserType,
+  legendMenuInfo,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -339,6 +341,16 @@ export default class ToolBar extends React.PureComponent {
         break
       case ConstToolType.POINTCOLOR_SET:
         data = pointColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
+        ]
+        break
+      case ConstToolType.LEGEND:
+        data = legendColor
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
@@ -2635,8 +2647,9 @@ export default class ToolBar extends React.PureComponent {
       SCollector.stopCollect()
     } else {
       if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
-        // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
-        SMap.setAction(Action.SELECT)
+        // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN ?
+        // SMap.setAction(Action.SELECT)
+        SMap.setAction(Action.PAN)
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
@@ -2795,7 +2808,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.POINTCOLOR_SET ||
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-        (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow)
+        (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow) ||
+        this.state.type === ConstToolType.LEGEND
       ) {
         Animated.timing(this.state.boxHeight, {
           toValue: this.state.showMenuDialog ? this.height : 0,
@@ -2817,7 +2831,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.POINTCOLOR_SET ||
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-        this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+        this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
+        this.state.type === ConstToolType.LEGEND
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
@@ -2865,7 +2880,10 @@ export default class ToolBar extends React.PureComponent {
       this.state.selectKey === '单点代表值' ||
       this.state.selectKey === '符号大小' ||
       this.state.selectKey === '基准值' ||
-      this.state.selectKey === '最大显示值'
+      this.state.selectKey === '最大显示值' ||
+      this.state.selectKey === '列数' ||
+      this.state.selectKey === '宽度' ||
+      this.state.selectKey === '高度'
     ) {
       isFullScreen = true
       showMenuDialog = !this.state.showMenuDialog
@@ -3067,6 +3085,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.POINTCOLOR_SET ||
       this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
       this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+      this.state.type === ConstToolType.LEGEND ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
@@ -3083,7 +3102,10 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '单点代表值' ||
         this.state.selectKey === '符号大小' ||
         this.state.selectKey === '基准值' ||
-        this.state.selectKey === '最大显示值'
+        this.state.selectKey === '最大显示值' ||
+        this.state.selectKey === '列数' ||
+        this.state.selectKey === '高度' ||
+        this.state.selectKey === '宽度'
       ) {
         // 显示指滑进度条
         this.setState(
@@ -3313,6 +3335,7 @@ export default class ToolBar extends React.PureComponent {
         }
         await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
+        SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
@@ -3350,6 +3373,7 @@ export default class ToolBar extends React.PureComponent {
           LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.setRangeColorScheme(Params)
+        await SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR
@@ -4620,6 +4644,8 @@ export default class ToolBar extends React.PureComponent {
       } else if (this.state.themeType === constants.THEME_GRID_RANGE) {
         list = gridRangeMenuInfo
       }
+    } else if (this.state.type.indexOf('LEGEND') >= 0) {
+      list = legendMenuInfo(this.props.language)
     }
     if (!list) {
       switch (this.props.currentLayer.type) {
@@ -4637,6 +4663,7 @@ export default class ToolBar extends React.PureComponent {
           break
       }
     }
+
     return (
       <MenuDialog
         ref={ref => (this.menuDialog = ref)}
@@ -4844,7 +4871,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
-            NavigationService.navigate('LayerAttribute', { type: 'MAP_3D' })
+            NavigationService.navigate('LayerAttribute3D', { type: 'MAP_3D' })
           }
           break
         // case ToolbarBtnType.SHARE:

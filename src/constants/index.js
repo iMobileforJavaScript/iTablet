@@ -30,6 +30,7 @@ import {
   graduatedSymbolMenuInfo,
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
+  legendMenuInfo,
 } from './FunctionToolbarModule'
 
 import {
@@ -37,6 +38,7 @@ import {
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,
+  legendColor,
 } from './ColorList'
 
 export {
@@ -63,6 +65,7 @@ export {
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,
+  legendColor,
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
@@ -76,4 +79,5 @@ export {
   CheckStatus,
   ConstAnalyst,
   getHeaderTitle,
+  legendMenuInfo,
 }

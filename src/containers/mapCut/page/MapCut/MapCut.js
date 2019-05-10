@@ -384,20 +384,28 @@ export default class MapCut extends React.Component {
       let layers = []
       let outLayers = JSON.parse(JSON.stringify(state.outLayers))
 
+      state.layers.forEach(item => {
+        if (selected.get(item.name)) {
+          outLayers.push(item)
+        } else {
+          layers.push(item)
+        }
+      })
+      selected.clear()
       if (state.isSelectAll) {
-        outLayers = state.layers
-        selected.clear()
+        // outLayers = state.layers
+        // selected.clear()
         extraData.clear()
       } else {
-        state.layers.forEach(item => {
-          if (selected.get(item.name)) {
-            outLayers.push(item)
-          } else {
-            layers.push(item)
-          }
-        })
-
-        selected.clear()
+        // state.layers.forEach(item => {
+        //   if (selected.get(item.name)) {
+        //     outLayers.push(item)
+        //   } else {
+        //     layers.push(item)
+        //   }
+        // })
+        //
+        // selected.clear()
       }
 
       return { selected, extraData, outLayers, layers }
@@ -786,7 +794,14 @@ export default class MapCut extends React.Component {
           let layers = JSON.parse(JSON.stringify(this.state.layers))
           const extraData = new Map(this.state.extraData)
           const selected = new Map(this.state.selected)
+          let outLayers = JSON.parse(JSON.stringify(this.state.outLayers))
           addLayers.forEach(item => {
+            for (let i = 0; i < outLayers.length; i++) {
+              if (outLayers[i].name === item.name) {
+                outLayers.splice(i, 1)
+                break
+              }
+            }
             layers.push(item)
 
             let data = {
@@ -812,6 +827,7 @@ export default class MapCut extends React.Component {
             layers,
             extraData,
             selected,
+            outLayers,
           })
         }}
       />

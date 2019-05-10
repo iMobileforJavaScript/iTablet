@@ -100,6 +100,7 @@ class Chat extends React.Component {
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
           m.message.message.progress = value.percentage
+
           if (value.percentage === 100) {
             m.message.message.isReceived = 1
           }
@@ -570,6 +571,7 @@ class Chat extends React.Component {
   //渲染标记
   renderTicks(props) {
     let currentMessage = props
+
     if (
       currentMessage.message.type &&
       currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY

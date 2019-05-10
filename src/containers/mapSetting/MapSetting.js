@@ -3,13 +3,14 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, InteractionManager, Platform } from 'react-native'
+import { SectionList, View, InteractionManager } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language/index'
+import { ConstToolType } from '../../constants'
 
 export default class MapSetting extends Component {
   props: {
@@ -145,11 +146,20 @@ export default class MapSetting extends Component {
         //'固定比例尺':
         SMap.setVisibleScalesEnabled(value)
         break
-      case '专题图图例':
-        if (Platform.OS === 'ios') {
-          SMap.legendLayer(value)
-        }
+      case getLanguage(this.props.language).Map_Setting.THEME_LEGEND:
         this.props.setMapLegend(value)
+        if (value) {
+          GLOBAL.toolBox &&
+            GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+              containerType: 'colortable',
+              column: 8,
+              tableType: 'scroll',
+              isFullScreen: false,
+              height: ConstToolType.THEME_HEIGHT[3],
+            })
+          GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+          this.props.navigation.navigate('MapView')
+        }
         break
     }
     this.setState({

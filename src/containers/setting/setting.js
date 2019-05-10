@@ -27,7 +27,7 @@ export default class setting extends Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.type = params.type || 'MAP_3D'
+    this.type = (params && params.type) || 'MAP_3D'
     this.state = {
       data: [],
     }

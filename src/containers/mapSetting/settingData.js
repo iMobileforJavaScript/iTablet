@@ -18,7 +18,7 @@ function getMapSettings() {
           value: false,
         },
         {
-          name: '专题图图例',
+          name: getLanguage(global.language).Map_Setting.THEME_LEGEND,
           value: false,
         },
       ],
