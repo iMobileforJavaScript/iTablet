@@ -194,6 +194,9 @@ export default handleActions(
       return state.setIn(['mapLegend'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
+      // if (payload && payload.setting) {
+      //   payload.setting.language = payload.setting.language === undefined ? 'CN' : payload.setting.language
+      // }
       // return payload && payload.setting ? fromJS(payload.setting) : state
       return ModelUtils.checkModel(state, payload && payload.setting)
     },
