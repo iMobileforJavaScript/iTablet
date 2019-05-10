@@ -453,7 +453,8 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 //    }
 //  }
   
-  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@%@", defaultDataPath, @"Workspace/", wsName] isDirectory:nil]) {
+  //if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@%@", defaultDataPath, @"Workspace/", wsName] isDirectory:nil])
+  {
     if(![FileTools unZipFile:srclic targetPath:defaultDataPath])
       NSLog(@"拷贝数据失败");
   }

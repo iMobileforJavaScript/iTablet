@@ -1,5 +1,5 @@
 import constants from '../../constants'
-import { SThemeCartography } from 'imobile_for_reactnative'
+import { SThemeCartography, SMap } from 'imobile_for_reactnative'
 // import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType, ConstPath, Const } from '../../../../constants'
@@ -922,11 +922,12 @@ function setThemeParams(params) {
 
 /** 设置分段模式 **/
 function setRangeMode() {
-  return SThemeCartography.modifyThemeRangeMap(_params)
+  SThemeCartography.modifyThemeRangeMap(_params)
+  SMap.updateLegend()
 }
 
 function setGridRangeMode() {
-  return SThemeCartography.modifyThemeGridRangeMap(_params)
+  SThemeCartography.modifyThemeGridRangeMap(_params)
 }
 
 function getRangeMode() {

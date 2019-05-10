@@ -3,6 +3,7 @@ import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
+import { ModelUtils } from '../utils'
 
 // Constants
 // --------------------------------------------------
@@ -193,7 +194,11 @@ export default handleActions(
       return state.setIn(['mapLegend'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.setting ? fromJS(payload.setting) : state
+      // if (payload && payload.setting) {
+      //   payload.setting.language = payload.setting.language === undefined ? 'CN' : payload.setting.language
+      // }
+      // return payload && payload.setting ? fromJS(payload.setting) : state
+      return ModelUtils.checkModel(state, payload && payload.setting)
     },
   },
   initialState,

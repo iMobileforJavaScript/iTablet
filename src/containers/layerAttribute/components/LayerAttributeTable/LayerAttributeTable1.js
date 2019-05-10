@@ -98,10 +98,10 @@ export default class LayerAttributeTable extends React.Component {
     this.canBeLoadMore = true // 控制是否可以加载更多
     this.isScrolling = false // 防止连续定位滚动
 
-    this.viewabilityConfig = {
-      waitForInteraction: true,
-      viewAreaCoveragePercentThreshold: 95,
-    }
+    // this.viewabilityConfig = {
+    //   waitForInteraction: true,
+    //   viewAreaCoveragePercentThreshold: 95,
+    // }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -420,7 +420,7 @@ export default class LayerAttributeTable extends React.Component {
           onScroll={() => (this.canBeLoadMore = true)}
           removeClippedSubviews={true}
           onViewableItemsChanged={this._onViewableItemsChanged}
-          viewabilityConfig={this.viewabilityConfig}
+          // viewabilityConfig={this.viewabilityConfig}
         />
       </ScrollView>
     )
