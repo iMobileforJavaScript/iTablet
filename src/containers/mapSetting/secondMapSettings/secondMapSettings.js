@@ -77,7 +77,7 @@ export default class secondMapSettings extends Component {
       data,
     })
   }
-
+  //todo 安卓缺接口，所以所有的数据获取都判断了平台
   getBasicData = async () => {
     let data
     let angle
@@ -99,6 +99,11 @@ export default class secondMapSettings extends Component {
 
   getRangeData = async () => {
     let data = await rangeSettings()
+    if (Platform.OS === 'ios') {
+      data[0].value = await SMap.getMapCenter()
+      data[1].value = await SMap.getMapScale()
+      data[1].value = await SMap.getFixedScale()
+    }
     return data
   }
 

@@ -209,12 +209,12 @@ const basicSettings = () => [
 const rangeSettings = () => [
   {
     title: '中心点',
-    value: '120.224544/23.354585',
+    value: '',
     iconType: 'arrow',
   },
   {
     title: '比例尺',
-    value: '1:2013,751.254445',
+    value: '',
     iconType: 'arrow',
   },
   {
