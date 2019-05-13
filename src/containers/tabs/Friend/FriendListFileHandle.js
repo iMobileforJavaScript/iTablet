@@ -260,6 +260,16 @@ export default class FriendListFileHandle {
     return bFound
   }
 
+  static getGroup(id) {
+    if (FriendListFileHandle.friends) {
+      for (let key in FriendListFileHandle.friends.groupInfo) {
+        if (FriendListFileHandle.friends.groupInfo[key].id === id) {
+          return FriendListFileHandle.friends.groupInfo[key]
+        }
+      }
+    }
+  }
+
   // eslint-disable-next-line
   static addToGroupList(obj) {
     let bFound = FriendListFileHandle.findFromGroupList(obj.id)

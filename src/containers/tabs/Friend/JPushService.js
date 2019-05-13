@@ -5,21 +5,38 @@ import fetch from 'node-fetch'
 import MsgConstant from './MsgConstant'
 
 export default class JPushService {
-  static async push(messageStr, talkId) {
-    let bCon = await this.isConnectService(talkId)
-    if (bCon) return
+  static async push(messageStr, talkIds) {
     let messageObj = JSON.parse(messageStr)
+    //只push以下消息
+    if (
+      messageObj.type !== MsgConstant.MSG_SINGLE &&
+      messageObj.type !== MsgConstant.MSG_GROUP
+    )
+      return
+    //连接到RabbitMQ则不push
+    let audience = []
+    for (let key in talkIds) {
+      let bCon = await this.isConnectService(talkIds[key])
+      !bCon && audience.push(talkIds[key])
+    }
+    if (audience.length === 0) return
+
     let messageText = messageObj.message
     if (messageObj.message.message) {
       messageText = messageObj.message.message.message
     }
+    let titleText = messageObj.user.name
+    if (messageObj.type === MsgConstant.MSG_GROUP) {
+      titleText = messageObj.user.groupName
+      messageText = messageObj.user.name + ': ' + messageText
+    }
     let request = {
       platform: 'all',
-      audience: { alias: [talkId] },
+      audience: { alias: audience },
       notification: {
         android: {
           alert: messageText,
-          title: messageObj.user.name,
+          title: titleText,
         },
         ios: {
           alert: messageText,
