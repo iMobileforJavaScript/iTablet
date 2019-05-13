@@ -29,7 +29,8 @@ import {
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
-
+//地图二级设置菜单
+import { secondMapSettings } from './mapSetting/secondMapSettings'
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
@@ -518,6 +519,12 @@ export default StackNavigator(
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
+      },
+    },
+    secondMapSettings: {
+      screen: secondMapSettings,
+      navigationOptions: {
+        header: null,
       },
     },
   },

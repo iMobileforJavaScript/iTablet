@@ -14,8 +14,8 @@ function checkModel(state, payload) {
   if (payload) {
     _setting = fromJS(payload)
     let setting = state.toJS()
-    for (let key of setting.keys) {
-      if (!payload[key]) {
+    for (let key of Object.keys(setting)) {
+      if (payload[key] === undefined) {
         _setting = state
       }
     }
