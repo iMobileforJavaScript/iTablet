@@ -53,6 +53,7 @@ import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
 
+const markerTag = 117868
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
 export default class MapView extends React.Component {
@@ -272,7 +273,7 @@ export default class MapView extends React.Component {
     }
     this.props.setMapLegend(false)
 
-    this.showMarker && SMap.deleteMarker()
+    this.showMarker && SMap.deleteMarker(markerTag)
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -940,7 +941,7 @@ export default class MapView extends React.Component {
         this.setLoading(false)
       }
       this.showMarker &&
-        SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
+        SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude,markerTag)
       SMap.openTaggingDataset(this.props.user.currentUser.userName)
 
       GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
