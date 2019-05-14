@@ -2859,6 +2859,24 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.THEME_GRAPH_TYPE,
             ToolbarBtnType.MENU_COMMIT,
           ]
+        } else if (this.state.type.indexOf('LEGEND') >= 0) {
+          if (this.state.type.indexOf('LEGEND_NOT_VISIBLE') >= 0) {
+            buttons = [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.NOT_VISIBLE,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ]
+          } else {
+            buttons = [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.VISIBLE,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ]
+          }
         } else {
           buttons = [
             ToolbarBtnType.CANCEL,
