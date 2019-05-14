@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { setBaseMap } from '../../../../models/map'
 const mapStateToProps = state => ({
   baseMaps: state.map.toJS().baseMaps,
+  user: state.user.toJS(),
 })
 const mapDispatchToProps = {
   setBaseMap,

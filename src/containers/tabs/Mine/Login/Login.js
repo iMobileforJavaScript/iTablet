@@ -229,7 +229,7 @@ export default class Login extends React.Component {
             userName: userName,
             password: password,
             isEmail: isEmail,
-            userId: userName,
+            userId: 0,
             userType: UserType.COMMON_USER,
           })
         }
