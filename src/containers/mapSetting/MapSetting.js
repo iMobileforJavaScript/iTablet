@@ -210,8 +210,23 @@ export default class MapSetting extends Component {
   }
 
   flatListPressHandle = title => {
-    //根据title跳转
-    NavigationService.navigate('secondMapSettings', { title })
+    //图例单独处理
+    if (title === '图例设置') {
+      this.props.setMapLegend(true)
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+    } else {
+      //根据title跳转
+      NavigationService.navigate('secondMapSettings', { title })
+    }
   }
   renderFlatListItem = ({ item }) => {
     const styles = {

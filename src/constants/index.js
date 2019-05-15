@@ -31,6 +31,7 @@ import {
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 } from './FunctionToolbarModule'
 
 import {
@@ -80,4 +81,5 @@ export {
   ConstAnalyst,
   getHeaderTitle,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 }

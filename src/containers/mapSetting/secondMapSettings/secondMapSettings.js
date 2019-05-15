@@ -6,8 +6,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../../components'
 // import constants from '../../workspace/constants'
-// // import NavigationService from '../NavigationService'
-// import { MapToolbar } from '../../workspace/components'
 import {
   View,
   FlatList,
@@ -22,9 +20,10 @@ import {
   rangeSettings,
   coordinateSystemSettings,
   advancedSettings,
+  histogramSettings,
+  getKeyBoard,
 } from '../settingData'
 import NavigationService from '../../NavigationService'
-// import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 // import { getLanguage } from '../../../language/index'
 // import Toast from "../../../utils/Toast"
@@ -34,15 +33,9 @@ import styles from './styles'
 
 export default class secondMapSettings extends Component {
   props: {
-    language: string,
     navigation: Object,
-    currentMap: Object,
-    setMapSetting: () => {},
-    mapSetting: any,
-    device: Object,
-    mapLegend: boolean,
-    setMapLegend: () => {},
     title: string,
+    renderItem?: () => {},
   }
   constructor(props) {
     super(props)
@@ -72,12 +65,19 @@ export default class secondMapSettings extends Component {
         data = await this.getAdvanceData()
         break
       case '图例设置':
+        break
+      case '柱状图风格':
+        data = await this.getHistogramData()
+        break
+      case '地图名称':
+        data = await getKeyBoard()
     }
     this.setState({
       data,
     })
   }
   //todo 安卓缺接口，所以所有的数据获取都判断了平台
+  //基础设置数据
   getBasicData = async () => {
     let data
     let angle
@@ -97,33 +97,49 @@ export default class secondMapSettings extends Component {
     return data
   }
 
+  //范围设置数据
   getRangeData = async () => {
     let data = await rangeSettings()
     if (Platform.OS === 'ios') {
-      data[0].value = await SMap.getMapCenter()
-      data[1].value = await SMap.getMapScale()
-      data[1].value = await SMap.getFixedScale()
+      let mapCenter = await SMap.getMapCenter()
+      let mapScale = await SMap.getMapScale()
+      data[0].value = mapCenter.toLocaleString('en')
+      data[1].value = `1:${mapScale.toLocaleString('en')}`
+      data[2].value = await SMap.getFixedScale()
     }
     return data
   }
 
+  //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
+    if (Platform.OS === 'ios') {
+      data[0].value = await SMap.getPrjCoordSys()
+      //todo 动态投影是否开启 缺少底层接口 data[1] data[2]相关设置
+    }
     return data
   }
 
+  //高级设置数据
   getAdvanceData = async () => {
     let data = await advancedSettings()
     return data
   }
 
+  //获取柱状图风格数据
+  getHistogramData = async () => {
+    let data = await histogramSettings()
+    return data
+  }
+  //返回
   backAction = () => {
     NavigationService.goBack()
   }
 
+  //switch开关事件
   _onValueChange = async ({ value, item, index }) => {
+    let data = this.state.data.concat()
     if (Platform.OS === 'ios') {
-      let data = this.state.data.concat()
       switch (item.title) {
         case '显示比例尺':
           await SMap.setScaleViewEnable(value)
@@ -135,6 +151,10 @@ export default class secondMapSettings extends Component {
         case '显示压盖对象':
           await SMap.setOverlapDisplayed(value)
           break
+        //todo ?ios并不能固定，但是缩放效果有问题，可能需要在手势操作时判断下
+        case '固定比例尺级别':
+          await SMap.setFixedScale(value)
+          break
       }
       data[index].value = value
       this.setState({
@@ -143,6 +163,7 @@ export default class secondMapSettings extends Component {
     }
   }
 
+  //渲染switch
   renderSwitchItem = (item, index) => {
     return (
       <View>
@@ -164,6 +185,7 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  //渲染分割线
   renderLine = () => {
     return (
       <View
@@ -177,12 +199,23 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  onItemPress = title => {
+    switch (title) {
+      case '地图名称':
+        NavigationService.navigate('secondMapSettings', { title })
+        break
+      case '柱状图风格':
+        NavigationService.navigate('secondMapSettings', { title })
+        break
+    }
+  }
+  //渲染带more按钮的行
   renderArrowItem = item => {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
     return (
       <View>
-        <TouchableOpacity>
-          <View onPress={() => this.onItemPress(item.title)} style={styles.row}>
+        <TouchableOpacity onPress={() => this.onItemPress(item.title)}>
+          <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
             {item.value !== undefined && (
               <Text style={styles.rightText}>{item.value}</Text>
@@ -199,6 +232,7 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  //渲染普通text行
   renderTextItem = item => {
     return (
       <View>
@@ -210,7 +244,17 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  renderKeybordItem = item => {
+    return (
+      <View>
+        <Text>修改名称测试{item}</Text>
+      </View>
+    )
+  }
   renderItem = ({ item, index }) => {
+    if (this.props.renderItem) {
+      return this.props.renderItem
+    }
     switch (item.iconType) {
       case 'switch':
         return this.renderSwitchItem(item, index)
@@ -222,6 +266,21 @@ export default class secondMapSettings extends Component {
   }
 
   render() {
+    if (
+      Array.isArray(this.state.data) &&
+      this.state.data[0].iconType === 'keyboard'
+    ) {
+      return (
+        <Container
+          headerProps={{
+            title: this.state.title,
+            backAction: this.backAction,
+          }}
+        >
+          {this.renderKeybordItem()}
+        </Container>
+      )
+    }
     return (
       <Container
         headerProps={{

@@ -230,7 +230,7 @@ const rangeSettings = () => [
 //坐标系设置
 const coordinateSystemSettings = () => [
   {
-    title: '坐标轴',
+    title: '坐标系',
     value: 'GCS_WGS 1984',
     iconType: 'arrow',
   },
@@ -272,7 +272,7 @@ const advancedSettings = () => [
     iconType: 'switch',
   },
   {
-    title: '全据统计值',
+    title: '全局统计值',
     value: false,
     iconType: 'switch',
   },
@@ -295,6 +295,25 @@ const advancedSettings = () => [
     iconType: 'arrow',
   },
 ]
+
+const histogramSettings = () => [
+  {
+    title: '柱宽度系数',
+    value: '1',
+    iconType: 'arrow',
+  },
+  {
+    title: '柱间距系数',
+    value: '0.618',
+    iconType: 'arrow',
+  },
+]
+const getKeyBoard = () => [
+  {
+    title: '',
+    iconType: 'keyboard',
+  },
+]
 export {
   getMapSettings,
   getThematicMapSettings,
@@ -302,4 +321,6 @@ export {
   rangeSettings,
   coordinateSystemSettings,
   advancedSettings,
+  histogramSettings,
+  getKeyBoard,
 }
