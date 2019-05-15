@@ -34,7 +34,7 @@ import {
   SurfaceView,
 } from '../../../../components'
 import { Utils } from '../../util'
-import { Toast, jsonUtil, scaleSize, setSpText } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -45,18 +45,11 @@ import {
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
-import {
-  Platform,
-  View,
-  Text,
-  InteractionManager,
-  Image,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native'
+import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import SMLegendView from '../../components/LegendView/SMLegendView'
+import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
 
@@ -164,96 +157,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
-      legendConfig: {
-        title: '图例',
-        column: 2,
-        bgcolor: 'white',
-        width: 450,
-        height: 325,
-        position: 'topLeft',
-      },
-      legendPositionConfig: {
-        topLeft: { left: 0, top: HEADER_HEIGHT },
-        topRight: { right: 0, top: HEADER_HEIGHT },
-        leftBottom: { left: 0, bottom: FOOTER_HEIGHT },
-        rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
-      },
       // changeLayerBtnBottom: scaleSize(200),
-    }
-
-    /**
-     * 获取图例数据方法，接口暂定为getImageSource，等待原声接口
-     * @returns {Promise<void>}
-     */
-    this.getLegend = async () => {
-      let legendArr = await SMap.getImageSource()
-      this.setState({
-        legendSource: legendArr,
-      })
-    }
-    /**
-     *  更改图例属性
-     * @param title 标题
-     * @param column 列数
-     * @param bgcolor 背景色
-     * @param width 宽度
-     * @param height 高度
-     * @param position 位置
-     * 位置的四个值 topLeft topRight leftBottom rightBottom
-     */
-    this.changeLegendConfig = ({
-      title = '图例',
-      column = 2,
-      bgcolor = 'white',
-      width = 300,
-      height = 325,
-      position = 'topLeft',
-    } = {}) => {
-      let legendConfig = { title, column, bgcolor, width, height, position }
-      this.setState({
-        legendConfig,
-      })
-    }
-    /**
-     * 渲染FlatList里面的图例项
-     * @param item
-     * @returns {*}
-     */
-    this.renderLegendItem = item => {
-      let curImageSource = `data:image/png;base64,${item.item.image}`
-      return (
-        <TouchableOpacity
-          style={{
-            width: (1 / this.state.legendConfig.column) * 100 + '%',
-            height: scaleSize(80),
-            //justifyContent:'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}
-        >
-          <Image
-            source={{ uri: curImageSource }}
-            style={{
-              width: scaleSize(65),
-              height: scaleSize(30),
-              resizeMode: 'contain',
-            }}
-          />
-          <Text
-            numberOfLines={1}
-            ellipsizeMode={'tail'}
-            style={{
-              flex: 1,
-              fontSize: setSpText(18),
-              backgroundColor: 'transparent',
-              fontWeight: 'bold',
-              height: scaleSize(20),
-            }}
-          >
-            {item.item.title}
-          </Text>
-        </TouchableOpacity>
-      )
     }
     this.closeInfo = [
       {
@@ -312,7 +216,6 @@ export default class MapView extends React.Component {
       })
 
       this.clearData()
-      !this.state.legendSource && Platform.OS === 'ios' && this.getLegend()
       if (this.toolBox) {
         GLOBAL.toolBox = this.toolBox
       }
@@ -1446,41 +1349,10 @@ export default class MapView extends React.Component {
           />
         )}
         {this.props.mapLegend && Platform.OS === 'ios' && (
-          <View
-            style={{
-              position: 'absolute',
-              width: scaleSize(this.state.legendConfig.width),
-              height: scaleSize(this.state.legendConfig.height),
-              borderColor: 'black',
-              borderWidth: scaleSize(3),
-              paddingRight: scaleSize(5),
-              backgroundColor: this.state.legendConfig.bgcolor,
-              zIndex: 1,
-              ...this.state.legendPositionConfig[
-                this.state.legendConfig.position
-              ],
-            }}
-          >
-            <Text
-              style={{
-                fontSize: setSpText(24),
-                textAlign: 'center',
-                backgroundColor: 'transparent',
-                fontWeight: 'bold',
-              }}
-            >
-              {this.state.legendConfig.title}
-            </Text>
-            <FlatList
-              style={{
-                flex: 1,
-              }}
-              renderItem={this.renderLegendItem}
-              data={this.state.legendSource}
-              keyExtractor={(item, index) => item.title + index}
-              numColumns={this.state.legendConfig.column}
-            />
-          </View>
+          <RNLegendView
+            device={this.props.device}
+            ref={ref => (GLOBAL.smlegend = ref)}
+          />
         )}
         {this.state.showMap && (
           <SMMapView

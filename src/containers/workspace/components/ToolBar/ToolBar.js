@@ -349,10 +349,22 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU_COMMIT,
         ]
         break
+      case ConstToolType.LEGEND_NOT_VISIBLE:
+        data = legendColor
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.VISIBLE,
+          ToolbarBtnType.MENU,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
+        ]
+        break
       case ConstToolType.LEGEND:
         data = legendColor
         buttons = [
           ToolbarBtnType.CANCEL,
+          ToolbarBtnType.NOT_VISIBLE,
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
@@ -2809,7 +2821,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow) ||
-        this.state.type === ConstToolType.LEGEND
+        this.state.type === ConstToolType.LEGEND ||
+        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
       ) {
         Animated.timing(this.state.boxHeight, {
           toValue: this.state.showMenuDialog ? this.height : 0,
@@ -2832,7 +2845,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
-        this.state.type === ConstToolType.LEGEND
+        this.state.type === ConstToolType.LEGEND ||
+        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
@@ -2845,6 +2859,24 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.THEME_GRAPH_TYPE,
             ToolbarBtnType.MENU_COMMIT,
           ]
+        } else if (this.state.type.indexOf('LEGEND') >= 0) {
+          if (this.state.type.indexOf('LEGEND_NOT_VISIBLE') >= 0) {
+            buttons = [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.NOT_VISIBLE,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ]
+          } else {
+            buttons = [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.VISIBLE,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ]
+          }
         } else {
           buttons = [
             ToolbarBtnType.CANCEL,
@@ -2952,7 +2984,7 @@ export default class ToolBar extends React.PureComponent {
         })
       }
 
-      if(this.currentLayerStyle){
+      if (this.currentLayerStyle) {
         this.currentLayerStyle = undefined
       }
       // 当前为采集状态
@@ -3089,6 +3121,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
       this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
       this.state.type === ConstToolType.LEGEND ||
+      this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
@@ -3163,6 +3196,23 @@ export default class ToolBar extends React.PureComponent {
         }
       }
     }
+  }
+
+  //改变图例组件的显隐
+  changeLegendVisible = () => {
+    let type =
+      this.state.type === ConstToolType.LEGEND
+        ? ConstToolType.LEGEND_NOT_VISIBLE
+        : ConstToolType.LEGEND
+    let { data, buttons } = this.getData(type)
+    this.setState({
+      type: type,
+      data: data,
+      buttons: buttons,
+    })
+    GLOBAL.smlegend.setState({
+      visible: type === ConstToolType.LEGEND,
+    })
   }
 
   showBox = (autoFullScreen = false) => {
@@ -4183,6 +4233,10 @@ export default class ToolBar extends React.PureComponent {
           getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
+        //切换地图后重新添加图例事件
+        SMap.addLegendDelegate({
+          legendContentChange: GLOBAL.smlegend._contentChange,
+        })
         if (mapInfo.Template) {
           this.props.setContainerLoading(
             true,
@@ -4987,6 +5041,16 @@ export default class ToolBar extends React.PureComponent {
           //菜单框-显示与隐藏
           image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showMenuBox
+          break
+        case ToolbarBtnType.VISIBLE:
+          // 图例的显示与隐藏
+          image = require('../../../../assets/layerToolbar/layer_can_visible.png')
+          action = this.changeLegendVisible
+          break
+        case ToolbarBtnType.NOT_VISIBLE:
+          // 图例的显示与隐藏
+          image = require('../../../../assets/layerToolbar/layer_can_not_visible.png')
+          action = this.changeLegendVisible
           break
         case ToolbarBtnType.MENU_COMMIT:
           //菜单框-提交
