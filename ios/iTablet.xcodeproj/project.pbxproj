@@ -490,16 +490,7 @@
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
-<<<<<<< HEAD
-		0A25E33E226182950009CB35 /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
-		0A25E33F226182950009CB35 /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
-		0A25E340226182950009CB35 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
-		0A25E341226182950009CB35 /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
-		0A5F9587226D662800B16E89 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
-		0A4CA888227705C3006BEA83 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../Trial_License.slm; sourceTree = "<group>"; };
-=======
 		0A27E1D62282A9C900227B8C /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
->>>>>>> release-2.0
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
 		0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneOS/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
