@@ -96,21 +96,21 @@ export default class LayerManager_tolbar extends React.Component {
 
   getData = type => {
     let data = []
-    // let headerData = layerSettingCanVisit(this.props.language).concat(
-    //   layerSettingCanSelect(this.props.language),
-    // )
+    let headerData = layerSettingCanVisit(this.props.language).concat(
+      layerSettingCanSelect(this.props.language),
+    )
     switch (type) {
       case ConstToolType.MAP_STYLE:
         data = layersetting(this.props.language)
-        // data[0].headers = headerData
+        data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLE:
         data = layerThemeSetting(this.props.language)
-        // data[0].headers = headerData
+        data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLES:
         data = layerThemeSettings(this.props.language)
-        // data[0].headers = headerData
+        data[0].headers = headerData
         break
       case ConstToolType.MAP3D_LAYER3DSELECT:
         data = layer3dSettingCanSelect(this.props.language)
@@ -120,11 +120,11 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.COLLECTION:
         //collection 单独处理
-        // headerData = headerData
-        //   .concat(layerSettingCanEdit(this.props.language))
-        //   .concat(layerSettingCanSnap(this.props.language))
+        headerData = headerData
+          .concat(layerSettingCanEdit(this.props.language))
+          .concat(layerSettingCanSnap(this.props.language))
         data = layerCollectionSetting(this.props.language)
-        // data[0].headers = headerData
+        data[0].headers = headerData
         break
       case ConstToolType.MAP_EDIT_STYLE:
         data = layereditsetting(global.language)
@@ -132,8 +132,8 @@ export default class LayerManager_tolbar extends React.Component {
       case ConstToolType.MAP_EDIT_MORE_STYLE:
         data = [
           {
-            title:'',
-            data:layerManagerData,
+            title: '',
+            data: layerManagerData,
           },
         ]
         break

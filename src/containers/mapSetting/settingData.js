@@ -308,12 +308,6 @@ const histogramSettings = () => [
     iconType: 'arrow',
   },
 ]
-const getKeyBoard = () => [
-  {
-    title: '',
-    iconType: 'keyboard',
-  },
-]
 export {
   getMapSettings,
   getThematicMapSettings,
@@ -322,5 +316,4 @@ export {
   coordinateSystemSettings,
   advancedSettings,
   histogramSettings,
-  getKeyBoard,
 }
