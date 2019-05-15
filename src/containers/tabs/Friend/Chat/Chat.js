@@ -676,7 +676,9 @@ class Chat extends React.Component {
             true,
             getLanguage(global.language).Friends.IMPORT_DATA,
           )
-
+          if (Platform.OS === 'ios') {
+            FileTools.getUri(this.downloadreceivePath)
+          }
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
