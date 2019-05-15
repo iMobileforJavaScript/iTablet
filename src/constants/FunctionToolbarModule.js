@@ -1147,7 +1147,7 @@ const gridRangeMenuInfo = [
   },
 ]
 
-//图例菜单
+//图例菜单 可见
 const legendMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
@@ -1162,6 +1162,7 @@ const legendMenuInfo = param => [
           height: ConstToolType.THEME_HEIGHT[3],
           buttons: [
             ToolbarBtnType.CANCEL,
+            ToolbarBtnType.VISIBLE,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.MENU_COMMIT,
@@ -1185,6 +1186,7 @@ const legendMenuInfo = param => [
           selectKey: '列数',
           buttons: [
             ToolbarBtnType.CANCEL,
+            ToolbarBtnType.VISIBLE,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.MENU_COMMIT,
@@ -1208,6 +1210,7 @@ const legendMenuInfo = param => [
           selectKey: '宽度',
           buttons: [
             ToolbarBtnType.CANCEL,
+            ToolbarBtnType.VISIBLE,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.MENU_COMMIT,
@@ -1231,6 +1234,7 @@ const legendMenuInfo = param => [
           selectKey: '高度',
           buttons: [
             ToolbarBtnType.CANCEL,
+            ToolbarBtnType.VISIBLE,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.MENU_COMMIT,
@@ -1244,6 +1248,106 @@ const legendMenuInfo = param => [
   },
 ]
 
+//图例菜单 不可见
+const legendMenuInfoNotVisible = param => [
+  {
+    key: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
+    action: () => {
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.NOT_VISIBLE,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: '填充色',
+          selectKey: '填充色',
+        })
+    },
+    selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
+    selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
+    //'列数',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '列数',
+          selectKey: '列数',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.NOT_VISIBLE,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
+    //'列数',
+    selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
+    //'列数',
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
+    //'宽度',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '宽度',
+          selectKey: '宽度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.NOT_VISIBLE,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectName: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
+    //'宽度',
+    selectKey: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
+    //'宽度',
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
+    //'高度',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '高度',
+          selectKey: '高度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.NOT_VISIBLE,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectName: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
+    //'高度',
+    selectKey: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
+    //'高度',
+  },
+]
 export {
   layerAdd,
   BotMap,
@@ -1262,4 +1366,5 @@ export {
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 }

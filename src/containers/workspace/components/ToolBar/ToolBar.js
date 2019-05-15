@@ -35,6 +35,7 @@ import {
   gridRangeMenuInfo,
   UserType,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -2860,19 +2861,19 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (this.state.type.indexOf('LEGEND_NOT_VISIBLE') >= 0) {
+          if (GLOBAL.smlegend.state.visible) {
             buttons = [
               ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
               ToolbarBtnType.NOT_VISIBLE,
+              ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.MENU_COMMIT,
             ]
           } else {
             buttons = [
               ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
               ToolbarBtnType.VISIBLE,
+              ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.MENU_COMMIT,
             ]
@@ -3200,10 +3201,9 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type =
-      this.state.type === ConstToolType.LEGEND
-        ? ConstToolType.LEGEND_NOT_VISIBLE
-        : ConstToolType.LEGEND
+    let type = GLOBAL.smlegend.state.visible
+      ? ConstToolType.LEGEND_NOT_VISIBLE
+      : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
     this.setState({
       type: type,
@@ -4702,7 +4702,11 @@ export default class ToolBar extends React.PureComponent {
         list = gridRangeMenuInfo
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      list = legendMenuInfo(this.props.language)
+      if (GLOBAL.smlegend.state.visible) {
+        list = legendMenuInfoNotVisible(this.props.language)
+      } else {
+        list = legendMenuInfo(this.props.language)
+      }
     }
     if (!list) {
       switch (this.props.currentLayer.type) {
