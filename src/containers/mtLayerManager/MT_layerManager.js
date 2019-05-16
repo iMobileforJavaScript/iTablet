@@ -66,6 +66,14 @@ export default class MT_layerManager extends React.Component {
     if(!this.curUserBaseMaps){
       this.curUserBaseMaps = this.props.baseMaps['default']
     }
+
+    let userAddBase = []
+    for(let i=0,n=this.curUserBaseMaps.length;i<n;i++){
+      if(this.curUserBaseMaps[i].userAdd){
+        userAddBase.push(this.curUserBaseMaps[i].layerName)
+      }
+    }
+    LayerUtils.setBaseMap(userAddBase)
     this.state = {
       // datasourceList: [],
       mapName: '',

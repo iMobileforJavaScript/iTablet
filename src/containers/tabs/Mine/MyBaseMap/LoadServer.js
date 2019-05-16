@@ -49,15 +49,18 @@ export default class LoadServer extends Component {
               //'请输入服务地址')
               return
             }
+            let alias = this.state.name
+            let layerName  = this.state.server.substring(this.state.server.lastIndexOf('/')+1,this.state.server.length)+'@'+alias//this.state.server.lastIndexOf('/')
             let item = {
               type: 'Datasource',
               DSParams: {
                 server: this.state.server,
                 engineType: 225,
-                alias: 'userAdd_'+this.state.name,
+                alias: alias,
               },
               layerIndex: 0,
               mapName: this.state.name,
+              layerName:layerName,
               userAdd:true,
             }
             let list = this.baseMaps

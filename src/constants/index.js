@@ -16,7 +16,7 @@ import ConstAnalyst from './ConstAnalyst'
 import {
   layerAdd,
   BotMap,
-  openData,
+  OpenData,
   line,
   point,
   region,
@@ -61,7 +61,7 @@ export {
   ConstToolType,
   Map3DBaseMapList,
   ConstInfo,
-  openData,
+  OpenData,
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,

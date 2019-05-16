@@ -3,6 +3,8 @@ import LayerManager_tolbar from './LayerManager_tolbar'
 
 // const mapStateToProps = state => ({
 //   language: state.setting.toJS().language,
+//   baseMaps: state.map.toJS().baseMaps,
+//   user: state.user.toJS(),
 // })
 
 // const mapDispatchToProps = {
