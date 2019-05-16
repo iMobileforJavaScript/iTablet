@@ -23,13 +23,14 @@ import {
   advancedSettings,
   histogramSettings,
 } from '../settingData'
-import NavigationService from '../../NavigationService'
+// import NavigationService from '../../NavigationService'
 import { SMap } from 'imobile_for_reactnative'
 // import { getLanguage } from '../../../language/index'
 import { scaleSize } from '../../../utils'
 import color from '../../../styles/color'
 import styles from './styles'
 import Toast from '../../../utils/Toast'
+import NavigationService from '../../NavigationService'
 
 export default class secondMapSettings extends Component {
   props: {
@@ -43,6 +44,7 @@ export default class secondMapSettings extends Component {
     this.state = {
       data: '',
       title: params.title,
+      cb: params.cb || '',
     }
   }
   UNSAFE_componentWillMount() {
@@ -64,7 +66,13 @@ export default class secondMapSettings extends Component {
       case '高级设置':
         data = await this.getAdvanceData()
         break
-      case '图例设置':
+      case '中心点':
+        data = { title: 'centerPoint' }
+        data.value = await SMap.getMapCenter()
+        break
+      case '比例尺':
+        data = { title: 'scale' }
+        data.value = await SMap.getMapScale()
         break
       case '柱状图风格':
         data = await this.getHistogramData()
@@ -85,8 +93,7 @@ export default class secondMapSettings extends Component {
   // }
   //基础设置数据
   getBasicData = async () => {
-    let data
-    let angle
+    let data, angle, bgColor
     data = await basicSettings()
 
     if (Platform.OS === 'ios') {
@@ -95,10 +102,12 @@ export default class secondMapSettings extends Component {
       angle = await SMap.getMapAngle()
       data[2].value = angle.toString().replace('.0', '')
       data[3].value = await SMap.getMapColorMode()
-      //todo 4背景颜色 8固定文本方向 待设置
+      bgColor = await SMap.getMapBackgroundColor()
+      data[4].value = bgColor.toUpperCase()
       data[5].value = await SMap.isAntialias()
       data[6].value = await SMap.getMarkerFixedAngle()
       data[7].value = await SMap.getTextFixedAngle()
+      data[8].value = await SMap.getFixedTextOrientation()
       data[9].value = await SMap.isOverlapDisplayed()
     }
 
@@ -110,14 +119,24 @@ export default class secondMapSettings extends Component {
     let data = await rangeSettings()
     if (Platform.OS === 'ios') {
       let mapCenter = await SMap.getMapCenter()
+      let centerX = this.formatNumber(mapCenter.x)
+      let centerY = this.formatNumber(mapCenter.y)
       let mapScale = await SMap.getMapScale()
-      data[0].value = mapCenter.toLocaleString('en')
-      data[1].value = `1:${mapScale.toLocaleString('en')}`
+      let scale = this.formatNumber(mapScale)
+      data[0].value = `${centerX}/${centerY}`
+      data[1].value = `1:${scale}`
       data[2].value = await SMap.isVisibleScalesEnabled()
     }
     return data
   }
 
+  formatNumber = num => {
+    let dotReg = /\./
+    let reg = /\.\d+/
+    let afterDot = ''
+    dotReg.test(num) && (afterDot = num.match(reg)[0])
+    return (+num).toLocaleString('en').replace(reg, afterDot)
+  }
   //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
@@ -139,6 +158,7 @@ export default class secondMapSettings extends Component {
     let data = await histogramSettings()
     return data
   }
+
   //返回
   backAction = () => {
     NavigationService.goBack()
@@ -165,6 +185,9 @@ export default class secondMapSettings extends Component {
         case '显示压盖对象':
           await SMap.setOverlapDisplayed(value)
           break
+        case '固定文本方向':
+          await SMap.setFixedTextOrientation(value)
+          break
         case '固定比例尺级别':
           await SMap.setVisibleScalesEnabled(value)
           break
@@ -177,17 +200,16 @@ export default class secondMapSettings extends Component {
   }
 
   onItemPress = title => {
-    let data
+    let data = this.state.data.concat()
     switch (title) {
       case '旋转角度':
-        data = this.state.data.concat()
-        NavigationService.navigate('InputPage', {
+        this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[2].value.replace('°', ''),
           cb: async value => {
             let isSetSuccess = false
             if (value >= -360 && value <= 360) {
-              isSetSuccess = await SMap.setMapAngle(~~value)
+              isSetSuccess = await SMap.setMapAngle(+value)
             } else {
               Toast.show('旋转角度范围应为[-360,360]')
             }
@@ -206,9 +228,63 @@ export default class secondMapSettings extends Component {
           },
         })
         break
-      case '柱状图风格':
-        NavigationService.navigate('secondMapSettings', { title })
+      case '比例尺':
+        this.props.navigation.navigate('InputPage', {
+          headerTitle: title,
+          placeholder: data[1].value.replace('1:', ''),
+          cb: async newValue => {
+            let isSuccess = false
+            let regExp = /^\d+(\.\d+)?$/
+            let data = this.state.data.concat()
+            if (newValue.match(regExp)) {
+              isSuccess = await SMap.setMapScale(1 / newValue)
+              data[1].value = `1:${this.formatNumber(newValue)}`
+            } else {
+              Toast.show('比例输入错误!')
+            }
+            if (isSuccess) {
+              this.setState(
+                {
+                  data,
+                },
+                () => {
+                  this.backAction()
+                },
+              )
+            }
+          },
+        })
         break
+      case '中心点':
+      case '柱状图风格':
+        this.props.navigation.navigate('secondMapSettings', {
+          title,
+          cb: this.saveInput,
+        })
+        break
+    }
+  }
+
+  //修改值判定 不适用于跳转InputPage的
+  saveInput = async (newValue, title) => {
+    let isSuccess = false
+    let regExp = /^\d+(\.\d+)?$/
+    let data = this.state.data.concat()
+    switch (title) {
+      case '中心点':
+        if (newValue.x.match(regExp) && newValue.y.match(regExp)) {
+          isSuccess = await SMap.setMapCenter(+newValue.x, +newValue.y)
+          data[0].value =
+            this.formatNumber(newValue.x) + '/' + this.formatNumber(newValue.y)
+        } else {
+          Toast.show('坐标点输入错误!')
+        }
+        break
+    }
+    if (isSuccess) {
+      this.setState({
+        data,
+      })
     }
   }
 
@@ -256,7 +332,14 @@ export default class secondMapSettings extends Component {
         <TouchableOpacity onPress={() => this.onItemPress(item.title)}>
           <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
-            {item.value !== undefined && (
+            {item.value !== undefined && item.title === '背景颜色' && (
+              <View style={{ ...styles.colorView }}>
+                <Text
+                  style={{ ...styles.colorBlock, backgroundColor: item.value }}
+                />
+              </View>
+            )}
+            {item.value !== undefined && item.title !== '背景颜色' && (
               <Text style={styles.rightText}>{item.value}</Text>
             )}
             <Image
@@ -283,16 +366,29 @@ export default class secondMapSettings extends Component {
     )
   }
 
-  //渲染带键盘的input（需要修改信息的item）
+  //渲染带键盘的多行input 单行的直接跳inputPage（需要修改信息的item）
   renderKeybordItem = item => {
+    let renderData = {}
+    switch (item.title) {
+      case 'centerPoint':
+        renderData.x = item.value.x
+        renderData.y = item.value.y
+        break
+      case 'scale':
+        renderData.textInput = item
+    }
     return (
-      <View>
-        <TextInput
-          onChangeText={text => (this.currentText = text)}
-          style={styles.inputItem}
-        >
-          {item.value.replace('.0', '').replace('°', '')}
-        </TextInput>
+      <View style={styles.inputContainer}>
+        {Object.keys(renderData).map((item, index) => {
+          return (
+            <TextInput
+              key={item + index}
+              onChangeText={text => (this[item] = text)}
+              style={styles.inputItem}
+              placeholder={`${item}:${renderData[item]}`}
+            />
+          )
+        })}
       </View>
     )
   }
@@ -312,29 +408,33 @@ export default class secondMapSettings extends Component {
   }
 
   render() {
-    // if (
-    //   Array.isArray(this.state.data) &&
-    //   this.state.data[0].iconType === 'keyboard'
-    // ) {
-    //   let data = this.state.data[0]
-    //   return (
-    //     <Container
-    //       headerProps={{
-    //         title: this.state.title,
-    //         backAction: this.backAction,
-    //         headerRight:
-    //           [<TouchableOpacity
-    //             key={'save'}
-    //             onPress={this.saveInput}
-    //           >
-    //             <Text style={styles.headerRight}>保存</Text>
-    //           </TouchableOpacity>],
-    //       }}
-    //     >
-    //       {this.renderKeybordItem(data)}
-    //     </Container>
-    //   )
-    // }
+    if (
+      this.state.data.constructor === Object &&
+      this.state.data.value !== ''
+    ) {
+      let data = this.state.data
+      return (
+        <Container
+          headerProps={{
+            title: this.state.title,
+            backAction: this.backAction,
+            headerRight: [
+              <TouchableOpacity
+                key={'save'}
+                onPress={() => {
+                  let value = this.x ? { x: this.x, y: this.y } : this.textInput
+                  this.state.cb(value, this.state.title)
+                }}
+              >
+                <Text style={styles.headerRight}>保存</Text>
+              </TouchableOpacity>,
+            ],
+          }}
+        >
+          {this.renderKeybordItem(data)}
+        </Container>
+      )
+    }
     return (
       <Container
         headerProps={{
