@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
+//eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 // import ConstOnline from '../../../../constants/ConstOnline'
 export default class BaseMapItem extends Component {
@@ -13,7 +14,7 @@ export default class BaseMapItem extends Component {
     removeDataFromUpList: () => {},
     curUserBaseMaps: Array,
     setBaseMap: () => {},
-    user:Object,
+    user: Object,
   }
   constructor(props) {
     super(props)
@@ -37,29 +38,36 @@ export default class BaseMapItem extends Component {
     // global.language
     items = [
       {
-        title: global.language==='CN'?'修改':'modify',
+        title: global.language === 'CN' ? '修改' : 'modify',
         // '删除',
         onPress: () => {
           NavigationService.navigate('LoadServer', {
             setBaseMap: this.props.setBaseMap,
             baseMaps: this.props.curUserBaseMaps,
-            item:item,
-            user:this.props.user,
+            item: item,
+            user: this.props.user,
           })
         },
       },
       {
-        title: global.language==='CN'?'删除':'delete',
+        title: global.language === 'CN' ? '删除' : 'delete',
         // '删除',
         onPress: () => {
           let list = this.props.curUserBaseMaps
-          for(let i=0,n=list.length;i<n;i++){
-            if(list[i].DSParams.server===item.DSParams.server && list[i].mapName===item.mapName){
-              list.splice(i,1)
+          for (let i = 0, n = list.length; i < n; i++) {
+            if (
+              list[i].DSParams.server === item.DSParams.server &&
+              list[i].mapName === item.mapName
+            ) {
+              list.splice(i, 1)
               break
             }
           }
-          this.props.setBaseMap && this.props.setBaseMap({userId:this.props.user.currentUser.userId,baseMaps:list})
+          this.props.setBaseMap &&
+            this.props.setBaseMap({
+              userId: this.props.user.currentUser.userId,
+              baseMaps: list,
+            })
         },
       },
     ]
@@ -126,8 +134,8 @@ export default class BaseMapItem extends Component {
         style={{ flex: 1 }}
         ref={ref => (iTemView = ref)}
         onLongPress={() => {
-          if(this.props.item.userAdd){
-            this._showPopover(iTemView,this.props.item)
+          if (this.props.item.userAdd) {
+            this._showPopover(iTemView, this.props.item)
           }
         }}
         onPress={() => {

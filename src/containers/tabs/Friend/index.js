@@ -3,6 +3,8 @@
  */
 import Friend from './Friend'
 import Chat from './Chat/Chat'
+import ManageFriend from './Chat/ManageFriend'
+import ManageGroup from './Chat/ManageGroup'
 import AddFriend from './AddFriend'
 import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
@@ -29,4 +31,12 @@ export default connect(
   mapDispatchToProps,
 )(Friend)
 
-export { Chat, AddFriend, InformMessage, CreateGroupChat, RecommendFriend }
+export {
+  Chat,
+  AddFriend,
+  InformMessage,
+  CreateGroupChat,
+  RecommendFriend,
+  ManageFriend,
+  ManageGroup,
+}

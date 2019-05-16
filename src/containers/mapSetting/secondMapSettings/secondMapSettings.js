@@ -14,6 +14,7 @@ import {
   Image,
   Switch,
   Platform,
+  TextInput,
 } from 'react-native'
 import {
   basicSettings,
@@ -21,15 +22,14 @@ import {
   coordinateSystemSettings,
   advancedSettings,
   histogramSettings,
-  getKeyBoard,
 } from '../settingData'
 import NavigationService from '../../NavigationService'
 import { SMap } from 'imobile_for_reactnative'
 // import { getLanguage } from '../../../language/index'
-// import Toast from "../../../utils/Toast"
 import { scaleSize } from '../../../utils'
 import color from '../../../styles/color'
 import styles from './styles'
+import Toast from '../../../utils/Toast'
 
 export default class secondMapSettings extends Component {
   props: {
@@ -69,14 +69,20 @@ export default class secondMapSettings extends Component {
       case '柱状图风格':
         data = await this.getHistogramData()
         break
-      case '地图名称':
-        data = await getKeyBoard()
     }
     this.setState({
       data,
     })
   }
-  //todo 安卓缺接口，所以所有的数据获取都判断了平台
+
+  // getKeyBoardData = async () =>{
+  //   let data = await getKeyBoard()
+  //   switch(this.state.title){
+  //     case '旋转角度':
+  //       data[0].value = await SMap.getMapAngle()
+  //   }
+  //   return data
+  // }
   //基础设置数据
   getBasicData = async () => {
     let data
@@ -89,8 +95,10 @@ export default class secondMapSettings extends Component {
       angle = await SMap.getMapAngle()
       data[2].value = angle.toString().replace('.0', '')
       data[3].value = await SMap.getMapColorMode()
-      //todo 4背景颜色 6固定符号角度 7固定文本角度 8固定文本方向 待设置
+      //todo 4背景颜色 8固定文本方向 待设置
       data[5].value = await SMap.isAntialias()
+      data[6].value = await SMap.getMarkerFixedAngle()
+      data[7].value = await SMap.getTextFixedAngle()
       data[9].value = await SMap.isOverlapDisplayed()
     }
 
@@ -105,7 +113,7 @@ export default class secondMapSettings extends Component {
       let mapScale = await SMap.getMapScale()
       data[0].value = mapCenter.toLocaleString('en')
       data[1].value = `1:${mapScale.toLocaleString('en')}`
-      data[2].value = await SMap.getFixedScale()
+      data[2].value = await SMap.isVisibleScalesEnabled()
     }
     return data
   }
@@ -148,18 +156,59 @@ export default class secondMapSettings extends Component {
           //已有接口内写的是int类型的参数 所以转成数字
           await SMap.setAntialias(+value)
           break
+        case '固定符号角度':
+          await SMap.setMarkerFixedAngle(value)
+          break
+        case '固定文本角度':
+          await SMap.setTextFixedAngle(value)
+          break
         case '显示压盖对象':
           await SMap.setOverlapDisplayed(value)
           break
-        //todo ?ios并不能固定，但是缩放效果有问题，可能需要在手势操作时判断下
         case '固定比例尺级别':
-          await SMap.setFixedScale(value)
+          await SMap.setVisibleScalesEnabled(value)
           break
       }
       data[index].value = value
       this.setState({
         data,
       })
+    }
+  }
+
+  onItemPress = title => {
+    let data
+    switch (title) {
+      case '旋转角度':
+        data = this.state.data.concat()
+        NavigationService.navigate('InputPage', {
+          headerTitle: title,
+          placeholder: data[2].value.replace('°', ''),
+          cb: async value => {
+            let isSetSuccess = false
+            if (value >= -360 && value <= 360) {
+              isSetSuccess = await SMap.setMapAngle(~~value)
+            } else {
+              Toast.show('旋转角度范围应为[-360,360]')
+            }
+
+            if (isSetSuccess) {
+              data[2].value = value + '°'
+              this.setState(
+                {
+                  data,
+                },
+                () => {
+                  this.backAction()
+                },
+              )
+            }
+          },
+        })
+        break
+      case '柱状图风格':
+        NavigationService.navigate('secondMapSettings', { title })
+        break
     }
   }
 
@@ -199,16 +248,6 @@ export default class secondMapSettings extends Component {
     )
   }
 
-  onItemPress = title => {
-    switch (title) {
-      case '地图名称':
-        NavigationService.navigate('secondMapSettings', { title })
-        break
-      case '柱状图风格':
-        NavigationService.navigate('secondMapSettings', { title })
-        break
-    }
-  }
   //渲染带more按钮的行
   renderArrowItem = item => {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
@@ -244,13 +283,20 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  //渲染带键盘的input（需要修改信息的item）
   renderKeybordItem = item => {
     return (
       <View>
-        <Text>修改名称测试{item}</Text>
+        <TextInput
+          onChangeText={text => (this.currentText = text)}
+          style={styles.inputItem}
+        >
+          {item.value.replace('.0', '').replace('°', '')}
+        </TextInput>
       </View>
     )
   }
+
   renderItem = ({ item, index }) => {
     if (this.props.renderItem) {
       return this.props.renderItem
@@ -266,21 +312,29 @@ export default class secondMapSettings extends Component {
   }
 
   render() {
-    if (
-      Array.isArray(this.state.data) &&
-      this.state.data[0].iconType === 'keyboard'
-    ) {
-      return (
-        <Container
-          headerProps={{
-            title: this.state.title,
-            backAction: this.backAction,
-          }}
-        >
-          {this.renderKeybordItem()}
-        </Container>
-      )
-    }
+    // if (
+    //   Array.isArray(this.state.data) &&
+    //   this.state.data[0].iconType === 'keyboard'
+    // ) {
+    //   let data = this.state.data[0]
+    //   return (
+    //     <Container
+    //       headerProps={{
+    //         title: this.state.title,
+    //         backAction: this.backAction,
+    //         headerRight:
+    //           [<TouchableOpacity
+    //             key={'save'}
+    //             onPress={this.saveInput}
+    //           >
+    //             <Text style={styles.headerRight}>保存</Text>
+    //           </TouchableOpacity>],
+    //       }}
+    //     >
+    //       {this.renderKeybordItem(data)}
+    //     </Container>
+    //   )
+    // }
     return (
       <Container
         headerProps={{

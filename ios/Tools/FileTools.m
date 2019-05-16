@@ -711,6 +711,7 @@ RCT_REMAP_METHOD(getUri,getUriStateWithPath:(NSString *)path resolver:(RCTPromis
     NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     
      NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/"];
+    path=[NSString stringWithFormat:@"%@weChat.zip", destinationPath];
     
     BOOL isUnzipSuccess = [FileTools unZipFile:path targetPath:destinationPath];
     if(isUnzipSuccess){

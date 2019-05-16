@@ -35,4 +35,15 @@ export default StyleSheet.create({
     height: scaleSize(30),
     tintColor: color.imageColorBlack,
   },
+  inputItem: {
+    height: scaleSize(80),
+    position: 'absolute',
+    width: '100%',
+    top: scaleSize(10),
+    paddingHorizontal: 0,
+    backgroundColor: color.white,
+  },
+  headerRight: {
+    color: color.white,
+  },
 })

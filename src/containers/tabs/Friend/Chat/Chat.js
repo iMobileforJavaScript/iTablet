@@ -20,7 +20,7 @@ import {
 import Container from '../../../../components/Container'
 import { Dialog } from '../../../../components'
 import { scaleSize } from '../../../../utils/screen'
-
+import NavigationService from '../../../NavigationService'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 import { ConstPath } from '../../../../constants'
@@ -197,6 +197,13 @@ class Chat extends React.Component {
     return chatMsg
   }
 
+  isGroupChat = () => {
+    let bGroup = false
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = true
+    }
+    return bGroup
+  }
   //发送普通消息
   onSend(messages = []) {
     let bGroup = 1
@@ -402,6 +409,7 @@ class Chat extends React.Component {
   }
 
   render() {
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Animated.View style={{ flex: 1, bottom: this.state.chatBottom }}>
         <Container
@@ -410,6 +418,28 @@ class Chat extends React.Component {
             title: this.targetUser['title'],
             withoutBack: false,
             navigation: this.props.navigation,
+            headerRight: (
+              <TouchableOpacity
+                onPress={() => {
+                  let route = this.isGroupChat()
+                    ? 'ManageGroup'
+                    : 'ManageFriend'
+                  NavigationService.navigate(route, {
+                    user: this.curUser,
+                    targetUser: this.targetUser,
+                    friend: this.friend,
+                    language: global.language,
+                  })
+                }}
+                style={styles.moreView}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  source={moreImg}
+                  style={styles.moreImg}
+                />
+              </TouchableOpacity>
+            ),
           }}
         >
           {this.state.showInformSpot ? (
@@ -646,7 +676,9 @@ class Chat extends React.Component {
             true,
             getLanguage(global.language).Friends.IMPORT_DATA,
           )
-
+          if (Platform.OS === 'ios') {
+            FileTools.getUri(this.downloadreceivePath)
+          }
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
@@ -726,6 +758,14 @@ class Chat extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  moreView: {
+    flex: 1,
+    marginRight: scaleSize(10),
+  },
+  moreImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+  },
   footerContainer: {
     marginTop: scaleSize(5),
     marginLeft: scaleSize(10),
