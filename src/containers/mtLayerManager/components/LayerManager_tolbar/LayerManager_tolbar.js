@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConstToolType, layerManagerData } from '../../../../constants/index'
+import { ConstToolType,OpenData,layerManagerData } from '../../../../constants/index'
 import NavigationService from '../../../NavigationService'
 import {
   layersetting,
@@ -33,7 +33,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap, SScene } from 'imobile_for_reactnative'
+import { SMap, SScene,DatasetType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
@@ -59,6 +59,7 @@ export default class LayerManager_tolbar extends React.Component {
     device: Object,
     layers: Object,
     user: Object,
+    curUserBaseMaps:Array,
   }
 
   static defaultProps = {
@@ -130,13 +131,54 @@ export default class LayerManager_tolbar extends React.Component {
         data = layereditsetting(global.language)
         break
       case ConstToolType.MAP_EDIT_MORE_STYLE:
+      {
+        let layerManagerDataArr = [...layerManagerData]
+        for(let i=0,n=this.props.curUserBaseMaps.length;i<n;i++){
+          let baseMap = this.props.curUserBaseMaps[i]
+          if(baseMap.DSParams.engineType===227 || baseMap.DSParams.engineType===223){
+            continue
+          }
+          let layerManagerData = {
+            title:baseMap.mapName,
+            action: () => {
+              return OpenData(baseMap, baseMap.layerIndex)
+            },
+            data: [],
+            image: require('../../../../assets/map/icon-shallow-image_black.png'),
+            type: DatasetType.IMAGE,
+            themeType: -1,
+          }
+          layerManagerDataArr.push(layerManagerData)
+        }
         data = [
           {
-            title: '',
-            data: layerManagerData,
+            title:'',
+            data:layerManagerDataArr,
           },
         ]
         break
+      }
+    //  let layerManagerDataArr = []
+    //   for(let i=0,n=this.props.curUserBaseMaps.length;i<n;i++){
+    //     let baseMap = this.props.curUserBaseMaps[i]
+    //     let layerManagerData = {
+    //       title:baseMap.mapName,
+    //       action: () => {
+    //         return OpenData(baseMap.DSParams, baseMap.layerIndex)
+    //       },
+    //       data: [],
+    // image: require('../assets/map/icon-shallow-image_black.png'),
+    // type: DatasetType.IMAGE,
+    // themeType: -1,
+    //     }
+    //   }
+    //     data = [
+    //       {
+    //         baseMaps:this.props.curUserBaseMaps,
+    //         title:'',
+    //         data:layerManagerData,
+    //       },
+    //     ]
       case ConstToolType.MAP3D_BASE:
         data = baseListData
         break

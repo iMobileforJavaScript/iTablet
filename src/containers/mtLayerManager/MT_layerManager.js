@@ -56,11 +56,16 @@ export default class MT_layerManager extends React.Component {
     setBackAction: () => {},
     removeBackAction: () => {},
     user: Object,
+    baseMaps: Object,
   }
 
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
+    this.curUserBaseMaps = this.props.baseMaps[this.props.user.currentUser.userId]
+    if(!this.curUserBaseMaps){
+      this.curUserBaseMaps = this.props.baseMaps['default']
+    }
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -1012,6 +1017,7 @@ export default class MT_layerManager extends React.Component {
     return (
       <LayerManager_tolbar
         language={this.props.language}
+        curUserBaseMaps = {this.curUserBaseMaps}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}
