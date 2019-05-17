@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Container } from '../../../components'
-// import constants from '../../workspace/constants'
+import { ColorTable } from './components'
 import {
   View,
   FlatList,
@@ -22,18 +22,20 @@ import {
   coordinateSystemSettings,
   advancedSettings,
   histogramSettings,
+  colorMode,
 } from '../settingData'
-// import NavigationService from '../../NavigationService'
 import { SMap } from 'imobile_for_reactnative'
-// import { getLanguage } from '../../../language/index'
 import { scaleSize } from '../../../utils'
 import color from '../../../styles/color'
 import styles from './styles'
 import Toast from '../../../utils/Toast'
 import NavigationService from '../../NavigationService'
+import { mapBackGroundColor } from '../../../constants'
+import SelectList from './components/SelectList'
 
 export default class secondMapSettings extends Component {
   props: {
+    language: string,
     navigation: Object,
     title: string,
     renderItem?: () => {},
@@ -43,6 +45,7 @@ export default class secondMapSettings extends Component {
     let { params } = this.props.navigation.state
     this.state = {
       data: '',
+      device: params.device,
       title: params.title,
       cb: params.cb || '',
     }
@@ -51,11 +54,13 @@ export default class secondMapSettings extends Component {
     this.getData()
   }
   getData = async () => {
-    let data
+    let data, colorData, colorModeData
     //地图旋转角度
     switch (this.state.title) {
       case '基本设置':
         data = await this.getBasicData()
+        colorData = mapBackGroundColor
+        colorModeData = colorMode()
         break
       case '范围设置':
         data = await this.getRangeData()
@@ -80,6 +85,8 @@ export default class secondMapSettings extends Component {
     }
     this.setState({
       data,
+      colorData,
+      colorModeData,
     })
   }
 
@@ -228,6 +235,12 @@ export default class secondMapSettings extends Component {
           },
         })
         break
+      case '颜色模式':
+        GLOBAL.colorModeList && GLOBAL.colorModeList.showFullMap()
+        break
+      case '背景颜色':
+        GLOBAL.colortable && GLOBAL.colortable.showFullMap()
+        break
       case '比例尺':
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
@@ -286,6 +299,24 @@ export default class secondMapSettings extends Component {
         data,
       })
     }
+  }
+
+  //设置地图背景色回调
+  setColorBlock = color => {
+    let data = this.state.data.concat()
+    data[4].value = color
+    this.setState({
+      data,
+    })
+  }
+
+  //设置地图颜色模式回调
+  setColorMode = value => {
+    let data = this.state.data.concat()
+    data[3].value = value
+    this.setState({
+      data,
+    })
   }
 
   //渲染switch
@@ -393,6 +424,31 @@ export default class secondMapSettings extends Component {
     )
   }
 
+  renderColorTable = data => {
+    return (
+      <ColorTable
+        ref={ref => (GLOBAL.colortable = ref)}
+        setColorBlock={this.setColorBlock}
+        language={this.props.language}
+        device={this.state.device}
+        data={data}
+      />
+    )
+  }
+
+  renderColorModeList = data => {
+    return (
+      <SelectList
+        ref={ref => (GLOBAL.colorModeList = ref)}
+        callback={this.setColorMode}
+        language={this.props.language}
+        device={this.state.device}
+        height={scaleSize(400)}
+        data={data}
+      />
+    )
+  }
+
   renderItem = ({ item, index }) => {
     if (this.props.renderItem) {
       return this.props.renderItem
@@ -448,6 +504,9 @@ export default class secondMapSettings extends Component {
           keyExtractor={(item, index) => item + index}
           numColumns={1}
         />
+        {this.state.title === '基本设置' &&
+          this.renderColorTable(this.state.colorData) &&
+          this.renderColorModeList(this.state.colorModeData)}
       </Container>
     )
   }

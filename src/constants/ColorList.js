@@ -1,4 +1,4 @@
-import { SCartography } from 'imobile_for_reactnative'
+import { SCartography, SMap } from 'imobile_for_reactnative'
 
 const lineColorSet = [
   {
@@ -3660,6 +3660,920 @@ const regionAfterColorSet = [
   },
 ]
 
+const mapBackGroundColor = [
+  {
+    key: '#FFFFFF',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFFFFF')
+    },
+    size: 'large',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#000000',
+    action: () => {
+      return SMap.setMapBackgroundColor('#000000')
+    },
+    size: 'large',
+    background: '#000000',
+  },
+  {
+    key: '#F0EDE1',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F0EDE1')
+    },
+    size: 'large',
+    background: '#F0EDE1',
+  },
+  {
+    key: '#1E477C',
+    action: () => {
+      return SMap.setMapBackgroundColor('#1E477C')
+    },
+    size: 'large',
+    background: '#1E477C',
+  },
+  {
+    key: '#4982BC',
+    action: () => {
+      return SMap.setMapBackgroundColor('#4982BC')
+    },
+    size: 'large',
+    background: '#4982BC',
+  },
+  {
+    key: '#00A1E9',
+    action: () => {
+      return SMap.setMapBackgroundColor('#00A1E9')
+    },
+    size: 'large',
+    background: '#00A1E9',
+  },
+  {
+    key: '#803000',
+    action: () => {
+      return SMap.setMapBackgroundColor('#803000')
+    },
+    size: 'large',
+    background: '#803000',
+  },
+  {
+    key: '#BD5747',
+    action: () => {
+      return SMap.setMapBackgroundColor('#BD5747')
+    },
+    size: 'large',
+    background: '#BD5747',
+  },
+  {
+    key: '#36E106',
+    action: () => {
+      return SMap.setMapBackgroundColor('#36E106')
+    },
+    size: 'large',
+    background: '#36E106',
+  },
+  {
+    key: '#9CBB58',
+    action: () => {
+      return SMap.setMapBackgroundColor('#9CBB58')
+    },
+    size: 'large',
+    background: '#9CBB58',
+  },
+  {
+    key: '#8364A1',
+    action: () => {
+      return SMap.setMapBackgroundColor('#8364A1')
+    },
+    size: 'large',
+    background: '#8364A1',
+  },
+  {
+    key: '#4AADC7',
+    action: () => {
+      return SMap.setMapBackgroundColor('#4AADC7')
+    },
+    size: 'large',
+    background: '#4AADC7',
+  },
+  {
+    key: '#F89746',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F89746')
+    },
+    size: 'large',
+    background: '#F89746',
+  },
+  {
+    key: '#E7A700',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E7A700')
+    },
+    size: 'large',
+    background: '#E7A700',
+  },
+  {
+    key: '#E7E300',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E7E300')
+    },
+    size: 'large',
+    background: '#E7E300',
+  },
+  {
+    key: '#D33248',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D33248')
+    },
+    size: 'large',
+    background: '#D33248',
+  },
+  {
+    key: '#F1F1F1',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F1F1F1')
+    },
+    size: 'large',
+    background: '#F1F1F1',
+  },
+  {
+    key: '#7D7D7D',
+    action: () => {
+      return SMap.setMapBackgroundColor('#7D7D7D')
+    },
+    size: 'large',
+    background: '#7D7D7D',
+  },
+  {
+    key: '#DDD9C3',
+    action: () => {
+      return SMap.setMapBackgroundColor('#DDD9C3')
+    },
+    size: 'large',
+    background: '#DDD9C3',
+  },
+  {
+    key: '#C9DDF0',
+    action: () => {
+      return SMap.setMapBackgroundColor('#C9DDF0')
+    },
+    size: 'large',
+    background: '#C9DDF0',
+  },
+  {
+    key: '#DBE4F3',
+    action: () => {
+      return SMap.setMapBackgroundColor('#DBE4F3')
+    },
+    size: 'large',
+    background: '#DBE4F3',
+  },
+  {
+    key: '#BCE8FD',
+    action: () => {
+      return SMap.setMapBackgroundColor('#BCE8FD')
+    },
+    size: 'large',
+    background: '#BCE8FD',
+  },
+  {
+    key: '#E5C495',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E5C495')
+    },
+    size: 'large',
+    background: '#E5C495',
+  },
+  {
+    key: '#F4DED9',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F4DED9')
+    },
+    size: 'large',
+    background: '#F4DED9',
+  },
+  {
+    key: '#DBE9CE',
+    action: () => {
+      return SMap.setMapBackgroundColor('#DBE9CE')
+    },
+    size: 'large',
+    background: '#DBE9CE',
+  },
+  {
+    key: '#EBF4DE',
+    action: () => {
+      return SMap.setMapBackgroundColor('#EBF4DE')
+    },
+    size: 'large',
+    background: '#EBF4DE',
+  },
+  {
+    key: '#E5E1ED',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E5E1ED')
+    },
+    size: 'large',
+    background: '#E5E1ED',
+  },
+  {
+    key: '#DDF0F3',
+    action: () => {
+      return SMap.setMapBackgroundColor('#DDF0F3')
+    },
+    size: 'large',
+    background: '#DDF0F3',
+  },
+  {
+    key: '#FDECDC',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FDECDC')
+    },
+    size: 'large',
+    background: '#FDECDC',
+  },
+  {
+    key: '#FFE7C4',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFE7C4')
+    },
+    size: 'large',
+    background: '#FFE7C4',
+  },
+  {
+    key: '#FDFACA',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FDFACA')
+    },
+    size: 'large',
+    background: '#FDFACA',
+  },
+  {
+    key: '#F09CA0',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F09CA0')
+    },
+    size: 'large',
+    background: '#F09CA0',
+  },
+  {
+    key: '#D7D7D7',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D7D7D7')
+    },
+    size: 'large',
+    background: '#D7D7D7',
+  },
+  {
+    key: '#585858',
+    action: () => {
+      return SMap.setMapBackgroundColor('#585858')
+    },
+    size: 'large',
+    background: '#585858',
+  },
+  {
+    key: '#C6B797',
+    action: () => {
+      return SMap.setMapBackgroundColor('#C6B797')
+    },
+    size: 'large',
+    background: '#C6B797',
+  },
+  {
+    key: '#8CB4EA',
+    action: () => {
+      return SMap.setMapBackgroundColor('#8CB4EA')
+    },
+    size: 'large',
+    background: '#8CB4EA',
+  },
+  {
+    key: '#C1CCE4',
+    action: () => {
+      return SMap.setMapBackgroundColor('#C1CCE4')
+    },
+    size: 'large',
+    background: '#C1CCE4',
+  },
+  {
+    key: '#7ED2F6',
+    action: () => {
+      return SMap.setMapBackgroundColor('#7ED2F6')
+    },
+    size: 'large',
+    background: '#7ED2F6',
+  },
+  {
+    key: '#B1894F',
+    action: () => {
+      return SMap.setMapBackgroundColor('#B1894F')
+    },
+    size: 'large',
+    background: '#B1894F',
+  },
+  {
+    key: '#E7B8B8',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E7B8B8')
+    },
+    size: 'large',
+    background: '#E7B8B8',
+  },
+  {
+    key: '#B0D59A',
+    action: () => {
+      return SMap.setMapBackgroundColor('#B0D59A')
+    },
+    size: 'large',
+    background: '#B0D59A',
+  },
+  {
+    key: '#D7E3BD',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D7E3BD')
+    },
+    size: 'large',
+    background: '#D7E3BD',
+  },
+  {
+    key: '#CDC1D9',
+    action: () => {
+      return SMap.setMapBackgroundColor('#CDC1D9')
+    },
+    size: 'large',
+    background: '#CDC1D9',
+  },
+  {
+    key: '#B7DDE9',
+    action: () => {
+      return SMap.setMapBackgroundColor('#B7DDE9')
+    },
+    size: 'large',
+    background: '#B7DDE9',
+  },
+  {
+    key: '#FAD6B1',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FAD6B1')
+    },
+    size: 'large',
+    background: '#FAD6B1',
+  },
+  {
+    key: '#F5CE88',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F5CE88')
+    },
+    size: 'large',
+    background: '#F5CE88',
+  },
+  {
+    key: '#FFF55A',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFF55A')
+    },
+    size: 'large',
+    background: '#FFF55A',
+  },
+  {
+    key: '#EF6C78',
+    action: () => {
+      return SMap.setMapBackgroundColor('#EF6C78')
+    },
+    size: 'large',
+    background: '#EF6C78',
+  },
+  {
+    key: '#BFBFBF',
+    action: () => {
+      return SMap.setMapBackgroundColor('#BFBFBF')
+    },
+    size: 'large',
+    background: '#BFBFBF',
+  },
+  {
+    key: '#3E3E3E',
+    action: () => {
+      return SMap.setMapBackgroundColor('#3E3E3E')
+    },
+    size: 'large',
+    background: '#3E3E3E',
+  },
+  {
+    key: '#938953',
+    action: () => {
+      return SMap.setMapBackgroundColor('#938953')
+    },
+    size: 'large',
+    background: '#938953',
+  },
+  {
+    key: '#548ED4',
+    action: () => {
+      return SMap.setMapBackgroundColor('#548ED4')
+    },
+    size: 'large',
+    background: '#548ED4',
+  },
+  {
+    key: '#98B7D5',
+    action: () => {
+      return SMap.setMapBackgroundColor('#98B7D5')
+    },
+    size: 'large',
+    background: '#98B7D5',
+  },
+  {
+    key: '#00B4F0',
+    action: () => {
+      return SMap.setMapBackgroundColor('#00B4F0')
+    },
+    size: 'large',
+    background: '#00B4F0',
+  },
+  {
+    key: '#9A6C34',
+    action: () => {
+      return SMap.setMapBackgroundColor('#9A6C34')
+    },
+    size: 'large',
+    background: '#9A6C34',
+  },
+  {
+    key: '#D79896',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D79896')
+    },
+    size: 'large',
+    background: '#D79896',
+  },
+  {
+    key: '#7EC368',
+    action: () => {
+      return SMap.setMapBackgroundColor('#7EC368')
+    },
+    size: 'large',
+    background: '#7EC368',
+  },
+  {
+    key: '#C5DDA5',
+    action: () => {
+      return SMap.setMapBackgroundColor('#C5DDA5')
+    },
+    size: 'large',
+    background: '#C5DDA5',
+  },
+  {
+    key: '#B1A5C6',
+    action: () => {
+      return SMap.setMapBackgroundColor('#B1A5C6')
+    },
+    size: 'large',
+    background: '#B1A5C6',
+  },
+  {
+    key: '#93CDDD',
+    action: () => {
+      return SMap.setMapBackgroundColor('#93CDDD')
+    },
+    size: 'large',
+    background: '#93CDDD',
+  },
+  {
+    key: '#F9BD8D',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F9BD8D')
+    },
+    size: 'large',
+    background: '#F9BD8D',
+  },
+  {
+    key: '#F7B550',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F7B550')
+    },
+    size: 'large',
+    background: '#F7B550',
+  },
+  {
+    key: '#FFF100',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFF100')
+    },
+    size: 'large',
+    background: '#FFF100',
+  },
+  {
+    key: '#E80050',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E80050')
+    },
+    size: 'large',
+    background: '#E80050',
+  },
+  {
+    key: '#A6A6A7',
+    action: () => {
+      return SMap.setMapBackgroundColor('#A6A6A7')
+    },
+    size: 'large',
+    background: '#A6A6A7',
+  },
+  {
+    key: '#2D2D2B',
+    action: () => {
+      return SMap.setMapBackgroundColor('#2D2D2B')
+    },
+    size: 'large',
+    background: '#2D2D2B',
+  },
+  {
+    key: '#494428',
+    action: () => {
+      return SMap.setMapBackgroundColor('#494428')
+    },
+    size: 'large',
+    background: '#494428',
+  },
+  {
+    key: '#1D3A5F',
+    action: () => {
+      return SMap.setMapBackgroundColor('#1D3A5F')
+    },
+    size: 'large',
+    background: '#1D3A5F',
+  },
+  {
+    key: '#376192',
+    action: () => {
+      return SMap.setMapBackgroundColor('#376192')
+    },
+    size: 'large',
+    background: '#376192',
+  },
+  {
+    key: '#00A1E9',
+    action: () => {
+      return SMap.setMapBackgroundColor('#00A1E9')
+    },
+    size: 'large',
+    background: '#00A1E9',
+  },
+  {
+    key: '#825320',
+    action: () => {
+      return SMap.setMapBackgroundColor('#825320')
+    },
+    size: 'large',
+    background: '#825320',
+  },
+  {
+    key: '#903635',
+    action: () => {
+      return SMap.setMapBackgroundColor('#903635')
+    },
+    size: 'large',
+    background: '#903635',
+  },
+  {
+    key: '#13B044',
+    action: () => {
+      return SMap.setMapBackgroundColor('#13B044')
+    },
+    size: 'large',
+    background: '#13B044',
+  },
+  {
+    key: '#76933C',
+    action: () => {
+      return SMap.setMapBackgroundColor('#76933C')
+    },
+    size: 'large',
+    background: '#76933C',
+  },
+  {
+    key: '#5E467C',
+    action: () => {
+      return SMap.setMapBackgroundColor('#5E467C')
+    },
+    size: 'large',
+    background: '#5E467C',
+  },
+  {
+    key: '#31859D',
+    action: () => {
+      return SMap.setMapBackgroundColor('#31859D')
+    },
+    size: 'large',
+    background: '#31859D',
+  },
+  {
+    key: '#E46C07',
+    action: () => {
+      return SMap.setMapBackgroundColor('#E46C07')
+    },
+    size: 'large',
+    background: '#E46C07',
+  },
+  {
+    key: '#F39900',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F39900')
+    },
+    size: 'large',
+    background: '#F39900',
+  },
+  {
+    key: '#B7AB00',
+    action: () => {
+      return SMap.setMapBackgroundColor('#B7AB00')
+    },
+    size: 'large',
+    background: '#B7AB00',
+  },
+  {
+    key: '#A50036',
+    action: () => {
+      return SMap.setMapBackgroundColor('#A50036')
+    },
+    size: 'large',
+    background: '#A50036',
+  },
+  {
+    key: '#979D99',
+    action: () => {
+      return SMap.setMapBackgroundColor('#979D99')
+    },
+    size: 'large',
+    background: '#979D99',
+  },
+  {
+    key: '#0C0C0C',
+    action: () => {
+      return SMap.setMapBackgroundColor('#0C0C0C')
+    },
+    size: 'large',
+    background: '#0C0C0C',
+  },
+  {
+    key: '#1C1A10',
+    action: () => {
+      return SMap.setMapBackgroundColor('#1C1A10')
+    },
+    size: 'large',
+    background: '#1C1A10',
+  },
+  {
+    key: '#0C263D',
+    action: () => {
+      return SMap.setMapBackgroundColor('#0C263D')
+    },
+    size: 'large',
+    background: '#0C263D',
+  },
+  {
+    key: '#1D3A5F',
+    action: () => {
+      return SMap.setMapBackgroundColor('#1D3A5F')
+    },
+    size: 'large',
+    background: '#1D3A5F',
+  },
+  {
+    key: '#005883',
+    action: () => {
+      return SMap.setMapBackgroundColor('#005883')
+    },
+    size: 'large',
+    background: '#005883',
+  },
+  {
+    key: '#693904',
+    action: () => {
+      return SMap.setMapBackgroundColor('#693904')
+    },
+    size: 'large',
+    background: '#693904',
+  },
+  {
+    key: '#622727',
+    action: () => {
+      return SMap.setMapBackgroundColor('#622727')
+    },
+    size: 'large',
+    background: '#622727',
+  },
+  {
+    key: '#005E14',
+    action: () => {
+      return SMap.setMapBackgroundColor('#005E14')
+    },
+    size: 'large',
+    background: '#005E14',
+  },
+  {
+    key: '#4F6028',
+    action: () => {
+      return SMap.setMapBackgroundColor('#4F6028')
+    },
+    size: 'large',
+    background: '#4F6028',
+  },
+  {
+    key: '#3E3050',
+    action: () => {
+      return SMap.setMapBackgroundColor('#3E3050')
+    },
+    size: 'large',
+    background: '#3E3050',
+  },
+  {
+    key: '#245B66',
+    action: () => {
+      return SMap.setMapBackgroundColor('#245B66')
+    },
+    size: 'large',
+    background: '#245B66',
+  },
+  {
+    key: '#974805',
+    action: () => {
+      return SMap.setMapBackgroundColor('#974805')
+    },
+    size: 'large',
+    background: '#974805',
+  },
+  {
+    key: '#AD6A00',
+    action: () => {
+      return SMap.setMapBackgroundColor('#AD6A00')
+    },
+    size: 'large',
+    background: '#AD6A00',
+  },
+  {
+    key: '#8B8100',
+    action: () => {
+      return SMap.setMapBackgroundColor('#8B8100')
+    },
+    size: 'large',
+    background: '#8B8100',
+  },
+  {
+    key: '#7C0022',
+    action: () => {
+      return SMap.setMapBackgroundColor('#8B8100')
+    },
+    size: 'large',
+    background: '#7C0022',
+  },
+  {
+    key: '#F0DCBE',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F0DCBE')
+    },
+    size: 'large',
+    background: '#F0DCBE',
+  },
+  {
+    key: '#F2B1CF',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F2B1CF')
+    },
+    size: 'large',
+    background: '#F2B1CF',
+  },
+  {
+    key: '#D3FFBF',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D3FFBF')
+    },
+    size: 'large',
+    background: '#D3FFBF',
+  },
+  {
+    key: '#00165F',
+    action: () => {
+      return SMap.setMapBackgroundColor('#00165F')
+    },
+    size: 'large',
+    background: '#00165F',
+  },
+  {
+    key: '#6673CB',
+    action: () => {
+      return SMap.setMapBackgroundColor('#6673CB')
+    },
+    size: 'large',
+    background: '#6673CB',
+  },
+  {
+    key: '#006EBF',
+    action: () => {
+      return SMap.setMapBackgroundColor('#006EBF')
+    },
+    size: 'large',
+    background: '#006EBF',
+  },
+  {
+    key: '#89CF66',
+    action: () => {
+      return SMap.setMapBackgroundColor('#89CF66')
+    },
+    size: 'large',
+    background: '#89CF66',
+  },
+  {
+    key: '#70A900',
+    action: () => {
+      return SMap.setMapBackgroundColor('#70A900')
+    },
+    size: 'large',
+    background: '#70A900',
+  },
+  {
+    key: '#13B044',
+    action: () => {
+      return SMap.setMapBackgroundColor('#13B044')
+    },
+    size: 'large',
+    background: '#13B044',
+  },
+  {
+    key: '#93D150',
+    action: () => {
+      return SMap.setMapBackgroundColor('#93D150')
+    },
+    size: 'large',
+    background: '#93D150',
+  },
+  {
+    key: '#70319F',
+    action: () => {
+      return SMap.setMapBackgroundColor('#70319F')
+    },
+    size: 'large',
+    background: '#70319F',
+  },
+  {
+    key: '#00B4F0',
+    action: () => {
+      return SMap.setMapBackgroundColor('#00B4F0')
+    },
+    size: 'large',
+    background: '#00B4F0',
+  },
+  {
+    key: '#D38968',
+    action: () => {
+      return SMap.setMapBackgroundColor('#D38968')
+    },
+    size: 'large',
+    background: '#D38968',
+  },
+  {
+    key: '#FFBF00',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFBF00')
+    },
+    size: 'large',
+    background: '#FFBF00',
+  },
+  {
+    key: '#FFFF00',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FFFF00')
+    },
+    size: 'large',
+    background: '#FFFF00',
+  },
+  {
+    key: '#C10000',
+    action: () => {
+      return SMap.setMapBackgroundColor('#C10000')
+    },
+    size: 'large',
+    background: '#C10000',
+  },
+  {
+    key: '#F0F1A6',
+    action: () => {
+      return SMap.setMapBackgroundColor('#F0F1A6')
+    },
+    size: 'large',
+    background: '#F0F1A6',
+  },
+  {
+    key: '#FF0000',
+    action: () => {
+      return SMap.setMapBackgroundColor('#FF0000')
+    },
+    size: 'large',
+    background: '#FF0000',
+  },
+]
 const legendColor = [
   {
     key: '#FFFFFF',
@@ -4574,11 +5488,11 @@ const legendColor = [
     background: '#FF0000',
   },
 ]
-
 export {
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,
   legendColor,
+  mapBackGroundColor,
 }

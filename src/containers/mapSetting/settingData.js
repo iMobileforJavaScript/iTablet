@@ -1,5 +1,5 @@
 import { getLanguage } from '../../language/index'
-
+import { SMap } from 'imobile_for_reactnative'
 function getMapSettings() {
   let data = [
     {
@@ -309,6 +309,38 @@ const histogramSettings = () => [
     iconType: 'arrow',
   },
 ]
+const colorMode = () => [
+  {
+    value: '默认色彩模式',
+    action: () => {
+      return SMap.setColorMode(0)
+    },
+  },
+  {
+    value: '黑白模式',
+    action: () => {
+      return SMap.setColorMode(1)
+    },
+  },
+  {
+    value: '灰度模式',
+    action: () => {
+      return SMap.setColorMode(2)
+    },
+  },
+  {
+    value: '黑白反色模式',
+    action: () => {
+      return SMap.setColorMode(3)
+    },
+  },
+  {
+    value: '黑白反色，其他颜色不变',
+    action: () => {
+      return SMap.setColorMode(4)
+    },
+  },
+]
 export {
   getMapSettings,
   getThematicMapSettings,
@@ -317,4 +349,5 @@ export {
   coordinateSystemSettings,
   advancedSettings,
   histogramSettings,
+  colorMode,
 }

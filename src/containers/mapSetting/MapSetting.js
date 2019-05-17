@@ -22,9 +22,9 @@ import { ConstToolType } from '../../constants'
 import { scaleSize } from '../../utils'
 import size from '../../styles/size'
 import color from '../../styles/color'
-
 export default class MapSetting extends Component {
   props: {
+    nav: string,
     language: string,
     navigation: Object,
     currentMap: Object,
@@ -225,7 +225,12 @@ export default class MapSetting extends Component {
       this.props.navigation.navigate('MapView')
     } else {
       //根据title跳转
-      NavigationService.navigate('secondMapSettings', { title })
+      NavigationService.navigate('secondMapSettings', {
+        title,
+        language: this.props.language,
+        //
+        device: this.props.device,
+      })
     }
   }
   renderFlatListItem = ({ item }) => {

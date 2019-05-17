@@ -5,5 +5,6 @@
  */
 
 import secondMapSettings from './secondMapSettings'
+import ColorTable from './components/ColorTable'
 
-export { secondMapSettings }
+export { secondMapSettings, ColorTable }

@@ -1353,6 +1353,7 @@ export {
   BotMap,
   layerManagerData,
   openData,
+  OpenData,
   line,
   point,
   region,
