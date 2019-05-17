@@ -172,7 +172,8 @@ const basicSettings = () => [
   },
   {
     title: '背景颜色',
-    iconType: 'text',
+    value: '',
+    iconType: 'arrow',
   },
   {
     title: '地图反走样',
