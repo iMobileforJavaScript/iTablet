@@ -65,6 +65,7 @@ const Friends = {
   //ManageFriend/Group
   SEND_MESSAGE: 'Send message',
   SET_MARKNAME: 'Set Alias',
+  SET_GROUPNAME: 'Set group name',
   PUSH_FRIEND_CARD: 'Push friend card',
   FRIEND_MAP: 'Friend map',
   ADD_BLACKLIST: 'Add to blacklist',

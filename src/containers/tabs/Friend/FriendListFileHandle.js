@@ -142,8 +142,12 @@ export default class FriendListFileHandle {
         RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
           () => {
             FriendListFileHandle.upload()
-            if (FriendListFileHandle.refreshCallback)
+            if (FriendListFileHandle.refreshCallback) {
               FriendListFileHandle.refreshCallback(true)
+            }
+            if (callback) {
+              callback(true)
+            }
           },
         )
       }
@@ -171,7 +175,11 @@ export default class FriendListFileHandle {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
-        friend.markName = name
+        if (name !== '') {
+          friend.markName = name
+        } else {
+          friend.markName = friend.name
+        }
         break
       }
     }
@@ -201,27 +209,6 @@ export default class FriendListFileHandle {
     FriendListFileHandle.saveHelper(friendsStr)
   }
 
-  // static modifyGroupList(id, name, callback) {
-  //   for (let key in FriendListFileHandle.friends.groupInfo) {
-  //     let friend = FriendListFileHandle.friends.groupInfo[key]
-  //     if (id === friend.id) {
-  //       friend.groupName = name
-  //       break
-  //     }
-  //   }
-  //
-  //   FriendListFileHandle.friends['rev'] += 1
-  //
-  //   let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-  //   //写如本地
-  //   RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
-  //     //上传
-  //     FriendListFileHandle.upload()
-  //     if (callback) callback(true)
-  //   })
-  // }
-
-  // eslint-disable-next-line
   static findFromFriendList(id) {
     let bFound
     if (FriendListFileHandle.friends) {
@@ -246,6 +233,17 @@ export default class FriendListFileHandle {
     return isFriend
   }
 
+  static getFriend(id) {
+    if (FriendListFileHandle.friends) {
+      for (let key in FriendListFileHandle.friends.userInfo) {
+        if (FriendListFileHandle.friends.userInfo[key].id === id) {
+          return FriendListFileHandle.friends.userInfo[key]
+        }
+      }
+    }
+    return undefined
+  }
+
   static findFromGroupList(id) {
     let bFound
     if (FriendListFileHandle.friends) {
@@ -268,9 +266,10 @@ export default class FriendListFileHandle {
         }
       }
     }
+    return undefined
   }
 
-  // eslint-disable-next-line
+  // 添加群
   static addToGroupList(obj) {
     let bFound = FriendListFileHandle.findFromGroupList(obj.id)
 
@@ -288,7 +287,7 @@ export default class FriendListFileHandle {
       FriendListFileHandle.saveHelper(friendsStr)
     }
   }
-  // eslint-disable-next-line
+  // 删除群
   static delFromGroupList(id, callback) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
@@ -302,12 +301,17 @@ export default class FriendListFileHandle {
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
     FriendListFileHandle.saveHelper(friendsStr)
+
+    callback && callback()
   }
+  //更改群名
   static modifyGroupList(id, name) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
-        friend.groupName = name
+        if (name !== '') {
+          friend.groupName = name
+        }
         break
       }
     }
@@ -319,5 +323,28 @@ export default class FriendListFileHandle {
       friendsStr,
       FriendListFileHandle.refreshMessageCallback,
     )
+  }
+
+  static addGroupMember(groupId, user) {
+    let group = FriendListFileHandle.getGroup(groupId)
+    if (group) {
+      group.members.push(user)
+      let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+      FriendListFileHandle.saveHelper(friendsStr)
+    }
+  }
+
+  static removeGroupMember(groupId, userId) {
+    let group = FriendListFileHandle.getGroup(groupId)
+    if (group) {
+      for (let key in group.members) {
+        if (group.members[key].id === userId) {
+          group.members.splice(key, 1)
+          let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+          FriendListFileHandle.saveHelper(friendsStr)
+          break
+        }
+      }
+    }
   }
 }

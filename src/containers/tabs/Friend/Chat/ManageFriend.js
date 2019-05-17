@@ -6,6 +6,7 @@ import NavigationService from '../../../NavigationService'
 import TouchableItemView from '../TouchableItemView'
 import { getThemeAssets } from '../../../../assets'
 import { scaleSize } from '../../../../utils'
+import FriendListFileHandle from '../FriendListFileHandle'
 
 class ManageFriend extends Component {
   props: {
@@ -19,6 +20,7 @@ class ManageFriend extends Component {
     this.user = this.props.navigation.getParam('user')
     this.targetUser = this.props.navigation.getParam('targetUser')
     this.language = this.props.navigation.getParam('language')
+    this.chat = this.props.navigation.getParam('chat')
     this.state = {
       contacts: [],
     }
@@ -29,7 +31,6 @@ class ManageFriend extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.targetUser['title'],
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -44,6 +45,7 @@ class ManageFriend extends Component {
       <ScrollView>
         <TouchableItemView
           item={{
+            //发消息
             image: getThemeAssets().friend.friend_message,
             text: getLanguage(this.language).Friends.SEND_MESSAGE,
           }}
@@ -53,11 +55,24 @@ class ManageFriend extends Component {
         />
         <TouchableItemView
           item={{
+            //设置备注
             image: getThemeAssets().friend.friend_edit,
             text: getLanguage(this.language).Friends.SET_MARKNAME,
           }}
-          onPress={() => {}}
+          onPress={() => {
+            NavigationService.navigate('InputPage', {
+              placeholder: FriendListFileHandle.getFriend(this.targetUser.id)
+                .markName,
+              headerTitle: getLanguage(this.language).Friends.SET_MARKNAME,
+              cb: value => {
+                FriendListFileHandle.modifyFriendList(this.targetUser.id, value)
+                this.chat && this.chat.onFriendListChanged()
+                NavigationService.goBack('InputPage')
+              },
+            })
+          }}
         />
+        {/* {删除好友} */}
         <TouchableOpacity
           style={{ alignItems: 'center', paddingVertical: scaleSize(20) }}
           onPress={() => {}}
