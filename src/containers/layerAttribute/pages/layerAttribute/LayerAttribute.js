@@ -50,7 +50,7 @@ export default class LayerAttribute extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.type = params && params.type
+    this.type = params && params.type || GLOBAL.Type
     let checkData = this.checkToolIsViable()
     this.state = {
       attributes: {
