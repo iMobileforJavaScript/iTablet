@@ -7,6 +7,7 @@
 import React from 'react'
 import { TouchableOpacity, View, Animated, FlatList, Text } from 'react-native'
 import { color } from '../../../tabs/Mine/MyService/Styles'
+import { HEADER_HEIGHT } from '../../../../components/Header/styles'
 import styles from '../styles'
 
 export default class SelectList extends React.Component {
@@ -23,7 +24,8 @@ export default class SelectList extends React.Component {
     this.height = this.props.height
     this.state = {
       bottom: new Animated.Value(-this.height),
-      boxHeight: new Animated.Value(-this.props.device.height),
+      boxOpacity: new Animated.Value(0),
+      boxBottom: new Animated.Value(HEADER_HEIGHT - this.props.device.height),
     }
   }
 
@@ -33,9 +35,13 @@ export default class SelectList extends React.Component {
         toValue: 0,
         duration: 150,
       }),
-      Animated.timing(this.state.boxHeight, {
-        toValue: 0,
+      Animated.timing(this.state.boxOpacity, {
+        toValue: 0.5,
         duration: 150,
+      }),
+      Animated.timing(this.state.boxBottom, {
+        toValue: 0,
+        duration: 10,
       }),
     ]
     Animated.parallel(anims).start()
@@ -47,9 +53,13 @@ export default class SelectList extends React.Component {
         toValue: -this.height,
         duration: 150,
       }),
-      Animated.timing(this.state.boxHeight, {
-        toValue: -this.props.device.height,
+      Animated.timing(this.state.boxOpacity, {
+        toValue: 0,
         duration: 150,
+      }),
+      Animated.timing(this.state.boxBottom, {
+        toValue: HEADER_HEIGHT - this.props.device.height,
+        duration: 10,
       }),
     ]
     Animated.parallel(anims).start()
@@ -72,8 +82,8 @@ export default class SelectList extends React.Component {
       <View>
         <TouchableOpacity
           onPress={async () => {
-            let isSucess = await item.action()
-            if (isSucess) this.props.callback(item.value)
+            let isSuccess = await item.action()
+            if (isSuccess) this.props.callback(item.value)
           }}
         >
           <View style={styles.row}>
@@ -85,16 +95,17 @@ export default class SelectList extends React.Component {
     )
   }
   render() {
+    let height = this.props.device.height - HEADER_HEIGHT + 2
     return (
       <View>
         <Animated.View
           style={{
             width: this.props.device.width,
-            height: this.props.device.height,
+            height: height,
             position: 'absolute',
             backgroundColor: color.gray1,
-            opacity: 0.5,
-            bottom: this.state.boxHeight,
+            opacity: this.state.boxOpacity,
+            bottom: this.state.boxBottom,
           }}
         >
           <TouchableOpacity

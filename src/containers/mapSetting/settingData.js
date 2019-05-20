@@ -1,5 +1,6 @@
 import { getLanguage } from '../../language/index'
 import { SMap } from 'imobile_for_reactnative'
+import { CoordSysData } from './secondMapSettings/CoordSysData'
 function getMapSettings() {
   let data = [
     {
@@ -155,11 +156,16 @@ const basicSettings = () => [
     value: false,
     iconType: 'switch',
   },
-  // {
-  //   title:'显示指北针',
-  //   value:false,
-  //   iconType:'switch',
-  // },
+  {
+    title: '手势旋转',
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    title: '手势俯仰',
+    value: false,
+    iconType: 'switch',
+  },
   {
     title: '旋转角度',
     value: '0°',
@@ -225,7 +231,8 @@ const rangeSettings = () => [
   },
   {
     title: '当前窗口四至范围',
-    iconType: 'text',
+    value: '',
+    iconType: 'arrow',
   },
 ]
 //坐标系设置
@@ -243,6 +250,45 @@ const coordinateSystemSettings = () => [
   {
     title: '转换参数',
     iconType: 'arrow',
+  },
+]
+const coordinateData = () => [
+  {
+    title: '平面坐标系',
+    visible: true,
+    data: [],
+  },
+  {
+    title: '地理坐标系',
+    visible: true,
+    data: [
+      {
+        name: 'GCS_CHINA_2000',
+        value: CoordSysData.GCS_CHINA_2000,
+      },
+      {
+        name: 'GCS_WGS_1984',
+        value: CoordSysData.GCS_WGS_1984,
+      },
+      {
+        name: 'Xi-An 1980 China',
+        value: CoordSysData.Xi_An_1980_China,
+      },
+    ],
+  },
+  {
+    title: '投影坐标系',
+    visible: true,
+    data: [
+      {
+        name: 'Beijing54_Albers_Equal_Area',
+        value: CoordSysData.Beijing54_Albers_Equal_Area,
+      },
+      {
+        name: 'Sphere_Mercator',
+        value: CoordSysData.Sphere_Mercator,
+      },
+    ],
   },
 ]
 //高级设置
@@ -313,31 +359,31 @@ const colorMode = () => [
   {
     value: '默认色彩模式',
     action: () => {
-      return SMap.setColorMode(0)
+      return SMap.setMapColorMode(0)
     },
   },
   {
     value: '黑白模式',
     action: () => {
-      return SMap.setColorMode(1)
+      return SMap.setMapColorMode(1)
     },
   },
   {
     value: '灰度模式',
     action: () => {
-      return SMap.setColorMode(2)
+      return SMap.setMapColorMode(2)
     },
   },
   {
     value: '黑白反色模式',
     action: () => {
-      return SMap.setColorMode(3)
+      return SMap.setMapColorMode(3)
     },
   },
   {
     value: '黑白反色，其他颜色不变',
     action: () => {
-      return SMap.setColorMode(4)
+      return SMap.setMapColorMode(4)
     },
   },
 ]
@@ -347,6 +393,7 @@ export {
   basicSettings,
   rangeSettings,
   coordinateSystemSettings,
+  coordinateData,
   advancedSettings,
   histogramSettings,
   colorMode,
