@@ -15,15 +15,18 @@ export default class LoadServer extends Component {
     this.baseMaps = params.baseMaps || []
     this.setBaseMap = params.setBaseMap
     this.user = params.user
-    if(params.item){
+    if (params.item) {
       //修改原来 add xiezhy
-      this.item = {server:params.item.DSParams.server,name: params.item.mapName}
+      this.item = {
+        server: params.item.DSParams.server,
+        name: params.item.mapName,
+      }
       this.state = {
         server: params.item.DSParams.server,
         name: params.item.mapName,
       }
-    }else{
-      this.item  = undefined
+    } else {
+      this.item = undefined
       this.state = {
         server: '',
         name: '',
@@ -49,29 +52,45 @@ export default class LoadServer extends Component {
               //'请输入服务地址')
               return
             }
+            let alias = this.state.name
+            let layerName =
+              this.state.server.substring(
+                this.state.server.lastIndexOf('/') + 1,
+                this.state.server.length,
+              ) +
+              '@' +
+              alias //this.state.server.lastIndexOf('/')
             let item = {
               type: 'Datasource',
               DSParams: {
                 server: this.state.server,
                 engineType: 225,
-                alias: 'userAdd_'+this.state.name,
+                alias: alias,
               },
               layerIndex: 0,
               mapName: this.state.name,
-              userAdd:true,
+              layerName: layerName,
+              userAdd: true,
             }
             let list = this.baseMaps
             //add xiezhy
-            if(thisHandle.item != undefined){
-              for(let i=0,n=list.length;i<n;i++){
-                if(list[i].DSParams.server===thisHandle.item.server && list[i].mapName===thisHandle.item.name){
-                  list.splice(i,1)
+            if (thisHandle.item != undefined) {
+              for (let i = 0, n = list.length; i < n; i++) {
+                if (
+                  list[i].DSParams.server === thisHandle.item.server &&
+                  list[i].mapName === thisHandle.item.name
+                ) {
+                  list.splice(i, 1)
                   break
                 }
               }
             }
             list.push(item)
-            this.setBaseMap && this.setBaseMap({userId:this.user.currentUser.userId,baseMaps:list})
+            this.setBaseMap &&
+              this.setBaseMap({
+                userId: this.user.currentUser.userId,
+                baseMaps: list,
+              })
             NavigationService.goBack()
           } catch (error) {
             Toast.show(getLanguage(global.language).Prompt.SAVE_FAILED)
@@ -102,7 +121,7 @@ export default class LoadServer extends Component {
         }}
       >
         <TextInput
-          value = {this.state.name}
+          value={this.state.name}
           placeholder={getLanguage(global.language).Profile.MAP_NAME}
           // {'地图名称'}
           style={styles.textInput}
@@ -110,7 +129,7 @@ export default class LoadServer extends Component {
           onChangeText={text => this.setState({ name: text })}
         />
         <TextInput
-          value = {this.state.server}
+          value={this.state.server}
           placeholder={
             getLanguage(global.language).Profile.ENTER_SERVICE_ADDRESS
           }

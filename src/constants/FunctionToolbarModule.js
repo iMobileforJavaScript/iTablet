@@ -47,128 +47,128 @@ const layerAdd = [
   },
 ]
 
-const BotMap = [
-  {
-    title: 'Google',
-    data: [
-      {
-        title: 'Google RoadMap',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.Google, 0)
-        },
-      },
-      {
-        title: 'Google Satellite',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.Google, 1)
-        },
-      },
-      {
-        title: 'Google Terrain',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.Google, 2)
-        },
-      },
-      {
-        title: 'Google Hybrid',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.Google, 3)
-        },
-      },
-    ],
-  },
-  {
-    title: 'MapWorld',
-    data: [
-      // {
-      //   title: '全球矢量地图（经纬度）',
-      //   action: () => {
-      //     OpenData(ConstOnline.TDJWD,0)
-      //   },
-      // },
-      {
-        title: '全球矢量地图',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.TD, 0)
-        },
-      },
-      // {
-      //   title: '全球影像地图服务（经纬度）',
-      //   action: () => {
-      //     OpenData(ConstOnline.TDYX,0)
-      //   },
-      // },
-      {
-        title: '全球影像地图服务',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.TDYXM, 0)
-        },
-      },
-      // {
-      //   title: '全球地形晕渲地图服务（经纬度）',
-      //   action: () => {
-      //     OpenData(ConstOnline.TDQ,0)
-      //   },
-      // },
-    ],
-  },
-  {
-    title: 'Baidu',
-    data: [
-      {
-        title: 'Baidu Map',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.Baidu, 0)
-        },
-      },
-    ],
-  },
-  {
-    title: 'OSM',
-    data: [
-      {
-        title: 'Standard',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.OSM, 0)
-        },
-      },
-      {
-        title: 'CycleMap',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.OSM, 1)
-        },
-      },
-      {
-        title: 'Transport',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.OSM, 2)
-        },
-      },
-    ],
-  },
-  {
-    title: 'SuperMapCloud',
-    data: [
-      {
-        title: 'quanguo',
-        image: require('../assets/mapToolbar/list_type_map_black.png'),
-        action: () => {
-          OpenData(ConstOnline.SuperMapCloud, 0)
-        },
-      },
-    ],
-  },
-]
+// const BotMap = [
+//   {
+//     title: 'Google',
+//     data: [
+//       {
+//         title: 'Google RoadMap',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.Google, 0)
+//         },
+//       },
+//       {
+//         title: 'Google Satellite',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.Google, 1)
+//         },
+//       },
+//       {
+//         title: 'Google Terrain',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.Google, 2)
+//         },
+//       },
+//       {
+//         title: 'Google Hybrid',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.Google, 3)
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     title: 'MapWorld',
+//     data: [
+//       // {
+//       //   title: '全球矢量地图（经纬度）',
+//       //   action: () => {
+//       //     OpenData(ConstOnline.TDJWD,0)
+//       //   },
+//       // },
+//       {
+//         title: '全球矢量地图',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.TD, 0)
+//         },
+//       },
+//       // {
+//       //   title: '全球影像地图服务（经纬度）',
+//       //   action: () => {
+//       //     OpenData(ConstOnline.TDYX,0)
+//       //   },
+//       // },
+//       {
+//         title: '全球影像地图服务',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.TDYXM, 0)
+//         },
+//       },
+//       // {
+//       //   title: '全球地形晕渲地图服务（经纬度）',
+//       //   action: () => {
+//       //     OpenData(ConstOnline.TDQ,0)
+//       //   },
+//       // },
+//     ],
+//   },
+//   {
+//     title: 'Baidu',
+//     data: [
+//       {
+//         title: 'Baidu Map',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.Baidu, 0)
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     title: 'OSM',
+//     data: [
+//       {
+//         title: 'Standard',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.OSM, 0)
+//         },
+//       },
+//       {
+//         title: 'CycleMap',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.OSM, 1)
+//         },
+//       },
+//       {
+//         title: 'Transport',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.OSM, 2)
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     title: 'SuperMapCloud',
+//     data: [
+//       {
+//         title: 'quanguo',
+//         image: require('../assets/mapToolbar/list_type_map_black.png'),
+//         action: () => {
+//           OpenData(ConstOnline.SuperMapCloud, 0)
+//         },
+//       },
+//     ],
+//   },
+// ]
 
 const layerManagerData = [
   {
@@ -211,26 +211,26 @@ const layerManagerData = [
     type: DatasetType.IMAGE,
     themeType: -1,
   },
-  {
-    title: '全球矢量地图',
-    action: () => {
-      return OpenData(ConstOnline.TD, 0)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
-  {
-    title: '全球影像地图服务',
-    action: () => {
-      return OpenData(ConstOnline.TDYXM, 0)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
+  // {
+  //   title: '全球矢量地图',
+  //   action: () => {
+  //     return OpenData(ConstOnline.TD, 0)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
+  // {
+  //   title: '全球影像地图服务',
+  //   action: () => {
+  //     return OpenData(ConstOnline.TDYXM, 0)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
   {
     title: 'Baidu Map',
     action: () => {
@@ -271,28 +271,28 @@ const layerManagerData = [
     type: DatasetType.IMAGE,
     themeType: -1,
   },
-  {
-    title: 'quanguo',
-    action: () => {
-      return OpenData(ConstOnline.SuperMapCloud, 0)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
+  // {
+  //   title: 'quanguo',
+  //   action: () => {
+  //     return OpenData(ConstOnline.SuperMapCloud, 0)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
 ]
 
-const openData = [
-  {
-    title: '地图',
-    data: [
-      {
-        title: '选择目录',
-      },
-    ],
-  },
-]
+// const openData = [
+//   {
+//     title: '地图',
+//     data: [
+//       {
+//         title: '选择目录',
+//       },
+//     ],
+//   },
+// ]
 
 const line = param => [
   {
@@ -1350,9 +1350,8 @@ const legendMenuInfoNotVisible = param => [
 ]
 export {
   layerAdd,
-  BotMap,
+  // BotMap,
   layerManagerData,
-  openData,
   OpenData,
   line,
   point,

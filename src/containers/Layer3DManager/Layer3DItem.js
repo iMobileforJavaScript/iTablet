@@ -40,7 +40,11 @@ export default class Layer3DItem extends Component {
   changeVisible = async () => {
     let newState = this.state
     newState.visible = !this.state.visible
-    await SScene.setVisible(this.state.name, newState.visible)
+    if (this.state.type === 'Terrain') {
+      await SScene.setTerrainLayerListVisible(this.state.name, newState.visible)
+    } else {
+      await SScene.setVisible(this.state.name, newState.visible)
+    }
     this.setState(newState)
   }
 

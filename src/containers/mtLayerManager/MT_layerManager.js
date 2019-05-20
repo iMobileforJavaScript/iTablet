@@ -62,10 +62,20 @@ export default class MT_layerManager extends React.Component {
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
-    this.curUserBaseMaps = this.props.baseMaps[this.props.user.currentUser.userId]
-    if(!this.curUserBaseMaps){
+    this.curUserBaseMaps = this.props.baseMaps[
+      this.props.user.currentUser.userId
+    ]
+    if (!this.curUserBaseMaps) {
       this.curUserBaseMaps = this.props.baseMaps['default']
     }
+
+    let userAddBase = []
+    for (let i = 0, n = this.curUserBaseMaps.length; i < n; i++) {
+      if (this.curUserBaseMaps[i].userAdd) {
+        userAddBase.push(this.curUserBaseMaps[i].layerName)
+      }
+    }
+    LayerUtils.setBaseMap(userAddBase)
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -1017,7 +1027,7 @@ export default class MT_layerManager extends React.Component {
     return (
       <LayerManager_tolbar
         language={this.props.language}
-        curUserBaseMaps = {this.curUserBaseMaps}
+        curUserBaseMaps={this.curUserBaseMaps}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}

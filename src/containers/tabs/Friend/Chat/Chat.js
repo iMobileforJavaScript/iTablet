@@ -30,6 +30,7 @@ import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
+import FriendListFileHandle from '../FriendListFileHandle'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -43,6 +44,12 @@ class Chat extends React.Component {
   }
   constructor(props) {
     super(props)
+    this.friend = this.props.navigation.getParam('friend')
+    this.targetUser = this.props.navigation.getParam('target')
+    this.curUser = this.props.navigation.getParam('curUser')
+    this.friend.setCurChat(this)
+    this._isMounted = false
+
     this.state = {
       messages: [],
       loadEarlier: true,
@@ -52,14 +59,9 @@ class Chat extends React.Component {
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
       showInformSpot: false,
       chatBottom: 0,
+      title: this.targetUser.title,
     }
 
-    this.friend = this.props.navigation.getParam('friend')
-    this.targetUser = this.props.navigation.getParam('target')
-    this.curUser = this.props.navigation.getParam('curUser')
-    this.friend.setCurChat(this)
-
-    this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
     this.onSendLocation = this.onSendLocation.bind(this)
@@ -73,6 +75,12 @@ class Chat extends React.Component {
     this.renderTicks = this.renderTicks.bind(this)
   }
 
+  onFriendListChanged = () => {
+    let newTitle = this.isGroupChat()
+      ? FriendListFileHandle.getGroup(this.targetUser.id).groupName
+      : FriendListFileHandle.getFriend(this.targetUser.id).markName
+    this.setState({ title: newTitle })
+  }
   componentDidMount() {
     let curMsg = []
 
@@ -415,7 +423,7 @@ class Chat extends React.Component {
         <Container
           ref={ref => (this.container = ref)}
           headerProps={{
-            title: this.targetUser['title'],
+            title: this.state.title,
             withoutBack: false,
             navigation: this.props.navigation,
             headerRight: (
@@ -429,6 +437,7 @@ class Chat extends React.Component {
                     targetUser: this.targetUser,
                     friend: this.friend,
                     language: global.language,
+                    chat: this,
                   })
                 }}
                 style={styles.moreView}

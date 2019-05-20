@@ -63,7 +63,8 @@ const Friends = {
   PERMISSION_DENIED_CONTACT: '请在手机的设置中打开iTablet访问通讯录的权限',
   //ManageFriend/Group
   SEND_MESSAGE: '发消息',
-  SET_MARKNAME: '设置备注名/修改备注名',
+  SET_MARKNAME: '修改备注名',
+  SET_GROUPNAME: '修改群名称',
   PUSH_FRIEND_CARD: '推送好友名片',
   FRIEND_MAP: '好友地图',
   ADD_BLACKLIST: '加入黑名单',
