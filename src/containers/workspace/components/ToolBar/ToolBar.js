@@ -11,12 +11,12 @@ import {
   ConstToolType,
   ConstPath,
   ConstOnline,
-  BotMap,
+  // BotMap,
   line,
   point,
   region,
   grid,
-  openData,
+  // openData,
   lineColorSet,
   pointColorSet,
   legendColor,
@@ -272,7 +272,7 @@ export default class ToolBar extends React.PureComponent {
         buttons = [ToolbarBtnType.CANCEL_2]
         break
       case ConstToolType.MAP_BASE:
-        data = BotMap
+        // data = BotMap
         break
       case ConstToolType.MAP3D_BASE:
         data = Map3DBaseMapList.baseListData
@@ -304,7 +304,7 @@ export default class ToolBar extends React.PureComponent {
         //     showData: true,
         //   })
         // }.bind(this))
-        data = openData
+        // data = openData
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_SYMBOL:
