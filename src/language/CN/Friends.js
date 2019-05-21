@@ -45,7 +45,7 @@ const Friends = {
   //FriendGroup
   LOADING: '刷新中...',
   DEL_GROUP: '删除群聊',
-  DEL_GROUP_CONFIRM: '将该群聊删除?',
+  DEL_GROUP_CONFIRM: '清空消息并退出群聊?',
   //Chat
   IMPORT_DATA: '数据导入中',
   IMPORT_SUCCESS: '导入成功',
