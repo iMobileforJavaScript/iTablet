@@ -46,6 +46,12 @@ export default class JPushService {
       },
     }
 
+    if (__DEV__) {
+      request.options = {
+        apns_production: false,
+      }
+    }
+
     let url = 'https://api.jpush.cn/v3/push'
     let extraData = {
       headers: {
