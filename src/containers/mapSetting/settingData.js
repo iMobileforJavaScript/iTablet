@@ -235,6 +235,28 @@ const rangeSettings = () => [
     iconType: 'arrow',
   },
 ]
+const fourRanges = () => [
+  {
+    title: '左',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: '下',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: '右',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: '上',
+    value: '',
+    iconType: 'arrow',
+  },
+]
 //坐标系设置
 const coordinateSystemSettings = () => [
   {
@@ -397,4 +419,5 @@ export {
   advancedSettings,
   histogramSettings,
   colorMode,
+  fourRanges,
 }

@@ -24,6 +24,7 @@ import {
   coordinateData,
   advancedSettings,
   histogramSettings,
+  fourRanges,
   colorMode,
 } from '../settingData'
 import { SMap } from 'imobile_for_reactnative'
@@ -84,6 +85,9 @@ export default class secondMapSettings extends Component {
         break
       case '坐标系':
         data = await coordinateData()
+        break
+      case '当前窗口四至范围':
+        data = await this.getFourRangeData()
         break
     }
     this.setState({
@@ -159,6 +163,16 @@ export default class secondMapSettings extends Component {
     return data
   }
 
+  //
+  getFourRangeData = async () => {
+    let data = await fourRanges()
+    let viewBounds = await SMap.getMapViewBounds()
+    data[0].value = this.formatNumber(viewBounds.left)
+    data[1].value = this.formatNumber(viewBounds.bottom)
+    data[2].value = this.formatNumber(viewBounds.right)
+    data[3].value = this.formatNumber(viewBounds.top)
+    return data
+  }
   //获取柱状图风格数据
   getHistogramData = async () => {
     let data = await histogramSettings()
@@ -211,13 +225,14 @@ export default class secondMapSettings extends Component {
     }
   }
 
-  onItemPress = title => {
+  //arrow item点击事件
+  onItemPress = ({ title, index }) => {
     let data = this.state.data.concat()
     switch (title) {
       case '旋转角度':
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          placeholder: data[2].value.replace('°', ''),
+          placeholder: data[index].value.replace('°', ''),
           cb: async value => {
             let isSetSuccess = false
             if (value >= -360 && value <= 360) {
@@ -227,7 +242,7 @@ export default class secondMapSettings extends Component {
             }
 
             if (isSetSuccess) {
-              data[2].value = value + '°'
+              data[index].value = value + '°'
               this.setState(
                 {
                   data,
@@ -249,14 +264,14 @@ export default class secondMapSettings extends Component {
       case '比例尺':
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          placeholder: data[1].value.replace('1:', ''),
+          placeholder: data[index].value.replace('1:', ''),
           cb: async newValue => {
             let isSuccess = false
             let regExp = /^\d+(\.\d+)?$/
             let data = this.state.data.concat()
             if (newValue.match(regExp)) {
               isSuccess = await SMap.setMapScale(1 / newValue)
-              data[1].value = `1:${this.formatNumber(newValue)}`
+              data[index].value = `1:${this.formatNumber(newValue)}`
             } else {
               Toast.show('比例输入错误!')
             }
@@ -268,7 +283,6 @@ export default class secondMapSettings extends Component {
         })
         break
       case '中心点':
-      case '柱状图风格':
         this.props.navigation.navigate('secondMapSettings', {
           title,
           cb: this.saveInput,
@@ -279,6 +293,18 @@ export default class secondMapSettings extends Component {
           title,
           cb: this.setMapCoordinate,
         })
+        break
+      case '当前窗口四至范围':
+        this.props.navigation.navigate('secondMapSettings', {
+          title,
+        })
+        break
+
+      //四至范围点击 跳InputPage
+      case '左':
+      case '下':
+      case '右':
+      case '上':
         break
     }
   }
@@ -309,7 +335,7 @@ export default class secondMapSettings extends Component {
   //设置地图背景色回调
   setColorBlock = color => {
     let data = this.state.data.concat()
-    data[4].value = color
+    data[6].value = color
     this.setState({
       data,
     })
@@ -318,7 +344,7 @@ export default class secondMapSettings extends Component {
   //设置地图颜色模式回调
   setMapColorMode = value => {
     let data = this.state.data.concat()
-    data[3].value = value
+    data[5].value = value
     this.setState({
       data,
     })
@@ -371,11 +397,13 @@ export default class secondMapSettings extends Component {
   }
 
   //渲染带more按钮的行
-  renderArrowItem = item => {
+  renderArrowItem = (item, index) => {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
     return (
       <View>
-        <TouchableOpacity onPress={() => this.onItemPress(item.title)}>
+        <TouchableOpacity
+          onPress={() => this.onItemPress({ title: item.title, index })}
+        >
           <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
             {item.value !== undefined && item.title === '背景颜色' && (
@@ -472,7 +500,7 @@ export default class secondMapSettings extends Component {
       case 'switch':
         return this.renderSwitchItem(item, index)
       case 'arrow':
-        return this.renderArrowItem(item)
+        return this.renderArrowItem(item, index)
       case 'text':
         return this.renderTextItem(item)
     }
