@@ -45,6 +45,7 @@ import {
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
+import { setGestureDetectorListener } from '../../../GestureDetectorListener'
 import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
@@ -941,12 +942,18 @@ export default class MapView extends React.Component {
         this.setLoading(false)
       }
       this.showMarker &&
-        SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude,markerTag)
+        SMap.showMarker(
+          this.showMarker.longitude,
+          this.showMarker.latitude,
+          markerTag,
+        )
       SMap.openTaggingDataset(this.props.user.currentUser.userName)
 
       GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
         this.props.user.currentUser.userName,
       )
+      setGestureDetectorListener({ ...this.props })
+      GLOBAL.TouchType = ConstToolType.NORMAL
     }.bind(this)())
   }
 
@@ -1158,7 +1165,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
-    this.fullMap = isFull
+    this.fullMap = !full
   }
 
   /** 显示量算结果 **/

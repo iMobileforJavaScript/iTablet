@@ -269,6 +269,16 @@ export default class FriendListFileHandle {
     return undefined
   }
 
+  static getGroupMember(groupId, userId) {
+    let group = FriendListFileHandle.getGroup(groupId)
+    for (let key in group.members) {
+      if (group.members[key].id === userId) {
+        return group.members[key]
+      }
+    }
+    return undefined
+  }
+
   // 添加群
   static addToGroupList(obj) {
     let bFound = FriendListFileHandle.findFromGroupList(obj.id)
