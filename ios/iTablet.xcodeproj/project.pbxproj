@@ -116,7 +116,7 @@
 		D83ED3BE21704BDB00683BB3 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83ED3BB21704BDB00683BB3 /* VCMain.storyboard */; };
 		D83ED3BF21704BDB00683BB3 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83ED3BD21704BDB00683BB3 /* VCViewController.m */; };
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
-		DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8462082C41D9417AA6132357 /* UserNotifications.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8462082C41D9417AA6132357 /* UserNotifications.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -596,6 +596,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */,
 				0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */,
 				0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */,
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
@@ -646,7 +647,6 @@
 				4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */,
 				53FE59234E8647D7AC780A14 /* libRCTJPushModule.a in Frameworks */,
 				C61FD8C4BF344DA98D024D8B /* libz.tbd in Frameworks */,
-				DB2C77E022BF4F78B2A323D4 /* UserNotifications.framework in Frameworks */,
 				053CDD8FCC7C4CC6A26CD91B /* CFNetwork.framework in Frameworks */,
 				251A29C627974FD188F8B53D /* CoreFoundation.framework in Frameworks */,
 				46ACF059CE1F4179A95098F9 /* libresolv.tbd in Frameworks */,
@@ -1830,6 +1830,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -1925,6 +1926,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s arm64";

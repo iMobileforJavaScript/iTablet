@@ -86,7 +86,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"localhost"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"10.10.2.78"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
@@ -129,6 +129,11 @@ static NSString* g_sampleCodeName = @"#";;
   NSSetUncaughtExceptionHandler(&UncaughtExceptionHandler);
   //判断上次是否有崩溃信息
   initCrash();
+  
+  //初始化极光推送
+  JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+  entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
+  [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
   
   return YES;
 }

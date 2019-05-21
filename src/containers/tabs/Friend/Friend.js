@@ -83,8 +83,8 @@ export default class Friend extends Component {
   componentDidMount() {
     this.connectService()
     this.addFileListener()
-    Platform.OS === 'android' &&
-      JPushService.init(this.props.user.currentUser.userId)
+    // Platform.OS === 'android' &&
+    JPushService.init(this.props.user.currentUser.userId)
   }
 
   componentDidUpdate(prevProps) {
@@ -94,8 +94,8 @@ export default class Friend extends Component {
     ) {
       this.disconnectService()
       this.connectService()
-      Platform.OS === 'android' &&
-        JPushService.init(this.props.user.currentUser.userId)
+      // Platform.OS === 'android' &&
+      JPushService.init(this.props.user.currentUser.userId)
     }
     if (
       JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
