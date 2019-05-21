@@ -45,7 +45,8 @@ const Friends = {
   //FriendGroup
   LOADING: 'Loading...',
   DEL_GROUP: 'Delete group',
-  DEL_GROUP_CONFIRM: 'Delete this group chat?',
+  DEL_GROUP_CONFIRM:
+    'Would you like to clear chat history and leave this group?',
   //Chat
   IMPORT_DATA: 'Importing data...',
   IMPORT_SUCCESS: 'Import success',

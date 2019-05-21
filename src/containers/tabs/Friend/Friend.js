@@ -216,7 +216,7 @@ export default class Friend extends Component {
         groupName: groupName, //群组消息带个群组名
       },
       members: members,
-      type: 912,
+      type: MSGConstant.MSG_CREATE_GROUP,
       time: time,
       message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
@@ -400,7 +400,7 @@ export default class Friend extends Component {
       ) {
         bUnReadMsg = true
       }
-      if (messageObj.type === 2) {
+      if (this.isGroupMsg(message['message'])) {
         msgId = this.getMsgId(messageObj.user.groupID)
       } else {
         msgId = this.getMsgId(messageObj.user.id)
@@ -469,6 +469,26 @@ export default class Friend extends Component {
         if (messageObj.type === MSGConstant.MSG_REJECT) {
           bSysStore = true
           bSysShow = true
+        }
+        switch (messageObj.type) {
+          case MSGConstant.MSG_REMOVE_MEMBER:
+            if (
+              messageObj.message.user.id !== this.props.user.currentUser.userId
+            ) {
+              // bSysStore = true
+              // bSysShow = true
+              FriendListFileHandle.removeGroupMember(
+                messageObj.user.groupID,
+                messageObj.message.user.id,
+              )
+            } else {
+              // bSysStore = true
+              // bSysShow = true
+              //todo 自己被移除后的处理
+            }
+            break
+          default:
+            break
         }
       }
       //保存
