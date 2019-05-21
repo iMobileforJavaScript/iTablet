@@ -55,6 +55,7 @@ export default class Mine extends Component {
       this.props.setUser({
         userName: 'Customer',
         userType: UserType.PROBATION_USER,
+        // userId: 0,
       })
     }
   }

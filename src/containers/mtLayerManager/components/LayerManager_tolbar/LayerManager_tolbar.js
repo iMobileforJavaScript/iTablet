@@ -130,7 +130,12 @@ export default class LayerManager_tolbar extends React.Component {
         data = layereditsetting(global.language)
         break
       case ConstToolType.MAP_EDIT_MORE_STYLE:
-        data = layerManagerData
+        data = [
+          {
+            title: '',
+            data: layerManagerData,
+          },
+        ]
         break
       case ConstToolType.MAP3D_BASE:
         data = baseListData

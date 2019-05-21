@@ -4,6 +4,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import cn.jpush.reactnativejpush.JPushPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
 //import com.airbnb.android.react.maps.MapsPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new JPushPackage(true, true),
             new ReactNativeContacts(),
             new AMapGeolocationPackage(),
 //            new MapsPackage(),

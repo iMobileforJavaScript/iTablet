@@ -42,6 +42,7 @@ import ConstPath from '../../../constants/ConstPath'
 // eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
+import JPushService from './JPushService'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -82,6 +83,8 @@ export default class Friend extends Component {
   componentDidMount() {
     this.connectService()
     this.addFileListener()
+    Platform.OS === 'android' &&
+      JPushService.init(this.props.user.currentUser.userId)
   }
 
   componentDidUpdate(prevProps) {
@@ -91,6 +94,8 @@ export default class Friend extends Component {
     ) {
       this.disconnectService()
       this.connectService()
+      Platform.OS === 'android' &&
+        JPushService.init(this.props.user.currentUser.userId)
     }
     if (
       JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
@@ -178,11 +183,10 @@ export default class Friend extends Component {
       this.curChat.onReceiveProgress(value)
     }
   }
-  // eslint-disable-next-line
+
   createGroupTalk = members => {
     let ctime = new Date()
     let time = Date.parse(ctime)
-    // eslint-disable-next-line
 
     members.push({
       id: this.props.user.currentUser.userId,
@@ -192,17 +196,6 @@ export default class Friend extends Component {
     //服务绑定
     SMessageService.declareSession(members, groupId)
 
-    let msgObj = {
-      user: {
-        name: this.props.user.currentUser.nickname,
-        id: this.props.user.currentUser.userId,
-        groupID: groupId,
-      },
-      members: members,
-      type: 912,
-      time: time,
-      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
-    }
     let groupName = ''
     for (let i in members) {
       if (i > 3) break
@@ -215,17 +208,42 @@ export default class Friend extends Component {
       groupName: groupName,
       masterID: this.props.user.currentUser.userId,
     })
-    let msgStr = JSON.stringify(msgObj)
-    for (let i in members) {
-      this._sendMessage(msgStr, members[i].id, false)
+    let msgObj = {
+      user: {
+        name: this.props.user.currentUser.nickname,
+        id: this.props.user.currentUser.userId,
+        groupID: groupId,
+        groupName: groupName, //群组消息带个群组名
+      },
+      members: members,
+      type: 912,
+      time: time,
+      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
-
-    // console.warn(members + groupId)
+    let msgStr = JSON.stringify(msgObj)
+    this._sendMessage(msgStr, groupId, false)
   }
 
-  _sendMessage = (messageStr, talkId, bInform) => {
+  isGroupMsg = messageStr => {
+    let messageObj = JSON.parse(messageStr)
+    let type = messageObj.type
+    let isGroup = false
+    if (type === MSGConstant.MSG_GROUP) {
+      isGroup = true
+    } else if (type > 9) {
+      //大于2的都是系统消息
+      if (type > 910 && type < 920) {
+        //群组相关的系统消息
+        isGroup = true
+      }
+    }
+    return isGroup
+  }
+
+  _sendMessage = async (messageStr, talkId, bInform) => {
+    let bCon = true
     if (!g_connectService) {
-      SMessageService.connectService(
+      bCon = await SMessageService.connectService(
         MSGConstant.MSG_IP,
         MSGConstant.MSG_Port,
         MSGConstant.MSG_HostName,
@@ -233,19 +251,22 @@ export default class Friend extends Component {
         MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
-        .then(() => {
-          SMessageService.sendMessage(messageStr, talkId)
-        })
-        .catch(() => {
-          Toast.show(
-            getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
-          )
-        })
-      Toast.show(
-        getLanguage(this.props.language).Friends.MSG_SERVICE_NOT_CONNECT,
-      )
-    } else {
+    }
+    if (bCon) {
+      let talkIds = []
+      if (this.isGroupMsg(messageStr)) {
+        let members = FriendListFileHandle.getGroup(talkId).members
+        await SMessageService.declareSession(members, talkId)
+        for (let key in members) {
+          talkIds.push(members[key].id)
+        }
+      } else {
+        talkIds.push(talkId)
+      }
       SMessageService.sendMessage(messageStr, talkId)
+      JPushService.push(messageStr, talkIds)
+    } else {
+      Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
     }
     if (!bInform) {
       //todo

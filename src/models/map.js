@@ -397,12 +397,14 @@ const initialState = fromJS({
   maps: [],
   currentMap: {},
   workspace: {},
-  baseMaps: [
-    ConstOnline.Baidu,
-    ConstOnline.Google,
-    ConstOnline.OSM,
-    ConstOnline.SuperMapCloud,
-  ],
+  baseMaps: {
+    default: [
+      ConstOnline.Baidu,
+      ConstOnline.Google,
+      ConstOnline.OSM,
+      ConstOnline.SuperMapCloud,
+    ],
+  },
 })
 
 export default handleActions(
@@ -483,12 +485,17 @@ export default handleActions(
         return state.setIn(['currentMap'], fromJS(payload))
       }
     },
+    //payload {userId:id,baseMaps:[]}
     [`${SET_BASEMAP}`]: (state, { payload }) => {
-      let newData
-      if (payload.length > 0) {
-        newData = payload
+      let allBaseMap = state.toJS()
+      if (allBaseMap.baseMaps.hasOwnProperty(payload.userId) === false) {
+        allBaseMap.baseMaps[payload.userId] = []
       }
-      return state.setIn(['baseMaps'], fromJS(newData))
+      // let newData
+      if (payload.baseMaps.length > 0) {
+        allBaseMap.baseMaps[payload.userId] = payload.baseMaps
+      }
+      return state.setIn(['baseMaps'], fromJS(allBaseMap.baseMaps))
     },
     [REHYDRATE]: (state, { payload }) => {
       if (payload && payload.map) {

@@ -201,9 +201,11 @@ class Chat extends React.Component {
   onSend(messages = []) {
     let bGroup = 1
     let groupID = messages[0].user._id
+    let groupName = ''
     if (this.targetUser.id.indexOf('Group_') != -1) {
       bGroup = 2
       groupID = this.targetUser.id
+      groupName = this.targetUser.title
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
@@ -215,6 +217,7 @@ class Chat extends React.Component {
         name: messages[0].user.name,
         id: messages[0].user._id,
         groupID: groupID,
+        groupName: groupName,
       },
       time: time,
     }
@@ -236,9 +239,11 @@ class Chat extends React.Component {
     let positionStr = value.address
     let bGroup = 1
     let groupID = this.curUser.userId
+    let groupName = ''
     if (this.targetUser.id.indexOf('Group_') != -1) {
       bGroup = 2
       groupID = this.targetUser.id
+      groupName = this.targetUser.title
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
@@ -256,6 +261,7 @@ class Chat extends React.Component {
         name: this.curUser.nickname,
         id: this.curUser.userId,
         groupID: groupID,
+        groupName: groupName,
       },
       time: time,
     }
@@ -276,9 +282,11 @@ class Chat extends React.Component {
   async onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
+    let groupName = ''
     if (this.targetUser.id.indexOf('Group_') != -1) {
       bGroup = 2
       groupID = this.targetUser.id
+      groupName = this.targetUser.title
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
@@ -289,6 +297,7 @@ class Chat extends React.Component {
         name: this.curUser.nickname,
         id: this.curUser.userId,
         groupID: groupID,
+        groupName: groupName,
       },
       time: time,
       message: {
@@ -312,6 +321,7 @@ class Chat extends React.Component {
         name: this.curUser.nickname,
         id: this.curUser.userId,
         groupID: groupID,
+        groupName: groupName,
       },
       message: {
         type: MSGConstant.MSG_FILE_NOTIFY,

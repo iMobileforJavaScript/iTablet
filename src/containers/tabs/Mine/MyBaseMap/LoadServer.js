@@ -14,13 +14,28 @@ export default class LoadServer extends Component {
     const { params } = this.props.navigation.state
     this.baseMaps = params.baseMaps || []
     this.setBaseMap = params.setBaseMap
-    this.state = {
-      server: '',
-      name: '',
+    this.user = params.user
+    if (params.item) {
+      //修改原来 add xiezhy
+      this.item = {
+        server: params.item.DSParams.server,
+        name: params.item.mapName,
+      }
+      this.state = {
+        server: params.item.DSParams.server,
+        name: params.item.mapName,
+      }
+    } else {
+      this.item = undefined
+      this.state = {
+        server: '',
+        name: '',
+      }
     }
   }
 
   _renderHeaderBtn = () => {
+    let thisHandle = this
     return (
       <TouchableOpacity
         onPress={() => {
@@ -42,14 +57,31 @@ export default class LoadServer extends Component {
               DSParams: {
                 server: this.state.server,
                 engineType: 225,
-                alias: 'BaseMap',
+                alias: 'userAdd_' + this.state.name,
               },
               layerIndex: 0,
               mapName: this.state.name,
+              userAdd: true,
             }
             let list = this.baseMaps
+            //add xiezhy
+            if (thisHandle.item != undefined) {
+              for (let i = 0, n = list.length; i < n; i++) {
+                if (
+                  list[i].DSParams.server === thisHandle.item.server &&
+                  list[i].mapName === thisHandle.item.name
+                ) {
+                  list.splice(i, 1)
+                  break
+                }
+              }
+            }
             list.push(item)
-            this.setBaseMap && this.setBaseMap(list)
+            this.setBaseMap &&
+              this.setBaseMap({
+                userId: this.user.currentUser.userId,
+                baseMaps: list,
+              })
             NavigationService.goBack()
           } catch (error) {
             Toast.show(getLanguage(global.language).Prompt.SAVE_FAILED)
@@ -80,6 +112,7 @@ export default class LoadServer extends Component {
         }}
       >
         <TextInput
+          value={this.state.name}
           placeholder={getLanguage(global.language).Profile.MAP_NAME}
           // {'地图名称'}
           style={styles.textInput}
@@ -87,6 +120,7 @@ export default class LoadServer extends Component {
           onChangeText={text => this.setState({ name: text })}
         />
         <TextInput
+          value={this.state.server}
           placeholder={
             getLanguage(global.language).Profile.ENTER_SERVICE_ADDRESS
           }

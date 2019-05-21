@@ -839,7 +839,12 @@ export default class TouchProgress extends Component {
           value = 40
         }
         let newvalue = Math.ceil(value / 10)
-        GLOBAL.legend.setState({ columns: newvalue })
+        if (Platform.OS === 'ios') {
+          let flatListKey = GLOBAL.smlegend.state.flatListKey + 1
+          GLOBAL.smlegend.setState({ columns: newvalue, flatListKey })
+        } else {
+          GLOBAL.legend.setState({ columns: newvalue })
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
@@ -850,7 +855,11 @@ export default class TouchProgress extends Component {
         } else if (value <= 10) {
           value = 10
         }
-        GLOBAL.legend.setState({ width: value })
+        if (Platform.OS === 'ios') {
+          GLOBAL.smlegend.setState({ width: value * 5 })
+        } else {
+          GLOBAL.legend.setState({ width: value })
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
@@ -861,7 +870,11 @@ export default class TouchProgress extends Component {
         } else if (value <= 10) {
           value = 10
         }
-        GLOBAL.legend.setState({ height: value })
+        if (Platform.OS === 'ios') {
+          GLOBAL.smlegend.setState({ height: value * 5 })
+        } else {
+          GLOBAL.legend.setState({ height: value })
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
           '     ' +

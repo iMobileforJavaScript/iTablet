@@ -40,6 +40,8 @@ export default {
   THEME_GRAPH_TYPE: 'theme_graph_type',
   MAP3DSHARE: 'map3dshare',
 
+  VISIBLE: 'visible',
+  NOT_VISIBLE: 'not_visible',
   MENU_COMMIT: 'menu_commit',
   MENU_FLEX: 'menu_flex',
 

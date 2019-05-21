@@ -112,6 +112,11 @@ android {
         targetSdkVersion 26
         versionCode 2
         versionName "2.0.2"
+        manifestPlaceholders = [
+                JPUSH_APPKEY: "7d2470baad20e273cd6e53cc",
+                APP_CHANNEL : "default"
+        ]
+
         ndk {
             abiFilters "armeabi-v7a"
         }
@@ -160,6 +165,8 @@ android {
 }
 
 dependencies {
+    implementation project(':jcore-react-native')
+    implementation project(':jpush-react-native')
     compile project(':react-native-contacts')
     implementation project(':react-native-amap-geolocation')
     api project(':react-native-splash-screen')
