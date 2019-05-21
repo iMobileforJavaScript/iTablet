@@ -15,8 +15,8 @@ import ConstAnalyst from './ConstAnalyst'
 
 import {
   layerAdd,
-  BotMap,
-  openData,
+  // BotMap,
+  OpenData,
   line,
   point,
   region,
@@ -31,6 +31,7 @@ import {
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 } from './FunctionToolbarModule'
 
 import {
@@ -39,6 +40,7 @@ import {
   regionBeforeColorSet,
   regionAfterColorSet,
   legendColor,
+  mapBackGroundColor,
 } from './ColorList'
 
 export {
@@ -52,20 +54,22 @@ export {
   ConstModule,
   MAP_MODULE,
   layerAdd,
-  BotMap,
+  // BotMap,
   line,
   point,
   region,
   grid,
+  // openData,
   ConstToolType,
   Map3DBaseMapList,
   ConstInfo,
-  openData,
+  OpenData,
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,
   legendColor,
+  mapBackGroundColor,
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
@@ -80,4 +84,5 @@ export {
   ConstAnalyst,
   getHeaderTitle,
   legendMenuInfo,
+  legendMenuInfoNotVisible,
 }

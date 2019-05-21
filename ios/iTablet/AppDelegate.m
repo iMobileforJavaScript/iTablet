@@ -19,6 +19,7 @@
 #import "VisualViewController.h"
 #import "VCViewController.h"
 #import "RNFSManager.h"
+#import "SuperMap/LogInfoService.h"
 //#import "RNSplashScreen.h"
 #import "Common/HWNetworkReachabilityManager.h"
 
@@ -77,11 +78,11 @@ static NSString* g_sampleCodeName = @"#";;
 {
   g_sampleCodeName = name;
 }
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [JPUSHService setupWithOption:launchOptions appKey:@"7d2470baad20e273cd6e53cc"
                         channel:nil apsForProduction:nil];
-
   NSURL *jsCodeLocation;
   
 #if DEBUG
@@ -123,6 +124,11 @@ static NSString* g_sampleCodeName = @"#";;
                                                       object:nil];
   // 开启网络监听
   [[HWNetworkReachabilityManager shareManager] monitorNetworkStatus];
+  
+  //监听崩溃信息
+  NSSetUncaughtExceptionHandler(&UncaughtExceptionHandler);
+  //判断上次是否有崩溃信息
+  initCrash();
   
   return YES;
 }
@@ -222,6 +228,35 @@ static NSString* g_sampleCodeName = @"#";;
   
   [[NSNotificationCenter defaultCenter] postNotificationName:@"dowloadFile"
                                                       object:nil];
+}
+
+void UncaughtExceptionHandler(NSException *exception) {
+  /**
+   *  获取异常崩溃信息
+   */
+  NSArray *callStack = [exception callStackSymbols];
+  NSString *reason = [exception reason];
+  NSString *name = [exception name];
+  NSString *content = [NSString stringWithFormat:@"========异常错误报告========\nname:%@\nreason:\n%@\ncallStackSymbols:\n%@",name,reason,[callStack componentsJoinedByString:@"\n"]];
+  
+  //将崩溃信息持久化在本地，下次程序启动时、或者后台，将崩溃信息作为日志发送给开发者。
+  [[NSUserDefaults standardUserDefaults] setObject:content forKey:@"ExceptionContent"];
+}
+void initCrash(){
+  NSString* crashKey=@"ExceptionContent";
+  NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+  NSString* crashStr=[userDefault objectForKey:crashKey];
+  if(crashStr){
+    NSMutableDictionary* dic=[[NSMutableDictionary alloc] init];
+    [dic setValue:crashStr forKey:@"crashIos"];
+    //上传数据
+    [LogInfoService sendAPPLogInfo:dic completionHandler:^(BOOL result) {
+      if(result){
+        //上传成功
+      }
+    }];
+    [userDefault removeObjectForKey:crashKey];
+  }
 }
 
 
