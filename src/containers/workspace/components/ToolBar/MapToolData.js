@@ -601,38 +601,11 @@ function point() {
 }
 
 function words() {
-  (async function() {
-    await SMap.setGestureDetector({
-      singleTapHandler: setwords,
-    })
-  }.bind(this)())
   GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
   })
-}
-
-function setwords(event) {
-  NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-    cb: async value => {
-      if (value !== '') {
-        await SMap.addTextRecordset(
-          GLOBAL.TaggingDatasetName,
-          value,
-          _params.user.currentUser.userName,
-          event.x,
-          event.y,
-        )
-      }
-      await SMap.deleteGestureDetector()
-      NavigationService.goBack()
-    },
-    backcb: async () => {
-      // await SMap.deleteGestureDetector()
-      NavigationService.goBack()
-    },
-  })
+  GLOBAL.TouchType = ConstToolType.MAP_TOOL_TAGGING
 }
 
 function pointline() {

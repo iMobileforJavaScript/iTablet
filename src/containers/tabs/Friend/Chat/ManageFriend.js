@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Container } from '../../../../components'
+import { Container, Dialog } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
 import TouchableItemView from '../TouchableItemView'
 import { getThemeAssets } from '../../../../assets'
 import { scaleSize } from '../../../../utils'
 import FriendListFileHandle from '../FriendListFileHandle'
+import MessageDataHandle from '../MessageDataHandle'
+// import MsgConstant from '../MsgConstant'
 
 class ManageFriend extends Component {
   props: {
@@ -26,6 +28,29 @@ class ManageFriend extends Component {
     }
   }
 
+  _deleteFriend = async () => {
+    // let ctime = new Date()
+    // let time = Date.parse(ctime)
+    // await this.friend._sendMessage(JSON.stringify({
+    //   user:{
+    //     name: this.user.name,
+    //     id: this.user.id,
+    //     groupId: this.targetUser.id,
+    //     groupName:
+    //   },
+    //   type: MsgConstant.MSG_REMOVE_MEMBER,
+    //   time: time,
+    //   message:'',
+    // }), this.targetUser.id)
+    MessageDataHandle.delMessage({
+      userId: this.user.userId, //当前登录账户的id
+      talkId: this.targetUser.id, //会话ID
+    })
+    FriendListFileHandle.delFromFriendList(this.targetUser.id)
+    this.delDialog.setDialogVisible(false)
+    NavigationService.reset()
+  }
+
   render() {
     return (
       <Container
@@ -35,8 +60,22 @@ class ManageFriend extends Component {
           navigation: this.props.navigation,
         }}
       >
+        {this.renderDelDialog()}
         {this.renderSettings()}
       </Container>
+    )
+  }
+
+  renderDelDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.delDialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
+        confirmAction={this._deleteFriend}
+        info={getLanguage(this.language).Friends.ALERT_DEL_FRIEND}
+      />
     )
   }
 
@@ -75,7 +114,9 @@ class ManageFriend extends Component {
         {/* {删除好友} */}
         <TouchableOpacity
           style={{ alignItems: 'center', paddingVertical: scaleSize(20) }}
-          onPress={() => {}}
+          onPress={() => {
+            this.delDialog.setDialogVisible(true)
+          }}
         >
           <Text style={{ color: 'red', fontSize: scaleSize(26) }}>
             {getLanguage(this.language).Friends.DELETE_FRIEND}

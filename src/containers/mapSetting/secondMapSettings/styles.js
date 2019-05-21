@@ -6,6 +6,7 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, setSpText } from '../../../utils'
 import color from '../../../styles/color'
+import size from '../../../styles/size'
 // const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default StyleSheet.create({
   row: {
@@ -65,6 +66,13 @@ export default StyleSheet.create({
     borderColor: color.separateColorGray,
   },
   headerRight: {
+    color: color.white,
+  },
+  sectionHeader: {
+    marginLeft: scaleSize(25),
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: size.fontSize.fontSizeXXl,
     color: color.white,
   },
 })

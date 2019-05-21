@@ -168,15 +168,31 @@ class Chat extends React.Component {
       system: msg.system,
     }
 
-    if (msg.msg.type) {
-      if (msg.msg.message.message) {
-        chatMsg.text = msg.msg.message.message
+    if (msg.type < 9) {
+      //非系统消息
+      if (msg.msg.type) {
+        if (msg.msg.message.message) {
+          chatMsg.text = msg.msg.message.message
+        } else {
+          chatMsg.text = ' '
+        }
       } else {
-        chatMsg.text = ' '
+        chatMsg.text = msg.msg
       }
     } else {
-      chatMsg.text = msg.msg
+      //系统默认为空，若要显示，自行构建
+      chatMsg.text = ' '
+      if (msg.type === MSGConstant.MSG_REMOVE_MEMBER) {
+        if (msg.msg.user.id === msg.id) {
+          chatMsg.text = msg.msg.user.name + '退出了群聊'
+        } else if (msg.msg.user.id === this.curUser.userId) {
+          chatMsg.text = msg.name + '将你移除群聊'
+        } else {
+          chatMsg.text = msg.name + '将' + msg.msg.user.name + '移除群聊'
+        }
+      }
     }
+
     return chatMsg
   }
   //将接收或要发送的消息转为chat消息
@@ -192,15 +208,30 @@ class Chat extends React.Component {
       type: message.type,
       message: message.message,
     }
-
-    if (message.message.type) {
-      if (message.message.message.message) {
-        chatMsg.text = message.message.message.message
+    if (message.type < 9) {
+      //非系统消息
+      if (message.message.type) {
+        if (message.message.message.message) {
+          chatMsg.text = message.message.message.message
+        } else {
+          chatMsg.text = ' '
+        }
       } else {
-        chatMsg.text = ' '
+        chatMsg.text = message.message
       }
     } else {
-      chatMsg.text = message.message
+      //系统默认为空，若要显示，自行构建
+      chatMsg.text = ' '
+      if (message.type === MSGConstant.MSG_REMOVE_MEMBER) {
+        if (message.message.user.id === message.user.id) {
+          chatMsg.text = message.message.user.name + '退出了群聊'
+        } else if (message.message.user.id === this.curUser.userId) {
+          chatMsg.text = message.user.name + '将你移除群聊'
+        } else {
+          chatMsg.text =
+            message.user.name + '将' + message.message.user.name + '移除群聊'
+        }
+      }
     }
     return chatMsg
   }

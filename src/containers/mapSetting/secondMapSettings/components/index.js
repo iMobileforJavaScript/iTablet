@@ -4,5 +4,6 @@
  * https://github.com/AsortKeven
  */
 import ColorTable from './ColorTable'
+import SelectList from './SelectList'
 
-export { ColorTable }
+export { ColorTable, SelectList }

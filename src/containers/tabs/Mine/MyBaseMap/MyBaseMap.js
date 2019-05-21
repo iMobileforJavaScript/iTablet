@@ -28,8 +28,10 @@ export default class MyBaseMap extends Component {
       //'底图',
       modalIsVisible: false,
     }
-    this.curUserBaseMaps = this.props.baseMaps[this.props.user.currentUser.userId]
-    if(!this.curUserBaseMaps){
+    this.curUserBaseMaps = this.props.baseMaps[
+      this.props.user.currentUser.userId
+    ]
+    if (!this.curUserBaseMaps) {
       this.curUserBaseMaps = this.props.baseMaps['default']
     }
     this.uploadList = []
@@ -39,7 +41,13 @@ export default class MyBaseMap extends Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <BaseMapItem {...this.props} curUserBaseMaps={this.curUserBaseMaps} item={item} index={index} saveItemInfo={this.saveItemInfo} />
+      <BaseMapItem
+        {...this.props}
+        curUserBaseMaps={this.curUserBaseMaps}
+        item={item}
+        index={index}
+        saveItemInfo={this.saveItemInfo}
+      />
     )
   }
 
@@ -83,7 +91,7 @@ export default class MyBaseMap extends Component {
           NavigationService.navigate('LoadServer', {
             setBaseMap: this.props.setBaseMap,
             baseMaps: this.curUserBaseMaps,
-            user:this.props.user,
+            user: this.props.user,
           })
         }}
       >

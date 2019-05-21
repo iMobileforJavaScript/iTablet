@@ -132,7 +132,7 @@ export default class BaseMapItem extends Component {
     return (
       <TouchableOpacity
         style={{ flex: 1 }}
-        ref={ref => (iTemView = ref)}
+        // ref={ref => (iTemView = ref)}
         onLongPress={() => {
           if (this.props.item.userAdd) {
             this._showPopover(iTemView, this.props.item)

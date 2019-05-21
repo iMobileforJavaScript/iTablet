@@ -397,12 +397,14 @@ const initialState = fromJS({
   maps: [],
   currentMap: {},
   workspace: {},
-  baseMaps:{'default':[
-    ConstOnline.Baidu,
-    ConstOnline.Google,
-    ConstOnline.OSM,
-    ConstOnline.SuperMapCloud,
-  ]},
+  baseMaps: {
+    default: [
+      ConstOnline.Baidu,
+      ConstOnline.Google,
+      ConstOnline.OSM,
+      ConstOnline.SuperMapCloud,
+    ],
+  },
 })
 
 export default handleActions(

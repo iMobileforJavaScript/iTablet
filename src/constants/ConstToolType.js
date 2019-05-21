@@ -3,6 +3,9 @@
  */
 import { scaleSize } from '../utils'
 export default {
+  //点击监听类型
+  NORMAL: 'NORMAL',
+  NULL: 'NULL',
   // Map
   MAP_BASE: 'MAP_BASE',
   MAP_ADD_LAYER: 'MAP_ADD_LAYER',
