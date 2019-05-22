@@ -17,6 +17,7 @@ import { dialogStyles } from './../Styles'
 import { styles } from './Styles'
 import AddFriend from './../AddFriend'
 import { getLanguage } from '../../../../language/index'
+import MSGconstant from '../MsgConstant'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -59,19 +60,24 @@ export default class InformMessage extends React.Component {
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
-      message: ' 我们已经是好友了,开始聊天吧',
-      type: 1,
-      user: { name: curUserName, id: uuid, groupID: uuid },
+      message: '我们已经是好友了,开始聊天吧',
+      type: MSGconstant.MSG_SINGLE,
+      user: {
+        name: curUserName,
+        id: uuid,
+        groupID: uuid,
+        groupName: '',
+      },
       time: time,
     }
     this.friend._sendMessage(
       JSON.stringify(message),
-      this.target.messageId,
+      this.target.originMsg.user.id,
       false,
     )
 
     AddFriend.acceptFriendAdd(
-      [this.target.messageId, this.target.users[[0]]],
+      [this.target.originMsg.user.id, this.target.originMsg.user.name],
       () => {
         this.friend.refreshList()
       },
@@ -115,8 +121,8 @@ export default class InformMessage extends React.Component {
   }
 
   _renderItem(item, index) {
-    let lastMessage = item['message']
-    let time = item.time
+    let lastMessage = item.text
+    let time = item.originMsg.time
     let ctime = new Date(time)
     let timeString =
       '' +
@@ -185,25 +191,14 @@ export default class InformMessage extends React.Component {
   }
 
   _renderItemHeadView(item) {
-    if (item['messageType'] === 3) {
-      let texts = []
-      for (var i in item['users']) {
-        if (i > 4) break
-        texts.push(
-          <Text
-            style={{ fontSize: scaleSize(18), color: 'white', top: 2, left: 1 }}
-          >
-            {item['users'][i][0].toUpperCase() + ' '}
-          </Text>,
-        )
-      }
-      return texts
-    } else {
-      return <Text style={styles.ITemHeadTextStyle}>{item['users'][0][0]}</Text>
-    }
+    return (
+      <Text style={styles.ITemHeadTextStyle}>
+        {item.originMsg.user.name[0]}
+      </Text>
+    )
   }
   _renderItemTitleView(item) {
-    return <Text style={styles.ITemTextStyle}>{item['title']}</Text>
+    return <Text style={styles.ITemTextStyle}>{item.originMsg.user.name}</Text>
   }
 
   renderDialogChildren = () => {

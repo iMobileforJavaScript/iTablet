@@ -21,6 +21,7 @@ import { dialogStyles } from './Styles'
 import FriendListFileHandle from './FriendListFileHandle'
 import { getLanguage } from '../../../language/index'
 import { Toast } from '../../../utils'
+import MSGConstant from './MsgConstant'
 
 const dismissKeyboard = require('dismissKeyboard')
 
@@ -135,8 +136,13 @@ class AddFriend extends Component {
     let time = Date.parse(ctime)
     let message = {
       message: curUserName + ' 请求添加您为好友',
-      type: 901,
-      user: { name: curUserName, id: uuid },
+      type: MSGConstant.MSG_ADD_FRIEND,
+      user: {
+        name: curUserName,
+        id: uuid,
+        groupId: uuid,
+        groupName: '',
+      },
       time: time,
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();

@@ -19,6 +19,7 @@ import { getLanguage } from '../../../language/index'
 import Contacts from 'react-native-contacts'
 import { Toast } from '../../../utils'
 import FriendListFileHandle from './FriendListFileHandle'
+import MsgConstant from './MsgConstant'
 
 class RecommendFriend extends Component {
   props: {
@@ -158,8 +159,13 @@ class RecommendFriend extends Component {
     let time = Date.parse(ctime)
     let message = {
       message: this.user.nickname + ' 请求添加您为好友',
-      type: 901,
-      user: { name: this.user.nickname, id: this.user.userId },
+      type: MsgConstant.MSG_ADD_FRIEND,
+      user: {
+        name: this.user.nickname,
+        id: this.user.userId,
+        groupID: this.user.userId,
+        groupName: '',
+      },
       time: time,
     }
 
