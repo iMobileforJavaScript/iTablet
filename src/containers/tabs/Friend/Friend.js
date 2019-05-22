@@ -171,7 +171,7 @@ export default class Friend extends Component {
 
   onReceiveProgress = value => {
     let msg = this.getMsgByMsgId(value.talkId, value.msgId)
-    msg.msg.message.progress = value.percentage
+    msg.originMsg.message.message.progress = value.percentage
     MessageDataHandle.editMessage({
       userId: this.props.user.currentUser.userId,
       talkId: value.talkId,
@@ -275,16 +275,65 @@ export default class Friend extends Component {
 
   storeMessage = (messageObj, talkId, msgId) => {
     let userId = this.props.user.currentUser.userId
-    MessageDataHandle.pushMessage({
-      userId: userId,
-      talkId: talkId,
-      messageUsr: messageObj.user,
-      message: messageObj.message,
-      time: messageObj.time,
-      type: messageObj.type,
-      unReadMsg: messageObj.unReadMsg,
-      msgId: msgId,
-    })
+    let type = 0
+    if (
+      messageObj.type === MSGConstant.MSG_SINGLE ||
+      messageObj.type === MSGConstant.MSG_GROUP
+    ) {
+      type = messageObj.message.type
+        ? messageObj.message.type
+        : MSGConstant.MSG_TEXT
+    } else {
+      type = messageObj.type
+    }
+    let bSystem = false
+    if (type > 100) {
+      bSystem = true
+    }
+    let storeMsg = {
+      userId: userId, //用户id
+      talkId: talkId, //对方或群组id
+      msgId: msgId, //消息id
+      type: type,
+      originMsg: messageObj, //原始消息体
+      text: '', //消息要显示的文字信息
+      unReadMsg: messageObj.unReadMsg, //消息已读未读
+      system: bSystem,
+    }
+    switch (type) {
+      case MSGConstant.MSG_TEXT:
+        storeMsg.text = messageObj.message
+        break
+      case MSGConstant.MSG_FILE_NOTIFY:
+        storeMsg.text = '[地图]'
+        break
+      case MSGConstant.MSG_LOCATION:
+        storeMsg.text = messageObj.message.message.message
+        break
+      case MSGConstant.MSG_ADD_FRIEND:
+        storeMsg.text = messageObj.message
+        break
+      case MSGConstant.MSG_REMOVE_MEMBER:
+        if (messageObj.message.user.id === messageObj.user.id) {
+          storeMsg.text = messageObj.message.user.name + '退出了群聊'
+        } else if (
+          messageObj.message.user.id === this.props.user.currentUser.userId
+        ) {
+          storeMsg.text = messageObj.user.name + '将你移除群聊'
+        } else {
+          storeMsg.text =
+            messageObj.user.name +
+            '将' +
+            messageObj.message.user.name +
+            '移除群聊'
+        }
+        break
+      default:
+        break
+    }
+
+    MessageDataHandle.pushMessage(storeMsg)
+    return storeMsg
   }
 
   getMsgId = talkId => {
@@ -330,7 +379,7 @@ export default class Friend extends Component {
       msgId,
     ).then(res => {
       let msg = this.getMsgByMsgId(talkId, msgId)
-      msg.msg.message.queueName = res.queueName
+      msg.originMsg.message.message.queueName = res.queueName
       MessageDataHandle.editMessage({
         userId: this.props.user.currentUser.userId,
         talkId: talkId,
@@ -359,8 +408,9 @@ export default class Friend extends Component {
           let message = this.props.chat[this.props.user.currentUser.userId][
             talkId
           ].history[msgId]
-          message.msg.message.isReceived = 1
-          message.msg.message.filePath = receivePath + '/' + fileName
+          message.originMsg.message.message.isReceived = 1
+          message.originMsg.message.message.filePath =
+            receivePath + '/' + fileName
           MessageDataHandle.editMessage({
             userId: this.props.user.currentUser.userId,
             talkId: talkId,
