@@ -68,16 +68,16 @@ export default class Layer3DItem extends Component {
             isFullScreen: true,
             height: scaleSize(174),
           })
+          layer3dToolbar.getLayer3dItem(
+            this.state,
+            this.props.setCurrentLayer3d,
+            this.setItemSelectable,
+            overlayView,
+            this.changeState,
+          )
           break
       }
       overlayView.setVisible(true)
-      layer3dToolbar.getLayer3dItem(
-        this.state,
-        this.props.setCurrentLayer3d,
-        this.setItemSelectable,
-        overlayView,
-        this.changeState,
-      )
     }
   }
 

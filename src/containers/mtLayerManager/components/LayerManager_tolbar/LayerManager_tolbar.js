@@ -665,12 +665,6 @@ export default class LayerManager_tolbar extends React.Component {
       if (_title === getLanguage(global.language).Map_Layer.NOT_OPTIONAL)
         canChoose = false
       SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
-        result
-          ? Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
-          : //`${_title}成功`)
-          Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
-        //`${_title}失败`)
-        // this.overlayView&&this.overlayView.setVisible(false)
         this.setVisible(false)
         let overlayView = this.props.getOverlayView
           ? this.props.getOverlayView()
@@ -739,6 +733,7 @@ export default class LayerManager_tolbar extends React.Component {
     }
   }
 
+  setLayer
   getLayer3dItem = (
     layer3dItem,
     cb = () => {},

@@ -7,7 +7,7 @@ import { LayerManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
 import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
-export default class Map3DToolBar extends Component {
+export default class Layer3DManager extends Component {
   props: {
     language: string,
     navigation: Object,
