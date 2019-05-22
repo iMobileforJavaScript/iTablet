@@ -98,6 +98,40 @@ export default class JPushService {
     return bCon
   }
 
+  static sendLocalNotification(messageObj) {
+    //只push以下消息
+    if (
+      messageObj.type !== MsgConstant.MSG_SINGLE &&
+      messageObj.type !== MsgConstant.MSG_GROUP
+    )
+      return
+
+    let messageText = messageObj.message
+    if (messageObj.message.message) {
+      messageText = messageObj.message.message.message
+    }
+    let titleText = messageObj.user.name
+    if (messageObj.type === MsgConstant.MSG_GROUP) {
+      titleText = messageObj.user.groupName
+      messageText = messageObj.user.name + ': ' + messageText
+    }
+
+    let notification = {
+      buildId: 0,
+      id: parseInt(messageObj.user.id),
+      title: titleText,
+      content: messageText,
+      extra: {},
+    }
+
+    if (Platform.OS === 'ios') {
+      notification.subtitle = ''
+      notification.badge = '+1'
+      notification.sound = 'default'
+    }
+    JPushModule.sendLocalNotification(notification)
+  }
+
   //userId
   static setAlias(userId) {
     // eslint-disable-next-line no-unused-vars

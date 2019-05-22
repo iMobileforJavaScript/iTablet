@@ -555,6 +555,8 @@ export default class Friend extends Component {
           } else {
             this.curChat.showInformSpot(true)
           }
+        } else {
+          JPushService.sendLocalNotification(messageObj)
         }
       }
     }
