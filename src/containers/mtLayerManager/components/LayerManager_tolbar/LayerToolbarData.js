@@ -67,7 +67,7 @@ function layersetting(param) {
     },
   ]
 }
-const baseListData = [
+const base3DListData = [
   {
     title: '在线底图',
     index: 0,
@@ -250,37 +250,51 @@ const layerSettingCanNotSnap = param => [
   },
 ]
 
-const layer3dSettingCanSelect = param => [
-  {
-    title: '',
-    data: [
-      {
-        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
-      },
-      {
-        title: getLanguage(param).Map_Layer.OPTIONAL,
-        image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
-      },
-    ],
-  },
-]
+const layer3dSettingCanSelect = (param,selected) =>{
 
-const layer3dSettingCanNotSelect = param => [
-  {
-    title: '',
-    data: [
-      {
-        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
-      },
-      {
-        title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
-        image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
-      },
-    ],
-  },
-]
+  let date =  {
+    title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    type:"setLayerSelect",
+  }
+  if(selected === false){
+    date =  {
+      title: getLanguage(param).Map_Layer.OPTIONAL,
+      image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+      type:"setLayerSelect",
+    }
+  }
+  return [
+    {
+      title: '',
+      data: [
+        {
+          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          image: require('../../../../assets/layerToolbar/layer_this.png'),
+          type:"scaleToLayer",
+        },
+        date,
+      ],
+    },
+  ]
+}
+
+// const layer3dSettingCanNotSelect = param => [
+//   {
+//     title: '',
+//     data: [
+//       {
+//         title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+//         image: require('../../../../assets/layerToolbar/layer_this.png'),
+//       },
+//       {
+//         title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+//         image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+//       },
+//     ],
+//   },
+// ]
 
 function layereditsetting(param) {
   return [
@@ -413,11 +427,10 @@ export {
   layersetting,
   layerThemeSetting,
   layer3dSettingCanSelect,
-  layer3dSettingCanNotSelect,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
-  baseListData,
+  base3DListData,
   taggingData,
   scaleData,
   mscaleData,

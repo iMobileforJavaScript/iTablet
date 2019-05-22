@@ -446,6 +446,11 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
     let item = { ...element, isShow: true }
     terrainList.push(item)
   }
+
+  //map = @{@"name":name,@"visible": @(visible),@"selectable": @(0),@"basemap":@(0),@"type":@"Terrain"};
+  if(terrainList.length === 0){
+    terrainList.push({"name":"cache","visible":true,"selectable":false,"type":"Terrain","basemap":false,isShow:true})
+  }
   let data = [
     {
       title: getLanguage(global.language).Map_Layer.PLOTS,

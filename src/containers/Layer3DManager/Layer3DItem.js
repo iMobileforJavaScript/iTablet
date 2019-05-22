@@ -13,7 +13,7 @@ export default class Layer3DItem extends Component {
     index: any,
     getlayer3dToolbar: () => {},
     setCurrentLayer3d: () => {},
-    getOverlayView: () => {},
+    overlayView: () => {},
   }
   constructor(props) {
     super(props)
@@ -48,36 +48,82 @@ export default class Layer3DItem extends Component {
     this.setState(newState)
   }
 
+  /*
+  const layer3dSettingCanSelect = param => [
+  {
+    title: '',
+    data: [
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.OPTIONAL,
+        image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+      },
+    ],
+  },
+]
+
+const layer3dSettingCanNotSelect = param => [
+  {
+    title: '',
+    data: [
+      {
+        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+        image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+      },
+    ],
+  },
+]
+
+ {
+      title: '',
+      data: [
+        {
+          title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
+        },
+      ],
+    },
+  */
   more = async () => {
     let layer3dToolbar = this.props.getlayer3dToolbar
       ? this.props.getlayer3dToolbar()
       : null
-    let overlayView = this.props.getOverlayView
-      ? this.props.getOverlayView()
-      : null
+    // let overlayView = this.props.getOverlayView
+    //   ? this.props.getOverlayView()
+    //   : null
     if (layer3dToolbar) {
       switch (this.state.type) {
         case 'IMAGEFILE':
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DCHANGE, {
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
+            isFullScreen: true,
+            height: scaleSize(87),
+          })
+          break
+        case 'Terrain':
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
             height: scaleSize(87),
           })
           break
         default:
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_DEFAULT, {
             isFullScreen: true,
             height: scaleSize(174),
           })
           layer3dToolbar.getLayer3dItem(
             this.state,
-            this.props.setCurrentLayer3d,
-            this.setItemSelectable,
-            overlayView,
             this.changeState,
           )
           break
       }
-      overlayView.setVisible(true)
+      this.props.overlayView.setVisible(true)
     }
   }
 

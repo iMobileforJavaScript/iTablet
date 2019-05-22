@@ -3,7 +3,7 @@ import { Container } from '../../components'
 import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
-import { LayerManager_tolbar } from '../mtLayerManager/components'
+import { Layer3DManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
 import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
@@ -70,7 +70,7 @@ export default class Layer3DManager extends Component {
             device={this.props.device}
             toHeightItem={this.state.toHeightItem}
             index={index}
-            getOverlayView={this.getOverlayView}
+            overlayView={this.OverlayView}
             setCurrentLayer3d={this.props.setCurrentLayer3d}
           />
         </TouchableOpacity>
@@ -79,11 +79,6 @@ export default class Layer3DManager extends Component {
       return <View />
     }
   }
-
-  getOverlayView = () => {
-    return this.OverlayView
-  }
-
   renderSectionFooter = () => {
     return <View style={styles.sectionFooter} />
   }
@@ -151,10 +146,11 @@ export default class Layer3DManager extends Component {
 
   renderLayerToolbar = () => {
     return (
-      <LayerManager_tolbar
+      <Layer3DManager_tolbar
         language={this.props.language}
+        navigation={this.props.navigation}
         ref={ref => (this.layer3dToolbar = ref)}
-        getOverlayView={this.getOverlayView}
+        overlayView={this.OverlayView}
         device={this.props.device}
       />
     )
