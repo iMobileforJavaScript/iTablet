@@ -156,6 +156,14 @@ const Prompt = {
   GOTO_ACTIVATE: '请前往邮箱激活',
   ENTER_CORRECT_MOBILE: '请输入正确的手机号',
   ENTER_CORRECT_EMAIL: '请输入正确的邮箱号',
+
+  //设置菜单提示信息
+  ROTATION_ANGLE_ERROR: '旋转角度应在-360°到360°之间',
+  MAP_SCALE_ERROR: '比例输入错误!请输入一个数字',
+  VIEW_BOUNDS_ERROR: '范围输入错误!请输入一个数字',
+  VIEW_BOUNDS_RANGE_ERROR: '参数错误!窗口宽高不能小于0',
+  MAP_CENTER_ERROR: '坐标输入错误!x,y都应该为数字',
+  COPY_SUCCESS: '复制成功',
 }
 
 export { Prompt }

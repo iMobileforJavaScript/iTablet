@@ -211,7 +211,9 @@ export default class MapSetting extends Component {
 
   flatListPressHandle = title => {
     //图例单独处理
-    if (title === '图例设置') {
+    if (
+      title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
+    ) {
       this.props.setMapLegend(true)
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {

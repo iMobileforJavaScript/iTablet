@@ -9,6 +9,7 @@ import {
   Map_Setting,
   Map_Layer,
   Map_Attribute,
+  Map_Settings,
 } from './Map'
 import { Prompt } from './Prompt'
 
@@ -21,6 +22,7 @@ export default {
   Map_Layer: Map_Layer,
   Map_Attribute: Map_Attribute,
   Map_Setting: Map_Setting,
+  Map_Settings: Map_Settings,
   Prompt: Prompt,
   Friends: Friends,
 }

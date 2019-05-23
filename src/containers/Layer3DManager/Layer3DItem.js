@@ -36,7 +36,7 @@ export default class Layer3DItem extends Component {
     if (
       JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
-    ){
+    ) {
       return true
     }
     return false
@@ -49,7 +49,7 @@ export default class Layer3DItem extends Component {
       selectable: this.props.item.selectable,
       type: this.props.item.type,
     })
-    // this.state = 
+    // this.state =
   }
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
@@ -135,10 +135,7 @@ const layer3dSettingCanNotSelect = param => [
             isFullScreen: true,
             height: scaleSize(174),
           })
-          layer3dToolbar.getLayer3dItem(
-            this.state,
-            this.changeState,
-          )
+          layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break
       }
       this.props.overlayView.setVisible(true)

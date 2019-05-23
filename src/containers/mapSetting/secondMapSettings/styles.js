@@ -67,8 +67,10 @@ export default StyleSheet.create({
   },
   headerRight: {
     color: 'white',
-    width: scaleSize(60),
+    width: scaleSize(100),
     fontSize: size.fontSize.fontSizeXXl,
+    textAlign: 'right',
+    marginRight: scaleSize(30),
   },
   sectionHeader: {
     marginLeft: scaleSize(25),
