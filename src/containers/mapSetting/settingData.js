@@ -274,6 +274,7 @@ const coordinateSystemSettings = () => [
     iconType: 'arrow',
   },
 ]
+//坐标系数据
 const coordinateData = () => [
   {
     title: '平面坐标系',
@@ -311,6 +312,42 @@ const coordinateData = () => [
         value: CoordSysData.Sphere_Mercator,
       },
     ],
+  },
+]
+const transferData = () => [
+  {
+    title: '转换方法',
+    value: [
+      {
+        value: 'Geocentric Transalation(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'Molodensky(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'Abridged Molodensky(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'position Vector(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'Coordinate Frame(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'Bursa-wolf(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'MolodenskyBadekas(10-para)',
+        paramNum: 10,
+      },
+    ],
+    iconType: 'arrow',
   },
 ]
 //高级设置
@@ -420,4 +457,5 @@ export {
   histogramSettings,
   colorMode,
   fourRanges,
+  transferData,
 }

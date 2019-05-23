@@ -26,6 +26,7 @@ import {
   histogramSettings,
   fourRanges,
   colorMode,
+  transferData,
 } from '../settingData'
 import { SMap } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils'
@@ -49,12 +50,30 @@ export default class secondMapSettings extends Component {
       data: [],
       device: params.device,
       title: params.title,
+      rightBtn: params.rightBtn || '',
       cb: params.cb || '',
     }
   }
   UNSAFE_componentWillMount() {
     this.getData()
   }
+
+  //数字格式化成带逗号的数字
+  formatNumberToString = num => {
+    let dotReg = /\./
+    let reg = /\.\d+/
+    let afterDot = ''
+    dotReg.test(num) && (afterDot = num.match(reg)[0])
+    return (+num).toLocaleString('en').replace(reg, afterDot)
+  }
+
+  //带逗号的字符串格式化成数字
+  formatStringToNumber = str => {
+    let reg = /,/g
+    return +str.replace(reg, '')
+  }
+
+  //获取数据方法
   getData = async () => {
     let data,
       colorData = null,
@@ -88,6 +107,9 @@ export default class secondMapSettings extends Component {
         break
       case '当前窗口四至范围':
         data = await this.getFourRangeData()
+        break
+      case '转换参数':
+        data = await this.getTransferData()
         break
     }
     this.setState({
@@ -127,10 +149,10 @@ export default class secondMapSettings extends Component {
     let data = await rangeSettings()
     if (Platform.OS === 'ios') {
       let mapCenter = await SMap.getMapCenter()
-      let centerX = this.formatNumber(mapCenter.x)
-      let centerY = this.formatNumber(mapCenter.y)
+      let centerX = this.formatNumberToString(mapCenter.x)
+      let centerY = this.formatNumberToString(mapCenter.y)
       let mapScale = await SMap.getMapScale()
-      let scale = this.formatNumber(mapScale)
+      let scale = this.formatNumberToString(mapScale)
       data[0].value = `${centerX}/${centerY}`
       data[1].value = `1:${scale}`
       data[2].value = await SMap.isVisibleScalesEnabled()
@@ -138,25 +160,23 @@ export default class secondMapSettings extends Component {
     return data
   }
 
-  //数据格式化
-  formatNumber = num => {
-    let dotReg = /\./
-    let reg = /\.\d+/
-    let afterDot = ''
-    dotReg.test(num) && (afterDot = num.match(reg)[0])
-    return (+num).toLocaleString('en').replace(reg, afterDot)
-  }
-
   //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
     if (Platform.OS === 'ios') {
       data[0].value = await SMap.getPrjCoordSys()
-      //todo 动态投影是否开启 缺少底层接口 data[1] data[2]相关设置
+      let isDynamicProjection = await SMap.getMapDynamicProjection()
+      data[1].value = isDynamicProjection
+      data[2].value = isDynamicProjection ? '' : '关'
     }
     return data
   }
 
+  //转换参数设置数据
+  getTransferData = async () => {
+    let data = await transferData()
+    return data.value
+  }
   //高级设置数据
   getAdvanceData = async () => {
     let data = await advancedSettings()
@@ -167,10 +187,10 @@ export default class secondMapSettings extends Component {
   getFourRangeData = async () => {
     let data = await fourRanges()
     let viewBounds = await SMap.getMapViewBounds()
-    data[0].value = this.formatNumber(viewBounds.left)
-    data[1].value = this.formatNumber(viewBounds.bottom)
-    data[2].value = this.formatNumber(viewBounds.right)
-    data[3].value = this.formatNumber(viewBounds.top)
+    data[0].value = this.formatNumberToString(viewBounds.left)
+    data[1].value = this.formatNumberToString(viewBounds.bottom)
+    data[2].value = this.formatNumberToString(viewBounds.right)
+    data[3].value = this.formatNumberToString(viewBounds.top)
     return data
   }
   //获取柱状图风格数据
@@ -217,6 +237,9 @@ export default class secondMapSettings extends Component {
         case '固定比例尺级别':
           await SMap.setVisibleScalesEnabled(value)
           break
+        case '动态投影':
+          await SMap.setMapDynamicProjection(value)
+          data[index + 1].value = value ? '' : '关'
       }
       data[index].value = value
       this.setState({
@@ -271,7 +294,7 @@ export default class secondMapSettings extends Component {
             let data = this.state.data.concat()
             if (newValue.match(regExp)) {
               isSuccess = await SMap.setMapScale(1 / newValue)
-              data[index].value = `1:${this.formatNumber(newValue)}`
+              data[index].value = `1:${this.formatNumberToString(newValue)}`
             } else {
               Toast.show('比例输入错误!')
             }
@@ -297,14 +320,48 @@ export default class secondMapSettings extends Component {
       case '当前窗口四至范围':
         this.props.navigation.navigate('secondMapSettings', {
           title,
+          rightBtn: '复制',
         })
         break
-
+      //todo 暂时不跳转 转换参数页面等设计出图
+      case '转换参数':
+        this.props.navigation.navigate('secondMapSettings', {
+          title,
+        })
+        break
       //四至范围点击 跳InputPage
       case '左':
       case '下':
       case '右':
       case '上':
+        this.props.navigation.navigate('InputPage', {
+          headerTitle: title,
+          placeholder: data[index].value,
+          cb: async newValue => {
+            let isSuccess = false
+            let regExp = /^\d+(\.\d+)?$/
+            let data = this.state.data.concat()
+            if (newValue.match(regExp)) {
+              data[index].value = this.formatNumberToString(newValue)
+              let left = this.formatStringToNumber(data[0].value)
+              let bottom = this.formatStringToNumber(data[1].value)
+              let right = this.formatStringToNumber(data[2].value)
+              let top = this.formatStringToNumber(data[3].value)
+              isSuccess = await SMap.setMapViewBounds({
+                left,
+                bottom,
+                right,
+                top,
+              })
+              isSuccess &&
+                this.setState({ data }, () => {
+                  this.backAction()
+                })
+            } else {
+              Toast.show('范围输入错误!')
+            }
+          },
+        })
         break
     }
   }
@@ -319,7 +376,9 @@ export default class secondMapSettings extends Component {
         if (newValue.x.match(regExp) && newValue.y.match(regExp)) {
           isSuccess = await SMap.setMapCenter(+newValue.x, +newValue.y)
           data[0].value =
-            this.formatNumber(newValue.x) + '/' + this.formatNumber(newValue.y)
+            this.formatNumberToString(newValue.x) +
+            '/' +
+            this.formatNumberToString(newValue.y)
         } else {
           Toast.show('坐标点输入错误!')
         }
@@ -399,6 +458,31 @@ export default class secondMapSettings extends Component {
   //渲染带more按钮的行
   renderArrowItem = (item, index) => {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
+    if (item.title === '转换参数' && item.value === '关') {
+      return (
+        <View>
+          <View style={styles.row}>
+            <Text
+              style={{
+                ...styles.itemName,
+                color: '#777',
+              }}
+            >
+              {item.title}
+            </Text>
+            {item.value !== undefined && item.title !== '背景颜色' && (
+              <Text style={styles.rightText}>{item.value}</Text>
+            )}
+            <Image
+              style={styles.itemArrow}
+              resizeMode={'contain'}
+              source={rightImagePath}
+            />
+          </View>
+          {this.renderLine()}
+        </View>
+      )
+    }
     return (
       <View>
         <TouchableOpacity
@@ -634,6 +718,16 @@ export default class secondMapSettings extends Component {
         headerProps={{
           title: this.state.title,
           backAction: this.backAction,
+          headerRight:
+            this.state.rightBtn !== ''
+              ? [
+                <TouchableOpacity key={'copy'} onPress={this.copyInfo}>
+                  <Text style={styles.headerRight}>
+                    {this.state.rightBtn}
+                  </Text>
+                </TouchableOpacity>,
+              ]
+              : null,
         }}
       >
         <FlatList
