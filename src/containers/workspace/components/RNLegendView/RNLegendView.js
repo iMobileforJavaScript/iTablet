@@ -3,7 +3,6 @@
  * Author: Asort
  * https://github.com/AsortKeven
  */
-//com.supermap.RN.Map.Legend.legend_content_change
 import * as React from 'react'
 import {
   View,
@@ -16,11 +15,14 @@ import {
 import { scaleSize, setSpText } from '../../../../utils'
 import { FOOTER_HEIGHT } from '../../pages/mapView/MapView'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
+
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 
 export default class RNLegendView extends React.Component {
   props: {
     device: Object,
+    language: String,
   }
 
   constructor(props) {
@@ -28,7 +30,7 @@ export default class RNLegendView extends React.Component {
     this.state = {
       columns: props.device.orientation === 'LANDSCAPE' ? 4 : 2,
       backgroundColor: '#FFFFFF',
-      title: '图例',
+      title: getLanguage(this.props.language).Map_Settings.THEME_LEGEND,
       width: 450,
       height: 325,
       currentPosition: 'topLeft',
@@ -137,10 +139,10 @@ export default class RNLegendView extends React.Component {
           ellipsizeMode={'tail'}
           style={{
             flex: 1,
-            fontSize: setSpText(18),
+            fontSize: setSpText(20),
             backgroundColor: 'transparent',
             fontWeight: 'bold',
-            height: scaleSize(20),
+            height: scaleSize(24),
           }}
         >
           {item.item.title}

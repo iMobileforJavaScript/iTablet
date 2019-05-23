@@ -331,6 +331,7 @@ const Map_Setting = {
 
 //地图设置菜单
 const Map_Settings = {
+  THEME_LEGEND: '图例',
   //一级菜单
   BASIC_SETTING: '基本设置',
   RANGE_SETTING: '范围设置',

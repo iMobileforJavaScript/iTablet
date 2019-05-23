@@ -311,6 +311,7 @@ const Map_Setting = {
 
 //地图设置菜单
 const Map_Settings = {
+  THEME_LEGEND: 'Theme Legend',
   //一级菜单
   BASIC_SETTING: 'Basic Settings',
   RANGE_SETTING: 'Bounds Settings',
