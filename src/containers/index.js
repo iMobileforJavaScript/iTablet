@@ -39,7 +39,7 @@ import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
 import MTLayerManager from './mtLayerManager'
-import Map3DLayerManager from './Layer3DManager'
+import Layer3DManager from './Layer3DManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
 import ChooseEditLayer from './chooseEditLayer'
@@ -115,8 +115,8 @@ export default StackNavigator(
         header: null,
       },
     },
-    Map3DLayerManager: {
-      screen: Map3DLayerManager,
+    Layer3DManager: {
+      screen: Layer3DManager,
       navigationOptions: {
         header: null,
       },

@@ -17,7 +17,9 @@ export default {
   MSG_REMOVE_MEMBER: 913, //退出群
   MSG_REJECT: 920, //拒收
   //message中的message的type
+  MSG_TEXT: 1,
+  MSG_PICTURE: 2,
   MSG_FILE: 3, //文件本体
-  MSG_FILE_NOTIFY: 6, //文件接收通知
+  MSG_FILE_NOTIFY: 6, //文件接收通知(地图)
   MSG_LOCATION: 10, //位置
 }

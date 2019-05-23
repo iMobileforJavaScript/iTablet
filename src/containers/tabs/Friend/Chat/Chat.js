@@ -107,10 +107,10 @@ class Chat extends React.Component {
     this.setState({
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
-          m.message.message.progress = value.percentage
+          m.originMsg.message.message.progress = value.percentage
 
           if (value.percentage === 100) {
-            m.message.message.isReceived = 1
+            m.originMsg.message.message.isReceived = 1
           }
         }
         return {
@@ -155,84 +155,22 @@ class Chat extends React.Component {
     }
   }
   //将redux中取出消息转为chat消息
-  _loadChatMsg(msg) {
+  _loadChatMsg(message) {
+    let msgStr = JSON.stringify(message)
+    let msg = JSON.parse(msgStr)
     let chatMsg = {
       _id: msg.msgId,
-      createdAt: new Date(msg.time),
+      createdAt: new Date(msg.originMsg.time),
       user: {
-        _id: msg.id,
-        name: msg.name,
+        _id: msg.originMsg.user.id,
+        name: msg.originMsg.user.name,
       },
       type: msg.type,
-      message: msg.msg,
+      originMsg: msg.originMsg,
+      text: msg.text,
       system: msg.system,
     }
 
-    if (msg.type < 9) {
-      //非系统消息
-      if (msg.msg.type) {
-        if (msg.msg.message.message) {
-          chatMsg.text = msg.msg.message.message
-        } else {
-          chatMsg.text = ' '
-        }
-      } else {
-        chatMsg.text = msg.msg
-      }
-    } else {
-      //系统默认为空，若要显示，自行构建
-      chatMsg.text = ' '
-      if (msg.type === MSGConstant.MSG_REMOVE_MEMBER) {
-        if (msg.msg.user.id === msg.id) {
-          chatMsg.text = msg.msg.user.name + '退出了群聊'
-        } else if (msg.msg.user.id === this.curUser.userId) {
-          chatMsg.text = msg.name + '将你移除群聊'
-        } else {
-          chatMsg.text = msg.name + '将' + msg.msg.user.name + '移除群聊'
-        }
-      }
-    }
-
-    return chatMsg
-  }
-  //将接收或要发送的消息转为chat消息
-  _getChatMsg(messageStr, msgId) {
-    let message = JSON.parse(messageStr)
-    let chatMsg = {
-      _id: msgId,
-      createdAt: new Date(message.time),
-      user: {
-        _id: message.user.id,
-        name: message.user.name,
-      },
-      type: message.type,
-      message: message.message,
-    }
-    if (message.type < 9) {
-      //非系统消息
-      if (message.message.type) {
-        if (message.message.message.message) {
-          chatMsg.text = message.message.message.message
-        } else {
-          chatMsg.text = ' '
-        }
-      } else {
-        chatMsg.text = message.message
-      }
-    } else {
-      //系统默认为空，若要显示，自行构建
-      chatMsg.text = ' '
-      if (message.type === MSGConstant.MSG_REMOVE_MEMBER) {
-        if (message.message.user.id === message.user.id) {
-          chatMsg.text = message.message.user.name + '退出了群聊'
-        } else if (message.message.user.id === this.curUser.userId) {
-          chatMsg.text = message.user.name + '将你移除群聊'
-        } else {
-          chatMsg.text =
-            message.user.name + '将' + message.message.user.name + '移除群聊'
-        }
-      }
-    }
     return chatMsg
   }
 
@@ -269,9 +207,9 @@ class Chat extends React.Component {
     }
     let msgId = this.friend.getMsgId(this.targetUser.id)
     //保存
-    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    let storeMsg = this.friend.storeMessage(message, this.targetUser.id, msgId)
     //显示
-    let chatMsg = this._getChatMsg(JSON.stringify(message), msgId)
+    let chatMsg = this._loadChatMsg(storeMsg)
     this.setState(previousState => {
       return {
         messages: GiftedChat.append(previousState.messages, chatMsg),
@@ -313,12 +251,12 @@ class Chat extends React.Component {
     }
     let msgId = this.friend.getMsgId(this.targetUser.id)
     //保存
-    this.friend.storeMessage(message, this.targetUser.id, msgId)
+    let storeMsg = this.friend.storeMessage(message, this.targetUser.id, msgId)
     //显示
-    let Chatmsg = this._getChatMsg(JSON.stringify(message), msgId)
+    let chatMsg = this._loadChatMsg(storeMsg)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, Chatmsg),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
       }
     })
     //发送
@@ -381,12 +319,16 @@ class Chat extends React.Component {
       },
     }
     //保存
-    this.friend.storeMessage(informMsg, this.targetUser.id, msgId)
+    let storeMsg = this.friend.storeMessage(
+      informMsg,
+      this.targetUser.id,
+      msgId,
+    )
     //显示
-    let ChatMsg = this._getChatMsg(JSON.stringify(informMsg), msgId)
+    let chatMsg = this._loadChatMsg(storeMsg)
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, ChatMsg),
+        messages: GiftedChat.append(previousState.messages, chatMsg),
       }
     })
     //发送文件及提醒
@@ -416,8 +358,8 @@ class Chat extends React.Component {
 
   receiveFile = (message, receivePath) => {
     this.friend._receiveFile(
-      message.message.message.fileName,
-      message.message.message.queueName,
+      message.originMsg.message.message.fileName,
+      message.originMsg.message.message.queueName,
       receivePath,
       this.targetUser.id,
       message._id,
@@ -430,7 +372,7 @@ class Chat extends React.Component {
         ConstPath.UserPath + this.curUser.userName,
       )
       let receivePath = userPath + '/ReceivedFiles'
-      if (message.message.message.isReceived === 0) {
+      if (message.originMsg.message.message.isReceived === 0) {
         this.downloadmessage = message
         this.downloadreceivePath = receivePath
         this.download.setDialogVisible(true)
@@ -439,7 +381,7 @@ class Chat extends React.Component {
           ConstPath.Import + '/weChat.zip',
         )
         FileTools.copyFile(
-          receivePath + '/' + message.message.message.fileName,
+          receivePath + '/' + message.originMsg.message.message.fileName,
           toPath,
         )
         this.import.setDialogVisible(true)
@@ -519,8 +461,8 @@ class Chat extends React.Component {
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
               if (
-                props.currentMessage.message.type &&
-                props.currentMessage.message.type ===
+                props.currentMessage.originMsg.message.type &&
+                props.currentMessage.originMsg.message.type ===
                   MSGConstant.MSG_FILE_NOTIFY
               ) {
                 return null
@@ -653,10 +595,10 @@ class Chat extends React.Component {
     let currentMessage = props
 
     if (
-      currentMessage.message.type &&
-      currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
+      currentMessage.type &&
+      currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
     ) {
-      let progress = currentMessage.message.message.progress
+      let progress = currentMessage.originMsg.message.message.progress
       return (
         <View style={styles.tickView}>
           <Text

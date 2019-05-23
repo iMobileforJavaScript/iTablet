@@ -51,10 +51,10 @@
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
-		0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33E226182950009CB35 /* libAsHttpRequest.a */; };
-		0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33F226182950009CB35 /* libCorePlot.a */; };
-		0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E340226182950009CB35 /* libSocketRocket.a */; };
-		0A25E345226182950009CB35 /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E341226182950009CB35 /* libflyMSC.a */; };
+		0A25E342226182950009CB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		0A25E343226182950009CB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		0A25E344226182950009CB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		0A25E345226182950009CB35 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
 		0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */; };
 		0A7E6C8E22437A9A00936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */; };
@@ -81,6 +81,10 @@
 		0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A95738821BFA38500B5853A /* libRNFS.a */; };
 		0A9573C821C0B8EE00B5853A /* NativeMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9573C721C0B8EE00B5853A /* NativeMethod.m */; };
 		0AA134942267432500606012 /* publicMap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AA134932267432500606012 /* publicMap.txt */; };
+		0AB1B6662294D6A40088A4D9 /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB1B6332294D6A20088A4D9 /* libflyMSC.a */; };
+		0AB1B6672294D6A40088A4D9 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB1B6632294D6A30088A4D9 /* libAsHttpRequest.a */; };
+		0AB1B6682294D6A40088A4D9 /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB1B6642294D6A30088A4D9 /* libCorePlot.a */; };
+		0AB1B6692294D6A40088A4D9 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AB1B6652294D6A40088A4D9 /* libSocketRocket.a */; };
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
@@ -517,7 +521,6 @@
         0A25E341226182950009CB35 /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
-		0A27E1D62282A9C900227B8C /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
 		0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneOS/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
@@ -542,6 +545,10 @@
 		0A9573C621C0B8EE00B5853A /* NativeMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethod.h; sourceTree = "<group>"; };
 		0A9573C721C0B8EE00B5853A /* NativeMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethod.m; sourceTree = "<group>"; };
 		0AA134932267432500606012 /* publicMap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = publicMap.txt; path = ../../publicMap.txt; sourceTree = "<group>"; };
+		0AB1B6332294D6A20088A4D9 /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
+		0AB1B6632294D6A30088A4D9 /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
+		0AB1B6642294D6A30088A4D9 /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
+		0AB1B6652294D6A40088A4D9 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
 		0ABCB8C22246056500992994 /* WeiXinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiXinUtils.h; sourceTree = "<group>"; };
 		0ABCB8C32246056500992994 /* WeiXinUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiXinUtils.m; sourceTree = "<group>"; };
 		0ABCB8C6224605E300992994 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
@@ -605,9 +612,10 @@
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
 				0A15466921D719A500347720 /* libSupermap.a in Frameworks */,
 				0A8F7C3921C35DF60003595E /* libRCTOrientation.a in Frameworks */,
+				0AB1B6672294D6A40088A4D9 /* libAsHttpRequest.a in Frameworks */,
 				0A95738C21BFA6D500B5853A /* libRNFS.a in Frameworks */,
 				0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */,
-				0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */,
+				0A25E344226182950009CB35 /* (null) in Frameworks */,
 				0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */,
 				0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -618,13 +626,14 @@
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				0A8EEE1B21104C7100F206BB /* CoreGraphics.framework in Frameworks */,
-				0A25E345226182950009CB35 /* libflyMSC.a in Frameworks */,
+				0A25E345226182950009CB35 /* (null) in Frameworks */,
 				0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */,
-				0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */,
+				0A25E343226182950009CB35 /* (null) in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				0A8EEE1C21104C7100F206BB /* CoreLocation.framework in Frameworks */,
 				0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */,
 				0A8EEE1621104C7100F206BB /* MediaPlayer.framework in Frameworks */,
+				0AB1B6692294D6A40088A4D9 /* libSocketRocket.a in Frameworks */,
 				0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */,
 				0A8F7C8521D1BA260003595E /* ZipArchive.framework in Frameworks */,
 				0A8EEE1721104C7100F206BB /* MobileCoreServices.framework in Frameworks */,
@@ -640,18 +649,20 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */,
 				0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */,
-				0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */,
+				0A25E342226182950009CB35 /* (null) in Frameworks */,
 				0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */,
 				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
 				0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
+				0AB1B6662294D6A40088A4D9 /* libflyMSC.a in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
 				4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */,
 				53FE59234E8647D7AC780A14 /* libRCTJPushModule.a in Frameworks */,
 				C61FD8C4BF344DA98D024D8B /* libz.tbd in Frameworks */,
 				053CDD8FCC7C4CC6A26CD91B /* CFNetwork.framework in Frameworks */,
 				251A29C627974FD188F8B53D /* CoreFoundation.framework in Frameworks */,
+				0AB1B6682294D6A40088A4D9 /* libCorePlot.a in Frameworks */,
 				46ACF059CE1F4179A95098F9 /* libresolv.tbd in Frameworks */,
 				A0476A16FAB8487492F6FCE0 /* libRCTJCoreModule.a in Frameworks */,
 			);
@@ -974,11 +985,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AB1B6632294D6A30088A4D9 /* libAsHttpRequest.a */,
+				0AB1B6642294D6A30088A4D9 /* libCorePlot.a */,
+				0AB1B6332294D6A20088A4D9 /* libflyMSC.a */,
+				0AB1B6652294D6A40088A4D9 /* libSocketRocket.a */,
 				007B8870228A527400CE49F9 /* SuperMap.framework */,
-				0A25E33E226182950009CB35 /* libAsHttpRequest.a */,
-				0A25E33F226182950009CB35 /* libCorePlot.a */,
-				0A25E341226182950009CB35 /* libflyMSC.a */,
-				0A25E340226182950009CB35 /* libSocketRocket.a */,
 				0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */,
 				0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */,
 				0A147441223F6A7B006663C7 /* libc++.1.tbd */,

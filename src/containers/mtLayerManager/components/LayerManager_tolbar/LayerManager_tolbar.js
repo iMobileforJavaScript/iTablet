@@ -8,12 +8,9 @@ import NavigationService from '../../../NavigationService'
 import {
   layersetting,
   layerThemeSetting,
-  layer3dSettingCanSelect,
-  layer3dSettingCanNotSelect,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
-  baseListData,
   taggingData,
   scaleData,
   mscaleData,
@@ -37,11 +34,10 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap, SScene, DatasetType } from 'imobile_for_reactnative'
+import { SMap, DatasetType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
-import Map3DToolBar from '../../../workspace/components/Map3DToolBar'
 import { getLanguage } from '../../../../language/index'
 /** 工具栏类型 **/
 const list = 'list'
@@ -75,7 +71,6 @@ export default class LayerManager_tolbar extends React.Component {
 
   constructor(props) {
     super(props)
-    this.layer3d = {}
     this.height =
       props.containerProps.height >= 0
         ? props.containerProps.height
@@ -116,12 +111,6 @@ export default class LayerManager_tolbar extends React.Component {
       case ConstToolType.MAP_THEME_STYLES:
         data = layerThemeSettings(this.props.language)
         data[0].headers = headerData
-        break
-      case ConstToolType.MAP3D_LAYER3DSELECT:
-        data = layer3dSettingCanSelect(this.props.language)
-        break
-      case ConstToolType.MAP3D_LAYER3DCHANGE:
-        data = layereditsetting(global.language)
         break
       case ConstToolType.COLLECTION:
         //collection 单独处理
@@ -185,9 +174,6 @@ export default class LayerManager_tolbar extends React.Component {
       //         data:layerManagerData,
       //       },
       //     ]
-      case ConstToolType.MAP3D_BASE:
-        data = baseListData
-        break
       case ConstToolType.MAP_EDIT_TAGGING:
         data = taggingData(global.language)
         break
@@ -371,17 +357,10 @@ export default class LayerManager_tolbar extends React.Component {
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
       //'切换底图') {
-      if (this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE) {
-        this.setVisible(true, ConstToolType.MAP3D_BASE, {
-          height: ConstToolType.TOOLBAR_HEIGHT[5],
-          type: ConstToolType.MAP3D_BASE,
-        })
-      } else {
-        this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
-          height: ConstToolType.TOOLBAR_HEIGHT[5],
-          layerdata: this.state.layerdata,
-        })
-      }
+      this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        layerdata: this.state.layerdata,
+      })
     } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_LAYER_STYLE
@@ -579,20 +558,6 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
       //'设置为当前图层'
-      if (
-        this.state.type === ConstToolType.MAP3D_LAYER3DSELECT ||
-        this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE
-      ) {
-        this.cb && this.cb(this.layer3dItem)
-        this.setVisible(false)
-        let overlayView = this.props.getOverlayView
-          ? this.props.getOverlayView()
-          : null
-        if (overlayView) {
-          overlayView.setVisible(false)
-        }
-        return
-      }
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
       this.setThislayer()
@@ -653,35 +618,6 @@ export default class LayerManager_tolbar extends React.Component {
           //'不支持由该图层创建专题图'
         )
       }
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.OPTIONAL ||
-      //设置图层可选'
-      section.title === getLanguage(global.language).Map_Layer.NOT_OPTIONAL
-      //'设置图层不可选'
-    ) {
-      //console.warn(this.state.data)
-      let _title = section.title
-      let canChoose = true
-      if (_title === getLanguage(global.language).Map_Layer.NOT_OPTIONAL)
-        canChoose = false
-      SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
-        result
-          ? Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
-          : //`${_title}成功`)
-          Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
-        //`${_title}失败`)
-        // this.overlayView&&this.overlayView.setVisible(false)
-        this.setVisible(false)
-        let overlayView = this.props.getOverlayView
-          ? this.props.getOverlayView()
-          : null
-        if (overlayView) {
-          overlayView.setVisible(false)
-        }
-        if (result) {
-          this.changeState(canChoose)
-        }
-      })
     }
   }
 
@@ -737,33 +673,6 @@ export default class LayerManager_tolbar extends React.Component {
     if (overlayView) {
       overlayView.setVisible(false)
     }
-  }
-
-  getLayer3dItem = (
-    layer3dItem,
-    cb = () => {},
-    setItemSelectable = () => {},
-    overlayView = {},
-    changeState = () => {},
-  ) => {
-    this.layer3dItem = layer3dItem
-    this.cb = cb
-    this.setItemSelectable = setItemSelectable
-    this.overlayView = overlayView
-    this.changeState = changeState
-    let selectable = this.layer3dItem.selectable
-    let data
-    selectable
-      ? (data = layer3dSettingCanNotSelect(this.props.language))
-      : (data = layer3dSettingCanSelect(this.props.language))
-    this.setState({ data })
-  }
-
-  getLayer3d = () => {
-    return this.layer3dItem
-  }
-  getoverlayView = () => {
-    return this.overlayView
   }
   renderList = () => {
     if (this.state.data.length === 0) return
@@ -833,20 +742,6 @@ export default class LayerManager_tolbar extends React.Component {
       </View>
     )
   }
-  renderMap3DList = () => {
-    return (
-      <Map3DToolBar
-        ref={ref => (this.Map3DToolBar = ref)}
-        data={this.state.data}
-        type={this.state.type}
-        setVisible={this.setVisible}
-        device={this.props.device}
-        getLayer3d={this.getLayer3d}
-        getoverlayView={this.getoverlayView}
-      />
-    )
-  }
-
   renderItem = ({ item }) => {
     return (
       <View>
@@ -911,15 +806,10 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_STYLE:
           case ConstToolType.MAP_THEME_STYLE:
           case ConstToolType.MAP_THEME_STYLES:
-          case ConstToolType.MAP3D_LAYER3DSELECT:
           case ConstToolType.COLLECTION:
           case ConstToolType.MAP_EDIT_STYLE:
           case ConstToolType.MAP_EDIT_MORE_STYLE:
-          case ConstToolType.MAP3D_LAYER3DCHANGE:
             box = this.renderList()
-            break
-          case ConstToolType.MAP3D_BASE:
-            box = this.renderMap3DList()
             break
         }
         break

@@ -7,7 +7,7 @@ import { Platform } from 'react-native'
 import { color } from '../../styles'
 import LayerManager from '../mtLayerManager'
 // import Map3DLayerManager from '../map3DLayerManager'
-import Map3DLayerManager from '../Layer3DManager'
+import Layer3DManager from '../Layer3DManager'
 import Setting from '../setting'
 import MapSetting from '../mapSetting'
 import { LayerAttribute } from '../layerAttribute'
@@ -87,8 +87,8 @@ const Map3DTabs = TabNavigator(
     Map3D: {
       screen: Map3D,
     },
-    Map3DLayerManager: {
-      screen: Map3DLayerManager,
+    Layer3DManager: {
+      screen: Layer3DManager,
     },
     LayerAttribute3D: {
       screen: LayerAttribute,

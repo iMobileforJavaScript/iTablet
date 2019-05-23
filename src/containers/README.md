@@ -15,7 +15,6 @@
 > * inPutPage
 > * Layer3DManager        (三维图层管理页面)
 > * layerAttribute        (图层属性页面)
-> * map3DLayerManager     (三维图层管理页面)
 > * mapChange             (地图切换页面(弃用))
 > * mapCut                (弃用)
 > * mapLoad               (本地地图页面(弃用))

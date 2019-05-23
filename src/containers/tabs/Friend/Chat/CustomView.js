@@ -13,6 +13,7 @@ import {
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { ConstOnline } from '../../../../constants'
+import MSGConstant from '../MsgConstant'
 
 export default class CustomView extends React.Component {
   props: {
@@ -28,10 +29,11 @@ export default class CustomView extends React.Component {
 
   render() {
     if (
-      this.props.currentMessage.message.type &&
-      this.props.currentMessage.message.type === 6
+      this.props.currentMessage.type &&
+      this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
     ) {
-      let fileSize = this.props.currentMessage.message.message.fileSize
+      let fileSize = this.props.currentMessage.originMsg.message.message
+        .fileSize
       let fileSizeText = ''
       if (fileSize > 1024) {
         fileSize = fileSize / 1024
@@ -61,7 +63,7 @@ export default class CustomView extends React.Component {
                   : [styles.fileName, { color: 'white' }]
               }
             >
-              {this.props.currentMessage.message.message.fileName}
+              {this.props.currentMessage.originMsg.message.message.fileName}
             </Text>
             <Text
               style={
@@ -77,14 +79,18 @@ export default class CustomView extends React.Component {
       )
     }
     if (
-      this.props.currentMessage.message.type &&
-      this.props.currentMessage.message.type === 10
+      this.props.currentMessage.type &&
+      this.props.currentMessage.type === MSGConstant.MSG_LOCATION
     ) {
       let text =
         'LOCATION(' +
-        this.props.currentMessage.message.message.longitude.toFixed(6) +
+        this.props.currentMessage.originMsg.message.message.longitude.toFixed(
+          6,
+        ) +
         ',' +
-        this.props.currentMessage.message.message.latitude.toFixed(6) +
+        this.props.currentMessage.originMsg.message.message.latitude.toFixed(
+          6,
+        ) +
         ')'
       let textColor = 'white'
       if (this.props.position === 'left') {
@@ -99,10 +105,13 @@ export default class CustomView extends React.Component {
             NavigationService.navigate('MapView', {
               wsData,
               isExample: true,
-              mapName: this.props.currentMessage.message.message.message,
+              mapName: this.props.currentMessage.originMsg.message.message
+                .message,
               showMarker: {
-                longitude: this.props.currentMessage.message.message.longitude,
-                latitude: this.props.currentMessage.message.message.latitude,
+                longitude: this.props.currentMessage.originMsg.message.message
+                  .longitude,
+                latitude: this.props.currentMessage.originMsg.message.message
+                  .latitude,
               },
             })
           }}

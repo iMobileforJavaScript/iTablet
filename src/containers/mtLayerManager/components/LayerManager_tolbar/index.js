@@ -1,4 +1,5 @@
 import LayerManager_tolbar from './LayerManager_tolbar'
+import Layer3DManager_tolbar from './Layer3DManager_tolbar'
 // import { connect } from 'react-redux'
 
 // const mapStateToProps = state => ({
@@ -14,4 +15,4 @@ import LayerManager_tolbar from './LayerManager_tolbar'
 //   mapDispatchToProps,
 // )(LayerManager_tolbar)
 
-export default LayerManager_tolbar
+export { LayerManager_tolbar,Layer3DManager_tolbar}
