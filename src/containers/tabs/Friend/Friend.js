@@ -255,7 +255,10 @@ export default class Friend extends Component {
     if (bCon) {
       let talkIds = []
       if (this.isGroupMsg(messageStr)) {
-        let members = FriendListFileHandle.getGroup(talkId).members
+        let omembers = FriendListFileHandle.getGroup(talkId).members
+        //直接传到原生会有问题，先转一下
+        let smembers = JSON.stringify(omembers)
+        let members = JSON.parse(smembers)
         await SMessageService.declareSession(members, talkId)
         for (let key in members) {
           talkIds.push(members[key].id)

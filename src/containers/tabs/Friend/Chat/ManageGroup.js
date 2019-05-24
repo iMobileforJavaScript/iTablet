@@ -25,10 +25,13 @@ class ManageGroup extends Component {
     this.language = this.props.navigation.getParam('language')
     this.chat = this.props.navigation.getParam('chat')
     this.state = {
-      contacts: this.targetUser.users,
+      contacts: this.getGroupMembers(),
     }
   }
 
+  getGroupMembers = () => {
+    return FriendListFileHandle.getGroup(this.targetUser.id).members
+  }
   _leaveGroup = async () => {
     let ctime = new Date()
     let time = Date.parse(ctime)
