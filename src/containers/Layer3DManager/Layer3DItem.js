@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
-import { scaleSize } from '../../utils'
 import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
 export default class Layer3DItem extends Component {
@@ -18,11 +17,13 @@ export default class Layer3DItem extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: props.item.name,
+      // name: props.item.name,
       visible: props.item.visible,
       selectable: props.item.selectable,
-      type: props.item.type,
+      // type: props.item.type,
     }
+
+    this.changeVisible = this.changeVisible.bind(this)
   }
 
   // changeSelect = async () => {
@@ -43,25 +44,25 @@ export default class Layer3DItem extends Component {
   }
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps) {
-    this.setState({
-      name: this.props.item.name,
-      visible: this.props.item.visible,
-      selectable: this.props.item.selectable,
-      type: this.props.item.type,
-    })
+    // this.setState({
+    //   // name: this.props.item.name,
+    //   visible: this.props.item.visible,
+    //   selectable: this.props.item.selectable,
+    //   // type: this.props.item.type,
+    // })
     // this.state = 
   }
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
   }
 
-  changeVisible = async () => {
-    let newState = this.state
+  changeVisible(){
+    let newState = JSON.parse(JSON.stringify(this.state))
     newState.visible = !this.state.visible
-    if (this.state.type === 'Terrain') {
-      await SScene.setTerrainLayerListVisible(this.state.name, newState.visible)
+    if (this.props.item.type === 'Terrain') {
+      SScene.setTerrainLayerListVisible(this.props.item.name, newState.visible)
     } else {
-      await SScene.setVisible(this.state.name, newState.visible)
+      SScene.setVisible(this.props.item.name, newState.visible)
     }
     this.setState(newState)
   }
@@ -117,30 +118,40 @@ const layer3dSettingCanNotSelect = param => [
     //   ? this.props.getOverlayView()
     //   : null
     if (layer3dToolbar) {
-      switch (this.state.type) {
+      switch (this.props.item.type) {
         case 'IMAGEFILE':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
             isFullScreen: true,
-            height: scaleSize(87),
+            height: 86*4,
           })
           break
         case 'Terrain':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
-            height: scaleSize(87),
+            height: 86*3,
           })
           break
-        default:
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_DEFAULT, {
+        default:{
+          let type =  ConstToolType.MAP3D_LAYER3D_DEFAULT
+          if(this.state.selectable){
+            type =  ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED
+          }
+          layer3dToolbar.setVisible(true,type, {
             isFullScreen: true,
-            height: scaleSize(174),
+            height: 86*2,
           })
-          layer3dToolbar.getLayer3dItem(
-            this.state,
-            this.changeState,
-          )
           break
+        }
       }
+      layer3dToolbar.getLayer3dItem(
+        {
+          name: this.props.item.name,
+          visible: this.state.visible,
+          selectable: this.state.selectable,
+          type: this.props.item.type,
+        },
+        this.changeState,
+      )
       this.props.overlayView.setVisible(true)
     }
   }
@@ -186,7 +197,7 @@ const layer3dSettingCanNotSelect = param => [
 
           <Image source={typeImg} style={styles.type} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <Text style={[styles.itemName, textColor]}>{this.state.name}</Text>
+            <Text style={[styles.itemName, textColor]}>{this.props.item.name}</Text>
           </ScrollView>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />
