@@ -123,22 +123,21 @@ function getMapSettings() {
   return data
 }
 // 地图设置 新菜单栏
-//todo 中英文
 const getThematicMapSettings = () => [
   {
-    title: '基本设置',
+    title: getLanguage(global.language).Map_Settings.BASIC_SETTING,
   },
   {
-    title: '范围设置',
+    title: getLanguage(global.language).Map_Settings.RANGE_SETTING,
   },
   {
-    title: '坐标系设置',
+    title: getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM_SETTING,
   },
   {
-    title: '高级设置',
+    title: getLanguage(global.language).Map_Settings.ADVANCED_SETTING,
   },
   {
-    title: '图例设置',
+    title: getLanguage(global.language).Map_Settings.LEGEND_SETTING,
   },
 ]
 /*
@@ -147,67 +146,62 @@ const getThematicMapSettings = () => [
 //基本设置
 const basicSettings = () => [
   {
-    title: '地图名称',
+    title: getLanguage(global.language).Map_Settings.MAP_NAME,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '显示比例尺',
+    title: getLanguage(global.language).Map_Settings.SHOW_SCALE,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '手势旋转',
+    title: getLanguage(global.language).Map_Settings.ROTATION_GESTURE,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '手势俯仰',
+    title: getLanguage(global.language).Map_Settings.PITCH_GESTURE,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '旋转角度',
+    title: getLanguage(global.language).Map_Settings.ROTATION_ANGLE,
     value: '0°',
     iconType: 'arrow',
   },
   {
-    title: '颜色模式',
+    title: getLanguage(global.language).Map_Settings.COLOR_MODE,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '背景颜色',
+    title: getLanguage(global.language).Map_Settings.BACKGROUND_COLOR,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '地图反走样',
-    value: false,
-    iconType: 'switch',
-  },
-  // {
-  //   title:'线性反走样',
-  //   value:true,
-  //   iconType:'switch',
-  // },
-  {
-    title: '固定符号角度',
-    value: true,
-    iconType: 'switch',
-  },
-  {
-    title: '固定文本角度',
+    title: getLanguage(global.language).Map_Settings.MAP_ANTI_ALIASING,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '固定文本方向',
+    title: getLanguage(global.language).Map_Settings.FIX_SYMBOL_ANGLE,
     value: true,
     iconType: 'switch',
   },
   {
-    title: '显示压盖对象',
+    title: getLanguage(global.language).Map_Settings.FIX_TEXT_ANGLE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.FIX_TEXT_DIRECTION,
+    value: true,
+    iconType: 'switch',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.SHOW_OVERLAYS,
     value: true,
     iconType: 'switch',
   },
@@ -215,44 +209,46 @@ const basicSettings = () => [
 //范围设置
 const rangeSettings = () => [
   {
-    title: '中心点',
+    title: getLanguage(global.language).Map_Settings.MAP_CENTER,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '比例尺',
+    title: getLanguage(global.language).Map_Settings.MAP_SCALE,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '固定比例尺级别',
+    title: getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '当前窗口四至范围',
+    title: getLanguage(global.language).Map_Settings.CURRENT_VIEW_BOUNDS,
     value: '',
     iconType: 'arrow',
   },
 ]
+
+//四至范围
 const fourRanges = () => [
   {
-    title: '左',
+    title: getLanguage(global.language).Map_Settings.LEFT,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '下',
+    title: getLanguage(global.language).Map_Settings.BOTTOM,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '右',
+    title: getLanguage(global.language).Map_Settings.RIGHT,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '上',
+    title: getLanguage(global.language).Map_Settings.TOP,
     value: '',
     iconType: 'arrow',
   },
@@ -260,28 +256,30 @@ const fourRanges = () => [
 //坐标系设置
 const coordinateSystemSettings = () => [
   {
-    title: '坐标系',
+    title: getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM,
     value: 'GCS_WGS 1984',
     iconType: 'arrow',
   },
   {
-    title: '动态投影',
+    title: getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION,
     value: true,
     iconType: 'switch',
   },
   {
-    title: '转换参数',
+    title: getLanguage(global.language).Map_Settings.TRANSFER_PARAMS,
     iconType: 'arrow',
   },
 ]
+//坐标系数据
 const coordinateData = () => [
   {
-    title: '平面坐标系',
+    title: getLanguage(global.language).Map_Settings.PLAN_COORDINATE_SYSTEM,
     visible: true,
     data: [],
   },
   {
-    title: '地理坐标系',
+    title: getLanguage(global.language).Map_Settings
+      .GEOGRAPHIC_COORDINATE_SYSTEM,
     visible: true,
     data: [
       {
@@ -299,7 +297,8 @@ const coordinateData = () => [
     ],
   },
   {
-    title: '投影坐标系',
+    title: getLanguage(global.language).Map_Settings
+      .PROJECTED_COORDINATE_SYSTEM,
     visible: true,
     data: [
       {
@@ -313,97 +312,133 @@ const coordinateData = () => [
     ],
   },
 ]
+const transferData = () => [
+  {
+    title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
+    value: [
+      {
+        value: 'Geocentric Transalation(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'Molodensky(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'Abridged Molodensky(3-para)',
+        paramNum: 3,
+      },
+      {
+        value: 'position Vector(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'Coordinate Frame(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'Bursa-wolf(7-para)',
+        paramNum: 7,
+      },
+      {
+        value: 'MolodenskyBadekas(10-para)',
+        paramNum: 10,
+      },
+    ],
+    iconType: 'arrow',
+  },
+]
 //高级设置
 const advancedSettings = () => [
   {
-    title: '流动显示',
+    title: getLanguage(global.language).Map_Settings.FLOW_VISIUALIZATION,
     value: true,
     iconType: 'switch',
   },
   {
-    title: '显示负值数据',
+    title: getLanguage(global.language).Map_Settings.SHOW_NEGATIVE_DATA,
     value: true,
     iconType: 'switch',
   },
   {
-    title: '自动避让',
+    title: getLanguage(global.language).Map_Settings.AUTOMATIC_AVOIDANCE,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '随图缩放',
+    title: getLanguage(global.language).Map_Settings.ZOOM_WITH_MAP,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '显示牵引线',
+    title: getLanguage(global.language).Map_Settings.SHOW_TRACTION_LINE,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '全局统计值',
+    title: getLanguage(global.language).Map_Settings.GLOBAL_STATISTICS,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '统计图注记',
-    value: '百分比',
+    title: getLanguage(global.language).Map_Settings.CHART_ANNOTATION,
+    value: getLanguage(global.language).Map_Settings.PERCENT,
     iconType: 'arrow',
   },
   {
-    title: '显示坐标轴',
+    title: getLanguage(global.language).Map_Settings.SHOW_AXIS,
     value: false,
     iconType: 'switch',
   },
   {
-    title: '柱状图风格',
+    title: getLanguage(global.language).Map_Settings.HISTOGRAM_STYLE,
     iconType: 'arrow',
   },
   {
-    title: '玫瑰图、饼图风格',
+    title: getLanguage(global.language).Map_Settings.ROSE_AND_PIE_CHART_STYLE,
     iconType: 'arrow',
   },
 ]
 
-const histogramSettings = () => [
-  {
-    title: '柱宽度系数',
-    value: '1',
-    iconType: 'arrow',
-  },
-  {
-    title: '柱间距系数',
-    value: '0.618',
-    iconType: 'arrow',
-  },
-]
+// const histogramSettings = () => [
+//   {
+//     title: '柱宽度系数',
+//     value: '1',
+//     iconType: 'arrow',
+//   },
+//   {
+//     title: '柱间距系数',
+//     value: '0.618',
+//     iconType: 'arrow',
+//   },
+// ]
 const colorMode = () => [
   {
-    value: '默认色彩模式',
+    value: getLanguage(global.language).Map_Settings.DEFAULT_COLOR_MODE,
     action: () => {
       return SMap.setMapColorMode(0)
     },
   },
   {
-    value: '黑白模式',
+    value: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
     action: () => {
       return SMap.setMapColorMode(1)
     },
   },
   {
-    value: '灰度模式',
+    value: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
     action: () => {
       return SMap.setMapColorMode(2)
     },
   },
   {
-    value: '黑白反色模式',
+    value: getLanguage(global.language).Map_Settings.ANTI_BLACK_AND_WHITE,
     action: () => {
       return SMap.setMapColorMode(3)
     },
   },
   {
-    value: '黑白反色，其他颜色不变',
+    value: getLanguage(global.language).Map_Settings.ANTI_BLACK_AND_WHITE_2,
     action: () => {
       return SMap.setMapColorMode(4)
     },
@@ -417,7 +452,8 @@ export {
   coordinateSystemSettings,
   coordinateData,
   advancedSettings,
-  histogramSettings,
+  // histogramSettings,
   colorMode,
   fourRanges,
+  transferData,
 }

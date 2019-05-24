@@ -1358,6 +1358,7 @@ export default class MapView extends React.Component {
         {this.props.mapLegend && Platform.OS === 'ios' && (
           <RNLegendView
             device={this.props.device}
+            language={this.props.language}
             ref={ref => (GLOBAL.smlegend = ref)}
           />
         )}

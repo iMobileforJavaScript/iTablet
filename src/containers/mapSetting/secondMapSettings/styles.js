@@ -66,8 +66,11 @@ export default StyleSheet.create({
     borderColor: color.separateColorGray,
   },
   headerRight: {
-    fontSize: setSpText(22),
-    color: color.white,
+    color: 'white',
+    width: scaleSize(100),
+    fontSize: size.fontSize.fontSizeXXl,
+    textAlign: 'right',
+    marginRight: scaleSize(30),
   },
   sectionHeader: {
     marginLeft: scaleSize(25),

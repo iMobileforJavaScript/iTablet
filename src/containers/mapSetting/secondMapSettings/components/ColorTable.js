@@ -9,6 +9,7 @@ import { ConstToolType } from '../../../../constants/index'
 import { TouchableOpacity, View, Animated, FlatList } from 'react-native'
 import { scaleSize } from '../../../../utils/index'
 import { color } from '../../../tabs/Mine/MyService/Styles'
+import { HEADER_HEIGHT } from '../../../../components/Header/styles'
 
 export default class ColorTable extends React.Component {
   props: {
@@ -27,7 +28,8 @@ export default class ColorTable extends React.Component {
     this.ColumeNums = this.props.device.orientation === 'LANDSCAPE' ? 16 : 8
     this.state = {
       bottom: new Animated.Value(-this.height),
-      boxHeight: new Animated.Value(-this.props.device.height),
+      boxOpacity: new Animated.Value(0),
+      boxBottom: new Animated.Value(HEADER_HEIGHT - this.props.device.height),
     }
   }
 
@@ -37,9 +39,13 @@ export default class ColorTable extends React.Component {
         toValue: 0,
         duration: 150,
       }),
-      Animated.timing(this.state.boxHeight, {
-        toValue: 0,
+      Animated.timing(this.state.boxOpacity, {
+        toValue: 0.5,
         duration: 150,
+      }),
+      Animated.timing(this.state.boxBottom, {
+        toValue: 0,
+        duration: 10,
       }),
     ]
     Animated.parallel(anims).start()
@@ -51,9 +57,13 @@ export default class ColorTable extends React.Component {
         toValue: -this.height,
         duration: 150,
       }),
-      Animated.timing(this.state.boxHeight, {
-        toValue: -this.props.device.height,
+      Animated.timing(this.state.boxOpacity, {
+        toValue: 0,
         duration: 150,
+      }),
+      Animated.timing(this.state.boxBottom, {
+        toValue: HEADER_HEIGHT - this.props.device.height,
+        duration: 10,
       }),
     ]
     Animated.parallel(anims).start()
@@ -80,14 +90,17 @@ export default class ColorTable extends React.Component {
   }
 
   render() {
+    let height = this.props.device.height - HEADER_HEIGHT + 2
     return (
       <View>
         <Animated.View
           style={{
             width: this.props.device.width,
-            height: this.props.device.height,
+            height: height,
             position: 'absolute',
-            bottom: this.state.boxHeight,
+            backgroundColor: color.gray1,
+            opacity: this.state.boxOpacity,
+            bottom: this.state.boxBottom,
           }}
         >
           <TouchableOpacity

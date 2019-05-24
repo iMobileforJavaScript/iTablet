@@ -37,20 +37,20 @@ export default class Layer3DItem extends Component {
     if (
       JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
-    ){
+    ) {
       return true
     }
     return false
   }
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps) {
-    // this.setState({
-    //   // name: this.props.item.name,
-    //   visible: this.props.item.visible,
-    //   selectable: this.props.item.selectable,
-    //   // type: this.props.item.type,
-    // })
-    // this.state = 
+    this.setState({
+      name: this.props.item.name,
+      visible: this.props.item.visible,
+      selectable: this.props.item.selectable,
+      type: this.props.item.type,
+    })
+    // this.state =
   }
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
@@ -140,6 +140,7 @@ const layer3dSettingCanNotSelect = param => [
             isFullScreen: true,
             height: 86*2,
           })
+          layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break
         }
       }

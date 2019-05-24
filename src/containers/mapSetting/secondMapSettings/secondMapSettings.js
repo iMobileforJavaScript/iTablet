@@ -16,6 +16,7 @@ import {
   Switch,
   Platform,
   TextInput,
+  Clipboard,
 } from 'react-native'
 import {
   basicSettings,
@@ -23,9 +24,9 @@ import {
   coordinateSystemSettings,
   coordinateData,
   advancedSettings,
-  histogramSettings,
   fourRanges,
   colorMode,
+  transferData,
 } from '../settingData'
 import { SMap } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils'
@@ -35,6 +36,8 @@ import Toast from '../../../utils/Toast'
 import NavigationService from '../../NavigationService'
 import { mapBackGroundColor } from '../../../constants'
 import { getThemeAssets } from '../../../assets'
+import { getLanguage } from '../../../language'
+
 export default class secondMapSettings extends Component {
   props: {
     language: string,
@@ -49,45 +52,66 @@ export default class secondMapSettings extends Component {
       data: [],
       device: params.device,
       title: params.title,
+      rightBtn: params.rightBtn || '',
       cb: params.cb || '',
     }
   }
   UNSAFE_componentWillMount() {
     this.getData()
   }
+
+  //数字格式化成带逗号的数字
+  formatNumberToString = num => {
+    let dotReg = /\./
+    let reg = /\.\d+/
+    let afterDot = ''
+    dotReg.test(num) && (afterDot = num.match(reg)[0])
+    return (+num).toLocaleString('en').replace(reg, afterDot)
+  }
+
+  //带逗号的字符串格式化成数字
+  formatStringToNumber = str => {
+    let reg = /,/g
+    return +str.replace(reg, '')
+  }
+
+  //获取数据方法
   getData = async () => {
     let data,
       colorData = null,
       colorModeData = null
     //地图旋转角度
     switch (this.state.title) {
-      case '基本设置':
+      case getLanguage(global.language).Map_Settings.BASIC_SETTING:
         data = await this.getBasicData()
         colorData = mapBackGroundColor
         colorModeData = colorMode()
         break
-      case '范围设置':
+      case getLanguage(global.language).Map_Settings.RANGE_SETTING:
         data = await this.getRangeData()
         break
-      case '坐标系设置':
+      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM_SETTING:
         data = await this.getCoordinateSystemData()
         break
-      case '高级设置':
+      case getLanguage(global.language).Map_Settings.ADVANCED_SETTING:
         data = await this.getAdvanceData()
         break
-      case '中心点':
+      case getLanguage(global.language).Map_Settings.MAP_CENTER:
         data = { title: 'centerPoint' }
         data.value = await SMap.getMapCenter()
         break
-      case '比例尺':
+      case getLanguage(global.language).Map_Settings.MAP_SCALE:
         data = { title: 'scale' }
         data.value = await SMap.getMapScale()
         break
-      case '坐标系':
+      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM:
         data = await coordinateData()
         break
-      case '当前窗口四至范围':
+      case getLanguage(global.language).Map_Settings.CURRENT_VIEW_BOUNDS:
         data = await this.getFourRangeData()
+        break
+      case getLanguage(global.language).Map_Settings.TRANSFER_PARAMS:
+        data = await this.getTransferData()
         break
     }
     this.setState({
@@ -109,7 +133,19 @@ export default class secondMapSettings extends Component {
       data[3].value = await SMap.isEnableSlantTouch()
       angle = await SMap.getMapAngle()
       data[4].value = angle.toString().replace('.0', '')
-      data[5].value = await SMap.getMapColorMode()
+      //原生层返回的是中文，做一个映射，转换成对应语言
+      let colorMode = await SMap.getMapColorMode()
+      let allColorMode = {
+        默认色彩模式: getLanguage(global.language).Map_Settings
+          .DEFAULT_COLOR_MODE,
+        黑白模式: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
+        灰度模式: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
+        黑白反色模式: getLanguage(global.language).Map_Settings
+          .ANTI_BLACK_AND_WHITE,
+        '黑白反色，其他颜色不变': getLanguage(global.language).Map_Settings
+          .ANTI_BLACK_AND_WHITE_2,
+      }
+      data[5].value = allColorMode[colorMode]
       bgColor = await SMap.getMapBackgroundColor()
       data[6].value = bgColor.toUpperCase()
       data[7].value = await SMap.isAntialias()
@@ -127,10 +163,10 @@ export default class secondMapSettings extends Component {
     let data = await rangeSettings()
     if (Platform.OS === 'ios') {
       let mapCenter = await SMap.getMapCenter()
-      let centerX = this.formatNumber(mapCenter.x)
-      let centerY = this.formatNumber(mapCenter.y)
+      let centerX = this.formatNumberToString(mapCenter.x)
+      let centerY = this.formatNumberToString(mapCenter.y)
       let mapScale = await SMap.getMapScale()
-      let scale = this.formatNumber(mapScale)
+      let scale = this.formatNumberToString(mapScale)
       data[0].value = `${centerX}/${centerY}`
       data[1].value = `1:${scale}`
       data[2].value = await SMap.isVisibleScalesEnabled()
@@ -138,25 +174,25 @@ export default class secondMapSettings extends Component {
     return data
   }
 
-  //数据格式化
-  formatNumber = num => {
-    let dotReg = /\./
-    let reg = /\.\d+/
-    let afterDot = ''
-    dotReg.test(num) && (afterDot = num.match(reg)[0])
-    return (+num).toLocaleString('en').replace(reg, afterDot)
-  }
-
   //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
     if (Platform.OS === 'ios') {
       data[0].value = await SMap.getPrjCoordSys()
-      //todo 动态投影是否开启 缺少底层接口 data[1] data[2]相关设置
+      let isDynamicProjection = await SMap.getMapDynamicProjection()
+      data[1].value = isDynamicProjection
+      data[2].value = isDynamicProjection
+        ? ''
+        : getLanguage(global.language).Map_Settings.OFF
     }
     return data
   }
 
+  //转换参数设置数据
+  getTransferData = async () => {
+    let data = await transferData()
+    return data.value
+  }
   //高级设置数据
   getAdvanceData = async () => {
     let data = await advancedSettings()
@@ -167,17 +203,17 @@ export default class secondMapSettings extends Component {
   getFourRangeData = async () => {
     let data = await fourRanges()
     let viewBounds = await SMap.getMapViewBounds()
-    data[0].value = this.formatNumber(viewBounds.left)
-    data[1].value = this.formatNumber(viewBounds.bottom)
-    data[2].value = this.formatNumber(viewBounds.right)
-    data[3].value = this.formatNumber(viewBounds.top)
+    data[0].value = this.formatNumberToString(viewBounds.left)
+    data[1].value = this.formatNumberToString(viewBounds.bottom)
+    data[2].value = this.formatNumberToString(viewBounds.right)
+    data[3].value = this.formatNumberToString(viewBounds.top)
     return data
   }
-  //获取柱状图风格数据
-  getHistogramData = async () => {
-    let data = await histogramSettings()
-    return data
-  }
+  // //获取柱状图风格数据
+  // getHistogramData = async () => {
+  //   let data = await histogramSettings()
+  //   return data
+  // }
 
   //返回
   backAction = () => {
@@ -189,34 +225,39 @@ export default class secondMapSettings extends Component {
     let data = this.state.data.concat()
     if (Platform.OS === 'ios') {
       switch (item.title) {
-        case '显示比例尺':
+        case getLanguage(global.language).Map_Settings.SHOW_SCALE:
           await SMap.setScaleViewEnable(value)
           break
-        case '手势旋转':
+        case getLanguage(global.language).Map_Settings.ROTATION_GESTURE:
           await SMap.enableRotateTouch(value)
           break
-        case '手势俯仰':
+        case getLanguage(global.language).Map_Settings.PITCH_GESTURE:
           await SMap.enableSlantTouch(value)
           break
-        case '地图反走样':
+        case getLanguage(global.language).Map_Settings.MAP_ANTI_ALIASING:
           //已有接口内写的是int类型的参数 所以转成数字
           await SMap.setAntialias(+value)
           break
-        case '固定符号角度':
+        case getLanguage(global.language).Map_Settings.FIX_SYMBOL_ANGLE:
           await SMap.setMarkerFixedAngle(value)
           break
-        case '固定文本角度':
+        case getLanguage(global.language).Map_Settings.FIX_TEXT_ANGLE:
           await SMap.setTextFixedAngle(value)
           break
-        case '显示压盖对象':
+        case getLanguage(global.language).Map_Settings.SHOW_OVERLAYS:
           await SMap.setOverlapDisplayed(value)
           break
-        case '固定文本方向':
+        case getLanguage(global.language).Map_Settings.FIX_TEXT_DIRECTION:
           await SMap.setFixedTextOrientation(value)
           break
-        case '固定比例尺级别':
+        case getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL:
           await SMap.setVisibleScalesEnabled(value)
           break
+        case getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION:
+          await SMap.setMapDynamicProjection(value)
+          data[index + 1].value = value
+            ? ''
+            : getLanguage(global.language).Map_Settings.OFF
       }
       data[index].value = value
       this.setState({
@@ -229,16 +270,18 @@ export default class secondMapSettings extends Component {
   onItemPress = ({ title, index }) => {
     let data = this.state.data.concat()
     switch (title) {
-      case '旋转角度':
+      case getLanguage(global.language).Map_Settings.ROTATION_ANGLE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[index].value.replace('°', ''),
           cb: async value => {
             let isSetSuccess = false
-            if (value >= -360 && value <= 360) {
+            if (value !== '' && value >= -360 && value <= 360) {
               isSetSuccess = await SMap.setMapAngle(+value)
             } else {
-              Toast.show('旋转角度范围应为[-360,360]')
+              Toast.show(
+                getLanguage(global.language).Prompt.ROTATION_ANGLE_ERROR,
+              )
             }
 
             if (isSetSuccess) {
@@ -255,13 +298,13 @@ export default class secondMapSettings extends Component {
           },
         })
         break
-      case '颜色模式':
+      case getLanguage(global.language).Map_Settings.COLOR_MODE:
         this.colorModeList && this.colorModeList.showFullMap()
         break
-      case '背景颜色':
+      case getLanguage(global.language).Map_Settings.BACKGROUND_COLOR:
         this.colortable && this.colortable.showFullMap()
         break
-      case '比例尺':
+      case getLanguage(global.language).Map_Settings.MAP_SCALE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[index].value.replace('1:', ''),
@@ -269,11 +312,11 @@ export default class secondMapSettings extends Component {
             let isSuccess = false
             let regExp = /^\d+(\.\d+)?$/
             let data = this.state.data.concat()
-            if (newValue.match(regExp)) {
+            if (newValue !== '' && newValue.match(regExp)) {
               isSuccess = await SMap.setMapScale(1 / newValue)
-              data[index].value = `1:${this.formatNumber(newValue)}`
+              data[index].value = `1:${this.formatNumberToString(newValue)}`
             } else {
-              Toast.show('比例输入错误!')
+              Toast.show(getLanguage(global.language).Prompt.MAP_SCALE_ERROR)
             }
             isSuccess &&
               this.setState({ data }, () => {
@@ -282,29 +325,67 @@ export default class secondMapSettings extends Component {
           },
         })
         break
-      case '中心点':
+      case getLanguage(global.language).Map_Settings.MAP_CENTER:
         this.props.navigation.navigate('secondMapSettings', {
           title,
           cb: this.saveInput,
         })
         break
-      case '坐标系':
+      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM:
         this.props.navigation.navigate('secondMapSettings', {
           title,
           cb: this.setMapCoordinate,
         })
         break
-      case '当前窗口四至范围':
+      case getLanguage(global.language).Map_Settings.CURRENT_VIEW_BOUNDS:
         this.props.navigation.navigate('secondMapSettings', {
           title,
+          rightBtn: getLanguage(global.language).Map_Settings.COPY,
         })
         break
-
+      //todo 暂时不跳转 转换参数页面等设计出图
+      case getLanguage(global.language).Map_Settings.TRANSFER_PARAMS:
+        // this.props.navigation.navigate('secondMapSettings', {
+        //   title,
+        // })
+        break
       //四至范围点击 跳InputPage
-      case '左':
-      case '下':
-      case '右':
-      case '上':
+      case getLanguage(global.language).Map_Settings.LEFT:
+      case getLanguage(global.language).Map_Settings.BOTTOM:
+      case getLanguage(global.language).Map_Settings.RIGHT:
+      case getLanguage(global.language).Map_Settings.TOP:
+        this.props.navigation.navigate('InputPage', {
+          headerTitle: title,
+          placeholder: data[index].value,
+          cb: async newValue => {
+            let isSuccess = false
+            let regExp = /^\d+(\.\d+)?$/
+            let data = this.state.data.concat()
+            if (newValue !== '' && newValue.match(regExp)) {
+              data[index].value = this.formatNumberToString(newValue)
+              let left = this.formatStringToNumber(data[0].value)
+              let bottom = this.formatStringToNumber(data[1].value)
+              let right = this.formatStringToNumber(data[2].value)
+              let top = this.formatStringToNumber(data[3].value)
+              isSuccess = await SMap.setMapViewBounds({
+                left,
+                bottom,
+                right,
+                top,
+              })
+              isSuccess &&
+                this.setState({ data }, () => {
+                  this.backAction()
+                })
+              !isSuccess &&
+                Toast.show(
+                  getLanguage(global.language).Prompt.VIEW_BOUNDS_RANGE_ERROR,
+                )
+            } else {
+              Toast.show(getLanguage(global.language).Prompt.VIEW_BOUNDS_ERROR)
+            }
+          },
+        })
         break
     }
   }
@@ -315,13 +396,20 @@ export default class secondMapSettings extends Component {
     let regExp = /^\d+(\.\d+)?$/
     let data = this.state.data.concat()
     switch (title) {
-      case '中心点':
-        if (newValue.x.match(regExp) && newValue.y.match(regExp)) {
+      case getLanguage(global.language).Map_Settings.MAP_CENTER:
+        if (
+          newValue.x &&
+          newValue.x.match(regExp) &&
+          newValue.y &&
+          newValue.y.match(regExp)
+        ) {
           isSuccess = await SMap.setMapCenter(+newValue.x, +newValue.y)
           data[0].value =
-            this.formatNumber(newValue.x) + '/' + this.formatNumber(newValue.y)
+            this.formatNumberToString(newValue.x) +
+            '/' +
+            this.formatNumberToString(newValue.y)
         } else {
-          Toast.show('坐标点输入错误!')
+          Toast.show(getLanguage(global.language).Prompt.MAP_CENTER_ERROR)
         }
         break
     }
@@ -399,6 +487,36 @@ export default class secondMapSettings extends Component {
   //渲染带more按钮的行
   renderArrowItem = (item, index) => {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
+    let hasValue = item.value !== undefined
+    let isBackGroundColor =
+      item.title === getLanguage(global.language).Map_Settings.BACKGROUND_COLOR
+    if (
+      item.title ===
+        getLanguage(global.language).Map_Settings.TRANSFER_PARAMS &&
+      item.value === '关'
+    ) {
+      return (
+        <View>
+          <View style={styles.row}>
+            <Text
+              style={{
+                ...styles.itemName,
+                color: '#777',
+              }}
+            >
+              {item.title}
+            </Text>
+            <Text style={styles.rightText}>{item.value}</Text>
+            <Image
+              style={styles.itemArrow}
+              resizeMode={'contain'}
+              source={rightImagePath}
+            />
+          </View>
+          {this.renderLine()}
+        </View>
+      )
+    }
     return (
       <View>
         <TouchableOpacity
@@ -406,14 +524,17 @@ export default class secondMapSettings extends Component {
         >
           <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
-            {item.value !== undefined && item.title === '背景颜色' && (
+            {hasValue && isBackGroundColor && (
               <View style={{ ...styles.colorView }}>
                 <Text
-                  style={{ ...styles.colorBlock, backgroundColor: item.value }}
+                  style={{
+                    ...styles.colorBlock,
+                    backgroundColor: item.value,
+                  }}
                 />
               </View>
             )}
-            {item.value !== undefined && item.title !== '背景颜色' && (
+            {hasValue && !isBackGroundColor && (
               <Text style={styles.rightText}>{item.value}</Text>
             )}
             <Image
@@ -503,6 +624,20 @@ export default class secondMapSettings extends Component {
         return this.renderArrowItem(item, index)
       case 'text':
         return this.renderTextItem(item)
+    }
+  }
+
+  //复制按钮点击事件
+  copyInfo = async () => {
+    let datas = this.state.data
+    Clipboard.setString(
+      datas.reduce((total, item) => {
+        return `${total}${item.title}:${item.value}\n`
+      }, ''),
+    )
+    let isSuccess = await Clipboard.getString()
+    if (isSuccess !== undefined) {
+      Toast.show(getLanguage(global.language).Prompt.COPY_SUCCESS)
     }
   }
 
@@ -601,7 +736,9 @@ export default class secondMapSettings extends Component {
                   this.state.cb(value, this.state.title)
                 }}
               >
-                <Text style={styles.headerRight}>保存</Text>
+                <Text style={styles.headerRight}>
+                  {getLanguage(global.language).Prompt.CONFIRM}
+                </Text>
               </TouchableOpacity>,
             ],
           }}
@@ -610,7 +747,10 @@ export default class secondMapSettings extends Component {
         </Container>
       )
     }
-    if (this.state.title === '坐标系') {
+    if (
+      this.state.title ===
+      getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM
+    ) {
       return (
         <Container
           headerProps={{
@@ -634,6 +774,16 @@ export default class secondMapSettings extends Component {
         headerProps={{
           title: this.state.title,
           backAction: this.backAction,
+          headerRight:
+            this.state.rightBtn !== ''
+              ? [
+                <TouchableOpacity key={'copy'} onPress={this.copyInfo}>
+                  <Text style={styles.headerRight}>
+                    {this.state.rightBtn}
+                  </Text>
+                </TouchableOpacity>,
+              ]
+              : null,
         }}
       >
         <FlatList
@@ -642,9 +792,11 @@ export default class secondMapSettings extends Component {
           keyExtractor={(item, index) => item + index}
           numColumns={1}
         />
-        {this.state.title === '基本设置' &&
+        {this.state.title ===
+          getLanguage(global.language).Map_Settings.BASIC_SETTING &&
           this.renderColorTable(this.state.colorData)}
-        {this.state.title === '基本设置' &&
+        {this.state.title ===
+          getLanguage(global.language).Map_Settings.BASIC_SETTING &&
           this.renderColorModeList(this.state.colorModeData)}
       </Container>
     )
