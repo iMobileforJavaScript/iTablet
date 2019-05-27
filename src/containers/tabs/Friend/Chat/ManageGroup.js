@@ -30,9 +30,11 @@ class ManageGroup extends Component {
   }
 
   getGroupMembers = () => {
-    return FriendListFileHandle.getGroup(this.targetUser.id).members
+    return FriendListFileHandle.readGroupMemberList(this.targetUser.id)
   }
   _leaveGroup = async () => {
+    this.leaveDialog.setDialogVisible(false)
+    NavigationService.reset()
     let ctime = new Date()
     let time = Date.parse(ctime)
     await this.friend._sendMessage(
@@ -61,8 +63,6 @@ class ManageGroup extends Component {
       talkId: this.targetUser.id, //会话ID
     })
     FriendListFileHandle.delFromGroupList(this.targetUser.id)
-    this.leaveDialog.setDialogVisible(false)
-    NavigationService.reset()
   }
 
   _renderMember = ({ item }) => {
@@ -147,6 +147,24 @@ class ManageGroup extends Component {
                 FriendListFileHandle.modifyGroupList(this.targetUser.id, value)
                 this.chat && this.chat.onFriendListChanged()
                 NavigationService.goBack('InputPage')
+              },
+            })
+          }}
+        />
+        <TouchableItemView
+          item={{
+            //添加群员
+            // image: getThemeAssets().friend.friend_edit,
+            text: getLanguage(this.language).Friends.ADD_MEMBER,
+          }}
+          onPress={() => {
+            NavigationService.navigate('CreateGroupChat', {
+              user: this.user,
+              friend: this.friend,
+              language: this.language,
+              groupID: this.targetUser.id,
+              cb: () => {
+                this.setState({ contacts: this.getGroupMembers() })
               },
             })
           }}

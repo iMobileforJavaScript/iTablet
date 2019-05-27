@@ -224,6 +224,32 @@ export default class Friend extends Component {
     this._sendMessage(msgStr, groupId, false)
   }
 
+  addGroupMember = (groupId, members) => {
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+
+    let bAdded = FriendListFileHandle.addGroupMember(groupId, members)
+
+    if (bAdded) {
+      let group = FriendListFileHandle.getGroup(groupId)
+
+      let msgObj = {
+        user: {
+          name: this.props.user.currentUser.nickname,
+          id: this.props.user.currentUser.userId,
+          groupID: groupId,
+          groupName: group.groupName, //群组消息带个群组名
+        },
+        members: group.members,
+        type: MSGConstant.MSG_CREATE_GROUP,
+        time: time,
+        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
+      }
+      let msgStr = JSON.stringify(msgObj)
+      this._sendMessage(msgStr, groupId, false)
+    }
+  }
+
   isGroupMsg = messageStr => {
     let messageObj = JSON.parse(messageStr)
     let type = messageObj.type
@@ -255,10 +281,7 @@ export default class Friend extends Component {
     if (bCon) {
       let talkIds = []
       if (this.isGroupMsg(messageStr)) {
-        let omembers = FriendListFileHandle.getGroup(talkId).members
-        //直接传到原生会有问题，先转一下
-        let smembers = JSON.stringify(omembers)
-        let members = JSON.parse(smembers)
+        let members = FriendListFileHandle.readGroupMemberList(talkId)
         await SMessageService.declareSession(members, talkId)
         for (let key in members) {
           talkIds.push(members[key].id)
@@ -504,20 +527,26 @@ export default class Friend extends Component {
           bSysStore = true
         }
         if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
-          //加入群
-          let groupName = ''
-          for (let i in messageObj.members) {
-            if (i > 3) break
-            groupName += messageObj.members[i].name
-            if (i !== messageObj.members.length - 2) groupName += '、'
+          if (
+            FriendListFileHandle.isInGroup(
+              messageObj.user.groupID,
+              this.props.user.currentUser.userId,
+            )
+          ) {
+            FriendListFileHandle.addGroupMember(
+              messageObj.user.groupID,
+              messageObj.members,
+            )
+          } else {
+            //加入群
+            FriendListFileHandle.addToGroupList({
+              id: messageObj.user.groupID,
+              members: messageObj.members,
+              groupName: messageObj.user.groupName,
+              masterID: messageObj.user.id,
+            })
+            return
           }
-          FriendListFileHandle.addToGroupList({
-            id: messageObj.user.groupID,
-            members: messageObj.members,
-            groupName: groupName,
-            masterID: messageObj.user.id,
-          })
-          return
         }
         if (messageObj.type === MSGConstant.MSG_REJECT) {
           bSysStore = true
