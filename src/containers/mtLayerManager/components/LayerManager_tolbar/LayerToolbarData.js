@@ -301,10 +301,10 @@ function layere3dImage(param) {
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
           type:"RemoveLayer3d_image",
         },
-        {
-          title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
-          image: require('../../../../assets/mapTools/icon_open_black.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+        //   image: require('../../../../assets/mapTools/icon_open_black.png'),
+        // },
       ],
     },
   ]
@@ -321,14 +321,14 @@ function layere3dTerrain() {
           type:"scaleToLayer",
         },
         {
-          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-          type:"RemoveLayer3d_terrain",
-        },
-        {
           title: global.language === 'CN' ? "添加地形图层" : "Add a terrain layer",
           image: require('../../../../assets/mapTools/icon_create_black.png'),
           type:"AddTerrain",
+        },
+        {
+          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
+          image: require('../../../../assets/layerToolbar/layer_remove.png'),
+          type:"RemoveLayer3d_terrain",
         },
       ],
     },

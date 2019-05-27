@@ -113,13 +113,20 @@ const layer3dSettingCanNotSelect = param => [
     //   : null
     if (layer3dToolbar) {
       switch (this.props.item.type) {
-        case 'IMAGEFILE':
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
-            isFullScreen: true,
-            height: 86*4,
-          })
+        case 'IMAGEFILE':{
+          if(this.props.item.name==="BingMap" || this.props.item.name==="TianDiTu"){
+            layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_BASE, {
+              isFullScreen: true,
+              height: 86*2,
+            })
+          }else{
+            layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
+              isFullScreen: true,
+              height: 86*3,
+            })
+          }
           break
-        case 'Terrain':
+        }case 'Terrain':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
             height: 86*3,

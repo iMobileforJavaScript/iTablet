@@ -170,15 +170,16 @@ export default class Map3D extends React.Component {
         // Toast.show('无场景显示')
       }, 1500)
     }
-    await SScene.addLayer3D(
-      'http://t0.tianditu.com/img_c/wmts',
-      'l3dBingMaps',
-      'bingmap',
-      'JPG_PNG',
-      96.0,
-      true,
-      'c768f9fd3e388eb0d155405f8d8c6999',
-    )
+    await SScene.changeBaseLayer(1)
+    // await SScene.addLayer3D(
+    //   'http://t0.tianditu.com/img_c/wmts',
+    //   'l3dBingMaps',
+    //   'bingmap',
+    //   'JPG_PNG',
+    //   96.0,
+    //   true,
+    //   'c768f9fd3e388eb0d155405f8d8c6999',
+    // )
   }
 
   _onGetInstance = sceneControl => {
