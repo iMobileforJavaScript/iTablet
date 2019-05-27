@@ -184,7 +184,7 @@ export default class Layer3DManager extends Component {
           withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
-        bottomProps={{ type: 'fix' }}
+        // bottomProps={{ type: 'fix' }}
       >
         {this.renderLayerToolbar()}
         {this.renderSelection()}

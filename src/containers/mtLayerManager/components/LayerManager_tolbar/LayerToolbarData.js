@@ -73,14 +73,6 @@ const base3DListData = [
     index: 0,
     show: true,
     data: [
-      // {
-      //   title: 'STK',
-      //   index: 0,
-      //   show: true,
-      //   type: 'terrainLayer',
-      //   name: 'stk',
-      //   url: 'https://assets.agi.com/stk-terrain/world',
-      // },
       {
         title: 'bingmap',
         index: 0,
@@ -88,6 +80,14 @@ const base3DListData = [
         type: 'l3dBingMaps',
         name: 'bingmap',
         url: 'http://t0.tianditu.com/img_c/wmts',
+      },
+      {
+        title: 'tianditu',
+        index: 0,
+        show: true,
+        type: 'ImageFormatTypeJPG_PNG',
+        name: 'tianditu',
+        url: 'http://t0.tianditu.com/img_c/wmts?tk=22f8a846ef9e3becd95a25b08bde8f36',
       },
     ],
   },

@@ -24,6 +24,7 @@ export default class Layer3DItem extends Component {
     }
 
     this.changeVisible = this.changeVisible.bind(this)
+    this.more = this.more.bind(this)
   }
 
   // changeSelect = async () => {
@@ -44,13 +45,6 @@ export default class Layer3DItem extends Component {
   }
   // eslint-disable-next-line no-unused-vars
   componentDidUpdate(prevProps) {
-    this.setState({
-      name: this.props.item.name,
-      visible: this.props.item.visible,
-      selectable: this.props.item.selectable,
-      type: this.props.item.type,
-    })
-    // this.state =
   }
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
@@ -110,7 +104,7 @@ const layer3dSettingCanNotSelect = param => [
       ],
     },
   */
-  more = async () => {
+  more(){
     let layer3dToolbar = this.props.getlayer3dToolbar
       ? this.props.getlayer3dToolbar()
       : null
