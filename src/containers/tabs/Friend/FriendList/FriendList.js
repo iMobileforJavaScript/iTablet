@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
   SectionList,
   FlatList,
-  Image,
-  TextInput,
   RefreshControl,
 } from 'react-native'
 
@@ -22,11 +20,8 @@ import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
-import MessageDataHandle from '../MessageDataHandle'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
-import { dialogStyles, inputStyles } from '../Styles'
-import { Dialog } from '../../../../components/Dialog'
 import { getLanguage } from '../../../../language/index'
 
 class FriendList extends Component {
@@ -48,7 +43,6 @@ class FriendList extends Component {
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
-    this._modifyName = this._modifyName.bind(this)
   }
 
   refresh = () => {
@@ -78,10 +72,6 @@ class FriendList extends Component {
       this.getContacts()
     }
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.getContacts()
-  // }
 
   upload = () => {
     FriendListFileHandle.upload()
@@ -114,123 +104,7 @@ class FriendList extends Component {
               srcFriendData.push(frend)
             }
           }
-          // srcFriendData = [
-          //
-          //  {
-          //    id: 3432,
-          //    markName: 'crazy',
-          //    name: 'crazy',
-          //    tel: 18683409897,
-          //    email: '18683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: '阿凡达',
-          //    name: '阿凡达',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'alishidan',
-          //    name: 'alishidan',
-          //    tel: 13683509897,
-          //    email: '13683509897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'babala',
-          //    name: 'babala',
-          //    tel: 13683409397,
-          //    email: '13683409397@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: '白小白',
-          //    name: '白小白',
-          //    tel: 15683409897,
-          //    email: '15683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: '彼岸花',
-          //    name: '彼岸花',
-          //    tel: 13683407897,
-          //    email: '13683407897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: '大龙',
-          //    name: '大龙',
-          //    tel: 13686409897,
-          //    email: '13686409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: '丹尼儿',
-          //    name: '丹尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'f尼儿',
-          //    name: 'f尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'z尼儿',
-          //    name: 'z尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'x尼儿',
-          //    name: 'x尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'e尼儿',
-          //    name: 'e尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'g尼儿',
-          //    name: 'g尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'o尼儿',
-          //    name: 'o尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //  {
-          //    id: 3432,
-          //    markName: 'l尼儿',
-          //    name: 'l尼儿',
-          //    tel: 13683409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //
-          //  {
-          //    id: 3432,
-          //    markName: '文大胖',
-          //    name: '文大胖',
-          //    tel: 13613409897,
-          //    email: '13683409897@qq.com',
-          //  },
-          //]
-          // srcFriendData = [];
+
           let sections = [],
             letterArr = []
 
@@ -310,37 +184,6 @@ class FriendList extends Component {
     // this.refs._sectionList.scrollToOffset({animated: true, offset: offset});
   }
 
-  // eslint-disable-next-line
-  clickItem(flag, item) {
-    // if(flag === 'phone'){
-    //   Linking.openURL("tel:" + item.mobile);
-    // }else if(flag === 'note'){
-    //   Linking.openURL("smsto:" + item.mobile);
-    // }else{
-    //   Linking.openURL("mailto:" + item.email);
-    // }
-  }
-
-  _modifyName() {
-    if (this.state.inputText !== '') {
-      FriendListFileHandle.modifyFriendList(
-        this.target.id,
-        this.state.inputText,
-      )
-    } else {
-      FriendListFileHandle.modifyFriendList(this.target.id, this.target.name)
-    }
-    this.inputdialog.setDialogVisible(false)
-  }
-  _deleteFriend = () => {
-    MessageDataHandle.delMessage({
-      //清除未读信息
-      userId: this.props.user.userId, //当前登录账户的id
-      talkId: this.target.id, //会话ID
-    })
-    FriendListFileHandle.delFromFriendList(this.target.id)
-    this.dialog.setDialogVisible(false)
-  }
   render() {
     const { letterArr, sections } = this.state
     //偏移量 = （设备高度 - 字母索引高度 - 底部导航栏 - 顶部标题栏 - 24）/ 2
@@ -404,43 +247,8 @@ class FriendList extends Component {
             )}
           />
         </View>
-        {this.renderDialog()}
-        {this.renderInputDialog()}
       </View>
     )
-  }
-
-  _showPopover = (pressView, item) => {
-    this.target = item
-
-    let obj = {
-      title: getLanguage(this.props.language).Friends.SET_MARK_NAME,
-      // '设置备注',
-      onPress: () => {
-        this.inputdialog.setDialogVisible(true)
-      },
-    }
-    pressView.measure((ox, oy, width, height, px, py) => {
-      let items = [
-        obj,
-        {
-          title: getLanguage(this.props.language).Friends.DEL_FRIEND,
-          // '删除好友',
-          onPress: () => {
-            this.dialog.setDialogVisible(true)
-          },
-        },
-      ]
-      ActionPopover.show(
-        {
-          x: px,
-          y: py,
-          width,
-          height,
-        },
-        items,
-      )
-    })
   }
 
   _renderSectionHeader(sectionItem) {
@@ -453,16 +261,11 @@ class FriendList extends Component {
   }
 
   _renderItem(item) {
-    let iTemView
     return (
       <TouchableOpacity
-        ref={ref => (iTemView = ref)}
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => this._onFriendSelect(item)}
-        onLongPress={() => {
-          this._showPopover(iTemView, item)
-        }}
       >
         <View style={styles.ITemHeadTextViewStyle}>
           <Text style={styles.ITemHeadTextStyle}>
@@ -473,79 +276,6 @@ class FriendList extends Component {
           <Text style={styles.ITemTextStyle}>{item['markName']}</Text>
         </View>
       </TouchableOpacity>
-    )
-  }
-
-  renderDialogChildren = () => {
-    return (
-      <View style={dialogStyles.dialogHeaderViewX}>
-        <Image
-          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-          style={dialogStyles.dialogHeaderImgX}
-        />
-        <Text style={dialogStyles.promptTtileX}>
-          {getLanguage(this.props.language).Friends.ALERT_DEL_FRIEND}
-          {/* 将该联系人删除,将同时删除与该联系人的聊天记录 */}
-        </Text>
-      </View>
-    )
-  }
-  renderDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.dialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.props.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.props.language).Friends.CANCEL}
-        confirmAction={this._deleteFriend}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={dialogStyles.dialogBackgroundX}
-      >
-        {this.renderDialogChildren()}
-      </Dialog>
-    )
-  }
-
-  renderInputDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.inputdialog = ref)}
-        style={{
-          marginVertical: 15,
-          width: scaleSize(420),
-          height: scaleSize(250),
-        }}
-        type={'modal'}
-        confirmAction={this._modifyName}
-        // cancelAction={this.cancel}
-      >
-        <View style={inputStyles.item}>
-          {/* <Text style={styles.title}>文本内容</Text> */}
-          <TextInput
-            underlineColorAndroid={'transparent'}
-            accessible={true}
-            accessibilityLabel={
-              getLanguage(this.props.language).Friends.TEXT_CONTENT
-            }
-            onChangeText={text => {
-              this.setState({
-                inputText: text,
-              })
-            }}
-            value={this.state.inputText}
-            placeholder={
-              getLanguage(this.props.language).Friends.INPUT_MARK_NAME
-            }
-            style={inputStyles.textInputStyle}
-          />
-        </View>
-        {this.state.placeholder && (
-          <Text style={styles.placeholder}>
-            {getLanguage(this.props.language).Friends.INPUT_INVALID}
-          </Text>
-        )}
-      </Dialog>
     )
   }
 }

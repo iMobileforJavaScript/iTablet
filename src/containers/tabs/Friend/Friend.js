@@ -42,6 +42,7 @@ import ConstPath from '../../../constants/ConstPath'
 // eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
+import JPushService from './JPushService'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -82,6 +83,8 @@ export default class Friend extends Component {
   componentDidMount() {
     this.connectService()
     this.addFileListener()
+    // Platform.OS === 'android' &&
+    JPushService.init(this.props.user.currentUser.userId)
   }
 
   componentDidUpdate(prevProps) {
@@ -91,6 +94,8 @@ export default class Friend extends Component {
     ) {
       this.disconnectService()
       this.connectService()
+      // Platform.OS === 'android' &&
+      JPushService.init(this.props.user.currentUser.userId)
     }
     if (
       JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
@@ -166,7 +171,7 @@ export default class Friend extends Component {
 
   onReceiveProgress = value => {
     let msg = this.getMsgByMsgId(value.talkId, value.msgId)
-    msg.msg.message.progress = value.percentage
+    msg.originMsg.message.message.progress = value.percentage
     MessageDataHandle.editMessage({
       userId: this.props.user.currentUser.userId,
       talkId: value.talkId,
@@ -178,11 +183,10 @@ export default class Friend extends Component {
       this.curChat.onReceiveProgress(value)
     }
   }
-  // eslint-disable-next-line
+
   createGroupTalk = members => {
     let ctime = new Date()
     let time = Date.parse(ctime)
-    // eslint-disable-next-line
 
     members.push({
       id: this.props.user.currentUser.userId,
@@ -192,17 +196,6 @@ export default class Friend extends Component {
     //服务绑定
     SMessageService.declareSession(members, groupId)
 
-    let msgObj = {
-      user: {
-        name: this.props.user.currentUser.nickname,
-        id: this.props.user.currentUser.userId,
-        groupID: groupId,
-      },
-      members: members,
-      type: 912,
-      time: time,
-      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
-    }
     let groupName = ''
     for (let i in members) {
       if (i > 3) break
@@ -215,17 +208,68 @@ export default class Friend extends Component {
       groupName: groupName,
       masterID: this.props.user.currentUser.userId,
     })
-    let msgStr = JSON.stringify(msgObj)
-    for (let i in members) {
-      this._sendMessage(msgStr, members[i].id, false)
+    let msgObj = {
+      user: {
+        name: this.props.user.currentUser.nickname,
+        id: this.props.user.currentUser.userId,
+        groupID: groupId,
+        groupName: groupName, //群组消息带个群组名
+      },
+      members: members,
+      type: MSGConstant.MSG_CREATE_GROUP,
+      time: time,
+      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
-
-    // console.warn(members + groupId)
+    let msgStr = JSON.stringify(msgObj)
+    this._sendMessage(msgStr, groupId, false)
   }
 
-  _sendMessage = (messageStr, talkId, bInform) => {
+  addGroupMember = (groupId, members) => {
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+
+    let bAdded = FriendListFileHandle.addGroupMember(groupId, members)
+
+    if (bAdded) {
+      let group = FriendListFileHandle.getGroup(groupId)
+
+      let msgObj = {
+        user: {
+          name: this.props.user.currentUser.nickname,
+          id: this.props.user.currentUser.userId,
+          groupID: groupId,
+          groupName: group.groupName, //群组消息带个群组名
+        },
+        members: group.members,
+        type: MSGConstant.MSG_CREATE_GROUP,
+        time: time,
+        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
+      }
+      let msgStr = JSON.stringify(msgObj)
+      this._sendMessage(msgStr, groupId, false)
+    }
+  }
+
+  isGroupMsg = messageStr => {
+    let messageObj = JSON.parse(messageStr)
+    let type = messageObj.type
+    let isGroup = false
+    if (type === MSGConstant.MSG_GROUP) {
+      isGroup = true
+    } else if (type > 9) {
+      //大于2的都是系统消息
+      if (type > 910 && type < 920) {
+        //群组相关的系统消息
+        isGroup = true
+      }
+    }
+    return isGroup
+  }
+
+  _sendMessage = async (messageStr, talkId, bInform) => {
+    let bCon = true
     if (!g_connectService) {
-      SMessageService.connectService(
+      bCon = await SMessageService.connectService(
         MSGConstant.MSG_IP,
         MSGConstant.MSG_Port,
         MSGConstant.MSG_HostName,
@@ -233,19 +277,22 @@ export default class Friend extends Component {
         MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
-        .then(() => {
-          SMessageService.sendMessage(messageStr, talkId)
-        })
-        .catch(() => {
-          Toast.show(
-            getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
-          )
-        })
-      Toast.show(
-        getLanguage(this.props.language).Friends.MSG_SERVICE_NOT_CONNECT,
-      )
-    } else {
+    }
+    if (bCon) {
+      let talkIds = []
+      if (this.isGroupMsg(messageStr)) {
+        let members = FriendListFileHandle.readGroupMemberList(talkId)
+        await SMessageService.declareSession(members, talkId)
+        for (let key in members) {
+          talkIds.push(members[key].id)
+        }
+      } else {
+        talkIds.push(talkId)
+      }
       SMessageService.sendMessage(messageStr, talkId)
+      JPushService.push(messageStr, talkIds)
+    } else {
+      Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
     }
     if (!bInform) {
       //todo
@@ -254,16 +301,65 @@ export default class Friend extends Component {
 
   storeMessage = (messageObj, talkId, msgId) => {
     let userId = this.props.user.currentUser.userId
-    MessageDataHandle.pushMessage({
-      userId: userId,
-      talkId: talkId,
-      messageUsr: messageObj.user,
-      message: messageObj.message,
-      time: messageObj.time,
-      type: messageObj.type,
-      unReadMsg: messageObj.unReadMsg,
-      msgId: msgId,
-    })
+    let type = 0
+    if (
+      messageObj.type === MSGConstant.MSG_SINGLE ||
+      messageObj.type === MSGConstant.MSG_GROUP
+    ) {
+      type = messageObj.message.type
+        ? messageObj.message.type
+        : MSGConstant.MSG_TEXT
+    } else {
+      type = messageObj.type
+    }
+    let bSystem = false
+    if (type > 100) {
+      bSystem = true
+    }
+    let storeMsg = {
+      userId: userId, //用户id
+      talkId: talkId, //对方或群组id
+      msgId: msgId, //消息id
+      type: type,
+      originMsg: messageObj, //原始消息体
+      text: '', //消息要显示的文字信息
+      unReadMsg: messageObj.unReadMsg, //消息已读未读
+      system: bSystem,
+    }
+    switch (type) {
+      case MSGConstant.MSG_TEXT:
+        storeMsg.text = messageObj.message
+        break
+      case MSGConstant.MSG_FILE_NOTIFY:
+        storeMsg.text = '[地图]'
+        break
+      case MSGConstant.MSG_LOCATION:
+        storeMsg.text = messageObj.message.message.message
+        break
+      case MSGConstant.MSG_ADD_FRIEND:
+        storeMsg.text = messageObj.message
+        break
+      case MSGConstant.MSG_REMOVE_MEMBER:
+        if (messageObj.message.user.id === messageObj.user.id) {
+          storeMsg.text = messageObj.message.user.name + '退出了群聊'
+        } else if (
+          messageObj.message.user.id === this.props.user.currentUser.userId
+        ) {
+          storeMsg.text = messageObj.user.name + '将你移除群聊'
+        } else {
+          storeMsg.text =
+            messageObj.user.name +
+            '将' +
+            messageObj.message.user.name +
+            '移除群聊'
+        }
+        break
+      default:
+        break
+    }
+
+    MessageDataHandle.pushMessage(storeMsg)
+    return storeMsg
   }
 
   getMsgId = talkId => {
@@ -309,7 +405,7 @@ export default class Friend extends Component {
       msgId,
     ).then(res => {
       let msg = this.getMsgByMsgId(talkId, msgId)
-      msg.msg.message.queueName = res.queueName
+      msg.originMsg.message.message.queueName = res.queueName
       MessageDataHandle.editMessage({
         userId: this.props.user.currentUser.userId,
         talkId: talkId,
@@ -338,8 +434,9 @@ export default class Friend extends Component {
           let message = this.props.chat[this.props.user.currentUser.userId][
             talkId
           ].history[msgId]
-          message.msg.message.isReceived = 1
-          message.msg.message.filePath = receivePath + '/' + fileName
+          message.originMsg.message.message.isReceived = 1
+          message.originMsg.message.message.filePath =
+            receivePath + '/' + fileName
           MessageDataHandle.editMessage({
             userId: this.props.user.currentUser.userId,
             talkId: talkId,
@@ -379,7 +476,7 @@ export default class Friend extends Component {
       ) {
         bUnReadMsg = true
       }
-      if (messageObj.type === 2) {
+      if (this.isGroupMsg(message['message'])) {
         msgId = this.getMsgId(messageObj.user.groupID)
       } else {
         msgId = this.getMsgId(messageObj.user.id)
@@ -430,24 +527,50 @@ export default class Friend extends Component {
           bSysStore = true
         }
         if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
-          //加入群
-          let groupName = ''
-          for (let i in messageObj.members) {
-            if (i > 3) break
-            groupName += messageObj.members[i].name
-            if (i !== messageObj.members.length - 2) groupName += '、'
+          if (
+            FriendListFileHandle.isInGroup(
+              messageObj.user.groupID,
+              this.props.user.currentUser.userId,
+            )
+          ) {
+            FriendListFileHandle.addGroupMember(
+              messageObj.user.groupID,
+              messageObj.members,
+            )
+          } else {
+            //加入群
+            FriendListFileHandle.addToGroupList({
+              id: messageObj.user.groupID,
+              members: messageObj.members,
+              groupName: messageObj.user.groupName,
+              masterID: messageObj.user.id,
+            })
+            return
           }
-          FriendListFileHandle.addToGroupList({
-            id: messageObj.user.groupID,
-            members: messageObj.members,
-            groupName: groupName,
-            masterID: messageObj.user.id,
-          })
-          return
         }
         if (messageObj.type === MSGConstant.MSG_REJECT) {
           bSysStore = true
           bSysShow = true
+        }
+        switch (messageObj.type) {
+          case MSGConstant.MSG_REMOVE_MEMBER:
+            if (
+              messageObj.message.user.id !== this.props.user.currentUser.userId
+            ) {
+              // bSysStore = true
+              // bSysShow = true
+              FriendListFileHandle.removeGroupMember(
+                messageObj.user.groupID,
+                messageObj.message.user.id,
+              )
+            } else {
+              // bSysStore = true
+              // bSysShow = true
+              //todo 自己被移除后的处理
+            }
+            break
+          default:
+            break
         }
       }
       //保存
@@ -464,6 +587,8 @@ export default class Friend extends Component {
           } else {
             this.curChat.showInformSpot(true)
           }
+        } else {
+          JPushService.sendLocalNotification(messageObj)
         }
       }
     }

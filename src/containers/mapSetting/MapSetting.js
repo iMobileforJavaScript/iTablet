@@ -1,19 +1,30 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-// import NavigationService from '../NavigationService'
+import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, View, InteractionManager } from 'react-native'
+import {
+  SectionList,
+  View,
+  InteractionManager,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native'
 import styles from './styles'
-import { getMapSettings } from './settingData'
+import { getMapSettings, getThematicMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language/index'
 import { ConstToolType } from '../../constants'
-
+import { scaleSize } from '../../utils'
+import size from '../../styles/size'
+import color from '../../styles/color'
 export default class MapSetting extends Component {
   props: {
+    nav: string,
     language: string,
     navigation: Object,
     currentMap: Object,
@@ -63,18 +74,23 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let isAntialias = await SMap.isAntialias()
-    let isOverlapDisplayed = await SMap.isOverlapDisplayed()
-    let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
-    let isEnableRotateTouch = SMap.isEnableRotateTouch()
-    let isEnableSlantTouch = SMap.isEnableSlantTouch()
+    let newData
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      newData = getThematicMapSettings()
+    } else {
+      let isAntialias = await SMap.isAntialias()
+      let isOverlapDisplayed = await SMap.isOverlapDisplayed()
+      let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+      let isEnableRotateTouch = SMap.isEnableRotateTouch()
+      let isEnableSlantTouch = SMap.isEnableSlantTouch()
 
-    let newData = getMapSettings()
-    newData[0].data[0].value = isEnableRotateTouch
-    newData[0].data[1].value = isEnableSlantTouch
-    newData[1].data[0].value = isAntialias
-    newData[1].data[1].value = isOverlapDisplayed
-    newData[2].data[0].value = isVisibleScalesEnabled
+      newData = getMapSettings()
+      newData[0].data[0].value = isEnableRotateTouch
+      newData[0].data[1].value = isEnableSlantTouch
+      newData[1].data[0].value = isAntialias
+      newData[1].data[1].value = isOverlapDisplayed
+      newData[2].data[0].value = isVisibleScalesEnabled
+    }
 
     this.setState({
       data: newData,
@@ -193,8 +209,103 @@ export default class MapSetting extends Component {
     return section.visible ? <View style={styles.itemSeparator} /> : null
   }
 
+  flatListPressHandle = title => {
+    //图例单独处理
+    if (
+      title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
+    ) {
+      this.props.setMapLegend(true)
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+    } else {
+      //根据title跳转
+      NavigationService.navigate('secondMapSettings', {
+        title,
+        language: this.props.language,
+        //
+        device: this.props.device,
+      })
+    }
+  }
+  renderFlatListItem = ({ item }) => {
+    const styles = {
+      itemWidth: '100%',
+      itemHeight: scaleSize(90),
+      fontSize: size.fontSize.fontSizeXl,
+      imageWidth: scaleSize(45),
+      imageHeight: scaleSize(45),
+      rightImagePath: require('../../assets/Mine/mine_my_arrow.png'),
+    }
+    let imageColor = color.imageColorBlack
+    let txtColor = color.fontColorBlack
+    let title = item.title
+    return (
+      <View style={{ flex: 1 }} display={this.state.display}>
+        <TouchableOpacity
+          onPress={() => this.flatListPressHandle(title)}
+          style={{
+            flexDirection: 'row',
+            width: styles.itemWidth,
+            height: styles.itemHeight,
+            alignItems: 'center',
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+        >
+          <Text
+            style={{
+              lineHeight: styles.itemHeight,
+              flex: 1,
+              textAlign: 'left',
+              fontSize: styles.fontSize,
+              color: txtColor,
+              paddingLeft: 5,
+            }}
+          >
+            {title}
+          </Text>
+          <Image
+            style={{
+              width: styles.imageWidth - 5,
+              height: styles.imageHeight - 5,
+              tintColor: imageColor,
+            }}
+            resizeMode={'contain'}
+            source={styles.rightImagePath}
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            flex: 1,
+            height: 1,
+            marginHorizontal: 10,
+            backgroundColor: color.separateColorGray,
+          }}
+        />
+      </View>
+    )
+  }
+
   renderSelection = () => {
     if (this.state.data.length === 0) return <View style={{ flex: 1 }} />
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      return (
+        <FlatList
+          renderItem={this.renderFlatListItem}
+          data={this.state.data}
+          keyExtractor={(item, index) => item.title + index}
+          numColumns={1}
+        />
+      )
+    }
     return (
       <SectionList
         sections={this.state.data}

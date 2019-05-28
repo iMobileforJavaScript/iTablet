@@ -332,4 +332,85 @@ const Map_Setting = {
   SPHERICAL: '球面',
 }
 
-export { Map_Main_Menu, Map_Label, Map_Layer, Map_Attribute, Map_Setting }
+//地图设置菜单
+const Map_Settings = {
+  THEME_LEGEND: '图例',
+  //一级菜单
+  BASIC_SETTING: '基本设置',
+  RANGE_SETTING: '范围设置',
+  COORDINATE_SYSTEM_SETTING: '坐标系设置',
+  ADVANCED_SETTING: '高级设置',
+  LEGEND_SETTING: '图例设置',
+
+  //二级菜单 基本设置
+  MAP_NAME: '地图名称',
+  SHOW_SCALE: '显示比例尺',
+  ROTATION_GESTURE: '手势旋转',
+  PITCH_GESTURE: '手势俯仰',
+  ROTATION_ANGLE: '旋转角度',
+  COLOR_MODE: '颜色模式',
+  BACKGROUND_COLOR: '背景颜色',
+  MAP_ANTI_ALIASING: '地图反走样',
+  FIX_SYMBOL_ANGLE: '固定符号角度',
+  FIX_TEXT_ANGLE: '固定文本角度',
+  FIX_TEXT_DIRECTION: '固定文本方向',
+  SHOW_OVERLAYS: '显示压盖对象',
+
+  //二级菜单 范围设置
+  MAP_CENTER: '中心点',
+  MAP_SCALE: '比例尺',
+  FIX_SCALE_LEVEL: '固定比例尺级别',
+  CURRENT_VIEW_BOUNDS: '当前窗口四至范围',
+
+  //二级菜单 坐标系设置
+  COORDINATE_SYSTEM: '坐标系',
+  DYNAMIC_PROJECTION: '动态投影',
+  TRANSFER_PARAMS: '转换参数',
+
+  //二级菜单 高级设置
+  FLOW_VISIUALIZATION: '流动显示',
+  SHOW_NEGATIVE_DATA: '显示负值数据',
+  AUTOMATIC_AVOIDANCE: '自动避让',
+  ZOOM_WITH_MAP: '随图缩放',
+  SHOW_TRACTION_LINE: '显示牵引线',
+  GLOBAL_STATISTICS: '全局统计值',
+  CHART_ANNOTATION: '统计图注记',
+  SHOW_AXIS: '显示坐标轴',
+  HISTOGRAM_STYLE: '柱状图风格',
+  ROSE_AND_PIE_CHART_STYLE: '玫瑰图、饼图风格',
+
+  //三级菜单 颜色模式
+  DEFAULT_COLOR_MODE: '默认色彩模式',
+  BLACK_AND_WHITE: '黑白模式',
+  GRAY_SCALE_MODE: '灰度模式',
+  ANTI_BLACK_AND_WHITE: '黑白反色模式',
+  ANTI_BLACK_AND_WHITE_2: '黑白反色，其他颜色不变',
+
+  //三级菜单 窗口四至范围
+  LEFT: '左',
+  RIGHT: '右',
+  TOP: '上',
+  BOTTOM: '下',
+
+  //三级菜单 坐标系设置
+  PLAN_COORDINATE_SYSTEM: '平面坐标系',
+  GEOGRAPHIC_COORDINATE_SYSTEM: '地理坐标系',
+  PROJECTED_COORDINATE_SYSTEM: '投影坐标系',
+
+  //三级菜单 换转参数
+  TRANSFER_METHOD: '转换方法',
+
+  //设置的一些参数
+  PERCENT: '百分比',
+  OFF: '关',
+  CONFIRM: '确定',
+  COPY: '复制',
+}
+export {
+  Map_Main_Menu,
+  Map_Label,
+  Map_Layer,
+  Map_Attribute,
+  Map_Setting,
+  Map_Settings,
+}

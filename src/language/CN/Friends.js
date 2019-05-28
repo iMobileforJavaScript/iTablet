@@ -45,7 +45,7 @@ const Friends = {
   //FriendGroup
   LOADING: '刷新中...',
   DEL_GROUP: '删除群聊',
-  DEL_GROUP_CONFIRM: '将该群聊删除?',
+  DEL_GROUP_CONFIRM: '清空消息并退出群聊?',
   //Chat
   IMPORT_DATA: '数据导入中',
   IMPORT_SUCCESS: '导入成功',
@@ -61,5 +61,18 @@ const Friends = {
   FIND_NONE: '未能从联系人中找到新的online好友',
   ALREADY_FRIEND: '你们已经是好友了',
   PERMISSION_DENIED_CONTACT: '请在手机的设置中打开iTablet访问通讯录的权限',
+  //ManageFriend/Group
+  SEND_MESSAGE: '发消息',
+  SET_MARKNAME: '修改备注名',
+  SET_GROUPNAME: '修改群名称',
+  PUSH_FRIEND_CARD: '推送好友名片',
+  FRIEND_MAP: '好友地图',
+  ADD_BLACKLIST: '加入黑名单',
+  DELETE_FRIEND: '删除好友',
+  LEAVE_GROUP: '退出群聊',
+  CLEAR_HISTORY: '清空聊天记录',
+  DISMISS_GROUP: '解散群',
+  DELETE_MEMBER: '移除群员',
+  ADD_MEMBER: '添加群员',
 }
 export { Friends }

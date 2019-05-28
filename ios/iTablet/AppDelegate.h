@@ -10,8 +10,9 @@
 #import <UIKit/UIKit.h>
 #import "FileTools.h"
 #import "WeiXinUtils.h"
+#import "JPUSHService.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate,JPUSHRegisterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UINavigationController *nav;

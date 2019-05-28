@@ -4,7 +4,7 @@
 import * as React from 'react'
 import {
   InteractionManager,
-  Text,
+  // Text,
   TouchableOpacity,
   View,
   Image,
@@ -105,7 +105,7 @@ export default class Camera extends React.Component {
     this.setState({
       isFinished: true,
     })
-    // this.camera && this.camera.pausePreview()
+    this.camera && this.camera.pausePreview()
   }
 
   /** 重拍 **/
@@ -300,7 +300,7 @@ export default class Camera extends React.Component {
           }.bind(this)())
         }}
       >
-        <Text style={{ fontSize: 14 }}> SNAP </Text>
+        {/*<Text style={{ fontSize: 14 }}> SNAP </Text>*/}
       </TouchableOpacity>
     )
   }

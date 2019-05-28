@@ -160,6 +160,15 @@ const Prompt = {
   GOTO_ACTIVATE: 'Please download the Trial License to the mailbox',
   ENTER_CORRECT_MOBILE: 'Please enter the correct mobile phone number',
   ENTER_CORRECT_EMAIL: 'Please enter the correct email address',
+
+  //设置菜单提示信息
+  ROTATION_ANGLE_ERROR: 'Rotation angle should be between -360° and 360°',
+  MAP_SCALE_ERROR: 'Input error! Please enter a number',
+  VIEW_BOUNDS_ERROR: 'Range error! Please enter a number',
+  VIEW_BOUNDS_RANGE_ERROR:
+    'Parameter error! Both height and width of the view should be greater than zero',
+  MAP_CENTER_ERROR: 'Coordinate error! Both X and Y should be numbers',
+  COPY_SUCCESS: 'Coping success!',
 }
 
 export { Prompt }

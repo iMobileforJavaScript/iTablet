@@ -94,21 +94,7 @@ class FriendMessage extends Component {
           //通知类
           for (let i in messageHistory) {
             let messageStruct = messageHistory[i]
-            // {messageId:uuid, users: ['白小白'], message: [{msg,time}], type: 2 },
-            let messageObj = {}
-
-            //此处应该查询好友或者群组列表
-            //通知类
-            //通知类消息，直接接收
-            messageObj['users'] = []
-            messageObj['users'].push(messageStruct.name)
-            messageObj['type'] = messageStruct.type
-            messageObj['messageId'] = messageStruct.id
-            messageObj['message'] = messageStruct.msg
-            messageObj['time'] = messageStruct.time
-            messageObj['title'] = messageStruct.name
-            messageObj['unReadMsg'] = messageStruct.unReadMsg
-            this.inFormData.push(messageObj)
+            this.inFormData.push(messageStruct)
           }
         } else {
           let obj = undefined
@@ -153,8 +139,8 @@ class FriendMessage extends Component {
         let msg1 = obj1.message[obj1.message.length - 1]
         let msg2 = obj2.message[obj2.message.length - 1]
         if (msg1 && msg2) {
-          let time1 = msg1.time
-          let time2 = msg2.time
+          let time1 = msg1.originMsg.time
+          let time2 = msg2.originMsg.time
           return time2 - time1
         } else {
           return true
@@ -356,7 +342,7 @@ class FriendMessage extends Component {
   _renderItem(item, index) {
     if (item && item['message'].length > 0) {
       let lastMessage = item['message'][item['message'].length - 1]
-      let time = lastMessage.time
+      let time = lastMessage.originMsg.time
       let ctime = new Date(time)
       let timeString =
         '' +
@@ -428,9 +414,7 @@ class FriendMessage extends Component {
                 top: scaleSize(10),
               }}
             >
-              {lastMessage.msg.type
-                ? lastMessage.msg.message.message
-                : lastMessage.msg}
+              {lastMessage.text}
             </Text>
           </View>
           <View

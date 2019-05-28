@@ -312,4 +312,86 @@ const Map_Setting = {
   SPHERICAL: 'Spherical',
 }
 
-export { Map_Main_Menu, Map_Label, Map_Layer, Map_Attribute, Map_Setting }
+//地图设置菜单
+const Map_Settings = {
+  THEME_LEGEND: 'Theme Legend',
+  //一级菜单
+  BASIC_SETTING: 'Basic Settings',
+  RANGE_SETTING: 'Bounds Settings',
+  COORDINATE_SYSTEM_SETTING: 'Coordinate System Settings',
+  ADVANCED_SETTING: 'Advanced Settings',
+  LEGEND_SETTING: 'Legend Settings',
+
+  //二级菜单 基本设置
+  MAP_NAME: 'Map Name',
+  SHOW_SCALE: 'Show Scale',
+  ROTATION_GESTURE: 'Rotation Gesture',
+  PITCH_GESTURE: 'Pitch Gesture',
+  ROTATION_ANGLE: 'Rotation Angle',
+  COLOR_MODE: 'Color Mode',
+  BACKGROUND_COLOR: 'Background Color',
+  MAP_ANTI_ALIASING: 'Map Anti-aliasing',
+  FIX_SYMBOL_ANGLE: 'Fix Symbol Angle',
+  FIX_TEXT_ANGLE: 'Fix Text Angle',
+  FIX_TEXT_DIRECTION: 'Fix Text Direction',
+  SHOW_OVERLAYS: 'Show overlays',
+
+  //二级菜单 范围设置
+  MAP_CENTER: 'Map Center',
+  MAP_SCALE: 'Map Scale',
+  FIX_SCALE_LEVEL: 'Fix Scale Level',
+  CURRENT_VIEW_BOUNDS: 'Current View Bounds',
+
+  //二级菜单 坐标系设置
+  COORDINATE_SYSTEM: 'Coordinate System',
+  DYNAMIC_PROJECTION: 'Dynamic Projection',
+  TRANSFER_PARAMS: 'Transfer Parameters',
+
+  //二级菜单 高级设置
+  FLOW_VISIUALIZATION: 'Flow Visiualization',
+  SHOW_NEGATIVE_DATA: 'Show Negative Data',
+  AUTOMATIC_AVOIDANCE: 'Automatic Avoidance',
+  ZOOM_WITH_MAP: 'Zoom With Map',
+  SHOW_TRACTION_LINE: 'Show Traction Line',
+  GLOBAL_STATISTICS: 'GLOBAL Statistics',
+  CHART_ANNOTATION: 'Chart Annotation',
+  SHOW_AXIS: 'Show Axis',
+  HISTOGRAM_STYLE: 'Histogram Style',
+  ROSE_AND_PIE_CHART_STYLE: 'Rose & Pie Chart Style',
+
+  //三级菜单 颜色模式
+  DEFAULT_COLOR_MODE: 'Default Color Mode',
+  BLACK_AND_WHITE: 'Black And White',
+  GRAY_SCALE_MODE: 'Gray-Scale Mode',
+  ANTI_BLACK_AND_WHITE: 'Anti Black And White',
+  ANTI_BLACK_AND_WHITE_2: 'Anti Black And White,Other Colors Unchanged',
+
+  //三级菜单 窗口四至范围
+  LEFT: 'Left',
+  RIGHT: 'Right',
+  TOP: 'Top',
+  BOTTOM: 'Bottom',
+
+  //三级菜单 坐标系设置
+  PLAN_COORDINATE_SYSTEM: 'Plan Coordinate System',
+  GEOGRAPHIC_COORDINATE_SYSTEM: 'Geographic Coordinate System',
+  PROJECTED_COORDINATE_SYSTEM: 'Projected Coordinate System',
+
+  //三级菜单 换转参数
+  TRANSFER_METHOD: 'Transfer Method',
+
+  //设置的一些参数
+  PERCENT: 'Percent',
+  OFF: 'Off',
+  CONFIRM: 'Confirm',
+  COPY: 'Copy',
+}
+
+export {
+  Map_Main_Menu,
+  Map_Label,
+  Map_Layer,
+  Map_Attribute,
+  Map_Setting,
+  Map_Settings,
+}

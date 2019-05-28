@@ -45,7 +45,8 @@ const Friends = {
   //FriendGroup
   LOADING: 'Loading...',
   DEL_GROUP: 'Delete group',
-  DEL_GROUP_CONFIRM: 'Delete this group chat?',
+  DEL_GROUP_CONFIRM:
+    'Would you like to clear chat history and leave this group?',
   //Chat
   IMPORT_DATA: 'Importing data...',
   IMPORT_SUCCESS: 'Import success',
@@ -62,5 +63,18 @@ const Friends = {
   ALREADY_FRIEND: 'Your are already friends',
   PERMISSION_DENIED_CONTACT:
     'Please turn on the permission of iTablet to view contacts',
+  //ManageFriend/Group
+  SEND_MESSAGE: 'Send message',
+  SET_MARKNAME: 'Set Alias',
+  SET_GROUPNAME: 'Set group name',
+  PUSH_FRIEND_CARD: 'Push friend card',
+  FRIEND_MAP: 'Friend map',
+  ADD_BLACKLIST: 'Add to blacklist',
+  DELETE_FRIEND: 'Delete friend',
+  LEAVE_GROUP: 'Leave group',
+  CLEAR_HISTORY: 'Clear chat history',
+  DISMISS_GROUP: 'Dismiss group',
+  DELETE_MEMBER: 'Remove group member',
+  ADD_MEMBER: 'Add group member',
 }
 export { Friends }

@@ -6,6 +6,8 @@ import { screen } from '../utils'
 export const SHOW_SET = 'SHOW_SET'
 // Actions
 // ---------------------------------.3-----------------
+
+//横竖屏切换，使用
 export const setShow = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SHOW_SET,

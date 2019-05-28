@@ -165,7 +165,7 @@ export default class MapToolbar extends React.Component {
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('Map3DLayerManager', {
+                this.props.navigation.navigate('Layer3DManager', {
                   type: 'MAP_3D',
                 })
             },

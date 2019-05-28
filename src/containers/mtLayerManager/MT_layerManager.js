@@ -56,11 +56,26 @@ export default class MT_layerManager extends React.Component {
     setBackAction: () => {},
     removeBackAction: () => {},
     user: Object,
+    baseMaps: Object,
   }
 
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
+    this.curUserBaseMaps = this.props.baseMaps[
+      this.props.user.currentUser.userId
+    ]
+    if (!this.curUserBaseMaps) {
+      this.curUserBaseMaps = this.props.baseMaps['default']
+    }
+
+    let userAddBase = []
+    for (let i = 0, n = this.curUserBaseMaps.length; i < n; i++) {
+      if (this.curUserBaseMaps[i].userAdd) {
+        userAddBase.push(this.curUserBaseMaps[i].layerName)
+      }
+    }
+    LayerUtils.setBaseMap(userAddBase)
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -572,7 +587,11 @@ export default class MT_layerManager extends React.Component {
           }
         } else if (GLOBAL.Type === constants.MAP_THEME) {
           if (data.themeType <= 0) {
-            this.mapEdit(data)
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+            )
+            //'当前图层无法设置风格')
           } else {
             this.mapTheme(data)
           }
@@ -1008,6 +1027,7 @@ export default class MT_layerManager extends React.Component {
     return (
       <LayerManager_tolbar
         language={this.props.language}
+        curUserBaseMaps={this.curUserBaseMaps}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}

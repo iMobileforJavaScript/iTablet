@@ -748,6 +748,24 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
   NSString *userName = [sMap.smMapWC getUserName];
   return userName;
 }
+//
+RCT_REMAP_METHOD(getUri,getUriStateWithPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+     NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/"];
+    path=[NSString stringWithFormat:@"%@weChat.zip", destinationPath];
+    
+    BOOL isUnzipSuccess = [FileTools unZipFile:path targetPath:destinationPath];
+    if(isUnzipSuccess){
+      [FileTools deleteFile:path];
+      hasImportedData = YES;
+    }
+  } @catch (NSException *exception) {
+    reject(@"getUri fail",exception.reason,nil);
+  }
+}
+
 /*
  * 判断压缩包是否存在并解压，给RN发送消息，用户选择是否导入
  */

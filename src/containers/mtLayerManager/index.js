@@ -18,6 +18,7 @@ const mapStateToProps = state => ({
   collection: state.collection.toJS(),
   currentLayer: state.layers.toJS().currentLayer,
   user: state.user.toJS(),
+  baseMaps: state.map.toJS().baseMaps,
 })
 
 const mapDispatchToProps = {

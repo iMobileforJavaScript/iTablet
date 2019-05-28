@@ -2,13 +2,15 @@ package com.supermap.itablet;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.supermap.file.CrashHandler;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import cn.jpush.reactnativejpush.JPushPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.rnfs.RNFSPackage;
 import org.reactnative.camera.RNCameraPackage;
-import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.supermap.SupermapFullPackage;
@@ -34,11 +36,13 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
             new PickerPackage(),
             new RNFSPackage(),
             new RNCameraPackage(),
-            new AMapGeolocationPackage(),
+            new JPushPackage(true, true),
             new ReactNativeContacts(),
+            new AMapGeolocationPackage(),
             new OrientationPackage(),
             new SplashScreenReactPackage(),
                     new SupermapFullPackage(),
@@ -77,6 +81,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         sInstance = this;
         LicConfig.configLic(this);
         SoLoader.init(this, /* native exopackage */ false);
+        CrashHandler.getInstance().init(getApplicationContext());
     }
 
 }

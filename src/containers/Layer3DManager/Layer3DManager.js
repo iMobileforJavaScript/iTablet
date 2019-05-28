@@ -3,11 +3,12 @@ import { Container } from '../../components'
 import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
-import { LayerManager_tolbar } from '../mtLayerManager/components'
+import { scaleSize } from '../../utils'
+import { Layer3DManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
 import { getLanguage } from '../../language/index'
 // import { SScene } from 'imobile_for_reactnative'
-export default class Map3DToolBar extends Component {
+export default class Layer3DManager extends Component {
   props: {
     language: string,
     navigation: Object,
@@ -70,7 +71,7 @@ export default class Map3DToolBar extends Component {
             device={this.props.device}
             toHeightItem={this.state.toHeightItem}
             index={index}
-            getOverlayView={this.getOverlayView}
+            overlayView={this.OverlayView}
             setCurrentLayer3d={this.props.setCurrentLayer3d}
           />
         </TouchableOpacity>
@@ -79,11 +80,6 @@ export default class Map3DToolBar extends Component {
       return <View />
     }
   }
-
-  getOverlayView = () => {
-    return this.OverlayView
-  }
-
   renderSectionFooter = () => {
     return <View style={styles.sectionFooter} />
   }
@@ -127,16 +123,26 @@ export default class Map3DToolBar extends Component {
 
   renderSelection = () => {
     return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionFooter={this.renderSectionFooter}
-        // ItemSeparatorComponent={this._renderItemSeparator}
-        renderSectionHeader={this.renderListSectionHeader}
-        keyExtractor={(item, index) => index}
-        onRefresh={this.props.refreshLayer3dList}
-        refreshing={false}
-      />
+      <View style={{ flex: 1 }}>
+        <SectionList
+          sections={this.state.data}
+          renderItem={this.renderListItem}
+          renderSectionFooter={this.renderSectionFooter}
+          ItemSeparatorComponent={this._renderItemSeparator}
+          renderSectionHeader={this.renderListSectionHeader}
+          keyExtractor={(item, index) => index}
+          onRefresh={this.props.refreshLayer3dList}
+          refreshing={false}
+          initialNumToRender={15}
+          getItemLayout={(data, index) => {
+            return {
+              length: scaleSize(80),
+              offset: scaleSize(80 + 1) * index,
+              index,
+            }
+          }}
+        />
+      </View>
     )
   }
   renderToolBar = () => {
@@ -151,11 +157,13 @@ export default class Map3DToolBar extends Component {
 
   renderLayerToolbar = () => {
     return (
-      <LayerManager_tolbar
+      <Layer3DManager_tolbar
         language={this.props.language}
+        navigation={this.props.navigation}
         ref={ref => (this.layer3dToolbar = ref)}
-        getOverlayView={this.getOverlayView}
+        overlayView={this.OverlayView}
         device={this.props.device}
+        layer3dRefresh={this.props.refreshLayer3dList}
       />
     )
   }
@@ -176,7 +184,7 @@ export default class Map3DToolBar extends Component {
           withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
-        bottomProps={{ type: 'fix' }}
+        // bottomProps={{ type: 'fix' }}
       >
         {this.renderLayerToolbar()}
         {this.renderSelection()}

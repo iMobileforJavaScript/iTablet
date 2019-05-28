@@ -426,7 +426,7 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
   let result = await SScene.getLayerList()
   let basemaplist = [],
     layerlist = [],
-    ablelist = [],
+    lablelist = [],
     terrainList = []
   for (let index = 0; index < result.length; index++) {
     const element = result[index]
@@ -434,16 +434,36 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
     if (item.type === 'IMAGEFILE') {
       basemaplist.push(item)
     } else if (item.name === 'NodeAnimation') {
-      ablelist.push(item)
+      lablelist.push(item)
     } else {
       layerlist.push(item)
     }
+  }
+
+  let Terrains = await SScene.getTerrainLayerList()
+  for (let index = 0; index < Terrains.length; index++) {
+    const element = Terrains[index]
+    let item = { ...element, isShow: true }
+    terrainList.push(item)
+  }
+
+  //map = @{@"name":name,@"visible": @(visible),@"selectable": @(0),@"basemap":@(0),@"type":@"Terrain"};
+  //默认显示个不存在地形
+  if (terrainList.length === 0) {
+    terrainList.push({
+      name: 'cache',
+      visible: true,
+      selectable: false,
+      type: 'Terrain',
+      basemap: false,
+      isShow: true,
+    })
   }
   let data = [
     {
       title: getLanguage(global.language).Map_Layer.PLOTS,
       //'我的标注',
-      data: ablelist,
+      data: lablelist,
       visible: true,
       index: 0,
     },

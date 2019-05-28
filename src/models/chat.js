@@ -99,19 +99,13 @@ export default handleActions(
       } else if (payload.operate === 'del') {
         delete currentUser[payload.talkId]
       } else if (payload.operate === 'add') {
-        let bSystem = true
-        if (payload.type < 9) {
-          bSystem = false
-        }
         let pushMsg = {
-          msg: payload.message,
-          time: payload.time,
-          type: payload.type,
-          name: payload.messageUsr.name,
-          id: payload.messageUsr.id,
-          unReadMsg: payload.unReadMsg,
           msgId: payload.msgId,
-          system: bSystem,
+          type: payload.type,
+          originMsg: payload.originMsg,
+          text: payload.text,
+          unReadMsg: payload.unReadMsg,
+          system: payload.system,
         }
         chats.history.push(pushMsg)
 

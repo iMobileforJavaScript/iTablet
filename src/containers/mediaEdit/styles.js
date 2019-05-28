@@ -18,7 +18,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(8),
     borderWidth: 1,
     borderColor: color.borderLight,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
   imageView: {
     width: IMAGE_SIZE,

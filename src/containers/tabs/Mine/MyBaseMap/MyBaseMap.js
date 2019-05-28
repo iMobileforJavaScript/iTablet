@@ -17,7 +17,7 @@ export default class MyBaseMap extends Component {
   props: {
     user: any,
     navigation: Object,
-    baseMaps: Array,
+    baseMaps: Object,
     setBaseMap: () => {},
   }
 
@@ -28,6 +28,12 @@ export default class MyBaseMap extends Component {
       //'底图',
       modalIsVisible: false,
     }
+    this.curUserBaseMaps = this.props.baseMaps[
+      this.props.user.currentUser.userId
+    ]
+    if (!this.curUserBaseMaps) {
+      this.curUserBaseMaps = this.props.baseMaps['default']
+    }
     this.uploadList = []
   }
 
@@ -35,7 +41,13 @@ export default class MyBaseMap extends Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <BaseMapItem item={item} index={index} saveItemInfo={this.saveItemInfo} />
+      <BaseMapItem
+        {...this.props}
+        curUserBaseMaps={this.curUserBaseMaps}
+        item={item}
+        index={index}
+        saveItemInfo={this.saveItemInfo}
+      />
     )
   }
 
@@ -78,7 +90,8 @@ export default class MyBaseMap extends Component {
         onPress={() => {
           NavigationService.navigate('LoadServer', {
             setBaseMap: this.props.setBaseMap,
-            baseMaps: this.props.baseMaps,
+            baseMaps: this.curUserBaseMaps,
+            user: this.props.user,
           })
         }}
       >
@@ -101,7 +114,7 @@ export default class MyBaseMap extends Component {
           initialNumToRender={20}
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
-          data={this.props.baseMaps}
+          data={this.curUserBaseMaps}
           ItemSeparatorComponent={() => (
             <View
               style={{

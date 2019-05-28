@@ -213,6 +213,10 @@ function importData() {
   return FileTools.importData()
 }
 
+function getUri(path) {
+  return FileTools.getUri(path)
+}
+
 /**
  * 深度遍历fileDir目录下的fileType数据,并添加到arrFilterFile中
  * fileDir 文件目录
@@ -331,4 +335,5 @@ export default {
   getImportResult,
   importData,
   getThumbnail,
+  getUri,
 }

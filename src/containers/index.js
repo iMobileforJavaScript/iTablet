@@ -22,6 +22,8 @@ import {
   InformMessage,
   CreateGroupChat,
   RecommendFriend,
+  ManageFriend,
+  ManageGroup,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -29,14 +31,15 @@ import {
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
-
+//地图二级设置菜单
+import { secondMapSettings } from './mapSetting/secondMapSettings'
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
 import MTLayerManager from './mtLayerManager'
-import Map3DLayerManager from './Layer3DManager'
+import Layer3DManager from './Layer3DManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
 import ChooseEditLayer from './chooseEditLayer'
@@ -115,8 +118,8 @@ export default StackNavigator(
         header: null,
       },
     },
-    Map3DLayerManager: {
-      screen: Map3DLayerManager,
+    Layer3DManager: {
+      screen: Layer3DManager,
       navigationOptions: {
         header: null,
       },
@@ -338,6 +341,20 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    ManageFriend: {
+      screen: ManageFriend,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ManageGroup: {
+      screen: ManageGroup,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
@@ -537,6 +554,12 @@ export default StackNavigator(
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
+      },
+    },
+    secondMapSettings: {
+      screen: secondMapSettings,
+      navigationOptions: {
+        header: null,
       },
     },
   },
