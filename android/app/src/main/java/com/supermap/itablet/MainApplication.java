@@ -4,17 +4,19 @@ import android.support.multidex.MultiDexApplication;
 
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.rnfs.RNFSPackage;
+import org.reactnative.camera.RNCameraPackage;
 import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
-//import com.airbnb.android.react.maps.MapsPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.github.yamill.orientation.OrientationPackage;
-import com.rnfs.RNFSPackage;
 import com.supermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.supermap.rnsupermap.BuildConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,11 +34,12 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-            new ReactNativeContacts(),
-            new AMapGeolocationPackage(),
-//            new MapsPackage(),
-            new OrientationPackage(),
+            new PickerPackage(),
             new RNFSPackage(),
+            new RNCameraPackage(),
+            new AMapGeolocationPackage(),
+            new ReactNativeContacts(),
+            new OrientationPackage(),
             new SplashScreenReactPackage(),
                     new SupermapFullPackage(),
                     new MyReactpackge()

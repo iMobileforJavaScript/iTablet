@@ -10,17 +10,17 @@ import { fromJS } from 'immutable'
  * @returns {*}
  */
 function checkModel(state, payload) {
-  let _setting = state
+  let _data = state
   if (payload) {
-    _setting = fromJS(payload)
+    _data = fromJS(payload)
     let setting = state.toJS()
-    for (let key of setting.keys) {
-      if (!payload[key]) {
-        _setting = state
+    for (let key of Object.keys(setting)) {
+      if (payload[key] === undefined) {
+        _data = state
       }
     }
   }
-  return _setting
+  return _data
 }
 
 export default {

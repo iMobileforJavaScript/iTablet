@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
+import { ModelUtils } from '../utils'
 // Constants
 // --------------------------------------------------
 export const USER_SET = 'USER_SET'
@@ -39,8 +40,9 @@ export default handleActions(
         .setIn(['users'], fromJS(users))
     },
     [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.user ? fromJS(payload.user) : state
-      // return initialState
+      let _data = ModelUtils.checkModel(state, payload && payload.user)
+      // return payload && payload.user ? fromJS(payload.user) : state
+      return _data
     },
   },
   initialState,

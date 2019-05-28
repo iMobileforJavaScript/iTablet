@@ -2,6 +2,7 @@ import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import MSGConstant from '../../src/containers/tabs/Friend/MsgConstant'
+import { ModelUtils } from '../utils'
 // Constants
 // --------------------------------------------------
 export const ADD_CHAT = 'ADD_CHAT'
@@ -131,9 +132,6 @@ export default handleActions(
 
       return fromJS(allChat)
     },
-    [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.chat ? fromJS(payload.chat) : state
-    },
     [`${EDIT_CHAT}`]: (state, { payload }) => {
       let allChat = state.toJS() || {}
       // console.log(allChat)
@@ -141,6 +139,11 @@ export default handleActions(
         allChat[payload.userId][payload.talkId].history[payload.msgId]
       Object.assign(message, payload.editItem)
       return fromJS(allChat)
+    },
+    [REHYDRATE]: (state, { payload }) => {
+      let _data = ModelUtils.checkModel(state, payload && payload.chat)
+      return _data
+      // return payload && payload.chat ? fromJS(payload.chat) : state
     },
   },
   initialState,

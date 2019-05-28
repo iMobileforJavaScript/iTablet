@@ -12,6 +12,7 @@ import {
   SMap,
   SCollector,
   EngineType,
+  SMediaCollector,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -57,8 +58,6 @@ import {
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import SMLegendView from '../../components/LegendView/SMLegendView'
-//eslint-disable-next-line
-import { HEIGHT } from '../../../../utils/constUtil'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
@@ -310,6 +309,12 @@ export default class MapView extends React.Component {
         action: () => this.back(),
       })
 
+      SMediaCollector.setCalloutTapListener(info => {
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      })
+
       this.clearData()
       !this.state.legendSource && Platform.OS === 'ios' && this.getLegend()
       if (this.toolBox) {
@@ -368,6 +373,12 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setMapLegend(false)
+
+    // 移除多媒体采集监听
+    SMediaCollector.removeListener()
+
+    // 移除多媒体采集Callout
+    SMediaCollector.hideMedia()
 
     this.showMarker && SMap.deleteMarker()
   }

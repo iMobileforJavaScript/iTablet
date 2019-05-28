@@ -80,10 +80,13 @@ const Map_Main_Menu = {
   TOOLS_CREATE_REGION: 'Create Region',
   TOOLS_CREATE_TRACK: 'Create Track',
   TOOLS_CREATE_TEXT: 'Create Text',
+
   TOOLS_NAME: 'Name',
   TOOLS_REMARKS: 'Remarks',
   TOOLS_HTTP: 'http Address',
   TOOLS_PICTURES: 'Pictures',
+  COLLECT_TIME: 'Time',
+  COORDINATE: 'Coordinate',
 
   TOOLS_RECTANGLE_CLIP: 'Rectangle Clip',
   TOOLS_CIRCLE_CLIP: 'Circle Clip',
