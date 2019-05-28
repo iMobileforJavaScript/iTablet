@@ -67,20 +67,12 @@ function layersetting(param) {
     },
   ]
 }
-const baseListData = [
+const base3DListData = [
   {
     title: '在线底图',
     index: 0,
     show: true,
     data: [
-      // {
-      //   title: 'STK',
-      //   index: 0,
-      //   show: true,
-      //   type: 'terrainLayer',
-      //   name: 'stk',
-      //   url: 'https://assets.agi.com/stk-terrain/world',
-      // },
       {
         title: 'bingmap',
         index: 0,
@@ -88,6 +80,14 @@ const baseListData = [
         type: 'l3dBingMaps',
         name: 'bingmap',
         url: 'http://t0.tianditu.com/img_c/wmts',
+      },
+      {
+        title: 'tianditu',
+        index: 0,
+        show: true,
+        type: 'ImageFormatTypeJPG_PNG',
+        name: 'tianditu',
+        url: 'http://t0.tianditu.com/img_c/wmts?tk=22f8a846ef9e3becd95a25b08bde8f36',
       },
     ],
   },
@@ -250,37 +250,90 @@ const layerSettingCanNotSnap = param => [
   },
 ]
 
-const layer3dSettingCanSelect = param => [
-  {
-    title: '',
-    data: [
-      {
-        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
-      },
-      {
-        title: getLanguage(param).Map_Layer.OPTIONAL,
-        image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
-      },
-    ],
-  },
-]
+const layer3dDefault = (param,selected) =>{
 
-const layer3dSettingCanNotSelect = param => [
-  {
-    title: '',
-    data: [
-      {
-        title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
-      },
-      {
-        title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
-        image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
-      },
-    ],
-  },
-]
+  let data =  {
+    title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    type:"setLayerSelect",
+  }
+  if(selected === false){
+    data =  {
+      title: getLanguage(param).Map_Layer.OPTIONAL,
+      image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+      type:"setLayerSelect",
+    }
+  }
+  return [
+    {
+      title: '',
+      data: [
+        {
+          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          type:"scaleToLayer",
+        },
+        data,
+      ],
+    },
+  ]
+}
+
+function layere3dImage(param) {
+  return [
+    {
+      title: '',
+      data: [
+        {
+          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          type:"scaleToLayer",
+        },
+        {
+          title: global.language === 'CN' ? "添加影像图层" : "Add a image layer",
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
+          type:"AddImage",
+        },
+        {
+          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
+          image: require('../../../../assets/layerToolbar/layer_remove.png'),
+          type:"RemoveLayer3d_image",
+        },
+        // {
+        //   title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+        //   image: require('../../../../assets/mapTools/icon_open_black.png'),
+        // },
+      ],
+    },
+  ]
+}
+function layere3dTerrain() {
+  return [
+    {
+      title: '',
+      data: [
+        {
+          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          type:"scaleToLayer",
+        },
+        {
+          title: global.language === 'CN' ? "添加地形图层" : "Add a terrain layer",
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
+          type:"AddTerrain",
+        },
+        {
+          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
+          image: require('../../../../assets/layerToolbar/layer_remove.png'),
+          type:"RemoveLayer3d_terrain",
+        },
+      ],
+    },
+  ]
+}
 
 function layereditsetting(param) {
   return [
@@ -412,12 +465,15 @@ const mscaleData = [
 export {
   layersetting,
   layerThemeSetting,
-  layer3dSettingCanSelect,
-  layer3dSettingCanNotSelect,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
-  baseListData,
+  //3d
+  layere3dImage,
+  base3DListData,
+  layere3dTerrain,
+  layer3dDefault,
+
   taggingData,
   scaleData,
   mscaleData,

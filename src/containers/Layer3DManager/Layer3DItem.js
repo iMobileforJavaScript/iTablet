@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
-import { scaleSize } from '../../utils'
 import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
+import { scaleSize } from '../../utils'
+
 export default class Layer3DItem extends Component {
   props: {
     item: Object,
@@ -13,16 +14,19 @@ export default class Layer3DItem extends Component {
     index: any,
     getlayer3dToolbar: () => {},
     setCurrentLayer3d: () => {},
-    getOverlayView: () => {},
+    overlayView: () => {},
   }
   constructor(props) {
     super(props)
     this.state = {
-      name: props.item.name,
+      // name: props.item.name,
       visible: props.item.visible,
       selectable: props.item.selectable,
-      type: props.item.type,
+      // type: props.item.type,
     }
+
+    this.changeVisible = this.changeVisible.bind(this)
+    this.more = this.more.bind(this)
   }
 
   // changeSelect = async () => {
@@ -32,48 +36,84 @@ export default class Layer3DItem extends Component {
   //   this.setState(newState)
   //   // console.log(this.state.visible,this.state.selectable)
   // }
-
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state)
+    ) {
+      return true
+    }
+    return false
+  }
+  // eslint-disable-next-line no-unused-vars
+  componentDidUpdate(prevProps) {
+  }
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
   }
 
-  changeVisible = async () => {
-    let newState = this.state
+  changeVisible(){
+    let newState = JSON.parse(JSON.stringify(this.state))
     newState.visible = !this.state.visible
-    await SScene.setVisible(this.state.name, newState.visible)
+    if (this.props.item.type === 'Terrain') {
+      SScene.setTerrainLayerListVisible(this.props.item.name, newState.visible)
+    } else {
+      SScene.setVisible(this.props.item.name, newState.visible)
+    }
     this.setState(newState)
   }
 
-  more = async () => {
+  more(){
     let layer3dToolbar = this.props.getlayer3dToolbar
       ? this.props.getlayer3dToolbar()
       : null
-    let overlayView = this.props.getOverlayView
-      ? this.props.getOverlayView()
-      : null
+    // let overlayView = this.props.getOverlayView
+    //   ? this.props.getOverlayView()
+    //   : null
     if (layer3dToolbar) {
-      switch (this.state.type) {
-        case 'IMAGEFILE':
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DCHANGE, {
+      switch (this.props.item.type) {
+        case 'IMAGEFILE':{
+          if(this.props.item.name==="BingMap" || this.props.item.name==="TianDiTu"){
+            layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_BASE, {
+              isFullScreen: true,
+              height: scaleSize(88)*2,
+            })
+          }else{
+            layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
+              isFullScreen: true,
+              height: scaleSize(88)*3,
+            })
+          }
+          break
+        }case 'Terrain':
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
-            height: scaleSize(87),
+            height: scaleSize(88)*3,
           })
           break
-        default:
-          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
+        default:{
+          let type =  ConstToolType.MAP3D_LAYER3D_DEFAULT
+          if(this.state.selectable){
+            type =  ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED
+          }
+          layer3dToolbar.setVisible(true,type, {
             isFullScreen: true,
-            height: scaleSize(174),
+            height: scaleSize(88)*2,
           })
+          layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break
+        }
       }
-      overlayView.setVisible(true)
       layer3dToolbar.getLayer3dItem(
-        this.state,
-        this.props.setCurrentLayer3d,
-        this.setItemSelectable,
-        overlayView,
+        {
+          name: this.props.item.name,
+          visible: this.state.visible,
+          selectable: this.state.selectable,
+          type: this.props.item.type,
+        },
         this.changeState,
       )
+      this.props.overlayView.setVisible(true)
     }
   }
 
@@ -118,7 +158,7 @@ export default class Layer3DItem extends Component {
 
           <Image source={typeImg} style={styles.type} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <Text style={[styles.itemName, textColor]}>{this.state.name}</Text>
+            <Text style={[styles.itemName, textColor]}>{this.props.item.name}</Text>
           </ScrollView>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />
