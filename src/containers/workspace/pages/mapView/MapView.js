@@ -49,7 +49,6 @@ import { setGestureDetectorListener } from '../../../GestureDetectorListener'
 import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import SMLegendView from '../../components/LegendView/SMLegendView'
 import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
@@ -1349,13 +1348,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && Platform.OS === 'android' && (
-          <SMLegendView
-            device={this.props.device}
-            ref={ref => (GLOBAL.smlegend = ref)}
-          />
-        )}
-        {this.props.mapLegend && Platform.OS === 'ios' && (
+        {this.props.mapLegend && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}

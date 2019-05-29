@@ -5,11 +5,9 @@
  */
 import React from 'react'
 import { ConstToolType } from '../../../../constants/index'
-
 import { TouchableOpacity, View, Animated, FlatList } from 'react-native'
 import { scaleSize } from '../../../../utils/index'
 import { color } from '../../../tabs/Mine/MyService/Styles'
-import { HEADER_HEIGHT } from '../../../../components/Header/styles'
 
 export default class ColorTable extends React.Component {
   props: {
@@ -27,46 +25,23 @@ export default class ColorTable extends React.Component {
         : ConstToolType.THEME_HEIGHT[3]
     this.ColumeNums = this.props.device.orientation === 'LANDSCAPE' ? 16 : 8
     this.state = {
+      isShow: false,
       bottom: new Animated.Value(-this.height),
-      boxOpacity: new Animated.Value(0),
-      boxBottom: new Animated.Value(HEADER_HEIGHT - this.props.device.height),
     }
   }
 
   showFullMap = () => {
-    let anims = [
-      Animated.timing(this.state.bottom, {
-        toValue: 0,
-        duration: 150,
-      }),
-      Animated.timing(this.state.boxOpacity, {
-        toValue: 0.5,
-        duration: 150,
-      }),
-      Animated.timing(this.state.boxBottom, {
-        toValue: 0,
-        duration: 10,
-      }),
-    ]
-    Animated.parallel(anims).start()
+    Animated.timing(this.state.bottom, {
+      toValue: 0,
+      duration: 150,
+    }).start()
   }
 
   hideColorList = () => {
-    let anims = [
-      Animated.timing(this.state.bottom, {
-        toValue: -this.height,
-        duration: 150,
-      }),
-      Animated.timing(this.state.boxOpacity, {
-        toValue: 0,
-        duration: 150,
-      }),
-      Animated.timing(this.state.boxBottom, {
-        toValue: HEADER_HEIGHT - this.props.device.height,
-        duration: 10,
-      }),
-    ]
-    Animated.parallel(anims).start()
+    Animated.timing(this.state.bottom, {
+      toValue: -this.height,
+      duration: 150,
+    }).start()
   }
 
   renderItem = ({ item }) => {
@@ -77,8 +52,8 @@ export default class ColorTable extends React.Component {
           if (isSuccess) this.props.setColorBlock(item.key)
         }}
         style={{
-          width: this.props.device.width / this.ColumeNums - 2,
-          height: this.props.device.width / this.ColumeNums - 2,
+          width: this.props.device.width / this.ColumeNums - 3,
+          height: this.props.device.width / this.ColumeNums - 3,
           backgroundColor: item.key,
           borderWidth: scaleSize(2),
           borderColor: color.gray,
@@ -90,29 +65,9 @@ export default class ColorTable extends React.Component {
   }
 
   render() {
-    let height = this.props.device.height - HEADER_HEIGHT + 2
+    //todo height还需要减去虚拟按键栏的高度
     return (
       <View>
-        <Animated.View
-          style={{
-            width: this.props.device.width,
-            height: height,
-            position: 'absolute',
-            backgroundColor: color.gray1,
-            opacity: this.state.boxOpacity,
-            bottom: this.state.boxBottom,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              this.hideColorList()
-            }}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </Animated.View>
         <Animated.View
           style={{
             height: this.height,

@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Container } from '../../../components'
-import { ColorTable, SelectList } from './components'
+import { ColorTable, SelectList, MaskView } from './components'
 import {
   View,
   FlatList,
@@ -54,6 +54,8 @@ export default class secondMapSettings extends Component {
       title: params.title,
       rightBtn: params.rightBtn || '',
       cb: params.cb || '',
+      showColorTable: false,
+      showColorModeMask: false,
     }
   }
   UNSAFE_componentWillMount() {
@@ -65,7 +67,7 @@ export default class secondMapSettings extends Component {
     let dotReg = /\./
     let reg = /\.\d+/
     let afterDot = ''
-    dotReg.test(num) && (afterDot = num.match(reg)[0])
+    dotReg.test(num) && (afterDot = num.toString().match(reg)[0])
     return (+num).toLocaleString('en').replace(reg, afterDot)
   }
 
@@ -80,7 +82,6 @@ export default class secondMapSettings extends Component {
     let data,
       colorData = null,
       colorModeData = null
-    //地图旋转角度
     switch (this.state.title) {
       case getLanguage(global.language).Map_Settings.BASIC_SETTING:
         data = await this.getBasicData()
@@ -126,33 +127,42 @@ export default class secondMapSettings extends Component {
     let data, angle, bgColor
     data = await basicSettings()
 
+    data[0].value = await SMap.getMapName()
+    data[2].value = await SMap.isEnableRotateTouch()
+    data[3].value = await SMap.isEnableSlantTouch()
+    angle = await SMap.getMapAngle()
+    Platform.OS === 'android' && (angle += '°')
+    data[4].value = angle.toString().replace('.0', '')
+    //原生层返回的是中文，做一个映射，转换成对应语言
+    let colorMode = await SMap.getMapColorMode()
+    let allColorMode = {
+      默认色彩模式: getLanguage(global.language).Map_Settings
+        .DEFAULT_COLOR_MODE,
+      DEFAULT: getLanguage(global.language).Map_Settings.DEFAULT_COLOR_MODE,
+      黑白模式: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
+      BLACKWHITE: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
+      灰度模式: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
+      GRAY: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
+      黑白反色模式: getLanguage(global.language).Map_Settings
+        .ANTI_BLACK_AND_WHITE,
+      BLACK_WHITE_REVERSE: getLanguage(global.language).Map_Settings
+        .ANTI_BLACK_AND_WHITE,
+      '黑白反色，其他颜色不变': getLanguage(global.language).Map_Settings
+        .ANTI_BLACK_AND_WHITE_2,
+      ONLY_BLACK_WHITE_REVERSE: getLanguage(global.language).Map_Settings
+        .ANTI_BLACK_AND_WHITE_2,
+    }
+    data[5].value = allColorMode[colorMode]
+    bgColor = await SMap.getMapBackgroundColor()
+    data[6].value = bgColor.toUpperCase()
+    data[7].value = await SMap.isAntialias()
+    data[8].value = await SMap.getMarkerFixedAngle()
+    data[9].value = await SMap.getTextFixedAngle()
+    data[10].value = await SMap.getFixedTextOrientation()
+    data[11].value = await SMap.isOverlapDisplayed()
+
     if (Platform.OS === 'ios') {
-      data[0].value = await SMap.getMapName()
       data[1].value = await SMap.getScaleViewEnable()
-      data[2].value = await SMap.isEnableRotateTouch()
-      data[3].value = await SMap.isEnableSlantTouch()
-      angle = await SMap.getMapAngle()
-      data[4].value = angle.toString().replace('.0', '')
-      //原生层返回的是中文，做一个映射，转换成对应语言
-      let colorMode = await SMap.getMapColorMode()
-      let allColorMode = {
-        默认色彩模式: getLanguage(global.language).Map_Settings
-          .DEFAULT_COLOR_MODE,
-        黑白模式: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
-        灰度模式: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
-        黑白反色模式: getLanguage(global.language).Map_Settings
-          .ANTI_BLACK_AND_WHITE,
-        '黑白反色，其他颜色不变': getLanguage(global.language).Map_Settings
-          .ANTI_BLACK_AND_WHITE_2,
-      }
-      data[5].value = allColorMode[colorMode]
-      bgColor = await SMap.getMapBackgroundColor()
-      data[6].value = bgColor.toUpperCase()
-      data[7].value = await SMap.isAntialias()
-      data[8].value = await SMap.getMarkerFixedAngle()
-      data[9].value = await SMap.getTextFixedAngle()
-      data[10].value = await SMap.getFixedTextOrientation()
-      data[11].value = await SMap.isOverlapDisplayed()
     }
 
     return data
@@ -161,30 +171,26 @@ export default class secondMapSettings extends Component {
   //范围设置数据
   getRangeData = async () => {
     let data = await rangeSettings()
-    if (Platform.OS === 'ios') {
-      let mapCenter = await SMap.getMapCenter()
-      let centerX = this.formatNumberToString(mapCenter.x)
-      let centerY = this.formatNumberToString(mapCenter.y)
-      let mapScale = await SMap.getMapScale()
-      let scale = this.formatNumberToString(mapScale)
-      data[0].value = `${centerX}/${centerY}`
-      data[1].value = `1:${scale}`
-      data[2].value = await SMap.isVisibleScalesEnabled()
-    }
+    let mapCenter = await SMap.getMapCenter()
+    let centerX = this.formatNumberToString(mapCenter.x)
+    let centerY = this.formatNumberToString(mapCenter.y)
+    let mapScale = await SMap.getMapScale()
+    let scale = this.formatNumberToString(mapScale)
+    data[0].value = `${centerX}/${centerY}`
+    data[1].value = `1:${scale}`
+    data[2].value = await SMap.isVisibleScalesEnabled()
     return data
   }
 
   //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
-    if (Platform.OS === 'ios') {
-      data[0].value = await SMap.getPrjCoordSys()
-      let isDynamicProjection = await SMap.getMapDynamicProjection()
-      data[1].value = isDynamicProjection
-      data[2].value = isDynamicProjection
-        ? ''
-        : getLanguage(global.language).Map_Settings.OFF
-    }
+    data[0].value = await SMap.getPrjCoordSys()
+    let isDynamicProjection = await SMap.getMapDynamicProjection()
+    data[1].value = isDynamicProjection
+    data[2].value = isDynamicProjection
+      ? ''
+      : getLanguage(global.language).Map_Settings.OFF
     return data
   }
 
@@ -223,47 +229,46 @@ export default class secondMapSettings extends Component {
   //switch开关事件
   _onValueChange = async ({ value, item, index }) => {
     let data = this.state.data.concat()
-    if (Platform.OS === 'ios') {
-      switch (item.title) {
-        case getLanguage(global.language).Map_Settings.SHOW_SCALE:
-          await SMap.setScaleViewEnable(value)
-          break
-        case getLanguage(global.language).Map_Settings.ROTATION_GESTURE:
-          await SMap.enableRotateTouch(value)
-          break
-        case getLanguage(global.language).Map_Settings.PITCH_GESTURE:
-          await SMap.enableSlantTouch(value)
-          break
-        case getLanguage(global.language).Map_Settings.MAP_ANTI_ALIASING:
-          //已有接口内写的是int类型的参数 所以转成数字
-          await SMap.setAntialias(+value)
-          break
-        case getLanguage(global.language).Map_Settings.FIX_SYMBOL_ANGLE:
-          await SMap.setMarkerFixedAngle(value)
-          break
-        case getLanguage(global.language).Map_Settings.FIX_TEXT_ANGLE:
-          await SMap.setTextFixedAngle(value)
-          break
-        case getLanguage(global.language).Map_Settings.SHOW_OVERLAYS:
-          await SMap.setOverlapDisplayed(value)
-          break
-        case getLanguage(global.language).Map_Settings.FIX_TEXT_DIRECTION:
-          await SMap.setFixedTextOrientation(value)
-          break
-        case getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL:
-          await SMap.setVisibleScalesEnabled(value)
-          break
-        case getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION:
-          await SMap.setMapDynamicProjection(value)
-          data[index + 1].value = value
-            ? ''
-            : getLanguage(global.language).Map_Settings.OFF
-      }
-      data[index].value = value
-      this.setState({
-        data,
-      })
+    switch (item.title) {
+      case getLanguage(global.language).Map_Settings.SHOW_SCALE:
+        await SMap.setScaleViewEnable(value)
+        break
+      case getLanguage(global.language).Map_Settings.ROTATION_GESTURE:
+        await SMap.enableRotateTouch(value)
+        break
+      case getLanguage(global.language).Map_Settings.PITCH_GESTURE:
+        await SMap.enableSlantTouch(value)
+        break
+      case getLanguage(global.language).Map_Settings.MAP_ANTI_ALIASING:
+        //IOS接口内写的是int类型的参数 所以转成数字
+        Platform.OS === 'ios' && (value = +value)
+        await SMap.setAntialias(value)
+        break
+      case getLanguage(global.language).Map_Settings.FIX_SYMBOL_ANGLE:
+        await SMap.setMarkerFixedAngle(value)
+        break
+      case getLanguage(global.language).Map_Settings.FIX_TEXT_ANGLE:
+        await SMap.setTextFixedAngle(value)
+        break
+      case getLanguage(global.language).Map_Settings.SHOW_OVERLAYS:
+        await SMap.setOverlapDisplayed(value)
+        break
+      case getLanguage(global.language).Map_Settings.FIX_TEXT_DIRECTION:
+        await SMap.setFixedTextOrientation(value)
+        break
+      case getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL:
+        await SMap.setVisibleScalesEnabled(value)
+        break
+      case getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION:
+        await SMap.setMapDynamicProjection(value)
+        data[index + 1].value = value
+          ? ''
+          : getLanguage(global.language).Map_Settings.OFF
     }
+    data[index].value = value
+    this.setState({
+      data,
+    })
   }
 
   //arrow item点击事件
@@ -299,10 +304,20 @@ export default class secondMapSettings extends Component {
         })
         break
       case getLanguage(global.language).Map_Settings.COLOR_MODE:
-        this.colorModeList && this.colorModeList.showFullMap()
+        if (this.colorModeList) {
+          this.setState({
+            showColorModeMask: true,
+          })
+          this.colorModeList.showFullMap()
+        }
         break
       case getLanguage(global.language).Map_Settings.BACKGROUND_COLOR:
-        this.colortable && this.colortable.showFullMap()
+        if (this.colortable) {
+          this.setState({
+            showColorTable: true,
+          })
+          this.colortable.showFullMap()
+        }
         break
       case getLanguage(global.language).Map_Settings.MAP_SCALE:
         this.props.navigation.navigate('InputPage', {
@@ -413,11 +428,10 @@ export default class secondMapSettings extends Component {
         }
         break
     }
-    if (isSuccess) {
-      this.setState({
-        data,
+    isSuccess &&
+      this.setState({ data }, () => {
+        this.backAction()
       })
-    }
   }
 
   //设置地图背景色回调
@@ -792,6 +806,28 @@ export default class secondMapSettings extends Component {
           keyExtractor={(item, index) => item + index}
           numColumns={1}
         />
+        {this.state.showColorTable && (
+          <MaskView
+            device={this.state.device}
+            callback={() => {
+              this.colortable.hideColorList()
+              this.setState({
+                showColorTable: false,
+              })
+            }}
+          />
+        )}
+        {this.state.showColorModeMask && (
+          <MaskView
+            device={this.state.device}
+            callback={() => {
+              this.colorModeList.hideSelectList()
+              this.setState({
+                showColorModeMask: false,
+              })
+            }}
+          />
+        )}
         {this.state.title ===
           getLanguage(global.language).Map_Settings.BASIC_SETTING &&
           this.renderColorTable(this.state.colorData)}
