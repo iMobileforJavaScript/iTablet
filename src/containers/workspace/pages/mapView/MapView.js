@@ -12,6 +12,7 @@ import {
   SMap,
   SCollector,
   EngineType,
+  SMediaCollector,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -215,6 +216,12 @@ export default class MapView extends React.Component {
         action: () => this.back(),
       })
 
+      SMediaCollector.setCalloutTapListener(info => {
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      })
+
       this.clearData()
       if (this.toolBox) {
         GLOBAL.toolBox = this.toolBox
@@ -272,6 +279,12 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setMapLegend(false)
+
+    // 移除多媒体采集监听
+    SMediaCollector.removeListener()
+
+    // 移除多媒体采集Callout
+    SMediaCollector.hideMedia()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }

@@ -15,4 +15,4 @@ import Layer3DManager_tolbar from './Layer3DManager_tolbar'
 //   mapDispatchToProps,
 // )(LayerManager_tolbar)
 
-export { LayerManager_tolbar,Layer3DManager_tolbar}
+export { LayerManager_tolbar, Layer3DManager_tolbar }

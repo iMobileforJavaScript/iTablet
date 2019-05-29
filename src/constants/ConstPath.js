@@ -47,6 +47,7 @@ const RelativeFilePath = {
   Collection: Data + 'Map/' + Collection + '/',
   MapEdit: Data + 'Map/' + MapEdit + '/',
   MapTheme: Data + 'Map/' + MapTheme + '/',
+  Media: Data + 'Media/',
 }
 
 // 默认创建的目录

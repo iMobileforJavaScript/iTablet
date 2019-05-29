@@ -75,5 +75,6 @@ const Friends = {
   CLEAR_HISTORY: 'Clear chat history',
   DISMISS_GROUP: 'Dismiss group',
   DELETE_MEMBER: 'Remove group member',
+  ADD_MEMBER: 'Add group member',
 }
 export { Friends }

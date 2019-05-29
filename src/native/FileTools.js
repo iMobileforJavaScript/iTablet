@@ -294,6 +294,20 @@ async function getMaps(path = '', filter = {}) {
   }
 }
 
+/**
+ * 返回视频缩略图
+ * @param path
+ * @returns {Promise.<*>}
+ */
+async function getThumbnail(path = '') {
+  try {
+    if (!path) return ''
+    return await FileTools.getThumbnail(path)
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   getHomeDirectory,
   appendingHomeDirectory,
@@ -320,5 +334,6 @@ export default {
   getShareResult,
   getImportResult,
   importData,
+  getThumbnail,
   getUri,
 }

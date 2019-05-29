@@ -73,5 +73,6 @@ const Friends = {
   CLEAR_HISTORY: '清空聊天记录',
   DISMISS_GROUP: '解散群',
   DELETE_MEMBER: '移除群员',
+  ADD_MEMBER: '添加群员',
 }
 export { Friends }

@@ -3,6 +3,7 @@ import { Container } from '../../components'
 import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
+import { scaleSize } from '../../utils'
 import { Layer3DManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
 import { getLanguage } from '../../language/index'
@@ -122,16 +123,26 @@ export default class Layer3DManager extends Component {
 
   renderSelection = () => {
     return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionFooter={this.renderSectionFooter}
-        // ItemSeparatorComponent={this._renderItemSeparator}
-        renderSectionHeader={this.renderListSectionHeader}
-        keyExtractor={(item, index) => index}
-        onRefresh={this.props.refreshLayer3dList}
-        refreshing={false}
-      />
+      <View style={{ flex: 1 }}>
+        <SectionList
+          sections={this.state.data}
+          renderItem={this.renderListItem}
+          renderSectionFooter={this.renderSectionFooter}
+          ItemSeparatorComponent={this._renderItemSeparator}
+          renderSectionHeader={this.renderListSectionHeader}
+          keyExtractor={(item, index) => index}
+          onRefresh={this.props.refreshLayer3dList}
+          refreshing={false}
+          initialNumToRender={15}
+          getItemLayout={(data, index) => {
+            return {
+              length: scaleSize(80),
+              offset: scaleSize(80 + 1) * index,
+              index,
+            }
+          }}
+        />
+      </View>
     )
   }
   renderToolBar = () => {
@@ -152,6 +163,7 @@ export default class Layer3DManager extends Component {
         ref={ref => (this.layer3dToolbar = ref)}
         overlayView={this.OverlayView}
         device={this.props.device}
+        layer3dRefresh={this.props.refreshLayer3dList}
       />
     )
   }
@@ -172,7 +184,7 @@ export default class Layer3DManager extends Component {
           withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
-        bottomProps={{ type: 'fix' }}
+        // bottomProps={{ type: 'fix' }}
       >
         {this.renderLayerToolbar()}
         {this.renderSelection()}

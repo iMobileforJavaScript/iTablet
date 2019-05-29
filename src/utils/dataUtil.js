@@ -206,6 +206,12 @@ function cloneObj(obj) {
   return newObj
 }
 
+//获取不带后缀的文件名
+function getFileNameWithOutExt(text) {
+  let json = text.split('.')
+  return text.replace('.' + json[json.length - 1], '')
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -220,4 +226,5 @@ export default {
   angleTransfer,
   swapArray,
   cloneObj,
+  getFileNameWithOutExt,
 }

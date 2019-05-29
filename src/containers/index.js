@@ -76,6 +76,9 @@ import {
   OverlayAnalystView,
 } from './analystView/pages'
 
+import MediaEdit from './mediaEdit'
+import Camera from './camera'
+
 export default StackNavigator(
   {
     Tabs: {
@@ -496,6 +499,22 @@ export default StackNavigator(
     },
     SuperMapKnown: {
       screen: SuperMapKnown,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /** 多媒体编辑 **/
+    MediaEdit: {
+      screen: MediaEdit,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /** 相机界面 **/
+    Camera: {
+      screen: Camera,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

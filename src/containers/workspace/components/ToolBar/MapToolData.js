@@ -8,7 +8,7 @@ import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import NavigationService from '../../../NavigationService'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 
 let _params = {}
 
@@ -245,6 +245,34 @@ function getMapTool(type, params) {
         //   action: this.showBox,
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
+        // },
+        {
+          key: 'captureImage',
+          title: getLanguage(global.language).Map_Main_Menu.CAMERA,
+          action: captureImage,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_camera,
+        },
+        // {
+        //   key: 'captureVideo',
+        //   title: '视频',
+        //   action: captureVideo,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
+        // },
+        // {
+        //   key: 'startCaptureAudio',
+        //   title: '开始录音',
+        //   action: startCaptureAudio,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
+        // },
+        // {
+        //   key: 'stopCaptureAudio',
+        //   title: '停止录音',
+        //   action: stopCaptureAudio,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
         // },
       ]
       // buttons = [
@@ -696,6 +724,38 @@ function address() {
     },
   })
 }
+
+function captureImage() {
+  // let options = {
+  //   datasourceName: 'Hunan',
+  // }
+  // SMediaCollector.captureImage(options, data => {
+  //   console.warn(JSON.stringify(data))
+  // })
+  NavigationService.navigate('Camera')
+}
+
+// function captureVideo () {
+//   let options = {
+//     datasourceName: 'Hunan',
+//   }
+//   SMediaCollector.captureVideo(options, data => {
+//     console.warn(JSON.stringify(data))
+//   })
+// }
+//
+// function startCaptureAudio () {
+//   let options = {
+//     datasourceName: 'Hunan',
+//   }
+//   SMediaCollector.startCaptureAudio(options)
+// }
+//
+// function stopCaptureAudio () {
+//   SMediaCollector.stopCaptureAudio(data => {
+//     console.warn(JSON.stringify(data))
+//   })
+// }
 
 /********** 裁剪手势监听 ************/
 // async function addMapCutListener() {

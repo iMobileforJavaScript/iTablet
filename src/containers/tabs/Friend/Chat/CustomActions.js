@@ -17,13 +17,11 @@ import { getLanguage } from '../../../../language/index'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
-var Geolocation = undefined
-if (Platform.OS === 'ios') {
-  var GeolocationIOS = require('Geolocation')
+
+if (Platform.OS === 'android') {
+  var AMapGeolocation = require('react-native-amap-geolocation')
 } else {
-  import('react-native-amap-geolocation').then(result => {
-    Geolocation = result.default.Geolocation
-  })
+  var GeolocationIOS = require('Geolocation')
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -88,44 +86,44 @@ export default class CustomActions extends React.Component {
   componentDidMount() {
     if (Platform.OS === 'android') {
       this.showLocation = true
-      Geolocation.init({
+      AMapGeolocation.init({
         android: '078057f0e29931c173ad8ec02284a897',
       }).then(() => {
-        Geolocation.setOptions({
-          interval: 8000,
-          distanceFilter: 20,
-        })
-        this.locationListener = Geolocation.addLocationListener(location => {
-          Geolocation.stop()
-          if (this.showLocation) {
-            this.showLocation = false
-            SOnlineService.reverseGeocoding(
-              location.longitude,
-              location.latitude,
-              {
-                onResult: result => {
-                  this.props.sendCallBack(3, {
-                    address: result,
-                    longitude: location.longitude,
-                    latitude: location.latitude,
-                  })
-                  // alert(result)
+        AMapGeolocation.setInterval(8000)
+        AMapGeolocation.setDistanceFilter(20)
+        this.locationListener = AMapGeolocation.addLocationListener(
+          location => {
+            AMapGeolocation.stop()
+            if (this.showLocation) {
+              this.showLocation = false
+              SOnlineService.reverseGeocoding(
+                location.longitude,
+                location.latitude,
+                {
+                  onResult: result => {
+                    this.props.sendCallBack(3, {
+                      address: result,
+                      longitude: location.longitude,
+                      latitude: location.latitude,
+                    })
+                    // alert(result)
+                  },
                 },
-              },
-            )
-            //3s内不接收其他位置信息,避免一次定位多次回调问题
-            setInterval(() => {
-              this.showLocation = true
-            }, 3000)
-          }
-        })
+              )
+              //3s内不接收其他位置信息,避免一次定位多次回调问题
+              setInterval(() => {
+                this.showLocation = true
+              }, 3000)
+            }
+          },
+        )
       })
     }
   }
   componentWillUnmount() {
     if (Platform.OS === 'android') {
       this.locationListener.remove()
-      Geolocation.stop()
+      AMapGeolocation.stop()
     }
   }
   setModalVisible(visible = false) {
@@ -223,7 +221,7 @@ export default class CustomActions extends React.Component {
         },
       )
     } else {
-      Geolocation.start()
+      AMapGeolocation.start()
     }
   }
 }

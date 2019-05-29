@@ -252,15 +252,16 @@ export default class Map3DToolBar extends React.Component {
       SScene.getAttribute()
       SScene.setCircleFly()
       SScene.setAction('PAN3D')
-      SScene.addLayer3D(
-        'http://t0.tianditu.com/img_c/wmts',
-        'l3dBingMaps',
-        'bingmap',
-        'JPG_PNG',
-        96.0,
-        true,
-        'c768f9fd3e388eb0d155405f8d8c6999',
-      )
+      SScene.changeBaseLayer(1)
+      // SScene.addLayer3D(
+      //   'http://t0.tianditu.com/img_c/wmts',
+      //   'l3dBingMaps',
+      //   'bingmap',
+      //   'JPG_PNG',
+      //   96.0,
+      //   true,
+      //   'c768f9fd3e388eb0d155405f8d8c6999',
+      // )
       GLOBAL.action3d = 'PAN3D'
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name
