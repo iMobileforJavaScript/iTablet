@@ -732,7 +732,10 @@ function captureImage() {
   // SMediaCollector.captureImage(options, data => {
   //   console.warn(JSON.stringify(data))
   // })
-  NavigationService.navigate('Camera')
+  // TODO datasourceAlias 修改为根据标注图层来设置
+  NavigationService.navigate('Camera', {
+    datasourceAlias: _params.layers.layers[0].datasourceAlias,
+  })
 }
 
 // function captureVideo () {

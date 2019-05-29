@@ -15,6 +15,10 @@ const icon_close = require('./icon-close.png')
 const icon_album = require('./icon_album.png')
 const icon_rephotograph = require('./icon_rephotograph.png')
 const icon_confirm = require('./icon_confirm.png')
+const icon_play = require('./icon_play.png')
+const icon_pause = require('./icon_pause.png')
+const icon_play_white = require('./icon_play_white.png')
+const icon_pause_white = require('./icon_pause_white.png')
 
 export default {
   icon_undo,
@@ -34,4 +38,8 @@ export default {
   icon_album,
   icon_rephotograph,
   icon_confirm,
+  icon_play,
+  icon_pause,
+  icon_play_white,
+  icon_pause_white,
 }

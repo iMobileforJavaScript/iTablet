@@ -6,7 +6,12 @@ import { CheckBox, PopModal, FingerMenu } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
-import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
+import {
+  SMap,
+  EngineType,
+  DatasetType,
+  GeoStyle,
+} from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
 import styles from './styles'
@@ -138,6 +143,14 @@ export default class BufferAnalystViewTab extends Component {
   }
 
   getAnalystParams = () => {
+    let geoStyle = new GeoStyle()
+    geoStyle.setLineColor(50, 240, 50)
+    geoStyle.setLineStyle(0)
+    geoStyle.setLineWidth(0.5)
+    geoStyle.setMarkerStyle(351)
+    geoStyle.setMarkerSize(5)
+    geoStyle.setFillForeColor(147, 16, 133)
+    geoStyle.setFillOpaqueRate(70)
     let params = {
       sourceData: {
         datasource: this.state.dataSource.value,
@@ -151,6 +164,7 @@ export default class BufferAnalystViewTab extends Component {
       isAttributeRetained: this.state.isRetainAttribute,
       optionParameter: {
         showResult: this.state.isShowOnMap,
+        geoStyle,
       },
     }
     if (this.props.type === 'single') {
