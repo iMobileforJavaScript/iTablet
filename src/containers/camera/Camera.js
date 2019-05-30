@@ -13,9 +13,9 @@ import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets } from '../../assets'
-import { Progress } from '../../components'
+import { Progress, MediaViewer } from '../../components'
 import { RNCamera } from 'react-native-camera'
-import Video from 'react-native-video'
+// import Video from 'react-native-video'
 import { SMediaCollector } from 'imobile_for_reactnative'
 import ImagePicker from 'react-native-image-crop-picker'
 import Orientation from 'react-native-orientation'
@@ -35,7 +35,7 @@ const RECORD_STATUS = {
   RECORDED: 3, // 拍摄完
 }
 
-const TIME_LIMIT = 6
+const TIME_LIMIT = 60
 
 export default class Camera extends React.Component {
   props: {
@@ -103,6 +103,7 @@ export default class Camera extends React.Component {
       data,
       recordStatus: RECORD_STATUS.RECORDED,
     })
+    this.mediaViewer && this.mediaViewer.setVisible(true, data.uri)
   }
 
   /** 开始录制视频 **/
@@ -116,7 +117,7 @@ export default class Camera extends React.Component {
     const options = {
       quality: RNCamera.Constants.VideoQuality['480p'],
       mirrorVideo: false,
-      maxDuration: 6,
+      maxDuration: TIME_LIMIT,
     }
 
     let startTime = new Date().getTime()
@@ -148,6 +149,7 @@ export default class Camera extends React.Component {
       data,
       recordStatus: RECORD_STATUS.RECORDED,
     })
+    this.mediaViewer && this.mediaViewer.setVisible(true, data.uri)
   }
 
   /** 结束录制视频 **/
@@ -175,6 +177,7 @@ export default class Camera extends React.Component {
         data: null,
         recordStatus: RECORD_STATUS.UN_RECORD,
       })
+      this.mediaViewer && this.mediaViewer.setVisible(false)
     })
   }
 
@@ -207,19 +210,19 @@ export default class Camera extends React.Component {
   }
 
   /** 视频播放/暂停 **/
-  play = () => {
-    if (
-      !this.state.data ||
-      !this.state.data.uri ||
-      this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-      this.state.type !== TYPE.VIDEO ||
-      !this.player
-    )
-      return null
-    this.setState({
-      videoPaused: !this.state.videoPaused,
-    })
-  }
+  // play = () => {
+  //   if (
+  //     !this.state.data ||
+  //     !this.state.data.uri ||
+  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
+  //     this.state.type !== TYPE.VIDEO ||
+  //     !this.player
+  //   )
+  //     return null
+  //   this.setState({
+  //     videoPaused: !this.state.videoPaused,
+  //   })
+  // }
 
   openAlbum = () => {
     ImagePicker.openPicker({
@@ -259,40 +262,40 @@ export default class Camera extends React.Component {
     )
   }
 
-  renderVideo = () => {
-    if (
-      !this.state.data ||
-      !this.state.data.uri ||
-      this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-      this.state.type !== TYPE.VIDEO
-    )
-      return null
-    return (
-      <Video
-        source={{ uri: this.state.data.uri }}
-        ref={ref => (this.player = ref)}
-        paused={this.state.videoPaused}
-        repeat={false}
-        style={styles.video}
-        onEnd={() => {
-          if (this.player) {
-            this.player.seek(0, 0)
-            if (this.mProgress) {
-              this.mProgress.progress = 1
-            }
-            this.setState({
-              videoPaused: true,
-            })
-          }
-        }}
-        onProgress={({ currentTime, seekableDuration }) => {
-          if (this.mProgress) {
-            this.mProgress.progress = currentTime / seekableDuration
-          }
-        }}
-      />
-    )
-  }
+  // renderVideo = () => {
+  //   if (
+  //     !this.state.data ||
+  //     !this.state.data.uri ||
+  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
+  //     this.state.type !== TYPE.VIDEO
+  //   )
+  //     return null
+  //   return (
+  //     <Video
+  //       source={{ uri: this.state.data.uri }}
+  //       ref={ref => (this.player = ref)}
+  //       paused={this.state.videoPaused}
+  //       repeat={false}
+  //       style={styles.video}
+  //       onEnd={() => {
+  //         if (this.player) {
+  //           this.player.seek(0, 0)
+  //           if (this.mProgress) {
+  //             this.mProgress.progress = 1
+  //           }
+  //           this.setState({
+  //             videoPaused: true,
+  //           })
+  //         }
+  //       }}
+  //       onProgress={({ currentTime, seekableDuration }) => {
+  //         if (this.mProgress) {
+  //           this.mProgress.progress = currentTime / seekableDuration
+  //         }
+  //       }}
+  //     />
+  //   )
+  // }
 
   renderProgress = () => {
     if (
@@ -314,41 +317,41 @@ export default class Camera extends React.Component {
     )
   }
 
-  renderVideoControl = () => {
-    if (
-      !this.state.data ||
-      !this.state.data.uri ||
-      this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-      this.state.type !== TYPE.VIDEO
-    )
-      return null
-    return (
-      <View style={styles.videoControlView}>
-        <TouchableOpacity
-          onPress={() => {
-            this.setState({
-              showVideoController: !this.state.showVideoController,
-            })
-          }}
-          style={styles.videoControlView}
-        />
-        {(this.state.showVideoController || this.state.videoPaused) && (
-          <TouchableOpacity onPress={() => this.play()} style={styles.play}>
-            <View style={styles.playOverlay} />
-            <Image
-              resizeMode={'contain'}
-              source={
-                this.state.videoPaused
-                  ? getPublicAssets().common.icon_play_white
-                  : getPublicAssets().common.icon_pause_white
-              }
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    )
-  }
+  // renderVideoControl = () => {
+  //   if (
+  //     !this.state.data ||
+  //     !this.state.data.uri ||
+  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
+  //     this.state.type !== TYPE.VIDEO
+  //   )
+  //     return null
+  //   return (
+  //     <View style={styles.videoControlView}>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           this.setState({
+  //             showVideoController: !this.state.showVideoController,
+  //           })
+  //         }}
+  //         style={styles.videoControlView}
+  //       />
+  //       {(this.state.showVideoController || this.state.videoPaused) && (
+  //         <TouchableOpacity onPress={() => this.play()} style={styles.play}>
+  //           <View style={styles.playOverlay} />
+  //           <Image
+  //             resizeMode={'contain'}
+  //             source={
+  //               this.state.videoPaused
+  //                 ? getPublicAssets().common.icon_play_white
+  //                 : getPublicAssets().common.icon_pause_white
+  //             }
+  //             style={styles.smallIcon}
+  //           />
+  //         </TouchableOpacity>
+  //       )}
+  //     </View>
+  //   )
+  // }
 
   renderBottomBtns = () => {
     if (this.state.recordStatus === RECORD_STATUS.RECORDING) return null
@@ -501,9 +504,11 @@ export default class Camera extends React.Component {
             if (status === 'READY') this.camera = camera
           }}
         </RNCamera>
-        {this.renderVideo()}
+        {/*{this.renderVideo()}*/}
         {this.renderProgress()}
-        {this.renderVideoControl()}
+        {/*{this.renderVideoControl()}*/}
+
+        <MediaViewer ref={ref => (this.mediaViewer = ref)} />
         {this.renderBottomBtns()}
         {this.renderCenterBtn()}
         {this.renderChangeBtns()}

@@ -24,11 +24,13 @@ export default StyleSheet.create({
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
     borderRadius: scaleSize(8),
+    backgroundColor: 'transparent',
   },
   image: {
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
     borderRadius: scaleSize(8),
+    backgroundColor: 'transparent',
   },
   tableView: {
     padding: scaleSize(30),

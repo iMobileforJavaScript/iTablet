@@ -2,18 +2,19 @@
  * 多媒体编辑界面
  */
 import * as React from 'react'
-import { TouchableOpacity, ScrollView, Image } from 'react-native'
+import { ScrollView, Platform } from 'react-native'
 import {
   Container,
   TextBtn,
   ListItem,
   TableList,
-  ImageViewer,
+  MediaViewer,
 } from '../../components'
-import { Toast } from '../../utils'
+import { Toast, checkType } from '../../utils'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import styles from './styles'
+import MediaItem from './MediaItem'
 import { getLanguage } from '../../language'
 import NavigationService from '../../containers/NavigationService'
 import ImagePicker from 'react-native-image-crop-picker'
@@ -34,12 +35,12 @@ export default class MediaEdit extends React.Component {
     const { params } = this.props.navigation.state || {}
     this.info = (params && params.info) || {}
     let paths = []
-    ;(this.info.mediaFilePaths || []).forEach(item => {
-      paths.push({
-        url: item,
-        freeHeight: true,
-      })
-    })
+    // ;(this.info.mediaFilePaths || []).forEach(item => {
+    //   paths.push({
+    //     url: item,
+    //     freeHeight: true,
+    //   })
+    // })
 
     this.showInfo = {
       mediaFileName: this.info.mediaFileName || '',
@@ -55,7 +56,31 @@ export default class MediaEdit extends React.Component {
     }
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    (async function() {
+      let paths = await this.dealData(this.state.mediaFilePaths)
+      this.setState({
+        paths,
+      })
+    }.bind(this)())
+  }
+
+  dealData = async (mediaPaths = []) => {
+    let paths = []
+    for (let item of mediaPaths) {
+      const type = checkType.getMediaTypeByPath(item)
+      let info
+      if (Platform.OS === 'ios' && type === 'video') {
+        info = await SMediaCollector.getVideoInfo(item)
+      }
+      paths.push({
+        ...info,
+        uri: item,
+        type,
+      })
+    }
+    return paths
+  }
 
   save = () => {
     if (!this.info.layerName) {
@@ -103,7 +128,7 @@ export default class MediaEdit extends React.Component {
     ImagePicker.openPicker({
       multiple: true,
       maxFiles,
-    }).then(images => {
+    }).then(async images => {
       let mediaFilePaths = [...this.state.mediaFilePaths]
 
       images.forEach(item => {
@@ -111,13 +136,7 @@ export default class MediaEdit extends React.Component {
       })
       mediaFilePaths = [...new Set(mediaFilePaths)]
 
-      let paths = []
-      mediaFilePaths.forEach(item => {
-        paths.push({
-          url: item,
-          freeHeight: true,
-        })
-      })
+      let paths = await this.dealData(mediaFilePaths)
 
       this.setState({
         mediaFilePaths,
@@ -140,34 +159,60 @@ export default class MediaEdit extends React.Component {
 
   renderImage = ({ item, rowIndex, cellIndex }) => {
     return (
-      <TouchableOpacity
-        key={rowIndex + '-' + cellIndex}
-        style={item === '+' ? styles.plusImageView : styles.imageView}
+      <MediaItem
+        data={item}
+        index={rowIndex * COLUMNS + cellIndex}
         onPress={() => {
           if (item === '+') {
             this.openAlbum()
           } else {
-            this.imageViewer &&
-              this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
+            // this.imageViewer &&
+            //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
+            const itemInfo = this.state.paths[rowIndex * COLUMNS + cellIndex]
+            this.mediaViewer && this.mediaViewer.setVisible(true, itemInfo.uri)
+            // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
           }
         }}
-      >
-        <Image
-          style={styles.image}
-          resizeMode={'stretch'}
-          source={
-            item === '+'
-              ? require('../../assets/public/icon-plus.png')
-              : { uri: item }
-          }
-        />
-      </TouchableOpacity>
+      />
     )
+    // return (
+    //   <TouchableOpacity
+    //     key={rowIndex + '-' + cellIndex}
+    //     style={item === '+' ? styles.plusImageView : styles.imageView}
+    //     onPress={() => {
+    //       if (item === '+') {
+    //         this.openAlbum()
+    //       } else {
+    //         // this.imageViewer &&
+    //         //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
+    //         const itemInfo = this.state.paths[rowIndex * COLUMNS + cellIndex]
+    //         this.mediaViewer &&
+    //         this.mediaViewer.setVisible(true, itemInfo.uri)
+    //         // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
+    //       }
+    //     }}
+    //   >
+    //     <Image
+    //       style={styles.image}
+    //       resizeMode={'stretch'}
+    //       source={
+    //         item === '+'
+    //           ? require('../../assets/public/icon-plus.png')
+    //           : { uri: item.image || item.uri }
+    //           // : { uri: item }
+    //       }
+    //     />
+    //   </TouchableOpacity>
+    // )
   }
 
   renderAlbum = () => {
-    let data = [...this.state.mediaFilePaths]
-    if (this.state.mediaFilePaths.length < 9) {
+    // let data = [...this.state.mediaFilePaths]
+    // if (this.state.mediaFilePaths.length < 9) {
+    //   data.push('+')
+    // }
+    let data = [...this.state.paths]
+    if (this.state.paths.length < 9) {
       data.push('+')
     }
     return (
@@ -265,9 +310,14 @@ export default class MediaEdit extends React.Component {
           })}
           {this.renderAlbum()}
         </ScrollView>
-        <ImageViewer
-          ref={ref => (this.imageViewer = ref)}
-          imageUrls={this.state.paths}
+        {/*<ImageViewer*/}
+        {/*ref={ref => (this.imageViewer = ref)}*/}
+        {/*imageUrls={this.state.paths}*/}
+        {/*/>*/}
+        <MediaViewer
+          ref={ref => (this.mediaViewer = ref)}
+          withBackBtn
+          isModal
         />
       </Container>
     )
