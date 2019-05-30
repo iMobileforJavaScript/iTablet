@@ -387,6 +387,13 @@ const Map_Settings = {
   COPY: 'Copy',
 }
 
+//地图工具
+const Map_Tools = {
+  VIDEO: 'Video',
+  PHOTO: 'Photo',
+  AUDIO: 'Audio',
+}
+
 export {
   Map_Main_Menu,
   Map_Label,
@@ -394,4 +401,5 @@ export {
   Map_Attribute,
   Map_Setting,
   Map_Settings,
+  Map_Tools,
 }

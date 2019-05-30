@@ -18,6 +18,7 @@ import {
   EngineType,
   SAnalyst,
   DatasetType,
+  GeoStyle,
 } from 'imobile_for_reactnative'
 
 const popTypes = {
@@ -133,6 +134,14 @@ export default class OverlayAnalystView extends Component {
     Toast.show(ConstInfo.ANALYST_START)
     ;(async function() {
       try {
+        let geoStyle = new GeoStyle()
+        geoStyle.setLineColor(50, 240, 50)
+        geoStyle.setLineStyle(0)
+        geoStyle.setLineWidth(0.5)
+        geoStyle.setMarkerStyle(351)
+        geoStyle.setMarkerSize(5)
+        geoStyle.setFillForeColor(244, 50, 50)
+        geoStyle.setFillOpaqueRate(70)
         let sourceData = {
             datasource: this.state.dataSource.value,
             dataset: this.state.dataSet.value,
@@ -145,37 +154,72 @@ export default class OverlayAnalystView extends Component {
             datasource: this.state.resultDataSource.value,
             dataset: this.state.resultDataSet.value,
           },
+          optionParameter = {
+            geoStyle,
+          },
           result = false
         switch (this.state.title) {
           case ConstAnalyst.CLIP:
-            result = await SAnalyst.clip(sourceData, targetData, resultData)
+            result = await SAnalyst.clip(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
           case ConstAnalyst.ERASE:
-            result = await SAnalyst.erase(sourceData, targetData, resultData)
+            result = await SAnalyst.erase(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
           case ConstAnalyst.IDENTITY:
-            result = await SAnalyst.identity(sourceData, targetData, resultData)
+            result = await SAnalyst.identity(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
           case ConstAnalyst.INTERSECT:
             result = await SAnalyst.intersect(
               sourceData,
               targetData,
               resultData,
+              optionParameter,
             )
             break
           case ConstAnalyst.UNION:
-            result = await SAnalyst.union(sourceData, targetData, resultData)
+            result = await SAnalyst.union(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
           case ConstAnalyst.UPDATE:
-            result = await SAnalyst.update(sourceData, targetData, resultData)
+            result = await SAnalyst.update(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
           case ConstAnalyst.XOR:
-            result = await SAnalyst.xOR(sourceData, targetData, resultData)
+            result = await SAnalyst.xOR(
+              sourceData,
+              targetData,
+              resultData,
+              optionParameter,
+            )
             break
         }
 
         Toast.show(result ? ConstInfo.ANALYST_SUCCESS : ConstInfo.ANALYST_FAIL)
         if (result) {
+          SMap.viewEntire()
           await this.props.getLayers()
 
           NavigationService.goBack('OverlayAnalystEntry')

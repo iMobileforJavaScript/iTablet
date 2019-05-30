@@ -9,7 +9,7 @@ import { scaleSize, Toast } from '../../../../utils'
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
-import { SAnalyst } from 'imobile_for_reactnative'
+import { SAnalyst, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
 import BufferAnalystViewTab from './BufferAnalystViewTab'
@@ -71,7 +71,7 @@ export default class BufferAnalystView extends Component {
           isAttributeRetained,
           optionParameter,
         ).then(
-          res => {
+          async res => {
             Toast.show(
               res.result
                 ? ConstInfo.ANALYST_SUCCESS
@@ -79,6 +79,8 @@ export default class BufferAnalystView extends Component {
             )
 
             if (res.result) {
+              SMap.viewEntire()
+              await this.props.getLayers()
               NavigationService.goBack()
               if (optionParameter.showResult) {
                 this.cb && this.cb()
@@ -111,6 +113,7 @@ export default class BufferAnalystView extends Component {
             )
 
             if (res.result) {
+              SMap.viewEntire()
               await this.props.getLayers()
               NavigationService.goBack()
               if (params.optionParameter.showResult) {

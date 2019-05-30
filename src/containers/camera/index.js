@@ -3,7 +3,7 @@ import Camera from './Camera'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
-  language: state.user.toJS().language,
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
 })
 

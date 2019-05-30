@@ -406,6 +406,14 @@ const Map_Settings = {
   CONFIRM: '确定',
   COPY: '复制',
 }
+
+//地图工具
+const Map_Tools = {
+  VIDEO: '视频',
+  PHOTO: '照片',
+  AUDIO: '音频',
+}
+
 export {
   Map_Main_Menu,
   Map_Label,
@@ -413,4 +421,5 @@ export {
   Map_Attribute,
   Map_Setting,
   Map_Settings,
+  Map_Tools,
 }
