@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { TouchableOpacity, View, Animated, FlatList, Text } from 'react-native'
+import { TouchableOpacity, View, FlatList, Text } from 'react-native'
 import { color } from '../../../tabs/Mine/MyService/Styles'
 import styles from '../styles'
 
@@ -15,29 +15,13 @@ export default class SelectList extends React.Component {
     data: Array,
     height: string,
     device: Object,
+    modal: Object,
     callback: () => {},
   }
 
   constructor(props) {
     super(props)
     this.height = this.props.height
-    this.state = {
-      bottom: new Animated.Value(-this.height),
-    }
-  }
-
-  showFullMap = () => {
-    Animated.timing(this.state.bottom, {
-      toValue: 0,
-      duration: 150,
-    }).start()
-  }
-
-  hideSelectList = () => {
-    Animated.timing(this.state.bottom, {
-      toValue: -this.height,
-      duration: 150,
-    }).start()
   }
 
   renderLine = () => {
@@ -58,7 +42,10 @@ export default class SelectList extends React.Component {
         <TouchableOpacity
           onPress={async () => {
             let isSuccess = await item.action()
-            if (isSuccess) this.props.callback(item.value)
+            if (isSuccess) {
+              this.props.callback(item.value)
+              this.props.modal.setVisible(false)
+            }
           }}
         >
           <View style={styles.row}>
@@ -71,22 +58,19 @@ export default class SelectList extends React.Component {
   }
   render() {
     return (
-      <View>
-        <Animated.View
-          style={{
-            height: this.height,
-            width: '100%',
-            position: 'absolute',
-            bottom: this.state.bottom,
-          }}
-        >
-          <FlatList
-            renderItem={this.renderItem}
-            data={this.props.data}
-            keyExtractor={(item, index) => item.value + index}
-            numColumns={1}
-          />
-        </Animated.View>
+      <View
+        style={{
+          height: this.height,
+          width: '100%',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <FlatList
+          renderItem={this.renderItem}
+          data={this.props.data}
+          keyExtractor={(item, index) => item.value + index}
+          numColumns={1}
+        />
       </View>
     )
   }
