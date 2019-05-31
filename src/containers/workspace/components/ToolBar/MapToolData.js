@@ -3,7 +3,7 @@
  */
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
-import { dataUtil } from '../../../../utils'
+import { dataUtil, Toast } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -726,16 +726,33 @@ function address() {
 }
 
 function captureImage() {
-  // let options = {
-  //   datasourceName: 'Hunan',
-  // }
-  // SMediaCollector.captureImage(options, data => {
-  //   console.warn(JSON.stringify(data))
-  // })
-  // TODO datasourceAlias 修改为根据标注图层来设置
-  NavigationService.navigate('Camera', {
-    datasourceAlias: _params.layers.layers[0].datasourceAlias,
-  })
+  (async function() {
+    // let options = {
+    //   datasourceName: 'Hunan',
+    // }
+    // SMediaCollector.captureImage(options, data => {
+    //   console.warn(JSON.stringify(data))
+    // })
+    // TODO datasourceAlias 修改为根据标注图层来设置
+    let isTaggingLayer = await SMap.isTaggingLayer(
+      _params.user.currentUser.userName,
+    )
+    if (isTaggingLayer) {
+      await SMap.setTaggingGrid(
+        GLOBAL.TaggingDatasetName,
+        _params.user.currentUser.userName,
+      )
+      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
+      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      NavigationService.navigate('Camera', {
+        datasourceAlias,
+        datasetName,
+      })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+  }.bind(this)())
 }
 
 // function captureVideo () {

@@ -48,7 +48,8 @@ export default class Camera extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state || {}
-    this.datasourceAlias = params.datasourceAlias || 'Hunan'
+    this.datasourceAlias = params.datasourceAlias || ''
+    this.datasetName = params.datasetName || 'MediaDataset'
     this.camera = null
 
     this.state = {
@@ -182,9 +183,11 @@ export default class Camera extends React.Component {
   }
 
   addMedia = async (mediaPaths = []) => {
+    // TODO 添加提示
+    if (!this.datasourceAlias) return
     let result = await SMediaCollector.addMedia({
       datasourceName: this.datasourceAlias,
-      datasetName: 'MediaDataset',
+      datasetName: this.datasetName,
       mediaPaths,
     })
     return result

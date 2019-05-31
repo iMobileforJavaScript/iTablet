@@ -327,7 +327,7 @@ export default class LayerManager_tolbar extends React.Component {
     } else return
   }
 
-  updateupdateTaggingTagging = async () => {
+  updateTagging = async () => {
     if (this.props.updateTagging) {
       await this.props.updateTagging({
         index: this.state.index,
