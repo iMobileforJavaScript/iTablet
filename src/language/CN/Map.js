@@ -89,10 +89,13 @@ const Map_Main_Menu = {
   TOOLS_CREATE_REGION: '画面',
   TOOLS_CREATE_TRACK: '轨迹',
   TOOLS_CREATE_TEXT: '文字',
+
   TOOLS_NAME: '名字',
   TOOLS_REMARKS: '备注',
   TOOLS_HTTP: 'http地址',
   TOOLS_PICTURES: '图片',
+  COLLECT_TIME: '采集时间',
+  COORDINATE: '经纬度',
 
   //裁剪
   TOOLS_RECTANGLE_CLIP: '矩形裁剪',
@@ -403,6 +406,14 @@ const Map_Settings = {
   CONFIRM: '确定',
   COPY: '复制',
 }
+
+//地图工具
+const Map_Tools = {
+  VIDEO: '视频',
+  PHOTO: '照片',
+  AUDIO: '音频',
+}
+
 export {
   Map_Main_Menu,
   Map_Label,
@@ -410,4 +421,5 @@ export {
   Map_Attribute,
   Map_Setting,
   Map_Settings,
+  Map_Tools,
 }

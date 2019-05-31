@@ -73,14 +73,6 @@ const base3DListData = [
     index: 0,
     show: true,
     data: [
-      // {
-      //   title: 'STK',
-      //   index: 0,
-      //   show: true,
-      //   type: 'terrainLayer',
-      //   name: 'stk',
-      //   url: 'https://assets.agi.com/stk-terrain/world',
-      // },
       {
         title: 'bingmap',
         index: 0,
@@ -88,6 +80,15 @@ const base3DListData = [
         type: 'l3dBingMaps',
         name: 'bingmap',
         url: 'http://t0.tianditu.com/img_c/wmts',
+      },
+      {
+        title: 'tianditu',
+        index: 0,
+        show: true,
+        type: 'ImageFormatTypeJPG_PNG',
+        name: 'tianditu',
+        url:
+          'http://t0.tianditu.com/img_c/wmts?tk=22f8a846ef9e3becd95a25b08bde8f36',
       },
     ],
   },
@@ -250,18 +251,17 @@ const layerSettingCanNotSnap = param => [
   },
 ]
 
-const layer3dDefault = (param,selected) =>{
-
-  let data =  {
+const layer3dDefault = (param, selected) => {
+  let data = {
     title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
-    type:"setLayerSelect",
+    type: 'setLayerSelect',
   }
-  if(selected === false){
-    data =  {
+  if (selected === false) {
+    data = {
       title: getLanguage(param).Map_Layer.OPTIONAL,
       image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
-      type:"setLayerSelect",
+      type: 'setLayerSelect',
     }
   }
   return [
@@ -270,9 +270,12 @@ const layer3dDefault = (param,selected) =>{
       data: [
         {
           // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          title:
+            global.language === 'CN'
+              ? '缩放至当前图层'
+              : 'Scale to the current layer',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
-          type:"scaleToLayer",
+          type: 'scaleToLayer',
         },
         data,
       ],
@@ -280,31 +283,35 @@ const layer3dDefault = (param,selected) =>{
   ]
 }
 
-function layere3dImage(param) {
+function layere3dImage() {
   return [
     {
       title: '',
       data: [
         {
           // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          title:
+            global.language === 'CN'
+              ? '缩放至当前图层'
+              : 'Scale to the current layer',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
-          type:"scaleToLayer",
+          type: 'scaleToLayer',
         },
         {
-          title: global.language === 'CN' ? "添加影像图层" : "Add a image layer",
+          title:
+            global.language === 'CN' ? '添加影像图层' : 'Add a image layer',
           image: require('../../../../assets/mapTools/icon_create_black.png'),
-          type:"AddImage",
+          type: 'AddImage',
         },
         {
-          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
+          title: global.language === 'CN' ? '移除当前图层' : 'Remove the layer',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
-          type:"RemoveLayer3d_image",
+          type: 'RemoveLayer3d_image',
         },
-        {
-          title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
-          image: require('../../../../assets/mapTools/icon_open_black.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+        //   image: require('../../../../assets/mapTools/icon_open_black.png'),
+        // },
       ],
     },
   ]
@@ -316,19 +323,23 @@ function layere3dTerrain() {
       data: [
         {
           // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          title: global.language === 'CN' ? "缩放至当前图层" : "Scale to the current layer",
+          title:
+            global.language === 'CN'
+              ? '缩放至当前图层'
+              : 'Scale to the current layer',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
-          type:"scaleToLayer",
+          type: 'scaleToLayer',
         },
         {
-          title: global.language === 'CN' ? "移除当前图层" : "Remove the layer",
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-          type:"RemoveLayer3d_terrain",
-        },
-        {
-          title: global.language === 'CN' ? "添加地形图层" : "Add a terrain layer",
+          title:
+            global.language === 'CN' ? '添加地形图层' : 'Add a terrain layer',
           image: require('../../../../assets/mapTools/icon_create_black.png'),
-          type:"AddTerrain",
+          type: 'AddTerrain',
+        },
+        {
+          title: global.language === 'CN' ? '移除当前图层' : 'Remove the layer',
+          image: require('../../../../assets/layerToolbar/layer_remove.png'),
+          type: 'RemoveLayer3d_terrain',
         },
       ],
     },
@@ -473,7 +484,6 @@ export {
   base3DListData,
   layere3dTerrain,
   layer3dDefault,
-
   taggingData,
   scaleData,
   mscaleData,

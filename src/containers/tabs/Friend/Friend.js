@@ -43,6 +43,7 @@ import ConstPath from '../../../constants/ConstPath'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
 import JPushService from './JPushService'
+import { Buffer } from 'buffer'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -224,6 +225,32 @@ export default class Friend extends Component {
     this._sendMessage(msgStr, groupId, false)
   }
 
+  addGroupMember = (groupId, members) => {
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+
+    let bAdded = FriendListFileHandle.addGroupMember(groupId, members)
+
+    if (bAdded) {
+      let group = FriendListFileHandle.getGroup(groupId)
+
+      let msgObj = {
+        user: {
+          name: this.props.user.currentUser.nickname,
+          id: this.props.user.currentUser.userId,
+          groupID: groupId,
+          groupName: group.groupName, //群组消息带个群组名
+        },
+        members: group.members,
+        type: MSGConstant.MSG_CREATE_GROUP,
+        time: time,
+        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
+      }
+      let msgStr = JSON.stringify(msgObj)
+      this._sendMessage(msgStr, groupId, false)
+    }
+  }
+
   isGroupMsg = messageStr => {
     let messageObj = JSON.parse(messageStr)
     let type = messageObj.type
@@ -255,7 +282,7 @@ export default class Friend extends Component {
     if (bCon) {
       let talkIds = []
       if (this.isGroupMsg(messageStr)) {
-        let members = FriendListFileHandle.getGroup(talkId).members
+        let members = FriendListFileHandle.readGroupMemberList(talkId)
         await SMessageService.declareSession(members, talkId)
         for (let key in members) {
           talkIds.push(members[key].id)
@@ -263,7 +290,13 @@ export default class Friend extends Component {
       } else {
         talkIds.push(talkId)
       }
-      SMessageService.sendMessage(messageStr, talkId)
+      //对接桌面
+      let messageObj = JSON.parse(messageStr)
+      if (messageObj.type < 10 && typeof messageObj.message === 'string') {
+        messageObj.message = Buffer.from(messageObj.message).toString('base64')
+      }
+      let generalMsg = JSON.stringify(messageObj)
+      SMessageService.sendMessage(generalMsg, talkId)
       JPushService.push(messageStr, talkIds)
     } else {
       Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
@@ -444,6 +477,14 @@ export default class Friend extends Component {
         return
       }
 
+      //对接桌面
+      if (messageObj.type < 10 && typeof messageObj.message === 'string') {
+        messageObj.message = Buffer.from(
+          messageObj.message,
+          'base64',
+        ).toString()
+      }
+
       if (!FriendListFileHandle.friends) {
         await this.getContacts()
       }
@@ -514,20 +555,26 @@ export default class Friend extends Component {
           bSysStore = true
         }
         if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
-          //加入群
-          let groupName = ''
-          for (let i in messageObj.members) {
-            if (i > 3) break
-            groupName += messageObj.members[i].name
-            if (i !== messageObj.members.length - 2) groupName += '、'
+          if (
+            FriendListFileHandle.isInGroup(
+              messageObj.user.groupID,
+              this.props.user.currentUser.userId,
+            )
+          ) {
+            FriendListFileHandle.addGroupMember(
+              messageObj.user.groupID,
+              messageObj.members,
+            )
+          } else {
+            //加入群
+            FriendListFileHandle.addToGroupList({
+              id: messageObj.user.groupID,
+              members: messageObj.members,
+              groupName: messageObj.user.groupName,
+              masterID: messageObj.user.id,
+            })
+            return
           }
-          FriendListFileHandle.addToGroupList({
-            id: messageObj.user.groupID,
-            members: messageObj.members,
-            groupName: groupName,
-            masterID: messageObj.user.id,
-          })
-          return
         }
         if (messageObj.type === MSGConstant.MSG_REJECT) {
           bSysStore = true

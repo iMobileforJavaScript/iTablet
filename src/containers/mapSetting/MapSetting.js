@@ -227,7 +227,7 @@ export default class MapSetting extends Component {
       this.props.navigation.navigate('MapView')
     } else {
       //根据title跳转
-      NavigationService.navigate('secondMapSettings', {
+      NavigationService.navigate('SecondMapSettings', {
         title,
         language: this.props.language,
         //

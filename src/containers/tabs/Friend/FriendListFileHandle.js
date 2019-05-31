@@ -279,6 +279,23 @@ export default class FriendListFileHandle {
     return undefined
   }
 
+  static readGroupMemberList(groupId) {
+    let members = JSON.stringify(FriendListFileHandle.getGroup(groupId).members)
+    return JSON.parse(members)
+  }
+
+  static isInGroup(groupId, userId) {
+    let group = FriendListFileHandle.getGroup(groupId)
+    if (group) {
+      for (let key in group.members) {
+        if (group.members[key].id === userId) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   // 添加群
   static addToGroupList(obj) {
     let bFound = FriendListFileHandle.findFromGroupList(obj.id)
@@ -335,13 +352,22 @@ export default class FriendListFileHandle {
     )
   }
 
-  static addGroupMember(groupId, user) {
+  static addGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
-    if (group) {
-      group.members.push(user)
+    let bAdded = false
+    for (let key in members) {
+      if (!FriendListFileHandle.isInGroup(groupId, members[key].id)) {
+        group.members.push(members[key])
+        bAdded = true
+      }
+    }
+    if (bAdded) {
+      FriendListFileHandle.friends['rev'] += 1
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
       FriendListFileHandle.saveHelper(friendsStr)
     }
+
+    return bAdded
   }
 
   static removeGroupMember(groupId, userId) {
@@ -350,6 +376,7 @@ export default class FriendListFileHandle {
       for (let key in group.members) {
         if (group.members[key].id === userId) {
           group.members.splice(key, 1)
+          FriendListFileHandle.friends['rev'] += 1
           let friendsStr = JSON.stringify(FriendListFileHandle.friends)
           FriendListFileHandle.saveHelper(friendsStr)
           break

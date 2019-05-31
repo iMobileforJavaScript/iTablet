@@ -12,6 +12,7 @@ import {
   SMap,
   SCollector,
   EngineType,
+  SMediaCollector,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -49,7 +50,6 @@ import { setGestureDetectorListener } from '../../../GestureDetectorListener'
 import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import SMLegendView from '../../components/LegendView/SMLegendView'
 import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
@@ -216,6 +216,12 @@ export default class MapView extends React.Component {
         action: () => this.back(),
       })
 
+      SMediaCollector.setCalloutTapListener(info => {
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      })
+
       this.clearData()
       if (this.toolBox) {
         GLOBAL.toolBox = this.toolBox
@@ -273,6 +279,12 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setMapLegend(false)
+
+    // 移除多媒体采集监听
+    SMediaCollector.removeListener()
+
+    // 移除多媒体采集Callout
+    SMediaCollector.hideMedia()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }
@@ -1349,13 +1361,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && Platform.OS === 'android' && (
-          <SMLegendView
-            device={this.props.device}
-            ref={ref => (GLOBAL.smlegend = ref)}
-          />
-        )}
-        {this.props.mapLegend && Platform.OS === 'ios' && (
+        {this.props.mapLegend && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}

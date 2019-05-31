@@ -21,5 +21,8 @@ export default {
   MSG_PICTURE: 2,
   MSG_FILE: 3, //文件本体
   MSG_FILE_NOTIFY: 6, //文件接收通知(地图)
+  MSG_GEOMETRY: 7, //对象
+  MSG_DATASET: 8, //数据集
+  MSG_LAYER: 9, //图层
   MSG_LOCATION: 10, //位置
 }

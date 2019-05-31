@@ -32,7 +32,7 @@ import {
 
 import GetBack from './register&getBack/GetBack'
 //地图二级设置菜单
-import { secondMapSettings } from './mapSetting/secondMapSettings'
+import { SecondMapSettings } from './mapSetting/secondMapSettings'
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
@@ -75,6 +75,9 @@ import {
   OverlayAnalystEntry,
   OverlayAnalystView,
 } from './analystView/pages'
+
+import MediaEdit from './mediaEdit'
+import Camera from './camera'
 
 export default StackNavigator(
   {
@@ -501,6 +504,22 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    /** 多媒体编辑 **/
+    MediaEdit: {
+      screen: MediaEdit,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /** 相机界面 **/
+    Camera: {
+      screen: Camera,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /**************************** Analyst ***************************/
     // AnalystTools: {
     //   screen: AnalystTools,
@@ -537,8 +556,8 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-    secondMapSettings: {
-      screen: secondMapSettings,
+    SecondMapSettings: {
+      screen: SecondMapSettings,
       navigationOptions: {
         header: null,
       },

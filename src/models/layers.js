@@ -449,8 +449,15 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
 
   //map = @{@"name":name,@"visible": @(visible),@"selectable": @(0),@"basemap":@(0),@"type":@"Terrain"};
   //默认显示个不存在地形
-  if(terrainList.length === 0){
-    terrainList.push({"name":"cache","visible":true,"selectable":false,"type":"Terrain","basemap":false,isShow:true})
+  if (terrainList.length === 0) {
+    terrainList.push({
+      name: 'cache',
+      visible: true,
+      selectable: false,
+      type: 'Terrain',
+      basemap: false,
+      isShow: true,
+    })
   }
   let data = [
     {

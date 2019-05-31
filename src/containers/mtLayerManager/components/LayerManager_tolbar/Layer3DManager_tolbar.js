@@ -1,13 +1,10 @@
 import React from 'react'
-import {
-  ConstToolType,
-} from '../../../../constants/index'
+import { ConstToolType } from '../../../../constants/index'
 // import NavigationService from '../../../NavigationService'
 import {
   layere3dImage,
   // layer3dSettingCanNotSelect,
   layer3dDefault,
-  base3DListData,
   layere3dTerrain,
 } from './LayerToolbarData'
 import {
@@ -24,8 +21,8 @@ import styles from './styles'
 import { SScene } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
-import { screen, scaleSize, setSpText,dataUtil } from '../../../../utils'
-import Map3DToolBar from '../../../workspace/components/Map3DToolBar'
+import { screen, scaleSize, setSpText, dataUtil } from '../../../../utils'
+// import Map3DToolBar from '../../../workspace/components/Map3DToolBar'
 import { getLanguage } from '../../../../language/index'
 /** 工具栏类型 **/
 const list = 'list'
@@ -86,9 +83,30 @@ export default class LayerManager_tolbar extends React.Component {
     this.getData = this.getData.bind(this)
   }
 
-  async getData(type){
+  async getData(type) {
     let data = []
     switch (type) {
+      case ConstToolType.MAP3D_LAYER3D_BASE:
+        data = [
+          {
+            title: '',
+            data: [
+              {
+                title:
+                  global.language === 'CN'
+                    ? '添加影像图层'
+                    : 'Add a image layer',
+                image: require('../../../../assets/mapTools/icon_create_black.png'),
+                type: 'AddImage',
+              },
+              {
+                title: getLanguage(global.language).Map_Layer.BASEMAP_SWITH,
+                image: require('../../../../assets/mapTools/icon_open_black.png'),
+              },
+            ],
+          },
+        ]
+        break
       case ConstToolType.MAP3D_LAYER3D_IMAGE:
         data = layere3dImage(global.language)
         break
@@ -96,50 +114,77 @@ export default class LayerManager_tolbar extends React.Component {
         data = layere3dTerrain()
         break
       case ConstToolType.MAP3D_BASE:
-        data = base3DListData
+        data = [
+          {
+            header: {
+              title: global.language === 'CN' ? '在线底图' : 'Online BaseMap',
+              image: require('../../../../assets/map/layers_theme_unique_style.png'),
+            },
+            data: [
+              {
+                title: 'BingMap',
+                name: 'BingMap',
+                type: 'AddBingmap',
+                image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
+              },
+              {
+                title: 'TianDiTu',
+                name: 'TianDiTu',
+                type: 'AddTianditu',
+                image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
+              },
+            ],
+          },
+        ]
         break
       case ConstToolType.MAP3D_LAYER3D_DEFAULT:
-        data = layer3dDefault(this.props.language,false)
+        data = layer3dDefault(this.props.language, false)
         break
       case ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED:
-        data = layer3dDefault(this.props.language,true)
+        data = layer3dDefault(this.props.language, true)
         break
-      case "AddTerrain_second"://地形添加二级界面
-      {
+      case 'AddTerrain_second': {
+        //地形添加二级界面
         let terrainDatas = {
-          header:{title:global.language==="CN"?"地形":"Terrain",image:require('../../../../assets/map/Frenchgrey/icon_vectorfile_white.png')},
-          data:[],
+          header: {
+            title: global.language === 'CN' ? '地形' : 'Terrain',
+            image: require('../../../../assets/map/Frenchgrey/icon_vectorfile_white.png'),
+          },
+          data: [],
         }
         let value = await SScene.getTerrainCacheNames()
-        if(value){
-          for(let i=0,n=value.length;i<n;i++){
+        if (value) {
+          for (let i = 0, n = value.length; i < n; i++) {
             let terrainData = {
               image: require('../../../../assets/map/Frenchgrey/icon_vectorfile.png'),
-              type:"AddTerrain_second",
+              type: 'AddTerrain_second',
             }
             terrainData.path = value[i].path
-            terrainData.title =  dataUtil.getFileNameWithOutExt(value[i].name)
+            terrainData.title = dataUtil.getFileNameWithOutExt(value[i].name)
             terrainDatas.data.push(terrainData)
           }
         }
         data.push(terrainDatas)
         break
       }
-      case "AddImage_second"://影像添加二级界面
-      {
+      case 'AddImage_second': {
+        //影像添加二级界面
         let terrainDatas = {
-          header:{title:global.language==="CN"?"影像":"Image",image:require('../../../../assets/map/layers_theme_unique_style.png')},
-          data:[],
+          header: {
+            title: global.language === 'CN' ? '影像' : 'Image',
+            image: require('../../../../assets/map/layers_theme_unique_style.png'),
+          },
+          data: [],
         }
         let value = await SScene.getImageCacheNames()
-        if(value){
-          for(let i=0,n=value.length;i<n;i++){
+        if (value) {
+          for (let i = 0, n = value.length; i < n; i++) {
             let terrainData = {
               image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
-              type:"AddImage_second",
+              type: 'AddImage_second',
             }
             terrainData.path = value[i].path
-            terrainData.title =  dataUtil.getFileNameWithOutExt(value[i].name)
+            terrainData.title = dataUtil.getFileNameWithOutExt(value[i].name)
             terrainDatas.data.push(terrainData)
           }
         }
@@ -220,7 +265,6 @@ export default class LayerManager_tolbar extends React.Component {
       GLOBAL.LayerManagerOverlayView.setVisible(visible)
   }
 
-
   //更新遮盖层状态
   updateOverlayerView = () => {
     this.setOverlayViewVisible(this.isShow)
@@ -235,15 +279,16 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       return
     }
-    if (section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH) {
+    if (
+      section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
+    ) {
       //'切换底图') {
-      if (this.state.type === ConstToolType.MAP3D_LAYER3D_IMAGE) {
-        this.setVisible(true, ConstToolType.MAP3D_BASE, {
-          height: ConstToolType.TOOLBAR_HEIGHT[5],
-          type: ConstToolType.MAP3D_BASE,
-        })
-      }
-    }else if (section.type && section.type==="setLayerSelect") {//设置图层可选择
+      this.setVisible(true, ConstToolType.MAP3D_BASE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        type: ConstToolType.MAP3D_BASE,
+      })
+    } else if (section.type && section.type === 'setLayerSelect') {
+      //设置图层可选择
       let selectable = this.layer3dItem.selectable
       let canChoose = !selectable
       SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
@@ -253,72 +298,88 @@ export default class LayerManager_tolbar extends React.Component {
           this.changeState(canChoose)
         }
       })
-    }else if(section.type && section.type==="scaleToLayer"){//缩放至当前图层
+    } else if (section.type && section.type === 'scaleToLayer') {
+      //缩放至当前图层
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
       SScene.ensureVisibleLayer(this.layer3dItem.name)
-      this.props.navigation.navigate("Map3D")
-    }else if(section.type && section.type==="scaleToLayer"){//缩放至当前图层
+      this.props.navigation.navigate('Map3D')
+    } else if (section.type && section.type === 'scaleToLayer') {
+      //缩放至当前图层
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
       SScene.ensureVisibleLayer(this.layer3dItem.name)
-      this.props.navigation.navigate("Map3D")
-    }else if(section.type && section.type==="AddTerrain"){//添加地形图层
+      this.props.navigation.navigate('Map3D')
+    } else if (section.type && section.type === 'AddTerrain') {
+      //添加地形图层
       // this.setVisible(false)
       // this.props.overlayView && this.props.overlayView.setVisible(false)
-      this.setVisible(true, "AddTerrain_second", {
+      this.setVisible(true, 'AddTerrain_second', {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
-        type: "AddTerrain_second",
+        type: 'AddTerrain_second',
       })
-    }else if(section.type && section.type==="AddImage"){//添加地形图层
+    } else if (section.type && section.type === 'AddImage') {
+      //添加地形图层
       // this.setVisible(false)
       // this.props.overlayView && this.props.overlayView.setVisible(false)
-      this.setVisible(true, "AddImage_second", {
+      this.setVisible(true, 'AddImage_second', {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
-        type: "AddImage_second",
+        type: 'AddImage_second',
       })
-    }else if(section.type && section.type==="AddTerrain_second"){//添加具体地形
+    } else if (section.type && section.type === 'AddTerrain_second') {
+      //添加具体地形
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
-      SScene.addTerrainCacheLayer(section.path,section.title).then(name=>{
-        if(name){
+      SScene.addTerrainCacheLayer(section.path, section.title).then(name => {
+        if (name) {
           this.props.layer3dRefresh()
           SScene.ensureVisibleLayer(name)
         }
       })
-      this.props.navigation.navigate("Map3D")
-    }
-    else if(section.type && section.type==="AddImage_second"){//添加具体影像
+      this.props.navigation.navigate('Map3D')
+    } else if (section.type && section.type === 'AddImage_second') {
+      //添加具体影像
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
-      SScene.addImageCacheLayer(section.path,section.title).then(name=>{
-        if(name){
+      SScene.addImageCacheLayer(section.path, section.title).then(name => {
+        if (name) {
           this.props.layer3dRefresh()
           SScene.ensureVisibleLayer(name)
         }
       })
-      this.props.navigation.navigate("Map3D")
-    }
-    else if(section.type && section.type==="RemoveLayer3d_image"){//删除影像图层
+      this.props.navigation.navigate('Map3D')
+    } else if (section.type && section.type === 'RemoveLayer3d_image') {
+      //删除影像图层
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
-      SScene.removeImageCacheLayer(this.layer3dItem.name).then(value=>{
+      SScene.removeImageCacheLayer(this.layer3dItem.name).then(value => {
         value && this.props.layer3dRefresh()
       })
-    }
-    else if(section.type && section.type==="RemoveLayer3d_terrain"){//删除地形图层
+    } else if (section.type && section.type === 'RemoveLayer3d_terrain') {
+      //删除地形图层
       this.setVisible(false)
       this.props.overlayView && this.props.overlayView.setVisible(false)
-      SScene.removeTerrainCacheLayer(this.layer3dItem.name).then(value=>{
+      SScene.removeTerrainCacheLayer(this.layer3dItem.name).then(value => {
+        value && this.props.layer3dRefresh()
+      })
+    } else if (section.type && section.type === 'AddBingmap') {
+      //删除地形图层
+      this.setVisible(false)
+      this.props.overlayView && this.props.overlayView.setVisible(false)
+      SScene.changeBaseLayer(2).then(value => {
+        value && this.props.layer3dRefresh()
+      })
+    } else if (section.type && section.type === 'AddTianditu') {
+      //删除地形图层
+      this.setVisible(false)
+      this.props.overlayView && this.props.overlayView.setVisible(false)
+      SScene.changeBaseLayer(1).then(value => {
         value && this.props.layer3dRefresh()
       })
     }
   }
 
-  getLayer3dItem = (
-    layer3dItem,
-    changeState = () => {},
-  ) => {
+  getLayer3dItem = (layer3dItem, changeState = () => {}) => {
     this.layer3dItem = layer3dItem
     this.changeState = changeState
   }
@@ -346,12 +407,39 @@ export default class LayerManager_tolbar extends React.Component {
       return <View style={{ height: 0 }} />
     }
     return (
-      <View style={ {height: scaleSize(80),flexDirection: 'row',alignItems: 'center',backgroundColor: color.subTheme}}>
-        <View style={{height: scaleSize(80),flexDirection: 'row',alignItems: 'center',backgroundColor: color.subTheme}}>
-          <Image source={section.header.image}
-            style={{ width: scaleSize(55),height: scaleSize(55),marginLeft: scaleSize(30)}}
+      <View
+        style={{
+          height: scaleSize(80),
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: color.subTheme,
+        }}
+      >
+        <View
+          style={{
+            height: scaleSize(80),
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: color.subTheme,
+          }}
+        >
+          <Image
+            source={section.header.image}
+            style={{
+              width: scaleSize(55),
+              height: scaleSize(55),
+              marginLeft: scaleSize(30),
+            }}
           />
-          <Text style={{fontSize: setSpText(28),color: '#F0F0F0',paddingLeft: scaleSize(30)}}>{section.header.title}</Text>
+          <Text
+            style={{
+              fontSize: setSpText(28),
+              color: '#F0F0F0',
+              paddingLeft: scaleSize(30),
+            }}
+          >
+            {section.header.title}
+          </Text>
         </View>
         {/* <TouchableOpacity
           style={{ flex: 1,height: scaleSize(80),flexDirection: 'row',justifyContent: 'flex-end',alignItems: 'center'}}
@@ -366,19 +454,19 @@ export default class LayerManager_tolbar extends React.Component {
       </View>
     )
   }
-  renderMap3DList = () => {
-    return (
-      <Map3DToolBar
-        ref={ref => (this.Map3DToolBar = ref)}
-        data={this.state.data}
-        type={this.state.type}
-        setVisible={this.setVisible}
-        device={this.props.device}
-        getLayer3d={this.getLayer3d}
-        getoverlayView={this.getoverlayView}
-      />
-    )
-  }
+  // renderMap3DList = () => {
+  //   return (
+  //     <Map3DToolBar
+  //       ref={ref => (this.Map3DToolBar = ref)}
+  //       data={this.state.data}
+  //       type={this.state.type}
+  //       setVisible={this.setVisible}
+  //       device={this.props.device}
+  //       getLayer3d={this.getLayer3d}
+  //       getoverlayView={this.getoverlayView}
+  //     />
+  //   )
+  // }
 
   renderItem = ({ item }) => {
     return (
@@ -434,9 +522,10 @@ export default class LayerManager_tolbar extends React.Component {
 
   renderView = () => {
     let box
-    if(this.state.type === ConstToolType.MAP3D_BASE){
-      box = this.renderMap3DList()
-    }else{
+    // if(this.state.type === ConstToolType.MAP3D_BASE){
+    //   box = this.renderMap3DList()
+    // }else
+    {
       box = this.renderList()
     }
     return (

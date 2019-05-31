@@ -3,12 +3,12 @@
  */
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
-import { dataUtil } from '../../../../utils'
+import { dataUtil, Toast } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import NavigationService from '../../../NavigationService'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 
 let _params = {}
 
@@ -245,6 +245,34 @@ function getMapTool(type, params) {
         //   action: this.showBox,
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
+        // },
+        {
+          key: 'captureImage',
+          title: getLanguage(global.language).Map_Main_Menu.CAMERA,
+          action: captureImage,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_camera,
+        },
+        // {
+        //   key: 'captureVideo',
+        //   title: '视频',
+        //   action: captureVideo,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
+        // },
+        // {
+        //   key: 'startCaptureAudio',
+        //   title: '开始录音',
+        //   action: startCaptureAudio,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
+        // },
+        // {
+        //   key: 'stopCaptureAudio',
+        //   title: '停止录音',
+        //   action: stopCaptureAudio,
+        //   size: 'large',
+        //   image: getPublicAssets().mapTools.tools_camera,
         // },
       ]
       // buttons = [
@@ -696,6 +724,58 @@ function address() {
     },
   })
 }
+
+function captureImage() {
+  (async function() {
+    // let options = {
+    //   datasourceName: 'Hunan',
+    // }
+    // SMediaCollector.captureImage(options, data => {
+    //   console.warn(JSON.stringify(data))
+    // })
+    // TODO datasourceAlias 修改为根据标注图层来设置
+    let isTaggingLayer = await SMap.isTaggingLayer(
+      _params.user.currentUser.userName,
+    )
+    if (isTaggingLayer) {
+      await SMap.setTaggingGrid(
+        GLOBAL.TaggingDatasetName,
+        _params.user.currentUser.userName,
+      )
+      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
+      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      NavigationService.navigate('Camera', {
+        datasourceAlias,
+        datasetName,
+      })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+  }.bind(this)())
+}
+
+// function captureVideo () {
+//   let options = {
+//     datasourceName: 'Hunan',
+//   }
+//   SMediaCollector.captureVideo(options, data => {
+//     console.warn(JSON.stringify(data))
+//   })
+// }
+//
+// function startCaptureAudio () {
+//   let options = {
+//     datasourceName: 'Hunan',
+//   }
+//   SMediaCollector.startCaptureAudio(options)
+// }
+//
+// function stopCaptureAudio () {
+//   SMediaCollector.stopCaptureAudio(data => {
+//     console.warn(JSON.stringify(data))
+//   })
+// }
 
 /********** 裁剪手势监听 ************/
 // async function addMapCutListener() {

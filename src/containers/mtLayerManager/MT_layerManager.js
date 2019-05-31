@@ -462,8 +462,19 @@ export default class MT_layerManager extends React.Component {
   }
 
   updateTagging = async () => {
-    this.setRefreshing(true)
-    this.getData()
+    // this.setRefreshing(true)
+    let dataList = await SMap.getTaggingLayers(
+      this.props.user.currentUser.userName,
+    )
+    let data = [...this.state.data]
+    data[0] = {
+      title: getLanguage(this.props.language).Map_Layer.PLOTS,
+      //'我的标注',
+      data: dataList,
+      visible: true,
+    }
+    this.setState({ data })
+    // this.getData()
   }
 
   /**地图制图修改风格 */
@@ -749,8 +760,9 @@ export default class MT_layerManager extends React.Component {
               value,
               this.props.user.currentUser.userName,
             )
-            this.setRefreshing(true)
-            this.getData()
+            // this.setRefreshing(true)
+            // this.getData()
+            this.updateTagging()
           }.bind(this)())
         }
         NavigationService.goBack()

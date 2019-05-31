@@ -1,17 +1,25 @@
 const icon_search_a0 = require('./icon_search_a0.png')
-const icon_search = require('../../publicTheme/common/icon_search.png')
-const icon_undo = require('../../publicTheme/common/icon_undo.png')
-const icon_check = require('../../publicTheme/common/icon_check.png')
-const icon_uncheck = require('../../publicTheme/common/icon_uncheck.png')
-const icon_check_disable = require('../../publicTheme/common/icon_check_disable.png')
-const icon_uncheck_disable = require('../../publicTheme/common/icon_uncheck_disable.png')
-const icon_radio_selected = require('../../publicTheme/common/icon_radio_selected.png')
-const icon_radio_selected_disable = require('../../publicTheme/common/icon_radio_selected_disable.png')
-const icon_radio_unselected = require('../../publicTheme/common/icon_radio_unselected.png')
-const icon_radio_unselected_disable = require('../../publicTheme/common/icon_radio_unselected_disable.png')
+const icon_search = require('./icon_search.png')
+const icon_undo = require('./icon_undo.png')
+const icon_check = require('./icon_check.png')
+const icon_uncheck = require('./icon_uncheck.png')
+const icon_check_disable = require('./icon_check_disable.png')
+const icon_uncheck_disable = require('./icon_uncheck_disable.png')
+const icon_radio_selected = require('./icon_radio_selected.png')
+const icon_radio_selected_disable = require('./icon_radio_selected_disable.png')
+const icon_radio_unselected = require('./icon_radio_unselected.png')
+const icon_radio_unselected_disable = require('./icon_radio_unselected_disable.png')
 const icon_about_itablet_more = require('./icon_aboutitablet_more.png')
-const icon_back = require('../../public/Frenchgrey/icon-back-white.png')
-const icon_close = require('../../public/icon-close.png')
+const icon_back = require('./icon-back-white.png')
+const icon_close = require('./icon-close.png')
+const icon_album = require('./icon_album.png')
+const icon_rephotograph = require('./icon_rephotograph.png')
+const icon_confirm = require('./icon_confirm.png')
+const icon_play = require('./icon_play.png')
+const icon_pause = require('./icon_pause.png')
+const icon_play_white = require('./icon_play_white.png')
+const icon_pause_white = require('./icon_pause_white.png')
+
 export default {
   icon_undo,
   icon_search,
@@ -27,4 +35,11 @@ export default {
   icon_about_itablet_more,
   icon_back,
   icon_close,
+  icon_album,
+  icon_rephotograph,
+  icon_confirm,
+  icon_play,
+  icon_pause,
+  icon_play_white,
+  icon_pause_white,
 }
