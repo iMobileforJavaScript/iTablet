@@ -389,12 +389,21 @@ export default class Friend extends Component {
 
       informMsg.message.message.queueName = res.queueName
       informMsg.message.message.filePath = ''
+      // informMsg.message.type=3       要给桌面发文件需要将类型改为3
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
       Toast.show(getLanguage(this.props.language).Friends.SEND_SUCCESS)
     })
   }
 
-  _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
+  _receiveFile = (
+    fileName,
+    queueName,
+    receivePath,
+    talkId,
+    msgId,
+    userId,
+    fileSize,
+  ) => {
     if (g_connectService) {
       SMessageService.receiveFile(
         fileName,
@@ -402,6 +411,8 @@ export default class Friend extends Component {
         receivePath,
         talkId,
         msgId,
+        userId,
+        fileSize,
       ).then(res => {
         if (res === true) {
           Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
@@ -425,6 +436,8 @@ export default class Friend extends Component {
   async _receiveMessage(message) {
     if (g_connectService) {
       let messageObj = JSON.parse(message['message'])
+      // messageObj.message.type=6;   桌面发送的文件类型是3，要接收桌面发送过来的文件需要把type改为6
+      // messageObj.message.message.progress=0;    桌面发送的数据没有progress参数，不能显示进度
       let userId = this.props.user.currentUser.userId
       if (userId === messageObj.user.id) {
         //自己的消息，返回

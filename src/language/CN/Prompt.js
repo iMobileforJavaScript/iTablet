@@ -41,6 +41,7 @@ const Prompt = {
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',
   SUPERMAP_KNOW: '超图知道',
+  SUPERMAP_GROUP: '超图集团',
   INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',

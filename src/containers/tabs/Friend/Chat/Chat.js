@@ -363,6 +363,8 @@ class Chat extends React.Component {
       receivePath,
       this.targetUser.id,
       message._id,
+      message.user._id,
+      message.originMsg.message.message.fileSize,
     )
   }
 

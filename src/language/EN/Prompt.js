@@ -40,6 +40,7 @@ const Prompt = {
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
   SUPERMAP_KNOW: 'SuperMap Know',
+  SUPERMAP_GROUP: 'SuperMap Group',
 
   INSTRUCTION_MANUAL: 'Instruction Manual',
   THE_CURRENT_LAYER: 'The current layer is',

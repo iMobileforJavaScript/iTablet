@@ -1,14 +1,14 @@
 export default {
-  MSG_IP: '192.168.0.107',
-  MSG_Port: 5672,
-  MSG_HostName: '/',
-  MSG_UserName: 'androidtest',
-  MSG_Password: 'androidtest',
-  // MSG_IP: '111.202.121.144',
+  // MSG_IP: '192.168.0.107',
   // MSG_Port: 5672,
   // MSG_HostName: '/',
-  // MSG_UserName: 'admin',
-  // MSG_Password: 'admin',
+  // MSG_UserName: 'androidtest',
+  // MSG_Password: 'androidtest',
+  MSG_IP: '111.202.121.144',
+  MSG_Port: 5672,
+  MSG_HostName: '/',
+  MSG_UserName: 'admin',
+  MSG_Password: 'admin',
   //整个message的type
   MSG_SINGLE: 1, //单人消息
   MSG_GROUP: 2, //群组消息

@@ -30,7 +30,8 @@ export default class CustomView extends React.Component {
   render() {
     if (
       this.props.currentMessage.type &&
-      this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
+      (this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
+        this.props.currentMessage.type === MSGConstant.MSG_FILE)
     ) {
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize

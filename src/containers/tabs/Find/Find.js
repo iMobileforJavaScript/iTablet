@@ -151,19 +151,24 @@ export default class Find extends Component {
               NavigationService.navigate('FriendMap')
             },
           })} */}
-          {/* {this._renderItem({
-            title: Const.FRIENDMAP,
+          {this._renderItem({
+            title: getLanguage(this.props.language).Prompt.SUPERMAP_GROUP,
             leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
             onClick: () => {
-              NavigationService.navigate('FriendMap')
+              NavigationService.navigate('SuperMapKnown', {
+                type: 'SuperMapGroup',
+              })
             },
-          })} */}
+          })}
           {this._renderItem({
             title: getLanguage(this.props.language).Prompt.SUPERMAP_KNOW,
             // Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
             onClick: () => {
-              NavigationService.navigate('SuperMapKnown')
+              // NavigationService.navigate('SuperMapKnown')
+              NavigationService.navigate('SuperMapKnown', {
+                type: 'SuperMapKnow',
+              })
             },
           })}
           {this._renderItem({
