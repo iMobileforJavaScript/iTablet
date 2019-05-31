@@ -169,6 +169,55 @@
 			remoteGlobalIDString = 323A12871E5F266B004975B8;
 			remoteInfo = "ART-tvOS";
 		};
+		0A12880722A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0A12880922A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0A12880B22A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0A12880D22A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0A12880F22A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0A12881122A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0A12881322A0C507007F0969 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
+		};
 		0A15465521D710BD00347720 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A15465121D710BD00347720 /* Supermap.xcodeproj */;
@@ -478,6 +527,7 @@
 		0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		0A11D9E821F9641D00AFE6D6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A147441223F6A7B006663C7 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
@@ -742,6 +792,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0A1287FB22A0C507007F0969 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A12880822A0C507007F0969 /* libLibUGC.a */,
+				0A12880A22A0C507007F0969 /* libLibUGC_Base.a */,
+				0A12880C22A0C507007F0969 /* libLibUGC_2D.a */,
+				0A12880E22A0C507007F0969 /* libLibUGC_3D.a */,
+				0A12881022A0C507007F0969 /* libObject_3D.a */,
+				0A12881222A0C507007F0969 /* libObjects_iOS.a */,
+				0A12881422A0C507007F0969 /* Super23D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0A15465221D710BD00347720 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -951,6 +1015,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */,
 				0A11D99721F885A400AFE6D6 /* ART.xcodeproj */,
 				0A15465121D710BD00347720 /* Supermap.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1114,6 +1179,10 @@
 					ProjectRef = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
 				},
 				{
+					ProductGroup = 0A1287FB22A0C507007F0969 /* Products */;
+					ProjectRef = 0A1287FA22A0C507007F0969 /* LibUGC.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1241,6 +1310,55 @@
 			fileType = archive.ar;
 			path = "libART-tvOS.a";
 			remoteRef = 0A11D99E21F885A400AFE6D6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12880822A0C507007F0969 /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0A12880722A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12880A22A0C507007F0969 /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0A12880922A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12880C22A0C507007F0969 /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0A12880B22A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12880E22A0C507007F0969 /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0A12880D22A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12881022A0C507007F0969 /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0A12880F22A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12881222A0C507007F0969 /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0A12881122A0C507007F0969 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A12881422A0C507007F0969 /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0A12881322A0C507007F0969 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A15465621D710BD00347720 /* libSupermap.a */ = {
