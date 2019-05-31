@@ -43,6 +43,7 @@ import ConstPath from '../../../constants/ConstPath'
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
 import JPushService from './JPushService'
+import { Buffer } from 'buffer'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -289,7 +290,13 @@ export default class Friend extends Component {
       } else {
         talkIds.push(talkId)
       }
-      SMessageService.sendMessage(messageStr, talkId)
+      //对接桌面
+      let messageObj = JSON.parse(messageStr)
+      if (messageObj.type < 10 && typeof messageObj.message === 'string') {
+        messageObj.message = Buffer.from(messageObj.message).toString('base64')
+      }
+      let generalMsg = JSON.stringify(messageObj)
+      SMessageService.sendMessage(generalMsg, talkId)
       JPushService.push(messageStr, talkIds)
     } else {
       Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
@@ -455,6 +462,14 @@ export default class Friend extends Component {
       if (userId === messageObj.user.id) {
         //自己的消息，返回
         return
+      }
+
+      //对接桌面
+      if (messageObj.type < 10 && typeof messageObj.message === 'string') {
+        messageObj.message = Buffer.from(
+          messageObj.message,
+          'base64',
+        ).toString()
       }
 
       if (!FriendListFileHandle.friends) {
