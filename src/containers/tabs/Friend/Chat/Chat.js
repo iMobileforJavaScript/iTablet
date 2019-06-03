@@ -31,6 +31,7 @@ import { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
+import { Buffer } from 'buffer'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -363,10 +364,73 @@ class Chat extends React.Component {
       receivePath,
       this.targetUser.id,
       message._id,
+      message.user._id,
+      message.originMsg.message.message.fileSize,
     )
   }
 
-  onFileTouch = async message => {
+  onCustomViewFileTouch = (type, message) => {
+    switch (type) {
+      case MSGConstant.MSG_FILE_NOTIFY:
+        this.onMapFileTouch(message)
+        break
+      case MSGConstant.MSG_LAYER:
+        this.onLayerFileTouch(message)
+        break
+      default:
+        break
+    }
+  }
+
+  onLayerFileTouch = async message => {
+    //TODO 以文件形式接收
+    let LayerBase64 = message.originMsg.message.message.layerValue[0]
+    let layer = Buffer.from(LayerBase64, 'base64').toString()
+
+    NavigationService.navigate('MyData', {
+      title: getLanguage(global.language).Profile.MAP,
+      formChat: true,
+      callBackMode: 'getName',
+      chatCallBack: async moduleMapFullName => {
+        let moduleMapName = moduleMapFullName.substr(
+          0,
+          moduleMapFullName.lastIndexOf('.'),
+        )
+        let userPath = (userPath =
+          ConstPath.UserPath + this.curUser.userName + '/')
+        let homePath = await FileTools.appendingHomeDirectory()
+        // 地图用相对路径
+        let moduleMapPath =
+          userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let data
+        if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+          data = {
+            type: 'Map',
+            path: moduleMapPath,
+            name: moduleMapName,
+            layer: layer,
+          }
+        }
+
+        let wsData = [
+          {
+            DSParams: { server: wsPath },
+            type: 'Workspace',
+          },
+          data,
+        ]
+        NavigationService.navigate('MapView', {
+          wsData,
+          isExample: true,
+          mapName: moduleMapName,
+        })
+      },
+    })
+  }
+
+  onMapFileTouch = async message => {
     if (message.user._id !== this.curUser.userId) {
       let userPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath + this.curUser.userName,
@@ -630,7 +694,7 @@ class Chat extends React.Component {
   }
 
   renderCustomView = props => {
-    return <CustomView {...props} onFileTouch={this.onFileTouch} />
+    return <CustomView {...props} onFileTouch={this.onCustomViewFileTouch} />
   }
 
   // eslint-disable-next-line
