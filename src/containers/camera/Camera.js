@@ -15,7 +15,6 @@ import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets } from '../../assets'
 import { Progress, MediaViewer } from '../../components'
 import { RNCamera } from 'react-native-camera'
-// import Video from 'react-native-video'
 import { SMediaCollector } from 'imobile_for_reactnative'
 import ImagePicker from 'react-native-image-crop-picker'
 import Orientation from 'react-native-orientation'
@@ -50,11 +49,12 @@ export default class Camera extends React.Component {
     const { params } = this.props.navigation.state || {}
     this.datasourceAlias = params.datasourceAlias || ''
     this.datasetName = params.datasetName || 'MediaDataset'
+    this.limit = params.limit >= 0 ? params.limit : 9
+    this.cb = params.cb
     this.camera = null
 
     this.state = {
       data: null,
-      // isFinished: false, // 拍摄是否完成
       videoPaused: true, // 视频是否暂停
       showVideoController: false, // 视频控制器是否显示
       type: TYPE.PHOTO,
@@ -161,10 +161,6 @@ export default class Camera extends React.Component {
     )
       return
     this.camera && this.camera.stopRecording()
-    // this.setState({
-    //   recordStatus: RECORD_STATUS.RECORDED,
-    // })
-    // this.camera && this.camera.pausePreview()
   }
 
   /** 重拍 **/
@@ -198,47 +194,42 @@ export default class Camera extends React.Component {
     (async function() {
       let sourcePath = this.state.data.uri.replace('file://', '')
 
-      let result = await this.addMedia([sourcePath])
+      let result = false
+      if (this.cb && typeof this.cb === 'function') {
+        result = true
+        this.cb([sourcePath])
+      } else {
+        result = await this.addMedia([sourcePath])
+      }
 
       this.state.type === TYPE.PHOTO &&
         this.camera &&
         this.camera.resumePreview()
       if (result) {
-        this.setState({
-          recordStatus: RECORD_STATUS.RECORDED,
-        })
+        // this.setState({
+        //   recordStatus: RECORD_STATUS.RECORDED,
+        // })
         NavigationService.goBack()
       }
     }.bind(this)())
   }
 
-  /** 视频播放/暂停 **/
-  // play = () => {
-  //   if (
-  //     !this.state.data ||
-  //     !this.state.data.uri ||
-  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-  //     this.state.type !== TYPE.VIDEO ||
-  //     !this.player
-  //   )
-  //     return null
-  //   this.setState({
-  //     videoPaused: !this.state.videoPaused,
-  //   })
-  // }
-
   openAlbum = () => {
     ImagePicker.openPicker({
       multiple: true,
+      maxFiles: this.limit,
     }).then(async images => {
       let mediaPaths = []
       if (images.length > 0) {
         images.forEach(item => {
           mediaPaths.push(item.path.replace('file://', ''))
         })
-        let result = await this.addMedia(mediaPaths)
-        if (result) {
+        if (this.cb && typeof this.cb === 'function') {
+          this.cb(mediaPaths)
           NavigationService.goBack()
+        } else {
+          let result = await this.addMedia(mediaPaths)
+          result && NavigationService.goBack()
         }
       }
     })
@@ -265,41 +256,6 @@ export default class Camera extends React.Component {
     )
   }
 
-  // renderVideo = () => {
-  //   if (
-  //     !this.state.data ||
-  //     !this.state.data.uri ||
-  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-  //     this.state.type !== TYPE.VIDEO
-  //   )
-  //     return null
-  //   return (
-  //     <Video
-  //       source={{ uri: this.state.data.uri }}
-  //       ref={ref => (this.player = ref)}
-  //       paused={this.state.videoPaused}
-  //       repeat={false}
-  //       style={styles.video}
-  //       onEnd={() => {
-  //         if (this.player) {
-  //           this.player.seek(0, 0)
-  //           if (this.mProgress) {
-  //             this.mProgress.progress = 1
-  //           }
-  //           this.setState({
-  //             videoPaused: true,
-  //           })
-  //         }
-  //       }}
-  //       onProgress={({ currentTime, seekableDuration }) => {
-  //         if (this.mProgress) {
-  //           this.mProgress.progress = currentTime / seekableDuration
-  //         }
-  //       }}
-  //     />
-  //   )
-  // }
-
   renderProgress = () => {
     if (
       !(
@@ -319,42 +275,6 @@ export default class Camera extends React.Component {
       />
     )
   }
-
-  // renderVideoControl = () => {
-  //   if (
-  //     !this.state.data ||
-  //     !this.state.data.uri ||
-  //     this.state.recordStatus !== RECORD_STATUS.RECORDED ||
-  //     this.state.type !== TYPE.VIDEO
-  //   )
-  //     return null
-  //   return (
-  //     <View style={styles.videoControlView}>
-  //       <TouchableOpacity
-  //         onPress={() => {
-  //           this.setState({
-  //             showVideoController: !this.state.showVideoController,
-  //           })
-  //         }}
-  //         style={styles.videoControlView}
-  //       />
-  //       {(this.state.showVideoController || this.state.videoPaused) && (
-  //         <TouchableOpacity onPress={() => this.play()} style={styles.play}>
-  //           <View style={styles.playOverlay} />
-  //           <Image
-  //             resizeMode={'contain'}
-  //             source={
-  //               this.state.videoPaused
-  //                 ? getPublicAssets().common.icon_play_white
-  //                 : getPublicAssets().common.icon_pause_white
-  //             }
-  //             style={styles.smallIcon}
-  //           />
-  //         </TouchableOpacity>
-  //       )}
-  //     </View>
-  //   )
-  // }
 
   renderBottomBtns = () => {
     if (this.state.recordStatus === RECORD_STATUS.RECORDING) return null
@@ -507,9 +427,7 @@ export default class Camera extends React.Component {
             if (status === 'READY') this.camera = camera
           }}
         </RNCamera>
-        {/*{this.renderVideo()}*/}
         {this.renderProgress()}
-        {/*{this.renderVideoControl()}*/}
 
         <MediaViewer ref={ref => (this.mediaViewer = ref)} />
         {this.renderBottomBtns()}

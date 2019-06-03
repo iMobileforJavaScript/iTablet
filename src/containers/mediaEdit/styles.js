@@ -12,6 +12,34 @@ export default StyleSheet.create({
     color: 'white',
     fontSize: size.fontSize.fontSizeXXl,
   },
+  tableView: {
+    padding: scaleSize(30),
+  },
+  tableCellView: {
+    // flex: 1,
+    height: IMAGE_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tableRowStyle: {
+    height: IMAGE_SIZE,
+  },
+
+  popBtn: {
+    height: scaleSize(80),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 1,
+    borderTopColor: color.bgG,
+  },
+  popText: {
+    fontSize: size.fontSize.fontSizeMd,
+    color: color.fontColorBlack,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+
+  // 图片Item
   plusImageView: {
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
@@ -32,16 +60,29 @@ export default StyleSheet.create({
     borderRadius: scaleSize(8),
     backgroundColor: 'transparent',
   },
-  tableView: {
-    padding: scaleSize(30),
+  deleteOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#rgba(255, 255, 255, 0.3)',
+    borderRadius: scaleSize(8),
   },
-  tableCellView: {
+  deleteView: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    height: scaleSize(40),
+    width: scaleSize(40),
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+  },
+  deleteImg: {
     // flex: 1,
-    height: IMAGE_SIZE,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tableRowStyle: {
-    height: IMAGE_SIZE,
+    backgroundColor: 'transparent',
+    height: scaleSize(30),
+    width: scaleSize(30),
   },
 })

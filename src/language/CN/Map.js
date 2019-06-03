@@ -412,6 +412,9 @@ const Map_Tools = {
   VIDEO: '视频',
   PHOTO: '照片',
   AUDIO: '音频',
+
+  TAKE_PHOTO: '拍照',
+  FROM_ALBUM: '从相册中选择',
 }
 
 export {

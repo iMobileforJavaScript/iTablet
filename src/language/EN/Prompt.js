@@ -22,6 +22,7 @@ const Prompt = {
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
 
   CONFIRM: 'Confirm',
+  COMPLETE: 'Complete',
 
   QUIT: 'Quit SuperMap iTablet?',
   MAP_LOADING: 'Loading',
@@ -48,6 +49,7 @@ const Prompt = {
   READING_DATA: 'Reading Data',
   CREATE_SUCCESSFULLY: 'Created Successfully',
   SAVE_SUCCESSFULLY: 'Saved Successfully',
+  NO_NEED_TO_SAVE: 'No need to save',
   SAVE_FAILED: 'Failed to Save',
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',

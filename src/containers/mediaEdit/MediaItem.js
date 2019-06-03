@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { TouchableOpacity, Text, Image } from 'react-native'
+import { TouchableOpacity, Text, Image, View } from 'react-native'
+import { getPublicAssets } from '../../assets'
 import styles from './styles'
 
 export default class MediaItem extends React.Component {
@@ -7,12 +8,15 @@ export default class MediaItem extends React.Component {
     data: Object,
     index: number,
     onPress?: () => {},
+    onDeletePress?: () => {},
+    onLongPress?: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
       image: { uri: props.data.uri },
+      showDelete: false,
     }
   }
 
@@ -20,7 +24,40 @@ export default class MediaItem extends React.Component {
     if (this.props.onPress && typeof this.props.onPress === 'function') {
       this.props.onPress({
         data: this.props.data,
-        index: this.props.data,
+        index: this.props.index,
+      })
+    }
+  }
+
+  _deletePress = () => {
+    if (
+      this.props.onDeletePress &&
+      typeof this.props.onDeletePress === 'function'
+    ) {
+      this.props.onDeletePress({
+        data: this.props.data,
+        index: this.props.index,
+      })
+    }
+  }
+
+  _onLongPress = () => {
+    if (
+      this.props.onLongPress &&
+      typeof this.props.onLongPress === 'function'
+    ) {
+      this.props.onLongPress({
+        ref: this,
+        data: this.props.data,
+        index: this.props.index,
+      })
+    }
+  }
+
+  setDelete = showDelete => {
+    if (showDelete !== this.state.showDelete) {
+      this.setState({
+        showDelete,
       })
     }
   }
@@ -39,30 +76,48 @@ export default class MediaItem extends React.Component {
     return <Text style={{ color: 'white', fontSize: 14 }}>{duration}</Text>
   }
 
+  renderDelete = () => {
+    if (!this.state.showDelete || this.props.data === '+') return null
+    return (
+      <View style={styles.deleteOverlay}>
+        <TouchableOpacity style={styles.deleteView} onPress={this._deletePress}>
+          <Image
+            resizeMode={'contain'}
+            style={styles.deleteImg}
+            source={getPublicAssets().common.icon_delete}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render = () => {
     return (
-      <TouchableOpacity
-        key={this.props.index}
+      <View
         style={
-          this.props.data.uri === '+' ? styles.plusImageView : styles.imageView
+          this.props.data === '+' ? styles.plusImageView : styles.imageView
         }
-        onPress={this._onPress}
       >
-        <Image
-          style={styles.image}
-          resizeMode={'stretch'}
-          source={
-            this.props.data === '+'
-              ? require('../../assets/public/icon-plus.png')
-              : { uri: this.props.data.path || this.props.data.uri }
-            // : { uri: item }
-          }
-        />
-        {/*{*/}
-        {/*this.props.data.duration &&*/}
-        {/*this.renderDuration()*/}
-        {/*}*/}
-      </TouchableOpacity>
+        <TouchableOpacity
+          key={this.props.index}
+          style={styles.imageView}
+          onPress={this._onPress}
+          onLongPress={this._onLongPress}
+          delayPressIn={1000}
+        >
+          <Image
+            style={styles.image}
+            resizeMode={'stretch'}
+            source={
+              this.props.data === '+'
+                ? require('../../assets/public/icon-plus.png')
+                : { uri: this.props.data.path || this.props.data.uri }
+              // : { uri: item }
+            }
+          />
+        </TouchableOpacity>
+        {this.renderDelete()}
+      </View>
     )
   }
 }

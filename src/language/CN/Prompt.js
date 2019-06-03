@@ -23,6 +23,7 @@ const Prompt = {
   DELETE_OBJECT: '确定要永久删除该对象吗?',
 
   CONFIRM: '确定',
+  COMPLETE: '完成',
 
   QUIT: '确认退出SuperMap iTablet?',
   MAP_LOADING: '地图加载中',
@@ -48,6 +49,7 @@ const Prompt = {
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
+  NO_NEED_TO_SAVE: '不需要保存',
   SAVE_FAILED: '保存失败',
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',

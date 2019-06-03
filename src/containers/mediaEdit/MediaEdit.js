@@ -2,13 +2,14 @@
  * 多媒体编辑界面
  */
 import * as React from 'react'
-import { ScrollView, Platform } from 'react-native'
+import { ScrollView, Platform, TouchableOpacity, Text } from 'react-native'
 import {
   Container,
   TextBtn,
   ListItem,
   TableList,
   MediaViewer,
+  PopModal,
 } from '../../components'
 import { Toast, checkType } from '../../utils'
 import { FileTools } from '../../native'
@@ -35,12 +36,6 @@ export default class MediaEdit extends React.Component {
     const { params } = this.props.navigation.state || {}
     this.info = (params && params.info) || {}
     let paths = []
-    // ;(this.info.mediaFilePaths || []).forEach(item => {
-    //   paths.push({
-    //     url: item,
-    //     freeHeight: true,
-    //   })
-    // })
 
     this.showInfo = {
       mediaFileName: this.info.mediaFileName || '',
@@ -53,7 +48,9 @@ export default class MediaEdit extends React.Component {
     this.state = {
       ...this.showInfo,
       paths,
+      showDelete: false,
     }
+    this.mediaItemRef = []
   }
 
   componentDidMount() {
@@ -97,14 +94,19 @@ export default class MediaEdit extends React.Component {
             })
           }
         }
+        if (modifiedData.length === 0) {
+          Toast.show(getLanguage(this.props.language).Prompt.NO_NEED_TO_SAVE)
+          return
+        }
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +
             '/' +
             ConstPath.RelativeFilePath.Media,
         )
-        await SMediaCollector.saveMedia(
-          this.info.layerName,
+        let result = await SMediaCollector.saveMediaByDataset(
+          // this.info.layerName,
+          GLOBAL.TaggingDatasetName,
           this.info.geoID,
           targetPath,
           modifiedData,
@@ -116,7 +118,11 @@ export default class MediaEdit extends React.Component {
         //     filter: `SmID=${this.info.geoID}`,
         //   },
         // )
-        Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
+            : getLanguage(this.props.language).Prompt.SAVE_FAILED,
+        )
       } catch (e) {
         Toast.show(getLanguage(this.props.language).Prompt.SAVE_FAILED)
       }
@@ -128,20 +134,42 @@ export default class MediaEdit extends React.Component {
     ImagePicker.openPicker({
       multiple: true,
       maxFiles,
-    }).then(async images => {
-      let mediaFilePaths = [...this.state.mediaFilePaths]
+    }).then(this.addMediaFiles)
+  }
 
-      images.forEach(item => {
+  addMediaFiles = async (images = []) => {
+    let mediaFilePaths = [...this.state.mediaFilePaths]
+
+    images.forEach(item => {
+      if (typeof item === 'string') {
+        mediaFilePaths.push(item)
+      } else {
         mediaFilePaths.push(item.path)
-      })
-      mediaFilePaths = [...new Set(mediaFilePaths)]
+      }
+    })
+    mediaFilePaths = [...new Set(mediaFilePaths)]
 
-      let paths = await this.dealData(mediaFilePaths)
+    let paths = await this.dealData(mediaFilePaths)
 
-      this.setState({
-        mediaFilePaths,
-        paths,
-      })
+    this.mediaItemRef = []
+    this.setState({
+      mediaFilePaths,
+      paths,
+    })
+  }
+
+  deleteMediaFile = async index => {
+    if (index >= this.state.mediaFilePaths.length) return
+    let mediaFilePaths = [...this.state.mediaFilePaths]
+
+    mediaFilePaths.splice(index, 1)
+
+    let paths = await this.dealData(mediaFilePaths)
+
+    this.mediaItemRef = []
+    this.setState({
+      mediaFilePaths,
+      paths,
     })
   }
 
@@ -160,11 +188,17 @@ export default class MediaEdit extends React.Component {
   renderImage = ({ item, rowIndex, cellIndex }) => {
     return (
       <MediaItem
+        ref={ref => {
+          if (ref && ref.props.data !== '+') {
+            this.mediaItemRef[rowIndex * COLUMNS + cellIndex] = ref
+          }
+        }}
         data={item}
         index={rowIndex * COLUMNS + cellIndex}
         onPress={() => {
           if (item === '+') {
-            this.openAlbum()
+            // this.openAlbum()
+            this.popModal && this.popModal.setVisible(true)
           } else {
             // this.imageViewer &&
             //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
@@ -173,46 +207,24 @@ export default class MediaEdit extends React.Component {
             // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
           }
         }}
+        onDeletePress={item => {
+          this.deleteMediaFile(item.index)
+        }}
+        onLongPress={() => {
+          for (let ref of this.mediaItemRef) {
+            if (ref.props.data !== '+') ref.setDelete && ref.setDelete(true)
+          }
+          this.setState({
+            showDelete: true,
+          })
+        }}
       />
     )
-    // return (
-    //   <TouchableOpacity
-    //     key={rowIndex + '-' + cellIndex}
-    //     style={item === '+' ? styles.plusImageView : styles.imageView}
-    //     onPress={() => {
-    //       if (item === '+') {
-    //         this.openAlbum()
-    //       } else {
-    //         // this.imageViewer &&
-    //         //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
-    //         const itemInfo = this.state.paths[rowIndex * COLUMNS + cellIndex]
-    //         this.mediaViewer &&
-    //         this.mediaViewer.setVisible(true, itemInfo.uri)
-    //         // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
-    //       }
-    //     }}
-    //   >
-    //     <Image
-    //       style={styles.image}
-    //       resizeMode={'stretch'}
-    //       source={
-    //         item === '+'
-    //           ? require('../../assets/public/icon-plus.png')
-    //           : { uri: item.image || item.uri }
-    //           // : { uri: item }
-    //       }
-    //     />
-    //   </TouchableOpacity>
-    // )
   }
 
   renderAlbum = () => {
-    // let data = [...this.state.mediaFilePaths]
-    // if (this.state.mediaFilePaths.length < 9) {
-    //   data.push('+')
-    // }
     let data = [...this.state.paths]
-    if (this.state.paths.length < 9) {
+    if (!this.state.showDelete && this.state.paths.length < 9) {
       data.push('+')
     }
     return (
@@ -228,6 +240,40 @@ export default class MediaEdit extends React.Component {
     )
   }
 
+  renderPopView = () => {
+    return (
+      <PopModal ref={ref => (this.popModal = ref)}>
+        <TouchableOpacity
+          style={[styles.popBtn, { width: '100%' }]}
+          onPress={() => {
+            this.popModal && this.popModal.setVisible(false)
+            NavigationService.navigate('Camera', {
+              limit: MAX_FILES - this.state.mediaFilePaths.length,
+              cb: this.addMediaFiles,
+            })
+          }}
+        >
+          <Text style={styles.popText}>
+            {getLanguage(this.props.language).Map_Tools.TAKE_PHOTO}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.popBtn, { width: '100%' }]}
+          onPress={() => {
+            this.popModal &&
+              this.popModal.setVisible(false, () => {
+                setTimeout(() => this.openAlbum(), 1000)
+              })
+          }}
+        >
+          <Text style={styles.popText}>
+            {getLanguage(this.props.language).Map_Tools.FROM_ALBUM}
+          </Text>
+        </TouchableOpacity>
+      </PopModal>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -237,9 +283,25 @@ export default class MediaEdit extends React.Component {
           navigation: this.props.navigation,
           headerRight: (
             <TextBtn
-              btnText={getLanguage(this.props.language).Prompt.SAVE_YES}
+              btnText={
+                this.state.showDelete
+                  ? getLanguage(this.props.language).Prompt.COMPLETE
+                  : getLanguage(this.props.language).Prompt.SAVE_YES
+              }
               textStyle={styles.headerBtnTitle}
-              btnClick={this.save}
+              btnClick={() => {
+                if (this.state.showDelete) {
+                  for (let ref of this.mediaItemRef) {
+                    if (ref && ref.props.data !== '+')
+                      ref.setDelete && ref.setDelete(false)
+                  }
+                  this.setState({
+                    showDelete: false,
+                  })
+                } else {
+                  this.save()
+                }
+              }}
             />
           ),
         }}
@@ -310,10 +372,7 @@ export default class MediaEdit extends React.Component {
           })}
           {this.renderAlbum()}
         </ScrollView>
-        {/*<ImageViewer*/}
-        {/*ref={ref => (this.imageViewer = ref)}*/}
-        {/*imageUrls={this.state.paths}*/}
-        {/*/>*/}
+        {this.renderPopView()}
         <MediaViewer
           ref={ref => (this.mediaViewer = ref)}
           withBackBtn
