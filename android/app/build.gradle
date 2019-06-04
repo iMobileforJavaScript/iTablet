@@ -183,19 +183,18 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-video')
     implementation project(':react-native-image-crop-picker')
-    implementation project(':react-native-video')
     implementation project(':react-native-fs')
     implementation project(':react-native-camera')
-    implementation project(':react-native-contacts')
     implementation project(':jpush-react-native')
     implementation project(':jcore-react-native')
     implementation project(':react-native-contacts')
     implementation project(':react-native-amap-geolocation')
-    api project(':react-native-splash-screen')
-    api project(':react-native-fs')
-    api project(':react-native-orientation')
-    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
+    implementation project(':react-native-splash-screen')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-orientation')
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
     implementation project(':imobile_for_reactnative')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.facebook.react:react-native:+'
