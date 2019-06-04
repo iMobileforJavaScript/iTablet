@@ -126,8 +126,9 @@ export default class JPushService {
 
     if (Platform.OS === 'ios') {
       notification.subtitle = ''
-      notification.badge = '+1'
+      notification.badge = 1
       notification.sound = 'default'
+      notification.fireTime = Date.parse(new Date()) + 2000
     }
     JPushModule.sendLocalNotification(notification)
   }

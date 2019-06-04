@@ -6,7 +6,7 @@ import { scaleSize } from '../../utils'
 export default class PopModal extends PureComponent {
   props: {
     children: any,
-    type: string,
+    type?: string,
     onCloseModal: () => {},
   }
 
@@ -21,15 +21,22 @@ export default class PopModal extends PureComponent {
     }
   }
 
-  setVisible = visible => {
+  setVisible = (visible, cb) => {
     if (visible === undefined) {
       visible = !this.state.modalVisible
     } else if (visible === this.state.modalVisible) {
       return
     }
-    this.setState({
-      modalVisible: visible,
-    })
+    this.setState(
+      {
+        modalVisible: visible,
+      },
+      () => {
+        if (cb && typeof cb === 'function') {
+          cb()
+        }
+      },
+    )
   }
 
   _onRequestClose = () => {

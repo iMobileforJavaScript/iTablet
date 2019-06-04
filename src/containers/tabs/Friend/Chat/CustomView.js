@@ -23,15 +23,22 @@ export default class CustomView extends React.Component {
     onFileTouch: () => {},
   }
 
-  touchFileCallback = message => {
-    this.props.onFileTouch(message)
+  touchFileCallback = (type, message) => {
+    this.props.onFileTouch(type, message)
   }
 
   render() {
-    if (
-      this.props.currentMessage.type &&
-      this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
-    ) {
+    /*
+     * 文本消息，不渲染customview
+     */
+    if (this.props.currentMessage.type === MSGConstant.MSG_TEXT) {
+      return null
+    }
+    /*
+     * 文件下载通知消息，包括图层，数据集等
+     */
+    if (this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) {
+      let fileType = this.props.currentMessage.type
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
       let fileSizeText = ''
@@ -46,7 +53,7 @@ export default class CustomView extends React.Component {
       return (
         <TouchableWithoutFeedback
           onPress={() => {
-            this.touchFileCallback(this.props.currentMessage)
+            this.touchFileCallback(fileType, this.props.currentMessage)
           }}
         >
           <View
@@ -78,6 +85,9 @@ export default class CustomView extends React.Component {
         </TouchableWithoutFeedback>
       )
     }
+    /*
+     * 定位消息
+     */
     if (
       this.props.currentMessage.type &&
       this.props.currentMessage.type === MSGConstant.MSG_LOCATION
@@ -135,7 +145,24 @@ export default class CustomView extends React.Component {
         </TouchableOpacity>
       )
     }
-    return null
+    /*
+     * 未在上面处理的消息
+     */
+    let textColor = 'white'
+    if (this.props.position === 'left') {
+      textColor = 'black'
+    }
+    return (
+      <Text
+        style={{
+          textAlign: 'center',
+          fontSize: scaleSize(20),
+          color: textColor,
+        }}
+      >
+        {'暂不支持的消息类型'}
+      </Text>
+    )
   }
 }
 

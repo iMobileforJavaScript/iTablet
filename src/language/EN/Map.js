@@ -392,6 +392,9 @@ const Map_Tools = {
   VIDEO: 'Video',
   PHOTO: 'Photo',
   AUDIO: 'Audio',
+
+  TAKE_PHOTO: 'Take photo',
+  FROM_ALBUM: 'Choose from album',
 }
 
 export {

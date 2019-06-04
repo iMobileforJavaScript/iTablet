@@ -1,12 +1,15 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { Const } from '../../constants'
 import { scaleSize } from '../../utils'
 import { size, color } from '../../styles'
 
 export default StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'column',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
     backgroundColor: 'black',
   },
   preview: {
@@ -58,16 +61,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     left: '50%',
     right: '50%',
-    marginLeft: scaleSize(-100),
-    marginTop: scaleSize(-100),
-    height: scaleSize(40),
-    width: scaleSize(200),
+    marginLeft: -100,
+    marginTop: -100,
+    height: 40,
+    width: 200,
     bottom: 0,
     backgroundColor: 'transparent',
   },
   typeBtn: {
     flex: 1,
-    height: scaleSize(40),
+    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -84,11 +87,7 @@ export default StyleSheet.create({
 
   // Video
   video: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+    flex: 1,
   },
   videoControlView: {
     position: 'absolute',
@@ -102,15 +101,15 @@ export default StyleSheet.create({
   },
   play: {
     // position: 'absolute',
-    width: scaleSize(100),
-    height: scaleSize(100),
+    width: 80,
+    height: 80,
     // bottom: 60,
     // left: '50%',
     // top: '50%',
     // marginLeft: -40,
     // marginTop: -40,
     backgroundColor: 'transparent',
-    borderRadius: scaleSize(50),
+    borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -121,7 +120,32 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#rgba(255, 255, 255, 0.3)',
-    borderRadius: scaleSize(50),
+    borderRadius: 40,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: scaleSize(30) + (Platform.OS === 'ios' ? 20 : 0),
+    left: scaleSize(30),
+    width: 60,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: scaleSize(4),
+    backgroundColor: 'transparent',
+  },
+  backBtnBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#rgba(0, 0, 0, 0.3)',
+  },
+  backIcon: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    backgroundColor: '#rgba(255, 255, 255, 0)',
+    marginRight: 3,
   },
 
   // 进度条

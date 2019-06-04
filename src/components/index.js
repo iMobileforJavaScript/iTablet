@@ -48,6 +48,7 @@ import SurfaceView from './SurfaceView'
 import FingerMenu from './FingerMenu'
 import { ListItem } from './ListItem'
 import ImageViewer from './ImageViewer'
+import MediaViewer from './MediaViewer'
 
 export {
   Container,
@@ -105,4 +106,5 @@ export {
   FingerMenu,
   ListItem,
   ImageViewer,
+  MediaViewer,
 }

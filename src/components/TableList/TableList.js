@@ -36,10 +36,11 @@ export default class TableList extends React.PureComponent {
     this.props.data.forEach((item, index) => {
       let column = this.props.numColumns
       let rowIndex = Math.floor(index / column)
+      let cellIndex = index % column
       if (!rows[rowIndex]) {
         rows[rowIndex] = []
       }
-      rows[rowIndex].push(this.renderCell(item, rowIndex, index))
+      rows[rowIndex].push(this.renderCell(item, rowIndex, cellIndex))
     })
 
     rows.forEach((row, rowIndex) => {
