@@ -128,6 +128,7 @@ export default class SecondMapSettings extends Component {
     data = await basicSettings()
 
     data[0].value = await SMap.getMapName()
+    data[1].value = global.scaleView.state.isShow
     data[2].value = await SMap.isEnableRotateTouch()
     data[3].value = await SMap.isEnableSlantTouch()
     angle = await SMap.getMapAngle()
@@ -160,10 +161,6 @@ export default class SecondMapSettings extends Component {
     data[9].value = await SMap.getTextFixedAngle()
     data[10].value = await SMap.getFixedTextOrientation()
     data[11].value = await SMap.isOverlapDisplayed()
-
-    if (Platform.OS === 'ios') {
-      data[1].value = await SMap.getScaleViewEnable()
-    }
 
     return data
   }
@@ -231,7 +228,7 @@ export default class SecondMapSettings extends Component {
     let data = this.state.data.concat()
     switch (item.title) {
       case getLanguage(global.language).Map_Settings.SHOW_SCALE:
-        await SMap.setScaleViewEnable(value)
+        global.scaleView && global.scaleView.changeVisible(value)
         break
       case getLanguage(global.language).Map_Settings.ROTATION_GESTURE:
         await SMap.enableRotateTouch(value)
@@ -595,31 +592,6 @@ export default class SecondMapSettings extends Component {
           )
         })}
       </View>
-    )
-  }
-
-  renderColorTable = data => {
-    return (
-      <ColorTable
-        ref={ref => (this.colortable = ref)}
-        setColorBlock={this.setColorBlock}
-        language={this.props.language}
-        device={this.state.device}
-        data={data}
-      />
-    )
-  }
-
-  renderColorModeList = data => {
-    return (
-      <SelectList
-        ref={ref => (this.colorModeList = ref)}
-        callback={this.setMapColorMode}
-        language={this.props.language}
-        device={this.state.device}
-        height={scaleSize(400)}
-        data={data}
-      />
     )
   }
 
