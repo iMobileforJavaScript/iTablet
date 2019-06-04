@@ -39,7 +39,7 @@
     "react-native-camera": "^2.10.0",
     "react-native-camera-roll-picker": "^1.2.3",
     "react-native-color-picker": "^0.4.0",
-    "react-native-contacts": "^4.0.1",
+    "react-native-contacts": "^4.0.2",
     "react-native-fs": "^2.13.3",
     "react-native-gifted-chat": "^0.7.2",
     "react-native-image-crop-picker": "^0.24.1",

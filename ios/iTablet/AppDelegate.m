@@ -134,10 +134,14 @@ static NSString* g_sampleCodeName = @"#";;
   //判断上次是否有崩溃信息
   initCrash();
   
-  //初始化极光推送
-  JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
-  entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
-  [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+  @try {
+    //初始化极光推送
+    JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
+    [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+  } @catch (NSException *exception) {
+    NSLog(@"%@", exception.description);
+  }
   
   return YES;
 }

@@ -133,6 +133,8 @@ class AppRoot extends Component {
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
     GLOBAL.BaseMapSize = 1
+    //地图比例尺
+    GLOBAL.scaleView = null
     PT.initCustomPrototype()
     this.login = this.login.bind(this)
     this.reCircleLogin = this.reCircleLogin.bind(this)

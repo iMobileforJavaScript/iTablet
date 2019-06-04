@@ -2,7 +2,7 @@
  * 多媒体编辑界面
  */
 import * as React from 'react'
-import { ScrollView, Platform, TouchableOpacity, Text } from 'react-native'
+import { ScrollView, TouchableOpacity, Text } from 'react-native'
 import {
   Container,
   TextBtn,
@@ -67,8 +67,9 @@ export default class MediaEdit extends React.Component {
     for (let item of mediaPaths) {
       const type = checkType.getMediaTypeByPath(item)
       let info
-      if (Platform.OS === 'ios' && type === 'video') {
-        info = await SMediaCollector.getVideoInfo(item)
+      if (type === 'video') {
+        let path = item.replace('file://', '')
+        info = await SMediaCollector.getVideoInfo(path)
       }
       paths.push({
         ...info,

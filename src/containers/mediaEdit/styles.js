@@ -85,4 +85,11 @@ export default StyleSheet.create({
     height: scaleSize(30),
     width: scaleSize(30),
   },
+  duration: {
+    position: 'absolute',
+    bottom: scaleSize(8),
+    right: scaleSize(8),
+    color: 'white',
+    fontSize: 14,
+  },
 })

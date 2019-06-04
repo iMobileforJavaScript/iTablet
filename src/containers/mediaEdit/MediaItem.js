@@ -63,17 +63,15 @@ export default class MediaItem extends React.Component {
   }
 
   renderDuration = sec => {
-    let duration = '',
-      m = 0,
-      s = 0
+    let m = 0
     if (sec > 60) {
       m = Math.floor(sec / 60)
       sec -= 60 * m
     }
-    s = sec.toFixed() - 1 + 1
+    let s = sec.toFixed() - 1 + 1
 
-    duration = (m >= 10 ? '' : '0') + m + ':' + (s >= 10 ? '' : '0') + s
-    return <Text style={{ color: 'white', fontSize: 14 }}>{duration}</Text>
+    let duration = (m >= 10 ? '' : '0') + m + ':' + (s >= 10 ? '' : '0') + s
+    return <Text style={styles.duration}>{duration}</Text>
   }
 
   renderDelete = () => {
@@ -107,7 +105,7 @@ export default class MediaItem extends React.Component {
         >
           <Image
             style={styles.image}
-            resizeMode={'stretch'}
+            resizeMode={'cover'}
             source={
               this.props.data === '+'
                 ? require('../../assets/public/icon-plus.png')
@@ -115,6 +113,9 @@ export default class MediaItem extends React.Component {
               // : { uri: item }
             }
           />
+          {this.props.data.duration >= 0 &&
+            this.props.data.type === 'video' &&
+            this.renderDuration(this.props.data.duration)}
         </TouchableOpacity>
         {this.renderDelete()}
       </View>
