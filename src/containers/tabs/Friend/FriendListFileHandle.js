@@ -354,34 +354,32 @@ export default class FriendListFileHandle {
 
   static addGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
-    let bAdded = false
-    for (let key in members) {
-      if (!FriendListFileHandle.isInGroup(groupId, members[key].id)) {
-        group.members.push(members[key])
-        bAdded = true
+    if (group) {
+      for (let key in members) {
+        if (!FriendListFileHandle.isInGroup(groupId, members[key].id)) {
+          group.members.push(members[key])
+        }
       }
-    }
-    if (bAdded) {
       FriendListFileHandle.friends['rev'] += 1
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
       FriendListFileHandle.saveHelper(friendsStr)
     }
-
-    return bAdded
   }
 
-  static removeGroupMember(groupId, userId) {
+  static removeGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
-      for (let key in group.members) {
-        if (group.members[key].id === userId) {
-          group.members.splice(key, 1)
-          FriendListFileHandle.friends['rev'] += 1
-          let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-          FriendListFileHandle.saveHelper(friendsStr)
-          break
+      for (let member in members) {
+        for (let key in group.members) {
+          if (group.members[key].id === members[member].id) {
+            group.members.splice(key, 1)
+            break
+          }
         }
       }
+      FriendListFileHandle.friends['rev'] += 1
+      let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+      FriendListFileHandle.saveHelper(friendsStr)
     }
   }
 }
