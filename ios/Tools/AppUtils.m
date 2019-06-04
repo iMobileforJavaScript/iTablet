@@ -8,6 +8,7 @@
 
 #import "AppUtils.h"
 #import <UIKit/UIKit.h>
+#import "NativeUtil.h"
 @implementation AppUtils
 RCT_EXPORT_MODULE();
 RCT_REMAP_METHOD(AppExit,AppExit:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
@@ -33,5 +34,13 @@ RCT_REMAP_METHOD(sendFileOfWechat, sendFileOfWechat:(NSDictionary*)data resolve:
     reject(@"AppUtils", exception.reason, nil);
   }
 }
-
+RCT_REMAP_METHOD(getCurrentLocation, resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    [NativeUtil openGPS];
+    GPSData* gpsData = [NativeUtil getGPSData];
+    resolve(@{@"longitude":@(gpsData.dLongitude),@"latitude":@(gpsData.dLatitude)});
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
 @end

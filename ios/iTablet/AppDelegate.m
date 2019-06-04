@@ -14,14 +14,17 @@
 #endif
 
 
+
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import "VisualViewController.h"
-#import "VCViewController.h"
+//#import "VisualViewController.h"
+//#import "VCViewController.h"
 #import "RNFSManager.h"
 #import "SuperMap/LogInfoService.h"
 //#import "RNSplashScreen.h"
 #import "Common/HWNetworkReachabilityManager.h"
+#import "NativeUtil.h"
+
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -81,12 +84,13 @@ static NSString* g_sampleCodeName = @"#";;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [NativeUtil openGPS];
   [JPUSHService setupWithOption:launchOptions appKey:@"7d2470baad20e273cd6e53cc"
                         channel:nil apsForProduction:nil];
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.102"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.43.228"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
@@ -187,21 +191,6 @@ static NSString* g_sampleCodeName = @"#";;
   [FileTools initUserDefaultData:@"Customer"];
 }
 
--(void)doSampleCodeNotification:(NSNotification *)notification
-{
-  NSLog(@"成功收到===>通知");
-  if([g_sampleCodeName isEqualToString:@"Visual"]){
-    
-    VisualViewController* vt = [[UIStoryboard storyboardWithName:@"VisualMain" bundle:nil] instantiateViewControllerWithIdentifier:@"Visual"];
-    [self.nav pushViewController:vt animated:YES];
-    self.nav.navigationBarHidden = NO;
-  }else if([g_sampleCodeName isEqualToString:@"glCache"])
-  {
-    VCViewController* vt = [[UIStoryboard storyboardWithName:@"VCMain" bundle:nil] instantiateViewControllerWithIdentifier:@"VC"];
-    [self.nav pushViewController:vt animated:YES];
-    self.nav.navigationBarHidden = NO;
-  }
-}
 
 // onReq是微信终端向第三方程序发起请求，要求第三方程序响应。第三方程序响应完后必须调用sendRsp返回。在调用sendRsp返回时，会切回到微信终端程序界面
 - (void)onReq:(BaseReq *)req
