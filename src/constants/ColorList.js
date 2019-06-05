@@ -4578,7 +4578,7 @@ const legendColor = [
   {
     key: '#FFFFFF',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFFFFF' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFFFFF' })
     },
     size: 'large',
     background: '#FFFFFF',
@@ -4586,7 +4586,7 @@ const legendColor = [
   {
     key: '#000000',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#000000' })
+      GLOBAL.legend.setState({ backgroundColor: '#000000' })
     },
     size: 'large',
     background: '#000000',
@@ -4594,7 +4594,7 @@ const legendColor = [
   {
     key: '#F0EDE1',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F0EDE1' })
+      GLOBAL.legend.setState({ backgroundColor: '#F0EDE1' })
     },
     size: 'large',
     background: '#F0EDE1',
@@ -4602,7 +4602,7 @@ const legendColor = [
   {
     key: '#1E477C',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#1E477C' })
+      GLOBAL.legend.setState({ backgroundColor: '#1E477C' })
     },
     size: 'large',
     background: '#1E477C',
@@ -4610,7 +4610,7 @@ const legendColor = [
   {
     key: '#4982BC',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#4982BC' })
+      GLOBAL.legend.setState({ backgroundColor: '#4982BC' })
     },
     size: 'large',
     background: '#4982BC',
@@ -4618,7 +4618,7 @@ const legendColor = [
   {
     key: '#00A1E9',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#00A1E9' })
+      GLOBAL.legend.setState({ backgroundColor: '#00A1E9' })
     },
     size: 'large',
     background: '#00A1E9',
@@ -4626,7 +4626,7 @@ const legendColor = [
   {
     key: '#803000',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#803000' })
+      GLOBAL.legend.setState({ backgroundColor: '#803000' })
     },
     size: 'large',
     background: '#803000',
@@ -4634,7 +4634,7 @@ const legendColor = [
   {
     key: '#BD5747',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#BD5747' })
+      GLOBAL.legend.setState({ backgroundColor: '#BD5747' })
     },
     size: 'large',
     background: '#BD5747',
@@ -4642,7 +4642,7 @@ const legendColor = [
   {
     key: '#36E106',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#36E106' })
+      GLOBAL.legend.setState({ backgroundColor: '#36E106' })
     },
     size: 'large',
     background: '#36E106',
@@ -4650,7 +4650,7 @@ const legendColor = [
   {
     key: '#9CBB58',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#9CBB58' })
+      GLOBAL.legend.setState({ backgroundColor: '#9CBB58' })
     },
     size: 'large',
     background: '#9CBB58',
@@ -4658,7 +4658,7 @@ const legendColor = [
   {
     key: '#8364A1',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#8364A1' })
+      GLOBAL.legend.setState({ backgroundColor: '#8364A1' })
     },
     size: 'large',
     background: '#8364A1',
@@ -4666,7 +4666,7 @@ const legendColor = [
   {
     key: '#4AADC7',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#4AADC7' })
+      GLOBAL.legend.setState({ backgroundColor: '#4AADC7' })
     },
     size: 'large',
     background: '#4AADC7',
@@ -4674,7 +4674,7 @@ const legendColor = [
   {
     key: '#F89746',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F89746' })
+      GLOBAL.legend.setState({ backgroundColor: '#F89746' })
     },
     size: 'large',
     background: '#F89746',
@@ -4682,7 +4682,7 @@ const legendColor = [
   {
     key: '#E7A700',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E7A700' })
+      GLOBAL.legend.setState({ backgroundColor: '#E7A700' })
     },
     size: 'large',
     background: '#E7A700',
@@ -4690,7 +4690,7 @@ const legendColor = [
   {
     key: '#E7E300',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E7E300' })
+      GLOBAL.legend.setState({ backgroundColor: '#E7E300' })
     },
     size: 'large',
     background: '#E7E300',
@@ -4698,7 +4698,7 @@ const legendColor = [
   {
     key: '#D33248',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D33248' })
+      GLOBAL.legend.setState({ backgroundColor: '#D33248' })
     },
     size: 'large',
     background: '#D33248',
@@ -4706,7 +4706,7 @@ const legendColor = [
   {
     key: '#F1F1F1',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F1F1F1' })
+      GLOBAL.legend.setState({ backgroundColor: '#F1F1F1' })
     },
     size: 'large',
     background: '#F1F1F1',
@@ -4714,7 +4714,7 @@ const legendColor = [
   {
     key: '#7D7D7D',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#7D7D7D' })
+      GLOBAL.legend.setState({ backgroundColor: '#7D7D7D' })
     },
     size: 'large',
     background: '#7D7D7D',
@@ -4722,7 +4722,7 @@ const legendColor = [
   {
     key: '#DDD9C3',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#DDD9C3' })
+      GLOBAL.legend.setState({ backgroundColor: '#DDD9C3' })
     },
     size: 'large',
     background: '#DDD9C3',
@@ -4730,7 +4730,7 @@ const legendColor = [
   {
     key: '#C9DDF0',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#C9DDF0' })
+      GLOBAL.legend.setState({ backgroundColor: '#C9DDF0' })
     },
     size: 'large',
     background: '#C9DDF0',
@@ -4738,7 +4738,7 @@ const legendColor = [
   {
     key: '#DBE4F3',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#DBE4F3' })
+      GLOBAL.legend.setState({ backgroundColor: '#DBE4F3' })
     },
     size: 'large',
     background: '#DBE4F3',
@@ -4746,7 +4746,7 @@ const legendColor = [
   {
     key: '#BCE8FD',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#BCE8FD' })
+      GLOBAL.legend.setState({ backgroundColor: '#BCE8FD' })
     },
     size: 'large',
     background: '#BCE8FD',
@@ -4754,7 +4754,7 @@ const legendColor = [
   {
     key: '#E5C495',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E5C495' })
+      GLOBAL.legend.setState({ backgroundColor: '#E5C495' })
     },
     size: 'large',
     background: '#E5C495',
@@ -4762,7 +4762,7 @@ const legendColor = [
   {
     key: '#F4DED9',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F4DED9' })
+      GLOBAL.legend.setState({ backgroundColor: '#F4DED9' })
     },
     size: 'large',
     background: '#F4DED9',
@@ -4770,7 +4770,7 @@ const legendColor = [
   {
     key: '#DBE9CE',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#DBE9CE' })
+      GLOBAL.legend.setState({ backgroundColor: '#DBE9CE' })
     },
     size: 'large',
     background: '#DBE9CE',
@@ -4778,7 +4778,7 @@ const legendColor = [
   {
     key: '#EBF4DE',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#EBF4DE' })
+      GLOBAL.legend.setState({ backgroundColor: '#EBF4DE' })
     },
     size: 'large',
     background: '#EBF4DE',
@@ -4786,7 +4786,7 @@ const legendColor = [
   {
     key: '#E5E1ED',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E5E1ED' })
+      GLOBAL.legend.setState({ backgroundColor: '#E5E1ED' })
     },
     size: 'large',
     background: '#E5E1ED',
@@ -4794,7 +4794,7 @@ const legendColor = [
   {
     key: '#DDF0F3',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#DDF0F3' })
+      GLOBAL.legend.setState({ backgroundColor: '#DDF0F3' })
     },
     size: 'large',
     background: '#DDF0F3',
@@ -4802,7 +4802,7 @@ const legendColor = [
   {
     key: '#FDECDC',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FDECDC' })
+      GLOBAL.legend.setState({ backgroundColor: '#FDECDC' })
     },
     size: 'large',
     background: '#FDECDC',
@@ -4810,7 +4810,7 @@ const legendColor = [
   {
     key: '#FFE7C4',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFE7C4' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFE7C4' })
     },
     size: 'large',
     background: '#FFE7C4',
@@ -4818,7 +4818,7 @@ const legendColor = [
   {
     key: '#FDFACA',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FDFACA' })
+      GLOBAL.legend.setState({ backgroundColor: '#FDFACA' })
     },
     size: 'large',
     background: '#FDFACA',
@@ -4826,7 +4826,7 @@ const legendColor = [
   {
     key: '#F09CA0',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F09CA0' })
+      GLOBAL.legend.setState({ backgroundColor: '#F09CA0' })
     },
     size: 'large',
     background: '#F09CA0',
@@ -4834,7 +4834,7 @@ const legendColor = [
   {
     key: '#D7D7D7',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D7D7D7' })
+      GLOBAL.legend.setState({ backgroundColor: '#D7D7D7' })
     },
     size: 'large',
     background: '#D7D7D7',
@@ -4842,7 +4842,7 @@ const legendColor = [
   {
     key: '#585858',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#585858' })
+      GLOBAL.legend.setState({ backgroundColor: '#585858' })
     },
     size: 'large',
     background: '#585858',
@@ -4850,7 +4850,7 @@ const legendColor = [
   {
     key: '#C6B797',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#C6B797' })
+      GLOBAL.legend.setState({ backgroundColor: '#C6B797' })
     },
     size: 'large',
     background: '#C6B797',
@@ -4858,7 +4858,7 @@ const legendColor = [
   {
     key: '#8CB4EA',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#8CB4EA' })
+      GLOBAL.legend.setState({ backgroundColor: '#8CB4EA' })
     },
     size: 'large',
     background: '#8CB4EA',
@@ -4866,7 +4866,7 @@ const legendColor = [
   {
     key: '#C1CCE4',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#C1CCE4' })
+      GLOBAL.legend.setState({ backgroundColor: '#C1CCE4' })
     },
     size: 'large',
     background: '#C1CCE4',
@@ -4874,7 +4874,7 @@ const legendColor = [
   {
     key: '#7ED2F6',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#7ED2F6' })
+      GLOBAL.legend.setState({ backgroundColor: '#7ED2F6' })
     },
     size: 'large',
     background: '#7ED2F6',
@@ -4882,7 +4882,7 @@ const legendColor = [
   {
     key: '#B1894F',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#B1894F' })
+      GLOBAL.legend.setState({ backgroundColor: '#B1894F' })
     },
     size: 'large',
     background: '#B1894F',
@@ -4890,7 +4890,7 @@ const legendColor = [
   {
     key: '#E7B8B8',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E7B8B8' })
+      GLOBAL.legend.setState({ backgroundColor: '#E7B8B8' })
     },
     size: 'large',
     background: '#E7B8B8',
@@ -4898,7 +4898,7 @@ const legendColor = [
   {
     key: '#B0D59A',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#B0D59A' })
+      GLOBAL.legend.setState({ backgroundColor: '#B0D59A' })
     },
     size: 'large',
     background: '#B0D59A',
@@ -4906,7 +4906,7 @@ const legendColor = [
   {
     key: '#D7E3BD',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D7E3BD' })
+      GLOBAL.legend.setState({ backgroundColor: '#D7E3BD' })
     },
     size: 'large',
     background: '#D7E3BD',
@@ -4914,7 +4914,7 @@ const legendColor = [
   {
     key: '#CDC1D9',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#CDC1D9' })
+      GLOBAL.legend.setState({ backgroundColor: '#CDC1D9' })
     },
     size: 'large',
     background: '#CDC1D9',
@@ -4922,7 +4922,7 @@ const legendColor = [
   {
     key: '#B7DDE9',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#B7DDE9' })
+      GLOBAL.legend.setState({ backgroundColor: '#B7DDE9' })
     },
     size: 'large',
     background: '#B7DDE9',
@@ -4930,7 +4930,7 @@ const legendColor = [
   {
     key: '#FAD6B1',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FAD6B1' })
+      GLOBAL.legend.setState({ backgroundColor: '#FAD6B1' })
     },
     size: 'large',
     background: '#FAD6B1',
@@ -4938,7 +4938,7 @@ const legendColor = [
   {
     key: '#F5CE88',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F5CE88' })
+      GLOBAL.legend.setState({ backgroundColor: '#F5CE88' })
     },
     size: 'large',
     background: '#F5CE88',
@@ -4946,7 +4946,7 @@ const legendColor = [
   {
     key: '#FFF55A',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFF55A' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFF55A' })
     },
     size: 'large',
     background: '#FFF55A',
@@ -4954,7 +4954,7 @@ const legendColor = [
   {
     key: '#EF6C78',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#EF6C78' })
+      GLOBAL.legend.setState({ backgroundColor: '#EF6C78' })
     },
     size: 'large',
     background: '#EF6C78',
@@ -4962,7 +4962,7 @@ const legendColor = [
   {
     key: '#BFBFBF',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#BFBFBF' })
+      GLOBAL.legend.setState({ backgroundColor: '#BFBFBF' })
     },
     size: 'large',
     background: '#BFBFBF',
@@ -4970,7 +4970,7 @@ const legendColor = [
   {
     key: '#3E3E3E',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#3E3E3E' })
+      GLOBAL.legend.setState({ backgroundColor: '#3E3E3E' })
     },
     size: 'large',
     background: '#3E3E3E',
@@ -4978,7 +4978,7 @@ const legendColor = [
   {
     key: '#938953',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#938953' })
+      GLOBAL.legend.setState({ backgroundColor: '#938953' })
     },
     size: 'large',
     background: '#938953',
@@ -4986,7 +4986,7 @@ const legendColor = [
   {
     key: '#548ED4',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#548ED4' })
+      GLOBAL.legend.setState({ backgroundColor: '#548ED4' })
     },
     size: 'large',
     background: '#548ED4',
@@ -4994,7 +4994,7 @@ const legendColor = [
   {
     key: '#98B7D5',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#98B7D5' })
+      GLOBAL.legend.setState({ backgroundColor: '#98B7D5' })
     },
     size: 'large',
     background: '#98B7D5',
@@ -5002,7 +5002,7 @@ const legendColor = [
   {
     key: '#00B4F0',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#00B4F0' })
+      GLOBAL.legend.setState({ backgroundColor: '#00B4F0' })
     },
     size: 'large',
     background: '#00B4F0',
@@ -5010,7 +5010,7 @@ const legendColor = [
   {
     key: '#9A6C34',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#9A6C34' })
+      GLOBAL.legend.setState({ backgroundColor: '#9A6C34' })
     },
     size: 'large',
     background: '#9A6C34',
@@ -5018,7 +5018,7 @@ const legendColor = [
   {
     key: '#D79896',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D79896' })
+      GLOBAL.legend.setState({ backgroundColor: '#D79896' })
     },
     size: 'large',
     background: '#D79896',
@@ -5026,7 +5026,7 @@ const legendColor = [
   {
     key: '#7EC368',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#7EC368' })
+      GLOBAL.legend.setState({ backgroundColor: '#7EC368' })
     },
     size: 'large',
     background: '#7EC368',
@@ -5034,7 +5034,7 @@ const legendColor = [
   {
     key: '#C5DDA5',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#C5DDA5' })
+      GLOBAL.legend.setState({ backgroundColor: '#C5DDA5' })
     },
     size: 'large',
     background: '#C5DDA5',
@@ -5042,7 +5042,7 @@ const legendColor = [
   {
     key: '#B1A5C6',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#B1A5C6' })
+      GLOBAL.legend.setState({ backgroundColor: '#B1A5C6' })
     },
     size: 'large',
     background: '#B1A5C6',
@@ -5050,7 +5050,7 @@ const legendColor = [
   {
     key: '#93CDDD',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#93CDDD' })
+      GLOBAL.legend.setState({ backgroundColor: '#93CDDD' })
     },
     size: 'large',
     background: '#93CDDD',
@@ -5058,7 +5058,7 @@ const legendColor = [
   {
     key: '#F9BD8D',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F9BD8D' })
+      GLOBAL.legend.setState({ backgroundColor: '#F9BD8D' })
     },
     size: 'large',
     background: '#F9BD8D',
@@ -5066,7 +5066,7 @@ const legendColor = [
   {
     key: '#F7B550',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F7B550' })
+      GLOBAL.legend.setState({ backgroundColor: '#F7B550' })
     },
     size: 'large',
     background: '#F7B550',
@@ -5074,7 +5074,7 @@ const legendColor = [
   {
     key: '#FFF100',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFF100' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFF100' })
     },
     size: 'large',
     background: '#FFF100',
@@ -5082,7 +5082,7 @@ const legendColor = [
   {
     key: '#E80050',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E80050' })
+      GLOBAL.legend.setState({ backgroundColor: '#E80050' })
     },
     size: 'large',
     background: '#E80050',
@@ -5090,7 +5090,7 @@ const legendColor = [
   {
     key: '#A6A6A7',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#A6A6A7' })
+      GLOBAL.legend.setState({ backgroundColor: '#A6A6A7' })
     },
     size: 'large',
     background: '#A6A6A7',
@@ -5098,7 +5098,7 @@ const legendColor = [
   {
     key: '#2D2D2B',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#2D2D2B' })
+      GLOBAL.legend.setState({ backgroundColor: '#2D2D2B' })
     },
     size: 'large',
     background: '#2D2D2B',
@@ -5106,7 +5106,7 @@ const legendColor = [
   {
     key: '#494428',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#494428' })
+      GLOBAL.legend.setState({ backgroundColor: '#494428' })
     },
     size: 'large',
     background: '#494428',
@@ -5114,7 +5114,7 @@ const legendColor = [
   {
     key: '#1D3A5F',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#1D3A5F' })
+      GLOBAL.legend.setState({ backgroundColor: '#1D3A5F' })
     },
     size: 'large',
     background: '#1D3A5F',
@@ -5122,7 +5122,7 @@ const legendColor = [
   {
     key: '#376192',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#376192' })
+      GLOBAL.legend.setState({ backgroundColor: '#376192' })
     },
     size: 'large',
     background: '#376192',
@@ -5130,7 +5130,7 @@ const legendColor = [
   {
     key: '#00A1E9',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#00A1E9' })
+      GLOBAL.legend.setState({ backgroundColor: '#00A1E9' })
     },
     size: 'large',
     background: '#00A1E9',
@@ -5138,7 +5138,7 @@ const legendColor = [
   {
     key: '#825320',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#825320' })
+      GLOBAL.legend.setState({ backgroundColor: '#825320' })
     },
     size: 'large',
     background: '#825320',
@@ -5146,7 +5146,7 @@ const legendColor = [
   {
     key: '#903635',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#903635' })
+      GLOBAL.legend.setState({ backgroundColor: '#903635' })
     },
     size: 'large',
     background: '#903635',
@@ -5154,7 +5154,7 @@ const legendColor = [
   {
     key: '#13B044',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#13B044' })
+      GLOBAL.legend.setState({ backgroundColor: '#13B044' })
     },
     size: 'large',
     background: '#13B044',
@@ -5162,7 +5162,7 @@ const legendColor = [
   {
     key: '#76933C',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#76933C' })
+      GLOBAL.legend.setState({ backgroundColor: '#76933C' })
     },
     size: 'large',
     background: '#76933C',
@@ -5170,7 +5170,7 @@ const legendColor = [
   {
     key: '#5E467C',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#5E467C' })
+      GLOBAL.legend.setState({ backgroundColor: '#5E467C' })
     },
     size: 'large',
     background: '#5E467C',
@@ -5178,7 +5178,7 @@ const legendColor = [
   {
     key: '#31859D',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#31859D' })
+      GLOBAL.legend.setState({ backgroundColor: '#31859D' })
     },
     size: 'large',
     background: '#31859D',
@@ -5186,7 +5186,7 @@ const legendColor = [
   {
     key: '#E46C07',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#E46C07' })
+      GLOBAL.legend.setState({ backgroundColor: '#E46C07' })
     },
     size: 'large',
     background: '#E46C07',
@@ -5194,7 +5194,7 @@ const legendColor = [
   {
     key: '#F39900',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F39900' })
+      GLOBAL.legend.setState({ backgroundColor: '#F39900' })
     },
     size: 'large',
     background: '#F39900',
@@ -5202,7 +5202,7 @@ const legendColor = [
   {
     key: '#B7AB00',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#B7AB00' })
+      GLOBAL.legend.setState({ backgroundColor: '#B7AB00' })
     },
     size: 'large',
     background: '#B7AB00',
@@ -5210,7 +5210,7 @@ const legendColor = [
   {
     key: '#A50036',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#A50036' })
+      GLOBAL.legend.setState({ backgroundColor: '#A50036' })
     },
     size: 'large',
     background: '#A50036',
@@ -5218,7 +5218,7 @@ const legendColor = [
   {
     key: '#979D99',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#979D99' })
+      GLOBAL.legend.setState({ backgroundColor: '#979D99' })
     },
     size: 'large',
     background: '#979D99',
@@ -5226,7 +5226,7 @@ const legendColor = [
   {
     key: '#0C0C0C',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#0C0C0C' })
+      GLOBAL.legend.setState({ backgroundColor: '#0C0C0C' })
     },
     size: 'large',
     background: '#0C0C0C',
@@ -5234,7 +5234,7 @@ const legendColor = [
   {
     key: '#1C1A10',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#1C1A10' })
+      GLOBAL.legend.setState({ backgroundColor: '#1C1A10' })
     },
     size: 'large',
     background: '#1C1A10',
@@ -5242,7 +5242,7 @@ const legendColor = [
   {
     key: '#0C263D',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#0C263D' })
+      GLOBAL.legend.setState({ backgroundColor: '#0C263D' })
     },
     size: 'large',
     background: '#0C263D',
@@ -5250,7 +5250,7 @@ const legendColor = [
   {
     key: '#1D3A5F',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#1D3A5F' })
+      GLOBAL.legend.setState({ backgroundColor: '#1D3A5F' })
     },
     size: 'large',
     background: '#1D3A5F',
@@ -5258,7 +5258,7 @@ const legendColor = [
   {
     key: '#005883',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#005883' })
+      GLOBAL.legend.setState({ backgroundColor: '#005883' })
     },
     size: 'large',
     background: '#005883',
@@ -5266,7 +5266,7 @@ const legendColor = [
   {
     key: '#693904',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#693904' })
+      GLOBAL.legend.setState({ backgroundColor: '#693904' })
     },
     size: 'large',
     background: '#693904',
@@ -5274,7 +5274,7 @@ const legendColor = [
   {
     key: '#622727',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#622727' })
+      GLOBAL.legend.setState({ backgroundColor: '#622727' })
     },
     size: 'large',
     background: '#622727',
@@ -5282,7 +5282,7 @@ const legendColor = [
   {
     key: '#005E14',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#005E14' })
+      GLOBAL.legend.setState({ backgroundColor: '#005E14' })
     },
     size: 'large',
     background: '#005E14',
@@ -5290,7 +5290,7 @@ const legendColor = [
   {
     key: '#4F6028',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#4F6028' })
+      GLOBAL.legend.setState({ backgroundColor: '#4F6028' })
     },
     size: 'large',
     background: '#4F6028',
@@ -5298,7 +5298,7 @@ const legendColor = [
   {
     key: '#3E3050',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#3E3050' })
+      GLOBAL.legend.setState({ backgroundColor: '#3E3050' })
     },
     size: 'large',
     background: '#3E3050',
@@ -5306,7 +5306,7 @@ const legendColor = [
   {
     key: '#245B66',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#245B66' })
+      GLOBAL.legend.setState({ backgroundColor: '#245B66' })
     },
     size: 'large',
     background: '#245B66',
@@ -5314,7 +5314,7 @@ const legendColor = [
   {
     key: '#974805',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#974805' })
+      GLOBAL.legend.setState({ backgroundColor: '#974805' })
     },
     size: 'large',
     background: '#974805',
@@ -5322,7 +5322,7 @@ const legendColor = [
   {
     key: '#AD6A00',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#AD6A00' })
+      GLOBAL.legend.setState({ backgroundColor: '#AD6A00' })
     },
     size: 'large',
     background: '#AD6A00',
@@ -5330,7 +5330,7 @@ const legendColor = [
   {
     key: '#8B8100',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#8B8100' })
+      GLOBAL.legend.setState({ backgroundColor: '#8B8100' })
     },
     size: 'large',
     background: '#8B8100',
@@ -5338,7 +5338,7 @@ const legendColor = [
   {
     key: '#7C0022',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#8B8100' })
+      GLOBAL.legend.setState({ backgroundColor: '#8B8100' })
     },
     size: 'large',
     background: '#7C0022',
@@ -5346,7 +5346,7 @@ const legendColor = [
   {
     key: '#F0DCBE',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F0DCBE' })
+      GLOBAL.legend.setState({ backgroundColor: '#F0DCBE' })
     },
     size: 'large',
     background: '#F0DCBE',
@@ -5354,7 +5354,7 @@ const legendColor = [
   {
     key: '#F2B1CF',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F2B1CF' })
+      GLOBAL.legend.setState({ backgroundColor: '#F2B1CF' })
     },
     size: 'large',
     background: '#F2B1CF',
@@ -5362,7 +5362,7 @@ const legendColor = [
   {
     key: '#D3FFBF',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D3FFBF' })
+      GLOBAL.legend.setState({ backgroundColor: '#D3FFBF' })
     },
     size: 'large',
     background: '#D3FFBF',
@@ -5370,7 +5370,7 @@ const legendColor = [
   {
     key: '#00165F',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#00165F' })
+      GLOBAL.legend.setState({ backgroundColor: '#00165F' })
     },
     size: 'large',
     background: '#00165F',
@@ -5378,7 +5378,7 @@ const legendColor = [
   {
     key: '#6673CB',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#6673CB' })
+      GLOBAL.legend.setState({ backgroundColor: '#6673CB' })
     },
     size: 'large',
     background: '#6673CB',
@@ -5386,7 +5386,7 @@ const legendColor = [
   {
     key: '#006EBF',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#006EBF' })
+      GLOBAL.legend.setState({ backgroundColor: '#006EBF' })
     },
     size: 'large',
     background: '#006EBF',
@@ -5394,7 +5394,7 @@ const legendColor = [
   {
     key: '#89CF66',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#89CF66' })
+      GLOBAL.legend.setState({ backgroundColor: '#89CF66' })
     },
     size: 'large',
     background: '#89CF66',
@@ -5402,7 +5402,7 @@ const legendColor = [
   {
     key: '#70A900',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#70A900' })
+      GLOBAL.legend.setState({ backgroundColor: '#70A900' })
     },
     size: 'large',
     background: '#70A900',
@@ -5410,7 +5410,7 @@ const legendColor = [
   {
     key: '#13B044',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#13B044' })
+      GLOBAL.legend.setState({ backgroundColor: '#13B044' })
     },
     size: 'large',
     background: '#13B044',
@@ -5418,7 +5418,7 @@ const legendColor = [
   {
     key: '#93D150',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#93D150' })
+      GLOBAL.legend.setState({ backgroundColor: '#93D150' })
     },
     size: 'large',
     background: '#93D150',
@@ -5426,7 +5426,7 @@ const legendColor = [
   {
     key: '#70319F',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#70319F' })
+      GLOBAL.legend.setState({ backgroundColor: '#70319F' })
     },
     size: 'large',
     background: '#70319F',
@@ -5434,7 +5434,7 @@ const legendColor = [
   {
     key: '#00B4F0',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#00B4F0' })
+      GLOBAL.legend.setState({ backgroundColor: '#00B4F0' })
     },
     size: 'large',
     background: '#00B4F0',
@@ -5442,7 +5442,7 @@ const legendColor = [
   {
     key: '#D38968',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#D38968' })
+      GLOBAL.legend.setState({ backgroundColor: '#D38968' })
     },
     size: 'large',
     background: '#D38968',
@@ -5450,7 +5450,7 @@ const legendColor = [
   {
     key: '#FFBF00',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFBF00' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFBF00' })
     },
     size: 'large',
     background: '#FFBF00',
@@ -5458,7 +5458,7 @@ const legendColor = [
   {
     key: '#FFFF00',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FFFF00' })
+      GLOBAL.legend.setState({ backgroundColor: '#FFFF00' })
     },
     size: 'large',
     background: '#FFFF00',
@@ -5466,7 +5466,7 @@ const legendColor = [
   {
     key: '#C10000',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#C10000' })
+      GLOBAL.legend.setState({ backgroundColor: '#C10000' })
     },
     size: 'large',
     background: '#C10000',
@@ -5474,7 +5474,7 @@ const legendColor = [
   {
     key: '#F0F1A6',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#F0F1A6' })
+      GLOBAL.legend.setState({ backgroundColor: '#F0F1A6' })
     },
     size: 'large',
     background: '#F0F1A6',
@@ -5482,7 +5482,7 @@ const legendColor = [
   {
     key: '#FF0000',
     action: () => {
-      GLOBAL.smlegend.setState({ backgroundColor: '#FF0000' })
+      GLOBAL.legend.setState({ backgroundColor: '#FF0000' })
     },
     size: 'large',
     background: '#FF0000',

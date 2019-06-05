@@ -23,7 +23,8 @@ import {
   rangeSettings,
   coordinateSystemSettings,
   coordinateData,
-  advancedSettings,
+  copyCoordinate,
+  // advancedSettings,
   fourRanges,
   colorMode,
   transferData,
@@ -114,6 +115,9 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
         data = await this.getTransferData()
         break
+      case '复制坐标系':
+        data = copyCoordinate()
+        break
     }
     this.setState({
       data,
@@ -196,11 +200,11 @@ export default class SecondMapSettings extends Component {
     let data = await transferData()
     return data.value
   }
-  //高级设置数据
-  getAdvanceData = async () => {
-    let data = await advancedSettings()
-    return data
-  }
+  // //高级设置数据
+  // getAdvanceData = async () => {
+  //   let data = await advancedSettings()
+  //   return data
+  // }
 
   //
   getFourRangeData = async () => {
@@ -212,11 +216,6 @@ export default class SecondMapSettings extends Component {
     data[3].value = this.formatNumberToString(viewBounds.top)
     return data
   }
-  // //获取柱状图风格数据
-  // getHistogramData = async () => {
-  //   let data = await histogramSettings()
-  //   return data
-  // }
 
   //返回
   backAction = () => {
@@ -352,7 +351,12 @@ export default class SecondMapSettings extends Component {
           rightBtn: getLanguage(GLOBAL.language).Map_Settings.COPY,
         })
         break
-      //todo 暂时不跳转 转换参数页面等设计出图
+      case '复制坐标系':
+        this.props.navigation.navigate('SecondMapSettings', {
+          title,
+        })
+        break
+      //todo 转换参数
       case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
         // this.props.navigation.navigate('SecondMapSettings', {
         //   title,
@@ -500,7 +504,7 @@ export default class SecondMapSettings extends Component {
     if (
       item.title ===
         getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS &&
-      item.value === '关'
+      item.value === getLanguage(GLOBAL.language).Map_Settings.OFF
     ) {
       return (
         <View>

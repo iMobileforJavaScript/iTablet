@@ -84,8 +84,8 @@ export default class ScaleView extends React.Component {
         </Text>
         <View
           style={{
-            height: scaleSize(16),
-            borderWidth: scaleSize(3),
+            height: scaleSize(10),
+            borderWidth: scaleSize(2),
             width: `${~~this.state.width}%`,
             borderTopColor: 'transparent',
             borderTopWidth: 0,
