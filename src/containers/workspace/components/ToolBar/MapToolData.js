@@ -737,7 +737,7 @@ function captureImage() {
     let isTaggingLayer = await SMap.isTaggingLayer(
       _params.user.currentUser.userName,
     )
-    if (isTaggingLayer) {
+    if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
       await SMap.setTaggingGrid(
         GLOBAL.TaggingDatasetName,
         _params.user.currentUser.userName,

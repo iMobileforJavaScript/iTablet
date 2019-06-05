@@ -84,10 +84,8 @@ export default class CustomActions extends React.Component {
     // this.selectImages = this.selectImages.bind(this)
   }
 
-  componentDidMount() {
-  }
-  componentWillUnmount() {
-  }
+  componentDidMount() {}
+  componentWillUnmount() {}
   setModalVisible(visible = false) {
     if (visible) {
       this.props.callBack(scaleSize(400))
@@ -158,21 +156,17 @@ export default class CustomActions extends React.Component {
   }
 
   handleLocationClick = () => {
-    AppUtils.getCurrentLocation().then(value=>{
-      SOnlineService.reverseGeocoding(
-        value.longitude,
-        value.latitude,
-        {
-          onResult: result => {
-            this.props.sendCallBack(3, {
-              address: result,
-              longitude: value.longitude,
-              latitude: value.latitude,
-            })
-            // alert(result)
-          },
+    AppUtils.getCurrentLocation().then(value => {
+      SOnlineService.reverseGeocoding(value.longitude, value.latitude, {
+        onResult: result => {
+          this.props.sendCallBack(3, {
+            address: result,
+            longitude: value.longitude,
+            latitude: value.latitude,
+          })
+          // alert(result)
         },
-      )
+      })
     })
   }
 }

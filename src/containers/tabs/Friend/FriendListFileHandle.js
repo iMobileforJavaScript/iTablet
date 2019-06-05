@@ -71,10 +71,112 @@ export default class FriendListFileHandle {
         //  RNFS.moveFile(friendListFile, path + 'friend.list')
       }
     }
+    FriendListFileHandle.checkFriendList()
     resultCallBack(FriendListFileHandle.friends)
   }
   static getContactsLocal() {
     return FriendListFileHandle.friends
+  }
+
+  static checkFriendList() {
+    let fl = FriendListFileHandle.friends
+    if (!fl) {
+      return
+    }
+
+    if (fl.rev === undefined || typeof fl.rev !== 'number') {
+      fl.rev = 0
+    }
+
+    if (fl.userInfo === undefined) {
+      fl.userInfo = []
+    }
+
+    if (fl.userInfo.length !== 0) {
+      for (let user = fl.userInfo.length - 1; user > -1; user--) {
+        if (
+          fl.userInfo[user].markName === undefined ||
+          fl.userInfo[user].markName === ''
+        ) {
+          fl.userInfo.splice(user, 1)
+          continue
+        }
+        if (
+          fl.userInfo[user].name === undefined ||
+          fl.userInfo[user].name === ''
+        ) {
+          fl.userInfo.splice(user, 1)
+          continue
+        }
+        if (fl.userInfo[user].id === undefined || fl.userInfo[user].id === '') {
+          fl.userInfo.splice(user, 1)
+          continue
+        }
+        if (
+          fl.userInfo[user].info === undefined ||
+          fl.userInfo[user].info.isFriend === undefined
+        ) {
+          fl.userInfo.splice(user, 1)
+          continue
+        }
+      }
+    }
+
+    if (fl.groupInfo === undefined) {
+      fl.groupInfo = []
+    }
+
+    if (fl.groupInfo.length !== 0) {
+      for (let group = fl.groupInfo.length - 1; group > -1; group--) {
+        if (
+          fl.groupInfo[group].id === undefined ||
+          fl.groupInfo[group].id === ''
+        ) {
+          fl.groupInfo.splice(group, 1)
+          continue
+        }
+        if (
+          fl.groupInfo[group].groupName === undefined ||
+          fl.groupInfo[group].groupName === ''
+        ) {
+          fl.groupInfo.splice(group, 1)
+          continue
+        }
+        if (
+          fl.groupInfo[group].masterID === undefined ||
+          fl.groupInfo[group].masterID === ''
+        ) {
+          fl.groupInfo.splice(group, 1)
+          continue
+        }
+        if (fl.groupInfo[group].members === undefined) {
+          fl.groupInfo.splice(group, 1)
+          continue
+        } else {
+          let userErr = false
+          for (let user in fl.groupInfo[group].members) {
+            if (
+              fl.groupInfo[group].members[user].id === undefined ||
+              fl.groupInfo[group].members[user].id === ''
+            ) {
+              userErr = true
+              break
+            }
+            if (
+              fl.groupInfo[group].members[user].name === undefined ||
+              fl.groupInfo[group].members[user].name === ''
+            ) {
+              userErr = true
+              break
+            }
+          }
+          if (userErr) {
+            fl.groupInfo.splice(group, 1)
+            continue
+          }
+        }
+      }
+    }
   }
 
   static download() {

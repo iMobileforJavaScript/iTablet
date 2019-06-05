@@ -89,7 +89,7 @@ const Friends = {
   SYS_MSG_REMOVE_OUT_GROUP2: 'out of group',
   SYS_MSG_ADD_INTO_GROUP: ' have added ',
   SYS_MSG_ADD_INTO_GROUP2: 'into group',
-  SYS_NO_SUCH_USER: 'No such user',
+  SYS_NO_SUCH_USER: 'User no found',
   SYS_FRIEND_ALREADY_IN_GROUP: 'Friends selected already in group',
 }
 export { Friends }
