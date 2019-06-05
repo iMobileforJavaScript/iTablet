@@ -874,38 +874,6 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
-            timestampString = "576410009.438774"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
-            timestampString = "576410009.438866"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
             timestampString = "576410009.4389271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
@@ -927,22 +895,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1116"
             endingLineNumber = "1116"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
-            timestampString = "577355721.990719"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1108"
-            endingLineNumber = "1108"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -977,6 +929,53 @@
             endingLineNumber = "140"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SMessageService memmber:groupId:exitSessionResolver:rejecter:]"
+                  moduleName = "iTablet"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet2.1/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
+                  timestampString = "581333059.4251159"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "280">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SMessageService memmber:groupId:exitSessionResolver:rejecter:]"
+                  moduleName = "iTablet"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet2.1/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
+                  timestampString = "581333059.429486"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "412">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SMessageService memmber:groupId:exitSessionResolver:rejecter:]"
+                  moduleName = "iTablet"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet2.1/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/SMessageService.m"
+                  timestampString = "581333059.433779"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "672">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1146,29 +1145,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
-            timestampString = "577355721.9912"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1090"
-            endingLineNumber = "1090"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
             timestampString = "577355721.991503"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1193"
             endingLineNumber = "1193"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
+            landmarkName = "SMap"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1185,53 +1168,6 @@
             endingLineNumber = "1627"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[SMap clearSelectionWithResolve:rejecter:]"
-                  moduleName = "iTablet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
-                  timestampString = "577355726.498129"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1627"
-                  endingLineNumber = "1627"
-                  offsetFromSymbolStart = "720">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[SMap clearSelectionWithResolve:rejecter:]"
-                  moduleName = "iTablet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
-                  timestampString = "577355726.50257"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1627"
-                  endingLineNumber = "1627"
-                  offsetFromSymbolStart = "892">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[SMap clearSelectionWithResolve:rejecter:]"
-                  moduleName = "iTablet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
-                  timestampString = "577355726.5074281"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1627"
-                  endingLineNumber = "1627"
-                  offsetFromSymbolStart = "1116">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1280,22 +1216,6 @@
             endingLineNumber = "723"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../../../sourceCode/UGC/Src/Map/UGLayers.cpp"
-            timestampString = "577416764.671216"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1618"
-            endingLineNumber = "1618"
-            landmarkName = "SMap"
-            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1448,30 +1368,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "iTablet/AppDelegate.m"
-            timestampString = "577417534.576196"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "-initCustomWorkspace"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/mapping/SMap.m"
             timestampString = "577355721.9932801"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1207"
             endingLineNumber = "1207"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
+            landmarkName = "-getMeasureResult:lastPoint:type:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

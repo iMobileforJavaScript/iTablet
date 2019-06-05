@@ -24,6 +24,7 @@ import {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  GroupMemberList,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -350,6 +351,13 @@ export default StackNavigator(
     },
     ManageGroup: {
       screen: ManageGroup,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    GroupMemberList: {
+      screen: GroupMemberList,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

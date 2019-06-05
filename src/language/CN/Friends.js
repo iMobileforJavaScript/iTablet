@@ -46,6 +46,7 @@ const Friends = {
   LOADING: '刷新中...',
   DEL_GROUP: '删除群聊',
   DEL_GROUP_CONFIRM: '清空消息并退出群聊?',
+  DEL_GROUP_CONFIRM2: '清空消息并解散群聊?',
   //Chat
   IMPORT_DATA: '数据导入中',
   IMPORT_SUCCESS: '导入成功',
@@ -69,10 +70,23 @@ const Friends = {
   FRIEND_MAP: '好友地图',
   ADD_BLACKLIST: '加入黑名单',
   DELETE_FRIEND: '删除好友',
+  LIST_MEMBERS: '查看群员',
   LEAVE_GROUP: '退出群聊',
   CLEAR_HISTORY: '清空聊天记录',
-  DISMISS_GROUP: '解散群',
+  DISBAND_GROUP: '解散群',
   DELETE_MEMBER: '移除群员',
-  ADD_MEMBER: '添加群员',
+  ADD_MEMBER: '邀请群员',
+  //system text
+  SYS_MSG_MAP: '[地图]',
+  SYS_MSG_ADD_FRIEND: '请求添加您为好友',
+  SYS_MSG_REMOVED_FROM_GROUP: '将你移除群聊',
+  SYS_MSG_LEAVE_GROUP: '退出了群聊',
+  SYS_MSG_ETC: '等 ',
+  SYS_MSG_REMOVE_OUT_GROUP: ' 将 ',
+  SYS_MSG_REMOVE_OUT_GROUP2: '移出群聊',
+  SYS_MSG_ADD_INTO_GROUP: ' 添加 ',
+  SYS_MSG_ADD_INTO_GROUP2: '进入群聊',
+  SYS_NO_SUCH_USER: '该用户不存在',
+  SYS_FRIEND_ALREADY_IN_GROUP: '所选好友已在群组中',
 }
 export { Friends }

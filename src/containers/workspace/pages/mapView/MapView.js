@@ -53,8 +53,9 @@ import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
+import ScaleView from '../../components/ScaleView/ScaleView'
 
-const markerTag = 117868
+const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
 export default class MapView extends React.Component {
@@ -381,7 +382,7 @@ export default class MapView extends React.Component {
     }
   }
 
-  _onGetInstance = mapView => {
+  _onGetInstance = async mapView => {
     this.mapView = mapView
     this._addMap()
   }
@@ -950,6 +951,8 @@ export default class MapView extends React.Component {
         )
         this._addGeometrySelectedListener()
         this.setLoading(false)
+        //地图打开后去获取图例数据
+        GLOBAL.scaleView.getInitialData()
       } catch (e) {
         this.setLoading(false)
       }
@@ -1382,7 +1385,11 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
-
+        <ScaleView
+          device={this.props.device}
+          language={this.props.language}
+          ref={ref => (GLOBAL.scaleView = ref)}
+        />
         <PopModal
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}

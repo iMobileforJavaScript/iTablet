@@ -83,35 +83,35 @@ export default class SecondMapSettings extends Component {
       colorData = null,
       colorModeData = null
     switch (this.state.title) {
-      case getLanguage(global.language).Map_Settings.BASIC_SETTING:
+      case getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING:
         data = await this.getBasicData()
         colorData = mapBackGroundColor
         colorModeData = colorMode()
         break
-      case getLanguage(global.language).Map_Settings.RANGE_SETTING:
+      case getLanguage(GLOBAL.language).Map_Settings.RANGE_SETTING:
         data = await this.getRangeData()
         break
-      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM_SETTING:
+      case getLanguage(GLOBAL.language).Map_Settings.COORDINATE_SYSTEM_SETTING:
         data = await this.getCoordinateSystemData()
         break
-      case getLanguage(global.language).Map_Settings.ADVANCED_SETTING:
+      case getLanguage(GLOBAL.language).Map_Settings.ADVANCED_SETTING:
         data = await this.getAdvanceData()
         break
-      case getLanguage(global.language).Map_Settings.MAP_CENTER:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
         data = { title: 'centerPoint' }
         data.value = await SMap.getMapCenter()
         break
-      case getLanguage(global.language).Map_Settings.MAP_SCALE:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
         data = { title: 'scale' }
         data.value = await SMap.getMapScale()
         break
-      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM:
+      case getLanguage(GLOBAL.language).Map_Settings.COORDINATE_SYSTEM:
         data = await coordinateData()
         break
-      case getLanguage(global.language).Map_Settings.CURRENT_VIEW_BOUNDS:
+      case getLanguage(GLOBAL.language).Map_Settings.CURRENT_VIEW_BOUNDS:
         data = await this.getFourRangeData()
         break
-      case getLanguage(global.language).Map_Settings.TRANSFER_PARAMS:
+      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
         data = await this.getTransferData()
         break
     }
@@ -128,6 +128,7 @@ export default class SecondMapSettings extends Component {
     data = await basicSettings()
 
     data[0].value = await SMap.getMapName()
+    data[1].value = GLOBAL.scaleView.state.isShow
     data[2].value = await SMap.isEnableRotateTouch()
     data[3].value = await SMap.isEnableSlantTouch()
     angle = await SMap.getMapAngle()
@@ -136,20 +137,20 @@ export default class SecondMapSettings extends Component {
     //原生层返回的是中文，做一个映射，转换成对应语言
     let colorMode = await SMap.getMapColorMode()
     let allColorMode = {
-      默认色彩模式: getLanguage(global.language).Map_Settings
+      默认色彩模式: getLanguage(GLOBAL.language).Map_Settings
         .DEFAULT_COLOR_MODE,
-      DEFAULT: getLanguage(global.language).Map_Settings.DEFAULT_COLOR_MODE,
-      黑白模式: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
-      BLACKWHITE: getLanguage(global.language).Map_Settings.BLACK_AND_WHITE,
-      灰度模式: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
-      GRAY: getLanguage(global.language).Map_Settings.GRAY_SCALE_MODE,
-      黑白反色模式: getLanguage(global.language).Map_Settings
+      DEFAULT: getLanguage(GLOBAL.language).Map_Settings.DEFAULT_COLOR_MODE,
+      黑白模式: getLanguage(GLOBAL.language).Map_Settings.BLACK_AND_WHITE,
+      BLACKWHITE: getLanguage(GLOBAL.language).Map_Settings.BLACK_AND_WHITE,
+      灰度模式: getLanguage(GLOBAL.language).Map_Settings.GRAY_SCALE_MODE,
+      GRAY: getLanguage(GLOBAL.language).Map_Settings.GRAY_SCALE_MODE,
+      黑白反色模式: getLanguage(GLOBAL.language).Map_Settings
         .ANTI_BLACK_AND_WHITE,
-      BLACK_WHITE_REVERSE: getLanguage(global.language).Map_Settings
+      BLACK_WHITE_REVERSE: getLanguage(GLOBAL.language).Map_Settings
         .ANTI_BLACK_AND_WHITE,
-      '黑白反色，其他颜色不变': getLanguage(global.language).Map_Settings
+      '黑白反色，其他颜色不变': getLanguage(GLOBAL.language).Map_Settings
         .ANTI_BLACK_AND_WHITE_2,
-      ONLY_BLACK_WHITE_REVERSE: getLanguage(global.language).Map_Settings
+      ONLY_BLACK_WHITE_REVERSE: getLanguage(GLOBAL.language).Map_Settings
         .ANTI_BLACK_AND_WHITE_2,
     }
     data[5].value = allColorMode[colorMode]
@@ -160,10 +161,6 @@ export default class SecondMapSettings extends Component {
     data[9].value = await SMap.getTextFixedAngle()
     data[10].value = await SMap.getFixedTextOrientation()
     data[11].value = await SMap.isOverlapDisplayed()
-
-    if (Platform.OS === 'ios') {
-      data[1].value = await SMap.getScaleViewEnable()
-    }
 
     return data
   }
@@ -190,7 +187,7 @@ export default class SecondMapSettings extends Component {
     data[1].value = isDynamicProjection
     data[2].value = isDynamicProjection
       ? ''
-      : getLanguage(global.language).Map_Settings.OFF
+      : getLanguage(GLOBAL.language).Map_Settings.OFF
     return data
   }
 
@@ -230,40 +227,40 @@ export default class SecondMapSettings extends Component {
   _onValueChange = async ({ value, item, index }) => {
     let data = this.state.data.concat()
     switch (item.title) {
-      case getLanguage(global.language).Map_Settings.SHOW_SCALE:
-        await SMap.setScaleViewEnable(value)
+      case getLanguage(GLOBAL.language).Map_Settings.SHOW_SCALE:
+        GLOBAL.scaleView && GLOBAL.scaleView.changeVisible(value)
         break
-      case getLanguage(global.language).Map_Settings.ROTATION_GESTURE:
+      case getLanguage(GLOBAL.language).Map_Settings.ROTATION_GESTURE:
         await SMap.enableRotateTouch(value)
         break
-      case getLanguage(global.language).Map_Settings.PITCH_GESTURE:
+      case getLanguage(GLOBAL.language).Map_Settings.PITCH_GESTURE:
         await SMap.enableSlantTouch(value)
         break
-      case getLanguage(global.language).Map_Settings.MAP_ANTI_ALIASING:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_ANTI_ALIASING:
         //IOS接口内写的是int类型的参数 所以转成数字
         Platform.OS === 'ios' && (value = +value)
         await SMap.setAntialias(value)
         break
-      case getLanguage(global.language).Map_Settings.FIX_SYMBOL_ANGLE:
+      case getLanguage(GLOBAL.language).Map_Settings.FIX_SYMBOL_ANGLE:
         await SMap.setMarkerFixedAngle(value)
         break
-      case getLanguage(global.language).Map_Settings.FIX_TEXT_ANGLE:
+      case getLanguage(GLOBAL.language).Map_Settings.FIX_TEXT_ANGLE:
         await SMap.setTextFixedAngle(value)
         break
-      case getLanguage(global.language).Map_Settings.SHOW_OVERLAYS:
+      case getLanguage(GLOBAL.language).Map_Settings.SHOW_OVERLAYS:
         await SMap.setOverlapDisplayed(value)
         break
-      case getLanguage(global.language).Map_Settings.FIX_TEXT_DIRECTION:
+      case getLanguage(GLOBAL.language).Map_Settings.FIX_TEXT_DIRECTION:
         await SMap.setFixedTextOrientation(value)
         break
-      case getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL:
+      case getLanguage(GLOBAL.language).Map_Settings.FIX_SCALE_LEVEL:
         await SMap.setVisibleScalesEnabled(value)
         break
-      case getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION:
+      case getLanguage(GLOBAL.language).Map_Settings.DYNAMIC_PROJECTION:
         await SMap.setMapDynamicProjection(value)
         data[index + 1].value = value
           ? ''
-          : getLanguage(global.language).Map_Settings.OFF
+          : getLanguage(GLOBAL.language).Map_Settings.OFF
     }
     data[index].value = value
     this.setState({
@@ -275,7 +272,7 @@ export default class SecondMapSettings extends Component {
   onItemPress = ({ title, index }) => {
     let data = this.state.data.concat()
     switch (title) {
-      case getLanguage(global.language).Map_Settings.ROTATION_ANGLE:
+      case getLanguage(GLOBAL.language).Map_Settings.ROTATION_ANGLE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[index].value.replace('°', ''),
@@ -285,7 +282,7 @@ export default class SecondMapSettings extends Component {
               isSetSuccess = await SMap.setMapAngle(+value)
             } else {
               Toast.show(
-                getLanguage(global.language).Prompt.ROTATION_ANGLE_ERROR,
+                getLanguage(GLOBAL.language).Prompt.ROTATION_ANGLE_ERROR,
               )
             }
 
@@ -303,8 +300,8 @@ export default class SecondMapSettings extends Component {
           },
         })
         break
-      case getLanguage(global.language).Map_Settings.COLOR_MODE:
-      case getLanguage(global.language).Map_Settings.BACKGROUND_COLOR:
+      case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
+      case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
         if (this.popModal) {
           this.setState(
             {
@@ -316,7 +313,7 @@ export default class SecondMapSettings extends Component {
           )
         }
         break
-      case getLanguage(global.language).Map_Settings.MAP_SCALE:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[index].value.replace('1:', ''),
@@ -328,7 +325,7 @@ export default class SecondMapSettings extends Component {
               isSuccess = await SMap.setMapScale(1 / newValue)
               data[index].value = `1:${this.formatNumberToString(newValue)}`
             } else {
-              Toast.show(getLanguage(global.language).Prompt.MAP_SCALE_ERROR)
+              Toast.show(getLanguage(GLOBAL.language).Prompt.MAP_SCALE_ERROR)
             }
             isSuccess &&
               this.setState({ data }, () => {
@@ -337,35 +334,35 @@ export default class SecondMapSettings extends Component {
           },
         })
         break
-      case getLanguage(global.language).Map_Settings.MAP_CENTER:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
         this.props.navigation.navigate('SecondMapSettings', {
           title,
           cb: this.saveInput,
         })
         break
-      case getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM:
+      case getLanguage(GLOBAL.language).Map_Settings.COORDINATE_SYSTEM:
         this.props.navigation.navigate('SecondMapSettings', {
           title,
           cb: this.setMapCoordinate,
         })
         break
-      case getLanguage(global.language).Map_Settings.CURRENT_VIEW_BOUNDS:
+      case getLanguage(GLOBAL.language).Map_Settings.CURRENT_VIEW_BOUNDS:
         this.props.navigation.navigate('SecondMapSettings', {
           title,
-          rightBtn: getLanguage(global.language).Map_Settings.COPY,
+          rightBtn: getLanguage(GLOBAL.language).Map_Settings.COPY,
         })
         break
       //todo 暂时不跳转 转换参数页面等设计出图
-      case getLanguage(global.language).Map_Settings.TRANSFER_PARAMS:
+      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
         // this.props.navigation.navigate('SecondMapSettings', {
         //   title,
         // })
         break
       //四至范围点击 跳InputPage
-      case getLanguage(global.language).Map_Settings.LEFT:
-      case getLanguage(global.language).Map_Settings.BOTTOM:
-      case getLanguage(global.language).Map_Settings.RIGHT:
-      case getLanguage(global.language).Map_Settings.TOP:
+      case getLanguage(GLOBAL.language).Map_Settings.LEFT:
+      case getLanguage(GLOBAL.language).Map_Settings.BOTTOM:
+      case getLanguage(GLOBAL.language).Map_Settings.RIGHT:
+      case getLanguage(GLOBAL.language).Map_Settings.TOP:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
           placeholder: data[index].value,
@@ -391,10 +388,10 @@ export default class SecondMapSettings extends Component {
                 })
               !isSuccess &&
                 Toast.show(
-                  getLanguage(global.language).Prompt.VIEW_BOUNDS_RANGE_ERROR,
+                  getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_RANGE_ERROR,
                 )
             } else {
-              Toast.show(getLanguage(global.language).Prompt.VIEW_BOUNDS_ERROR)
+              Toast.show(getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_ERROR)
             }
           },
         })
@@ -408,7 +405,7 @@ export default class SecondMapSettings extends Component {
     let regExp = /^\d+(\.\d+)?$/
     let data = this.state.data.concat()
     switch (title) {
-      case getLanguage(global.language).Map_Settings.MAP_CENTER:
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
         if (
           newValue.x &&
           newValue.x.match(regExp) &&
@@ -421,7 +418,7 @@ export default class SecondMapSettings extends Component {
             '/' +
             this.formatNumberToString(newValue.y)
         } else {
-          Toast.show(getLanguage(global.language).Prompt.MAP_CENTER_ERROR)
+          Toast.show(getLanguage(GLOBAL.language).Prompt.MAP_CENTER_ERROR)
         }
         break
     }
@@ -499,10 +496,10 @@ export default class SecondMapSettings extends Component {
     let rightImagePath = require('../../../assets/Mine/mine_my_arrow.png')
     let hasValue = item.value !== undefined
     let isBackGroundColor =
-      item.title === getLanguage(global.language).Map_Settings.BACKGROUND_COLOR
+      item.title === getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR
     if (
       item.title ===
-        getLanguage(global.language).Map_Settings.TRANSFER_PARAMS &&
+        getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS &&
       item.value === '关'
     ) {
       return (
@@ -598,31 +595,6 @@ export default class SecondMapSettings extends Component {
     )
   }
 
-  renderColorTable = data => {
-    return (
-      <ColorTable
-        ref={ref => (this.colortable = ref)}
-        setColorBlock={this.setColorBlock}
-        language={this.props.language}
-        device={this.state.device}
-        data={data}
-      />
-    )
-  }
-
-  renderColorModeList = data => {
-    return (
-      <SelectList
-        ref={ref => (this.colorModeList = ref)}
-        callback={this.setMapColorMode}
-        language={this.props.language}
-        device={this.state.device}
-        height={scaleSize(400)}
-        data={data}
-      />
-    )
-  }
-
   renderItem = ({ item, index }) => {
     if (this.props.renderItem) {
       return this.props.renderItem
@@ -647,7 +619,7 @@ export default class SecondMapSettings extends Component {
     )
     let isSuccess = await Clipboard.getString()
     if (isSuccess !== undefined) {
-      Toast.show(getLanguage(global.language).Prompt.COPY_SUCCESS)
+      Toast.show(getLanguage(GLOBAL.language).Prompt.COPY_SUCCESS)
     }
   }
 
@@ -730,7 +702,7 @@ export default class SecondMapSettings extends Component {
   renderPopItem = () => {
     let modal = this.state.currentClick
     switch (modal) {
-      case getLanguage(global.language).Map_Settings.COLOR_MODE:
+      case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
         return (
           <SelectList
             modal={this.popModal}
@@ -741,7 +713,7 @@ export default class SecondMapSettings extends Component {
             callback={this.setMapColorMode}
           />
         )
-      case getLanguage(global.language).Map_Settings.BACKGROUND_COLOR:
+      case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
         return (
           <ColorTable
             language={this.props.language}
@@ -774,7 +746,7 @@ export default class SecondMapSettings extends Component {
                 }}
               >
                 <Text style={styles.headerRight}>
-                  {getLanguage(global.language).Prompt.CONFIRM}
+                  {getLanguage(GLOBAL.language).Prompt.CONFIRM}
                 </Text>
               </TouchableOpacity>,
             ],
@@ -786,7 +758,7 @@ export default class SecondMapSettings extends Component {
     }
     if (
       this.state.title ===
-      getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM
+      getLanguage(GLOBAL.language).Map_Settings.COORDINATE_SYSTEM
     ) {
       return (
         <Container
@@ -830,7 +802,7 @@ export default class SecondMapSettings extends Component {
           numColumns={1}
         />
         {this.state.title ===
-          getLanguage(global.language).Map_Settings.BASIC_SETTING && (
+          getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING && (
           <PopModal ref={ref => (this.popModal = ref)}>
             {this.renderPopItem()}
           </PopModal>

@@ -29,6 +29,7 @@ import Friend, {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  GroupMemberList,
 } from './Friend'
 import InformSpot from './Friend/InformSpot'
 import { getLanguage } from '../../language/index'
@@ -282,6 +283,7 @@ export {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  GroupMemberList,
   //-----------
   MyLabel,
   MyBaseMap,

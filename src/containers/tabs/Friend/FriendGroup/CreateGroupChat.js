@@ -209,18 +209,36 @@ class CreateGroupChat extends Component {
             <TouchableOpacity
               onPress={() => {
                 {
+                  if (this.state.seletctArr.length === 0) return
                   if (!this.groupID && this.state.seletctArr.length < 2) {
                     Toast.show(
                       getLanguage(this.language).Friends.TOAST_CHOOSE_2,
                     )
                     return
                   }
+                  let newMembers = []
+                  if (this.groupID) {
+                    for (let member in this.state.seletctArr) {
+                      if (
+                        !FriendListFileHandle.isInGroup(
+                          this.groupID,
+                          this.state.seletctArr[member].id,
+                        )
+                      ) {
+                        newMembers.push(this.state.seletctArr[member])
+                      }
+                    }
+                    if (newMembers.length === 0) {
+                      Toast.show(
+                        getLanguage(this.language).Friends
+                          .SYS_FRIEND_ALREADY_IN_GROUP,
+                      )
+                      return
+                    }
+                  }
                   NavigationService.goBack()
                   if (this.groupID) {
-                    this.friend.addGroupMember(
-                      this.groupID,
-                      this.state.seletctArr,
-                    )
+                    this.friend.addGroupMember(this.groupID, newMembers)
                     this.refreshListCallBack && this.refreshListCallBack()
                   } else {
                     this.friend.createGroupTalk(this.state.seletctArr)

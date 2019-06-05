@@ -40,10 +40,15 @@ class RecommendFriend extends Component {
     this.search = this.search.bind(this)
     this._renderItem = this._renderItem.bind(this)
     this.addFriendRequest = this.addFriendRequest.bind(this)
+    this.exit = false
   }
 
   componentDidMount() {
     setTimeout(this.requestPermission, 1000)
+  }
+
+  componentWillUnmount() {
+    this.exit = true
   }
 
   requestPermission = async () => {
@@ -97,6 +102,10 @@ class RecommendFriend extends Component {
               givenName: item.givenName,
               phoneNumbers: item.phoneNumbers,
             })
+            if (this.exit) {
+              GLOBAL.Loading.setLoading(false)
+              return
+            }
           }
         }
         GLOBAL.Loading.setLoading(false)

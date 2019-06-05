@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, TouchableOpacity, FlatList } from 'react-native'
+import { ScrollView, Text, TouchableOpacity } from 'react-native'
 import { Container, Dialog } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
@@ -24,14 +24,33 @@ class ManageGroup extends Component {
     this.targetUser = this.props.navigation.getParam('targetUser')
     this.language = this.props.navigation.getParam('language')
     this.chat = this.props.navigation.getParam('chat')
-    this.state = {
-      contacts: this.getGroupMembers(),
-    }
+    this.masterID = FriendListFileHandle.getGroup(this.targetUser.id).masterID
   }
 
-  getGroupMembers = () => {
-    return FriendListFileHandle.readGroupMemberList(this.targetUser.id)
+  _modifyGroupName = value => {
+    FriendListFileHandle.modifyGroupList(this.targetUser.id, value)
+    this.chat && this.chat.onFriendListChanged()
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    this.friend._sendMessage(
+      JSON.stringify({
+        user: {
+          name: this.user.nickname,
+          id: this.user.userId,
+          groupID: this.targetUser.id,
+          groupName: FriendListFileHandle.getGroup(this.targetUser.id)
+            .groupName,
+        },
+        type: MsgConstant.MSG_MODIFY_GROUP_NAME,
+        time: time,
+        message: {
+          name: value,
+        },
+      }),
+      this.targetUser.id,
+    )
   }
+
   _leaveGroup = async () => {
     this.leaveDialog.setDialogVisible(false)
     NavigationService.reset()
@@ -49,10 +68,12 @@ class ManageGroup extends Component {
         type: MsgConstant.MSG_REMOVE_MEMBER,
         time: time,
         message: {
-          user: {
-            id: this.user.userId,
-            name: this.user.nickname,
-          },
+          members: [
+            {
+              id: this.user.userId,
+              name: this.user.nickname,
+            },
+          ],
         },
       }),
       this.targetUser.id,
@@ -65,21 +86,35 @@ class ManageGroup extends Component {
     FriendListFileHandle.delFromGroupList(this.targetUser.id)
   }
 
-  _renderMember = ({ item }) => {
-    return (
-      <TouchableItemView
-        item={{
-          // image: getThemeAssets().friend.friend_edit,
-          text: item.name,
-        }}
-        onPress={() => {
-          // NavigationService.navigate('ManageFriend', {
-          //   ...this.props.navigation.state.params,
-          //   targetUser: item,
-          // })
-        }}
-      />
+  _disbandGroup = async () => {
+    this.disbandDialog.setDialogVisible(false)
+    NavigationService.reset()
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    await this.friend._sendMessage(
+      JSON.stringify({
+        user: {
+          name: this.user.nickname,
+          id: this.user.userId,
+          groupID: this.targetUser.id,
+          groupName: FriendListFileHandle.getGroup(this.targetUser.id)
+            .groupName,
+        },
+        type: MsgConstant.MSG_DISBAND_GROUP,
+        time: time,
+        message: '',
+      }),
+      this.targetUser.id,
     )
+    let members = FriendListFileHandle.readGroupMemberList(this.targetUser.id)
+    for (let member in members) {
+      SMessageService.exitSession(members[member].id, this.targetUser.id)
+    }
+    MessageDataHandle.delMessage({
+      userId: this.user.userId, //当前登录账户的id
+      talkId: this.targetUser.id, //会话ID
+    })
+    FriendListFileHandle.delFromGroupList(this.targetUser.id)
   }
 
   render() {
@@ -92,6 +127,7 @@ class ManageGroup extends Component {
         }}
       >
         {this.renderLeaveDialog()}
+        {this.renderDisbandDialog()}
         {this.renderSettings()}
       </Container>
     )
@@ -110,18 +146,22 @@ class ManageGroup extends Component {
     )
   }
 
+  renderDisbandDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.disbandDialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
+        confirmAction={this._disbandGroup}
+        info={getLanguage(this.language).Friends.DEL_GROUP_CONFIRM2}
+      />
+    )
+  }
+
   renderSettings = () => {
     return (
       <ScrollView>
-        {/* {好友列表} */}
-        <FlatList
-          style={{
-            top: scaleSize(10),
-          }}
-          data={this.state.contacts}
-          renderItem={this._renderMember}
-          keyExtractor={(item, index) => index.toString()}
-        />
         <TouchableItemView
           item={{
             //发消息
@@ -144,10 +184,26 @@ class ManageGroup extends Component {
                 .groupName,
               headerTitle: getLanguage(this.language).Friends.SET_GROUPNAME,
               cb: value => {
-                FriendListFileHandle.modifyGroupList(this.targetUser.id, value)
-                this.chat && this.chat.onFriendListChanged()
+                this._modifyGroupName(value)
                 NavigationService.goBack('InputPage')
               },
+            })
+          }}
+        />
+        <TouchableItemView
+          item={{
+            //查看群员
+            // image: getThemeAssets().friend.friend_edit,
+            text: getLanguage(this.language).Friends.LIST_MEMBERS,
+          }}
+          onPress={() => {
+            NavigationService.navigate('GroupMemberList', {
+              user: this.user,
+              friend: this.friend,
+              language: this.language,
+              groupID: this.targetUser.id,
+              mode: 'view',
+              cb: () => {},
             })
           }}
         />
@@ -163,21 +219,46 @@ class ManageGroup extends Component {
               friend: this.friend,
               language: this.language,
               groupID: this.targetUser.id,
-              cb: () => {
-                this.setState({ contacts: this.getGroupMembers() })
-              },
+              cb: () => {},
             })
           }}
         />
-        {/* {退出群聊} */}
+        {this.user.userId === this.masterID ? (
+          <TouchableItemView
+            item={{
+              //移除群员
+              // image: getThemeAssets().friend.friend_edit,
+              text: getLanguage(this.language).Friends.DELETE_MEMBER,
+            }}
+            onPress={() => {
+              NavigationService.navigate('GroupMemberList', {
+                user: this.user,
+                friend: this.friend,
+                language: this.language,
+                groupID: this.targetUser.id,
+                mode: 'select',
+                cb: members => {
+                  this.friend.removeGroupMember(this.targetUser.id, members)
+                },
+              })
+            }}
+          />
+        ) : null}
+        {/* {退出或解散群聊} */}
         <TouchableOpacity
           style={{ alignItems: 'center', paddingVertical: scaleSize(20) }}
           onPress={() => {
-            this.leaveDialog.setDialogVisible(true)
+            if (this.user.userId === this.masterID) {
+              this.disbandDialog.setDialogVisible(true)
+            } else {
+              this.leaveDialog.setDialogVisible(true)
+            }
           }}
         >
           <Text style={{ color: 'red', fontSize: scaleSize(26) }}>
-            {getLanguage(this.language).Friends.LEAVE_GROUP}
+            {this.user.userId === this.masterID
+              ? getLanguage(this.language).Friends.DISBAND_GROUP
+              : getLanguage(this.language).Friends.LEAVE_GROUP}
           </Text>
         </TouchableOpacity>
       </ScrollView>

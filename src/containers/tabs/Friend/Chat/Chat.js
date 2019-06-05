@@ -16,6 +16,7 @@ import {
   Bubble,
   MessageText,
   SystemMessage,
+  InputToolbar,
 } from 'react-native-gifted-chat'
 import Container from '../../../../components/Container'
 import { Dialog } from '../../../../components'
@@ -156,9 +157,10 @@ class Chat extends React.Component {
     }
   }
   //将redux中取出消息转为chat消息
-  _loadChatMsg(message) {
+  _loadChatMsg = message => {
     let msgStr = JSON.stringify(message)
     let msg = JSON.parse(msgStr)
+    msg = this.friend.loadMsg(msg)
     let chatMsg = {
       _id: msg.msgId,
       createdAt: new Date(msg.originMsg.time),
@@ -463,29 +465,36 @@ class Chat extends React.Component {
             title: this.state.title,
             withoutBack: false,
             navigation: this.props.navigation,
-            headerRight: (
-              <TouchableOpacity
-                onPress={() => {
-                  let route = this.isGroupChat()
-                    ? 'ManageGroup'
-                    : 'ManageFriend'
-                  NavigationService.navigate(route, {
-                    user: this.curUser,
-                    targetUser: this.targetUser,
-                    friend: this.friend,
-                    language: global.language,
-                    chat: this,
-                  })
-                }}
-                style={styles.moreView}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  source={moreImg}
-                  style={styles.moreImg}
-                />
-              </TouchableOpacity>
-            ),
+            headerRight:
+              this.targetUser.id.indexOf('Group_') === -1 ||
+              FriendListFileHandle.isInGroup(
+                this.targetUser.id,
+                this.curUser.userId,
+              ) ? (
+                /* eslint-disable*/
+                <TouchableOpacity
+                  onPress={() => {
+                    let route = this.isGroupChat()
+                      ? 'ManageGroup'
+                      : 'ManageFriend'
+                    NavigationService.navigate(route, {
+                      user: this.curUser,
+                      targetUser: this.targetUser,
+                      friend: this.friend,
+                      language: global.language,
+                      chat: this,
+                    })
+                  }}
+                  style={styles.moreView}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    source={moreImg}
+                    style={styles.moreImg}
+                  />
+                </TouchableOpacity>
+              ) : null,
+            /* eslint-enable */
           }}
         >
           {this.state.showInformSpot ? (
@@ -517,6 +526,19 @@ class Chat extends React.Component {
               name: this.curUser.nickname,
             }}
             renderActions={this.renderCustomActions}
+            //被移出群组后不显示输入栏
+            renderInputToolbar={props => {
+              if (
+                this.targetUser.id.indexOf('Group_') === -1 ||
+                FriendListFileHandle.isInGroup(
+                  this.targetUser.id,
+                  this.curUser.userId,
+                )
+              ) {
+                return <InputToolbar {...props} />
+              }
+              return null
+            }}
             renderBubble={this.renderBubble}
             renderTicks={this.renderTicks}
             renderSystemMessage={this.renderSystemMessage}

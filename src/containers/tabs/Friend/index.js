@@ -8,6 +8,7 @@ import ManageGroup from './Chat/ManageGroup'
 import AddFriend from './AddFriend'
 import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
+import GroupMemberList from './FriendGroup/GroupMemberList'
 import RecommendFriend from './RecommendFriend'
 
 import { connect } from 'react-redux'
@@ -39,4 +40,5 @@ export {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  GroupMemberList,
 }
