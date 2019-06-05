@@ -124,8 +124,8 @@ export default StyleSheet.create({
   },
   backBtn: {
     position: 'absolute',
-    top: scaleSize(30) + (Platform.OS === 'ios' ? 20 : 0),
-    left: scaleSize(30),
+    top: scaleSize(9) + (Platform.OS === 'ios' ? 20 : 0),
+    left: scaleSize(10),
     width: 60,
     padding: 5,
     justifyContent: 'center',

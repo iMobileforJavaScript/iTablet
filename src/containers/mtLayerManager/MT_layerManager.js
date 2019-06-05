@@ -17,7 +17,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
-import { SMap, ThemeType } from 'imobile_for_reactnative'
+import { SMap, ThemeType, SMediaCollector } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import {
   ConstToolType,
@@ -35,7 +35,7 @@ import {
 } from '../../assets'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
-import { getLanguage } from '../../language/index'
+import { getLanguage } from '../../language'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -498,6 +498,14 @@ export default class MT_layerManager extends React.Component {
         }
       }
     SMap.setLayerVisible(data.path, value)
+
+    if (value) {
+      // 显示多媒体callouts
+      SMediaCollector.showMedia(data.name)
+    } else {
+      // 隐藏多媒体callouts
+      SMediaCollector.hideMedia(data.name)
+    }
   }
 
   setLoading = (loading = false, info, extra) => {

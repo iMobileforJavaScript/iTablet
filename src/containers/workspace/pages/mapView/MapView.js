@@ -284,7 +284,7 @@ export default class MapView extends React.Component {
     SMediaCollector.removeListener()
 
     // 移除多媒体采集Callout
-    SMediaCollector.hideMedia()
+    SMediaCollector.removeMedia()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }
