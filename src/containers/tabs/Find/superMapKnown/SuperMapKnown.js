@@ -44,6 +44,9 @@ export default class SuperMapKnown extends Component {
           // return responseJson.movies;
           let result = responseJson
           this.setState({ data: result })
+          if (this.props.navigation.state.params.callback != null) {
+            this.props.navigation.state.params.callback()
+          }
         })
         .catch(() => {})
       //   console.log(result)

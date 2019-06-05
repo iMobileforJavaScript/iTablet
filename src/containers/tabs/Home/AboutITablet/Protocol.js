@@ -117,7 +117,7 @@ export default class protocol extends Component {
         break
       case 'superMapForum':
         source = {
-          uri: `https://ask.supermap.com/`,
+          uri: `http://ask.supermap.com/`,
         }
         title = getLanguage(global.language).Prompt.SUPERMAP_FORUM
         //'超图论坛'

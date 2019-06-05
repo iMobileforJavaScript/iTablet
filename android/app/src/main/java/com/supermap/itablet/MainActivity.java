@@ -18,6 +18,7 @@ import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
 import com.supermap.data.LicenseStatus;
 import com.supermap.file.Utils;
+import com.supermap.smNative.collector.SMCollector;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -53,6 +54,8 @@ public class MainActivity extends ReactActivity {
         FileTools.getUriState(this);
 
 
+
+        SMCollector.openGPS(this);
         //注册网络状态监听广播
         RNFSManager.NetWorkChangReceiver netWorkChangReceiver = new RNFSManager.NetWorkChangReceiver();
         IntentFilter filter = new IntentFilter();
