@@ -118,6 +118,9 @@ export default class SecondMapSettings extends Component {
       case '复制坐标系':
         data = copyCoordinate()
         break
+      case '从数据源':
+        data = await this.getDatasources()
+        break
     }
     this.setState({
       data,
@@ -126,6 +129,16 @@ export default class SecondMapSettings extends Component {
     })
   }
 
+  getDatasources = async () => {
+    let datas = []
+    let datasources = await SMap.getDatasources()
+    datasources.map(item => {
+      let obj = {}
+      obj.title = item.alias
+      ;(obj.server = item.server), (obj.iconType = 'text'), datas.push(obj)
+    })
+    return datas
+  }
   //基础设置数据
   getBasicData = async () => {
     let data, angle, bgColor
@@ -267,8 +280,11 @@ export default class SecondMapSettings extends Component {
     })
   }
 
+  //text item 点击事件
+  // onTextItemPress = item => {
+  // }
   //arrow item点击事件
-  onItemPress = ({ title, index }) => {
+  onArrowItemPress = ({ title, index }) => {
     let data = this.state.data.concat()
     switch (title) {
       case getLanguage(GLOBAL.language).Map_Settings.ROTATION_ANGLE:
@@ -352,6 +368,9 @@ export default class SecondMapSettings extends Component {
         })
         break
       case '复制坐标系':
+      case '从数据源':
+      case '从数据集':
+      case '从文件':
         this.props.navigation.navigate('SecondMapSettings', {
           title,
         })
@@ -531,7 +550,7 @@ export default class SecondMapSettings extends Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.onItemPress({ title: item.title, index })}
+          onPress={() => this.onArrowItemPress({ title: item.title, index })}
         >
           <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
@@ -563,12 +582,16 @@ export default class SecondMapSettings extends Component {
   //渲染普通text行
   renderTextItem = item => {
     return (
-      <View>
+      <TouchableOpacity
+        onPress={() => {
+          this.onTextItemPress(item)
+        }}
+      >
         <View style={styles.row}>
           <Text style={styles.itemName}>{item.title}</Text>
         </View>
         {this.renderLine()}
-      </View>
+      </TouchableOpacity>
     )
   }
 

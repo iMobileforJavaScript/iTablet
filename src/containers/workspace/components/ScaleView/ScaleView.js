@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { Animated, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
@@ -18,6 +18,7 @@ export default class ScaleView extends React.Component {
 
   constructor(props) {
     super(props)
+    this.left = new Animated.Value(scaleSize(120))
     this.state = {
       width: 0,
       title: '',
@@ -37,6 +38,18 @@ export default class ScaleView extends React.Component {
     }
   }
 
+  showFullMap = () => {
+    Animated.timing(this.left, {
+      toValue: scaleSize(30),
+      duration: 300,
+    }).start()
+  }
+  exitFullMap = () => {
+    Animated.timing(this.left, {
+      toValue: scaleSize(120),
+      duration: 300,
+    }).start()
+  }
   getInitialData = async () => {
     let data = await SMap.getScaleData()
     await this.scaleViewChange(data)
@@ -60,13 +73,13 @@ export default class ScaleView extends React.Component {
   }
   render() {
     let textWidth =
-      this.state.width > scaleSize(50) ? this.state.width : scaleSize(50)
+      this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
     if (!this.state.isShow) return <View />
     return (
-      <View
+      <Animated.View
         style={{
           position: 'absolute',
-          left: scaleSize(120),
+          left: this.left,
           bottom: scaleSize(120),
           width: scaleSize(150),
           height: scaleSize(40),
@@ -80,7 +93,7 @@ export default class ScaleView extends React.Component {
           <Text
             style={{
               width: textWidth,
-              textAlign: 'center',
+              textAlign: 'left',
               position: 'absolute',
               left: 0,
               bottom: 0,
@@ -94,7 +107,7 @@ export default class ScaleView extends React.Component {
           <Text
             style={{
               width: textWidth,
-              textAlign: 'center',
+              textAlign: 'left',
               position: 'absolute',
               left: 0.5,
               letterSpacing: scaleSize(1),
@@ -142,7 +155,7 @@ export default class ScaleView extends React.Component {
             }}
           />
         </View>
-      </View>
+      </Animated.View>
     )
   }
 }

@@ -419,7 +419,7 @@ export default class TouchProgress extends Component {
         }
       }
       if (this.props.selectName === '列数') {
-        let columnnumber = value !== undefined ? value : 2
+        let columnnumber = GLOBAL.legend.state.columns
         this._panBtnStyles.style.left =
           (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
         this._previousLeft = (columnnumber * 10 * progressWidth) / 40
@@ -429,7 +429,7 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(columnnumber)
       } else if (this.props.selectName === '宽度') {
-        let width = value !== undefined ? value : 50
+        let width = GLOBAL.legend.state.widthPercent
         this._panBtnStyles.style.left =
           (width * progressWidth) / 100 + panBtnDevLeft
         this._previousLeft = (width * progressWidth) / 100
@@ -439,7 +439,7 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(width)
       } else if (this.props.selectName === '高度') {
-        let height = value !== undefined ? value : 50
+        let height = GLOBAL.legend.state.heightPercent
         this._panBtnStyles.style.left =
           (height * progressWidth) / 100 + panBtnDevLeft
         this._previousLeft = (height * progressWidth) / 100
@@ -583,7 +583,7 @@ export default class TouchProgress extends Component {
 
     if (newValue === undefined) {
       if (this.props.selectName === '列数') {
-        newValue = value * 40
+        newValue = value * 100
       } else if (this.props.selectName === '宽度') {
         newValue = value * 100
       } else if (this.props.selectName === '高度') {
@@ -835,19 +835,25 @@ export default class TouchProgress extends Component {
         }
       }
       if (this.props.selectName === '列数') {
-        if (value > 40) {
-          value = 40
+        let columns = GLOBAL.legend.state.columns
+        if (value <= 25) {
+          columns = 1
+        } else if (value <= 50) {
+          columns = 2
+        } else if (value <= 75) {
+          columns = 3
+        } else {
+          columns = 4
         }
-        let newvalue = Math.ceil(value / 10)
         let flatListKey = GLOBAL.legend.state.flatListKey + 1
         GLOBAL.legend.setState({
-          columns: newvalue,
+          columns,
           flatListKey,
         })
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
-          parseInt(newvalue)
+          parseInt(columns)
       } else if (this.props.selectName === '宽度') {
         if (value > 100) {
           value = 100
@@ -1079,19 +1085,25 @@ export default class TouchProgress extends Component {
         }
       }
       if (this.props.selectName === '列数') {
-        if (value > 40) {
-          value = 40
+        let columns = GLOBAL.legend.state.columns
+        if (value <= 25) {
+          columns = 1
+        } else if (value <= 50) {
+          columns = 2
+        } else if (value <= 75) {
+          columns = 3
+        } else {
+          columns = 4
         }
-        let newvalue = Math.ceil(value / 10)
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
-          parseInt(newvalue)
+          parseInt(columns)
       } else if (this.props.selectName === '宽度') {
         if (value > 100) {
           value = 100
-        } else if (value <= 10) {
-          value = 10
+        } else if (value <= 20) {
+          value = 20
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
@@ -1100,8 +1112,8 @@ export default class TouchProgress extends Component {
       } else if (this.props.selectName === '高度') {
         if (value > 100) {
           value = 100
-        } else if (value <= 10) {
-          value = 10
+        } else if (value <= 20) {
+          value = 20
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +

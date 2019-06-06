@@ -20,8 +20,10 @@ function touchCallback(event) {
     case ConstToolType.NORMAL:
       if (isfull) {
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        GLOBAL.scaleView && GLOBAL.scaleView.showFullMap()
       } else {
         GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
+        GLOBAL.scaleView && GLOBAL.scaleView.exitFullMap()
       }
       isfull = !isfull
       break
