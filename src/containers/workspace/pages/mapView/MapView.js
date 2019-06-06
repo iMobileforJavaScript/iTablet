@@ -285,7 +285,7 @@ export default class MapView extends React.Component {
     SMediaCollector.removeListener()
 
     // 移除多媒体采集Callout
-    SMediaCollector.removeMedia()
+    SMediaCollector.removeMedias()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }
@@ -922,6 +922,16 @@ export default class MapView extends React.Component {
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
+        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
+          dataList => {
+            dataList.forEach(item => {
+              if (item.isVisible) {
+                SMediaCollector.showMedia(item.name)
+              }
+            })
+          },
+        )
         // 获取图层列表
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },

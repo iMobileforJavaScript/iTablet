@@ -43,10 +43,10 @@ public class AppUtils extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void  getCurrentLocation( Promise promise){
+    public void  getCurrentLocation(ReadableMap map,  Promise promise){
         try {
-            Map params = map.toHashMap();
-            Boolean result=appManager.getAppManager().sendFileOfWechat(params);
+//            Map params = map.toHashMap();
+//            Boolean result=appManager.getAppManager().sendFileOfWechat(params);
             promise.resolve(false);
         }catch (Exception e){
             promise.reject(e);
