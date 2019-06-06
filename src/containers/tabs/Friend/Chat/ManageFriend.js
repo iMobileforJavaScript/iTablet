@@ -5,7 +5,7 @@ import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
 import TouchableItemView from '../TouchableItemView'
 import { getThemeAssets } from '../../../../assets'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, Toast } from '../../../../utils'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from '../MessageDataHandle'
 // import MsgConstant from '../MsgConstant'
@@ -20,8 +20,9 @@ class ManageFriend extends Component {
     super(props)
     this.friend = this.props.navigation.getParam('friend')
     this.user = this.props.navigation.getParam('user')
-    this.targetUser = this.props.navigation.getParam('targetUser')
-    this.language = this.props.navigation.getParam('language')
+    this.targetId = this.props.navigation.getParam('targetId')
+    this.targetUser = this.friend.getTargetUser(this.targetId)
+    this.language = global.language
     this.chat = this.props.navigation.getParam('chat')
     this.state = {
       contacts: [],
@@ -89,7 +90,15 @@ class ManageFriend extends Component {
             text: getLanguage(this.language).Friends.SEND_MESSAGE,
           }}
           onPress={() => {
-            NavigationService.goBack('ManageFriend')
+            if (this.chat) {
+              NavigationService.goBack('ManageFriend')
+            } else {
+              this.props.navigation.navigate('Chat', {
+                targetId: this.targetId,
+                curUser: this.user,
+                friend: this.friend,
+              })
+            }
           }}
         />
         <TouchableItemView
@@ -104,6 +113,20 @@ class ManageFriend extends Component {
                 .markName,
               headerTitle: getLanguage(this.language).Friends.SET_MARKNAME,
               cb: value => {
+                let len = 0
+                for (var i = 0; i < value.length; i++) {
+                  if (value.charCodeAt(i) > 127 || value.charCodeAt(i) == 94) {
+                    len += 2
+                  } else {
+                    len++
+                  }
+                }
+                if (len > 40) {
+                  Toast.show(
+                    getLanguage(this.language).Friends.EXCEED_NAME_LIMIT,
+                  )
+                  return
+                }
                 FriendListFileHandle.modifyFriendList(this.targetUser.id, value)
                 this.chat && this.chat.onFriendListChanged()
                 NavigationService.goBack('InputPage')

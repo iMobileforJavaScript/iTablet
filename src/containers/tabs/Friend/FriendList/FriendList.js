@@ -146,29 +146,8 @@ class FriendList extends Component {
   }
 
   _onFriendSelect = key => {
-    let friend = {
-      id: key.id,
-      users: [key.markName],
-      message: [],
-      title: key.markName,
-    }
-
-    let chatObj = {}
-    if (this.props.friend.props.chat.hasOwnProperty(this.props.user.userId)) {
-      let chats = this.props.friend.props.chat[this.props.user.userId]
-      if (chats.hasOwnProperty(key.id)) {
-        chatObj = chats[key.id].history
-        friend = {
-          id: key.id,
-          users: [key.markName],
-          message: chatObj,
-          title: key.markName,
-        }
-      }
-    }
-
     NavigationService.navigate('Chat', {
-      target: friend,
+      targetId: key.id,
       curUser: this.props.user,
       friend: this.props.friend,
     })

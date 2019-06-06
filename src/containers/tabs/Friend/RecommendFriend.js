@@ -20,6 +20,7 @@ import Contacts from 'react-native-contacts'
 import { Toast } from '../../../utils'
 import FriendListFileHandle from './FriendListFileHandle'
 import MsgConstant from './MsgConstant'
+import NavigationService from '../../NavigationService'
 
 class RecommendFriend extends Component {
   props: {
@@ -154,16 +155,6 @@ class RecommendFriend extends Component {
   async addFriendRequest() {
     this.dialog.setDialogVisible(false)
 
-    if (this.target.id == this.user.userId) {
-      Toast.show(getLanguage(this.language).Friends.ADD_SELF)
-      return
-    }
-
-    if (FriendListFileHandle.isFriend(this.target.id)) {
-      Toast.show(getLanguage(this.language).Friends.ALREADY_FRIEND)
-      return
-    }
-
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
@@ -220,7 +211,19 @@ class RecommendFriend extends Component {
           activeOpacity={0.75}
           onPress={() => {
             this.target = item //[id,name]
-            this.dialog.setDialogVisible(true)
+            if (this.target.id == this.user.userId) {
+              Toast.show(getLanguage(this.language).Friends.ADD_SELF)
+              return
+            }
+            if (FriendListFileHandle.isFriend(this.target.id)) {
+              NavigationService.navigate('ManageFriend', {
+                targetId: this.target.id,
+                user: this.user,
+                friend: this.friend,
+              })
+            } else {
+              this.dialog.setDialogVisible(true)
+            }
           }}
         >
           <View style={[styles.ItemHeadViewStyle, { opacity: 1 }]}>

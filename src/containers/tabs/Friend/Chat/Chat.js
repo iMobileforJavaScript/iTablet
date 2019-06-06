@@ -47,8 +47,9 @@ class Chat extends React.Component {
   constructor(props) {
     super(props)
     this.friend = this.props.navigation.getParam('friend')
-    this.targetUser = this.props.navigation.getParam('target')
     this.curUser = this.props.navigation.getParam('curUser')
+    this.targetId = this.props.navigation.getParam('targetId')
+    this.targetUser = this.friend.getTargetUser(this.targetId)
     this.friend.setCurChat(this)
     this._isMounted = false
 
@@ -479,9 +480,8 @@ class Chat extends React.Component {
                       : 'ManageFriend'
                     NavigationService.navigate(route, {
                       user: this.curUser,
-                      targetUser: this.targetUser,
+                      targetId: this.targetId,
                       friend: this.friend,
-                      language: global.language,
                       chat: this,
                     })
                   }}
@@ -828,7 +828,7 @@ class Chat extends React.Component {
 const styles = StyleSheet.create({
   moreView: {
     flex: 1,
-    marginRight: scaleSize(10),
+    // marginRight: scaleSize(10),
   },
   moreImg: {
     width: scaleSize(60),

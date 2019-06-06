@@ -120,29 +120,8 @@ class FriendGroup extends Component {
   }
 
   _onSectionselect = key => {
-    let friend = {
-      id: key.id,
-      users: key.members,
-      message: [],
-      title: key.groupName,
-    }
-
-    let chatObj = {}
-    if (this.props.friend.props.chat.hasOwnProperty(this.props.user.userId)) {
-      let chats = this.props.friend.props.chat[this.props.user.userId]
-      if (chats.hasOwnProperty(key.id)) {
-        chatObj = chats[key.id].history
-        friend = {
-          id: key.id,
-          users: key.members,
-          message: chatObj,
-          title: key.groupName,
-        }
-      }
-    }
-
     NavigationService.navigate('Chat', {
-      target: friend,
+      targetId: key.id,
       curUser: this.props.user,
       friend: this.props.friend,
     })

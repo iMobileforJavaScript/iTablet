@@ -185,12 +185,42 @@ export default class Friend extends Component {
     }
   }
 
+  //构造chat页面等需要的targetUser对象
+  getTargetUser = targetId => {
+    let name = ''
+    if (targetId.indexOf('Group_') != -1) {
+      name = FriendListFileHandle.getGroup(targetId).groupName
+    } else {
+      name = FriendListFileHandle.getFriend(targetId).markName
+    }
+
+    let chatObj = {}
+    let friend = {
+      id: targetId,
+      message: chatObj,
+      title: name,
+    }
+
+    if (this.props.chat.hasOwnProperty(this.props.user.currentUser.userId)) {
+      let chats = this.props.chat[this.props.user.currentUser.userId]
+      if (chats.hasOwnProperty(targetId)) {
+        chatObj = chats[targetId].history
+        friend = {
+          id: targetId,
+          message: chatObj,
+          title: name,
+        }
+      }
+    }
+    return friend
+  }
+
   createGroupTalk = members => {
     let ctime = new Date()
     let time = Date.parse(ctime)
     let newMembers = JSON.parse(JSON.stringify(members))
 
-    members.push({
+    members.unshift({
       id: this.props.user.currentUser.userId,
       name: this.props.user.currentUser.nickname,
     })
@@ -199,8 +229,11 @@ export default class Friend extends Component {
     let groupName = ''
     for (let i in members) {
       if (i > 3) break
-      groupName += members[i].name
-      if (i !== members.length - 2) groupName += '、'
+      if (i === '0') {
+        groupName += members[i].name
+      } else {
+        groupName += '、' + members[i].name
+      }
     }
     FriendListFileHandle.addToGroupList({
       id: groupId,
@@ -229,6 +262,11 @@ export default class Friend extends Component {
     }
     let msgStr = JSON.stringify(msgObj)
     this._sendMessage(msgStr, groupId, false)
+    NavigationService.navigate('Chat', {
+      targetId: groupId,
+      curUser: this.props.user.currentUser,
+      friend: this,
+    })
   }
 
   addGroupMember = (groupId, members) => {
@@ -450,6 +488,12 @@ export default class Friend extends Component {
             memberStr +
             getLanguage(this.props.language).Friends.SYS_MSG_ADD_INTO_GROUP2
         }
+        break
+      case MSGConstant.MSG_MODIFY_GROUP_NAME:
+        text =
+          msg.originMsg.user.name +
+          getLanguage(this.props.language).Friends.SYS_MSG_MOD_GROUP_NAME +
+          msg.originMsg.message.name
         break
       default:
         break
@@ -722,6 +766,8 @@ export default class Friend extends Component {
           /*
            * 修改群名
            */
+          bSysStore = true
+          bSysShow = true
           FriendListFileHandle.modifyGroupList(
             messageObj.user.groupID,
             messageObj.message.name,
