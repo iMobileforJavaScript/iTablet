@@ -152,7 +152,7 @@ class CreateGroupChat extends Component {
     if (n !== -1) {
       seletctArr.splice(n, 1)
     } else {
-      seletctArr.push({ id: key.id, name: key.markName })
+      seletctArr.push({ id: key.id, name: key.name })
     }
 
     this.setState({ seletctArr })
@@ -235,9 +235,7 @@ class CreateGroupChat extends Component {
                       )
                       return
                     }
-                  }
-                  NavigationService.goBack()
-                  if (this.groupID) {
+                    NavigationService.goBack()
                     this.friend.addGroupMember(this.groupID, newMembers)
                     this.refreshListCallBack && this.refreshListCallBack()
                   } else {

@@ -133,9 +133,12 @@ const getThematicMapSettings = () => [
   {
     title: getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM_SETTING,
   },
-  {
-    title: getLanguage(global.language).Map_Settings.ADVANCED_SETTING,
-  },
+  //高级设置 暂时屏蔽
+  // {
+  //   title: getLanguage(global.language).Map_Settings.ADVANCED_SETTING,
+  // },
+]
+const getlegendSetting = () => [
   {
     title: getLanguage(global.language).Map_Settings.LEGEND_SETTING,
   },
@@ -261,12 +264,35 @@ const coordinateSystemSettings = () => [
     iconType: 'arrow',
   },
   {
+    title: '复制坐标系',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
     title: getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION,
-    value: true,
+    value: false,
     iconType: 'switch',
   },
   {
     title: getLanguage(global.language).Map_Settings.TRANSFER_PARAMS,
+    value: getLanguage(global.language).Map_Settings.OFF,
+    iconType: 'arrow',
+  },
+]
+const copyCoordinate = () => [
+  {
+    title: '从数据源',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: '从数据集',
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: '从文件',
+    value: '',
     iconType: 'arrow',
   },
 ]
@@ -349,56 +375,56 @@ const transferData = () => [
   },
 ]
 //高级设置
-const advancedSettings = () => [
-  {
-    title: getLanguage(global.language).Map_Settings.FLOW_VISIUALIZATION,
-    value: true,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_NEGATIVE_DATA,
-    value: true,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.AUTOMATIC_AVOIDANCE,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.ZOOM_WITH_MAP,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_TRACTION_LINE,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.GLOBAL_STATISTICS,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.CHART_ANNOTATION,
-    value: getLanguage(global.language).Map_Settings.PERCENT,
-    iconType: 'arrow',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_AXIS,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.HISTOGRAM_STYLE,
-    iconType: 'arrow',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.ROSE_AND_PIE_CHART_STYLE,
-    iconType: 'arrow',
-  },
-]
+// const advancedSettings = () => [
+//   {
+//     title: getLanguage(global.language).Map_Settings.FLOW_VISIUALIZATION,
+//     value: true,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_NEGATIVE_DATA,
+//     value: true,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.AUTOMATIC_AVOIDANCE,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.ZOOM_WITH_MAP,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_TRACTION_LINE,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.GLOBAL_STATISTICS,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.CHART_ANNOTATION,
+//     value: getLanguage(global.language).Map_Settings.PERCENT,
+//     iconType: 'arrow',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_AXIS,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.HISTOGRAM_STYLE,
+//     iconType: 'arrow',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.ROSE_AND_PIE_CHART_STYLE,
+//     iconType: 'arrow',
+//   },
+// ]
 
 // const histogramSettings = () => [
 //   {
@@ -447,12 +473,13 @@ const colorMode = () => [
 export {
   getMapSettings,
   getThematicMapSettings,
+  getlegendSetting,
   basicSettings,
   rangeSettings,
   coordinateSystemSettings,
   coordinateData,
-  advancedSettings,
-  // histogramSettings,
+  copyCoordinate,
+  // advancedSettings,
   colorMode,
   fourRanges,
   transferData,

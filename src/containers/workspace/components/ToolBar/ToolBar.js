@@ -2869,7 +2869,7 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (GLOBAL.smlegend.state.visible) {
+          if (GLOBAL.legend.state.visible) {
             buttons = [
               ToolbarBtnType.CANCEL,
               ToolbarBtnType.NOT_VISIBLE,
@@ -3209,7 +3209,7 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = GLOBAL.smlegend.state.visible
+    let type = GLOBAL.legend.state.visible
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3218,7 +3218,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    GLOBAL.smlegend.setState({
+    GLOBAL.legend.setState({
       visible: type === ConstToolType.LEGEND,
     })
   }
@@ -4282,7 +4282,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         SMap.addLegendDelegate({
-          legendContentChange: GLOBAL.smlegend._contentChange,
+          legendContentChange: GLOBAL.legend._contentChange,
         })
         if (mapInfo.Template) {
           this.props.setContainerLoading(
@@ -4760,7 +4760,7 @@ export default class ToolBar extends React.PureComponent {
         list = gridRangeMenuInfo
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      if (GLOBAL.smlegend.state.visible) {
+      if (GLOBAL.legend.state.visible) {
         list = legendMenuInfoNotVisible(this.props.language)
       } else {
         list = legendMenuInfo(this.props.language)

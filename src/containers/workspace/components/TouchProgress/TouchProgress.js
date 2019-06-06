@@ -839,12 +839,11 @@ export default class TouchProgress extends Component {
           value = 40
         }
         let newvalue = Math.ceil(value / 10)
-        if (Platform.OS === 'ios') {
-          let flatListKey = GLOBAL.smlegend.state.flatListKey + 1
-          GLOBAL.smlegend.setState({ columns: newvalue, flatListKey })
-        } else {
-          GLOBAL.legend.setState({ columns: newvalue })
-        }
+        let flatListKey = GLOBAL.legend.state.flatListKey + 1
+        GLOBAL.legend.setState({
+          columns: newvalue,
+          flatListKey,
+        })
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
@@ -852,14 +851,10 @@ export default class TouchProgress extends Component {
       } else if (this.props.selectName === '宽度') {
         if (value > 100) {
           value = 100
-        } else if (value <= 10) {
-          value = 10
+        } else if (value <= 20) {
+          value = 20
         }
-        if (Platform.OS === 'ios') {
-          GLOBAL.smlegend.setState({ width: value * 5 })
-        } else {
-          GLOBAL.legend.setState({ width: value })
-        }
+        GLOBAL.legend.setState({ widthPercent: value })
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
@@ -867,14 +862,10 @@ export default class TouchProgress extends Component {
       } else if (this.props.selectName === '高度') {
         if (value > 100) {
           value = 100
-        } else if (value <= 10) {
-          value = 10
+        } else if (value <= 20) {
+          value = 20
         }
-        if (Platform.OS === 'ios') {
-          GLOBAL.smlegend.setState({ height: value * 5 })
-        } else {
-          GLOBAL.legend.setState({ height: value })
-        }
+        GLOBAL.legend.setState({ heightPercent: value })
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
           '     ' +

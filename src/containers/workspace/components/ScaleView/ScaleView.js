@@ -18,7 +18,6 @@ export default class ScaleView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.initialWith = 80
     this.state = {
       width: 0,
       title: '',
@@ -60,40 +59,89 @@ export default class ScaleView extends React.Component {
     }
   }
   render() {
+    let textWidth =
+      this.state.width > scaleSize(50) ? this.state.width : scaleSize(50)
     if (!this.state.isShow) return <View />
     return (
       <View
         style={{
           position: 'absolute',
-          right: scaleSize(50),
+          left: scaleSize(120),
           bottom: scaleSize(120),
-          width: scaleSize(this.initialWith),
-          height: scaleSize(50),
+          width: scaleSize(150),
+          height: scaleSize(40),
         }}
       >
-        <Text
-          style={{
-            fontSize: setSpText(12),
-            height: '50%',
-            textAlign: 'left',
-            minWidth: scaleSize(60),
-            width: `${~~this.state.width}%`,
-          }}
-        >
-          {this.state.title}
-        </Text>
         <View
           style={{
-            height: scaleSize(16),
-            borderWidth: scaleSize(3),
-            width: `${~~this.state.width}%`,
-            borderTopColor: 'transparent',
-            borderTopWidth: 0,
-            borderBottomColor: color.black,
-            borderLeftColor: color.black,
-            borderRightColor: color.black,
+            width: this.state.width,
           }}
-        />
+        >
+          <Text
+            style={{
+              width: textWidth,
+              textAlign: 'center',
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              fontSize: setSpText(12),
+              color: color.white,
+              fontWeight: '900',
+            }}
+          >
+            {this.state.title}
+          </Text>
+          <Text
+            style={{
+              width: textWidth,
+              textAlign: 'center',
+              position: 'absolute',
+              left: 0.5,
+              letterSpacing: scaleSize(1),
+              bottom: 0.5,
+              fontSize: setSpText(12),
+            }}
+          >
+            {this.state.title}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+          }}
+        >
+          <View
+            style={{
+              width: 3,
+              height: 8,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderWidth: 1,
+              borderRightWidth: 0,
+            }}
+          />
+          <View
+            style={{
+              height: 4,
+              width: ~~this.state.width,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+            }}
+          />
+          <View
+            style={{
+              width: 3,
+              height: 8,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderWidth: 1,
+              borderLeftWidth: 0,
+            }}
+          />
+        </View>
       </View>
     )
   }

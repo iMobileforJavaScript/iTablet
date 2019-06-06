@@ -31,8 +31,10 @@ export default class RNLegendView extends React.Component {
       columns: props.device.orientation === 'LANDSCAPE' ? 4 : 2,
       backgroundColor: '#FFFFFF',
       title: getLanguage(this.props.language).Map_Settings.THEME_LEGEND,
-      width: 450,
-      height: 325,
+      width: 560,
+      height: 410,
+      widthPercent: 80,
+      heightPercent: 80,
       currentPosition: 'topLeft',
       topLeft: { left: 0, top: HEADER_HEIGHT },
       topRight: { right: 0, top: HEADER_HEIGHT },
@@ -43,7 +45,6 @@ export default class RNLegendView extends React.Component {
       visible: true,
     }
   }
-
   componentDidUpdate(prevProps) {
     if (this.props.device.orientation !== prevProps.device.orientation) {
       this.setState({
@@ -157,8 +158,10 @@ export default class RNLegendView extends React.Component {
       <View
         style={{
           position: 'absolute',
-          width: scaleSize(this.state.width),
-          height: scaleSize(this.state.height),
+          width: scaleSize((this.state.width * this.state.widthPercent) / 100),
+          height: scaleSize(
+            (this.state.height * this.state.heightPercent) / 100,
+          ),
           borderColor: 'black',
           borderWidth: scaleSize(3),
           paddingRight: scaleSize(5),
