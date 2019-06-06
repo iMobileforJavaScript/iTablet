@@ -114,7 +114,7 @@ export default StyleSheet.create({
     position: 'absolute',
     zIndex: -1,
     left: scaleSize(80),
-    right: scaleSize(60),
+    right: scaleSize(80),
     alignItems: 'center',
     justifyContent: 'center',
   },

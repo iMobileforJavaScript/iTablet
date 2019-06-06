@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity, Text, Image, View } from 'react-native'
+import { TouchableOpacity, Text, Image, View, Platform } from 'react-native'
 import { getPublicAssets } from '../../assets'
 import styles from './styles'
 
@@ -90,6 +90,16 @@ export default class MediaItem extends React.Component {
   }
 
   render = () => {
+    let image
+    if (this.props.data === '+') {
+      image = require('../../assets/public/icon-plus.png')
+    } else {
+      let imgPath =
+        (Platform.OS === 'android' ? 'file://' : '') +
+        (this.props.data.path || this.props.data.uri)
+      image = { uri: imgPath }
+    }
+
     return (
       <View
         style={
@@ -103,16 +113,7 @@ export default class MediaItem extends React.Component {
           onLongPress={this._onLongPress}
           delayPressIn={1000}
         >
-          <Image
-            style={styles.image}
-            resizeMode={'cover'}
-            source={
-              this.props.data === '+'
-                ? require('../../assets/public/icon-plus.png')
-                : { uri: this.props.data.path || this.props.data.uri }
-              // : { uri: item }
-            }
-          />
+          <Image style={styles.image} resizeMode={'cover'} source={image} />
           {this.props.data.duration >= 0 &&
             this.props.data.type === 'video' &&
             this.renderDuration(this.props.data.duration)}

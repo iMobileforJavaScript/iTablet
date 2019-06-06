@@ -47,10 +47,8 @@ public class AppUtils extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void  getCurrentLocation( Promise promise){
+    public void  getCurrentLocation(Promise promise){
         try {
-//            Map params = map.toHashMap();
-//            Boolean result=appManager.getAppManager().sendFileOfWechat(params);
             LocationManagePlugin.GPSData data = SMCollector.getGPSPoint();
             WritableMap map = Arguments.createMap();
             map.putDouble ("longitude", data.dLongitude);

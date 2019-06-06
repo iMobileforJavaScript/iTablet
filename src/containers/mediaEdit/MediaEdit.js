@@ -66,14 +66,23 @@ export default class MediaEdit extends React.Component {
     let paths = []
     for (let item of mediaPaths) {
       const type = checkType.getMediaTypeByPath(item)
-      let info
+      let info,
+        path = item
       if (type === 'video') {
-        let path = item.replace('file://', '')
+        if (item.indexOf('file://') === 0) {
+          path = item.replace('file://', '')
+          // item = path
+        } else if (item.indexOf('/iTablet') === 0) {
+          path = await FileTools.appendingHomeDirectory(item)
+        }
         info = await SMediaCollector.getVideoInfo(path)
+      } else if (item.indexOf('/iTablet') === 0) {
+        // 判断是否是已存的图片
+        path = await FileTools.appendingHomeDirectory(item)
       }
       paths.push({
         ...info,
-        uri: item,
+        uri: path,
         type,
       })
     }
@@ -142,10 +151,19 @@ export default class MediaEdit extends React.Component {
     let mediaFilePaths = [...this.state.mediaFilePaths]
 
     images.forEach(item => {
+      let path
       if (typeof item === 'string') {
-        mediaFilePaths.push(item)
+        path = item
+        if (item.indexOf('file://') === 0) {
+          path = item.replace('file://', '')
+        }
+        mediaFilePaths.push(path)
       } else {
-        mediaFilePaths.push(item.path)
+        path = item.path
+        if (path.indexOf('file://') === 0) {
+          path = path.replace('file://', '')
+        }
+        mediaFilePaths.push(path)
       }
     })
     mediaFilePaths = [...new Set(mediaFilePaths)]

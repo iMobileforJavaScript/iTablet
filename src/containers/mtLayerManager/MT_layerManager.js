@@ -248,6 +248,12 @@ export default class MT_layerManager extends React.Component {
     let dataList = await SMap.getTaggingLayers(
       this.props.user.currentUser.userName,
     )
+    for (let item of dataList) {
+      if (item.isVisible) {
+        // 显示多媒体callouts
+        SMediaCollector.showMedia(item.name)
+      }
+    }
     let data = [...this.state.data]
     data[0] = {
       title: getLanguage(this.props.language).Map_Layer.PLOTS,

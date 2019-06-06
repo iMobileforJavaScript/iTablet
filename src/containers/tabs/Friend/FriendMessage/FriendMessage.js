@@ -155,7 +155,7 @@ class FriendMessage extends Component {
   _onSectionselect = item => {
     this.target = item
     NavigationService.navigate('Chat', {
-      target: item,
+      targetId: item.id,
       curUser: this.props.user,
       friend: this.props.friend,
     })
