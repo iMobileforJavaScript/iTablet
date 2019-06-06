@@ -97,11 +97,12 @@ class RecommendFriend extends Component {
         )
         for (let i = 0, len = contacts.length; i < len; i++) {
           let item = contacts[i]
-          if (item.phoneNumbers.length > 0) {
+          if (item.phoneNumbers.length > 0 || item.emailAddresses.length > 0) {
             await this.search({
               familyName: item.familyName,
               givenName: item.givenName,
               phoneNumbers: item.phoneNumbers,
+              emails: item.emailAddresses,
             })
             if (this.exit) {
               GLOBAL.Loading.setLoading(false)
@@ -118,8 +119,7 @@ class RecommendFriend extends Component {
   }
 
   async search(val) {
-    let i = 0
-    for (i; i < val.phoneNumbers.length; i++) {
+    for (let i = 0; i < val.phoneNumbers.length; i++) {
       if (!val.phoneNumbers[i]) {
         break
       }
@@ -134,6 +134,24 @@ class RecommendFriend extends Component {
           familyName: val.familyName,
           givenName: val.givenName,
           phoneNumbers: val.phoneNumbers[i],
+          id: result[0],
+          name: result[1],
+        })
+        this.setState({
+          contacts: this.state.contacts.map(item => {
+            return item
+          }),
+        })
+      }
+    }
+    for (let i = 0; i < val.emails.length; i++) {
+      let result = await SOnlineService.getUserInfoBy(val.emails[i].email, 0)
+      if (result !== false && result !== '获取用户id失败') {
+        let array = this.state.contacts
+        array.push({
+          familyName: val.familyName,
+          givenName: val.givenName,
+          email: val.emails[i].email,
           id: result[0],
           name: result[1],
         })
@@ -241,7 +259,7 @@ class RecommendFriend extends Component {
                 {item.givenName === null ? '' : item.givenName}
               </Text>
               <Text style={styles.ItemSubTextStyle}>
-                {item.phoneNumbers.number}
+                {item.phoneNumbers ? item.phoneNumbers.number : item.email}
               </Text>
             </View>
           </View>
