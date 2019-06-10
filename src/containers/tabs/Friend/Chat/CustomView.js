@@ -88,20 +88,17 @@ export default class CustomView extends React.Component {
     /*
      * 定位消息
      */
-    if (
-      this.props.currentMessage.type &&
-      this.props.currentMessage.type === MSGConstant.MSG_LOCATION
-    ) {
-      let text =
-        'LOCATION(' +
-        this.props.currentMessage.originMsg.message.message.longitude.toFixed(
-          6,
-        ) +
-        ',' +
-        this.props.currentMessage.originMsg.message.message.latitude.toFixed(
-          6,
-        ) +
-        ')'
+    if (this.props.currentMessage.type === MSGConstant.MSG_LOCATION) {
+      let text = this.props.currentMessage.originMsg.message.message.message
+      // 'LOCATION(' +
+      // this.props.currentMessage.originMsg.message.message.longitude.toFixed(
+      //   6,
+      // ) +
+      // ',' +
+      // this.props.currentMessage.originMsg.message.message.latitude.toFixed(
+      //   6,
+      // ) +
+      // ')'
       let textColor = 'white'
       if (this.props.position === 'left') {
         textColor = 'black'
@@ -126,22 +123,30 @@ export default class CustomView extends React.Component {
             })
           }}
         >
-          <Image
-            source={require('../../../../assets/lightTheme/friend/app_chat_pin.png')}
+          <View
             style={{
-              width: scaleSize(45),
-              height: scaleSize(45),
-            }}
-          />
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: scaleSize(20),
-              color: textColor,
+              width: scaleSize(340),
+              padding: scaleSize(5),
+              alignItems: 'center',
             }}
           >
-            {text}
-          </Text>
+            <Image
+              source={require('../../../../assets/lightTheme/friend/app_chat_pin.png')}
+              style={{
+                width: scaleSize(45),
+                height: scaleSize(45),
+              }}
+            />
+            <Text
+              style={{
+                // textAlign: 'center',
+                fontSize: scaleSize(20),
+                color: textColor,
+              }}
+            >
+              {text}
+            </Text>
+          </View>
         </TouchableOpacity>
       )
     }
@@ -170,7 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
   fileContainer: {
     // backgroundColor: 'white',
