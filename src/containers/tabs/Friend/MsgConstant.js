@@ -1,5 +1,5 @@
 export default {
-  // MSG_IP: '192.168.0.107',
+  // MSG_IP: '192.168.0.104',
   // MSG_Port: 5672,
   // MSG_HostName: '/',
   // MSG_UserName: 'androidtest',
@@ -18,6 +18,7 @@ export default {
   MSG_REMOVE_MEMBER: 913, //退出群
   MSG_DISBAND_GROUP: 914, //解散群
   MSG_REJECT: 920, //拒收
+  MSG_LOGOUT: 999, //下线
   //message中的message的type
   MSG_TEXT: 1,
   MSG_PICTURE: 2,

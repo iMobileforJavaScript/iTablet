@@ -93,5 +93,6 @@ const Friends = {
   SYS_FRIEND_ALREADY_IN_GROUP: 'Friends selected already in group',
   EXCEED_NAME_LIMIT: 'Name should be within 40 words (Chinese within 20 words)',
   SYS_MSG_MOD_GROUP_NAME: ' changed the group name to ',
+  SYS_LOGIN_ON_OTHER_DEVICE: 'Your account is logged in on other device',
 }
 export { Friends }

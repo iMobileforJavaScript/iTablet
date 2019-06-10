@@ -547,9 +547,8 @@ class Chat extends React.Component {
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
               if (
-                props.currentMessage.originMsg.message.type &&
-                props.currentMessage.originMsg.message.type ===
-                  MSGConstant.MSG_FILE_NOTIFY
+                props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
+                props.currentMessage.type === MSGConstant.MSG_LOCATION
               ) {
                 return null
               }
