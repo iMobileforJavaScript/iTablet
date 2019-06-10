@@ -395,6 +395,7 @@ const Map_Tools = {
 
   TAKE_PHOTO: 'Take photo',
   FROM_ALBUM: 'Choose from album',
+  VIEW: 'View',
 }
 
 export {

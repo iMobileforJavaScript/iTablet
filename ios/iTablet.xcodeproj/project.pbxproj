@@ -20,12 +20,12 @@
 		0A11D9E721F9641700AFE6D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E621F9641700AFE6D6 /* icon.png */; };
 		0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E821F9641D00AFE6D6 /* logo.png */; };
 		0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A13B46522A66D37005E4AEC /* ExternalAccessory.framework */; };
-		0A13B49B22A66D94005E4AEC /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A13B49A22A66D94005E4AEC /* Trial_License.slm */; };
 		0A13B49D22A66F37005E4AEC /* RSKImageCropper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A13B49C22A66F37005E4AEC /* RSKImageCropper.framework */; };
 		0A13B49E22A66F37005E4AEC /* RSKImageCropper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A13B49C22A66F37005E4AEC /* RSKImageCropper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147441223F6A7B006663C7 /* libc++.1.tbd */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
+		0A2296CA22AE3A3E001B2356 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A2296C922AE3A3E001B2356 /* Trial_License.slm */; };
 		0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33E226182950009CB35 /* libAsHttpRequest.a */; };
 		0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33F226182950009CB35 /* libCorePlot.a */; };
 		0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E340226182950009CB35 /* libSocketRocket.a */; };
@@ -492,11 +492,11 @@
 		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		0A11D9E821F9641D00AFE6D6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0A13B46522A66D37005E4AEC /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
-		0A13B49A22A66D94005E4AEC /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = SOURCE_ROOT; };
 		0A13B49C22A66F37005E4AEC /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A147441223F6A7B006663C7 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
+		0A2296C922AE3A3E001B2356 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		0A25E33E226182950009CB35 /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A25E33F226182950009CB35 /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
 		0A25E340226182950009CB35 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
@@ -756,7 +756,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0A13B49A22A66D94005E4AEC /* Trial_License.slm */,
+				0A2296C922AE3A3E001B2356 /* Trial_License.slm */,
 				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
@@ -1624,7 +1624,7 @@
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
-				0A13B49B22A66D94005E4AEC /* Trial_License.slm in Resources */,
+				0A2296CA22AE3A3E001B2356 /* Trial_License.slm in Resources */,
 				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
