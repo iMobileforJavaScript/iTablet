@@ -415,6 +415,7 @@ const Map_Tools = {
 
   TAKE_PHOTO: '拍照',
   FROM_ALBUM: '从相册中选择',
+  VIEW: '查看',
 }
 
 export {
