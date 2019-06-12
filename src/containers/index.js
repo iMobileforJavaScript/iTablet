@@ -73,8 +73,12 @@ import { MapCut, MapCutDS } from './mapCut/page'
 import {
   BufferAnalystView,
   AnalystRadiusSetting,
-  OverlayAnalystEntry,
+  AnalystListEntry,
   OverlayAnalystView,
+  OnlineAnalystView,
+  IServerLoginPage,
+  SourceDatasetPage,
+  AnalystRangePage,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -550,8 +554,8 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-    OverlayAnalystEntry: {
-      screen: OverlayAnalystEntry,
+    AnalystListEntry: {
+      screen: AnalystListEntry,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -559,6 +563,34 @@ export default StackNavigator(
     },
     OverlayAnalystView: {
       screen: OverlayAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    OnlineAnalystView: {
+      screen: OnlineAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    IServerLoginPage: {
+      screen: IServerLoginPage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SourceDatasetPage: {
+      screen: SourceDatasetPage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    AnalystRangePage: {
+      screen: AnalystRangePage,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

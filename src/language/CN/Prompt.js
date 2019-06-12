@@ -167,6 +167,8 @@ const Prompt = {
   VIEW_BOUNDS_RANGE_ERROR: '参数错误!窗口宽高不能小于0',
   MAP_CENTER_ERROR: '坐标输入错误!x,y都应该为数字',
   COPY_SUCCESS: '复制成功',
+
+  PLEASE_ENTER: '请输入',
 }
 
 export { Prompt }

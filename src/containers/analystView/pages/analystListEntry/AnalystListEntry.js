@@ -4,10 +4,10 @@ import { Container } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import { OverlayAnalystItem } from '../../components'
-import { ConstAnalyst } from '../../../../constants'
-import overlayAnalystEntryData from './overlayAnalystEntryData'
+import { Analyst_Types } from '../../AnalystType'
+import AnalystEntryData from './AnalystEntryData'
 
-export default class OverlayAnalystEntry extends Component {
+export default class AnalystListEntry extends Component {
   props: {
     navigation: Object,
     data: Array,
@@ -15,15 +15,42 @@ export default class OverlayAnalystEntry extends Component {
     settingData: any,
     device: Object,
     currentUser: Object,
+    language: Object,
   }
 
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
     this.cb = params && params.cb
+    this.type = (params && params.type) || Analyst_Types.ONLINE_ANALYST
+    // TODO 根据类型获取数据列表
     this.state = {
-      data: overlayAnalystEntryData.getData() || [],
+      title: (params && params.title) || '',
+      data: this.getData(this.type),
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.language !== this.props.language) {
+      this.setState({
+        data: this.getData(this.type),
+      })
+    }
+  }
+
+  getData = type => {
+    let data = []
+    switch (type) {
+      case Analyst_Types.ONLINE_ANALYST:
+        data = AnalystEntryData.getOnlineAnalystData(this.props.language) || []
+        break
+      case Analyst_Types.OVERLAY_ANALYST:
+      default:
+        data = AnalystEntryData.getOverlayAnalystData(this.props.language) || []
+        break
+    }
+
+    return data || []
   }
 
   back = () => {
@@ -54,7 +81,7 @@ export default class OverlayAnalystEntry extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: ConstAnalyst.OVERLAY_ANALYST,
+          title: this.state.title,
           navigation: this.props.navigation,
           backAction: this.back,
         }}

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import AnalystRadioSetting from './AnalystRadiusSetting'
+import AnalystRangePage from './AnalystRangePage'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
@@ -9,4 +9,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   [],
-)(AnalystRadioSetting)
+)(AnalystRangePage)
