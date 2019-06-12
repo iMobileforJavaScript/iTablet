@@ -158,11 +158,20 @@ export default class MT_layerManager extends React.Component {
       this.itemRefs = {}
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
-      if (
-        (layers.length > 0 &&
-          !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
-        layers.length === 0
-      ) {
+      let baseMap = []
+      if (layers.length > 0 ) {
+
+        if(!LayerUtils.isBaseLayer(layers[layers.length - 1].name)){
+
+          baseMap = [{caption:"baseMap",datasetName:"",
+            name:"baseMap",
+            path:"",
+            themeType:0,
+            type:81}]
+        }else{
+          baseMap = [layers[layers.length - 1]]
+        }
+      }else if(layers.length === 0) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
           GLOBAL.Type === constants.COLLECTION
@@ -172,18 +181,12 @@ export default class MT_layerManager extends React.Component {
           false,
         )
         layers = await this.props.getLayers()
-      }
-
-      let baseMap = []
-      if (
-        layers.length > 0 &&
-        LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      ) {
         baseMap = [layers[layers.length - 1]]
       }
       let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
+      //debugger
       this.setState({
         data: [
           {
