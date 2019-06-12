@@ -24,9 +24,11 @@ const Profile = {
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
   ENTER_USERNAME: 'Please enter your username',
+  ENTER_USERNAME2: 'Please enter user name',
   ENTER_CODE: 'Please enter your code',
   GET_CODE: 'Get Code',
   ENTER_EMAIL: 'Please enter your email',
+  ENTER_SERVER_ADDRESS: 'Please enter server address',
 
   //
   SHARE: 'Share',

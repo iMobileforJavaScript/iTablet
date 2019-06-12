@@ -172,6 +172,8 @@ const Prompt = {
     'Parameter error! Both height and width of the view should be greater than zero',
   MAP_CENTER_ERROR: 'Coordinate error! Both X and Y should be numbers',
   COPY_SUCCESS: 'Coping success!',
+
+  PLEASE_ENTER: 'Please enter ',
 }
 
 export { Prompt }
