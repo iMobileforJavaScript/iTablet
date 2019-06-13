@@ -344,6 +344,7 @@ const Map_Settings = {
 
   //二级菜单 坐标系设置
   COORDINATE_SYSTEM: 'Coordinate System',
+  COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
   DYNAMIC_PROJECTION: 'Dynamic Projection',
   TRANSFER_PARAMS: 'Transfer Parameters',
 
@@ -377,12 +378,28 @@ const Map_Settings = {
   GEOGRAPHIC_COORDINATE_SYSTEM: 'Geographic Coordinate System',
   PROJECTED_COORDINATE_SYSTEM: 'Projected Coordinate System',
 
+  //三级菜单 复制坐标系
+  FROM_DATASOURCE: 'From Datasource',
+  FROM_DATASET: 'From Dataset',
+  FROM_FILE: 'From File',
+
+  //四级菜单 和复制提示
+  TYPE: 'Type',
+  FORMAT: 'Format',
+  DATASOURCES: 'Datasources',
+  DATASETS: 'Datasets',
+  ALL_COORD_FILE: 'Supported Coordinate System File',
+  SHAPE_COORD_FILE: 'Shape Coordinate System File',
+  MAPINFO_FILE: 'MapInfo Change File',
+  MAPINFO_TAB_FILE: 'MapInfo Tab File',
+  IMG_COORD_FILE: 'Image Coordinate System File',
+  COORD_FILE: 'Coordinate System File',
   //三级菜单 换转参数
   TRANSFER_METHOD: 'Transfer Method',
 
   //设置的一些参数
   PERCENT: 'Percent',
-  OFF: 'Off',
+  OFF: 'OFF',
   CONFIRM: 'Confirm',
   COPY: 'Copy',
 }

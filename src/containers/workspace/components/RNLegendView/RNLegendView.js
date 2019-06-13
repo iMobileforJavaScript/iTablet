@@ -16,6 +16,7 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { FOOTER_HEIGHT } from '../../pages/mapView/MapView'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
+import color from '../../../../styles/color'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 
@@ -172,10 +173,24 @@ export default class RNLegendView extends React.Component {
       >
         <Text
           style={{
-            fontSize: setSpText(24),
-            textAlign: 'center',
-            backgroundColor: 'transparent',
-            fontWeight: 'bold',
+            left: '49%',
+            position: 'absolute',
+            top: 0,
+            fontSize: setSpText(12),
+            letterSpacing: scaleSize(2),
+            color: color.white,
+            fontWeight: '900',
+          }}
+        >
+          {this.state.title}
+        </Text>
+        <Text
+          style={{
+            position: 'absolute',
+            top: 0.5,
+            left: '49%',
+            letterSpacing: scaleSize(3),
+            fontSize: setSpText(12),
           }}
         >
           {this.state.title}

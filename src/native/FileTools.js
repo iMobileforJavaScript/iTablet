@@ -78,6 +78,15 @@ async function getPathListByFilter(path, filter = {}) {
 }
 
 /**
+ * 遍历指定目录下指定类型文件
+ * @param path  文件目录
+ * @param extensions  类型  字符串形式，多个类型逗号隔开 如 "xml,shp"
+ * @returns Array   返回值格式 [{name:'xxx',path:'xxx'}]
+ */
+async function getPathListByFilterDeep(path, extensions) {
+  return await FileTools.getPathListByFilterDeep(path, extensions)
+}
+/**
  * 获取指定路径下可用地图名
  * @param path
  * @param name
@@ -336,4 +345,5 @@ export default {
   importData,
   getThumbnail,
   getUri,
+  getPathListByFilterDeep,
 }

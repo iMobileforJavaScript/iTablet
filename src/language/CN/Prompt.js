@@ -167,6 +167,10 @@ const Prompt = {
   VIEW_BOUNDS_RANGE_ERROR: '参数错误!窗口宽高不能小于0',
   MAP_CENTER_ERROR: '坐标输入错误!x,y都应该为数字',
   COPY_SUCCESS: '复制成功',
+  //复制坐标系
+  COPY_COORD_SYSTEM_SUCCESS: '坐标系复制成功',
+  COPY_COORD_SYSTEM_FAIL: '坐标系复制失败',
+  ILLEGAL_COORDSYS: '所选文件不是支持的坐标系文件',
 
   PLEASE_ENTER: '请输入',
 }

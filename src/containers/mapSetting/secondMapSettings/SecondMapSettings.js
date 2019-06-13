@@ -5,7 +5,7 @@
  */
 import React, { Component } from 'react'
 import { Container, PopModal } from '../../../components'
-import { ColorTable, SelectList } from './components'
+import { ColorTable, SelectList, LinkageList, FilterList } from './components'
 import {
   View,
   FlatList,
@@ -28,6 +28,8 @@ import {
   fourRanges,
   colorMode,
   transferData,
+  coordMenuData,
+  coordMenuTitle,
 } from '../settingData'
 import { SMap } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils'
@@ -38,6 +40,7 @@ import NavigationService from '../../NavigationService'
 import { mapBackGroundColor } from '../../../constants'
 import { getThemeAssets } from '../../../assets'
 import { getLanguage } from '../../../language'
+import FileTools from '../../../native/FileTools'
 
 export default class SecondMapSettings extends Component {
   props: {
@@ -81,8 +84,10 @@ export default class SecondMapSettings extends Component {
   //获取数据方法
   getData = async () => {
     let data,
+      datasets,
       colorData = null,
-      colorModeData = null
+      colorModeData = null,
+      homeDirectory
     switch (this.state.title) {
       case getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING:
         data = await this.getBasicData()
@@ -115,31 +120,69 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
         data = await this.getTransferData()
         break
-      case '复制坐标系':
+      case getLanguage(GLOBAL.language).Map_Settings.COPY_COORDINATE_SYSTEM:
         data = copyCoordinate()
         break
-      case '从数据源':
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASOURCE:
         data = await this.getDatasources()
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
+        data = await this.getDatasources()
+        datasets = await this.getDatasets({ data })
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_FILE:
+        homeDirectory = await FileTools.getHomeDirectory()
+        Platform.OS === 'android' && (homeDirectory += '/iTablet')
+        data = await FileTools.getPathListByFilterDeep(
+          homeDirectory,
+          //todo 目前接口只支持xml/prj文件导入
+          //"shp,prj,mif,tab,tif,img,sit,xml"
+          'xml,prj',
+        )
         break
     }
     this.setState({
       data,
       colorData,
       colorModeData,
+      datasets,
     })
   }
 
+  // 获取数据源
   getDatasources = async () => {
     let datas = []
     let datasources = await SMap.getDatasources()
     datasources.map(item => {
       let obj = {}
       obj.title = item.alias
-      ;(obj.server = item.server), (obj.iconType = 'text'), datas.push(obj)
+      obj.server = item.server
+      obj.engineType = item.engineType
+      obj.iconType = 'text'
+      datas.push(obj)
     })
     return datas
   }
-  //基础设置数据
+
+  // 获取所有数据集
+  getDatasets = async ({ data }) => {
+    let datasets = []
+    let dataset
+    for (let item of data) {
+      dataset = await SMap.getDatasetsByDatasource(
+        {
+          server: item.server,
+          engineType: item.engineType,
+          alias: item.title,
+        },
+        false,
+      )
+      datasets.push(dataset)
+    }
+    return datasets
+  }
+
+  // 基础设置数据
   getBasicData = async () => {
     let data, angle, bgColor
     data = await basicSettings()
@@ -281,8 +324,49 @@ export default class SecondMapSettings extends Component {
   }
 
   //text item 点击事件
-  // onTextItemPress = item => {
-  // }
+  onTextItemPress = async ({ item, title }) => {
+    let prjCoordSysName = ''
+    let toastTip
+    !title && (title = this.state.title)
+    switch (title) {
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASOURCE:
+        prjCoordSysName = await SMap.copyPrjCoordSysFromDatasource(
+          item.server,
+          item.engineType,
+        )
+        toastTip = prjCoordSysName
+          ? getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_SUCCESS
+          : getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_FAIL
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
+        prjCoordSysName = await SMap.copyPrjCoordSysFromDataset(
+          item.datasourceName,
+          item.datasetName,
+        )
+        toastTip = prjCoordSysName
+          ? getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_SUCCESS
+          : getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_FAIL
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_FILE:
+        prjCoordSysName = await SMap.copyPrjCoordSysFromFile(
+          item.path,
+          item.name.substring(item.name.lastIndexOf('.'), item.name.length),
+        )
+        if (prjCoordSysName.error) {
+          toastTip = getLanguage(GLOBAL.language).Prompt[prjCoordSysName.error]
+        } else {
+          toastTip = prjCoordSysName
+            ? getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_SUCCESS
+            : getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_FAIL
+        }
+        break
+    }
+    Toast.show(toastTip)
+    if (this.state.cb !== '') {
+      this.state.cb(prjCoordSysName)
+    }
+  }
+
   //arrow item点击事件
   onArrowItemPress = ({ title, index }) => {
     let data = this.state.data.concat()
@@ -367,12 +451,22 @@ export default class SecondMapSettings extends Component {
           rightBtn: getLanguage(GLOBAL.language).Map_Settings.COPY,
         })
         break
-      case '复制坐标系':
-      case '从数据源':
-      case '从数据集':
-      case '从文件':
+      case getLanguage(GLOBAL.language).Map_Settings.COPY_COORDINATE_SYSTEM:
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASOURCE:
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
+      case getLanguage(GLOBAL.language).Map_Settings.FROM_FILE:
         this.props.navigation.navigate('SecondMapSettings', {
           title,
+          cb:
+            this.state.cb !== ''
+              ? this.state.cb
+              : ({ prjCoordSysName }) => {
+                let data = this.state.data.concat()
+                data[0].value = prjCoordSysName
+                this.setState({
+                  data,
+                })
+              },
         })
         break
       //todo 转换参数
@@ -584,7 +678,7 @@ export default class SecondMapSettings extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.onTextItemPress(item)
+          this.onTextItemPress({ item, title: this.state.title })
         }}
       >
         <View style={styles.row}>
@@ -801,6 +895,52 @@ export default class SecondMapSettings extends Component {
             ItemSeparatorComponent={this.renderSectionFooter}
             renderSectionHeader={this.renderSectionHeader}
             renderSectionFooter={this.renderSectionFooter}
+          />
+        </Container>
+      )
+    }
+    if (
+      this.state.title ===
+      getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET
+    ) {
+      return (
+        <Container
+          headerProps={{
+            title: this.state.title,
+            backAction: this.backAction,
+          }}
+        >
+          <LinkageList
+            language={this.props.language}
+            data={this.state.data}
+            secondData={this.state.datasets}
+            titles={[
+              getLanguage(GLOBAL.language).Map_Settings.DATASOURCES,
+              getLanguage(GLOBAL.language).Map_Settings.DATASETS,
+            ]}
+            onRightPress={this.onTextItemPress}
+          />
+        </Container>
+      )
+    }
+    if (
+      this.state.title === getLanguage(GLOBAL.language).Map_Settings.FROM_FILE
+    ) {
+      let menuData = coordMenuData()
+      let menuTitle = coordMenuTitle()
+      return (
+        <Container
+          headerProps={{
+            title: this.state.title,
+            backAction: this.backAction,
+          }}
+        >
+          <FilterList
+            language={this.props.language}
+            data={this.state.data}
+            menuData={menuData}
+            menuTitle={menuTitle}
+            onItemPress={this.onTextItemPress}
           />
         </Container>
       )

@@ -24,6 +24,7 @@ export default class ScaleView extends React.Component {
       title: '',
       isAddedListener: false,
       isShow: false,
+      visible: true,
     }
   }
 
@@ -38,18 +39,17 @@ export default class ScaleView extends React.Component {
     }
   }
 
-  showFullMap = () => {
+  showFullMap = visible => {
+    if (this.state.visible === visible) return
     Animated.timing(this.left, {
-      toValue: scaleSize(30),
+      toValue: visible ? scaleSize(120) : scaleSize(30),
       duration: 300,
     }).start()
+    this.setState({
+      visible,
+    })
   }
-  exitFullMap = () => {
-    Animated.timing(this.left, {
-      toValue: scaleSize(120),
-      duration: 300,
-    }).start()
-  }
+
   getInitialData = async () => {
     let data = await SMap.getScaleData()
     await this.scaleViewChange(data)
