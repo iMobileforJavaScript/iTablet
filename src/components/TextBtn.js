@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import * as Util from '../utils/constUtil'
+import { scaleSize } from '../utils'
 
-const WIDTH = 70
+const WIDTH = scaleSize(120)
 
 export default class TextBtn extends React.Component {
   props: {

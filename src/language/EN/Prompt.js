@@ -176,6 +176,8 @@ const Prompt = {
   COPY_COORD_SYSTEM_SUCCESS: 'Coordinate system replication successfully',
   COPY_COORD_SYSTEM_FAIL: 'Coordinate system replication failed',
   ILLEGAL_COORDSYS: 'Not a supported coordinate system file',
+
+  PLEASE_ENTER: 'Please enter ',
 }
 
 export { Prompt }

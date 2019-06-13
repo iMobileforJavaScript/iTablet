@@ -124,15 +124,30 @@ export default class Find extends Component {
           }}
           onPress={onClick}
         >
-          <Image
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              tintColor: imageColor,
-            }}
-            resizeMode={'contain'}
-            source={leftImagePath}
-          />
+          <View>
+            <Image
+              style={{
+                width: imageWidth,
+                height: imageHeight,
+                tintColor: imageColor,
+              }}
+              resizeMode={'contain'}
+              source={leftImagePath}
+            />
+            {isInformSpot ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'red',
+                  height: scaleSize(15),
+                  width: scaleSize(15),
+                  borderRadius: scaleSize(15),
+                  right: scaleSize(0),
+                  top: scaleSize(-5),
+                }}
+              />
+            ) : null}
+          </View>
           <View
             style={{
               marginLeft: 15,
@@ -140,7 +155,7 @@ export default class Find extends Component {
               flex: 1,
               // justifyContent:"center",
               alignItems: 'center',
-              // backgroundColor: color.separateColorGray,
+              // backgroundColor: 'blue',
               borderBottomWidth: 1,
               borderBottomColor: color.separateColorGray,
             }}
@@ -167,20 +182,6 @@ export default class Find extends Component {
               source={rightImagePath}
             />
           </View>
-
-          {isInformSpot ? (
-            <View
-              style={{
-                position: 'absolute',
-                backgroundColor: 'red',
-                height: scaleSize(15),
-                width: scaleSize(15),
-                borderRadius: scaleSize(15),
-                left: scaleSize(50),
-                top: scaleSize(20),
-              }}
-            />
-          ) : null}
         </TouchableOpacity>
       </View>
     )

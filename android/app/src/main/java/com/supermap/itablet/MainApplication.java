@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.supermap.file.CrashHandler;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import com.ocetnik.timer.BackgroundTimerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import org.reactnative.camera.RNCameraPackage;
 import cn.jpush.reactnativejpush.JPushPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new BackgroundTimerPackage(),
             new RNCameraPackage(),
             new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
             new ReactVideoPackage(),

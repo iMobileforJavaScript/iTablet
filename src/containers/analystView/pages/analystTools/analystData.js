@@ -1,11 +1,13 @@
-import { ConstAnalyst } from '../../../../constants'
 import { getThemeAssets } from '../../../../assets'
 import NavigationService from '../../../NavigationService'
-function getData() {
+import { getLanguage } from '../../../../language'
+import { Analyst_Types } from '../../AnalystType'
+
+function getData(language) {
   let data = [
     {
-      key: ConstAnalyst.BUFFER_ANALYST,
-      title: ConstAnalyst.BUFFER_ANALYST,
+      key: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
+      title: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
       action: (params = {}) => {
         NavigationService.navigate('BufferAnalystView', params)
       },
@@ -13,11 +15,28 @@ function getData() {
       image: getThemeAssets().analyst.analysis_buffer,
     },
     {
-      key: ConstAnalyst.OVERLAY_ANALYST,
-      title: ConstAnalyst.OVERLAY_ANALYST,
+      key: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
+      title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
       size: 'large',
       action: (params = {}) => {
-        NavigationService.navigate('OverlayAnalystEntry', params)
+        NavigationService.navigate('AnalystListEntry', {
+          ...params,
+          type: Analyst_Types.OVERLAY_ANALYST,
+          title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
+        })
+      },
+      image: getThemeAssets().analyst.analysis_overlay,
+    },
+    {
+      key: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
+      title: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
+      size: 'large',
+      action: (params = {}) => {
+        NavigationService.navigate('AnalystListEntry', {
+          ...params,
+          type: Analyst_Types.ONLINE_ANALYST,
+          title: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
+        })
       },
       image: getThemeAssets().analyst.analysis_overlay,
     },

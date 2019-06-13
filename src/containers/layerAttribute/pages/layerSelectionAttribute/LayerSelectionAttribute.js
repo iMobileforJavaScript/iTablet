@@ -9,6 +9,8 @@ import { ConstInfo } from '../../../../constants'
 import { Toast, LayerUtil, scaleSize } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
+import NavigationService from '../../../NavigationService'
+import { SMediaCollector } from 'imobile_for_reactnative'
 
 const PAGE_SIZE = 30
 const ROWS_LIMIT = 120
@@ -854,6 +856,18 @@ export default class LayerSelectionAttribute extends React.Component {
     //   type = LayerAttributeTable.Type.SINGLE_DATA
     // }
 
+    let buttonNameFilter = ['MediaFilePaths'], // 属性表cell显示 查看 按钮
+      buttonTitles = [getLanguage(global.language).Map_Tools.VIEW]
+    let buttonActions = [
+      async data => {
+        let layerName = this.props.layerSelection.layerInfo.name,
+          geoID = data.rowData[0].value
+        let info = await SMediaCollector.getMediaInfo(layerName, geoID)
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      },
+    ]
     return (
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
@@ -890,6 +904,9 @@ export default class LayerSelectionAttribute extends React.Component {
             : this.state.startIndex + 1
         }
         selectRow={this.selectRow}
+        buttonNameFilter={buttonNameFilter}
+        buttonActions={buttonActions}
+        buttonTitles={buttonTitles}
       />
     )
   }

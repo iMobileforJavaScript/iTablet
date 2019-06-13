@@ -64,6 +64,9 @@ export default class Row extends Component {
   props: {
     data: any,
     index: number,
+    buttonIndexes?: Array, // Cell 为button的列的index
+    buttonActions?: Array, // Cell 为button的列的点击事件
+    buttonTitles?: Array, // Cell 为button列对应的title, buttonTitles必须不为空，buttonIndexes才生效
     selected?: boolean,
     hasInputText?: boolean,
     renderCell?: () => {},
@@ -87,6 +90,9 @@ export default class Row extends Component {
     indexColumn: -1,
     hasInputText: true,
     selected: false,
+    buttonIndexes: [],
+    buttonActions: [],
+    buttonTitles: [],
   }
 
   shouldComponentUpdate(nextProps) {
@@ -121,6 +127,20 @@ export default class Row extends Component {
   }
 
   _renderCell = (item, index) => {
+    let isButton = false, // 属性表cell显示 查看 按钮
+      buttonTitle = '',
+      buttonAction = () => {}
+    if (
+      this.props.buttonTitles.length === this.props.buttonIndexes.length &&
+      this.props.buttonIndexes.indexOf(index) >= 0 &&
+      this.props.buttonTitles.length > 0
+    ) {
+      isButton = true
+      buttonTitle = this.props.buttonTitles[index] || this.props.buttonTitles[0]
+      buttonAction =
+        this.props.buttonActions[index] || this.props.buttonActions[0]
+    }
+
     let width
     if (this.props.cellWidthArr && this.props.cellWidthArr.length > index) {
       width = this.props.cellWidthArr[index]
@@ -163,7 +183,39 @@ export default class Row extends Component {
       cellStyle = [styles.selectedCell, this.props.selectedCellStyle]
       textStyle = [styles.selectedCellText, this.props.selectedCellTextStyle]
     }
-    if (
+    if (isButton) {
+      return (
+        <TouchableOpacity
+          activeOpacity={1}
+          key={index}
+          style={[
+            cellStyle,
+            width ? { width } : { flex: 1 },
+            !isLastCell && {
+              borderRightWidth: 1,
+              borderColor: this.props.separatorColor,
+            },
+            // { width },
+          ]}
+          onPress={() =>
+            buttonAction({
+              data: this.props.data,
+              index: this.props.index,
+            })
+          }
+        >
+          <Text
+            style={[
+              textStyle,
+              width && { width: width - 4 },
+              { color: color.USUAL_BLUE },
+            ]}
+          >
+            {buttonTitle}
+          </Text>
+        </TouchableOpacity>
+      )
+    } else if (
       (this.props.indexColumn >= 0 && this.props.indexColumn === index) ||
       !this.props.hasInputText
     ) {

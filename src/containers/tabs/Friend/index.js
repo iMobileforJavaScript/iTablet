@@ -10,7 +10,7 @@ import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
 import GroupMemberList from './FriendGroup/GroupMemberList'
 import RecommendFriend from './RecommendFriend'
-
+import { openWorkspace, closeWorkspace } from '../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
 import { addChat, editChat } from '../../../models/chat'
@@ -26,6 +26,8 @@ const mapDispatchToProps = {
   addChat,
   //addUnreadMessage,
   editChat,
+  openWorkspace,
+  closeWorkspace,
 }
 export default connect(
   mapStateToProps,
