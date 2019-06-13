@@ -172,6 +172,10 @@ const Prompt = {
     'Parameter error! Both height and width of the view should be greater than zero',
   MAP_CENTER_ERROR: 'Coordinate error! Both X and Y should be numbers',
   COPY_SUCCESS: 'Coping success!',
+  //复制坐标系
+  COPY_COORD_SYSTEM_SUCCESS: 'Coordinate system replication successfully',
+  COPY_COORD_SYSTEM_FAIL: 'Coordinate system replication failed',
+  ILLEGAL_COORDSYS: 'Not a supported coordinate system file',
 }
 
 export { Prompt }

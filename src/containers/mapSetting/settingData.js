@@ -264,7 +264,7 @@ const coordinateSystemSettings = () => [
     iconType: 'arrow',
   },
   {
-    title: '复制坐标系',
+    title: getLanguage(global.language).Map_Settings.COPY_COORDINATE_SYSTEM,
     value: '',
     iconType: 'arrow',
   },
@@ -279,22 +279,40 @@ const coordinateSystemSettings = () => [
     iconType: 'arrow',
   },
 ]
+
+//复制坐标系
 const copyCoordinate = () => [
   {
-    title: '从数据源',
+    title: getLanguage(global.language).Map_Settings.FROM_DATASOURCE,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '从数据集',
+    title: getLanguage(global.language).Map_Settings.FROM_DATASET,
     value: '',
     iconType: 'arrow',
   },
   {
-    title: '从文件',
+    title: getLanguage(global.language).Map_Settings.FROM_FILE,
     value: '',
     iconType: 'arrow',
   },
+]
+//从文件复制坐标系类型列表
+const coordMenuData = () => [
+  [
+    getLanguage(global.language).Map_Settings.ALL_COORD_FILE,
+    getLanguage(global.language).Map_Settings.SHAPE_COORD_FILE,
+    getLanguage(global.language).Map_Settings.MAPINFO_FILE,
+    getLanguage(global.language).Map_Settings.MAPINFO_TAB_FILE,
+    getLanguage(global.language).Map_Settings.IMG_COORD_FILE,
+    getLanguage(global.language).Map_Settings.COORD_FILE,
+  ],
+  ['*.shp', '*.prj', '*.mif', '*.tab', '*.tif', '*.img', '*.sit', '*.xml'],
+]
+const coordMenuTitle = () => [
+  getLanguage(global.language).Map_Settings.TYPE,
+  getLanguage(global.language).Map_Settings.FORMAT,
 ]
 //坐标系数据
 const coordinateData = () => [
@@ -479,6 +497,8 @@ export {
   coordinateSystemSettings,
   coordinateData,
   copyCoordinate,
+  coordMenuData,
+  coordMenuTitle,
   // advancedSettings,
   colorMode,
   fourRanges,
