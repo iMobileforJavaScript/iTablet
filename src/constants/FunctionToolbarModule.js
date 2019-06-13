@@ -5,6 +5,7 @@ import { ConstToolType } from '../constants'
 import constants from '../containers/workspace/constants'
 import { getLanguage } from '../language/index'
 import { Toast } from '../utils'
+import * as LayerUtils from '../containers/mtLayerManager/LayerUtils'
 
 async function OpenData(data, index) {
   let layers = await SMap.getLayersByType()
@@ -19,7 +20,9 @@ async function OpenData(data, index) {
   // Layer index = 0 为顶层
   if (isOpen) {
     for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-      await SMap.removeLayer(layers.length - i)
+      if( LayerUtils.isBaseLayer(layers[layers.length - i].name)) {
+        await SMap.removeLayer(layers.length - i)
+      }
     }
     if (data instanceof Array) {
       for (let i = data.length - 1; i >= 0; i--) {
@@ -231,46 +234,46 @@ const layerManagerData = [
   //   type: DatasetType.IMAGE,
   //   themeType: -1,
   // },
-  {
-    title: 'Baidu Map',
-    action: () => {
-      return OpenData(ConstOnline.Baidu, 0)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
-  {
-    title: 'Standard',
-    action: () => {
-      return OpenData(ConstOnline.OSM, 0)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
-  {
-    title: 'CycleMap',
-    action: () => {
-      return OpenData(ConstOnline.OSM, 1)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
-  {
-    title: 'Transport',
-    action: () => {
-      return OpenData(ConstOnline.OSM, 2)
-    },
-    data: [],
-    image: require('../assets/map/icon-shallow-image_black.png'),
-    type: DatasetType.IMAGE,
-    themeType: -1,
-  },
+  // {
+  //   title: 'Baidu Map',
+  //   action: () => {
+  //     return OpenData(ConstOnline.Baidu, 0)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
+  // {
+  //   title: 'Standard',
+  //   action: () => {
+  //     return OpenData(ConstOnline.OSM, 0)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
+  // {
+  //   title: 'CycleMap',
+  //   action: () => {
+  //     return OpenData(ConstOnline.OSM, 1)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
+  // {
+  //   title: 'Transport',
+  //   action: () => {
+  //     return OpenData(ConstOnline.OSM, 2)
+  //   },
+  //   data: [],
+  //   image: require('../assets/map/icon-shallow-image_black.png'),
+  //   type: DatasetType.IMAGE,
+  //   themeType: -1,
+  // },
   // {
   //   title: 'quanguo',
   //   action: () => {
