@@ -1075,11 +1075,11 @@ const graduatedSymbolMenuInfo = param => [
 ]
 
 //栅格单值专题图
-const gridUniqueMenuInfo = [
+const gridUniqueMenuInfo = param => [
   {
     key: '颜色方案',
     selectKey: '颜色方案',
-    btntitle: '颜色方案',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getUniqueColorScheme(
@@ -1105,7 +1105,7 @@ const gridUniqueMenuInfo = [
 ]
 
 //栅格分段专题图（分段方法有缺陷，只有等距分段有用，先注释掉）
-const gridRangeMenuInfo = [
+const gridRangeMenuInfo = param => [
   // {
   //   key: '分段方法',
   //   selectKey: '分段方法',
@@ -1135,13 +1135,73 @@ const gridRangeMenuInfo = [
   {
     key: '颜色方案',
     selectKey: '颜色方案',
-    btntitle: '颜色方案',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.getRangeColorScheme(
           ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR,
           '颜色方案',
           '颜色方案',
+        )
+    },
+  },
+]
+
+//热力图
+const heatmapMenuInfo = param => [
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_RADIUS,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_RADIUS,
+    // btntitle: '核半径',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_RADIUS,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getHeatmapParams(
+          ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_RADIUS,
+          '核半径',
+          '核半径',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
+    // btntitle: '颜色方案',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getAggregationColorScheme(
+          ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_COLOR,
+          '颜色方案',
+          '颜色方案',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_FUZZY_DEGREE,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_FUZZY_DEGREE,
+    // btntitle: '颜色渐变模糊度',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_FUZZY_DEGREE,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getHeatmapParams(
+          ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_FUZZYDEGREE,
+          '颜色渐变模糊度',
+          '颜色渐变模糊度',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_MAXCOLOR_WEIGHT,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_MAXCOLOR_WEIGHT,
+    // btntitle: '最大颜色权重',
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_MAXCOLOR_WEIGHT,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getHeatmapParams(
+          ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_MAXCOLOR_WEIGHT,
+          '最大颜色权重',
+          '最大颜色权重',
         )
     },
   },
@@ -1367,4 +1427,5 @@ export {
   gridRangeMenuInfo,
   legendMenuInfo,
   legendMenuInfoNotVisible,
+  heatmapMenuInfo,
 }

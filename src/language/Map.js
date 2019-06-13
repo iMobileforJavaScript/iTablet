@@ -154,6 +154,7 @@ const Map_Main_Menu_Chinese = {
   THEME_RING: '环状图',
   THEME_DOT_DENSITY_MAP: '点密度图',
   THEME_GRADUATED_SYMBOLS_MAP: '等级符号图',
+  THEME_HEATMAP: '热力图',
 
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
@@ -179,6 +180,11 @@ const Map_Main_Menu_Chinese = {
   THEME_DIAMOND: '菱形',
   THEME_TRIANGLE: '三角形',
   THEME_MARKER_SYMBOL: '点符号',
+
+  THEME_HEATMAP_RADIUS: '核半径',
+  THEME_HEATMAP_COLOR: '颜色方案',
+  THEME_HEATMAP_FUZZY_DEGREE: '颜色渐变模糊度',
+  THEME_HEATMAP_MAXCOLOR_WEIGHT: '最大颜色权重',
 
   THEME_GRANDUATE_BY: '计算方法',
   THEME_CONSTANT: '常量',
@@ -361,6 +367,7 @@ const Map_Main_Menu_English = {
   THEME_RING: 'Ring',
   THEME_DOT_DENSITY_MAP: 'Dot Density Map',
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
+  THEME_HEATMAP: 'HeatMap',
 
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
@@ -386,6 +393,11 @@ const Map_Main_Menu_English = {
   THEME_DIAMOND: 'Diamond',
   THEME_TRIANGLE: 'Triangle',
   THEME_MARKER_SYMBOL: 'Marker Symbol',
+
+  THEME_HEATMAP_RADIUS: 'Nuclear Radius',
+  THEME_HEATMAP_COLOR: 'Color Scheme',
+  THEME_HEATMAP_FUZZY_DEGREE: 'Color Fuzzy Degree',
+  THEME_HEATMAP_MAXCOLOR_WEIGHT: 'Max Color Weight',
 
   THEME_GRANDUATE_BY: 'Granduate by',
   THEME_CONSTANT: 'Constant',

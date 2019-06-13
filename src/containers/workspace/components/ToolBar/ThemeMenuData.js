@@ -7,6 +7,7 @@ import { FileTools } from '../../../../native'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
 import { Toast } from '../../../../utils'
+// import aggregationColorScheme from '../../../../assets/publicTheme/theme/aggregationColorScheme'
 
 let _toolbarParams = {}
 
@@ -757,6 +758,16 @@ function getThemeMapCreate(type, params) {
       action: showDatasetsList,
       image: getThemeAssets().themeType.theme_grid_range,
       selectedImage: getThemeAssets().themeType.theme_grid_range,
+    },
+    {
+      //热力图
+      key: constants.THEME_HEATMAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP,
+      // title: constants.THEME_HEATMAP,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.heatmap,
+      selectedImage: getThemeAssets().themeType.heatmap,
     },
   ]
   return { data, buttons }
@@ -3249,6 +3260,86 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
   }
 }
 
+/**
+ * 统计专题图颜色方案
+ */
+function getAggregationColorScheme() {
+  let list = [
+    {
+      key: 'ZA_Insights',
+      colorSchemeName: 'ZA_Insights',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZA_Insights,
+    },
+    {
+      key: 'ZB_Sunrise',
+      colorSchemeName: 'ZB_Sunrise',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZB_Sunrise,
+    },
+    {
+      key: 'ZC_Garden',
+      colorSchemeName: 'ZC_Garden',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZC_Garden,
+    },
+    {
+      key: 'ZD_Classic',
+      colorSchemeName: 'ZD_Classic',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZD_Classic,
+    },
+    {
+      key: 'ZE_Warm',
+      colorSchemeName: 'ZE_Warm',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZE_Warm,
+    },
+    {
+      key: 'ZF_Dreamlike',
+      colorSchemeName: 'ZF_Dreamlike',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.ZF_Dreamlike,
+    },
+    {
+      key: 'BA_Rainbow',
+      colorSchemeName: 'BA_Rainbow',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BA_Rainbow,
+    },
+    {
+      key: 'BB_LightRainbow',
+      colorSchemeName: 'BB_LightRainbow',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme
+        .BB_LightRainbow,
+    },
+    {
+      key: 'BC_Lemon',
+      colorSchemeName: 'BC_Lemon',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BC_Lemon,
+    },
+    {
+      key: 'BD_Scarlet',
+      colorSchemeName: 'BD_Scarlet',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BD_Scarlet,
+    },
+    {
+      key: 'BE_Sea',
+      colorSchemeName: 'BE_Sea',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BE_Sea,
+    },
+    {
+      key: 'BF_Orange',
+      colorSchemeName: 'BF_Orange',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BF_Orange,
+    },
+    {
+      key: 'BG_Green',
+      colorSchemeName: 'BG_Green',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BG_Green,
+    },
+    {
+      key: 'BH_Purple',
+      colorSchemeName: 'BH_Purple',
+      colorScheme: getPublicAssets().theme.aggregationColorScheme.BH_Purple,
+    },
+  ]
+  return list
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -3281,4 +3372,5 @@ export default {
   createThemeGridUniqueMap,
   createThemeGridRangeMap,
   getGridRangeMode,
+  getAggregationColorScheme,
 }

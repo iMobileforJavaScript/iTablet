@@ -131,7 +131,10 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
+    if (
+      !GLOBAL.currentLayer ||
+      (GLOBAL.currentLayer.themeType <= 0 && !GLOBAL.currentLayer.isHeatmap)
+    ) {
       Toast.show(
         getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER,
       )
@@ -140,41 +143,46 @@ export default class FunctionToolbar extends React.Component {
       return
     }
     let type = ''
-    switch (GLOBAL.currentLayer.themeType) {
-      case ThemeType.UNIQUE:
-        type = constants.THEME_UNIQUE_STYLE
-        break
-      case ThemeType.RANGE:
-        type = constants.THEME_RANGE_STYLE
-        break
-      case ThemeType.LABEL:
-        type = constants.THEME_UNIFY_LABEL
-        break
-      case ThemeType.GRAPH:
-        type = constants.THEME_GRAPH_STYLE
-        break
-      case ThemeType.DOTDENSITY:
-        type = constants.THEME_DOT_DENSITY
-        break
-      case ThemeType.GRADUATEDSYMBOL:
-        type = constants.THEME_GRADUATED_SYMBOL
-        break
-      case ThemeType.GRIDRANGE:
-        type = constants.THEME_GRID_RANGE
-        break
-      case ThemeType.GRIDUNIQUE:
-        type = constants.THEME_GRID_UNIQUE
-        break
-      case ThemeType.CUSTOM:
-        Toast.show('提示: 暂不支持编辑的专题图层。')
-        return
-      default:
-        Toast.show(
-          getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER,
-        )
-        //''提示: 请先选择专题图层。')
-        NavigationService.navigate('LayerManager')
-        return
+    if (GLOBAL.currentLayer.isHeatmap) {
+      type = constants.THEME_HEATMAP
+    } else {
+      switch (GLOBAL.currentLayer.themeType) {
+        case ThemeType.UNIQUE:
+          type = constants.THEME_UNIQUE_STYLE
+          break
+        case ThemeType.RANGE:
+          type = constants.THEME_RANGE_STYLE
+          break
+        case ThemeType.LABEL:
+          type = constants.THEME_UNIFY_LABEL
+          break
+        case ThemeType.GRAPH:
+          type = constants.THEME_GRAPH_STYLE
+          break
+        case ThemeType.DOTDENSITY:
+          type = constants.THEME_DOT_DENSITY
+          break
+        case ThemeType.GRADUATEDSYMBOL:
+          type = constants.THEME_GRADUATED_SYMBOL
+          break
+        case ThemeType.GRIDRANGE:
+          type = constants.THEME_GRID_RANGE
+          break
+        case ThemeType.GRIDUNIQUE:
+          type = constants.THEME_GRID_UNIQUE
+          break
+        case ThemeType.CUSTOM:
+          Toast.show('提示: 暂不支持编辑的专题图层。')
+          return
+        default:
+          Toast.show(
+            getLanguage(this.props.language).Prompt
+              .PLEASE_SELECT_THEMATIC_LAYER,
+          )
+          //''提示: 请先选择专题图层。')
+          NavigationService.navigate('LayerManager')
+          return
+      }
     }
 
     if (GLOBAL.toolBox) {

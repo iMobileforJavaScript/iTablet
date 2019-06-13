@@ -18,6 +18,7 @@ import {
   getThemeWhiteIconByType,
   getLayerIconByType,
   getLayerWhiteIconByType,
+  getThemeAssets,
 } from '../../../../assets'
 
 const LAYER_GROUP = 'layerGroup'
@@ -397,6 +398,12 @@ export default class LayerManager_item extends React.Component {
         return getThemeWhiteIconByType(item.themeType)
       } else {
         return getThemeIconByType(item.themeType)
+      }
+    } else if (item.isHeatmap) {
+      if (this.props.selectLayer === this.props.data.name) {
+        return getThemeAssets().themeType.heatmap_selected
+      } else {
+        return getThemeAssets().themeType.heatmap
       }
     } else {
       if (this.props.selectLayer === this.props.data.name) {

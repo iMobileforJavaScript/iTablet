@@ -500,43 +500,47 @@ export default class MT_layerManager extends React.Component {
   /**修改专题图 */
   mapTheme = data => {
     let curThemeType
-    switch (data.themeType) {
-      case ThemeType.UNIQUE:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_UNIQUE_STYLE
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
-        break
-      case ThemeType.RANGE:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_RANGE_STYLE
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
-        break
-      case ThemeType.LABEL:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_UNIFY_LABEL
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-        break
-      case ThemeType.DOTDENSITY:
-        curThemeType = constants.THEME_DOT_DENSITY
-        break
-      case ThemeType.GRADUATEDSYMBOL:
-        curThemeType = constants.THEME_GRADUATED_SYMBOL
-        break
-      case ThemeType.GRAPH:
-        curThemeType = constants.THEME_GRAPH_STYLE
-        break
-      case ThemeType.GRIDRANGE:
-        curThemeType = constants.THEME_GRID_RANGE
-        break
-      case ThemeType.GRIDUNIQUE:
-        curThemeType = constants.THEME_GRID_UNIQUE
-        break
-      default:
-        Toast.show('提示:当前图层暂不支持修改')
-        break
+    if (data.isHeatmap) {
+      curThemeType = constants.THEME_HEATMAP
+    } else {
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIQUE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          break
+        case ThemeType.RANGE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_RANGE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          break
+        case ThemeType.LABEL:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIFY_LABEL
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          break
+        case ThemeType.DOTDENSITY:
+          curThemeType = constants.THEME_DOT_DENSITY
+          break
+        case ThemeType.GRADUATEDSYMBOL:
+          curThemeType = constants.THEME_GRADUATED_SYMBOL
+          break
+        case ThemeType.GRAPH:
+          curThemeType = constants.THEME_GRAPH_STYLE
+          break
+        case ThemeType.GRIDRANGE:
+          curThemeType = constants.THEME_GRID_RANGE
+          break
+        case ThemeType.GRIDUNIQUE:
+          curThemeType = constants.THEME_GRID_UNIQUE
+          break
+        default:
+          Toast.show('提示:当前图层暂不支持修改')
+          break
+      }
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
@@ -586,7 +590,7 @@ export default class MT_layerManager extends React.Component {
             //'当前图层无法设置风格')
           }
         } else if (GLOBAL.Type === constants.MAP_THEME) {
-          if (data.themeType <= 0) {
+          if (data.themeType <= 0 && !data.isHeatmap) {
             Toast.show(
               getLanguage(this.props.language).Prompt
                 .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
