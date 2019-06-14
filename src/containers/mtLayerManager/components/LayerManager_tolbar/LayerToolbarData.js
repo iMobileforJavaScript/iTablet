@@ -355,6 +355,11 @@ function layereditsetting(param) {
           title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          //'移除',
+          image: require('../../../../assets/layerToolbar/layer_remove.png'),
+        },
       ],
     },
   ]
