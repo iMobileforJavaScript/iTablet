@@ -4281,9 +4281,11 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        SMap.addLegendDelegate({
-          legendContentChange: GLOBAL.legend._contentChange,
-        })
+        if(GLOBAL.legend){
+          SMap.addLegendDelegate({
+            legendContentChange: GLOBAL.legend._contentChange,
+          })
+        }
         if (mapInfo.Template) {
           this.props.setContainerLoading(
             true,
@@ -4309,17 +4311,17 @@ export default class ToolBar extends React.PureComponent {
           //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
           //       ? 1 : ConstOnline['Google'].layerIndex, false)
           // }
-          if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
-            await LayerUtils.addBaseMap(
-              layers,
-              ConstOnline['Google'],
-              GLOBAL.Type === constants.COLLECTION
-                ? 1
-                : ConstOnline['Google'].layerIndex,
-              false,
-            )
-            await this.props.getLayers(-1)
-          }
+          // if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
+          //   await LayerUtils.addBaseMap(
+          //     layers,
+          //     ConstOnline['Google'],
+          //     GLOBAL.Type === constants.COLLECTION
+          //       ? 1
+          //       : ConstOnline['Google'].layerIndex,
+          //     false,
+          //   )
+          //   await this.props.getLayers(-1)
+          // }
         })
 
         // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
