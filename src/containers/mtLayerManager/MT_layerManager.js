@@ -427,12 +427,13 @@ export default class MT_layerManager extends React.Component {
       let themeType
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.RANGE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.LABEL:
+        case ThemeType.GRAPH:
+        case ThemeType.GRADUATEDSYMBOL:
+        case ThemeType.DOTDENSITY:
+        case ThemeType.GRIDUNIQUE:
+        case ThemeType.GRIDRANGE:
           themeType = ConstToolType.MAP_THEME_STYLES
           break
         default:
