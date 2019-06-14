@@ -17,7 +17,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
-import { SMap, ThemeType } from 'imobile_for_reactnative'
+import { SMap, ThemeType, SMediaCollector } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import {
   ConstToolType,
@@ -35,7 +35,7 @@ import {
 } from '../../assets'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
-import { getLanguage } from '../../language/index'
+import { getLanguage } from '../../language'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -158,11 +158,23 @@ export default class MT_layerManager extends React.Component {
       this.itemRefs = {}
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
-      if (
-        (layers.length > 0 &&
-          !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
-        layers.length === 0
-      ) {
+      let baseMap = []
+      if (layers.length > 0) {
+        if (!LayerUtils.isBaseLayer(layers[layers.length - 1].name)) {
+          baseMap = [
+            {
+              caption: 'baseMap',
+              datasetName: '',
+              name: 'baseMap',
+              path: '',
+              themeType: 0,
+              type: 81,
+            },
+          ]
+        } else {
+          baseMap = [layers[layers.length - 1]]
+        }
+      } else if (layers.length === 0) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
           GLOBAL.Type === constants.COLLECTION
@@ -172,18 +184,12 @@ export default class MT_layerManager extends React.Component {
           false,
         )
         layers = await this.props.getLayers()
-      }
-
-      let baseMap = []
-      if (
-        layers.length > 0 &&
-        LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      ) {
         baseMap = [layers[layers.length - 1]]
       }
       let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
+      //debugger
       this.setState({
         data: [
           {
@@ -213,224 +219,6 @@ export default class MT_layerManager extends React.Component {
       this.setRefreshing(false)
     }
   }
-
-  // showSaveDialog = (isShow = true) => {
-  //   this.saveDialog.setDialogVisible(isShow)
-  // }
-  //
-  // showModifiedDialog = (isShow = true) => {
-  //   this.modifiedDialog.setDialogVisible(isShow)
-  // }
-  //
-  // showRenameDialog = (isShow = true, layer = null) => {
-  //   this.renameDialog.setDialogVisible(isShow)
-  //   if (layer) {
-  //     this.renameLayer = layer
-  //   }
-  // }
-  //
-  // showRemoveDialog = (isShow = true, data = null, info = '') => {
-  //   this.deleteDialog.setDialogVisible(isShow, info)
-  //   if (data) {
-  //     this.removeLayerData = data
-  //   }
-  // }
-  //
-  // /*LayerManager_tab点击方法*/
-  // //地图切换
-  // _map_change = async () => {
-  //   let isModified = await this.map.isModified()
-  //   if (isModified) {
-  //     this.showModifiedDialog(true)
-  //   } else {
-  //     this.goToMapChange()
-  //   }
-  // }
-  //
-  // goToMapChange = () => {
-  //   NavigationService.navigate('MapChange', {
-  //     workspace: this.workspace,
-  //     map: this.map,
-  //   })
-  //   // NavigationService.navigate('MapChange',{workspace: this.workspace, map:this.map, cb: this.getData})
-  // }
-  //
-  // // 地图保存
-  // saveAndGoToMapChange = () => {
-  //   (async function() {
-  //     try {
-  //       let saveMap = await this.map.save()
-  //       if (!saveMap) {
-  //         Toast.show('保存失败')
-  //       } else {
-  //         this.showModifiedDialog(false)
-  //         this.showSaveDialog(false)
-  //         Toast.show('保存成功')
-  //         this.goToMapChange()
-  //       }
-  //     } catch (e) {
-  //       Toast.show('保存失败')
-  //     }
-  //   }.bind(this)())
-  // }
-  //
-  // // 保存
-  // saveMapAndWorkspace = ({ mapName, wsName, path }) => {
-  //   this.container.setLoading(true)
-  //   ;(async function() {
-  //     try {
-  //       let saveWs
-  //       let info = {}
-  //       if (!mapName) {
-  //         Toast.show('请输入地图名称')
-  //         return
-  //       }
-  //       if (this.state.path !== path || path === ConstPath.LocalDataPath) {
-  //         info.path = path
-  //       }
-  //       if (this.showDialogCaption) {
-  //         if (!wsName) {
-  //           Toast.show('请输入工作空间名称')
-  //           return
-  //         }
-  //         info.path = path
-  //         info.caption = wsName
-  //       }
-  //       await this.map.setWorkspace(this.workspace)
-  //       // 若名称相同，则不另存为
-  //       // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-  //
-  //       // saveWs = await this.workspace.saveWorkspace(info)
-  //       if (this.showDialogCaption) {
-  //         let index = await this.workspace.addMap(
-  //           mapName,
-  //           await this.map.toXML(),
-  //         )
-  //         if (index >= 0) {
-  //           saveWs = await this.workspace.saveWorkspace(info)
-  //           if (saveWs) {
-  //             this.showSaveDialog(false)
-  //             Toast.show('保存成功')
-  //           } else {
-  //             Toast.show('保存失败')
-  //           }
-  //         } else {
-  //           Toast.show('该名称地图已存在')
-  //         }
-  //       } else {
-  //         // 若名称相同，则不另存为
-  //         let saveMap = await this.map.save(
-  //           mapName !== this.state.mapName ? mapName : '',
-  //         )
-  //         saveWs = await this.workspace.saveWorkspace(info)
-  //         if (!saveMap) {
-  //           Toast.show('该名称地图已存在')
-  //         } else if (saveWs || !this.showDialogCaption) {
-  //           this.showSaveDialog(false)
-  //           Toast.show('保存成功')
-  //         } else if (saveWs === undefined) {
-  //           Toast.show('该工作空间已存在')
-  //         } else {
-  //           Toast.show('保存失败')
-  //         }
-  //       }
-  //       this.container.setLoading(false)
-  //     } catch (e) {
-  //       this.container.setLoading(false)
-  //       Toast.show('保存失败')
-  //     }
-  //   }.bind(this)())
-  // }
-  //
-  // //添加数据集
-  // _add_dataset = () => {
-  //   NavigationService.navigate('AddDataset', {
-  //     workspace: this.workspace,
-  //     map: this.map,
-  //     layerList: this.state.datasourceList,
-  //     cb: async () => {
-  //       await this.getData()
-  //       this.map && this.map.refresh()
-  //     },
-  //   })
-  // }
-  //
-  // //新建图层组
-  // _add_layer_group = () => {
-  //   NavigationService.navigate('AddLayerGroup', {
-  //     workspace: this.workspace,
-  //     mapControl: this.mapControl,
-  //     map: this.map,
-  //     cb: this.getData,
-  //   })
-  // }
-  //
-  // //删除图层 / 解散图层组
-  // _removeLayer = () => {
-  //   (async function() {
-  //     try {
-  //       if (!this.map || !this.removeLayerData) return
-  //       let result = false,
-  //         info = '删除',
-  //         isDeletedFromGroup = false
-  //       if (this.removeLayerData.layer._SMLayerGroupId) {
-  //         // 解散图层组
-  //         result = await this.removeLayerData.layer.ungroup()
-  //         info = '解散图层组'
-  //       } else if (this.removeLayerData.groupName) {
-  //         // 从图层组中删除图层
-  //         let group = new LayerGroup()
-  //         group._SMLayerId = this.removeLayerData.layerGroupId
-  //         result = await group.remove(this.removeLayerData.layer)
-  //         isDeletedFromGroup = true
-  //       } else {
-  //         // 删除图层
-  //         let name = this.removeLayerData.name
-  //         result = await this.map.removeLayer(name)
-  //       }
-  //       if (result) {
-  //         Toast.show(info + '成功')
-  //
-  //         // TODO 更新解散的图层组
-  //         if (
-  //           (this.removeLayerData.layer._SMLayerGroupId &&
-  //             this.removeLayerData.groupName) ||
-  //           isDeletedFromGroup
-  //         ) {
-  //           let child = await this.getChildList({
-  //             data: this.itemRefs[this.removeLayerData.groupName].props.data,
-  //           })
-  //           this.itemRefs[this.removeLayerData.groupName].updateChild(child)
-  //         } else {
-  //           await this.getData()
-  //         }
-  //         delete this.itemRefs[this.removeLayerData.name]
-  //         this.removeLayerData = null
-  //       } else {
-  //         Toast.show(info + '失败')
-  //       }
-  //       this.deleteDialog && this.deleteDialog.setDialogVisible(false)
-  //     } catch (e) {
-  //       Toast.show('删除失败')
-  //     }
-  //   }.bind(this)())
-  // }
-  //
-  // //图层重命名
-  // _renameLayer = name => {
-  //   (async function() {
-  //     try {
-  //       if (!this.map || !this.renameLayer) return
-  //       await this.renameLayer.setCaption(name)
-  //       Toast.show('修改成功')
-  //       this.renameLayer = null
-  //       await this.getData()
-  //       this.renameDialog && this.renameDialog.setDialogVisible(false)
-  //     } catch (e) {
-  //       Toast.show('修改失败')
-  //     }
-  //   }.bind(this)())
-  // }
 
   getItemLayout = (data, index) => {
     return {
@@ -462,8 +250,25 @@ export default class MT_layerManager extends React.Component {
   }
 
   updateTagging = async () => {
-    this.setRefreshing(true)
-    this.getData()
+    // this.setRefreshing(true)
+    let dataList = await SMap.getTaggingLayers(
+      this.props.user.currentUser.userName,
+    )
+    for (let item of dataList) {
+      if (item.isVisible) {
+        // 显示多媒体callouts
+        SMediaCollector.showMedia(item.name)
+      }
+    }
+    let data = [...this.state.data]
+    data[0] = {
+      title: getLanguage(this.props.language).Map_Layer.PLOTS,
+      //'我的标注',
+      data: dataList,
+      visible: true,
+    }
+    this.setState({ data })
+    // this.getData()
   }
 
   /**地图制图修改风格 */
@@ -709,6 +514,14 @@ export default class MT_layerManager extends React.Component {
         }
       }
     SMap.setLayerVisible(data.path, value)
+
+    if (value) {
+      // 显示多媒体callouts
+      SMediaCollector.showMedia(data.name)
+    } else {
+      // 隐藏多媒体callouts
+      SMediaCollector.hideMedia(data.name)
+    }
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -753,8 +566,9 @@ export default class MT_layerManager extends React.Component {
               value,
               this.props.user.currentUser.userName,
             )
-            this.setRefreshing(true)
-            this.getData()
+            // this.setRefreshing(true)
+            // this.getData()
+            this.updateTagging()
           }.bind(this)())
         }
         NavigationService.goBack()
@@ -1054,40 +868,9 @@ export default class MT_layerManager extends React.Component {
         }}
         bottomBar={this.renderToolBar()}
       >
-        {/*<LayerManager_tab*/}
-        {/*mapChange={this._map_change}*/}
-        {/*showSaveDialog={this.showSaveDialog}*/}
-        {/*addDataset={this._add_dataset}*/}
-        {/*addLayerGroup={this._add_layer_group}*/}
-        {/*/>*/}
         {this.renderList()}
         {this.renderOverLayer()}
         {this.renderTool()}
-        {/*<SaveDialog*/}
-        {/*ref={ref => (this.saveDialog = ref)}*/}
-        {/*confirmAction={this.saveMapAndWorkspace}*/}
-        {/*showWsName={this.showDialogCaption}*/}
-        {/*mapName={this.state.mapName}*/}
-        {/*wsName={this.state.wsName}*/}
-        {/*path={this.state.path}*/}
-        {/*/>*/}
-        {/*<ModifiedDialog*/}
-        {/*ref={ref => (this.modifiedDialog = ref)}*/}
-        {/*info={'当前地图已修改，是否保存？'}*/}
-        {/*confirmAction={this.saveAndGoToMapChange}*/}
-        {/*cancelAction={this.goToMapChange}*/}
-        {/*/>*/}
-        {/*<ModifiedDialog*/}
-        {/*ref={ref => (this.deleteDialog = ref)}*/}
-        {/*info={'是否要删除该图层？'}*/}
-        {/*confirmAction={this._removeLayer}*/}
-        {/*/>*/}
-        {/*<InputDialog*/}
-        {/*ref={ref => (this.renameDialog = ref)}*/}
-        {/*title={'图层重命名'}*/}
-        {/*label={'图层名称'}*/}
-        {/*confirmAction={this._renameLayer}*/}
-        {/*/>*/}
       </Container>
     )
   }

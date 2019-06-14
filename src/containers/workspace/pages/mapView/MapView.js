@@ -12,6 +12,7 @@ import {
   SMap,
   SCollector,
   EngineType,
+  SMediaCollector,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -49,10 +50,10 @@ import { setGestureDetectorListener } from '../../../GestureDetectorListener'
 import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import SMLegendView from '../../components/LegendView/SMLegendView'
 import RNLegendView from '../../components/RNLegendView'
 //eslint-disable-next-line
 import { HEIGHT } from '../../../../utils/constUtil'
+import ScaleView from '../../components/ScaleView/ScaleView'
 
 const markerTag = 117868
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -216,6 +217,12 @@ export default class MapView extends React.Component {
         action: () => this.back(),
       })
 
+      SMediaCollector.setCalloutTapListener(info => {
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      })
+
       this.clearData()
       if (this.toolBox) {
         GLOBAL.toolBox = this.toolBox
@@ -273,6 +280,12 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setMapLegend(false)
+
+    // 移除多媒体采集监听
+    SMediaCollector.removeListener()
+
+    // 移除多媒体采集Callout
+    SMediaCollector.removeMedias()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }
@@ -369,7 +382,7 @@ export default class MapView extends React.Component {
     }
   }
 
-  _onGetInstance = mapView => {
+  _onGetInstance = async mapView => {
     this.mapView = mapView
     this._addMap()
   }
@@ -909,6 +922,16 @@ export default class MapView extends React.Component {
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
+        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
+          dataList => {
+            dataList.forEach(item => {
+              if (item.isVisible) {
+                SMediaCollector.showMedia(item.name)
+              }
+            })
+          },
+        )
         // 获取图层列表
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },
@@ -938,6 +961,8 @@ export default class MapView extends React.Component {
         )
         this._addGeometrySelectedListener()
         this.setLoading(false)
+        //地图打开后去获取图例数据
+        GLOBAL.scaleView.getInitialData()
       } catch (e) {
         this.setLoading(false)
       }
@@ -1165,6 +1190,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.fullMap = !full
   }
 
@@ -1349,17 +1375,11 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && Platform.OS === 'android' && (
-          <SMLegendView
-            device={this.props.device}
-            ref={ref => (GLOBAL.smlegend = ref)}
-          />
-        )}
-        {this.props.mapLegend && Platform.OS === 'ios' && (
+        {this.props.mapLegend && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}
-            ref={ref => (GLOBAL.smlegend = ref)}
+            ref={ref => (GLOBAL.legend = ref)}
           />
         )}
         {this.state.showMap && (
@@ -1376,7 +1396,11 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
-
+        <ScaleView
+          device={this.props.device}
+          language={this.props.language}
+          ref={ref => (GLOBAL.scaleView = ref)}
+        />
         <PopModal
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}

@@ -4,7 +4,7 @@ import { getLanguage } from '../language/index'
 import { ConstToolType } from '../constants'
 
 let _params = {}
-let isfull = true
+// let isfull = true
 
 function setGestureDetectorListener(params) {
   (async function() {
@@ -18,12 +18,12 @@ function setGestureDetectorListener(params) {
 function touchCallback(event) {
   switch (GLOBAL.TouchType) {
     case ConstToolType.NORMAL:
-      if (isfull) {
-        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      } else {
-        GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
-      }
-      isfull = !isfull
+      // if (isfull) {
+      //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      // } else {
+      //   GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
+      // }
+      // isfull = !isfull
       break
     case ConstToolType.MAP_TOOL_TAGGING:
       NavigationService.navigate('InputPage', {

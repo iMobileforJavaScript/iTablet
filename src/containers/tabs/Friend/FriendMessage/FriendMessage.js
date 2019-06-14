@@ -155,7 +155,7 @@ class FriendMessage extends Component {
   _onSectionselect = item => {
     this.target = item
     NavigationService.navigate('Chat', {
-      target: item,
+      targetId: item.id,
       curUser: this.props.user,
       friend: this.props.friend,
     })
@@ -342,6 +342,7 @@ class FriendMessage extends Component {
   _renderItem(item, index) {
     if (item && item['message'].length > 0) {
       let lastMessage = item['message'][item['message'].length - 1]
+      lastMessage = this.props.friend.loadMsg(lastMessage)
       let time = lastMessage.originMsg.time
       let ctime = new Date(time)
       let timeString =
@@ -414,7 +415,7 @@ class FriendMessage extends Component {
                 top: scaleSize(10),
               }}
             >
-              {lastMessage.text}
+              {lastMessage.text.replace(/[\r\n]/g, '')}
             </Text>
           </View>
           <View

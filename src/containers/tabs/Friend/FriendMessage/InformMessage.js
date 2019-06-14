@@ -32,9 +32,9 @@ export default class InformMessage extends React.Component {
       currentUser: this.props.navigation.getParam('user', ''),
     }
     this.language = this.props.navigation.getParam('language', '')
+    this.friend = this.props.navigation.getParam('friend')
   }
   componentDidMount() {
-    this.friend = this.props.navigation.getParam('friend')
     this.setState(() => {
       return {
         messageInfo: this.props.navigation.getParam('messageInfo'),
@@ -121,7 +121,7 @@ export default class InformMessage extends React.Component {
   }
 
   _renderItem(item, index) {
-    let lastMessage = item.text
+    let lastMessage = this.friend.loadMsg(item)
     let time = item.originMsg.time
     let ctime = new Date(time)
     let timeString =
@@ -165,7 +165,7 @@ export default class InformMessage extends React.Component {
               top: scaleSize(10),
             }}
           >
-            {lastMessage}
+            {lastMessage.text}
           </Text>
         </View>
         <View

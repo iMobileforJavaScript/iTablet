@@ -5,18 +5,26 @@ import android.support.multidex.MultiDexApplication;
 import com.supermap.file.CrashHandler;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import com.ocetnik.timer.BackgroundTimerPackage;
+import org.reactnative.camera.RNCameraPackage;
+import org.reactnative.camera.RNCameraPackage;
 import cn.jpush.reactnativejpush.JPushPackage;
+import com.brentvatne.react.ReactVideoPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import cn.jpush.reactnativejpush.JPushPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.rnfs.RNFSPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import cn.qiuxiang.react.geolocation.AMapGeolocationPackage;
-//import com.airbnb.android.react.maps.MapsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.github.yamill.orientation.OrientationPackage;
-import com.rnfs.RNFSPackage;
 import com.supermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.supermap.rnsupermap.BuildConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,12 +42,17 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new BackgroundTimerPackage(),
+            new RNCameraPackage(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
+            new ReactVideoPackage(),
+            new JPushPackage(!BuildConfig.DEBUG, !BuildConfig.DEBUG),
+            new PickerPackage(),
+            new RNFSPackage(),
             new JPushPackage(true, true),
             new ReactNativeContacts(),
             new AMapGeolocationPackage(),
-//            new MapsPackage(),
             new OrientationPackage(),
-            new RNFSPackage(),
             new SplashScreenReactPackage(),
                     new SupermapFullPackage(),
                     new MyReactpackge()

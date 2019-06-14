@@ -56,6 +56,7 @@ import {
   // SOnlineService,
   SMCollectorType,
   SCartography,
+  SMediaCollector,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -2979,7 +2980,7 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (GLOBAL.smlegend.state.visible) {
+          if (GLOBAL.legend.state.visible) {
             buttons = [
               ToolbarBtnType.CANCEL,
               ToolbarBtnType.NOT_VISIBLE,
@@ -3319,7 +3320,7 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = GLOBAL.smlegend.state.visible
+    let type = GLOBAL.legend.state.visible
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3328,7 +3329,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    GLOBAL.smlegend.setState({
+    GLOBAL.legend.setState({
       visible: type === ConstToolType.LEGEND,
     })
   }
@@ -3986,6 +3987,8 @@ export default class ToolBar extends React.PureComponent {
             if (this.props.map.currentMap.name) {
               await this.props.closeMap()
             }
+            // 移除地图上所有callout
+            SMediaCollector.removeMedias()
             // 打开地图
             let mapPath =
               (this.props.user && this.props.user.currentUser.userName
@@ -4011,6 +4014,16 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             }
             await SMap.openTaggingDataset(this.props.user.currentUser.userName)
+            // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+            await SMap.getTaggingLayers(
+              this.props.user.currentUser.userName,
+            ).then(dataList => {
+              dataList.forEach(item => {
+                if (item.isVisible) {
+                  SMediaCollector.showMedia(item.name)
+                }
+              })
+            })
             // 重新加载图层
             this.props.getLayers({
               type: -1,
@@ -4087,6 +4100,8 @@ export default class ToolBar extends React.PureComponent {
                 getLanguage(this.props.language).Prompt.CREATING,
                 //ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
               )
+            // 移除地图上所有callout
+            SMediaCollector.removeMedias()
             await this.props.closeMap()
             this.props.setCollectionInfo() // 清空当前模板
             this.props.setCurrentTemplateInfo() // 清空当前模板
@@ -4114,6 +4129,17 @@ export default class ToolBar extends React.PureComponent {
             )
 
             let layers = await this.props.getLayers()
+            await SMap.openTaggingDataset(this.props.user.currentUser.userName)
+            // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+            await SMap.getTaggingLayers(
+              this.props.user.currentUser.userName,
+            ).then(dataList => {
+              dataList.forEach(item => {
+                if (item.isVisible) {
+                  SMediaCollector.showMedia(item.name)
+                }
+              })
+            })
 
             // 隐藏底图
             await SMap.setLayerVisible(layers[layers.length - 1].path, true)
@@ -4205,6 +4231,8 @@ export default class ToolBar extends React.PureComponent {
           if (this.props.map.currentMap.name) {
             await this.props.closeMap()
           }
+          // 移除地图上所有callout
+          SMediaCollector.removeMedias()
           await this.props.setCurrentSymbols()
           this.props
             .importWorkspace({
@@ -4287,6 +4315,16 @@ export default class ToolBar extends React.PureComponent {
                   //       ? 1 : ConstOnline['Google'].layerIndex, false)
                   // }
                 })
+                // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+                await SMap.getTaggingLayers(
+                  this.props.user.currentUser.userName,
+                ).then(dataList => {
+                  dataList.forEach(item => {
+                    if (item.isVisible) {
+                      SMediaCollector.showMedia(item.name)
+                    }
+                  })
+                })
                 this.props.setContainerLoading(false)
                 // // 重新加载图层
                 // this.props.getLayers({
@@ -4350,6 +4388,8 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      // 移除地图上所有callout
+      SMediaCollector.removeMedias()
       // 清除属性历史记录
       await this.props.clearAttributeHistory()
       await this.props.setCurrentSymbols()
@@ -4361,7 +4401,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         SMap.addLegendDelegate({
-          legendContentChange: GLOBAL.smlegend._contentChange,
+          legendContentChange: GLOBAL.legend._contentChange,
         })
         if (mapInfo.Template) {
           this.props.setContainerLoading(
@@ -4400,6 +4440,17 @@ export default class ToolBar extends React.PureComponent {
             await this.props.getLayers(-1)
           }
         })
+
+        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
+          dataList => {
+            dataList.forEach(item => {
+              if (item.isVisible) {
+                SMediaCollector.showMedia(item.name)
+              }
+            })
+          },
+        )
 
         this.props.setContainerLoading(false)
         this.setVisible(false)
@@ -4833,7 +4884,7 @@ export default class ToolBar extends React.PureComponent {
         list = heatmapMenuInfo(this.props.language)
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      if (GLOBAL.smlegend.state.visible) {
+      if (GLOBAL.legend.state.visible) {
         list = legendMenuInfoNotVisible(this.props.language)
       } else {
         list = legendMenuInfo(this.props.language)

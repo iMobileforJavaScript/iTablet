@@ -30,6 +30,7 @@ export default class JPushService {
       titleText = messageObj.user.groupName
       messageText = messageObj.user.name + ': ' + messageText
     }
+    messageText = messageText.replace(/[\r\n]/g, '')
     let request = {
       platform: 'all',
       audience: { alias: audience },
@@ -115,7 +116,7 @@ export default class JPushService {
       titleText = messageObj.user.groupName
       messageText = messageObj.user.name + ': ' + messageText
     }
-
+    messageText = messageText.replace(/[\r\n]/g, '')
     let notification = {
       buildId: 0,
       id: parseInt(messageObj.user.id),
@@ -126,8 +127,9 @@ export default class JPushService {
 
     if (Platform.OS === 'ios') {
       notification.subtitle = ''
-      notification.badge = '+1'
+      notification.badge = 1
       notification.sound = 'default'
+      notification.fireTime = Date.parse(new Date()) + 2000
     }
     JPushModule.sendLocalNotification(notification)
   }

@@ -117,23 +117,33 @@ export default class protocol extends Component {
         break
       case 'superMapForum':
         source = {
-          uri: `https://ask.supermap.com/`,
+          uri: `http://ask.supermap.com/`,
         }
         title = getLanguage(global.language).Prompt.SUPERMAP_FORUM
         //'超图论坛'
         break
-      case 'supermap':
+      case 'SuperMapGroup':
+        // source = {
+        //   uri: `http://mp.weixin.qq.com/profile?src=3&timestamp=1552115539&ver=1&signature=Woh7VGjhtLXAgNTVx1F50zmUmCsLKoHFVbmqPbIG9A8hHc0dRRkEY*lxVbf-sH5ULhQ6jonrW-AHDvub42uzsw==`,
+        // }
+        // title = '超图集团'
         source = {
-          uri: `http://mp.weixin.qq.com/profile?src=3&timestamp=1552115539&ver=1&signature=Woh7VGjhtLXAgNTVx1F50zmUmCsLKoHFVbmqPbIG9A8hHc0dRRkEY*lxVbf-sH5ULhQ6jonrW-AHDvub42uzsw==`,
+          uri:
+            // 'http://111.202.121.144:8088/officialAccount/SuperMapGroup/html/' +
+            'https://mp.weixin.qq.com/s/' + this.knownItem.id,
+          //  +
+          // '.html',
         }
-        title = '超图集团'
+        title = getLanguage(global.language).Prompt.SUPERMAP_GROUP
+        //'超图集团'
         break
       case 'superMapKnown':
         source = {
           uri:
-            'http://111.202.121.144:8088/officialAccount/zhidao/html/' +
-            this.knownItem.id +
-            '.html',
+            // 'http://111.202.121.144:8088/officialAccount/zhidao/html/' +
+            'https://mp.weixin.qq.com/s/' + this.knownItem.id,
+          // +
+          // '.html',
         }
         title = getLanguage(global.language).Prompt.SUPERMAP_KNOW
         //'超图知道'

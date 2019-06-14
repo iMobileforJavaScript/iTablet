@@ -4,7 +4,6 @@ import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
 import {
-  SectionList,
   View,
   InteractionManager,
   FlatList,
@@ -13,7 +12,7 @@ import {
   Image,
 } from 'react-native'
 import styles from './styles'
-import { getMapSettings, getThematicMapSettings } from './settingData'
+import { getlegendSetting, getThematicMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
@@ -74,24 +73,10 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let newData
+    let newData = getThematicMapSettings()
     if (GLOBAL.Type === constants.MAP_THEME) {
-      newData = getThematicMapSettings()
-    } else {
-      let isAntialias = await SMap.isAntialias()
-      let isOverlapDisplayed = await SMap.isOverlapDisplayed()
-      let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
-      let isEnableRotateTouch = SMap.isEnableRotateTouch()
-      let isEnableSlantTouch = SMap.isEnableSlantTouch()
-
-      newData = getMapSettings()
-      newData[0].data[0].value = isEnableRotateTouch
-      newData[0].data[1].value = isEnableSlantTouch
-      newData[1].data[0].value = isAntialias
-      newData[1].data[1].value = isOverlapDisplayed
-      newData[2].data[0].value = isVisibleScalesEnabled
+      newData = newData.concat(getlegendSetting())
     }
-
     this.setState({
       data: newData,
     })
@@ -227,7 +212,7 @@ export default class MapSetting extends Component {
       this.props.navigation.navigate('MapView')
     } else {
       //根据title跳转
-      NavigationService.navigate('secondMapSettings', {
+      NavigationService.navigate('SecondMapSettings', {
         title,
         language: this.props.language,
         //
@@ -296,25 +281,12 @@ export default class MapSetting extends Component {
 
   renderSelection = () => {
     if (this.state.data.length === 0) return <View style={{ flex: 1 }} />
-    if (GLOBAL.Type === constants.MAP_THEME) {
-      return (
-        <FlatList
-          renderItem={this.renderFlatListItem}
-          data={this.state.data}
-          keyExtractor={(item, index) => item.title + index}
-          numColumns={1}
-        />
-      )
-    }
     return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionHeader={this.renderListSectionHeader}
-        ItemSeparatorComponent={this._renderItemSeparatorComponent}
-        keyExtractor={(item, index) => index}
-        onRefresh={this.getData}
-        refreshing={false}
+      <FlatList
+        renderItem={this.renderFlatListItem}
+        data={this.state.data}
+        keyExtractor={(item, index) => item.title + index}
+        numColumns={1}
       />
     )
   }

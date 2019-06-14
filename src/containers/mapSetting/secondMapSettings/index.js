@@ -4,7 +4,7 @@
  * https://github.com/AsortKeven
  */
 
-import secondMapSettings from './secondMapSettings'
+import SecondMapSettings from './SecondMapSettings'
 import ColorTable from './components/ColorTable'
 
-export { secondMapSettings, ColorTable }
+export { SecondMapSettings, ColorTable }

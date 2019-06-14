@@ -140,6 +140,49 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
   resolve(array);
 }
 
+#pragma mark 深度遍历指定目录下的指定后缀的文件
+
+NSMutableArray *array;
+
+RCT_REMAP_METHOD(getPathListByFilterDeep, getPathListByFilterDeepWithPath:(NSString *)path surffix:(NSString *) surffix resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try{
+    array = [[NSMutableArray alloc]init];
+    [FileTools getFileAtDirectoryWithPath:path Extensions:surffix];
+    resolve(array);
+    array = nil;
+  }@catch(NSException *exception){
+    reject(@"getPathListByFilterDeep",exception.reason,nil);
+  }
+}
+
++(void)getFileAtDirectoryWithPath:(NSString *)path Extensions:(NSString *) extensions {
+  //NSMutableArray *array = [[NSMutableArray alloc]init];
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  NSArray *currentFiles = [filemanager contentsOfDirectoryAtPath:path error:nil];
+  NSArray *exts = [extensions componentsSeparatedByString:@","];
+  
+  BOOL isDir;
+  
+  for(NSString *file in currentFiles){
+    isDir = NO;
+    NSString *fileName = [[NSString alloc]initWithFormat:@"%@%@%@",path,@"/",file];
+    BOOL isDirExist = [filemanager fileExistsAtPath:fileName isDirectory:&isDir];
+    
+    if(isDir && isDirExist){
+      [self getFileAtDirectoryWithPath:fileName Extensions:extensions];
+    }else{
+      for(int j = 0; j < exts.count; j++){
+        if([file hasSuffix:exts[j]]){
+          NSString *filePath = [[NSString alloc] initWithFormat:@"%@%@%@",path,@"/",file];
+          NSObject *obj = @{@"name":file,@"path":filePath};
+          [array addObject:obj];
+          continue;
+        }
+      }
+    }
+  }
+}
+
 RCT_REMAP_METHOD(getMaps, getMapsPath:(NSString*)path filter:(NSDictionary*)filter resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     BOOL flag = YES;
@@ -360,6 +403,48 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   }
 }
 
+RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
+{
+  @try {
+    UIImage *shotImage;
+    //视频路径URL
+    NSURL *fileURL = [NSURL fileURLWithPath:filepath];
+    
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
+    
+    AVAssetImageGenerator *gen = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    
+    gen.appliesPreferredTrackTransform = YES;
+    
+    CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+    
+    NSError *error = nil;
+    
+    CMTime actualTime;
+    
+    CGImageRef image = [gen copyCGImageAtTime:time actualTime:&actualTime error:&error];
+    
+    shotImage = [[UIImage alloc] initWithCGImage:image];
+    // save to temp directory
+    NSString* tempDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
+                                                                   NSUserDomainMask,
+                                                                   YES) lastObject];
+    
+    NSData *data = UIImageJPEGRepresentation(shotImage, 1.0);
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *fullPath = [tempDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"thumb-%@.jpg", [[NSProcessInfo processInfo] globallyUniqueString]]];
+    [fileManager createFileAtPath:fullPath contents:data attributes:nil];
+    CGImageRelease(image);
+    if (resolve)
+      resolve(@{ @"path" : fullPath,
+                 @"width" : [NSNumber numberWithFloat: shotImage.size.width],
+                 @"height" : [NSNumber numberWithFloat: shotImage.size.height] });
+  } @catch(NSException *e) {
+    reject(e.reason, nil, nil);
+  }
+}
+
 /****************************************************************************************************************/
 
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath {
@@ -482,6 +567,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Color"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Map"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Media"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", plottingExtDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath]];

@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
-  Image,
-  TextInput,
   RefreshControl,
 } from 'react-native'
 
@@ -20,11 +18,8 @@ import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 // import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
-import MessageDataHandle from '../MessageDataHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
-import { dialogStyles, inputStyles } from '../Styles'
-import { Dialog } from '../../../../components/Dialog'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 // import { styles } from './../Styles'
@@ -43,7 +38,6 @@ class FriendGroup extends Component {
     this.screenWidth = Dimensions.get('window').width
     this.inFormData = []
 
-    //this.chat;
     this.state = {
       data: [],
       isRefresh: false,
@@ -52,15 +46,7 @@ class FriendGroup extends Component {
     }
   }
 
-  // refresh = () =>
-  // {
-  //   if (JSON.stringify(this.chat) !== JSON.stringify(this.props.friend.props.chat)) {
-  //     this.chat = this.props.friend.props.chat;
-  //     this.getContacts(this.props)
-  //   }
-  // }
   componentDidMount() {
-    // this.chat = this.props.friend.props.chat
     this.getContacts()
   }
 
@@ -134,46 +120,11 @@ class FriendGroup extends Component {
   }
 
   _onSectionselect = key => {
-    let friend = {
-      id: key.id,
-      users: key.members,
-      message: [],
-      title: key.groupName,
-    }
-
-    let chatObj = {}
-    if (this.props.friend.props.chat.hasOwnProperty(this.props.user.userId)) {
-      let chats = this.props.friend.props.chat[this.props.user.userId]
-      if (chats.hasOwnProperty(key.id)) {
-        chatObj = chats[key.id].history
-        friend = {
-          id: key.id,
-          users: key.members,
-          message: chatObj,
-          title: key.groupName,
-        }
-      }
-    }
-
     NavigationService.navigate('Chat', {
-      target: friend,
+      targetId: key.id,
       curUser: this.props.user,
       friend: this.props.friend,
     })
-  }
-
-  _modifyName = () => {
-    FriendListFileHandle.modifyGroupList(this.target.id, this.state.inputText)
-    this.inputdialog.setDialogVisible(false)
-  }
-  _deleteGroup = () => {
-    MessageDataHandle.delMessage({
-      //清除未读信息
-      userId: this.props.user.userId, //当前登录账户的id
-      talkId: this.target.id, //会话ID
-    })
-    FriendListFileHandle.delFromGroupList(this.target.id)
-    this.dialog.setDialogVisible(false)
   }
 
   render() {
@@ -207,53 +158,16 @@ class FriendGroup extends Component {
             />
           }
         />
-        {this.renderDialog()}
-        {this.renderInputDialog()}
       </View>
     )
   }
 
-  _showPopover = (pressView, item) => {
-    this.target = item
-    let obj = {
-      title: getLanguage(this.props.language).Friends.SET_MARK_NAME,
-      onPress: () => {
-        this.inputdialog.setDialogVisible(true)
-      },
-    }
-    pressView.measure((ox, oy, width, height, px, py) => {
-      let items = [
-        obj,
-        {
-          title: getLanguage(this.props.language).Friends.DEL_GROUP,
-          onPress: () => {
-            this.dialog.setDialogVisible(true)
-          },
-        },
-      ]
-      ActionPopover.show(
-        {
-          x: px,
-          y: py,
-          width,
-          height,
-        },
-        items,
-      )
-    })
-  }
-
   _renderItem(item) {
-    let iTemView
     return (
       <TouchableOpacity
-        ref={ref => (iTemView = ref)}
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => this._onSectionselect(item)}
-        onLongPress={() => {
-          this._showPopover(iTemView, item)
-        }}
       >
         <View style={styles.ITemHeadTextViewStyle}>
           <View
@@ -273,84 +187,6 @@ class FriendGroup extends Component {
       </TouchableOpacity>
     )
   }
-
-  // _renderItem(item, index) {
-  //   if (item && item['message'].length > 0) {
-  //     let lastMessage = item['message'][item['message'].length - 1]
-  //     let time = lastMessage.time
-  //     let ctime = new Date(time)
-  //     let timeString =
-  //       '' +
-  //       ctime.getFullYear() +
-  //       '/' +
-  //       (ctime.getMonth() + 1) +
-  //       '/' +
-  //       ctime.getDate() +
-  //       ' ' +
-  //       ctime.getHours() +
-  //       ':' +
-  //       ctime.getMinutes()
-  //
-  //     return (
-  //       <TouchableOpacity
-  //         style={styles.ItemViewStyle}
-  //         activeOpacity={0.75}
-  //         onPress={() => {
-  //           this._onSectionselect(item, index)
-  //         }}
-  //       >
-  //         <View style={styles.ITemHeadTextViewStyle}>
-  //           {item.unReadMsg > 0 ? (
-  //             <View
-  //               style={{
-  //                 position: 'absolute',
-  //                 backgroundColor: 'red',
-  //                 justifyContent: 'center',
-  //                 height: scaleSize(25),
-  //                 width: scaleSize(25),
-  //                 borderRadius: scaleSize(25),
-  //                 top: scaleSize(-6),
-  //                 right: scaleSize(-12),
-  //               }}
-  //             >
-  //               <Text
-  //                 style={{
-  //                   fontSize: scaleSize(20),
-  //                   color: 'white',
-  //                   textAlign: 'center',
-  //                 }}
-  //               >
-  //                 {item.unReadMsg}
-  //               </Text>
-  //             </View>
-  //           ) : null}
-  //           <View
-  //             style={{
-  //               alignItems: 'center',
-  //               justifyContent: 'center',
-  //               flexDirection: 'row',
-  //               flexWrap: 'wrap',
-  //             }}
-  //           >
-  //             {this._renderItemHeadView(item)}
-  //           </View>
-  //         </View>
-  //         <View style={styles.ITemTextViewStyle}>
-  //           {this._renderItemTitleView(item)}
-  //           <Text
-  //             style={{
-  //               fontSize: scaleSize(20),
-  //               color: 'grey',
-  //               top: scaleSize(10),
-  //             }}
-  //           >
-  //             {lastMessage.msg}
-  //           </Text>
-  //         </View>
-  //       </TouchableOpacity>
-  //     )
-  //   }
-  // }
 
   _renderItemHeadView(item) {
     if (item.members.length > 1) {
@@ -374,81 +210,9 @@ class FriendGroup extends Component {
       )
     }
   }
-  // eslint-disable-next-line
+
   _renderItemTitleView(item) {
     return <Text style={styles.ITemTextStyle}>{item['title']}</Text>
-  }
-
-  renderDialogChildren = () => {
-    return (
-      <View style={dialogStyles.dialogHeaderViewX}>
-        <Image
-          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-          style={dialogStyles.dialogHeaderImgX}
-        />
-        <Text style={dialogStyles.promptTtileX}>
-          {getLanguage(this.props.language).Friends.DEL_GROUP_CONFIRM}
-        </Text>
-      </View>
-    )
-  }
-  renderDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.dialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.props.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.props.language).Friends.CANCEL}
-        confirmAction={this._deleteGroup}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={dialogStyles.dialogBackgroundX}
-      >
-        {this.renderDialogChildren()}
-      </Dialog>
-    )
-  }
-
-  renderInputDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.inputdialog = ref)}
-        style={{
-          marginVertical: 15,
-          width: scaleSize(420),
-          height: scaleSize(250),
-        }}
-        type={'modal'}
-        confirmAction={this._modifyName}
-        // cancelAction={this.cancel}
-      >
-        <View style={inputStyles.item}>
-          {/* <Text style={styles.title}>文本内容</Text> */}
-          <TextInput
-            underlineColorAndroid={'transparent'}
-            accessible={true}
-            accessibilityLabel={
-              getLanguage(this.props.language).Friends.TEXT_CONTENT
-            }
-            onChangeText={text => {
-              this.setState({
-                inputText: text,
-              })
-            }}
-            value={this.state.inputText}
-            placeholder={
-              getLanguage(this.props.language).Friends.INPUT_MARK_NAME
-            }
-            style={inputStyles.textInputStyle}
-          />
-        </View>
-        {this.state.placeholder && (
-          <Text style={styles.placeholder}>
-            {getLanguage(this.props.language).Friends.INPUT_INVALID}
-          </Text>
-        )}
-      </Dialog>
-    )
   }
 }
 const styles = StyleSheet.create({

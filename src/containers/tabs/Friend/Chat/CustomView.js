@@ -23,15 +23,22 @@ export default class CustomView extends React.Component {
     onFileTouch: () => {},
   }
 
-  touchFileCallback = message => {
-    this.props.onFileTouch(message)
+  touchFileCallback = (type, message) => {
+    this.props.onFileTouch(type, message)
   }
 
   render() {
-    if (
-      this.props.currentMessage.type &&
-      this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
-    ) {
+    /*
+     * 文本消息，不渲染customview
+     */
+    if (this.props.currentMessage.type === MSGConstant.MSG_TEXT) {
+      return null
+    }
+    /*
+     * 文件下载通知消息，包括图层，数据集等
+     */
+    if (this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) {
+      let fileType = this.props.currentMessage.type
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
       let fileSizeText = ''
@@ -46,7 +53,7 @@ export default class CustomView extends React.Component {
       return (
         <TouchableWithoutFeedback
           onPress={() => {
-            this.touchFileCallback(this.props.currentMessage)
+            this.touchFileCallback(fileType, this.props.currentMessage)
           }}
         >
           <View
@@ -78,20 +85,20 @@ export default class CustomView extends React.Component {
         </TouchableWithoutFeedback>
       )
     }
-    if (
-      this.props.currentMessage.type &&
-      this.props.currentMessage.type === MSGConstant.MSG_LOCATION
-    ) {
-      let text =
-        'LOCATION(' +
-        this.props.currentMessage.originMsg.message.message.longitude.toFixed(
-          6,
-        ) +
-        ',' +
-        this.props.currentMessage.originMsg.message.message.latitude.toFixed(
-          6,
-        ) +
-        ')'
+    /*
+     * 定位消息
+     */
+    if (this.props.currentMessage.type === MSGConstant.MSG_LOCATION) {
+      let text = this.props.currentMessage.originMsg.message.message.message
+      // 'LOCATION(' +
+      // this.props.currentMessage.originMsg.message.message.longitude.toFixed(
+      //   6,
+      // ) +
+      // ',' +
+      // this.props.currentMessage.originMsg.message.message.latitude.toFixed(
+      //   6,
+      // ) +
+      // ')'
       let textColor = 'white'
       if (this.props.position === 'left') {
         textColor = 'black'
@@ -116,26 +123,51 @@ export default class CustomView extends React.Component {
             })
           }}
         >
-          <Image
-            source={require('../../../../assets/lightTheme/friend/app_chat_pin.png')}
+          <View
             style={{
-              width: scaleSize(45),
-              height: scaleSize(45),
-            }}
-          />
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: scaleSize(20),
-              color: textColor,
+              width: scaleSize(340),
+              padding: scaleSize(5),
+              alignItems: 'center',
             }}
           >
-            {text}
-          </Text>
+            <Image
+              source={require('../../../../assets/lightTheme/friend/app_chat_pin.png')}
+              style={{
+                width: scaleSize(45),
+                height: scaleSize(45),
+              }}
+            />
+            <Text
+              style={{
+                // textAlign: 'center',
+                fontSize: scaleSize(20),
+                color: textColor,
+              }}
+            >
+              {text}
+            </Text>
+          </View>
         </TouchableOpacity>
       )
     }
-    return null
+    /*
+     * 未在上面处理的消息
+     */
+    let textColor = 'white'
+    if (this.props.position === 'left') {
+      textColor = 'black'
+    }
+    return (
+      <Text
+        style={{
+          textAlign: 'center',
+          fontSize: scaleSize(20),
+          color: textColor,
+        }}
+      >
+        {'暂不支持的消息类型'}
+      </Text>
+    )
   }
 }
 
@@ -143,7 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
   fileContainer: {
     // backgroundColor: 'white',

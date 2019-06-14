@@ -133,9 +133,12 @@ const getThematicMapSettings = () => [
   {
     title: getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM_SETTING,
   },
-  {
-    title: getLanguage(global.language).Map_Settings.ADVANCED_SETTING,
-  },
+  //高级设置 暂时屏蔽
+  // {
+  //   title: getLanguage(global.language).Map_Settings.ADVANCED_SETTING,
+  // },
+]
+const getlegendSetting = () => [
   {
     title: getLanguage(global.language).Map_Settings.LEGEND_SETTING,
   },
@@ -261,14 +264,55 @@ const coordinateSystemSettings = () => [
     iconType: 'arrow',
   },
   {
+    title: getLanguage(global.language).Map_Settings.COPY_COORDINATE_SYSTEM,
+    value: '',
+    iconType: 'arrow',
+  },
+  {
     title: getLanguage(global.language).Map_Settings.DYNAMIC_PROJECTION,
-    value: true,
+    value: false,
     iconType: 'switch',
   },
   {
     title: getLanguage(global.language).Map_Settings.TRANSFER_PARAMS,
+    value: getLanguage(global.language).Map_Settings.OFF,
     iconType: 'arrow',
   },
+]
+
+//复制坐标系
+const copyCoordinate = () => [
+  {
+    title: getLanguage(global.language).Map_Settings.FROM_DATASOURCE,
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.FROM_DATASET,
+    value: '',
+    iconType: 'arrow',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.FROM_FILE,
+    value: '',
+    iconType: 'arrow',
+  },
+]
+//从文件复制坐标系类型列表
+const coordMenuData = () => [
+  [
+    getLanguage(global.language).Map_Settings.ALL_COORD_FILE,
+    getLanguage(global.language).Map_Settings.SHAPE_COORD_FILE,
+    getLanguage(global.language).Map_Settings.MAPINFO_FILE,
+    getLanguage(global.language).Map_Settings.MAPINFO_TAB_FILE,
+    getLanguage(global.language).Map_Settings.IMG_COORD_FILE,
+    getLanguage(global.language).Map_Settings.COORD_FILE,
+  ],
+  ['*.shp', '*.prj', '*.mif', '*.tab', '*.tif', '*.img', '*.sit', '*.xml'],
+]
+const coordMenuTitle = () => [
+  getLanguage(global.language).Map_Settings.TYPE,
+  getLanguage(global.language).Map_Settings.FORMAT,
 ]
 //坐标系数据
 const coordinateData = () => [
@@ -349,56 +393,56 @@ const transferData = () => [
   },
 ]
 //高级设置
-const advancedSettings = () => [
-  {
-    title: getLanguage(global.language).Map_Settings.FLOW_VISIUALIZATION,
-    value: true,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_NEGATIVE_DATA,
-    value: true,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.AUTOMATIC_AVOIDANCE,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.ZOOM_WITH_MAP,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_TRACTION_LINE,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.GLOBAL_STATISTICS,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.CHART_ANNOTATION,
-    value: getLanguage(global.language).Map_Settings.PERCENT,
-    iconType: 'arrow',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.SHOW_AXIS,
-    value: false,
-    iconType: 'switch',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.HISTOGRAM_STYLE,
-    iconType: 'arrow',
-  },
-  {
-    title: getLanguage(global.language).Map_Settings.ROSE_AND_PIE_CHART_STYLE,
-    iconType: 'arrow',
-  },
-]
+// const advancedSettings = () => [
+//   {
+//     title: getLanguage(global.language).Map_Settings.FLOW_VISIUALIZATION,
+//     value: true,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_NEGATIVE_DATA,
+//     value: true,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.AUTOMATIC_AVOIDANCE,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.ZOOM_WITH_MAP,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_TRACTION_LINE,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.GLOBAL_STATISTICS,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.CHART_ANNOTATION,
+//     value: getLanguage(global.language).Map_Settings.PERCENT,
+//     iconType: 'arrow',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.SHOW_AXIS,
+//     value: false,
+//     iconType: 'switch',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.HISTOGRAM_STYLE,
+//     iconType: 'arrow',
+//   },
+//   {
+//     title: getLanguage(global.language).Map_Settings.ROSE_AND_PIE_CHART_STYLE,
+//     iconType: 'arrow',
+//   },
+// ]
 
 // const histogramSettings = () => [
 //   {
@@ -447,12 +491,15 @@ const colorMode = () => [
 export {
   getMapSettings,
   getThematicMapSettings,
+  getlegendSetting,
   basicSettings,
   rangeSettings,
   coordinateSystemSettings,
   coordinateData,
-  advancedSettings,
-  // histogramSettings,
+  copyCoordinate,
+  coordMenuData,
+  coordMenuTitle,
+  // advancedSettings,
   colorMode,
   fourRanges,
   transferData,

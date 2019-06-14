@@ -88,10 +88,13 @@ export default class AnalystItem extends PureComponent {
   props: {
     title: string,
     value: any,
+    rightStyle?: any,
+    inputStyle?: any,
     rightType?: string,
     keyboardType?: string,
     returnKeyLabel?: string,
     returnKeyType?: string,
+    autoCheckNumber?: boolean, // 自动检查输入数字是否合法。只有自定义onChangeText方法，该值才生效
     style?: Object,
     onChange?: () => {},
     onPress?: () => {},
@@ -99,6 +102,7 @@ export default class AnalystItem extends PureComponent {
     onRadioPress?: () => {},
     onSubmitEditing?: () => {},
     onChangeText?: () => {},
+    onBlur?: () => {},
   }
 
   static defaultProps = {
@@ -106,6 +110,7 @@ export default class AnalystItem extends PureComponent {
     keyboardType: 'default', // TextInput keyboardType
     returnKeyLabel: '完成', // TextInput returnKeyLabel
     returnKeyType: 'done', // TextInput returnKeyType
+    autoCheckNumber: false,
   }
 
   constructor(props) {
@@ -116,7 +121,10 @@ export default class AnalystItem extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value) {
+    if (
+      this.props.rightType === 'input' &&
+      prevProps.value !== this.props.value
+    ) {
       this.setState({
         inputValue: this.props.value,
       })
@@ -134,8 +142,27 @@ export default class AnalystItem extends PureComponent {
     }
   }
 
+  onBlur = () => {
+    if (this.props.onBlur && typeof this.props.onBlur === 'function') {
+      this.props.onBlur(this.state.inputValue)
+    }
+  }
+
   _blur = () => {
     this.input && this.input.blur()
+  }
+
+  checkNumber = text => {
+    if (
+      this.props.keyboardType === 'number-pad' ||
+      this.props.keyboardType === 'decimal-pad' ||
+      this.props.keyboardType === 'numeric'
+    ) {
+      if (isNaN(text) && text !== '' && text !== '-') {
+        text = this.state.inputValue
+      }
+    }
+    return text
   }
 
   renderRight = () => {
@@ -143,7 +170,7 @@ export default class AnalystItem extends PureComponent {
     switch (typeof this.props.value) {
       case 'boolean':
         rightView = (
-          <View style={styles.rightView}>
+          <View style={[styles.rightView, this.props.rightStyle]}>
             <Switch
               style={styles.switch}
               trackColor={{ false: color.bgG, true: color.switch }}
@@ -164,6 +191,7 @@ export default class AnalystItem extends PureComponent {
         break
       case 'string':
       case 'number':
+      default:
         if (
           this.props.rightType === 'input' &&
           (this.props.radioStatus === CheckStatus.CHECKED ||
@@ -172,14 +200,14 @@ export default class AnalystItem extends PureComponent {
             this.props.radioStatus > 3)
         ) {
           rightView = (
-            <View style={styles.rightView}>
+            <View style={[styles.rightView, this.props.rightStyle]}>
               <TextInput
                 ref={ref => (this.input = ref)}
                 underlineColorAndroid={'transparent'}
-                style={styles.input}
+                style={[styles.input, this.props.inputStyle]}
                 keyboardType={this.props.keyboardType}
                 // defaultValue={this.props.value + ''}
-                value={this.state.inputValue + ''}
+                value={(this.state.inputValue || '') + ''}
                 returnKeyLabel={this.props.returnKeyLabel}
                 returnKeyType={this.props.returnKeyType}
                 onChangeText={text => {
@@ -187,23 +215,16 @@ export default class AnalystItem extends PureComponent {
                     this.props.onChangeText &&
                     typeof this.props.onChangeText === 'function'
                   ) {
+                    if (this.props.autoCheckNumber)
+                      text = this.checkNumber(text)
                     this.props.onChangeText(text)
                   } else {
-                    if (
-                      this.props.keyboardType === 'number-pad' ||
-                      this.props.keyboardType === 'decimal-pad' ||
-                      this.props.keyboardType === 'numeric'
-                    ) {
-                      if (isNaN(text) && text !== '' && text !== '-') {
-                        text = this.state.inputValue
-                        // text = this.inputValue
-                      }
-                    }
+                    text = this.checkNumber(text)
                     this.setState({ inputValue: text })
-                    // this.inputValue = text
                   }
                 }}
                 onSubmitEditing={this.onSubmitEditing}
+                onBlur={this.onBlur}
               />
             </View>
           )

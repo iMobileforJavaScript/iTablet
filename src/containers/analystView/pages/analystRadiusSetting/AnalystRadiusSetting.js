@@ -7,16 +7,15 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import { CheckStatus } from '../../../../constants'
+import { getLanguage } from '../../../../language'
 import { AnalystItem } from '../../components'
 import styles from './styles'
-
-const STEP_SIZE = '步长'
-const SEGMENTS = '段数'
 
 export default class AnalystRadiusSetting extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
+    language: String,
   }
 
   constructor(props) {
@@ -120,11 +119,11 @@ export default class AnalystRadiusSetting extends React.Component {
     let stepSizeStatus
     let segmentsStatus
     switch (title) {
-      case STEP_SIZE:
+      case getLanguage(this.props.language).Analyst_Labels.STEP:
         stepSizeStatus = CheckStatus.CHECKED
         segmentsStatus = CheckStatus.UN_CHECK
         break
-      case SEGMENTS:
+      case getLanguage(this.props.language).Analyst_Labels.RANGE_COUNT:
         stepSizeStatus = CheckStatus.UN_CHECK
         segmentsStatus = CheckStatus.CHECKED
         break
@@ -162,7 +161,7 @@ export default class AnalystRadiusSetting extends React.Component {
         <AnalystItem
           ref={ref => (this.startItem = ref)}
           rightType={'input'}
-          title={'起始值'}
+          title={getLanguage(this.props.language).Analyst_Labels.START_VALUE}
           value={this.state.startValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
@@ -175,7 +174,7 @@ export default class AnalystRadiusSetting extends React.Component {
           ref={ref => (this.endItem = ref)}
           style={{ borderBottomWidth: 0 }}
           rightType={'input'}
-          title={'结束值'}
+          title={getLanguage(this.props.language).Analyst_Labels.END_VALUE}
           value={this.state.endValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
@@ -195,10 +194,14 @@ export default class AnalystRadiusSetting extends React.Component {
           ref={ref => (this.stepSizeItem = ref)}
           radioStatus={this.state.stepSizeStatus}
           rightType={'input'}
-          title={STEP_SIZE}
+          title={getLanguage(this.props.language).Analyst_Labels.STEP}
           value={this.state.stepSize}
           keyboardType={'numeric'}
-          onRadioPress={() => this.changeBufferType(STEP_SIZE)}
+          onRadioPress={() =>
+            this.changeBufferType(
+              getLanguage(this.props.language).Analyst_Labels.STEP,
+            )
+          }
           onSubmitEditing={value => {
             let _value = parseFloat(value)
             if (_value <= 0)
@@ -226,10 +229,14 @@ export default class AnalystRadiusSetting extends React.Component {
           radioStatus={this.state.segmentsStatus}
           style={{ borderBottomWidth: 0 }}
           rightType={'input'}
-          title={SEGMENTS}
+          title={getLanguage(this.props.language).Analyst_Labels.RANGE_COUNT}
           value={this.state.segments}
           keyboardType={'numeric'}
-          onRadioPress={() => this.changeBufferType(SEGMENTS)}
+          onRadioPress={() =>
+            this.changeBufferType(
+              getLanguage(this.props.language).Analyst_Labels.RANGE_COUNT,
+            )
+          }
           onRadiusPress={text => {
             if (text === '') {
               this.setState({
@@ -255,12 +262,12 @@ export default class AnalystRadiusSetting extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: '批量添加',
+          title: getLanguage(this.props.language).Analyst_Labels.BATCH_ADD,
           backAction: this.back,
           navigation: this.props.navigation,
           headerRight: (
             <TextBtn
-              btnText={'确定'}
+              btnText={getLanguage(this.props.language).Analyst_Labels.CONFIRM}
               textStyle={
                 this.state.clickAble
                   ? styles.headerBtnTitle

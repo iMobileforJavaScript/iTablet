@@ -47,6 +47,8 @@ const Friends = {
   DEL_GROUP: 'Delete group',
   DEL_GROUP_CONFIRM:
     'Would you like to clear chat history and leave this group?',
+  DEL_GROUP_CONFIRM2:
+    'Would you like to clear chat history and disband this group?',
   //Chat
   IMPORT_DATA: 'Importing data...',
   IMPORT_SUCCESS: 'Import success',
@@ -71,9 +73,26 @@ const Friends = {
   FRIEND_MAP: 'Friend map',
   ADD_BLACKLIST: 'Add to blacklist',
   DELETE_FRIEND: 'Delete friend',
+  LIST_MEMBERS: 'List members ',
   LEAVE_GROUP: 'Leave group',
   CLEAR_HISTORY: 'Clear chat history',
-  DISMISS_GROUP: 'Dismiss group',
+  DISBAND_GROUP: 'Disband group',
   DELETE_MEMBER: 'Remove group member',
+  ADD_MEMBER: 'Add group member',
+  //system text
+  SYS_MSG_MAP: '[MAP]',
+  SYS_MSG_ADD_FRIEND: 'Send a friend request',
+  SYS_MSG_REMOVED_FROM_GROUP: 'removed you out of group',
+  SYS_MSG_LEAVE_GROUP: 'leaved this group',
+  SYS_MSG_ETC: '... ',
+  SYS_MSG_REMOVE_OUT_GROUP: ' have removed ',
+  SYS_MSG_REMOVE_OUT_GROUP2: 'out of group',
+  SYS_MSG_ADD_INTO_GROUP: ' have added ',
+  SYS_MSG_ADD_INTO_GROUP2: 'into group',
+  SYS_NO_SUCH_USER: 'User no found',
+  SYS_FRIEND_ALREADY_IN_GROUP: 'Friends selected already in group',
+  EXCEED_NAME_LIMIT: 'Name should be within 40 words (Chinese within 20 words)',
+  SYS_MSG_MOD_GROUP_NAME: ' changed the group name to ',
+  SYS_LOGIN_ON_OTHER_DEVICE: 'Your account is logged in on other device',
 }
 export { Friends }

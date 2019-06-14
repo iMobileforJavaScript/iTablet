@@ -44,13 +44,12 @@ export default class Layer3DItem extends Component {
     return false
   }
   // eslint-disable-next-line no-unused-vars
-  componentDidUpdate(prevProps) {
-  }
+  componentDidUpdate(prevProps) {}
   setItemSelectable(selectable) {
     this.setState({ selectable: selectable })
   }
 
-  changeVisible(){
+  changeVisible() {
     let newState = JSON.parse(JSON.stringify(this.state))
     newState.visible = !this.state.visible
     if (this.props.item.type === 'Terrain') {
@@ -104,7 +103,7 @@ const layer3dSettingCanNotSelect = param => [
       ],
     },
   */
-  more(){
+  more() {
     let layer3dToolbar = this.props.getlayer3dToolbar
       ? this.props.getlayer3dToolbar()
       : null
@@ -113,33 +112,37 @@ const layer3dSettingCanNotSelect = param => [
     //   : null
     if (layer3dToolbar) {
       switch (this.props.item.type) {
-        case 'IMAGEFILE':{
-          if(this.props.item.name==="BingMap" || this.props.item.name==="TianDiTu"){
+        case 'IMAGEFILE': {
+          if (
+            this.props.item.name === 'BingMap' ||
+            this.props.item.name === 'TianDiTu'
+          ) {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_BASE, {
               isFullScreen: true,
-              height: 86*2,
+              height: 86 * 2,
             })
-          }else{
+          } else {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
               isFullScreen: true,
-              height: 86*3,
+              height: 86 * 3,
             })
           }
           break
-        }case 'Terrain':
+        }
+        case 'Terrain':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
-            height: 86*3,
+            height: 86 * 3,
           })
           break
-        default:{
-          let type =  ConstToolType.MAP3D_LAYER3D_DEFAULT
-          if(this.state.selectable){
-            type =  ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED
+        default: {
+          let type = ConstToolType.MAP3D_LAYER3D_DEFAULT
+          if (this.state.selectable) {
+            type = ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED
           }
-          layer3dToolbar.setVisible(true,type, {
+          layer3dToolbar.setVisible(true, type, {
             isFullScreen: true,
-            height: 86*2,
+            height: 86 * 2,
           })
           layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break
@@ -199,7 +202,9 @@ const layer3dSettingCanNotSelect = param => [
 
           <Image source={typeImg} style={styles.type} />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <Text style={[styles.itemName, textColor]}>{this.props.item.name}</Text>
+            <Text style={[styles.itemName, textColor]}>
+              {this.props.item.name}
+            </Text>
           </ScrollView>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />

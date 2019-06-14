@@ -16,6 +16,7 @@ import {
   Bubble,
   MessageText,
   SystemMessage,
+  InputToolbar,
 } from 'react-native-gifted-chat'
 import Container from '../../../../components/Container'
 import { Dialog } from '../../../../components'
@@ -31,6 +32,7 @@ import { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
+import { Buffer } from 'buffer'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -45,8 +47,9 @@ class Chat extends React.Component {
   constructor(props) {
     super(props)
     this.friend = this.props.navigation.getParam('friend')
-    this.targetUser = this.props.navigation.getParam('target')
     this.curUser = this.props.navigation.getParam('curUser')
+    this.targetId = this.props.navigation.getParam('targetId')
+    this.targetUser = this.friend.getTargetUser(this.targetId)
     this.friend.setCurChat(this)
     this._isMounted = false
 
@@ -155,9 +158,10 @@ class Chat extends React.Component {
     }
   }
   //将redux中取出消息转为chat消息
-  _loadChatMsg(message) {
+  _loadChatMsg = message => {
     let msgStr = JSON.stringify(message)
     let msg = JSON.parse(msgStr)
+    msg = this.friend.loadMsg(msg)
     let chatMsg = {
       _id: msg.msgId,
       createdAt: new Date(msg.originMsg.time),
@@ -363,10 +367,73 @@ class Chat extends React.Component {
       receivePath,
       this.targetUser.id,
       message._id,
+      message.user._id,
+      message.originMsg.message.message.fileSize,
     )
   }
 
-  onFileTouch = async message => {
+  onCustomViewFileTouch = (type, message) => {
+    switch (type) {
+      case MSGConstant.MSG_FILE_NOTIFY:
+        this.onMapFileTouch(message)
+        break
+      case MSGConstant.MSG_LAYER:
+        this.onLayerFileTouch(message)
+        break
+      default:
+        break
+    }
+  }
+
+  onLayerFileTouch = async message => {
+    //TODO 以文件形式接收
+    let LayerBase64 = message.originMsg.message.message.layerValue[0]
+    let layer = Buffer.from(LayerBase64, 'base64').toString()
+
+    NavigationService.navigate('MyData', {
+      title: getLanguage(global.language).Profile.MAP,
+      formChat: true,
+      callBackMode: 'getName',
+      chatCallBack: async moduleMapFullName => {
+        let moduleMapName = moduleMapFullName.substr(
+          0,
+          moduleMapFullName.lastIndexOf('.'),
+        )
+        let userPath = (userPath =
+          ConstPath.UserPath + this.curUser.userName + '/')
+        let homePath = await FileTools.appendingHomeDirectory()
+        // 地图用相对路径
+        let moduleMapPath =
+          userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let data
+        if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+          data = {
+            type: 'Map',
+            path: moduleMapPath,
+            name: moduleMapName,
+            layer: layer,
+          }
+        }
+
+        let wsData = [
+          {
+            DSParams: { server: wsPath },
+            type: 'Workspace',
+          },
+          data,
+        ]
+        NavigationService.navigate('MapView', {
+          wsData,
+          isExample: true,
+          mapName: moduleMapName,
+        })
+      },
+    })
+  }
+
+  onMapFileTouch = async message => {
     if (message.user._id !== this.curUser.userId) {
       let userPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath + this.curUser.userName,
@@ -399,29 +466,35 @@ class Chat extends React.Component {
             title: this.state.title,
             withoutBack: false,
             navigation: this.props.navigation,
-            headerRight: (
-              <TouchableOpacity
-                onPress={() => {
-                  let route = this.isGroupChat()
-                    ? 'ManageGroup'
-                    : 'ManageFriend'
-                  NavigationService.navigate(route, {
-                    user: this.curUser,
-                    targetUser: this.targetUser,
-                    friend: this.friend,
-                    language: global.language,
-                    chat: this,
-                  })
-                }}
-                style={styles.moreView}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  source={moreImg}
-                  style={styles.moreImg}
-                />
-              </TouchableOpacity>
-            ),
+            headerRight:
+              this.targetUser.id.indexOf('Group_') === -1 ||
+              FriendListFileHandle.isInGroup(
+                this.targetUser.id,
+                this.curUser.userId,
+              ) ? (
+                /* eslint-disable*/
+                <TouchableOpacity
+                  onPress={() => {
+                    let route = this.isGroupChat()
+                      ? 'ManageGroup'
+                      : 'ManageFriend'
+                    NavigationService.navigate(route, {
+                      user: this.curUser,
+                      targetId: this.targetId,
+                      friend: this.friend,
+                      chat: this,
+                    })
+                  }}
+                  style={styles.moreView}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    source={moreImg}
+                    style={styles.moreImg}
+                  />
+                </TouchableOpacity>
+              ) : null,
+            /* eslint-enable */
           }}
         >
           {this.state.showInformSpot ? (
@@ -453,6 +526,19 @@ class Chat extends React.Component {
               name: this.curUser.nickname,
             }}
             renderActions={this.renderCustomActions}
+            //被移出群组后不显示输入栏
+            renderInputToolbar={props => {
+              if (
+                this.targetUser.id.indexOf('Group_') === -1 ||
+                FriendListFileHandle.isInGroup(
+                  this.targetUser.id,
+                  this.curUser.userId,
+                )
+              ) {
+                return <InputToolbar {...props} />
+              }
+              return null
+            }}
             renderBubble={this.renderBubble}
             renderTicks={this.renderTicks}
             renderSystemMessage={this.renderSystemMessage}
@@ -461,9 +547,8 @@ class Chat extends React.Component {
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
               if (
-                props.currentMessage.originMsg.message.type &&
-                props.currentMessage.originMsg.message.type ===
-                  MSGConstant.MSG_FILE_NOTIFY
+                props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
+                props.currentMessage.type === MSGConstant.MSG_LOCATION
               ) {
                 return null
               }
@@ -630,7 +715,7 @@ class Chat extends React.Component {
   }
 
   renderCustomView = props => {
-    return <CustomView {...props} onFileTouch={this.onFileTouch} />
+    return <CustomView {...props} onFileTouch={this.onCustomViewFileTouch} />
   }
 
   // eslint-disable-next-line
@@ -742,7 +827,7 @@ class Chat extends React.Component {
 const styles = StyleSheet.create({
   moreView: {
     flex: 1,
-    marginRight: scaleSize(10),
+    // marginRight: scaleSize(10),
   },
   moreImg: {
     width: scaleSize(60),

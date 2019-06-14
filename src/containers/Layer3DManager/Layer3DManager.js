@@ -123,7 +123,7 @@ export default class Layer3DManager extends Component {
 
   renderSelection = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SectionList
           sections={this.state.data}
           renderItem={this.renderListItem}
@@ -134,10 +134,10 @@ export default class Layer3DManager extends Component {
           onRefresh={this.props.refreshLayer3dList}
           refreshing={false}
           initialNumToRender={15}
-          getItemLayout = {(data,index)=>{
+          getItemLayout={(data, index) => {
             return {
-              length:scaleSize(80),
-              offset:scaleSize(80+1) * index,
+              length: scaleSize(80),
+              offset: scaleSize(80 + 1) * index,
               index,
             }
           }}

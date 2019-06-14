@@ -89,10 +89,13 @@ const Map_Main_Menu = {
   TOOLS_CREATE_REGION: '画面',
   TOOLS_CREATE_TRACK: '轨迹',
   TOOLS_CREATE_TEXT: '文字',
+
   TOOLS_NAME: '名字',
   TOOLS_REMARKS: '备注',
   TOOLS_HTTP: 'http地址',
   TOOLS_PICTURES: '图片',
+  COLLECT_TIME: '采集时间',
+  COORDINATE: '经纬度',
 
   //裁剪
   TOOLS_RECTANGLE_CLIP: '矩形裁剪',
@@ -367,6 +370,7 @@ const Map_Settings = {
 
   //二级菜单 坐标系设置
   COORDINATE_SYSTEM: '坐标系',
+  COPY_COORDINATE_SYSTEM: '复制坐标系',
   DYNAMIC_PROJECTION: '动态投影',
   TRANSFER_PARAMS: '转换参数',
 
@@ -400,6 +404,22 @@ const Map_Settings = {
   GEOGRAPHIC_COORDINATE_SYSTEM: '地理坐标系',
   PROJECTED_COORDINATE_SYSTEM: '投影坐标系',
 
+  //三级菜单 复制坐标系
+  FROM_DATASOURCE: '从数据源',
+  FROM_DATASET: '从数据集',
+  FROM_FILE: '从文件',
+
+  //四级菜单 和复制提示
+  DATASOURCES: '数据源',
+  DATASETS: '数据集',
+  TYPE: '类型',
+  FORMAT: '格式',
+  ALL_COORD_FILE: '所支持的坐标系文件',
+  SHAPE_COORD_FILE: 'Shape坐标系文件',
+  MAPINFO_FILE: 'MapInfo交换格式',
+  MAPINFO_TAB_FILE: 'MapInfo Tab文件',
+  IMG_COORD_FILE: '影像格式坐标系文件',
+  COORD_FILE: '坐标系文件',
   //三级菜单 换转参数
   TRANSFER_METHOD: '转换方法',
 
@@ -409,6 +429,18 @@ const Map_Settings = {
   CONFIRM: '确定',
   COPY: '复制',
 }
+
+//地图工具
+const Map_Tools = {
+  VIDEO: '视频',
+  PHOTO: '照片',
+  AUDIO: '音频',
+
+  TAKE_PHOTO: '拍照',
+  FROM_ALBUM: '从相册中选择',
+  VIEW: '查看',
+}
+
 export {
   Map_Main_Menu,
   Map_Label,
@@ -416,4 +448,5 @@ export {
   Map_Attribute,
   Map_Setting,
   Map_Settings,
+  Map_Tools,
 }

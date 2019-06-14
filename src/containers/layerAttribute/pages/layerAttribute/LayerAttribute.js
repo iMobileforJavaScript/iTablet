@@ -20,7 +20,12 @@ import {
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
-import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
+import {
+  SMap,
+  Action,
+  GeoStyle,
+  SMediaCollector,
+} from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
 
@@ -909,6 +914,19 @@ export default class LayerAttribute extends React.Component {
       (!this.state.attributes.data && this.state.attributes.data.length === 0)
     )
       return null
+
+    let buttonNameFilter = ['MediaFilePaths'], // 属性表cell显示 查看 按钮
+      buttonTitles = [getLanguage(global.language).Map_Tools.VIEW]
+    let buttonActions = [
+      async data => {
+        let layerName = this.props.currentLayer.name,
+          geoID = data.rowData[0].value
+        let info = await SMediaCollector.getMediaInfo(layerName, geoID)
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      },
+    ]
     return (
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
@@ -946,6 +964,9 @@ export default class LayerAttribute extends React.Component {
         refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
         changeAction={this.changeAction}
+        buttonNameFilter={buttonNameFilter}
+        buttonActions={buttonActions}
+        buttonTitles={buttonTitles}
       />
     )
   }

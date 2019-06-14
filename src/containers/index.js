@@ -24,6 +24,7 @@ import {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  GroupMemberList,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -32,7 +33,7 @@ import {
 
 import GetBack from './register&getBack/GetBack'
 //地图二级设置菜单
-import { secondMapSettings } from './mapSetting/secondMapSettings'
+import { SecondMapSettings } from './mapSetting/secondMapSettings'
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
@@ -72,9 +73,16 @@ import { MapCut, MapCutDS } from './mapCut/page'
 import {
   BufferAnalystView,
   AnalystRadiusSetting,
-  OverlayAnalystEntry,
+  AnalystListEntry,
   OverlayAnalystView,
+  OnlineAnalystView,
+  IServerLoginPage,
+  SourceDatasetPage,
+  AnalystRangePage,
 } from './analystView/pages'
+
+import MediaEdit from './mediaEdit'
+import Camera from './camera'
 
 export default StackNavigator(
   {
@@ -352,6 +360,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    GroupMemberList: {
+      screen: GroupMemberList,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
@@ -501,6 +516,22 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    /** 多媒体编辑 **/
+    MediaEdit: {
+      screen: MediaEdit,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /** 相机界面 **/
+    Camera: {
+      screen: Camera,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /**************************** Analyst ***************************/
     // AnalystTools: {
     //   screen: AnalystTools,
@@ -523,8 +554,8 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-    OverlayAnalystEntry: {
-      screen: OverlayAnalystEntry,
+    AnalystListEntry: {
+      screen: AnalystListEntry,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -537,8 +568,36 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-    secondMapSettings: {
-      screen: secondMapSettings,
+    OnlineAnalystView: {
+      screen: OnlineAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    IServerLoginPage: {
+      screen: IServerLoginPage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SourceDatasetPage: {
+      screen: SourceDatasetPage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    AnalystRangePage: {
+      screen: AnalystRangePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SecondMapSettings: {
+      screen: SecondMapSettings,
       navigationOptions: {
         header: null,
       },

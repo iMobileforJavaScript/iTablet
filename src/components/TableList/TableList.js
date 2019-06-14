@@ -6,8 +6,8 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { screen } from '../../utils'
 import styles from './styles'
+
 export default class TableList extends React.PureComponent {
   props: {
     data: Array,
@@ -15,6 +15,7 @@ export default class TableList extends React.PureComponent {
     lineSeparator?: number,
     style?: Object,
     cellStyle?: Object,
+    rowStyle?: Object,
     rowStyle?: Object,
     renderCell: () => {},
     type?: string,
@@ -35,10 +36,11 @@ export default class TableList extends React.PureComponent {
     this.props.data.forEach((item, index) => {
       let column = this.props.numColumns
       let rowIndex = Math.floor(index / column)
+      let cellIndex = index % column
       if (!rows[rowIndex]) {
         rows[rowIndex] = []
       }
-      rows[rowIndex].push(this.renderCell(item, rowIndex, index))
+      rows[rowIndex].push(this.renderCell(item, rowIndex, cellIndex))
     })
 
     rows.forEach((row, rowIndex) => {
@@ -53,6 +55,7 @@ export default class TableList extends React.PureComponent {
         key={'row-' + rowIndex}
         style={[
           styles.row,
+          this.props.rowStyle,
           rowIndex &&
             this.props.lineSeparator >= 0 && {
             marginTop: this.props.lineSeparator,
@@ -67,9 +70,10 @@ export default class TableList extends React.PureComponent {
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
     let column = this.props.numColumns
+    let width = 100 / column + '%'
     return (
       <View
-        style={[{ width: screen.deviceWidth / column }, this.props.cellStyle]}
+        style={[{ width }, this.props.cellStyle]}
         key={rowIndex + '-' + cellIndex}
       >
         {this.props.renderCell({ item, rowIndex, cellIndex })}

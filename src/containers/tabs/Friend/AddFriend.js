@@ -12,7 +12,7 @@ import {
   FlatList,
   Image,
 } from 'react-native'
-//import NavigationService from '../../NavigationService'
+import NavigationService from '../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils/screen'
 import { Container, Dialog } from '../../../components'
@@ -86,8 +86,8 @@ class AddFriend extends Component {
       getLanguage(this.language).Friends.SEARCHING,
     )
     let result = await SOnlineService.getUserInfoBy(val, 0)
-    if (result === false) {
-      result = ['无', '该用户不存在']
+    if (result === false || result === '获取用户id失败') {
+      result = ['0', getLanguage(this.language).Friends.SYS_NO_SUCH_USER]
     }
     this.setState({
       list: [result],
@@ -213,7 +213,7 @@ class AddFriend extends Component {
   _renderItem(item) {
     let opacity = 1.0
     let headStr = item[1][0].toUpperCase()
-    if (item[0] === '无') {
+    if (item[0] === '0') {
       opacity = 0.3
       headStr = '无'
     }
@@ -221,9 +221,22 @@ class AddFriend extends Component {
       <TouchableOpacity
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
+        disabled={item[0] === '0' ? true : false}
         onPress={() => {
           this.target = item //[id,name]
-          this.dialog.setDialogVisible(true)
+          if (this.target[0] == this.user.userId) {
+            Toast.show(getLanguage(this.language).Friends.ADD_SELF)
+            return
+          }
+          if (FriendListFileHandle.isFriend(this.target[0])) {
+            NavigationService.navigate('ManageFriend', {
+              targetId: this.target[0],
+              user: this.user,
+              friend: this.friend,
+            })
+          } else {
+            this.dialog.setDialogVisible(true)
+          }
         }}
       >
         <View style={[styles.ITemHeadTextViewStyle, { opacity: opacity }]}>
