@@ -20,11 +20,10 @@ export const setBackAction = (params = {}) => async (dispatch, getState) => {
       nav = NavigationService.getTopLevelNavigator().state.nav
     }
     let current = nav.routes[nav.index]
-    if (current.routes) {
-      params.key = current.routes[current.index].routeName
-    } else {
-      params.key = current.routeName
+    while (current.routes) {
+      current = current.routes[current.index]
     }
+    params.key = current.routeName
   }
 
   await dispatch({
@@ -36,11 +35,10 @@ export const removeBackAction = (params = {}) => async (dispatch, getState) => {
   if (!params.key) {
     let nav = getState().nav.toJS()
     let current = nav.routes[nav.index]
-    if (current.routes) {
-      params.key = current.routes[current.index].routeName
-    } else {
-      params.key = nav.routes[nav.routes].routeName
+    while (current.routes) {
+      current = current.routes[current.index]
     }
+    params.key = current.routeName
   }
 
   await dispatch({

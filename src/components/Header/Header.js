@@ -57,6 +57,7 @@ class NavigationHeader extends Component {
       headerTop: new Animated.Value(0),
     }
     this.visible = true
+    this.clickable = true
   }
 
   setVisible = visible => {
@@ -72,7 +73,10 @@ class NavigationHeader extends Component {
     if (this.props.backAction && typeof this.props.backAction === 'function') {
       this.props.backAction()
     } else if (!this.props.backAction && navigation) {
-      navigation.goBack(null)
+      if (this.clickable) {
+        this.clickable = false
+        navigation.goBack(null)
+      }
     }
   }
 

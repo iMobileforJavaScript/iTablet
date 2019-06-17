@@ -124,6 +124,7 @@ export default class MapView extends React.Component {
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
+    this.coworkMode = params && params.coworkMode
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -843,6 +844,12 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (this.coworkMode) {
+      // NavigationService.navigate('CoworkChat')
+      NavigationService.navigate('Chat')
+      return true
+    }
+
     this.backAction = async () => {
       try {
         this.setLoading(
@@ -1371,7 +1378,7 @@ export default class MapView extends React.Component {
             ]
             : null,
         }}
-        bottomBar={!this.isExample && this.renderToolBar()}
+        bottomBar={(!this.isExample || this.coworkMode) && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         {this.props.mapLegend && (

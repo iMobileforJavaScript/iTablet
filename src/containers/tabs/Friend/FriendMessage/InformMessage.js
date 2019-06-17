@@ -18,6 +18,8 @@ import { styles } from './Styles'
 import AddFriend from './../AddFriend'
 import { getLanguage } from '../../../../language/index'
 import MSGconstant from '../MsgConstant'
+import FriendListFileHandle from '../FriendListFileHandle'
+import NavigationService from '../../../NavigationService'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -50,7 +52,21 @@ export default class InformMessage extends React.Component {
 
   _onSectionselect = item => {
     this.target = item
-    this.dialog.setDialogVisible(true)
+    switch (item.type) {
+      case MSGconstant.MSG_ADD_FRIEND:
+        if (!FriendListFileHandle.isFriend(item.originMsg.user.id)) {
+          this.dialog.setDialogVisible(true)
+        } else {
+          NavigationService.navigate('ManageFriend', {
+            targetId: item.originMsg.user.id,
+            user: this.state.currentUser,
+            friend: this.friend,
+          })
+        }
+        break
+      default:
+        break
+    }
   }
 
   _dialogConfirm = () => {

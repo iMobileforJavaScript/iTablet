@@ -245,11 +245,10 @@ class AppRoot extends Component {
         : NavigationService.getTopLevelNavigator().state.nav
       let current = nav.routes[nav.index]
       let key
-      if (current.routes) {
-        key = current.routes[current.index].routeName
-      } else {
-        key = current.routeName
+      while (current.routes) {
+        current = current.routes[current.index]
       }
+      key = current.routeName
       if (this.props.backActions[key] && typeof this.props.backActions[key] === 'function') {
         this.props.backActions[key]()
         return true
