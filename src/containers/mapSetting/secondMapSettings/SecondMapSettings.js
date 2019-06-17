@@ -24,6 +24,8 @@ import {
   coordinateSystemSettings,
   coordinateData,
   copyCoordinate,
+  transfer3ParamsSetting,
+  transfer7ParamsSetting,
   // advancedSettings,
   fourRanges,
   colorMode,
@@ -83,7 +85,7 @@ export default class SecondMapSettings extends Component {
 
   //获取数据方法
   getData = async () => {
-    let data,
+    let data = [],
       datasets,
       colorData = null,
       colorModeData = null,
@@ -117,8 +119,8 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.CURRENT_VIEW_BOUNDS:
         data = await this.getFourRangeData()
         break
-      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
-        data = await this.getTransferData()
+      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_METHOD:
+        data = transferData()
         break
       case getLanguage(GLOBAL.language).Map_Settings.COPY_COORDINATE_SYSTEM:
         data = copyCoordinate()
@@ -139,6 +141,18 @@ export default class SecondMapSettings extends Component {
           //"shp,prj,mif,tab,tif,img,sit,xml"
           'xml,prj',
         )
+        break
+      case 'Geocentric Transalation(3-para)':
+        data = transfer3ParamsSetting()
+        data[0].value[0].value = this.state.title
+        break
+      case 'Molodensky(7-para)':
+      case 'Abridged Molodensky(7-para)':
+      case 'Position Vector(7-para)':
+      case 'Coordinate Frame(7-para)':
+      case 'Bursa-wolf(7-para)':
+        data = transfer7ParamsSetting()
+        data[0].value[0].value = this.state.title
         break
     }
     this.setState({
@@ -242,20 +256,19 @@ export default class SecondMapSettings extends Component {
   //坐标系设置数据
   getCoordinateSystemData = async () => {
     let data = await coordinateSystemSettings()
+    let transferMethod = await SMap.getCoordSysTransMethod()
     data[0].value = await SMap.getPrjCoordSys()
     let isDynamicProjection = await SMap.getMapDynamicProjection()
-    data[1].value = isDynamicProjection
     data[2].value = isDynamicProjection
-      ? ''
+    data[3].value = isDynamicProjection
+      ? transferMethod
       : getLanguage(GLOBAL.language).Map_Settings.OFF
+    this.setState({
+      transferMethod,
+    })
     return data
   }
 
-  //转换参数设置数据
-  getTransferData = async () => {
-    let data = await transferData()
-    return data.value
-  }
   // //高级设置数据
   // getAdvanceData = async () => {
   //   let data = await advancedSettings()
@@ -314,7 +327,7 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.DYNAMIC_PROJECTION:
         await SMap.setMapDynamicProjection(value)
         data[index + 1].value = value
-          ? ''
+          ? this.state.transferMethod
           : getLanguage(GLOBAL.language).Map_Settings.OFF
     }
     data[index].value = value
@@ -361,14 +374,15 @@ export default class SecondMapSettings extends Component {
         }
         break
     }
-    Toast.show(toastTip)
+    toastTip !== undefined && Toast.show(toastTip)
     if (this.state.cb !== '') {
       this.state.cb(prjCoordSysName)
     }
   }
 
   //arrow item点击事件
-  onArrowItemPress = ({ title, index }) => {
+  onArrowItemPress = ({ item, index }) => {
+    let title = item.title
     let data = this.state.data.concat()
     switch (title) {
       case getLanguage(GLOBAL.language).Map_Settings.ROTATION_ANGLE:
@@ -469,11 +483,11 @@ export default class SecondMapSettings extends Component {
               },
         })
         break
-      //todo 转换参数
-      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS:
-        // this.props.navigation.navigate('SecondMapSettings', {
-        //   title,
-        // })
+      case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_METHOD:
+        this.props.navigation.navigate('SecondMapSettings', {
+          title,
+          cb: this.setTransferMethod,
+        })
         break
       //四至范围点击 跳InputPage
       case getLanguage(GLOBAL.language).Map_Settings.LEFT:
@@ -510,6 +524,45 @@ export default class SecondMapSettings extends Component {
             } else {
               Toast.show(getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_ERROR)
             }
+          },
+        })
+        break
+      case 'Geocentric Transalation(3-para)':
+      case 'Molodensky(7-para)':
+      case 'Abridged Molodensky(7-para)':
+      case 'Position Vector(7-para)':
+      case 'Coordinate Frame(7-para)':
+      case 'Bursa-wolf(7-para)':
+        this.props.navigation.navigate('SecondMapSettings', {
+          title,
+          rightBtn: getLanguage(GLOBAL.language).Map_Settings.CONFIRM,
+          cb: this.state.cb,
+        })
+        break
+      //转换参数设置点击
+      case '比例差':
+      case 'X':
+      case 'Y':
+      case 'Z':
+        this.props.navigation.navigate('InputPage', {
+          headerTitle: title,
+          placeholder: data[item.pos].value[index].value + '',
+          cb: async newValue => {
+            let isSuccess = false
+            let regExp = /^\d+(\.\d+)?$/
+            let data = this.state.data.concat()
+            if (newValue !== '' && newValue.match(regExp)) {
+              data[item.pos].value[index].value = this.formatNumberToString(
+                newValue,
+              )
+              isSuccess = true
+            } else {
+              Toast.show(getLanguage(GLOBAL.language).Prompt.TRANSFER_PARAMS)
+            }
+            isSuccess &&
+              this.setState({ data }, () => {
+                this.backAction()
+              })
           },
         })
         break
@@ -572,6 +625,17 @@ export default class SecondMapSettings extends Component {
     })
     return true
   }
+
+  //设置转换方法回调
+  setTransferMethod = value => {
+    let data = this.state.data.concat()
+    data[3].value = value
+    this.setState({
+      data,
+    })
+    return true
+  }
+
   //渲染switch
   renderSwitchItem = (item, index) => {
     return (
@@ -616,7 +680,7 @@ export default class SecondMapSettings extends Component {
       item.title === getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR
     if (
       item.title ===
-        getLanguage(GLOBAL.language).Map_Settings.TRANSFER_PARAMS &&
+        getLanguage(GLOBAL.language).Map_Settings.TRANSFER_METHOD &&
       item.value === getLanguage(GLOBAL.language).Map_Settings.OFF
     ) {
       return (
@@ -644,7 +708,7 @@ export default class SecondMapSettings extends Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.onArrowItemPress({ title: item.title, index })}
+          onPress={() => this.onArrowItemPress({ item, index })}
         >
           <View style={styles.row}>
             <Text style={styles.itemName}>{item.title}</Text>
@@ -675,6 +739,7 @@ export default class SecondMapSettings extends Component {
 
   //渲染普通text行
   renderTextItem = item => {
+    let hasRightValue = item.value !== undefined
     return (
       <TouchableOpacity
         onPress={() => {
@@ -683,6 +748,7 @@ export default class SecondMapSettings extends Component {
       >
         <View style={styles.row}>
           <Text style={styles.itemName}>{item.title}</Text>
+          {hasRightValue && <Text style={styles.rightText}>{item.value}</Text>}
         </View>
         {this.renderLine()}
       </TouchableOpacity>
@@ -803,6 +869,47 @@ export default class SecondMapSettings extends Component {
       )
     }
     return <View />
+  }
+
+  //转换参数设置方法
+  setTransferParams = async () => {
+    let data = this.state.data
+    let isSuccess
+    let paramsObject = {}
+    switch (data.length) {
+      case 2:
+        paramsObject.rotateX = 0
+        paramsObject.rotateY = 0
+        paramsObject.rotateZ = 0
+        paramsObject.scaleDifference = 0
+        paramsObject.translateX = data[1].value[0].value
+        paramsObject.translateY = data[1].value[1].value
+        paramsObject.translateZ = data[1].value[2].value
+        break
+      case 3:
+        paramsObject.rotateX = data[1].value[0].value
+        paramsObject.rotateY = data[1].value[1].value
+        paramsObject.rotateZ = data[1].value[2].value
+        paramsObject.scaleDifference = data[0].value[1].value
+        paramsObject.translateX = data[2].value[0].value
+        paramsObject.translateY = data[2].value[1].value
+        paramsObject.translateZ = data[2].value[2].value
+        break
+    }
+    Object.keys(paramsObject).map(key => {
+      if (typeof paramsObject[key] === 'string') {
+        paramsObject[key] = this.formatStringToNumber(paramsObject[key])
+      }
+    })
+    ;(paramsObject.coordSysTransMethod = this.state.title),
+    (isSuccess = await SMap.setCoordSysTransMethodAndParams(paramsObject))
+    if (isSuccess) {
+      this.state.cb(this.state.title)
+      this.backAction()
+      Toast.show(getLanguage(GLOBAL.language).Prompt.SETTING_SUCCESS)
+    } else {
+      Toast.show(getLanguage(GLOBAL.language).Prompt.SETTING_FAILED)
+    }
   }
 
   //section 分割线
@@ -945,6 +1052,40 @@ export default class SecondMapSettings extends Component {
         </Container>
       )
     }
+    if (/^[\w\s-]+(\(\d{1,2}-para\))$/.test(this.state.title)) {
+      return (
+        <Container
+          headerProps={{
+            title: this.state.title,
+            backAction: this.backAction,
+            headerRight: [
+              <TouchableOpacity
+                key={'setTransferParams'}
+                onPress={() => {
+                  this.setTransferParams()
+                }}
+              >
+                <Text style={styles.headerRight}>{this.state.rightBtn}</Text>
+              </TouchableOpacity>,
+            ],
+          }}
+        >
+          {this.state.data.map((item, index) => {
+            return (
+              <View key={item + index}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                <FlatList
+                  renderItem={this.renderItem}
+                  data={item.value}
+                  extraData={this.state.data}
+                  keyExtractor={(item, index) => item + index}
+                />
+              </View>
+            )
+          })}
+        </Container>
+      )
+    }
     return (
       <Container
         headerProps={{
@@ -966,7 +1107,6 @@ export default class SecondMapSettings extends Component {
           renderItem={this.renderItem}
           data={this.state.data}
           keyExtractor={(item, index) => item + index}
-          numColumns={1}
         />
         {this.state.title ===
           getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING && (

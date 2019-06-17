@@ -346,7 +346,7 @@ const Map_Settings = {
   COORDINATE_SYSTEM: 'Coordinate System',
   COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
   DYNAMIC_PROJECTION: 'Dynamic Projection',
-  TRANSFER_PARAMS: 'Transfer Parameters',
+  TRANSFER_METHOD: 'Transfer Method',
 
   //二级菜单 高级设置
   FLOW_VISIUALIZATION: 'Flow Visiualization',
@@ -394,8 +394,6 @@ const Map_Settings = {
   MAPINFO_TAB_FILE: 'MapInfo Tab File',
   IMG_COORD_FILE: 'Image Coordinate System File',
   COORD_FILE: 'Coordinate System File',
-  //三级菜单 换转参数
-  TRANSFER_METHOD: 'Transfer Method',
 
   //设置的一些参数
   PERCENT: 'Percent',
