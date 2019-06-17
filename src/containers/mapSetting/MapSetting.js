@@ -64,12 +64,6 @@ export default class MapSetting extends Component {
     ) {
       this.getData()
     }
-    if (
-      JSON.stringify(prevProps.mapLegend) !==
-      JSON.stringify(this.props.mapLegend)
-    ) {
-      this.getLegendData()
-    }
   }
 
   getData = async () => {
@@ -77,15 +71,6 @@ export default class MapSetting extends Component {
     if (GLOBAL.Type === constants.MAP_THEME) {
       newData = newData.concat(getlegendSetting())
     }
-    this.setState({
-      data: newData,
-    })
-  }
-
-  getLegendData = async () => {
-    let newData = JSON.parse(JSON.stringify(this.state.data))
-    newData[0].data[2].value = this.props.mapLegend
-
     this.setState({
       data: newData,
     })

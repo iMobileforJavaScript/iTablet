@@ -89,7 +89,7 @@ export default class MT_layerManager extends React.Component {
 
   componentDidUpdate(prevProps) {
     let newState = {}
-    let dataList = []
+    // let dataList = []
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)

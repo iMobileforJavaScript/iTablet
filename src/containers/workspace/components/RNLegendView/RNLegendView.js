@@ -43,7 +43,6 @@ export default class RNLegendView extends React.Component {
       rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
       legendSource: '',
       flatListKey: 0,
-      visible: true,
     }
   }
   componentDidUpdate(prevProps) {
@@ -154,7 +153,6 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    if (!this.state.visible) return <View />
     return (
       <View
         style={{
