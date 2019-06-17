@@ -99,43 +99,44 @@ export default class MT_layerManager extends React.Component {
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
-      let baseData = []
-      if (
-        this.props.layers.length > 0 &&
-        LayerUtils.isBaseLayer(
-          this.props.layers[this.props.layers.length - 1].name,
-        )
-      ) {
-        baseData = [this.props.layers[this.props.layers.length - 1]]
-      }
-      (async function() {
-        dataList = await SMap.getTaggingLayers(
-          this.props.user.currentUser.userName,
-        )
-        newState.data = [
-          {
-            title: getLanguage(this.props.language).Map_Layer.PLOTS,
-            //'我的标注',
-            data: dataList,
-            visible: true,
-          },
-          {
-            title: getLanguage(this.props.language).Map_Layer.LAYERS,
-            //'我的图层',
-            data: this.props.layers,
-            visible: true,
-          },
-          {
-            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
-            //'我的底图',
-            data: baseData,
-            visible: true,
-          },
-        ]
-        if (Object.keys(newState).length > 0) {
-          this.setState(newState)
-        }
-      }.bind(this)())
+      this.getData()
+      // let baseData = []
+      // if (
+      //   this.props.layers.length > 0 &&
+      //   LayerUtils.isBaseLayer(
+      //     this.props.layers[this.props.layers.length - 1].name,
+      //   )
+      // ) {
+      //   baseData = [this.props.layers[this.props.layers.length - 1]]
+      // }
+      // (async function() {
+      //   dataList = await SMap.getTaggingLayers(
+      //     this.props.user.currentUser.userName,
+      //   )
+      //   newState.data = [
+      //     {
+      //       title: getLanguage(this.props.language).Map_Layer.PLOTS,
+      //       //'我的标注',
+      //       data: dataList,
+      //       visible: true,
+      //     },
+      //     {
+      //       title: getLanguage(this.props.language).Map_Layer.LAYERS,
+      //       //'我的图层',
+      //       data: this.props.layers,
+      //       visible: true,
+      //     },
+      //     {
+      //       title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+      //       //'我的底图',
+      //       data: baseData,
+      //       visible: true,
+      //     },
+      //   ]
+      //   if (Object.keys(newState).length > 0) {
+      //     this.setState(newState)
+      //   }
+      // }.bind(this)())
     }
   }
 
@@ -305,43 +306,47 @@ export default class MT_layerManager extends React.Component {
   /**修改专题图 */
   mapTheme = data => {
     let curThemeType
-    switch (data.themeType) {
-      case ThemeType.UNIQUE:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_UNIQUE_STYLE
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
-        break
-      case ThemeType.RANGE:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_RANGE_STYLE
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
-        break
-      case ThemeType.LABEL:
-        // this.props.navigation.navigate('MapView')
-        // Toast.show('当前图层为:' + data.name)
-        curThemeType = constants.THEME_UNIFY_LABEL
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-        break
-      case ThemeType.DOTDENSITY:
-        curThemeType = constants.THEME_DOT_DENSITY
-        break
-      case ThemeType.GRADUATEDSYMBOL:
-        curThemeType = constants.THEME_GRADUATED_SYMBOL
-        break
-      case ThemeType.GRAPH:
-        curThemeType = constants.THEME_GRAPH_STYLE
-        break
-      case ThemeType.GRIDRANGE:
-        curThemeType = constants.THEME_GRID_RANGE
-        break
-      case ThemeType.GRIDUNIQUE:
-        curThemeType = constants.THEME_GRID_UNIQUE
-        break
-      default:
-        Toast.show('提示:当前图层暂不支持修改')
-        break
+    if (data.isHeatmap) {
+      curThemeType = constants.THEME_HEATMAP
+    } else {
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIQUE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          break
+        case ThemeType.RANGE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_RANGE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          break
+        case ThemeType.LABEL:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIFY_LABEL
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          break
+        case ThemeType.DOTDENSITY:
+          curThemeType = constants.THEME_DOT_DENSITY
+          break
+        case ThemeType.GRADUATEDSYMBOL:
+          curThemeType = constants.THEME_GRADUATED_SYMBOL
+          break
+        case ThemeType.GRAPH:
+          curThemeType = constants.THEME_GRAPH_STYLE
+          break
+        case ThemeType.GRIDRANGE:
+          curThemeType = constants.THEME_GRID_RANGE
+          break
+        case ThemeType.GRIDUNIQUE:
+          curThemeType = constants.THEME_GRID_UNIQUE
+          break
+        default:
+          Toast.show('提示:当前图层暂不支持修改')
+          break
+      }
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
@@ -391,7 +396,7 @@ export default class MT_layerManager extends React.Component {
             //'当前图层无法设置风格')
           }
         } else if (GLOBAL.Type === constants.MAP_THEME) {
-          if (data.themeType <= 0) {
+          if (data.themeType <= 0 && !data.isHeatmap) {
             Toast.show(
               getLanguage(this.props.language).Prompt
                 .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
@@ -409,7 +414,7 @@ export default class MT_layerManager extends React.Component {
 
   onToolBasePress = async ({ data }) => {
     this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_STYLE, {
-      height: ConstToolType.TOOLBAR_HEIGHT[0],
+      height: ConstToolType.TOOLBAR_HEIGHT[1],
       layerdata: data,
     })
   }
@@ -427,12 +432,13 @@ export default class MT_layerManager extends React.Component {
       let themeType
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.RANGE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.LABEL:
+        case ThemeType.GRAPH:
+        case ThemeType.GRADUATEDSYMBOL:
+        case ThemeType.DOTDENSITY:
+        case ThemeType.GRIDUNIQUE:
+        case ThemeType.GRIDRANGE:
           themeType = ConstToolType.MAP_THEME_STYLES
           break
         default:

@@ -136,6 +136,7 @@ const Map_Main_Menu = {
   THEME_RING: 'Ring',
   THEME_DOT_DENSITY_MAP: 'Dot Density Map',
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
+  THEME_HEATMAP: 'HeatMap',
 
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
@@ -161,6 +162,11 @@ const Map_Main_Menu = {
   THEME_DIAMOND: 'Diamond',
   THEME_TRIANGLE: 'Triangle',
   THEME_MARKER_SYMBOL: 'Marker Symbol',
+
+  THEME_HEATMAP_RADIUS: 'Nuclear Radius',
+  THEME_HEATMAP_COLOR: 'Color Scheme',
+  THEME_HEATMAP_FUZZY_DEGREE: 'Color Fuzzy Degree',
+  THEME_HEATMAP_MAXCOLOR_WEIGHT: 'Max Color Weight',
 
   THEME_GRANDUATE_BY: 'Granduate by',
   THEME_CONSTANT: 'Constant',

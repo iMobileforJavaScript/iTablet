@@ -183,8 +183,8 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-background-timer')
-    compile project(':react-native-video')
+    implementation project(':react-native-background-timer')
+    implementation project(':react-native-video')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-fs')
     implementation project(':react-native-camera')
