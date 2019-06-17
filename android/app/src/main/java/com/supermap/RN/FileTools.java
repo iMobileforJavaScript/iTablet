@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ import org.json.JSONObject;
 
 public class FileTools extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "FileTools";
+    public WritableArray fileArray = Arguments.createArray();
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
@@ -196,6 +198,44 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    /**
+     * 深度遍历指定路径下指定后缀的文件
+     * @param path
+     * @param extensions
+     * @param promise
+     */
+    @ReactMethod
+    public void getPathListByFilterDeep(String path, String extensions, Promise promise){
+       try{
+           getFileAtDirectoryWithPath(path,extensions);
+           promise.resolve(fileArray);
+           fileArray = null;
+       }catch (Exception e){
+           promise.reject(e);
+       }
+
+    }
+    public void getFileAtDirectoryWithPath(String path, String extensions){
+        String[] extensionArray = extensions.split(",");
+        File dir = new File(path);
+        File[] files = dir.listFiles();
+        for(File f : files){
+            String fileName = f.getName();
+            String filePath = f.getAbsolutePath();
+            if(f.isDirectory()){
+                getFileAtDirectoryWithPath(filePath,extensions);
+            }else {
+                for(int j = 0; j < extensionArray.length; j++){
+                    if(fileName.endsWith(extensionArray[j])){
+                        WritableMap map = Arguments.createMap();
+                        map.putString("path", filePath);
+                        map.putString("name", fileName);
+                        fileArray.pushMap(map);
+                    }
+                }
+            }
+        }
+    }
     /**
      * 读取文件的修改时间
      */

@@ -79,4 +79,11 @@ export default StyleSheet.create({
     fontSize: size.fontSize.fontSizeXXl,
     color: color.white,
   },
+  itemTitle: {
+    fontSize: setSpText(22),
+    color: '#777',
+    backgroundColor: '#F0F0F0',
+    paddingTop: scaleSize(30),
+    paddingHorizontal: scaleSize(30),
+  },
 })

@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { Animated, View, Text } from 'react-native'
+import { Animated, View, Text,Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
@@ -24,6 +24,7 @@ export default class ScaleView extends React.Component {
       title: '',
       isAddedListener: false,
       isShow: false,
+      visible: true,
     }
   }
 
@@ -38,18 +39,17 @@ export default class ScaleView extends React.Component {
     }
   }
 
-  showFullMap = () => {
+  showFullMap = visible => {
+    if (this.state.visible === visible) return
     Animated.timing(this.left, {
-      toValue: scaleSize(30),
+      toValue: visible ? scaleSize(120) : scaleSize(30),
       duration: 300,
     }).start()
+    this.setState({
+      visible,
+    })
   }
-  exitFullMap = () => {
-    Animated.timing(this.left, {
-      toValue: scaleSize(120),
-      duration: 300,
-    }).start()
-  }
+
   getInitialData = async () => {
     let data = await SMap.getScaleData()
     await this.scaleViewChange(data)
@@ -75,6 +75,12 @@ export default class ScaleView extends React.Component {
     let textWidth =
       this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
     if (!this.state.isShow) return <View />
+
+    let TextOffset = 0.5
+    let textSpacing = 1
+    if(Platform.OS === "android"){
+      textSpacing = TextOffset = 0
+    }
     return (
       <Animated.View
         style={{
@@ -109,9 +115,9 @@ export default class ScaleView extends React.Component {
               width: textWidth,
               textAlign: 'left',
               position: 'absolute',
-              left: 0.5,
-              letterSpacing: scaleSize(1),
-              bottom: 0.5,
+              left: TextOffset,
+              letterSpacing: scaleSize(textSpacing),
+              bottom: TextOffset,
               fontSize: setSpText(12),
             }}
           >

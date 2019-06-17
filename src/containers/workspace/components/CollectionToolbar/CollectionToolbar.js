@@ -226,10 +226,10 @@ export default class CollectionToolbar extends React.Component {
 
   /** 添加点 **/
   _addPoint = async () => {
-    let point = await SCollector.getGPSPoint()
+    // let point = await SCollector.getGPSPoint()
     // let x = await point.getX()
     // let y = await point.getY()
-    let result = await SCollector.addGPSPoint(this.props.map, point)
+    let result = await SCollector.addGPSPoint()
     if (!result) {
       Toast.show('定位失败')
     }

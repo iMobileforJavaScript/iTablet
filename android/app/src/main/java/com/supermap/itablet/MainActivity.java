@@ -55,7 +55,7 @@ public class MainActivity extends ReactActivity {
 
 
 
-        SMCollector.openGPS(this);
+//        SMCollector.openGPS(this);
         //注册网络状态监听广播
         RNFSManager.NetWorkChangReceiver netWorkChangReceiver = new RNFSManager.NetWorkChangReceiver();
         IntentFilter filter = new IntentFilter();

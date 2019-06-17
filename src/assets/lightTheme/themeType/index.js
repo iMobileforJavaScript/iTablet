@@ -31,6 +31,8 @@ const theme_grid_range = require('./theme_grid_range.png')
 const theme_grid_range_selected = require('./theme_grid_range_selected.png')
 const theme_grid_unique = require('./theme_grid_unique.png')
 const theme_grid_unique_selected = require('./theme_grid_unique_selected.png')
+const heatmap = require('./heatmap.png')
+const heatmap_selected = require('./heatmap_selected.png')
 
 //专题图类型图标
 export default {
@@ -78,4 +80,7 @@ export default {
   theme_grid_range_selected,
   theme_grid_unique,
   theme_grid_unique_selected,
+  //热力图
+  heatmap,
+  heatmap_selected,
 }

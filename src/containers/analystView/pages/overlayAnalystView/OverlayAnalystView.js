@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native'
-import {
-  Container,
-  TextBtn,
-  PopModal,
-  FingerMenu,
-} from '../../../../components'
+import { ScrollView, Text, View } from 'react-native'
+import { Container, TextBtn } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
-import { AnalystItem } from '../../components'
+import { AnalystItem, PopModalList } from '../../components'
 import { ConstPath, ConstInfo, ConstAnalyst } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
+import { getLanguage } from '../../../../language'
 import {
   SMap,
   EngineType,
@@ -32,6 +28,7 @@ const popTypes = {
 
 export default class OverlayAnalystView extends Component {
   props: {
+    language: String,
     navigation: Object,
     device: Object,
     currentUser: Object,
@@ -222,7 +219,7 @@ export default class OverlayAnalystView extends Component {
           SMap.viewEntire()
           await this.props.getLayers()
 
-          NavigationService.goBack('OverlayAnalystEntry')
+          NavigationService.goBack('AnalystListEntry')
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
           }
@@ -300,10 +297,12 @@ export default class OverlayAnalystView extends Component {
     return (
       <View key="sourceData" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>源数据</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.SOURCE_DATA}
+          </Text>
         </View>
         <AnalystItem
-          title={'数据源'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE}
           value={(this.state.dataSource && this.state.dataSource.value) || ''}
           onPress={async () => {
             this.currentPop = popTypes.DataSource
@@ -314,13 +313,13 @@ export default class OverlayAnalystView extends Component {
                 currentPopData: this.state.dataSource,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'数据集'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SET}
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
             if (!this.state.dataSource) {
@@ -354,7 +353,7 @@ export default class OverlayAnalystView extends Component {
                 currentPopData: this.state.dataSet,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
@@ -367,10 +366,12 @@ export default class OverlayAnalystView extends Component {
     return (
       <View key="overlayData" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>叠加数据</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.OVERLAY_DATASET}
+          </Text>
         </View>
         <AnalystItem
-          title={'数据源'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE}
           value={
             (this.state.overlayDataSource &&
               this.state.overlayDataSource.value) ||
@@ -385,13 +386,13 @@ export default class OverlayAnalystView extends Component {
                 currentPopData: this.state.overlayDataSource,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'数据集'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SET}
           value={
             (this.state.overlayDataSet && this.state.overlayDataSet.value) || ''
           }
@@ -428,7 +429,7 @@ export default class OverlayAnalystView extends Component {
                 currentPopData: this.state.overlayDataSet,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
@@ -441,10 +442,12 @@ export default class OverlayAnalystView extends Component {
     return (
       <View key="resultData" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>结果数据</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.RESULT_DATA}
+          </Text>
         </View>
         <AnalystItem
-          title={'数据源'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE}
           value={
             (this.state.resultDataSource &&
               this.state.resultDataSource.value) ||
@@ -459,13 +462,13 @@ export default class OverlayAnalystView extends Component {
                 currentPopData: this.state.resultDataSource,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'数据集'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SET}
           value={
             (this.state.resultDataSet && this.state.resultDataSet.value) || ''
           }
@@ -479,7 +482,8 @@ export default class OverlayAnalystView extends Component {
               value: this.state.resultDataSet
                 ? this.state.resultDataSet.value
                 : '',
-              headerTitle: '结果数据集名称',
+              headerTitle: getLanguage(this.props.language).Analyst_Labels
+                .RESULT_DATASET_NAME,
               placeholder: '',
               cb: async value => {
                 NavigationService.goBack()
@@ -496,58 +500,40 @@ export default class OverlayAnalystView extends Component {
     )
   }
 
-  /** 选择数据源弹出框 **/
   renderPopList = () => {
     return (
-      <View style={[styles.popView, { width: '100%' }]}>
-        <FingerMenu
-          ref={ref => (this.fingerMenu = ref)}
-          data={this.state.popData}
-          initialKey={
-            this.state.currentPopData && this.state.currentPopData.key
+      <PopModalList
+        ref={ref => (this.popModal = ref)}
+        language={this.props.language}
+        popData={this.state.popData}
+        currentPopData={this.state.currentPopData}
+        confirm={data => {
+          let newStateData = {}
+          switch (this.currentPop) {
+            case popTypes.DataSource:
+              newStateData = { dataSource: data }
+              break
+            case popTypes.DataSet:
+              newStateData = { dataSet: data }
+              break
+            case popTypes.OverlayDataSource:
+              newStateData = { overlayDataSource: data }
+              break
+            case popTypes.OverlayDataSet:
+              newStateData = { overlayDataSet: data }
+              break
+            case popTypes.ResultDataSource:
+              newStateData = { resultDataSource: data }
+              break
+            case popTypes.ResultDataSet:
+              newStateData = { resultDataSet: data }
+              break
           }
-        />
-        <View style={[styles.btnsView, { width: '100%' }]}>
-          <TouchableOpacity
-            style={[styles.btnView, { justifyContent: 'flex-start' }]}
-            onPress={() => this.dsModal && this.dsModal.setVisible(false)}
-          >
-            <Text style={styles.btnText}>取消</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.btnView, { justifyContent: 'flex-end' }]}
-            onPress={() => {
-              let { data } = this.fingerMenu && this.fingerMenu.getCurrentData()
-              let newStateData = {}
-              switch (this.currentPop) {
-                case popTypes.DataSource:
-                  newStateData = { dataSource: data }
-                  break
-                case popTypes.DataSet:
-                  newStateData = { dataSet: data }
-                  break
-                case popTypes.OverlayDataSource:
-                  newStateData = { overlayDataSource: data }
-                  break
-                case popTypes.OverlayDataSet:
-                  newStateData = { overlayDataSet: data }
-                  break
-                case popTypes.ResultDataSource:
-                  newStateData = { resultDataSource: data }
-                  break
-                case popTypes.ResultDataSet:
-                  newStateData = { resultDataSet: data }
-                  break
-              }
-              this.setState(newStateData, () => {
-                this.dsModal && this.dsModal.setVisible(false)
-              })
-            }}
-          >
-            <Text style={styles.btnText}>确定</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+          this.setState(newStateData, () => {
+            this.popModal && this.popModal.setVisible(false)
+          })
+        }}
+      />
     )
   }
 
@@ -562,7 +548,7 @@ export default class OverlayAnalystView extends Component {
           backAction: this.back,
           headerRight: (
             <TextBtn
-              btnText={'分析'}
+              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
               textStyle={
                 this.state.canBeAnalyst
                   ? styles.headerBtnTitle
@@ -578,9 +564,7 @@ export default class OverlayAnalystView extends Component {
           {this.renderOverlayData()}
           {this.renderResultData()}
         </ScrollView>
-        <PopModal ref={ref => (this.dsModal = ref)}>
-          {this.renderPopList()}
-        </PopModal>
+        {this.renderPopList()}
       </Container>
     )
   }

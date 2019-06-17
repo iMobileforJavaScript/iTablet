@@ -14,7 +14,7 @@ import {
 import { color } from '../../styles'
 import styles from './styles'
 
-export default class InputDialog extends PureComponent {
+export default class Input extends PureComponent {
   props: {
     accessible?: boolean,
     accessibilityLabel?: string,
@@ -30,6 +30,8 @@ export default class InputDialog extends PureComponent {
     returnKeyType?: string,
     placeholderTextColor?: string,
     keyboardType?: string,
+    textContentType?: string,
+    secureTextEntry?: boolean,
     onChangeText?: () => {},
   }
 
@@ -43,12 +45,13 @@ export default class InputDialog extends PureComponent {
     placeholderTextColor: color.themePlaceHolder,
     showClear: false,
     isKeyboardAvoiding: false,
+    secureTextEntry: false,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      value: props.value,
+      value: props.value || props.defaultValue || '',
     }
   }
 
@@ -67,6 +70,7 @@ export default class InputDialog extends PureComponent {
   }
 
   renderClearBtn = () => {
+    if (this.state.value === '') return null
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -93,6 +97,9 @@ export default class InputDialog extends PureComponent {
           placeholder={this.props.placeholder}
           underlineColorAndroid="transparent"
           placeholderTextColor={this.props.placeholderTextColor}
+          textContentType={this.props.textContentType}
+          secureTextEntry={this.props.secureTextEntry}
+          defaultValue={this.props.defaultValue}
           value={this.state.value + ''}
           onChangeText={text => {
             if (

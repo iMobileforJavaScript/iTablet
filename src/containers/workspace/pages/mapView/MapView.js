@@ -1197,6 +1197,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.fullMap = !full
   }
 
