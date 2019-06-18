@@ -102,6 +102,7 @@ export default class MapView extends React.Component {
     openWorkspace: PropTypes.func,
     closeWorkspace: PropTypes.func,
     getSymbolTemplates: PropTypes.func,
+    getSymbolPlots: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
     saveMap: PropTypes.func,
@@ -1021,6 +1022,31 @@ export default class MapView extends React.Component {
             path: templatePath,
             name: data.name,
           })
+        } else if (GLOBAL.Type === constants.MAP_PLOTTING) {
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
+          let plotIconPath = await FileTools.appendingHomeDirectory(
+            ConstPath.PlotIconPath,
+          )
+          await this.props.getSymbolPlots({
+            path: plotIconPath,
+            name: data.name,
+          })
+
+          // let plotLibPath = await FileTools.appendingHomeDirectory(
+          //   ConstPath.PlotLibPath,
+          // )
+          // fs.readDir(plotLibPath).then(async data => {
+          //   let plotLibPaths=[]
+          //   for(let i=0;i<data.length;i++){
+          //     plotLibPaths.push(data[i].path)
+          //   }
+          //   let plotLibIds = SMap.initPlotSymbolLibrary(plotLibPaths)
+          //   let plotLibs=plotLibIds
+          // })
         } else {
           await this.props.setTemplate()
         }

@@ -123,6 +123,7 @@ export default class ToolBar extends React.PureComponent {
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
+    getSymbolPlots: () => {},
     openWorkspace: () => {},
     closeWorkspace: () => {},
     openMap: () => {},
