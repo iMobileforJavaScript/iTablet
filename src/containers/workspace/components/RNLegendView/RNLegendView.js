@@ -16,6 +16,7 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { FOOTER_HEIGHT } from '../../pages/mapView/MapView'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
+import color from '../../../../styles/color'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 
@@ -42,16 +43,39 @@ export default class RNLegendView extends React.Component {
       rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
       legendSource: '',
       flatListKey: 0,
-      visible: true,
+    }
+    this.startTime = 0
+    this.endTime = 0
+    this.INTERVAL = 300
+  }
+
+  UNSAFE_componentWillMount() {
+    if (this.state.legendSource === '') {
+      this.getLegendData()
     }
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.device.orientation !== prevProps.device.orientation) {
+  shouldComponentUpdate(nextProps, nextState) {
+    let returnFlag = false
+    if (this.props.device.orientation !== nextProps.device.orientation) {
+      let flatListKey = this.state.flatListKey + 1
       this.setState({
         columns: this.props.device.orientation === 'LANDSCAPE' ? 4 : 2,
+        flatListKey,
       })
+      returnFlag = true
     }
-    this.state.legendSource === '' && this.getLegendData()
+    if (
+      nextState.backgroundColor !== this.state.backgroundColor ||
+      nextState.widthPercent !== this.state.widthPercent ||
+      nextState.heightPercent !== this.state.heightPercent
+    ) {
+      returnFlag = true
+    }
+    if (this.state.legendSource === '') {
+      this.getLegendData()
+      returnFlag = true
+    }
+    return returnFlag
   }
 
   /**
@@ -94,10 +118,18 @@ export default class RNLegendView extends React.Component {
    * @private
    */
   _contentChange = legendSource => {
-    legendSource.sort(this.sortMethod('type'))
-    this.setState({
-      legendSource,
-    })
+    this.endTime = +new Date()
+    if (this.endTime - this.startTime > this.INTERVAL) {
+      legendSource.sort(this.sortMethod('type'))
+      this.setState(
+        {
+          legendSource,
+        },
+        () => {
+          this.startTime = this.endTime
+        },
+      )
+    }
   }
   /**
    * 排序 按照对象属性值
@@ -153,7 +185,6 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    if (!this.state.visible) return <View />
     return (
       <View
         style={{
@@ -172,10 +203,24 @@ export default class RNLegendView extends React.Component {
       >
         <Text
           style={{
-            fontSize: setSpText(24),
-            textAlign: 'center',
-            backgroundColor: 'transparent',
-            fontWeight: 'bold',
+            left: '49%',
+            position: 'absolute',
+            top: 0,
+            fontSize: setSpText(12),
+            letterSpacing: scaleSize(2),
+            color: color.white,
+            fontWeight: '900',
+          }}
+        >
+          {this.state.title}
+        </Text>
+        <Text
+          style={{
+            position: 'absolute',
+            top: 0.5,
+            left: '49%',
+            letterSpacing: scaleSize(3),
+            fontSize: setSpText(12),
           }}
         >
           {this.state.title}

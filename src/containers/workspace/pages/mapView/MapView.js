@@ -100,6 +100,7 @@ export default class MapView extends React.Component {
     openWorkspace: PropTypes.func,
     closeWorkspace: PropTypes.func,
     getSymbolTemplates: PropTypes.func,
+    getSymbolPlots: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
     saveMap: PropTypes.func,
@@ -122,6 +123,7 @@ export default class MapView extends React.Component {
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
+    this.coworkMode = params && params.coworkMode
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -841,6 +843,12 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (this.coworkMode) {
+      // NavigationService.navigate('CoworkChat')
+      NavigationService.navigate('Chat')
+      return true
+    }
+
     this.backAction = async () => {
       try {
         this.setLoading(
@@ -1029,6 +1037,31 @@ export default class MapView extends React.Component {
             path: templatePath,
             name: data.name,
           })
+        } else if (GLOBAL.Type === constants.MAP_PLOTTING) {
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
+          let plotIconPath = await FileTools.appendingHomeDirectory(
+            ConstPath.PlotIconPath,
+          )
+          await this.props.getSymbolPlots({
+            path: plotIconPath,
+            name: data.name,
+          })
+
+          // let plotLibPath = await FileTools.appendingHomeDirectory(
+          //   ConstPath.PlotLibPath,
+          // )
+          // fs.readDir(plotLibPath).then(async data => {
+          //   let plotLibPaths=[]
+          //   for(let i=0;i<data.length;i++){
+          //     plotLibPaths.push(data[i].path)
+          //   }
+          //   let plotLibIds = SMap.initPlotSymbolLibrary(plotLibPaths)
+          //   let plotLibs=plotLibIds
+          // })
         } else {
           await this.props.setTemplate()
         }
@@ -1188,6 +1221,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.fullMap = !full
   }
 
@@ -1369,7 +1403,7 @@ export default class MapView extends React.Component {
             ]
             : null,
         }}
-        bottomBar={!this.isExample && this.renderToolBar()}
+        bottomBar={(!this.isExample || this.coworkMode) && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         {this.props.mapLegend && (

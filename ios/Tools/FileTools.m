@@ -140,6 +140,49 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
   resolve(array);
 }
 
+#pragma mark 深度遍历指定目录下的指定后缀的文件
+
+NSMutableArray *array;
+
+RCT_REMAP_METHOD(getPathListByFilterDeep, getPathListByFilterDeepWithPath:(NSString *)path surffix:(NSString *) surffix resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try{
+    array = [[NSMutableArray alloc]init];
+    [FileTools getFileAtDirectoryWithPath:path Extensions:surffix];
+    resolve(array);
+    array = nil;
+  }@catch(NSException *exception){
+    reject(@"getPathListByFilterDeep",exception.reason,nil);
+  }
+}
+
++(void)getFileAtDirectoryWithPath:(NSString *)path Extensions:(NSString *) extensions {
+  //NSMutableArray *array = [[NSMutableArray alloc]init];
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  NSArray *currentFiles = [filemanager contentsOfDirectoryAtPath:path error:nil];
+  NSArray *exts = [extensions componentsSeparatedByString:@","];
+  
+  BOOL isDir;
+  
+  for(NSString *file in currentFiles){
+    isDir = NO;
+    NSString *fileName = [[NSString alloc]initWithFormat:@"%@%@%@",path,@"/",file];
+    BOOL isDirExist = [filemanager fileExistsAtPath:fileName isDirectory:&isDir];
+    
+    if(isDir && isDirExist){
+      [self getFileAtDirectoryWithPath:fileName Extensions:extensions];
+    }else{
+      for(int j = 0; j < exts.count; j++){
+        if([file hasSuffix:exts[j]]){
+          NSString *filePath = [[NSString alloc] initWithFormat:@"%@%@%@",path,@"/",file];
+          NSObject *obj = @{@"name":file,@"path":filePath};
+          [array addObject:obj];
+          continue;
+        }
+      }
+    }
+  }
+}
+
 RCT_REMAP_METHOD(getMaps, getMapsPath:(NSString*)path filter:(NSDictionary*)filter resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     BOOL flag = YES;

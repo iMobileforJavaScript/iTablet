@@ -33,6 +33,7 @@ import {
   graduatedSymbolMenuInfo,
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
+  heatmapMenuInfo,
   UserType,
   legendMenuInfo,
   legendMenuInfoNotVisible,
@@ -112,6 +113,8 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
+    mapLegend?: Boolean, //图例显隐
+    setMapLegend?: () => {}, //设置图例显隐的redux状态
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
     getLayers: () => {}, // 更新数据（包括其他界面）
@@ -124,6 +127,7 @@ export default class ToolBar extends React.PureComponent {
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
+    getSymbolPlots: () => {},
     openWorkspace: () => {},
     closeWorkspace: () => {},
     openMap: () => {},
@@ -1280,6 +1284,75 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //热力图颜色方案列表
+  getAggregationColorScheme = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(
+            true,
+            getLanguage(this.props.language).Prompt.READING_DATA,
+          )
+        let list = await ThemeMenuData.getAggregationColorScheme()
+        let datalist = [
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .THEME_HEATMAP_COLOR,
+            //'颜色方案',
+            data: list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeFourMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            this.updateOverlayerView()
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   getColorGradientType = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -1541,6 +1614,47 @@ export default class ToolBar extends React.PureComponent {
         {
           isFullScreen: true,
           selectName: name, //'单点代表值' ，'符号大小'
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //热力图参数
+  getHeatmapParams = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
+
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name, //'核半径' ，'颜色渐变模糊度', '最大颜色权重'
           isTouchProgress: true,
           showMenuDialog: false,
           type: type,
@@ -2086,6 +2200,7 @@ export default class ToolBar extends React.PureComponent {
         },
       )
     } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
+      this.props.showFullMap && this.props.showFullMap(true)
       let { data, buttons } = this.getData(type)
       this.setState(
         {
@@ -3209,7 +3324,7 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = GLOBAL.legend.state.visible
+    let type = this.props.mapLegend
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3218,9 +3333,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    GLOBAL.legend.setState({
-      visible: type === ConstToolType.LEGEND,
-    })
+    this.props.setMapLegend(type === ConstToolType.LEGEND)
   }
 
   showBox = (autoFullScreen = false) => {
@@ -3496,6 +3609,14 @@ export default class ToolBar extends React.PureComponent {
               themeDatasetName: item.datasetName,
             }
             ThemeMenuData.createThemeGridRangeMap(params)
+            return
+          } else if (this.state.themeCreateType === constants.THEME_HEATMAP) {
+            //创建热力图
+            let params = {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+            }
+            ThemeMenuData.createHeatMap(params)
             return
           }
           //其他专题图需要选择字段
@@ -4281,9 +4402,11 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        SMap.addLegendDelegate({
-          legendContentChange: GLOBAL.legend._contentChange,
-        })
+        if (GLOBAL.legend) {
+          SMap.addLegendDelegate({
+            legendContentChange: GLOBAL.legend._contentChange,
+          })
+        }
         if (mapInfo.Template) {
           this.props.setContainerLoading(
             true,
@@ -4309,17 +4432,17 @@ export default class ToolBar extends React.PureComponent {
           //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
           //       ? 1 : ConstOnline['Google'].layerIndex, false)
           // }
-          if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
-            await LayerUtils.addBaseMap(
-              layers,
-              ConstOnline['Google'],
-              GLOBAL.Type === constants.COLLECTION
-                ? 1
-                : ConstOnline['Google'].layerIndex,
-              false,
-            )
-            await this.props.getLayers(-1)
-          }
+          // if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
+          //   await LayerUtils.addBaseMap(
+          //     layers,
+          //     ConstOnline['Google'],
+          //     GLOBAL.Type === constants.COLLECTION
+          //       ? 1
+          //       : ConstOnline['Google'].layerIndex,
+          //     false,
+          //   )
+          //   await this.props.getLayers(-1)
+          // }
         })
 
         // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
@@ -4512,6 +4635,9 @@ export default class ToolBar extends React.PureComponent {
               break
             case constants.THEME_GRID_RANGE:
               type = constants.THEME_GRID_RANGE
+              break
+            case constants.THEME_HEATMAP:
+              type = constants.THEME_HEATMAP
               break
           }
           let menutoolRef =
@@ -4755,9 +4881,11 @@ export default class ToolBar extends React.PureComponent {
       } else if (this.state.themeType === constants.THEME_GRADUATED_SYMBOL) {
         list = graduatedSymbolMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRID_UNIQUE) {
-        list = gridUniqueMenuInfo
+        list = gridUniqueMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRID_RANGE) {
-        list = gridRangeMenuInfo
+        list = gridRangeMenuInfo(this.props.language)
+      } else if (this.state.themeType === constants.THEME_HEATMAP) {
+        list = heatmapMenuInfo(this.props.language)
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
       if (GLOBAL.legend.state.visible) {

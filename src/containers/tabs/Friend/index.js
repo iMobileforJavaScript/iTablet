@@ -2,7 +2,7 @@
  * Created by imobile-xzy on 2019/3/4.
  */
 import Friend from './Friend'
-import Chat from './Chat/Chat'
+import Chat from './Chat'
 import ManageFriend from './Chat/ManageFriend'
 import ManageGroup from './Chat/ManageGroup'
 import AddFriend from './AddFriend'
