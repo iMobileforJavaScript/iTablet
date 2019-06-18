@@ -2200,6 +2200,7 @@ export default class ToolBar extends React.PureComponent {
         },
       )
     } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
+      this.props.showFullMap && this.props.showFullMap(true)
       let { data, buttons } = this.getData(type)
       this.setState(
         {
