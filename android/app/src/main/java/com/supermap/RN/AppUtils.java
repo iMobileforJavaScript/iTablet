@@ -2,14 +2,18 @@ package com.supermap.RN;
 
 import android.app.ActivityManager;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.supermap.containts.EventConst;
+import com.supermap.plugin.LocationManagePlugin;
+import com.supermap.smNative.collector.SMCollector;
 
 import java.util.Map;
 
@@ -43,11 +47,13 @@ public class AppUtils extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void  getCurrentLocation( Promise promise){
+    public void  getCurrentLocation(Promise promise){
         try {
-            Map params = map.toHashMap();
-            Boolean result=appManager.getAppManager().sendFileOfWechat(params);
-            promise.resolve(false);
+            LocationManagePlugin.GPSData data = SMCollector.getGPSPoint();
+            WritableMap map = Arguments.createMap();
+            map.putDouble ("longitude", data.dLongitude);
+            map.putDouble("latitude", data.dLatitude);
+            promise.resolve(map);
         }catch (Exception e){
             promise.reject(e);
         }

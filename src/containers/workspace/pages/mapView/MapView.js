@@ -125,6 +125,7 @@ export default class MapView extends React.Component {
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
+    this.coworkMode = params && params.coworkMode
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -286,7 +287,7 @@ export default class MapView extends React.Component {
     SMediaCollector.removeListener()
 
     // 移除多媒体采集Callout
-    SMediaCollector.removeMedia()
+    SMediaCollector.removeMedias()
 
     this.showMarker && SMap.deleteMarker(markerTag)
   }
@@ -844,6 +845,12 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (this.coworkMode) {
+      // NavigationService.navigate('CoworkChat')
+      NavigationService.navigate('Chat')
+      return true
+    }
+
     this.backAction = async () => {
       try {
         this.setLoading(
@@ -923,6 +930,16 @@ export default class MapView extends React.Component {
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
+        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
+          dataList => {
+            dataList.forEach(item => {
+              if (item.isVisible) {
+                SMediaCollector.showMedia(item.name)
+              }
+            })
+          },
+        )
         // 获取图层列表
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },
@@ -1206,6 +1223,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.fullMap = !full
   }
 
@@ -1387,7 +1405,7 @@ export default class MapView extends React.Component {
             ]
             : null,
         }}
-        bottomBar={!this.isExample && this.renderToolBar()}
+        bottomBar={(!this.isExample || this.coworkMode) && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         {this.props.mapLegend && (

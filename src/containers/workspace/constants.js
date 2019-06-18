@@ -84,6 +84,7 @@ export default {
   THEME_GRADUATED_SYMBOL: '等级符号图',
   THEME_GRID_UNIQUE: '单值栅格图',
   THEME_GRID_RANGE: '分段栅格图',
+  THEME_HEATMAP: '热力图',
 
   //统计专题图
   THEME_GRAPH_AREA: '面积图',

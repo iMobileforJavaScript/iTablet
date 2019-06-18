@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Dimensions } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
-import { ConstInfo, ConstAnalyst } from '../../../../constants'
+import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
 import { scaleSize, Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
@@ -23,6 +24,7 @@ export default class BufferAnalystView extends Component {
     settingData: any,
     device: Object,
     currentUser: Object,
+    language: String,
   }
 
   constructor(props) {
@@ -148,12 +150,13 @@ export default class BufferAnalystView extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: ConstAnalyst.BUFFER_ANALYST_2,
+          title: getLanguage(this.props.language).Analyst_Modules
+            .BUFFER_ANALYST_2,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: (
             <TextBtn
-              btnText={'分析'}
+              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
               textStyle={
                 this.state.canBeAnalyst
                   ? styles.headerBtnTitle
@@ -195,9 +198,12 @@ export default class BufferAnalystView extends Component {
         >
           <BufferAnalystViewTab
             ref={ref => (this.singleBuffer = ref)}
-            tabLabel="缓冲区"
+            tabLabel={
+              getLanguage(this.props.language).Analyst_Labels.BUFFER_ZONE
+            }
             type="single"
             currentUser={this.props.currentUser}
+            language={this.props.language}
             checkData={result => {
               if (this.currentTabIndex === 0) {
                 this.checkData(result)
@@ -206,9 +212,12 @@ export default class BufferAnalystView extends Component {
           />
           <BufferAnalystViewTab
             ref={ref => (this.multiBuffer = ref)}
-            tabLabel="多重缓冲区"
+            tabLabel={
+              getLanguage(this.props.language).Analyst_Labels.MULTI_BUFFER_ZONE
+            }
             type="multiple"
             currentUser={this.props.currentUser}
+            language={this.props.language}
             checkData={result => {
               if (this.currentTabIndex === 1) {
                 this.checkData(result)

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native'
-import { AnalystItem } from '../../components'
+import { ScrollView, View, Text } from 'react-native'
+import { AnalystItem, PopModalList } from '../../components'
 import { CheckStatus, ConstPath, ConstInfo } from '../../../../constants'
-import { CheckBox, PopModal, FingerMenu } from '../../../../components'
+import { getLanguage } from '../../../../language'
+import { CheckBox } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
@@ -25,20 +26,22 @@ const popTypes = {
   SemicircleArcNum: 'SemicircleArcNum',
 }
 
-const FlatType = [
-  {
-    key: '双侧缓冲',
-    value: '双侧缓冲',
-  },
-  {
-    key: '左缓冲',
-    value: '左缓冲',
-  },
-  {
-    key: '右缓冲',
-    value: '右缓冲',
-  },
-]
+function getFlatType(language) {
+  return [
+    {
+      key: getLanguage(language).Analyst_Params.BUFFER_LEFT_AND_RIGHT,
+      value: getLanguage(language).Analyst_Params.BUFFER_LEFT_AND_RIGHT,
+    },
+    {
+      key: getLanguage(language).Analyst_Params.BUFFER_LEFT,
+      value: getLanguage(language).Analyst_Params.BUFFER_LEFT,
+    },
+    {
+      key: getLanguage(language).Analyst_Params.BUFFER_RIGHT,
+      value: getLanguage(language).Analyst_Params.BUFFER_RIGHT,
+    },
+  ]
+}
 
 const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
   value: k,
@@ -49,6 +52,7 @@ export default class BufferAnalystViewTab extends Component {
   props: {
     navigation: Object,
     currentUser: Object,
+    language: string,
     data: Array,
     type: string, // single, multiple
     checkData: () => {},
@@ -64,7 +68,7 @@ export default class BufferAnalystViewTab extends Component {
       // 缓冲类型
       roundTypeStatus: CheckStatus.CHECKED,
       flatTypeStatus: CheckStatus.UN_CHECK,
-      flatType: FlatType[0],
+      flatType: getFlatType(this.props.language)[0],
       // 缓冲半径
       bufferRadius: 10,
       bufferRadiuses: [10, 20, 30],
@@ -172,15 +176,16 @@ export default class BufferAnalystViewTab extends Component {
       // 缓冲分析
       if (this.state.flatTypeStatus === CheckStatus.CHECKED) {
         switch (this.state.flatType.value) {
-          case '左缓冲':
+          case getLanguage(this.props.language).Analyst_Params.BUFFER_LEFT:
             bufferParameter.leftDistance = this.state.bufferRadius
             bufferParameter.rightDistance = 0
             break
-          case '右缓冲':
+          case getLanguage(this.props.language).Analyst_Params.BUFFER_RIGHT:
             bufferParameter.leftDistance = 0
             bufferParameter.rightDistance = this.state.bufferRadius
             break
-          case '双侧缓冲':
+          case getLanguage(this.props.language).Analyst_Params
+            .BUFFER_LEFT_AND_RIGHT:
           default:
             bufferParameter.leftDistance = this.state.bufferRadius
             bufferParameter.rightDistance = this.state.bufferRadius
@@ -244,11 +249,11 @@ export default class BufferAnalystViewTab extends Component {
     let roundTypeStatus
     let flatTypeStatus
     switch (title) {
-      case '圆头缓冲':
+      case getLanguage(this.props.language).Analyst_Labels.BUFFER_ROUND:
         roundTypeStatus = CheckStatus.CHECKED
         flatTypeStatus = CheckStatus.UN_CHECK
         break
-      case '平头缓冲':
+      case getLanguage(this.props.language).Analyst_Labels.BUFFER_FLAT:
         roundTypeStatus = CheckStatus.UN_CHECK
         flatTypeStatus = CheckStatus.CHECKED
         break
@@ -263,7 +268,7 @@ export default class BufferAnalystViewTab extends Component {
     return (
       <View key="topView" style={styles.topView}>
         <AnalystItem
-          title={'数据源'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE}
           value={(this.state.dataSource && this.state.dataSource.value) || ''}
           onPress={async () => {
             this.currentPop = popTypes.DataSource
@@ -274,13 +279,13 @@ export default class BufferAnalystViewTab extends Component {
                 currentPopData: this.state.dataSource,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'数据集'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SET}
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
             if (!this.state.dataSource) {
@@ -314,7 +319,7 @@ export default class BufferAnalystViewTab extends Component {
                 currentPopData: this.state.dataSet,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
@@ -327,7 +332,9 @@ export default class BufferAnalystViewTab extends Component {
               })
             }}
           />
-          <Text style={styles.checkTips}>只针对被选择对象进行缓冲操作</Text>
+          <Text style={styles.checkTips}>
+            {getLanguage(this.props.language).Analyst_Labels.SELECTED_OBJ_ONLY}
+          </Text>
         </View>
       </View>
     )
@@ -337,28 +344,38 @@ export default class BufferAnalystViewTab extends Component {
     return (
       <View key="typeView" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>缓冲类型</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.BUFFER_TYPE}
+          </Text>
         </View>
         <AnalystItem
           radioStatus={this.state.roundTypeStatus}
-          title={'圆头缓冲'}
-          onRadioPress={() => this.changeBufferType('圆头缓冲')}
+          title={getLanguage(this.props.language).Analyst_Labels.BUFFER_ROUND}
+          onRadioPress={() =>
+            this.changeBufferType(
+              getLanguage(this.props.language).Analyst_Labels.BUFFER_ROUND,
+            )
+          }
         />
         <AnalystItem
           radioStatus={this.state.flatTypeStatus}
-          title={'平头缓冲'}
+          title={getLanguage(this.props.language).Analyst_Labels.BUFFER_FLAT}
           value={this.state.flatType && this.state.flatType.value}
-          onRadioPress={() => this.changeBufferType('平头缓冲')}
+          onRadioPress={() =>
+            this.changeBufferType(
+              getLanguage(this.props.language).Analyst_Labels.BUFFER_FLAT,
+            )
+          }
           onPress={async () => {
             if (this.state.flatTypeStatus !== CheckStatus.CHECKED) return
             this.currentPop = popTypes.BufferType
             this.setState(
               {
-                popData: FlatType,
+                popData: getFlatType(this.props.language),
                 currentPopData: this.state.flatType,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
@@ -371,21 +388,27 @@ export default class BufferAnalystViewTab extends Component {
     return (
       <View key="optionView" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>缓冲半径</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.BUFFER_RADIUS}
+          </Text>
         </View>
         <AnalystItem
-          title={'缓冲半径'}
+          title={getLanguage(this.props.language).Analyst_Labels.BUFFER_RADIUS}
           value={
             this.props.type === 'single'
-              ? this.state.bufferRadius + '米'
-              : '去设置'
+              ? this.state.bufferRadius +
+                getLanguage(this.props.language).Analyst_Params.METER
+              : getLanguage(this.props.language).Analyst_Labels.GO_TO_SET
           }
           onPress={() => {
             if (this.props.type === 'single') {
               NavigationService.navigate('InputPage', {
                 value: this.state.bufferRadius,
-                headerTitle: '缓冲半径',
-                placeholder: '请输入缓冲半径',
+                headerTitle: getLanguage(this.props.language).Analyst_Labels
+                  .BUFFER_RADIUS,
+                placeholder:
+                  getLanguage(this.props.language).Prompt.PLEASE_ENTER +
+                  getLanguage(this.props.language).Analyst_Labels.BUFFER_RADIUS,
                 keyboardType: 'numeric',
                 cb: async value => {
                   NavigationService.goBack()
@@ -397,7 +420,8 @@ export default class BufferAnalystViewTab extends Component {
             } else {
               NavigationService.navigate('AnalystRadiusSetting', {
                 value: this.state.bufferRadius,
-                headerTitle: '批量添加',
+                headerTitle: getLanguage(this.props.language).Analyst_Labels
+                  .BATCH_ADD,
                 keyboardType: 'numeric',
                 cb: async data => {
                   NavigationService.goBack()
@@ -418,10 +442,12 @@ export default class BufferAnalystViewTab extends Component {
     return (
       <View key="resultSetting" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>结果设置</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.RESULT_SETTINGS}
+          </Text>
         </View>
         <AnalystItem
-          title={'合并缓冲区'}
+          title={getLanguage(this.props.language).Analyst_Labels.BUFFER_UNION}
           value={this.state.isUnionBuffer}
           onChange={value => {
             this.setState({
@@ -430,7 +456,9 @@ export default class BufferAnalystViewTab extends Component {
           }}
         />
         <AnalystItem
-          title={'保留原对象字段属性'}
+          title={
+            getLanguage(this.props.language).Analyst_Labels.KEEP_ATTRIBUTES
+          }
           value={this.state.isRetainAttribute}
           onChange={value => {
             this.setState({
@@ -439,7 +467,7 @@ export default class BufferAnalystViewTab extends Component {
           }}
         />
         <AnalystItem
-          title={'在地图中展示'}
+          title={getLanguage(this.props.language).Analyst_Labels.DISPLAY_IN_MAP}
           value={this.state.isShowOnMap}
           onChange={value => {
             this.setState({
@@ -448,7 +476,7 @@ export default class BufferAnalystViewTab extends Component {
           }}
         />
         {/*<AnalystItem*/}
-        {/*title={'在场景中展示'}*/}
+        {/*title={getLanguage(this.props.language).Analyst_Labels.DISPLAY_IN_SCENE}*/}
         {/*value={this.state.isShowOnScene}*/}
         {/*onChange={value => {*/}
         {/*this.setState({*/}
@@ -457,7 +485,9 @@ export default class BufferAnalystViewTab extends Component {
         {/*}}*/}
         {/*/>*/}
         <AnalystItem
-          title={'半圆弧线段数'}
+          title={
+            getLanguage(this.props.language).Analyst_Labels.SEMICIRCLE_SEGMENTS
+          }
           value={this.state.semicircleArcNum.value}
           onPress={async () => {
             this.currentPop = popTypes.SemicircleArcNum
@@ -467,13 +497,13 @@ export default class BufferAnalystViewTab extends Component {
                 currentPopData: this.state.semicircleArcNum,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'生成环状缓冲区'}
+          title={getLanguage(this.props.language).Analyst_Labels.RESULT_DATA}
           value={this.state.isRing}
           onChange={value => {
             this.setState({
@@ -489,10 +519,12 @@ export default class BufferAnalystViewTab extends Component {
     return (
       <View key="resultData" style={styles.topView}>
         <View style={styles.subTitleView}>
-          <Text style={styles.subTitle}>结果数据</Text>
+          <Text style={styles.subTitle}>
+            {getLanguage(this.props.language).Analyst_Labels.RESULT_DATA}
+          </Text>
         </View>
         <AnalystItem
-          title={'数据源'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE}
           value={
             (this.state.resultDataSource &&
               this.state.resultDataSource.value) ||
@@ -507,13 +539,13 @@ export default class BufferAnalystViewTab extends Component {
                 currentPopData: this.state.resultDataSource,
               },
               () => {
-                this.dsModal && this.dsModal.setVisible(true)
+                this.popModal && this.popModal.setVisible(true)
               },
             )
           }}
         />
         <AnalystItem
-          title={'数据集'}
+          title={getLanguage(this.props.language).Analyst_Labels.DATA_SET}
           value={
             (this.state.resultDataSet && this.state.resultDataSet.value) || ''
           }
@@ -541,7 +573,7 @@ export default class BufferAnalystViewTab extends Component {
             //     currentPopData: this.state.resultDataSet,
             //   },
             //   () => {
-            //     this.dsModal && this.dsModal.setVisible(true)
+            //     this.popModal && this.popModal.setVisible(true)
             //   },
             // )
 
@@ -549,7 +581,8 @@ export default class BufferAnalystViewTab extends Component {
               value: this.state.resultDataSet
                 ? this.state.resultDataSet.value
                 : '',
-              headerTitle: '结果数据集名称',
+              headerTitle: getLanguage(this.props.language).Analyst_Labels
+                .RESULT_DATASET_NAME,
               placeholder: '',
               cb: async value => {
                 NavigationService.goBack()
@@ -569,74 +602,57 @@ export default class BufferAnalystViewTab extends Component {
   /** 选择数据源弹出框 **/
   renderPopList = () => {
     return (
-      <View style={[styles.popView, { width: '100%' }]}>
-        <FingerMenu
-          ref={ref => (this.fingerMenu = ref)}
-          data={this.state.popData}
-          initialKey={
-            this.state.currentPopData && this.state.currentPopData.key
-          }
-        />
-        <View style={[styles.btnsView, { width: '100%' }]}>
-          <TouchableOpacity
-            style={[styles.btnView, { justifyContent: 'flex-start' }]}
-            onPress={() => this.dsModal && this.dsModal.setVisible(false)}
-          >
-            <Text style={styles.btnText}>取消</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.btnView, { justifyContent: 'flex-end' }]}
-            onPress={() => {
-              let { data } = this.fingerMenu && this.fingerMenu.getCurrentData()
-              let newStateData = {}
-              switch (this.currentPop) {
-                case popTypes.DataSource:
-                  newStateData = { dataSource: data }
-                  break
-                case popTypes.DataSet: {
-                  let roundTypeStatus = CheckStatus.CHECKED
-                  let flatTypeStatus = CheckStatus.UN_CHECK
+      <PopModalList
+        ref={ref => (this.popModal = ref)}
+        language={this.props.language}
+        popData={this.state.popData}
+        currentPopData={this.state.currentPopData}
+        confirm={data => {
+          let newStateData = {}
+          switch (this.currentPop) {
+            case popTypes.DataSource:
+              newStateData = { dataSource: data }
+              break
+            case popTypes.DataSet: {
+              let roundTypeStatus = CheckStatus.CHECKED
+              let flatTypeStatus = CheckStatus.UN_CHECK
 
-                  if (
-                    data.datasetType === DatasetType.REGION ||
-                    data.datasetType === DatasetType.POINT
-                  ) {
-                    roundTypeStatus = CheckStatus.CHECKED_DISABLE
-                    flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
-                  }
-
-                  newStateData = this.state.showAdvance
-                    ? { dataSet: data, roundTypeStatus, flatTypeStatus }
-                    : {
-                      dataSet: data,
-                      showAdvance: true,
-                      roundTypeStatus,
-                      flatTypeStatus,
-                    }
-                  break
-                }
-                case popTypes.BufferType:
-                  newStateData = { flatType: data }
-                  break
-                case popTypes.SemicircleArcNum:
-                  newStateData = { semicircleArcNum: data }
-                  break
-                case popTypes.ResultDataSource:
-                  newStateData = { resultDataSource: data }
-                  break
-                case popTypes.ResultDataSet:
-                  newStateData = { resultDataSet: data }
-                  break
+              if (
+                data.datasetType === DatasetType.REGION ||
+                data.datasetType === DatasetType.POINT
+              ) {
+                roundTypeStatus = CheckStatus.CHECKED_DISABLE
+                flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
               }
-              this.setState(newStateData, () => {
-                this.dsModal && this.dsModal.setVisible(false)
-              })
-            }}
-          >
-            <Text style={styles.btnText}>确定</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+
+              newStateData = this.state.showAdvance
+                ? { dataSet: data, roundTypeStatus, flatTypeStatus }
+                : {
+                  dataSet: data,
+                  showAdvance: true,
+                  roundTypeStatus,
+                  flatTypeStatus,
+                }
+              break
+            }
+            case popTypes.BufferType:
+              newStateData = { flatType: data }
+              break
+            case popTypes.SemicircleArcNum:
+              newStateData = { semicircleArcNum: data }
+              break
+            case popTypes.ResultDataSource:
+              newStateData = { resultDataSource: data }
+              break
+            case popTypes.ResultDataSet:
+              newStateData = { resultDataSet: data }
+              break
+          }
+          this.setState(newStateData, () => {
+            this.popModal && this.popModal.setVisible(false)
+          })
+        }}
+      />
     )
   }
 
@@ -650,9 +666,7 @@ export default class BufferAnalystViewTab extends Component {
           {this.state.showAdvance && this.renderResultSetting()}
           {this.state.showAdvance && this.renderResultData()}
         </ScrollView>
-        <PopModal ref={ref => (this.dsModal = ref)}>
-          {this.renderPopList()}
-        </PopModal>
+        {this.renderPopList()}
       </View>
     )
   }

@@ -1,3 +1,12 @@
+import { connect } from 'react-redux'
 import AnalystRadioSetting from './AnalystRadiusSetting'
 
-export default AnalystRadioSetting
+const mapStateToProps = state => ({
+  nav: state.nav.toJS(),
+  language: state.setting.toJS().language,
+})
+
+export default connect(
+  mapStateToProps,
+  [],
+)(AnalystRadioSetting)

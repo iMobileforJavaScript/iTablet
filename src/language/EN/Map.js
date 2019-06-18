@@ -136,6 +136,7 @@ const Map_Main_Menu = {
   THEME_RING: 'Ring',
   THEME_DOT_DENSITY_MAP: 'Dot Density Map',
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
+  THEME_HEATMAP: 'HeatMap',
 
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
@@ -161,6 +162,11 @@ const Map_Main_Menu = {
   THEME_DIAMOND: 'Diamond',
   THEME_TRIANGLE: 'Triangle',
   THEME_MARKER_SYMBOL: 'Marker Symbol',
+
+  THEME_HEATMAP_RADIUS: 'Nuclear Radius',
+  THEME_HEATMAP_COLOR: 'Color Scheme',
+  THEME_HEATMAP_FUZZY_DEGREE: 'Color Fuzzy Degree',
+  THEME_HEATMAP_MAXCOLOR_WEIGHT: 'Max Color Weight',
 
   THEME_GRANDUATE_BY: 'Granduate by',
   THEME_CONSTANT: 'Constant',
@@ -344,8 +350,9 @@ const Map_Settings = {
 
   //二级菜单 坐标系设置
   COORDINATE_SYSTEM: 'Coordinate System',
+  COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
   DYNAMIC_PROJECTION: 'Dynamic Projection',
-  TRANSFER_PARAMS: 'Transfer Parameters',
+  TRANSFER_METHOD: 'Transfer Method',
 
   //二级菜单 高级设置
   FLOW_VISIUALIZATION: 'Flow Visiualization',
@@ -377,12 +384,26 @@ const Map_Settings = {
   GEOGRAPHIC_COORDINATE_SYSTEM: 'Geographic Coordinate System',
   PROJECTED_COORDINATE_SYSTEM: 'Projected Coordinate System',
 
-  //三级菜单 换转参数
-  TRANSFER_METHOD: 'Transfer Method',
+  //三级菜单 复制坐标系
+  FROM_DATASOURCE: 'From Datasource',
+  FROM_DATASET: 'From Dataset',
+  FROM_FILE: 'From File',
+
+  //四级菜单 和复制提示
+  TYPE: 'Type',
+  FORMAT: 'Format',
+  DATASOURCES: 'Datasources',
+  DATASETS: 'Datasets',
+  ALL_COORD_FILE: 'Supported Coordinate System File',
+  SHAPE_COORD_FILE: 'Shape Coordinate System File',
+  MAPINFO_FILE: 'MapInfo Change File',
+  MAPINFO_TAB_FILE: 'MapInfo Tab File',
+  IMG_COORD_FILE: 'Image Coordinate System File',
+  COORD_FILE: 'Coordinate System File',
 
   //设置的一些参数
   PERCENT: 'Percent',
-  OFF: 'Off',
+  OFF: 'OFF',
   CONFIRM: 'Confirm',
   COPY: 'Copy',
 }
@@ -395,6 +416,7 @@ const Map_Tools = {
 
   TAKE_PHOTO: 'Take photo',
   FROM_ALBUM: 'Choose from album',
+  VIEW: 'View',
 }
 
 export {

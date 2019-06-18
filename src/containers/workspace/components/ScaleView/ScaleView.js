@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { Animated, View, Text,Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
@@ -18,12 +18,13 @@ export default class ScaleView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.initialWith = 80
+    this.left = new Animated.Value(scaleSize(120))
     this.state = {
       width: 0,
       title: '',
       isAddedListener: false,
       isShow: false,
+      visible: true,
     }
   }
 
@@ -36,6 +37,17 @@ export default class ScaleView extends React.Component {
         isAddedListener: !this.state.isAddedListener,
       })
     }
+  }
+
+  showFullMap = visible => {
+    if (this.state.visible === visible) return
+    Animated.timing(this.left, {
+      toValue: visible ? scaleSize(120) : scaleSize(30),
+      duration: 300,
+    }).start()
+    this.setState({
+      visible,
+    })
   }
 
   getInitialData = async () => {
@@ -60,41 +72,96 @@ export default class ScaleView extends React.Component {
     }
   }
   render() {
+    let textWidth =
+      this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
     if (!this.state.isShow) return <View />
+
+    let TextOffset = 0.5
+    let textSpacing = 1
+    if(Platform.OS === "android"){
+      textSpacing = TextOffset = 0
+    }
     return (
-      <View
+      <Animated.View
         style={{
           position: 'absolute',
-          right: scaleSize(50),
+          left: this.left,
           bottom: scaleSize(120),
-          width: scaleSize(this.initialWith),
-          height: scaleSize(50),
+          width: scaleSize(150),
+          height: scaleSize(40),
         }}
       >
-        <Text
-          style={{
-            fontSize: setSpText(12),
-            height: '50%',
-            textAlign: 'left',
-            minWidth: scaleSize(60),
-            width: `${~~this.state.width}%`,
-          }}
-        >
-          {this.state.title}
-        </Text>
         <View
           style={{
-            height: scaleSize(10),
-            borderWidth: scaleSize(2),
-            width: `${~~this.state.width}%`,
-            borderTopColor: 'transparent',
-            borderTopWidth: 0,
-            borderBottomColor: color.black,
-            borderLeftColor: color.black,
-            borderRightColor: color.black,
+            width: this.state.width,
           }}
-        />
-      </View>
+        >
+          <Text
+            style={{
+              width: textWidth,
+              textAlign: 'left',
+              position: 'absolute',
+              left: 0,
+              bottom: 0,
+              fontSize: setSpText(12),
+              color: color.white,
+              fontWeight: '900',
+            }}
+          >
+            {this.state.title}
+          </Text>
+          <Text
+            style={{
+              width: textWidth,
+              textAlign: 'left',
+              position: 'absolute',
+              left: TextOffset,
+              letterSpacing: scaleSize(textSpacing),
+              bottom: TextOffset,
+              fontSize: setSpText(12),
+            }}
+          >
+            {this.state.title}
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+          }}
+        >
+          <View
+            style={{
+              width: 3,
+              height: 8,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderWidth: 1,
+              borderRightWidth: 0,
+            }}
+          />
+          <View
+            style={{
+              height: 4,
+              width: ~~this.state.width,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+            }}
+          />
+          <View
+            style={{
+              width: 3,
+              height: 8,
+              backgroundColor: color.black,
+              borderColor: color.white,
+              borderWidth: 1,
+              borderLeftWidth: 0,
+            }}
+          />
+        </View>
+      </Animated.View>
     )
   }
 }

@@ -12,7 +12,7 @@ import {
   FlatList,
   Image,
 } from 'react-native'
-//import NavigationService from '../../NavigationService'
+import NavigationService from '../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils/screen'
 import { Container, Dialog } from '../../../components'
@@ -224,7 +224,19 @@ class AddFriend extends Component {
         disabled={item[0] === '0' ? true : false}
         onPress={() => {
           this.target = item //[id,name]
-          this.dialog.setDialogVisible(true)
+          if (this.target[0] == this.user.userId) {
+            Toast.show(getLanguage(this.language).Friends.ADD_SELF)
+            return
+          }
+          if (FriendListFileHandle.isFriend(this.target[0])) {
+            NavigationService.navigate('ManageFriend', {
+              targetId: this.target[0],
+              user: this.user,
+              friend: this.friend,
+            })
+          } else {
+            this.dialog.setDialogVisible(true)
+          }
         }}
       >
         <View style={[styles.ITemHeadTextViewStyle, { opacity: opacity }]}>

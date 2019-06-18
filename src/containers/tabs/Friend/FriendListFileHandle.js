@@ -208,19 +208,21 @@ export default class FriendListFileHandle {
   }
   static upload() {
     //上传
-    SOnlineService.deleteData('friend.list').then(() => {
-      let UploadFileName = 'friend.list.zip'
-      if (Platform.OS === 'android') {
-        UploadFileName = 'friend.list'
+    SOnlineService.deleteData('friend.list').then(result => {
+      if (result === true) {
+        let UploadFileName = 'friend.list.zip'
+        if (Platform.OS === 'android') {
+          UploadFileName = 'friend.list'
+        }
+        SOnlineService.uploadFile(
+          FriendListFileHandle.friendListFile,
+          UploadFileName,
+          {
+            // eslint-disable-next-line
+            onResult: value => {},
+          },
+        )
       }
-      SOnlineService.uploadFile(
-        FriendListFileHandle.friendListFile,
-        UploadFileName,
-        {
-          // eslint-disable-next-line
-          onResult: value => {},
-        },
-      )
     })
   }
 

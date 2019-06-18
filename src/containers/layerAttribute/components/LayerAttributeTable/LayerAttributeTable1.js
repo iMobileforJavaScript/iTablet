@@ -29,6 +29,9 @@ export default class LayerAttributeTable extends React.Component {
     selectRow?: () => {},
     changeAction?: () => {}, // 修改表格中的值的回调
     onViewableItemsChanged?: () => {},
+    buttonNameFilter?: Array, // Cell 为button的列的filter
+    buttonActions?: Array, // Cell 为button的列的点击事件
+    buttonTitles?: Array, // Cell 为button列对应的title, buttonTitles必须不为空，buttonIndexes才生效
 
     selectable: boolean,
     stickySectionHeadersEnabled?: boolean,
@@ -338,6 +341,74 @@ export default class LayerAttributeTable extends React.Component {
         fieldInfo: {},
       })
     }
+
+    let buttonActions = [],
+      buttonIndexes = [],
+      buttonTitles = []
+
+    if (this.props.type === 'MULTI_DATA' && this.state.isMultiData) {
+      buttonTitles = this.props.buttonTitles
+      for (let index1 in item) {
+        for (let filter of this.props.buttonNameFilter) {
+          if (item[index1].name === filter) {
+            buttonIndexes.push(parseInt(index1) + 1)
+            break
+          }
+        }
+      }
+      this.props.buttonActions.forEach(action => {
+        buttonActions.push(row => {
+          if (typeof action === 'function') {
+            if (item && item instanceof Array) {
+              action({
+                rowData: item,
+                rowIndex: index,
+                cellData: row.data,
+                cellIndex: row.index,
+              })
+            } else {
+              action({
+                rowData: this.props.data,
+                rowIndex: 0,
+                cellData: item,
+                cellIndex: index,
+              })
+            }
+          }
+        })
+      })
+    } else {
+      for (let filter of this.props.buttonNameFilter) {
+        if (item.name === filter) {
+          buttonTitles = this.props.buttonTitles
+          buttonIndexes = [1]
+          this.props.buttonActions.forEach(action => {
+            buttonActions.push(row => {
+              if (typeof action === 'function') {
+                if (item && item instanceof Array) {
+                  action({
+                    rowData: item,
+                    rowIndex: index,
+                    cellData: row.data,
+                    cellIndex: row.index,
+                  })
+                } else {
+                  action({
+                    rowData: this.props.data,
+                    rowIndex: 0,
+                    cellData: item,
+                    cellIndex: index,
+                  })
+                }
+              }
+            })
+          })
+          break
+        }
+      }
+      buttonTitles = this.props.buttonTitles
+    }
+
     return (
       <Row
         data={data}
@@ -350,6 +421,9 @@ export default class LayerAttributeTable extends React.Component {
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
         onPress={() => this.onPressRow({ data: item, index })}
         onChangeEnd={this.onChangeEnd}
+        buttonIndexes={buttonIndexes}
+        buttonActions={buttonActions}
+        buttonTitles={buttonTitles}
       />
     )
   }

@@ -19,7 +19,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view'
 
 // eslint-disable-next-line
-import { SMessageService } from 'imobile_for_reactnative'
+import { SMessageService, SOnlineService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
 import { Toast } from '../../../utils/index'
@@ -58,6 +58,9 @@ export default class Friend extends Component {
     chat: Array,
     addChat: () => {},
     editChat: () => {},
+    setUser: () => {},
+    openWorkspace: () => {},
+    closeWorkspace: () => {},
   }
 
   constructor(props) {
@@ -67,6 +70,7 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    this.curMap = undefined
     MessageDataHandle.setHandle(this.props.addChat)
     FriendListFileHandle.refreshCallback = this.refreshList
     FriendListFileHandle.refreshMessageCallback = this.refreshMsg
@@ -143,6 +147,11 @@ export default class Friend extends Component {
     }
   }
 
+  //设置协作地图
+  setCurMap = async moduleMapFullName => {
+    this.curMap = moduleMapFullName
+  }
+
   addFileListener = () => {
     if (Platform.OS === 'iOS') {
       this.receiveFileListener = iOSEventEmitter.addListener(
@@ -185,12 +194,42 @@ export default class Friend extends Component {
     }
   }
 
+  //构造chat页面等需要的targetUser对象
+  getTargetUser = targetId => {
+    let name = ''
+    if (targetId.indexOf('Group_') != -1) {
+      name = FriendListFileHandle.getGroup(targetId).groupName
+    } else {
+      name = FriendListFileHandle.getFriend(targetId).markName
+    }
+
+    let chatObj = {}
+    let friend = {
+      id: targetId,
+      message: chatObj,
+      title: name,
+    }
+
+    if (this.props.chat.hasOwnProperty(this.props.user.currentUser.userId)) {
+      let chats = this.props.chat[this.props.user.currentUser.userId]
+      if (chats.hasOwnProperty(targetId)) {
+        chatObj = chats[targetId].history
+        friend = {
+          id: targetId,
+          message: chatObj,
+          title: name,
+        }
+      }
+    }
+    return friend
+  }
+
   createGroupTalk = members => {
     let ctime = new Date()
     let time = Date.parse(ctime)
     let newMembers = JSON.parse(JSON.stringify(members))
 
-    members.push({
+    members.unshift({
       id: this.props.user.currentUser.userId,
       name: this.props.user.currentUser.nickname,
     })
@@ -199,8 +238,11 @@ export default class Friend extends Component {
     let groupName = ''
     for (let i in members) {
       if (i > 3) break
-      groupName += members[i].name
-      if (i !== members.length - 2) groupName += '、'
+      if (i === '0') {
+        groupName += members[i].name
+      } else {
+        groupName += '、' + members[i].name
+      }
     }
     FriendListFileHandle.addToGroupList({
       id: groupId,
@@ -229,6 +271,11 @@ export default class Friend extends Component {
     }
     let msgStr = JSON.stringify(msgObj)
     this._sendMessage(msgStr, groupId, false)
+    NavigationService.navigate('Chat', {
+      targetId: groupId,
+      curUser: this.props.user.currentUser,
+      friend: this,
+    })
   }
 
   addGroupMember = (groupId, members) => {
@@ -451,6 +498,12 @@ export default class Friend extends Component {
             getLanguage(this.props.language).Friends.SYS_MSG_ADD_INTO_GROUP2
         }
         break
+      case MSGConstant.MSG_MODIFY_GROUP_NAME:
+        text =
+          msg.originMsg.user.name +
+          getLanguage(this.props.language).Friends.SYS_MSG_MOD_GROUP_NAME +
+          msg.originMsg.message.name
+        break
       default:
         break
     }
@@ -555,11 +608,42 @@ export default class Friend extends Component {
     }
   }
 
+  _logout = async () => {
+    try {
+      if (this.props.user.userType !== UserType.PROBATION_USER) {
+        SOnlineService.logout()
+      }
+      this.props.closeWorkspace(async () => {
+        SOnlineService.removeCookie()
+        let customPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+        )
+        this.props.setUser({
+          userName: 'Customer',
+          userType: UserType.PROBATION_USER,
+        })
+        NavigationService.reset('Tabs')
+        this.props.openWorkspace({ server: customPath })
+        Toast.show(
+          getLanguage(this.props.language).Friends.SYS_LOGIN_ON_OTHER_DEVICE,
+        )
+      })
+    } catch (e) {
+      //
+    }
+  }
+
   async _receiveMessage(message) {
     if (g_connectService) {
       let messageObj = JSON.parse(message['message'])
       // messageObj.message.type=6;   桌面发送的文件类型是3，要接收桌面发送过来的文件需要把type改为6
       // messageObj.message.message.progress=0;    桌面发送的数据没有progress参数，不能显示进度
+      if (messageObj.type === MSGConstant.MSG_LOGOUT) {
+        if (messageObj.time !== this.loginTime) {
+          this._logout()
+        }
+        return
+      }
       let userId = this.props.user.currentUser.userId
       if (userId === messageObj.user.id) {
         //自己的消息，返回
@@ -722,6 +806,8 @@ export default class Friend extends Component {
           /*
            * 修改群名
            */
+          bSysStore = true
+          bSysShow = true
           FriendListFileHandle.modifyGroupList(
             messageObj.user.groupID,
             messageObj.message.name,
@@ -758,14 +844,21 @@ export default class Friend extends Component {
     await FriendListFileHandle.getContacts(userPath, 'friend.list', () => {})
   }
 
-  connectService = () => {
+  connectService = async () => {
     let bHasUserInfo = false
-
+    let isAlreadyLogin = false
     if (this.props.user.currentUser.hasOwnProperty('userType') === true) {
       let usrType = this.props.user.currentUser.userType
       bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
+          if (
+            await JPushService.isConnectService(
+              this.props.user.currentUser.userId,
+            )
+          ) {
+            isAlreadyLogin = true
+          }
           SMessageService.connectService(
             MSGConstant.MSG_IP,
             MSGConstant.MSG_Port,
@@ -781,6 +874,18 @@ export default class Friend extends Component {
                 )
               } else {
                 g_connectService = true
+                if (isAlreadyLogin) {
+                  this.loginTime = Date.parse(new Date())
+                  this._sendMessage(
+                    JSON.stringify({
+                      type: MSGConstant.MSG_LOGOUT,
+                      user: {},
+                      time: this.loginTime,
+                      message: '',
+                    }),
+                    this.props.user.currentUser.userId,
+                  )
+                }
                 SMessageService.startReceiveMessage(
                   this.props.user.currentUser.userId,
                   { callback: this._receiveMessage },

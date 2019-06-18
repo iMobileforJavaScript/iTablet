@@ -109,7 +109,7 @@ android {
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode 2
         versionName "2.0.2"
         manifestPlaceholders = [
@@ -183,7 +183,8 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-video')
+    implementation project(':react-native-background-timer')
+    implementation project(':react-native-video')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-fs')
     implementation project(':react-native-camera')
@@ -197,6 +198,7 @@ dependencies {
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
     implementation project(':imobile_for_reactnative')
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation "com.android.support:support-v4:28.0.0"
     implementation 'com.facebook.react:react-native:+'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:multidex:1.0.3'

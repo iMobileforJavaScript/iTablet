@@ -88,5 +88,8 @@ const Friends = {
   SYS_MSG_ADD_INTO_GROUP2: '进入群聊',
   SYS_NO_SUCH_USER: '该用户不存在',
   SYS_FRIEND_ALREADY_IN_GROUP: '所选好友已在群组中',
+  EXCEED_NAME_LIMIT: '长度需小于40个字符(汉字20个字符)',
+  SYS_MSG_MOD_GROUP_NAME: ' 将群名称更改为 ',
+  SYS_LOGIN_ON_OTHER_DEVICE: '您的账号已在别的设备上登录',
 }
 export { Friends }

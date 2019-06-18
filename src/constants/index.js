@@ -30,6 +30,7 @@ import {
   graduatedSymbolMenuInfo,
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
+  heatmapMenuInfo,
   legendMenuInfo,
   legendMenuInfoNotVisible,
 } from './FunctionToolbarModule'
@@ -78,6 +79,7 @@ export {
   graduatedSymbolMenuInfo,
   gridUniqueMenuInfo,
   gridRangeMenuInfo,
+  heatmapMenuInfo,
   UserType,
   ThemeType,
   CheckStatus,

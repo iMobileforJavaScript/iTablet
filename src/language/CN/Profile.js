@@ -25,9 +25,11 @@ const Profile = {
   MOBILE_REGISTER: '手机注册',
   EMAIL_REGISTER: '邮箱注册',
   ENTER_USERNAME: '请输入昵称',
+  ENTER_USERNAME2: '请输入用户名',
   ENTER_CODE: '请输入验证码',
   GET_CODE: '获取验证码',
   ENTER_EMAIL: '请输入邮箱',
+  ENTER_SERVER_ADDRESS: '请输入服务地址',
 
   SWITCH_ACCOUNT: '切换账号',
   LOG_OUT: '退出登录',

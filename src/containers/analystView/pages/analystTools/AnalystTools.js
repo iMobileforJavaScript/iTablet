@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { Container, TableList, MTBtn } from '../../../../components'
-import { MAP_MODULE } from '../../../../constants/ConstModule'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
 import analystData from './analystData'
 import { setSpText } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
+
 export default class AnalystTools extends Component {
   props: {
     navigation: Object,
@@ -14,12 +15,21 @@ export default class AnalystTools extends Component {
     setSettingData: () => {},
     settingData: any,
     device: Object,
+    language: String,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      data: analystData.getData(),
+      data: analystData.getData(this.props.language),
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.language !== this.props.language) {
+      this.setState({
+        data: analystData.getData(this.props.language),
+      })
     }
   }
 
@@ -62,7 +72,7 @@ export default class AnalystTools extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: MAP_MODULE.MAP_ANALYST,
+          title: getLanguage(this.props.language).Map_Module.DATA_ANALYSIS,
           navigation: this.props.navigation,
         }}
       >
