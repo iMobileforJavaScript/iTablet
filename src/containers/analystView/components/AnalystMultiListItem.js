@@ -4,17 +4,56 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, Image } from 'react-native'
-import { ImageButton } from '../../../components/index'
-import { CheckStatus } from '../../../constants/index'
-import {
-  getPublicAssets,
-  getThemeIconByType,
-  getLayerIconByType,
-} from '../../../assets/index'
-import styles from '../styles'
+import { View, Text, StyleSheet } from 'react-native'
+import { ImageButton } from '../../../components'
+import { CheckStatus } from '../../../constants'
+import { scaleSize } from '../../../utils'
+import { size, color } from '../../../styles'
+import { getPublicAssets } from '../../../assets'
 
-export default class MapCutAddLayerListItem extends PureComponent {
+const ROW_HEIGHT = scaleSize(80)
+const styles = StyleSheet.create({
+  itemView: {
+    flex: 1,
+    flexDirection: 'row',
+    height: ROW_HEIGHT,
+    paddingLeft: scaleSize(20),
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: 'transparent',
+  },
+  content: {
+    fontSize: size.fontSize.fontSizeMd,
+    color: color.fontColorBlack,
+    backgroundColor: 'transparent',
+  },
+  /** Check按钮 **/
+  select: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  selectContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  selectImgView: {
+    width: ROW_HEIGHT,
+    height: ROW_HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  selectImg: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+    backgroundColor: 'transparent',
+  },
+})
+
+export default class AnalystMultiListItem extends PureComponent {
   props: {
     data: Object,
     selected?: boolean,
@@ -23,14 +62,6 @@ export default class MapCutAddLayerListItem extends PureComponent {
 
   static defaultProps = {
     selected: false,
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      // inputValue: props.datasourceName,
-    }
-    this.caption = ''
   }
 
   onSelect = () => {
@@ -63,36 +94,22 @@ export default class MapCutAddLayerListItem extends PureComponent {
         iconStyle={styles.selectImg}
         icon={icon}
         onPress={() => {
-          this.setState(
-            {
-              isSelectAll: !this.state.isSelectAll,
-            },
-            () => {
-              action && action(data)
-            },
-          )
+          action && action(data)
         }}
       />
     )
   }
 
   render() {
-    let icon =
-      this.props.data.themeType > 0
-        ? getThemeIconByType(this.props.data.themeType)
-        : getLayerIconByType(this.props.data.type)
     return (
-      <View style={[styles.topLeftView, { width: '100%' }]}>
+      <View style={[styles.itemView, { width: '100%' }]}>
         {this.renderCheckButton({
           status: this.props.selected
             ? CheckStatus.CHECKED
             : CheckStatus.UN_CHECK,
           action: this.onSelect,
         })}
-        <View style={styles.selectImgView}>
-          <Image resizeMode="contain" style={styles.selectImg} source={icon} />
-        </View>
-        <Text style={styles.content}>{this.props.data.caption}</Text>
+        <Text style={styles.content}>{this.props.data.key}</Text>
       </View>
     )
   }

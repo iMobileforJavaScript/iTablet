@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, Text, View, Animated } from 'react-native'
 import TouchableItem from 'react-navigation/src/views/TouchableItem'
 
-export default class SymbolTabs extends React.Component {
+export default class DefaultTabBar extends React.Component {
   props: {
     goToPage: () => {},
     activeTab: number,

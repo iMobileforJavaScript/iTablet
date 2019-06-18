@@ -347,13 +347,20 @@ export default class LayerManager_tolbar extends React.Component {
       section.title === getLanguage(global.language).Map_Layer.LAYERS_REMOVE
     ) {
       //'移除'
-
       (async function() {
         await SMap.removeLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
     } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_FULL_VIEW_LAYER
+    ) {
+      //'全幅显示当前图层') {
+      this.setVisible(false)
+      SMap.setLayerFullView(this.state.layerdata.name)
+      // eslint-disable-next-line react/prop-types
+      this.props.navigation.navigate('MapView')
+    }else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
       //'切换底图') {

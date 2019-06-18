@@ -22,6 +22,10 @@ const Analyst_Labels = {
   ANALYST: 'Analyst',
   CONFIRM: 'Confirm',
   CANCEL: 'Cancel',
+  NEXT: 'Next',
+  PREVIOUS: 'Previous',
+  ADD: 'Add',
+  Edit: 'Edit',
 
   BUFFER_ZONE: 'Buffer',
   MULTI_BUFFER_ZONE: 'Multi-buffer',
@@ -69,6 +73,9 @@ const Analyst_Labels = {
   MESH_SIZE: 'Mesh Size',
   SEARCH_RADIUS: 'Radius',
   AREA_UNIT: 'Area Units',
+  STATISTIC_MODE: 'Statistic Mode',
+  NUMERIC_PRECISION: 'Numeric Precision',
+  AGGREGATE_TYPE: 'Aggregate Type',
 
   THEMATIC_PARAMS: 'Thematic Parameters',
   INTERVAL_MODE: 'Interval Mode',
@@ -77,6 +84,11 @@ const Analyst_Labels = {
 
   Input_Type: 'Input Type',
   Dataset: 'Dataset',
+
+  NOT_SET: 'Not Set',
+  ALREADY_SET: 'Already Set',
+
+  ADD_WEIGHT_STATISTIC: 'Add Weighted Field',
 
   // 方向
   LEFT: 'Left',
@@ -129,6 +141,34 @@ const Analyst_Params = {
   RAINBOW_COLOR: 'Rainbow Color',
   SPECTRAL_GRADIENT: 'Spectral Gradient',
   TERRAIN_GRADIENT: 'Terrain Gradient',
+
+  // 统计模式
+  MAX: 'Max',
+  MIN: 'Min',
+  AVERAGE: 'Average',
+  SUM: 'Sum',
+  VARIANCE: 'Variance',
+  STANDARD_DEVIATION: 'Standard Deviation',
+
+  // 聚合类型
+  AGGREGATE_WITH_GRID: 'Aggregate with Grid',
+  AGGREGATE_WITH_REGION: 'Aggregate with Region',
 }
 
-export { Analyst_Modules, Analyst_Methods, Analyst_Labels, Analyst_Params }
+const Analyst_Prompt = {
+  PLEASE_CONNECT_TO_ISERVER: 'Please connect to iServer',
+  PLEASE_CHOOSE_INPUT_METHOD: 'Please choose input method',
+  PLEASE_CHOOSE_DATASET: 'Please choose dataset',
+  LOGIN_ISERVER_FAILED:
+    'Failed to connect iServer, please check ip, username and password',
+  BEING_ANALYZED: 'Being analyzed',
+  ANALYZING_FAILED: 'Analyzing failed',
+}
+
+export {
+  Analyst_Modules,
+  Analyst_Methods,
+  Analyst_Labels,
+  Analyst_Params,
+  Analyst_Prompt,
+}

@@ -79,6 +79,7 @@ import {
   IServerLoginPage,
   SourceDatasetPage,
   AnalystRangePage,
+  WeightAndStatistic,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -598,6 +599,13 @@ export default StackNavigator(
     },
     AnalystRangePage: {
       screen: AnalystRangePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    WeightAndStatistic: {
+      screen: WeightAndStatistic,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
