@@ -4,6 +4,7 @@ import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
+import { scaleSize } from '../../utils';
 export default class Layer3DItem extends Component {
   props: {
     item: Object,
@@ -119,12 +120,12 @@ const layer3dSettingCanNotSelect = param => [
           ) {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_BASE, {
               isFullScreen: true,
-              height: 86 * 2,
+              height: scaleSize(88) * 2,
             })
           } else {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
               isFullScreen: true,
-              height: 86 * 3,
+              height: scaleSize(88) * 3,
             })
           }
           break
@@ -132,7 +133,7 @@ const layer3dSettingCanNotSelect = param => [
         case 'Terrain':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
-            height: 86 * 3,
+            height: scaleSize(88) * 3,
           })
           break
         default: {
@@ -142,7 +143,7 @@ const layer3dSettingCanNotSelect = param => [
           }
           layer3dToolbar.setVisible(true, type, {
             isFullScreen: true,
-            height: 86 * 2,
+            height: scaleSize(88) * 2,
           })
           layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break
@@ -193,19 +194,16 @@ const layer3dSettingCanNotSelect = param => [
     return (
       <View>
         <View style={styles.row}>
-          {/* <TouchableOpacity onPress={this.changeSelect}>
-            <Image source={selectImg} style={styles.selectImg} />
-          </TouchableOpacity> */}
           <TouchableOpacity onPress={this.changeVisible}>
             <Image source={visibleImg} style={styles.visibleImg} />
           </TouchableOpacity>
 
           <Image source={typeImg} style={styles.type} />
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <View style={{ flex: 1,marginLeft: scaleSize(30)}}>
             <Text style={[styles.itemName, textColor]}>
               {this.props.item.name}
             </Text>
-          </ScrollView>
+          </View>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />
           </TouchableOpacity>
