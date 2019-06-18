@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import IServerLoginPage from './SourceDatasetPage'
+import WeightAndStatistic from './WeightAndStatistic'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
@@ -10,4 +10,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   [],
-)(IServerLoginPage)
+)(WeightAndStatistic)
