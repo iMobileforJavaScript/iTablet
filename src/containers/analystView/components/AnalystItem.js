@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native'
 import { color, size } from '../../../styles'
-import { scaleSize } from '../../../utils'
+import { scaleSize, screen } from '../../../utils'
 import { getThemeAssets, getPublicAssets } from '../../../assets'
 import { CheckStatus } from '../../../constants'
 
@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  switchTitle: {
+  contentText: {
     fontSize: size.fontSize.fontSizeMd,
     color: color.fontColorGray,
-    textAlign: 'center',
+    textAlign: 'right',
     backgroundColor: 'transparent',
   },
   arrowImg: {
@@ -241,7 +241,14 @@ export default class AnalystItem extends PureComponent {
                 }
               }}
             >
-              <Text style={styles.switchTitle}>{this.props.value}</Text>
+              <Text
+                style={[
+                  styles.contentText,
+                  { maxWidth: screen.getScreenWidth() / 3 },
+                ]}
+              >
+                {this.props.value}
+              </Text>
               {this.props.rightType !== 'input' && (
                 <Image
                   resizeMode={'contain'}

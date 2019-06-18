@@ -8,6 +8,7 @@ import jsonUtil from './jsonUtil'
 import FetchUtils from './FetchUtils'
 import LayerUtil from './LayerUtil'
 import ModelUtils from './ModelUtils'
+import request from './request'
 export {
   screen,
   scaleSize,
@@ -19,6 +20,7 @@ export {
   jsonUtil,
   FetchUtils,
   setSpText,
+  request,
   /** 地图公共方法 **/
   LayerUtil,
   ModelUtils,

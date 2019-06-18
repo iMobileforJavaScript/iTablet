@@ -14,8 +14,6 @@ import {
 import styles from './styles'
 import { getlegendSetting, getThematicMapSettings } from './settingData'
 import SettingSection from './SettingSection'
-import SettingItem from './SettingItem'
-import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language/index'
 import { ConstToolType } from '../../constants'
 import { scaleSize } from '../../utils'
@@ -101,57 +99,57 @@ export default class MapSetting extends Component {
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
   }
 
-  _onValueChange = ({ value, index, section }) => {
-    let newData = JSON.parse(JSON.stringify(this.state.data))
-    let sectionIndex = 0
-    for (let i = 0; i < newData.length; i++) {
-      if (newData[i].title === section.title) {
-        sectionIndex = i
-        break
-      }
-    }
-    newData[sectionIndex].data[index].value = value
-    switch (newData[sectionIndex].data[index].name) {
-      case getLanguage(this.props.language).Map_Setting.ROTATION_GESTURE:
-        //'手势旋转':
-        SMap.enableRotateTouch(value)
-        break
-      case getLanguage(this.props.language).Map_Setting.PITCH_GESTURE:
-        //'手势俯仰':
-        SMap.enableSlantTouch(value)
-        break
-      case getLanguage(this.props.language).Map_Setting.ANTI_ALIASING_MAP:
-        //'反走样地图':
-        SMap.setAntialias(value)
-        break
-      case getLanguage(this.props.language).Map_Setting.SHOW_OVERLAYS:
-        //'显示压盖对象':
-        SMap.setOverlapDisplayed(value)
-        break
-      case getLanguage(this.props.language).Map_Setting.FIX_SCALE:
-        //'固定比例尺':
-        SMap.setVisibleScalesEnabled(value)
-        break
-      case getLanguage(this.props.language).Map_Setting.THEME_LEGEND:
-        this.props.setMapLegend(value)
-        if (value) {
-          GLOBAL.toolBox &&
-            GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
-              containerType: 'colortable',
-              column: 8,
-              tableType: 'scroll',
-              isFullScreen: false,
-              height: ConstToolType.THEME_HEIGHT[3],
-            })
-          GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-          this.props.navigation.navigate('MapView')
-        }
-        break
-    }
-    this.setState({
-      data: newData.concat(),
-    })
-  }
+  // _onValueChange = ({ value, index, section }) => {
+  //   let newData = JSON.parse(JSON.stringify(this.state.data))
+  //   let sectionIndex = 0
+  //   for (let i = 0; i < newData.length; i++) {
+  //     if (newData[i].title === section.title) {
+  //       sectionIndex = i
+  //       break
+  //     }
+  //   }
+  //   newData[sectionIndex].data[index].value = value
+  //   switch (newData[sectionIndex].data[index].name) {
+  //     case getLanguage(this.props.language).Map_Setting.ROTATION_GESTURE:
+  //       //'手势旋转':
+  //       SMap.enableRotateTouch(value)
+  //       break
+  //     case getLanguage(this.props.language).Map_Setting.PITCH_GESTURE:
+  //       //'手势俯仰':
+  //       SMap.enableSlantTouch(value)
+  //       break
+  //     case getLanguage(this.props.language).Map_Setting.ANTI_ALIASING_MAP:
+  //       //'反走样地图':
+  //       SMap.setAntialias(value)
+  //       break
+  //     case getLanguage(this.props.language).Map_Setting.SHOW_OVERLAYS:
+  //       //'显示压盖对象':
+  //       SMap.setOverlapDisplayed(value)
+  //       break
+  //     case getLanguage(this.props.language).Map_Setting.FIX_SCALE:
+  //       //'固定比例尺':
+  //       SMap.setVisibleScalesEnabled(value)
+  //       break
+  //     case getLanguage(this.props.language).Map_Setting.THEME_LEGEND:
+  //       this.props.setMapLegend(value)
+  //       if (value) {
+  //         GLOBAL.toolBox &&
+  //           GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+  //             containerType: 'colortable',
+  //             column: 8,
+  //             tableType: 'scroll',
+  //             isFullScreen: false,
+  //             height: ConstToolType.THEME_HEIGHT[3],
+  //           })
+  //         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+  //         this.props.navigation.navigate('MapView')
+  //       }
+  //       break
+  //   }
+  //   this.setState({
+  //     data: newData.concat(),
+  //   })
+  // }
 
   renderListSectionHeader = ({ section }) => {
     return (
@@ -162,18 +160,18 @@ export default class MapSetting extends Component {
     )
   }
 
-  renderListItem = ({ item, index, section }) => {
-    if (!section.visible) return <View />
-    return (
-      <SettingItem
-        device={this.props.device}
-        section={section}
-        data={item}
-        index={index}
-        onPress={data => this._onValueChange(data)}
-      />
-    )
-  }
+  // renderListItem = ({ item, index, section }) => {
+  //   if (!section.visible) return <View />
+  //   return (
+  //     <SettingItem
+  //       device={this.props.device}
+  //       section={section}
+  //       data={item}
+  //       index={index}
+  //       onPress={data => this._onValueChange(data)}
+  //     />
+  //   )
+  // }
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.visible ? <View style={styles.itemSeparator} /> : null

@@ -51,8 +51,6 @@ import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
-//eslint-disable-next-line
-import { HEIGHT } from '../../../../utils/constUtil'
 import ScaleView from '../../components/ScaleView/ScaleView'
 
 const markerTag = 117868

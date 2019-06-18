@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native'
+import { TouchableOpacity, View, Text, Image } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
-import { scaleSize } from '../../utils';
+import { scaleSize } from '../../utils'
 export default class Layer3DItem extends Component {
   props: {
     item: Object,
@@ -199,7 +199,7 @@ const layer3dSettingCanNotSelect = param => [
           </TouchableOpacity>
 
           <Image source={typeImg} style={styles.type} />
-          <View style={{ flex: 1,marginLeft: scaleSize(30)}}>
+          <View style={{ flex: 1, marginLeft: scaleSize(30) }}>
             <Text style={[styles.itemName, textColor]}>
               {this.props.item.name}
             </Text>

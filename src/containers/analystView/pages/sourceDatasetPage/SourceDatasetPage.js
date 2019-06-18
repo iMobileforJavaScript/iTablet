@@ -4,10 +4,16 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { KeyboardAvoidingView, Platform } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  InteractionManager,
+} from 'react-native'
 import { Container, TextBtn } from '../../../../components'
+import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import { AnalystItem, PopModalList } from '../../components'
+import { SAnalyst } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class SourceDatasetPage extends React.Component {
@@ -15,6 +21,7 @@ export default class SourceDatasetPage extends React.Component {
     navigation: Object,
     nav: Object,
     language: String,
+    iServerData: String,
   }
 
   constructor(props) {
@@ -24,13 +31,11 @@ export default class SourceDatasetPage extends React.Component {
     this.backcb = params && params.backcb
 
     this.inputTypes = [
-      { key: 'HDFS', value: 'HDFS' },
       { key: 'iServer Catalog', value: 'iServer Catalog' },
+      { key: 'HDFS', value: 'HDFS' },
     ]
-    this.datasets = [{ key: '111', value: '111' }, { key: '222', value: '222' }]
 
-    let inputType = this.inputTypes[0],
-      dataset = this.datasets[0]
+    let inputType = this.inputTypes[0]
     if (params && params.inputType) {
       for (let type of this.inputTypes) {
         if (type.value === params.inputType) {
@@ -39,21 +44,44 @@ export default class SourceDatasetPage extends React.Component {
         }
       }
     }
-    if (params && params.datasets) {
-      for (let item of this.datasets) {
-        if (item.value === params.datasets) {
-          dataset = item
-          break
-        }
-      }
-    }
 
     this.state = {
       headerTitle: params && params.headerTitle ? params.headerTitle : '',
       inputType: inputType,
-      dataset: dataset,
+      datasets: params && params.datasets ? params.datasets : [],
+      dataset: params && params.dataset ? params.dataset : '',
 
       popData: [],
+    }
+  }
+
+  componentDidMount() {
+    if (
+      this.props.iServerData &&
+      this.props.iServerData.ip &&
+      this.props.iServerData.port &&
+      this.state.datasets.length === 0
+    ) {
+      InteractionManager.runAfterInteractions(() => {
+        SAnalyst.getOnlineAnalysisData(
+          this.props.iServerData.ip,
+          this.props.iServerData.port,
+          0,
+        ).then(data => {
+          let datasets = []
+          if (data.datasetCount > 0) {
+            data.datasetNames.forEach(datasetName => {
+              datasets.push({ key: datasetName, value: datasetName })
+            })
+          }
+          if (datasets.length > 0) {
+            this.setState({
+              datasets,
+              dataset: datasets[0],
+            })
+          }
+        })
+      })
     }
   }
 
@@ -67,6 +95,19 @@ export default class SourceDatasetPage extends React.Component {
 
   confirm = () => {
     if (this.cb && typeof this.cb === 'function') {
+      if (!this.state.inputType || !this.state.inputType.value) {
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt
+            .PLEASE_CHOOSE_INPUT_METHOD,
+        )
+        return
+      }
+      if (!this.state.dataset || !this.state.dataset.value) {
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.PLEASE_CHOOSE_DATASET,
+        )
+        return
+      }
       this.cb({
         inputType: this.state.inputType.value,
         dataset: this.state.dataset.value,
@@ -146,12 +187,12 @@ export default class SourceDatasetPage extends React.Component {
           />
           <AnalystItem
             title={getLanguage(this.props.language).Analyst_Labels.Dataset}
-            value={this.state.dataset.value}
+            value={(this.state.dataset && this.state.dataset.value) || ''}
             onPress={async () => {
               this.currentPop = 1
               this.setState(
                 {
-                  popData: this.datasets,
+                  popData: this.state.datasets,
                   currentPopData: this.state.dataset,
                 },
                 () => {

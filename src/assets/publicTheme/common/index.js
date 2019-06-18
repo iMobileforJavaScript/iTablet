@@ -20,6 +20,8 @@ const icon_pause = require('./icon_pause.png')
 const icon_play_white = require('./icon_play_white.png')
 const icon_pause_white = require('./icon_pause_white.png')
 const icon_delete = require('./icon_delete.png')
+const icon_delete_black = require('./icon_delete_black.png')
+const icon_plus = require('./icon_plus.png')
 
 export default {
   icon_undo,
@@ -44,4 +46,6 @@ export default {
   icon_play_white,
   icon_pause_white,
   icon_delete,
+  icon_delete_black,
+  icon_plus,
 }
