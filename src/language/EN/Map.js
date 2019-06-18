@@ -236,6 +236,7 @@ const Map_Layer = {
   LAYERS_BOTTOM: 'Bottom',
   LAYERS_LONG_PRESS: 'Long Press and Drag to Sort',
   LAYERS_SET_AS_CURRENT_LAYER: 'Set As Current Layer',
+  LAYERS_FULL_VIEW_LAYER: 'Display this layer in full',
   LAYERS_LAYER_STYLE: 'Layer Style',
   LAYERS_FULL_EXTENT: 'Full Extent',
   LAYERS_SET_VISIBLE_SCALE: 'Set Visible Scale',
