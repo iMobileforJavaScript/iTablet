@@ -95,17 +95,23 @@ export default class ToolBarSectionList extends React.Component {
           ) {
             selectList[title].push(pushObj)
           } else {
-            for (let i = 0, l = selectList[title].length; i < l; i++)
-              if (pushName in selectList[title][i]) {
-                selectList[title][i][pushName] = false
+            for (let l = 0; l < selectList[title].length; l++)
+              if (pushName in selectList[title][l]) {
+                selectList[title][l][pushName] = false
                 break
               }
           }
         } else {
+          let pushName =
+            sections[i].data[index].title ||
+            sections[i].data[index].name ||
+            sections[i].data[index].expression ||
+            sections[i].data[index].datasetName
           for (let j = 0; j < selectList[title].length; j++) {
-            let pushName = section.data[index].datasetName
+            //let pushName = section.data[index].datasetName
             if (pushName in selectList[title][j]) {
               selectList[title][j][pushName] = true
+              break
             }
           }
         }

@@ -858,8 +858,12 @@ export default class ToolBar extends React.PureComponent {
         }
         let expressions = await SThemeCartography.getGraphExpressions(param)
         let selectedExpressions = expressions.list //已选择的字段列表
+        let listExpressionsArr = []
         if (selectedExpressions) {
           for (let index = 0; index < selectedExpressions.length; index++) {
+            let temp = {}
+            temp[selectedExpressions[index]] = false
+            listExpressionsArr.push(temp)
             for (let i = 0; i < allExpressions.length; i++) {
               if (allExpressions[i].expression === selectedExpressions[index]) {
                 allExpressions[i].isSelected = true
@@ -881,6 +885,9 @@ export default class ToolBar extends React.PureComponent {
             data: allExpressions,
           },
         ]
+        let listExpressionsObj = {}
+        listExpressionsObj[dataset.datasetName] = listExpressionsArr
+        // listExpressionsObj[.push(]tt,selectedExpressions)
         this.setState(
           {
             isFullScreen: false,
@@ -893,7 +900,7 @@ export default class ToolBar extends React.PureComponent {
             buttons: ThemeMenuData.getThemeGraphMenu(),
             selectName: name,
             selectKey: key,
-            listExpressions: selectedExpressions,
+            listExpressions: listExpressionsObj,
           },
           () => {
             this.height =
@@ -3743,9 +3750,26 @@ export default class ToolBar extends React.PureComponent {
    * 统计专题图多选字段列表，修改所需字段，实时更新地图
    */
   listSelectableAction = async ({ selectList }) => {
+    let list = []
+
+    for (let key in selectList) {
+      let arr = selectList[key]
+      for (let i = 0, l = arr.length; i < l; i++) {
+        for (let expression in arr[i]) {
+          if (arr[i][expression] === false) list.push(expression)
+        }
+      }
+    }
+
+    // for (let i = 0, l = selectList.length; i < l; i++) {
+    //   for (let key in selectList[i]) {
+    //     list.push(key)
+    //   }
+    // }
     let Params = {
       LayerName: GLOBAL.currentLayer.name,
-      GraphExpressions: selectList,
+      GraphExpressions: list,
+      //GraphExpressions: selectList,
     }
     await SThemeCartography.setThemeGraphExpressions(Params)
   }
@@ -5358,7 +5382,8 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}
