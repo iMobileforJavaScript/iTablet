@@ -617,7 +617,7 @@ export default class MT_layerManager extends React.Component {
         }
         return (
           <LayerManager_item
-            key={item.name}
+            // key={item.name}
             // sectionID={sectionID}
             // rowID={item.index}
             ref={ref => {
@@ -627,7 +627,8 @@ export default class MT_layerManager extends React.Component {
               this.itemRefs[item.name] = ref
               return this.itemRefs[item.name]
             }}
-            layer={item.layer}
+            {...this.props}
+            // swipeEnabled={true}
             // map={this.map}
             data={item}
             index={index}
