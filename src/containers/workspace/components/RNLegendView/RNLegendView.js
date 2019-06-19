@@ -67,7 +67,8 @@ export default class RNLegendView extends React.Component {
     if (
       nextState.backgroundColor !== this.state.backgroundColor ||
       nextState.widthPercent !== this.state.widthPercent ||
-      nextState.heightPercent !== this.state.heightPercent
+      nextState.heightPercent !== this.state.heightPercent ||
+      nextState.legendSource !== this.state.legendSource
     ) {
       returnFlag = true
     }

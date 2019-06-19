@@ -209,7 +209,11 @@ export default class ToolBar extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
+    let tempPrev = Object.assign({}, prevProps)
+    let tempthis = Object.assign({}, this.props)
+    tempPrev.nav && delete tempPrev.nav
+    tempthis.nav && delete tempthis.nav
+    if (JSON.stringify(tempPrev) !== JSON.stringify(tempthis)) {
       // 实时更新params
       ToolbarData.setParams({
         setToolbarVisible: this.setVisible,

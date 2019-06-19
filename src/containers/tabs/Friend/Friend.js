@@ -70,7 +70,7 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
-    this.curMap = undefined
+    this.curMod = undefined
     MessageDataHandle.setHandle(this.props.addChat)
     FriendListFileHandle.refreshCallback = this.refreshList
     FriendListFileHandle.refreshMessageCallback = this.refreshMsg
@@ -147,9 +147,9 @@ export default class Friend extends Component {
     }
   }
 
-  //设置协作地图
-  setCurMap = async moduleMapFullName => {
-    this.curMap = moduleMapFullName
+  //设置协作模块
+  setCurMod = async Module => {
+    this.curMod = Module
   }
 
   addFileListener = () => {

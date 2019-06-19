@@ -123,7 +123,6 @@ export default class MapView extends React.Component {
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
-    this.coworkMode = params && params.coworkMode
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -279,7 +278,7 @@ export default class MapView extends React.Component {
         key: this.props.navigation.state.routeName,
       })
     }
-    this.props.setMapLegend(false)
+    // this.props.setMapLegend(false)
 
     // 移除多媒体采集监听
     SMediaCollector.removeListener()
@@ -843,7 +842,7 @@ export default class MapView extends React.Component {
       }
     }
 
-    if (this.coworkMode) {
+    if (global.coworkMode) {
       // NavigationService.navigate('CoworkChat')
       NavigationService.navigate('Chat')
       return true
@@ -1403,7 +1402,7 @@ export default class MapView extends React.Component {
             ]
             : null,
         }}
-        bottomBar={(!this.isExample || this.coworkMode) && this.renderToolBar()}
+        bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         {this.props.mapLegend && (
