@@ -26,7 +26,7 @@ class ManageFriend extends Component {
     this.chat = this.props.navigation.getParam('chat')
     this.state = {
       contacts: [],
-      coworkMode: this.friend.curMap ? true : false,
+      coworkMode: global.coworkMode,
     }
   }
 
@@ -84,39 +84,32 @@ class ManageFriend extends Component {
   renderSettings = () => {
     return (
       <ScrollView>
-        <TouchableItemView
-          item={{
-            //关联地图
-            // image: getThemeAssets().friend.friend_message,
-            text: '地图协作',
-          }}
-          onPress={() => {
-            NavigationService.navigate('MyData', {
-              title: getLanguage(this.language).Profile.MAP,
-              formChat: true,
-              callBackMode: 'getName',
-              chatCallBack: moduleMapFullName => {
-                this.friend.setCurMap(moduleMapFullName)
-                // this.props.navigation.pop(3)
-                // NavigationService.navigate('CoworkChat', {
-                //   targetId: this.targetId,
-                //   curUser: this.user,
-                //   friend: this.friend,
-                // })
-                // onechat
-                NavigationService.goBack('ManageFriend')
-                this.setState({ coworkMode: true })
-                this.chat.setCoworkMode(true)
-              },
-            })
-          }}
-        />
+        {!this.state.coworkMode && (
+          <TouchableItemView
+            item={{
+              //地图协作
+              // image: getThemeAssets().friend.friend_message,
+              text: getLanguage(global.language).Friends.COWORK,
+            }}
+            onPress={() => {
+              NavigationService.navigate('SelectModule', {
+                callBack: value => {
+                  this.friend.setCurMod(value)
+                  NavigationService.goBack('ManageFriend')
+                  this.setState({ coworkMode: true })
+                  this.chat.setCoworkMode(true)
+                  global.coworkMode = true
+                },
+              })
+            }}
+          />
+        )}
         {this.state.coworkMode ? (
           <TouchableItemView
             item={{
-              //关联地图
+              //退出协作
               // image: getThemeAssets().friend.friend_message,
-              text: '退出协作',
+              text: getLanguage(global.language).Friends.EXIT_COWORK,
             }}
             onPress={() => {
               this.chat.back()

@@ -7,6 +7,7 @@ const Friends = {
   ADD_FRIENDS: '添加好友',
   NEW_GROUP_CHAT: '发起群聊',
   RECOMMEND_FRIEND: '好友推荐',
+  SELECT_MODULE: '选择模块',
   //Friend
   MSG_SERVICE_FAILED: '连接消息服务失败！',
   MSG_SERVICE_NOT_CONNECT: '未能连接消息服务！',
@@ -76,6 +77,10 @@ const Friends = {
   DISBAND_GROUP: '解散群',
   DELETE_MEMBER: '移除群员',
   ADD_MEMBER: '邀请群员',
+  COWORK: '地图协作',
+  EXIT_COWORK: '退出协作',
+  GO_COWORK: '协作',
+  ALERT_EXIT_COWORK: '是否关闭当前协作地图?',
   //system text
   SYS_MSG_MAP: '[地图]',
   SYS_MSG_ADD_FRIEND: '请求添加您为好友',

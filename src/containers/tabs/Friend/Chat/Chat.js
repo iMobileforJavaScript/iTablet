@@ -35,8 +35,6 @@ import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
 import { Buffer } from 'buffer'
 import CoworkTouchableView from '../CoworkTouchableView'
-import ConstOnline from '../../../../constants/ConstOnline'
-import constants from '../../../../containers/workspace/constants'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -68,7 +66,7 @@ class Chat extends React.Component {
       showInformSpot: false,
       chatBottom: 0,
       title: this.targetUser.title,
-      coworkMode: this.friend.curMap ? true : false,
+      coworkMode: global.coworkMode,
     }
 
     this.onSend = this.onSend.bind(this)
@@ -412,51 +410,6 @@ class Chat extends React.Component {
     )
   }
 
-  navigataToMap = async () => {
-    let moduleMapFullName = this.friend.curMap
-    let data = ConstOnline['Google']
-    data.layerIndex = 3
-    GLOBAL.Type = constants.MAP_EDIT
-    GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-    GLOBAL.showMenu = true
-    let moduleMapName = moduleMapFullName.substr(
-      0,
-      moduleMapFullName.lastIndexOf('.'),
-    )
-    let userPath = (userPath =
-      ConstPath.UserPath + this.friend.props.user.currentUser.userName + '/')
-    let homePath = await FileTools.appendingHomeDirectory()
-    // 地图用相对路径
-    let moduleMapPath =
-      userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-    let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
-    if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
-      data = {
-        type: 'Map',
-        path: moduleMapPath,
-        name: moduleMapName,
-      }
-    }
-
-    let wsData = [
-      {
-        DSParams: { server: wsPath },
-        type: 'Workspace',
-      },
-      data,
-    ]
-
-    let params = {
-      wsData: wsData,
-      isExample: true,
-      mapName: moduleMapName,
-      coworkMode: true,
-    }
-
-    NavigationService.navigate('MapView', params)
-  }
-
   onCustomViewFileTouch = (type, message) => {
     switch (type) {
       case MSGConstant.MSG_FILE_NOTIFY:
@@ -600,7 +553,7 @@ class Chat extends React.Component {
             <CoworkTouchableView
               screen="Chat"
               onPress={() => {
-                this.navigataToMap()
+                this.friend.curMod.action()
               }}
             />
           ) : null}
@@ -927,8 +880,9 @@ class Chat extends React.Component {
         confirmAction={async () => {
           this.exitCowork.setDialogVisible(false)
           let close = () => {
-            this.friend.setCurMap(undefined)
+            this.friend.setCurMod(undefined)
             this.setCoworkMode(false)
+            global.coworkMode = false
             NavigationService.goBack()
           }
           let mapOpen
@@ -942,8 +896,9 @@ class Chat extends React.Component {
               if (result) {
                 GLOBAL.SaveMapView &&
                   GLOBAL.SaveMapView.setVisible(true, null, () => {
-                    this.friend.setCurMap(undefined)
+                    this.friend.setCurMod(undefined)
                     this.setCoworkMode(false)
+                    global.coworkMode = false
                   })
               } else {
                 close()
@@ -965,7 +920,9 @@ class Chat extends React.Component {
             source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
             style={styles.dialogHeaderImg}
           />
-          <Text style={styles.promptTtile}>{'关闭协作地图并退出聊天？'}</Text>
+          <Text style={styles.promptTtile}>
+            {getLanguage(global.language).Friends.ALERT_EXIT_COWORK}
+          </Text>
         </View>
       </Dialog>
     )

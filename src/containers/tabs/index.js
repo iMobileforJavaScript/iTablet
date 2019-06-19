@@ -29,6 +29,7 @@ import Friend, {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  SelectModule,
   GroupMemberList,
 } from './Friend'
 import InformSpot from './Friend/InformSpot'
@@ -283,6 +284,7 @@ export {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  SelectModule,
   GroupMemberList,
   //-----------
   MyLabel,
