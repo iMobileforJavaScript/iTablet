@@ -7,7 +7,7 @@ function layersetting(param) {
       data: [
         {
           title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'设置为当前图层',
+          //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
@@ -106,6 +106,11 @@ function layerThemeSetting(param) {
       //'设置为当前图层',
       data: [
         {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
+        {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
           image: require('../../../../assets/layerToolbar/layer_this.png'),
@@ -156,6 +161,11 @@ function layerThemeSettings(param) {
     {
       title: '',
       data: [
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
         {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
@@ -392,6 +402,11 @@ function layerCollectionSetting(param) {
     {
       title: '',
       data: [
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
         {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
