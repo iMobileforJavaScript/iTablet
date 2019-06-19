@@ -17,7 +17,7 @@ import {
   Setting,
   AboutITablet,
   Login,
-  Chat,
+  // Chat,
   AddFriend,
   InformMessage,
   CreateGroupChat,
@@ -60,7 +60,7 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-import { MapTabs, Map3DTabs, MapAnalystTabs } from './workspace'
+import { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
@@ -79,6 +79,7 @@ import {
   IServerLoginPage,
   SourceDatasetPage,
   AnalystRangePage,
+  WeightAndStatistic,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -100,6 +101,12 @@ export default StackNavigator(
     },
     MapTabs: {
       screen: MapTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    CoworkTabs: {
+      screen: CoworkTabs,
       navigationOptions: {
         header: null,
       },
@@ -311,13 +318,14 @@ export default StackNavigator(
       },
     },
     /******************************** Friend **********************/
-    Chat: {
-      screen: Chat,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
+    //onechat
+    // Chat: {
+    //   screen: Chat,
+    //   navigationOptions: {
+    //     header: null,
+    //     gesturesEnabled: true,
+    //   },
+    // },
     AddFriend: {
       screen: AddFriend,
       navigationOptions: {
@@ -591,6 +599,13 @@ export default StackNavigator(
     },
     AnalystRangePage: {
       screen: AnalystRangePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    WeightAndStatistic: {
+      screen: WeightAndStatistic,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

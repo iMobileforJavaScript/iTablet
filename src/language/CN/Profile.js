@@ -30,6 +30,7 @@ const Profile = {
   GET_CODE: '获取验证码',
   ENTER_EMAIL: '请输入邮箱',
   ENTER_SERVER_ADDRESS: '请输入服务地址',
+  ENTER_VALID_SERVER_ADDRESS: '请输入合法的服务地址',
 
   SWITCH_ACCOUNT: '切换账号',
   LOG_OUT: '退出登录',

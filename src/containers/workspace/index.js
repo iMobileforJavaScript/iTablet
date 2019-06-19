@@ -10,6 +10,7 @@ import LayerManager from '../mtLayerManager'
 import Layer3DManager from '../Layer3DManager'
 import Setting from '../setting'
 import MapSetting from '../mapSetting'
+import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
 import { AnalystTools } from '../analystView/pages'
 
@@ -62,6 +63,19 @@ const MapTabs = TabNavigator(
   options,
 )
 
+const CoworkTabs = TabNavigator(
+  {
+    //onechat
+    Chat: {
+      screen: Chat,
+    },
+    CoworkMapTabs: {
+      screen: MapTabs,
+    },
+  },
+  options,
+)
+
 const analystTabsOptions = Object.assign(options, {
   initialRouteIndex: 1,
   lazy: false,
@@ -100,4 +114,4 @@ const Map3DTabs = TabNavigator(
   options,
 )
 
-export { MapTabs, Map3DTabs, MapAnalystTabs }
+export { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs }

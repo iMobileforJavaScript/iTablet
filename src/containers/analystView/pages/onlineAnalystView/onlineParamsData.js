@@ -138,10 +138,70 @@ function getColorGradientType(language) {
   ]
 }
 
+/**
+ * 统计模式
+ * @param language
+ * @returns {[*,*,*,*,*,*]}
+ */
+function getStatisticMode(language) {
+  return [
+    {
+      key: getLanguage(language).Analyst_Params.MAX,
+      value: 'max',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.MIN,
+      value: 'min',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.AVERAGE,
+      value: 'average',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.SUM,
+      value: 'sum',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.VARIANCE,
+      value: 'variance',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.STANDARD_DEVIATION,
+      value: 'stdDeviation',
+    },
+  ]
+}
+
+function getAggregateType(language) {
+  return [
+    {
+      key: getLanguage(language).Analyst_Params.AGGREGATE_WITH_GRID,
+      value: 'SUMMARYMESH',
+    },
+    {
+      key: getLanguage(language).Analyst_Params.AGGREGATE_WITH_REGION,
+      value: 'SUMMARYREGION',
+    },
+  ]
+}
+
+let weight = []
+function setWeight(data) {
+  weight = data
+}
+function getWeight() {
+  return weight
+}
+
 export default {
   getAnalysisMethod,
   getMeshType,
   getRangeMode,
   getAreaUnit,
   getColorGradientType,
+  getStatisticMode,
+  getAggregateType,
+
+  setWeight,
+  getWeight,
 }

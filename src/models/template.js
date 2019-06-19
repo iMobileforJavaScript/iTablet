@@ -3,7 +3,7 @@ import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
-import { ConstInfo } from '../constants'
+import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import xml2js from 'react-native-xml2js'
 let parser = new xml2js.Parser()
@@ -219,6 +219,91 @@ export const setCurrentTemplateInfo = (
   })
   cb && cb(params)
   return
+}
+
+export const getSymbolPlots = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  try {
+    let templateData = getState().template.toJS()
+    let template = templateData.template
+    let path = (params && params.path) || template.path
+    if (
+      path === templateData.template.path &&
+      templateData.template.symbols.length > 0
+    ) {
+      cb && cb(params)
+      return
+    }
+
+    let plotLibPath = await FileTools.appendingHomeDirectory(
+      ConstPath.PlotLibPath,
+    )
+    let plotLibIds
+    await fs.readDir(plotLibPath).then(async data => {
+      let plotLibPaths = []
+      for (let i = 0; i < data.length; i++) {
+        plotLibPaths.push(data[i].path)
+      }
+      plotLibIds = await SMap.initPlotSymbolLibrary(plotLibPaths)
+      await fs.readDir(path).then(async data => {
+        let rootFeature = []
+        for (let i = 0; i < data.length; i++) {
+          let subData = {}
+          let obj = {}
+          obj.name = data[i].name
+          obj.code = (i + 1).toString()
+          obj.type = data[i].name
+          let dealData = async function(path) {
+            let mList = []
+            await fs.readDir(path).then(async children => {
+              for (let j = 0; j < children.length; j++) {
+                let childData = {}
+                let obj1 = {}
+                obj1.name = children[j].name
+                obj1.code = plotLibIds[i]
+                obj1.type = children[j].type
+                obj1.path = children[j].path
+
+                let endWith = function(str, endStr) {
+                  var d = str.length - endStr.length
+                  return d >= 0 && str.lastIndexOf(endStr) == d
+                }
+                if (!endWith(children[j].name, '.png')) {
+                  childData.feature = await dealData(children[j].path)
+                } else {
+                  obj1.name = children[j].name.substr(
+                    0,
+                    children[j].name.length - 4,
+                  )
+                }
+                childData.$ = obj1
+                childData.fields = [{ field: [{ name: children[j].name }] }]
+                mList.push(childData)
+              }
+            })
+            return mList
+          }
+
+          subData.$ = obj
+          subData.feature = await dealData(data[i].path)
+          rootFeature.push(subData)
+        }
+        dispatch({
+          type: GET_SYMBOL_TEMPLATES,
+          payload: {
+            symbols: rootFeature || [],
+            ...params,
+          },
+        })
+        cb && cb(params)
+      })
+    })
+  } catch (e) {
+    cb && cb(params)
+    return
+  }
 }
 
 // 获取xml文件中的模板符号

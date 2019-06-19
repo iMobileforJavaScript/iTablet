@@ -6,6 +6,7 @@ import MoreData from './MoreData'
 import ShareData from './ShareData'
 import StartData from './StartData'
 import CollectionData from './CollectionData'
+import PlotData from './PlotData'
 import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
@@ -17,6 +18,7 @@ import { getLanguage } from '../../../../language/index'
 function setParams(params) {
   // _params = params
   CollectionData.setParams(params)
+  PlotData.setParams(params)
   StartData.setParams(params)
   ShareData.setParams(params)
   MoreData.setParams(params)

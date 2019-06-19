@@ -7,15 +7,19 @@ import * as React from 'react'
 import { View, ScrollView, KeyboardAvoidingView } from 'react-native'
 import { Container, Input, Button } from '../../../../components'
 import { color } from '../../../../styles'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize, dataUtil } from '../../../../utils'
 import { getLanguage } from '../../../../language'
+import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
 export default class IServerLoginPage extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
+    iServerData: Object,
     language: String,
+
+    loginIServer: () => {},
   }
 
   constructor(props) {
@@ -27,14 +31,27 @@ export default class IServerLoginPage extends React.Component {
       headerTitle: params && params.headerTitle ? params.headerTitle : '',
     }
 
-    this.serverUrl = params && params.serverUrl ? params.serverUrl : ''
-    this.userName = params && params.userName ? params.userName : ''
-    this.password = params && params.password ? params.password : ''
+    this.serverUrl =
+      this.props.iServerData.ip && this.props.iServerData.port
+        ? this.props.iServerData.ip + ':' + this.props.iServerData.port
+        : ''
+    this.userName = this.props.iServerData.userName
+      ? this.props.iServerData.userName
+      : ''
+    this.password = this.props.iServerData.password
+      ? this.props.iServerData.password
+      : ''
   }
 
   login = () => {
     if (!this.serverUrl) {
       Toast.show(getLanguage(this.props.language).Profile.ENTER_SERVER_ADDRESS)
+      return
+    }
+    if (!dataUtil.checkIpPort(this.serverUrl)) {
+      Toast.show(
+        getLanguage(this.props.language).Profile.ENTER_VALID_SERVER_ADDRESS,
+      )
       return
     }
     if (!this.userName) {
@@ -45,16 +62,45 @@ export default class IServerLoginPage extends React.Component {
       Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
       return
     }
-    // TODO login iserver
 
-    this.cb && this.cb(this.serverUrl)
+    let ip = this.serverUrl.substr(0, this.serverUrl.lastIndexOf(':'))
+    let port = this.serverUrl.substr(this.serverUrl.lastIndexOf(':') + 1)
+
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.LOG_IN,
+    )
+    this.props
+      .loginIServer({
+        ip,
+        port,
+        userName: this.userName,
+        password: this.password,
+      })
+      .then(async data => {
+        if (data && data.succeed) {
+          this.cb && (await this.cb({ ip, port }))
+          this.container.setLoading(false)
+          NavigationService.goBack()
+        } else {
+          this.container.setLoading(false)
+          Toast.show(
+            getLanguage(this.props.language).Analyst_Prompt
+              .LOGIN_ISERVER_FAILED,
+          )
+        }
+      })
+      .catch(error => {
+        this.container.setLoading(false)
+        Toast.show(error)
+      })
   }
 
   back = () => {
     if (this.backcb) {
       this.backcb()
     } else {
-      this.props.navigation.goBack()
+      NavigationService.goBack()
     }
   }
 
@@ -68,7 +114,7 @@ export default class IServerLoginPage extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: this.state.headerTitle,
+          title: getLanguage(this.props.language).Analyst_Labels.ISERVER_LOGIN,
           backAction: this.back,
           navigation: this.props.navigation,
         }}

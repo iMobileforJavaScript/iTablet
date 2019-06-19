@@ -18,6 +18,7 @@ import {
   SystemMessage,
   InputToolbar,
 } from 'react-native-gifted-chat'
+import { SMap } from 'imobile_for_reactnative'
 import Container from '../../../../components/Container'
 import { Dialog } from '../../../../components'
 import { scaleSize } from '../../../../utils/screen'
@@ -33,6 +34,9 @@ import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
 import { Buffer } from 'buffer'
+import CoworkTouchableView from '../CoworkTouchableView'
+import ConstOnline from '../../../../constants/ConstOnline'
+import constants from '../../../../containers/workspace/constants'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -43,6 +47,8 @@ class Chat extends React.Component {
   props: {
     navigation: Object,
     user: Object,
+    setBackAction: () => {},
+    removeBackAction: () => {},
   }
   constructor(props) {
     super(props)
@@ -52,7 +58,6 @@ class Chat extends React.Component {
     this.targetUser = this.friend.getTargetUser(this.targetId)
     this.friend.setCurChat(this)
     this._isMounted = false
-
     this.state = {
       messages: [],
       loadEarlier: true,
@@ -63,6 +68,7 @@ class Chat extends React.Component {
       showInformSpot: false,
       chatBottom: 0,
       title: this.targetUser.title,
+      coworkMode: this.friend.curMap ? true : false,
     }
 
     this.onSend = this.onSend.bind(this)
@@ -85,6 +91,12 @@ class Chat extends React.Component {
     this.setState({ title: newTitle })
   }
   componentDidMount() {
+    if (Platform.OS === 'android' && this.state.coworkMode) {
+      this.props.setBackAction({
+        key: this.props.navigation.state.routeName,
+        action: () => this.back(),
+      })
+    }
     let curMsg = []
 
     //加载两条
@@ -124,8 +136,36 @@ class Chat extends React.Component {
   }
 
   componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      this.props.removeBackAction({
+        key: this.props.navigation.state.routeName,
+      })
+    }
     this.friend.setCurChat(undefined)
     this._isMounted = false
+  }
+
+  back = () => {
+    if (this.state.coworkMode) {
+      this.exitCowork.setDialogVisible(true)
+    }
+    return true
+  }
+
+  setCoworkMode = value => {
+    this.setState({ coworkMode: value })
+    if (Platform.OS === 'android') {
+      if (value) {
+        this.props.setBackAction({
+          key: this.props.navigation.state.routeName,
+          action: () => this.back(),
+        })
+      } else {
+        this.props.removeBackAction({
+          key: this.props.navigation.state.routeName,
+        })
+      }
+    }
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -372,6 +412,51 @@ class Chat extends React.Component {
     )
   }
 
+  navigataToMap = async () => {
+    let moduleMapFullName = this.friend.curMap
+    let data = ConstOnline['Google']
+    data.layerIndex = 3
+    GLOBAL.Type = constants.MAP_EDIT
+    GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+    GLOBAL.showMenu = true
+    let moduleMapName = moduleMapFullName.substr(
+      0,
+      moduleMapFullName.lastIndexOf('.'),
+    )
+    let userPath = (userPath =
+      ConstPath.UserPath + this.friend.props.user.currentUser.userName + '/')
+    let homePath = await FileTools.appendingHomeDirectory()
+    // 地图用相对路径
+    let moduleMapPath =
+      userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+    let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+    if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+      data = {
+        type: 'Map',
+        path: moduleMapPath,
+        name: moduleMapName,
+      }
+    }
+
+    let wsData = [
+      {
+        DSParams: { server: wsPath },
+        type: 'Workspace',
+      },
+      data,
+    ]
+
+    let params = {
+      wsData: wsData,
+      isExample: true,
+      mapName: moduleMapName,
+      coworkMode: true,
+    }
+
+    NavigationService.navigate('MapView', params)
+  }
+
   onCustomViewFileTouch = (type, message) => {
     switch (type) {
       case MSGConstant.MSG_FILE_NOTIFY:
@@ -465,6 +550,7 @@ class Chat extends React.Component {
           headerProps={{
             title: this.state.title,
             withoutBack: false,
+            backAction: this.state.coworkMode && this.back,
             navigation: this.props.navigation,
             headerRight:
               this.targetUser.id.indexOf('Group_') === -1 ||
@@ -510,7 +596,14 @@ class Chat extends React.Component {
               }}
             />
           ) : null}
-
+          {this.state.coworkMode ? (
+            <CoworkTouchableView
+              screen="Chat"
+              onPress={() => {
+                this.navigataToMap()
+              }}
+            />
+          ) : null}
           <GiftedChat
             placeholder="message..."
             messages={this.state.messages}
@@ -562,6 +655,7 @@ class Chat extends React.Component {
           />
           {this.renderImportDialog()}
           {this.renderDownloadDialog()}
+          {this.renderExitCoworkChatDialog()}
         </Container>
       </Animated.View>
     )
@@ -820,6 +914,60 @@ class Chat extends React.Component {
           {getLanguage(global.language).Friends.RECEIVE_CONFIRM}
         </Text>
       </View>
+    )
+  }
+
+  renderExitCoworkChatDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.exitCowork = ref)}
+        type={'modal'}
+        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
+        confirmAction={async () => {
+          this.exitCowork.setDialogVisible(false)
+          let close = () => {
+            this.friend.setCurMap(undefined)
+            this.setCoworkMode(false)
+            NavigationService.goBack()
+          }
+          let mapOpen
+          try {
+            mapOpen = await SMap.isAnyMapOpened()
+          } catch (error) {
+            mapOpen = false
+          }
+          if (mapOpen) {
+            SMap.mapIsModified().then(result => {
+              if (result) {
+                GLOBAL.SaveMapView &&
+                  GLOBAL.SaveMapView.setVisible(true, null, () => {
+                    this.friend.setCurMap(undefined)
+                    this.setCoworkMode(false)
+                  })
+              } else {
+                close()
+              }
+            })
+          } else {
+            close()
+          }
+        }}
+        cancelAction={() => {
+          this.exitCowork.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        <View style={styles.dialogHeaderView}>
+          <Image
+            source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+            style={styles.dialogHeaderImg}
+          />
+          <Text style={styles.promptTtile}>{'关闭协作地图并退出聊天？'}</Text>
+        </View>
+      </Dialog>
     )
   }
 }

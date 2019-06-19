@@ -5,7 +5,8 @@
  */
 import React, { Component } from 'react'
 import { Container, PopModal } from '../../../components'
-import { ColorTable, SelectList, LinkageList, FilterList } from './components'
+import { ColorTable, SelectList, FilterList } from './components'
+import LinkageList from '../../../components/LinkageList'
 import {
   View,
   FlatList,
@@ -306,8 +307,11 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.MAP_ANTI_ALIASING:
         //IOS接口内写的是int类型的参数 所以转成数字
-        Platform.OS === 'ios' && (value = +value)
-        await SMap.setAntialias(value)
+        if (Platform.OS === 'ios') {
+          await SMap.setAntialias(+value)
+        } else {
+          await SMap.setAntialias(value)
+        }
         break
       case getLanguage(GLOBAL.language).Map_Settings.FIX_SYMBOL_ANGLE:
         await SMap.setMarkerFixedAngle(value)

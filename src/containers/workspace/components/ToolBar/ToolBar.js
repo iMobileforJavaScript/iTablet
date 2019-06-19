@@ -113,6 +113,8 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
+    mapLegend?: Boolean, //图例显隐
+    setMapLegend?: () => {}, //设置图例显隐的redux状态
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
     getLayers: () => {}, // 更新数据（包括其他界面）
@@ -125,6 +127,7 @@ export default class ToolBar extends React.PureComponent {
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
+    getSymbolPlots: () => {},
     openWorkspace: () => {},
     closeWorkspace: () => {},
     openMap: () => {},
@@ -2204,6 +2207,7 @@ export default class ToolBar extends React.PureComponent {
         },
       )
     } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
+      this.props.showFullMap && this.props.showFullMap(true)
       let { data, buttons } = this.getData(type)
       this.setState(
         {
@@ -3327,7 +3331,7 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = GLOBAL.legend.state.visible
+    let type = this.props.mapLegend
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3336,9 +3340,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    GLOBAL.legend.setState({
-      visible: type === ConstToolType.LEGEND,
-    })
+    this.props.setMapLegend(type === ConstToolType.LEGEND)
   }
 
   showBox = (autoFullScreen = false) => {

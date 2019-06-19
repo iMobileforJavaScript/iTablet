@@ -790,6 +790,14 @@ export default class MapCut extends React.Component {
       <MapCutAddLayer
         ref={ref => (this.addLayerModal = ref)}
         layers={this.state.outLayers}
+        confirmTitle={
+          getLanguage(this.props.language || GLOBAL.language).Analyst_Labels
+            .CONFIRM
+        }
+        cancelTitle={
+          getLanguage(this.props.language || GLOBAL.language).Analyst_Labels
+            .CONFIRM
+        }
         configAction={addLayers => {
           let layers = JSON.parse(JSON.stringify(this.state.layers))
           const extraData = new Map(this.state.extraData)
