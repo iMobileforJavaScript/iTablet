@@ -279,7 +279,7 @@ export default class MapView extends React.Component {
         key: this.props.navigation.state.routeName,
       })
     }
-    this.props.setMapLegend(false)
+    // this.props.setMapLegend(false)
 
     // 移除多媒体采集监听
     SMediaCollector.removeListener()
