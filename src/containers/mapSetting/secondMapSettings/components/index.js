@@ -5,6 +5,5 @@
  */
 import ColorTable from './ColorTable'
 import SelectList from './SelectList'
-import LinkageList from './LinkageList'
 import FilterList from './FilterList'
-export { ColorTable, SelectList, LinkageList, FilterList }
+export { ColorTable, SelectList, FilterList }

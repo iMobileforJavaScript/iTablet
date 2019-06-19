@@ -107,7 +107,7 @@ class RenderModuleItem extends Component {
           style={[styles.module]}
         >
           {/* <Image source={image} style={item.img} /> */}
-          <Image source={item.baseImage} style={item.style} />
+          {/* <Image source={item.baseImage} style={item.style} /> */}
           <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}

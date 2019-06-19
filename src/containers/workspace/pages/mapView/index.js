@@ -26,6 +26,7 @@ import {
   setCurrentTemplateInfo,
   setTemplate,
   getSymbolTemplates,
+  getSymbolPlots,
 } from '../../../../models/template'
 import {
   setBufferSetting,
@@ -85,6 +86,7 @@ const mapDispatchToProps = {
   openMap,
   closeMap,
   getSymbolTemplates,
+  getSymbolPlots,
   saveMap,
   getMapSetting,
   setSharing,

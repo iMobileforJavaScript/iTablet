@@ -254,6 +254,7 @@ const Map_Layer = {
   LAYERS_BOTTOM: '置底',
   LAYERS_LONG_PRESS: '长按拖动排序',
   LAYERS_SET_AS_CURRENT_LAYER: '设置为当前图层',
+  LAYERS_FULL_VIEW_LAYER: '全幅显示本图层',
   LAYERS_LAYER_STYLE: '图层风格',
   LAYERS_FULL_EXTENT: '全幅显示本图层',
   LAYERS_SET_VISIBLE_SCALE: '可见比例尺范围',

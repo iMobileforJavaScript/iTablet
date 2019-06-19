@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { Animated, View, Text,Platform } from 'react-native'
+import { Animated, View, Text, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
@@ -26,6 +26,9 @@ export default class ScaleView extends React.Component {
       isShow: false,
       visible: true,
     }
+    this.startTime = 0
+    this.endTime = 0
+    this.INTERVAL = 300
   }
 
   componentDidMount() {
@@ -62,13 +65,21 @@ export default class ScaleView extends React.Component {
     })
   }
   scaleViewChange = data => {
-    let width = ~~this.state.width
-    let title = this.state.title
-    if (width !== ~~data.width || title !== data.title) {
-      this.setState({
-        width: data.width,
-        title: data.title,
-      })
+    this.endTime = +new Date()
+    if (this.endTime - this.startTime > this.INTERVAL) {
+      let width = ~~this.state.width
+      let title = this.state.title
+      if (width !== ~~data.width || title !== data.title) {
+        this.setState(
+          {
+            width: data.width,
+            title: data.title,
+          },
+          () => {
+            this.startTime = this.endTime
+          },
+        )
+      }
     }
   }
   render() {
@@ -78,7 +89,7 @@ export default class ScaleView extends React.Component {
 
     let TextOffset = 0.5
     let textSpacing = 1
-    if(Platform.OS === "android"){
+    if (Platform.OS === 'android') {
       textSpacing = TextOffset = 0
     }
     return (

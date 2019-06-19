@@ -501,7 +501,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        height: ConstToolType.NEWTHEME_HEIGHT[2],
+        height: ConstToolType.NEWTHEME_HEIGHT[4],
         // this.props.device.orientation === 'LANDSCAPE'
         //   ? ConstToolType.HEIGHT[0]
         //   : ConstToolType.HEIGHT[2],
