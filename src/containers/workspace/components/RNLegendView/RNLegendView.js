@@ -107,7 +107,7 @@ export default class RNLegendView extends React.Component {
    * @returns {Promise<void>}
    */
   getLegendData = async () => {
-    await SMap.addLegendDelegate({
+    await SMap.addLegendListener({
       legendContentChange: this._contentChange,
     })
   }

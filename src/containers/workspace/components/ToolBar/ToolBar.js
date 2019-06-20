@@ -4431,7 +4431,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
-          SMap.addLegendDelegate({
+          SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
         }
@@ -5386,8 +5386,7 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}
