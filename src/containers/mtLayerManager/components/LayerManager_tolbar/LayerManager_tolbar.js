@@ -353,14 +353,15 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_FULL_VIEW_LAYER
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_FULL_VIEW_LAYER
     ) {
       //'全幅显示当前图层') {
       this.setVisible(false)
       SMap.setLayerFullView(this.state.layerdata.name)
       // eslint-disable-next-line react/prop-types
       this.props.navigation.navigate('MapView')
-    }else if (
+    } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
       //'切换底图') {
@@ -500,7 +501,7 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    } 
+    }
     // else if (
     //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
     // ) {
@@ -549,7 +550,7 @@ export default class LayerManager_tolbar extends React.Component {
     //   }
     //   this.props.getLayers()
     //   this.setVisible(false)
-    // } 
+    // }
     else if (
       section.title ===
       getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT

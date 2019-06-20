@@ -34,8 +34,8 @@ export default class ColorTable extends React.Component {
           if (isSuccess) this.props.setColorBlock(item.key)
         }}
         style={{
-          width: this.props.device.width / this.ColumnNums - 3,
-          height: this.props.device.width / this.ColumnNums - 3,
+          width: this.props.device.width / this.ColumnNums - scaleSize(4),
+          height: this.props.device.width / this.ColumnNums - scaleSize(4),
           backgroundColor: item.key,
           borderWidth: scaleSize(2),
           borderColor: color.gray,

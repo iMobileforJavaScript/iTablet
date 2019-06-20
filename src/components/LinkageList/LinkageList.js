@@ -11,8 +11,7 @@ import styles from './styles'
 export default class LinkageList extends React.Component {
   props: {
     language: String,
-    data: Array, // 左侧一级菜单数据
-    secondData: Array, //右侧二级菜单数据
+    data: Array, // 菜单数据
     titles: Array, //左右侧标题
     onLeftPress?: () => {}, //左侧点击
     onRightPress?: () => {}, //右侧点击
@@ -23,6 +22,7 @@ export default class LinkageList extends React.Component {
     super(props)
     this.state = {
       selected: 0,
+      data: [],
       rightData: [],
     }
     this.styles = this.props.styles
@@ -30,30 +30,30 @@ export default class LinkageList extends React.Component {
       : styles
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    let currentDatasource = nextProps.data[this.state.selected].title
-    let rightItem = nextProps.secondData.filter(item => {
-      return item.datasource.alias === currentDatasource
-    })
-    this.setState({
-      rightData: rightItem[0].list,
-    })
+  static getDerivedStateFromProps(nextProps, currentState) {
+    if (nextProps.data && nextProps.data !== currentState.data) {
+      return {
+        data: nextProps.data,
+        rightData: nextProps.data[0].data,
+      }
+    }
+    return null
   }
-
   onLeftPress = ({ item, index }) => {
     if (this.props.onLeftPress) return this.props.onLeftPress({ item, index })
-    let title = item.title
-    let rightItem = this.props.secondData.filter(
-      item => item.datasource.alias === title,
-    )
     this.setState({
       selected: index,
-      rightData: rightItem[0].list,
+      rightData: item.data,
     })
   }
 
   onRightPress = async ({ item, index }) => {
-    if (this.props.onRightPress) return this.props.onRightPress({ item, index })
+    let data = this.state.data
+    let parent = data.filter(val => {
+      return val.title === item.parentTitle
+    })
+    if (this.props.onRightPress)
+      return this.props.onRightPress({ parent, item, index })
   }
 
   renderLeftItem = ({ item, index }) => {
@@ -88,7 +88,7 @@ export default class LinkageList extends React.Component {
           this.onRightPress({ item, index })
         }}
       >
-        <Text style={this.styles.rightItem}>{item.datasetName}</Text>
+        <Text style={this.styles.rightItem}>{item.title}</Text>
       </TouchableOpacity>
     )
   }
@@ -104,7 +104,7 @@ export default class LinkageList extends React.Component {
         <View style={this.styles.leftFlatListContainer}>
           <FlatList
             renderItem={this.renderLeftItem}
-            data={this.props.data}
+            data={this.state.data}
             extraData={this.state.selected}
             keyExtractor={(item, index) => item + index}
           />

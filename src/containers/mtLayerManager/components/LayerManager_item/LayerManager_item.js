@@ -5,12 +5,13 @@
 */
 
 import * as React from 'react'
+//eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { DatasetType, ThemeType } from 'imobile_for_reactnative'
-import { Toast, scaleSize} from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import * as LayerUtils from '../../LayerUtils'
-import { SMap} from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 // import { Const } from '../../../../constants'
 // import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
@@ -46,7 +47,7 @@ export default class LayerManager_item extends React.Component {
     onAllPress: () => {},
     onToolPress: () => {},
     onOpen: () => {},
-    getLayers:()=>{},
+    getLayers: () => {},
     child: Array,
     sectionID: number,
     rowID: number,
@@ -500,7 +501,11 @@ export default class LayerManager_item extends React.Component {
           (async function() {
             await SMap.moveToBottom(layer.name)
           }.bind(this)())
-          if(LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].name)){
+          if (
+            LayerUtils.isBaseLayer(
+              this.props.layers[this.props.layers.length - 1].name,
+            )
+          ) {
             SMap.moveUpLayer(layer.name)
           }
           // if (
@@ -526,7 +531,7 @@ export default class LayerManager_item extends React.Component {
       )
     })
   }
-  renderItem(){
+  renderItem() {
     let name = this.props.data.caption
     const visibleImgWhite = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable.png')
@@ -569,9 +574,10 @@ export default class LayerManager_item extends React.Component {
         onPress={this._all_pop_row}
         onLongPress={() => {
           //非标注，底图
-          if (thisHandle.props.data.name.indexOf('@Label_')===-1 &&
-              !LayerUtils.isBaseLayer(thisHandle.props.data.name)
-          ){
+          if (
+            thisHandle.props.data.name.indexOf('@Label_') === -1 &&
+            !LayerUtils.isBaseLayer(thisHandle.props.data.name)
+          ) {
             this._showPopover(iTemView, this.props.data)
           }
         }}

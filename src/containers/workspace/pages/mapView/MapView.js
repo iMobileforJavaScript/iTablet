@@ -1405,7 +1405,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && (
+        {this.props.mapLegend && GLOBAL.Type === constants.MAP_THEME && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}

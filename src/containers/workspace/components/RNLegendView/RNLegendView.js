@@ -72,13 +72,12 @@ export default class RNLegendView extends React.Component {
     ) {
       returnFlag = true
     }
-    if (this.state.legendSource === '') {
-      this.getLegendData()
-      returnFlag = true
-    }
     return returnFlag
   }
 
+  componentWillUnmount() {
+    SMap.removeLegendListener()
+  }
   /**
    *  更改图例属性
    * @param title 标题
