@@ -2,7 +2,7 @@
  * Copyright © SuperMap. All rights reserved.
  * Author: Asort
  * https://github.com/AsortKeven
- * description: 二级联动菜单组件
+ * description: 顶部筛选菜单组件
  */
 
 import React from 'react'
