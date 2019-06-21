@@ -3340,6 +3340,39 @@ function getAggregationColorScheme() {
   return list
 }
 
+//通过数据集->创建热力图
+async function createHeatMap(params) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    DatasourceAlias: params.themeDatasourceAlias,
+    DatasetName: params.themeDatasetName,
+    KernelRadius: '40',
+    FuzzyDegree: '0.8',
+    Intensity: '0.1',
+    ColorType: 'ZA_Insights',
+  }
+  await SThemeCartography.createHeatMap(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -3373,4 +3406,5 @@ export default {
   createThemeGridRangeMap,
   getGridRangeMode,
   getAggregationColorScheme,
+  createHeatMap,
 }

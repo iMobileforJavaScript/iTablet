@@ -276,6 +276,9 @@ class ModuleList extends Component {
       if (moduleKey === MAP_MODULE.MAP_ANALYST) {
         item.action && item.action(this.props.currentUser)
         return
+      } else if (moduleKey === MAP_MODULE.MAP_AR) {
+        item.action && item.action(this.props.currentUser)
+        return
       } else if (moduleKey === '地图制图') {
         fileName = language === 'CN' ? '湖南' : 'LosAngeles'
         // mapname =  language==='CN'?'SanFrancisco':'湖南'

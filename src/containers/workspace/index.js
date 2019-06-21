@@ -12,6 +12,7 @@ import Setting from '../setting'
 import MapSetting from '../mapSetting'
 import { LayerAttribute } from '../layerAttribute'
 import { AnalystTools } from '../analystView/pages'
+import { ARMap } from '../armapView/pages'
 
 const options = {
   animationEnabled: false, // 切换页面时是否有动画效果
@@ -100,4 +101,22 @@ const Map3DTabs = TabNavigator(
   options,
 )
 
-export { MapTabs, Map3DTabs, MapAnalystTabs }
+const MapARTabs = TabNavigator(
+  {
+    ARMap: {
+      screen: ARMap,
+    },
+    LayerARManager: {
+      screen: LayerManager,
+    },
+    LayerARAttribute: {
+      screen: LayerAttribute,
+    },
+    MapARSetting: {
+      screen: MapSetting,
+    },
+  },
+  options,
+)
+
+export { MapTabs, Map3DTabs, MapAnalystTabs, MapARTabs }

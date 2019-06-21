@@ -15,6 +15,7 @@ const MAP_MODULE = {
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
   MAP_ANALYST: '数据分析',
+  MAP_AR: 'AR地图',
 }
 
 function getHeaderTitle(type) {
@@ -32,6 +33,8 @@ function getHeaderTitle(type) {
       return getLanguage(global.language).Map_Module.MAP_PLOTTING
     case getLanguage(global.language).Map_Module.MAP_ANALYST:
       return getLanguage(global.language).Map_Module.MAP_ANALYST
+    case getLanguage(global.language).Map_Module.MAP_AR:
+      return getLanguage(global.language).Map_Module.MAP_AR
   }
 }
 
@@ -438,6 +441,44 @@ function SetMap(param) {
         })
       },
     },
+    // {
+    //   key: 'AR地图',
+    //   title: getLanguage(param).Map_Module.MAP_AR,
+    //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
+    //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
+    //   style: {
+    //     width: scaleSize(70),
+    //     height: scaleSize(67),
+    //     position: 'absolute',
+    //     right: 0,
+    //     bottom: 0,
+    //   },
+    //   action: async user => {
+    //     GLOBAL.Type = constants.MAP_AR
+    //
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     let userPath = ConstPath.CustomerPath
+    //     if (user && user.userName) {
+    //       userPath = ConstPath.UserPath + user.userName + '/'
+    //     }
+    //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+    //
+    //     let wsData = [
+    //       {
+    //         DSParams: { server: wsPath },
+    //         // layerIndex: 0,
+    //         type: 'Workspace',
+    //       },
+    //       null,
+    //     ]
+    //     NavigationService.navigate('ARMap', {
+    //       operationType: constants.MAP_AR,
+    //       wsData,
+    //       mapName: getLanguage(param).Map_Module.MAP_AR,
+    //       isExample: false,
+    //     })
+    //   },
+    // },
   ]
 }
 

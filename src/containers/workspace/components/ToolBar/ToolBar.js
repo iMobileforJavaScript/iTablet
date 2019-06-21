@@ -2569,7 +2569,7 @@ export default class ToolBar extends React.PureComponent {
           Toast.show('请至少选择一个字段表达式')
           return
         }
-        //数据集->创建专题图
+        //数据集->创建统计专题图
         let params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -2587,7 +2587,6 @@ export default class ToolBar extends React.PureComponent {
           Toast.show(
             getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
           )
-          //'创建专题图成功')
         } else {
           Toast.show('创建专题图失败')
         }
@@ -2604,7 +2603,7 @@ export default class ToolBar extends React.PureComponent {
           Toast.show('请至少选择一个字段表达式')
           return
         }
-        //图层->创建专题图
+        //图层->创建统计专题图
         let params = {
           LayerName: ThemeMenuData.getLayerNameCreateTheme(), //图层名称
           GraphExpressions: expressions,
@@ -2621,7 +2620,6 @@ export default class ToolBar extends React.PureComponent {
           Toast.show(
             getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
           )
-          //'创建专题图成功')
         } else {
           Toast.show('创建专题图失败')
         }
@@ -3574,6 +3572,20 @@ export default class ToolBar extends React.PureComponent {
         await SThemeCartography.setThemeGraphColorScheme(Params)
       }.bind(this)())
     } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_COLOR
+    ) {
+      //热力图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          HeatmapColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.setHeatMapColorScheme(Params)
+      }.bind(this)())
+    } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
     ) {
       //统一标签表达式
@@ -4400,7 +4412,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if(GLOBAL.legend){
+        if (GLOBAL.legend) {
           SMap.addLegendDelegate({
             legendContentChange: GLOBAL.legend._contentChange,
           })

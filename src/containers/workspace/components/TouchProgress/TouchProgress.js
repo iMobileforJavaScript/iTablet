@@ -142,7 +142,8 @@ export default class TouchProgress extends Component {
             getLanguage(global.language).Map_Main_Menu
               .THEME_HEATMAP_FUZZY_DEGREE +
             '     ' +
-            parseInt(this.fuzzyDegree)
+            parseInt(this.fuzzyDegree) +
+            '%'
         } else if (this.props.selectName === '最大颜色权重') {
           this.maxColorWeight =
             value !== undefined
@@ -159,7 +160,8 @@ export default class TouchProgress extends Component {
             getLanguage(global.language).Map_Main_Menu
               .THEME_HEATMAP_MAXCOLOR_WEIGHT +
             '     ' +
-            parseInt(this.maxColorWeight)
+            parseInt(this.maxColorWeight) +
+            '%'
         }
       } else {
         switch (themeType) {
@@ -765,7 +767,8 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_FUZZY_DEGREE +
           '     ' +
-          parseInt(value)
+          parseInt(value) +
+          '%'
         let _params = {
           LayerName: this.props.currentLayer.name,
           FuzzyDegree: value,
@@ -776,7 +779,8 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_MAXCOLOR_WEIGHT +
           '     ' +
-          parseInt(value)
+          parseInt(value) +
+          '%'
         let _params = {
           LayerName: this.props.currentLayer.name,
           MaxColorWeight: value,
@@ -1077,7 +1081,8 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_FUZZY_DEGREE +
           '     ' +
-          parseInt(value)
+          parseInt(value) +
+          '%'
       } else if (this.props.selectName === '最大颜色权重') {
         if (value <= 0) {
           value = 1
@@ -1088,7 +1093,8 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_MAXCOLOR_WEIGHT +
           '     ' +
-          parseInt(value)
+          parseInt(value) +
+          '%'
       }
     }
 

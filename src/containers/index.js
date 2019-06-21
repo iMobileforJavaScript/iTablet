@@ -60,7 +60,7 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-import { MapTabs, Map3DTabs, MapAnalystTabs } from './workspace'
+import { MapTabs, Map3DTabs, MapAnalystTabs, MapARTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
@@ -106,6 +106,12 @@ export default StackNavigator(
     },
     MapAnalystTabs: {
       screen: MapAnalystTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapARTabs: {
+      screen: MapARTabs,
       navigationOptions: {
         header: null,
       },
