@@ -96,6 +96,9 @@ export default class JPushService {
       .then(data => {
         return data.consumers === 0 ? false : true
       })
+      .catch(() => {
+        return false
+      })
     return bCon
   }
 
