@@ -23,6 +23,7 @@ import { SMap } from 'imobile_for_reactnative'
 
 import { connect } from 'react-redux'
 import { getLanguage } from '../../../../language'
+// import console = require('console');
 
 class RenderModuleItem extends Component {
   props: {
@@ -423,23 +424,26 @@ class ModuleList extends Component {
 
   _renderScrollView = () => {
     return (
-      <ScrollView
-        style={styles.scrollView}
-        // horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        <FlatList
-          data={ConstModule(this.props.language)}
-          horizontal={true}
-          renderItem={this._renderItem}
-          keyboardShouldPersistTaps={'always'}
+      <View style={{width:this.props.device.width,height:scaleSize(300)}}>
+        <ScrollView
+          style={[styles.scrollView]}
+          // horizontal={true}
           showsHorizontalScrollIndicator={false}
-        />
-      </ScrollView>
+        >
+          <FlatList
+            data={ConstModule(this.props.language)}
+            horizontal={true}
+            renderItem={this._renderItem}
+            keyboardShouldPersistTaps={'always'}
+            showsHorizontalScrollIndicator={false}
+          />
+        </ScrollView>
+      </View>
     )
   }
 
   render() {
+    // console.warn("render "+this.props.device.orientation)
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
@@ -547,14 +551,15 @@ const styles = StyleSheet.create({
     marginTop: scaleSize(13),
   },
   scrollView: {
-    // position:"absolute",
-    // width: '72%',
+    position:"absolute",
+    // width: 900,
     // height:"100%",
     flex: 1,
     flexDirection: 'column',
     // alignItems:"center",
     // justifyContent: 'space-around',
-    position: 'absolute',
+    // position: 'absolute',
     alignSelf: 'center',
+    // backgroundColor:'red',
   },
 })

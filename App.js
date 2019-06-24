@@ -277,22 +277,18 @@ class AppRoot extends Component {
     }
   }
 
+  orientation = o=> {
+    this.props.setShow({
+      orientation: o,
+    })
+  }
   //初始化横竖屏显示方式
   initOrientation = async () => {
     Orientation.getOrientation((e, orientation) => {
       this.props.setShow({orientation: orientation})
     })
-    Orientation.addOrientationListener(orientation => {
-      if (orientation === 'LANDSCAPE') {
-        this.props.setShow({
-          orientation: orientation,
-        })
-      } else {
-        this.props.setShow({
-          orientation: orientation,
-        })
-      }
-    })
+    Orientation.removeOrientationListener(this.orientation)
+    Orientation.addOrientationListener(this.orientation)
   }
 
   // 初始化文件目录
