@@ -13,6 +13,8 @@ import {
   NativeModules,
   NativeEventEmitter,
   Platform,
+  AppState,
+  NetInfo,
 } from 'react-native'
 import ScrollableTabView, {
   DefaultTabBar,
@@ -81,14 +83,14 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
-
+    AppState.addEventListener('change', this.handleStateChange)
+    NetInfo.addEventListener('change', this.handleNetworkState)
     this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
     this.connectService()
     this.addFileListener()
-    // Platform.OS === 'android' &&
     JPushService.init(this.props.user.currentUser.userId)
   }
 
@@ -97,9 +99,7 @@ export default class Friend extends Component {
       JSON.stringify(prevProps.user.currentUser.userId) !==
       JSON.stringify(this.props.user.currentUser.userId)
     ) {
-      this.disconnectService()
-      this.connectService()
-      // Platform.OS === 'android' &&
+      this.restartService()
       JPushService.init(this.props.user.currentUser.userId)
     }
     if (
@@ -124,6 +124,61 @@ export default class Friend extends Component {
       return true
     }
     return false
+  }
+
+  handleStateChange = appState => {
+    if (
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
+      if (appState === 'active') {
+        this.restartService()
+      } else if (appState === 'background') {
+        this.disconnectService()
+      }
+    }
+  }
+
+  handleNetworkState = async state => {
+    if (
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
+      if (
+        state !== 'NONE' ||
+        state !== 'none' ||
+        state !== 'unknown' ||
+        state !== 'UNKNOWN'
+      ) {
+        this.restartService()
+        global.network = true
+      } else {
+        this.disconnectService()
+        global.network = false
+      }
+    }
+  }
+
+  startCheckAvailability = () => {
+    NetInfo.isConnected.fetch().done(isConnected => {
+      global.network = isConnected
+      this.endCheckAvailability()
+      this.interval = setInterval(async () => {
+        if (
+          !(await JPushService.isConnectService(
+            this.props.user.currentUser.userId,
+          ))
+        ) {
+          this.restartService()
+        }
+      }, 60000)
+    })
+  }
+
+  endCheckAvailability = () => {
+    this.interval && clearInterval(this.interval)
   }
 
   refreshMsg = () => {
@@ -852,13 +907,10 @@ export default class Friend extends Component {
       bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
-          if (
-            await JPushService.isConnectService(
-              this.props.user.currentUser.userId,
-            )
-          ) {
-            isAlreadyLogin = true
-          }
+          //是否登陆其他设备
+          isAlreadyLogin = await JPushService.isConnectService(
+            this.props.user.currentUser.userId,
+          )
           SMessageService.connectService(
             MSGConstant.MSG_IP,
             MSGConstant.MSG_Port,
@@ -867,11 +919,12 @@ export default class Friend extends Component {
             MSGConstant.MSG_Password,
             this.props.user.currentUser.userId,
           )
-            .then(res => {
+            .then(async res => {
               if (!res) {
                 Toast.show(
                   getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
                 )
+                this.disconnectService()
               } else {
                 g_connectService = true
                 if (isAlreadyLogin) {
@@ -886,16 +939,18 @@ export default class Friend extends Component {
                     this.props.user.currentUser.userId,
                   )
                 }
-                SMessageService.startReceiveMessage(
+                await SMessageService.startReceiveMessage(
                   this.props.user.currentUser.userId,
                   { callback: this._receiveMessage },
                 )
+                this.startCheckAvailability()
               }
             })
             .catch(() => {
               Toast.show(
                 getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
               )
+              this.disconnectService()
             })
         }
       } else {
@@ -907,9 +962,15 @@ export default class Friend extends Component {
   }
 
   disconnectService = async () => {
-    SMessageService.disconnectionService()
-    SMessageService.stopReceiveMessage()
+    await SMessageService.stopReceiveMessage()
+    await SMessageService.disconnectionService()
     g_connectService = false
+    this.endCheckAvailability()
+  }
+
+  restartService = async () => {
+    await this.disconnectService()
+    await this.connectService()
   }
 
   addMore = index => {
