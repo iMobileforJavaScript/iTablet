@@ -230,12 +230,13 @@ const Map_Layer = {
   PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
 
   LAYERS: 'My Layers',
-  LAYERS_MOVE_UP: 'Move up',
-  LAYERS_MOVE_DOWN: 'Move down',
+  LAYERS_MOVE_UP: 'Move Up',
+  LAYERS_MOVE_DOWN: 'Move Down',
   LAYERS_TOP: 'Top',
   LAYERS_BOTTOM: 'Bottom',
   LAYERS_LONG_PRESS: 'Long Press and Drag to Sort',
   LAYERS_SET_AS_CURRENT_LAYER: 'Set As Current Layer',
+  LAYERS_FULL_VIEW_LAYER: 'Display This Layer In Full',
   LAYERS_LAYER_STYLE: 'Layer Style',
   LAYERS_FULL_EXTENT: 'Full Extent',
   LAYERS_SET_VISIBLE_SCALE: 'Set Visible Scale',
@@ -352,7 +353,7 @@ const Map_Settings = {
   COORDINATE_SYSTEM: 'Coordinate System',
   COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
   DYNAMIC_PROJECTION: 'Dynamic Projection',
-  TRANSFER_PARAMS: 'Transfer Parameters',
+  TRANSFER_METHOD: 'Transfer Method',
 
   //二级菜单 高级设置
   FLOW_VISIUALIZATION: 'Flow Visiualization',
@@ -400,8 +401,6 @@ const Map_Settings = {
   MAPINFO_TAB_FILE: 'MapInfo Tab File',
   IMG_COORD_FILE: 'Image Coordinate System File',
   COORD_FILE: 'Coordinate System File',
-  //三级菜单 换转参数
-  TRANSFER_METHOD: 'Transfer Method',
 
   //设置的一些参数
   PERCENT: 'Percent',

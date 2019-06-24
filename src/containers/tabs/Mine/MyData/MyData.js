@@ -118,6 +118,7 @@ export default class MyLocalData extends Component {
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
+    this.callBackMode = params.callBackMode
   }
 
   componentDidMount() {
@@ -353,8 +354,13 @@ export default class MyLocalData extends Component {
         style={[styles.item, { display: display }]}
         onPress={async () => {
           if (this.formChat && this.chatCallBack) {
-            this.itemInfo = info
-            this._onUploadData('')
+            if (this.callBackMode && this.callBackMode === 'getName') {
+              this.itemInfo = info
+              this.chatCallBack(info.item.name)
+            } else {
+              this.itemInfo = info
+              this._onUploadData('')
+            }
           }
         }}
       >

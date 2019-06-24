@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../styles'
 import { scaleSize } from '../../utils'
+import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android'
 
 export default class PopModal extends PureComponent {
   props: {
@@ -19,6 +20,8 @@ export default class PopModal extends PureComponent {
     this.state = {
       modalVisible: false,
     }
+    this.virtualMenuHeight =
+      Platform.OS === 'android' ? getSoftMenuBarHeight() : 0
   }
 
   setVisible = (visible, cb) => {
@@ -134,7 +137,7 @@ export default class PopModal extends PureComponent {
           'landscape-left',
           'landscape-right',
         ]}
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingBottom: this.virtualMenuHeight }}
         visible={this.state.modalVisible}
       >
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>

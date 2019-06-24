@@ -51,8 +51,6 @@ import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
-//eslint-disable-next-line
-import { HEIGHT } from '../../../../utils/constUtil'
 import ScaleView from '../../components/ScaleView/ScaleView'
 
 const markerTag = 117868
@@ -102,6 +100,7 @@ export default class MapView extends React.Component {
     openWorkspace: PropTypes.func,
     closeWorkspace: PropTypes.func,
     getSymbolTemplates: PropTypes.func,
+    getSymbolPlots: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
     saveMap: PropTypes.func,
@@ -279,7 +278,7 @@ export default class MapView extends React.Component {
         key: this.props.navigation.state.routeName,
       })
     }
-    this.props.setMapLegend(false)
+    // this.props.setMapLegend(false)
 
     // 移除多媒体采集监听
     SMediaCollector.removeListener()
@@ -843,6 +842,12 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (global.coworkMode) {
+      // NavigationService.navigate('CoworkChat')
+      NavigationService.navigate('Chat')
+      return true
+    }
+
     this.backAction = async () => {
       try {
         this.setLoading(
@@ -1031,6 +1036,31 @@ export default class MapView extends React.Component {
             path: templatePath,
             name: data.name,
           })
+        } else if (GLOBAL.Type === constants.MAP_PLOTTING) {
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
+          let plotIconPath = await FileTools.appendingHomeDirectory(
+            ConstPath.PlotIconPath,
+          )
+          await this.props.getSymbolPlots({
+            path: plotIconPath,
+            name: data.name,
+          })
+
+          // let plotLibPath = await FileTools.appendingHomeDirectory(
+          //   ConstPath.PlotLibPath,
+          // )
+          // fs.readDir(plotLibPath).then(async data => {
+          //   let plotLibPaths=[]
+          //   for(let i=0;i<data.length;i++){
+          //     plotLibPaths.push(data[i].path)
+          //   }
+          //   let plotLibIds = SMap.initPlotSymbolLibrary(plotLibPaths)
+          //   let plotLibs=plotLibIds
+          // })
         } else {
           await this.props.setTemplate()
         }
@@ -1375,7 +1405,7 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && (
+        {this.props.mapLegend && GLOBAL.Type === constants.MAP_THEME && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}

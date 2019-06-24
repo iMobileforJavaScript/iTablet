@@ -7,6 +7,7 @@ const Friends = {
   ADD_FRIENDS: 'Add Friends',
   NEW_GROUP_CHAT: 'New Group Chat',
   RECOMMEND_FRIEND: 'Recommend Friends',
+  SELECT_MODULE: 'Select Module',
   //Friend
   MSG_SERVICE_FAILED: 'Failed to connect to message service',
   MSG_SERVICE_NOT_CONNECT: 'Unable to connect to message service',
@@ -79,6 +80,10 @@ const Friends = {
   DISBAND_GROUP: 'Disband group',
   DELETE_MEMBER: 'Remove group member',
   ADD_MEMBER: 'Add group member',
+  COWORK: 'Map cowork',
+  EXIT_COWORK: 'Exit cowork',
+  GO_COWORK: 'Cowork',
+  ALERT_EXIT_COWORK: 'Do you want to close current cowork map?',
   //system text
   SYS_MSG_MAP: '[MAP]',
   SYS_MSG_ADD_FRIEND: 'Send a friend request',
@@ -89,7 +94,7 @@ const Friends = {
   SYS_MSG_REMOVE_OUT_GROUP2: 'out of group',
   SYS_MSG_ADD_INTO_GROUP: ' have added ',
   SYS_MSG_ADD_INTO_GROUP2: 'into group',
-  SYS_NO_SUCH_USER: 'User no found',
+  SYS_NO_SUCH_USER: 'User not found',
   SYS_FRIEND_ALREADY_IN_GROUP: 'Friends selected already in group',
   EXCEED_NAME_LIMIT: 'Name should be within 40 words (Chinese within 20 words)',
   SYS_MSG_MOD_GROUP_NAME: ' changed the group name to ',

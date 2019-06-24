@@ -70,6 +70,7 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    this.curMod = undefined
     MessageDataHandle.setHandle(this.props.addChat)
     FriendListFileHandle.refreshCallback = this.refreshList
     FriendListFileHandle.refreshMessageCallback = this.refreshMsg
@@ -144,6 +145,11 @@ export default class Friend extends Component {
         talkId: this.curChat.targetUser.id, //会话ID
       })
     }
+  }
+
+  //设置协作模块
+  setCurMod = async Module => {
+    this.curMod = Module
   }
 
   addFileListener = () => {
@@ -633,7 +639,9 @@ export default class Friend extends Component {
       // messageObj.message.type=6;   桌面发送的文件类型是3，要接收桌面发送过来的文件需要把type改为6
       // messageObj.message.message.progress=0;    桌面发送的数据没有progress参数，不能显示进度
       if (messageObj.type === MSGConstant.MSG_LOGOUT) {
-        this._logout()
+        if (messageObj.time !== this.loginTime) {
+          this._logout()
+        }
         return
       }
       let userId = this.props.user.currentUser.userId
@@ -867,11 +875,12 @@ export default class Friend extends Component {
               } else {
                 g_connectService = true
                 if (isAlreadyLogin) {
+                  this.loginTime = Date.parse(new Date())
                   this._sendMessage(
                     JSON.stringify({
                       type: MSGConstant.MSG_LOGOUT,
                       user: {},
-                      time: '',
+                      time: this.loginTime,
                       message: '',
                     }),
                     this.props.user.currentUser.userId,

@@ -254,6 +254,7 @@ const Map_Layer = {
   LAYERS_BOTTOM: '置底',
   LAYERS_LONG_PRESS: '长按拖动排序',
   LAYERS_SET_AS_CURRENT_LAYER: '设置为当前图层',
+  LAYERS_FULL_VIEW_LAYER: '全幅显示本图层',
   LAYERS_LAYER_STYLE: '图层风格',
   LAYERS_FULL_EXTENT: '全幅显示本图层',
   LAYERS_SET_VISIBLE_SCALE: '可见比例尺范围',
@@ -372,7 +373,7 @@ const Map_Settings = {
   COORDINATE_SYSTEM: '坐标系',
   COPY_COORDINATE_SYSTEM: '复制坐标系',
   DYNAMIC_PROJECTION: '动态投影',
-  TRANSFER_PARAMS: '转换参数',
+  TRANSFER_METHOD: '转换方法',
 
   //二级菜单 高级设置
   FLOW_VISIUALIZATION: '流动显示',
@@ -420,8 +421,6 @@ const Map_Settings = {
   MAPINFO_TAB_FILE: 'MapInfo Tab文件',
   IMG_COORD_FILE: '影像格式坐标系文件',
   COORD_FILE: '坐标系文件',
-  //三级菜单 换转参数
-  TRANSFER_METHOD: '转换方法',
 
   //设置的一些参数
   PERCENT: '百分比',

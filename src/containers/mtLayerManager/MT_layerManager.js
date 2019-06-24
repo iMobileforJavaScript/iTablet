@@ -89,6 +89,7 @@ export default class MT_layerManager extends React.Component {
 
   componentDidUpdate(prevProps) {
     let newState = {}
+    // eslint-disable-next-line
     let dataList = []
     if (
       JSON.stringify(prevProps.currentLayer) !==
@@ -432,12 +433,13 @@ export default class MT_layerManager extends React.Component {
       let themeType
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.RANGE:
-          themeType = ConstToolType.MAP_THEME_STYLES
-          break
         case ThemeType.LABEL:
+        case ThemeType.GRAPH:
+        case ThemeType.GRADUATEDSYMBOL:
+        case ThemeType.DOTDENSITY:
+        case ThemeType.GRIDUNIQUE:
+        case ThemeType.GRIDRANGE:
           themeType = ConstToolType.MAP_THEME_STYLES
           break
         default:
@@ -615,7 +617,7 @@ export default class MT_layerManager extends React.Component {
         }
         return (
           <LayerManager_item
-            key={item.name}
+            // key={item.name}
             // sectionID={sectionID}
             // rowID={item.index}
             ref={ref => {
@@ -625,7 +627,8 @@ export default class MT_layerManager extends React.Component {
               this.itemRefs[item.name] = ref
               return this.itemRefs[item.name]
             }}
-            layer={item.layer}
+            {...this.props}
+            // swipeEnabled={true}
             // map={this.map}
             data={item}
             index={index}

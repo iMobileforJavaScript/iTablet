@@ -2,9 +2,10 @@
  * Created by imobile-xzy on 2019/3/4.
  */
 import Friend from './Friend'
-import Chat from './Chat/Chat'
+import Chat from './Chat'
 import ManageFriend from './Chat/ManageFriend'
 import ManageGroup from './Chat/ManageGroup'
+import SelectModule from './Chat/SelectModule'
 import AddFriend from './AddFriend'
 import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
@@ -42,5 +43,6 @@ export {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  SelectModule,
   GroupMemberList,
 }

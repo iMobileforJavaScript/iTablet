@@ -43,18 +43,41 @@ export default class RNLegendView extends React.Component {
       rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
       legendSource: '',
       flatListKey: 0,
-      visible: true,
     }
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.device.orientation !== prevProps.device.orientation) {
-      this.setState({
-        columns: this.props.device.orientation === 'LANDSCAPE' ? 4 : 2,
-      })
-    }
-    this.state.legendSource === '' && this.getLegendData()
+    this.startTime = 0
+    this.endTime = 0
+    this.INTERVAL = 300
   }
 
+  UNSAFE_componentWillMount() {
+    if (this.state.legendSource === '') {
+      this.getLegendData()
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    let returnFlag = false
+    if (this.props.device.orientation !== nextProps.device.orientation) {
+      let flatListKey = this.state.flatListKey + 1
+      this.setState({
+        columns: this.props.device.orientation === 'LANDSCAPE' ? 4 : 2,
+        flatListKey,
+      })
+      returnFlag = true
+    }
+    if (
+      nextState.backgroundColor !== this.state.backgroundColor ||
+      nextState.widthPercent !== this.state.widthPercent ||
+      nextState.heightPercent !== this.state.heightPercent ||
+      nextState.legendSource !== this.state.legendSource
+    ) {
+      returnFlag = true
+    }
+    return returnFlag
+  }
+
+  componentWillUnmount() {
+    SMap.removeLegendListener()
+  }
   /**
    *  更改图例属性
    * @param title 标题
@@ -84,7 +107,7 @@ export default class RNLegendView extends React.Component {
    * @returns {Promise<void>}
    */
   getLegendData = async () => {
-    await SMap.addLegendDelegate({
+    await SMap.addLegendListener({
       legendContentChange: this._contentChange,
     })
   }
@@ -95,10 +118,18 @@ export default class RNLegendView extends React.Component {
    * @private
    */
   _contentChange = legendSource => {
-    legendSource.sort(this.sortMethod('type'))
-    this.setState({
-      legendSource,
-    })
+    this.endTime = +new Date()
+    if (this.endTime - this.startTime > this.INTERVAL) {
+      legendSource.sort(this.sortMethod('type'))
+      this.setState(
+        {
+          legendSource,
+        },
+        () => {
+          this.startTime = this.endTime
+        },
+      )
+    }
   }
   /**
    * 排序 按照对象属性值
@@ -154,7 +185,6 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    if (!this.state.visible) return <View />
     return (
       <View
         style={{

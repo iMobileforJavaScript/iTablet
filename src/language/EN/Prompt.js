@@ -177,6 +177,7 @@ const Prompt = {
   COPY_COORD_SYSTEM_FAIL: 'Coordinate system replication failed',
   ILLEGAL_COORDSYS: 'Not a supported coordinate system file',
 
+  TRANSFER_PARAMS: 'Param error! Please enter a number',
   PLEASE_ENTER: 'Please enter ',
 }
 

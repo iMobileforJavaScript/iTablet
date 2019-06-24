@@ -8,6 +8,9 @@ export default class TouchableItemView extends Component {
     disableTouch: Boolean,
     onPress: () => {},
     renderRight: () => {},
+    contentStyle: {},
+    imageStyle: {},
+    textStyle: {},
   }
 
   constructor(props) {
@@ -17,7 +20,7 @@ export default class TouchableItemView extends Component {
   render() {
     return (
       <View style={styles.itemView}>
-        <View style={styles.contentView}>
+        <View style={[styles.contentView, this.props.contentStyle]}>
           <TouchableOpacity
             disabled={
               this.props.disableTouch === undefined
@@ -30,9 +33,11 @@ export default class TouchableItemView extends Component {
             <Image
               resizeMode={'contain'}
               source={this.props.item.image}
-              style={styles.image}
+              style={[styles.image, this.props.imageStyle]}
             />
-            <Text style={styles.textView}>{this.props.item.text}</Text>
+            <Text style={[styles.textView, this.props.textStyle]}>
+              {this.props.item.text}
+            </Text>
           </TouchableOpacity>
           {this.props.renderRight ? this.props.renderRight() : null}
         </View>

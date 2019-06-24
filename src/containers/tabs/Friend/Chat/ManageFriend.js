@@ -26,6 +26,7 @@ class ManageFriend extends Component {
     this.chat = this.props.navigation.getParam('chat')
     this.state = {
       contacts: [],
+      coworkMode: global.coworkMode,
     }
   }
 
@@ -83,6 +84,41 @@ class ManageFriend extends Component {
   renderSettings = () => {
     return (
       <ScrollView>
+        {!this.state.coworkMode && (
+          <TouchableItemView
+            item={{
+              //地图协作
+              // image: getThemeAssets().friend.friend_message,
+              text: getLanguage(global.language).Friends.COWORK,
+            }}
+            onPress={() => {
+              NavigationService.navigate('SelectModule', {
+                callBack: value => {
+                  this.friend.setCurMod(value)
+                  NavigationService.goBack('ManageFriend')
+                  this.setState({ coworkMode: true })
+                  this.chat.setCoworkMode(true)
+                  global.coworkMode = true
+                },
+              })
+            }}
+          />
+        )}
+        {this.state.coworkMode ? (
+          <TouchableItemView
+            item={{
+              //退出协作
+              // image: getThemeAssets().friend.friend_message,
+              text: getLanguage(global.language).Friends.EXIT_COWORK,
+            }}
+            onPress={() => {
+              this.chat.back()
+              // this.friend.setCurMap(undefined)
+              // this.setState({coworkMode : false})
+              // this.chat.setCoworkMode(false)
+            }}
+          />
+        ) : null}
         <TouchableItemView
           item={{
             //发消息

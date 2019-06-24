@@ -22,6 +22,10 @@ const Analyst_Labels = {
   ANALYST: '分析',
   CONFIRM: '确定',
   CANCEL: '取消',
+  NEXT: '下一步',
+  PREVIOUS: '上一步',
+  ADD: '添加',
+  Edit: '修改',
 
   BUFFER_ZONE: '缓冲区',
   MULTI_BUFFER_ZONE: '多重缓冲区',
@@ -69,6 +73,9 @@ const Analyst_Labels = {
   MESH_SIZE: '网格大小',
   SEARCH_RADIUS: '搜索半径',
   AREA_UNIT: '面积单位',
+  STATISTIC_MODE: '统计模式',
+  NUMERIC_PRECISION: '数字精度',
+  AGGREGATE_TYPE: '聚合类型',
 
   THEMATIC_PARAMS: '专题图参数',
   INTERVAL_MODE: '分段模式',
@@ -77,6 +84,11 @@ const Analyst_Labels = {
 
   Input_Type: '输入方式',
   Dataset: '数据集',
+
+  NOT_SET: '未设置',
+  ALREADY_SET: '已设置',
+
+  ADD_WEIGHT_STATISTIC: '增加权重字段',
 
   // 方向
   LEFT: '左',
@@ -129,6 +141,33 @@ const Analyst_Params = {
   RAINBOW_COLOR: '彩虹色',
   SPECTRAL_GRADIENT: '光谱渐变',
   TERRAIN_GRADIENT: '地形渐变',
+
+  // 统计模式
+  MAX: '最大值',
+  MIN: '最小值',
+  AVERAGE: '平均值',
+  SUM: '求和',
+  VARIANCE: '方差',
+  STANDARD_DEVIATION: '标准差',
+
+  // 聚合类型
+  AGGREGATE_WITH_GRID: '网格面聚合',
+  AGGREGATE_WITH_REGION: '多边形聚合',
 }
 
-export { Analyst_Modules, Analyst_Methods, Analyst_Labels, Analyst_Params }
+const Analyst_Prompt = {
+  PLEASE_CONNECT_TO_ISERVER: '请连接iServer服务器',
+  PLEASE_CHOOSE_INPUT_METHOD: '请选择输入方式',
+  PLEASE_CHOOSE_DATASET: '请选择数据集',
+  LOGIN_ISERVER_FAILED: '连接iServer服务器失败，请检查ip地址和用户名密码',
+  BEING_ANALYZED: '正在分析',
+  ANALYZING_FAILED: '分析失败',
+}
+
+export {
+  Analyst_Modules,
+  Analyst_Methods,
+  Analyst_Labels,
+  Analyst_Params,
+  Analyst_Prompt,
+}

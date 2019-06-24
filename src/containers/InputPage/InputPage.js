@@ -23,8 +23,10 @@ export default class InputPage extends React.Component {
     this.backcb = params && params.backcb
     this.state = {
       value: params && params.value ? params.value : '',
-      placeholder: params && params.placeholder ? params.placeholder : '',
-      headerTitle: params && params.headerTitle ? params.headerTitle : '',
+      placeholder:
+        params && params.placeholder !== undefined ? params.placeholder : '',
+      headerTitle:
+        params && params.headerTitle !== undefined ? params.headerTitle : '',
       btnTitle:
         params && params.btnTitle
           ? params.btnTitle

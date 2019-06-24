@@ -11,6 +11,7 @@ import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
 import {
   setCurrentTemplateInfo,
   getSymbolTemplates,
+  getSymbolPlots,
   setCurrentTemplateList,
 } from '../../../../models/template'
 import { setEditLayer } from '../../../../models/layers'
@@ -18,6 +19,9 @@ import TemplateList from './TemplateList'
 import TemplateTab from './TemplateTab'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
+import PlotList from './PlotList'
+import PlotTab from './PlotTab'
+import constants from '../../constants'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -36,6 +40,7 @@ const mapDispatchToProps = {
   setCurrentTemplateInfo,
   setEditLayer,
   getSymbolTemplates,
+  getSymbolPlots,
   setCurrentTemplateList,
 }
 
@@ -55,6 +60,7 @@ class SymbolTabs extends React.Component {
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
     getSymbolTemplates: () => {},
+    getSymbolPlots: () => {},
     setCurrentTemplateList: () => {},
     device: Object,
   }
@@ -287,7 +293,90 @@ class SymbolTabs extends React.Component {
     )
   }
 
+  renderPlotTab = () => {
+    return (
+      <ScrollableTabView
+        ref={ref => (this.scrollTab = ref)}
+        style={[styles.container, this.props.style]}
+        initialPage={1}
+        page={this.state.currentPage}
+        onChangeTab={({ i }) => this.goToPage(i)}
+        renderTabBar={() => (
+          <DefaultTabBar
+            activeBackgroundColor={color.bgW}
+            activeTextColor={color.themeText2}
+            inactiveTextColor={'white'}
+            textStyle={{
+              fontSize: size.fontSize.fontSizeSm,
+              backgroundColor: 'transparent',
+            }}
+            tabStyle={{
+              backgroundColor: color.subTheme,
+            }}
+          />
+        )}
+        tabBarUnderlineStyle={{
+          height: 0,
+        }}
+      >
+        <PlotTab
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT
+          }
+          //"最近"
+          style={styles.temple}
+          user={this.props.user}
+          showToolbar={this.props.showToolbar}
+          data={this.props.template.latestTemplateSymbols}
+          layers={this.props.layers}
+          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setEditLayer={this.props.setEditLayer}
+          getSymbolPlots={this.props.getSymbolPlots}
+          setCurrentSymbol={this.props.setCurrentSymbol}
+          device={this.props.device}
+        />
+        <PlotTab
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL
+          }
+          //"符号"
+          style={styles.temple}
+          user={this.props.user}
+          showToolbar={this.props.showToolbar}
+          data={this.props.template.currentTemplateList}
+          layers={this.props.layers}
+          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setEditLayer={this.props.setEditLayer}
+          getSymbolPlots={this.props.getSymbolPlots}
+          setCurrentSymbol={this.props.setCurrentSymbol}
+          device={this.props.device}
+        />
+        <PlotList
+          tabLabel={
+            getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP
+          }
+          //"分组"
+          style={styles.temple}
+          user={this.props.user}
+          showToolbar={this.props.showToolbar}
+          template={this.props.template}
+          layers={this.props.layers}
+          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setEditLayer={this.props.setEditLayer}
+          getSymbolPlots={this.props.getSymbolPlots}
+          setCurrentTemplateList={this.props.setCurrentTemplateList}
+          goToPage={this.goToPage}
+        />
+        {/*<TemplateTab tabLabel="模板" />*/}
+      </ScrollableTabView>
+    )
+  }
+
   render() {
+    if (GLOBAL.Type == constants.MAP_PLOTTING) {
+      return this.renderPlotTab()
+    }
+
     if (this.props.map.currentMap && this.props.map.currentMap.Template) {
       return this.renderTempleTab()
     } else {

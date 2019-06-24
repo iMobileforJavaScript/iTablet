@@ -29,6 +29,7 @@ const Profile = {
   GET_CODE: 'Get Code',
   ENTER_EMAIL: 'Please enter your email',
   ENTER_SERVER_ADDRESS: 'Please enter server address',
+  ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
 
   //
   SHARE: 'Share',

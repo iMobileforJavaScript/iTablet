@@ -10,6 +10,7 @@ import LayerManager from '../mtLayerManager'
 import Layer3DManager from '../Layer3DManager'
 import Setting from '../setting'
 import MapSetting from '../mapSetting'
+import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
 import { AnalystTools } from '../analystView/pages'
 import { ARMap } from '../armapView/pages'
@@ -58,6 +59,19 @@ const MapTabs = TabNavigator(
     },
     MapSetting: {
       screen: MapSetting,
+    },
+  },
+  options,
+)
+
+const CoworkTabs = TabNavigator(
+  {
+    //onechat
+    Chat: {
+      screen: Chat,
+    },
+    CoworkMapTabs: {
+      screen: MapTabs,
     },
   },
   options,
@@ -119,4 +133,4 @@ const MapARTabs = TabNavigator(
   options,
 )
 
-export { MapTabs, Map3DTabs, MapAnalystTabs, MapARTabs }
+export { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs, MapARTabs }

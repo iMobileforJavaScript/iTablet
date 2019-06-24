@@ -5,11 +5,15 @@
 */
 
 import * as React from 'react'
+//eslint-disable-next-line
+import { ActionPopover } from 'teaset'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import { DatasetType, ThemeType } from 'imobile_for_reactnative'
+import { DatasetType, ThemeType, SMap } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../../../utils'
-import { Const } from '../../../../constants'
-import NavigationService from '../../../NavigationService'
+import * as LayerUtils from '../../LayerUtils'
+
+// import { Const } from '../../../../constants'
+// import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -20,12 +24,13 @@ import {
   getLayerWhiteIconByType,
   getThemeAssets,
 } from '../../../../assets'
+import { getLanguage } from '../../../../language'
 
 const LAYER_GROUP = 'layerGroup'
 
 export default class LayerManager_item extends React.Component {
   props: {
-    layer: Object,
+    user: Object,
     map: Object,
     data: Object,
     mapControl: Object,
@@ -42,12 +47,13 @@ export default class LayerManager_item extends React.Component {
     onAllPress: () => {},
     onToolPress: () => {},
     onOpen: () => {},
+    getLayers: () => {},
     child: Array,
     sectionID: number,
     rowID: number,
     selectLayer: Object,
     index: number,
-
+    layers: Object,
     setLayerVisible: () => {},
   }
 
@@ -82,6 +88,8 @@ export default class LayerManager_item extends React.Component {
       sectionID: props.sectionID || 0,
       rowID: props.rowID || 0,
     }
+
+    this.renderItem = this.renderItem.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -148,14 +156,14 @@ export default class LayerManager_item extends React.Component {
     }.bind(this)())
   }
 
-  updateEditable = () => {
-    (async function() {
-      let idEditable = await this.props.layer.getEditable()
-      this.setState({
-        editable: idEditable,
-      })
-    }.bind(this)())
-  }
+  // updateEditable = () => {
+  //   (async function() {
+  //     let idEditable = await this.props.layer.getEditable()
+  //     this.setState({
+  //       editable: idEditable,
+  //     })
+  //   }.bind(this)())
+  // }
 
   getOptions = data => {
     let { isThemeLayer, isVectorLayer } = this.getValidate(data)
@@ -263,71 +271,71 @@ export default class LayerManager_item extends React.Component {
     })
   }
 
-  _openTheme = () => {
-    let title = '',
-      themeType = ''
-    switch (this.props.data.themeType) {
-      case ThemeType.LABEL:
-        title = Const.LABEL
-        break
-      case ThemeType.UNIQUE:
-        title = Const.UNIQUE
-        break
-      case ThemeType.RANGE:
-        title = Const.RANGE
-        break
-    }
-    if (this.props.data.type === DatasetType.CAD) {
-      title = Const.LABEL
-      themeType = ThemeType.LABEL
-    }
-    if (title) {
-      let editLayer = this.props.layer
-      Object.assign(editLayer, {
-        index: this.props.data.index,
-        themeType: themeType || this.props.data.themeType,
-        name: this.props.data.name,
-        caption: this.props.data.caption,
-      })
-      NavigationService.navigate('ThemeEdit', {
-        title,
-        layer: this.props.layer,
-        map: this.props.map,
-        mapControl: this.props.mapControl,
-        isThemeLayer: !themeType,
-      })
-    } else {
-      NavigationService.navigate('ThemeEntry', {
-        layer: this.props.layer,
-        map: this.props.map,
-        mapControl: this.props.mapControl,
-      })
-    }
-  }
+  // _openTheme = () => {
+  //   let title = '',
+  //     themeType = ''
+  //   switch (this.props.data.themeType) {
+  //     case ThemeType.LABEL:
+  //       title = Const.LABEL
+  //       break
+  //     case ThemeType.UNIQUE:
+  //       title = Const.UNIQUE
+  //       break
+  //     case ThemeType.RANGE:
+  //       title = Const.RANGE
+  //       break
+  //   }
+  //   if (this.props.data.type === DatasetType.CAD) {
+  //     title = Const.LABEL
+  //     themeType = ThemeType.LABEL
+  //   }
+  //   if (title) {
+  //     let editLayer = this.props.layer
+  //     Object.assign(editLayer, {
+  //       index: this.props.data.index,
+  //       themeType: themeType || this.props.data.themeType,
+  //       name: this.props.data.name,
+  //       caption: this.props.data.caption,
+  //     })
+  //     NavigationService.navigate('ThemeEdit', {
+  //       title,
+  //       layer: this.props.layer,
+  //       map: this.props.map,
+  //       mapControl: this.props.mapControl,
+  //       isThemeLayer: !themeType,
+  //     })
+  //   } else {
+  //     NavigationService.navigate('ThemeEntry', {
+  //       layer: this.props.layer,
+  //       map: this.props.map,
+  //       mapControl: this.props.mapControl,
+  //     })
+  //   }
+  // }
 
-  _openStyle = () => {
-    NavigationService.navigate('ThemeStyle', {
-      layer: this.props.layer,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-      type: this.props.data.type,
-    })
-  }
+  // _openStyle = () => {
+  //   NavigationService.navigate('ThemeStyle', {
+  //     layer: this.props.layer,
+  //     map: this.props.map,
+  //     mapControl: this.props.mapControl,
+  //     type: this.props.data.type,
+  //   })
+  // }
 
-  _rename = () => {
-    this.props.showRenameDialog &&
-      this.props.showRenameDialog(true, this.props.layer)
-  }
+  // _rename = () => {
+  //   this.props.showRenameDialog &&
+  //     this.props.showRenameDialog(true, this.props.layer)
+  // }
 
-  _remove = () => {
-    this.props.showRemoveDialog &&
-      this.props.showRemoveDialog(true, this.props.data, '是否要删除该图层？')
-  }
+  // _remove = () => {
+  //   this.props.showRemoveDialog &&
+  //     this.props.showRemoveDialog(true, this.props.data, '是否要删除该图层？')
+  // }
 
-  _unGroup = () => {
-    this.props.showRemoveDialog &&
-      this.props.showRemoveDialog(true, this.props.data, '是否要解散该图层组？')
-  }
+  // _unGroup = () => {
+  //   this.props.showRemoveDialog &&
+  //     this.props.showRemoveDialog(true, this.props.data, '是否要解散该图层组？')
+  // }
 
   _pop_row = async () => {
     if (this.props.onPress) {
@@ -450,7 +458,80 @@ export default class LayerManager_item extends React.Component {
     )
   }
 
-  renderItem = () => {
+  _showPopover = (pressView, layer) => {
+    let items = []
+
+    items = [
+      {
+        title: getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP,
+        onPress: () => {
+          (async function() {
+            await SMap.moveUpLayer(layer.name)
+            await this.props.getLayers()
+          }.bind(this)())
+        },
+      },
+      {
+        title: getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN,
+        onPress: () => {
+          (async function() {
+            await SMap.moveDownLayer(layer.name)
+            await this.props.getLayers()
+          }.bind(this)())
+        },
+      },
+      {
+        title: getLanguage(global.language).Map_Layer.LAYERS_TOP,
+        onPress: () => {
+          (async function() {
+            await SMap.moveToTop(layer.name)
+            let count = await SMap.getTaggingLayerCount(
+              this.props.user.currentUser.userName,
+            )
+            for (let i = 0; i < count; i++) {
+              await SMap.moveDownLayer(layer.name)
+            }
+            await this.props.getLayers()
+          }.bind(this)())
+        },
+      },
+      {
+        title: getLanguage(global.language).Map_Layer.LAYERS_BOTTOM,
+        onPress: () => {
+          (async function() {
+            await SMap.moveToBottom(layer.name)
+          }.bind(this)())
+          if (
+            LayerUtils.isBaseLayer(
+              this.props.layers[this.props.layers.length - 1].name,
+            )
+          ) {
+            SMap.moveUpLayer(layer.name)
+          }
+          // if (
+          //   this.props.layers[this.props.layers.length - 1].name.indexOf(
+          //     'vec@TD',
+          //   ) >= 0
+          // ) {
+          //   SMap.moveToBottom(layer.name)
+          // }
+          this.props.getLayers()
+        },
+      },
+    ]
+    pressView.measure((ox, oy, width, height, px, py) => {
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
+    })
+  }
+  renderItem() {
     let name = this.props.data.caption
     const visibleImgWhite = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable.png')
@@ -482,11 +563,24 @@ export default class LayerManager_item extends React.Component {
       visibleImg = visibleImgBlack
       moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     }
+
+    let thisHandle = this
+    let iTemView
     return (
       <TouchableOpacity
+        ref={ref => (iTemView = ref)}
         activeOpacity={1}
         style={[styles.rowOne, { backgroundColor: select }]}
         onPress={this._all_pop_row}
+        onLongPress={() => {
+          //非标注，底图
+          if (
+            thisHandle.props.data.name.indexOf('@Label_') === -1 &&
+            !LayerUtils.isBaseLayer(thisHandle.props.data.name)
+          ) {
+            this._showPopover(iTemView, this.props.data)
+          }
+        }}
       >
         <View style={styles.btn_container}>
           {this.props.data.type === LAYER_GROUP ? (

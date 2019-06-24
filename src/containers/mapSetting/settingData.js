@@ -274,7 +274,7 @@ const coordinateSystemSettings = () => [
     iconType: 'switch',
   },
   {
-    title: getLanguage(global.language).Map_Settings.TRANSFER_PARAMS,
+    title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
     value: getLanguage(global.language).Map_Settings.OFF,
     iconType: 'arrow',
   },
@@ -356,42 +356,144 @@ const coordinateData = () => [
     ],
   },
 ]
+
+//转换方法
 const transferData = () => [
   {
-    title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
-    value: [
-      {
-        value: 'Geocentric Transalation(3-para)',
-        paramNum: 3,
-      },
-      {
-        value: 'Molodensky(3-para)',
-        paramNum: 3,
-      },
-      {
-        value: 'Abridged Molodensky(3-para)',
-        paramNum: 3,
-      },
-      {
-        value: 'position Vector(7-para)',
-        paramNum: 7,
-      },
-      {
-        value: 'Coordinate Frame(7-para)',
-        paramNum: 7,
-      },
-      {
-        value: 'Bursa-wolf(7-para)',
-        paramNum: 7,
-      },
-      {
-        value: 'MolodenskyBadekas(10-para)',
-        paramNum: 10,
-      },
-    ],
+    title: 'Geocentric Transalation(3-para)',
     iconType: 'arrow',
+    paramNum: 3,
+  },
+  {
+    title: 'Molodensky(7-para)',
+    iconType: 'arrow',
+    paramNum: 7,
+  },
+  {
+    title: 'Abridged Molodensky(7-para)',
+    iconType: 'arrow',
+    paramNum: 7,
+  },
+  {
+    title: 'Position Vector(7-para)',
+    iconType: 'arrow',
+    paramNum: 7,
+  },
+  {
+    title: 'Coordinate Frame(7-para)',
+    iconType: 'arrow',
+    paramNum: 7,
+  },
+  {
+    title: 'Bursa-wolf(7-para)',
+    iconType: 'arrow',
+    paramNum: 7,
   },
 ]
+
+//转换方法3参数设置
+const transfer3ParamsSetting = () => [
+  {
+    title: '基本参数',
+    value: [
+      {
+        title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
+        iconType: 'text',
+        value: '',
+      },
+    ],
+  },
+  {
+    title: '偏移量',
+    value: [
+      {
+        title: 'X',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+      {
+        title: 'Y',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+      {
+        title: 'Z',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+    ],
+  },
+]
+
+//转换方法7参数设置
+const transfer7ParamsSetting = () => [
+  {
+    title: '基本参数',
+    value: [
+      {
+        title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
+        iconType: 'text',
+        value: '',
+      },
+      {
+        title: '比例差',
+        iconType: 'arrow',
+        value: 0,
+        pos: 0,
+      },
+    ],
+  },
+  {
+    title: '旋转角度(秒)',
+    value: [
+      {
+        title: 'X',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+      {
+        title: 'Y',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+      {
+        title: 'Z',
+        iconType: 'arrow',
+        value: 0,
+        pos: 1,
+      },
+    ],
+  },
+  {
+    title: '偏移量',
+    value: [
+      {
+        title: 'X',
+        iconType: 'arrow',
+        value: 0,
+        pos: 2,
+      },
+      {
+        title: 'Y',
+        iconType: 'arrow',
+        value: 0,
+        pos: 2,
+      },
+      {
+        title: 'Z',
+        iconType: 'arrow',
+        value: 0,
+        pos: 2,
+      },
+    ],
+  },
+]
+
 //高级设置
 // const advancedSettings = () => [
 //   {
@@ -499,6 +601,8 @@ export {
   copyCoordinate,
   coordMenuData,
   coordMenuTitle,
+  transfer3ParamsSetting,
+  transfer7ParamsSetting,
   // advancedSettings,
   colorMode,
   fourRanges,
