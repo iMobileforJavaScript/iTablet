@@ -2,7 +2,7 @@
  * 获取地图工具数据
  */
 import { SMap, Action } from 'imobile_for_reactnative'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, TouchType } from '../../../../constants'
 import { dataUtil, Toast } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
@@ -634,7 +634,7 @@ function words() {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[4],
   })
-  GLOBAL.TouchType = ConstToolType.MAP_TOOL_TAGGING
+  GLOBAL.TouchType = TouchType.MAP_TOOL_TAGGING
 }
 
 function pointline() {

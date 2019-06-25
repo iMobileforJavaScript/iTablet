@@ -22,23 +22,25 @@ export default class LinkageList extends React.Component {
     super(props)
     this.state = {
       selected: 0,
-      data: [],
-      rightData: [],
+      // data: props.data || [],
+      rightData: (props.data[0] && props.data[0].data) || [],
     }
     this.styles = this.props.styles
       ? Object.assign(styles, this.props.styles)
       : styles
   }
 
-  static getDerivedStateFromProps(nextProps, currentState) {
-    if (nextProps.data && nextProps.data !== currentState.data) {
-      return {
-        data: nextProps.data,
-        rightData: nextProps.data[0].data,
-      }
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
+      this.setState({
+        rightData:
+          (this.props.data[this.state.selected] &&
+            this.props.data[this.state.selected].data) ||
+          [],
+      })
     }
-    return null
   }
+
   onLeftPress = ({ item, index }) => {
     if (this.props.onLeftPress) return this.props.onLeftPress({ item, index })
     this.setState({
@@ -48,7 +50,7 @@ export default class LinkageList extends React.Component {
   }
 
   onRightPress = async ({ item, index }) => {
-    let data = this.state.data
+    let data = this.props.data
     let parent = data.filter(val => {
       return val.title === item.parentTitle
     })
@@ -104,7 +106,7 @@ export default class LinkageList extends React.Component {
         <View style={this.styles.leftFlatListContainer}>
           <FlatList
             renderItem={this.renderLeftItem}
-            data={this.state.data}
+            data={this.props.data}
             extraData={this.state.selected}
             keyExtractor={(item, index) => item + index}
           />

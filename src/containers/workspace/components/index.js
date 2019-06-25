@@ -14,6 +14,11 @@ import SymbolTabs from './SymbolTabs'
 import MenuAlertDialog from './MenuAlertDialog'
 import SaveView from './SaveView'
 import OverlayView from './OverlayView'
+import {
+  AnalystMapButtons,
+  AnalystMapRecommend,
+  AnalystMapToolbar,
+} from './AnalystMapOptions'
 export {
   PopList,
   NetworkAnalystToolBar,
@@ -31,4 +36,7 @@ export {
   constants,
   MenuAlertDialog,
   OverlayView,
+  AnalystMapButtons,
+  AnalystMapRecommend,
+  AnalystMapToolbar,
 }

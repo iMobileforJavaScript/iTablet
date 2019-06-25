@@ -56,8 +56,26 @@ function goBack(routeName, immediate) {
   })()
 }
 
-function reset(routeName, params) {
-  let resetAction = NavigationActions.popToTop({
+function pop(index = 1) {
+  (async function _goBack() {
+    await _navigator.dispatch(
+      NavigationActions.pop({
+        n: index,
+      }),
+    )
+  })()
+}
+
+function reset(index, actions) {
+  let resetAction = NavigationActions.reset({
+    index,
+    actions,
+  })
+  _navigator.dispatch(resetAction)
+}
+
+function replace(routeName, params) {
+  let resetAction = NavigationActions.replace({
     routeName,
     params,
   })
@@ -72,4 +90,6 @@ export default {
   setTopLevelNavigator,
   goBack,
   reset,
+  replace,
+  pop,
 }

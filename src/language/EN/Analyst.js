@@ -3,6 +3,11 @@ const Analyst_Modules = {
   BUFFER_ANALYST_2: 'Buffer Analyst',
   OVERLAY_ANALYST: 'Overlay Analyst',
   ONLINE_ANALYST: 'Online Analyst',
+
+  OPTIMAL_PATH: 'Optimal Path',
+  CONNECTIVITY_ANALYSIS: 'Connectivity Analysis',
+  FIND_TSP_PATH: 'Find TSP Path',
+  TRACING_ANALYSIS: 'Tracing Analysis',
 }
 
 const Analyst_Methods = {
@@ -26,6 +31,30 @@ const Analyst_Labels = {
   PREVIOUS: 'Previous',
   ADD: 'Add',
   Edit: 'Edit',
+
+  // local
+  USE_AN_EXISTING_NETWORK_DATASET: 'Use An Existing Network Dataset',
+  BUILD_A_NETWORK_DATASET: 'Build A Network Dataset',
+  CHOOSE_DATA: 'Choose Data',
+  TOPOLOGY: 'Topology',
+  ADD_DATASET: 'Add Dataset',
+  DONE: 'Done',
+  RESULT_FIELDS: 'Result Fields',
+  SPLIT_SETTINGS: 'Split Settings',
+  SPLIT_LINE_BY_POINT: 'Split Line by Point',
+  SPLIT_LINES_AT_INTERSECTION: 'Split Lines at Intersection',
+
+  SET_START_STATION: 'Set Start Station',
+  MIDDLE_STATIONS: 'Middle Stations',
+  SET_END_STATION: 'Set End Station',
+  LOCATION: 'Location',
+  SET_AS_START_STATION: 'Set as Start Station',
+  SET_AS_END_STATION: 'Set as End Station',
+  ADD_STATIONS: 'Add Stations',
+  ADD_BARRIER_NODES: 'Add Barrier Nodes',
+  ADD_NODES: 'Add Nodes',
+  UPSTREAM_TRACKING: 'Upstream Tracking',
+  DOWNSTREAM_TRACKING: 'Downstream Tracking',
 
   BUFFER_ZONE: 'Buffer',
   MULTI_BUFFER_ZONE: 'Multi-buffer',

@@ -8,6 +8,7 @@ import IServerLoginPage from './iServerLoginPage'
 import SourceDatasetPage from './sourceDatasetPage'
 import AnalystRangePage from './analystRangePage'
 import WeightAndStatistic from './weightAndStatistic'
+import LocalAnalystView from './localAnalystView'
 
 export {
   AnalystTools,
@@ -20,4 +21,5 @@ export {
   SourceDatasetPage,
   AnalystRangePage,
   WeightAndStatistic,
+  LocalAnalystView,
 }

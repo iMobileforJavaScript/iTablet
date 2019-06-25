@@ -7,7 +7,6 @@ import {
   FlatList,
   // Dimensions,
   StyleSheet,
-  ScrollView,
   Platform,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
@@ -424,20 +423,15 @@ class ModuleList extends Component {
 
   _renderScrollView = () => {
     return (
-      <View style={{width:this.props.device.width,height:scaleSize(300)}}>
-        <ScrollView
-          style={[styles.scrollView]}
-          // horizontal={true}
+      <View style={styles.flatListView}>
+        <FlatList
+          key={'landscapeList'}
+          data={ConstModule(this.props.language)}
+          horizontal={true}
+          renderItem={this._renderItem}
+          keyboardShouldPersistTaps={'always'}
           showsHorizontalScrollIndicator={false}
-        >
-          <FlatList
-            data={ConstModule(this.props.language)}
-            horizontal={true}
-            renderItem={this._renderItem}
-            keyboardShouldPersistTaps={'always'}
-            showsHorizontalScrollIndicator={false}
-          />
-        </ScrollView>
+        />
       </View>
     )
   }
@@ -450,6 +444,7 @@ class ModuleList extends Component {
           this._renderScrollView()
         ) : (
           <FlatList
+            key={'list'}
             style={styles.flatList}
             data={ConstModule(this.props.language)}
             renderItem={this._renderItem}
@@ -475,26 +470,15 @@ export default connect(
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 20,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    // flex: 1,
+    flex: 1,
     flexDirection: 'column',
-    // marginTop: scaleSize(100),
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
   },
   flatList: {
-    position: 'absolute',
-    // justifyContent: 'center',
     alignSelf: 'center',
-    // top: 0,left:0,right:0,bottom:0,
     flex: 1,
-    // backgroundColor: 'blue',
-    // marginLeft: scaleSize(40),
   },
   module: {
     width: scaleSize(260),
@@ -504,17 +488,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#707070',
     borderRadius: scaleSize(4),
-    // elevation: 2,
-    // shadowOffset: { width: 0, height: 0 },
-    // shadowColor: 'black',
-    // shadowOpacity: 1,
-    // shadowRadius: scaleSize(4),
   },
-  // img:{
-  //   position:"absolute",
-  //   width: scaleSize(260),
-  //   height: scaleSize(260),
-  // },
   moduleImage: {
     width: scaleSize(100),
     height: scaleSize(100),
@@ -525,9 +499,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor:'green',
-    // paddingHorizontal: scaleSize(10),
-    // marginTop: scaleSize(5),
   },
   moduleItem: {
     alignItems: 'center',
@@ -542,24 +513,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: scaleSize(13),
   },
-  longtitle: {
-    width: scaleSize(130),
-    height: scaleSize(70),
-    fontSize: setSpText(25),
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginTop: scaleSize(13),
-  },
-  scrollView: {
-    position:"absolute",
-    // width: 900,
-    // height:"100%",
-    flex: 1,
-    flexDirection: 'column',
-    // alignItems:"center",
-    // justifyContent: 'space-around',
-    // position: 'absolute',
-    alignSelf: 'center',
-    // backgroundColor:'red',
+  flatListView: {
+    height: scaleSize(300),
   },
 })

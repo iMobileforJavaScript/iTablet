@@ -11,6 +11,7 @@ import {
   ConstToolType,
   ConstPath,
   ConstOnline,
+  TouchType,
   // BotMap,
   line,
   point,
@@ -2303,7 +2304,7 @@ export default class ToolBar extends React.PureComponent {
    **/
   setVisible(isShow, type = this.state.type, params = {}) {
     if (isShow) {
-      GLOBAL.TouchType = ConstToolType.NULL
+      GLOBAL.TouchType = TouchType.NULL
     }
     this.setOverlayViewVisible(isShow)
 
@@ -2780,7 +2781,7 @@ export default class ToolBar extends React.PureComponent {
 
       // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
-      GLOBAL.TouchType = ConstToolType.NORMAL
+      GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
   }
 
@@ -3174,7 +3175,7 @@ export default class ToolBar extends React.PureComponent {
 
       // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
-      GLOBAL.TouchType = ConstToolType.NORMAL
+      GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
   }
 
@@ -5324,7 +5325,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   overlayOnPress = () => {
-    GLOBAL.TouchType = ConstToolType.NORMAL
+    GLOBAL.TouchType = TouchType.NORMAL
     if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS ||
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION ||

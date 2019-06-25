@@ -42,11 +42,11 @@ export default class ScaleView extends React.Component {
     }
   }
 
-  showFullMap = visible => {
+  showFullMap = (visible, immediately = false) => {
     if (this.state.visible === visible) return
     Animated.timing(this.left, {
       toValue: visible ? scaleSize(120) : scaleSize(30),
-      duration: 300,
+      duration: immediately ? 0 : 300,
     }).start()
     this.setState({
       visible,

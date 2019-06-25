@@ -2,6 +2,9 @@ const Analyst_Types = {
   BUFFER_ANALYST: 1,
   OVERLAY_ANALYST: 2,
   ONLINE_ANALYST: 3,
+  OPTIMAL_PATH: 4,
+  CONNECTIVITY_ANALYSIS: 5,
+  FIND_TSP_PATH: 6,
 }
 
 const AggregatePointParams = {

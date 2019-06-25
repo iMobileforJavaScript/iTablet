@@ -12,6 +12,7 @@ import UserType from './UserType'
 import ThemeType from './ThemeType'
 import CheckStatus from './CheckStatus'
 import ConstAnalyst from './ConstAnalyst'
+import TouchType from './TouchType'
 
 import {
   layerAdd,
@@ -84,6 +85,7 @@ export {
   ThemeType,
   CheckStatus,
   ConstAnalyst,
+  TouchType,
   getHeaderTitle,
   legendMenuInfo,
   legendMenuInfoNotVisible,

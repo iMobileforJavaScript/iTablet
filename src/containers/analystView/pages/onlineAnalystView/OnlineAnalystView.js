@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, View, InteractionManager } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import NavigationService from '../../../NavigationService'
+import TabNavigationService from '../../../TabNavigationService'
 import { getLanguage } from '../../../../language'
 import { Toast } from '../../../../utils'
 import { AnalystItem, PopModalList } from '../../components'
@@ -29,7 +30,8 @@ export default class OnlineAnalystView extends Component {
     const { params } = props.navigation.state
     this.cb = params && params.cb
     this.state = {
-      type: (params && params.type) || AnalystEntryData.analysisTypes.DENSITY, // 分析类型
+      type:
+        (params && params.type) || AnalystEntryData.onlineAnalysisTypes.DENSITY, // 分析类型
       title: (params && params.title) || '',
       canBeAnalyst: false,
 
@@ -162,6 +164,7 @@ export default class OnlineAnalystView extends Component {
       await this.props.getLayers()
       this.container.setLoading(false)
       NavigationService.goBack('AnalystListEntry')
+      TabNavigationService.navigate('MapAnalystView')
       if (this.cb && typeof this.cb === 'function') {
         this.cb()
       }
@@ -311,7 +314,7 @@ export default class OnlineAnalystView extends Component {
 
   renderAnalystParams = () => {
     switch (this.state.type) {
-      case AnalystEntryData.analysisTypes.AGGREGATE_POINTS_ANALYSIS:
+      case AnalystEntryData.onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS:
         return (
           <AggregatePointsAnalystView
             ref={ref => (this.aggregatePointsView = ref)}
@@ -322,7 +325,7 @@ export default class OnlineAnalystView extends Component {
             }
           />
         )
-      case AnalystEntryData.analysisTypes.DENSITY:
+      case AnalystEntryData.onlineAnalysisTypes.DENSITY:
       default:
         return (
           <DensityAnalystView
@@ -347,7 +350,7 @@ export default class OnlineAnalystView extends Component {
         currentPopData={this.state.currentPopData}
         confirm={data => {
           switch (this.state.type) {
-            case AnalystEntryData.analysisTypes.AGGREGATE_POINTS_ANALYSIS:
+            case AnalystEntryData.onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS:
               if (this.aggregatePointsView) {
                 this.aggregatePointsView.popCallback(
                   this.currentPop,
@@ -356,7 +359,7 @@ export default class OnlineAnalystView extends Component {
                 )
               }
               break
-            case AnalystEntryData.analysisTypes.DENSITY:
+            case AnalystEntryData.onlineAnalysisTypes.DENSITY:
             default:
               if (this.densityView) {
                 this.densityView.popCallback(this.currentPop, data, () =>

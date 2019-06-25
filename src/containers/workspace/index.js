@@ -1,3 +1,9 @@
+/**
+ * Tabs
+ * 注：MapView相关的Tabs在Routes中始终保持一个
+ */
+
+import React from 'react'
 import { MapView, Map3D } from './pages'
 // export { MapView, Map3D }
 
@@ -14,6 +20,26 @@ import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
 import { AnalystTools } from '../analystView/pages'
 import { ARMap } from '../armapView/pages'
+import TabNavigationService from '../TabNavigationService'
+
+function compose(Component) {
+  class Tab extends Component {
+    render() {
+      return (
+        <Component
+          ref={navigatorRef => {
+            TabNavigationService.setTopLevelNavigator(navigatorRef)
+          }}
+          {...this.props}
+          // onNavigationStateChange={(prevState, currentState) => {
+          //   console.log(JSON.stringify(currentState))
+          // }}
+        />
+      )
+    }
+  }
+  return Tab
+}
 
 const options = {
   animationEnabled: false, // 切换页面时是否有动画效果
@@ -46,22 +72,24 @@ const options = {
   },
 }
 
-const MapTabs = TabNavigator(
-  {
-    MapView: {
-      screen: MapView,
+const MapTabs = compose(
+  TabNavigator(
+    {
+      MapView: {
+        screen: MapView,
+      },
+      LayerManager: {
+        screen: LayerManager,
+      },
+      LayerAttribute: {
+        screen: LayerAttribute,
+      },
+      MapSetting: {
+        screen: MapSetting,
+      },
     },
-    LayerManager: {
-      screen: LayerManager,
-    },
-    LayerAttribute: {
-      screen: LayerAttribute,
-    },
-    MapSetting: {
-      screen: MapSetting,
-    },
-  },
-  options,
+    options,
+  ),
 )
 
 const CoworkTabs = TabNavigator(
@@ -82,19 +110,21 @@ const analystTabsOptions = Object.assign(options, {
   lazy: false,
   backBehavior: 'none',
 })
-const MapAnalystTabs = TabNavigator(
-  {
-    MapAnalystView: {
-      screen: MapView,
+const MapAnalystTabs = compose(
+  TabNavigator(
+    {
+      MapAnalystView: {
+        screen: MapView,
+      },
+      AnalystTools: {
+        screen: AnalystTools,
+      },
+      LayerAnalystManager: {
+        screen: LayerManager,
+      },
     },
-    AnalystTools: {
-      screen: AnalystTools,
-    },
-    LayerAnalystManager: {
-      screen: LayerManager,
-    },
-  },
-  analystTabsOptions,
+    analystTabsOptions,
+  ),
 )
 
 const Map3DTabs = TabNavigator(

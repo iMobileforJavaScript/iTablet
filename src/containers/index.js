@@ -87,6 +87,7 @@ import {
   SourceDatasetPage,
   AnalystRangePage,
   WeightAndStatistic,
+  LocalAnalystView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -626,6 +627,13 @@ export default StackNavigator(
     },
     WeightAndStatistic: {
       screen: WeightAndStatistic,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LocalAnalystView: {
+      screen: LocalAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

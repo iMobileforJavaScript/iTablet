@@ -2,7 +2,7 @@ import { getThemeAssets } from '../../../../assets'
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language'
 
-const analysisTypes = {
+const onlineAnalysisTypes = {
   DENSITY: 1,
   AGGREGATE_POINTS_ANALYSIS: 2,
 }
@@ -106,7 +106,7 @@ function getOnlineAnalystData(language) {
       action: (cb = () => {}) =>
         onlineCallback(
           getLanguage(language).Analyst_Methods.DENSITY,
-          analysisTypes.DENSITY,
+          onlineAnalysisTypes.DENSITY,
           cb,
         ),
       image: getThemeAssets().analyst.analysis_density,
@@ -117,7 +117,7 @@ function getOnlineAnalystData(language) {
       action: (cb = () => {}) =>
         onlineCallback(
           getLanguage(language).Analyst_Methods.AGGREGATE_POINTS_ANALYSIS,
-          analysisTypes.AGGREGATE_POINTS_ANALYSIS,
+          onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS,
           cb,
         ),
       image: getThemeAssets().analyst.analysis_overlay_union,
@@ -126,8 +126,36 @@ function getOnlineAnalystData(language) {
   return data
 }
 
+function getLocalAnalystEntryData(language, type) {
+  let data = [
+    {
+      key: getLanguage(language).Analyst_Labels.USE_AN_EXISTING_NETWORK_DATASET,
+      title: getLanguage(language).Analyst_Labels
+        .USE_AN_EXISTING_NETWORK_DATASET,
+      action: (cb = () => {}) => {
+        NavigationService.navigate('LocalAnalystView', {
+          type: type,
+          cb: cb,
+        })
+      },
+    },
+    {
+      key: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
+      title: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
+      action: (cb = () => {}) => {
+        NavigationService.navigate('LocalAnalystView', {
+          type: type,
+          cb: cb,
+        })
+      },
+    },
+  ]
+  return data
+}
+
 export default {
-  analysisTypes,
+  onlineAnalysisTypes,
   getOverlayAnalystData,
   getOnlineAnalystData,
+  getLocalAnalystEntryData,
 }

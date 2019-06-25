@@ -53,9 +53,9 @@ export default class AnalystTools extends Component {
     SMediaCollector.removeMedias()
   }
 
-  goToMapView = () => {
-    this.props.navigation && this.props.navigation.navigate('MapAnalystView')
-  }
+  // goToMapView = () => {
+  //   this.props.navigation && this.props.navigation.navigate('MapAnalystView')
+  // }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column = this.state.column
@@ -70,7 +70,7 @@ export default class AnalystTools extends Component {
         background={item.background}
         onPress={() => {
           item.action({
-            cb: this.goToMapView,
+            // cb: this.goToMapView,
           })
         }}
       />

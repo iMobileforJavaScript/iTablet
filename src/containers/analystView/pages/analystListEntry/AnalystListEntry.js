@@ -3,7 +3,7 @@ import { FlatList } from 'react-native'
 import { Container } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
-import { OverlayAnalystItem } from '../../components'
+import { AnalystListItem } from '../../components'
 import { Analyst_Types } from '../../AnalystType'
 import AnalystEntryData from './AnalystEntryData'
 
@@ -41,6 +41,27 @@ export default class AnalystListEntry extends Component {
   getData = type => {
     let data = []
     switch (type) {
+      case Analyst_Types.OPTIMAL_PATH:
+        data =
+          AnalystEntryData.getLocalAnalystEntryData(
+            this.props.language,
+            Analyst_Types.OPTIMAL_PATH,
+          ) || []
+        break
+      case Analyst_Types.CONNECTIVITY_ANALYSIS:
+        data =
+          AnalystEntryData.getLocalAnalystEntryData(
+            this.props.language,
+            Analyst_Types.CONNECTIVITY_ANALYSIS,
+          ) || []
+        break
+      case Analyst_Types.FIND_TSP_PATH:
+        data =
+          AnalystEntryData.getLocalAnalystEntryData(
+            this.props.language,
+            Analyst_Types.FIND_TSP_PATH,
+          ) || []
+        break
       case Analyst_Types.ONLINE_ANALYST:
         data = AnalystEntryData.getOnlineAnalystData(this.props.language) || []
         break
@@ -65,7 +86,7 @@ export default class AnalystListEntry extends Component {
 
   _renderItem = ({ item }) => {
     return (
-      <OverlayAnalystItem
+      <AnalystListItem
         title={item.title}
         icon={item.image}
         onPress={() => this._action(item)}

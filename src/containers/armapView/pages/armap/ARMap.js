@@ -5,6 +5,7 @@ import constants from '../../../workspace/constants'
 import styles from './styles'
 import analystData from './ARMapData'
 import { getLanguage } from '../../../../language'
+// eslint-disable-next-line
 import { SMDynamicArrowView } from 'imobile_for_reactnative'
 import { RNCamera } from 'react-native-camera'
 import { getPublicAssets } from '../../../../assets'

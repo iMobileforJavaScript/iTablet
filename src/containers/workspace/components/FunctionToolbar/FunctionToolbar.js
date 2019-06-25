@@ -11,7 +11,7 @@ import {
   Const,
   // ConstInfo,
   ConstPath,
-  // UserType,
+  UserType,
 } from '../../../../constants'
 import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
@@ -97,11 +97,11 @@ export default class FunctionToolbar extends React.Component {
     return false
   }
 
-  setVisible = visible => {
+  setVisible = (visible, immediately = false) => {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(31) : scaleSize(-200),
-      duration: Const.ANIMATED_DURATION,
+      duration: immediately ? 0 : Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
   }
@@ -615,7 +615,11 @@ export default class FunctionToolbar extends React.Component {
             })
 
             let userUDBPath, userUDBs
-            if (this.props.user && this.props.user.currentUser.userName) {
+            if (
+              this.props.user &&
+              this.props.user.currentUser.userName &&
+              this.props.user.currentUser.userType !== UserType.PROBATION_USER
+            ) {
               userUDBPath =
                 (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
                 this.props.user.currentUser.userName +
@@ -690,24 +694,28 @@ export default class FunctionToolbar extends React.Component {
       ToolbarBtnType.THEME_CANCEL,
       // ToolbarBtnType.THEME_COMMIT,
     ]
-    let customerUDBPath = await FileTools.appendingHomeDirectory(
-      ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-    )
-    let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
-      extension: 'udb',
-      type: 'file',
-    })
-    customerUDBs.forEach(item => {
-      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
-      item.info = {
-        infoType: 'mtime',
-        lastModifiedDate: item.mtime,
-      }
-      item.name = this.basename(item.path)
-    })
+    // let customerUDBPath = await FileTools.appendingHomeDirectory(
+    //   ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+    // )
+    // let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+    //   extension: 'udb',
+    //   type: 'file',
+    // })
+    // customerUDBs.forEach(item => {
+    //   item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+    //   item.info = {
+    //     infoType: 'mtime',
+    //     lastModifiedDate: item.mtime,
+    //   }
+    //   item.name = this.basename(item.path)
+    // })
 
     let userUDBPath, userUDBs
-    if (this.props.user && this.props.user.currentUser.userName) {
+    if (
+      this.props.user &&
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
       let userPath =
         (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
         this.props.user.currentUser.userName +
@@ -761,6 +769,21 @@ export default class FunctionToolbar extends React.Component {
         },
       ]
     } else {
+      let customerUDBPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+      )
+      let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+      customerUDBs.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+        item.name = this.basename(item.path)
+      })
       let customerPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath,
       )

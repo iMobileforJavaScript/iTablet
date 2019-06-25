@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
+import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList } from '../../components'
 import { ConstPath, ConstInfo, ConstAnalyst } from '../../../../constants'
 import { Toast } from '../../../../utils'
@@ -131,6 +132,7 @@ export default class OverlayAnalystView extends Component {
     Toast.show(ConstInfo.ANALYST_START)
     ;(async function() {
       try {
+        this.setLoading(true, getLanguage(this.props.language).Prompt.ANALYSING)
         let geoStyle = new GeoStyle()
         geoStyle.setLineColor(50, 240, 50)
         geoStyle.setLineStyle(0)
@@ -213,6 +215,7 @@ export default class OverlayAnalystView extends Component {
             )
             break
         }
+        this.setLoading(false)
 
         Toast.show(result ? ConstInfo.ANALYST_SUCCESS : ConstInfo.ANALYST_FAIL)
         if (result) {
@@ -220,11 +223,15 @@ export default class OverlayAnalystView extends Component {
           await this.props.getLayers()
 
           NavigationService.goBack('AnalystListEntry')
+          if (optionParameter.showResult) {
+            TabNavigationService.navigate('MapAnalystView')
+          }
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
           }
         }
       } catch (e) {
+        this.setLoading(false)
         Toast.show(ConstInfo.ANALYST_FAIL)
       }
     }.bind(this)())

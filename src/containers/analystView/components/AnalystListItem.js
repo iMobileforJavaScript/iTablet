@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class OverlayAnalystItem extends PureComponent {
+export default class AnalystListItem extends PureComponent {
   props: {
     title: string,
     icon: any,
@@ -69,7 +69,12 @@ export default class OverlayAnalystItem extends PureComponent {
             />
           </View>
         )}
-        <View style={styles.titleView}>
+        <View
+          style={[
+            styles.titleView,
+            !this.props.icon && { marginLeft: scaleSize(30) },
+          ]}
+        >
           <Text style={[styles.title, this.props.titleStyle]}>
             {this.props.title}
           </Text>

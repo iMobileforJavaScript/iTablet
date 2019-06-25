@@ -6,6 +6,45 @@ import { Analyst_Types } from '../../AnalystType'
 function getData(language) {
   let data = [
     {
+      key: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
+      title: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
+      action: (params = {}) => {
+        NavigationService.navigate('AnalystListEntry', {
+          ...params,
+          type: Analyst_Types.OPTIMAL_PATH,
+          title: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
+        })
+      },
+      size: 'large',
+      image: getThemeAssets().analyst.analysis_shortestpath,
+    },
+    {
+      key: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
+      title: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
+      size: 'large',
+      action: (params = {}) => {
+        NavigationService.navigate('AnalystListEntry', {
+          ...params,
+          type: Analyst_Types.CONNECTIVITY_ANALYSIS,
+          title: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
+        })
+      },
+      image: getThemeAssets().analyst.analysis_connectivity,
+    },
+    {
+      key: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
+      title: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
+      size: 'large',
+      action: (params = {}) => {
+        NavigationService.navigate('AnalystListEntry', {
+          ...params,
+          type: Analyst_Types.FIND_TSP_PATH,
+          title: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
+        })
+      },
+      image: getThemeAssets().analyst.analysis_traveling,
+    },
+    {
       key: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
       title: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
       action: (params = {}) => {

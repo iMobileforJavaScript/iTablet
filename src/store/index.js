@@ -16,6 +16,7 @@ const persistConfig = {
     'online',
     'device',
     'backActions',
+    'analyst',
   ],
 }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

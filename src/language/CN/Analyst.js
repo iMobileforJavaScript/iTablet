@@ -3,6 +3,11 @@ const Analyst_Modules = {
   BUFFER_ANALYST_2: '缓冲区分析',
   OVERLAY_ANALYST: '叠加分析',
   ONLINE_ANALYST: '在线分析',
+
+  OPTIMAL_PATH: '路径分析',
+  CONNECTIVITY_ANALYSIS: '连通性分析',
+  FIND_TSP_PATH: '商旅分析',
+  TRACING_ANALYSIS: '追踪分析',
 }
 
 const Analyst_Methods = {
@@ -26,6 +31,30 @@ const Analyst_Labels = {
   PREVIOUS: '上一步',
   ADD: '添加',
   Edit: '修改',
+
+  // local
+  USE_AN_EXISTING_NETWORK_DATASET: '使用现有网络数据集',
+  BUILD_A_NETWORK_DATASET: '新建二维网络数据集',
+  CHOOSE_DATA: '选择数据',
+  TOPOLOGY: '拓扑构网',
+  ADD_DATASET: '添加数据集',
+  DONE: '确定',
+  RESULT_FIELDS: '字段设置',
+  SPLIT_SETTINGS: '打断设置',
+  SPLIT_LINE_BY_POINT: '点自动打断线',
+  SPLIT_LINES_AT_INTERSECTION: '线线自动打断',
+
+  SET_START_STATION: '设置起点',
+  MIDDLE_STATIONS: '添加途经点',
+  SET_END_STATION: '设置终点',
+  LOCATION: '选中位置',
+  SET_AS_START_STATION: '设为起点',
+  SET_AS_END_STATION: '设为终点',
+  ADD_STATIONS: '添加站点',
+  ADD_BARRIER_NODES: '添加障碍点	',
+  ADD_NODES: '添加节点',
+  UPSTREAM_TRACKING: '上游追踪',
+  DOWNSTREAM_TRACKING: '下游追踪',
 
   BUFFER_ZONE: '缓冲区',
   MULTI_BUFFER_ZONE: '多重缓冲区',

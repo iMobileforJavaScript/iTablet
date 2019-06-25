@@ -103,7 +103,7 @@ const Prompt = {
 
   LAYER_CANNOT_CREATE_THEMATIC_MAP: '不支持由该图层创建专题图',
 
-  ANALYSING: '路径分析中',
+  ANALYSING: '分析中',
   CHOOSE_STARTING_POINT: '请输入起点',
   CHOOSE_DESTINATION: '请输入终点',
 
