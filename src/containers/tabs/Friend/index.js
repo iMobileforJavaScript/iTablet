@@ -14,7 +14,7 @@ import RecommendFriend from './RecommendFriend'
 import { openWorkspace, closeWorkspace } from '../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
-import { addChat, editChat } from '../../../models/chat'
+import { addChat, editChat, setConsumer } from '../../../models/chat'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -27,6 +27,7 @@ const mapDispatchToProps = {
   addChat,
   //addUnreadMessage,
   editChat,
+  setConsumer,
   openWorkspace,
   closeWorkspace,
 }

@@ -7,6 +7,7 @@ import { ModelUtils } from '../utils'
 // --------------------------------------------------
 export const ADD_CHAT = 'ADD_CHAT'
 export const EDIT_CHAT = 'EDIT_CHAT'
+export const SET_CONSUMER = 'SET_CONSUMER'
 // Actions
 // ---------------------------------.3-----------------
 export const addChat = (params = {}, cb = () => {}) => async dispatch => {
@@ -25,6 +26,13 @@ export const editChat = (params = {}, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const setConsumer = (params = {}, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_CONSUMER,
+    payload: params,
+  })
+  cb && cb()
+}
 /**
  * [
  *    {
@@ -132,6 +140,12 @@ export default handleActions(
       let message =
         allChat[payload.userId][payload.talkId].history[payload.msgId]
       Object.assign(message, payload.editItem)
+      return fromJS(allChat)
+    },
+    [`${SET_CONSUMER}`]: (state, { payload }) => {
+      let allChat = state.toJS() || {}
+      // console.log(allChat)
+      allChat.consumer = payload
       return fromJS(allChat)
     },
     [REHYDRATE]: (state, { payload }) => {

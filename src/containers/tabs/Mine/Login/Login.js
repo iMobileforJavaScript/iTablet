@@ -171,6 +171,8 @@ export default class Login extends React.Component {
         }
         //下载好友列表
         if (bGetUserInfo !== false) {
+          //连接消息服务时判断是否正在登陆
+          global.isLogging = true
           //优先加载在线的
           let userPath = await FileTools.appendingHomeDirectory(
             ConstPath.UserPath + userName + '/Data/Temp',
