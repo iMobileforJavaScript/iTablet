@@ -48,7 +48,10 @@ export default class PlotTab extends React.Component {
         key={item.code}
         onPress={() => this.action({ item, rowIndex, cellIndex })}
       >
-        <Image source={{ uri: item.path }} style={styles.listItemImg} />
+        <Image
+          source={{ uri: 'file://' + item.path }}
+          style={styles.listItemImg}
+        />
         <View style={styles.listItemContent}>
           <Text
             style={styles.listItemName}

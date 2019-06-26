@@ -58,6 +58,9 @@ import java.util.zip.ZipException;
 import org.apache.tools.zip.ZipOutputStream;
 import org.json.JSONObject;
 
+import static com.supermap.interfaces.mapping.SMap.importPlotLibDataMethod;
+import static com.supermap.interfaces.utils.SMFileUtil.copyFiles;
+
 public class FileTools extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "FileTools";
     public WritableArray fileArray = Arguments.createArray();
@@ -825,6 +828,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Color");
         createDirectory(dataPath + "Map");
         createDirectory(dataPath + "Media");
+        createDirectory(dataPath + "Plotting");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
         createDirectory(plottingExtDataPath);
@@ -838,6 +842,10 @@ public class FileTools extends ReactContextBaseJavaModule {
         String defaultZipData = "Template.zip";
         String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
+        String plotPath = plottingExtDataPath;
+        String plotFilePath = plotPath+"PlotLibData";
+        String commonPlotZipPath = commonPath + "PlotLibData.zip";
+        String plotZipData = "PlotLibData.zip";
 
         String srclic = "publicMap.txt";
         if (!Utils.fileIsExit(commonCachePath + srclic)) {
@@ -862,7 +870,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             workspace.dispose();
         }
 
-        Boolean isUnZip;
+        Boolean isUnZip,isUnZipPlot;
         if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
             if (Utils.fileIsExit(commonZipPath)) {
                 isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
@@ -875,8 +883,24 @@ public class FileTools extends ReactContextBaseJavaModule {
         } else {
             isUnZip = true;
         }
+        if (!Utils.fileIsExit(plotPath) || !Utils.fileIsExit(plotFilePath)) {
+            if (Utils.fileIsExit(commonPlotZipPath)) {
+                isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
+                System.out.print(isUnZipPlot ? "解压数据成功" : "解压数据失败");
+            } else {
+                Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, plotZipData);
+                isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
+                System.out.print(isUnZipPlot ? "解压数据成功" : "解压数据失败");
+            }
+            if(isUnZipPlot){
+                String toPath=dataPath+"Plotting/";
+                copyFiles(plotFilePath,toPath,"plot","Symbol","SymbolIcon");
+            }
+        } else {
+            isUnZipPlot = true;
+        }
 
-        return isUnZip;
+        return isUnZip&&isUnZipPlot;
     }
 
     /**

@@ -24,6 +24,8 @@ const RelativePath = {
   Datasource: Data + 'Datasource/',
   Scene: Data + 'Scene/',
   Template: Data + 'Template/',
+  Plotting: Data + 'Plotting/',
+  // PlottingExternalDefaultName: 'ExternalData/'+Plotting + '/标绘库',
   Symbol: Data + 'Symbol/',
   Attribute: Data + 'Attribute/',
   Workspace: Data + 'Workspace/',

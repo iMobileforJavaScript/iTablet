@@ -61,6 +61,7 @@ export default {
   BASE_MAP: '切换底图',
   ADD: '添加',
   MAP3DSHARE: '分享场景',
+  CHANGE_PLOT_LIB: '切换标绘',
 
   THEME_CLOSE: '关闭地图',
   THEME_SAVE: '保存地图',

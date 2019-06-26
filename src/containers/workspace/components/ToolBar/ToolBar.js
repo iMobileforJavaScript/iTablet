@@ -3946,6 +3946,9 @@ export default class ToolBar extends React.PureComponent {
       // 切换地图
       this.changeMap(item)
       this.props.getMapSetting()
+    } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
+      // 切换标绘库
+      this.changePlotLib(item)
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
       //专题图添加数据集
       // if (item.datasetName) {
@@ -4369,7 +4372,36 @@ export default class ToolBar extends React.PureComponent {
       },
     })
   }
-
+  /** 切换标绘库 **/
+  changePlotLib = async item => {
+    try {
+      this.props.setContainerLoading(
+        true,
+        getLanguage(this.props.language).Prompt.SWITCHING_PLOT_LIB,
+        //ConstInfo.MAP_CHANGING
+      )
+      let libIds = this.props.template.plotLibIds
+      if (libIds != undefined) {
+        let result = await SMap.removePlotSymbolLibraryArr(libIds)
+        if (result) {
+          let plotPath = await FileTools.appendingHomeDirectory(
+            // ConstPath.UserPath + ConstPath.RelativeFilePath.Plotting,
+            item.path,
+          )
+          this.props.getSymbolPlots({ path: plotPath })
+        }
+      }
+      Toast.show(
+        getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
+        //ConstInfo.CHANGE_MAP_TO + mapInfo.name
+      )
+      this.props.setContainerLoading(false)
+      this.setVisible(false)
+    } catch (e) {
+      Toast.show(ConstInfo.CHANGE_PLOT_LIB_FAILED)
+      this.props.setContainerLoading(false)
+    }
+  }
   /** 切换地图 **/
   changeMap = async item => {
     try {

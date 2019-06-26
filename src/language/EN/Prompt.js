@@ -37,6 +37,7 @@ const Prompt = {
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
+  SWITCHING_PLOT_LIB: 'Switching',
 
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
