@@ -49,6 +49,7 @@ import FingerMenu from './FingerMenu'
 import { ListItem } from './ListItem'
 import ImageViewer from './ImageViewer'
 import MediaViewer from './MediaViewer'
+import LinkageList from './LinkageList'
 
 export {
   Container,
@@ -107,4 +108,5 @@ export {
   ListItem,
   ImageViewer,
   MediaViewer,
+  LinkageList,
 }

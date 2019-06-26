@@ -60,6 +60,7 @@ const mapStateToProps = state => ({
   device: state.device.toJS().device,
   online: state.online.toJS(),
   mapLegend: state.setting.toJS().mapLegend,
+  analyst: state.analyst.toJS(),
 })
 
 const mapDispatchToProps = {

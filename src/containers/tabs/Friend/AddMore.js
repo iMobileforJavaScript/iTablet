@@ -100,7 +100,7 @@ export default class AddMore extends React.Component {
                 {/* //添加好友 */}
               </Text>
             </TouchableOpacity>
-
+            <View style={styles.seperator} />
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
@@ -114,7 +114,7 @@ export default class AddMore extends React.Component {
                 {/* // 发起群聊 */}
               </Text>
             </TouchableOpacity>
-
+            <View style={styles.seperator} />
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
@@ -150,12 +150,12 @@ const styles = StyleSheet.create({
     top: Top,
     padding: scaleSize(5),
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     borderRadius: 3,
   },
   itemView: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flex: 1,
     marginTop: scaleSize(5),
@@ -165,10 +165,15 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: '#fff',
-    fontSize: scaleSize(30),
+    fontSize: scaleSize(24),
   },
   imgStyle: {
     width: 20,
     height: 20,
+  },
+  seperator: {
+    height: scaleSize(1),
+    marginLeft: scaleSize(10),
+    backgroundColor: '#fff',
   },
 })

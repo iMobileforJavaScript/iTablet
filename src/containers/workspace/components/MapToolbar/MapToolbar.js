@@ -108,6 +108,54 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
+      case constants.MAP_AR:
+        list = [
+          {
+            key: 'ARMap',
+            title: getLanguage(global.language).Map_Label.MAP,
+            //'地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('ARMap', { type })
+            },
+          },
+          {
+            key: 'LayerARManager',
+            title: getLanguage(global.language).Map_Label.LAYER,
+            //'图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerARManager', { type })
+            },
+          },
+          {
+            key: 'LayerARAttribute',
+            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+            //'属性',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerARAttribute', { type })
+            },
+          },
+          {
+            key: 'MapARSetting',
+            title: getLanguage(global.language).Map_Label.SETTING,
+            //'设置',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapARSetting', { type })
+            },
+          },
+        ]
+        break
       case constants.MAP_ANALYST:
         list = [
           {

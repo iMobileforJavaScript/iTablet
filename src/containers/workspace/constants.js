@@ -161,6 +161,7 @@ export default {
   MAP_PLOTTING: 'MAP_PLOTTING',
   MAP_ANALYST: 'MAP_ANALYST',
   NETWORK: 'NETWORK',
+  MAP_AR: 'MAP_AR',
 
   // ==================分享===================
   QQ: 'QQ',

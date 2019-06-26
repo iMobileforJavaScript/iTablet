@@ -1,5 +1,6 @@
 import AnalystItem from './AnalystItem'
-import OverlayAnalystItem from './OverlayAnalystItem'
+import AnalystListItem from './AnalystListItem'
 import PopModalList from './PopModalList'
+import PopSwitchList from './PopSwitchList'
 
-export { AnalystItem, OverlayAnalystItem, PopModalList }
+export { AnalystItem, AnalystListItem, PopModalList, PopSwitchList }

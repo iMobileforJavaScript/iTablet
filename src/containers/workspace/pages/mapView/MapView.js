@@ -23,16 +23,20 @@ import {
   MenuAlertDialog,
   AlertDialog,
   OverlayView,
+  AnalystMapButtons,
+  AnalystMapToolbar,
 } from '../../components'
 import {
   Container,
   MTBtn,
+  TextBtn,
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
   InputDialog,
   PopModal,
   SurfaceView,
+  SearchBar,
 } from '../../../../components'
 import { Utils } from '../../util'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
@@ -41,6 +45,7 @@ import { FileTools } from '../../../../native'
 import {
   ConstPath,
   ConstToolType,
+  TouchType,
   ConstInfo,
   getHeaderTitle,
 } from '../../../../constants'
@@ -51,8 +56,6 @@ import { Platform, View, Text, InteractionManager } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
-//eslint-disable-next-line
-import { HEIGHT } from '../../../../utils/constUtil'
 import ScaleView from '../../components/ScaleView/ScaleView'
 
 const markerTag = 117868
@@ -80,6 +83,7 @@ export default class MapView extends React.Component {
     collection: PropTypes.object,
     device: PropTypes.object,
     online: PropTypes.object,
+    analyst: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -125,7 +129,6 @@ export default class MapView extends React.Component {
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
-    this.coworkMode = params && params.coworkMode
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -149,7 +152,7 @@ export default class MapView extends React.Component {
     //     ? null
     //     : wsName.lastIndexOf('.') > 0 &&
     //       wsName.substring(0, wsName.lastIndexOf('.'))
-    this.backAction = null
+    this.backAction = (params && params.backAction) || null
     this.state = {
       showMap: false, // 控制地图初始化显示
       data: params ? params.data : [],
@@ -193,6 +196,7 @@ export default class MapView extends React.Component {
     ]
 
     this.fullMap = false
+    this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
   }
 
   componentDidMount() {
@@ -251,6 +255,47 @@ export default class MapView extends React.Component {
       // })
     }
 
+    // 网络分析模式下
+    if (this.props.analyst.params) {
+      this.container && this.container.setHeaderVisible(false)
+      this.container && this.container.setBottomVisible(false)
+      // 网络分析模式下，设置返回按钮事件
+      if (
+        JSON.stringify(prevProps.analyst.params) !==
+        JSON.stringify(this.props.analyst.params)
+      ) {
+        this.backAction =
+          (this.props.navigation.state.params &&
+            this.props.navigation.state.params.backAction) ||
+          null
+      }
+      // 网络分析模式下，地图控制器 横竖屏切换位置变化
+      if (this.props.device.orientation !== prevProps.device.orientation) {
+        if (this.analystRecommendVisible) {
+          if (this.props.device.orientation === 'LANDSCAPE') {
+            this.mapController.reset()
+          } else {
+            this.mapController.move({ bottom: 200 })
+          }
+        }
+      }
+    } else if (prevProps.analyst.params && !this.props.analyst.params) {
+      this.container && this.container.setHeaderVisible(true)
+      this.container && this.container.setBottomVisible(true)
+    }
+    if (
+      this.props.device.orientation !== prevProps.device.orientation &&
+      this.props.analyst.params
+    ) {
+      if (this.analystRecommendVisible) {
+        if (this.props.device.orientation === 'LANDSCAPE') {
+          this.mapController.reset()
+        } else {
+          this.mapController.move({ bottom: 200 })
+        }
+      }
+    }
+
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
     //   let bottom = this.popList.state.subPopShow
@@ -281,7 +326,7 @@ export default class MapView extends React.Component {
         key: this.props.navigation.state.routeName,
       })
     }
-    this.props.setMapLegend(false)
+    // this.props.setMapLegend(false)
 
     // 移除多媒体采集监听
     SMediaCollector.removeListener()
@@ -290,6 +335,10 @@ export default class MapView extends React.Component {
     SMediaCollector.removeMedias()
 
     this.showMarker && SMap.deleteMarker(markerTag)
+
+    if (GLOBAL.MapTabNavigator) {
+      GLOBAL.MapTabNavigator = null
+    }
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -834,6 +883,14 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    // 优先处理其他界面跳转到MapView传来的返回事件
+    if (this.backAction && typeof this.backAction === 'function') {
+      this.backAction()
+      this.backAction = null
+      this.mapController.reset()
+      return
+    }
+
     if (Platform.OS === 'android') {
       if (this.toolBox && this.toolBox.getState().isShow) {
         this.toolBox.close()
@@ -850,32 +907,44 @@ export default class MapView extends React.Component {
       }
     }
 
-    if (this.coworkMode) {
+    if (global.coworkMode) {
       // NavigationService.navigate('CoworkChat')
       NavigationService.navigate('Chat')
       return true
     }
 
-    this.backAction = async () => {
-      try {
-        this.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.CLOSING,
-          //'正在关闭地图'
-        )
-        await this.props.closeMap()
-        GLOBAL.clearMapData()
-        this.setLoading(false)
-        NavigationService.goBack()
-      } catch (e) {
-        this.setLoading(false)
-      }
-    }
-    SMap.mapIsModified().then(result => {
+    // this.backAction = async () => {
+    //   try {
+    //     this.setLoading(
+    //       true,
+    //       getLanguage(this.props.language).Prompt.CLOSING,
+    //       //'正在关闭地图'
+    //     )
+    //     await this.props.closeMap()
+    //     GLOBAL.clearMapData()
+    //     this.setLoading(false)
+    //     NavigationService.goBack()
+    //   } catch (e) {
+    //     this.setLoading(false)
+    //   }
+    // }
+    SMap.mapIsModified().then(async result => {
       if (result && !this.isExample) {
         this.setSaveViewVisible(true)
       } else {
-        this.backAction()
+        try {
+          this.setLoading(
+            true,
+            getLanguage(this.props.language).Prompt.CLOSING,
+            //'正在关闭地图'
+          )
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setLoading(false)
+          NavigationService.goBack()
+        } catch (e) {
+          this.setLoading(false)
+        }
       }
     })
     this.props.setCurrentAttribute({})
@@ -890,61 +959,52 @@ export default class MapView extends React.Component {
   _addMap = () => {
     (async function() {
       try {
-        if (this.wsData === null || this.wsData === undefined) {
-          this.setLoading(false)
-          return
-        }
+        // if (this.wsData === null || this.wsData === undefined) {
+        //   this.setLoading(false)
+        //   return
+        // }
 
-        if (this.wsData instanceof Array) {
-          for (let i = 0; i < this.wsData.length; i++) {
-            let item = this.wsData[i]
-            if (item === null) continue
-            if (item.type === 'Workspace') {
-              await this._openWorkspace(
-                this.wsData[i],
-                this.wsData[i].layerIndex,
-              )
-            } else if (item.type === 'Datasource') {
-              await this._openDatasource(
-                this.wsData[i],
-                this.wsData[i].layerIndex,
-              )
-            } else if (item.type === 'Map') {
-              await this._openMap(this.wsData[i])
+        if (this.wsData) {
+          if (this.wsData instanceof Array) {
+            for (let i = 0; i < this.wsData.length; i++) {
+              let item = this.wsData[i]
+              if (item === null) continue
+              if (item.type === 'Workspace') {
+                await this._openWorkspace(
+                  this.wsData[i],
+                  this.wsData[i].layerIndex,
+                )
+              } else if (item.type === 'Datasource') {
+                await this._openDatasource(
+                  this.wsData[i],
+                  this.wsData[i].layerIndex,
+                )
+              } else if (item.type === 'Map') {
+                await this._openMap(this.wsData[i])
+              }
+              // else if (item.type === 'LastMap') {
+              //   // 打开最近地图
+              //   // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
+              //   await this._openLatestMap(this.wsData[i].DSParams)
+              // }
             }
-            // else if (item.type === 'LastMap') {
+          } else {
+            if (this.wsData.type === 'Workspace') {
+              await this._openWorkspace(this.wsData, this.wsData.layerIndex)
+            } else if (this.wsData.type === 'Datasource') {
+              await this._openDatasource(this.wsData, this.wsData.layerIndex)
+            } else if (this.wsData.type === 'Map') {
+              await this._openMap(this.wsData)
+            }
+            // else if (this.wsData.type === 'LastMap') {
             //   // 打开最近地图
             //   // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
-            //   await this._openLatestMap(this.wsData[i].DSParams)
+            //   await this._openLatestMap(this.wsData.DSParams)
             // }
           }
-        } else {
-          if (this.wsData.type === 'Workspace') {
-            await this._openWorkspace(this.wsData, this.wsData.layerIndex)
-          } else if (this.wsData.type === 'Datasource') {
-            await this._openDatasource(this.wsData, this.wsData.layerIndex)
-          } else if (this.wsData.type === 'Map') {
-            await this._openMap(this.wsData)
-          }
-          // else if (this.wsData.type === 'LastMap') {
-          //   // 打开最近地图
-          //   // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
-          //   await this._openLatestMap(this.wsData.DSParams)
-          // }
         }
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
-
-        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
-        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
-          dataList => {
-            dataList.forEach(item => {
-              if (item.isVisible) {
-                SMediaCollector.showMedia(item.name)
-              }
-            })
-          },
-        )
         // 获取图层列表
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },
@@ -972,26 +1032,42 @@ export default class MapView extends React.Component {
             }
           },
         )
+
+        // 检查是否有可显示的标注图层，并把多媒体标注显示到地图上
+        SMap.getTaggingLayers(this.props.user.currentUser.userName).then(
+          dataList => {
+            dataList.forEach(item => {
+              if (item.isVisible) {
+                SMediaCollector.showMedia(item.name)
+              }
+            })
+          },
+        )
+
         this._addGeometrySelectedListener()
         this.setLoading(false)
+
+        setGestureDetectorListener({ ...this.props })
+        GLOBAL.TouchType = TouchType.NORMAL
+
+        SMap.openTaggingDataset(this.props.user.currentUser.userName)
+
+        GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
+          this.props.user.currentUser.userName,
+        )
+
         //地图打开后去获取图例数据
         GLOBAL.scaleView.getInitialData()
+
+        this.showMarker &&
+          SMap.showMarker(
+            this.showMarker.longitude,
+            this.showMarker.latitude,
+            markerTag,
+          )
       } catch (e) {
         this.setLoading(false)
       }
-      this.showMarker &&
-        SMap.showMarker(
-          this.showMarker.longitude,
-          this.showMarker.latitude,
-          markerTag,
-        )
-      SMap.openTaggingDataset(this.props.user.currentUser.userName)
-
-      GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
-        this.props.user.currentUser.userName,
-      )
-      setGestureDetectorListener({ ...this.props })
-      GLOBAL.TouchType = ConstToolType.NORMAL
     }.bind(this)())
   }
 
@@ -1163,6 +1239,57 @@ export default class MapView extends React.Component {
         navigation={this.props.navigation}
         initIndex={0}
         type={this.type}
+      />
+    )
+  }
+
+  /** 地图分析模式左侧按钮 **/
+  renderAnalystMapButtons = () => {
+    return (
+      <AnalystMapButtons
+        language={this.props.language}
+        type={this.props.analyst.params.type}
+      />
+    )
+  }
+
+  /** 地图分析模式底部推荐地点滑动列表 **/
+  // renderAnalystMapRecommend = () => {
+  //   return (
+  //     <AnalystMapRecommend
+  //       ref={ref => this.analystRecommend = ref}
+  //       orientation={this.props.device.orientation}
+  //       data={[
+  //         {
+  //           title: '1111',
+  //           subTitle: '11111111',
+  //         },
+  //         {
+  //           title: '2222',
+  //           subTitle: '2222222',
+  //         },
+  //         {
+  //           title: '3333',
+  //           subTitle: '33333333',
+  //         },
+  //       ]}
+  //       language={this.props.language}
+  //     />
+  //   )
+  // }
+
+  /** 地图分析模式底部工具栏 **/
+  renderAnalystMapToolbar = () => {
+    return (
+      <AnalystMapToolbar
+        back={() => {
+          let action =
+            (this.props.navigation.state.params &&
+              this.props.navigation.state.params.backAction) ||
+            null
+          action && action()
+        }}
+        analyst={() => {}}
       />
     )
   }
@@ -1372,25 +1499,57 @@ export default class MapView extends React.Component {
     )
   }
 
+  renderSearchBar = () => {
+    if (!this.props.analyst.params) return null
+    return (
+      <SearchBar
+        ref={ref => (this.searchBar = ref)}
+        onSubmitEditing={searchKey => {
+          this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
+          this.search(searchKey)
+        }}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+        //{'请输入搜索关键字'}
+      />
+    )
+  }
+
+  renderHeaderRight = () => {
+    if (this.isExample) return null
+    if (this.props.analyst.params) {
+      return [
+        <TextBtn
+          key={'analyst'}
+          btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+          textStyle={styles.headerBtnTitle}
+          btnClick={() => {
+            if (this.props.analyst.params) {
+              this.analystRecommendVisible = !this.analystRecommendVisible
+              this.analystRecommend.setVisible(this.analystRecommendVisible)
+              if (this.props.device.orientation !== 'LANDSCAPE') {
+                if (this.analystRecommendVisible) {
+                  this.mapController.move({ bottom: 200 })
+                } else {
+                  this.mapController.reset()
+                }
+              }
+              return
+            }
+          }}
+        />,
+      ]
+    }
+    return [
+      <MTBtn
+        key={'undo'}
+        image={getPublicAssets().common.icon_undo}
+        imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+        onPress={this.showUndoView}
+      />,
+    ]
+  }
+
   render() {
-    {
-      /*<MTBtn*/
-    }
-    {
-      /*key={'search'}*/
-    }
-    {
-      /*image={getPublicAssets().common.icon_search}*/
-    }
-    {
-      /*imageStyle={styles.headerBtn}*/
-    }
-    {
-      /*onPress={this.goToSearch}*/
-    }
-    {
-      /*/>,*/
-    }
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1400,24 +1559,15 @@ export default class MapView extends React.Component {
           // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
-          headerRight: !this.isExample
-            ? [
-              <MTBtn
-                key={'undo'}
-                image={getPublicAssets().common.icon_undo}
-                imageStyle={[
-                  styles.headerBtn,
-                  { marginRight: scaleSize(15) },
-                ]}
-                onPress={this.showUndoView}
-              />,
-            ]
-            : null,
+          headerCenter: this.renderSearchBar(),
+          headerRight: this.renderHeaderRight(),
         }}
-        bottomBar={(!this.isExample || this.coworkMode) && this.renderToolBar()}
+        bottomBar={
+          !this.isExample && !this.props.analyst.params && this.renderToolBar()
+        }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && (
+        {this.props.mapLegend && GLOBAL.Type === constants.MAP_THEME && (
           <RNLegendView
             device={this.props.device}
             language={this.props.language}
@@ -1433,11 +1583,26 @@ export default class MapView extends React.Component {
         )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
-        {!this.isExample && this.renderFunctionToolbar()}
-        {!this.isExample && this.renderOverLayer()}
-        {!this.isExample && this.renderTool()}
-        {!this.isExample && this.renderMenuDialog()}
-        {this.state.measureShow && this.renderMeasureLabel()}
+        {!this.isExample &&
+          this.props.analyst.params &&
+          this.renderAnalystMapButtons()}
+        {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
+        {!this.isExample &&
+          this.props.analyst.params &&
+          this.renderAnalystMapToolbar()}
+        {!this.isExample &&
+          !this.props.analyst.params &&
+          this.renderFunctionToolbar()}
+        {!this.isExample &&
+          !this.props.analyst.params &&
+          this.renderOverLayer()}
+        {!this.isExample && !this.props.analyst.params && this.renderTool()}
+        {!this.isExample &&
+          !this.props.analyst.params &&
+          this.renderMenuDialog()}
+        {this.state.measureShow &&
+          !this.props.analyst.params &&
+          this.renderMeasureLabel()}
         <ScaleView
           device={this.props.device}
           language={this.props.language}

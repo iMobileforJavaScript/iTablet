@@ -347,12 +347,20 @@ export default class LayerManager_tolbar extends React.Component {
       section.title === getLanguage(global.language).Map_Layer.LAYERS_REMOVE
     ) {
       //'移除'
-
       (async function() {
         await SMap.removeLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
+    } else if (
+      section.title ===
+      getLanguage(global.language).Map_Layer.LAYERS_FULL_VIEW_LAYER
+    ) {
+      //'全幅显示当前图层') {
+      this.setVisible(false)
+      SMap.setLayerFullView(this.state.layerdata.name)
+      // eslint-disable-next-line react/prop-types
+      this.props.navigation.navigate('MapView')
     } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
@@ -493,55 +501,57 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
-    ) {
-      //''上移') {
-      (async function() {
-        await SMap.moveUpLayer(this.state.layerdata.name)
-        await this.props.getLayers()
-      }.bind(this)())
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN
-    ) {
-      //''下移') {
-      (async function() {
-        await SMap.moveDownLayer(this.state.layerdata.name)
-        await this.props.getLayers()
-      }.bind(this)())
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_TOP
-    ) {
-      //''置顶') {
-      (async function() {
-        await SMap.moveToTop(this.state.layerdata.name)
-        let count = await SMap.getTaggingLayerCount(
-          this.props.user.currentUser.userName,
-        )
-        for (let i = 0; i < count; i++) {
-          await SMap.moveDownLayer(this.state.layerdata.name)
-        }
-        await this.props.getLayers()
-        this.setVisible(false)
-      }.bind(this)())
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
-    ) {
-      //''置底') {
-      (async function() {
-        await SMap.moveToBottom(this.state.layerdata.name)
-      }.bind(this)())
-      SMap.moveUpLayer(this.state.layerdata.name)
-      if (
-        this.props.layers[this.props.layers.length - 1].name.indexOf(
-          'vec@TD',
-        ) >= 0
-      ) {
-        SMap.moveUpLayer(this.state.layerdata.name)
-      }
-      this.props.getLayers()
-      this.setVisible(false)
-    } else if (
+    }
+    // else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
+    // ) {
+    //   //''上移') {
+    //   (async function() {
+    //     await SMap.moveUpLayer(this.state.layerdata.name)
+    //     await this.props.getLayers()
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN
+    // ) {
+    //   //''下移') {
+    //   (async function() {
+    //     await SMap.moveDownLayer(this.state.layerdata.name)
+    //     await this.props.getLayers()
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_TOP
+    // ) {
+    //   //''置顶') {
+    //   (async function() {
+    //     await SMap.moveToTop(this.state.layerdata.name)
+    //     let count = await SMap.getTaggingLayerCount(
+    //       this.props.user.currentUser.userName,
+    //     )
+    //     for (let i = 0; i < count; i++) {
+    //       await SMap.moveDownLayer(this.state.layerdata.name)
+    //     }
+    //     await this.props.getLayers()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
+    // ) {
+    //   //''置底') {
+    //   (async function() {
+    //     await SMap.moveToBottom(this.state.layerdata.name)
+    //   }.bind(this)())
+    //   SMap.moveUpLayer(this.state.layerdata.name)
+    //   if (
+    //     this.props.layers[this.props.layers.length - 1].name.indexOf(
+    //       'vec@TD',
+    //     ) >= 0
+    //   ) {
+    //     SMap.moveUpLayer(this.state.layerdata.name)
+    //   }
+    //   this.props.getLayers()
+    //   this.setVisible(false)
+    // }
+    else if (
       section.title ===
       getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
     ) {

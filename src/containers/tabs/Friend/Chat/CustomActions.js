@@ -44,19 +44,19 @@ const ICONS = context => [
       context.setModalVisible()
     },
   },
-  {
-    name: require('../../../../assets/lightTheme/friend/app_chat_data.png'),
-    type: 'ionicon',
-    text: getLanguage(global.language).Friends.TEMPLATE,
-    onPress: () => {
-      NavigationService.navigate('MyModule', {
-        formChat: true,
-        // eslint-disable-next-line
-        chatCallBack: _path => {},
-      })
-      context.setModalVisible()
-    },
-  },
+  // {
+  //   name: require('../../../../assets/lightTheme/friend/app_chat_data.png'),
+  //   type: 'ionicon',
+  //   text: getLanguage(global.language).Friends.TEMPLATE,
+  //   onPress: () => {
+  //     NavigationService.navigate('MyModule', {
+  //       formChat: true,
+  //       // eslint-disable-next-line
+  //       chatCallBack: _path => {},
+  //     })
+  //     context.setModalVisible()
+  //   },
+  // },
   {
     name: require('../../../../assets/lightTheme/friend/app_chat_location.png'),
     type: 'material',

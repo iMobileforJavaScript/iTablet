@@ -48,12 +48,12 @@ export default class Container extends PureComponent {
     this.bottomVisible = true
   }
 
-  setHeaderVisible = visible => {
+  setHeaderVisible = (visible, immediately = false) => {
     if (this.props.header) {
       if (this.headerVisible === visible) return
       Animated.timing(this.state.top, {
         toValue: visible ? 0 : scaleSize(-200),
-        duration: Const.ANIMATED_DURATION,
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
       this.headerVisible = visible
     } else {
@@ -61,11 +61,11 @@ export default class Container extends PureComponent {
     }
   }
 
-  setBottomVisible = visible => {
+  setBottomVisible = (visible, immediately = false) => {
     if (this.bottomVisible === visible) return
     Animated.timing(this.state.bottom, {
       toValue: visible ? 0 : scaleSize(-200),
-      duration: Const.ANIMATED_DURATION,
+      duration: immediately ? 0 : Const.ANIMATED_DURATION,
     }).start()
     this.bottomVisible = visible
   }

@@ -13,10 +13,15 @@ import styles from '../styles'
 export default class MapCutAddLayer extends React.Component {
   props: {
     layers: Array,
+    confirmTitle: String,
+    cancelTitle: String,
     configAction?: () => {},
   }
 
-  static defaultProps = {}
+  static defaultProps = {
+    confirmTitle: '确定',
+    cancelTitle: '取消',
+  }
 
   constructor(props) {
     super(props)
@@ -69,7 +74,7 @@ export default class MapCutAddLayer extends React.Component {
             this.addLayerModal && this.addLayerModal.setVisible(false)
           }
         >
-          <Text style={styles.closeText}>取消</Text>
+          <Text style={styles.closeText}>{this.props.cancelTitle}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.settingBtn}
@@ -84,7 +89,7 @@ export default class MapCutAddLayer extends React.Component {
             })
           }}
         >
-          <Text style={styles.closeText}>确定</Text>
+          <Text style={styles.closeText}>{this.props.confirmTitle}</Text>
         </TouchableOpacity>
       </View>
     )

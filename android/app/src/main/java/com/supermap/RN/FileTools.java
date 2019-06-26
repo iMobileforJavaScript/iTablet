@@ -49,6 +49,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,7 +64,6 @@ import static com.supermap.interfaces.utils.SMFileUtil.copyFiles;
 
 public class FileTools extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "FileTools";
-    public WritableArray fileArray = Arguments.createArray();
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
@@ -210,34 +210,58 @@ public class FileTools extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPathListByFilterDeep(String path, String extensions, Promise promise){
        try{
-           getFileAtDirectoryWithPath(path,extensions);
+           String[] extensionArray = extensions.split(",");
+           WritableArray fileArray = Arguments.createArray();
+           LinkedList list = new LinkedList();
+           File dir = new File(path);
+           File []files = dir.listFiles();
+           for(File f : files){
+               String fileName = f.getName();
+               String filePath = f.getAbsolutePath();
+
+               if(f.isDirectory()){
+                   list.add(f);
+               }else {
+                   for(int j = 0; j < extensionArray.length; j++){
+                       if(fileName.endsWith(extensionArray[j])){
+                           WritableMap map = Arguments.createMap();
+                           map.putString("path", filePath);
+                           map.putString("name", fileName);
+                           fileArray.pushMap(map);
+                       }
+                   }
+               }
+           }
+           File tmpFile;
+           while (!list.isEmpty()){
+               tmpFile = (File)list.removeFirst();
+               if(tmpFile.isDirectory()){
+                   files = tmpFile.listFiles();
+                   if(files == null)
+                       continue;
+                   for (File file : files){
+                       String fileName = file.getName();
+                       String filePath = file.getAbsolutePath();
+                       if(file.isDirectory()){
+                           list.add(file);
+                       }else {
+                           for(int j = 0; j < extensionArray.length; j++){
+                               if(fileName.endsWith(extensionArray[j])){
+                                   WritableMap map = Arguments.createMap();
+                                   map.putString("path", filePath);
+                                   map.putString("name", fileName);
+                                   fileArray.pushMap(map);
+                               }
+                           }
+                       }
+                   }
+               }
+           }
            promise.resolve(fileArray);
-           fileArray = null;
        }catch (Exception e){
            promise.reject(e);
        }
 
-    }
-    public void getFileAtDirectoryWithPath(String path, String extensions){
-        String[] extensionArray = extensions.split(",");
-        File dir = new File(path);
-        File[] files = dir.listFiles();
-        for(File f : files){
-            String fileName = f.getName();
-            String filePath = f.getAbsolutePath();
-            if(f.isDirectory()){
-                getFileAtDirectoryWithPath(filePath,extensions);
-            }else {
-                for(int j = 0; j < extensionArray.length; j++){
-                    if(fileName.endsWith(extensionArray[j])){
-                        WritableMap map = Arguments.createMap();
-                        map.putString("path", filePath);
-                        map.putString("name", fileName);
-                        fileArray.pushMap(map);
-                    }
-                }
-            }
-        }
     }
     /**
      * 读取文件的修改时间

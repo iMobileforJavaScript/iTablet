@@ -212,6 +212,21 @@ function getFileNameWithOutExt(text) {
   return text.replace('.' + json[json.length - 1], '')
 }
 
+//检查ip+port是否合法
+function checkIpPort(ip) {
+  let re = /^(\d+)\.(\d+)\.(\d+)\.(\d+):(\d{3,4})$/ //正则表达式
+  if (re.test(ip)) {
+    if (
+      RegExp.$1 < 256 &&
+      RegExp.$2 < 256 &&
+      RegExp.$3 < 256 &&
+      RegExp.$4 < 256
+    )
+      return true
+  }
+  return false
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -227,4 +242,5 @@ export default {
   swapArray,
   cloneObj,
   getFileNameWithOutExt,
+  checkIpPort,
 }

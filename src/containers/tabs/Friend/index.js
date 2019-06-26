@@ -5,6 +5,7 @@ import Friend from './Friend'
 import Chat from './Chat'
 import ManageFriend from './Chat/ManageFriend'
 import ManageGroup from './Chat/ManageGroup'
+import SelectModule from './Chat/SelectModule'
 import AddFriend from './AddFriend'
 import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
@@ -13,7 +14,7 @@ import RecommendFriend from './RecommendFriend'
 import { openWorkspace, closeWorkspace } from '../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
-import { addChat, editChat } from '../../../models/chat'
+import { addChat, editChat, setConsumer } from '../../../models/chat'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -26,6 +27,7 @@ const mapDispatchToProps = {
   addChat,
   //addUnreadMessage,
   editChat,
+  setConsumer,
   openWorkspace,
   closeWorkspace,
 }
@@ -42,5 +44,6 @@ export {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  SelectModule,
   GroupMemberList,
 }

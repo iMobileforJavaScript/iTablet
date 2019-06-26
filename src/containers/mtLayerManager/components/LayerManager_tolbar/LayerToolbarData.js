@@ -6,6 +6,11 @@ function layersetting(param) {
       title: '',
       data: [
         {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
+        {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
           image: require('../../../../assets/layerToolbar/layer_this.png'),
@@ -29,22 +34,22 @@ function layersetting(param) {
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
-          image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
-          image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_TOP,
-          image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
-          image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+        // },
         // {
         //   title: '复制',
         //   data: [],
@@ -101,6 +106,11 @@ function layerThemeSetting(param) {
       //'设置为当前图层',
       data: [
         {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
+        {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
           image: require('../../../../assets/layerToolbar/layer_this.png'),
@@ -120,22 +130,22 @@ function layerThemeSetting(param) {
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
-          image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
-          image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_TOP,
-          image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
-          image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+        // },
         {
           title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
           //'移除',
@@ -151,6 +161,11 @@ function layerThemeSettings(param) {
     {
       title: '',
       data: [
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
         {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
@@ -171,22 +186,22 @@ function layerThemeSettings(param) {
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
-          image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
-          image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_TOP,
-          image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
-          image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+        // },
         {
           title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
           //'移除',
@@ -388,6 +403,11 @@ function layerCollectionSetting(param) {
       title: '',
       data: [
         {
+          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
+        {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           //'设置为当前图层',
           image: require('../../../../assets/layerToolbar/layer_this.png'),
@@ -402,22 +422,22 @@ function layerCollectionSetting(param) {
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
-          image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
-          image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_TOP,
-          image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
-          image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+        // },
+        // {
+        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+        // },
         {
           title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
           //'移除',

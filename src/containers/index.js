@@ -24,6 +24,7 @@ import {
   RecommendFriend,
   ManageFriend,
   ManageGroup,
+  SelectModule,
   GroupMemberList,
   MyLabel,
   MyBaseMap,
@@ -60,7 +61,13 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-import { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs } from './workspace'
+import {
+  MapTabs,
+  Map3DTabs,
+  MapAnalystTabs,
+  CoworkTabs,
+  MapARTabs,
+} from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
@@ -79,6 +86,8 @@ import {
   IServerLoginPage,
   SourceDatasetPage,
   AnalystRangePage,
+  WeightAndStatistic,
+  LocalAnalystView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -112,6 +121,12 @@ export default StackNavigator(
     },
     MapAnalystTabs: {
       screen: MapAnalystTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapARTabs: {
+      screen: MapARTabs,
       navigationOptions: {
         header: null,
       },
@@ -367,6 +382,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    SelectModule: {
+      screen: SelectModule,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     GroupMemberList: {
       screen: GroupMemberList,
       navigationOptions: {
@@ -598,6 +620,20 @@ export default StackNavigator(
     },
     AnalystRangePage: {
       screen: AnalystRangePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    WeightAndStatistic: {
+      screen: WeightAndStatistic,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LocalAnalystView: {
+      screen: LocalAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

@@ -12,6 +12,8 @@ import { SMap, SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
 
+const DEFAULT_BOTTOM = scaleSize(135)
+
 export default class MapController extends React.Component {
   props: {
     style?: any,
@@ -23,8 +25,10 @@ export default class MapController extends React.Component {
   constructor(props) {
     super(props)
     this.deg = 0
+    this.bottom = DEFAULT_BOTTOM
     this.state = {
       left: new Animated.Value(scaleSize(34)),
+      bottom: new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),
     }
   }
@@ -40,17 +44,37 @@ export default class MapController extends React.Component {
     }
   }
 
-  setVisible = visible => {
+  setVisible = (visible, immediately = false) => {
     if (visible) {
       Animated.timing(this.state.left, {
         toValue: scaleSize(20),
-        duration: Const.ANIMATED_DURATION,
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
     } else {
       Animated.timing(this.state.left, {
         toValue: scaleSize(-200),
-        duration: Const.ANIMATED_DURATION,
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
+    }
+  }
+
+  // 归位
+  reset = (immediately = false) => {
+    Animated.timing(this.state.bottom, {
+      toValue: scaleSize(DEFAULT_BOTTOM),
+      duration: immediately ? 0 : Const.ANIMATED_DURATION,
+    }).start()
+    this.bottom = DEFAULT_BOTTOM
+  }
+
+  // 移动
+  move = ({ bottom }, immediately = false) => {
+    if (bottom !== undefined) {
+      Animated.timing(this.state.bottom, {
+        toValue: scaleSize(this.bottom + bottom),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+      this.bottom = bottom
     }
   }
 
@@ -160,7 +184,12 @@ export default class MapController extends React.Component {
   render() {
     return (
       <Animated.View
-        style={[styles.container, this.props.style, { left: this.state.left }]}
+        style={[
+          styles.container,
+          this.props.style,
+          { left: this.state.left },
+          { bottom: this.state.bottom },
+        ]}
       >
         {this.renderLocation()}
         {this.renderCompass()}

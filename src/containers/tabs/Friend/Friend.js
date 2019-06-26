@@ -13,6 +13,8 @@ import {
   NativeModules,
   NativeEventEmitter,
   Platform,
+  // AppState,
+  NetInfo,
 } from 'react-native'
 import ScrollableTabView, {
   DefaultTabBar,
@@ -44,6 +46,7 @@ import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { EventConst } from '../../../constants'
 import JPushService from './JPushService'
 import { Buffer } from 'buffer'
+import SMessageServiceHTTP from './SMessageServiceHTTP'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 let searchImg = getThemeAssets().friend.friend_search
@@ -58,6 +61,7 @@ export default class Friend extends Component {
     chat: Array,
     addChat: () => {},
     editChat: () => {},
+    setConsumer: () => {},
     setUser: () => {},
     openWorkspace: () => {},
     closeWorkspace: () => {},
@@ -70,7 +74,7 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
-    this.curMap = undefined
+    this.curMod = undefined
     MessageDataHandle.setHandle(this.props.addChat)
     FriendListFileHandle.refreshCallback = this.refreshList
     FriendListFileHandle.refreshMessageCallback = this.refreshMsg
@@ -81,14 +85,14 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
-
+    // AppState.addEventListener('change', this.handleStateChange)
+    NetInfo.addEventListener('connectionChange', this.handleNetworkState)
     this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
-    this.connectService()
+    this.restartService()
     this.addFileListener()
-    // Platform.OS === 'android' &&
     JPushService.init(this.props.user.currentUser.userId)
   }
 
@@ -97,9 +101,7 @@ export default class Friend extends Component {
       JSON.stringify(prevProps.user.currentUser.userId) !==
       JSON.stringify(this.props.user.currentUser.userId)
     ) {
-      this.disconnectService()
-      this.connectService()
-      // Platform.OS === 'android' &&
+      this.restartService()
       JPushService.init(this.props.user.currentUser.userId)
     }
     if (
@@ -126,6 +128,62 @@ export default class Friend extends Component {
     return false
   }
 
+  handleStateChange = appState => {
+    if (
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
+      if (appState === 'active') {
+        this.restartService()
+      } else if (appState === 'background') {
+        this.disconnectService()
+      }
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  handleNetworkState = state => {
+    if (
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
+      this.restartService()
+    }
+  }
+
+  startCheckAvailability = () => {
+    NetInfo.isConnected.fetch().done(async isConnected => {
+      global.network = isConnected
+      this.endCheckAvailability()
+      //记录本次连接的consumer
+      let consumer = await SMessageServiceHTTP.getConsumer(
+        this.props.user.currentUser.userId,
+      )
+      //服务器还没来得及生成，等待
+      if (!consumer) {
+        setTimeout(this.startCheckAvailability, 2000)
+        return
+      }
+      this.props.setConsumer(consumer)
+      //每隔一分钟查询连接到服务器的consumer
+      this.interval = setInterval(async () => {
+        let consumer = await SMessageServiceHTTP.getConsumer(
+          this.props.user.currentUser.userId,
+        )
+        // let reconnect = true //每分钟重连
+        if (!consumer || consumer !== this.props.chat.consumer) {
+          this.restartService()
+        }
+      }, 60000)
+    })
+  }
+
+  endCheckAvailability = () => {
+    this.interval && clearInterval(this.interval)
+  }
+
   refreshMsg = () => {
     if (this.friendMessage && this.friendMessage.refresh)
       this.friendMessage.refresh()
@@ -147,9 +205,9 @@ export default class Friend extends Component {
     }
   }
 
-  //设置协作地图
-  setCurMap = async moduleMapFullName => {
-    this.curMap = moduleMapFullName
+  //设置协作模块
+  setCurMod = async Module => {
+    this.curMod = Module
   }
 
   addFileListener = () => {
@@ -846,37 +904,35 @@ export default class Friend extends Component {
 
   connectService = async () => {
     let bHasUserInfo = false
-    let isAlreadyLogin = false
     if (this.props.user.currentUser.hasOwnProperty('userType') === true) {
       let usrType = this.props.user.currentUser.userType
       bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
-          if (
-            await JPushService.isConnectService(
+          try {
+            let res = await SMessageService.connectService(
+              MSGConstant.MSG_IP,
+              MSGConstant.MSG_Port,
+              MSGConstant.MSG_HostName,
+              MSGConstant.MSG_UserName,
+              MSGConstant.MSG_Password,
               this.props.user.currentUser.userId,
             )
-          ) {
-            isAlreadyLogin = true
-          }
-          SMessageService.connectService(
-            MSGConstant.MSG_IP,
-            MSGConstant.MSG_Port,
-            MSGConstant.MSG_HostName,
-            MSGConstant.MSG_UserName,
-            MSGConstant.MSG_Password,
-            this.props.user.currentUser.userId,
-          )
-            .then(res => {
-              if (!res) {
-                Toast.show(
-                  getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
-                )
-              } else {
-                g_connectService = true
-                if (isAlreadyLogin) {
+            if (!res) {
+              Toast.show(
+                getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+              )
+              this.disconnectService()
+            } else {
+              //是否有其他连接
+              let connection = await SMessageServiceHTTP.getConnection(
+                this.props.user.currentUser.userId,
+              )
+              //是否是login时调用
+              if (global.isLogging) {
+                if (connection) {
                   this.loginTime = Date.parse(new Date())
-                  this._sendMessage(
+                  await this._sendMessage(
                     JSON.stringify({
                       type: MSGConstant.MSG_LOGOUT,
                       user: {},
@@ -885,18 +941,39 @@ export default class Friend extends Component {
                     }),
                     this.props.user.currentUser.userId,
                   )
+                  await SMessageServiceHTTP.closeConnection(connection)
                 }
-                SMessageService.startReceiveMessage(
-                  this.props.user.currentUser.userId,
-                  { callback: this._receiveMessage },
-                )
+                global.isLogging = false
+              } else {
+                if (connection) {
+                  //检查是否之前consumer
+                  let consumer = await SMessageServiceHTTP.getConsumer(
+                    this.props.user.currentUser.userId,
+                  )
+                  if (this.props.chat.consumer === consumer) {
+                    await SMessageServiceHTTP.closeConnection(connection)
+                  } else {
+                    this._logout()
+                    return
+                  }
+                }
               }
-            })
-            .catch(() => {
-              Toast.show(
-                getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+
+              await SMessageService.startReceiveMessage(
+                this.props.user.currentUser.userId,
+                { callback: this._receiveMessage },
               )
-            })
+
+              this.startCheckAvailability()
+
+              g_connectService = true
+            }
+          } catch (error) {
+            Toast.show(
+              getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+            )
+            this.disconnectService()
+          }
         }
       } else {
         this.disconnectService()
@@ -907,9 +984,34 @@ export default class Friend extends Component {
   }
 
   disconnectService = async () => {
-    SMessageService.disconnectionService()
-    SMessageService.stopReceiveMessage()
-    g_connectService = false
+    if (!g_connectService) return
+    //重复调用，退出
+    if (this.disconnecting) return
+    //重启中，等待重启完成
+    if (this.restarting) {
+      setTimeout(this.disconnectService, 10000)
+    } else {
+      this.disconnecting = true
+      this.endCheckAvailability()
+      await SMessageService.stopReceiveMessage()
+      await SMessageService.disconnectionService()
+      g_connectService = false
+      this.disconnecting = false
+    }
+  }
+
+  restartService = async () => {
+    //重复调用，退出
+    if (this.restarting) return
+    //正在断开连接，等待完成
+    if (this.disconnecting) {
+      setTimeout(this.restartService, 10000)
+    } else {
+      g_connectService && (await this.disconnectService())
+      this.restarting = true
+      await this.connectService()
+      this.restarting = false
+    }
   }
 
   addMore = index => {

@@ -14,6 +14,7 @@ const baseMapsOrigin = [
   'CycleMap@OpenStreetMaps',
   'TransportMap@OpenStreetMaps',
   'quanguo@SuperMapCloud',
+  'baseMap',
 ]
 let baseMaps = [...baseMapsOrigin]
 function isBaseLayer(name) {

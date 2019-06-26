@@ -5,7 +5,8 @@
  */
 import React, { Component } from 'react'
 import { Container, PopModal } from '../../../components'
-import { ColorTable, SelectList, LinkageList, FilterList } from './components'
+import { ColorTable, SelectList, FilterList } from './components'
+import LinkageList from '../../../components/LinkageList'
 import {
   View,
   FlatList,
@@ -86,7 +87,7 @@ export default class SecondMapSettings extends Component {
   //获取数据方法
   getData = async () => {
     let data = [],
-      datasets,
+      dataSourceAndSets,
       colorData = null,
       colorModeData = null,
       homeDirectory
@@ -130,7 +131,7 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
         data = await this.getDatasources()
-        datasets = await this.getDatasets({ data })
+        dataSourceAndSets = await this.getDatasets({ data })
         break
       case getLanguage(GLOBAL.language).Map_Settings.FROM_FILE:
         homeDirectory = await FileTools.getHomeDirectory()
@@ -159,7 +160,7 @@ export default class SecondMapSettings extends Component {
       data,
       colorData,
       colorModeData,
-      datasets,
+      dataSourceAndSets,
     })
   }
 
@@ -180,9 +181,11 @@ export default class SecondMapSettings extends Component {
 
   // 获取所有数据集
   getDatasets = async ({ data }) => {
-    let datasets = []
+    let result = data
+    let index = 0
     let dataset
     for (let item of data) {
+      let datasets = []
       dataset = await SMap.getDatasetsByDatasource(
         {
           server: item.server,
@@ -191,9 +194,15 @@ export default class SecondMapSettings extends Component {
         },
         false,
       )
-      datasets.push(dataset)
+      dataset.list.map(val => {
+        let obj = {}
+        obj.title = val.datasetName
+        obj.parentTitle = val.datasourceName
+        datasets.push(obj)
+      })
+      result[index++].data = datasets
     }
-    return datasets
+    return result
   }
 
   // 基础设置数据
@@ -306,8 +315,11 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.MAP_ANTI_ALIASING:
         //IOS接口内写的是int类型的参数 所以转成数字
-        Platform.OS === 'ios' && (value = +value)
-        await SMap.setAntialias(value)
+        if (Platform.OS === 'ios') {
+          await SMap.setAntialias(+value)
+        } else {
+          await SMap.setAntialias(value)
+        }
         break
       case getLanguage(GLOBAL.language).Map_Settings.FIX_SYMBOL_ANGLE:
         await SMap.setMarkerFixedAngle(value)
@@ -353,8 +365,8 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
         prjCoordSysName = await SMap.copyPrjCoordSysFromDataset(
-          item.datasourceName,
-          item.datasetName,
+          item.parentTitle,
+          item.title,
         )
         toastTip = prjCoordSysName
           ? getLanguage(GLOBAL.language).Prompt.COPY_COORD_SYSTEM_SUCCESS
@@ -1019,8 +1031,7 @@ export default class SecondMapSettings extends Component {
         >
           <LinkageList
             language={this.props.language}
-            data={this.state.data}
-            secondData={this.state.datasets}
+            data={this.state.dataSourceAndSets}
             titles={[
               getLanguage(GLOBAL.language).Map_Settings.DATASOURCES,
               getLanguage(GLOBAL.language).Map_Settings.DATASETS,

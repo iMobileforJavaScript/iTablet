@@ -2,6 +2,7 @@ import { fromJS } from 'immutable'
 import { handleActions } from 'redux-actions'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
+import { request } from '../utils'
 
 // Constants
 // --------------------------------------------------
@@ -10,6 +11,8 @@ export const SHARING = 'SHARING'
 export const UPLOADING = 'UPLOADING'
 export const UPDATEDOWNLIST = 'UPDATEDOWNLIST'
 export const REMOVEITEMPFDOWNLIST = 'REMOVEITEMPFDOWNLIST'
+export const ISERVER_LOGIN = 'ISERVER_LOGIN'
+export const ISERVER_GET_DATASET_INFO = 'ISERVER_GET_DATASET_INFO'
 // export const UPLOADED = 'UPLOADED'
 // Actions
 // ---------------------------------.3-----------------
@@ -92,10 +95,64 @@ export const removeItemOfDownList = (
   cb && cb()
 }
 
+export const loginIServer = (params, cb = () => {}) => async dispatch => {
+  let response = await request(
+    'http://' +
+      params.ip +
+      ':' +
+      params.port +
+      '/iserver/services/security/login.json',
+    'POST',
+    {
+      body: {
+        userName: params.userName,
+        password: params.password,
+        rememberme: true,
+      },
+    },
+  )
+
+  cb && cb(response)
+
+  await dispatch({
+    type: ISERVER_LOGIN,
+    payload: {
+      ip: params.ip,
+      port: params.port,
+      userName: params.userName,
+      password: params.password,
+    },
+  })
+
+  return response
+}
+
+export const getDatasetInfoFromIServer = params => async () => {
+  let url =
+    'http://' +
+    params.ip +
+    ':' +
+    params.port +
+    '/iserver/services/datacatalog/rest/datacatalog/sharefile/' +
+    params.dataset +
+    '/fields.json'
+  return request(url, 'GET', {
+    headers: {
+      Cookie: global.cookie,
+    },
+  })
+}
+
 const initialState = fromJS({
   share: [], // { module: '', name: '', progress: 0}
   upload: [], // { module: '', name: '', progress: 0}
   down: [],
+  iServerData: {
+    ip: '',
+    port: '',
+    userName: '',
+    password: '',
+  },
 })
 
 export default handleActions(
@@ -169,7 +226,6 @@ export default handleActions(
       }
       return state.setIn(['down'], fromJS(down))
     },
-
     [`${REMOVEITEMPFDOWNLIST}`]: (state, { payload }) => {
       let down = state.toJS().down
       if (payload.id) {
@@ -182,6 +238,17 @@ export default handleActions(
         }
       }
       return state.setIn(['down'], fromJS(down))
+    },
+    [`${ISERVER_LOGIN}`]: (state, { payload }) => {
+      let iServerData = state.toJS().iServerData
+      if (payload) {
+        for (let key in payload) {
+          iServerData[key] = payload[key]
+        }
+      } else {
+        iServerData = initialState.toJS().iServerData
+      }
+      return state.setIn(['iServerData'], fromJS(iServerData))
     },
     // [REHYDRATE]: () => {
     //   // return payload && payload.online ? fromJS(payload.online) : state

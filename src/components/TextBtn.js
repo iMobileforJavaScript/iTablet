@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import * as Util from '../utils/constUtil'
 import { scaleSize } from '../utils'
 
@@ -12,6 +12,7 @@ export default class TextBtn extends React.Component {
     btnText: string,
     btnClick: () => {},
     textStyle?: any,
+    containerStyle?: any,
   }
 
   constructor(props) {
@@ -35,25 +36,23 @@ export default class TextBtn extends React.Component {
     const containerWidth = this.props.width ? this.props.width : WIDTH
     const containerHeight = this.props.height ? this.props.height : null
     return (
-      <View
+      <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={this.props.btnText}
+        activeOpacity={0.8}
         style={[
           styles.container,
-          { width: containerWidth, height: containerHeight },
+          this.props.containerStyle,
+          this.props.width && { width: containerWidth },
+          this.props.height && { height: containerHeight },
         ]}
+        onPress={this._btnClick}
       >
-        <TouchableOpacity
-          accessible={true}
-          accessibilityLabel={this.props.btnText}
-          activeOpacity={0.8}
-          style={styles.titleBtn}
-          onPress={this._btnClick}
-        >
-          <Text style={[styles.btnText, this.props.textStyle]}>
-            {this.props.btnText ? this.props.btnText : '按钮'}
-          </Text>
-          {/*<Text style={[styles.btnText, { color: this.state.clicked ? Util.USUAL_PURPLE : textBlue }]}>{this.props.btnText ? this.props.btnText : '按钮'}</Text>*/}
-        </TouchableOpacity>
-      </View>
+        <Text style={[styles.btnText, this.props.textStyle]}>
+          {this.props.btnText ? this.props.btnText : '按钮'}
+        </Text>
+        {/*<Text style={[styles.btnText, { color: this.state.clicked ? Util.USUAL_PURPLE : textBlue }]}>{this.props.btnText ? this.props.btnText : '按钮'}</Text>*/}
+      </TouchableOpacity>
     )
   }
 }

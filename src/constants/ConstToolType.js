@@ -2,10 +2,9 @@
  * 地图功能列表/工具栏 对应的标识符
  */
 import { scaleSize } from '../utils'
+
+const TOOLBAR_HEIGHT_1 = 88
 export default {
-  //点击监听类型
-  NORMAL: 'NORMAL',
-  NULL: 'NULL',
   // Map
   MAP_BASE: 'MAP_BASE',
   MAP_ADD_LAYER: 'MAP_ADD_LAYER',
@@ -232,13 +231,13 @@ export default {
     scaleSize(800),
   ],
   TOOLBAR_HEIGHT: [
-    scaleSize(86),
-    scaleSize(172),
-    scaleSize(344),
-    scaleSize(430),
-    scaleSize(516),
-    scaleSize(602),
-    scaleSize(688),
+    scaleSize(TOOLBAR_HEIGHT_1),
+    scaleSize(TOOLBAR_HEIGHT_1 * 2),
+    scaleSize(TOOLBAR_HEIGHT_1 * 3),
+    scaleSize(TOOLBAR_HEIGHT_1 * 4),
+    scaleSize(TOOLBAR_HEIGHT_1 * 5),
+    scaleSize(TOOLBAR_HEIGHT_1 * 6),
+    scaleSize(TOOLBAR_HEIGHT_1 * 7),
   ],
   TOOLBAR_BASEMAP_HEIGHT: [],
 }

@@ -40,7 +40,7 @@ export default class MapCutAddLayerListItem extends PureComponent {
   }
 
   renderCheckButton = ({ status = 0, action = () => {}, data }) => {
-    let icon = this.state.sectionSelected
+    let icon = this.props.selected
       ? getPublicAssets().common.icon_check
       : getPublicAssets().common.icon_uncheck
     switch (status) {

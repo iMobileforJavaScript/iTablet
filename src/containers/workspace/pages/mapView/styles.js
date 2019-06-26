@@ -99,6 +99,10 @@ export default StyleSheet.create({
   headerBtnSeparator: {
     marginLeft: scaleSize(40),
   },
+  headerBtnTitle: {
+    color: 'white',
+    fontSize: size.fontSize.fontSizeXXl,
+  },
 
   mapController: {
     position: 'absolute',

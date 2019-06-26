@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, Animated } from 'react-native'
 import { scaleSize } from '../../../utils/screen'
 import { zIndexLevel } from '../../../styles'
 import { Const } from '../../../constants'
+import { getLanguage } from '../../../language/index'
+
 const AnimatedView = Animated.View
 
 export default class CoworkTouchableView extends Component {
@@ -29,7 +31,7 @@ export default class CoworkTouchableView extends Component {
   render() {
     let text = ''
     if (this.props.screen === 'Chat') {
-      text = '协作地图'
+      text = getLanguage(global.language).Friends.GO_COWORK
     }
     return (
       <AnimatedView
@@ -61,11 +63,10 @@ const style = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     backgroundColor: '#505050',
-    padding: scaleSize(10),
     height: scaleSize(85),
     width: scaleSize(85),
     borderRadius: scaleSize(50),
-    top: scaleSize(100),
+    top: scaleSize(120),
     right: scaleSize(40),
     zIndex: zIndexLevel.THREE,
   },

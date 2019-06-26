@@ -70,7 +70,13 @@ export default class ImageButton extends React.Component {
           />
         </View>
         {this.props.title && (
-          <Text style={[styles.iconTitle, this.props.titleStyle]}>
+          <Text
+            style={[
+              styles.iconTitle,
+              this.props.direction === 'column' && { marginTop: scaleSize(10) },
+              this.props.titleStyle,
+            ]}
+          >
             {this.props.title}
           </Text>
         )}
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   iconBg: {
     // borderRadius: scaleSize(80),
@@ -97,7 +104,6 @@ const styles = StyleSheet.create({
     width: scaleSize(50),
   },
   iconTitle: {
-    marginTop: scaleSize(10),
     fontSize: setSpText(20),
     color: color.blue2,
     backgroundColor: 'transparent',

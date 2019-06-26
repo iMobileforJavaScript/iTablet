@@ -12,6 +12,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view'
 import { SAnalyst, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
+import TabNavigationService from '../../../TabNavigationService'
 
 import BufferAnalystViewTab from './BufferAnalystViewTab'
 
@@ -53,81 +54,98 @@ export default class BufferAnalystView extends Component {
     if (!this.state.canBeAnalyst) return
     if (!this.currentTab && this.singleBuffer)
       this.currentTab = this.singleBuffer
-    if (this.currentTab) {
-      Toast.show(ConstInfo.ANALYST_START)
-      // this.setLoading(ConstInfo.ANALYST_START)
-      if (this.currentTabIndex === 0) {
-        let {
-          sourceData,
-          resultData,
-          bufferParameter,
-          isUnion,
-          isAttributeRetained,
-          optionParameter,
-        } = this.currentTab.getAnalystParams()
-        SAnalyst.createBuffer(
-          sourceData,
-          resultData,
-          bufferParameter,
-          isUnion,
-          isAttributeRetained,
-          optionParameter,
-        ).then(
-          async res => {
-            Toast.show(
-              res.result
-                ? ConstInfo.ANALYST_SUCCESS
-                : res.errorMsg || ConstInfo.ANALYST_FAIL,
-            )
+    try {
+      if (this.currentTab) {
+        Toast.show(ConstInfo.ANALYST_START)
+        // this.setLoading(ConstInfo.ANALYST_START)
+        this.setLoading(true, getLanguage(this.props.language).Prompt.ANALYSING)
+        if (this.currentTabIndex === 0) {
+          let {
+            sourceData,
+            resultData,
+            bufferParameter,
+            isUnion,
+            isAttributeRetained,
+            optionParameter,
+          } = this.currentTab.getAnalystParams()
+          SAnalyst.createBuffer(
+            sourceData,
+            resultData,
+            bufferParameter,
+            isUnion,
+            isAttributeRetained,
+            optionParameter,
+          ).then(
+            async res => {
+              this.setLoading(false)
 
-            if (res.result) {
-              SMap.viewEntire()
-              await this.props.getLayers()
-              NavigationService.goBack()
-              if (optionParameter.showResult) {
+              Toast.show(
+                res.result
+                  ? ConstInfo.ANALYST_SUCCESS
+                  : res.errorMsg || ConstInfo.ANALYST_FAIL,
+              )
+
+              if (res.result) {
+                SMap.viewEntire()
+                await this.props.getLayers()
+                NavigationService.goBack('AnalystListEntry')
+                if (optionParameter.showResult) {
+                  TabNavigationService.navigate('MapAnalystView')
+                }
                 this.cb && this.cb()
               }
-            }
-          },
-          res => {
-            Toast.show(res && res.errorMsg)
-          },
-        )
-      } else {
-        // let { sourceData, resultData, bufferRadiuses, bufferRadiusUnit, semicircleSegments, isUnion, isAttributeRetained, isRing, optionParameter } = this.currentTab.getAnalystParams()
-        let params = this.currentTab.getAnalystParams()
-        SAnalyst.createMultiBuffer(
-          params.sourceData,
-          params.resultData,
-          params.bufferRadiuses,
-          params.bufferRadiusUnit,
-          params.semicircleSegments,
-          params.isUnion,
-          params.isAttributeRetained,
-          params.isRing,
-          params.optionParameter,
-        ).then(
-          async res => {
-            Toast.show(
-              res.result
-                ? ConstInfo.ANALYST_SUCCESS
-                : res.errorMsg || ConstInfo.ANALYST_FAIL,
-            )
+            },
+            res => {
+              this.setLoading(false)
+              Toast.show(res && res.errorMsg)
+            },
+          )
+        } else {
+          // let { sourceData, resultData, bufferRadiuses, bufferRadiusUnit, semicircleSegments, isUnion, isAttributeRetained, isRing, optionParameter } = this.currentTab.getAnalystParams()
+          let params = this.currentTab.getAnalystParams()
+          SAnalyst.createMultiBuffer(
+            params.sourceData,
+            params.resultData,
+            params.bufferRadiuses,
+            params.bufferRadiusUnit,
+            params.semicircleSegments,
+            params.isUnion,
+            params.isAttributeRetained,
+            params.isRing,
+            params.optionParameter,
+          ).then(
+            async res => {
+              this.setLoading(false)
 
-            if (res.result) {
-              SMap.viewEntire()
-              await this.props.getLayers()
-              NavigationService.goBack()
-              if (params.optionParameter.showResult) {
+              Toast.show(
+                res.result
+                  ? ConstInfo.ANALYST_SUCCESS
+                  : res.errorMsg || ConstInfo.ANALYST_FAIL,
+              )
+
+              if (res.result) {
+                SMap.viewEntire()
+                await this.props.getLayers()
+                NavigationService.goBack()
+                NavigationService.goBack('AnalystListEntry')
+                if (
+                  params.optionParameter &&
+                  params.optionParameter.showResult
+                ) {
+                  TabNavigationService.navigate('MapAnalystView')
+                }
                 this.cb && this.cb()
               }
-            }
-          },
-          res => {
-            Toast.show(res && res.errorMsg)
-          },
-        )
+            },
+            res => {
+              this.setLoading(false)
+              Toast.show(res && res.errorMsg)
+            },
+          )
+        }
       }
+    } catch (e) {
+      this.setLoading(false)
     }
   }
 

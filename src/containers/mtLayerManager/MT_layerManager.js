@@ -174,7 +174,7 @@ export default class MT_layerManager extends React.Component {
             },
           ]
         } else {
-          baseMap = [layers[layers.length - 1]]
+          baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
         }
       } else if (layers.length === 0) {
         await SMap.openDatasource(
@@ -183,15 +183,14 @@ export default class MT_layerManager extends React.Component {
             ? 1
             : ConstOnline.Google.layerIndex,
           false,
-          false,
+          GLOBAL.Type === constants.MAP_ANALYST, // 分析模块下，显示地图
         )
         layers = await this.props.getLayers()
-        baseMap = [layers[layers.length - 1]]
+        baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
       }
       let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
-      //debugger
       this.setState({
         data: [
           {
@@ -617,7 +616,7 @@ export default class MT_layerManager extends React.Component {
         }
         return (
           <LayerManager_item
-            key={item.name}
+            // key={item.name}
             // sectionID={sectionID}
             // rowID={item.index}
             ref={ref => {
@@ -627,7 +626,8 @@ export default class MT_layerManager extends React.Component {
               this.itemRefs[item.name] = ref
               return this.itemRefs[item.name]
             }}
-            layer={item.layer}
+            {...this.props}
+            // swipeEnabled={true}
             // map={this.map}
             data={item}
             index={index}
