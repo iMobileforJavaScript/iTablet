@@ -15,7 +15,7 @@ import constants from '../../../../containers/workspace/constants'
 import ConstModule, { MAP_MODULE } from '../../../../constants/ConstModule'
 import { scaleSize, setSpText } from '../../../../utils'
 // import RenderModuleListItem from './RenderModuleListItem'
-import { downloadFile } from 'react-native-fs'
+import RNFS from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
@@ -27,6 +27,7 @@ import { getLanguage } from '../../../../language'
 
 class RenderModuleItem extends Component {
   props: {
+    downloadData:Object,
     item: Object,
     importWorkspace: () => {},
     showDialog: () => {},
@@ -42,6 +43,47 @@ class RenderModuleItem extends Component {
       progress: '',
       disabled: false,
       dialogCheck: false,
+    }
+  }
+
+  cheackDownload = async timer=>{
+    let exist = await FileTools.fileIsExist(this.props.downloadData.copyFilePath+'_')
+    if (!exist) {
+      if(timer){
+        clearInterval(timer)
+      }
+      this.setState({
+        isShowProgressView: false,
+        disabled: false,
+      })
+    } else {
+      let result = await RNFS.readFile(this.props.downloadData.copyFilePath+'_')
+      // debugger
+      if (result >= 100) {
+        this.setState({
+          progress: getLanguage(global.language).Prompt.IMPORTING,
+          isShowProgressView: true,
+          // disabled: true,
+        })
+        // this.downloading = false
+      } else if (result !== this.state.progress) {
+        this.downloading = true
+        this.setState({
+          progress: result+'%',
+          isShowProgressView: true,
+          dialogCheck: false,
+        })
+      }
+    }
+  }
+  async componentDidMount() {
+    let exist = await FileTools.fileIsExist(this.props.downloadData.copyFilePath+'_')
+    // debugger
+    if(exist){
+      this.cheackDownload()
+      let timer = setInterval(async () => {
+        this.cheackDownload(timer)
+      }, 500)
     }
   }
 
@@ -139,12 +181,14 @@ class ModuleList extends Component {
     super(props)
     this.state = {
       isShowProgressView: false,
-    }
+    } 
     this.moduleItems = []
     //this.bytesInfo = 0
     this.itemAction = this.itemAction.bind(this)
   }
-
+  async componentDidMount() {
+    this.homePath = await  FileTools.appendingHomeDirectory()
+  }
   _showAlert = (ref, downloadData, currentUserName) => {
     setTimeout(() => {
       this.props.showDialog && this.props.showDialog(true)
@@ -214,10 +258,11 @@ class ModuleList extends Component {
               isShowProgressView: true,
               // disabled: true,
             })
+            RNFS.writeFile(fileDirPath+'_', res.progress.toFixed(0), 'utf8')
           }
         },
       }
-      let result = downloadFile(downloadOptions)
+      let result = RNFS.downloadFile(downloadOptions)
       result.promise
         .then(async () => {
           await FileTools.unZipFile(fileCachePath, cachePath)
@@ -227,7 +272,7 @@ class ModuleList extends Component {
             downloadData.copyFilePath,
           )
           ref.setNewState({ isShowProgressView: false, disabled: false })
-
+          FileTools.deleteFile(fileDirPath+'_')
           FileTools.deleteFile(fileDirPath + '.zip')
           ref.setDownloading(false)
         })
@@ -268,9 +313,46 @@ class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
+  getDownloadData = (language, item)=>{
+    let fileName
+    // let mapname
+    let moduleKey = item.key
+    /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+    if (moduleKey === '地图制图') {
+      fileName = language === 'CN' ? '湖南' : 'LosAngeles'
+      // mapname =  language==='CN'?'SanFrancisco':'湖南'
+    } else if (moduleKey === '专题制图') {
+      fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
+      // mapname =  language==='CN'?'Precipitation':'LandBuild'
+    } else if (moduleKey === '外业采集') {
+      fileName = '地理国情普查_示范数据'
+    } else if (moduleKey === '三维场景') {
+      if (Platform.OS === 'android') {
+        fileName = 'OlympicGreen_android'
+      } else if (Platform.OS === 'ios') {
+        fileName = 'OlympicGreen_ios'
+      }
+    } else if (moduleKey === '应急标绘') {
+      fileName = '湖南'
+    }
+
+    let tmpCurrentUser = this.props.currentUser
+
+    let toPath = this.homePath + ConstPath.CachePath + fileName
+
+    let cachePath = this.homePath + ConstPath.CachePath
+    let downloadData = {
+      fileName: fileName,
+      cachePath: cachePath,
+      copyFilePath: toPath,
+      itemData: item,
+      tmpCurrentUser: tmpCurrentUser,
+    }
+
+    return downloadData
+  }
   async itemAction(language, { item, index }) {
     try {
-      let fileName
       // let mapname
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
@@ -280,25 +362,26 @@ class ModuleList extends Component {
       } else if (moduleKey === MAP_MODULE.MAP_AR) {
         item.action && item.action(this.props.currentUser)
         return
-      } else if (moduleKey === '地图制图') {
-        fileName = language === 'CN' ? '湖南' : 'LosAngeles'
-        // mapname =  language==='CN'?'SanFrancisco':'湖南'
-      } else if (moduleKey === '专题制图') {
-        fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
-        // mapname =  language==='CN'?'Precipitation':'LandBuild'
-      } else if (moduleKey === '外业采集') {
-        fileName = '地理国情普查_示范数据'
-      } else if (moduleKey === '三维场景') {
-        if (Platform.OS === 'android') {
-          fileName = 'OlympicGreen_android'
-        } else if (Platform.OS === 'ios') {
-          fileName = 'OlympicGreen_ios'
-        }
-      } else if (moduleKey === '应急标绘') {
-        fileName = '湖南'
       }
+      // } else if (moduleKey === '地图制图') {
+      //   fileName = language === 'CN' ? '湖南' : 'LosAngeles'
+      //   // mapname =  language==='CN'?'SanFrancisco':'湖南'
+      // } else if (moduleKey === '专题制图') {
+      //   fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
+      //   // mapname =  language==='CN'?'Precipitation':'LandBuild'
+      // } else if (moduleKey === '外业采集') {
+      //   fileName = '地理国情普查_示范数据'
+      // } else if (moduleKey === '三维场景') {
+      //   if (Platform.OS === 'android') {
+      //     fileName = 'OlympicGreen_android'
+      //   } else if (Platform.OS === 'ios') {
+      //     fileName = 'OlympicGreen_ios'
+      //   }
+      // } else if (moduleKey === '应急标绘') {
+      //   fileName = '湖南'
+      // }
 
-      let homePath = await FileTools.appendingHomeDirectory()
+      // let homePath = await FileTools.appendingHomeDirectory()
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
@@ -331,19 +414,21 @@ class ModuleList extends Component {
       ) {
         latestMap = this.props.latestMap[currentUserName][module][0]
       }
-      let toPath = homePath + ConstPath.CachePath + fileName
 
-      let cachePath = homePath + ConstPath.CachePath
-      let fileDirPath = cachePath + fileName
+      let downloadData = this.getDownloadData(language,item)
+      let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
+
+      let cachePath = this.homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + downloadData.fileName
       let arrFile = await FileTools.getFilterFiles(fileDirPath)
       if (arrFile.length === 0) {
-        let downloadData = {
-          fileName: fileName,
-          cachePath: cachePath,
-          copyFilePath: toPath,
-          itemData: item,
-          tmpCurrentUser: tmpCurrentUser,
-        }
+        // let downloadData = {
+        //   fileName: fileName,
+        //   cachePath: cachePath,
+        //   copyFilePath: toPath,
+        //   itemData: item,
+        //   tmpCurrentUser: tmpCurrentUser,
+        // }
         // if (this.state.dialogCheck) {
         if (
           !(
@@ -370,7 +455,7 @@ class ModuleList extends Component {
         )
         if (fileType === '.sxwu') {
           filePath2 =
-            homePath +
+            this.homePath +
             ConstPath.UserPath +
             currentUserName +
             '/Data/Scene/' +
@@ -380,7 +465,7 @@ class ModuleList extends Component {
           let maps = await SMap.getMapsByFile(filePath)
           let mapName = maps[0]
           filePath2 =
-            homePath +
+          this.homePath +
             ConstPath.UserPath +
             currentUserName +
             '/Data/Map/' +
@@ -410,9 +495,11 @@ class ModuleList extends Component {
   }
 
   _renderItem = ({ item, index }) => {
+    let downloadData = this.getDownloadData(global.language,item)
     return (
       <RenderModuleItem
         item={item}
+        downloadData = {downloadData}
         ref={ref => this.getRef({ item, index }, ref)}
         importWorkspace={this.props.importWorkspace}
         showDialog={this.props.showDialog}
