@@ -51,9 +51,15 @@ export default class LinkageList extends React.Component {
 
   onRightPress = async ({ item, index }) => {
     let data = this.props.data
-    let parent = data.filter(val => {
-      return val.title === item.parentTitle
-    })
+    // let parent = data.filter(val => {
+    //   return val.title === item.parentTitle
+    // })
+    let parent = {}
+    for (let p of data) {
+      if (p.title === item.parentTitle) {
+        parent = p
+      }
+    }
     if (this.props.onRightPress)
       return this.props.onRightPress({ parent, item, index })
   }

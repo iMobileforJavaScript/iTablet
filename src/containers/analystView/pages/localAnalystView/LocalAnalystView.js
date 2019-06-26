@@ -11,7 +11,7 @@ import {
   SMap,
   EngineType,
   DatasetType,
-  // SFacilityAnalyst,
+  SFacilityAnalyst,
 } from 'imobile_for_reactnative'
 
 export default class LocalAnalystView extends Component {
@@ -82,6 +82,7 @@ export default class LocalAnalystView extends Component {
           for (let j = 0; j < datasets.length; j++) {
             if (datasets[j].datasetType === DatasetType.Network) {
               datasets[j].title = datasets[j].datasetName
+              datasets[j].parentTitle = datasets[j].datasourceName
               dss.push(datasets[j])
             }
           }
@@ -89,6 +90,8 @@ export default class LocalAnalystView extends Component {
           if (dss.length > 0) {
             dataSourceAndSets.push({
               title: alias,
+              server: udbPath,
+              engineType: EngineType.UDB,
               data: dss,
             })
           }
@@ -164,32 +167,51 @@ export default class LocalAnalystView extends Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
-  listRightAction = () => {
-    // { parent, item, index }
+  listRightAction = ({ parent, item }) => {
     (async function() {
       try {
         let params1 =
           this.props.nav.routes[this.props.nav.index - 1].params || {}
         let params2 = this.props.navigation.state.params || {}
-        // await SFacilityAnalyst.load({
-        //   datasourceParams: {
-        //     alias:
-        //   },
-        // })
-        this.props.setAnalystParams({
-          ...params2,
-        })
-        NavigationService.goBack('AnalystListEntry')
-        TabNavigationService.navigate('MapAnalystView', {
-          backAction: () => {
-            this.props.setAnalystParams(null)
-            TabNavigationService.navigate('AnalystTools')
-            NavigationService.navigate('AnalystListEntry', {
-              ...params1,
-            })
-            NavigationService.navigate('LocalAnalystView', { ...params2 })
+        let result = await SFacilityAnalyst.load(
+          {
+            alias: parent.title,
+            server: parent.server,
+            engineType: parent.engineType,
           },
-        })
+          {
+            networkDataset: item.datasetName,
+            weightFieldInfos: [
+              {
+                name: 'length',
+                ftWeightField: 'smLength',
+                tfWeightField: 'smLength',
+              },
+            ],
+            // edgeIDField: 'SmEdgeID',
+            // nodeIDField: 'SmNodeID',
+            tolerance: 89,
+            // fNodeIDField: 'SmFNode',
+            // tNodeIDField: 'SmTNode',
+            directionField: 'Name',
+          },
+        )
+        if (result) {
+          this.props.setAnalystParams({
+            ...params2,
+          })
+          NavigationService.goBack('AnalystListEntry')
+          TabNavigationService.navigate('MapAnalystView', {
+            backAction: () => {
+              this.props.setAnalystParams(null)
+              TabNavigationService.navigate('AnalystTools')
+              NavigationService.navigate('AnalystListEntry', {
+                ...params1,
+              })
+              NavigationService.navigate('LocalAnalystView', { ...params2 })
+            },
+          })
+        }
       } catch (e) {
         // console.warn(e)
       }
