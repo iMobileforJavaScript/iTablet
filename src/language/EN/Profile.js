@@ -65,6 +65,10 @@ const Profile = {
   SWITCH_ACCOUNT: 'Switch Account',
   LOG_OUT: 'Log out',
 
+  SWITCH_CURRENT: 'You are already loged in with this user',
+  SWITCHING: 'Switching...',
+  SWITCH_FAIL: 'Switch failed, please try to login with this user again',
+
   //地图服务地址
   SERVICE_ADDRESS: 'Service Address',
   MAP_NAME: 'Map Name',

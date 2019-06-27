@@ -42,28 +42,40 @@ export default class ToggleAccount extends Component {
                 this.props.user.currentUser.userName === userName &&
                 this.props.user.currentUser.password === password
               ) {
-                Toast.show('处于当前用户下，不可切换')
+                Toast.show(getLanguage(global.language).Profile.SWITCH_CURRENT)
                 return
               }
               if (this.containerRef) {
-                this.containerRef.setLoading(true, '切换中...')
+                this.containerRef.setLoading(
+                  true,
+                  getLanguage(global.language).Profile.SWITCHING,
+                )
               }
-              this.props.setUser({
-                userName: userName,
-                password: password,
-                isEmail: isEmail,
-              })
+              // this.props.setUser({
+              //   userName: userName,
+              //   password: password,
+              //   isEmail: isEmail,
+              // })
               // await SOnlineService.removeCookie()
+              let result
               if (isEmail === true) {
-                await SOnlineService.login(userName, password)
+                result = await SOnlineService.login(userName, password)
               } else if (isEmail === false) {
-                await SOnlineService.loginWithPhoneNumber(userName, password)
+                result = await SOnlineService.loginWithPhoneNumber(
+                  userName,
+                  password,
+                )
               }
               if (this.containerRef) {
                 this.containerRef.setLoading(false)
               }
-              NavigationService.reset('Tabs')
-              // NavigationService.navigate('Mine')
+              if (result) {
+                this.props.setUser(info.item)
+                NavigationService.reset('Tabs')
+                // NavigationService.navigate('Mine')
+              } else {
+                Toast.show(getLanguage(global.language).Profile.SWITCH_FAIL)
+              }
             } catch (e) {
               if (this.containerRef) {
                 this.containerRef.setLoading(false)
