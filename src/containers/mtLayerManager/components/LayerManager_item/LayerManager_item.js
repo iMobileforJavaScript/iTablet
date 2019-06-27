@@ -506,11 +506,13 @@ export default class LayerManager_item extends React.Component {
         onPress: () => {
           (async function() {
             await SMap.moveToTop(layer.path)
-            let count = await SMap.getTaggingLayerCount(
-              this.props.user.currentUser.userName,
-            )
-            for (let i = 0; i < count; i++) {
-              await SMap.moveDownLayer(layer.path)
+            if(layer.path.indexOf('/')===-1){
+              let count = await SMap.getTaggingLayerCount(
+                this.props.user.currentUser.userName,
+              )
+              for (let i = 0; i < count; i++) {
+                await SMap.moveDownLayer(layer.path)
+              }
             }
             await this.props.getLayers()
           }.bind(this)())
@@ -523,7 +525,7 @@ export default class LayerManager_item extends React.Component {
             await SMap.moveToBottom(layer.path)
           }.bind(this)())
           if (
-            LayerUtils.isBaseLayer(
+            layer.path.indexOf('/')===-1 && LayerUtils.isBaseLayer(
               this.props.layers[this.props.layers.length - 1].name,
             )
           ) {
