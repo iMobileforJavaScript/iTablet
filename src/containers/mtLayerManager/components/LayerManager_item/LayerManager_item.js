@@ -362,6 +362,27 @@ export default class LayerManager_item extends React.Component {
     } else return
   }
 
+  refreshChildlist= async ()=>{
+    let isShow = this.state.rowShow
+    if (this.props.data.type === 'layerGroup') {
+      let child = []
+      if (isShow) {
+        child =
+          (this.props.onArrowPress &&
+            (await this.props.onArrowPress({
+              layer: this.props.data.layer,
+              data: this.props.data,
+              // sectionID: this.state.sectionID,
+            }))) ||
+          []
+
+        this.setState({
+          rowShow: isShow,
+          child: child,
+        })
+      }
+    }
+  }
   _arrow_pop_row = async () => {
     let isShow = !this.state.rowShow
     if (this.props.data.type === 'layerGroup') {
@@ -466,7 +487,7 @@ export default class LayerManager_item extends React.Component {
         title: getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP,
         onPress: () => {
           (async function() {
-            await SMap.moveUpLayer(layer.name)
+            await SMap.moveUpLayer(layer.path)
             await this.props.getLayers()
           }.bind(this)())
         },
@@ -475,7 +496,7 @@ export default class LayerManager_item extends React.Component {
         title: getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN,
         onPress: () => {
           (async function() {
-            await SMap.moveDownLayer(layer.name)
+            await SMap.moveDownLayer(layer.path)
             await this.props.getLayers()
           }.bind(this)())
         },
@@ -484,12 +505,12 @@ export default class LayerManager_item extends React.Component {
         title: getLanguage(global.language).Map_Layer.LAYERS_TOP,
         onPress: () => {
           (async function() {
-            await SMap.moveToTop(layer.name)
+            await SMap.moveToTop(layer.path)
             let count = await SMap.getTaggingLayerCount(
               this.props.user.currentUser.userName,
             )
             for (let i = 0; i < count; i++) {
-              await SMap.moveDownLayer(layer.name)
+              await SMap.moveDownLayer(layer.path)
             }
             await this.props.getLayers()
           }.bind(this)())
@@ -499,14 +520,14 @@ export default class LayerManager_item extends React.Component {
         title: getLanguage(global.language).Map_Layer.LAYERS_BOTTOM,
         onPress: () => {
           (async function() {
-            await SMap.moveToBottom(layer.name)
+            await SMap.moveToBottom(layer.path)
           }.bind(this)())
           if (
             LayerUtils.isBaseLayer(
               this.props.layers[this.props.layers.length - 1].name,
             )
           ) {
-            SMap.moveUpLayer(layer.name)
+            SMap.moveUpLayer(layer.path)
           }
           // if (
           //   this.props.layers[this.props.layers.length - 1].name.indexOf(
