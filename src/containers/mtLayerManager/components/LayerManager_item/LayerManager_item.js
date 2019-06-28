@@ -362,7 +362,7 @@ export default class LayerManager_item extends React.Component {
     } else return
   }
 
-  refreshChildlist= async ()=>{
+  refreshChildlist = async () => {
     let isShow = this.state.rowShow
     if (this.props.data.type === 'layerGroup') {
       let child = []
@@ -506,7 +506,7 @@ export default class LayerManager_item extends React.Component {
         onPress: () => {
           (async function() {
             await SMap.moveToTop(layer.path)
-            if(layer.path.indexOf('/')===-1){
+            if (layer.path.indexOf('/') === -1) {
               let count = await SMap.getTaggingLayerCount(
                 this.props.user.currentUser.userName,
               )
@@ -525,7 +525,8 @@ export default class LayerManager_item extends React.Component {
             await SMap.moveToBottom(layer.path)
           }.bind(this)())
           if (
-            layer.path.indexOf('/')===-1 && LayerUtils.isBaseLayer(
+            layer.path.indexOf('/') === -1 &&
+            LayerUtils.isBaseLayer(
               this.props.layers[this.props.layers.length - 1].name,
             )
           ) {

@@ -29,6 +29,8 @@ import {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  uniqueLabelMenuInfo,
+  rangeLabelMenuInfo,
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
@@ -753,6 +755,18 @@ export default class ToolBar extends React.PureComponent {
           type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
         ) {
           selectedExpression = await SThemeCartography.getUniformLabelExpression(
+            param,
+          )
+        } else if (
+          type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION
+        ) {
+          selectedExpression = await SThemeCartography.getUniqueLabelExpression(
+            param,
+          )
+        } else if (
+          type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION
+        ) {
+          selectedExpression = await SThemeCartography.getRangeLabelExpression(
             param,
           )
         } else if (
@@ -3612,6 +3626,58 @@ export default class ToolBar extends React.PureComponent {
         await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
     } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION
+    ) {
+      //单值标签表达式
+      (async function() {
+        let Params = {
+          UniqueExpression: item.expression,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await this.refreshThemeExpression(item.expression)
+        await SThemeCartography.setUniqueLabelExpression(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR
+    ) {
+      //单值标签专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          ColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.setUniqueLabelColorScheme(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION
+    ) {
+      //分段标签表达式
+      (async function() {
+        let Params = {
+          RangeExpression: item.expression,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await this.refreshThemeExpression(item.expression)
+        await SThemeCartography.setRangeLabelExpression(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_COLOR
+    ) {
+      //单值标签专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          ColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.setRangeLabelColorScheme(Params)
+      }.bind(this)())
+    } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
       //数据集选择列表(跳转到专题图字段选择列表)
@@ -4947,6 +5013,10 @@ export default class ToolBar extends React.PureComponent {
         list = rangeMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_UNIFY_LABEL) {
         list = labelMenuInfo(this.props.language)
+      } else if (this.state.themeType === constants.THEME_UNIQUE_LABEL) {
+        list = uniqueLabelMenuInfo(this.props.language)
+      } else if (this.state.themeType === constants.THEME_RANGE_LABEL) {
+        list = rangeLabelMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_GRAPH_STYLE) {
         list = graphMenuInfo(this.props.language)
       } else if (this.state.themeType === constants.THEME_DOT_DENSITY) {
@@ -5431,7 +5501,8 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}

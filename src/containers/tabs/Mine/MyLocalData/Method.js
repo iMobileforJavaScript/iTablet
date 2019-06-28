@@ -276,7 +276,9 @@ async function downFileAction(
       let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
       let toPath = await FileTools.appendingHomeDirectory(path)
       // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-      let dataUrl = `https://www.supermapol.com/web/datas/${itemInfo.id}/download`
+      let dataUrl = `https://www.supermapol.com/web/datas/${
+        itemInfo.id
+      }/download`
       let headers = {}
       if (cookie) {
         headers = {

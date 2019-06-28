@@ -328,6 +328,12 @@ export default class MT_layerManager extends React.Component {
           curThemeType = constants.THEME_UNIFY_LABEL
           // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
+        case ThemeType.LABELUNIQUE:
+          curThemeType = constants.THEME_UNIQUE_LABEL
+          break
+        case ThemeType.LABELRANGE:
+          curThemeType = constants.THEME_RANGE_LABEL
+          break
         case ThemeType.DOTDENSITY:
           curThemeType = constants.THEME_DOT_DENSITY
           break
@@ -434,6 +440,8 @@ export default class MT_layerManager extends React.Component {
         case ThemeType.UNIQUE:
         case ThemeType.RANGE:
         case ThemeType.LABEL:
+        case ThemeType.LABELUNIQUE:
+        case ThemeType.LABELRANGE:
         case ThemeType.GRAPH:
         case ThemeType.GRADUATEDSYMBOL:
         case ThemeType.DOTDENSITY:

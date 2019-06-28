@@ -140,6 +140,8 @@ const Map_Main_Menu = {
 
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
+  THEME_UNIQUE_EXPRESSION: 'Unique Expression',
+  THEME_RANGE_EXPRESSION: 'Range Expression',
   THEME_COLOR_SCHEME: 'Color Scheme',
   THEME_FONT_SIZE: 'Font Size',
   THEME_FONT: 'Font',

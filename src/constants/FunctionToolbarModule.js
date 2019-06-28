@@ -824,6 +824,91 @@ const labelMenuInfo = param => [
     },
   },
 ]
+
+//单值标签
+const uniqueLabelMenuInfo = param => [
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_UNIQUE_EXPRESSION,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_UNIQUE_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_UNIQUE_EXPRESSION,
+    //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION,
+          '单值表达式',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getUniqueColorScheme(
+          ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
+//分段标签
+const rangeLabelMenuInfo = param => [
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_RANGE_EXPRESSION,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_RANGE_EXPRESSION,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_RANGE_EXPRESSION,
+    //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION,
+          '单值表达式',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    btntitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_RANGELABEL_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
 //统计专题图
 const graphMenuInfo = param => [
   {
@@ -1423,6 +1508,8 @@ export {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  uniqueLabelMenuInfo,
+  rangeLabelMenuInfo,
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,

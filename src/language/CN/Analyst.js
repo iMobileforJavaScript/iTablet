@@ -55,6 +55,7 @@ const Analyst_Labels = {
   ADD_NODES: '添加节点',
   UPSTREAM_TRACKING: '上游追踪',
   DOWNSTREAM_TRACKING: '下游追踪',
+  CLEAR: '清除',
 
   BUFFER_ZONE: '缓冲区',
   MULTI_BUFFER_ZONE: '多重缓冲区',
@@ -191,6 +192,11 @@ const Analyst_Prompt = {
   LOGIN_ISERVER_FAILED: '连接iServer服务器失败，请检查ip地址和用户名密码',
   BEING_ANALYZED: '正在分析',
   ANALYZING_FAILED: '分析失败',
+  LOADING_MODULE: '正在加载模块',
+  LOADING_MODULE_FAILED: '加载模块失败，请检查数据集',
+  TWO_NODES_ARE_CONNECTED: '两点连通',
+  TWO_NODES_ARE_NOT_CONNECTED: '两点不连通',
+  NOT_FIND_SUITABLE_PATH: '没有查找到合适的路径',
 }
 
 export {

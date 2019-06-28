@@ -30,6 +30,8 @@ function getThemeIconByType(type) {
       icon = require('./map/layers_theme_range_style_black.png')
       break
     case ThemeType.LABEL: // 标签专题图
+    case ThemeType.LABELUNIQUE:
+    case ThemeType.LABELRANGE:
       icon = require('./map/layers_theme_unify_label_style_black.png')
       break
     case ThemeType.GRAPH: // 统计专题图
@@ -64,6 +66,8 @@ function getThemeWhiteIconByType(type) {
       icon = require('./map/layers_theme_range_style.png')
       break
     case ThemeType.LABEL: // 标签专题图
+    case ThemeType.LABELUNIQUE:
+    case ThemeType.LABELRANGE:
       icon = require('./map/layers_theme_unify_label_style.png')
       break
     case ThemeType.GRAPH: // 统计专题图

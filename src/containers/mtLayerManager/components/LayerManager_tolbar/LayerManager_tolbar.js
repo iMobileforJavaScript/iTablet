@@ -3,7 +3,7 @@ import {
   ConstToolType,
   OpenData,
   layerManagerData,
-} from '../../../../constants/index'
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import {
   layersetting,
@@ -39,6 +39,7 @@ import { SMap, DatasetType } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import constants from '../../../workspace/constants'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -360,7 +361,9 @@ export default class LayerManager_tolbar extends React.Component {
       this.setVisible(false)
       SMap.setLayerFullView(this.state.layerdata.path)
       // eslint-disable-next-line react/prop-types
-      this.props.navigation.navigate('MapView')
+      this.props.navigation.navigate(
+        GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
+      )
     } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {

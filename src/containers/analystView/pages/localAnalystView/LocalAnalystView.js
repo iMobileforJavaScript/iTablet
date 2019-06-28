@@ -3,6 +3,7 @@ import { ConstPath, UserType } from '../../../../constants'
 import { Container, LinkageList } from '../../../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
+import { Toast, AnalystTools } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
@@ -12,6 +13,7 @@ import {
   EngineType,
   DatasetType,
   SFacilityAnalyst,
+  STransportationAnalyst,
 } from 'imobile_for_reactnative'
 
 export default class LocalAnalystView extends Component {
@@ -173,33 +175,25 @@ export default class LocalAnalystView extends Component {
         let params1 =
           this.props.nav.routes[this.props.nav.index - 1].params || {}
         let params2 = this.props.navigation.state.params || {}
-        let result = await SFacilityAnalyst.load(
-          {
-            alias: parent.title,
-            server: parent.server,
-            engineType: parent.engineType,
-          },
-          {
-            networkDataset: item.datasetName,
-            weightFieldInfos: [
-              {
-                name: 'length',
-                ftWeightField: 'smLength',
-                tfWeightField: 'smLength',
-              },
-            ],
-            // edgeIDField: 'SmEdgeID',
-            // nodeIDField: 'SmNodeID',
-            tolerance: 89,
-            // fNodeIDField: 'SmFNode',
-            // tNodeIDField: 'SmTNode',
-            directionField: 'Name',
-          },
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE,
         )
-        if (result) {
+
+        let res
+        // if (this.type === Analyst_Types.CONNECTIVITY_ANALYSIS) {
+        //   res = await this.loadFacility({ parent, item })
+        // } else {
+        res = await this.loadTransport({ parent, item })
+        // }
+
+        if (res.result) {
           this.props.setAnalystParams({
             ...params2,
           })
+          await AnalystTools.clear(this.type)
+          this.setLoading(false)
+          await SMap.setLayerFullView(res.layerInfo.path)
           NavigationService.goBack('AnalystListEntry')
           TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
@@ -211,11 +205,74 @@ export default class LocalAnalystView extends Component {
               NavigationService.navigate('LocalAnalystView', { ...params2 })
             },
           })
+        } else {
+          this.setLoading(false)
         }
       } catch (e) {
-        // console.warn(e)
+        this.setLoading(false)
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE_FAILED,
+        )
       }
     }.bind(this)())
+  }
+
+  loadFacility = async ({ parent, item }) => {
+    let data = await SFacilityAnalyst.load(
+      {
+        alias: parent.title,
+        server: parent.server,
+        engineType: parent.engineType,
+      },
+      {
+        networkDataset: item.datasetName,
+        weightFieldInfos: [
+          {
+            name: 'length',
+            ftWeightField: 'smLength',
+            tfWeightField: 'smLength',
+          },
+        ],
+        // edgeNameField: 'roadName',
+        weightName: 'length',
+        // edgeIDField: 'SmEdgeID',
+        // nodeIDField: 'SmNodeID',
+        tolerance: 89,
+        // fNodeIDField: 'SmFNode',
+        // tNodeIDField: 'SmTNode',
+        // directionField: 'Direction',
+      },
+    )
+    return data
+  }
+
+  loadTransport = async ({ parent, item }) => {
+    let data = await STransportationAnalyst.load(
+      {
+        alias: parent.title,
+        server: parent.server,
+        engineType: parent.engineType,
+      },
+      {
+        networkDataset: item.datasetName,
+        weightFieldInfos: [
+          {
+            name: 'length',
+            ftWeightField: 'smLength',
+            tfWeightField: 'smLength',
+          },
+        ],
+        edgeNameField: 'roadName',
+        weightName: 'length',
+        // edgeIDField: 'SmEdgeID',
+        // nodeIDField: 'SmNodeID',
+        tolerance: 89,
+        // fNodeIDField: 'SmFNode',
+        // tNodeIDField: 'SmTNode',
+        // directionField: 'Name',
+      },
+    )
+    return data
   }
 
   render() {

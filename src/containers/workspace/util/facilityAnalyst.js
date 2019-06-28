@@ -1,8 +1,8 @@
 import {
-  FacilityAnalyst,
-  FacilityAnalystSetting,
-  WeightFieldInfo,
-  WeightFieldInfos,
+  // FacilityAnalyst,
+  // FacilityAnalystSetting,
+  // WeightFieldInfo,
+  // WeightFieldInfos,
   Point,
   GeoStyle,
   Size2D,
@@ -149,33 +149,33 @@ async function loadModel(
     if (facilityAnalyst) {
       await facilityAnalyst.dispose()
     }
-    analystSetting = await new FacilityAnalystSetting().createObj()
-    await addGestureDetector()
-
-    await analystSetting.setNetworkDataset(datasetVector)
-    await analystSetting.setNodeIDField('SmNodeID')
-    await analystSetting.setEdgeIDField('SmID')
-    await analystSetting.setFNodeIDField('SmFNode')
-    await analystSetting.setTNodeIDField('SmTNode')
-    await analystSetting.setDirectionField('Direction')
-
-    let fieldInfo = await new WeightFieldInfo().createObj()
-    await fieldInfo.setName('length')
-    await fieldInfo.setFTWeightField('SmLength')
-    await fieldInfo.setTFWeightField('SmLength')
-
-    let fieldInfos = await new WeightFieldInfos().createObj()
-    await fieldInfos.add(fieldInfo)
-
-    await analystSetting.setWeightFieldInfos(fieldInfos)
-
-    facilityAnalyst = await new FacilityAnalyst().createObj()
-    await facilityAnalyst.setAnalystSetting(analystSetting)
-
-    let result = await facilityAnalyst.load()
-
-    mMapControl && (await mMapControl.setAction(Action.SELECT))
-    return result || false
+    // analystSetting = await new FacilityAnalystSetting().createObj()
+    // await addGestureDetector()
+    //
+    // await analystSetting.setNetworkDataset(datasetVector)
+    // await analystSetting.setNodeIDField('SmNodeID')
+    // await analystSetting.setEdgeIDField('SmID')
+    // await analystSetting.setFNodeIDField('SmFNode')
+    // await analystSetting.setTNodeIDField('SmTNode')
+    // await analystSetting.setDirectionField('Direction')
+    //
+    // let fieldInfo = await new WeightFieldInfo().createObj()
+    // await fieldInfo.setName('length')
+    // await fieldInfo.setFTWeightField('SmLength')
+    // await fieldInfo.setTFWeightField('SmLength')
+    //
+    // let fieldInfos = await new WeightFieldInfos().createObj()
+    // await fieldInfos.add(fieldInfo)
+    //
+    // await analystSetting.setWeightFieldInfos(fieldInfos)
+    //
+    // facilityAnalyst = await new FacilityAnalyst().createObj()
+    // await facilityAnalyst.setAnalystSetting(analystSetting)
+    //
+    // let result = await facilityAnalyst.load()
+    //
+    // mMapControl && (await mMapControl.setAction(Action.SELECT))
+    // return result || false
   } catch (e) {
     Toast.show('加载失败')
     return false

@@ -139,16 +139,16 @@ function getLocalAnalystEntryData(language, type) {
         })
       },
     },
-    {
-      key: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
-      title: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
-      action: (cb = () => {}) => {
-        NavigationService.navigate('LocalAnalystView', {
-          type: type,
-          cb: cb,
-        })
-      },
-    },
+    // {
+    //   key: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
+    //   title: getLanguage(language).Analyst_Labels.BUILD_A_NETWORK_DATASET,
+    //   action: (cb = () => {}) => {
+    //     NavigationService.navigate('LocalAnalystView', {
+    //       type: type,
+    //       cb: cb,
+    //     })
+    //   },
+    // },
   ]
   return data
 }

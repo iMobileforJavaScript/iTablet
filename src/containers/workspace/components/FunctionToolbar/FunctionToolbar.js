@@ -156,6 +156,12 @@ export default class FunctionToolbar extends React.Component {
         case ThemeType.LABEL:
           type = constants.THEME_UNIFY_LABEL
           break
+        case ThemeType.LABELUNIQUE:
+          type = constants.THEME_UNIQUE_LABEL
+          break
+        case ThemeType.LABELRANGE:
+          type = constants.THEME_RANGE_LABEL
+          break
         case ThemeType.GRAPH:
           type = constants.THEME_GRAPH_STYLE
           break
@@ -1044,12 +1050,12 @@ export default class FunctionToolbar extends React.Component {
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
-          {
-            key: constants.EDIT,
-            title: constants.EDIT,
-            action: this.showEdit,
-            image: require('../../../../assets/function/icon_edit.png'),
-          },
+          // {
+          //   key: constants.EDIT,
+          //   title: constants.EDIT,
+          //   action: this.showEdit,
+          //   image: require('../../../../assets/function/icon_edit.png'),
+          // },
           {
             key: constants.TOOL,
             title: constants.TOOL,
@@ -1260,7 +1266,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   geometrySelected = event => {
-    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+    SMap.appointEditGeometry(event.id, event.layerInfo.path)
   }
 
   geometryMultiSelected = () => {
