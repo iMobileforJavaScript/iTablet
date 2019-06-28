@@ -154,6 +154,8 @@ const Map_Main_Menu = {
 
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
+  THEME_UNIQUE_EXPRESSION: '单值表达式',
+  THEME_RANGE_EXPRESSION: '分段表达式',
   THEME_COLOR_SCHEME: '颜色方案',
   THEME_FONT_SIZE: '字号',
   THEME_FONT: '字体',

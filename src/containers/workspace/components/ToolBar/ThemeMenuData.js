@@ -3073,10 +3073,10 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
       paramsTheme = {
         DatasourceAlias: ToolbarParams.themeDatasourceAlias,
         DatasetName: ToolbarParams.themeDatasetName,
-        RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
-        RangeParameter: '11.0',
-        ColorScheme: 'CD_Cyans',
+        UniqueExpression: item.expression,
+        //RangeMode: 'EQUALINTERVAL',
+        //RangeParameter: '11.0',
+        ColorScheme: 'DA_Ragular',
       }
       await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
         .then(msg => {
@@ -3216,10 +3216,10 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
       paramsTheme = {
         DatasourceAlias: item.datasourceName,
         DatasetName: item.datasetName,
-        RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
-        RangeParameter: '11.0',
-        ColorScheme: 'CD_Cyans',
+        UniqueExpression: item.expression,
+        //RangeMode: 'EQUALINTERVAL',
+        //RangeParameter: '11.0',
+        ColorScheme: 'DA_Ragular',
       }
       await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
         .then(msg => {

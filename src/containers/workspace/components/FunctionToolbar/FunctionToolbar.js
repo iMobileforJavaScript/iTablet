@@ -156,6 +156,12 @@ export default class FunctionToolbar extends React.Component {
         case ThemeType.LABEL:
           type = constants.THEME_UNIFY_LABEL
           break
+        case ThemeType.LABELUNIQUE:
+          type = constants.THEME_UNIQUE_LABEL
+          break
+        case ThemeType.LABELRANGE:
+          type = constants.THEME_RANGE_LABEL
+          break
         case ThemeType.GRAPH:
           type = constants.THEME_GRAPH_STYLE
           break
