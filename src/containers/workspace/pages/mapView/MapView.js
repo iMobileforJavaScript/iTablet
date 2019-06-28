@@ -491,7 +491,7 @@ export default class MapView extends React.Component {
               height,
               tableType,
               cb: () =>
-                SMap.appointEditGeometry(event.id, event.layerInfo.name),
+                SMap.appointEditGeometry(event.id, event.layerInfo.path),
             })
         }
         break

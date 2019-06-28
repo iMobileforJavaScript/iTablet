@@ -34,7 +34,9 @@ export default class WeightAndStatistic extends React.Component {
       onlineParamsData.getStatisticMode(this.props.language),
     ]
     let data = params && params.data ? params.data : []
-    data.push('+')
+    if (data[data.length - 1] !== '+') {
+      data.push('+')
+    }
     this.state = {
       data: data,
 
