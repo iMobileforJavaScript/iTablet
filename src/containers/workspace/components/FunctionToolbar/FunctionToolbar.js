@@ -1260,7 +1260,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   geometrySelected = event => {
-    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+    SMap.appointEditGeometry(event.id, event.layerInfo.path)
   }
 
   geometryMultiSelected = () => {
