@@ -43,7 +43,7 @@ export default class Personal extends Component {
           userType: UserType.PROBATION_USER,
         })
         // NavigationService.goBack()
-        NavigationService.reset('Tabs')
+        NavigationService.popToTop('Tabs')
         await this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {

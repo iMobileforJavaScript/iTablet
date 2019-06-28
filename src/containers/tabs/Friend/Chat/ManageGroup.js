@@ -54,7 +54,7 @@ class ManageGroup extends Component {
 
   _leaveGroup = async () => {
     this.leaveDialog.setDialogVisible(false)
-    NavigationService.reset()
+    NavigationService.popToTop()
     let ctime = new Date()
     let time = Date.parse(ctime)
     await this.friend._sendMessage(
@@ -89,7 +89,7 @@ class ManageGroup extends Component {
 
   _disbandGroup = async () => {
     this.disbandDialog.setDialogVisible(false)
-    NavigationService.reset()
+    NavigationService.popToTop()
     let ctime = new Date()
     let time = Date.parse(ctime)
     await this.friend._sendMessage(

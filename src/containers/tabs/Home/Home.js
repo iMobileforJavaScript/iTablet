@@ -188,7 +188,7 @@ export default class Home extends Component {
           this.container.setLoading(false)
         }
         // NavigationService.navigate('Mine')
-        NavigationService.reset('Tabs')
+        NavigationService.popToTop('Tabs')
         this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {

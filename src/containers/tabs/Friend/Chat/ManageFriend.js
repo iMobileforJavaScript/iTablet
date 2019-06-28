@@ -50,7 +50,7 @@ class ManageFriend extends Component {
     })
     FriendListFileHandle.delFromFriendList(this.targetUser.id)
     this.delDialog.setDialogVisible(false)
-    NavigationService.reset()
+    NavigationService.popToTop()
   }
 
   render() {

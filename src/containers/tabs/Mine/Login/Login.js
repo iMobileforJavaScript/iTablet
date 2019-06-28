@@ -83,7 +83,7 @@ export default class Login extends React.Component {
     })
     if (!this.state.isFirstLogin) {
       // NavigationService.navigate('Mine')
-      NavigationService.reset('Tabs')
+      NavigationService.popToTop('Tabs')
     }
   }
 
@@ -244,7 +244,7 @@ export default class Login extends React.Component {
         //   userType: UserType.COMMON_USER,
         // })
         if (!this.state.isFirstLogin) {
-          NavigationService.reset('Tabs')
+          NavigationService.popToTop('Tabs')
         }
       } else {
         this.props.setUser({

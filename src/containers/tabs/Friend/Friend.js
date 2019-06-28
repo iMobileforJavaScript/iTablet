@@ -683,7 +683,7 @@ export default class Friend extends Component {
           userName: 'Customer',
           userType: UserType.PROBATION_USER,
         })
-        NavigationService.reset('Tabs')
+        NavigationService.popToTop('Tabs')
         this.props.openWorkspace({ server: customPath })
         Toast.show(
           getLanguage(this.props.language).Friends.SYS_LOGIN_ON_OTHER_DEVICE,

@@ -71,7 +71,7 @@ export default class ToggleAccount extends Component {
               }
               if (result) {
                 this.props.setUser(info.item)
-                NavigationService.reset('Tabs')
+                NavigationService.popToTop('Tabs')
                 // NavigationService.navigate('Mine')
               } else {
                 Toast.show(getLanguage(global.language).Profile.SWITCH_FAIL)

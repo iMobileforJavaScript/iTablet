@@ -82,6 +82,13 @@ function replace(routeName, params) {
   _navigator.dispatch(resetAction)
 }
 
+function popToTop(routeName, params) {
+  let resetAction = NavigationActions.popToTop({
+    routeName,
+    params,
+  })
+  _navigator.dispatch(resetAction)
+}
 // add other navigation functions that you need and export them
 
 export default {
@@ -92,4 +99,5 @@ export default {
   reset,
   replace,
   pop,
+  popToTop,
 }
