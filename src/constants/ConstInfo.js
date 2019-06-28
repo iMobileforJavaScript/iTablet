@@ -106,4 +106,6 @@ export default {
   ANALYST_START: '开始分析',
   ANALYST_SUCCESS: '分析成功',
   ANALYST_FAIL: '分析失败',
+
+  CHANGE_PLOT_LIB_FAILED: '切换标绘库失败',
 }

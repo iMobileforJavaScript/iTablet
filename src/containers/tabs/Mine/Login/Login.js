@@ -41,8 +41,8 @@ export default class Login extends React.Component {
     this.state = {
       onEmailTitleFocus: false,
       onPhoneTitleFocus: true,
-      titleEmailDefaultBg: titleOnFocusBackgroundColor,
-      titlePhoneBg: titleOnBlurBackgroundColor,
+      titleEmailDefaultBg: titleOnBlurBackgroundColor,
+      titlePhoneBg: titleOnFocusBackgroundColor,
       behavior: 'padding',
       isChangeOrientation: false,
       isFirstLogin: this.props.navigation === undefined,

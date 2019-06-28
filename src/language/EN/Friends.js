@@ -99,5 +99,6 @@ const Friends = {
   EXCEED_NAME_LIMIT: 'Name should be within 40 words (Chinese within 20 words)',
   SYS_MSG_MOD_GROUP_NAME: ' changed the group name to ',
   SYS_LOGIN_ON_OTHER_DEVICE: 'Your account is logged in on other device',
+  SYS_MSG_REJ: "The opposite haven't added you as friend yet",
 }
 export { Friends }

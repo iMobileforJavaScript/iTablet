@@ -57,13 +57,34 @@ async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
           }
         }
       } else if (isFile === 'directory') {
-        await _setFilterDatas(newPath, fileType, arrFilterFile)
+        if (fileName === 'Plotting') {
+          await _getPlotingLibDataList(newPath, arrFilterFile)
+        } else await _setFilterDatas(newPath, fileType, arrFilterFile)
       }
     }
   } catch (e) {
     // Toast.show('没有数据')
   }
   return arrFilterFile
+}
+
+/**获取标绘库数据列表 */
+async function _getPlotingLibDataList(fileDir, arrFile) {
+  let arrPlotDirContent = await FileTools.getDirectoryContent(fileDir)
+  for (let i = 0; i < arrPlotDirContent.length; i++) {
+    let fileContent = arrPlotDirContent[i]
+    let isFile = fileContent.type
+    let fileName = fileContent.name
+    let newPath = fileDir + '/' + fileName
+    if (isFile === 'directory') {
+      arrFile.push({
+        filePath: newPath,
+        fileName: fileName,
+        directory: newPath,
+        fileType: 'plotting',
+      })
+    }
+  }
 }
 
 /** 构造游客以及当前用户数据*/
@@ -192,6 +213,15 @@ async function getOnlineData(currentPage, pageSize, cb = () => {}) {
   try {
     let strDataList = await SOnlineService.getDataList(currentPage, pageSize)
     let objDataList = JSON.parse(strDataList)
+    if (objDataList.content) {
+      //过滤friendlist
+      for (let i = objDataList.content.length - 1; i > -1; i--) {
+        if (objDataList.content[i].fileName.indexOf('friend.list') != -1) {
+          objDataList.content.splice(i, 1)
+          objDataList.total -= 1
+        }
+      }
+    }
     if (objDataList.content && objDataList.content.length > 0) {
       cb && cb(objDataList.total)
       let arrDataContent = objDataList.content

@@ -186,8 +186,8 @@ function getCollectionData(libId, symbolCode, params) {
 }
 
 /** 采集分类点击事件 **/
-function showCollection(libId, symbolCode, type) {
-  SMap.setPlotSymbol(libId, symbolCode)
+async function showCollection(libId, symbolCode, type) {
+  await SMap.setPlotSymbol(libId, symbolCode)
   let { data, buttons } = getCollectionData(libId, symbolCode, _params)
   if (!_params.setToolbarVisible) return
   // _params.setLastState()

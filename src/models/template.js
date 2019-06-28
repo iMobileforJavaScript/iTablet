@@ -3,7 +3,7 @@ import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
-import { ConstPath, ConstInfo } from '../constants'
+import { ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import xml2js from 'react-native-xml2js'
 let parser = new xml2js.Parser()
@@ -14,6 +14,7 @@ export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const SET_CURRENT_TEMPLATE_SYMBOL_LIST =
   'SET_CURRENT_TEMPLATE_SYMBOL_LIST'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
+export const SET_PLOT_LIBIDS = 'SET_PLOT_LIBIDS'
 
 // let isExporting = false
 
@@ -160,6 +161,14 @@ export const importWorkspace = (params, cb = () => {}) => async (
   }
 }
 
+//导入标绘库
+// export const importPlotLib= async (params) => {
+export const importPlotLib = (params, cb = () => {}) => async () => {
+  let result = await SMap.importPlotLibData(params.path)
+  cb && cb({ result })
+  return { result }
+}
+
 // 导入模版
 export const importTemplate = (params, cb = () => {}) => async dispatch => {
   // 关闭所有地图
@@ -236,10 +245,9 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
       cb && cb(params)
       return
     }
+    let plotLibPath = path + '/Symbol'
+    let plotIconPath = path + '/SymbolIcon'
 
-    let plotLibPath = await FileTools.appendingHomeDirectory(
-      ConstPath.PlotLibPath,
-    )
     let plotLibIds
     await fs.readDir(plotLibPath).then(async data => {
       let plotLibPaths = []
@@ -247,7 +255,16 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
         plotLibPaths.push(data[i].path)
       }
       plotLibIds = await SMap.initPlotSymbolLibrary(plotLibPaths)
-      await fs.readDir(path).then(async data => {
+      let plotlibIdAndNameArr = []
+      let getPlotSymbolLibNameById = async function(libId) {
+        let name = await SMap.getPlotSymbolLibNameById(libId)
+        return name
+      }
+      for (let libIndex = 0; libIndex < plotLibIds.length; libIndex++) {
+        let plotLibName = await getPlotSymbolLibNameById(plotLibIds[libIndex])
+        plotlibIdAndNameArr.push([plotLibName, plotLibIds[libIndex]])
+      }
+      await fs.readDir(plotIconPath).then(async data => {
         let rootFeature = []
         for (let i = 0; i < data.length; i++) {
           let subData = {}
@@ -255,6 +272,21 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
           obj.name = data[i].name
           obj.code = (i + 1).toString()
           obj.type = data[i].name
+          let getID = function(name) {
+            let id
+            for (
+              let libIndex = 0;
+              libIndex < plotlibIdAndNameArr.length;
+              libIndex++
+            ) {
+              if (name == plotlibIdAndNameArr[libIndex][0]) {
+                id = plotlibIdAndNameArr[libIndex][1]
+              }
+            }
+            return id
+          }
+          let lib
+          lib = getID(data[i].name)
           let dealData = async function(path) {
             let mList = []
             await fs.readDir(path).then(async children => {
@@ -262,10 +294,10 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
                 let childData = {}
                 let obj1 = {}
                 obj1.name = children[j].name
-                obj1.code = plotLibIds[i]
+                // obj1.code = plotLibIds[i]
+                obj1.code = lib
                 obj1.type = children[j].type
                 obj1.path = children[j].path
-
                 let endWith = function(str, endStr) {
                   var d = str.length - endStr.length
                   return d >= 0 && str.lastIndexOf(endStr) == d
@@ -285,7 +317,6 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
             })
             return mList
           }
-
           subData.$ = obj
           subData.feature = await dealData(data[i].path)
           rootFeature.push(subData)
@@ -296,6 +327,10 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
             symbols: rootFeature || [],
             ...params,
           },
+        })
+        dispatch({
+          type: SET_PLOT_LIBIDS,
+          payload: plotLibIds || [],
         })
         cb && cb(params)
       })
@@ -369,6 +404,38 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
   }
 }
 
+//设置当前标绘库
+export const setCurrentPlotList = (params, cb = () => {}) => async dispatch => {
+  try {
+    let list = []
+    // if (params.$.datasetName && params.$.type !== 'Unknown') {
+    //   list = [{ ...params.$, field: params.fields[0].field }]
+    // }
+    let getData = function(data) {
+      if (!data.feature || data.feature.length === 0) return
+      for (let i = 0; i < data.feature.length; i++) {
+        let item = data.feature[i]
+        // list.push({ ...item.$, field: item.fields[0].field })
+        if (item.feature && item.feature.length > 0) {
+          getData(item)
+        } else {
+          list.push({ ...item.$, field: item.fields[0].field })
+        }
+      }
+    }
+    getData(params)
+
+    await dispatch({
+      type: SET_CURRENT_TEMPLATE_SYMBOL_LIST,
+      payload: list || [],
+    })
+    return
+  } catch (e) {
+    cb && cb(params)
+    return
+  }
+}
+
 // 设置当前选择模板符号列表
 export const setCurrentTemplateList = (
   params,
@@ -412,6 +479,7 @@ const initialState = fromJS({
   currentTemplateInfo: {},
   currentTemplateList: [],
   latestTemplateSymbols: [],
+  plotLibIds: [],
 })
 
 export default handleActions(
@@ -440,6 +508,9 @@ export default handleActions(
     },
     [`${SET_CURRENT_TEMPLATE_SYMBOL_LIST}`]: (state, { payload }) => {
       return state.setIn(['currentTemplateList'], fromJS(payload))
+    },
+    [`${SET_PLOT_LIBIDS}`]: (state, { payload }) => {
+      return state.setIn(['plotLibIds'], fromJS(payload))
     },
     [`${SET_TEMPLATE}`]: (state, { payload }) => {
       let newData = state.toJS().templates || []
@@ -498,6 +569,7 @@ export default handleActions(
         }
         data.currentTemplateInfo = {}
         data.currentTemplateList = []
+        data.plotLibIds = []
         return fromJS(data)
       } else {
         return state

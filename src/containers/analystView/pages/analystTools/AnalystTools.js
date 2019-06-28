@@ -8,6 +8,7 @@ import analystData from './analystData'
 import { setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
+import NavigationService from '../../../NavigationService'
 import { SMediaCollector } from 'imobile_for_reactnative'
 
 export default class AnalystTools extends Component {
@@ -21,6 +22,7 @@ export default class AnalystTools extends Component {
     setMapLegend: () => {},
     setBackAction: () => {},
     removeBackAction: () => {},
+    closeMap: () => {},
   }
 
   constructor(props) {
@@ -86,6 +88,37 @@ export default class AnalystTools extends Component {
     )
   }
 
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  back = () => {
+    // 优先处理其他界面跳转到MapView传来的返回事件
+    if (this.backAction && typeof this.backAction === 'function') {
+      this.backAction()
+      this.backAction = null
+      this.mapController.reset()
+      return
+    }
+
+    (async function() {
+      try {
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.CLOSING,
+          //'正在关闭地图'
+        )
+        await this.props.closeMap()
+        GLOBAL.clearMapData()
+        this.setLoading(false)
+        NavigationService.goBack()
+      } catch (e) {
+        this.setLoading(false)
+      }
+    }.bind(this)())
+    return true
+  }
+
   render() {
     return (
       <Container
@@ -94,6 +127,7 @@ export default class AnalystTools extends Component {
         headerProps={{
           title: getLanguage(this.props.language).Map_Module.DATA_ANALYSIS,
           navigation: this.props.navigation,
+          backAction: this.back,
         }}
       >
         <TableList

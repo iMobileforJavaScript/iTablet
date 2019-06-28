@@ -1,8 +1,8 @@
 import {
   TransportationAnalyst,
   TransportationAnalystSetting,
-  WeightFieldInfo,
-  WeightFieldInfos,
+  // WeightFieldInfo,
+  // WeightFieldInfos,
   Point,
   CoordSysTranslator,
   CoordSysTransParameter,
@@ -221,15 +221,15 @@ async function loadRouteModel(mapView, mapControl, datasetVector) {
     await analystSetting.setFNodeIDField('SmFNode')
     await analystSetting.setTNodeIDField('SmTNode')
 
-    let fieldInfo = await new WeightFieldInfo().createObj()
-    await fieldInfo.setName('length')
-    await fieldInfo.setFTWeightField('smLength')
-    await fieldInfo.setTFWeightField('smLength')
-
-    let fieldInfos = await new WeightFieldInfos().createObj()
-    await fieldInfos.add(fieldInfo)
-
-    await analystSetting.setWeightFieldInfos(fieldInfos)
+    // let fieldInfo = await new WeightFieldInfo().createObj()
+    // await fieldInfo.setName('length')
+    // await fieldInfo.setFTWeightField('smLength')
+    // await fieldInfo.setTFWeightField('smLength')
+    //
+    // let fieldInfos = await new WeightFieldInfos().createObj()
+    // await fieldInfos.add(fieldInfo)
+    //
+    // await analystSetting.setWeightFieldInfos(fieldInfos)
 
     transportationAnalyst = await new TransportationAnalyst().createObj()
     await transportationAnalyst.setAnalystSetting(analystSetting)

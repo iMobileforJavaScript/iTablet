@@ -376,6 +376,49 @@ function getEditData(type) {
         // },
       ]
       break
+    case ConstToolType.MAP_EDIT_CAD:
+      data = [
+        {
+          key: constants.EDIT_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_NODES,
+          //constants.EDIT_NODE,
+          size: 'large',
+          action: editNode,
+          image: require('../../../../assets/mapTools/icon_edit_node_black.png'),
+        },
+        {
+          key: constants.DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          //constants.DELETE,
+          action: remove,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_delete_black.png'),
+        },
+        {
+          key: constants.UNDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+          //constants.UNDO,
+          size: 'large',
+          action: undo,
+          image: require('../../../../assets/mapTools/icon_undo_black.png'),
+        },
+        {
+          key: constants.REDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+          //constants.REDO,
+          size: 'large',
+          action: redo,
+          image: require('../../../../assets/mapTools/icon_recover_black.png'),
+        },
+        {
+          key: constants.CANCEL_SELECT,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_CANCEL,
+          size: 'large',
+          action: cancel,
+          image: require('../../../../assets/mapTools/icon_close_black.png'),
+        },
+      ]
+      break
   }
   if (type === ConstToolType.MAP_EDIT_DEFAULT) {
     buttons = [
@@ -535,6 +578,10 @@ function undo(type) {
 function redo(type) {
   // return SCollector.redo(type)
   return SMap.redo(type)
+}
+
+function cancel() {
+  return SMap.setAction(Action.SELECT)
 }
 
 function remove() {

@@ -486,6 +486,9 @@ export default class Friend extends Component {
       case MSGConstant.MSG_TEXT:
         text = msg.originMsg.message
         break
+      case MSGConstant.MSG_REJECT:
+        text = getLanguage(this.props.language).Friends.SYS_MSG_REJ
+        break
       case MSGConstant.MSG_FILE_NOTIFY:
         text = getLanguage(this.props.language).Friends.SYS_MSG_MAP
         break

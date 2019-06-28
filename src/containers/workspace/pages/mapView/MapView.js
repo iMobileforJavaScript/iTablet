@@ -29,7 +29,6 @@ import {
 import {
   Container,
   MTBtn,
-  TextBtn,
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
@@ -117,6 +116,7 @@ export default class MapView extends React.Component {
     setMapLegend: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
+    setAnalystParams: PropTypes.func,
   }
 
   constructor(props) {
@@ -478,6 +478,11 @@ export default class MapView extends React.Component {
               height = ConstToolType.HEIGHT[2]
               tableType = 'scroll'
               break
+            case DatasetType.CAD:
+              type = ConstToolType.MAP_EDIT_CAD
+              height = ConstToolType.HEIGHT[0]
+              column = 5
+              break
           }
           this.toolBox &&
             this.toolBox.setVisible(true, type, {
@@ -486,7 +491,7 @@ export default class MapView extends React.Component {
               height,
               tableType,
               cb: () =>
-                SMap.appointEditGeometry(event.id, event.layerInfo.name),
+                SMap.appointEditGeometry(event.id, event.layerInfo.path),
             })
         }
         break
@@ -1122,7 +1127,11 @@ export default class MapView extends React.Component {
             getLanguage(this.props.language).Prompt.READING_TEMPLATE,
           )
           let plotIconPath = await FileTools.appendingHomeDirectory(
-            ConstPath.PlotIconPath,
+            ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Plotting +
+              'PlotLibData',
           )
           await this.props.getSymbolPlots({
             path: plotIconPath,
@@ -1273,6 +1282,7 @@ export default class MapView extends React.Component {
   renderAnalystMapToolbar = () => {
     return (
       <AnalystMapToolbar
+        type={this.props.analyst.params.type}
         back={() => {
           let action =
             (this.props.navigation.state.params &&
@@ -1280,7 +1290,8 @@ export default class MapView extends React.Component {
             null
           action && action()
         }}
-        analyst={() => {}}
+        setAnalystParams={this.props.setAnalystParams}
+        language={this.props.language}
       />
     )
   }
@@ -1507,29 +1518,29 @@ export default class MapView extends React.Component {
 
   renderHeaderRight = () => {
     if (this.isExample) return null
-    if (this.props.analyst.params) {
-      return [
-        <TextBtn
-          key={'analyst'}
-          btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-          textStyle={styles.headerBtnTitle}
-          btnClick={() => {
-            if (this.props.analyst.params) {
-              this.analystRecommendVisible = !this.analystRecommendVisible
-              this.analystRecommend.setVisible(this.analystRecommendVisible)
-              if (this.props.device.orientation !== 'LANDSCAPE') {
-                if (this.analystRecommendVisible) {
-                  this.mapController.move({ bottom: 200 })
-                } else {
-                  this.mapController.reset()
-                }
-              }
-              return
-            }
-          }}
-        />,
-      ]
-    }
+    // if (this.props.analyst.params) {
+    //   return [
+    //     <TextBtn
+    //       key={'analyst'}
+    //       btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+    //       textStyle={styles.headerBtnTitle}
+    //       btnClick={() => {
+    //         if (this.props.analyst.params) {
+    //           // this.analystRecommendVisible = !this.analystRecommendVisible
+    //           // this.analystRecommend.setVisible(this.analystRecommendVisible)
+    //           // if (this.props.device.orientation !== 'LANDSCAPE') {
+    //           //   if (this.analystRecommendVisible) {
+    //           //     this.mapController.move({ bottom: 200 })
+    //           //   } else {
+    //           //     this.mapController.reset()
+    //           //   }
+    //           // }
+    //           // return
+    //         }
+    //       }}
+    //     />,
+    //   ]
+    // }
     return [
       <MTBtn
         key={'undo'}

@@ -35,6 +35,7 @@ export default class MyLocalData extends Component {
     user: Object,
     navigation: Object,
     down: Object,
+    importPlotLib: () => {},
     importWorkspace: () => {},
     importSceneWorkspace: () => {},
     updateDownList: () => {},
@@ -270,6 +271,30 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onImportPlotLib = async () => {
+    try {
+      this._closeModal()
+      if (this.itemInfo !== undefined) {
+        this.setLoading(
+          true,
+          //ConstInfo.DATA_IMPORTING
+          getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+        )
+        let filePath = this.itemInfo.item.filePath
+        let result = await this.props.importPlotLib({ path: filePath })
+        if (result.msg !== undefined) {
+          Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+        } else {
+          Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+        }
+        this.setLoading(false)
+      }
+    } catch (e) {
+      this.setLoading(false)
+      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+      this._closeModal()
+    }
+  }
   _onImportWorkspace = async () => {
     try {
       this._closeModal()
@@ -324,7 +349,12 @@ export default class MyLocalData extends Component {
         this.props.importSceneWorkspace,
       )
     } else {
-      this._onImportWorkspace()
+      if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'plotting'
+      ) {
+        this._onImportPlotLib()
+      } else this._onImportWorkspace()
     }
   }
 
