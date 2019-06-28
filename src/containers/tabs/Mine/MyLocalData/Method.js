@@ -213,6 +213,15 @@ async function getOnlineData(currentPage, pageSize, cb = () => {}) {
   try {
     let strDataList = await SOnlineService.getDataList(currentPage, pageSize)
     let objDataList = JSON.parse(strDataList)
+    if (objDataList.content) {
+      //过滤friendlist
+      for (let i = objDataList.content.length - 1; i > -1; i--) {
+        if (objDataList.content[i].fileName.indexOf('friend.list') != -1) {
+          objDataList.content.splice(i, 1)
+          objDataList.total -= 1
+        }
+      }
+    }
     if (objDataList.content && objDataList.content.length > 0) {
       cb && cb(objDataList.total)
       let arrDataContent = objDataList.content
@@ -267,9 +276,7 @@ async function downFileAction(
       let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
       let toPath = await FileTools.appendingHomeDirectory(path)
       // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-      let dataUrl = `https://www.supermapol.com/web/datas/${
-        itemInfo.id
-      }/download`
+      let dataUrl = `https://www.supermapol.com/web/datas/${itemInfo.id}/download`
       let headers = {}
       if (cookie) {
         headers = {
