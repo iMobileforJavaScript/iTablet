@@ -35,6 +35,7 @@ export default class AnalystMapToolbar extends React.Component {
     back: () => {},
     analyst?: () => {},
     setAnalystParams?: () => {},
+    language: string,
   }
 
   renderBottomBtn = (img, action) => {
@@ -63,6 +64,13 @@ export default class AnalystMapToolbar extends React.Component {
               let { edges } = await AnalystTools.analyst(this.props.type)
               if (edges && edges.length > 0) {
                 this.props.setAnalystParams(null)
+                AnalystTools.showMsg(this.props.type, true, this.props.language)
+              } else {
+                AnalystTools.showMsg(
+                  this.props.type,
+                  false,
+                  this.props.language,
+                )
               }
             }
           },

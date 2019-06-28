@@ -216,6 +216,9 @@ const Map_Main_Menu = {
   MOVE: 'Move',
   FREE_DRAW_ERASE: 'Free-draw Erase',
 
+  PLOTTING_LIB_CHANGE: 'Change Plotting Lib',
+  PLOTTING_LIB: 'Plotting Lib',
+
   SHARE: 'Share',
   SHARE_WECHAT: 'Wechat',
   SHARE_FRIENDS: 'Friends',

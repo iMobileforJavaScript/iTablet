@@ -614,6 +614,7 @@ export default class MT_layerManager extends React.Component {
         ) {
           action = this.taggingTool
         }
+        this.itemRefs[item.name] && this.itemRefs[item.name].refreshChildlist()
         return (
           <LayerManager_item
             // key={item.name}

@@ -68,6 +68,7 @@ class RenderModuleItem extends Component {
           isShowProgressView: true,
           // disabled: true,
         })
+        FileTools.deleteFile(this.props.downloadData.copyFilePath + '_')
         // this.downloading = false
       } else if (result !== this.state.progress) {
         this.downloading = true

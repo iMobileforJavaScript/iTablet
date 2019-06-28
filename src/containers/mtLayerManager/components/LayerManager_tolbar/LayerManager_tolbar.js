@@ -3,7 +3,7 @@ import {
   ConstToolType,
   OpenData,
   layerManagerData,
-} from '../../../../constants/index'
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import {
   layersetting,
@@ -39,6 +39,7 @@ import { SMap, DatasetType } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import constants from '../../../workspace/constants'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -348,7 +349,7 @@ export default class LayerManager_tolbar extends React.Component {
     ) {
       //'移除'
       (async function() {
-        await SMap.removeLayer(this.state.layerdata.name)
+        await SMap.removeLayer(this.state.layerdata.path)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
@@ -358,9 +359,11 @@ export default class LayerManager_tolbar extends React.Component {
     ) {
       //'全幅显示当前图层') {
       this.setVisible(false)
-      SMap.setLayerFullView(this.state.layerdata.name)
+      SMap.setLayerFullView(this.state.layerdata.path)
       // eslint-disable-next-line react/prop-types
-      this.props.navigation.navigate('MapView')
+      this.props.navigation.navigate(
+        GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
+      )
     } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
@@ -404,80 +407,80 @@ export default class LayerManager_tolbar extends React.Component {
     } else if (section.title === '1:5,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 5000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 5000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 5000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 5000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:10,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 10000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 10000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 10000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 10000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:25,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 25000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 25000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 25000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 25000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:50,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 50000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 50000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 50000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 50000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:100,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 100000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 100000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 100000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 100000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:250,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 250000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 250000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 250000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 250000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:500,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 500000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 500000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 500000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 500000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:1,000,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.name, 1000000)
+          await SMap.setMinVisibleScale(this.state.layerdata.path, 1000000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.name, 1000000)
+          await SMap.setMaxVisibleScale(this.state.layerdata.path, 1000000)
           this.setVisible(false)
         }
       }.bind(this)())
@@ -492,7 +495,7 @@ export default class LayerManager_tolbar extends React.Component {
         cb: async value => {
           if (value !== '') {
             (async function() {
-              await SMap.renameLayer(this.state.layerdata.name, value)
+              await SMap.renameLayer(this.state.layerdata.path, value)
               await this.props.getLayers()
             }.bind(this)())
           }
@@ -558,7 +561,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'设置为当前标注'
       (async function() {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
-          this.state.layerdata.name,
+          this.state.layerdata.path,
         )
         this.updateTagging()
         this.setVisible(false)
@@ -616,7 +619,7 @@ export default class LayerManager_tolbar extends React.Component {
                 this.props.device.orientation === 'LANDSCAPE'
                   ? ConstToolType.THEME_HEIGHT[4]
                   : ConstToolType.THEME_HEIGHT[10],
-              createThemeByLayer: this.state.layerdata.name,
+              createThemeByLayer: this.state.layerdata.path,
             },
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
@@ -639,22 +642,22 @@ export default class LayerManager_tolbar extends React.Component {
       case getLanguage(this.props.language).Map_Layer.VISIBLE:
       case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
         layerdata.isVisible = !layerdata.isVisible
-        rel = SMap.setVisible(layerdata.path, layerdata.isVisible)
+        rel = SMap.setLayerVisible(layerdata.path, layerdata.isVisible)
         break
       case getLanguage(this.props.language).Map_Layer.EDITABLE:
       case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
         layerdata.isEditable = !layerdata.isEditable
-        rel = SMap.setEditable(layerdata.path, layerdata.isEditable)
+        rel = SMap.setLayerEditable(layerdata.path, layerdata.isEditable)
         break
       case getLanguage(this.props.language).Map_Layer.SNAPABLE:
       case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
         layerdata.isSnapable = !layerdata.isSnapable
-        rel = SMap.setSnapable(layerdata.path, layerdata.isSnapable)
+        rel = SMap.setLayerSnapable(layerdata.path, layerdata.isSnapable)
         break
       case getLanguage(this.props.language).Map_Layer.OPTIONAL:
       case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
         layerdata.isSelectable = !layerdata.isSelectable
-        rel = SMap.setSelectable(layerdata.path, layerdata.isSelectable)
+        rel = SMap.setLayerSelectable(layerdata.path, layerdata.isSelectable)
         break
     }
     rel.then(isSuccess => {

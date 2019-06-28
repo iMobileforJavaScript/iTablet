@@ -35,6 +35,10 @@ const Profile = {
   SWITCH_ACCOUNT: '切换账号',
   LOG_OUT: '退出登录',
 
+  SWITCH_CURRENT: '处于当前用户下，不可切换',
+  SWITCHING: '切换中...',
+  SWITCH_FAIL: '切换失败，请尝试重新登录此用户',
+
   //地图服务地址
   SERVICE_ADDRESS: '服务地址',
   MAP_NAME: '地图名称',

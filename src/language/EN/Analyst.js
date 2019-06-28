@@ -193,6 +193,11 @@ const Analyst_Prompt = {
     'Failed to connect iServer, please check ip, username and password',
   BEING_ANALYZED: 'Being analyzed',
   ANALYZING_FAILED: 'Analyzing failed',
+  LOADING_MODULE: 'Module Loading',
+  LOADING_MODULE_FAILED: 'Failed to load module, please check the dataset',
+  TWO_NODES_ARE_CONNECTED: 'The two nodes are connected',
+  TWO_NODES_ARE_NOT_CONNECTED: 'The two nodes are not connected',
+  NOT_FIND_SUITABLE_PATH: 'Did not find suitable path',
 }
 
 export {

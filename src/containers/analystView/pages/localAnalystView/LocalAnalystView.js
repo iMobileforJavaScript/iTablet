@@ -3,6 +3,7 @@ import { ConstPath, UserType } from '../../../../constants'
 import { Container, LinkageList } from '../../../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
+import { Toast, AnalystTools } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
@@ -174,7 +175,11 @@ export default class LocalAnalystView extends Component {
         let params1 =
           this.props.nav.routes[this.props.nav.index - 1].params || {}
         let params2 = this.props.navigation.state.params || {}
-        let result = await STransportationAnalyst.load(
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE,
+        )
+        let { result, layerInfo } = await STransportationAnalyst.load(
           {
             alias: parent.title,
             server: parent.server,
@@ -203,6 +208,9 @@ export default class LocalAnalystView extends Component {
           this.props.setAnalystParams({
             ...params2,
           })
+          await AnalystTools.clear(this.type)
+          this.setLoading(false)
+          await SMap.setLayerFullView(layerInfo.path)
           NavigationService.goBack('AnalystListEntry')
           TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
@@ -214,9 +222,14 @@ export default class LocalAnalystView extends Component {
               NavigationService.navigate('LocalAnalystView', { ...params2 })
             },
           })
+        } else {
+          this.setLoading(false)
         }
       } catch (e) {
-        // console.warn(e)
+        this.setLoading(false)
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE_FAILED,
+        )
       }
     }.bind(this)())
   }

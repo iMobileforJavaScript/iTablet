@@ -1,5 +1,5 @@
 import MyLocalData from './MyLocalData'
-import { importWorkspace } from '../../../../models/template'
+import { importPlotLib, importWorkspace } from '../../../../models/template'
 import { importSceneWorkspace } from '../../../../models/map'
 import { updateDownList, removeItemOfDownList } from '../../../../models/online'
 import { connect } from 'react-redux'
@@ -12,6 +12,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setUser,
+  importPlotLib,
   importWorkspace,
   importSceneWorkspace,
   updateDownList,

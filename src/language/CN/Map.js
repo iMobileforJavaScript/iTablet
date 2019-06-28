@@ -233,6 +233,10 @@ const Map_Main_Menu = {
   MOVE: '平移',
   FREE_DRAW_ERASE: '手绘擦除',
 
+  //标绘
+  PLOTTING_LIB_CHANGE: '切换标绘库',
+  PLOTTING_LIB: '标绘库',
+
   //分享
   SHARE: '分享',
   SHARE_WECHAT: '微信',

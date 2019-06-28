@@ -478,6 +478,11 @@ export default class MapView extends React.Component {
               height = ConstToolType.HEIGHT[2]
               tableType = 'scroll'
               break
+            case DatasetType.CAD:
+              type = ConstToolType.MAP_EDIT_CAD
+              height = ConstToolType.HEIGHT[0]
+              column = 5
+              break
           }
           this.toolBox &&
             this.toolBox.setVisible(true, type, {
@@ -1122,7 +1127,11 @@ export default class MapView extends React.Component {
             getLanguage(this.props.language).Prompt.READING_TEMPLATE,
           )
           let plotIconPath = await FileTools.appendingHomeDirectory(
-            ConstPath.PlotIconPath,
+            ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Plotting +
+              'PlotLibData',
           )
           await this.props.getSymbolPlots({
             path: plotIconPath,
@@ -1282,6 +1291,7 @@ export default class MapView extends React.Component {
           action && action()
         }}
         setAnalystParams={this.props.setAnalystParams}
+        language={this.props.language}
       />
     )
   }

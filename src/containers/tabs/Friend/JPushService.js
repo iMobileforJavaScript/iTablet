@@ -1,8 +1,8 @@
 import { Platform } from 'react-native'
 import JPushModule from 'jpush-react-native'
-import { Buffer } from 'buffer'
 import fetch from 'node-fetch'
 import MsgConstant from './MsgConstant'
+import SMessageServiceHTTP from './SMessageServiceHTTP'
 
 export default class JPushService {
   static async push(messageStr, talkIds) {
@@ -16,7 +16,7 @@ export default class JPushService {
     //连接到RabbitMQ则不push
     let audience = []
     for (let key in talkIds) {
-      let bCon = await this.isConnectService(talkIds[key])
+      let bCon = await SMessageServiceHTTP.isConnectService(talkIds[key])
       !bCon && audience.push(talkIds[key])
     }
     if (audience.length === 0) return
@@ -71,35 +71,6 @@ export default class JPushService {
         return data
       })
     return result
-  }
-
-  //对方是否连接上RabbitMQ服务，没有连接上则发送push
-  static async isConnectService(talkId) {
-    let auth = Buffer.from(
-      MsgConstant.MSG_UserName + ':' + MsgConstant.MSG_Password,
-    ).toString('base64')
-    let url =
-      'http://' +
-      MsgConstant.MSG_IP +
-      ':15672/api/queues/%2F/Message_' +
-      talkId +
-      '?columns=consumers'
-    let extraData = {
-      headers: {
-        Authorization: 'Basic ' + auth,
-      },
-    }
-    let bCon = await fetch(url, extraData)
-      .then(data => {
-        return data.json()
-      })
-      .then(data => {
-        return data.consumers === 0 ? false : true
-      })
-      .catch(() => {
-        return false
-      })
-    return bCon
   }
 
   static sendLocalNotification(messageObj) {
