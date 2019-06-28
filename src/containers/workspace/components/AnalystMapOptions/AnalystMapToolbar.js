@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, AnalystTools } from '../../../../utils'
 import { Const } from '../../../../constants'
 
 const styles = StyleSheet.create({
@@ -31,8 +31,10 @@ const styles = StyleSheet.create({
 
 export default class AnalystMapToolbar extends React.Component {
   props: {
+    type: Number,
     back: () => {},
-    analyst: () => {},
+    analyst?: () => {},
+    setAnalystParams?: () => {},
   }
 
   renderBottomBtn = (img, action) => {
@@ -54,8 +56,15 @@ export default class AnalystMapToolbar extends React.Component {
         )}
         {this.renderBottomBtn(
           require('../../../../assets/mapEdit/icon_function_theme_param_commit.png'),
-          () => {
-            this.props.analyst && this.props.analyst()
+          async () => {
+            if (this.props.analyst) {
+              this.props.analyst()
+            } else {
+              let { edges } = await AnalystTools.analyst(this.props.type)
+              if (edges && edges.length > 0) {
+                this.props.setAnalystParams(null)
+              }
+            }
           },
         )}
       </View>

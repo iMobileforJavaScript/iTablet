@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { TextBtn } from '../../../../components'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, AnalystTools } from '../../../../utils'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import { getLanguage } from '../../../../language'
 import { TouchType } from '../../../../constants'
@@ -74,10 +74,12 @@ export default class AnalystMapButtons extends React.Component {
     )
   }
 
-  btnAction = ({ index, action }) => {
-    this.setState({
-      selected: index,
-    })
+  btnAction = ({ title, index, action }) => {
+    if (title !== getLanguage(this.props.language).Analyst_Labels.CLEAR) {
+      this.setState({
+        selected: index,
+      })
+    }
     action && action()
   }
 
@@ -138,7 +140,14 @@ export default class AnalystMapButtons extends React.Component {
         },
       ],
     }
-    return data[type]
+    let curData = data[type]
+    curData.push({
+      title: getLanguage(this.props.language).Analyst_Labels.CLEAR,
+      action: () => {
+        AnalystTools.clear(type)
+      },
+    })
+    return curData
   }
 
   getAnalystButtons = () => {
@@ -161,9 +170,9 @@ export default class AnalystMapButtons extends React.Component {
           this.state.selected === index
             ? styles.titleViewSelected
             : styles.titleView,
-          { marginTop: index * BTN_GAPE },
+          { marginTop: BTN_GAPE },
         ]}
-        btnClick={() => this.btnAction({ index, action })}
+        btnClick={() => this.btnAction({ title, index, action })}
       />
     )
   }

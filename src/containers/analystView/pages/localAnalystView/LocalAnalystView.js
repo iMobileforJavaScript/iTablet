@@ -11,7 +11,8 @@ import {
   SMap,
   EngineType,
   DatasetType,
-  SFacilityAnalyst,
+  // SFacilityAnalyst,
+  STransportationAnalyst,
 } from 'imobile_for_reactnative'
 
 export default class LocalAnalystView extends Component {
@@ -173,7 +174,7 @@ export default class LocalAnalystView extends Component {
         let params1 =
           this.props.nav.routes[this.props.nav.index - 1].params || {}
         let params2 = this.props.navigation.state.params || {}
-        let result = await SFacilityAnalyst.load(
+        let result = await STransportationAnalyst.load(
           {
             alias: parent.title,
             server: parent.server,
@@ -188,12 +189,14 @@ export default class LocalAnalystView extends Component {
                 tfWeightField: 'smLength',
               },
             ],
+            edgeNameField: 'roadName',
+            weightName: 'length',
             // edgeIDField: 'SmEdgeID',
             // nodeIDField: 'SmNodeID',
             tolerance: 89,
             // fNodeIDField: 'SmFNode',
             // tNodeIDField: 'SmTNode',
-            directionField: 'Name',
+            // directionField: 'Name',
           },
         )
         if (result) {

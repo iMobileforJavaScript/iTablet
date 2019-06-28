@@ -55,6 +55,7 @@ const Analyst_Labels = {
   ADD_NODES: 'Add Nodes',
   UPSTREAM_TRACKING: 'Upstream Tracking',
   DOWNSTREAM_TRACKING: 'Downstream Tracking',
+  CLEAR: 'Clear',
 
   BUFFER_ZONE: 'Buffer',
   MULTI_BUFFER_ZONE: 'Multi-buffer',

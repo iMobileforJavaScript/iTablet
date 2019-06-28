@@ -55,6 +55,7 @@ const Analyst_Labels = {
   ADD_NODES: '添加节点',
   UPSTREAM_TRACKING: '上游追踪',
   DOWNSTREAM_TRACKING: '下游追踪',
+  CLEAR: '清除',
 
   BUFFER_ZONE: '缓冲区',
   MULTI_BUFFER_ZONE: '多重缓冲区',

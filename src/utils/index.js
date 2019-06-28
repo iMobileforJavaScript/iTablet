@@ -9,6 +9,7 @@ import FetchUtils from './FetchUtils'
 import LayerUtil from './LayerUtil'
 import ModelUtils from './ModelUtils'
 import request from './request'
+import AnalystTools from './AnalystTools'
 export {
   screen,
   scaleSize,
@@ -24,4 +25,6 @@ export {
   /** 地图公共方法 **/
   LayerUtil,
   ModelUtils,
+  /** 分析公共方法 **/
+  AnalystTools,
 }

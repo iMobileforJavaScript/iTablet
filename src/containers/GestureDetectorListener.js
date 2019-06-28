@@ -1,11 +1,9 @@
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, STransportationAnalyst } from 'imobile_for_reactnative'
 import NavigationService from './NavigationService'
 import { getLanguage } from '../language'
 import { TouchType } from '../constants'
-import { Toast } from '../utils'
 
 let _params = {}
-// let isfull = true
 
 function setGestureDetectorListener(params) {
   (async function() {
@@ -48,25 +46,25 @@ function touchCallback(event) {
       })
       break
     case TouchType.SET_START_STATION:
-      Toast.show(TouchType.SET_START_STATION + '\n' + JSON.stringify(event))
+      STransportationAnalyst.setStartPoint(event.screenPoint)
       break
     case TouchType.MIDDLE_STATIONS:
-      Toast.show(TouchType.MIDDLE_STATIONS + '\n' + JSON.stringify(event))
+      STransportationAnalyst.addNode(event.screenPoint)
       break
     case TouchType.SET_END_STATION:
-      Toast.show(TouchType.SET_END_STATION + '\n' + JSON.stringify(event))
+      STransportationAnalyst.setEndPoint(event.screenPoint)
       break
     case TouchType.SET_AS_START_STATION:
-      Toast.show(TouchType.SET_AS_START_STATION + '\n' + JSON.stringify(event))
+      STransportationAnalyst.setStartPoint(event.screenPoint)
       break
     case TouchType.SET_AS_END_STATION:
-      Toast.show(TouchType.SET_AS_END_STATION) + '\n' + JSON.stringify(event)
+      STransportationAnalyst.setEndPoint(event.screenPoint)
       break
     case TouchType.ADD_STATIONS:
-      Toast.show(TouchType.ADD_STATIONS + '\n' + JSON.stringify(event))
+      STransportationAnalyst.addNode(event.screenPoint)
       break
     case TouchType.ADD_BARRIER_NODES:
-      Toast.show(TouchType.ADD_BARRIER_NODES + '\n' + JSON.stringify(event))
+      STransportationAnalyst.addBarrierNode(event.screenPoint)
       break
     case TouchType.ADD_NODES:
     case TouchType.NULL:
