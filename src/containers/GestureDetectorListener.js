@@ -1,4 +1,8 @@
-import { SMap, STransportationAnalyst } from 'imobile_for_reactnative'
+import {
+  SMap,
+  STransportationAnalyst,
+  // SFacilityAnalyst,
+} from 'imobile_for_reactnative'
 import NavigationService from './NavigationService'
 import { getLanguage } from '../language'
 import { TouchType } from '../constants'
@@ -56,9 +60,11 @@ function touchCallback(event) {
       break
     case TouchType.SET_AS_START_STATION:
       STransportationAnalyst.setStartPoint(event.screenPoint)
+      // SFacilityAnalyst.setStartPoint(event.screenPoint)
       break
     case TouchType.SET_AS_END_STATION:
       STransportationAnalyst.setEndPoint(event.screenPoint)
+      // SFacilityAnalyst.setEndPoint(event.screenPoint)
       break
     case TouchType.ADD_STATIONS:
       STransportationAnalyst.addNode(event.screenPoint)

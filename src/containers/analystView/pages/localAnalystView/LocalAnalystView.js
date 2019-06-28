@@ -12,7 +12,7 @@ import {
   SMap,
   EngineType,
   DatasetType,
-  // SFacilityAnalyst,
+  SFacilityAnalyst,
   STransportationAnalyst,
 } from 'imobile_for_reactnative'
 
@@ -179,38 +179,21 @@ export default class LocalAnalystView extends Component {
           true,
           getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE,
         )
-        let { result, layerInfo } = await STransportationAnalyst.load(
-          {
-            alias: parent.title,
-            server: parent.server,
-            engineType: parent.engineType,
-          },
-          {
-            networkDataset: item.datasetName,
-            weightFieldInfos: [
-              {
-                name: 'length',
-                ftWeightField: 'smLength',
-                tfWeightField: 'smLength',
-              },
-            ],
-            edgeNameField: 'roadName',
-            weightName: 'length',
-            // edgeIDField: 'SmEdgeID',
-            // nodeIDField: 'SmNodeID',
-            tolerance: 89,
-            // fNodeIDField: 'SmFNode',
-            // tNodeIDField: 'SmTNode',
-            // directionField: 'Name',
-          },
-        )
-        if (result) {
+
+        let res
+        // if (this.type === Analyst_Types.CONNECTIVITY_ANALYSIS) {
+        //   res = await this.loadFacility({ parent, item })
+        // } else {
+        res = await this.loadTransport({ parent, item })
+        // }
+
+        if (res.result) {
           this.props.setAnalystParams({
             ...params2,
           })
           await AnalystTools.clear(this.type)
           this.setLoading(false)
-          await SMap.setLayerFullView(layerInfo.path)
+          await SMap.setLayerFullView(res.layerInfo.path)
           NavigationService.goBack('AnalystListEntry')
           TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
@@ -232,6 +215,64 @@ export default class LocalAnalystView extends Component {
         )
       }
     }.bind(this)())
+  }
+
+  loadFacility = async ({ parent, item }) => {
+    let data = await SFacilityAnalyst.load(
+      {
+        alias: parent.title,
+        server: parent.server,
+        engineType: parent.engineType,
+      },
+      {
+        networkDataset: item.datasetName,
+        weightFieldInfos: [
+          {
+            name: 'length',
+            ftWeightField: 'smLength',
+            tfWeightField: 'smLength',
+          },
+        ],
+        // edgeNameField: 'roadName',
+        weightName: 'length',
+        // edgeIDField: 'SmEdgeID',
+        // nodeIDField: 'SmNodeID',
+        tolerance: 89,
+        // fNodeIDField: 'SmFNode',
+        // tNodeIDField: 'SmTNode',
+        // directionField: 'Direction',
+      },
+    )
+    return data
+  }
+
+  loadTransport = async ({ parent, item }) => {
+    let data = await STransportationAnalyst.load(
+      {
+        alias: parent.title,
+        server: parent.server,
+        engineType: parent.engineType,
+      },
+      {
+        networkDataset: item.datasetName,
+        weightFieldInfos: [
+          {
+            name: 'length',
+            ftWeightField: 'smLength',
+            tfWeightField: 'smLength',
+          },
+        ],
+        edgeNameField: 'roadName',
+        weightName: 'length',
+        // edgeIDField: 'SmEdgeID',
+        // nodeIDField: 'SmNodeID',
+        tolerance: 89,
+        // fNodeIDField: 'SmFNode',
+        // tNodeIDField: 'SmTNode',
+        // directionField: 'Name',
+      },
+    )
+    return data
   }
 
   render() {

@@ -1,4 +1,7 @@
-import { STransportationAnalyst } from 'imobile_for_reactnative'
+import {
+  STransportationAnalyst,
+  // SFacilityAnalyst,
+} from 'imobile_for_reactnative'
 import { Analyst_Types } from '../containers/analystView/AnalystType'
 import { getLanguage } from '../language'
 import { Toast } from '../utils'
@@ -11,6 +14,7 @@ async function analyst(type) {
       break
     case Analyst_Types.CONNECTIVITY_ANALYSIS:
       result = await STransportationAnalyst.findPath()
+      // result = await SFacilityAnalyst.findPathFromNodes()
       break
     case Analyst_Types.FIND_TSP_PATH:
       result = await STransportationAnalyst.findTSPPath()
@@ -27,6 +31,7 @@ async function clear(type) {
       break
     case Analyst_Types.CONNECTIVITY_ANALYSIS:
       result = await STransportationAnalyst.clear()
+      // result = await SFacilityAnalyst.clear()
       break
     case Analyst_Types.FIND_TSP_PATH:
       result = await STransportationAnalyst.clear()

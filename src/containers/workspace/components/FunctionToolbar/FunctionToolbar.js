@@ -1044,12 +1044,12 @@ export default class FunctionToolbar extends React.Component {
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
-          {
-            key: constants.EDIT,
-            title: constants.EDIT,
-            action: this.showEdit,
-            image: require('../../../../assets/function/icon_edit.png'),
-          },
+          // {
+          //   key: constants.EDIT,
+          //   title: constants.EDIT,
+          //   action: this.showEdit,
+          //   image: require('../../../../assets/function/icon_edit.png'),
+          // },
           {
             key: constants.TOOL,
             title: constants.TOOL,
