@@ -187,6 +187,7 @@ function getCollectionData(libId, symbolCode, params) {
 
 /** 采集分类点击事件 **/
 async function showCollection(libId, symbolCode, type) {
+  // await SMap.addCadLayer('PlotEdit')
   await SMap.setPlotSymbol(libId, symbolCode)
   let { data, buttons } = getCollectionData(libId, symbolCode, _params)
   if (!_params.setToolbarVisible) return
@@ -217,7 +218,6 @@ async function showCollection(libId, symbolCode, type) {
 }
 
 async function collectionSubmit() {
-  await SMap.addCadLayer('PlotEdit')
   await SMap.submit()
   await SMap.refreshMap()
 }

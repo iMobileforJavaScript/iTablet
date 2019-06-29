@@ -248,22 +248,30 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
     let plotLibPath = path + '/Symbol'
     let plotIconPath = path + '/SymbolIcon'
 
-    let plotLibIds
+    let plotLibIds = []
+    let plotlibIdAndNameArr = []
     await fs.readDir(plotLibPath).then(async data => {
       let plotLibPaths = []
       for (let i = 0; i < data.length; i++) {
         plotLibPaths.push(data[i].path)
       }
-      plotLibIds = await SMap.initPlotSymbolLibrary(plotLibPaths)
-      let plotlibIdAndNameArr = []
-      let getPlotSymbolLibNameById = async function(libId) {
-        let name = await SMap.getPlotSymbolLibNameById(libId)
-        return name
-      }
-      for (let libIndex = 0; libIndex < plotLibIds.length; libIndex++) {
-        let plotLibName = await getPlotSymbolLibNameById(plotLibIds[libIndex])
-        plotlibIdAndNameArr.push([plotLibName, plotLibIds[libIndex]])
-      }
+      // await SMap.addCadLayer('PlotEdit')
+      let resultArr = await SMap.initPlotSymbolLibrary(plotLibPaths)
+      Object.keys(resultArr).forEach(function(key) {
+        plotLibIds.push(resultArr[key])
+        plotlibIdAndNameArr.push([key, resultArr[key]])
+      })
+
+      // plotLibIds = [22,421]
+      // let plotlibIdAndNameArr = [['常用标号',22],['警用标号',421]]
+      // let getPlotSymbolLibNameById = async function(libId) {
+      //   let name = await SMap.getPlotSymbolLibNameById(libId)
+      //   return name
+      // }
+      // for (let libIndex = 0; libIndex < plotLibIds.length; libIndex++) {
+      //   let plotLibName = await getPlotSymbolLibNameById(plotLibIds[libIndex])
+      //   plotlibIdAndNameArr.push([plotLibName, plotLibIds[libIndex]])
+      // }
       await fs.readDir(plotIconPath).then(async data => {
         let rootFeature = []
         for (let i = 0; i < data.length; i++) {
