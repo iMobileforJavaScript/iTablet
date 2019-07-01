@@ -67,6 +67,7 @@ export default class AggregatePointsAnalystView extends Component {
   }
 
   getData = () => {
+    let data = {}
     let weight = ''
     let statisticModes = ''
 
@@ -80,22 +81,19 @@ export default class AggregatePointsAnalystView extends Component {
           statisticModes += ','
         }
       })
-    } else {
-      weight = 1 // 默认值
+      data.weight = weight
+      data.statisticModes = statisticModes
     }
-    return {
-      aggregateType: this.state.aggregateType.value,
-      meshType: this.state.meshType.value,
-      bounds: this.state.bounds,
-      meshSize: this.state.meshSize,
-      meshSizeUnit: 'Meter',
-      weight: weight,
-      statisticModes: statisticModes,
-      numericPrecision: this.state.numericPrecision,
-      rangeMode: this.state.rangeMode.value,
-      rangeCount: this.state.rangeCount,
-      colorGradientType: this.state.colorGradientType.value,
-    }
+    data.aggregateType = this.state.aggregateType.value
+    data.meshType = this.state.meshType.value
+    data.bounds = this.state.bounds
+    data.meshSize = this.state.meshSize
+    data.meshSizeUnit = 'Meter'
+    data.numericPrecision = this.state.numericPrecision
+    data.rangeMode = this.state.rangeMode.value
+    data.rangeCount = this.state.rangeCount
+    data.colorGradientType = this.state.colorGradientType.value
+    return data
   }
 
   popCallback = (type, data = {}, cb = () => {}) => {

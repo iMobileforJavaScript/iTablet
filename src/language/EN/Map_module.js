@@ -7,6 +7,6 @@ const Map_Module = {
   MAP_THEME: 'Thematic Map',
   MAP_COLLECTION: 'Collection',
   MAP_PLOTTING: 'Plotting',
-  DATA_ANALYSIS: 'Data Analysis',
+  MAP_ANALYST: 'Data Analysis',
 }
 export { Map_Module }
