@@ -84,12 +84,10 @@ class SymbolTabs extends React.Component {
       this.props.template.currentTemplateList.length === 0 &&
         this.initTemplate()
     } else {
-      // this.props.symbol.currentSymbols.length === 0 && this.initSymbols()
-      if (this.props.symbol.currentSymbols.length === 0) {
-        this.initSymbols()
-      } else {
-        this.initPlotting()
-      }
+      this.props.symbol.currentSymbols.length === 0 && this.initSymbols()
+    }
+    if (GLOBAL.Type === constants.MAP_PLOTTING) {
+      this.initPlotting()
     }
   }
 
@@ -136,20 +134,6 @@ class SymbolTabs extends React.Component {
       this.props.template.template.symbols &&
       this.props.template.template.symbols.length > 0
     ) {
-      // let dealData = function(list) {
-      //   let mList = []
-      //   for (let i = 0; i < list.length; i++) {
-      //     if (list[i].feature && list[i].feature.length > 0) {
-      //       list[i].id = list[i].code
-      //       list[i].childGroups = []
-      //       list[i].childGroups = dealData(list[i].feature)
-      //       mList.push(list[i])
-      //     }
-      //   }
-      //   return mList
-      // }
-      // let data = dealData(this.props.template.template.symbols)
-
       this.props.setCurrentPlotList(this.props.template.template.symbols[0])
     }
   }

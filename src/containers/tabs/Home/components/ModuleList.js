@@ -338,9 +338,10 @@ class ModuleList extends Component {
       } else if (Platform.OS === 'ios') {
         fileName = 'OlympicGreen_ios'
       }
-    } else if (moduleKey === '应急标绘') {
-      fileName = '湖南'
     }
+    // else if (moduleKey === '应急标绘') {
+    //   fileName = '湖南'
+    // }
 
     let tmpCurrentUser = this.props.currentUser
 
@@ -444,7 +445,12 @@ class ModuleList extends Component {
               this.moduleItems[index].getDownloading())
           )
         ) {
-          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
+          if (!(module == constants.MAP_PLOTTING))
+            this._showAlert(
+              this.moduleItems[index],
+              downloadData,
+              tmpCurrentUser,
+            )
         }
         if (latestMap) {
           item.action && item.action(tmpCurrentUser, latestMap)
