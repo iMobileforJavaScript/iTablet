@@ -1056,8 +1056,9 @@ export default class MapView extends React.Component {
           this.props.user.currentUser.userName,
         )
 
-        //地图打开后去获取图例数据
+        //地图打开后去获取比例尺、图例数据
         GLOBAL.scaleView.getInitialData()
+        GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&
           SMap.showMarker(

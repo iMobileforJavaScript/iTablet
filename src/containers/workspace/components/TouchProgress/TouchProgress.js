@@ -337,7 +337,7 @@ export default class TouchProgress extends Component {
         }
       }
 
-      if (tips === '') {
+      if (tips === '' || GLOBAL.Type === constants.MAP_THEME) {
         switch (layerType) {
           case 1: {
             if (this.props.selectName === '大小') {
