@@ -4496,7 +4496,7 @@ export default class ToolBar extends React.PureComponent {
             // ConstPath.UserPath + ConstPath.RelativeFilePath.Plotting,
             item.path,
           )
-          this.props.getSymbolPlots({ path: plotPath })
+          this.props.getSymbolPlots({ path: plotPath, isFirst: false })
         }
       }
       Toast.show(
@@ -5501,8 +5501,7 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}
