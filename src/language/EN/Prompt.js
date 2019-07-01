@@ -180,6 +180,8 @@ const Prompt = {
 
   TRANSFER_PARAMS: 'Param error! Please enter a number',
   PLEASE_ENTER: 'Please enter ',
+
+  REQUEST_TIMEOUT: 'Request timeout',
 }
 
 export { Prompt }

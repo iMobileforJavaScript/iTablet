@@ -31,9 +31,9 @@ function getHeaderTitle(type) {
       return getLanguage(global.language).Map_Module.MAP_COLLECTION
     case constants.MAP_PLOTTING:
       return getLanguage(global.language).Map_Module.MAP_PLOTTING
-    case getLanguage(global.language).Map_Module.MAP_ANALYST:
+    case constants.MAP_ANALYST:
       return getLanguage(global.language).Map_Module.MAP_ANALYST
-    case getLanguage(global.language).Map_Module.MAP_AR:
+    case constants.MAP_AR:
       return getLanguage(global.language).Map_Module.MAP_AR
   }
 }
@@ -404,7 +404,7 @@ function SetMap(param) {
     // },
     {
       key: '数据分析',
-      title: getLanguage(param).Map_Module.DATA_ANALYSIS,
+      title: getLanguage(param).Map_Module.MAP_ANALYST,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_mapanalysis.png'),
       style: {

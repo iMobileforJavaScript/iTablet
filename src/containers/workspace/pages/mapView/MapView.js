@@ -1137,6 +1137,7 @@ export default class MapView extends React.Component {
           await this.props.getSymbolPlots({
             path: plotIconPath,
             name: data.name,
+            isFirst: true,
           })
 
           // let plotLibPath = await FileTools.appendingHomeDirectory(
