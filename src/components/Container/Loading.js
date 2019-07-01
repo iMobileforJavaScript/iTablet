@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
-import { scaleSize, setSpText } from '../../utils'
+import { scaleSize, setSpText, Toast } from '../../utils'
 export const NORMAL = 'NORMAL'
 import { getLanguage } from '../../language/index'
 
@@ -19,6 +19,7 @@ export default class Loading extends Component {
     displayMode: string,
     info: string,
     timeout: number,
+    timeoutMsg: string,
   }
 
   static defaultProps = {
@@ -43,6 +44,7 @@ export default class Loading extends Component {
         timeout: props.timeout,
       },
     }
+    this.timer = null
   }
 
   setLoading = (loading, info, extra = {}) => {
@@ -73,11 +75,15 @@ export default class Loading extends Component {
                 extra,
               },
               () => {
-                // Toast.show('请求超时')
+                if (extra.timeoutMsg) {
+                  Toast.show(extra.timeoutMsg)
+                }
               },
             )
           }
         }, timeout)
+      } else {
+        !loading && this.timer && clearTimeout(this.timer)
       }
     }
   }

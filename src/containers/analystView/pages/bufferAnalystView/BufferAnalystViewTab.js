@@ -44,8 +44,8 @@ function getFlatType(language) {
 }
 
 const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
-  value: k,
-  key: k,
+  value: k + 1,
+  key: k + 1,
 }))
 
 export default class BufferAnalystViewTab extends Component {
@@ -503,7 +503,7 @@ export default class BufferAnalystViewTab extends Component {
           }}
         />
         <AnalystItem
-          title={getLanguage(this.props.language).Analyst_Labels.RESULT_DATA}
+          title={getLanguage(this.props.language).Analyst_Labels.RING_BUFFER}
           value={this.state.isRing}
           onChange={value => {
             this.setState({

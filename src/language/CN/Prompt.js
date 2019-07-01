@@ -175,6 +175,8 @@ const Prompt = {
 
   TRANSFER_PARAMS: '参数错误!请输入一个数字',
   PLEASE_ENTER: '请输入',
+
+  REQUEST_TIMEOUT: '请求超时',
 }
 
 export { Prompt }

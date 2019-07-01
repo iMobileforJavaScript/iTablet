@@ -106,11 +106,15 @@ export default class OnlineAnalystView extends Component {
     if (!this.checkData()) return
 
     switch (this.state.type) {
-      case AnalystEntryData.analysisTypes.AGGREGATE_POINTS_ANALYSIS: {
+      case AnalystEntryData.onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS: {
         if (!this.aggregatePointsView) break
         this.container.setLoading(
           true,
           getLanguage(this.props.language).Analyst_Prompt.BEING_ANALYZED,
+          {
+            timeout: 20000,
+            timeoutMsg: getLanguage(global.language).Prompt.REQUEST_TIMEOUT,
+          },
         )
         let analysisData = this.aggregatePointsView.getData()
         Object.assign(analysisData, { datasetName: this.state.datasetName })
@@ -122,12 +126,16 @@ export default class OnlineAnalystView extends Component {
         )
         break
       }
-      case AnalystEntryData.analysisTypes.DENSITY:
+      case AnalystEntryData.onlineAnalysisTypes.DENSITY:
       default: {
         if (!this.densityView) break
         this.container.setLoading(
           true,
           getLanguage(this.props.language).Analyst_Prompt.BEING_ANALYZED,
+          {
+            timeout: 20000,
+            timeoutMsg: getLanguage(global.language).Prompt.REQUEST_TIMEOUT,
+          },
         )
 
         let analysisData = this.densityView.getData()
@@ -146,8 +154,8 @@ export default class OnlineAnalystView extends Component {
   analystResult = async res => {
     if (res.result) {
       if (res.datasources && res.datasources instanceof Array) {
-        res.datasources.forEach(async datasource => {
-          // let server = datasource.substr(0, datasource.lastIndexOf("/"))
+        for (let i = 0; i < res.datasources.length; i++) {
+          let datasource = res.datasources[i]
           let alias = datasource.substr(datasource.lastIndexOf('/') + 1)
           await SMap.openDatasource(
             {
@@ -157,11 +165,11 @@ export default class OnlineAnalystView extends Component {
             },
             0,
           )
-        })
+        }
       }
 
-      SMap.viewEntire()
-      await this.props.getLayers()
+      let layers = await this.props.getLayers()
+      layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
       this.container.setLoading(false)
       NavigationService.goBack('AnalystListEntry')
       TabNavigationService.navigate('MapAnalystView')
@@ -173,7 +181,7 @@ export default class OnlineAnalystView extends Component {
       Toast.show(
         getLanguage(this.props.language).Analyst_Prompt.ANALYZING_FAILED +
           '\n' +
-          res.message,
+          res.error,
       )
     }
   }

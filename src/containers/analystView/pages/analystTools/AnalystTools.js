@@ -125,7 +125,7 @@ export default class AnalystTools extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Map_Module.DATA_ANALYSIS,
+          title: getLanguage(this.props.language).Map_Module.MAP_ANALYST,
           navigation: this.props.navigation,
           backAction: this.back,
         }}
