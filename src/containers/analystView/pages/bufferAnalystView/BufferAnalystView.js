@@ -86,8 +86,9 @@ export default class BufferAnalystView extends Component {
               )
 
               if (res.result) {
-                SMap.viewEntire()
-                await this.props.getLayers()
+                let layers = await this.props.getLayers()
+                layers.length > 0 &&
+                  (await SMap.setLayerFullView(layers[0].path))
                 NavigationService.goBack('AnalystListEntry')
                 if (optionParameter.showResult) {
                   TabNavigationService.navigate('MapAnalystView')
@@ -122,11 +123,10 @@ export default class BufferAnalystView extends Component {
                   ? ConstInfo.ANALYST_SUCCESS
                   : res.errorMsg || ConstInfo.ANALYST_FAIL,
               )
-
               if (res.result) {
-                SMap.viewEntire()
-                await this.props.getLayers()
-                NavigationService.goBack()
+                let layers = await this.props.getLayers()
+                layers.length > 0 &&
+                  (await SMap.setLayerFullView(layers[0].path))
                 NavigationService.goBack('AnalystListEntry')
                 if (
                   params.optionParameter &&

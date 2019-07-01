@@ -62,7 +62,6 @@ export default class IServerLoginPage extends React.Component {
       Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
       return
     }
-
     let ip = this.serverUrl.substr(0, this.serverUrl.lastIndexOf(':'))
     let port = this.serverUrl.substr(this.serverUrl.lastIndexOf(':') + 1)
 

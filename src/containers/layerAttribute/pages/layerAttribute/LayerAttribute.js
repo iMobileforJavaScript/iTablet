@@ -596,7 +596,7 @@ export default class LayerAttribute extends React.Component {
   relateAction = () => {
     if (this.state.currentFieldInfo.length === 0) return
     SMap.setAction(Action.PAN)
-    SMap.setEditable(this.props.currentLayer.path, false)
+    SMap.setLayerEditable(this.props.currentLayer.path, false)
     let geoStyle = new GeoStyle()
     geoStyle.setFillForeColor(0, 255, 0, 0.5)
     geoStyle.setLineWidth(1)

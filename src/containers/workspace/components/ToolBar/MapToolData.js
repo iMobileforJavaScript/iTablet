@@ -619,54 +619,96 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
   }
 }
 
-function point() {
+async function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  SMap.setAction(Action.CREATEPOINT)
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    SMap.setAction(Action.CREATEPOINT)
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
-function words() {
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
-  GLOBAL.TouchType = TouchType.MAP_TOOL_TAGGING
+async function words() {
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+    GLOBAL.TouchType = TouchType.MAP_TOOL_TAGGING
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
-function pointline() {
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
-  SMap.setAction(Action.CREATEPOLYLINE)
+async function pointline() {
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+    SMap.setAction(Action.CREATEPOLYLINE)
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
-function freeline() {
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
-  SMap.setAction(Action.DRAWLINE)
+async function freeline() {
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+    SMap.setAction(Action.DRAWLINE)
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
-function pointcover() {
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
-  SMap.setAction(Action.CREATEPOLYGON)
+async function pointcover() {
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+    SMap.setAction(Action.CREATEPOLYGON)
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
-function freecover() {
-  GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
-    isFullScreen: false,
-    height: ConstToolType.HEIGHT[4],
-  })
-  SMap.setAction(Action.DRAWPLOYGON)
+async function freecover() {
+  let isTaggingLayer = await SMap.isTaggingLayer(
+    _params.user.currentUser.userName,
+  )
+  if (isTaggingLayer) {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[4],
+    })
+    SMap.setAction(Action.DRAWPLOYGON)
+  } else {
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+  }
 }
 
 function name() {

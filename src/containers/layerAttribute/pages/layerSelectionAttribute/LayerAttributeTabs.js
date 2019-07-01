@@ -328,7 +328,7 @@ export default class LayerAttributeTabs extends React.Component {
 
     if (!selection || !selection.data) return
 
-    SMap.setEditable(layerPath, false)
+    SMap.setLayerEditable(layerPath, false)
     let objs = []
     let geoStyle = new GeoStyle()
     geoStyle.setFillForeColor(0, 255, 0, 0.5)
