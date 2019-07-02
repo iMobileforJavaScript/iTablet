@@ -68,7 +68,8 @@ export default class RNLegendView extends React.Component {
       nextState.backgroundColor !== this.state.backgroundColor ||
       nextState.widthPercent !== this.state.widthPercent ||
       nextState.heightPercent !== this.state.heightPercent ||
-      nextState.legendSource !== this.state.legendSource
+      nextState.legendSource !== this.state.legendSource ||
+      nextState.columns !== this.state.columns
     ) {
       returnFlag = true
     }
@@ -107,6 +108,7 @@ export default class RNLegendView extends React.Component {
    * @returns {Promise<void>}
    */
   getLegendData = async () => {
+    // await SMap.getOtherLegendData()
     await SMap.addLegendListener({
       legendContentChange: this._contentChange,
     })
