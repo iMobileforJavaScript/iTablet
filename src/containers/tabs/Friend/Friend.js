@@ -13,7 +13,7 @@ import {
   NativeModules,
   NativeEventEmitter,
   Platform,
-  // AppState,
+  AppState,
   NetInfo,
 } from 'react-native'
 import ScrollableTabView, {
@@ -49,7 +49,7 @@ import { Buffer } from 'buffer'
 import SMessageServiceHTTP from './SMessageServiceHTTP'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
-let searchImg = getThemeAssets().friend.friend_search
+// let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
 let g_connectService = false
@@ -85,7 +85,7 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
-    // AppState.addEventListener('change', this.handleStateChange)
+    AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
     this._receiveMessage = this._receiveMessage.bind(this)
   }
@@ -137,7 +137,7 @@ export default class Friend extends Component {
       if (appState === 'active') {
         this.restartService()
       } else if (appState === 'background') {
-        this.disconnectService()
+        // this.disconnectService()
       }
     }
   }
@@ -1056,23 +1056,23 @@ export default class Friend extends Component {
                 <Image source={addFriendImg} style={styles.addFriendImg} />
               </TouchableOpacity>
             ) : null,
-          headerRight:
-            this.state.bHasUserInfo === true ? (
-              <TouchableOpacity
-                onPress={() => {
-                  {
-                    //  let usr = this.props.user
-                  }
-                }}
-                style={styles.searchView}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  source={searchImg}
-                  style={styles.searchImg}
-                />
-              </TouchableOpacity>
-            ) : null,
+          // headerRight:
+          //   this.state.bHasUserInfo === true ? (
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         {
+          //           //  let usr = this.props.user
+          //         }
+          //       }}
+          //       style={styles.searchView}
+          //     >
+          //       <Image
+          //         resizeMode={'contain'}
+          //         source={searchImg}
+          //         style={styles.searchImg}
+          //       />
+          //     </TouchableOpacity>
+          //   ) : null,
           withoutBack: true,
           navigation: this.props.navigation,
         }}

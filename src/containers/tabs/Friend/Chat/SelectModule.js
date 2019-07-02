@@ -32,7 +32,7 @@ export default class SelectModule extends Component {
             renderItem={({ item }) => (
               <TouchableItemView
                 item={{
-                  // image: item.moduleImage,
+                  image: item.moduleImageLight,
                   text: item.title,
                 }}
                 onPress={() => {

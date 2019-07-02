@@ -50,6 +50,7 @@ function SetMap(param) {
           ? require('../assets/home/Frenchgrey/left_top_free.png')
           : require('../assets/home/Frenchgrey/free_top_left.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_cartography.png'),
+      moduleImageLight: require('../assets/home/Light/icon_cartography.png'),
       style: {
         width: scaleSize(60),
         height: scaleSize(60),
@@ -124,6 +125,7 @@ function SetMap(param) {
           ? require('../assets/home/Frenchgrey/right_bottom_free.png')
           : require('../assets/home/Frenchgrey/free_bottom_right.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_map3D.png'),
+      moduleImageLight: require('../assets/home/Light/icon_map3D.png'),
       style: {
         width: scaleSize(60),
         height: scaleSize(60),
@@ -183,6 +185,7 @@ function SetMap(param) {
       title: getLanguage(param).Map_Module.MAP_THEME,
       baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_thematicmap.png'),
+      moduleImageLight: require('../assets/home/Light/icon_thematicmap.png'),
       style: {
         width: scaleSize(60),
         height: scaleSize(60),
@@ -252,6 +255,7 @@ function SetMap(param) {
       title: getLanguage(param).Map_Module.MAP_COLLECTION,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
+      moduleImageLight: require('../assets/home/Light/icon_collection.png'),
       style: {
         width: scaleSize(70),
         height: scaleSize(67),
@@ -321,7 +325,8 @@ function SetMap(param) {
       key: '应急标绘',
       title: '应急标绘',
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
-      moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
+      moduleImage: require('../assets/home/icon_plot.png'),
+      moduleImageLight: require('../assets/home/Light/icon_plot.png'),
       style: {
         width: scaleSize(70),
         height: scaleSize(67),
@@ -407,6 +412,7 @@ function SetMap(param) {
       title: getLanguage(param).Map_Module.MAP_ANALYST,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_mapanalysis.png'),
+      moduleImageLight: require('../assets/home/Light/icon_mapanalysis.png'),
       style: {
         width: scaleSize(70),
         height: scaleSize(67),
