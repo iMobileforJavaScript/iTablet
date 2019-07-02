@@ -12,6 +12,7 @@ import online from './online'
 import chat from './chat'
 import backActions from './backActions'
 import analyst from './analyst'
+import localData from './localData'
 export {
   nav,
   layers,
@@ -27,4 +28,5 @@ export {
   chat,
   backActions,
   analyst,
+  localData,
 }
