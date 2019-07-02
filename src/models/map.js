@@ -129,6 +129,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
 ) => {
   try {
     let mapName = params.mapName
+    //eslint-disable-next-line
     let curMapName = getState().map.toJS().currentMap.name
     let userName = getState().user.toJS().currentUser.userName
     let path = ''
@@ -149,7 +150,8 @@ export const saveMap = (params = {}, cb = () => {}) => async (
     }
 
     // 另存为 和 未打开一幅已命名的地图，则需要重新设置当前地图
-    if (!params.isNew || curMapName !== mapName) {
+    // 另存不需要重新设置当前地图
+    if (!params.isNew /*|| curMapName !== mapName*/) {
       await dispatch({
         type: SET_CURRENT_MAP,
         payload: { path, name: mapName },

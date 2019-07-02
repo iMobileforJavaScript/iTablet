@@ -183,7 +183,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-extra-dimensions-android')
+    implementation project(':react-native-extra-dimensions-android')
     implementation project(':react-native-extra-dimensions-android')
     implementation project(':react-native-background-timer')
     implementation project(':react-native-video')
