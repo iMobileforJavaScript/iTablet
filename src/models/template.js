@@ -239,6 +239,8 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
     let template = templateData.template
     let path = (params && params.path) || template.path
     let isFirst = params && params.isFirst
+    let newName = params && params.newName
+    let isDefaultNew = params.hasOwnProperty('newName')
     // if (
     //   path === templateData.template.path &&
     //   templateData.template.symbols.length > 0
@@ -257,7 +259,12 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
         plotLibPaths.push(data[i].path)
       }
       // await SMap.addCadLayer('PlotEdit')
-      let resultArr = await SMap.initPlotSymbolLibrary(plotLibPaths, isFirst)
+      let resultArr = await SMap.initPlotSymbolLibrary(
+        plotLibPaths,
+        isFirst,
+        newName,
+        isDefaultNew,
+      )
       Object.keys(resultArr).forEach(function(key) {
         plotLibIds.push(resultArr[key])
         plotlibIdAndNameArr.push([key, resultArr[key]])

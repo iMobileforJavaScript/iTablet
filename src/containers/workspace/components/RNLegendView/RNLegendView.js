@@ -59,7 +59,7 @@ export default class RNLegendView extends React.Component {
     if (this.props.device.orientation !== nextProps.device.orientation) {
       let flatListKey = this.state.flatListKey + 1
       this.setState({
-        columns: this.props.device.orientation === 'LANDSCAPE' ? 4 : 2,
+        columns: this.props.device.orientation === 'LANDSCAPE' ? 2 : 4,
         flatListKey,
       })
       returnFlag = true
@@ -68,7 +68,8 @@ export default class RNLegendView extends React.Component {
       nextState.backgroundColor !== this.state.backgroundColor ||
       nextState.widthPercent !== this.state.widthPercent ||
       nextState.heightPercent !== this.state.heightPercent ||
-      nextState.legendSource !== this.state.legendSource
+      nextState.legendSource !== this.state.legendSource ||
+      nextState.columns !== this.state.columns
     ) {
       returnFlag = true
     }
@@ -148,7 +149,6 @@ export default class RNLegendView extends React.Component {
    * @returns {*}
    */
   renderLegendItem = item => {
-    let curImageSource = `data:image/png;base64,${item.item.image}`
     return (
       <TouchableOpacity
         style={{
@@ -159,14 +159,34 @@ export default class RNLegendView extends React.Component {
           flexDirection: 'row',
         }}
       >
-        <Image
-          source={{ uri: curImageSource }}
-          style={{
-            width: scaleSize(65),
-            height: scaleSize(30),
-            resizeMode: 'contain',
-          }}
-        />
+        {item.item.image && (
+          <Image
+            source={{ uri: `data:image/png;base64,${item.item.image}` }}
+            style={{
+              width: scaleSize(65),
+              height: scaleSize(30),
+              resizeMode: 'contain',
+            }}
+          />
+        )}
+        {item.item.color && (
+          <View
+            style={{
+              width: scaleSize(65),
+              height: scaleSize(30),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <View
+              style={{
+                width: scaleSize(48),
+                height: scaleSize(32),
+                backgroundColor: item.item.color,
+              }}
+            />
+          </View>
+        )}
         <Text
           numberOfLines={1}
           ellipsizeMode={'tail'}
@@ -178,7 +198,7 @@ export default class RNLegendView extends React.Component {
             height: scaleSize(24),
           }}
         >
-          {item.item.title}
+          {item.item.title.replace(/\s<=?\sX\s<\s/, '~')}
         </Text>
       </TouchableOpacity>
     )

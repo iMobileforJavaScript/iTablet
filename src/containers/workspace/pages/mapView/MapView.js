@@ -1004,6 +1004,25 @@ export default class MapView extends React.Component {
           }
         }
 
+        if (GLOBAL.Type === constants.MAP_PLOTTING) {
+          this.setLoading(
+            true,
+            //ConstInfo.TEMPLATE_READING
+            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
+          )
+          let plotIconPath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Plotting +
+              'PlotLibData',
+          )
+          await this.props.getSymbolPlots({
+            path: plotIconPath,
+            isFirst: true,
+          })
+        }
+
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
         // 获取图层列表
         this.props.getLayers(
@@ -1056,8 +1075,9 @@ export default class MapView extends React.Component {
           this.props.user.currentUser.userName,
         )
 
-        //地图打开后去获取图例数据
+        //地图打开后去获取比例尺、图例数据
         GLOBAL.scaleView.getInitialData()
+        GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&
           SMap.showMarker(
@@ -1120,36 +1140,6 @@ export default class MapView extends React.Component {
             path: templatePath,
             name: data.name,
           })
-        } else if (GLOBAL.Type === constants.MAP_PLOTTING) {
-          this.setLoading(
-            true,
-            //ConstInfo.TEMPLATE_READING
-            getLanguage(this.props.language).Prompt.READING_TEMPLATE,
-          )
-          let plotIconPath = await FileTools.appendingHomeDirectory(
-            ConstPath.UserPath +
-              this.props.user.currentUser.userName +
-              '/' +
-              ConstPath.RelativePath.Plotting +
-              'PlotLibData',
-          )
-          await this.props.getSymbolPlots({
-            path: plotIconPath,
-            name: data.name,
-            isFirst: true,
-          })
-
-          // let plotLibPath = await FileTools.appendingHomeDirectory(
-          //   ConstPath.PlotLibPath,
-          // )
-          // fs.readDir(plotLibPath).then(async data => {
-          //   let plotLibPaths=[]
-          //   for(let i=0;i<data.length;i++){
-          //     plotLibPaths.push(data[i].path)
-          //   }
-          //   let plotLibIds = SMap.initPlotSymbolLibrary(plotLibPaths)
-          //   let plotLibs=plotLibIds
-          // })
         } else {
           await this.props.setTemplate()
         }

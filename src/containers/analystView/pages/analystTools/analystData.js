@@ -9,10 +9,15 @@ function getData(language) {
       key: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
       title: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
       action: (params = {}) => {
-        NavigationService.navigate('AnalystListEntry', {
+        // NavigationService.navigate('AnalystListEntry', {
+        //   ...params,
+        //   type: Analyst_Types.OPTIMAL_PATH,
+        //   title: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
+        // })
+        NavigationService.navigate('LocalAnalystView', {
           ...params,
           type: Analyst_Types.OPTIMAL_PATH,
-          title: getLanguage(language).Analyst_Modules.OPTIMAL_PATH,
+          // cb: cb,
         })
       },
       size: 'large',
@@ -23,10 +28,15 @@ function getData(language) {
       title: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
       size: 'large',
       action: (params = {}) => {
-        NavigationService.navigate('AnalystListEntry', {
+        // NavigationService.navigate('AnalystListEntry', {
+        //   ...params,
+        //   type: Analyst_Types.CONNECTIVITY_ANALYSIS,
+        //   title: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
+        // })
+        NavigationService.navigate('LocalAnalystView', {
           ...params,
           type: Analyst_Types.CONNECTIVITY_ANALYSIS,
-          title: getLanguage(language).Analyst_Modules.CONNECTIVITY_ANALYSIS,
+          // cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_connectivity,
@@ -36,10 +46,15 @@ function getData(language) {
       title: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
       size: 'large',
       action: (params = {}) => {
-        NavigationService.navigate('AnalystListEntry', {
+        // NavigationService.navigate('AnalystListEntry', {
+        //   ...params,
+        //   type: Analyst_Types.FIND_TSP_PATH,
+        //   title: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
+        // })
+        NavigationService.navigate('LocalAnalystView', {
           ...params,
           type: Analyst_Types.FIND_TSP_PATH,
-          title: getLanguage(language).Analyst_Modules.FIND_TSP_PATH,
+          // cb: cb,
         })
       },
       image: getThemeAssets().analyst.analysis_traveling,

@@ -18,7 +18,7 @@ function setGestureDetectorListener(params) {
   _params = params
 }
 
-function touchCallback(event) {
+async function touchCallback(event) {
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
       // if (isfull) {
@@ -37,12 +37,12 @@ function touchCallback(event) {
               GLOBAL.TaggingDatasetName,
               value,
               _params.user.currentUser.userName,
-              event.x,
-              event.y,
+              event.screenPoint.x,
+              event.screenPoint.y,
             )
+            NavigationService.goBack()
+            GLOBAL.TouchType = TouchType.NORMAL
           }
-          NavigationService.goBack()
-          GLOBAL.TouchType = TouchType.NORMAL
         },
         backcb: async () => {
           NavigationService.goBack()

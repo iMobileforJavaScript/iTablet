@@ -336,186 +336,183 @@ export default class TouchProgress extends Component {
             break
         }
       }
-
-      if (tips === '') {
-        switch (layerType) {
-          case 1: {
-            if (this.props.selectName === '大小') {
-              let pointSize =
-                value !== undefined
-                  ? value
-                  : await SCartography.getMarkerSize(
-                    this.props.currentLayer.name,
-                  )
-              this._panBtnStyles.style.left =
-                (pointSize * progressWidth) / 100 + panBtnDevLeft
-              this._previousLeft = (pointSize * progressWidth) / 100
-              this._BackLine.style.width = (pointSize * progressWidth) / 100
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE +
-                '     ' +
-                parseInt(pointSize) +
-                'mm'
-            } else if (this.props.selectName === '透明度') {
-              let pointAlpha =
-                value !== undefined
-                  ? value
-                  : await SCartography.getMarkerAlpha(
-                    this.props.currentLayer.name,
-                  )
-              this._panBtnStyles.style.left =
-                (pointAlpha * progressWidth) / 100 + panBtnDevLeft
-              this._previousLeft = (pointAlpha * progressWidth) / 100
-              this._BackLine.style.width = (pointAlpha * progressWidth) / 100
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
-                '     ' +
-                parseInt(pointAlpha) +
-                '%'
-            } else if (this.props.selectName === '旋转角度') {
-              let pointAngle =
-                value !== undefined
-                  ? value
-                  : await SCartography.getMarkerAngle(
-                    this.props.currentLayer.name,
-                  )
-              this._panBtnStyles.style.left =
-                (pointAngle * progressWidth) / 360 + panBtnDevLeft
-              this._previousLeft = (pointAngle * progressWidth) / 360
-              this._BackLine.style.width = (pointAngle * progressWidth) / 360
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION +
-                '     ' +
-                parseInt(pointAngle) +
-                '°'
-            }
-            break
-          }
-          case 3: {
-            let lineWidth =
+    }
+    if (tips === '') {
+      switch (layerType) {
+        case 1: {
+          if (this.props.selectName === '大小') {
+            let pointSize =
               value !== undefined
                 ? value
-                : await SCartography.getLineWidth(this.props.currentLayer.name)
+                : await SCartography.getMarkerSize(this.props.currentLayer.name)
             this._panBtnStyles.style.left =
-              (lineWidth * progressWidth) / 20 + panBtnDevLeft
-            this._previousLeft = (lineWidth * progressWidth) / 20
-            this._BackLine.style.width = (lineWidth * progressWidth) / 20
+              (pointSize * progressWidth) / 100 + panBtnDevLeft
+            this._previousLeft = (pointSize * progressWidth) / 100
+            this._BackLine.style.width = (pointSize * progressWidth) / 100
             tips =
-              getLanguage(global.language).Map_Main_Menu.STYLE_LINE_WIDTH +
+              getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE +
               '     ' +
-              parseInt(lineWidth) +
+              parseInt(pointSize) +
               'mm'
-            break
-          }
-          case 5: {
-            let fillOpaque =
+          } else if (this.props.selectName === '透明度') {
+            let pointAlpha =
               value !== undefined
                 ? value
-                : await SCartography.getFillOpaqueRate(
+                : await SCartography.getMarkerAlpha(
                   this.props.currentLayer.name,
                 )
             this._panBtnStyles.style.left =
-              (fillOpaque * progressWidth) / 100 + panBtnDevLeft
-            this._previousLeft = (fillOpaque * progressWidth) / 100
-            this._BackLine.style.width = (fillOpaque * progressWidth) / 100
+              (pointAlpha * progressWidth) / 100 + panBtnDevLeft
+            this._previousLeft = (pointAlpha * progressWidth) / 100
+            this._BackLine.style.width = (pointAlpha * progressWidth) / 100
             tips =
               getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
               '     ' +
-              parseInt(fillOpaque) +
+              parseInt(pointAlpha) +
               '%'
-            break
+          } else if (this.props.selectName === '旋转角度') {
+            let pointAngle =
+              value !== undefined
+                ? value
+                : await SCartography.getMarkerAngle(
+                  this.props.currentLayer.name,
+                )
+            this._panBtnStyles.style.left =
+              (pointAngle * progressWidth) / 360 + panBtnDevLeft
+            this._previousLeft = (pointAngle * progressWidth) / 360
+            this._BackLine.style.width = (pointAngle * progressWidth) / 360
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION +
+              '     ' +
+              parseInt(pointAngle) +
+              '°'
           }
-          case 83: {
-            if (this.props.selectName === '透明度') {
-              let gridOpaque =
-                value !== undefined
-                  ? value
-                  : await SCartography.getGridOpaqueRate(
-                    this.props.currentLayer.name,
-                  )
-              this._panBtnStyles.style.left =
-                (gridOpaque * progressWidth) / 100 + panBtnDevLeft
-              this._previousLeft = (gridOpaque * progressWidth) / 100
-              this._BackLine.style.width = (gridOpaque * progressWidth) / 100
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
-                '     ' +
-                parseInt(gridOpaque)
-            } else if (this.props.selectName === '对比度') {
-              let gridBright =
-                value !== undefined
-                  ? value
-                  : (await SCartography.getGridBrightness(
-                    this.props.currentLayer.name,
-                  )) + 100
-              this._panBtnStyles.style.left =
-                (gridBright * progressWidth) / 200 + panBtnDevLeft
-              this._previousLeft = (gridBright * progressWidth) / 200
-              this._BackLine.style.width = (gridBright * progressWidth) / 200
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
-                '     ' +
-                parseInt(gridBright) +
-                '%'
-            } else if (this.props.selectName === '亮度') {
-              let gridContrast =
-                value !== undefined
-                  ? value
-                  : (await SCartography.getGridContrast(
-                    this.props.currentLayer.name,
-                  )) + 100
-              this._panBtnStyles.style.left =
-                (gridContrast * progressWidth) / 200 + panBtnDevLeft
-              this._previousLeft = (gridContrast * progressWidth) / 200
-              this._BackLine.style.width = (gridContrast * progressWidth) / 200
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
-                '     ' +
-                parseInt(gridContrast) +
-                '%'
-            }
-            break
-          }
+          break
         }
-        if (this.props.selectName === '列数') {
-          let columnnumber = GLOBAL.legend.state.columns
+        case 3: {
+          let lineWidth =
+            value !== undefined
+              ? value
+              : await SCartography.getLineWidth(this.props.currentLayer.name)
           this._panBtnStyles.style.left =
-            (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
-          this._previousLeft = (columnnumber * 10 * progressWidth) / 40
-          this._BackLine.style.width = (columnnumber * 10 * progressWidth) / 40
+            (lineWidth * progressWidth) / 20 + panBtnDevLeft
+          this._previousLeft = (lineWidth * progressWidth) / 20
+          this._BackLine.style.width = (lineWidth * progressWidth) / 20
           tips =
-            getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+            getLanguage(global.language).Map_Main_Menu.STYLE_LINE_WIDTH +
             '     ' +
-            parseInt(columnnumber)
-        } else if (this.props.selectName === '宽度') {
-          let width = GLOBAL.legend.state.widthPercent
+            parseInt(lineWidth) +
+            'mm'
+          break
+        }
+        case 5: {
+          let fillOpaque =
+            value !== undefined
+              ? value
+              : await SCartography.getFillOpaqueRate(
+                this.props.currentLayer.name,
+              )
           this._panBtnStyles.style.left =
-            (width * progressWidth) / 100 + panBtnDevLeft
-          this._previousLeft = (width * progressWidth) / 100
-          this._BackLine.style.width = (width * progressWidth) / 100
+            (fillOpaque * progressWidth) / 100 + panBtnDevLeft
+          this._previousLeft = (fillOpaque * progressWidth) / 100
+          this._BackLine.style.width = (fillOpaque * progressWidth) / 100
           tips =
-            getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
             '     ' +
-            parseInt(width)
-        } else if (this.props.selectName === '高度') {
-          let height = GLOBAL.legend.state.heightPercent
-          this._panBtnStyles.style.left =
-            (height * progressWidth) / 100 + panBtnDevLeft
-          this._previousLeft = (height * progressWidth) / 100
-          this._BackLine.style.width = (height * progressWidth) / 100
-          tips =
-            getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
-            '     ' +
-            parseInt(height)
+            parseInt(fillOpaque) +
+            '%'
+          break
+        }
+        case 83: {
+          if (this.props.selectName === '透明度') {
+            let gridOpaque =
+              value !== undefined
+                ? value
+                : await SCartography.getGridOpaqueRate(
+                  this.props.currentLayer.name,
+                )
+            this._panBtnStyles.style.left =
+              (gridOpaque * progressWidth) / 100 + panBtnDevLeft
+            this._previousLeft = (gridOpaque * progressWidth) / 100
+            this._BackLine.style.width = (gridOpaque * progressWidth) / 100
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
+              '     ' +
+              parseInt(gridOpaque)
+          } else if (this.props.selectName === '对比度') {
+            let gridBright =
+              value !== undefined
+                ? value
+                : (await SCartography.getGridBrightness(
+                  this.props.currentLayer.name,
+                )) + 100
+            this._panBtnStyles.style.left =
+              (gridBright * progressWidth) / 200 + panBtnDevLeft
+            this._previousLeft = (gridBright * progressWidth) / 200
+            this._BackLine.style.width = (gridBright * progressWidth) / 200
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+              '     ' +
+              parseInt(gridBright) +
+              '%'
+          } else if (this.props.selectName === '亮度') {
+            let gridContrast =
+              value !== undefined
+                ? value
+                : (await SCartography.getGridContrast(
+                  this.props.currentLayer.name,
+                )) + 100
+            this._panBtnStyles.style.left =
+              (gridContrast * progressWidth) / 200 + panBtnDevLeft
+            this._previousLeft = (gridContrast * progressWidth) / 200
+            this._BackLine.style.width = (gridContrast * progressWidth) / 200
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+              '     ' +
+              parseInt(gridContrast) +
+              '%'
+          }
+          break
         }
       }
-
-      this.setState({
-        tips,
-      })
-      this._updateNativeStyles()
-      this._updateBackLine()
+      if (this.props.selectName === '列数') {
+        let columnnumber = GLOBAL.legend.state.columns
+        this._panBtnStyles.style.left =
+          (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
+        this._previousLeft = (columnnumber * 10 * progressWidth) / 40
+        this._BackLine.style.width = (columnnumber * 10 * progressWidth) / 40
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+          '     ' +
+          parseInt(columnnumber)
+      } else if (this.props.selectName === '宽度') {
+        let width = GLOBAL.legend.state.widthPercent
+        this._panBtnStyles.style.left =
+          (width * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (width * progressWidth) / 100
+        this._BackLine.style.width = (width * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+          '     ' +
+          parseInt(width)
+      } else if (this.props.selectName === '高度') {
+        let height = GLOBAL.legend.state.heightPercent
+        this._panBtnStyles.style.left =
+          (height * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (height * progressWidth) / 100
+        this._BackLine.style.width = (height * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+          '     ' +
+          parseInt(height)
+      }
     }
+
+    this.setState({
+      tips,
+    })
+    this._updateNativeStyles()
+    this._updateBackLine()
   }
 
   _handleStartShouldSetPanResponder = () => {
