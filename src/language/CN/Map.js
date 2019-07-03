@@ -8,6 +8,7 @@ const Map_Label = {
   SETTING: '设置',
   SCENE: '场景',
   NAME: '名称',
+  TOOL_BOX: '工具箱',
 }
 
 //地图、场景主菜单
@@ -23,6 +24,8 @@ const Map_Main_Menu = {
   START_NEW_SENCE: '新建场景',
   START_SAVE_SENCE: '保存场景',
   START_SAVE_AS_SENCE: '另存场景',
+
+  PLOT: '标绘',
 
   //地图制图及公共 添加
   OPEN: '添加',
