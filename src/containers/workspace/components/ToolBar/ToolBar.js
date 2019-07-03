@@ -680,6 +680,7 @@ export default class ToolBar extends React.PureComponent {
         sectionIndex: 0,
         itemIndex: 0,
         viewOffset: scaleSize(80),
+        viewPosition: 0,
       })
   }
   //滚动到指定位置
@@ -3533,7 +3534,6 @@ export default class ToolBar extends React.PureComponent {
         }
         await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
-        SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
@@ -3571,7 +3571,6 @@ export default class ToolBar extends React.PureComponent {
           LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.setRangeColorScheme(Params)
-        await SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR

@@ -135,6 +135,7 @@ export default class LocalAnalystView extends Component {
           // NavigationService.goBack('AnalystListEntry')
           TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
+              AnalystTools.clear(this.type)
               this.props.setAnalystParams(null)
               TabNavigationService.navigate('AnalystTools')
               // NavigationService.navigate('AnalystListEntry', {
