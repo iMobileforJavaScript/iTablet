@@ -13,7 +13,7 @@ import {
   NativeModules,
   NativeEventEmitter,
   Platform,
-  // AppState,
+  AppState,
   NetInfo,
 } from 'react-native'
 import ScrollableTabView, {
@@ -49,7 +49,7 @@ import { Buffer } from 'buffer'
 import SMessageServiceHTTP from './SMessageServiceHTTP'
 const SMessageServiceiOS = NativeModules.SMessageService
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
-let searchImg = getThemeAssets().friend.friend_search
+// let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
 let g_connectService = false
@@ -85,7 +85,7 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
-    // AppState.addEventListener('change', this.handleStateChange)
+    AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
     this._receiveMessage = this._receiveMessage.bind(this)
   }
@@ -137,7 +137,7 @@ export default class Friend extends Component {
       if (appState === 'active') {
         this.restartService()
       } else if (appState === 'background') {
-        this.disconnectService()
+        // this.disconnectService()
       }
     }
   }
@@ -695,207 +695,210 @@ export default class Friend extends Component {
   }
 
   async _receiveMessage(message) {
-    if (g_connectService) {
-      let messageObj = JSON.parse(message['message'])
-      // messageObj.message.type=6;   桌面发送的文件类型是3，要接收桌面发送过来的文件需要把type改为6
-      // messageObj.message.message.progress=0;    桌面发送的数据没有progress参数，不能显示进度
-      if (messageObj.type === MSGConstant.MSG_LOGOUT) {
-        if (messageObj.time !== this.loginTime) {
-          this._logout()
-        }
-        return
+    let messageObj = JSON.parse(message['message'])
+    // messageObj.message.type=6;   桌面发送的文件类型是3，要接收桌面发送过来的文件需要把type改为6
+    // messageObj.message.message.progress=0;    桌面发送的数据没有progress参数，不能显示进度
+    if (messageObj.type === MSGConstant.MSG_LOGOUT) {
+      if (messageObj.time !== this.loginTime) {
+        this._logout()
       }
-      let userId = this.props.user.currentUser.userId
-      if (userId === messageObj.user.id) {
-        //自己的消息，返回
-        return
-      }
+      return
+    }
+    let userId = this.props.user.currentUser.userId
+    if (userId === messageObj.user.id) {
+      //自己的消息，返回
+      return
+    }
 
-      //对接桌面
-      if (messageObj.type < 10 && typeof messageObj.message === 'string') {
-        messageObj.message = Buffer.from(
-          messageObj.message,
-          'base64',
-        ).toString()
-      }
+    //对接桌面
+    if (messageObj.type < 10 && typeof messageObj.message === 'string') {
+      messageObj.message = Buffer.from(messageObj.message, 'base64').toString()
+    }
 
-      if (!FriendListFileHandle.friends) {
-        await this.getContacts()
-      }
+    if (!FriendListFileHandle.friends) {
+      await this.getContacts()
+    }
 
-      let bSystem = false
-      let bUnReadMsg = false
-      let msgId = 0
-      let bSysStore = false //系统消息是否保存
-      let bSysShow = false //系统消息是否显示在聊天窗口
-      //系统消息
-      if (messageObj.type > 9) {
-        bSystem = true
-      }
-      if (
-        !this.curChat ||
-        this.curChat.targetUser.id !== messageObj.user.groupID //个人会话这个ID和groupID是同一个，就用一个吧
-      ) {
-        bUnReadMsg = true
-      }
-      if (this.isGroupMsg(message['message'])) {
-        msgId = this.getMsgId(messageObj.user.groupID)
-      } else {
-        msgId = this.getMsgId(messageObj.user.id)
-      }
+    let bSystem = false
+    let bUnReadMsg = false
+    let msgId = 0
+    let bSysStore = false //系统消息是否保存
+    let bSysShow = false //系统消息是否显示在聊天窗口
+    //系统消息
+    if (messageObj.type > 9) {
+      bSystem = true
+    }
+    if (
+      !this.curChat ||
+      this.curChat.targetUser.id !== messageObj.user.groupID //个人会话这个ID和groupID是同一个，就用一个吧
+    ) {
+      bUnReadMsg = true
+    }
+    if (this.isGroupMsg(message['message'])) {
+      msgId = this.getMsgId(messageObj.user.groupID)
+    } else {
+      msgId = this.getMsgId(messageObj.user.id)
+    }
 
-      if (!bSystem) {
-        //普通消息
-        let obj = undefined
-        if (messageObj.type === 1) {
-          obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
-        } else if (messageObj.type === 2) {
-          obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
-          if (!obj) {
-            return
-          }
-        }
+    if (!bSystem) {
+      //普通消息
+      let obj = undefined
+      if (messageObj.type === 1) {
+        obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
+      } else if (messageObj.type === 2) {
+        obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
         if (!obj) {
-          //非好友
-          let ctime = new Date()
-          let time = Date.parse(ctime)
-          let message = {
-            message: '对方还未添加您为好友',
-            type: MSGConstant.MSG_REJECT,
-            user: {
-              name: this.props.user.currentUser.userName,
-              id: this.props.user.currentUser.userId,
-              groupID: this.props.user.currentUser.userId,
-            },
-            time: time,
-          }
-          SMessageService.sendMessage(
-            JSON.stringify(message),
-            messageObj.user.id,
-          )
           return
         }
-
-        //文件通知消息
-        if (
-          messageObj.message.type &&
-          messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY
-        ) {
-          messageObj.message.message.isReceived = 0
+      }
+      if (!obj) {
+        //非好友
+        let ctime = new Date()
+        let time = Date.parse(ctime)
+        let message = {
+          message: '对方还未添加您为好友',
+          type: MSGConstant.MSG_REJECT,
+          user: {
+            name: this.props.user.currentUser.userName,
+            id: this.props.user.currentUser.userId,
+            groupID: this.props.user.currentUser.userId,
+          },
+          time: time,
         }
-      } else {
-        //系统消息，做处理机制
+        SMessageService.sendMessage(JSON.stringify(message), messageObj.user.id)
+        return
+      }
+
+      //文件通知消息
+      if (
+        messageObj.message.type &&
+        messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY
+      ) {
+        messageObj.message.message.isReceived = 0
+      }
+    } else {
+      //系统消息，做处理机制
+      /*
+       * 添加好友
+       */
+      if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
+        bSysStore = true
+      } else if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
         /*
-         * 添加好友
+         * 添加群员
          */
-        if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
-          bSysStore = true
-        } else if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
-          /*
-           * 添加群员
-           */
-          bSysStore = true
-          bSysShow = true
+        bSysStore = true
+        bSysShow = true
+        if (
+          FriendListFileHandle.isInGroup(
+            messageObj.user.groupID,
+            this.props.user.currentUser.userId,
+          )
+        ) {
+          FriendListFileHandle.addGroupMember(
+            messageObj.user.groupID,
+            messageObj.message.newMembers,
+          )
+        } else {
+          //加入群
+          let members = messageObj.message.oldMembers.concat(
+            messageObj.message.newMembers,
+          )
+          FriendListFileHandle.addToGroupList({
+            id: messageObj.user.groupID,
+            members: members,
+            groupName: messageObj.user.groupName,
+            masterID: messageObj.user.id,
+          })
+        }
+      } else if (messageObj.type === MSGConstant.MSG_REJECT) {
+        /*
+         * 拒收消息
+         */
+        bSysStore = true
+        bSysShow = true
+      } else if (messageObj.type === MSGConstant.MSG_REMOVE_MEMBER) {
+        /*
+         * 移除群员
+         */
+        bSysStore = true
+        bSysShow = true
+        let inList = false
+        for (let member in messageObj.message.members) {
           if (
-            FriendListFileHandle.isInGroup(
-              messageObj.user.groupID,
-              this.props.user.currentUser.userId,
-            )
+            messageObj.message.members[member].id ===
+            this.props.user.currentUser.userId
           ) {
-            FriendListFileHandle.addGroupMember(
-              messageObj.user.groupID,
-              messageObj.message.newMembers,
-            )
-          } else {
-            //加入群
-            let members = messageObj.message.oldMembers.concat(
-              messageObj.message.newMembers,
-            )
-            FriendListFileHandle.addToGroupList({
-              id: messageObj.user.groupID,
-              members: members,
-              groupName: messageObj.user.groupName,
-              masterID: messageObj.user.id,
-            })
+            inList = true
+            break
           }
-        } else if (messageObj.type === MSGConstant.MSG_REJECT) {
-          /*
-           * 拒收消息
-           */
-          bSysStore = true
-          bSysShow = true
-        } else if (messageObj.type === MSGConstant.MSG_REMOVE_MEMBER) {
-          /*
-           * 移除群员
-           */
-          bSysStore = true
-          bSysShow = true
-          let inList = false
-          for (let member in messageObj.message.members) {
-            if (
-              messageObj.message.members[member].id ===
-              this.props.user.currentUser.userId
-            ) {
-              inList = true
-              break
-            }
-          }
-          if (inList) {
-            bSysStore = false
-            bSysShow = false
-            FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
-            MessageDataHandle.delMessage({
-              userId: this.props.user.currentUser.userId,
-              talkId: messageObj.user.groupID,
-            })
-          } else {
-            FriendListFileHandle.removeGroupMember(
-              messageObj.user.groupID,
-              messageObj.message.members,
-            )
-          }
-        } else if (messageObj.type === MSGConstant.MSG_DISBAND_GROUP) {
-          /*
-           * 解散群
-           */
+        }
+        if (inList) {
+          bSysStore = false
+          bSysShow = false
           FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
           MessageDataHandle.delMessage({
             userId: this.props.user.currentUser.userId,
             talkId: messageObj.user.groupID,
           })
-        } else if (messageObj.type === MSGConstant.MSG_MODIFY_GROUP_NAME) {
-          /*
-           * 修改群名
-           */
-          bSysStore = true
-          bSysShow = true
-          FriendListFileHandle.modifyGroupList(
-            messageObj.user.groupID,
-            messageObj.message.name,
-          )
-          this.curChat && this.curChat.onFriendListChanged()
-        }
-      }
-
-      //保存
-      if ((bSystem && bSysStore) || !bSystem) {
-        messageObj.unReadMsg = bUnReadMsg
-        this.storeMessage(messageObj, messageObj.user.groupID, msgId)
-      }
-      //显示
-      if ((bSystem && bSysShow) || !bSystem) {
-        if (this.curChat) {
-          //在当前聊天窗口,则显示这条消息
-          if (this.curChat.targetUser.id === messageObj.user.groupID) {
-            this.curChat.onReceive(msgId)
-          } else {
-            this.curChat.showInformSpot(true)
+          if (
+            this.curChat &&
+            this.curChat.targetId === messageObj.user.groupID
+          ) {
+            NavigationService.goBack()
+            Toast.show(
+              messageObj.user.name +
+                getLanguage(this.props.language).Friends
+                  .SYS_MSG_REMOVED_FROM_GROUP,
+            )
           }
         } else {
-          JPushService.sendLocalNotification(messageObj)
+          FriendListFileHandle.removeGroupMember(
+            messageObj.user.groupID,
+            messageObj.message.members,
+          )
         }
+      } else if (messageObj.type === MSGConstant.MSG_DISBAND_GROUP) {
+        /*
+         * 解散群
+         */
+        FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
+        MessageDataHandle.delMessage({
+          userId: this.props.user.currentUser.userId,
+          talkId: messageObj.user.groupID,
+        })
+      } else if (messageObj.type === MSGConstant.MSG_MODIFY_GROUP_NAME) {
+        /*
+         * 修改群名
+         */
+        bSysStore = true
+        bSysShow = true
+        FriendListFileHandle.modifyGroupList(
+          messageObj.user.groupID,
+          messageObj.message.name,
+        )
+        this.curChat && this.curChat.onFriendListChanged()
       }
-    } //g_connectService
+    }
+
+    //保存
+    if ((bSystem && bSysStore) || !bSystem) {
+      messageObj.unReadMsg = bUnReadMsg
+      this.storeMessage(messageObj, messageObj.user.groupID, msgId)
+    }
+    //显示
+    if ((bSystem && bSysShow) || !bSystem) {
+      if (this.curChat) {
+        //在当前聊天窗口,则显示这条消息
+        if (this.curChat.targetUser.id === messageObj.user.groupID) {
+          this.curChat.onReceive(msgId)
+        } else {
+          this.curChat.showInformSpot(true)
+        }
+      } else {
+        JPushService.sendLocalNotification(messageObj)
+      }
+    }
   }
 
   getContacts = async () => {
@@ -1056,23 +1059,23 @@ export default class Friend extends Component {
                 <Image source={addFriendImg} style={styles.addFriendImg} />
               </TouchableOpacity>
             ) : null,
-          headerRight:
-            this.state.bHasUserInfo === true ? (
-              <TouchableOpacity
-                onPress={() => {
-                  {
-                    //  let usr = this.props.user
-                  }
-                }}
-                style={styles.searchView}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  source={searchImg}
-                  style={styles.searchImg}
-                />
-              </TouchableOpacity>
-            ) : null,
+          // headerRight:
+          //   this.state.bHasUserInfo === true ? (
+          //     <TouchableOpacity
+          //       onPress={() => {
+          //         {
+          //           //  let usr = this.props.user
+          //         }
+          //       }}
+          //       style={styles.searchView}
+          //     >
+          //       <Image
+          //         resizeMode={'contain'}
+          //         source={searchImg}
+          //         style={styles.searchImg}
+          //       />
+          //     </TouchableOpacity>
+          //   ) : null,
           withoutBack: true,
           navigation: this.props.navigation,
         }}

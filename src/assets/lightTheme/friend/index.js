@@ -8,6 +8,7 @@ const friend_mobileCon = require('./icon_contact_mobilecon_light.png')
 const friend_notice = require('./icon_contact_notice_light.png')
 const friend_scan = require('./icon_contact_scan_light.png')
 const friend_shareCon = require('./icon_contact_sharecon_light.png')
+const friend_group = require('./icon_group.png')
 
 export default {
   friend_add,
@@ -20,4 +21,5 @@ export default {
   friend_notice,
   friend_scan,
   friend_shareCon,
+  friend_group,
 }

@@ -2,7 +2,7 @@
  * 多媒体编辑界面
  */
 import * as React from 'react'
-import { ScrollView, TouchableOpacity, Text } from 'react-native'
+import { ScrollView, TouchableOpacity, Text, Platform } from 'react-native'
 import {
   Container,
   TextBtn,
@@ -222,7 +222,11 @@ export default class MediaEdit extends React.Component {
             // this.imageViewer &&
             //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
             const itemInfo = this.state.paths[rowIndex * COLUMNS + cellIndex]
-            this.mediaViewer && this.mediaViewer.setVisible(true, itemInfo.uri)
+            this.mediaViewer &&
+              this.mediaViewer.setVisible(
+                true,
+                (Platform.OS === 'android' ? 'file://' : '') + itemInfo.uri,
+              )
             // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
           }
         }}

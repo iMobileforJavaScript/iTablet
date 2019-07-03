@@ -10,8 +10,6 @@ import NavigationService from '../../../NavigationService'
 import TabNavigationService from '../../../TabNavigationService'
 import {
   SMap,
-  EngineType,
-  DatasetType,
   SFacilityAnalyst,
   STransportationAnalyst,
 } from 'imobile_for_reactnative'
@@ -23,8 +21,10 @@ export default class LocalAnalystView extends Component {
     navigation: Object,
     currentUser: Object,
     device: Object,
+    userUdbAndDs: Array,
     getLayers: () => {},
     setAnalystParams: () => {},
+    getUdbAndDs: () => {},
   }
 
   constructor(props) {
@@ -32,6 +32,10 @@ export default class LocalAnalystView extends Component {
     const { params } = props.navigation.state
     this.type = params && params.type
     this.cb = params && params.cb
+    this.reloadData = true
+    if (params && params.reloadData !== undefined) {
+      this.reloadData = params.reloadData
+    }
 
     let title = ''
     switch (this.type) {
@@ -54,59 +58,19 @@ export default class LocalAnalystView extends Component {
   }
 
   componentDidMount() {
-    this.getData()
+    if (this.reloadData || this.props.userUdbAndDs.length === 0) {
+      this.getData()
+    }
   }
-
-  // componentDidUpdate(prevProps, prevState) {}
 
   getData = () => {
     (async function() {
       this.setLoading(true, getLanguage(this.props.language).Prompt.LOADING)
       try {
-        let dataSourceAndSets = []
-        let data = await this.getDatasources()
-        for (let i = 0; i < data.length; i++) {
-          let dataSource = data[i]
-          let alias = dataSource.path.substr(
-            dataSource.path.lastIndexOf('/') + 1,
-            dataSource.path.lastIndexOf('.') -
-              dataSource.path.lastIndexOf('/') -
-              1,
-          )
-          let udbPath = await FileTools.appendingHomeDirectory(dataSource.path)
-          let datasets = await SMap.getDatasetsByExternalDatasource({
-            server: udbPath,
-            alias: alias,
-            engineType: EngineType.UDB,
-          })
-
-          let dss = []
-          for (let j = 0; j < datasets.length; j++) {
-            if (datasets[j].datasetType === DatasetType.Network) {
-              datasets[j].title = datasets[j].datasetName
-              datasets[j].parentTitle = datasets[j].datasourceName
-              dss.push(datasets[j])
-            }
-          }
-
-          if (dss.length > 0) {
-            dataSourceAndSets.push({
-              title: alias,
-              server: udbPath,
-              engineType: EngineType.UDB,
-              data: dss,
-            })
-          }
-        }
-
-        this.setState(
-          {
-            dataSourceAndSets,
-          },
-          () => {
-            this.setLoading(false)
-          },
-        )
+        await this.props.getUdbAndDs({
+          userName: this.props.currentUser.userName,
+        })
+        this.setLoading(false)
       } catch (e) {
         this.setLoading(false)
       }
@@ -138,33 +102,6 @@ export default class LocalAnalystView extends Component {
     return udbs
   }
 
-  // 获取所有数据集
-  getDatasets = async ({ data }) => {
-    let result = data
-    let index = 0
-    let dataset
-    for (let item of data) {
-      let datasets = []
-      dataset = await SMap.getDatasetsByDatasource(
-        {
-          server: item.server,
-          engineType: item.engineType,
-          alias: item.title,
-        },
-        false,
-      )
-
-      dataset.list.map(val => {
-        let obj = {}
-        obj.title = val.datasetName
-        obj.parentTitle = val.datasourceName
-        datasets.push(obj)
-      })
-      result[index++].data = datasets
-    }
-    return result
-  }
-
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
   }
@@ -172,8 +109,8 @@ export default class LocalAnalystView extends Component {
   listRightAction = ({ parent, item }) => {
     (async function() {
       try {
-        let params1 =
-          this.props.nav.routes[this.props.nav.index - 1].params || {}
+        // let params1 =
+        //   this.props.nav.routes[this.props.nav.index - 1].params || {}
         let params2 = this.props.navigation.state.params || {}
         this.setLoading(
           true,
@@ -194,15 +131,20 @@ export default class LocalAnalystView extends Component {
           await AnalystTools.clear(this.type)
           this.setLoading(false)
           await SMap.setLayerFullView(res.layerInfo.path)
-          NavigationService.goBack('AnalystListEntry')
+          NavigationService.goBack()
+          // NavigationService.goBack('AnalystListEntry')
           TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
+              AnalystTools.clear(this.type)
               this.props.setAnalystParams(null)
               TabNavigationService.navigate('AnalystTools')
-              NavigationService.navigate('AnalystListEntry', {
-                ...params1,
+              // NavigationService.navigate('AnalystListEntry', {
+              //   ...params1,
+              // })
+              NavigationService.navigate('LocalAnalystView', {
+                ...params2,
+                reloadData: false,
               })
-              NavigationService.navigate('LocalAnalystView', { ...params2 })
             },
           })
         } else {
@@ -299,7 +241,8 @@ export default class LocalAnalystView extends Component {
       >
         <LinkageList
           language={this.props.language}
-          data={this.state.dataSourceAndSets}
+          // data={this.state.dataSourceAndSets}
+          data={this.props.userUdbAndDs}
           titles={[
             getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE,
             getLanguage(this.props.language).Analyst_Labels.DATA_SET,

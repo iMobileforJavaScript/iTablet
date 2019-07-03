@@ -142,13 +142,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#rgba(0,0,0,0)',
   },
   modal: {
-    backgroundColor: '#696969',
+    backgroundColor: '#505050',
     // width: scaleSize(300),
     // height: scaleSize(170),
     position: 'absolute',
     left: scaleSize(25),
     top: Top,
     padding: scaleSize(5),
+    paddingLeft: scaleSize(20),
     justifyContent: 'center',
     // alignItems: 'flex-start',
     borderRadius: 3,
@@ -156,12 +157,12 @@ const styles = StyleSheet.create({
   itemView: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
-    marginTop: scaleSize(5),
-    marginBottom: scaleSize(5),
+    marginTop: scaleSize(15),
+    marginBottom: scaleSize(15),
     marginLeft: scaleSize(10),
-    marginRight: scaleSize(10),
+    marginRight: scaleSize(20),
   },
   textStyle: {
     color: '#fff',
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
   seperator: {
     height: scaleSize(1),
     marginLeft: scaleSize(10),
-    backgroundColor: '#fff',
+    marginRight: scaleSize(20),
+    backgroundColor: '#A0A0A0',
   },
 })
