@@ -568,6 +568,7 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Color"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Map"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Media"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Plotting"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", plottingExtDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath]];
@@ -577,8 +578,13 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
   NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath];
   NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", collectionExtDataPath, @"地理国情普查"];
+  NSString* plotPath = [NSHomeDirectory() stringByAppendingFormat:@"%@", plottingExtDataPath];
+  NSString* plotFilePath = [NSString stringWithFormat:@"%@/%@", plottingExtDataPath, @"PlotLibData"];
+  NSString* commonPlotZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"PlotLibData.zip"];
+  NSString* originPlotPath = [[NSBundle mainBundle] pathForResource:@"PlotLibData" ofType:@"zip"];
+  NSString* plotZipData = @"PlotLibData.zip";
   
-  BOOL isUnZip = NO;
+  BOOL isUnZip = NO,isUnZipPlot = NO;
   if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
       isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
@@ -588,6 +594,27 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
         isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
         NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
       }
+    }
+  } else {
+    isUnZip = YES;
+  }
+  externalDataPath=[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
+  plotFilePath=[NSHomeDirectory() stringByAppendingFormat:@"%@", plotFilePath];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
+      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
+      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+    } else {
+      if ([FileTools copyFile:originPlotPath targetPath:commonPlotZipPath]) {
+        isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
+        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+      }
+    }
+    if(isUnZipPlot){
+      NSString* fromPath=plotFilePath;
+      NSString* toPath=[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Plotting"];
+      [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon"];
+      
     }
   } else {
     isUnZip = YES;

@@ -323,7 +323,7 @@ function SetMap(param) {
     },
     {
       key: '应急标绘',
-      title: '应急标绘',
+      title: getLanguage(param).Map_Module.MAP_PLOTTING,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_plot.png'),
       moduleImageLight: require('../assets/home/Light/icon_plot.png'),
@@ -388,7 +388,7 @@ function SetMap(param) {
         NavigationService.navigate('MapView', {
           operationType: constants.MAP_PLOTTING,
           wsData,
-          mapName: '应急标绘',
+          mapName: getLanguage(param).Map_Module.MAP_PLOTTING,
           isExample: false,
         })
       },

@@ -239,6 +239,7 @@ const Map_Main_Menu = {
   FREE_DRAW_ERASE: '手绘擦除',
 
   //标绘
+  PLOTTING: '标绘',
   PLOTTING_LIB_CHANGE: '切换标绘库',
   PLOTTING_LIB: '标绘库',
 
