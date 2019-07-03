@@ -1077,7 +1077,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            action: () => this.start(ConstToolType.MAP_PLOTTING_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
