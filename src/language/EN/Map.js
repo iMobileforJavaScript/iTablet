@@ -218,6 +218,7 @@ const Map_Main_Menu = {
   MOVE: 'Move',
   FREE_DRAW_ERASE: 'Free-draw Erase',
 
+  PLOTTING: 'Plotting',
   PLOTTING_LIB_CHANGE: 'Change Plotting Lib',
   PLOTTING_LIB: 'Plotting Lib',
 
