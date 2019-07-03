@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Image, Text, View, TouchableOpacity } from 'react-native'
-import styles, { textHeight, color } from './Styles'
+import styles, { textHeight } from './Styles'
 import NavigationService from '../../../NavigationService'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
@@ -38,7 +38,7 @@ export default class RenderServiceItem extends PureComponent {
   }
 
   render() {
-    let moreImg = require('../../../../assets/Mine/mine_more_white.png')
+    let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
     let imageWidth = scaleSize(40),
       imageHeight = scaleSize(40)
     return (
@@ -94,7 +94,6 @@ export default class RenderServiceItem extends PureComponent {
                 position: 'absolute',
                 bottom: 2,
                 right: 0,
-                tintColor: color.imageColorBlack,
               }}
             />
           </TouchableOpacity>

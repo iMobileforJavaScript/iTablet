@@ -385,9 +385,9 @@ export default class MyLocalData extends Component {
         let dataItemServices = { serviceType: 'RESTMAP', serviceName: '' }
         arrDataItemServices.push(dataItemServices)
         this.setState({ sectionData: sectionData })
-        // Toast.show(this.itemInfo.fileName + '  服务发布成功')
+        Toast.show(getLanguage(this.props.language).Prompt.PUBLISH_SUCCESS)
       } else {
-        // Toast.show('服务发布失败')
+        Toast.show(getLanguage(this.props.language).Prompt.PUBLISH_FAILED)
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -402,10 +402,10 @@ export default class MyLocalData extends Component {
     let objDataJson = await FetchUtils.getObjJson(dataUrl)
     if (objDataJson) {
       if (objDataJson.serviceStatus === 'PUBLISHED') {
-        Toast.show('服务发布成功')
+        Toast.show(getLanguage(this.props.language).Prompt.PUBLISH_SUCCESS)
         return true
       } else if (objDataJson.serviceStatus === 'PUBLISH_FAILED') {
-        Toast.show('服务发布失败')
+        Toast.show(getLanguage(this.props.language).Prompt.PUBLISH_FAILED)
         return false
       }
     }
