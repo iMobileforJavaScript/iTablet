@@ -216,7 +216,7 @@ class ManageGroup extends Component {
         <TouchableItemView
           item={{
             //查看群员
-            // image: getThemeAssets().friend.friend_edit,
+            image: getThemeAssets().friend.friend_group,
             text: getLanguage(this.language).Friends.LIST_MEMBERS,
           }}
           onPress={() => {
@@ -233,7 +233,7 @@ class ManageGroup extends Component {
         <TouchableItemView
           item={{
             //添加群员
-            // image: getThemeAssets().friend.friend_edit,
+            image: getThemeAssets().friend.friend_group,
             text: getLanguage(this.language).Friends.ADD_MEMBER,
           }}
           onPress={() => {
@@ -250,7 +250,7 @@ class ManageGroup extends Component {
           <TouchableItemView
             item={{
               //移除群员
-              // image: getThemeAssets().friend.friend_edit,
+              image: getThemeAssets().friend.friend_group,
               text: getLanguage(this.language).Friends.DELETE_MEMBER,
             }}
             onPress={() => {

@@ -18,6 +18,7 @@ export default class MapCutSetting extends React.Component {
   props: {
     language: string,
     datasources: Array,
+    currentUser: Object,
     configAction?: () => {},
   }
 
@@ -159,7 +160,7 @@ export default class MapCutSetting extends React.Component {
           style={[styles.topRightView, { width: scaleSize(360) }]}
         >
           <Text style={[styles.content, { width: scaleSize(140) }]}>
-            {this.props.datasources[0] ? this.props.datasources[0].alias : ''}
+            {item.dsName ? item.dsName : ''}
           </Text>
           <Image
             resizeMode="contain"
@@ -216,6 +217,7 @@ export default class MapCutSetting extends React.Component {
               this.showModal(false)
               NavigationService.navigate('MapCutDS', {
                 data: this.props.datasources,
+                currentUser: this.props.currentUser,
                 cb: ({ item }) => {
                   const newData = new Map(this.state.data)
                   let dsData = newData.get('ds')

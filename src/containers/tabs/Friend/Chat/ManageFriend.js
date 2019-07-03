@@ -88,7 +88,7 @@ class ManageFriend extends Component {
           <TouchableItemView
             item={{
               //地图协作
-              // image: getThemeAssets().friend.friend_message,
+              image: getThemeAssets().friend.friend_map,
               text: getLanguage(global.language).Friends.COWORK,
             }}
             onPress={() => {
@@ -108,7 +108,7 @@ class ManageFriend extends Component {
           <TouchableItemView
             item={{
               //退出协作
-              // image: getThemeAssets().friend.friend_message,
+              image: getThemeAssets().friend.friend_map,
               text: getLanguage(global.language).Friends.EXIT_COWORK,
             }}
             onPress={() => {
