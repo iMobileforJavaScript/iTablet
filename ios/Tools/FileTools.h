@@ -10,6 +10,7 @@
 #import "React/RCTBridgeModule.h"
 #import <ZipArchive/ZipArchive.h>
 #import "SMap.h"
+#import "FileUtils.h"
 
 NSString *USER_NAME;
 static BOOL hasImportedData = NO;

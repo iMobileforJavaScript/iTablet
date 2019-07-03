@@ -911,12 +911,14 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
+            key: constants.TOOL,
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
             action: this.showTools,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
+            key: constants.SHARE,
             title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
             //'分享',
             action: () => {
@@ -1038,14 +1040,14 @@ export default class FunctionToolbar extends React.Component {
       case constants.MAP_ANALYST:
         data = [
           {
-            key: constants.START,
-            title: constants.START,
+            key: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
             key: constants.ADD,
-            title: constants.ADD,
+            title: getLanguage(this.props.language).Map_Main_Menu.OPEN,
             size: 'large',
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
@@ -1058,13 +1060,13 @@ export default class FunctionToolbar extends React.Component {
           // },
           {
             key: constants.TOOL,
-            title: constants.TOOL,
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
             key: constants.SHARE,
-            title: constants.SHARE,
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },
@@ -1076,27 +1078,31 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             key: '开始',
-            title: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
-            title: '标绘',
+            key: constants.PLOT,
+            title: getLanguage(this.props.language).Map_Main_Menu.PLOT,
             action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_symbol.png'),
           },
           {
-            title: '编辑',
+            key: constants.EDIT,
+            title: getLanguage(this.props.language).Map_Main_Menu.EDIT,
             action: this.showEdit,
             image: require('../../../../assets/function/icon_edit.png'),
           },
           {
-            title: '工具',
+            key: constants.TOOL,
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '分享',
+            key: constants.SHARE,
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },

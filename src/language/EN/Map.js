@@ -6,6 +6,7 @@ const Map_Label = {
   SETTING: 'Setting',
   SCENE: 'Scene',
   NAME: 'Name',
+  TOOL_BOX: 'Toolbox',
 }
 
 //地图、场景主菜单
@@ -21,6 +22,7 @@ const Map_Main_Menu = {
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
 
+  PLOT: 'Plot',
   OPEN: 'Add',
   OPEN_DATASOURCE: 'Datasource',
   OPEN_MAP: 'Map',
@@ -218,6 +220,7 @@ const Map_Main_Menu = {
   MOVE: 'Move',
   FREE_DRAW_ERASE: 'Free-draw Erase',
 
+  PLOTTING: 'Plotting',
   PLOTTING_LIB_CHANGE: 'Change Plotting Lib',
   PLOTTING_LIB: 'Plotting Lib',
 

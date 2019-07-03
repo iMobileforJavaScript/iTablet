@@ -680,6 +680,7 @@ export default class ToolBar extends React.PureComponent {
         sectionIndex: 0,
         itemIndex: 0,
         viewOffset: scaleSize(80),
+        viewPosition: 0,
       })
   }
   //滚动到指定位置
@@ -3533,7 +3534,6 @@ export default class ToolBar extends React.PureComponent {
         }
         await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
-        SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
@@ -3571,7 +3571,6 @@ export default class ToolBar extends React.PureComponent {
           LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.setRangeColorScheme(Params)
-        await SMap.updateLegend()
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR
@@ -4252,21 +4251,6 @@ export default class ToolBar extends React.PureComponent {
                 }
               })
             })
-            //如果是标绘模块则加载标绘数据
-            if (GLOBAL.Type === constants.MAP_PLOTTING) {
-              let plotIconPath = await FileTools.appendingHomeDirectory(
-                ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/' +
-                  ConstPath.RelativePath.Plotting +
-                  'PlotLibData',
-              )
-              await this.props.getSymbolPlots({
-                path: plotIconPath,
-                isFirst: true,
-                newName: value,
-              })
-            }
             // 隐藏底图
             await SMap.setLayerVisible(layers[layers.length - 1].path, true)
 
@@ -4448,10 +4432,6 @@ export default class ToolBar extends React.PureComponent {
                     }
                   })
                 })
-                //如果是标绘模块则加载标绘数据
-                if (GLOBAL.Type === constants.MAP_PLOTTING) {
-                  this.initPlotData()
-                }
                 this.props.setContainerLoading(false)
                 // // 重新加载图层
                 // this.props.getLayers({
@@ -4493,21 +4473,6 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
         }, 1000)
       },
-    })
-  }
-
-  /** 初始化标绘数据**/
-  initPlotData = async () => {
-    let plotIconPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath +
-        this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativePath.Plotting +
-        'PlotLibData',
-    )
-    await this.props.getSymbolPlots({
-      path: plotIconPath,
-      isFirst: true,
     })
   }
 
@@ -4627,7 +4592,17 @@ export default class ToolBar extends React.PureComponent {
         )
         //如果是标绘模块则加载标绘数据
         if (GLOBAL.Type === constants.MAP_PLOTTING) {
-          this.initPlotData()
+          let plotIconPath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Plotting +
+              'PlotLibData',
+          )
+          await this.props.getSymbolPlots({
+            path: plotIconPath,
+            isFirst: true,
+          })
         }
 
         this.props.setContainerLoading(false)

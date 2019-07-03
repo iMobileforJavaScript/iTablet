@@ -143,7 +143,7 @@ export default class MT_layerManager extends React.Component {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.getData(true)
+      this.state.type !== constants.MAP_ANALYST && this.getData(true)
     })
   }
 

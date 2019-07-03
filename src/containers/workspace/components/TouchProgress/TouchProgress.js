@@ -14,7 +14,6 @@ import {
   SCartography,
   SThemeCartography,
   ThemeType,
-  SMap,
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { getLanguage } from '../../../../language/index'
@@ -681,7 +680,6 @@ export default class TouchProgress extends Component {
         switch (themeType) {
           case ThemeType.RANGE:
             await SThemeCartography.modifyThemeRangeMap(Params)
-            SMap.updateLegend()
             break
           case ThemeType.GRIDRANGE:
             await SThemeCartography.modifyThemeGridRangeMap(Params)
