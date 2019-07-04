@@ -278,8 +278,8 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
               if (
                 layerHistory.history[currentIndex - 1].fieldInfo[0].smID !==
                   currentHistory[0].fieldInfo[0].smID ||
-                layerHistory.history[currentIndex - 1].fieldInfo[0]
-                  .columnIndex !== currentHistory[0].fieldInfo[0].columnIndex
+                layerHistory.history[currentIndex - 1].fieldInfo[0].name !==
+                  currentHistory[0].fieldInfo[0].name
               ) {
                 currentIndex++
                 currentHistory = [layerHistory.history[currentIndex]]
@@ -312,8 +312,8 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
               if (
                 layerHistory.history[currentIndex + 1].fieldInfo[0].smID !==
                   currentHistory[0].fieldInfo[0].smID ||
-                layerHistory.history[currentIndex + 1].fieldInfo[0]
-                  .columnIndex !== currentHistory[0].fieldInfo[0].columnIndex
+                layerHistory.history[currentIndex + 1].fieldInfo[0].name !==
+                  currentHistory[0].fieldInfo[0].name
               ) {
                 currentIndex--
                 currentHistory = [layerHistory.history[currentIndex]]
@@ -736,11 +736,11 @@ export default handleActions(
 
                 // 若修改的对象和之前最新的对象不是一个对象，则把被修改对象之前的值加入到历史记录中
                 if (
-                  layers[j].history[0].params.filter !== item.params.filter || // 判断是否是同一行数据
+                  layers[j].history[0].params.filter !== item.params.filter || // 判断是否是同一条数据
                   layers[j].history[0].fieldInfo.length !==
                     item.fieldInfo.length ||
-                  layers[j].history[0].fieldInfo[0].columnIndex !==
-                    item.fieldInfo[0].columnIndex //判断是否是同一行不同列数据
+                  layers[j].history[0].fieldInfo[0].name !==
+                    item.fieldInfo[0].name //判断是否是同一条数据不同属性
                 ) {
                   layers[j].history.unshift({
                     fieldInfo: item.prevData,

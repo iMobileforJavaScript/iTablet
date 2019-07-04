@@ -161,8 +161,11 @@ export default class MT_layerManager extends React.Component {
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       let baseMap = []
-      if (layers.length > 0) {
-        if (!LayerUtils.isBaseLayer(layers[layers.length - 1].name)) {
+      if (layers.length > 0 || GLOBAL.Type === constants.MAP_ANALYST) {
+        if (
+          !LayerUtils.isBaseLayer(layers[layers.length - 1].name) ||
+          GLOBAL.Type === constants.MAP_ANALYST
+        ) {
           baseMap = [
             {
               caption: 'baseMap',
@@ -183,7 +186,7 @@ export default class MT_layerManager extends React.Component {
             ? 1
             : ConstOnline.Google.layerIndex,
           false,
-          GLOBAL.Type === constants.MAP_ANALYST, // 分析模块下，显示地图
+          false, // 分析模块下，显示地图
         )
         layers = await this.props.getLayers()
         baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []

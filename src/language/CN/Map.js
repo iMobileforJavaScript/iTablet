@@ -297,7 +297,7 @@ const Map_Layer = {
   SNAPABLE: '设置图层可捕获',
   NOT_SNAPABLE: '设置图层不可捕获',
   //专题图图层
-  LAYERS_CREAT_THEMATIC_MAP: '制作专题图',
+  LAYERS_CREATE_THEMATIC_MAP: '制作专题图',
   LAYERS_MODIFY_THEMATIC_MAP: '修改专题图',
 
   BASEMAP: '我的底图',
