@@ -41,7 +41,13 @@ export default class ScaleView extends React.Component {
       })
     }
   }
-
+  componentWillUnmount() {
+    if (this.state.isAddedListener) {
+      SMap.addScaleChangeDelegate({
+        scaleViewChange: () => {},
+      })
+    }
+  }
   showFullMap = (visible, immediately = false) => {
     if (this.state.visible === visible) return
     Animated.timing(this.left, {

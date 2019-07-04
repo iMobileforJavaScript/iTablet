@@ -9,9 +9,8 @@ import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil } from '../../../../utils'
-import { ConstInfo, ConstToolType } from '../../../../constants'
+import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
-import constants from '../../../workspace/constants'
 import {
   LayerAttributeTable,
   LayerTopBar,
@@ -1066,29 +1065,6 @@ export default class LayerAttribute extends React.Component {
   // }
 
   render() {
-    let title = ''
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
-        //MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
-        //MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = getLanguage(this.props.language).Map_Module.MAP_3D
-        //MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = getLanguage(this.props.language).Map_Module.MAP_THEME
-        //MAP_MODULE.MAP_THEME
-        break
-      case constants.MAP_PLOTTING:
-        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
-        //MAP_MODULE.MAP_PLOTTING
-        break
-    }
     let showContent =
       this.state.showTable &&
       this.state.attributes &&
@@ -1117,7 +1093,7 @@ export default class LayerAttribute extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: getHeaderTitle(this.type),
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),

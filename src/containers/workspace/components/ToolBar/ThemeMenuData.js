@@ -496,6 +496,16 @@ function getThemeMapCreateByLayer(type, params) {
       image: getThemeAssets().themeType.theme_grid_range,
       selectedImage: getThemeAssets().themeType.theme_grid_range,
     },
+    {
+      //热力图
+      key: constants.THEME_HEATMAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP,
+      // title: constants.THEME_HEATMAP,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.heatmap,
+      selectedImage: getThemeAssets().themeType.heatmap,
+    },
   ]
   return { data, buttons }
 }

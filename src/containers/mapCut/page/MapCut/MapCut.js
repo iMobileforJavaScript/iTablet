@@ -85,6 +85,13 @@ export default class MapCut extends React.Component {
     })
   }
 
+  regetDatasource = () => {
+    SMap.getDatasources().then(datasources => {
+      this.setState({
+        datasources,
+      })
+    })
+  }
   /**
    * 获取所有图层，包含图层组中的图层
    */
@@ -149,8 +156,24 @@ export default class MapCut extends React.Component {
               layerInfo.IsExactClip =
                 info.exactCutStatus === CheckStatus.CHECKED
             }
-            layerInfo.DatasourceTarget = info.datasourceName
-
+            let isDatasourceExist = true
+            let suffix = '_1'
+            let tempName = info.datasourceName
+            while (isDatasourceExist) {
+              isDatasourceExist = false
+              if (tempName.match(/(_\d)$/)) {
+                suffix = `_${+tempName.match(/(_\d)$/)[0][1] + 1}`
+                tempName = tempName.replace(/(_\d)$/, suffix)
+              } else {
+                tempName = tempName + suffix
+              }
+              this.state.datasources.map(item => {
+                if (tempName === item.alias) {
+                  isDatasourceExist = true
+                }
+              })
+            }
+            layerInfo.DatasourceTarget = tempName
             layersInfo.push(layerInfo)
           })
 
@@ -740,6 +763,7 @@ export default class MapCut extends React.Component {
     return (
       <MapCutSetting
         language={this.props.language}
+        mapcutDSCallBack={this.regetDatasource}
         ref={ref => (this.settingModal = ref)}
         currentUser={this.props.currentUser}
         datasources={this.state.datasources}

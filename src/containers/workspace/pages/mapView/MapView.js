@@ -99,6 +99,7 @@ export default class MapView extends React.Component {
     importTemplate: PropTypes.func,
     importWorkspace: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
+    setCurrentPlotInfo: PropTypes.func,
     setTemplate: PropTypes.func,
     getMaps: PropTypes.func,
     exportWorkspace: PropTypes.func,
@@ -280,6 +281,7 @@ export default class MapView extends React.Component {
         }
       }
     } else if (prevProps.analyst.params && !this.props.analyst.params) {
+      this.backAction = null
       this.container && this.container.setHeaderVisible(true)
       this.container && this.container.setBottomVisible(true)
     }
@@ -386,6 +388,7 @@ export default class MapView extends React.Component {
     this.props.setAnalystLayer(null)
     this.props.setCollectionInfo() // 置空Redux中Collection中的数据
     this.props.setCurrentTemplateInfo() // 清空当前模板
+    this.props.setCurrentPlotInfo() //清空当前模板
     this.props.setTemplate() // 清空模板
   }
 
@@ -536,6 +539,10 @@ export default class MapView extends React.Component {
       geometrySelected: this.geometrySelected,
       geometryMultiSelected: this.geometryMultiSelected,
     })
+  }
+
+  _removeGeometrySelectedListener = async () => {
+    await SMap.removeGeometrySelectedListener()
   }
 
   // 导出(保存)工作空间中地图到模块
@@ -930,7 +937,9 @@ export default class MapView extends React.Component {
     // }
     SMap.mapIsModified().then(async result => {
       if (result && !this.isExample) {
-        this.setSaveViewVisible(true)
+        this.setSaveViewVisible(true, null, () => {
+          this._removeGeometrySelectedListener()
+        })
       } else {
         try {
           this.setLoading(
@@ -939,6 +948,7 @@ export default class MapView extends React.Component {
             //'正在关闭地图'
           )
           await this.props.closeMap()
+          await this._removeGeometrySelectedListener()
           GLOBAL.clearMapData()
           this.setLoading(false)
           NavigationService.goBack()
@@ -1093,7 +1103,7 @@ export default class MapView extends React.Component {
         )
 
         //地图打开后去获取比例尺、图例数据
-        GLOBAL.scaleView.getInitialData()
+        GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
         GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&

@@ -27,7 +27,7 @@ export default class MapCutDS extends React.Component {
 
     this.currentUser = params && params.currentUser
     this.cb = params && params.cb
-
+    this.mapcutDSCallBack = params && params.mapcutDSCallBack
     this.changeDSData = null
   }
 
@@ -50,6 +50,7 @@ export default class MapCutDS extends React.Component {
               data,
             },
             () => {
+              this.mapcutDSCallBack()
               NavigationService.goBack()
             },
           )
@@ -110,33 +111,6 @@ export default class MapCutDS extends React.Component {
             />
           )}
         />
-        {/*<PopModal*/}
-        {/*ref={ref => (this.popModal = ref)}*/}
-        {/*onCloseModal={this.newDatasource}>*/}
-        {/*<View style={{*/}
-        {/*flex:1,*/}
-        {/*height:scaleSize(200),*/}
-        {/*backgroundColor:color.background,*/}
-        {/*justifyContent:'flex-end',*/}
-        {/*}}>*/}
-        {/*<View*/}
-        {/*style={{*/}
-        {/*flex:1,*/}
-        {/*height:scaleSize(80),*/}
-        {/*flexDirection: 'row',*/}
-        {/*justifyContent:'space-between',*/}
-        {/*paddingHorizontal: scaleSize(20),*/}
-        {/*}}>*/}
-        {/*<Text>取消</Text>*/}
-        {/*<Text>确定</Text>*/}
-        {/*</View>*/}
-        {/*<TextInput*/}
-        {/*style={{*/}
-        {/*height:scaleSize(80),*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*</View>*/}
-        {/*</PopModal>*/}
       </Container>
     )
   }
