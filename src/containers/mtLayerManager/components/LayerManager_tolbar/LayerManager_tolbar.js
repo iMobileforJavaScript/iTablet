@@ -8,6 +8,7 @@ import NavigationService from '../../../NavigationService'
 import {
   layersetting,
   layerThemeSetting,
+  layerPlottingSetting,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
@@ -113,6 +114,15 @@ export default class LayerManager_tolbar extends React.Component {
         data = layerThemeSettings(this.props.language)
         data[0].headers = headerData
         break
+      case ConstToolType.PLOTTING:
+        //如果是cad图层 单独处理，其他图层通采集图层
+        // headerData = headerData
+        // .concat(layerSettingCanEdit(this.props.language))
+        // .concat(layerSettingCanSnap(this.props.language))
+        data = layerPlottingSetting(this.props.language)
+        data[0].headers = headerData
+        break
+
       case ConstToolType.COLLECTION:
         //collection 单独处理
         headerData = headerData
@@ -820,6 +830,7 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_THEME_STYLE:
           case ConstToolType.MAP_THEME_STYLES:
           case ConstToolType.COLLECTION:
+          case ConstToolType.PLOTTING:
           case ConstToolType.MAP_EDIT_STYLE:
           case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()

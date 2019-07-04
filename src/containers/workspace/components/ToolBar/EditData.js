@@ -410,13 +410,13 @@ function getEditData(type) {
           action: redo,
           image: require('../../../../assets/mapTools/icon_recover_black.png'),
         },
-        {
-          key: constants.CANCEL_SELECT,
-          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_CANCEL,
-          size: 'large',
-          action: cancel,
-          image: require('../../../../assets/mapTools/icon_close_black.png'),
-        },
+        // {
+        //   key: constants.CANCEL_SELECT,
+        //   title: getLanguage(global.language).Map_Main_Menu.COLLECTION_CANCEL,
+        //   size: 'large',
+        //   action: cancel,
+        //   image: require('../../../../assets/mapTools/icon_close_black.png'),
+        // },
       ]
       break
   }
@@ -580,9 +580,9 @@ function redo(type) {
   return SMap.redo(type)
 }
 
-function cancel() {
-  return SMap.setAction(Action.SELECT)
-}
+// function cancel() {
+//   return SMap.setAction(Action.SELECT)
+// }
 
 function remove() {
   // TODO remove

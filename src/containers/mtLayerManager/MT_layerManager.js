@@ -462,6 +462,14 @@ export default class MT_layerManager extends React.Component {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
       })
+    } else if (
+      GLOBAL.Type === constants.MAP_PLOTTING &&
+      data.name.substring(0, 9) === 'PlotEdit_'
+    ) {
+      this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
+        height: ConstToolType.TOOLBAR_HEIGHT[4],
+        layerdata: data,
+      })
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: ConstToolType.TOOLBAR_HEIGHT[5],

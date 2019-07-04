@@ -111,7 +111,7 @@ export default class TreeListItem extends React.Component {
             />
           </TouchableOpacity>
         ) : (
-          <View style={styles.arrowImg} />
+          <View style={styles.btn} />
         )}
         {icon && (
           <Image
