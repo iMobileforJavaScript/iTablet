@@ -453,7 +453,7 @@ export default class MT_layerManager extends React.Component {
           themeType = ConstToolType.MAP_THEME_STYLE
           break
       }
-      if(data.isHeatmap){
+      if (data.isHeatmap) {
         themeType = ConstToolType.MAP_THEME_STYLES
       }
       this.toolBox.setVisible(true, themeType, {
