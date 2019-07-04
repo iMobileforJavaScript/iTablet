@@ -121,7 +121,8 @@ export default class Friend extends Component {
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language !== this.props.language
+      prevProps.language !== this.props.language ||
+      Dimensions.get('window').width !== this.screenWidth
     ) {
       return true
     }
@@ -1043,6 +1044,7 @@ export default class Friend extends Component {
     }
   }
   render() {
+    this.screenWidth = Dimensions.get('window').width
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1098,21 +1100,67 @@ export default class Friend extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ScrollableTabView
-          renderTabBar={() => <DefaultTabBar />}
+          renderTabBar={() => (
+            <DefaultTabBar
+              renderTab={(name, page, isTabActive, onPressHandler) => {
+                let activeTextColor = 'rgba(70,128,223,1.0)'
+                let inactiveTextColor = 'black'
+                const textColor = isTabActive
+                  ? activeTextColor
+                  : inactiveTextColor
+                const fontWeight = isTabActive ? 'bold' : 'normal'
+
+                return (
+                  <TouchableOpacity
+                    style={{ flex: 1 }}
+                    key={name}
+                    accessible={true}
+                    accessibilityLabel={name}
+                    accessibilityTraits="button"
+                    onPress={() => onPressHandler(page)}
+                  >
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        paddingVertical: scaleSize(10),
+                      }}
+                    >
+                      <View>
+                        <Text
+                          style={{
+                            color: textColor,
+                            fontWeight,
+                            fontSize: scaleSize(25),
+                            textAlign: 'center',
+                          }}
+                        >
+                          {name}
+                        </Text>
+                        {name ===
+                          getLanguage(this.props.language).Friends.MESSAGES && (
+                          <InformSpot
+                            style={{
+                              top: scaleSize(-5),
+                              right: scaleSize(-15),
+                            }}
+                          />
+                        )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              }}
+            />
+          )}
           initialPage={1}
           tabBarUnderlineStyle={{
             backgroundColor: 'rgba(70,128,223,1.0)',
             height: 2,
             width: 20,
             marginLeft: this.screenWidth / 3 / 2 - 10,
-          }}
-          tabBarBackgroundColor="white"
-          tabBarActiveTextColor="rgba(70,128,223,1.0)"
-          tabBarInactiveTextColor="black"
-          tabBarTextStyle={{
-            fontSize: scaleSize(25),
-            textAlign: 'center',
-            marginTop: 10,
           }}
         >
           <FriendMessage
@@ -1141,19 +1189,6 @@ export default class Friend extends Component {
             friend={this}
           />
         </ScrollableTabView>
-
-        <InformSpot
-          style={{
-            position: 'absolute',
-            backgroundColor: 'red',
-            justifyContent: 'center',
-            height: scaleSize(15),
-            width: scaleSize(15),
-            borderRadius: scaleSize(25),
-            top: scaleSize(10),
-            left: this.screenWidth / 3 / 2 + 10,
-          }}
-        />
       </View>
     )
   }
