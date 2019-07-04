@@ -99,6 +99,7 @@ export default class MapView extends React.Component {
     importTemplate: PropTypes.func,
     importWorkspace: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
+    setCurrentPlotInfo: PropTypes.func,
     setTemplate: PropTypes.func,
     getMaps: PropTypes.func,
     exportWorkspace: PropTypes.func,
@@ -387,6 +388,7 @@ export default class MapView extends React.Component {
     this.props.setAnalystLayer(null)
     this.props.setCollectionInfo() // 置空Redux中Collection中的数据
     this.props.setCurrentTemplateInfo() // 清空当前模板
+    this.props.setCurrentPlotInfo() //清空当前模板
     this.props.setTemplate() // 清空模板
   }
 

@@ -136,6 +136,7 @@ export default class ToolBar extends React.PureComponent {
     openMap: () => {},
     closeMap: () => {},
     setCurrentTemplateInfo: () => {},
+    setCurrentPlotInfo: () => {},
     setTemplate: () => {},
     setInputDialogVisible: () => {},
     exportmap3DWorkspace: () => {},
@@ -4218,6 +4219,7 @@ export default class ToolBar extends React.PureComponent {
             await this.props.closeMap()
             this.props.setCollectionInfo() // 清空当前模板
             this.props.setCurrentTemplateInfo() // 清空当前模板
+            this.props.setCurrentPlotInfo() //清空模板
             this.props.setTemplate() // 清空模板
 
             // 重新打开工作空间，防止Resource被删除或破坏
