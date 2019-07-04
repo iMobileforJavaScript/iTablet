@@ -160,7 +160,7 @@ export default class MapToolbar extends React.Component {
         list = [
           {
             key: 'MapAnalystView',
-            title: '地图',
+            title: getLanguage(global.language).Map_Label.MAP,
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
             btnClick: () => {
@@ -170,7 +170,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'AnalystTools',
-            title: '工具箱',
+            title: getLanguage(global.language).Map_Label.TOOL_BOX,
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
@@ -180,7 +180,7 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerAnalystManager',
-            title: '图层',
+            title: getLanguage(global.language).Map_Label.LAYER,
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {

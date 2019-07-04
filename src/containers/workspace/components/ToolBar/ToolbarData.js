@@ -43,7 +43,8 @@ function getTabBarData(type, params = {}) {
     type === ConstToolType.MAP_THEME_START ||
     type === ConstToolType.MAP_COLLECTION_START ||
     type === ConstToolType.MAP_EDIT_START ||
-    type === ConstToolType.MAP_3D_START
+    type === ConstToolType.MAP_3D_START ||
+    type === ConstToolType.MAP_PLOTTING_START
   ) {
     tabBarData = StartData.getStart(type, params)
   } else if (

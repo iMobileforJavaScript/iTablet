@@ -209,16 +209,59 @@ function getStart(type, params) {
           image: require('../../../../assets/mapTools/icon_save_as_black.png'),
         },
       ]
-      if (GLOBAL.Type == constants.MAP_PLOTTING) {
-        data.push({
+      break
+    case ConstToolType.MAP_PLOTTING_START:
+      data = [
+        {
+          key: constants.OPEN,
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+          //constants.CREATE,
+          size: 'large',
+          action: () => isNeedToSave(create),
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
+          //constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_history_black.png'),
+        },
+        {
+          key: constants.SAVE,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_MAP,
+          //constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_save_black.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
+          //constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_save_as_black.png'),
+        },
+        {
           key: constants.CHANGE_PLOT_LIB,
           title: getLanguage(global.language).Map_Main_Menu.PLOTTING_LIB_CHANGE,
           //constants.SAVE_AS,
           size: 'large',
           action: changePlotLib,
           image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
-        })
-      }
+        },
+      ]
       break
     case ConstToolType.MAP_THEME_START:
       data = [
@@ -696,7 +739,8 @@ function create() {
   }
   if (
     GLOBAL.Type === constants.MAP_EDIT ||
-    GLOBAL.Type === constants.MAP_THEME
+    GLOBAL.Type === constants.MAP_THEME ||
+    GLOBAL.Type === constants.MAP_PLOTTING
   ) {
     (async function() {
       let userPath =
@@ -755,6 +799,18 @@ function create() {
           await SMap.openTaggingDataset(_params.user.currentUser.userName)
           GLOBAL.TaggingDatasetName = ''
           _params.getLayers && (await _params.getLayers())
+
+          //如果是标绘模块则加载标绘数据
+          if (GLOBAL.Type === constants.MAP_PLOTTING) {
+            let plotIconPath = await FileTools.appendingHomeDirectory(
+              userPath + ConstPath.RelativePath.Plotting + 'PlotLibData',
+            )
+            await _params.getSymbolPlots({
+              path: plotIconPath,
+              isFirst: true,
+              newName: value,
+            })
+          }
 
           _params.saveMap &&
             (await _params.saveMap({

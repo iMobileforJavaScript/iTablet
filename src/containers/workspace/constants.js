@@ -53,6 +53,7 @@ export default {
   EDIT: '编辑',
   TOOL: '工具',
   SHARE: '分享',
+  PLOT: '标绘',
   OPEN: '打开地图',
   WORKSPACE: '工作空间',
   CREATE: '新建地图',

@@ -128,6 +128,10 @@ export default class Register extends React.Component {
         this._goMine()
         return
       } else {
+        let index = result.indexOf('，')
+        if (index !== -1) {
+          result = result.substring(0, index)
+        }
         switch (result) {
           case '手机号已注册':
             info = getLanguage(this.props.language).Prompt
@@ -148,10 +152,15 @@ export default class Register extends React.Component {
             info = getLanguage(this.props.language).Prompt.REGIST_FAILED
             break
           case '请输入正确的手机号':
+          case '手机格式不正确':
             info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_MOBILE
             break
           case '请输入正确的邮箱号':
+          case '邮箱格式不正确':
             info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
+            break
+          default:
+            info = getLanguage(this.props.language).Prompt.REGIST_FAILED
             break
         }
         Toast.show(info)

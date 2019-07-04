@@ -280,6 +280,7 @@ export default class MapView extends React.Component {
         }
       }
     } else if (prevProps.analyst.params && !this.props.analyst.params) {
+      this.backAction = null
       this.container && this.container.setHeaderVisible(true)
       this.container && this.container.setBottomVisible(true)
     }
@@ -536,6 +537,10 @@ export default class MapView extends React.Component {
       geometrySelected: this.geometrySelected,
       geometryMultiSelected: this.geometryMultiSelected,
     })
+  }
+
+  _removeGeometrySelectedListener = async () => {
+    await SMap.removeGeometrySelectedListener()
   }
 
   // 导出(保存)工作空间中地图到模块
@@ -939,6 +944,7 @@ export default class MapView extends React.Component {
             //'正在关闭地图'
           )
           await this.props.closeMap()
+          await this._removeGeometrySelectedListener()
           GLOBAL.clearMapData()
           this.setLoading(false)
           NavigationService.goBack()
@@ -1002,6 +1008,22 @@ export default class MapView extends React.Component {
             //   await this._openLatestMap(this.wsData.DSParams)
             // }
           }
+        } else {
+          // 若无参数，打开默认工作空间。分析模块使用
+          let homePath = await FileTools.appendingHomeDirectory()
+          let userPath = ConstPath.CustomerPath
+          if (
+            this.props.user.currentUser &&
+            this.props.user.currentUser.userName
+          ) {
+            userPath =
+              ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+          }
+          let wsPath =
+            homePath + userPath + ConstPath.RelativeFilePath.Workspace
+          await this._openWorkspace({
+            DSParams: { server: wsPath },
+          })
         }
 
         if (GLOBAL.Type === constants.MAP_PLOTTING) {
@@ -1028,6 +1050,7 @@ export default class MapView extends React.Component {
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },
           async layers => {
+            if (!this.wsData) return
             // 若数据源已经打开，图层未加载，则去默认加载一个图层
             if (layers.length === 0) {
               let result = false
