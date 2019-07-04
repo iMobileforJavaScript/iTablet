@@ -647,7 +647,7 @@ export default handleActions(
         data.currentTemplateList = []
         data.plotLibIds = []
         data.currentPlotInfo = {}
-        data.currentPlotList = {}
+        data.currentPlotList = []
         return fromJS(data)
       } else {
         return state
