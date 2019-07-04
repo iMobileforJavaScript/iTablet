@@ -935,7 +935,9 @@ export default class MapView extends React.Component {
     // }
     SMap.mapIsModified().then(async result => {
       if (result && !this.isExample) {
-        this.setSaveViewVisible(true)
+        this.setSaveViewVisible(true, null, () => {
+          this._removeGeometrySelectedListener()
+        })
       } else {
         try {
           this.setLoading(
