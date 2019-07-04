@@ -28,9 +28,11 @@ import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
 import NavigationService from '../../../NavigationService'
-import { DatasetType, SMap } from 'imobile_for_reactnative'
+import { DatasetType, SMap, EngineType } from 'imobile_for_reactnative'
 import styles from '../../styles'
 import { getLanguage } from '../../../../language'
+import ConstPath from '../../../../constants/ConstPath'
+import FileTools from '../../../../native/FileTools'
 
 let COMPLETE = ''
 let EDIT = ''
@@ -136,6 +138,29 @@ export default class MapCut extends React.Component {
           )
         setTimeout(async () => {
           let layersInfo = []
+          let newDatasourceName =
+            this.props.currentUser.userName + '_Clip_Label#'
+          let filePath = await FileTools.appendingHomeDirectory(
+            ConstPath.AppPath +
+              'User/' +
+              this.props.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Datasource,
+          )
+          let newDatasourcePath = filePath + newDatasourceName + '.udb'
+          let newDatasourceUDDPath = filePath + newDatasourceName + '.udd'
+          //另存地图
+          if (this.state.saveAsName !== '') {
+            let datasourceParams = {}
+            datasourceParams.server = newDatasourcePath
+            datasourceParams.engineType = EngineType.UDB
+            datasourceParams.alias = newDatasourceName
+            SMap.createDatasource(datasourceParams).then(rel => {
+              if (rel === true) {
+                SMap.openDatasource(datasourceParams)
+              }
+            })
+          }
           this.state.selected.forEach((value, key) => {
             let layerInfo = {}
             if (!value) return
@@ -156,24 +181,10 @@ export default class MapCut extends React.Component {
               layerInfo.IsExactClip =
                 info.exactCutStatus === CheckStatus.CHECKED
             }
-            let isDatasourceExist = true
-            let suffix = '_1'
-            let tempName = info.datasourceName
-            while (isDatasourceExist) {
-              isDatasourceExist = false
-              if (tempName.match(/(_\d)$/)) {
-                suffix = `_${+tempName.match(/(_\d)$/)[0][1] + 1}`
-                tempName = tempName.replace(/(_\d)$/, suffix)
-              } else {
-                tempName = tempName + suffix
-              }
-              this.state.datasources.map(item => {
-                if (tempName === item.alias) {
-                  isDatasourceExist = true
-                }
-              })
-            }
-            layerInfo.DatasourceTarget = tempName
+            layerInfo.DatasourceTarget =
+              this.state.saveAsName !== ''
+                ? newDatasourceName
+                : info.datasourceName
             layersInfo.push(layerInfo)
           })
 
@@ -191,6 +202,11 @@ export default class MapCut extends React.Component {
             true,
           ).then(
             () => {
+              if (this.state.saveAsName !== '') {
+                SMap.closeDatasource(newDatasourceName)
+                SMap.deleteDatasource(newDatasourcePath)
+                SMap.deleteDatasource(newDatasourceUDDPath)
+              }
               this.container && this.container.setLoading(false)
               this.isCutting = false
 
