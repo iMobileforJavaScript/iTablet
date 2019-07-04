@@ -3,7 +3,7 @@
  */
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType, TouchType } from '../../../../constants'
-import { dataUtil, Toast } from '../../../../utils'
+import { dataUtil, Toast, StyleUtils } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -550,8 +550,10 @@ function measureLength() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
-  SMap.measureLength(obj => {
-    _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
+  StyleUtils.setDefaultMapControlStyle().then(() => {
+    SMap.measureLength(obj => {
+      _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
+    })
   })
 
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
@@ -570,8 +572,10 @@ function measureArea() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
-  SMap.measureArea(obj => {
-    _params.showMeasureResult(true, obj.curResult.toFixed(6) + '㎡')
+  StyleUtils.setDefaultMapControlStyle().then(() => {
+    SMap.measureArea(obj => {
+      _params.showMeasureResult(true, obj.curResult.toFixed(6) + '㎡')
+    })
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
 
@@ -589,8 +593,10 @@ function measureAngle() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
-  SMap.measureAngle(obj => {
-    _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
+  StyleUtils.setDefaultMapControlStyle().then(() => {
+    SMap.measureAngle(obj => {
+      _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
+    })
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_ANGLE
 

@@ -27,7 +27,7 @@ function getHeaderTitle(type) {
       return getLanguage(global.language).Map_Module.MAP_3D
     case constants.MAP_THEME:
       return getLanguage(global.language).Map_Module.MAP_THEME
-    case constants.MAP_COLLECTION:
+    case constants.COLLECTION:
       return getLanguage(global.language).Map_Module.MAP_COLLECTION
     case constants.MAP_PLOTTING:
       return getLanguage(global.language).Map_Module.MAP_PLOTTING

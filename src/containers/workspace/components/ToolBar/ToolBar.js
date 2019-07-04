@@ -2547,7 +2547,9 @@ export default class ToolBar extends React.PureComponent {
         // 找出有默认样式的数据集，并给对应图层设置
         for (let i = 0; i < resultArr.length; i++) {
           let description =
-            resultArr[i].description && JSON.parse(resultArr[i].description)
+            resultArr[i].description &&
+            resultArr[i].description != 'NULL' &&
+            JSON.parse(resultArr[i].description)
           if (description && description.geoStyle) {
             await SMap.setLayerStyle(
               resultArr[i].layerName,
@@ -2795,7 +2797,6 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
@@ -3189,7 +3190,6 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())

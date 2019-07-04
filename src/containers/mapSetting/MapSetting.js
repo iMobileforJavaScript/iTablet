@@ -15,7 +15,7 @@ import styles from './styles'
 import { getlegendSetting, getThematicMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import { getLanguage } from '../../language/index'
-import { ConstToolType } from '../../constants'
+import { ConstToolType, getHeaderTitle } from '../../constants'
 import { scaleSize } from '../../utils'
 import size from '../../styles/size'
 import color from '../../styles/color'
@@ -285,35 +285,12 @@ export default class MapSetting extends Component {
   }
 
   render() {
-    let title = ''
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = getLanguage(this.props.language).Map_Module.MAP_COLLECTION
-        //MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = getLanguage(this.props.language).Map_Module.MAP_EDIT
-        //MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = getLanguage(this.props.language).Map_Module.MAP_3D
-        //MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = getLanguage(this.props.language).Map_Module.MAP_THEME
-        //MAP_MODULE.MAP_THEME
-        break
-      case constants.MAP_PLOTTING:
-        title = getLanguage(this.props.language).Map_Module.MAP_PLOTTING
-        //MAP_MODULE.MAP_PLOTTING
-        break
-    }
     return (
       <Container
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: getHeaderTitle(GLOBAL.Type),
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../assets/mapTools/icon_close.png'),

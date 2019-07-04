@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, TouchableOpacity, Animated, Easing } from 'react-native'
 import styles from './styles'
-export default class MapSetting extends Component {
+export default class SettingSection extends Component {
   props: {
     data: Array,
     onPress: () => {},

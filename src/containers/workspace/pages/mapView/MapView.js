@@ -37,8 +37,7 @@ import {
   SurfaceView,
   SearchBar,
 } from '../../../../components'
-import { Utils } from '../../util'
-import { Toast, jsonUtil, scaleSize } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -503,10 +502,10 @@ export default class MapView extends React.Component {
         // 除了编辑状态，其余点选对象所在图层全设置为选择状态
         if (event.layerInfo.editable) {
           SMap.setLayerEditable(event.layerInfo.path, false).then(() => {
-            Utils.setSelectionStyle(event.layerInfo.path)
+            StyleUtils.setSelectionStyle(event.layerInfo.path)
           })
         } else {
-          Utils.setSelectionStyle(event.layerInfo.path)
+          StyleUtils.setSelectionStyle(event.layerInfo.path)
         }
         break
     }
@@ -518,7 +517,7 @@ export default class MapView extends React.Component {
       if (event.geometries[i].layerInfo.editable) {
         SMap.setLayerEditable(event.geometries[i].layerInfo.path, false)
       }
-      Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
+      StyleUtils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,
         ids: event.geometries[i].ids,
@@ -937,7 +936,9 @@ export default class MapView extends React.Component {
     // }
     SMap.mapIsModified().then(async result => {
       if (result && !this.isExample) {
-        this.setSaveViewVisible(true)
+        this.setSaveViewVisible(true, null, () => {
+          this._removeGeometrySelectedListener()
+        })
       } else {
         try {
           this.setLoading(

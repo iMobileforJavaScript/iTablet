@@ -600,7 +600,7 @@ export default class LayerManager_tolbar extends React.Component {
       this.setVisible(false)
     } else if (
       section.title ===
-      getLanguage(global.language).Map_Layer.LAYERS_CREAT_THEMATIC_MAP
+      getLanguage(global.language).Map_Layer.LAYERS_CREATE_THEMATIC_MAP
     ) {
       //'新建专题图') {
       let themeType = this.state.layerdata.themeType

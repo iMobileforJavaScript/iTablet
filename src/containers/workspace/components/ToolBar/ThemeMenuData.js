@@ -82,11 +82,21 @@ function showExpressionList(type) {
     _createThemeByLayer,
   ).then(getdata => {
     let dataset = getdata.dataset
-    let allExpressions = getdata.list
-    allExpressions.forEach(item => {
-      item.info = {
-        infoType: 'fieldType',
-        fieldType: item.fieldType,
+    let allExpressions = []
+    getdata.list.forEach(item => {
+      if (
+        item.fieldTypeStr === 'DOUBLE' ||
+        item.fieldTypeStr === 'INT16' ||
+        item.fieldTypeStr === 'INT32' ||
+        item.fieldTypeStr === 'INT64' ||
+        item.fieldTypeStr === 'LONGBINARY' ||
+        item.fieldTypeStr === 'SINGLE'
+      ) {
+        item.info = {
+          infoType: 'fieldType',
+          fieldType: item.fieldType,
+        }
+        allExpressions.push(item)
       }
     })
     let data = [
@@ -495,6 +505,16 @@ function getThemeMapCreateByLayer(type, params) {
       action: () => createThemeGridRangeMapByLayer(),
       image: getThemeAssets().themeType.theme_grid_range,
       selectedImage: getThemeAssets().themeType.theme_grid_range,
+    },
+    {
+      //热力图
+      key: constants.THEME_HEATMAP,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP,
+      // title: constants.THEME_HEATMAP,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.heatmap,
+      selectedImage: getThemeAssets().themeType.heatmap,
     },
   ]
   return { data, buttons }
