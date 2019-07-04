@@ -82,11 +82,21 @@ function showExpressionList(type) {
     _createThemeByLayer,
   ).then(getdata => {
     let dataset = getdata.dataset
-    let allExpressions = getdata.list
-    allExpressions.forEach(item => {
-      item.info = {
-        infoType: 'fieldType',
-        fieldType: item.fieldType,
+    let allExpressions = []
+    getdata.list.forEach(item => {
+      if (
+        item.fieldTypeStr === 'DOUBLE' ||
+        item.fieldTypeStr === 'INT16' ||
+        item.fieldTypeStr === 'INT32' ||
+        item.fieldTypeStr === 'INT64' ||
+        item.fieldTypeStr === 'LONGBINARY' ||
+        item.fieldTypeStr === 'SINGLE'
+      ) {
+        item.info = {
+          infoType: 'fieldType',
+          fieldType: item.fieldType,
+        }
+        allExpressions.push(item)
       }
     })
     let data = [
