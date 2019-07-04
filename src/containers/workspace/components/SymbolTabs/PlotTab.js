@@ -12,7 +12,7 @@ export default class PlotTab extends React.Component {
     data: Array,
     user: Object,
     layers: Object,
-    setCurrentTemplateInfo: () => {},
+    setCurrentPlotInfo: () => {},
     showToolbar: () => {},
     device: Object,
   }
@@ -34,7 +34,7 @@ export default class PlotTab extends React.Component {
     )
 
     let tempSymbol = Object.assign({}, item)
-    this.props.setCurrentTemplateInfo(tempSymbol)
+    this.props.setCurrentPlotInfo(tempSymbol)
     let symbolCode = parseInt(item.name)
     let libId = item.code
 

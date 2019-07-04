@@ -15,6 +15,8 @@ export const SET_CURRENT_TEMPLATE_SYMBOL_LIST =
   'SET_CURRENT_TEMPLATE_SYMBOL_LIST'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 export const SET_PLOT_LIBIDS = 'SET_PLOT_LIBIDS'
+export const SET_CURRENT_PLOT_INFO = 'SET_CURRENT_PLOT_INFO'
+export const SET_CURRENT_PLOT_SYMBOL_LIST = 'SET_CURRENT_PLOT_SYMBOL_LIST'
 
 // let isExporting = false
 
@@ -224,6 +226,30 @@ export const setCurrentTemplateInfo = (
   }
   await dispatch({
     type: SET_CURRENT_TEMPLATE_INFO,
+    payload: data || {},
+  })
+  cb && cb(params)
+  return
+}
+
+// 设置当前选中的模板符号
+export const setCurrentPlotInfo = (params, cb = () => {}) => async dispatch => {
+  let data = {}
+  if (params && params.field) {
+    let tempInfo = params.field,
+      fieldInfo = []
+    tempInfo.forEach(item => {
+      fieldInfo.push(item.$)
+    })
+    data = {
+      ...params.$,
+      layerPath: params.layerPath,
+      field: fieldInfo,
+      originData: params,
+    }
+  }
+  await dispatch({
+    type: SET_CURRENT_PLOT_INFO,
     payload: data || {},
   })
   cb && cb(params)
@@ -442,7 +468,7 @@ export const setCurrentPlotList = (params, cb = () => {}) => async dispatch => {
     getData(params)
 
     await dispatch({
-      type: SET_CURRENT_TEMPLATE_SYMBOL_LIST,
+      type: SET_CURRENT_PLOT_SYMBOL_LIST,
       payload: list || [],
     })
     return
@@ -495,6 +521,9 @@ const initialState = fromJS({
   currentTemplateInfo: {},
   currentTemplateList: [],
   latestTemplateSymbols: [],
+  currentPlotInfo: {},
+  currentPlotList: [],
+  latestPlotSymbols: [],
   plotLibIds: [],
 })
 
@@ -575,6 +604,37 @@ export default handleActions(
         .setIn(['templates'], fromJS(newData))
         .setIn(['template'], fromJS(payload))
     },
+
+    [`${SET_CURRENT_PLOT_INFO}`]: (state, { payload }) => {
+      let newData = state.toJS().latestPlotSymbols || []
+      let isExist = false
+      let originData = payload.originData
+      for (let i = 0; i < newData.length; i++) {
+        if (
+          originData &&
+          newData[i].code === originData.code &&
+          newData[i].name === originData.name
+        ) {
+          newData[i] = originData
+          let temp = newData[0]
+          newData[0] = newData[i]
+          newData[i] = temp
+          isExist = true
+          break
+        }
+      }
+      if (!isExist && originData) {
+        newData.unshift(originData)
+      }
+      delete payload.originData
+      return state
+        .setIn(['currentPlotInfo'], fromJS(payload))
+        .setIn(['latestPlotSymbols'], fromJS(newData))
+    },
+    [`${SET_CURRENT_PLOT_SYMBOL_LIST}`]: (state, { payload }) => {
+      return state.setIn(['currentPlotList'], fromJS(payload))
+    },
+
     [REHYDRATE]: (state, { payload }) => {
       if (payload && payload.template) {
         let data = payload.template
@@ -586,6 +646,8 @@ export default handleActions(
         data.currentTemplateInfo = {}
         data.currentTemplateList = []
         data.plotLibIds = []
+        data.currentPlotInfo = {}
+        data.currentPlotList = []
         return fromJS(data)
       } else {
         return state
