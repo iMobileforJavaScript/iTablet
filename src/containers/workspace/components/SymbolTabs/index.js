@@ -10,6 +10,7 @@ import SymbolTab from './SymbolTab'
 import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
 import {
   setCurrentTemplateInfo,
+  setCurrentPlotInfo,
   getSymbolTemplates,
   getSymbolPlots,
   setCurrentTemplateList,
@@ -39,6 +40,7 @@ const mapDispatchToProps = {
   setCurrentSymbol,
   setCurrentSymbols,
   setCurrentTemplateInfo,
+  setCurrentPlotInfo,
   setEditLayer,
   getSymbolTemplates,
   getSymbolPlots,
@@ -60,6 +62,7 @@ class SymbolTabs extends React.Component {
     showToolbar: () => {},
     showBox: () => {},
     setCurrentTemplateInfo: () => {},
+    setCurrentPlotInfo: () => {},
     setEditLayer: () => {},
     getSymbolTemplates: () => {},
     getSymbolPlots: () => {},
@@ -86,7 +89,10 @@ class SymbolTabs extends React.Component {
     } else {
       this.props.symbol.currentSymbols.length === 0 && this.initSymbols()
     }
-    if (GLOBAL.Type === constants.MAP_PLOTTING) {
+    if (
+      GLOBAL.Type === constants.MAP_PLOTTING &&
+      this.props.template.currentPlotList.length === 0
+    ) {
       this.initPlotting()
     }
   }
@@ -342,9 +348,9 @@ class SymbolTabs extends React.Component {
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}
-          data={this.props.template.latestTemplateSymbols}
+          data={this.props.template.latestPlotSymbols}
           layers={this.props.layers}
-          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setCurrentPlotInfo={this.props.setCurrentPlotInfo}
           setEditLayer={this.props.setEditLayer}
           getSymbolPlots={this.props.getSymbolPlots}
           setCurrentSymbol={this.props.setCurrentSymbol}
@@ -358,9 +364,9 @@ class SymbolTabs extends React.Component {
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}
-          data={this.props.template.currentTemplateList}
+          data={this.props.template.currentPlotList}
           layers={this.props.layers}
-          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setCurrentPlotInfo={this.props.setCurrentPlotInfo}
           setEditLayer={this.props.setEditLayer}
           getSymbolPlots={this.props.getSymbolPlots}
           setCurrentSymbol={this.props.setCurrentSymbol}
@@ -376,7 +382,7 @@ class SymbolTabs extends React.Component {
           showToolbar={this.props.showToolbar}
           template={this.props.template}
           layers={this.props.layers}
-          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setCurrentPlotInfo={this.props.setCurrentPlotInfo}
           setEditLayer={this.props.setEditLayer}
           getSymbolPlots={this.props.getSymbolPlots}
           setCurrentPlotList={this.props.setCurrentPlotList}

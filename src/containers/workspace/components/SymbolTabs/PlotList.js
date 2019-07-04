@@ -12,7 +12,7 @@ export default class PlotList extends React.Component {
     layers: Object,
     style?: Object,
     showToolbar: () => {},
-    setCurrentTemplateInfo: () => {},
+    setCurrentPlotInfo: () => {},
     setEditLayer: () => {},
     // getSymbolTemplates: () => {},
     setCurrentTemplateList: () => {},
@@ -70,7 +70,7 @@ export default class PlotList extends React.Component {
     )
     this.props.setCurrentPlotList(data)
     let tempSymbol = Object.assign({}, data.$)
-    this.props.setCurrentTemplateInfo(
+    this.props.setCurrentPlotInfo(
       tempSymbol,
       () => this.props.goToPage && this.props.goToPage(1),
     )

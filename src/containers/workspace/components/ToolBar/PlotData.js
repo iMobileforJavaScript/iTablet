@@ -177,7 +177,7 @@ function getCollectionData(libId, symbolCode, params) {
   })
   buttons = [
     ToolbarBtnType.CANCEL,
-    ToolbarBtnType.CHANGE_COLLECTION,
+    // ToolbarBtnType.CHANGE_COLLECTION,
     ToolbarBtnType.MAP_SYMBOL,
     ToolbarBtnType.COMPLETE,
   ]
