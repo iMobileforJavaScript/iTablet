@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
-import { Toast, scaleSize, LayerUtil } from '../../../../utils'
+import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import {
@@ -16,7 +16,6 @@ import {
   LayerTopBar,
   LocationView,
 } from '../../components'
-import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import {
@@ -621,7 +620,7 @@ export default class LayerAttribute extends React.Component {
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
-      Utils.setSelectionStyle(this.props.currentLayer.path)
+      StyleUtils.setSelectionStyle(this.props.currentLayer.path)
       if (data instanceof Array && data.length > 0) {
         SMap.moveToPoint({
           x: data[0].x,
@@ -640,7 +639,7 @@ export default class LayerAttribute extends React.Component {
     //     })
     //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
     //
-    //   Utils.setSelectionStyle(this.props.currentLayer.path)
+    //   StyleUtils.setSelectionStyle(this.props.currentLayer.path)
     //   if (data instanceof Array && data.length > 0) {
     //     SMap.moveToPoint({
     //       x: data[0].x,

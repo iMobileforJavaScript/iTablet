@@ -2795,7 +2795,6 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
@@ -3189,7 +3188,6 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())

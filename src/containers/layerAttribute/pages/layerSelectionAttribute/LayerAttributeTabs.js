@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Container, MTBtn, PopModal } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
@@ -16,7 +16,6 @@ import DefaultTabBar from './DefaultTabBar'
 import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
-import { Utils } from '../../../workspace/util'
 import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 
@@ -377,7 +376,7 @@ export default class LayerAttributeTabs extends React.Component {
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
-        Utils.setSelectionStyle(this.props.currentLayer.path)
+        StyleUtils.setSelectionStyle(this.props.currentLayer.path)
         if (data instanceof Array && data.length > 0) {
           SMap.moveToPoint({
             x: data[0].x,

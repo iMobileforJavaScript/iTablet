@@ -10,6 +10,7 @@ import LayerUtil from './LayerUtil'
 import ModelUtils from './ModelUtils'
 import request from './request'
 import AnalystTools from './AnalystTools'
+import StyleUtils from './StyleUtils'
 export {
   screen,
   scaleSize,
@@ -27,4 +28,5 @@ export {
   ModelUtils,
   /** 分析公共方法 **/
   AnalystTools,
+  StyleUtils,
 }
