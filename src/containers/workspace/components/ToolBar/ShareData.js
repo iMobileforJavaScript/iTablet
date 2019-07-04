@@ -299,7 +299,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
             onResult: async () => {
               let result = await SOnlineService.publishService(dataName)
               // SOnlineService.changeServiceVisibility()
-              if (result) {
+              if (typeof result === 'boolean' && result) {
                 _params.setSharing({
                   module: GLOBAL.Type,
                   name: dataName,
@@ -314,10 +314,9 @@ async function shareToSuperMapOnline(list = [], name = '') {
               }, 2000)
               GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
               Toast.show(
-                result
+                typeof result === 'boolean' && result
                   ? getLanguage(global.language).Prompt.SHARE_SUCCESS
-                  : //ConstInfo.SHARE_SUCCESS
-                  ConstInfo.SHARE_FAILED,
+                  : getLanguage(global.language).Prompt.SHARE_FAILED,
               )
               FileTools.deleteFile(path)
               isSharing = false

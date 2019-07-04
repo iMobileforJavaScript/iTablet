@@ -19,6 +19,7 @@ export default class MapCutSetting extends React.Component {
     language: string,
     datasources: Array,
     currentUser: Object,
+    mapcutDSCallBack?: () => {},
     configAction?: () => {},
   }
 
@@ -218,6 +219,7 @@ export default class MapCutSetting extends React.Component {
               NavigationService.navigate('MapCutDS', {
                 data: this.props.datasources,
                 currentUser: this.props.currentUser,
+                mapcutDSCallBack: this.props.mapcutDSCallBack,
                 cb: ({ item }) => {
                   const newData = new Map(this.state.data)
                   let dsData = newData.get('ds')
