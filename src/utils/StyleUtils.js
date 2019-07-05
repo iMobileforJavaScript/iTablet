@@ -37,7 +37,7 @@ async function setDefaultMapControlStyle() {
     nodeStyle: JSON.stringify(nodeStyle),
     nodeColor: [250, 20, 20, 1],
     nodeSize: 1,
-    strokeColor: [255, 0, 0, 1],
+    strokeColor: [90, 90, 90, 1],
     // strokeColor: colorRgb2Hex(255, 0, 0, 1),
     strokeFillColor: [200, 200, 200, 127 / 255],
     strokeWidth: 1,
