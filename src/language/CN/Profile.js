@@ -13,6 +13,7 @@ const Profile = {
   COLOR_SCHEME: '色带',
   TEMPLATE: '模板',
   COLLECTION_TEMPLATE: '采集模板',
+  PLOTTING_TEMPLATE: '标绘模板',
 
   //我的——登录
   LOGIN: '登录',

@@ -57,10 +57,13 @@ export default class MyModule extends Component {
         ? 'Customer'
         : this.props.user.currentUser.userName
 
-    let plottingData = await NativeMethod.getTemplates(
-      user,
-      ConstPath.Module.Plotting,
-    )
+    // let plottingData = await NativeMethod.getTemplates(
+    //   user,
+    //   ConstPath.Module.Plotting,
+    // )
+
+    let plottingData = await this._getPlotDataList(user)
+
     let collectionData = await NativeMethod.getTemplates(
       user,
       ConstPath.Module.Collection,
@@ -72,7 +75,7 @@ export default class MyModule extends Component {
     if (plottingData.length > 0) {
       isShowItem = true
       data.push({
-        title: '标绘模板',
+        title: getLanguage(global.language).Profile.PLOTTING_TEMPLATE,
         data: plottingData,
         isShowItem: isShowItem,
       })
@@ -87,6 +90,41 @@ export default class MyModule extends Component {
       })
     }
     this.setState({ sectionData: data })
+  }
+
+  // _getPlotDataList = async userName => {
+  async _getPlotDataList(userName) {
+    let path =
+      ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.Plotting
+    let plotPath = await FileTools.appendingHomeDirectory(path)
+    let list = []
+    let arrDirContent = await FileTools.getDirectoryContent(plotPath)
+    if (arrDirContent.length > 0) {
+      for (let key in arrDirContent) {
+        if (arrDirContent[key].type === 'directory') {
+          let dirPath = plotPath + arrDirContent[key].name
+          let dirContent = await FileTools.getDirectoryContent(dirPath)
+          let hasSymbol, hasSymbolIcon
+          if (dirContent.length === 0) continue
+          for (let index in dirContent) {
+            if (dirContent[index].type === 'directory') {
+              if (dirContent[index].name === 'Symbol') {
+                hasSymbol = true
+              } else if (dirContent[index].name === 'SymbolIcon') {
+                hasSymbolIcon = true
+              }
+            }
+          }
+          if (hasSymbol && hasSymbolIcon) {
+            list.push({
+              name: arrDirContent[key].name,
+              path: plotPath + arrDirContent[key].name,
+            })
+          }
+        }
+      }
+    }
+    return list
   }
 
   _renderItem = ({ item, section, index }) => {
@@ -120,71 +158,30 @@ export default class MyModule extends Component {
   }
 
   _showMyDataPopupModal = () => {
+    let localOption = [
+      {
+        title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
+        //'删除数据',
+        action: async () => {
+          this.deleteData()
+        },
+      },
+    ]
+    let userOption = [
+      {
+        title: getLanguage(global.language).Profile.UPLOAD_TEMPLATE,
+        //''分享',
+        action: async () => {
+          this._closeModal()
+          this.ModalBtns.setVisible(true)
+        },
+      },
+    ]
     let data
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      data = [
-        {
-          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
-          //'删除数据',
-          action: async () => {
-            try {
-              let filePath = this.itemInfo.item.path.substring(
-                0,
-                this.itemInfo.item.path.lastIndexOf('/'),
-              )
-              let result = await FileTools.deleteFile(filePath)
-              if (result) {
-                this._closeModal()
-                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
-                //'删除成功')
-                this.getData()
-              } else {
-                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
-                //'删除失败')
-              }
-            } catch (error) {
-              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
-              //'删除失败')
-            }
-          },
-        },
-      ]
+      data = localOption
     } else {
-      data = [
-        {
-          title: getLanguage(global.language).Profile.UPLOAD_TEMPLATE,
-          //''分享',
-          action: async () => {
-            this._closeModal()
-            this.ModalBtns.setVisible(true)
-          },
-        },
-        {
-          title: getLanguage(global.language).Profile.DELETE_TEMPLATE,
-          //'删除数据',
-          action: async () => {
-            try {
-              let filePath = this.itemInfo.item.path.substring(
-                0,
-                this.itemInfo.item.path.lastIndexOf('/'),
-              )
-              let result = await FileTools.deleteFile(filePath)
-              if (result) {
-                this._closeModal()
-                Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
-                //'删除成功')
-                this.getData()
-              } else {
-                Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
-                //'删除失败')
-              }
-            } catch (error) {
-              Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
-              //'删除失败')
-            }
-          },
-        },
-      ]
+      data = userOption.concat(localOption)
     }
     return (
       <MyDataPopupModal
@@ -196,16 +193,60 @@ export default class MyModule extends Component {
     )
   }
 
+  deleteData = async () => {
+    try {
+      let filePath
+      if (
+        this.itemInfo.section.title ===
+        getLanguage(global.language).Profile.COLLECTION_TEMPLATE
+      ) {
+        filePath = this.itemInfo.item.path.substring(
+          0,
+          this.itemInfo.item.path.lastIndexOf('/'),
+        )
+      } else if (
+        this.itemInfo.section.title ===
+        getLanguage(global.language).Profile.PLOTTING_TEMPLATE
+      ) {
+        filePath = this.itemInfo.item.path
+      }
+      let result = await FileTools.deleteFile(filePath)
+      if (result) {
+        this._closeModal()
+        Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+        //'删除成功')
+        this.getData()
+      } else {
+        Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+        //'删除失败')
+      }
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+      //'删除失败')
+    }
+  }
+
   shareData = async type => {
     try {
       this.ModalBtns.setVisible(false)
       // this.container.setLoading(true, '正在分享')
       Toast.show(getLanguage(global.language).Prompt.SHARING)
       //'正在分享')
-      let fromPath = this.itemInfo.item.path.substring(
-        0,
-        this.itemInfo.item.path.lastIndexOf('/'),
-      )
+      let fromPath
+      if (
+        this.itemInfo.section.title ===
+        getLanguage(global.language).Profile.COLLECTION_TEMPLATE
+      ) {
+        fromPath = this.itemInfo.item.path.substring(
+          0,
+          this.itemInfo.item.path.lastIndexOf('/'),
+        )
+      } else if (
+        this.itemInfo.section.title ===
+        getLanguage(global.language).Profile.PLOTTING_TEMPLATE
+      ) {
+        fromPath = this.itemInfo.item.path
+      }
       let userPath = await FileTools.appendingHomeDirectory(
         this.props.user.currentUser.userType === UserType.PROBATION_USER
           ? ConstPath.CustomerPath
@@ -215,8 +256,7 @@ export default class MyModule extends Component {
         userPath +
         ConstPath.RelativePath.ExternalData +
         ConstPath.RelativeFilePath.ExportData +
-        this.itemInfo.item.name +
-        '.zip'
+        'MyExport.zip'
       // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
