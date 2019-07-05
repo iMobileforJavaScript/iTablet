@@ -163,7 +163,7 @@ export default class MT_layerManager extends React.Component {
       let baseMap = []
       if (layers.length > 0 || GLOBAL.Type === constants.MAP_ANALYST) {
         if (
-          !LayerUtils.isBaseLayer(layers[layers.length - 1].name) ||
+          layers.length > 0 && !LayerUtils.isBaseLayer(layers[layers.length - 1].name) ||
           GLOBAL.Type === constants.MAP_ANALYST
         ) {
           baseMap = [
