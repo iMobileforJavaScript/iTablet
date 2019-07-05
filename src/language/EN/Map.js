@@ -350,6 +350,7 @@ const Map_Settings = {
   FIX_TEXT_ANGLE: 'Fix Text Angle',
   FIX_TEXT_DIRECTION: 'Fix Text Direction',
   SHOW_OVERLAYS: 'Show overlays',
+  ENABLE_MAP_MAGNIFER: 'Enable map magnifer',
 
   //二级菜单 范围设置
   MAP_CENTER: 'Map Center',
