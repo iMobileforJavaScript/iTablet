@@ -156,6 +156,7 @@ export default {
   // =====================================
 
   COLLECTION: 'COLLECTION',
+  // PLOTTING: 'PLOTTING',
   MAP_EDIT: 'MAP_EDIT',
   MAP_3D: 'MAP_3D',
   MAP_THEME: 'MAP_THEME',

@@ -5,6 +5,7 @@ const Prompt = {
   SAVE_NO: 'No',
   CANCEL: 'Cancel',
   SHARE: 'Share',
+  DELETE: 'Delete',
   WECHAT: 'Wechat',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',

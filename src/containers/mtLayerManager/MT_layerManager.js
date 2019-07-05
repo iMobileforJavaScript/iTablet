@@ -161,10 +161,14 @@ export default class MT_layerManager extends React.Component {
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       let baseMap = []
-      if (layers.length > 0 || GLOBAL.Type === constants.MAP_ANALYST) {
+      if (
+        layers.length > 0 ||
+        (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
+      ) {
         if (
-          !LayerUtils.isBaseLayer(layers[layers.length - 1].name) ||
-          GLOBAL.Type === constants.MAP_ANALYST
+          (layers.length > 0 &&
+            !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
+          (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
         ) {
           baseMap = [
             {
@@ -466,6 +470,14 @@ export default class MT_layerManager extends React.Component {
     } else if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
+        layerdata: data,
+      })
+    } else if (
+      GLOBAL.Type === constants.MAP_PLOTTING &&
+      data.name.substring(0, 9) === 'PlotEdit_'
+    ) {
+      this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
+        height: ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
       })
     } else {
