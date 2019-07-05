@@ -204,7 +204,7 @@ export default class LocalAnalystView extends Component {
             tfWeightField: 'smLength',
           },
         ],
-        edgeNameField: 'roadName',
+        edgeNameField: 'Name',
         weightName: 'length',
         // edgeIDField: 'SmEdgeID',
         // nodeIDField: 'SmNodeID',

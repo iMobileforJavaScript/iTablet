@@ -5,7 +5,7 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList } from '../../components'
-import { ConstPath, ConstInfo, ConstAnalyst } from '../../../../constants'
+import { ConstPath, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
@@ -92,15 +92,15 @@ export default class OverlayAnalystView extends Component {
   getDataLimit = () => {
     let limit = []
     switch (this.state.title) {
-      case ConstAnalyst.UPDATE:
-      case ConstAnalyst.UNION:
-      case ConstAnalyst.XOR:
+      case getLanguage(this.props.language).Analyst_Methods.UPDATE:
+      case getLanguage(this.props.language).Analyst_Methods.UNION:
+      case getLanguage(this.props.language).Analyst_Methods.XOR:
         limit = [DatasetType.REGION]
         break
-      case ConstAnalyst.CLIP:
-      case ConstAnalyst.ERASE:
-      case ConstAnalyst.IDENTITY:
-      case ConstAnalyst.INTERSECT:
+      case getLanguage(this.props.language).Analyst_Methods.CLIP:
+      case getLanguage(this.props.language).Analyst_Methods.ERASE:
+      case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
+      case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
       default:
         limit = []
         break
@@ -158,7 +158,7 @@ export default class OverlayAnalystView extends Component {
           },
           result = false
         switch (this.state.title) {
-          case ConstAnalyst.CLIP:
+          case getLanguage(this.props.language).Analyst_Methods.CLIP:
             result = await SAnalyst.clip(
               sourceData,
               targetData,
@@ -166,7 +166,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.ERASE:
+          case getLanguage(this.props.language).Analyst_Methods.ERASE:
             result = await SAnalyst.erase(
               sourceData,
               targetData,
@@ -174,7 +174,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.IDENTITY:
+          case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
             result = await SAnalyst.identity(
               sourceData,
               targetData,
@@ -182,7 +182,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.INTERSECT:
+          case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
             result = await SAnalyst.intersect(
               sourceData,
               targetData,
@@ -190,7 +190,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.UNION:
+          case getLanguage(this.props.language).Analyst_Methods.UNION:
             result = await SAnalyst.union(
               sourceData,
               targetData,
@@ -198,7 +198,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.UPDATE:
+          case getLanguage(this.props.language).Analyst_Methods.UPDATE:
             result = await SAnalyst.update(
               sourceData,
               targetData,
@@ -206,7 +206,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.XOR:
+          case getLanguage(this.props.language).Analyst_Methods.XOR:
             result = await SAnalyst.xOR(
               sourceData,
               targetData,
