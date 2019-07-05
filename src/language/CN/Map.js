@@ -372,6 +372,7 @@ const Map_Settings = {
   FIX_TEXT_ANGLE: '固定文本角度',
   FIX_TEXT_DIRECTION: '固定文本方向',
   SHOW_OVERLAYS: '显示压盖对象',
+  ENABLE_MAP_MAGNIFER: '开启地图放大镜',
 
   //二级菜单 范围设置
   MAP_CENTER: '中心点',

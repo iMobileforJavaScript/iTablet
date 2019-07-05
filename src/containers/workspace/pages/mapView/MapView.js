@@ -72,6 +72,7 @@ export default class MapView extends React.Component {
     currentLayer: PropTypes.object,
     template: PropTypes.object,
     mapLegend: PropTypes.bool,
+    mapScaleView: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -1622,11 +1623,13 @@ export default class MapView extends React.Component {
         {this.state.measureShow &&
           !this.props.analyst.params &&
           this.renderMeasureLabel()}
-        <ScaleView
-          device={this.props.device}
-          language={this.props.language}
-          ref={ref => (GLOBAL.scaleView = ref)}
-        />
+        {this.props.mapScaleView && (
+          <ScaleView
+            device={this.props.device}
+            language={this.props.language}
+            ref={ref => (GLOBAL.scaleView = ref)}
+          />
+        )}
         <PopModal
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}

@@ -50,6 +50,8 @@ export default class SecondMapSettings extends Component {
     language: string,
     navigation: Object,
     title: string,
+    mapScaleView: Boolean,
+    setMapScaleView: () => {},
     renderItem?: () => {},
   }
   constructor(props) {
@@ -211,7 +213,7 @@ export default class SecondMapSettings extends Component {
     data = await basicSettings()
 
     data[0].value = await SMap.getMapName()
-    data[1].value = GLOBAL.scaleView.state.isShow
+    data[1].value = this.props.mapScaleView
     data[2].value = await SMap.isEnableRotateTouch()
     data[3].value = await SMap.isEnableSlantTouch()
     angle = await SMap.getMapAngle()
@@ -244,7 +246,7 @@ export default class SecondMapSettings extends Component {
     data[9].value = await SMap.getTextFixedAngle()
     data[10].value = await SMap.getFixedTextOrientation()
     data[11].value = await SMap.isOverlapDisplayed()
-
+    data[12].value = await SMap.isMagnifierEnabled()
     return data
   }
 
@@ -305,7 +307,7 @@ export default class SecondMapSettings extends Component {
     let data = this.state.data.concat()
     switch (item.title) {
       case getLanguage(GLOBAL.language).Map_Settings.SHOW_SCALE:
-        GLOBAL.scaleView && GLOBAL.scaleView.changeVisible(value)
+        this.props.setMapScaleView(value)
         break
       case getLanguage(GLOBAL.language).Map_Settings.ROTATION_GESTURE:
         await SMap.enableRotateTouch(value)
@@ -335,6 +337,9 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.FIX_SCALE_LEVEL:
         await SMap.setVisibleScalesEnabled(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.ENABLE_MAP_MAGNIFER:
+        await SMap.setIsMagnifierEnabled(value)
         break
       case getLanguage(GLOBAL.language).Map_Settings.DYNAMIC_PROJECTION:
         await SMap.setMapDynamicProjection(value)

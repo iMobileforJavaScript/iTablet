@@ -208,6 +208,11 @@ const basicSettings = () => [
     value: true,
     iconType: 'switch',
   },
+  {
+    title: getLanguage(global.language).Map_Settings.ENABLE_MAP_MAGNIFER,
+    value: true,
+    iconType: 'switch',
+  },
 ]
 //范围设置
 const rangeSettings = () => [
