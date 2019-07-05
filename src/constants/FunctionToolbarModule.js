@@ -20,7 +20,10 @@ async function OpenData(data, index) {
   // Layer index = 0 为顶层
   if (isOpen) {
     for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-      if (LayerUtils.isBaseLayer(layers[layers.length - i].name)) {
+      if (
+        layers.length > 0 &&
+        LayerUtils.isBaseLayer(layers[layers.length - i].name)
+      ) {
         await SMap.removeLayer(layers.length - i)
       }
     }
