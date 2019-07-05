@@ -149,6 +149,9 @@ export default class LocalAnalystView extends Component {
           })
         } else {
           this.setLoading(false)
+          Toast.show(
+            getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE_FAILED,
+          )
         }
       } catch (e) {
         this.setLoading(false)
@@ -204,7 +207,8 @@ export default class LocalAnalystView extends Component {
             tfWeightField: 'smLength',
           },
         ],
-        edgeNameField: 'roadName',
+        edgeNameField: 'Name',
+        // edgeNameField: 'roadName',
         weightName: 'length',
         // edgeIDField: 'SmEdgeID',
         // nodeIDField: 'SmNodeID',

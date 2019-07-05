@@ -208,7 +208,8 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
       break
   }
   try {
-    if (!params || !params.mapName || !params.layerPath)
+    // if (!params || !params.mapName || !params.layerPath)
+    if (!params || !params.layerPath)
       return {
         msg: getLanguage(global.language).Prompt[`${_type}_FAILED`],
         result: false,
