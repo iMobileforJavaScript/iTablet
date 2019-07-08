@@ -997,6 +997,12 @@ function saveMap() {
         }
       }
       let addition = {}
+      let prefix = `@Label_${_params.user.currentUser.userName}#`
+      let regexp = new RegExp(prefix)
+      let layers = await _params.getLayers()
+      addition.filterLayers = layers
+        .filter(item => item.name.match(regexp))
+        .map(val => val.name)
       if (_params.map.currentMap.Template) {
         addition.Template = _params.map.currentMap.Template
       }
