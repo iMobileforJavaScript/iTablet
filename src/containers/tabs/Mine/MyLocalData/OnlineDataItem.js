@@ -25,6 +25,9 @@ export default class OnlineDataItem extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if (JSON.stringify(nextProps.item) !== JSON.stringify(this.props.item)) {
+      return true
+    }
     if (JSON.stringify(nextProps.down) !== JSON.stringify(this.props.down)) {
       for (let index = 0; index < nextProps.down.length; index++) {
         if (nextProps.down[index].id === this.props.item.id) {
@@ -121,9 +124,7 @@ export default class OnlineDataItem extends Component {
               }}
             >
               {getLanguage(global.language).Profile.PATH +
-                `:https://www.supermapol.com/web/mycontent/datas/${
-                  this.props.item.id
-                }`}
+                `:https://www.supermapol.com/web/mycontent/datas/${this.props.item.id}`}
             </Text>
           </View>
           <Image
