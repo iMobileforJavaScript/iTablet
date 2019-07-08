@@ -4920,6 +4920,8 @@ export default class ToolBar extends React.PureComponent {
             ThemeMenuData.setThemeParams(Params)
           }
         }
+        //init add xiezhy
+        this.setState({listExpressions:{}})
         item.action()
         break
     }
