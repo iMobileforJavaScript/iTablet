@@ -506,8 +506,7 @@ export default class MyLocalData extends Component {
               this.props.user.currentUser.userName +
               '/' +
               ConstPath.RelativePath.Temp) +
-          fileName +
-          '.zip'
+          'MyExport.zip'
         let archivePaths = []
         switch (this.state.title) {
           case getLanguage(this.props.language).Profile.MAP: {
@@ -563,7 +562,7 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
           ) {
-            let result = await this._exportData()
+            let result = await this._exportData(true)
             if (!result) {
               Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
               //'分享失败')
@@ -571,16 +570,6 @@ export default class MyLocalData extends Component {
               return
             }
             zipResult = true
-            let homePath = await FileTools.appendingHomeDirectory()
-            targetPath =
-              homePath +
-              ConstPath.UserPath +
-              this.props.user.currentUser.userName +
-              '/' +
-              ConstPath.RelativePath.ExternalData +
-              ConstPath.RelativeFilePath.ExportData +
-              fileName +
-              '.zip'
           } else {
             zipResult = await FileTools.zipFiles(archivePaths, targetPath)
           }
@@ -605,23 +594,13 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
           ) {
-            let result = await this._exportData()
+            let result = await this._exportData(true)
             if (!result) {
               Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
               //'分享失败')
               this.setLoading(false)
               return
             }
-            let homePath = await FileTools.appendingHomeDirectory()
-            targetPath =
-              homePath +
-              ConstPath.UserPath +
-              this.props.user.currentUser.userName +
-              '/' +
-              ConstPath.RelativePath.ExternalData +
-              ConstPath.RelativeFilePath.ExportData +
-              fileName +
-              '.zip'
             await SOnlineService.uploadFile(targetPath, fileName, {
               onResult: result => {
                 this.setLoading(false)
@@ -657,17 +636,7 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
           ) {
-            await this._exportData()
-            let homePath = await FileTools.appendingHomeDirectory()
-            targetPath =
-              homePath +
-              ConstPath.UserPath +
-              this.props.user.currentUser.userName +
-              '/' +
-              ConstPath.RelativePath.ExternalData +
-              ConstPath.RelativeFilePath.ExportData +
-              fileName +
-              '.zip'
+            await this._exportData(true)
             this.chatCallBack && this.chatCallBack(targetPath)
             NavigationService.goBack()
           } else {
@@ -794,11 +763,12 @@ export default class MyLocalData extends Component {
     return result
   }
 
-  _exportData = async (showToast = false) => {
+  _exportData = async (isShare = false, showToast = false) => {
     this._closeModal()
     let name = this.state.sectionData[0].data[this.itemInfo.index].name
     let mapName = name.substring(0, name.length - 4)
     let homePath = await FileTools.appendingHomeDirectory()
+    let zipPath = ''
     let path =
       homePath +
       ConstPath.UserPath +
@@ -810,9 +780,18 @@ export default class MyLocalData extends Component {
       '/' +
       mapName +
       '.smwu'
+    if (isShare) {
+      zipPath =
+        homePath +
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        'MyExport.zip'
+    }
     let exportResult = false
     await this.props.exportWorkspace(
-      { maps: [mapName], outPath: path, isOpenMap: true },
+      { maps: [mapName], outPath: path, isOpenMap: true, zipPath },
       result => {
         if (result === true) {
           showToast &&
@@ -875,7 +854,7 @@ export default class MyLocalData extends Component {
               title: getLanguage(this.props.language).Profile.EXPORT_MAP,
               // '导出数据',
               action: () => {
-                this._exportData(true)
+                this._exportData(false, true)
               },
             },
             {
@@ -913,7 +892,7 @@ export default class MyLocalData extends Component {
               title: getLanguage(this.props.language).Profile.EXPORT_MAP,
               //'导出数据',
               action: () => {
-                this._exportData(true)
+                this._exportData(false, true)
               },
             },
             {

@@ -254,7 +254,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
       fileName = '',
       fileNameWithoutExtension = '',
       parentPath = '',
-      zipPath = ''
+      zipPath = params.zipPath
     let exportResult = false
     if (!path) {
       fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
@@ -294,7 +294,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     // console.warn(exportResult)
     // 压缩工作空间
     if (exportResult) {
-      zipPath = parentPath + '.zip'
+      zipPath = zipPath ? zipPath : parentPath + '.zip'
       zipResult = await FileTools.zipFile(parentPath, zipPath)
     }
     // 删除导出的工作空间
