@@ -1003,7 +1003,11 @@ function saveMap() {
       addition.filterLayers = layers
         .filter(item => item.name.match(regexp))
         .map(val => val.name)
-      if (_params.map.currentMap.Template) {
+      if (
+        _params.map &&
+        _params.map.currentMap &&
+        _params.map.currentMap.Template
+      ) {
         addition.Template = _params.map.currentMap.Template
       }
 
