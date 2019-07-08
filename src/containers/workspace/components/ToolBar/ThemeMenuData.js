@@ -489,9 +489,9 @@ function getThemeMapCreateByLayer(type, params) {
       selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
     },
     {
-      //栅格单值专题图
+      //单值栅格专题图
       key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
+      title: global.language==='CN' ? '栅格单值专题图': 'Grid Unique',
       size: 'large',
       action: () => createThemeGridUniqueMapByLayer(),
       image: getThemeAssets().themeType.theme_grid_unique,
@@ -500,7 +500,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //栅格分段专题图
       key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
+      title: global.language==='CN' ? '栅格分段专题图': 'Grid Range',
       size: 'large',
       action: () => createThemeGridRangeMapByLayer(),
       image: getThemeAssets().themeType.theme_grid_range,
@@ -764,7 +764,7 @@ function getThemeMapCreate(type, params) {
     {
       //栅格单值专题图
       key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
+      title: global.language==='CN' ? '栅格单值专题图': 'Grid Unique',//constants.THEME_GRID_UNIQUE,
       size: 'large',
       action: showDatasetsList,
       image: getThemeAssets().themeType.theme_grid_unique,
@@ -773,7 +773,7 @@ function getThemeMapCreate(type, params) {
     {
       //栅格分段专题图
       key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
+      title: global.language==='CN' ? '栅格分段专题图': 'Grid Range',
       size: 'large',
       action: showDatasetsList,
       image: getThemeAssets().themeType.theme_grid_range,
