@@ -671,6 +671,7 @@ export default handleActions(
         data.plotLibIds = []
         data.currentPlotInfo = {}
         data.currentPlotList = []
+        if (data.latestPlotSymbols === undefined) data.latestPlotSymbols = []
         return fromJS(data)
       } else {
         return state
