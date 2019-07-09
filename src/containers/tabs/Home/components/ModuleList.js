@@ -7,7 +7,7 @@ import {
   FlatList,
   // Dimensions,
   StyleSheet,
-  // Platform,
+  Platform,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import constants from '../../../../containers/workspace/constants'
@@ -336,6 +336,12 @@ class ModuleList extends Component {
       fileName = 'Xiamen_CN'
     } else if (moduleKey === '应急标绘') {
       fileName = '湖南'
+    }else if (moduleKey === '三维场景') {
+      if (Platform.OS === 'android') {
+        fileName = 'OlympicGreen_android'
+      } else if (Platform.OS === 'ios') {
+        fileName = 'OlympicGreen_ios'
+      }
     }
     // else if (moduleKey === '应急标绘') {
     //   fileName = '湖南'

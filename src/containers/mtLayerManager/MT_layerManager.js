@@ -66,7 +66,7 @@ export default class MT_layerManager extends React.Component {
       this.props.user.currentUser.userId
     ]
     if (!this.curUserBaseMaps) {
-      this.curUserBaseMaps = this.props.baseMaps['default']
+      this.curUserBaseMaps = this.props.baseMaps['default'] || []
     }
 
     let userAddBase = []
