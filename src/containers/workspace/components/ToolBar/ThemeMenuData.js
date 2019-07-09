@@ -84,7 +84,7 @@ function showExpressionList(type) {
     let dataset = getdata.dataset
     let allExpressions = []
     getdata.list.forEach(item => {
-      if (isThemeFieldTypeAvailable(item.fieldType)) {
+      if (isThemeFieldTypeAvailable(item.fieldTypeStr)) {
         item.info = {
           infoType: 'fieldType',
           fieldType: item.fieldType,
