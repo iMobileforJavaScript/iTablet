@@ -45,7 +45,7 @@ class RenderModuleItem extends Component {
     }
   }
 
-  cheackDownload = async timer => {
+  checkDownload = async timer => {
     let exist = await FileTools.fileIsExist(
       this.props.downloadData.copyFilePath + '_',
     )
@@ -86,9 +86,9 @@ class RenderModuleItem extends Component {
     )
     // debugger
     if (exist) {
-      this.cheackDownload()
+      this.checkDownload()
       let timer = setInterval(async () => {
-        this.cheackDownload(timer)
+        this.checkDownload(timer)
       }, 500)
     }
   }
@@ -332,6 +332,10 @@ class ModuleList extends Component {
       // mapname =  language==='CN'?'Precipitation':'LandBuild'
     } else if (moduleKey === '外业采集') {
       fileName = '地理国情普查_示范数据'
+    } else if (moduleKey === MAP_MODULE.MAP_ANALYST) {
+      fileName = 'Xiamen_CN'
+    } else if (moduleKey === '应急标绘') {
+      fileName = '湖南'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
@@ -363,10 +367,11 @@ class ModuleList extends Component {
       // let mapname
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === MAP_MODULE.MAP_ANALYST) {
-        item.action && item.action(this.props.currentUser)
-        return
-      } else if (moduleKey === MAP_MODULE.MAP_AR) {
+      // if (moduleKey === MAP_MODULE.MAP_ANALYST) {
+      //   item.action && item.action(this.props.currentUser)
+      //   return
+      // } else
+      if (moduleKey === MAP_MODULE.MAP_AR) {
         item.action && item.action(this.props.currentUser)
         return
       }
@@ -411,6 +416,9 @@ class ModuleList extends Component {
         case MAP_MODULE.MAP_PLOTTING:
           module = constants.MAP_PLOTTING
           break
+        case MAP_MODULE.MAP_ANALYST:
+          module = constants.MAP_ANALYST
+          break
       }
       // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
       let latestMap
@@ -445,7 +453,7 @@ class ModuleList extends Component {
               this.moduleItems[index].getDownloading())
           )
         ) {
-          if (!(module == constants.MAP_PLOTTING))
+          if (!(module === constants.MAP_PLOTTING))
             this._showAlert(
               this.moduleItems[index],
               downloadData,

@@ -115,6 +115,7 @@ export default class PopModal extends PureComponent {
           left: 0,
           right: 0,
           backgroundColor: color.contentColorWhite,
+          paddingBottom: this.virtualMenuHeight,
         }}
       >
         {this.props.children}
@@ -137,7 +138,7 @@ export default class PopModal extends PureComponent {
           'landscape-left',
           'landscape-right',
         ]}
-        style={{ flex: 1, paddingBottom: this.virtualMenuHeight }}
+        style={{ flex: 1 }}
         visible={this.state.modalVisible}
       >
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>

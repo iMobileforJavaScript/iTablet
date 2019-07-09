@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, AnalystTools } from '../../../../utils'
-import { Const } from '../../../../constants'
+import { Const, TouchType } from '../../../../constants'
 
 const styles = StyleSheet.create({
   buttons: {
@@ -63,6 +63,7 @@ export default class AnalystMapToolbar extends React.Component {
             } else {
               let { edges } = await AnalystTools.analyst(this.props.type)
               if (edges && edges.length > 0) {
+                GLOBAL.TouchType = TouchType.NULL // 关闭分析界面，触摸事件置空
                 this.props.setAnalystParams(null)
                 AnalystTools.showMsg(this.props.type, true, this.props.language)
               } else {

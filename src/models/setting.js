@@ -15,7 +15,7 @@ export const SETTING_DATA = 'SETTING_DATA'
 export const MAP_SETTING = 'MAP_SETTING'
 export const SETTING_LANGUAGE = 'SETTING_LANGUAGE'
 export const MAP_LEGEND = 'MAP_LEGEND'
-
+export const MAP_SCALEVIEW = 'MAP_SCALEVIEW'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -79,7 +79,12 @@ export const setMapLegend = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
-
+export const setMapScaleView = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_SCALEVIEW,
+    payload: params || false,
+  })
+}
 export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
   try {
     let isAntialias = true
@@ -129,6 +134,7 @@ const initialState = fromJS({
   mapSetting: [],
   language: 'CN',
   mapLegend: false,
+  mapScaleView: true,
 })
 
 export default handleActions(
@@ -183,6 +189,15 @@ export default handleActions(
         data = []
       }
       return state.setIn(['mapSetting'], fromJS(data))
+    },
+    [`${MAP_SCALEVIEW}`]: (state, { payload }) => {
+      let data = state.toJS().mapScaleView
+      if (payload) {
+        data = payload
+      } else {
+        data = false
+      }
+      return state.setIn(['mapScaleView'], fromJS(data))
     },
     [`${MAP_LEGEND}`]: (state, { payload }) => {
       let data = state.toJS().mapLegend

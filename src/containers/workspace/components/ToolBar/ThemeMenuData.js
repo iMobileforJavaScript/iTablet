@@ -84,14 +84,7 @@ function showExpressionList(type) {
     let dataset = getdata.dataset
     let allExpressions = []
     getdata.list.forEach(item => {
-      if (
-        item.fieldTypeStr === 'DOUBLE' ||
-        item.fieldTypeStr === 'INT16' ||
-        item.fieldTypeStr === 'INT32' ||
-        item.fieldTypeStr === 'INT64' ||
-        item.fieldTypeStr === 'LONGBINARY' ||
-        item.fieldTypeStr === 'SINGLE'
-      ) {
+      if (isThemeFieldTypeAvailable(item.fieldType)) {
         item.info = {
           infoType: 'fieldType',
           fieldType: item.fieldType,
@@ -489,9 +482,9 @@ function getThemeMapCreateByLayer(type, params) {
       selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
     },
     {
-      //栅格单值专题图
+      //单值栅格专题图
       key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
+      title: global.language === 'CN' ? '栅格单值专题图' : 'Grid Unique',
       size: 'large',
       action: () => createThemeGridUniqueMapByLayer(),
       image: getThemeAssets().themeType.theme_grid_unique,
@@ -500,7 +493,7 @@ function getThemeMapCreateByLayer(type, params) {
     {
       //栅格分段专题图
       key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
+      title: global.language === 'CN' ? '栅格分段专题图' : 'Grid Range',
       size: 'large',
       action: () => createThemeGridRangeMapByLayer(),
       image: getThemeAssets().themeType.theme_grid_range,
@@ -764,7 +757,7 @@ function getThemeMapCreate(type, params) {
     {
       //栅格单值专题图
       key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
+      title: global.language === 'CN' ? '栅格单值专题图' : 'Grid Unique', //constants.THEME_GRID_UNIQUE,
       size: 'large',
       action: showDatasetsList,
       image: getThemeAssets().themeType.theme_grid_unique,
@@ -773,7 +766,7 @@ function getThemeMapCreate(type, params) {
     {
       //栅格分段专题图
       key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
+      title: global.language === 'CN' ? '栅格分段专题图' : 'Grid Range',
       size: 'large',
       action: showDatasetsList,
       image: getThemeAssets().themeType.theme_grid_range,
@@ -3392,6 +3385,17 @@ async function createHeatMap(params) {
   }
 }
 
+function isThemeFieldTypeAvailable(fieldType) {
+  return (
+    fieldType === 'DOUBLE' ||
+    fieldType === 'INT16' ||
+    fieldType === 'INT32' ||
+    fieldType === 'INT64' ||
+    fieldType === 'LONGBINARY' ||
+    fieldType === 'SINGLE'
+  )
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -3426,4 +3430,6 @@ export default {
   getGridRangeMode,
   getAggregationColorScheme,
   createHeatMap,
+
+  isThemeFieldTypeAvailable,
 }

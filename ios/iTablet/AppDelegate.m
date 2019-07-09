@@ -91,7 +91,7 @@ static NSString* g_sampleCodeName = @"#";;
   
 #if DEBUG
 
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.103"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.43.228"];
 
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -163,10 +163,9 @@ static NSString* g_sampleCodeName = @"#";;
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-    //    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-    //      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-    //        NSLog(@"拷贝数据失败");
-    //    }
+    if([[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      [[NSFileManager defaultManager] removeItemAtPath:deslic error:nil];
+    }
     if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
       NSLog(@"拷贝数据失败");
   }

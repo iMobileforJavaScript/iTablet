@@ -186,6 +186,9 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSIS_START: 'Analysing',
+  ANALYSIS_SUCCESS: 'Analysis successfully',
+  ANALYSIS_FAIL: 'Analysis failed',
   PLEASE_CONNECT_TO_ISERVER: 'Please connect to iServer',
   PLEASE_CHOOSE_INPUT_METHOD: 'Please choose input method',
   PLEASE_CHOOSE_DATASET: 'Please choose dataset',
@@ -198,6 +201,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_CONNECTED: 'The two nodes are connected',
   TWO_NODES_ARE_NOT_CONNECTED: 'The two nodes are not connected',
   NOT_FIND_SUITABLE_PATH: 'Did not find suitable path',
+  SELECT_DATA_SOURCE_FIRST: 'Please select datasource first',
 }
 
 export {

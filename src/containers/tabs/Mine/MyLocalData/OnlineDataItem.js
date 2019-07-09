@@ -25,6 +25,9 @@ export default class OnlineDataItem extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if (JSON.stringify(nextProps.item) !== JSON.stringify(this.props.item)) {
+      return true
+    }
     if (JSON.stringify(nextProps.down) !== JSON.stringify(this.props.down)) {
       for (let index = 0; index < nextProps.down.length; index++) {
         if (nextProps.down[index].id === this.props.item.id) {

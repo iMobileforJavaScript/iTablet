@@ -5,7 +5,7 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList } from '../../components'
-import { ConstPath, ConstInfo, ConstAnalyst } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
@@ -92,15 +92,15 @@ export default class OverlayAnalystView extends Component {
   getDataLimit = () => {
     let limit = []
     switch (this.state.title) {
-      case ConstAnalyst.UPDATE:
-      case ConstAnalyst.UNION:
-      case ConstAnalyst.XOR:
+      case getLanguage(this.props.language).Analyst_Methods.UPDATE:
+      case getLanguage(this.props.language).Analyst_Methods.UNION:
+      case getLanguage(this.props.language).Analyst_Methods.XOR:
         limit = [DatasetType.REGION]
         break
-      case ConstAnalyst.CLIP:
-      case ConstAnalyst.ERASE:
-      case ConstAnalyst.IDENTITY:
-      case ConstAnalyst.INTERSECT:
+      case getLanguage(this.props.language).Analyst_Methods.CLIP:
+      case getLanguage(this.props.language).Analyst_Methods.ERASE:
+      case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
+      case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
       default:
         limit = []
         break
@@ -129,10 +129,13 @@ export default class OverlayAnalystView extends Component {
 
   analyst = () => {
     if (!this.checkData) return
-    Toast.show(ConstInfo.ANALYST_START)
+    Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
     ;(async function() {
       try {
-        this.setLoading(true, getLanguage(this.props.language).Prompt.ANALYSING)
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
+        )
         let geoStyle = new GeoStyle()
         geoStyle.setLineColor(50, 240, 50)
         geoStyle.setLineStyle(0)
@@ -158,7 +161,7 @@ export default class OverlayAnalystView extends Component {
           },
           result = false
         switch (this.state.title) {
-          case ConstAnalyst.CLIP:
+          case getLanguage(this.props.language).Analyst_Methods.CLIP:
             result = await SAnalyst.clip(
               sourceData,
               targetData,
@@ -166,7 +169,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.ERASE:
+          case getLanguage(this.props.language).Analyst_Methods.ERASE:
             result = await SAnalyst.erase(
               sourceData,
               targetData,
@@ -174,7 +177,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.IDENTITY:
+          case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
             result = await SAnalyst.identity(
               sourceData,
               targetData,
@@ -182,7 +185,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.INTERSECT:
+          case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
             result = await SAnalyst.intersect(
               sourceData,
               targetData,
@@ -190,7 +193,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.UNION:
+          case getLanguage(this.props.language).Analyst_Methods.UNION:
             result = await SAnalyst.union(
               sourceData,
               targetData,
@@ -198,7 +201,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.UPDATE:
+          case getLanguage(this.props.language).Analyst_Methods.UPDATE:
             result = await SAnalyst.update(
               sourceData,
               targetData,
@@ -206,7 +209,7 @@ export default class OverlayAnalystView extends Component {
               optionParameter,
             )
             break
-          case ConstAnalyst.XOR:
+          case getLanguage(this.props.language).Analyst_Methods.XOR:
             result = await SAnalyst.xOR(
               sourceData,
               targetData,
@@ -217,7 +220,11 @@ export default class OverlayAnalystView extends Component {
         }
         this.setLoading(false)
 
-        Toast.show(result ? ConstInfo.ANALYST_SUCCESS : ConstInfo.ANALYST_FAIL)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
+            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+        )
         if (result) {
           SMap.viewEntire()
           await this.props.getLayers()
@@ -232,7 +239,9 @@ export default class OverlayAnalystView extends Component {
         }
       } catch (e) {
         this.setLoading(false)
-        Toast.show(ConstInfo.ANALYST_FAIL)
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+        )
       }
     }.bind(this)())
   }
@@ -330,7 +339,10 @@ export default class OverlayAnalystView extends Component {
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
             if (!this.state.dataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
@@ -405,7 +417,10 @@ export default class OverlayAnalystView extends Component {
           }
           onPress={async () => {
             if (!this.state.overlayDataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
@@ -481,7 +496,10 @@ export default class OverlayAnalystView extends Component {
           }
           onPress={async () => {
             if (!this.state.resultDataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 

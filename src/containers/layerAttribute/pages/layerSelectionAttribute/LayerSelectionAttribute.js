@@ -510,14 +510,32 @@ export default class LayerSelectionAttribute extends React.Component {
           currentIndex,
         },
         () => {
-          this.table &&
-            this.table.scrollToLocation({
-              animated: false,
-              itemIndex: relativeIndex,
-              sectionIndex: 0,
-              viewPosition: viewPosition,
-              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-            })
+          if (this.table) {
+            // 避免 Android 更新数据后无法滚动
+            setTimeout(() => {
+              let item = this.table.setSelected(relativeIndex, false)
+              this.setState(
+                {
+                  currentFieldInfo: item.data,
+                },
+                () => {
+                  cb &&
+                    cb({
+                      currentIndex,
+                      currentFieldInfo: item.data,
+                      layerInfo: this.props.layerSelection.layerInfo,
+                    })
+                  this.table.scrollToLocation({
+                    animated: false,
+                    itemIndex: relativeIndex,
+                    sectionIndex: 0,
+                    viewPosition: viewPosition,
+                    viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+                  })
+                },
+              )
+            }, 0)
+          }
         },
       )
       this.setLoading(false)

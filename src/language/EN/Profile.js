@@ -12,6 +12,7 @@ const Profile = {
   COLOR_SCHEME: 'Color Scheme',
   TEMPLATE: 'Template',
   COLLECTION_TEMPLATE: 'Collection Template',
+  PLOTTING_TEMPLATE: 'Plotting Template',
 
   //我的——登录
   LOGIN: 'Login',

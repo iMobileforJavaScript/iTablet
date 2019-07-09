@@ -29,7 +29,7 @@ export default class ModuleItem extends Component {
       <TouchableOpacity style={{ flex: 1 }}>
         <View style={styles.rowView}>
           <Image source={Img} style={styles.Img} />
-          <Text style={styles.title}>{this.state.title}</Text>
+          <Text style={styles.title}>{this.props.item.name}</Text>
           <TouchableOpacity
             style={styles.moreImgBtn}
             onPress={() => {

@@ -285,6 +285,10 @@ export default class Home extends Component {
           fileName = 'LosAngeles'
           storage = '  23.73MB'
           break
+        case 'Xiamen_CN':
+          fileName = 'Xiamen_CN'
+          storage = '  1.9MB'
+          break
       }
     }
     let Img = this.state.dialogCheck
