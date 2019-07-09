@@ -527,6 +527,7 @@ const initialState = fromJS({
   plotLibIds: [],
 })
 
+const maxLength = 20
 export default handleActions(
   {
     [`${SET_CURRENT_TEMPLATE_INFO}`]: (state, { payload }) => {
@@ -545,6 +546,9 @@ export default handleActions(
       }
       if (!isExist && originData) {
         newData.unshift(originData)
+      }
+      if (newData.length >= maxLength) {
+        newData = newData.slice(0, maxLength)
       }
       delete payload.originData
       return state

@@ -209,7 +209,7 @@ export default class LocalAnalystView extends Component {
           },
         ],
         // edgeNameField: 'Name',
-        edgeNameField: 'SmID',
+        edgeNameField: 'roadName',
         // edgeNameField: 'roadName',
         nodeNameField: 'SmNodeID',
         weightName: 'length',
