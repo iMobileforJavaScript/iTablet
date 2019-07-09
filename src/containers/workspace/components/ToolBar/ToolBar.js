@@ -5289,7 +5289,12 @@ export default class ToolBar extends React.PureComponent {
             // NavigationService.navigate('layerSelectionAttribute', {
             //   type: 'singleAttribute',
             // })
-            NavigationService.navigate('LayerSelectionAttribute')
+            NavigationService.navigate(
+              'LayerSelectionAttribute',
+              GLOBAL.SelectedSelectionAttribute && {
+                selectionAttribute: GLOBAL.SelectedSelectionAttribute,
+              },
+            )
           }
           break
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
