@@ -308,6 +308,14 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
       // }
       await fs.readDir(plotIconPath).then(async data => {
         let rootFeature = []
+        data.sort(function(a, b) {
+          if (a.name < b.name) {
+            return -1
+          } else if (a.name > b.name) {
+            return 1
+          }
+          return 0
+        })
         for (let i = 0; i < data.length; i++) {
           let subData = {}
           let obj = {}
@@ -332,6 +340,14 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
           let dealData = async function(path) {
             let mList = []
             await fs.readDir(path).then(async children => {
+              children.sort(function(a, b) {
+                if (a.name < b.name) {
+                  return -1
+                } else if (a.name > b.name) {
+                  return 1
+                }
+                return 0
+              })
               for (let j = 0; j < children.length; j++) {
                 let childData = {}
                 let obj1 = {}

@@ -600,26 +600,27 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   }
   externalDataPath=[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
   plotFilePath=[NSHomeDirectory() stringByAppendingFormat:@"%@", plotFilePath];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
-      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
-      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-    } else {
+  //修改为每次都解压标绘库
+//  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
+//      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
+//      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+//    } else {
       if ([FileTools copyFile:originPlotPath targetPath:commonPlotZipPath]) {
         isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
         NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
       }
-    }
+//    }
     if(isUnZipPlot){
       NSString* fromPath=plotFilePath;
       NSString* toPath=[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Plotting"];
-      [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon"];
-      
+      [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon" isOnly:YES];
+
     }
-  } else {
-    isUnZip = YES;
-  }
-  
+//  } else {
+//    isUnZip = YES;
+//  }
+
   NSString* commonCache = [NSHomeDirectory() stringByAppendingFormat:@"%@/%@",CachePath,@"publicMap.txt"];
   if (![[NSFileManager defaultManager] fileExistsAtPath:commonCache isDirectory:nil]) {
     srclic = [[NSBundle mainBundle] pathForResource:@"publicMap" ofType:@"txt"];
