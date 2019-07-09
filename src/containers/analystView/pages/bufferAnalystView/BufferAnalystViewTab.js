@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Text } from 'react-native'
 import { AnalystItem, PopModalList } from '../../components'
-import { CheckStatus, ConstPath, ConstInfo } from '../../../../constants'
+import { CheckStatus, ConstPath } from '../../../../constants'
 import { getLanguage } from '../../../../language'
-import { CheckBox } from '../../../../components'
+// import { CheckBox } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
@@ -289,7 +289,10 @@ export default class BufferAnalystViewTab extends Component {
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
             if (!this.state.dataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
@@ -324,18 +327,18 @@ export default class BufferAnalystViewTab extends Component {
             )
           }}
         />
-        <View style={styles.checkView}>
-          <CheckBox
-            onChange={checked => {
-              this.setState({
-                isOperateForSelectedObj: checked,
-              })
-            }}
-          />
-          <Text style={styles.checkTips}>
-            {getLanguage(this.props.language).Analyst_Labels.SELECTED_OBJ_ONLY}
-          </Text>
-        </View>
+        {/*<View style={styles.checkView}>*/}
+        {/*<CheckBox*/}
+        {/*onChange={checked => {*/}
+        {/*this.setState({*/}
+        {/*isOperateForSelectedObj: checked,*/}
+        {/*})*/}
+        {/*}}*/}
+        {/*/>*/}
+        {/*<Text style={styles.checkTips}>*/}
+        {/*{getLanguage(this.props.language).Analyst_Labels.SELECTED_OBJ_ONLY}*/}
+        {/*</Text>*/}
+        {/*</View>*/}
       </View>
     )
   }
@@ -407,7 +410,7 @@ export default class BufferAnalystViewTab extends Component {
                 headerTitle: getLanguage(this.props.language).Analyst_Labels
                   .BUFFER_RADIUS,
                 placeholder:
-                  getLanguage(this.props.language).Prompt.PLEASE_ENTER +
+                  getLanguage(this.props.language).Analyst_Prompt.PLEASE_ENTER +
                   getLanguage(this.props.language).Analyst_Labels.BUFFER_RADIUS,
                 keyboardType: 'numeric',
                 cb: async value => {
@@ -551,7 +554,10 @@ export default class BufferAnalystViewTab extends Component {
           }
           onPress={async () => {
             if (!this.state.resultDataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
