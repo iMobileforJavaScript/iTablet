@@ -646,6 +646,9 @@ export default handleActions(
       if (!isExist && originData) {
         newData.unshift(originData)
       }
+      if (newData.length >= maxLength) {
+        newData = newData.slice(0, maxLength)
+      }
       delete payload.originData
       return state
         .setIn(['currentPlotInfo'], fromJS(payload))
