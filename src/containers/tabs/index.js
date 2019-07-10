@@ -1,4 +1,4 @@
-import { TabNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
 import { Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
@@ -90,7 +90,7 @@ const TabBarLabel = connect(
   mapDispatchToProps,
 )(tabItem)
 
-const Tabs = TabNavigator(
+const Tabs = createBottomTabNavigator(
   {
     Home: {
       screen: Home,

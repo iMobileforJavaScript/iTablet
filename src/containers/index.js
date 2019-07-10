@@ -1,5 +1,6 @@
-import { StackNavigator } from 'react-navigation'
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
+import { createStackNavigator, createAppContainer } from 'react-navigation'
+// eslint-disable-next-line
+import StackViewStyleInterpolator from 'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator'
 //主页
 import MapLoad from './mapLoad'
 
@@ -93,7 +94,7 @@ import {
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
 
-export default StackNavigator(
+const AppNavigator = createStackNavigator(
   {
     Tabs: {
       screen: Tabs,
@@ -659,7 +660,9 @@ export default StackNavigator(
     lazy: true,
     mode: 'card',
     transitionConfig: () => ({
-      screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+      screenInterpolator: StackViewStyleInterpolator.forHorizontal,
     }),
   },
 )
+
+export default createAppContainer(AppNavigator)

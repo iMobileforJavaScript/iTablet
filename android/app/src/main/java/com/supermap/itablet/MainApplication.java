@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.supermap.file.CrashHandler;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -39,6 +40,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RNGestureHandlerPackage(),
             new ExtraDimensionsPackage(),
             new BackgroundTimerPackage(),
             new RNCameraPackage(),
