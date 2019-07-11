@@ -511,6 +511,9 @@ export default handleActions(
         data.maps = []
         data.currentMap = {}
         data.workspace = {}
+        if (data.baseMaps === undefined) {
+          data.baseMaps = initialState.toJS().baseMaps
+        }
         return fromJS(data)
       } else {
         return state

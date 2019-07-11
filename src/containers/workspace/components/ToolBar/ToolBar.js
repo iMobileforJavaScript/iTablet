@@ -785,22 +785,26 @@ export default class ToolBar extends React.PureComponent {
           )
         }
         let dataset = this.expressionData.dataset
-        let allExpressions = this.expressionData.list
-        if (selectedExpression) {
-          for (let i = 0; i < allExpressions.length; i++) {
-            if (allExpressions[i].expression === selectedExpression) {
-              allExpressions[i].isSelected = true
-            } else {
-              allExpressions[i].isSelected = false
+        let allExpressions = []
+        // if (selectedExpression) {
+        for (let i = 0; i < this.expressionData.list.length; i++) {
+          let item = this.expressionData.list[i]
+          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+            item.info = {
+              infoType: 'fieldType',
+              fieldType: item.fieldType,
             }
+            item.isSelected = item.expression === selectedExpression
+            allExpressions.push(item)
           }
         }
-        allExpressions.forEach(item => {
-          item.info = {
-            infoType: 'fieldType',
-            fieldType: item.fieldType,
-          }
-        })
+        // }
+        // allExpressions.forEach(item => {
+        //   item.info = {
+        //     infoType: 'fieldType',
+        //     fieldType: item.fieldType,
+        //   }
+        // })
         let datalist = [
           {
             title: dataset.datasetName,
@@ -873,31 +877,42 @@ export default class ToolBar extends React.PureComponent {
           GLOBAL.currentLayer.name,
         )
         let dataset = this.expressionData.dataset
-        let allExpressions = this.expressionData.list
+        let allExpressions = []
         let param = {
           LayerName: GLOBAL.currentLayer.name,
         }
         let expressions = await SThemeCartography.getGraphExpressions(param)
         let selectedExpressions = expressions.list //已选择的字段列表
         let listExpressionsArr = []
-        if (selectedExpressions) {
-          for (let index = 0; index < selectedExpressions.length; index++) {
-            let temp = {}
-            temp[selectedExpressions[index]] = false
-            listExpressionsArr.push(temp)
-            for (let i = 0; i < allExpressions.length; i++) {
-              if (allExpressions[i].expression === selectedExpressions[index]) {
-                allExpressions[i].isSelected = true
+
+        for (let i = 0; i < this.expressionData.list.length; i++) {
+          let item = this.expressionData.list[i]
+          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+            if (selectedExpressions) {
+              for (let index = 0; index < selectedExpressions.length; index++) {
+                let temp = {}
+                temp[selectedExpressions[index]] = false
+                listExpressionsArr.push(temp)
+                item.isSelected = item.expression === selectedExpressions[index]
               }
+            } else {
+              item.isSelected = false
             }
+            item.info = {
+              infoType: 'fieldType',
+              fieldType: item.fieldType,
+            }
+
+            allExpressions.push(item)
           }
         }
-        allExpressions.forEach(item => {
-          item.info = {
-            infoType: 'fieldType',
-            fieldType: item.fieldType,
-          }
-        })
+
+        // allExpressions.forEach(item => {
+        //   item.info = {
+        //     infoType: 'fieldType',
+        //     fieldType: item.fieldType,
+        //   }
+        // })
         let datalist = [
           {
             title: dataset.datasetName,
@@ -3721,12 +3736,17 @@ export default class ToolBar extends React.PureComponent {
             item.datasetName,
           )
           let dataset = data.dataset
+          let _list = []
           data.list.forEach(item => {
-            item.info = {
-              infoType: 'fieldType',
-              fieldType: item.fieldType,
+            if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+              item.info = {
+                infoType: 'fieldType',
+                fieldType: item.fieldType,
+              }
+              _list.push(item)
             }
           })
+          data.list = _list
           let datalist = [
             {
               title: dataset.datasetName,
@@ -3982,7 +4002,7 @@ export default class ToolBar extends React.PureComponent {
             Toast.show(
               result
                 ? getLanguage(this.props.language).Prompt.ADD_SUCCESS
-                : ConstInfo.ADD_FAILED,
+                : getLanguage(this.props.language).Prompt.ADD_FAILED,
             )
             if (result) {
               await this.props.getLayers(-1, layers => {
@@ -4920,6 +4940,8 @@ export default class ToolBar extends React.PureComponent {
             ThemeMenuData.setThemeParams(Params)
           }
         }
+        //init add xiezhy
+        this.setState({ listExpressions: {} })
         item.action()
         break
     }
@@ -5267,7 +5289,12 @@ export default class ToolBar extends React.PureComponent {
             // NavigationService.navigate('layerSelectionAttribute', {
             //   type: 'singleAttribute',
             // })
-            NavigationService.navigate('LayerSelectionAttribute')
+            NavigationService.navigate(
+              'LayerSelectionAttribute',
+              GLOBAL.SelectedSelectionAttribute && {
+                selectionAttribute: GLOBAL.SelectedSelectionAttribute,
+              },
+            )
           }
           break
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:

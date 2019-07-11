@@ -124,7 +124,9 @@ export default class OnlineDataItem extends Component {
               }}
             >
               {getLanguage(global.language).Profile.PATH +
-                `:https://www.supermapol.com/web/mycontent/datas/${this.props.item.id}`}
+                `:https://www.supermapol.com/web/mycontent/datas/${
+                  this.props.item.id
+                }`}
             </Text>
           </View>
           <Image

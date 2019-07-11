@@ -204,19 +204,23 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   onGetAttribute = attributes => {
-    // 当数据只有一条时，则默认当前index为0
-    if (attributes.data.length === 1 && this.state.currentIndex !== 0) {
-      this.setState({
-        currentIndex: 0,
-        attributes,
-      })
-    } else if (
-      JSON.stringify(this.state.attributes) !== JSON.stringify(attributes)
-    ) {
-      this.setState({
-        attributes,
-      })
+    let newState = {}
+    // 当数据是一维数组时，则表格只有一条数据，则默认当前index为0
+    if (attributes.data.length === 1) {
+      // if (attributes.data.length > 0 && !(attributes.data[0] instanceof Array) && this.state.currentIndex !== 0) {
+      GLOBAL.SelectedSelectionAttribute = {
+        index: 0,
+        layerInfo: this.props.selection[this.state.currentTabIndex].layerInfo,
+        data: attributes.data[0],
+      }
+      if (this.state.currentIndex !== 0) newState.currentIndex = 0
     }
+
+    if (JSON.stringify(this.state.attributes) !== JSON.stringify(attributes)) {
+      newState.attributes = attributes
+    }
+
+    if (Object.keys(newState).length > 0) this.setState(newState)
 
     // 初始化第一次进入，多行属性界面，跳转到初始化行
     if (

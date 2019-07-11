@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dimensions } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
-import { ConstInfo } from '../../../../constants'
+// import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
@@ -56,9 +56,14 @@ export default class BufferAnalystView extends Component {
       this.currentTab = this.singleBuffer
     try {
       if (this.currentTab) {
-        Toast.show(ConstInfo.ANALYST_START)
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START,
+        )
         // this.setLoading(ConstInfo.ANALYST_START)
-        this.setLoading(true, getLanguage(this.props.language).Prompt.ANALYSING)
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
+        )
         if (this.currentTabIndex === 0) {
           let {
             sourceData,
@@ -81,8 +86,11 @@ export default class BufferAnalystView extends Component {
 
               Toast.show(
                 res.result
-                  ? ConstInfo.ANALYST_SUCCESS
-                  : res.errorMsg || ConstInfo.ANALYST_FAIL,
+                  ? getLanguage(this.props.language).Analyst_Prompt
+                    .ANALYSIS_SUCCESS
+                  : getLanguage(this.props.language).Analyst_Prompt
+                    .ANALYSIS_FAIL,
+                // : res.errorMsg || getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
               )
 
               if (res.result) {
@@ -96,9 +104,12 @@ export default class BufferAnalystView extends Component {
                 this.cb && this.cb()
               }
             },
-            res => {
+            () => {
               this.setLoading(false)
-              Toast.show(res && res.errorMsg)
+              // Toast.show(res && res.errorMsg)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
+              )
             },
           )
         } else {
@@ -120,8 +131,11 @@ export default class BufferAnalystView extends Component {
 
               Toast.show(
                 res.result
-                  ? ConstInfo.ANALYST_SUCCESS
-                  : res.errorMsg || ConstInfo.ANALYST_FAIL,
+                  ? getLanguage(this.props.language).Analyst_Prompt
+                    .ANALYSIS_SUCCESS
+                  : getLanguage(this.props.language).Analyst_Prompt
+                    .ANALYSIS_FAIL,
+                // : res.errorMsg || getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
               )
               if (res.result) {
                 let layers = await this.props.getLayers()
@@ -137,9 +151,12 @@ export default class BufferAnalystView extends Component {
                 this.cb && this.cb()
               }
             },
-            res => {
+            () => {
               this.setLoading(false)
-              Toast.show(res && res.errorMsg)
+              // Toast.show(res && res.errorMsg)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
+              )
             },
           )
         }

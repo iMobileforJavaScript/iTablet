@@ -186,6 +186,9 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSIS_START: '开始分析',
+  ANALYSIS_SUCCESS: '分析成功',
+  ANALYSIS_FAIL: '分析失败',
   PLEASE_CONNECT_TO_ISERVER: '请连接iServer服务器',
   PLEASE_CHOOSE_INPUT_METHOD: '请选择输入方式',
   PLEASE_CHOOSE_DATASET: '请选择数据集',
@@ -197,6 +200,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_CONNECTED: '两点连通',
   TWO_NODES_ARE_NOT_CONNECTED: '两点不连通',
   NOT_FIND_SUITABLE_PATH: '没有查找到合适的路径',
+  SELECT_DATA_SOURCE_FIRST: '请先选择数据源',
 }
 
 export {

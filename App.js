@@ -126,6 +126,17 @@ class AppRoot extends Component {
       sceneStyle: styles.invisibleMap,
       import: null,
     }
+    this.initGlobal()
+    PT.initCustomPrototype()
+    this.login = this.login.bind(this)
+    this.reCircleLogin = this.reCircleLogin.bind(this)
+  }
+
+  UNSAFE_componentWillMount(){
+    SOnlineService.init()
+  }
+
+  initGlobal = () => {
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
     GLOBAL.loginTimer = undefined
@@ -135,13 +146,7 @@ class AppRoot extends Component {
     GLOBAL.BaseMapSize = 1
     //地图比例尺
     GLOBAL.scaleView = null
-    PT.initCustomPrototype()
-    this.login = this.login.bind(this)
-    this.reCircleLogin = this.reCircleLogin.bind(this)
-  }
-
-  UNSAFE_componentWillMount(){
-    SOnlineService.init()
+    GLOBAL.SelectedSelectionAttribute = null // 框选-属性-关联对象 {layerInfo, index, data}
   }
 
   async login(){

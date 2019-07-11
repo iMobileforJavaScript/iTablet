@@ -308,6 +308,14 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
       // }
       await fs.readDir(plotIconPath).then(async data => {
         let rootFeature = []
+        data.sort(function(a, b) {
+          if (a.name < b.name) {
+            return -1
+          } else if (a.name > b.name) {
+            return 1
+          }
+          return 0
+        })
         for (let i = 0; i < data.length; i++) {
           let subData = {}
           let obj = {}
@@ -332,6 +340,14 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
           let dealData = async function(path) {
             let mList = []
             await fs.readDir(path).then(async children => {
+              children.sort(function(a, b) {
+                if (a.name < b.name) {
+                  return -1
+                } else if (a.name > b.name) {
+                  return 1
+                }
+                return 0
+              })
               for (let j = 0; j < children.length; j++) {
                 let childData = {}
                 let obj1 = {}
@@ -527,6 +543,7 @@ const initialState = fromJS({
   plotLibIds: [],
 })
 
+const maxLength = 20
 export default handleActions(
   {
     [`${SET_CURRENT_TEMPLATE_INFO}`]: (state, { payload }) => {
@@ -545,6 +562,9 @@ export default handleActions(
       }
       if (!isExist && originData) {
         newData.unshift(originData)
+      }
+      if (newData.length >= maxLength) {
+        newData = newData.slice(0, maxLength)
       }
       delete payload.originData
       return state
@@ -626,6 +646,9 @@ export default handleActions(
       if (!isExist && originData) {
         newData.unshift(originData)
       }
+      if (newData.length >= maxLength) {
+        newData = newData.slice(0, maxLength)
+      }
       delete payload.originData
       return state
         .setIn(['currentPlotInfo'], fromJS(payload))
@@ -648,6 +671,7 @@ export default handleActions(
         data.plotLibIds = []
         data.currentPlotInfo = {}
         data.currentPlotList = []
+        if (data.latestPlotSymbols === undefined) data.latestPlotSymbols = []
         return fromJS(data)
       } else {
         return state

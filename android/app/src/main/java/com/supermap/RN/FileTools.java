@@ -908,22 +908,23 @@ public class FileTools extends ReactContextBaseJavaModule {
         } else {
             isUnZip = true;
         }
-        if (!Utils.fileIsExit(plotPath) || !Utils.fileIsExit(plotFilePath)) {
-            if (Utils.fileIsExit(commonPlotZipPath)) {
-                isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
-                System.out.print(isUnZipPlot ? "解压数据成功" : "解压数据失败");
-            } else {
+        //修改为每次都重新解压标绘库
+//        if (!Utils.fileIsExit(plotPath) || !Utils.fileIsExit(plotFilePath)) {
+//            if (Utils.fileIsExit(commonPlotZipPath)) {
+//                isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
+//                System.out.print(isUnZipPlot ? "解压数据成功" : "解压数据失败");
+//            } else {
                 Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, plotZipData);
                 isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
                 System.out.print(isUnZipPlot ? "解压数据成功" : "解压数据失败");
-            }
+//            }
             if(isUnZipPlot){
                 String toPath=dataPath+"Plotting/";
-                copyFiles(plotFilePath,toPath,"plot","Symbol","SymbolIcon");
+                copyFiles(plotFilePath,toPath,"plot","Symbol","SymbolIcon",true);
             }
-        } else {
-            isUnZipPlot = true;
-        }
+//        } else {
+//            isUnZipPlot = true;
+//        }
 
         return isUnZip&&isUnZipPlot;
     }

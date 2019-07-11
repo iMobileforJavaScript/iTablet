@@ -5,7 +5,7 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList } from '../../components'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
@@ -129,10 +129,13 @@ export default class OverlayAnalystView extends Component {
 
   analyst = () => {
     if (!this.checkData) return
-    Toast.show(ConstInfo.ANALYST_START)
+    Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
     ;(async function() {
       try {
-        this.setLoading(true, getLanguage(this.props.language).Prompt.ANALYSING)
+        this.setLoading(
+          true,
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
+        )
         let geoStyle = new GeoStyle()
         geoStyle.setLineColor(50, 240, 50)
         geoStyle.setLineStyle(0)
@@ -217,7 +220,11 @@ export default class OverlayAnalystView extends Component {
         }
         this.setLoading(false)
 
-        Toast.show(result ? ConstInfo.ANALYST_SUCCESS : ConstInfo.ANALYST_FAIL)
+        Toast.show(
+          result
+            ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
+            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+        )
         if (result) {
           SMap.viewEntire()
           await this.props.getLayers()
@@ -232,7 +239,9 @@ export default class OverlayAnalystView extends Component {
         }
       } catch (e) {
         this.setLoading(false)
-        Toast.show(ConstInfo.ANALYST_FAIL)
+        Toast.show(
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+        )
       }
     }.bind(this)())
   }
@@ -330,7 +339,10 @@ export default class OverlayAnalystView extends Component {
           value={(this.state.dataSet && this.state.dataSet.value) || ''}
           onPress={async () => {
             if (!this.state.dataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
@@ -405,7 +417,10 @@ export default class OverlayAnalystView extends Component {
           }
           onPress={async () => {
             if (!this.state.overlayDataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
@@ -481,7 +496,10 @@ export default class OverlayAnalystView extends Component {
           }
           onPress={async () => {
             if (!this.state.resultDataSource) {
-              Toast.show(ConstInfo.SELECT_DATA_SOURCE_FIRST)
+              Toast.show(
+                getLanguage(this.props.language).Analyst_Prompt
+                  .SELECT_DATA_SOURCE_FIRST,
+              )
               return
             }
 
