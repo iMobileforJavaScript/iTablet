@@ -300,27 +300,32 @@ RCT_REMAP_METHOD(isDirectory,isDirectoryPath:(NSString*)path getHomeDirectoryWit
 }
 
 RCT_REMAP_METHOD(getPathList,getPathListPath:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
-  
-  NSFileManager* fileMgr = [NSFileManager defaultManager];
-  NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
-  
-  for (NSString* fileName in tempArray) {
+  @try {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
     
-    BOOL flag = YES;
+    NSFileManager* fileMgr = [NSFileManager defaultManager];
+    NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
     
-    NSString* fullPath = [path stringByAppendingPathComponent:fileName];
-    
-    if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+    for (NSString* fileName in tempArray) {
       
-      NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
-      [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
-      //  [array addObject:@{@"name":fileName,@"type":@"directory"}];
+      BOOL flag = YES;
+      
+      NSString* fullPath = [path stringByAppendingPathComponent:fileName];
+      
+      if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+        
+        NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
+        [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+        //  [array addObject:@{@"name":fileName,@"type":@"directory"}];
+      }
+      
     }
     
+    resolve(array);
+  } @catch (NSException *exception) {
+    reject(@"getPathList", exception.reason, nil);
   }
   
-  resolve(array);
   
 }
 
@@ -337,6 +342,37 @@ RCT_REMAP_METHOD(fileIsExistInHomeDirectory,fileIsExistInHomeDirectoryPath:(NSSt
   BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:[home stringByAppendingFormat:@"/Documents/%@",path] isDirectory:nil];
   //BOOL b = [[NSFileManager defaultManager] createDirectoryAtPath:[home stringByAppendingFormat:@"/Documents/%@",path] withIntermediateDirectories:NO attributes:nil error:nil];
   resolve(@(b));
+}
+
+RCT_REMAP_METHOD(writeToFile, writeTo:(NSString *)filePath with:(NSString *) str resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL fexist = [fileManager fileExistsAtPath:filePath];
+    if (!fexist) {
+      [fileManager createFileAtPath:filePath contents:nil attributes:nil];
+    }
+  
+    BOOL result = [str writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
+    resolve([NSNumber numberWithBool:result]);
+  } @catch (NSException *exception) {
+    reject(@"writeFile", exception.reason, nil);
+  }
+}
+
+RCT_REMAP_METHOD(readFile, readFile:(NSString *)filePath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL fexist = [fileManager fileExistsAtPath:filePath];
+    NSString *readStr;
+    if (fexist) {
+     readStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    }
+    
+    resolve(readStr);
+  } @catch (NSException *exception) {
+    reject(@"writeFile", exception.reason, nil);
+  }
 }
 
 RCT_REMAP_METHOD(zipFile, zipFileByPath:(NSString *)archivePath targetPath:(NSString *)targetPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){

@@ -36,9 +36,9 @@ const ICONS = context => [
         title: getLanguage(global.language).Profile.MAP,
         formChat: true,
         // eslint-disable-next-line
-        chatCallBack: _path => {
+        chatCallBack: (_path, fileName) => {
           // console.warn(path)
-          context.props.sendCallBack(1, _path)
+          context.props.sendCallBack(1, _path, fileName)
         },
       })
       context.setModalVisible()

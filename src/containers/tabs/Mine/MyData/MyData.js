@@ -637,13 +637,13 @@ export default class MyLocalData extends Component {
             this.state.title === getLanguage(this.props.language).Profile.MAP
           ) {
             await this._exportData(true)
-            this.chatCallBack && this.chatCallBack(targetPath)
+            this.chatCallBack && this.chatCallBack(targetPath, fileName)
             NavigationService.goBack()
           } else {
             let zipResult = await FileTools.zipFiles(archivePaths, targetPath)
             if (zipResult) {
               this.setLoading(false)
-              this.chatCallBack && this.chatCallBack(targetPath)
+              this.chatCallBack && this.chatCallBack(targetPath.fileName)
               NavigationService.goBack()
             }
           }

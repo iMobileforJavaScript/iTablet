@@ -28,16 +28,20 @@ export default class CustomView extends React.Component {
   }
 
   render() {
+    let type = this.props.currentMessage.type
     /*
      * 文本消息，不渲染customview
      */
-    if (this.props.currentMessage.type === MSGConstant.MSG_TEXT) {
+    if (type === MSGConstant.MSG_TEXT) {
       return null
     }
     /*
      * 文件下载通知消息，包括图层，数据集等
      */
-    if (this.props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) {
+    if (
+      type === MSGConstant.MSG_FILE_NOTIFY ||
+      type === MSGConstant.MSG_LAYER
+    ) {
       let fileType = this.props.currentMessage.type
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
@@ -49,6 +53,15 @@ export default class CustomView extends React.Component {
       if (fileSize > 1024) {
         fileSize = fileSize / 1024
         fileSizeText = fileSize.toFixed(2) + 'MB'
+      }
+      let typeText = ''
+      switch (type) {
+        case MSGConstant.MSG_FILE_NOTIFY:
+          typeText = 'Map'
+          break
+        case MSGConstant.MSG_LAYER:
+          typeText = 'Layer'
+          break
       }
       return (
         <TouchableWithoutFeedback
@@ -79,7 +92,7 @@ export default class CustomView extends React.Component {
                   : [styles.fileSize, { color: 'white' }]
               }
             >
-              {fileSizeText}
+              {typeText + '  ' + fileSizeText}
             </Text>
           </View>
         </TouchableWithoutFeedback>
@@ -88,7 +101,7 @@ export default class CustomView extends React.Component {
     /*
      * 定位消息
      */
-    if (this.props.currentMessage.type === MSGConstant.MSG_LOCATION) {
+    if (type === MSGConstant.MSG_LOCATION) {
       let text = this.props.currentMessage.originMsg.message.message.message
       // 'LOCATION(' +
       // this.props.currentMessage.originMsg.message.message.longitude.toFixed(
