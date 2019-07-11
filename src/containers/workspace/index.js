@@ -107,7 +107,7 @@ const CoworkTabs = createBottomTabNavigator(
   options,
 )
 
-const analystTabsOptions = Object.assign(options, {
+const analystTabsOptions = Object.assign({}, options, {
   initialRouteIndex: 1,
   lazy: false,
   backBehavior: 'none',
