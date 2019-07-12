@@ -3,6 +3,7 @@ import {
   ConstToolType,
   OpenData,
   layerManagerData,
+  ConstPath,
 } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import {
@@ -41,6 +42,9 @@ import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import constants from '../../../workspace/constants'
+import ModalBtns from '../../../tabs/Mine/MyModule/ModalBtns'
+import { FileTools } from '../../../../../src/native'
+import { MsgConstant } from '../../../../containers/tabs/Friend'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -641,6 +645,11 @@ export default class LayerManager_tolbar extends React.Component {
           //'不支持由该图层创建专题图'
         )
       }
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_SHARE
+    ) {
+      //分享图层
+      this.setVisible(true, 'Share', { layerdata: this.state.layerdata })
     }
   }
 
@@ -817,6 +826,68 @@ export default class LayerManager_tolbar extends React.Component {
     )
   }
 
+  renderShare = () => {
+    return (
+      <View>
+        <Text>123</Text>
+        <ModalBtns
+          ref={ref => {
+            this.ModalBtns = ref
+          }}
+          alwaysShow={true}
+          showCancel={false}
+          // actionOfOnline={() => this._onShare('online')}
+          // actionOfWechat={() => this._onShare('weChat')}
+          actionOfFriend={() => this._onShare('friend')}
+        />
+      </View>
+    )
+  }
+
+  _onShare = async type => {
+    let xmlLayer = await SMap.getLayerAsXML(this.state.layerdata.path)
+    let homePath = await FileTools.appendingHomeDirectory()
+    let targetPath =
+      homePath +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      this.state.layerdata.name +
+      '.xml'
+    let zipPath =
+      homePath +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      'MyExport.zip'
+    if (await FileTools.fileIsExist(targetPath)) {
+      await FileTools.deleteFile(targetPath)
+    }
+    await FileTools.writeFile(targetPath, xmlLayer)
+    await FileTools.zipFile(targetPath, zipPath)
+    await FileTools.deleteFile(targetPath)
+    if (type === 'friend') {
+      NavigationService.navigate('SelectFriend', {
+        user: this.props.user,
+        callBack: targetId => {
+          NavigationService.navigate('Chat', {
+            targetId: targetId,
+            curUser: this.props.user.currentUser,
+            friend: global.getFriend(),
+            action: {
+              name: 'onSendFile',
+              type: MsgConstant.MSG_LAYER,
+              filePath: zipPath,
+              fileName: this.state.layerdata.caption,
+            },
+          })
+        },
+      })
+    }
+  }
+
   renderView = () => {
     let box
     switch (this.state.containerType) {
@@ -834,6 +905,9 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_EDIT_STYLE:
           case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()
+            break
+          case 'Share':
+            box = this.renderShare()
             break
         }
         break

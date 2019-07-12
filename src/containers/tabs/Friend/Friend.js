@@ -88,6 +88,15 @@ export default class Friend extends Component {
     AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
     this._receiveMessage = this._receiveMessage.bind(this)
+    global.getFriend = this._getFriend
+  }
+
+  _getFriend = () => {
+    if (this.props.user.currentUser.userId !== undefined) {
+      return this
+    } else {
+      return undefined
+    }
   }
 
   componentDidMount() {
@@ -492,6 +501,9 @@ export default class Friend extends Component {
         break
       case MSGConstant.MSG_FILE_NOTIFY:
         text = getLanguage(this.props.language).Friends.SYS_MSG_MAP
+        break
+      case MSGConstant.MSG_LAYER:
+        text = getLanguage(this.props.language).Friends.SYS_MSG_LAYER
         break
       case MSGConstant.MSG_LOCATION:
         text = msg.originMsg.message.message.message

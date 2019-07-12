@@ -287,6 +287,7 @@ const Map_Layer = {
   LAYERS_SCALE: '缩放基准比例尺',
   LAYERS_MIN_OBJECT_SIZE: '对象最小尺寸',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
+  LAYERS_SHARE: '分享',
 
   VISIBLE: '设置图层可见',
   NOT_VISIBLE: '设置图层不可见',

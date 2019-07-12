@@ -83,6 +83,8 @@ const Friends = {
   ALERT_EXIT_COWORK: '是否关闭当前协作地图?',
   //system text
   SYS_MSG_MAP: '[地图]',
+  SYS_MSG_LAYER: '[图层]',
+  SYS_MSG_DATASET: '[数据集]',
   SYS_MSG_ADD_FRIEND: '请求添加您为好友',
   SYS_MSG_REMOVED_FROM_GROUP: '将你移除群聊',
   SYS_MSG_LEAVE_GROUP: '退出了群聊',

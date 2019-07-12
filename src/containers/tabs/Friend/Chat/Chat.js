@@ -33,7 +33,6 @@ import { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
-import { Buffer } from 'buffer'
 import CoworkTouchableView from '../CoworkTouchableView'
 
 let Top = scaleSize(38)
@@ -55,6 +54,7 @@ class Chat extends React.Component {
     this.targetId = this.props.navigation.getParam('targetId')
     this.targetUser = this.friend.getTargetUser(this.targetId)
     this.friend.setCurChat(this)
+    this.action = this.props.navigation.getParam('action')
     this._isMounted = false
     this.state = {
       messages: [],
@@ -114,6 +114,18 @@ class Chat extends React.Component {
         messages: curMsg,
       }
     })
+
+    this.action && this._handleAciton()
+  }
+
+  _handleAciton = () => {
+    if (this.action.name === 'onSendFile') {
+      this.onSendFile(
+        this.action.type,
+        this.action.filePath,
+        this.action.fileName,
+      )
+    }
   }
 
   onReceiveProgress(value) {
@@ -305,7 +317,7 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
-  async onSendFile(filepath) {
+  async onSendFile(type, filepath, fileName) {
     let bGroup = 1
     let groupID = this.curUser.userId
     let groupName = ''
@@ -337,7 +349,7 @@ class Chat extends React.Component {
     }
 
     let msgId = this.friend.getMsgId(this.targetUser.id)
-    let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
+    fileName = fileName + '.zip'
     let statResult = await stat(filepath)
     //文件接收提醒
     let informMsg = {
@@ -350,9 +362,9 @@ class Chat extends React.Component {
         groupName: groupName,
       },
       message: {
-        type: MSGConstant.MSG_FILE_NOTIFY,
+        type: type,
         message: {
-          message: '[文件]',
+          // message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
           filePath: filepath,
@@ -410,88 +422,69 @@ class Chat extends React.Component {
     )
   }
 
-  onCustomViewFileTouch = (type, message) => {
-    switch (type) {
-      case MSGConstant.MSG_FILE_NOTIFY:
-        this.onMapFileTouch(message)
-        break
-      case MSGConstant.MSG_LAYER:
-        this.onLayerFileTouch(message)
-        break
-      default:
-        break
-    }
-  }
-
-  onLayerFileTouch = async message => {
-    //TODO 以文件形式接收
-    let LayerBase64 = message.originMsg.message.message.layerValue[0]
-    let layer = Buffer.from(LayerBase64, 'base64').toString()
-
-    NavigationService.navigate('MyData', {
-      title: getLanguage(global.language).Profile.MAP,
-      formChat: true,
-      callBackMode: 'getName',
-      chatCallBack: async moduleMapFullName => {
-        let moduleMapName = moduleMapFullName.substr(
-          0,
-          moduleMapFullName.lastIndexOf('.'),
-        )
-        let userPath = (userPath =
-          ConstPath.UserPath + this.curUser.userName + '/')
-        let homePath = await FileTools.appendingHomeDirectory()
-        // 地图用相对路径
-        let moduleMapPath =
-          userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
-        let data
-        if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
-          data = {
-            type: 'Map',
-            path: moduleMapPath,
-            name: moduleMapName,
-            layer: layer,
-          }
-        }
-
-        let wsData = [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
-          data,
-        ]
-        NavigationService.navigate('MapView', {
-          wsData,
-          isExample: true,
-          mapName: moduleMapName,
-        })
-      },
-    })
-  }
-
-  onMapFileTouch = async message => {
+  onCustomViewFileTouch = async (type, message) => {
     if (message.user._id !== this.curUser.userId) {
       let userPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath + this.curUser.userName,
       )
       let receivePath = userPath + '/ReceivedFiles'
-      if (message.originMsg.message.message.isReceived === 0) {
+      if (message.originMsg.message.message.progress !== 100) {
         this.downloadmessage = message
         this.downloadreceivePath = receivePath
         this.download.setDialogVisible(true)
       } else {
-        let toPath = await FileTools.appendingHomeDirectory(
-          ConstPath.Import + '/weChat.zip',
-        )
-        FileTools.copyFile(
-          receivePath + '/' + message.originMsg.message.message.fileName,
-          toPath,
-        )
-        this.import.setDialogVisible(true)
+        switch (type) {
+          case MSGConstant.MSG_FILE_NOTIFY:
+            this.onMapFileTouch(message)
+            break
+          case MSGConstant.MSG_LAYER:
+            this.onLayerFileTouch(message)
+            break
+          default:
+            break
+        }
       }
     }
+  }
+
+  onLayerFileTouch = async message => {
+    let mapOpen
+    try {
+      mapOpen = await SMap.isAnyMapOpened()
+    } catch (error) {
+      mapOpen = false
+    }
+    if (!mapOpen) {
+      Toast.show('请先打开协作地图再导入图层')
+      return
+    }
+    let homePath = await FileTools.appendingHomeDirectory()
+    let filePath = message.originMsg.message.message.filePath
+    let fileDir = filePath.substr(0, filePath.lastIndexOf('.'))
+    await FileTools.unZipFile(filePath, fileDir)
+    let fileList = await FileTools.getPathList(fileDir)
+    let layer
+    if (fileList.length > 0) {
+      for (let i = 0; i < fileList.length; i++) {
+        if (fileList[i].path.indexOf('.xml') !== -1) {
+          layer = await FileTools.readFile(homePath + fileList[i].path)
+          await SMap.insertXMLLayer(0, layer)
+        }
+      }
+    }
+    await FileTools.deleteFile(fileDir)
+    await SMap.refreshMap()
+    this.friend.curMod.action()
+    //todo refresh
+  }
+
+  onMapFileTouch = async message => {
+    let receivePath = message.originMsg.message.message.filePath
+    let toPath = await FileTools.appendingHomeDirectory(
+      ConstPath.Import + '/weChat.zip',
+    )
+    FileTools.copyFile(receivePath, toPath)
+    this.import.setDialogVisible(true)
   }
 
   render() {
@@ -619,9 +612,9 @@ class Chat extends React.Component {
       <CustomActions
         {...props}
         callBack={value => this.setState({ chatBottom: value })}
-        sendCallBack={(type, value) => {
+        sendCallBack={(type, value, fileName) => {
           if (type === 1) {
-            this.onSendFile(value)
+            this.onSendFile(MSGConstant.MSG_FILE_NOTIFY, value, fileName)
           } else if (type === 3) {
             this.onSendLocation(value)
           }
@@ -727,8 +720,9 @@ class Chat extends React.Component {
     let currentMessage = props
 
     if (
-      currentMessage.type &&
-      currentMessage.type === MSGConstant.MSG_FILE_NOTIFY
+      (currentMessage.type &&
+        currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) ||
+      currentMessage.type === MSGConstant.MSG_LAYER
     ) {
       let progress = currentMessage.originMsg.message.message.progress
       return (

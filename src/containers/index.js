@@ -27,6 +27,7 @@ import {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  SelectFriend,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -392,6 +393,13 @@ const AppNavigator = createStackNavigator(
     },
     GroupMemberList: {
       screen: GroupMemberList,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SelectFriend: {
+      screen: SelectFriend,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

@@ -31,6 +31,7 @@ import Friend, {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  SelectFriend,
 } from './Friend'
 import InformSpot from './Friend/InformSpot'
 import { getLanguage } from '../../language/index'
@@ -286,6 +287,7 @@ export {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  SelectFriend,
   //-----------
   MyLabel,
   MyBaseMap,
