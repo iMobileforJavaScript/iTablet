@@ -56,8 +56,7 @@ const options = {
       height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
     },
     style: {
-      // backgroundColor: color.theme, // TabBar 背景色
-      backgroundColor: 'yellow', // TabBar 背景色
+      backgroundColor: color.theme, // TabBar 背景色
       // height: Platform.OS === 'android' ? 50 : 49,
       // height: scaleSize(96),
       height: 0,

@@ -478,6 +478,7 @@ function select() {
 }
 
 function cancelSelect() {
+  _params.setSelection(null)
   SMap.clearSelection()
   select()
 }

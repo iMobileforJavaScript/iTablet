@@ -21,6 +21,7 @@ import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 
 import styles from './styles'
+import ImageButton from '../../components/ImageButton'
 
 const TYPE = {
   PHOTO: 1,
@@ -335,8 +336,10 @@ export default class Camera extends React.Component {
     // 照片/视频拍摄完成不显示此按钮
     if (this.state.recordStatus === RECORD_STATUS.RECORDED) return null
     return (
-      <TouchableOpacity
-        style={styles.capture}
+      <ImageButton
+        containerStyle={styles.capture}
+        iconStyle={styles.iconView}
+        icon={getPublicAssets().common.icon_take_camera}
         onPress={() => {
           if (this.state.type === TYPE.VIDEO) {
             if (this.state.recordStatus === RECORD_STATUS.RECORDING) {
@@ -348,21 +351,7 @@ export default class Camera extends React.Component {
             this.takePicture()
           }
         }}
-        // onLongPress={() => {
-        //   this.changeType(TYPE.VIDEO, this.recordAsync)
-        // }}
-        // delayPressIn={1000}
-        // onPressIn={() => {}}
-        // onPressOut={() => {
-        //   (async function() {
-        //     if (this.state.type === TYPE.VIDEO) {
-        //       await this.stopRecording()
-        //     }
-        //   }.bind(this)())
-        // }}
-      >
-        {/*<Text style={{ fontSize: 14 }}> SNAP </Text>*/}
-      </TouchableOpacity>
+      />
     )
   }
 
