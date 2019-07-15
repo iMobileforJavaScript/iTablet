@@ -5286,9 +5286,12 @@ export default class ToolBar extends React.PureComponent {
               Toast.show(ConstInfo.NON_SELECTED_OBJ)
               return
             }
-            // NavigationService.navigate('layerSelectionAttribute', {
-            //   type: 'singleAttribute',
-            // })
+            let selectObjNums = 0
+            this.props.selection.forEach(item => {
+              selectObjNums += item.ids.length
+            })
+            selectObjNums === 0 && Toast.show(ConstInfo.NON_SELECTED_OBJ)
+
             NavigationService.navigate(
               'LayerSelectionAttribute',
               GLOBAL.SelectedSelectionAttribute && {

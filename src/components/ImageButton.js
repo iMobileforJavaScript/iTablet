@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     width: scaleSize(80),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: color.white,
+    // backgroundColor: color.white,
+    backgroundColor: 'transparent',
   },
   icon: {
     height: scaleSize(50),
