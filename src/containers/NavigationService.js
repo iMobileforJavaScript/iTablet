@@ -1,6 +1,6 @@
 // NavigationService.js
 
-import { NavigationActions } from 'react-navigation'
+import { StackActions, NavigationActions } from 'react-navigation'
 
 let _navigator
 let preRoute = undefined
@@ -82,11 +82,8 @@ function replace(routeName, params) {
   _navigator.dispatch(resetAction)
 }
 
-function popToTop(routeName, params) {
-  let resetAction = NavigationActions.popToTop({
-    routeName,
-    params,
-  })
+function popToTop() {
+  let resetAction = StackActions.popToTop()
   _navigator.dispatch(resetAction)
 }
 // add other navigation functions that you need and export them
