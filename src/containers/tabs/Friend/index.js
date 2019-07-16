@@ -11,6 +11,8 @@ import InformMessage from './FriendMessage/InformMessage'
 import CreateGroupChat from './FriendGroup/CreateGroupChat'
 import GroupMemberList from './FriendGroup/GroupMemberList'
 import RecommendFriend from './RecommendFriend'
+import MsgConstant from './MsgConstant'
+import SelectFriend from './SelectFriend'
 import { openWorkspace, closeWorkspace } from '../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
@@ -46,4 +48,6 @@ export {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  MsgConstant,
+  SelectFriend,
 }

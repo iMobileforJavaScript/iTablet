@@ -1,4 +1,4 @@
-import { TabNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
 import { Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
@@ -31,6 +31,7 @@ import Friend, {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  SelectFriend,
 } from './Friend'
 import InformSpot from './Friend/InformSpot'
 import { getLanguage } from '../../language/index'
@@ -90,7 +91,7 @@ const TabBarLabel = connect(
   mapDispatchToProps,
 )(tabItem)
 
-const Tabs = TabNavigator(
+const Tabs = createBottomTabNavigator(
   {
     Home: {
       screen: Home,
@@ -286,6 +287,7 @@ export {
   ManageGroup,
   SelectModule,
   GroupMemberList,
+  SelectFriend,
   //-----------
   MyLabel,
   MyBaseMap,

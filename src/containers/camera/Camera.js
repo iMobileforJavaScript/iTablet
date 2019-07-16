@@ -13,14 +13,15 @@ import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets } from '../../assets'
-import { Progress, MediaViewer } from '../../components'
+import { Progress, MediaViewer, ImagePicker } from '../../components'
 import { RNCamera } from 'react-native-camera'
 import { SMediaCollector } from 'imobile_for_reactnative'
-import ImagePicker from 'react-native-image-crop-picker'
+// import ImagePicker from 'react-native-image-crop-picker'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 
 import styles from './styles'
+import ImageButton from '../../components/ImageButton'
 
 const TYPE = {
   PHOTO: 1,
@@ -215,24 +216,62 @@ export default class Camera extends React.Component {
   }
 
   openAlbum = () => {
-    ImagePicker.openPicker({
-      multiple: true,
-      maxFiles: this.limit,
-    }).then(async images => {
-      let mediaPaths = []
-      if (images.length > 0) {
-        images.forEach(item => {
-          mediaPaths.push(item.path.replace('file://', ''))
-        })
-        if (this.cb && typeof this.cb === 'function') {
-          this.cb(mediaPaths)
-          NavigationService.goBack()
-        } else {
-          let result = await this.addMedia(mediaPaths)
-          result && NavigationService.goBack()
+    // CameraRoll.getPhotos({
+    //   first: 1000000,
+    //   assetType: 'All',
+    //   // groupTypes: 'All',
+    // }).then(data => {
+    //   let str = ''
+    //   if (data && data.edges) {
+    //
+    //     data.edges.forEach((item, index) => {
+    //       if (item.node.type.indexOf('video') >= 0) str += item.node.type + '--------\n'
+    //     })
+    //   }
+    //   console.warn(str)
+    // })
+
+    ImagePicker.AlbumListView.defaultProps.assetType = 'All'
+    ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+    ImagePicker.getAlbum({
+      maxSize: 9,
+      callback: async data => {
+        let mediaPaths = []
+        if (data.length > 0) {
+          data.forEach(item => {
+            // mediaPaths.push(item.uri.replace(Platform.OS === 'ios' ? 'assets-library://' : 'contents://', ''))
+            mediaPaths.push(item.uri)
+          })
+          if (this.cb && typeof this.cb === 'function') {
+            this.cb(mediaPaths)
+            NavigationService.goBack()
+          } else {
+            let result = await this.addMedia(mediaPaths)
+            result && NavigationService.goBack()
+          }
         }
-      }
+      },
     })
+
+    // ImagePicker.openPicker({
+    //   multiple: true,
+    //   maxFiles: this.limit,
+    // }).then(async images => {
+    //   console.warn(JSON.stringify(images))
+    //   let mediaPaths = []
+    //   if (images.length > 0) {
+    //     images.forEach(item => {
+    //       mediaPaths.push(item.path.replace('file://', ''))
+    //     })
+    //     if (this.cb && typeof this.cb === 'function') {
+    //       this.cb(mediaPaths)
+    //       NavigationService.goBack()
+    //     } else {
+    //       let result = await this.addMedia(mediaPaths)
+    //       result && NavigationService.goBack()
+    //     }
+    //   }
+    // })
   }
 
   changeType = (type, cb = () => {}) => {
@@ -335,8 +374,10 @@ export default class Camera extends React.Component {
     // 照片/视频拍摄完成不显示此按钮
     if (this.state.recordStatus === RECORD_STATUS.RECORDED) return null
     return (
-      <TouchableOpacity
-        style={styles.capture}
+      <ImageButton
+        containerStyle={styles.capture}
+        iconStyle={styles.iconView}
+        icon={getPublicAssets().common.icon_take_camera}
         onPress={() => {
           if (this.state.type === TYPE.VIDEO) {
             if (this.state.recordStatus === RECORD_STATUS.RECORDING) {
@@ -348,21 +389,7 @@ export default class Camera extends React.Component {
             this.takePicture()
           }
         }}
-        // onLongPress={() => {
-        //   this.changeType(TYPE.VIDEO, this.recordAsync)
-        // }}
-        // delayPressIn={1000}
-        // onPressIn={() => {}}
-        // onPressOut={() => {
-        //   (async function() {
-        //     if (this.state.type === TYPE.VIDEO) {
-        //       await this.stopRecording()
-        //     }
-        //   }.bind(this)())
-        // }}
-      >
-        {/*<Text style={{ fontSize: 14 }}> SNAP </Text>*/}
-      </TouchableOpacity>
+      />
     )
   }
 

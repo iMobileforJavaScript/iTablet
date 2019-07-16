@@ -300,27 +300,32 @@ RCT_REMAP_METHOD(isDirectory,isDirectoryPath:(NSString*)path getHomeDirectoryWit
 }
 
 RCT_REMAP_METHOD(getPathList,getPathListPath:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
-  
-  NSFileManager* fileMgr = [NSFileManager defaultManager];
-  NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
-  
-  for (NSString* fileName in tempArray) {
+  @try {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
     
-    BOOL flag = YES;
+    NSFileManager* fileMgr = [NSFileManager defaultManager];
+    NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
     
-    NSString* fullPath = [path stringByAppendingPathComponent:fileName];
-    
-    if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+    for (NSString* fileName in tempArray) {
       
-      NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
-      [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
-      //  [array addObject:@{@"name":fileName,@"type":@"directory"}];
+      BOOL flag = YES;
+      
+      NSString* fullPath = [path stringByAppendingPathComponent:fileName];
+      
+      if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+        
+        NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
+        [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+        //  [array addObject:@{@"name":fileName,@"type":@"directory"}];
+      }
+      
     }
     
+    resolve(array);
+  } @catch (NSException *exception) {
+    reject(@"getPathList", exception.reason, nil);
   }
   
-  resolve(array);
   
 }
 
@@ -337,6 +342,37 @@ RCT_REMAP_METHOD(fileIsExistInHomeDirectory,fileIsExistInHomeDirectoryPath:(NSSt
   BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:[home stringByAppendingFormat:@"/Documents/%@",path] isDirectory:nil];
   //BOOL b = [[NSFileManager defaultManager] createDirectoryAtPath:[home stringByAppendingFormat:@"/Documents/%@",path] withIntermediateDirectories:NO attributes:nil error:nil];
   resolve(@(b));
+}
+
+RCT_REMAP_METHOD(writeToFile, writeTo:(NSString *)filePath with:(NSString *) str resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL fexist = [fileManager fileExistsAtPath:filePath];
+    if (!fexist) {
+      [fileManager createFileAtPath:filePath contents:nil attributes:nil];
+    }
+  
+    BOOL result = [str writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
+    resolve([NSNumber numberWithBool:result]);
+  } @catch (NSException *exception) {
+    reject(@"writeFile", exception.reason, nil);
+  }
+}
+
+RCT_REMAP_METHOD(readFile, readFile:(NSString *)filePath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL fexist = [fileManager fileExistsAtPath:filePath];
+    NSString *readStr;
+    if (fexist) {
+     readStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    }
+    
+    resolve(readStr);
+  } @catch (NSException *exception) {
+    reject(@"writeFile", exception.reason, nil);
+  }
 }
 
 RCT_REMAP_METHOD(zipFile, zipFileByPath:(NSString *)archivePath targetPath:(NSString *)targetPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
@@ -600,26 +636,27 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   }
   externalDataPath=[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
   plotFilePath=[NSHomeDirectory() stringByAppendingFormat:@"%@", plotFilePath];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
-      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
-      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-    } else {
+  //修改为每次都解压标绘库
+//  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
+//      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
+//      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+//    } else {
       if ([FileTools copyFile:originPlotPath targetPath:commonPlotZipPath]) {
         isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];
         NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
       }
-    }
+//    }
     if(isUnZipPlot){
       NSString* fromPath=plotFilePath;
       NSString* toPath=[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Plotting"];
-      [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon"];
-      
+      [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon" isOnly:YES];
+
     }
-  } else {
-    isUnZip = YES;
-  }
-  
+//  } else {
+//    isUnZip = YES;
+//  }
+
   NSString* commonCache = [NSHomeDirectory() stringByAppendingFormat:@"%@/%@",CachePath,@"publicMap.txt"];
   if (![[NSFileManager defaultManager] fileExistsAtPath:commonCache isDirectory:nil]) {
     srclic = [[NSBundle mainBundle] pathForResource:@"publicMap" ofType:@"txt"];

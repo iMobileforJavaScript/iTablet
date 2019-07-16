@@ -5,15 +5,24 @@
  */
 
 import * as React from 'react'
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import {
+  Modal,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+} from 'react-native'
 import { Button } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 import { color, zIndexLevel, size } from '../../../../styles'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
-    bottom: 0,
+    // bottom: 0,
     left: 0,
     right: 0,
     top: 0,
@@ -139,6 +148,12 @@ export default class SaveView extends React.Component {
 
   render() {
     let animationType = this.props.animated ? 'fade' : 'none'
+    const deviceHeight =
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height
+        : ExtraDimensions.getRealWindowHeight() -
+          ExtraDimensions.getStatusBarHeight()
+    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={animationType}
@@ -153,7 +168,13 @@ export default class SaveView extends React.Component {
         }}
       >
         <TouchableOpacity
-          style={styles.overlay}
+          style={[
+            styles.overlay,
+            Platform.OS === 'android' && {
+              height: deviceHeight,
+              width: deviceWidth,
+            },
+          ]}
           activeOpacity={1}
           onPress={this.cancel}
         >

@@ -84,7 +84,7 @@ class ManageFriend extends Component {
   renderSettings = () => {
     return (
       <ScrollView>
-        {/* {!this.state.coworkMode && (
+        {!this.state.coworkMode && (
           <TouchableItemView
             item={{
               //地图协作
@@ -103,7 +103,7 @@ class ManageFriend extends Component {
               })
             }}
           />
-        )} */}
+        )}
         {this.state.coworkMode ? (
           <TouchableItemView
             item={{

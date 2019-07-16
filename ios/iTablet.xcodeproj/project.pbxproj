@@ -26,6 +26,7 @@
 		0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147441223F6A7B006663C7 /* libc++.1.tbd */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
+		0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A1A201B22D5E62E0014058A /* libRCTCameraRoll.a */; };
 		0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33E226182950009CB35 /* libAsHttpRequest.a */; };
 		0A25E343226182950009CB35 /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E33F226182950009CB35 /* libCorePlot.a */; };
 		0A25E344226182950009CB35 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A25E340226182950009CB35 /* libSocketRocket.a */; };
@@ -88,6 +89,7 @@
 		77F6BE748AD84DFBAE668F38 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAAB7B312D51420CBFD827D9 /* CFNetwork.framework */; };
 		7D02BE5C1E034E4AAE286DF7 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2174BA18CE944BC3A447F8A2 /* CoreTelephony.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		896D51ABFDF6442E9DC02E3D /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17885666ECFD4AE19C3FE469 /* libRNGestureHandler-tvOS.a */; };
 		903DCFA58DD44C48AA75535C /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CECBA6EB67142759CFF6105 /* libRCTJPushModule.a */; };
 		AB9C1E0FCFFF4818AE82E25D /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CEBBE375A25447F9697656F /* libRCTJCoreModule.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -97,6 +99,7 @@
 		CFFC10A9D14645FBB08D3CBA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 125E67BD15C84118B881A822 /* CoreGraphics.framework */; };
 		D15AD4572D5244D593915653 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9098A2463DE246D19C37CCA1 /* UIKit.framework */; };
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
+		DDAFB8CE1D4748E3B330DDE2 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */; };
 		E0509A2D700743D5B7DAB506 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F600F658FE4C4D69AEB76059 /* libRNBackgroundTimer.a */; };
 		EDCFE5F05909482399867063 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D6CD931E62D24C278BC22FC9 /* libresolv.tbd */; };
 		FBB79BB5658E4D198E348DAE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 204FAC9BD5F245C193CA49A0 /* libz.tbd */; };
@@ -166,6 +169,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
 		};
+		0A1A201A22D5E62E0014058A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A1A200E22D5E62D0014058A /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
+		};
 		0A2F5C3C22A4A65300C42441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2E4990A052A84EAF84B52E04 /* RCTJCoreModule.xcodeproj */;
@@ -221,6 +231,69 @@
 			proxyType = 2;
 			remoteGlobalIDString = 6280980A1CEDC407000D3A81;
 			remoteInfo = RCTJPushModule;
+		};
+		0A64860B22D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0A64860D22D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0A64860F22D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0A64861122D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0A64861322D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0A64861522D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0A64861722D2EA1F00C19253 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
+		};
+		0A8C1E9222D5CF96009015E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNGestureHandler;
+		};
+		0A8C1E9422D5CF96009015E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5C32A36220C603B000FFB8D;
+			remoteInfo = "RNGestureHandler-tvOS";
 		};
 		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -305,55 +378,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 1441618E1BD0A79300FA4F59;
 			remoteInfo = RCTContacts;
-		};
-		0AFC515622AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF34489A14EB99A700D8449F;
-			remoteInfo = LibUGC;
-		};
-		0AFC515822AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
-			remoteInfo = LibUGC_Base;
-		};
-		0AFC515A22AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B46016F1A08700A19B73;
-			remoteInfo = LibUGC_2D;
-		};
-		0AFC515C22AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
-			remoteInfo = LibUGC_3D;
-		};
-		0AFC515E22AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03BDDAED1714098D003EC801;
-			remoteInfo = Object_3D;
-		};
-		0AFC516022AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 00F6D375175F20A9008963A0;
-			remoteInfo = Objects_iOS;
-		};
-		0AFC516222AF528900D5E6D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 005EF27D175F5F96005433E1;
-			remoteInfo = Super23D;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -562,6 +586,7 @@
 		0A147441223F6A7B006663C7 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
+		0A1A200E22D5E62D0014058A /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		0A25E33E226182950009CB35 /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A25E33F226182950009CB35 /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
 		0A25E340226182950009CB35 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
@@ -572,6 +597,7 @@
 		0A61803D22A51A3500E3D69B /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RSKImageCropper.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/iTablet-fpwwspvlpqkvcrhauagxetirlcrf/Build/Products/Debug-iphoneos/RSKImageCropper.framework"; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
+		0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneOS/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneSimulator/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
@@ -595,7 +621,6 @@
 		0ABCB8C7224605E300992994 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		0ABCB8C8224605E300992994 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		0AF433CA224C78E4003FDADE /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
-		0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		125E67BD15C84118B881A822 /* CoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -608,11 +633,13 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = iTablet/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		161B72053D084F8288A022CA /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		17885666ECFD4AE19C3FE469 /* libRNGestureHandler-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNGestureHandler-tvOS.a"; sourceTree = "<group>"; };
 		1853C4F095F74312930AEB4B /* libRCTContacts.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContacts.a; sourceTree = "<group>"; };
 		1CECBA6EB67142759CFF6105 /* libRCTJPushModule.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTJPushModule.a; sourceTree = "<group>"; };
 		204FAC9BD5F245C193CA49A0 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2174BA18CE944BC3A447F8A2 /* CoreTelephony.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		23E1668885E74380A5197539 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		2A89416022CADE2700AA0363 /* PlotLibData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PlotLibData.zip; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTablet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -624,6 +651,7 @@
 		42219B4096494B08AF407B38 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		4718178FEC6F4F6183EA8DAB /* RCTJPushModule.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTJPushModule.xcodeproj; path = "../node_modules/jpush-react-native/ios/RCTJPushModule.xcodeproj"; sourceTree = "<group>"; };
 		47393AD6041845BA97972D87 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
+		5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		616F9FBF550E4BF498A86BE9 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -656,6 +684,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */,
 				0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */,
 				0A6180A722A604B300E3D69B /* libRCTVideo.a in Frameworks */,
 				0A334D30229798BD00E4F302 /* libSupermap.a in Frameworks */,
@@ -718,6 +747,7 @@
 				EDCFE5F05909482399867063 /* libresolv.tbd in Frameworks */,
 				CFFC10A9D14645FBB08D3CBA /* CoreGraphics.framework in Frameworks */,
 				E0509A2D700743D5B7DAB506 /* libRNBackgroundTimer.a in Frameworks */,
+				DDAFB8CE1D4748E3B330DDE2 /* libRNGestureHandler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +763,7 @@
 				2D02E4C61E0B4AEC006451C7 /* libRCTSettings-tvOS.a in Frameworks */,
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
+				896D51ABFDF6442E9DC02E3D /* libRNGestureHandler-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -838,6 +869,14 @@
 			path = assets;
 			sourceTree = "<group>";
 		};
+		0A1A200F22D5E62D0014058A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A1A201B22D5E62E0014058A /* libRCTCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0A1C2E78211059DF00FFC856 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -855,6 +894,8 @@
 				BFDA3FC05BEC446BAE4F2E22 /* libRCTVideo.a */,
 				1CECBA6EB67142759CFF6105 /* libRCTJPushModule.a */,
 				F600F658FE4C4D69AEB76059 /* libRNBackgroundTimer.a */,
+				244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */,
+				17885666ECFD4AE19C3FE469 /* libRNGestureHandler-tvOS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -909,6 +950,29 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0A6485FE22D2EA1E00C19253 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A64860C22D2EA1F00C19253 /* libLibUGC.a */,
+				0A64860E22D2EA1F00C19253 /* libLibUGC_Base.a */,
+				0A64861022D2EA1F00C19253 /* libLibUGC_2D.a */,
+				0A64861222D2EA1F00C19253 /* libLibUGC_3D.a */,
+				0A64861422D2EA1F00C19253 /* libObject_3D.a */,
+				0A64861622D2EA1F00C19253 /* libObjects_iOS.a */,
+				0A64861822D2EA1F00C19253 /* Super23D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A8C1E8E22D5CF95009015E7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A8C1E9322D5CF96009015E7 /* libRNGestureHandler.a */,
+				0A8C1E9522D5CF96009015E7 /* libRNGestureHandler-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0A8F7C3321C35D9B0003595E /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -949,20 +1013,6 @@
 			isa = PBXGroup;
 			children = (
 				0AF348D72270653B004D6D09 /* libRCTContacts.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		0AFC514922AF528600D5E6D0 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0AFC515722AF528900D5E6D0 /* libLibUGC.a */,
-				0AFC515922AF528900D5E6D0 /* libLibUGC_Base.a */,
-				0AFC515B22AF528900D5E6D0 /* libLibUGC_2D.a */,
-				0AFC515D22AF528900D5E6D0 /* libLibUGC_3D.a */,
-				0AFC515F22AF528900D5E6D0 /* libObject_3D.a */,
-				0AFC516122AF528900D5E6D0 /* libObjects_iOS.a */,
-				0AFC516322AF528900D5E6D0 /* Super23D.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1093,7 +1143,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */,
+				0A1A200E22D5E62D0014058A /* RCTCameraRoll.xcodeproj */,
+				0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */,
 				0A334D28229797F800E4F302 /* Supermap.xcodeproj */,
 				0A11D99721F885A400AFE6D6 /* ART.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1118,6 +1169,7 @@
 				AEAF2C3B32AC4A08B8CCC1DF /* RCTVideo.xcodeproj */,
 				4718178FEC6F4F6183EA8DAB /* RCTJPushModule.xcodeproj */,
 				42219B4096494B08AF407B38 /* RNBackgroundTimer.xcodeproj */,
+				5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1259,8 +1311,8 @@
 					ProjectRef = 9B178A29AEDA4320AF6CC78A /* imageCropPicker.xcodeproj */;
 				},
 				{
-					ProductGroup = 0AFC514922AF528600D5E6D0 /* Products */;
-					ProjectRef = 0AFC514822AF528600D5E6D0 /* LibUGC.xcodeproj */;
+					ProductGroup = 0A6485FE22D2EA1E00C19253 /* Products */;
+					ProjectRef = 0A6485FD22D2EA1E00C19253 /* LibUGC.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1273,6 +1325,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A1A200F22D5E62D0014058A /* Products */;
+					ProjectRef = 0A1A200E22D5E62D0014058A /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 0AF348D32270653B004D6D09 /* Products */;
@@ -1341,6 +1397,10 @@
 				{
 					ProductGroup = 0A95738321BFA38500B5853A /* Products */;
 					ProjectRef = EEB38F0AD8D84316B33CC7A9 /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A8C1E8E22D5CF95009015E7 /* Products */;
+					ProjectRef = 5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */;
 				},
 				{
 					ProductGroup = 0A0D938221E74B0A0041B997 /* Products */;
@@ -1423,6 +1483,13 @@
 			remoteRef = 0A15C0E9228E83F60027AB33 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		0A1A201B22D5E62E0014058A /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = 0A1A201A22D5E62E0014058A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		0A2F5C3D22A4A65300C42441 /* libRCTJCoreModule.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1477,6 +1544,69 @@
 			fileType = archive.ar;
 			path = libRCTJPushModule.a;
 			remoteRef = 0A6180A522A51DB300E3D69B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64860C22D2EA1F00C19253 /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0A64860B22D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64860E22D2EA1F00C19253 /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0A64860D22D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64861022D2EA1F00C19253 /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0A64860F22D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64861222D2EA1F00C19253 /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0A64861122D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64861422D2EA1F00C19253 /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0A64861322D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64861622D2EA1F00C19253 /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0A64861522D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A64861822D2EA1F00C19253 /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0A64861722D2EA1F00C19253 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8C1E9322D5CF96009015E7 /* libRNGestureHandler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGestureHandler.a;
+			remoteRef = 0A8C1E9222D5CF96009015E7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8C1E9522D5CF96009015E7 /* libRNGestureHandler-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNGestureHandler-tvOS.a";
+			remoteRef = 0A8C1E9422D5CF96009015E7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
@@ -1561,55 +1691,6 @@
 			fileType = archive.ar;
 			path = libRCTContacts.a;
 			remoteRef = 0AF348D62270653B004D6D09 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC515722AF528900D5E6D0 /* libLibUGC.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC.a;
-			remoteRef = 0AFC515622AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC515922AF528900D5E6D0 /* libLibUGC_Base.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_Base.a;
-			remoteRef = 0AFC515822AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC515B22AF528900D5E6D0 /* libLibUGC_2D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_2D.a;
-			remoteRef = 0AFC515A22AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC515D22AF528900D5E6D0 /* libLibUGC_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_3D.a;
-			remoteRef = 0AFC515C22AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC515F22AF528900D5E6D0 /* libObject_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObject_3D.a;
-			remoteRef = 0AFC515E22AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC516122AF528900D5E6D0 /* libObjects_iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObjects_iOS.a;
-			remoteRef = 0AFC516022AF528900D5E6D0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0AFC516322AF528900D5E6D0 /* Super23D.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Super23D.app;
-			remoteRef = 0AFC516222AF528900D5E6D0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -1929,6 +2010,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1938,6 +2020,8 @@
 					"values>",
 					"$(PROJECT_DIR)/SDKExport",
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"\"$(SRCROOT)/iTablet\"",
+					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 				);
@@ -1967,7 +2051,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s arm64";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2019,6 +2103,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2029,6 +2114,8 @@
 					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/SDKExport/",
 					"$(PROJECT_DIR)/SDKExport",
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"\"$(SRCROOT)/iTablet\"",
+					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 				);
@@ -2058,7 +2145,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv7s arm64";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -2093,6 +2180,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2144,6 +2232,7 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -86,6 +86,8 @@ const Friends = {
   ALERT_EXIT_COWORK: 'Do you want to close current cowork map?',
   //system text
   SYS_MSG_MAP: '[MAP]',
+  SYS_MSG_LAYER: '[LAYER]',
+  SYS_MSG_DATASET: '[DATASET]',
   SYS_MSG_ADD_FRIEND: 'Send a friend request',
   SYS_MSG_REMOVED_FROM_GROUP: 'removed you out of group',
   SYS_MSG_LEAVE_GROUP: 'leaved this group',

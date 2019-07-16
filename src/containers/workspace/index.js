@@ -7,7 +7,7 @@ import React from 'react'
 import { MapView, Map3D } from './pages'
 // export { MapView, Map3D }
 
-import { TabNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 import { Platform } from 'react-native'
 
 import { color } from '../../styles'
@@ -48,9 +48,10 @@ const options = {
   backBehavior: 'initialRoute', // 按 back 键是否跳转到第一个Tab， none 为不跳转
   lazy: true,
   tabBarOptions: {
+    showLabel: false,
+    showIcon: false,
     activeTintColor: color.blue2, // 文字和图片选中颜色
     inactiveTintColor: '#999', // 文字和图片未选中颜色
-    showIcon: true, // android 默认不显示 icon, 需要设置为 true 才会显示
     indicatorStyle: {
       height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
     },
@@ -73,7 +74,7 @@ const options = {
 }
 
 const MapTabs = compose(
-  TabNavigator(
+  createBottomTabNavigator(
     {
       MapView: {
         screen: MapView,
@@ -92,7 +93,7 @@ const MapTabs = compose(
   ),
 )
 
-const CoworkTabs = TabNavigator(
+const CoworkTabs = createBottomTabNavigator(
   {
     //onechat
     Chat: {
@@ -105,13 +106,13 @@ const CoworkTabs = TabNavigator(
   options,
 )
 
-const analystTabsOptions = Object.assign(options, {
+const analystTabsOptions = Object.assign({}, options, {
   initialRouteIndex: 1,
   lazy: false,
   backBehavior: 'none',
 })
 const MapAnalystTabs = compose(
-  TabNavigator(
+  createBottomTabNavigator(
     {
       MapAnalystView: {
         screen: MapView,
@@ -127,7 +128,7 @@ const MapAnalystTabs = compose(
   ),
 )
 
-const Map3DTabs = TabNavigator(
+const Map3DTabs = createBottomTabNavigator(
   {
     Map3D: {
       screen: Map3D,
@@ -145,7 +146,7 @@ const Map3DTabs = TabNavigator(
   options,
 )
 
-const MapARTabs = TabNavigator(
+const MapARTabs = createBottomTabNavigator(
   {
     ARMap: {
       screen: ARMap,
