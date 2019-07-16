@@ -142,29 +142,13 @@ export default class MediaEdit extends React.Component {
 
   openAlbum = () => {
     let maxFiles = MAX_FILES - this.state.mediaFilePaths.length
-    // ImagePicker.openPicker({
-    //   multiple: true,
-    //   maxFiles,
-    // }).then(this.addMediaFiles)
     ImagePicker.AlbumListView.defaultProps.assetType = 'All'
     ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
     ImagePicker.getAlbum({
       maxSize: maxFiles,
       callback: async data => {
-        // let mediaPaths = []
         if (data.length > 0) {
-          // data.forEach(item => {
-          //   // mediaPaths.push(item.uri.replace(Platform.OS === 'ios' ? 'assets-library://' : 'contents://', ''))
-          //   mediaPaths.push(item.uri)
-          // })
           this.addMediaFiles(data)
-          // if (this.cb && typeof this.cb === 'function') {
-          //   this.cb(mediaPaths)
-          //   NavigationService.goBack()
-          // } else {
-          //   let result = await this.addMedia(mediaPaths)
-          //   result && NavigationService.goBack()
-          // }
         }
       },
     })

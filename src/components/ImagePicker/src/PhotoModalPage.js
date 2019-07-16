@@ -7,11 +7,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native'
-import {
-  createAppContainer,
-  createStackNavigator,
-  SafeAreaView,
-} from 'react-navigation'
+import { createAppContainer, createStackNavigator } from 'react-navigation'
 import PageKeys from './PageKeys'
 import AlbumListView from './AlbumListView'
 import AlbumView from './AlbumView'
@@ -29,7 +25,9 @@ export default class extends React.PureComponent {
     previewLabel: 'Preview',
     choosePhotoTitle: 'Choose Photo',
     maxSizeChooseAlert: number =>
-      'You can only choose ' + number + ' photos at most',
+      GLOBAL.language === 'EN'
+        ? 'You can only choose ' + number + ' photos at most'
+        : '您最多能选择' + number + '张照片',
     maxSizeTakeAlert: number =>
       'You can only take ' + number + ' photos at most',
     supportedOrientations: ['portrait', 'landscape'],
