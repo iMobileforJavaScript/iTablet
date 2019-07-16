@@ -505,6 +505,9 @@ export default class Friend extends Component {
       case MSGConstant.MSG_LAYER:
         text = getLanguage(this.props.language).Friends.SYS_MSG_LAYER
         break
+      case MSGConstant.MSG_DATASET:
+        text = getLanguage(this.props.language).Friends.SYS_MSG_DATASET
+        break
       case MSGConstant.MSG_LOCATION:
         text = msg.originMsg.message.message.message
         break
