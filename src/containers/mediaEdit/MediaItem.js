@@ -94,9 +94,16 @@ export default class MediaItem extends React.Component {
     if (this.props.data === '+') {
       image = require('../../assets/public/icon-plus.png')
     } else {
-      let imgPath =
-        (Platform.OS === 'android' ? 'file://' : '') +
-        (this.props.data.path || this.props.data.uri)
+      let imgPath = this.props.data.path || this.props.data.uri
+      if (
+        Platform.OS === 'android' &&
+        imgPath.toLowerCase().indexOf('content://') !== 0
+      ) {
+        imgPath = 'file://' + imgPath
+      }
+      // imgPath =
+      //   (Platform.OS === 'android' ? 'file://' : '') +
+      //   (this.props.data.path || this.props.data.uri)
       image = { uri: imgPath }
     }
 
