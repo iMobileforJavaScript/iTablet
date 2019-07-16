@@ -123,7 +123,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: '路径分析',
   TOOLS_VISIBILITY_ANALYSIS: '通视分析',
   TOOLS_CLEAN_PLOTTING: '清除标注',
-
+  TOOLS_BOX_CLIP: 'Box裁剪',
+  TOOLS_PLANE_CLIP: '平面裁剪',
+  TOOLS_CROSS_CLIP: 'Cross裁剪',
   //三维 飞行
   FLY: '飞行',
   FLY_ROUTE: '飞行轨迹',

@@ -49,7 +49,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated } from 'react-native'
+import { View, TouchableOpacity, Image, Animated, Platform } from 'react-native'
 import {
   SMap,
   SScene,
@@ -74,6 +74,12 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
+import MenuList from '../MenuList/MenuList'
+import {
+  BoxClipData,
+  CrossClipData,
+  PlaneClipData,
+} from '../../pages/map3D/Map3DClipMenuData'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -148,6 +154,8 @@ export default class ToolBar extends React.PureComponent {
     saveMap: () => {},
     measureShow: () => {},
     clearAttributeHistory: () => {},
+    layerList?: Array, //三维图层
+    changeLayerList?: () => {}, //切换场景改变三维图层
   }
 
   static defaultProps = {
@@ -413,6 +421,12 @@ export default class ToolBar extends React.PureComponent {
         data = []
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
         break
+      case ConstToolType.MAP3D_BOX_CLIP:
+      case ConstToolType.MAP3D_PLANE_CLIP:
+      case ConstToolType.MAP3D_CROSS_CLIP:
+        data = this.getClipData(type)
+        buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.CLEAR]
+        break
       case ConstToolType.MAP3D_TOOL:
         data = [
           {
@@ -667,6 +681,77 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
+          Platform.OS === 'android' && {
+            key: 'boxClip',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .TOOLS_BOX_CLIP,
+            //'box裁剪',
+            action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show(
+                  getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE,
+                )
+                //'请打开场景')
+                return
+              }
+              try {
+                // SScene.startDrawLine()
+                GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
+                GLOBAL.currentToolbarType = ConstToolType.MAP_BOX_CLIP
+                this.showMap3DTool(ConstToolType.MAP_BOX_CLIP)
+              } catch (error) {
+                Toast.show('点绘线失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapToolbar/icon_sence_box_clip.png'),
+          },
+          // {
+          //   key: 'planeClip',
+          //   title: getLanguage(this.props.language).Map_Main_Menu
+          //     .TOOLS_PLANE_CLIP,
+          //   //'平面裁剪',
+          //   action: () => {
+          //     if (!GLOBAL.openWorkspace) {
+          //       Toast.show(
+          //         getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE,
+          //       )
+          //       //'请打开场景')
+          //       return
+          //     }
+          //     try {
+          //       // SScene.startDrawLine()
+          //       this.showMap3DTool(ConstToolType.MAP3D_PLANE_CLIP)
+          //     } catch (error) {
+          //       Toast.show('点绘线失败')
+          //     }
+          //   },
+          //   size: 'large',
+          //   image: require('../../../../assets/mapToolbar/icon_sence_plane_clip.png'),
+          // },
+          // {
+          //   key: 'crossClip',
+          //   title: getLanguage(this.props.language).Map_Main_Menu
+          //     .TOOLS_CROSS_CLIP,
+          //   //'cross裁剪',
+          //   action: () => {
+          //     if (!GLOBAL.openWorkspace) {
+          //       Toast.show(
+          //         getLanguage(this.props.language).Prompt.PLEASE_OPEN_SCENE,
+          //       )
+          //       //'请打开场景')
+          //       return
+          //     }
+          //     try {
+          //       // SScene.startDrawLine()
+          //       this.showMap3DTool(ConstToolType.MAP3D_CROSS_CLIP)
+          //     } catch (error) {
+          //       Toast.show('点绘线失败')
+          //     }
+          //   },
+          //   size: 'large',
+          //   image: require('../../../../assets/mapToolbar/icon_sence_cross_clip.png'),
+          // },
         ]
         buttons = []
         break
@@ -2248,6 +2333,30 @@ export default class ToolBar extends React.PureComponent {
           this.updateOverlayerView()
         },
       )
+    } else if (
+      type === ConstToolType.MAP3D_BOX_CLIP ||
+      type === ConstToolType.MAP3D_PLANE_CLIP ||
+      type === ConstToolType.MAP3D_CROSS_CLIP
+    ) {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          containerType: 'list',
+          isFullScreen: false,
+          column: 1,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.NEWTHEME_HEIGHT[2]
+              : ConstToolType.NEWTHEME_HEIGHT[2]
+          this.showToolbar()
+          this.updateOverlayerView()
+        },
+      )
     } else {
       let { data, buttons } = this.getData(type)
       this.setState(
@@ -2816,7 +2925,12 @@ export default class ToolBar extends React.PureComponent {
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
-      } else if (type === ConstToolType.MAP_TOOL_RECTANGLE_CUT) {
+      } else if (
+        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT ||
+        type === ConstToolType.MAP_BOX_CLIP ||
+        type === ConstToolType.MAP3D_CROSS_CLIP ||
+        type === ConstToolType.MAP3D_PLANE_CLIP
+      ) {
         GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else {
         if (type === ConstToolType.ATTRIBUTE_RELATE) {
@@ -3451,6 +3565,14 @@ export default class ToolBar extends React.PureComponent {
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
         SScene.clearLineAnalyst()
         this.props.measureShow(true, '0m')
+        break
+      case ConstToolType.MAP3D_BOX_CLIP:
+      case ConstToolType.MAP3D_CROSS_CLIP:
+      case ConstOnline.MAP3D_PLANE_CLIP:
+        //清除裁剪面 返回上个界面
+        SScene.clipSenceClear()
+        GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show()
+        this.showMap3DTool(ConstToolType.MAP_BOX_CLIP)
         break
       default:
         SScene.clear()
@@ -4630,6 +4752,34 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
+  //三维裁剪参数获取
+  map3dCut = async () => {
+    let data = GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.getResult()
+    if (data[0].x !== data[0].y) {
+      let clipSetting = {
+        startX: ~~data[0].x,
+        startY: ~~data[0].y,
+        endX: ~~data[2].x,
+        endY: ~~data[2].y,
+        clipInner: true,
+        layers: [],
+      }
+      let rel = await this.cut3d(clipSetting)
+      this.setState({
+        clipSetting: rel,
+      })
+      GLOBAL.MapSurfaceView.show(false)
+      this.showMap3DTool(ConstToolType.MAP3D_BOX_CLIP)
+    } else {
+      Toast.show('请先裁剪')
+    }
+  }
+
+  //三维裁剪
+  cut3d = async data => {
+    //todo 三维裁剪 分this.state.type
+    return await SScene.clipByBox(data)
+  }
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -4921,7 +5071,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }
         //init add xiezhy
-        this.setState({listExpressions:{}})
+        this.setState({ listExpressions: {} })
         item.action()
         break
     }
@@ -5000,6 +5150,40 @@ export default class ToolBar extends React.PureComponent {
       />
     )
   }
+  getClipData = type => {
+    let clipData
+    switch (type) {
+      case ConstToolType.MAP3D_BOX_CLIP:
+        clipData = BoxClipData()
+        break
+      case ConstToolType.MAP3D_PLANE_CLIP:
+        clipData = PlaneClipData()
+        break
+      case ConstToolType.MAP3D_CROSS_CLIP:
+        clipData = CrossClipData()
+        break
+    }
+    this.props.layerList.map(item => {
+      let obj = item
+      obj.title = item.name
+      obj.iconType = 'Select'
+      obj.isChecked = true
+      clipData[0].data.push(obj)
+    })
+    return clipData
+  }
+  renderMap3DClip = () => {
+    return (
+      <MenuList
+        ref={ref => (this.menuList = ref)}
+        data={this.state.data}
+        device={this.props.device}
+        clipSetting={this.state.clipSetting}
+        dataChangeCall={this.cut3d}
+        changeHeight={this.changeHeight}
+      />
+    )
+  }
 
   renderMap3DList = () => {
     return (
@@ -5014,6 +5198,7 @@ export default class ToolBar extends React.PureComponent {
         refreshLayer3dList={this.props.refreshLayer3dList}
         device={this.props.device}
         newFly={this.newFly}
+        changeLayerList={this.props.changeLayerList}
       />
     )
   }
@@ -5105,6 +5290,11 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
             box = this.renderMap3DList()
             break
+          case ConstToolType.MAP3D_BOX_CLIP:
+          case ConstToolType.MAP3D_PLANE_CLIP:
+          case ConstToolType.MAP3D_CROSS_CLIP:
+            box = this.renderMap3DClip()
+            break
           default:
             box = this.renderList()
             break
@@ -5189,6 +5379,10 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.COMMIT_CUT:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.goToCut
+          break
+        case ToolbarBtnType.COMMIT_3D_CUT:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.map3dCut
           break
         case ToolbarBtnType.MENU:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
