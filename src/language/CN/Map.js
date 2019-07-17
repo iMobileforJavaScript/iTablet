@@ -112,7 +112,10 @@ const Map_Main_Menu = {
   TOOLS_UNIFIED_SETTING: '统一设置',
   MAP_CLIP: '地图裁剪',
   CLIP: '裁剪',
+
   CAMERA: '多媒体采集',
+  TOUR: '旅行轨迹',
+  TOUR_NAME: '旅行轨迹名称',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',
@@ -438,6 +441,7 @@ const Map_Settings = {
   PERCENT: '百分比',
   OFF: '关',
   CONFIRM: '确定',
+  CANCEL: '取消',
   COPY: '复制',
 }
 

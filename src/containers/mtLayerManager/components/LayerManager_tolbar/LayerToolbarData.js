@@ -408,6 +408,10 @@ function taggingData(param) {
           title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           image: require('../../../../assets/layerToolbar/layer_this.png'),
         },
+        // {
+        //   title: getLanguage(param).Map_Layer.PLOTS_DELETE,
+        //   image: require('../../../../assets/layerToolbar/layer_this.png'),
+        // },
       ],
     },
   ]

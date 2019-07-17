@@ -104,7 +104,10 @@ const Map_Main_Menu = {
   TOOLS_SELECT_REVERSE: 'Select Reverse',
   MAP_CLIP: 'Map Clip',
   CLIP: 'Clip',
-  CAMERA: 'CAMERA',
+
+  CAMERA: 'Camera',
+  TOUR: 'Tour',
+  TOUR_NAME: 'Tour Name',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
@@ -416,6 +419,7 @@ const Map_Settings = {
   PERCENT: 'Percent',
   OFF: 'OFF',
   CONFIRM: 'Confirm',
+  CANCEL: 'Cancel',
   COPY: 'Copy',
 }
 

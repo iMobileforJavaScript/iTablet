@@ -580,7 +580,22 @@ export default class LayerManager_tolbar extends React.Component {
         this.updateTagging()
         this.setVisible(false)
       }.bind(this)())
-    } else if (
+    }
+    // if (
+    //   section.title ===
+    //   getLanguage(global.language).Map_Layer.PLOTS_DELETE
+    // ) {
+    //   //'设置为当前标注'
+    //   (async function() {
+    //     GLOBAL.TaggingDatasetName = await SMap.removeTaggingDataset(
+    //       this.state.layerdata.datasetName,
+    //       this.props.user.currentUser.userName,
+    //     )
+    //     this.updateTagging()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // }
+    else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
