@@ -19,7 +19,6 @@ export default class MapCutSetting extends React.Component {
     language: string,
     datasources: Array,
     currentUser: Object,
-    mapcutDSCallBack?: () => {},
     configAction?: () => {},
   }
 
@@ -27,6 +26,7 @@ export default class MapCutSetting extends React.Component {
     super(props)
     this.state = {
       data: this.initData(),
+      extradatasources: [],
     }
 
     this.changeDSData = null
@@ -61,7 +61,7 @@ export default class MapCutSetting extends React.Component {
       selected: true,
       title: getLanguage(this.props.language).Map_Main_Menu.TOOLS_ERASE,
       //'擦除裁剪区域',
-      value: true,
+      value: false,
     })
     data.set('exactCut', {
       selected: true,
@@ -217,20 +217,28 @@ export default class MapCutSetting extends React.Component {
             action: () => {
               this.showModal(false)
               NavigationService.navigate('MapCutDS', {
-                data: this.props.datasources,
+                data: this.props.datasources.concat(
+                  this.state.extradatasources,
+                ),
                 currentUser: this.props.currentUser,
-                mapcutDSCallBack: this.props.mapcutDSCallBack,
                 cb: ({ item }) => {
                   const newData = new Map(this.state.data)
                   let dsData = newData.get('ds')
+                  let extradatasources = this.state.extradatasources
+                  extradatasources = extradatasources.filter(
+                    val => val.alias !== item.alias,
+                  )
+                  extradatasources.push(item)
                   if (dsData.dsName !== item.alias) {
                     dsData.dsName = item.alias
                     newData.set('ds', dsData)
                     this.setState(
                       {
                         data: newData,
+                        extradatasources,
                       },
                       () => {
+                        this.settingModal.setVisible(true)
                         this.props.configAction &&
                           this.props.configAction(this.state.data)
                       },

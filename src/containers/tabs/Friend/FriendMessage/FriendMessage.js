@@ -156,8 +156,6 @@ class FriendMessage extends Component {
     this.target = item
     NavigationService.navigate('Chat', {
       targetId: item.id,
-      curUser: this.props.user,
-      friend: this.props.friend,
     })
   }
 

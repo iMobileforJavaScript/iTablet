@@ -87,13 +87,6 @@ export default class MapCut extends React.Component {
     })
   }
 
-  regetDatasource = () => {
-    SMap.getDatasources().then(datasources => {
-      this.setState({
-        datasources,
-      })
-    })
-  }
   /**
    * 获取所有图层，包含图层组中的图层
    */
@@ -161,11 +154,29 @@ export default class MapCut extends React.Component {
               }
             })
           }
+          let DSName = this.state.datasources.map(item => item.alias)
           this.state.selected.forEach((value, key) => {
             let layerInfo = {}
             if (!value) return
             let info = this.state.extraData.get(key)
             if (!info) return
+            // 不另存地图 需要新建并且打开的数据源
+            if (
+              DSName.indexOf(info.datasourceName) === -1 &&
+              this.state.saveAsName === ''
+            ) {
+              let newDatasourcePath = filePath + info.datasourceName + '.udb'
+              let datasourceParams = {}
+              datasourceParams.server = newDatasourcePath
+              datasourceParams.engineType = EngineType.UDB
+              datasourceParams.alias = info.datasourceName
+              SMap.createDatasource(datasourceParams).then(rel => {
+                if (rel === true) {
+                  SMap.openDatasource(datasourceParams)
+                  DSName.push(info.datasourceName)
+                }
+              })
+            }
 
             layerInfo.LayerName = key
             layerInfo.IsClipInRegion =
@@ -779,7 +790,6 @@ export default class MapCut extends React.Component {
     return (
       <MapCutSetting
         language={this.props.language}
-        mapcutDSCallBack={this.regetDatasource}
         ref={ref => (this.settingModal = ref)}
         currentUser={this.props.currentUser}
         datasources={this.state.datasources}
@@ -838,7 +848,7 @@ export default class MapCut extends React.Component {
         }
         cancelTitle={
           getLanguage(this.props.language || GLOBAL.language).Analyst_Labels
-            .CONFIRM
+            .CANCEL
         }
         configAction={addLayers => {
           let layers = JSON.parse(JSON.stringify(this.state.layers))

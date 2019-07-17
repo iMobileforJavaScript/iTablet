@@ -57,6 +57,7 @@ const Prompt = {
   TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
   TURN_ON: 'Turn on',
 
+  NO_PLOTTING_DEDUCTION: 'No Plotting Deduction in the current map',
   NO_FLY: 'No Fly in the current scene',
   PLEASE_OPEN_SCENE: 'Please open a scene',
   NO_SCENE: 'No Scene',

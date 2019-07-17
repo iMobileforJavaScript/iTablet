@@ -56,6 +56,7 @@ const Friends = {
   IMPORT_FAIL: 'Import failed',
   IMPORT_CONFIRM: 'Do you want to import the data?',
   RECEIVE_CONFIRM: 'Do you want to download the data',
+  OPENCOWORKFIRST: 'Please open cowork map first',
   //CustomActions
   MAP: 'Map',
   TEMPLATE: 'Template',
@@ -84,6 +85,7 @@ const Friends = {
   EXIT_COWORK: 'Exit cowork',
   GO_COWORK: 'Cowork',
   ALERT_EXIT_COWORK: 'Do you want to close current cowork map?',
+  SHARE_DATASET: 'Share the dataset at the same time',
   //system text
   SYS_MSG_MAP: '[MAP]',
   SYS_MSG_LAYER: '[LAYER]',

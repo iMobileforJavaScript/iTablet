@@ -56,6 +56,7 @@ const Prompt = {
   TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
   TURN_ON: '是',
 
+  NO_PLOTTING_DEDUCTION: '当前地图没有推演列表',
   NO_FLY: '当前场景无飞行轨迹',
   PLEASE_OPEN_SCENE: '请打开场景',
   NO_SCENE: '无场景显示',

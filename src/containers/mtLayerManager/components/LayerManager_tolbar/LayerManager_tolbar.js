@@ -4,6 +4,7 @@ import {
   OpenData,
   layerManagerData,
   ConstPath,
+  UserType,
 } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import {
@@ -859,7 +860,8 @@ export default class LayerManager_tolbar extends React.Component {
             }}
           />
           <Text style={{ marginLeft: scaleSize(5), fontSize: scaleSize(24) }}>
-            {'同时分享对应数据集'}
+            {getLanguage(global.language).Friends.SHARE_DATASET}
+            {/* {同时分享对应数据集}*/}
           </Text>
         </View>
         <TouchableOpacity
@@ -887,7 +889,11 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   _onShare = async type => {
-    Toast.show('正在准备分享')
+    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+      return
+    }
+    Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
     let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
     this.setVisible(false)
     let homePath = await FileTools.appendingHomeDirectory()
@@ -919,16 +925,11 @@ export default class LayerManager_tolbar extends React.Component {
     if (this.shareDataset) {
       let datasetPath = tempPath + layerdata.datasetName + '.json'
       let datasetZipPath = tempPath + 'MyExportDataset.zip'
-      // let geoJsonDataset = await SMap.getDatasetToGeoJson(layerdata.datasourceAlias, layerdata.datasetName)
       await SMap.getDatasetToGeoJson(
         layerdata.datasourceAlias,
         layerdata.datasetName,
         datasetPath,
       )
-      // if (await FileTools.fileIsExist(datasetPath)) {
-      //   await FileTools.deleteFile(datasetPath)
-      // }
-      // await FileTools.writeFile(datasetPath, geoJsonDataset)
       await FileTools.zipFile(datasetPath, datasetZipPath)
       await FileTools.deleteFile(datasetPath)
       let datasetAction = {
@@ -944,17 +945,21 @@ export default class LayerManager_tolbar extends React.Component {
     }
 
     if (type === 'friend') {
-      NavigationService.navigate('SelectFriend', {
-        user: this.props.user,
-        callBack: targetId => {
-          NavigationService.navigate('Chat', {
-            targetId: targetId,
-            curUser: this.props.user.currentUser,
-            friend: global.getFriend(),
-            action: action,
-          })
-        },
-      })
+      if (global.coworkMode) {
+        NavigationService.navigate('Chat')
+        let Chat = global.getFriend().curChat
+        Chat._handleAciton(action)
+      } else {
+        NavigationService.navigate('SelectFriend', {
+          user: this.props.user,
+          callBack: targetId => {
+            NavigationService.replace('CoworkTabs', {
+              targetId: targetId,
+              action: action,
+            })
+          },
+        })
+      }
     }
   }
 

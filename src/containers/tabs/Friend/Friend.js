@@ -205,6 +205,11 @@ export default class Friend extends Component {
   }
 
   setCurChat = chat => {
+    //防止replace chat页面时变量设置错误
+    if (chat !== undefined && this.curChat !== undefined) {
+      setTimeout(() => this.setCurChat(chat), 1000)
+      return
+    }
     this.curChat = chat
     if (this.curChat) {
       MessageDataHandle.readMessage({
@@ -341,8 +346,6 @@ export default class Friend extends Component {
     this._sendMessage(msgStr, groupId, false)
     NavigationService.navigate('Chat', {
       targetId: groupId,
-      curUser: this.props.user.currentUser,
-      friend: this,
     })
   }
 
@@ -647,7 +650,7 @@ export default class Friend extends Component {
     })
   }
 
-  _receiveFile = (
+  _receiveFile = async (
     fileName,
     queueName,
     receivePath,
@@ -657,10 +660,11 @@ export default class Friend extends Component {
     fileSize,
   ) => {
     if (g_connectService) {
+      let homePath = await FileTools.appendingHomeDirectory()
       SMessageService.receiveFile(
         fileName,
         queueName,
-        receivePath,
+        homePath + receivePath,
         talkId,
         msgId,
         userId,

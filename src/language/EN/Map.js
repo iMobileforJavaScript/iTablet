@@ -113,6 +113,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
   TOOLS_VISIBILITY_ANALYSIS: 'Visibility Analysis',
   TOOLS_CLEAN_PLOTTING: 'Clean Plotting',
+  TOOLS_BOX_CLIP: 'Box Clip',
+  TOOLS_PLANE_CLIP: 'Plane Clip',
+  TOOLS_CROSS_CLIP: 'Cross Clip',
 
   FLY: 'Fly',
   FLY_ROUTE: 'Flying Route',
@@ -226,6 +229,8 @@ const Map_Main_Menu = {
   PLOTTING: 'Plotting',
   PLOTTING_LIB_CHANGE: 'Change Plotting Lib',
   PLOTTING_LIB: 'Plotting Lib',
+  PLOTTING_ANIMATION: 'Animation',
+  PLOTTING_ANIMATION_DEDUCTION: 'Plotting Animation Deduction',
 
   SHARE: 'Share',
   SHARE_WECHAT: 'Wechat',
@@ -235,7 +240,7 @@ const Map_Main_Menu = {
 
 //图层
 const Map_Layer = {
-  PLOTS: 'My Plots',
+  PLOTS: 'My Marks',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
   PLOTS_SET_AS_CURRENT: 'Set As Current Marks',

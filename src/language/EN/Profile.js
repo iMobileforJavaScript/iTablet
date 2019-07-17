@@ -37,7 +37,7 @@ const Profile = {
   PATH: 'Path',
 
   SAMPLEDATA: 'Sampledata',
-  ON_DEVICE: 'On Device',
+  ON_DEVICE: 'UserData',
   EXPORT_DATA: 'Export Data',
   IMPORT_DATA: 'Import Data',
   UPLOAD_DATA: 'Upload Data',

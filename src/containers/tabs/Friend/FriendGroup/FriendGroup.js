@@ -122,8 +122,6 @@ class FriendGroup extends Component {
   _onSectionselect = key => {
     NavigationService.navigate('Chat', {
       targetId: key.id,
-      curUser: this.props.user,
-      friend: this.props.friend,
     })
   }
 

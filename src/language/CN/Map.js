@@ -126,7 +126,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: '路径分析',
   TOOLS_VISIBILITY_ANALYSIS: '通视分析',
   TOOLS_CLEAN_PLOTTING: '清除标注',
-
+  TOOLS_BOX_CLIP: 'Box裁剪',
+  TOOLS_PLANE_CLIP: '平面裁剪',
+  TOOLS_CROSS_CLIP: 'Cross裁剪',
   //三维 飞行
   FLY: '飞行',
   FLY_ROUTE: '飞行轨迹',
@@ -245,6 +247,8 @@ const Map_Main_Menu = {
   PLOTTING: '标绘',
   PLOTTING_LIB_CHANGE: '切换标绘库',
   PLOTTING_LIB: '标绘库',
+  PLOTTING_ANIMATION: '动画',
+  PLOTTING_ANIMATION_DEDUCTION: '态势推演',
 
   //分享
   SHARE: '分享',

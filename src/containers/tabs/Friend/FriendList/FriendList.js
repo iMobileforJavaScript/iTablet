@@ -152,8 +152,6 @@ class FriendList extends Component {
     } else {
       NavigationService.navigate('Chat', {
         targetId: key.id,
-        curUser: this.props.user,
-        friend: this.props.friend,
       })
     }
   }
