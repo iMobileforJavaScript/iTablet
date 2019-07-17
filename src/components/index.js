@@ -51,6 +51,7 @@ import ImageViewer from './ImageViewer'
 import MediaViewer from './MediaViewer'
 import LinkageList from './LinkageList'
 import TouchableItem from './TouchableItem'
+import ImagePicker from './ImagePicker'
 
 export {
   Container,
@@ -111,4 +112,5 @@ export {
   MediaViewer,
   LinkageList,
   TouchableItem,
+  ImagePicker,
 }

@@ -28,6 +28,7 @@ export default class Map3DToolBar extends React.Component {
     getLayer3d: () => {},
     getoverlayView: () => {},
     newFly: () => {},
+    changeLayerList: () => {},
   }
   constructor(props) {
     super(props)
@@ -312,6 +313,7 @@ export default class Map3DToolBar extends React.Component {
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+      this.props.changeLayerList && this.props.changeLayerList()
     })
   }
 

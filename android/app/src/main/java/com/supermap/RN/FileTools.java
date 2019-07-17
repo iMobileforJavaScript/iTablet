@@ -546,18 +546,19 @@ public class FileTools extends ReactContextBaseJavaModule {
         try {
 
             File file = new File(filePath);
-            if(file.exists()){
+            boolean result = false;
+            if(!file.exists()){
                 FileWriter fw = new FileWriter(file,false);
                 BufferedWriter bw = new BufferedWriter(fw);
                 bw.write(strJson);
                 bw.close();
                 fw.close();
-                promise.resolve(true);
-//                System.out.println("test1 done!");
+                result = true;
             }
 
+            promise.resolve(result);
         } catch (Exception e) {
-            // TODO: handle exception
+           promise.reject(e);
         }
     }
 

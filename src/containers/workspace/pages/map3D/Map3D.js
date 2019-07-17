@@ -28,6 +28,7 @@ import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
 import { getLanguage } from '../../../../language/index'
+import SurfaceView from '../../../../components/SurfaceView'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
@@ -85,6 +86,7 @@ export default class Map3D extends React.Component {
       this._addScene()
       this.addAttributeListener()
       this.addCircleFlyListen()
+      this.getLayers()
     })
   }
 
@@ -99,6 +101,14 @@ export default class Map3D extends React.Component {
     this.circleFlyListen && this.circleFlyListen.remove()
   }
 
+  getLayers = async () => {
+    let layerlist = await SScene.getLayerList()
+    let terrainLayerList = await SScene.getTerrainLayerList()
+    layerlist = JSON.parse(JSON.stringify(layerlist.concat(terrainLayerList)))
+    this.setState({
+      layerlist,
+    })
+  }
   initListener = async () => {
     SScene.setListener().then(() => {
       SScene.getAttribute()
@@ -372,6 +382,8 @@ export default class Map3D extends React.Component {
         setAttributes={this.props.setAttributes}
         measureShow={this.measureShow}
         setContainerLoading={this.setLoading}
+        layerList={this.state.layerlist}
+        changeLayerList={this.getLayers}
       />
     )
   }
@@ -468,6 +480,7 @@ export default class Map3D extends React.Component {
         bottomProps={{ type: 'fix' }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
+        <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderOverLayer()}

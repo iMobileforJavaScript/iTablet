@@ -319,6 +319,9 @@ function getMap3DData(type, params) {
         ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE,
       ]
       break
+    case ConstToolType.MAP_BOX_CLIP:
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT_3D_CUT]
+      break
   }
   return { data, buttons }
 }

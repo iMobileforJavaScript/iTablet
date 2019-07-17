@@ -54,6 +54,7 @@ const Friends = {
   IMPORT_FAIL: '导入失败',
   IMPORT_CONFIRM: '是否导入数据',
   RECEIVE_CONFIRM: '是否接收数据',
+  OPENCOWORKFIRST: '请先打开协作地图',
   //CustomActions
   MAP: '地图',
   TEMPLATE: '模板',
@@ -81,8 +82,11 @@ const Friends = {
   EXIT_COWORK: '退出协作',
   GO_COWORK: '协作',
   ALERT_EXIT_COWORK: '是否关闭当前协作地图?',
+  SHARE_DATASET: '同时分享对应数据集',
   //system text
   SYS_MSG_MAP: '[地图]',
+  SYS_MSG_LAYER: '[图层]',
+  SYS_MSG_DATASET: '[数据集]',
   SYS_MSG_ADD_FRIEND: '请求添加您为好友',
   SYS_MSG_REMOVED_FROM_GROUP: '将你移除群聊',
   SYS_MSG_LEAVE_GROUP: '退出了群聊',

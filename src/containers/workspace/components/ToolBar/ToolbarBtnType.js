@@ -8,6 +8,8 @@ export default {
   STYLE: 'style', // 样式
   COMMIT: 'commit', // 提交
   COMMIT_CUT: 'commitCut', // 提交
+  COMMIT_3D_CUT: 'commit3dCut', //提交三维裁剪
+  MAP3D_CUT_BACK: 'map3dCutBack', //三维裁剪返回按键
   MENU: 'menu', //菜单
   MENUS: 'menus', //菜单
   PLACEHOLDER: 'placeholder', // 占位

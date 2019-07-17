@@ -123,7 +123,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: '路径分析',
   TOOLS_VISIBILITY_ANALYSIS: '通视分析',
   TOOLS_CLEAN_PLOTTING: '清除标注',
-
+  TOOLS_BOX_CLIP: 'Box裁剪',
+  TOOLS_PLANE_CLIP: '平面裁剪',
+  TOOLS_CROSS_CLIP: 'Cross裁剪',
   //三维 飞行
   FLY: '飞行',
   FLY_ROUTE: '飞行轨迹',
@@ -289,6 +291,7 @@ const Map_Layer = {
   LAYERS_SCALE: '缩放基准比例尺',
   LAYERS_MIN_OBJECT_SIZE: '对象最小尺寸',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
+  LAYERS_SHARE: '分享',
 
   VISIBLE: '设置图层可见',
   NOT_VISIBLE: '设置图层不可见',

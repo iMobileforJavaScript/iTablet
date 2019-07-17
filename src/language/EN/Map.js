@@ -110,6 +110,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
   TOOLS_VISIBILITY_ANALYSIS: 'Visibility Analysis',
   TOOLS_CLEAN_PLOTTING: 'Clean Plotting',
+  TOOLS_BOX_CLIP: 'Box Clip',
+  TOOLS_PLANE_CLIP: 'Plane Clip',
+  TOOLS_CROSS_CLIP: 'Cross Clip',
 
   FLY: 'Fly',
   FLY_ROUTE: 'Flying Route',
@@ -234,7 +237,7 @@ const Map_Main_Menu = {
 
 //图层
 const Map_Layer = {
-  PLOTS: 'My Plots',
+  PLOTS: 'My Marks',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
   PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
@@ -269,6 +272,7 @@ const Map_Layer = {
   LAYERS_SCALE: 'Scale',
   LAYERS_MIN_OBJECT_SIZE: 'Min Object Size',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: 'Filter Overlapping Small Objects',
+  LAYERS_SHARE: 'Share',
 
   LAYERS_CREATE_THEMATIC_MAP: 'Create Thematic Map',
   LAYERS_MODIFY_THEMATIC_MAP: 'Modify Thematic Map',

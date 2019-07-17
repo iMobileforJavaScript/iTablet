@@ -30,6 +30,7 @@ class FriendList extends Component {
     navigation: Object,
     user: Object,
     friend: Object,
+    callBack: () => {},
   }
 
   constructor(props) {
@@ -146,11 +147,15 @@ class FriendList extends Component {
   }
 
   _onFriendSelect = key => {
-    NavigationService.navigate('Chat', {
-      targetId: key.id,
-      curUser: this.props.user,
-      friend: this.props.friend,
-    })
+    if (this.props.callBack !== undefined) {
+      this.props.callBack(key.id)
+    } else {
+      NavigationService.navigate('Chat', {
+        targetId: key.id,
+        curUser: this.props.user,
+        friend: this.props.friend,
+      })
+    }
   }
   _onSectionselect = key => {
     //滚动到指定的偏移的位置

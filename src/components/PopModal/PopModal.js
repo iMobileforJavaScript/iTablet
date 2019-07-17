@@ -1,8 +1,15 @@
 import React, { PureComponent } from 'react'
-import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
+import {
+  Modal,
+  Platform,
+  TouchableOpacity,
+  Text,
+  View,
+  Dimensions,
+} from 'react-native'
 import { color, size } from '../../styles'
 import { scaleSize } from '../../utils'
-import { getSoftMenuBarHeight } from 'react-native-extra-dimensions-android'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 
 export default class PopModal extends PureComponent {
   props: {
@@ -20,8 +27,6 @@ export default class PopModal extends PureComponent {
     this.state = {
       modalVisible: false,
     }
-    this.virtualMenuHeight =
-      Platform.OS === 'android' ? getSoftMenuBarHeight() : 0
   }
 
   setVisible = (visible, cb) => {
@@ -126,6 +131,12 @@ export default class PopModal extends PureComponent {
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
+    const deviceHeight =
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height
+        : ExtraDimensions.getRealWindowHeight() -
+          ExtraDimensions.getStatusBarHeight()
+    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={animationType}
@@ -141,7 +152,7 @@ export default class PopModal extends PureComponent {
         style={{ flex: 1 }}
         visible={this.state.modalVisible}
       >
-        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <View style={{ height: deviceHeight, width: deviceWidth }}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
