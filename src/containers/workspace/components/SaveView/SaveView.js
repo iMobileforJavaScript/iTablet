@@ -22,7 +22,7 @@ import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 const styles = StyleSheet.create({
   overlay: {
     position: 'absolute',
-    // bottom: 0,
+    bottom: 0,
     left: 0,
     right: 0,
     top: 0,
@@ -152,7 +152,8 @@ export default class SaveView extends React.Component {
       Platform.OS === 'ios'
         ? Dimensions.get('window').height
         : ExtraDimensions.getRealWindowHeight() -
-          ExtraDimensions.getStatusBarHeight()
+          ExtraDimensions.getStatusBarHeight() -
+          ExtraDimensions.getSoftMenuBarHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

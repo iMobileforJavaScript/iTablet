@@ -135,7 +135,8 @@ export default class PopModal extends PureComponent {
       Platform.OS === 'ios'
         ? Dimensions.get('window').height
         : ExtraDimensions.getRealWindowHeight() -
-          ExtraDimensions.getStatusBarHeight()
+          ExtraDimensions.getStatusBarHeight() -
+          ExtraDimensions.getSoftMenuBarHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

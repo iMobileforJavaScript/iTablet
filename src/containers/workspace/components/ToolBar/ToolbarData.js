@@ -11,6 +11,7 @@ import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import SMap from 'imobile_for_reactnative/NativeModule/interfaces/mapping/SMap'
 
 // let _params = {}
 
@@ -47,6 +48,8 @@ function getTabBarData(type, params = {}) {
     type === ConstToolType.MAP_PLOTTING_START
   ) {
     tabBarData = StartData.getStart(type, params)
+  } else if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
+    tabBarData = getPlotAnimationData(type)
   } else if (
     typeof type === 'string' &&
     type.indexOf(ConstToolType.MAP_TOOL) > -1
@@ -318,6 +321,43 @@ function getMap3DData(type, params) {
       break
     case ConstToolType.MAP_BOX_CLIP:
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT_3D_CUT]
+      break
+  }
+  return { data, buttons }
+}
+
+function getPlotAnimationData(type) {
+  let data = [],
+    buttons = []
+  // if (type.indexOf('MAP3D_') === -1) return { data, buttons }
+  switch (type) {
+    case ConstToolType.MAP_PLOTTING_ANIMATION_ITEM:
+      data = [
+        {
+          key: 'startFly',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_START,
+          //'开始飞行',
+          action: () => {
+            SMap.animationPlay()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_play.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_play.png'),
+        },
+        {
+          key: 'stop',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
+          action: () => {
+            SMap.animationPause()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_stop.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
+          // selectMode:"flash"
+        },
+      ]
+      buttons = [ToolbarBtnType.END_ANIMATION]
       break
   }
   return { data, buttons }
