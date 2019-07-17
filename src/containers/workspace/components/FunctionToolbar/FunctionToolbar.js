@@ -409,6 +409,18 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showAnimationList = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.MAP_PLOTTING_ANIMATION
+      toolRef.setVisible(true, type, {
+        isFullScreen: false,
+        cb: () => {},
+      })
+    }
+  }
+
   showEdit = async () => {
     const toolRef = this.props.getToolRef()
     let height = ConstToolType.HEIGHT[3]
@@ -1102,6 +1114,14 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            //动画
+            key: constants.PLOTTING_ANIMATION,
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .PLOTTING_ANIMATION,
+            action: this.showAnimationList,
+            image: require('../../../../assets/function/icon_edit.png'),
           },
           {
             //分享

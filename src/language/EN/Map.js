@@ -226,6 +226,8 @@ const Map_Main_Menu = {
   PLOTTING: 'Plotting',
   PLOTTING_LIB_CHANGE: 'Change Plotting Lib',
   PLOTTING_LIB: 'Plotting Lib',
+  PLOTTING_ANIMATION: 'Animation',
+  PLOTTING_ANIMATION_DEDUCTION: 'Plotting Animation Deduction',
 
   SHARE: 'Share',
   SHARE_WECHAT: 'Wechat',

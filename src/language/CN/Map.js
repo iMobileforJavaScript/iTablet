@@ -244,6 +244,8 @@ const Map_Main_Menu = {
   PLOTTING: '标绘',
   PLOTTING_LIB_CHANGE: '切换标绘库',
   PLOTTING_LIB: '标绘库',
+  PLOTTING_ANIMATION: '动画',
+  PLOTTING_ANIMATION_DEDUCTION: '态势推演',
 
   //分享
   SHARE: '分享',
