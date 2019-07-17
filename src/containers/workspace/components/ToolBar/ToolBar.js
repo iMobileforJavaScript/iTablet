@@ -1867,6 +1867,105 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  /** 态势推演动画列表*/
+  showAnimation = async type => {
+    let { data, buttons } = await this.getAnimationlist()
+    this.props.showFullMap && this.props.showFullMap(true)
+    this.setState(
+      {
+        type: type,
+        data: data,
+        buttons: buttons,
+        containerType: 'list',
+        isFullScreen: true,
+      },
+      () => {
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[2]
+            : ConstToolType.HEIGHT[3]
+        this.showToolbar()
+        this.updateOverlayerView()
+      },
+    )
+  }
+
+  getAnimationlist = async () => {
+    try {
+      // let data = []
+      let mapName = await SMap.getMapName()
+      // path =
+      //   (await FileTools.appendingHomeDirectory(
+      //     _params.user && _params.user.currentUser.userName
+      //       ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+      //       : ConstPath.CustomerPath,
+      //   // )) + ConstPath.RelativeFilePath.Animation+mapName
+      //   )) + ConstPath.RelativeFilePath.Animation+'plot'
+
+      let userName = this.props.user.currentUser.userName || 'Customer'
+      let path = await FileTools.appendingHomeDirectory(
+        // ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.Animation+'plot',
+        ConstPath.UserPath +
+          userName +
+          '/' +
+          ConstPath.RelativeFilePath.Animation +
+          mapName +
+          '/',
+      )
+      let animationXmlList = []
+      let arrDirContent = await FileTools.getDirectoryContent(path)
+      if (arrDirContent.length > 0) {
+        let i = 0
+        for (let key in arrDirContent) {
+          if (arrDirContent[key].type === 'file') {
+            // let dirPath = path + arrDirContent[key].name
+            let item = {}
+            item.title = arrDirContent[key].name
+            item.index = i
+            item.path = path + arrDirContent[key].name
+            animationXmlList.push(item)
+            i++
+          }
+        }
+      }
+
+      if (animationXmlList.length == 0) {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.NO_PLOTTING_DEDUCTION,
+          //'当前场景无态势推演'
+        )
+      } else {
+        SMap.initAnimation()
+      }
+
+      // let flydata = await SScene.getFlyRouteNames()
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu
+            .PLOTTING_ANIMATION_DEDUCTION,
+          // '态势推演列表',
+          data: animationXmlList,
+        },
+      ]
+      let buttons = []
+      return { data, buttons }
+    } catch (error) {
+      let buttons = []
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu
+            .PLOTTING_ANIMATION_DEDUCTION,
+          // '态势推演列表',
+          data: [],
+        },
+      ]
+      Toast.show(
+        getLanguage(this.props.language).Prompt.NO_PLOTTING_DEDUCTION,
+        //'当前场景无态势推演'
+      )
+      return { data, buttons }
+    }
+  }
   getLabelFontName = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -2298,6 +2397,47 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  /** 推演动画播放事件*/
+  showPlotAnimationTool = async type => {
+    if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          column: data.length,
+          containerType: 'table',
+          isFullScreen: false,
+        },
+        () => {
+          this.height = ConstToolType.HEIGHT[0]
+          this.showToolbar()
+          this.updateOverlayerView()
+        },
+      )
+
+      // this.props.showFullMap && this.props.showFullMap(true)
+      // this.setState(
+      //   {
+      //     type: type,
+      //     data: data,
+      //     buttons: buttons,
+      //     containerType: 'list',
+      //     isFullScreen: true,
+      //   },
+      //   () => {
+      //     this.height =
+      //       this.props.device.orientation === 'LANDSCAPE'
+      //         ? ConstToolType.HEIGHT[2]
+      //         : ConstToolType.HEIGHT[3]
+      //     this.showToolbar()
+      //     this.updateOverlayerView()
+      //   },
+      // )
+    }
+  }
+
   /** 拍照 **/
   takePhoto = () => {}
 
@@ -2358,7 +2498,10 @@ export default class ToolBar extends React.PureComponent {
       this.showMap3DTool(type)
       return
     }
-    // if (this.isShow === isShow && type === this.state.type) return
+    if (type === ConstToolType.MAP_PLOTTING_ANIMATION && isShow) {
+      this.showAnimation(type)
+      // return
+    }
     if (
       this.isShow !== isShow ||
       this.state.type !== type ||
@@ -3473,6 +3616,12 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  endAnimation = () => {
+    SMap.animationClose()
+    this.showToolbar(!this.isShow)
+    this.props.existFullMap && this.props.existFullMap()
+  }
+
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
     SScene.flyStop()
@@ -3499,6 +3648,11 @@ export default class ToolBar extends React.PureComponent {
 
   newFly = () => {
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_NEWFLY)
+  }
+
+  setAnimation = path => {
+    SMap.readAnimationXmlFile(path)
+    this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
   }
 
   listThemeAction = ({ item }) => {
@@ -4077,6 +4231,12 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
       // 切换标绘库
       this.changePlotLib(item)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+      // 显示态势推演动画列表
+      this.getAnimationList(item)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
+      // 选择某一个推演动画xml加载
+      // this.getAnimationList(item)
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
       //专题图添加数据集
       // if (item.datasetName) {
@@ -5028,6 +5188,7 @@ export default class ToolBar extends React.PureComponent {
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
+        setAnimation={this.setAnimation}
         showToolbar={this.showToolbar}
         existFullMap={this.props.existFullMap}
         importSceneWorkspace={this.props.importSceneWorkspace}
@@ -5114,6 +5275,7 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_TOOL_FLYLIST:
           case ConstToolType.MAP3D_ATTRIBUTE:
           case ConstToolType.MAP3D_WORKSPACE_LIST:
+          case ConstToolType.MAP_PLOTTING_ANIMATION:
             box = this.renderMap3DList()
             break
           case ConstToolType.MAP3D_IMPORTWORKSPACE:
@@ -5237,6 +5399,10 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SAVE_FLY:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.saveFly
+          break
+        case ToolbarBtnType.END_ANIMATION:
+          image = require('../../../../assets/mapEdit/cancel.png')
+          action = this.endAnimation
           break
         case ToolbarBtnType.TAGGING_BACK:
           //返回上一级

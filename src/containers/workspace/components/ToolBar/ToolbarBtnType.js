@@ -30,6 +30,7 @@ export default {
   CLEAR_CURRENT_LABEL: 'clearCurrentLabel',
   CLOSE_CIRCLE: 'closeCircle',
   SHARE: 'SHARE',
+  END_ANIMATION: 'endAnimation',
 
   //专题制图
   THEME_CANCEL: 'theme_cancel',

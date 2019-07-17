@@ -19,6 +19,7 @@ export default class Map3DToolBar extends React.Component {
     data: Array,
     device: Object,
     setfly: () => {},
+    setAnimation: () => {},
     showToolbar: () => {},
     existFullMap: () => {},
     importSceneWorkspace: () => {},
@@ -169,6 +170,23 @@ export default class Map3DToolBar extends React.Component {
         </TouchableOpacity>
       )
     }
+    if (this.props.type === 'MAP_PLOTTING_ANIMATION') {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.props.setAnimation(item.path)
+          }}
+          style={styles.sceneItem}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.title}</Text>
+            </View>
+          </View>
+          {this.renderItemSeparatorComponent()}
+        </TouchableOpacity>
+      )
+    }
     return <View />
   }
 
@@ -210,6 +228,31 @@ export default class Map3DToolBar extends React.Component {
               style={styles.newRout}
             />
           </TouchableOpacity>
+        </View>
+      )
+    }
+    if (this.props.type === 'MAP_PLOTTING_ANIMATION') {
+      // return <Text style={styles.sectionHeader}>{section.title}</Text>
+      return (
+        <View style={styles.fltListHeader}>
+          <View style={styles.sceneView}>
+            <Image
+              source={require('../../../../assets/function/Frenchgrey/icon_symbolFly_white.png')}
+              style={styles.sceneImg}
+            />
+            <Text style={styles.sceneTitle}>{section.title}</Text>
+          </View>
+          {/* <TouchableOpacity
+            style={styles.newView}
+            onPress={() => {
+              this.props.newFly && this.props.newFly()
+            }}
+          >
+            <Image
+              source={require('../../../../assets/map/Frenchgrey/scene_addfly_light.png')}
+              style={styles.newRout}
+            />
+          </TouchableOpacity> */}
         </View>
       )
     }

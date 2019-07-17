@@ -338,7 +338,7 @@ export default class MyLocalData extends Component {
 
   importData = async () => {
     this._closeModal()
-    if (this.itemInfo.id) {
+    if (this.itemInfo && this.itemInfo.id) {
       downFileAction(
         this.props.down,
         this.itemInfo,
@@ -360,7 +360,7 @@ export default class MyLocalData extends Component {
 
   deleteData = async () => {
     this._closeModal()
-    if (this.itemInfo.id) {
+    if (this.itemInfo && this.itemInfo.id) {
       this.deleteDataOfOnline()
     } else {
       this._onDeleteData()
