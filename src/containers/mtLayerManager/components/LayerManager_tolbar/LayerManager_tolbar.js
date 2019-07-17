@@ -844,7 +844,8 @@ export default class LayerManager_tolbar extends React.Component {
             }}
           />
           <Text style={{ marginLeft: scaleSize(5), fontSize: scaleSize(24) }}>
-            {'同时分享对应数据集'}
+            {getLanguage(global.language).Friends.SHARE_DATASET}
+            {/* {同时分享对应数据集}*/}
           </Text>
         </View>
         <TouchableOpacity
@@ -872,7 +873,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   _onShare = async type => {
-    Toast.show('正在准备分享')
+    Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
     let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
     this.setVisible(false)
     let homePath = await FileTools.appendingHomeDirectory()
@@ -904,16 +905,11 @@ export default class LayerManager_tolbar extends React.Component {
     if (this.shareDataset) {
       let datasetPath = tempPath + layerdata.datasetName + '.json'
       let datasetZipPath = tempPath + 'MyExportDataset.zip'
-      // let geoJsonDataset = await SMap.getDatasetToGeoJson(layerdata.datasourceAlias, layerdata.datasetName)
       await SMap.getDatasetToGeoJson(
         layerdata.datasourceAlias,
         layerdata.datasetName,
         datasetPath,
       )
-      // if (await FileTools.fileIsExist(datasetPath)) {
-      //   await FileTools.deleteFile(datasetPath)
-      // }
-      // await FileTools.writeFile(datasetPath, geoJsonDataset)
       await FileTools.zipFile(datasetPath, datasetZipPath)
       await FileTools.deleteFile(datasetPath)
       let datasetAction = {

@@ -647,7 +647,7 @@ export default class Friend extends Component {
     })
   }
 
-  _receiveFile = (
+  _receiveFile = async (
     fileName,
     queueName,
     receivePath,
@@ -657,10 +657,11 @@ export default class Friend extends Component {
     fileSize,
   ) => {
     if (g_connectService) {
+      let homePath = await FileTools.appendingHomeDirectory()
       SMessageService.receiveFile(
         fileName,
         queueName,
-        receivePath,
+        homePath + receivePath,
         talkId,
         msgId,
         userId,

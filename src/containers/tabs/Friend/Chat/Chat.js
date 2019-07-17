@@ -46,6 +46,7 @@ class Chat extends React.Component {
     user: Object,
     setBackAction: () => {},
     removeBackAction: () => {},
+    closeWorkspace: () => {},
   }
   constructor(props) {
     super(props)
@@ -420,6 +421,9 @@ class Chat extends React.Component {
   }
 
   receiveFile = (message, receivePath) => {
+    message.originMsg.message.message.filePath =
+      receivePath + '/' + message.originMsg.message.message.fileName
+
     this.friend._receiveFile(
       message.originMsg.message.message.fileName,
       message.originMsg.message.message.queueName,
@@ -433,11 +437,9 @@ class Chat extends React.Component {
 
   onCustomViewFileTouch = async (type, message) => {
     if (message.user._id !== this.curUser.userId) {
-      let userPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath + this.curUser.userName,
-      )
-      let receivePath = userPath + '/ReceivedFiles'
       if (message.originMsg.message.message.progress !== 100) {
+        let userPath = ConstPath.UserPath + this.curUser.userName
+        let receivePath = userPath + '/ReceivedFiles'
         this.downloadmessage = message
         this.downloadreceivePath = receivePath
         this.download.setDialogVisible(true)
@@ -467,18 +469,20 @@ class Chat extends React.Component {
       mapOpen = false
     }
     if (!mapOpen) {
-      Toast.show('请先打开协作地图再导入数据集')
+      Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
       return
     }
     let homePath = await FileTools.appendingHomeDirectory()
-    let filePath = message.originMsg.message.message.filePath
+    let filePath = homePath + message.originMsg.message.message.filePath
     let fileDir = filePath.substr(0, filePath.lastIndexOf('.'))
     await FileTools.unZipFile(filePath, fileDir)
+    //要导入的文件
     let fileList = await FileTools.getPathList(fileDir)
 
     if (fileList.length > 0) {
       let datasourceList = await SMap.getDatasources()
       let isDatasourceOpen = false
+      //是否打开了对应的数据源
       for (let i in datasourceList) {
         if (
           datasourceList[i].alias ===
@@ -488,20 +492,22 @@ class Chat extends React.Component {
           break
         }
       }
-      let datasourcePath =
-        homePath +
-        ConstPath.AppPath +
-        'User/' +
-        this.curUser.userName +
-        '/' +
-        ConstPath.RelativePath.Datasource
-      let time = Date.parse(new Date())
-      let newDatasourcePath = datasourcePath + 'import_' + time + '.udb'
-      let datasourceParams = {}
-      datasourceParams.server = newDatasourcePath
-      datasourceParams.engineType = EngineType.UDB
-      datasourceParams.alias = message.originMsg.message.message.datasourceAlias
+      //没有对应的数据源则新建一个
       if (!isDatasourceOpen) {
+        let datasourcePath =
+          homePath +
+          ConstPath.AppPath +
+          'User/' +
+          this.curUser.userName +
+          '/' +
+          ConstPath.RelativePath.Datasource
+        let time = Date.parse(new Date())
+        let newDatasourcePath = datasourcePath + 'import_' + time + '.udb'
+        let datasourceParams = {}
+        datasourceParams.server = newDatasourcePath
+        datasourceParams.engineType = EngineType.UDB
+        datasourceParams.alias =
+          message.originMsg.message.message.datasourceAlias
         await SMap.createDatasource(datasourceParams)
         await SMap.openDatasource(datasourceParams)
       }
@@ -527,7 +533,7 @@ class Chat extends React.Component {
     }
 
     await FileTools.deleteFile(fileDir)
-    Toast.show('导入成功')
+    Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
   }
 
   onLayerFileTouch = async message => {
@@ -538,11 +544,11 @@ class Chat extends React.Component {
       mapOpen = false
     }
     if (!mapOpen) {
-      Toast.show('请先打开协作地图再导入图层')
+      Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
       return
     }
     let homePath = await FileTools.appendingHomeDirectory()
-    let filePath = message.originMsg.message.message.filePath
+    let filePath = homePath + message.originMsg.message.message.filePath
     let fileDir = filePath.substr(0, filePath.lastIndexOf('.'))
     await FileTools.unZipFile(filePath, fileDir)
     let fileList = await FileTools.getPathList(fileDir)
@@ -557,16 +563,19 @@ class Chat extends React.Component {
     }
     await FileTools.deleteFile(fileDir)
     await SMap.refreshMap()
-    NavigationService.navigate('MapViwew')
+    NavigationService.navigate('MapView')
+    Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
     //todo refresh
   }
 
   onMapFileTouch = async message => {
-    let receivePath = message.originMsg.message.message.filePath
-    let toPath = await FileTools.appendingHomeDirectory(
-      ConstPath.Import + '/weChat.zip',
-    )
-    FileTools.copyFile(receivePath, toPath)
+    let homePath = await FileTools.appendingHomeDirectory()
+    let receivePath = homePath + message.originMsg.message.message.filePath
+    let toPath = homePath + ConstPath.Import + '/weChat.zip'
+    await FileTools.copyFile(receivePath, toPath)
+    if (Platform.OS === 'ios') {
+      await FileTools.getUri(receivePath)
+    }
     this.import.setDialogVisible(true)
   }
 
@@ -629,17 +638,17 @@ class Chat extends React.Component {
             <CoworkTouchableView
               screen="Chat"
               onPress={async () => {
-                let mapOpen
-                try {
-                  mapOpen = await SMap.isAnyMapOpened()
-                } catch (error) {
-                  mapOpen = false
-                }
-                if (!mapOpen) {
-                  this.friend.curMod.action(this.curUser)
-                } else {
-                  NavigationService.navigate('MapView')
-                }
+                // let mapOpen
+                // try {
+                //   mapOpen = await SMap.isAnyMapOpened()
+                // } catch (error) {
+                //   mapOpen = false
+                // }
+                // if (!mapOpen) {
+                this.friend.curMod.action(this.curUser)
+                // } else {
+                //   NavigationService.navigate('MapView')
+                // }
               }}
             />
           ) : null}
@@ -880,9 +889,6 @@ class Chat extends React.Component {
             true,
             getLanguage(global.language).Friends.IMPORT_DATA,
           )
-          if (Platform.OS === 'ios') {
-            FileTools.getUri(this.downloadreceivePath)
-          }
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
@@ -973,6 +979,7 @@ class Chat extends React.Component {
             this.friend.setCurMod(undefined)
             this.setCoworkMode(false)
             global.coworkMode = false
+            this.props.closeWorkspace()
             NavigationService.goBack()
           }
           let mapOpen
