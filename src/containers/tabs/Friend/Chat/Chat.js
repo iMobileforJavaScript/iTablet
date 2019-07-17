@@ -18,7 +18,7 @@ import {
   SystemMessage,
   InputToolbar,
 } from 'react-native-gifted-chat'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import Container from '../../../../components/Container'
 import { Dialog } from '../../../../components'
 import { scaleSize } from '../../../../utils/screen'
@@ -46,6 +46,7 @@ class Chat extends React.Component {
     user: Object,
     setBackAction: () => {},
     removeBackAction: () => {},
+    closeWorkspace: () => {},
   }
   constructor(props) {
     super(props)
@@ -118,13 +119,18 @@ class Chat extends React.Component {
     this.action && this._handleAciton()
   }
 
-  _handleAciton = () => {
-    if (this.action.name === 'onSendFile') {
-      this.onSendFile(
-        this.action.type,
-        this.action.filePath,
-        this.action.fileName,
-      )
+  _handleAciton = async () => {
+    if (this.action.length > 0) {
+      for (let i = 0; i < this.action.length; i++) {
+        if (this.action[i].name === 'onSendFile') {
+          await this.onSendFile(
+            this.action[i].type,
+            this.action[i].filePath,
+            this.action[i].fileName,
+            this.action[i].extraInfo,
+          )
+        }
+      }
     }
   }
 
@@ -317,7 +323,7 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
-  async onSendFile(type, filepath, fileName) {
+  async onSendFile(type, filepath, fileName, extraInfo) {
     let bGroup = 1
     let groupID = this.curUser.userId
     let groupName = ''
@@ -348,7 +354,6 @@ class Chat extends React.Component {
       },
     }
 
-    let msgId = this.friend.getMsgId(this.targetUser.id)
     fileName = fileName + '.zip'
     let statResult = await stat(filepath)
     //文件接收提醒
@@ -372,6 +377,11 @@ class Chat extends React.Component {
         },
       },
     }
+    if (extraInfo) {
+      Object.assign(informMsg.message.message, extraInfo)
+    }
+
+    let msgId = this.friend.getMsgId(this.targetUser.id)
     //保存
     let storeMsg = this.friend.storeMessage(
       informMsg,
@@ -411,6 +421,9 @@ class Chat extends React.Component {
   }
 
   receiveFile = (message, receivePath) => {
+    message.originMsg.message.message.filePath =
+      receivePath + '/' + message.originMsg.message.message.fileName
+
     this.friend._receiveFile(
       message.originMsg.message.message.fileName,
       message.originMsg.message.message.queueName,
@@ -424,11 +437,9 @@ class Chat extends React.Component {
 
   onCustomViewFileTouch = async (type, message) => {
     if (message.user._id !== this.curUser.userId) {
-      let userPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath + this.curUser.userName,
-      )
-      let receivePath = userPath + '/ReceivedFiles'
       if (message.originMsg.message.message.progress !== 100) {
+        let userPath = ConstPath.UserPath + this.curUser.userName
+        let receivePath = userPath + '/ReceivedFiles'
         this.downloadmessage = message
         this.downloadreceivePath = receivePath
         this.download.setDialogVisible(true)
@@ -440,11 +451,89 @@ class Chat extends React.Component {
           case MSGConstant.MSG_LAYER:
             this.onLayerFileTouch(message)
             break
+          case MSGConstant.MSG_DATASET:
+            this.onDatasetFileTouch(message)
+            break
           default:
             break
         }
       }
     }
+  }
+
+  onDatasetFileTouch = async message => {
+    let mapOpen
+    try {
+      mapOpen = await SMap.isAnyMapOpened()
+    } catch (error) {
+      mapOpen = false
+    }
+    if (!mapOpen) {
+      Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
+      return
+    }
+    let homePath = await FileTools.appendingHomeDirectory()
+    let filePath = homePath + message.originMsg.message.message.filePath
+    let fileDir = filePath.substr(0, filePath.lastIndexOf('.'))
+    await FileTools.unZipFile(filePath, fileDir)
+    //要导入的文件
+    let fileList = await FileTools.getPathList(fileDir)
+
+    if (fileList.length > 0) {
+      let datasourceList = await SMap.getDatasources()
+      let isDatasourceOpen = false
+      //是否打开了对应的数据源
+      for (let i in datasourceList) {
+        if (
+          datasourceList[i].alias ===
+          message.originMsg.message.message.datasourceAlias
+        ) {
+          isDatasourceOpen = true
+          break
+        }
+      }
+      //没有对应的数据源则新建一个
+      if (!isDatasourceOpen) {
+        let datasourcePath =
+          homePath +
+          ConstPath.AppPath +
+          'User/' +
+          this.curUser.userName +
+          '/' +
+          ConstPath.RelativePath.Datasource
+        let time = Date.parse(new Date())
+        let newDatasourcePath = datasourcePath + 'import_' + time + '.udb'
+        let datasourceParams = {}
+        datasourceParams.server = newDatasourcePath
+        datasourceParams.engineType = EngineType.UDB
+        datasourceParams.alias =
+          message.originMsg.message.message.datasourceAlias
+        await SMap.createDatasource(datasourceParams)
+        await SMap.openDatasource(datasourceParams)
+      }
+      for (let i = 0; i < fileList.length; i++) {
+        if (fileList[i].path.indexOf('.json') !== -1) {
+          let jstr = await FileTools.readFile(homePath + fileList[i].path)
+          let type = 1
+          if (jstr.indexOf('Polygon') != -1) {
+            type = DatasetType.REGION
+          } else if (jstr.indexOf('LineString') != -1) {
+            type = DatasetType.LINE
+          } else if (jstr.indexOf('Point') != -1) {
+            type = DatasetType.POINT
+          }
+          await SMap.importDatasetFromGeoJson(
+            message.originMsg.message.message.datasourceAlias,
+            fileList[i].name.substr(0, fileList[i].name.lastIndexOf('.')),
+            homePath + fileList[i].path,
+            type,
+          )
+        }
+      }
+    }
+
+    await FileTools.deleteFile(fileDir)
+    Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
   }
 
   onLayerFileTouch = async message => {
@@ -455,11 +544,11 @@ class Chat extends React.Component {
       mapOpen = false
     }
     if (!mapOpen) {
-      Toast.show('请先打开协作地图再导入图层')
+      Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
       return
     }
     let homePath = await FileTools.appendingHomeDirectory()
-    let filePath = message.originMsg.message.message.filePath
+    let filePath = homePath + message.originMsg.message.message.filePath
     let fileDir = filePath.substr(0, filePath.lastIndexOf('.'))
     await FileTools.unZipFile(filePath, fileDir)
     let fileList = await FileTools.getPathList(fileDir)
@@ -474,16 +563,19 @@ class Chat extends React.Component {
     }
     await FileTools.deleteFile(fileDir)
     await SMap.refreshMap()
-    this.friend.curMod.action()
+    NavigationService.navigate('MapView')
+    Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
     //todo refresh
   }
 
   onMapFileTouch = async message => {
-    let receivePath = message.originMsg.message.message.filePath
-    let toPath = await FileTools.appendingHomeDirectory(
-      ConstPath.Import + '/weChat.zip',
-    )
-    FileTools.copyFile(receivePath, toPath)
+    let homePath = await FileTools.appendingHomeDirectory()
+    let receivePath = homePath + message.originMsg.message.message.filePath
+    let toPath = homePath + ConstPath.Import + '/weChat.zip'
+    await FileTools.copyFile(receivePath, toPath)
+    if (Platform.OS === 'ios') {
+      await FileTools.getUri(receivePath)
+    }
     this.import.setDialogVisible(true)
   }
 
@@ -545,8 +637,18 @@ class Chat extends React.Component {
           {this.state.coworkMode ? (
             <CoworkTouchableView
               screen="Chat"
-              onPress={() => {
-                this.friend.curMod.action()
+              onPress={async () => {
+                // let mapOpen
+                // try {
+                //   mapOpen = await SMap.isAnyMapOpened()
+                // } catch (error) {
+                //   mapOpen = false
+                // }
+                // if (!mapOpen) {
+                this.friend.curMod.action(this.curUser)
+                // } else {
+                //   NavigationService.navigate('MapView')
+                // }
               }}
             />
           ) : null}
@@ -587,7 +689,9 @@ class Chat extends React.Component {
             renderMessageText={props => {
               if (
                 props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
-                props.currentMessage.type === MSGConstant.MSG_LOCATION
+                props.currentMessage.type === MSGConstant.MSG_LOCATION ||
+                props.currentMessage.type === MSGConstant.MSG_LAYER ||
+                props.currentMessage.type === MSGConstant.MSG_DATASET
               ) {
                 return null
               }
@@ -722,7 +826,8 @@ class Chat extends React.Component {
     if (
       (currentMessage.type &&
         currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) ||
-      currentMessage.type === MSGConstant.MSG_LAYER
+      currentMessage.type === MSGConstant.MSG_LAYER ||
+      currentMessage.type === MSGConstant.MSG_DATASET
     ) {
       let progress = currentMessage.originMsg.message.message.progress
       return (
@@ -784,9 +889,6 @@ class Chat extends React.Component {
             true,
             getLanguage(global.language).Friends.IMPORT_DATA,
           )
-          if (Platform.OS === 'ios') {
-            FileTools.getUri(this.downloadreceivePath)
-          }
           FileTools.importData().then(
             result => {
               GLOBAL.Loading.setLoading(false)
@@ -877,6 +979,7 @@ class Chat extends React.Component {
             this.friend.setCurMod(undefined)
             this.setCoworkMode(false)
             global.coworkMode = false
+            this.props.closeWorkspace()
             NavigationService.goBack()
           }
           let mapOpen

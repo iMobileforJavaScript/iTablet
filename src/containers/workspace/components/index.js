@@ -19,6 +19,7 @@ import {
   AnalystMapRecommend,
   AnalystMapToolbar,
 } from './AnalystMapOptions'
+import MenuList from './MenuList'
 export {
   PopList,
   NetworkAnalystToolBar,
@@ -39,4 +40,5 @@ export {
   AnalystMapButtons,
   AnalystMapRecommend,
   AnalystMapToolbar,
+  MenuList,
 }

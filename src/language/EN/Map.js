@@ -110,6 +110,9 @@ const Map_Main_Menu = {
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
   TOOLS_VISIBILITY_ANALYSIS: 'Visibility Analysis',
   TOOLS_CLEAN_PLOTTING: 'Clean Plotting',
+  TOOLS_BOX_CLIP: 'Box Clip',
+  TOOLS_PLANE_CLIP: 'Plane Clip',
+  TOOLS_CROSS_CLIP: 'Cross Clip',
 
   FLY: 'Fly',
   FLY_ROUTE: 'Flying Route',

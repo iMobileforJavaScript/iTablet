@@ -40,12 +40,13 @@ export default class CustomView extends React.Component {
      */
     if (
       type === MSGConstant.MSG_FILE_NOTIFY ||
-      type === MSGConstant.MSG_LAYER
+      type === MSGConstant.MSG_LAYER ||
+      type === MSGConstant.MSG_DATASET
     ) {
       let fileType = this.props.currentMessage.type
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
-      let fileSizeText = ''
+      let fileSizeText = fileSize.toFixed(2) + 'B'
       if (fileSize > 1024) {
         fileSize = fileSize / 1024
         fileSizeText = fileSize.toFixed(2) + 'KB'
@@ -61,6 +62,9 @@ export default class CustomView extends React.Component {
           break
         case MSGConstant.MSG_LAYER:
           typeText = 'Layer'
+          break
+        case MSGConstant.MSG_DATASET:
+          typeText = 'Dataset'
           break
       }
       return (

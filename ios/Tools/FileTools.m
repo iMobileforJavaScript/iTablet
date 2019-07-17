@@ -868,6 +868,8 @@ RCT_REMAP_METHOD(getUri,getUriStateWithPath:(NSString *)path resolver:(RCTPromis
       [FileTools deleteFile:path];
       hasImportedData = YES;
     }
+    
+    resolve(@(YES));
   } @catch (NSException *exception) {
     reject(@"getUri fail",exception.reason,nil);
   }

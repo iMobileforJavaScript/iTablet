@@ -13,6 +13,7 @@ export default class ModalBtns extends Component {
     actionOfFriend: () => {},
     alwaysShow: Boolean,
     showCancel: Boolean,
+    style: Object,
   }
   constructor(props) {
     super(props)
@@ -31,7 +32,7 @@ export default class ModalBtns extends Component {
   render() {
     if (this.props.alwaysShow || this.state.show) {
       return (
-        <View style={[styles.bottomBtns, { width: '100%' }]}>
+        <View style={[styles.bottomBtns, { width: '100%' }, this.props.style]}>
           {this.props.actionOfOnline && (
             <MTBtn
               key={'online'}

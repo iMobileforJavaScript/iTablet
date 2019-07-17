@@ -505,6 +505,9 @@ export default class Friend extends Component {
       case MSGConstant.MSG_LAYER:
         text = getLanguage(this.props.language).Friends.SYS_MSG_LAYER
         break
+      case MSGConstant.MSG_DATASET:
+        text = getLanguage(this.props.language).Friends.SYS_MSG_DATASET
+        break
       case MSGConstant.MSG_LOCATION:
         text = msg.originMsg.message.message.message
         break
@@ -644,7 +647,7 @@ export default class Friend extends Component {
     })
   }
 
-  _receiveFile = (
+  _receiveFile = async (
     fileName,
     queueName,
     receivePath,
@@ -654,10 +657,11 @@ export default class Friend extends Component {
     fileSize,
   ) => {
     if (g_connectService) {
+      let homePath = await FileTools.appendingHomeDirectory()
       SMessageService.receiveFile(
         fileName,
         queueName,
-        receivePath,
+        homePath + receivePath,
         talkId,
         msgId,
         userId,
