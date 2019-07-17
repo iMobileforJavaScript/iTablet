@@ -232,7 +232,7 @@ const Map_Main_Menu = {
 
 //图层
 const Map_Layer = {
-  PLOTS: 'My Plots',
+  PLOTS: 'My Marks',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
   PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
