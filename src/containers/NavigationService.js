@@ -59,7 +59,7 @@ function goBack(routeName, immediate) {
 function pop(index = 1) {
   (async function _goBack() {
     await _navigator.dispatch(
-      NavigationActions.pop({
+      StackActions.pop({
         n: index,
       }),
     )
@@ -75,7 +75,7 @@ function reset(index, actions) {
 }
 
 function replace(routeName, params) {
-  let resetAction = NavigationActions.replace({
+  let resetAction = StackActions.replace({
     routeName,
     params,
   })

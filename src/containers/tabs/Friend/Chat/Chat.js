@@ -116,18 +116,19 @@ class Chat extends React.Component {
       }
     })
 
-    this.action && this._handleAciton()
+    this.action && this._handleAciton(this.action)
   }
 
-  _handleAciton = async () => {
-    if (this.action.length > 0) {
-      for (let i = 0; i < this.action.length; i++) {
-        if (this.action[i].name === 'onSendFile') {
+  _handleAciton = async action => {
+    NavigationService.getTopLevelNavigator()
+    if (action.length > 0) {
+      for (let i = 0; i < action.length; i++) {
+        if (action[i].name === 'onSendFile') {
           await this.onSendFile(
-            this.action[i].type,
-            this.action[i].filePath,
-            this.action[i].fileName,
-            this.action[i].extraInfo,
+            action[i].type,
+            action[i].filePath,
+            action[i].fileName,
+            action[i].extraInfo,
           )
         }
       }
@@ -980,7 +981,7 @@ class Chat extends React.Component {
             this.setCoworkMode(false)
             global.coworkMode = false
             this.props.closeWorkspace()
-            NavigationService.goBack()
+            NavigationService.pop()
             this.props.navigation.replace('CoworkTabs', {
               targetId: this.targetId,
             })
