@@ -10,6 +10,7 @@ import {
   TableList,
   MediaViewer,
   PopModal,
+  ImagePicker,
 } from '../../components'
 import { Toast, checkType } from '../../utils'
 import { FileTools } from '../../native'
@@ -18,7 +19,7 @@ import styles from './styles'
 import MediaItem from './MediaItem'
 import { getLanguage } from '../../language'
 import NavigationService from '../../containers/NavigationService'
-import ImagePicker from 'react-native-image-crop-picker'
+// import ImagePicker from 'react-native-image-crop-picker'
 import { SMediaCollector } from 'imobile_for_reactnative'
 
 const COLUMNS = 3
@@ -116,7 +117,7 @@ export default class MediaEdit extends React.Component {
         )
         let result = await SMediaCollector.saveMediaByDataset(
           // this.info.layerName,
-          GLOBAL.TaggingDatasetName,
+          GLOBAL.TaggingDatasetName || this.info.layerName,
           this.info.geoID,
           targetPath,
           modifiedData,
@@ -141,10 +142,16 @@ export default class MediaEdit extends React.Component {
 
   openAlbum = () => {
     let maxFiles = MAX_FILES - this.state.mediaFilePaths.length
-    ImagePicker.openPicker({
-      multiple: true,
-      maxFiles,
-    }).then(this.addMediaFiles)
+    ImagePicker.AlbumListView.defaultProps.assetType = 'All'
+    ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+    ImagePicker.getAlbum({
+      maxSize: maxFiles,
+      callback: async data => {
+        if (data.length > 0) {
+          this.addMediaFiles(data)
+        }
+      },
+    })
   }
 
   addMediaFiles = async (images = []) => {
@@ -159,7 +166,7 @@ export default class MediaEdit extends React.Component {
         }
         mediaFilePaths.push(path)
       } else {
-        path = item.path
+        path = item.path || item.uri
         if (path.indexOf('file://') === 0) {
           path = path.replace('file://', '')
         }
@@ -222,11 +229,14 @@ export default class MediaEdit extends React.Component {
             // this.imageViewer &&
             //   this.imageViewer.setVisible(true, rowIndex * COLUMNS + cellIndex)
             const itemInfo = this.state.paths[rowIndex * COLUMNS + cellIndex]
-            this.mediaViewer &&
-              this.mediaViewer.setVisible(
-                true,
-                (Platform.OS === 'android' ? 'file://' : '') + itemInfo.uri,
-              )
+            let imgPath = itemInfo.uri
+            if (
+              Platform.OS === 'android' &&
+              imgPath.toLowerCase().indexOf('contents://') !== 0
+            ) {
+              imgPath = 'file://' + imgPath
+            }
+            this.mediaViewer && this.mediaViewer.setVisible(true, imgPath)
             // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
           }
         }}

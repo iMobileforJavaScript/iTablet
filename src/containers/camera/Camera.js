@@ -13,10 +13,10 @@ import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets } from '../../assets'
-import { Progress, MediaViewer } from '../../components'
+import { Progress, MediaViewer, ImagePicker } from '../../components'
 import { RNCamera } from 'react-native-camera'
 import { SMediaCollector } from 'imobile_for_reactnative'
-import ImagePicker from 'react-native-image-crop-picker'
+// import ImagePicker from 'react-native-image-crop-picker'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 
@@ -216,24 +216,62 @@ export default class Camera extends React.Component {
   }
 
   openAlbum = () => {
-    ImagePicker.openPicker({
-      multiple: true,
-      maxFiles: this.limit,
-    }).then(async images => {
-      let mediaPaths = []
-      if (images.length > 0) {
-        images.forEach(item => {
-          mediaPaths.push(item.path.replace('file://', ''))
-        })
-        if (this.cb && typeof this.cb === 'function') {
-          this.cb(mediaPaths)
-          NavigationService.goBack()
-        } else {
-          let result = await this.addMedia(mediaPaths)
-          result && NavigationService.goBack()
+    // CameraRoll.getPhotos({
+    //   first: 1000000,
+    //   assetType: 'All',
+    //   // groupTypes: 'All',
+    // }).then(data => {
+    //   let str = ''
+    //   if (data && data.edges) {
+    //
+    //     data.edges.forEach((item, index) => {
+    //       if (item.node.type.indexOf('video') >= 0) str += item.node.type + '--------\n'
+    //     })
+    //   }
+    //   console.warn(str)
+    // })
+
+    ImagePicker.AlbumListView.defaultProps.assetType = 'All'
+    ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+    ImagePicker.getAlbum({
+      maxSize: 9,
+      callback: async data => {
+        let mediaPaths = []
+        if (data.length > 0) {
+          data.forEach(item => {
+            // mediaPaths.push(item.uri.replace(Platform.OS === 'ios' ? 'assets-library://' : 'contents://', ''))
+            mediaPaths.push(item.uri)
+          })
+          if (this.cb && typeof this.cb === 'function') {
+            this.cb(mediaPaths)
+            NavigationService.goBack()
+          } else {
+            let result = await this.addMedia(mediaPaths)
+            result && NavigationService.goBack()
+          }
         }
-      }
+      },
     })
+
+    // ImagePicker.openPicker({
+    //   multiple: true,
+    //   maxFiles: this.limit,
+    // }).then(async images => {
+    //   console.warn(JSON.stringify(images))
+    //   let mediaPaths = []
+    //   if (images.length > 0) {
+    //     images.forEach(item => {
+    //       mediaPaths.push(item.path.replace('file://', ''))
+    //     })
+    //     if (this.cb && typeof this.cb === 'function') {
+    //       this.cb(mediaPaths)
+    //       NavigationService.goBack()
+    //     } else {
+    //       let result = await this.addMedia(mediaPaths)
+    //       result && NavigationService.goBack()
+    //     }
+    //   }
+    // })
   }
 
   changeType = (type, cb = () => {}) => {
