@@ -50,8 +50,8 @@ class Chat extends React.Component {
   }
   constructor(props) {
     super(props)
-    this.friend = this.props.navigation.getParam('friend')
-    this.curUser = this.props.navigation.getParam('curUser')
+    this.friend = global.getFriend()
+    this.curUser = this.friend.props.user.currentUser
     this.targetId = this.props.navigation.getParam('targetId')
     this.targetUser = this.friend.getTargetUser(this.targetId)
     this.friend.setCurChat(this)
@@ -981,6 +981,9 @@ class Chat extends React.Component {
             global.coworkMode = false
             this.props.closeWorkspace()
             NavigationService.goBack()
+            this.props.navigation.replace('CoworkTabs', {
+              targetId: this.targetId,
+            })
           }
           let mapOpen
           try {
@@ -996,6 +999,9 @@ class Chat extends React.Component {
                     this.friend.setCurMod(undefined)
                     this.setCoworkMode(false)
                     global.coworkMode = false
+                    this.props.navigation.replace('CoworkTabs', {
+                      targetId: this.targetId,
+                    })
                   })
               } else {
                 close()

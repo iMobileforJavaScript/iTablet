@@ -930,8 +930,6 @@ export default class LayerManager_tolbar extends React.Component {
         callBack: targetId => {
           NavigationService.navigate('Chat', {
             targetId: targetId,
-            curUser: this.props.user.currentUser,
-            friend: global.getFriend(),
             action: action,
           })
         },

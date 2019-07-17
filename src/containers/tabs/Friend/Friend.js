@@ -341,8 +341,6 @@ export default class Friend extends Component {
     this._sendMessage(msgStr, groupId, false)
     NavigationService.navigate('Chat', {
       targetId: groupId,
-      curUser: this.props.user.currentUser,
-      friend: this,
     })
   }
 
