@@ -362,18 +362,18 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          // let moduleMapName = '湖南'
-          // let moduleMapFullName = moduleMapName + '.xml'
-          // // 地图用相对路径
-          // let moduleMapPath =
-          //   userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-          // if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
-          //   data = {
-          //     type: 'Map',
-          //     path: moduleMapPath,
-          //     name: moduleMapName,
-          //   }
-          // }
+          let moduleMapName = '强渡乌江'
+          let moduleMapFullName = moduleMapName + '.xml'
+          // 地图用相对路径
+          let moduleMapPath =
+            userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+          if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+            data = {
+              type: 'Map',
+              path: moduleMapPath,
+              name: moduleMapName,
+            }
+          }
         }
 
         wsData = [
