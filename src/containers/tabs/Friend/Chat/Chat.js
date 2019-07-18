@@ -18,15 +18,14 @@ import {
   SystemMessage,
   InputToolbar,
 } from 'react-native-gifted-chat'
+import { SimpleDialog } from '../index'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import Container from '../../../../components/Container'
-import { Dialog } from '../../../../components'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 import { ConstPath } from '../../../../constants'
-import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
@@ -164,7 +163,14 @@ class Chat extends React.Component {
 
   back = () => {
     if (this.state.coworkMode) {
-      this.exitCowork.setDialogVisible(true)
+      this.SimpleDialog.setConfirm(() => {
+        this.SimpleDialog.setVisible(false)
+        this.endCowork()
+      })
+      this.SimpleDialog.setText(
+        getLanguage(global.language).Friends.ALERT_EXIT_COWORK,
+      )
+      this.SimpleDialog.setVisible(true)
     }
     return true
   }
@@ -184,6 +190,45 @@ class Chat extends React.Component {
       }
     }
   }
+
+  endCowork = async () => {
+    let close = () => {
+      this.friend.setCurMod(undefined)
+      this.setCoworkMode(false)
+      global.coworkMode = false
+      this.props.closeWorkspace()
+      NavigationService.pop()
+      this.props.navigation.replace('CoworkTabs', {
+        targetId: this.targetId,
+      })
+    }
+    let mapOpen
+    try {
+      mapOpen = await SMap.isAnyMapOpened()
+    } catch (error) {
+      mapOpen = false
+    }
+    if (mapOpen) {
+      SMap.mapIsModified().then(result => {
+        if (result) {
+          GLOBAL.SaveMapView &&
+            GLOBAL.SaveMapView.setVisible(true, null, () => {
+              this.friend.setCurMod(undefined)
+              this.setCoworkMode(false)
+              global.coworkMode = false
+              this.props.navigation.replace('CoworkTabs', {
+                targetId: this.targetId,
+              })
+            })
+        } else {
+          close()
+        }
+      })
+    } else {
+      close()
+    }
+  }
+
   // eslint-disable-next-line
   onPressAvator = data => {}
 
@@ -441,19 +486,45 @@ class Chat extends React.Component {
       if (message.originMsg.message.message.progress !== 100) {
         let userPath = ConstPath.UserPath + this.curUser.userName
         let receivePath = userPath + '/ReceivedFiles'
-        this.downloadmessage = message
-        this.downloadreceivePath = receivePath
-        this.download.setDialogVisible(true)
+        this.SimpleDialog.setConfirm(() => {
+          this.SimpleDialog.setVisible(false)
+          this.receiveFile(message, receivePath)
+        })
+        this.SimpleDialog.setText(
+          getLanguage(global.language).Friends.RECEIVE_CONFIRM,
+        )
+        this.SimpleDialog.setVisible(true)
       } else {
         switch (type) {
           case MSGConstant.MSG_FILE_NOTIFY:
-            this.onMapFileTouch(message)
+            this.SimpleDialog.setConfirm(() => {
+              this.SimpleDialog.setVisible(false)
+              this.importMap(message)
+            })
+            this.SimpleDialog.setText(
+              getLanguage(global.language).Friends.IMPORT_CONFIRM,
+            )
+            this.SimpleDialog.setVisible(true)
             break
           case MSGConstant.MSG_LAYER:
-            this.onLayerFileTouch(message)
+            this.SimpleDialog.setConfirm(() => {
+              this.SimpleDialog.setVisible(false)
+              this.importLayer(message)
+            })
+            this.SimpleDialog.setText(
+              getLanguage(global.language).Friends.IMPORT_CONFIRM,
+            )
+            this.SimpleDialog.setVisible(true)
             break
           case MSGConstant.MSG_DATASET:
-            this.onDatasetFileTouch(message)
+            this.SimpleDialog.setConfirm(() => {
+              this.SimpleDialog.setVisible(false)
+              this.importDataset(message)
+            })
+            this.SimpleDialog.setText(
+              getLanguage(global.language).Friends.IMPORT_CONFIRM,
+            )
+            this.SimpleDialog.setVisible(true)
             break
           default:
             break
@@ -462,7 +533,7 @@ class Chat extends React.Component {
     }
   }
 
-  onDatasetFileTouch = async message => {
+  importDataset = async message => {
     let mapOpen
     try {
       mapOpen = await SMap.isAnyMapOpened()
@@ -537,7 +608,7 @@ class Chat extends React.Component {
     Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
   }
 
-  onLayerFileTouch = async message => {
+  importLayer = async message => {
     let mapOpen
     try {
       mapOpen = await SMap.isAnyMapOpened()
@@ -569,7 +640,7 @@ class Chat extends React.Component {
     //todo refresh
   }
 
-  onMapFileTouch = async message => {
+  importMap = async message => {
     let homePath = await FileTools.appendingHomeDirectory()
     let receivePath = homePath + message.originMsg.message.message.filePath
     let toPath = homePath + ConstPath.Import + '/weChat.zip'
@@ -577,7 +648,21 @@ class Chat extends React.Component {
     if (Platform.OS === 'ios') {
       await FileTools.getUri(receivePath)
     }
-    this.import.setDialogVisible(true)
+    GLOBAL.Loading.setLoading(
+      true,
+      getLanguage(global.language).Friends.IMPORT_DATA,
+    )
+    FileTools.importData().then(
+      result => {
+        GLOBAL.Loading.setLoading(false)
+        result &&
+          Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
+      },
+      () => {
+        GLOBAL.Loading.setLoading(false)
+        Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
+      },
+    )
   }
 
   render() {
@@ -704,9 +789,7 @@ class Chat extends React.Component {
               )
             }}
           />
-          {this.renderImportDialog()}
-          {this.renderDownloadDialog()}
-          {this.renderExitCoworkChatDialog()}
+          {this.renderSimpleDialog()}
         </Container>
       </Animated.View>
     )
@@ -877,159 +960,8 @@ class Chat extends React.Component {
     return null
   }
 
-  renderImportDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.import = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
-        confirmAction={() => {
-          this.import.setDialogVisible(false)
-          GLOBAL.Loading.setLoading(
-            true,
-            getLanguage(global.language).Friends.IMPORT_DATA,
-          )
-          FileTools.importData().then(
-            result => {
-              GLOBAL.Loading.setLoading(false)
-              result &&
-                Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
-            },
-            () => {
-              GLOBAL.Loading.setLoading(false)
-              Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
-            },
-          )
-        }}
-        cancelAction={async () => {
-          let importPath = ConstPath.Import
-          await FileTools.deleteFile(importPath)
-          this.import.setDialogVisible(false)
-        }}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
-      >
-        {this.renderImportDialogChildren()}
-      </Dialog>
-    )
-  }
-
-  renderImportDialogChildren = () => {
-    return (
-      <View style={styles.dialogHeaderView}>
-        <Image
-          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-          style={styles.dialogHeaderImg}
-        />
-        <Text style={styles.promptTtile}>
-          {getLanguage(global.language).Friends.IMPORT_CONFIRM}
-        </Text>
-      </View>
-    )
-  }
-
-  renderDownloadDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.download = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
-        confirmAction={() => {
-          this.download.setDialogVisible(false)
-          this.receiveFile(this.downloadmessage, this.downloadreceivePath)
-        }}
-        cancelAction={() => {
-          this.download.setDialogVisible(false)
-        }}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
-      >
-        {this.renderDownloadDialogChildren()}
-      </Dialog>
-    )
-  }
-
-  renderDownloadDialogChildren = () => {
-    return (
-      <View style={styles.dialogHeaderView}>
-        <Image
-          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-          style={styles.dialogHeaderImg}
-        />
-        <Text style={styles.promptTtile}>
-          {getLanguage(global.language).Friends.RECEIVE_CONFIRM}
-        </Text>
-      </View>
-    )
-  }
-
-  renderExitCoworkChatDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.exitCowork = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(global.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(global.language).Friends.CANCEL}
-        confirmAction={async () => {
-          this.exitCowork.setDialogVisible(false)
-          let close = () => {
-            this.friend.setCurMod(undefined)
-            this.setCoworkMode(false)
-            global.coworkMode = false
-            this.props.closeWorkspace()
-            NavigationService.pop()
-            this.props.navigation.replace('CoworkTabs', {
-              targetId: this.targetId,
-            })
-          }
-          let mapOpen
-          try {
-            mapOpen = await SMap.isAnyMapOpened()
-          } catch (error) {
-            mapOpen = false
-          }
-          if (mapOpen) {
-            SMap.mapIsModified().then(result => {
-              if (result) {
-                GLOBAL.SaveMapView &&
-                  GLOBAL.SaveMapView.setVisible(true, null, () => {
-                    this.friend.setCurMod(undefined)
-                    this.setCoworkMode(false)
-                    global.coworkMode = false
-                    this.props.navigation.replace('CoworkTabs', {
-                      targetId: this.targetId,
-                    })
-                  })
-              } else {
-                close()
-              }
-            })
-          } else {
-            close()
-          }
-        }}
-        cancelAction={() => {
-          this.exitCowork.setDialogVisible(false)
-        }}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
-      >
-        <View style={styles.dialogHeaderView}>
-          <Image
-            source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-            style={styles.dialogHeaderImg}
-          />
-          <Text style={styles.promptTtile}>
-            {getLanguage(global.language).Friends.ALERT_EXIT_COWORK}
-          </Text>
-        </View>
-      </Dialog>
-    )
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 }
 
@@ -1051,39 +983,6 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: scaleSize(14),
     color: '#aaa',
-  },
-  dialogHeaderView: {
-    flex: 1,
-    //  backgroundColor:"pink",
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  dialogHeaderImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
-    opacity: 1,
-    // marginLeft:scaleSize(145),
-    // marginTop:scaleSize(21),
-  },
-  promptTtile: {
-    fontSize: scaleSize(24),
-    color: color.theme_white,
-    marginTop: scaleSize(5),
-    marginLeft: scaleSize(10),
-    marginRight: scaleSize(10),
-    textAlign: 'center',
-  },
-  dialogBackground: {
-    width: scaleSize(350),
-    height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
-  },
-  opacityView: {
-    width: scaleSize(350),
-    height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
   },
   tickView: {
     flexDirection: 'row',
