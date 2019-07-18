@@ -239,6 +239,7 @@ class CreateGroupChat extends Component {
                     this.friend.addGroupMember(this.groupID, newMembers)
                     this.refreshListCallBack && this.refreshListCallBack()
                   } else {
+                    NavigationService.goBack()
                     this.friend.createGroupTalk(this.state.seletctArr)
                   }
                 }

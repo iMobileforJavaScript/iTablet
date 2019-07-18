@@ -33,6 +33,7 @@ import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
 import FriendListFileHandle from '../FriendListFileHandle'
 import CoworkTouchableView from '../CoworkTouchableView'
+import 'moment/locale/zh-cn'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -739,13 +740,15 @@ class Chat extends React.Component {
             />
           ) : null}
           <GiftedChat
-            placeholder="message..."
+            locale={getLanguage(global.language).Friends.LOCALE}
+            placeholder={getLanguage(global.language).Friends.INPUT_MESSAGE}
             messages={this.state.messages}
             showAvatarForEveryMessage={false}
             onSend={this.onSend}
             loadEarlier={this.state.loadEarlier}
             onLoadEarlier={this.onLoadEarlier}
             isLoadingEarlier={this.state.isLoadingEarlier}
+            label={getLanguage(global.language).Friends.LOAD_EARLIER}
             showUserAvatar={this.state.showUserAvatar}
             renderAvatarOnTop={false}
             user={{
@@ -762,7 +765,12 @@ class Chat extends React.Component {
                   this.curUser.userId,
                 )
               ) {
-                return <InputToolbar {...props} />
+                return (
+                  <InputToolbar
+                    {...props}
+                    label={getLanguage(global.language).Friends.SEND}
+                  />
+                )
               }
               return null
             }}

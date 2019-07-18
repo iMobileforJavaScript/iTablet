@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
-import { Image, StyleSheet, View, Text } from 'react-native'
+import { Image, StyleSheet, View, Text, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
 import { getThemeAssets } from '../../assets'
 import { color } from '../../styles'
@@ -44,6 +44,7 @@ class tabItem extends PureComponent {
     title: Object,
     source_focuse: Object,
     source_unfocuse: Object,
+    renderExtra: () => {},
   }
   gettitle = () => {
     //alert(this.props.title)
@@ -77,6 +78,7 @@ class tabItem extends PureComponent {
           style={styles.icon}
         />
         <Text style={styles.tabText}>{this.gettitle()}</Text>
+        {this.props.renderExtra && this.props.renderExtra()}
       </View>
     )
   }
@@ -128,28 +130,21 @@ const Tabs = createBottomTabNavigator(
         return {
           tabBarLabel: data => {
             return (
-              // <View style={[styles.labelView]}>
-              //   <Image
-              //     resizeMode="contain"
-              //     source={
-              //       data.focused
-              //         ? getThemeAssets().tabBar.tab_friend_selected
-              //         : getThemeAssets().tabBar.tab_friend
-              //     }
-              //     style={styles.icon}
-              //   />
-              //   <Text style={styles.tabText}>好友</Text>
-              // <InformSpot />
-              // </View>
-              <View>
-                <TabBarLabel
-                  data={data}
-                  title={'friend'}
-                  source_focuse={getThemeAssets().tabBar.tab_friend_selected}
-                  source_unfocuse={getThemeAssets().tabBar.tab_friend}
-                />
-                <InformSpot />
-              </View>
+              <TabBarLabel
+                data={data}
+                title={'friend'}
+                source_focuse={getThemeAssets().tabBar.tab_friend_selected}
+                source_unfocuse={getThemeAssets().tabBar.tab_friend}
+                renderExtra={() => {
+                  return (
+                    <InformSpot
+                      style={{
+                        right: Platform.OS === 'android' ? scaleSize(50) : 0,
+                      }}
+                    />
+                  )
+                }}
+              />
             )
           },
           header: null,

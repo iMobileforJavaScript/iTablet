@@ -1,5 +1,7 @@
 //好友
 const Friends = {
+  LOCALE: 'en',
+
   LOGOUT: 'Login and keep in touch with your friends',
   MESSAGES: 'Messages',
   FRIENDS: 'Friends',
@@ -51,6 +53,9 @@ const Friends = {
   DEL_GROUP_CONFIRM2:
     'Would you like to clear chat history and disband this group?',
   //Chat
+  INPUT_MESSAGE: 'Input message...',
+  SEND: 'Send',
+  LOAD_EARLIER: 'Load earlier messages',
   IMPORT_DATA: 'Importing data...',
   IMPORT_SUCCESS: 'Import success',
   IMPORT_FAIL: 'Import failed',
