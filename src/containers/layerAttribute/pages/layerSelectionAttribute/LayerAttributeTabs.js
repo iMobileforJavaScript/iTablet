@@ -130,6 +130,8 @@ export default class LayerAttributeTabs extends React.Component {
 
     this.currentTabRefs = []
     this.init = !!selectionAttribute
+
+    this.relateAction = this.relateAction.bind(this)
   }
 
   componentDidMount() {
@@ -319,7 +321,7 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   /** 关联事件 **/
-  relateAction = () => {
+  relateAction(){
     if (
       this.state.currentTabIndex >= this.currentTabRefs.length &&
       !this.currentTabRefs[this.state.currentTabIndex]
@@ -341,7 +343,7 @@ export default class LayerAttributeTabs extends React.Component {
     geoStyle.setMarkerWidth(5)
     geoStyle.setMarkerSize(10)
     for (let i = 0; i < this.props.selection.length; i++) {
-      if (this.props.selection[i].layerInfo.name === layerPath) {
+      if (this.props.selection[i].layerInfo.path === layerPath) {
         objs.push({
           layerPath: layerPath,
           // ids: [selection.data[0].value],
@@ -354,7 +356,7 @@ export default class LayerAttributeTabs extends React.Component {
         })
       } else {
         objs.push({
-          layerPath: this.props.selection[i].layerInfo.name,
+          layerPath: this.props.selection[i].layerInfo.path,
           ids: [],
         })
       }
