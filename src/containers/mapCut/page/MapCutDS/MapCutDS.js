@@ -9,7 +9,6 @@ import { Container } from '../../../../components'
 import NavigationService from '../../../NavigationService'
 import { color } from '../../../../styles'
 import styles from '../../styles'
-import { SMap } from 'imobile_for_reactnative'
 import MTBtn from '../../../../components/mapTools/MT_Btn'
 import FileTools from '../../../../native/FileTools'
 
@@ -27,7 +26,6 @@ export default class MapCutDS extends React.Component {
 
     this.currentUser = params && params.currentUser
     this.cb = params && params.cb
-    this.mapcutDSCallBack = params && params.mapcutDSCallBack
     this.changeDSData = null
   }
 
@@ -43,18 +41,16 @@ export default class MapCutDS extends React.Component {
             this.currentUser.userName
           }/Data/Datasource/${value}.udb`,
         }
-        await SMap.createDatasource(params)
-        SMap.getDatasources().then(data => {
-          this.setState(
-            {
-              data,
-            },
-            () => {
-              this.mapcutDSCallBack()
-              NavigationService.goBack()
-            },
-          )
-        })
+        let data = this.state.data
+        data.push(params)
+        this.setState(
+          {
+            data,
+          },
+          () => {
+            NavigationService.goBack()
+          },
+        )
       },
     })
   }

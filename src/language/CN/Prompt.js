@@ -67,6 +67,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
 
+  SELECT_TWO_MEDIAS_AT_LEAST: '至少选中两个多媒体文件',
+
   NETWORK_REQUEST_FAILED: '网络请求失败',
 
   CREATING: '正在创建',

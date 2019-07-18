@@ -113,6 +113,7 @@ const AppNavigator = createStackNavigator(
       screen: MapTabs,
       navigationOptions: {
         header: null,
+        gesturesEnabled: false,
       },
     },
     CoworkTabs: {
@@ -137,6 +138,7 @@ const AppNavigator = createStackNavigator(
       screen: Map3DTabs,
       navigationOptions: {
         header: null,
+        gesturesEnabled: false,
       },
     },
 
@@ -656,6 +658,9 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
+    defaultNavigationOptions: {
+      gesturesEnabled: false,
+    },
     navigationOptions: {
       headerBackTitle: null,
       headerTintColor: '#333333',
