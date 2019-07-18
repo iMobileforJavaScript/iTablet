@@ -637,7 +637,15 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   }
   externalDataPath=[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
   plotFilePath=[NSHomeDirectory() stringByAppendingFormat:@"%@", plotFilePath];
-  //修改为每次都解压标绘库
+  //修改为每次都解压标绘库,ios解压不会覆盖，所以要先删除之前的文件
+  if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
+    [[NSFileManager defaultManager] removeItemAtPath:commonPlotZipPath error:nil];
+  }
+  if ([[NSFileManager defaultManager] fileExistsAtPath:plotPath isDirectory:nil]) {
+    [[NSFileManager defaultManager] removeItemAtPath:plotPath error:nil];
+  }
+  
+  
 //  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:plotFilePath isDirectory:nil]) {
 //    if ([[NSFileManager defaultManager] fileExistsAtPath:commonPlotZipPath isDirectory:nil]) {
 //      isUnZipPlot = [FileTools unZipFile:commonPlotZipPath targetPath:plotPath];

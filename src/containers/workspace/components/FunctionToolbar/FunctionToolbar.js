@@ -1121,7 +1121,7 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu
               .PLOTTING_ANIMATION,
             action: this.showAnimationList,
-            image: require('../../../../assets/function/icon_edit.png'),
+            image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
             //分享
