@@ -71,6 +71,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
 
+  SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
+
   NETWORK_REQUEST_FAILED: 'Network Request Failed',
 
   CREATING: 'Creating',

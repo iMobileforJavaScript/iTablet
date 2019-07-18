@@ -2815,7 +2815,7 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < resultArr.length; i++) {
           let description =
             resultArr[i].description &&
-            resultArr[i].description != 'NULL' &&
+            resultArr[i].description !== 'NULL' &&
             JSON.parse(resultArr[i].description)
           if (description && description.geoStyle) {
             await SMap.setLayerStyle(

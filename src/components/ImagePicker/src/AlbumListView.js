@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import PageKeys from './PageKeys'
 import Container from '../../Container'
+import { InputDialog } from '../../Dialog'
 import { getLanguage } from '../../../language'
 import { scaleSize } from '../../../utils'
 import { size } from '../../../styles'
@@ -24,9 +25,13 @@ export default class extends React.PureComponent {
     groupTypes: String,
     choosePhotoTitle: String,
     cancelLabel: String,
-    callback: () => {},
     callback: String,
     navigation: Object,
+    showDialog?: boolean,
+
+    callback: () => {},
+    dialogConfirm?: () => {},
+    dialogCancel?: () => {},
   }
 
   static defaultProps = {
@@ -47,6 +52,8 @@ export default class extends React.PureComponent {
   componentDidMount() {
     Dimensions.addEventListener('change', this._onWindowChanged)
     ;(async function() {
+      if (this.props.showDialog && this.dialog)
+        this.dialog.setDialogVisible(this.props.showDialog)
       let data
       if (Platform.OS === 'android' && this.props.assetType === 'All') {
         let photots = await this.getPhotos('Photos')
@@ -115,6 +122,26 @@ export default class extends React.PureComponent {
           keyExtractor={item => item.name}
           extraData={this.state}
         />
+        {this.props.dialogConfirm && (
+          <InputDialog
+            ref={ref => (this.dialog = ref)}
+            title={getLanguage(GLOBAL.language).Map_Main_Menu.TOUR_NAME}
+            confirmAction={value => {
+              this.props.dialogConfirm(value, () =>
+                this.dialog.setDialogVisible(false),
+              )
+            }}
+            cancelAction={() => {
+              if (this.props.dialogCancel) {
+                this.props.dialogCancel()
+              } else {
+                this._clickCancel()
+              }
+            }}
+            confirmBtnTitle={getLanguage(GLOBAL.language).Map_Settings.CONFIRM}
+            cancelBtnTitle={getLanguage(GLOBAL.language).Map_Settings.CANCEL}
+          />
+        )}
       </Container>
     )
   }

@@ -1,10 +1,12 @@
 /**
  * 获取地图工具数据
  */
-import { SMap, Action } from 'imobile_for_reactnative'
-import { ConstToolType, TouchType } from '../../../../constants'
+import { SMap, Action, SMediaCollector } from 'imobile_for_reactnative'
+import { ConstToolType, TouchType, ConstPath } from '../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
+import { FileTools } from '../../../../native'
+import { ImagePicker } from '../../../../components'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import NavigationService from '../../../NavigationService'
@@ -253,6 +255,13 @@ function getMapTool(type, params) {
           action: captureImage,
           size: 'large',
           image: getPublicAssets().mapTools.tools_camera,
+        },
+        {
+          key: 'tour',
+          title: getLanguage(global.language).Map_Main_Menu.TOUR,
+          action: tour,
+          size: 'large',
+          image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
         },
         // {
         //   key: 'captureVideo',
@@ -777,13 +786,6 @@ function address() {
 
 function captureImage() {
   (async function() {
-    // let options = {
-    //   datasourceName: 'Hunan',
-    // }
-    // SMediaCollector.captureImage(options, data => {
-    //   console.warn(JSON.stringify(data))
-    // })
-    // TODO datasourceAlias 修改为根据标注图层来设置
     let isTaggingLayer = await SMap.isTaggingLayer(
       _params.user.currentUser.userName,
     )
@@ -802,6 +804,76 @@ function captureImage() {
       Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
       _params.navigation.navigate('LayerManager')
     }
+  }.bind(this)())
+}
+
+function tour() {
+  (async function() {
+    // let {isTaggingLayer, layerInfo} = await SMap.getCurrentTaggingLayer(
+    //   _params.user.currentUser.userName,
+    // )
+    //
+    // // TODO 判断是否是轨迹标注图层
+    // if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
+    //   let dsDes = layerInfo && layerInfo.datasetDescription &&
+    //     layerInfo.datasetDescription !== 'NULL' && JSON.parse(layerInfo.datasetDescription)
+    //   dsDes && dsDes.type !== 'tour' && await SMap.setTaggingGrid(
+    //     GLOBAL.TaggingDatasetName,
+    //     _params.user.currentUser.userName,
+    //   )
+    //   ImagePicker.AlbumListView.defaultProps.showDialog = false
+    //   ImagePicker.AlbumListView.defaultProps.dialogConfirm = null
+    // } else {
+    let targetPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        _params.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativeFilePath.Media,
+    )
+    SMediaCollector.initMediaCollector(targetPath)
+
+    let tourLayer
+    ImagePicker.AlbumListView.defaultProps.showDialog = true
+    ImagePicker.AlbumListView.defaultProps.dialogConfirm = (
+      value = '',
+      cb = () => {},
+    ) => {
+      // TODO 创建轨迹标注图层
+      if (value !== '') {
+        (async function() {
+          await SMap.setLabelColor()
+          let tagginData = await SMap.newTaggingDataset(
+            value,
+            _params.user.currentUser.userName,
+            false, // 轨迹图层都设置为不可编辑
+            'tour',
+          )
+          tourLayer = tagginData.layerName
+          cb && cb()
+        }.bind(this)())
+      }
+      Toast.show(value)
+    }
+    // }
+
+    ImagePicker.AlbumListView.defaultProps.assetType = 'All'
+    ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+
+    ImagePicker.getAlbum({
+      maxSize: 9,
+      callback: async data => {
+        if (data.length <= 1) {
+          Toast.show(
+            getLanguage(global.language).Prompt.SELECT_TWO_MEDIAS_AT_LEAST,
+          )
+          return
+        }
+        if (tourLayer) {
+          let res = await SMediaCollector.addTour(tourLayer, data)
+          res.result && (await SMap.setLayerFullView(tourLayer))
+        }
+      },
+    })
   }.bind(this)())
 }
 

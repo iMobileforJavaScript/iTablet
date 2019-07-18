@@ -334,18 +334,20 @@ class ModuleList extends Component {
       fileName = '地理国情普查_示范数据'
     } else if (moduleKey === MAP_MODULE.MAP_ANALYST) {
       fileName = 'Xiamen_CN'
-    } else if (moduleKey === '应急标绘') {
-      fileName = '湖南'
-    } else if (moduleKey === '三维场景') {
+    }
+    // else if (moduleKey === '应急标绘') {
+    //   fileName = '湖南'
+    // }
+    else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
       } else if (Platform.OS === 'ios') {
         fileName = 'OlympicGreen_ios'
       }
+    } else if (moduleKey === '应急标绘') {
+      // fileName = '湖南'
+      fileName = 'qdwj_示范数据'
     }
-    // else if (moduleKey === '应急标绘') {
-    //   fileName = '湖南'
-    // }
 
     let tmpCurrentUser = this.props.currentUser
 
@@ -453,12 +455,8 @@ class ModuleList extends Component {
               this.moduleItems[index].getDownloading())
           )
         ) {
-          if (!(module === constants.MAP_PLOTTING))
-            this._showAlert(
-              this.moduleItems[index],
-              downloadData,
-              tmpCurrentUser,
-            )
+          // if (!(module === constants.MAP_PLOTTING))
+          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
         if (latestMap) {
           item.action && item.action(tmpCurrentUser, latestMap)
