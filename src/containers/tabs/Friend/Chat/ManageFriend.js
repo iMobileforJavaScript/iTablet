@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Container, Dialog } from '../../../../components'
+import { Container } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
 import TouchableItemView from '../TouchableItemView'
@@ -8,6 +8,7 @@ import { getThemeAssets } from '../../../../assets'
 import { scaleSize, Toast } from '../../../../utils'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from '../MessageDataHandle'
+import { SimpleDialog } from '../index'
 // import MsgConstant from '../MsgConstant'
 
 class ManageFriend extends Component {
@@ -49,7 +50,6 @@ class ManageFriend extends Component {
       talkId: this.targetUser.id, //会话ID
     })
     FriendListFileHandle.delFromFriendList(this.targetUser.id)
-    this.delDialog.setDialogVisible(false)
     NavigationService.popToTop()
   }
 
@@ -62,23 +62,14 @@ class ManageFriend extends Component {
           navigation: this.props.navigation,
         }}
       >
-        {this.renderDelDialog()}
+        {this.renderSimpleDialog()}
         {this.renderSettings()}
       </Container>
     )
   }
 
-  renderDelDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.delDialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
-        confirmAction={this._deleteFriend}
-        info={getLanguage(this.language).Friends.ALERT_DEL_FRIEND}
-      />
-    )
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   renderSettings = () => {
@@ -174,7 +165,14 @@ class ManageFriend extends Component {
         <TouchableOpacity
           style={{ alignItems: 'center', paddingVertical: scaleSize(20) }}
           onPress={() => {
-            this.delDialog.setDialogVisible(true)
+            this.SimpleDialog.setText(
+              getLanguage(this.language).Friends.ALERT_DEL_FRIEND,
+            )
+            this.SimpleDialog.setConfirm(() => {
+              this.SimpleDialog.setVisible(false)
+              this._deleteFriend()
+            })
+            this.SimpleDialog.setVisible(true)
           }}
         >
           <Text style={{ color: 'red', fontSize: scaleSize(26) }}>

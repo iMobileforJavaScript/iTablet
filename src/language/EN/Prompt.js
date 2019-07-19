@@ -18,6 +18,7 @@ const Prompt = {
 
   LOG_OUT: 'Are you sure you want to log out?',
   FAILED_TO_LOG: 'Failed to Login',
+  INCORRECT_USER_INFO: 'Account not exist or password error',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
@@ -137,6 +138,7 @@ const Prompt = {
   SETTING_FAILED: 'Failed to Set',
 
   NETWORK_ERROR: 'Network Error',
+  NO_NETWORK: 'No Internet connection',
 
   LICENSE_EXPIRED:
     'Trial license has expired. Please apply for a new one and restart.',

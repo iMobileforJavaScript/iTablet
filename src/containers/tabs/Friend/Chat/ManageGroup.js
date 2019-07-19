@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Container, Dialog } from '../../../../components'
+import { Container } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
 import TouchableItemView from '../TouchableItemView'
@@ -10,6 +10,7 @@ import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from '../MessageDataHandle'
 import MsgConstant from '../MsgConstant'
 import { SMessageService } from 'imobile_for_reactnative'
+import { SimpleDialog } from '../index'
 
 class ManageGroup extends Component {
   props: {
@@ -53,7 +54,6 @@ class ManageGroup extends Component {
   }
 
   _leaveGroup = async () => {
-    this.leaveDialog.setDialogVisible(false)
     NavigationService.popToTop()
     let ctime = new Date()
     let time = Date.parse(ctime)
@@ -88,7 +88,6 @@ class ManageGroup extends Component {
   }
 
   _disbandGroup = async () => {
-    this.disbandDialog.setDialogVisible(false)
     NavigationService.popToTop()
     let ctime = new Date()
     let time = Date.parse(ctime)
@@ -127,37 +126,14 @@ class ManageGroup extends Component {
           navigation: this.props.navigation,
         }}
       >
-        {this.renderLeaveDialog()}
-        {this.renderDisbandDialog()}
+        {this.renderSimpleDialog()}
         {this.renderSettings()}
       </Container>
     )
   }
 
-  renderLeaveDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.leaveDialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
-        confirmAction={this._leaveGroup}
-        info={getLanguage(this.language).Friends.DEL_GROUP_CONFIRM}
-      />
-    )
-  }
-
-  renderDisbandDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.disbandDialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
-        confirmAction={this._disbandGroup}
-        info={getLanguage(this.language).Friends.DEL_GROUP_CONFIRM2}
-      />
-    )
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   renderSettings = () => {
@@ -272,10 +248,23 @@ class ManageGroup extends Component {
           style={{ alignItems: 'center', paddingVertical: scaleSize(20) }}
           onPress={() => {
             if (this.user.userId === this.masterID) {
-              this.disbandDialog.setDialogVisible(true)
+              this.SimpleDialog.setText(
+                getLanguage(this.language).Friends.DEL_GROUP_CONFIRM2,
+              )
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this._disbandGroup()
+              })
             } else {
-              this.leaveDialog.setDialogVisible(true)
+              this.SimpleDialog.setText(
+                getLanguage(this.language).Friends.DEL_GROUP_CONFIRM,
+              )
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this._leaveGroup()
+              })
             }
+            this.SimpleDialog.setVisible(true)
           }}
         >
           <Text style={{ color: 'red', fontSize: scaleSize(26) }}>

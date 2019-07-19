@@ -1,5 +1,7 @@
 //好友
 const Friends = {
+  LOCALE: 'zh-cn',
+
   LOGOUT: '登录以联系好友',
   MESSAGES: '消息',
   FRIENDS: '好友',
@@ -49,6 +51,9 @@ const Friends = {
   DEL_GROUP_CONFIRM: '清空消息并退出群聊?',
   DEL_GROUP_CONFIRM2: '清空消息并解散群聊?',
   //Chat
+  INPUT_MESSAGE: '输入消息...',
+  SEND: '发送',
+  LOAD_EARLIER: '显示更多消息',
   IMPORT_DATA: '数据导入中',
   IMPORT_SUCCESS: '导入成功',
   IMPORT_FAIL: '导入失败',

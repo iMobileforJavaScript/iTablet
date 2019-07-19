@@ -18,6 +18,7 @@ const Prompt = {
 
   LOG_OUT: '是否退出登录？',
   FAILED_TO_LOG: '登录失败',
+  INCORRECT_USER_INFO: '用户名或用户密码错误',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
@@ -133,6 +134,7 @@ const Prompt = {
   SETTING_SUCCESS: '设置成功',
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
+  NO_NETWORK: '未连接到网络',
 
   LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
   APPLY_LICENSE: '申请许可',

@@ -13,6 +13,7 @@ import GroupMemberList from './FriendGroup/GroupMemberList'
 import RecommendFriend from './RecommendFriend'
 import MsgConstant from './MsgConstant'
 import SelectFriend from './SelectFriend'
+import { SimpleDialog } from './Component'
 import { openWorkspace, closeWorkspace } from '../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
@@ -50,4 +51,5 @@ export {
   GroupMemberList,
   MsgConstant,
   SelectFriend,
+  SimpleDialog,
 }

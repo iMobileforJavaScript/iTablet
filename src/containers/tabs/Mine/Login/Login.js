@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Keyboard,
+  NetInfo,
 } from 'react-native'
 import { Toast, scaleSize } from '../../../../utils/index'
 import { Container } from '../../../../components'
@@ -107,16 +108,8 @@ export default class Login extends React.Component {
           Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
-        this.container.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.LOG_IN,
-        )
-        //'登录中...')
         userName = this.txtEmail
         password = this.txtEmailPassword
-        /// debugger
-        result = await SOnlineService.login(userName, password)
-        // debugger
       } else {
         if (!this.txtPhoneNumber) {
           //请输入手机号
@@ -128,17 +121,22 @@ export default class Login extends React.Component {
           Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
+        userName = this.txtPhoneNumber
+        password = this.txtPhoneNumberPassword
+      }
+
+      let isConnected = await NetInfo.isConnected.fetch()
+      if (isConnected) {
         this.container.setLoading(
           true,
           getLanguage(this.props.language).Prompt.LOG_IN,
         )
-        //'登录中...')
-        userName = this.txtPhoneNumber
-        password = this.txtPhoneNumberPassword
-        //debugger
-        result = await SOnlineService.loginWithPhoneNumber(userName, password)
-        // debugger
+        result = await SOnlineService.login(userName, password)
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
+        return
       }
+
       // debugger
       if (typeof result === 'boolean' && result) {
         //debugger
@@ -252,7 +250,19 @@ export default class Login extends React.Component {
           password: '',
           // userType:UserType.COMMON_USER,
         })
-        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
+        if (
+          result === '用户名或用户密码错误' ||
+          result === 'account not exist or password error'
+        ) {
+          Toast.show(
+            getLanguage(this.props.language).Prompt.INCORRECT_USER_INFO,
+          )
+        } else if (
+          result === '无网络连接' ||
+          result === 'The Internet connection appears to be offline.'
+        ) {
+          Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
+        } else Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
         //'登录失败')
         this.container.setLoading(false)
       }
