@@ -2005,7 +2005,7 @@ export default class ToolBar extends React.PureComponent {
           if (arrDirContent[key].type === 'file') {
             // let dirPath = path + arrDirContent[key].name
             let item = {}
-            item.title = arrDirContent[key].name
+            item.title = arrDirContent[key].name.split('.')[0]
             item.index = i
             item.path = path + arrDirContent[key].name
             animationXmlList.push(item)
