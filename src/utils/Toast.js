@@ -2,7 +2,7 @@ import Toast from 'react-native-root-toast'
 
 function show(msg, option = null) {
   let op = option || {
-    duration: Toast.TOAST_SHOT,
+    duration: DURATION.TOAST_SHOT,
     position: POSITION.TOP,
     shadow: true,
     animation: true,

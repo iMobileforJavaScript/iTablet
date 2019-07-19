@@ -40,6 +40,7 @@ const Prompt = {
   ADD_FAILED: 'Failed to Add',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
   SWITCHING_PLOT_LIB: 'Switching',
+  NON_SELECTED_OBJ: 'No object selected',
 
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',

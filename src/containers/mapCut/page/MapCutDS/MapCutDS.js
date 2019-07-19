@@ -82,6 +82,10 @@ export default class MapCutDS extends React.Component {
         headerProps={{
           title: '地图裁剪',
           navigation: this.props.navigation,
+          backAction: () => {
+            this.cb && this.cb({ msg: 'showModal' })
+            NavigationService.goBack()
+          },
           headerRight: [
             <MTBtn
               key={'newDatasource'}
