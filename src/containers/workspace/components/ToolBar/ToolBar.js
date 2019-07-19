@@ -3088,6 +3088,7 @@ export default class ToolBar extends React.PureComponent {
         type === ConstToolType.MAP3D_CROSS_CLIP ||
         type === ConstToolType.MAP3D_PLANE_CLIP
       ) {
+        await SScene.clipSenceClear()
         GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else {
         if (type === ConstToolType.ATTRIBUTE_RELATE) {
@@ -4942,8 +4943,10 @@ export default class ToolBar extends React.PureComponent {
         endY: ~~data[2].y,
         clipInner: true,
         layers: [],
+        isCliped: false,
       }
       let rel = await this.cut3d(clipSetting)
+      rel.isCliped = true
       this.setState({
         clipSetting: rel,
       })
@@ -5642,7 +5645,9 @@ export default class ToolBar extends React.PureComponent {
               // !this.props.selection.layerInfo ||
               // !this.props.selection.layerInfo.path
             ) {
-              Toast.show(ConstInfo.NON_SELECTED_OBJ)
+              Toast.show(
+                getLanguage(this.props.language).Prompt.NON_SELECTED_OBJ,
+              )
               return
             }
             let selectObjNums = 0
