@@ -57,7 +57,7 @@ buck-out/
 .idea/
 .gradle/
 android/keystores/
-android/release/
+android/app/release/
 android/app/app.iml
 android/local.properties
 android/app/build/
