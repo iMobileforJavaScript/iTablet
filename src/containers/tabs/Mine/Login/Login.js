@@ -139,17 +139,19 @@ export default class Login extends React.Component {
 
       // debugger
       if (typeof result === 'boolean' && result) {
-        //debugger
-        let isAccountExist
-        for (let i = 0; i < this.props.user.users.length; i++) {
-          isAccountExist =
-            this.props.user.users[i].userName === userName &&
-            this.props.user.users[i].password === password
-          if (isAccountExist) {
-            break
-          }
-        }
-        if (!isAccountExist) {
+        // debugger
+        // let isAccountExist
+        // for (let i = 0; i < this.props.user.users.length; i++) {
+        //   isAccountExist =
+        //     this.props.user.users[i].userName === userName &&
+        //     this.props.user.users[i].password === password
+        //   if (isAccountExist) {
+        //     break
+        //   }
+        // }
+        // debugger
+        //if (!isAccountExist) 
+        {
           await this.initUserDirectories(userName)
         }
 
