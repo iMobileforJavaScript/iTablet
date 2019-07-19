@@ -594,7 +594,7 @@ export default class MT_layerManager extends React.Component {
               value,
               this.props.user.currentUser.userName,
             )
-            GLOBAL.TaggingDatasetName = data && data.dataset
+            GLOBAL.TaggingDatasetName = data && data.datasetName
             // this.setRefreshing(true)
             // this.getData()
             this.updateTagging()

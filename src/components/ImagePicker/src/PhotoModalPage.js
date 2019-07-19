@@ -100,6 +100,7 @@ export default class extends React.PureComponent {
         animationType={'slide'}
         supportedOrientations={this.props.supportedOrientations}
         style={{ flex: 1 }}
+        onRequestClose={this._onRequestClose}
       >
         <View style={{ height: deviceHeight, width: deviceWidth }}>
           <NavigationDoor />
@@ -107,6 +108,8 @@ export default class extends React.PureComponent {
       </Modal>
     )
   }
+
+  _onRequestClose = () => {}
 
   _clickBack = () => {
     this.props.onDestroy && this.props.onDestroy()

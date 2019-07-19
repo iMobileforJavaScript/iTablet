@@ -150,7 +150,7 @@ export default class Login extends React.Component {
         //   }
         // }
         // debugger
-        //if (!isAccountExist) 
+        //if (!isAccountExist)
         {
           await this.initUserDirectories(userName)
         }
