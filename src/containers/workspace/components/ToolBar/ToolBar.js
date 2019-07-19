@@ -208,7 +208,6 @@ export default class ToolBar extends React.PureComponent {
     }
     this.isShow = false
     this.isBoxShow = true
-    this.setVisible = this.setVisible.bind(this)
   }
 
   componentDidMount() {
@@ -2582,7 +2581,7 @@ export default class ToolBar extends React.PureComponent {
    *   containerType:   容器的类型, list | table
    * }
    **/
-  setVisible(isShow, type = this.state.type, params = {}) {
+  setVisible = (isShow, type = this.state.type, params = {}) => {
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
     }
