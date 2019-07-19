@@ -581,7 +581,7 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   }
   //创建Import文件夹
   NSString *importFilePath = [NSHomeDirectory() stringByAppendingString:@"/Documents/iTablet/Import"];
-  [FileTools deleteFile:importFilePath];
+//  [FileTools deleteFile:importFilePath];
   [FileTools createFileDirectories:importFilePath];
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
