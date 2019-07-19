@@ -137,6 +137,12 @@ export default class CustomView extends React.Component {
                 latitude: this.props.currentMessage.originMsg.message.message
                   .latitude,
               },
+              backAction: () => {
+                NavigationService.pop()
+                NavigationService.replace('CoworkTabs', {
+                  targetId: this.props.currentMessage.originMsg.user.groupID,
+                })
+              },
             })
           }}
         >

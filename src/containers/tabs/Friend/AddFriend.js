@@ -229,10 +229,8 @@ class AddFriend extends Component {
             return
           }
           if (FriendListFileHandle.isFriend(this.target[0])) {
-            NavigationService.navigate('ManageFriend', {
+            NavigationService.navigate('Chat', {
               targetId: this.target[0],
-              user: this.user,
-              friend: this.friend,
             })
           } else {
             this.dialog.setDialogVisible(true)

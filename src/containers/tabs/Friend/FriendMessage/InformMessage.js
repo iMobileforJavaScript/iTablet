@@ -57,10 +57,8 @@ export default class InformMessage extends React.Component {
         if (!FriendListFileHandle.isFriend(item.originMsg.user.id)) {
           this.dialog.setDialogVisible(true)
         } else {
-          NavigationService.navigate('ManageFriend', {
+          NavigationService.navigate('Chat', {
             targetId: item.originMsg.user.id,
-            user: this.state.currentUser,
-            friend: this.friend,
           })
         }
         break

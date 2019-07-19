@@ -234,10 +234,8 @@ class RecommendFriend extends Component {
               return
             }
             if (FriendListFileHandle.isFriend(this.target.id)) {
-              NavigationService.navigate('ManageFriend', {
+              NavigationService.navigate('Chat', {
                 targetId: this.target.id,
-                user: this.user,
-                friend: this.friend,
               })
             } else {
               this.dialog.setDialogVisible(true)

@@ -441,6 +441,11 @@ function layerPlottingSetting(param) {
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          //'分享图层',
+          image: require('../../../../assets/function/icon_function_share.png'),
+        },
       ],
     },
   ]
@@ -486,6 +491,11 @@ function layerCollectionSetting(param) {
         //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
         //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
         // },
+        {
+          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          //'分享图层',
+          image: require('../../../../assets/function/icon_function_share.png'),
+        },
         {
           title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
           //'移除',

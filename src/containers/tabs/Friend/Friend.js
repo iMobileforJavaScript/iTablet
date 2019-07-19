@@ -147,7 +147,7 @@ export default class Friend extends Component {
       if (appState === 'active') {
         this.restartService()
       } else if (appState === 'background') {
-        // this.disconnectService()
+        this.disconnectService()
       }
     }
   }
@@ -166,7 +166,6 @@ export default class Friend extends Component {
   startCheckAvailability = () => {
     NetInfo.isConnected.fetch().done(async isConnected => {
       global.network = isConnected
-      this.endCheckAvailability()
       //记录本次连接的consumer
       let consumer = await SMessageServiceHTTP.getConsumer(
         this.props.user.currentUser.userId,
@@ -177,14 +176,17 @@ export default class Friend extends Component {
         return
       }
       this.props.setConsumer(consumer)
+      this.endCheckAvailability()
       //每隔一分钟查询连接到服务器的consumer
       this.interval = setInterval(async () => {
-        let consumer = await SMessageServiceHTTP.getConsumer(
-          this.props.user.currentUser.userId,
-        )
-        // let reconnect = true //每分钟重连
-        if (!consumer || consumer !== this.props.chat.consumer) {
-          this.restartService()
+        let isConnected = await NetInfo.isConnected.fetch()
+        if (isConnected) {
+          let consumer = await SMessageServiceHTTP.getConsumer(
+            this.props.user.currentUser.userId,
+          )
+          if (!consumer || consumer !== this.props.chat.consumer) {
+            this.restartService()
+          }
         }
       }, 60000)
     })
@@ -1009,14 +1011,18 @@ export default class Friend extends Component {
     this.setState({ bHasUserInfo })
   }
 
-  disconnectService = async () => {
-    if (!g_connectService) return
+  disconnectService = async fromRestarting => {
     //重复调用，退出
-    if (this.disconnecting) return
+    if (this.disconnecting) {
+      return
+    }
     //重启中，等待重启完成
-    if (this.restarting) {
-      setTimeout(this.disconnectService, 10000)
+    if (!fromRestarting && this.restarting) {
+      setTimeout(this.disconnectService, 3000)
     } else {
+      if (!g_connectService) {
+        return
+      }
       this.disconnecting = true
       this.endCheckAvailability()
       await SMessageService.stopReceiveMessage()
@@ -1028,13 +1034,15 @@ export default class Friend extends Component {
 
   restartService = async () => {
     //重复调用，退出
-    if (this.restarting) return
+    if (this.restarting) {
+      return
+    }
     //正在断开连接，等待完成
     if (this.disconnecting) {
-      setTimeout(this.restartService, 10000)
+      setTimeout(this.restartService, 3000)
     } else {
-      g_connectService && (await this.disconnectService())
       this.restarting = true
+      g_connectService && (await this.disconnectService(true))
       await this.connectService()
       this.restarting = false
     }
