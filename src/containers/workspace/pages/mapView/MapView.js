@@ -256,6 +256,11 @@ export default class MapView extends React.Component {
       // })
     }
 
+    // 防止Toolbar被销毁后，再次添加Toolbar，修改其state失败
+    if (this.toolBox) {
+      GLOBAL.toolBox = this.toolBox
+    }
+
     // 网络分析模式下
     if (this.props.analyst.params) {
       this.container && this.container.setHeaderVisible(false)

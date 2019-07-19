@@ -28,8 +28,6 @@ export default class MapCutSetting extends React.Component {
       data: this.initData(),
       extradatasources: [],
     }
-
-    this.changeDSData = null
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -40,6 +38,28 @@ export default class MapCutSetting extends React.Component {
     shouldUpdate = shouldUpdate || !nextState.data.compare(this.state.data)
 
     return shouldUpdate
+  }
+
+  reset = cb => {
+    this.setState(
+      state => {
+        const newData = new Map(state.data)
+        let item = newData.get('ds')
+        item.selected = false
+        item.dsName = this.props.datasources[0]
+          ? this.props.datasources[0].alias
+          : ''
+        let erase = newData.get('erase')
+        erase.value = false
+        newData.set('erase', erase)
+        newData.set('ds', item)
+        return { data: newData }
+      },
+      () => {
+        this.props.configAction && this.props.configAction(this.state.data)
+        cb && cb()
+      },
+    )
   }
 
   initData = () => {
@@ -221,28 +241,32 @@ export default class MapCutSetting extends React.Component {
                   this.state.extradatasources,
                 ),
                 currentUser: this.props.currentUser,
-                cb: ({ item }) => {
-                  const newData = new Map(this.state.data)
-                  let dsData = newData.get('ds')
-                  let extradatasources = this.state.extradatasources
-                  extradatasources = extradatasources.filter(
-                    val => val.alias !== item.alias,
-                  )
-                  extradatasources.push(item)
-                  if (dsData.dsName !== item.alias) {
-                    dsData.dsName = item.alias
-                    newData.set('ds', dsData)
-                    this.setState(
-                      {
-                        data: newData,
-                        extradatasources,
-                      },
-                      () => {
-                        this.settingModal.setVisible(true)
-                        this.props.configAction &&
-                          this.props.configAction(this.state.data)
-                      },
+                cb: ({ item, msg }) => {
+                  if (item && !msg) {
+                    const newData = new Map(this.state.data)
+                    let dsData = newData.get('ds')
+                    let extradatasources = this.state.extradatasources
+                    extradatasources = extradatasources.filter(
+                      val => val.alias !== item.alias,
                     )
+                    extradatasources.push(item)
+                    if (dsData.dsName !== item.alias) {
+                      dsData.dsName = item.alias
+                      newData.set('ds', dsData)
+                      this.setState(
+                        {
+                          data: newData,
+                          extradatasources,
+                        },
+                        () => {
+                          this.settingModal.setVisible(true)
+                          this.props.configAction &&
+                            this.props.configAction(this.state.data)
+                        },
+                      )
+                    }
+                  } else if (msg === 'showModal') {
+                    this.settingModal.setVisible(true)
                   }
                 },
               })

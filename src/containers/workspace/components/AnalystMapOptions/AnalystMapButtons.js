@@ -102,6 +102,13 @@ export default class AnalystMapButtons extends React.Component {
         },
         {
           title: getLanguage(this.props.language).Analyst_Labels
+            .ADD_BARRIER_NODES,
+          action: () => {
+            GLOBAL.TouchType = TouchType.ADD_BARRIER_NODES
+          },
+        },
+        {
+          title: getLanguage(this.props.language).Analyst_Labels
             .SET_END_STATION,
           action: () => {
             GLOBAL.TouchType = TouchType.SET_END_STATION

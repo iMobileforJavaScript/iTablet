@@ -36,6 +36,7 @@ import FileTools from '../../../../native/FileTools'
 
 let COMPLETE = ''
 let EDIT = ''
+let CANCEL = ''
 
 export default class MapCut extends React.Component {
   props: {
@@ -51,9 +52,10 @@ export default class MapCut extends React.Component {
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
-    ;(COMPLETE = getLanguage(this.props.language).Prompt.CONFIRM),
-    (EDIT = getLanguage(this.props.language).Map_Main_Menu.EDIT),
-    (this.state = {
+    COMPLETE = getLanguage(this.props.language).Prompt.CONFIRM
+    EDIT = getLanguage(this.props.language).Map_Main_Menu.EDIT
+    CANCEL = getLanguage(this.props.language).Prompt.CANCEL
+    this.state = {
       headerBtnTitle: EDIT,
       selected: (new Map(): Map<string, boolean>),
       extraData: (new Map(): Map<string, Object>),
@@ -65,7 +67,7 @@ export default class MapCut extends React.Component {
       outLayers: [], // 未选中的图层
       datasources: [],
       points: (params && params.points) || [],
-    })
+    }
     this.init = true
     this.changeDSData = null
     this.isCutting = false // 判断是否正在裁剪
@@ -81,14 +83,14 @@ export default class MapCut extends React.Component {
           })
         })
         let _layers = await this.getAllLayers(layers)
-
+        _layers = _layers.filter(item => item.isVisible)
         this.selectAll(true, _layers)
       }.bind(this)())
     })
   }
 
   /**
-   * 获取所有图层，包含图层组中的图层
+   * 获取所有图层，包含图层组中的图层  过滤标注图层 保留当前标注图层
    */
   getAllLayers = async layers => {
     let _layers = []
@@ -142,7 +144,12 @@ export default class MapCut extends React.Component {
           )
           let newDatasourcePath = filePath + newDatasourceName + '.udb'
           let newDatasourceUDDPath = filePath + newDatasourceName + '.udd'
+
           //另存地图
+          let addition = {}
+          if (this.props.map.currentMap.Template) {
+            addition.Template = this.props.map.currentMap.Template
+          }
           if (this.state.saveAsName !== '') {
             let datasourceParams = {}
             datasourceParams.server = newDatasourcePath
@@ -153,6 +160,12 @@ export default class MapCut extends React.Component {
                 SMap.openDatasource(datasourceParams)
               }
             })
+            let prefix = `@Label_${this.props.currentUser.userName}#`
+            let regexp = new RegExp(prefix)
+            let layers = this.state.layers
+            addition.filterLayers = layers
+              .filter(item => item.name.match(regexp))
+              .map(val => val.name)
           }
           let DSName = this.state.datasources.map(item => item.alias)
           this.state.selected.forEach((value, key) => {
@@ -198,11 +211,6 @@ export default class MapCut extends React.Component {
                 : info.datasourceName
             layersInfo.push(layerInfo)
           })
-
-          let addition = {}
-          if (this.props.map.currentMap.Template) {
-            addition.Template = this.props.map.currentMap.Template
-          }
 
           SMap.clipMap(
             this.state.points,
@@ -653,14 +661,14 @@ export default class MapCut extends React.Component {
             },
           })}
           {this.renderBottomButton({
-            icon: require('../../../../assets/mapTools/icon_delete.png'),
+            icon: getThemeAssets().attribute.icon_delete,
             action: () => {
               if (this.state.selected.size === 0) return
               this.deleteLayers()
             },
           })}
           {this.renderBottomButton({
-            icon: require('../../../../assets/mapTools/icon_setting.png'),
+            icon: getThemeAssets().attribute.icon_setting,
             action: () => {
               if (this.state.selected.size === 0) return
               this.settingModal && this.settingModal.showModal(true)
@@ -895,6 +903,21 @@ export default class MapCut extends React.Component {
   }
 
   render() {
+    let headerL = {}
+    this.state.headerBtnTitle === COMPLETE &&
+      (headerL.headerLeft = (
+        <TextBtn
+          btnText={CANCEL}
+          textStyle={styles.headerBtnTitle}
+          btnClick={() => {
+            if (this.state.headerBtnTitle === COMPLETE) {
+              this.settingModal.reset(this.headerBtnAction)
+            } else {
+              this.props.navigation.goBack()
+            }
+          }}
+        />
+      ))
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -910,6 +933,7 @@ export default class MapCut extends React.Component {
               btnClick={this.headerBtnAction}
             />
           ),
+          ...headerL,
         }}
       >
         {this.renderTop()}

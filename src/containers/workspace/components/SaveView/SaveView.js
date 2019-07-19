@@ -153,7 +153,9 @@ export default class SaveView extends React.Component {
         ? Dimensions.get('window').height
         : ExtraDimensions.getRealWindowHeight() -
           ExtraDimensions.getStatusBarHeight() -
-          ExtraDimensions.getSoftMenuBarHeight()
+          (ExtraDimensions.isSoftMenuBarEnabled()
+            ? ExtraDimensions.getSoftMenuBarHeight()
+            : 0)
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

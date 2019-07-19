@@ -321,7 +321,7 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   /** 关联事件 **/
-  relateAction(){
+  relateAction() {
     if (
       this.state.currentTabIndex >= this.currentTabRefs.length &&
       !this.currentTabRefs[this.state.currentTabIndex]
@@ -382,7 +382,9 @@ export default class LayerAttributeTabs extends React.Component {
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
-        StyleUtils.setSelectionStyle(this.props.currentLayer.path)
+        StyleUtils.setSelectionStyle(
+          this.props.currentLayer.path || objs[0].layerPath,
+        )
         if (data instanceof Array && data.length > 0) {
           SMap.moveToPoint({
             x: data[0].x,
