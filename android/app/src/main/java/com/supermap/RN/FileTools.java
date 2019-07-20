@@ -910,6 +910,11 @@ public class FileTools extends ReactContextBaseJavaModule {
             isUnZip = true;
         }
         //修改为每次都重新解压标绘库
+        File plotPathFile=new File(plotFilePath);
+        if(plotPathFile.exists()&&plotPathFile.isDirectory()){
+            deleteDirectory(plotFilePath);
+        }
+
 //        if (!Utils.fileIsExit(plotPath) || !Utils.fileIsExit(plotFilePath)) {
 //            if (Utils.fileIsExit(commonPlotZipPath)) {
 //                isUnZipPlot = FileTools.unZipFile(commonPlotZipPath, plotPath);
@@ -921,6 +926,11 @@ public class FileTools extends ReactContextBaseJavaModule {
 //            }
             if(isUnZipPlot){
                 String toPath=dataPath+"Plotting/";
+                String targetToPath=toPath+"PlotLibData";
+                File targetToPathFile=new File(targetToPath);
+                if(targetToPathFile.exists()&&targetToPathFile.isDirectory()){
+                    deleteDirectory(targetToPath);
+                }
                 copyFiles(plotFilePath,toPath,"plot","Symbol","SymbolIcon",true);
             }
 //        } else {
