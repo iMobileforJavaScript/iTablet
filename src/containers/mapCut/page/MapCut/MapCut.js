@@ -152,6 +152,17 @@ export default class MapCut extends React.Component {
           }
           if (this.state.saveAsName !== '') {
             let datasourceParams = {}
+            let index = 0
+            let flag = true
+            newDatasourcePath = filePath + newDatasourceName + index + '.udb'
+            while (flag) {
+              index++
+              newDatasourceName =
+                this.props.currentUser.userName + index + '_Clip_Label#'
+              newDatasourcePath = filePath + newDatasourceName + '.udb'
+              newDatasourceUDDPath = filePath + newDatasourceName + '.udd'
+              flag = await FileTools.fileIsExist(newDatasourcePath)
+            }
             datasourceParams.server = newDatasourcePath
             datasourceParams.engineType = EngineType.UDB
             datasourceParams.alias = newDatasourceName

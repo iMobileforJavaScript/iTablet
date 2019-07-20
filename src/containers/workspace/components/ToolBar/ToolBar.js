@@ -3082,8 +3082,9 @@ export default class ToolBar extends React.PureComponent {
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
+      } else if (type === ConstToolType.MAP_TOOL_RECTANGLE_CUT) {
+        GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else if (
-        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT ||
         type === ConstToolType.MAP_BOX_CLIP ||
         type === ConstToolType.MAP3D_CROSS_CLIP ||
         type === ConstToolType.MAP3D_PLANE_CLIP
