@@ -85,6 +85,15 @@ function getToorbarHeight(orientation, type) {
         column = 8
       }
       break
+    case ConstToolType.MAP_TOOLS:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.NEWTHEME_HEIGHT[4]
+        column = 4
+      } else {
+        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        column = 5
+      }
+      break
     case ConstToolType.MAP_THEME_ADD_UDB:
     case ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS:
     case ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION:
