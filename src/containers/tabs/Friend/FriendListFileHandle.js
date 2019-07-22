@@ -6,8 +6,8 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import { SOnlineService } from 'imobile_for_reactnative'
-// import { Toast } from '../../../utils/index'
 import { FileTools } from '../../../native'
+import ConstPath from '../../../constants/ConstPath'
 
 function isJSON(str) {
   if (typeof str === 'string') {
@@ -31,46 +31,24 @@ export default class FriendListFileHandle {
   static friendListFile_ol = ''
 
   static async getContacts(path, file, resultCallBack) {
-    FriendListFileHandle.friends = undefined
-    let friendListFile = path + '/' + file
-    let onlineList = path + '/ol_fl'
+    // FriendListFileHandle.friends = undefined
+    // let friendListFile = path + '/' + file
+    // let onlineList = path + '/ol_fl'
 
-    FriendListFileHandle.friendListFile = friendListFile
-    FriendListFileHandle.friendListFile_ol = onlineList
+    // FriendListFileHandle.friendListFile = friendListFile
+    // FriendListFileHandle.friendListFile_ol = onlineList
 
-    if (await FileTools.fileIsExist(friendListFile)) {
-      let value = await RNFS.readFile(friendListFile)
+    if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile)) {
+      let value = await RNFS.readFile(FriendListFileHandle.friendListFile)
       if (isJSON(value) === true) {
         FriendListFileHandle.friends = JSON.parse(value)
       }
     }
 
-    if (await FileTools.fileIsExist(onlineList)) {
-      let onlineVersion = undefined
-      let onlinevalue = await RNFS.readFile(onlineList)
-      if (isJSON(onlinevalue) === true) {
-        onlineVersion = JSON.parse(onlinevalue)
-      }
-      if (
-        onlineVersion &&
-        (!FriendListFileHandle.friends ||
-          onlineVersion.rev > FriendListFileHandle.friends.rev)
-      ) {
-        FriendListFileHandle.friends = onlineVersion
-        FileTools.fileIsExist(FriendListFileHandle.friendListFile).then(
-          value => {
-            if (value) {
-              RNFS.unlink(FriendListFileHandle.friendListFile).then(() => {
-                RNFS.writeFile(FriendListFileHandle.friendListFile, onlinevalue)
-              })
-            } else {
-              RNFS.writeFile(FriendListFileHandle.friendListFile, onlinevalue)
-            }
-          },
-        )
-        //  RNFS.moveFile(friendListFile, path + 'friend.list')
-      }
+    if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile_ol)) {
+      await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
     }
+
     FriendListFileHandle.checkFriendList()
     resultCallBack(FriendListFileHandle.friends)
   }
@@ -179,51 +157,81 @@ export default class FriendListFileHandle {
     }
   }
 
-  static download() {
+  static async download(user) {
+    FriendListFileHandle.friends = undefined
+
+    if (user.userId === undefined) {
+      return
+    }
+
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + user.userName + '/Data/Temp',
+    )
+
+    let friendListFile = userPath + '/friend.list'
+    let onlineList = userPath + '/ol_fl'
+
+    FriendListFileHandle.friendListFile = friendListFile
+    FriendListFileHandle.friendListFile_ol = onlineList
+
+    if (await FileTools.fileIsExist(friendListFile)) {
+      let value = await RNFS.readFile(friendListFile)
+      if (isJSON(value) === true) {
+        FriendListFileHandle.friends = JSON.parse(value)
+      }
+    }
+
     SOnlineService.downloadFileWithCallBack(
       FriendListFileHandle.friendListFile_ol,
       'friend.list',
       {
-        onResult: value => {
-          // console.warn("-------------")
+        onResult: async value => {
           if (value === true) {
             RNFS.readFile(FriendListFileHandle.friendListFile_ol).then(
-              value => {
+              async value => {
                 let onlineVersion = JSON.parse(value)
                 if (
                   !FriendListFileHandle.friends ||
                   onlineVersion.rev > FriendListFileHandle.friends.rev
                 ) {
                   FriendListFileHandle.friends = onlineVersion
-                  FriendListFileHandle.saveHelper(value)
-                  //  RNFS.writeFile(FriendListFileHandle.friendListFile, value)
-                  //  RNFS.moveFile(friendListFile, path + 'friend.list')
+                  await RNFS.writeFile(
+                    FriendListFileHandle.friendListFile,
+                    value,
+                  )
+                  if (FriendListFileHandle.refreshCallback) {
+                    FriendListFileHandle.refreshCallback(true)
+                  }
+                } else if (
+                  onlineVersion.rev < FriendListFileHandle.friends.rev
+                ) {
+                  await FriendListFileHandle.upload()
                 }
+                await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
               },
             )
+          } else if (FriendListFileHandle.friends !== undefined) {
+            await FriendListFileHandle.upload()
           }
         },
       },
     )
   }
-  static upload() {
+  static async upload() {
     //上传
-    SOnlineService.deleteData('friend.list').then(result => {
-      if (result === true) {
-        let UploadFileName = 'friend.list.zip'
-        if (Platform.OS === 'android') {
-          UploadFileName = 'friend.list'
-        }
-        SOnlineService.uploadFile(
-          FriendListFileHandle.friendListFile,
-          UploadFileName,
-          {
-            // eslint-disable-next-line
-            onResult: value => {},
-          },
-        )
-      }
-    })
+    await SOnlineService.deleteData('friend.list')
+    let UploadFileName = 'friend.list.zip'
+    if (Platform.OS === 'android') {
+      UploadFileName = 'friend.list'
+    }
+    SOnlineService.uploadFile(
+      FriendListFileHandle.friendListFile,
+      UploadFileName,
+      {
+        // eslint-disable-next-line
+        onResult: value => {},
+      },
+    )
   }
 
   static saveHelper(friendsStr, callback) {

@@ -39,6 +39,7 @@ import SplashScreen from 'react-native-splash-screen'
 import UserType from './src/constants/UserType'
 import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
+import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 
 const {persistor, store} = ConfigStore()
 
@@ -169,6 +170,10 @@ class AppRoot extends Component {
         }
         // Toast.show('登陆状态失效')
       }else{
+        if(!this.listDowned){
+          FriendListFileHandle.download(this.props.user.currentUser)
+          this.listDowned = true
+        }
         // Toast.show('登陆')
       }
 

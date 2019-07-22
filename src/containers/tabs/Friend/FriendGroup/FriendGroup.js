@@ -75,7 +75,7 @@ class FriendGroup extends Component {
     FriendListFileHandle.upload()
   }
   download = () => {
-    FriendListFileHandle.download()
+    FriendListFileHandle.download(this.props.user)
     this.setState({ isRefresh: false })
   }
   refresh = () => {

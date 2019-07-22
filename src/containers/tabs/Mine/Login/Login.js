@@ -168,47 +168,47 @@ export default class Login extends React.Component {
           bGetUserInfo = true
         }
         //下载好友列表
-        if (bGetUserInfo !== false) {
-          //连接消息服务时判断是否正在登陆
-          global.isLogging = true
-          //优先加载在线的
-          let userPath = await FileTools.appendingHomeDirectory(
-            ConstPath.UserPath + userName + '/Data/Temp',
-          )
-          userPath = userPath + '/ol_fl'
-          SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
-            onResult: value => {
-              // console.warn("-------------")
-              if (value === true) {
-                this.props.setUser({
-                  userName: userName,
-                  password: password,
-                  nickname: userInfo.nickname,
-                  email: userInfo.email,
-                  phoneNumber: userInfo.phoneNumber,
-                  userId: userInfo.userId,
-                  isEmail: isEmail,
-                  userType: UserType.COMMON_USER,
-                  hasUpdateFriend: true,
-                })
-              } else {
-                this.props.setUser({
-                  userName: userName,
-                  password: password,
-                  nickname: userInfo.nickname,
-                  email: userInfo.email,
-                  phoneNumber: userInfo.phoneNumber,
-                  userId: userInfo.userId,
-                  isEmail: isEmail,
-                  userType: UserType.COMMON_USER,
-                  hasUpdateFriend: false,
-                })
-              }
-            },
-          })
-        }
+        // if (bGetUserInfo !== false) {
+        //连接消息服务时判断是否正在登陆
+        //优先加载在线的
+        // let userPath = await FileTools.appendingHomeDirectory(
+        //   ConstPath.UserPath + userName + '/Data/Temp',
+        // )
+        // userPath = userPath + '/ol_fl'
+        // SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
+        //   onResult: value => {
+        //     // console.warn("-------------")
+        //     if (value === true) {
+        //       this.props.setUser({
+        //         userName: userName,
+        //         password: password,
+        //         nickname: userInfo.nickname,
+        //         email: userInfo.email,
+        //         phoneNumber: userInfo.phoneNumber,
+        //         userId: userInfo.userId,
+        //         isEmail: isEmail,
+        //         userType: UserType.COMMON_USER,
+        //         hasUpdateFriend: true,
+        //       })
+        //     } else {
+        //       this.props.setUser({
+        //         userName: userName,
+        //         password: password,
+        //         nickname: userInfo.nickname,
+        //         email: userInfo.email,
+        //         phoneNumber: userInfo.phoneNumber,
+        //         userId: userInfo.userId,
+        //         isEmail: isEmail,
+        //         userType: UserType.COMMON_USER,
+        //         hasUpdateFriend: false,
+        //       })
+        //     }
+        //   },
+        // })
+        // }
 
         if (bGetUserInfo !== false) {
+          global.isLogging = true
           // Toast.show('登录成功')
           this.container.setLoading(false)
           this.props.setUser({
@@ -220,7 +220,7 @@ export default class Login extends React.Component {
             userId: userInfo.userId,
             isEmail: isEmail,
             userType: UserType.COMMON_USER,
-            hasUpdateFriend: undefined,
+            // hasUpdateFriend: undefined,
           })
         } else {
           // Toast.show('登录成功')

@@ -110,15 +110,16 @@ export default class Friend extends Component {
       JSON.stringify(prevProps.user.currentUser.userId) !==
       JSON.stringify(this.props.user.currentUser.userId)
     ) {
+      this.downloadFriendList(this.props.user.currentUser)
       this.restartService()
       JPushService.init(this.props.user.currentUser.userId)
     }
-    if (
-      JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
-      JSON.stringify(this.props.user.currentUser.hasUpdateFriend)
-    ) {
-      this.refreshList()
-    }
+    // if (
+    //   JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
+    //   JSON.stringify(this.props.user.currentUser.hasUpdateFriend)
+    // ) {
+    //   this.refreshList()
+    // }
   }
 
   componentWillUnmount() {
@@ -204,6 +205,10 @@ export default class Friend extends Component {
   refreshList = () => {
     if (this.friendList && this.friendList.refresh) this.friendList.refresh()
     if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
+  }
+
+  downloadFriendList = async user => {
+    FriendListFileHandle.download(user)
   }
 
   setCurChat = chat => {
@@ -738,7 +743,10 @@ export default class Friend extends Component {
     }
 
     if (!FriendListFileHandle.friends) {
-      await this.getContacts()
+      setTimeout(() => {
+        this._receiveMessage(message)
+      }, 500)
+      return
     }
 
     let bSystem = false

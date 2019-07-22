@@ -52,9 +52,6 @@ class FriendList extends Component {
   }
   componentDidMount() {
     this.getContacts()
-    if (this.props.friend.props.user.currentUser.hasUpdateFriend === false) {
-      this.upload()
-    }
   }
 
   shouldComponentUpdate(prevProps, prevState) {
@@ -78,7 +75,7 @@ class FriendList extends Component {
     FriendListFileHandle.upload()
   }
   download = () => {
-    FriendListFileHandle.download()
+    FriendListFileHandle.download(this.props.user)
     this.setState({ isRefresh: false })
   }
 
