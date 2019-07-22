@@ -15,9 +15,8 @@ import {
   Platform,
 } from 'react-native'
 import { Button } from '../../../../components'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, screen } from '../../../../utils'
 import { color, zIndexLevel, size } from '../../../../styles'
-import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 
 const styles = StyleSheet.create({
   overlay: {
@@ -148,12 +147,7 @@ export default class SaveView extends React.Component {
 
   render() {
     let animationType = this.props.animated ? 'fade' : 'none'
-    const deviceHeight =
-      Platform.OS === 'ios'
-        ? ExtraDimensions.getRealWindowHeight()
-        : ExtraDimensions.getRealWindowHeight() -
-          ExtraDimensions.getStatusBarHeight() -
-          ExtraDimensions.getSoftMenuBarHeight()
+    const deviceHeight = screen.getScreenSafeHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

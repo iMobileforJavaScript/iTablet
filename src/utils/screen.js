@@ -1,9 +1,11 @@
-import { Dimensions, PixelRatio } from 'react-native'
+import { Dimensions, PixelRatio, Platform } from 'react-native'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 const defaultPixel = PixelRatio.get() //iphone6的像素密度
 const dp2px = dp => PixelRatio.getPixelSizeForLayoutSize(dp) // DP to PX
 const px2dp = px => PixelRatio.roundToNearestPixel(px) // PX to DP
 let deviceWidth = getScreenWidth() //Dimensions.get('window').width //设备的宽度
 let deviceHeight = getScreenHeight() //Dimensions.get('window').height //设备的高度
+let deviceSafeHeight //设备安全高度
 //const defaultPixel = 2.25
 // const fontScale = PixelRatio.getFontScale()
 
@@ -18,7 +20,18 @@ function getScreenHeight() {
   deviceHeight = Dimensions.get('window').height
   return deviceHeight
 }
-
+function getScreenSafeHeight() {
+  if (Platform.OS === 'ios') return deviceHeight
+  let softMenuHeight = ExtraDimensions.getSoftMenuBarHeight()
+  let screenHeight = ExtraDimensions.getRealWindowHeight()
+  if (deviceHeight < deviceWidth) {
+    screenHeight = ExtraDimensions.getRealWindowWidth()
+    softMenuHeight = 0
+  }
+  deviceSafeHeight =
+    screenHeight - ExtraDimensions.getStatusBarHeight() - softMenuHeight
+  return deviceSafeHeight
+}
 //px转换成dp
 // let w2 = deviceWidth > 320 ? 720 / defaultPixel : 640 / defaultPixel
 // let h2 = deviceWidth > 320 ? 1080 / defaultPixel : 1136 / defaultPixel
@@ -53,6 +66,7 @@ export function setSpText(size) {
 export default {
   getScreenWidth,
   getScreenHeight,
+  getScreenSafeHeight,
   deviceWidth,
   deviceHeight,
   px2dp,

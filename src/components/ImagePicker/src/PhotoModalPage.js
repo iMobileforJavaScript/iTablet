@@ -11,8 +11,8 @@ import { createAppContainer, createStackNavigator } from 'react-navigation'
 import PageKeys from './PageKeys'
 import AlbumListView from './AlbumListView'
 import AlbumView from './AlbumView'
+import { screen } from '../../../utils'
 // import PreviewMultiView from './PreviewMultiView'
-import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 import StackViewStyleInterpolator from 'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator'
 
 export default class extends React.PureComponent {
@@ -86,12 +86,7 @@ export default class extends React.PureComponent {
         }),
       }),
     )
-    const deviceHeight =
-      Platform.OS === 'ios'
-        ? ExtraDimensions.getRealWindowHeight()
-        : ExtraDimensions.getRealWindowHeight() -
-          ExtraDimensions.getStatusBarHeight() -
-          ExtraDimensions.getSoftMenuBarHeight()
+    const deviceHeight = screen.getScreenSafeHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

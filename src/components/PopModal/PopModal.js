@@ -8,8 +8,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { color, size } from '../../styles'
-import { scaleSize } from '../../utils'
-import * as ExtraDimensions from 'react-native-extra-dimensions-android'
+import { scaleSize, screen } from '../../utils'
 
 export default class PopModal extends PureComponent {
   props: {
@@ -131,12 +130,7 @@ export default class PopModal extends PureComponent {
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
-    const deviceHeight =
-      Platform.OS === 'ios'
-        ? ExtraDimensions.getRealWindowHeight()
-        : ExtraDimensions.getRealWindowHeight() -
-          ExtraDimensions.getStatusBarHeight() -
-          ExtraDimensions.getSoftMenuBarHeight()
+    const deviceHeight = screen.getScreenSafeHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
