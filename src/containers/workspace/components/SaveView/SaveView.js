@@ -150,12 +150,10 @@ export default class SaveView extends React.Component {
     let animationType = this.props.animated ? 'fade' : 'none'
     const deviceHeight =
       Platform.OS === 'ios'
-        ? Dimensions.get('window').height
+        ? ExtraDimensions.getRealWindowHeight()
         : ExtraDimensions.getRealWindowHeight() -
           ExtraDimensions.getStatusBarHeight() -
-          (ExtraDimensions.isSoftMenuBarEnabled()
-            ? ExtraDimensions.getSoftMenuBarHeight()
-            : 0)
+          ExtraDimensions.getSoftMenuBarHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal

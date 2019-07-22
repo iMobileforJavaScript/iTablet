@@ -88,12 +88,10 @@ export default class extends React.PureComponent {
     )
     const deviceHeight =
       Platform.OS === 'ios'
-        ? Dimensions.get('window').height
+        ? ExtraDimensions.getRealWindowHeight()
         : ExtraDimensions.getRealWindowHeight() -
           ExtraDimensions.getStatusBarHeight() -
-          (ExtraDimensions.isSoftMenuBarEnabled()
-            ? ExtraDimensions.getSoftMenuBarHeight()
-            : 0)
+          ExtraDimensions.getSoftMenuBarHeight()
     const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
