@@ -3082,8 +3082,9 @@ export default class ToolBar extends React.PureComponent {
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
+      } else if (type === ConstToolType.MAP_TOOL_RECTANGLE_CUT) {
+        GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else if (
-        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT ||
         type === ConstToolType.MAP_BOX_CLIP ||
         type === ConstToolType.MAP3D_CROSS_CLIP ||
         type === ConstToolType.MAP3D_PLANE_CLIP
@@ -4229,7 +4230,7 @@ export default class ToolBar extends React.PureComponent {
                 listSelectable: true, //单选框
                 buttons: [
                   ToolbarBtnType.THEME_CANCEL,
-                  ToolbarBtnType.THEME_ADD_BACK,
+                  // ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ],
                 data: dataList,
@@ -4947,6 +4948,34 @@ export default class ToolBar extends React.PureComponent {
       }
       let rel = await this.cut3d(clipSetting)
       rel.isCliped = true
+      let num
+      Object.keys(rel).map(key => {
+        switch (key) {
+          case 'x':
+          case 'y':
+            num = 6
+            break
+          case 'z':
+            num = 1
+            break
+          case 'zRot':
+            num = 0
+            break
+          case 'length':
+            num = 0
+            break
+          case 'width':
+            num = 0
+            break
+          case 'height':
+            num = 0
+            break
+          case 'clipInner':
+            break
+        }
+        if (rel[key] * 1 === rel[key])
+          rel[key] = parseFloat(rel[key].toFixed(num))
+      })
       this.setState({
         clipSetting: rel,
       })
@@ -4960,7 +4989,36 @@ export default class ToolBar extends React.PureComponent {
   //三维裁剪
   cut3d = async data => {
     //todo 三维裁剪 分this.state.type
-    return await SScene.clipByBox(data)
+    let rel = await SScene.clipByBox(data)
+    let num
+    Object.keys(rel).map(key => {
+      switch (key) {
+        case 'x':
+        case 'y':
+          num = 6
+          break
+        case 'z':
+          num = 1
+          break
+        case 'zRot':
+          num = 0
+          break
+        case 'length':
+          num = 0
+          break
+        case 'width':
+          num = 0
+          break
+        case 'height':
+          num = 0
+          break
+        case 'clipInner':
+          break
+      }
+      if (rel[key] * 1 === rel[key])
+        rel[key] = parseFloat(rel[key].toFixed(num))
+    })
+    return rel
   }
   renderList = () => {
     if (this.state.data.length === 0) return

@@ -43,7 +43,7 @@ export default class MenuList extends Component {
     }
     //函数防抖
     this.startTime = 0
-    this.INTERVAL = 200
+    this.INTERVAL = 400
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps && nextProps.data.length > 0) {
@@ -193,8 +193,13 @@ export default class MenuList extends Component {
     )
   }
 
-  mapcut = () => {
-    this.props.dataChangeCall(this.state.clipSetting)
+  mapcut = async () => {
+    let data = this.state.clipSetting
+    data.layers = this.getlayers()
+    let clipSetting = await this.props.dataChangeCall(data)
+    this.setState({
+      clipSetting,
+    })
   }
 
   debounce = fn => {
@@ -533,31 +538,23 @@ export default class MenuList extends Component {
   }
   renderItem = ({ item, index }) => {
     let key
-    let num = 6
     switch (item.title) {
       case 'x':
       case 'y':
-        key = item.title
-        break
       case 'z':
         key = item.title
-        num = 1
         break
       case 'z旋转':
         key = 'zRot'
-        num = 0
         break
       case '底面长':
         key = 'length'
-        num = 0
         break
       case '底面宽':
         key = 'width'
-        num = 0
         break
       case '高度':
         key = 'height'
-        num = 0
         break
       case '区域内裁剪':
         key = 'clipInner'
@@ -565,9 +562,6 @@ export default class MenuList extends Component {
     }
     if (key) {
       item.value = this.state.clipSetting[key]
-      if (item.value * 1 === item.value) {
-        item.value = item.value.toFixed(num)
-      }
     }
     switch (item.iconType) {
       case 'Arrow':

@@ -581,7 +581,7 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   }
   //创建Import文件夹
   NSString *importFilePath = [NSHomeDirectory() stringByAppendingString:@"/Documents/iTablet/Import"];
-  [FileTools deleteFile:importFilePath];
+//  [FileTools deleteFile:importFilePath];
   [FileTools createFileDirectories:importFilePath];
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
@@ -659,6 +659,10 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
     if(isUnZipPlot){
       NSString* fromPath=plotFilePath;
       NSString* toPath=[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Plotting"];
+      NSString* targetPlotLibPath=[toPath stringByAppendingString:@"/PlotLibData"];
+      if ([[NSFileManager defaultManager] fileExistsAtPath:targetPlotLibPath isDirectory:nil]) {
+        [[NSFileManager defaultManager] removeItemAtPath:targetPlotLibPath error:nil];
+      }
       [FileUtils copyFiles:fromPath targetDictionary:toPath filterFileSuffix:@"plot" filterFileDicName:@"Symbol" otherFileDicName:@"SymbolIcon" isOnly:YES];
 
     }
