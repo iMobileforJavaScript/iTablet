@@ -882,6 +882,7 @@ export default class MT_layerManager extends React.Component {
         onPress={this.onPressRow}
         onThisPress={this.onThisPress}
         updateTagging={this.updateTagging}
+        updateData={this.getData}
       />
     )
   }

@@ -63,6 +63,7 @@ export default class LayerManager_tolbar extends React.Component {
     onThisPress: () => {},
     updateTagging: () => {},
     getOverlayView: () => {},
+    updateData?: () => {},
     device: Object,
     layers: Object,
     user: Object,
@@ -672,12 +673,14 @@ export default class LayerManager_tolbar extends React.Component {
   //header点击事件
   headerAction = ({ item }) => {
     let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
-    let rel
+    let rel,
+      needUpdate = false
     switch (item.title) {
       case getLanguage(this.props.language).Map_Layer.VISIBLE:
       case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
         layerdata.isVisible = !layerdata.isVisible
         rel = SMap.setLayerVisible(layerdata.path, layerdata.isVisible)
+        needUpdate = true
         break
       case getLanguage(this.props.language).Map_Layer.EDITABLE:
       case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
@@ -703,7 +706,11 @@ export default class LayerManager_tolbar extends React.Component {
           },
           () => {
             this.updateMenuState()
-            this.props.getLayers()
+            if (needUpdate && this.props.updateData) {
+              this.props.updateData()
+            } else {
+              this.props.getLayers()
+            }
             Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
           },
           () => {
