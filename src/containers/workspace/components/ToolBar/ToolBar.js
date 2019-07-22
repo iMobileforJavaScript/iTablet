@@ -4948,6 +4948,34 @@ export default class ToolBar extends React.PureComponent {
       }
       let rel = await this.cut3d(clipSetting)
       rel.isCliped = true
+      let num
+      Object.keys(rel).map(key => {
+        switch (key) {
+          case 'x':
+          case 'y':
+            num = 6
+            break
+          case 'z':
+            num = 1
+            break
+          case 'zRot':
+            num = 0
+            break
+          case 'length':
+            num = 0
+            break
+          case 'width':
+            num = 0
+            break
+          case 'height':
+            num = 0
+            break
+          case 'clipInner':
+            break
+        }
+        if (rel[key] * 1 === rel[key])
+          rel[key] = parseFloat(rel[key].toFixed(num))
+      })
       this.setState({
         clipSetting: rel,
       })
@@ -4961,7 +4989,36 @@ export default class ToolBar extends React.PureComponent {
   //三维裁剪
   cut3d = async data => {
     //todo 三维裁剪 分this.state.type
-    return await SScene.clipByBox(data)
+    let rel = await SScene.clipByBox(data)
+    let num
+    Object.keys(rel).map(key => {
+      switch (key) {
+        case 'x':
+        case 'y':
+          num = 6
+          break
+        case 'z':
+          num = 1
+          break
+        case 'zRot':
+          num = 0
+          break
+        case 'length':
+          num = 0
+          break
+        case 'width':
+          num = 0
+          break
+        case 'height':
+          num = 0
+          break
+        case 'clipInner':
+          break
+      }
+      if (rel[key] * 1 === rel[key])
+        rel[key] = parseFloat(rel[key].toFixed(num))
+    })
+    return rel
   }
   renderList = () => {
     if (this.state.data.length === 0) return

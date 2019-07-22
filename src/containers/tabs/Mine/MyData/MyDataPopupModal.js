@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, screen } from '../../../../utils'
 import { Button } from '../../../../components'
 
 import { getLanguage } from '../../../../language/index'
@@ -123,6 +123,8 @@ export default class MyDataPopupModal extends PureComponent {
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
+    let screenHeight = screen.getScreenSafeHeight()
+    let screenWidth = screen.getScreenWidth()
     return (
       <Modal
         animationType={animationType}
@@ -143,7 +145,13 @@ export default class MyDataPopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1, backgroundColor: color.modalBgColor }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            width: screenWidth,
+            height: screenHeight,
+            backgroundColor: color.modalBgColor,
+          }}
         >
           <View
             style={{
