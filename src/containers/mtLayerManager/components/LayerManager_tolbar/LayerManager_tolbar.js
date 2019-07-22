@@ -714,13 +714,13 @@ export default class LayerManager_tolbar extends React.Component {
         Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
       }
     })
-    this.setVisible(false)
-    let overlayView = this.props.getOverlayView
-      ? this.props.getOverlayView()
-      : null
-    if (overlayView) {
-      overlayView.setVisible(false)
-    }
+    // this.setVisible(false)
+    // let overlayView = this.props.getOverlayView
+    //   ? this.props.getOverlayView()
+    //   : null
+    // if (overlayView) {
+    //   overlayView.setVisible(false)
+    // }
   }
   renderList = () => {
     if (this.state.data.length === 0) return
