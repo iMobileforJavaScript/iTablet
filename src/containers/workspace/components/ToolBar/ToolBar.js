@@ -4230,7 +4230,7 @@ export default class ToolBar extends React.PureComponent {
                 listSelectable: true, //单选框
                 buttons: [
                   ToolbarBtnType.THEME_CANCEL,
-                  ToolbarBtnType.THEME_ADD_BACK,
+                  // ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ],
                 data: dataList,
