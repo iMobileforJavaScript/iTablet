@@ -287,7 +287,7 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.HEIGHT[1]
       }
       break
-    case ConstToolType.MAP3D_CLIP:
+    case ConstToolType.MAP3D_CLIP_SHOW:
       height = ConstToolType.NEWTHEME_HEIGHT[2]
       break
     case ConstToolType.MAP3D_CLIP_HIDDEN:

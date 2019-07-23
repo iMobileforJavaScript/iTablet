@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../styles'
-import { scaleSize } from '../../../utils'
+import { scaleSize, screen } from '../../../utils'
 import { getLanguage } from '../../../language/index'
 
 export default class HomePopupModal extends PureComponent {
@@ -182,6 +182,8 @@ export default class HomePopupModal extends PureComponent {
 
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    const screenHeight = screen.getScreenSafeHeight()
+    const screenWidth = screen.getScreenWidth()
     let animationType = 'fade'
     return (
       <Modal
@@ -203,7 +205,13 @@ export default class HomePopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1, backgroundColor: color.modalBgColor }}
+          style={{
+            position: 'absolute',
+            width: screenWidth,
+            height: screenHeight,
+            top: 0,
+            backgroundColor: color.modalBgColor,
+          }}
         >
           {this._selectRender()}
         </TouchableOpacity>
