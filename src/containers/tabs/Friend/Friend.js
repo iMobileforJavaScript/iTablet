@@ -764,7 +764,10 @@ export default class Friend extends Component {
     ) {
       bUnReadMsg = true
     }
-    if (this.isGroupMsg(message['message'])) {
+
+    if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
+      msgId = this.getMsgId(1)
+    } else if (this.isGroupMsg(message['message'])) {
       msgId = this.getMsgId(messageObj.user.groupID)
     } else {
       msgId = this.getMsgId(messageObj.user.id)
@@ -813,6 +816,7 @@ export default class Friend extends Component {
        */
       if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
         bSysStore = true
+        messageObj.consumed = false
       } else if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
         /*
          * 添加群员

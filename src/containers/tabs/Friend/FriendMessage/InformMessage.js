@@ -9,17 +9,16 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
-  Image,
 } from 'react-native'
 import { scaleSize } from '../../../../utils/screen'
-import { Container, Dialog } from '../../../../components'
-import { dialogStyles } from './../Styles'
+import { Container } from '../../../../components'
 import { styles } from './Styles'
 import AddFriend from './../AddFriend'
 import { getLanguage } from '../../../../language/index'
 import MSGconstant from '../MsgConstant'
 import FriendListFileHandle from '../FriendListFileHandle'
-import NavigationService from '../../../NavigationService'
+import { SimpleDialog } from '../index'
+import MessageDataHandle from '../MessageDataHandle'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -51,14 +50,39 @@ export default class InformMessage extends React.Component {
   }
 
   _onSectionselect = item => {
-    this.target = item
     switch (item.type) {
       case MSGconstant.MSG_ADD_FRIEND:
         if (!FriendListFileHandle.isFriend(item.originMsg.user.id)) {
-          this.dialog.setDialogVisible(true)
+          this.SimpleDialog.setText(
+            getLanguage(this.language).Friends.FRIEND_RESPOND,
+          )
+          this.SimpleDialog.setConfirm(() => {
+            this.SimpleDialog.setVisible(false)
+            this._acceptFriend(item)
+            item.originMsg.consumed = true
+            MessageDataHandle.editMessage({
+              userId: this.state.currentUser.userId,
+              talkId: item.originMsg.user.groupID,
+              msgId: item.msgId,
+              type: item.type,
+              editItem: item,
+            })
+            this.setState({
+              messageInfo: JSON.parse(JSON.stringify(this.state.messageInfo)),
+            })
+          })
+          this.SimpleDialog.setVisible(true)
         } else {
-          NavigationService.navigate('Chat', {
-            targetId: item.originMsg.user.id,
+          item.originMsg.consumed = true
+          MessageDataHandle.editMessage({
+            userId: this.state.currentUser.userId,
+            talkId: item.originMsg.user.groupID,
+            msgId: item.msgId,
+            type: item.type,
+            editItem: item,
+          })
+          this.setState({
+            messageInfo: JSON.parse(JSON.stringify(this.state.messageInfo)),
           })
         }
         break
@@ -67,8 +91,7 @@ export default class InformMessage extends React.Component {
     }
   }
 
-  _dialogConfirm = () => {
-    //  this.target;
+  _acceptFriend = item => {
     let curUserName = this.state.currentUser.nickname
     let uuid = this.state.currentUser.userId
     let ctime = new Date()
@@ -86,17 +109,20 @@ export default class InformMessage extends React.Component {
     }
     this.friend._sendMessage(
       JSON.stringify(message),
-      this.target.originMsg.user.id,
+      item.originMsg.user.id,
       false,
     )
 
     AddFriend.acceptFriendAdd(
-      [this.target.originMsg.user.id, this.target.originMsg.user.name],
+      [item.originMsg.user.id, item.originMsg.user.name],
       () => {
         this.friend.refreshList()
       },
     )
-    this.dialog.setDialogVisible(false)
+  }
+
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   render() {
@@ -129,7 +155,7 @@ export default class InformMessage extends React.Component {
           returnKeyType={'search'}
           keyboardDismissMode={'on-drag'}
         />
-        {this.renderDialog()}
+        {this.renderSimpleDialog()}
       </Container>
     )
   }
@@ -149,11 +175,15 @@ export default class InformMessage extends React.Component {
       ctime.getHours() +
       ':' +
       ctime.getMinutes()
-
+    let opacity = 1.0
+    if (item.originMsg.consumed) {
+      opacity = 0.3
+    }
     return (
       <TouchableOpacity
-        style={styles.ItemViewStyle}
+        style={[styles.ItemViewStyle, { opacity: opacity }]}
         activeOpacity={0.75}
+        disabled={item.originMsg.consumed || false}
         onPress={() => {
           this._onSectionselect(item, index)
         }}
@@ -213,36 +243,5 @@ export default class InformMessage extends React.Component {
   }
   _renderItemTitleView(item) {
     return <Text style={styles.ITemTextStyle}>{item.originMsg.user.name}</Text>
-  }
-
-  renderDialogChildren = () => {
-    return (
-      <View style={dialogStyles.dialogHeaderViewX}>
-        <Image
-          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-          style={dialogStyles.dialogHeaderImgX}
-        />
-        <Text style={dialogStyles.promptTtileX}>
-          {getLanguage(this.language).Friends.FRIEND_RESPOND}
-          {/* 同意对方添加请求 ？ */}
-        </Text>
-      </View>
-    )
-  }
-  renderDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.dialog = ref)}
-        type={'modal'}
-        confirmBtnTitle={getLanguage(this.language).Friends.CONFIRM}
-        cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
-        confirmAction={this._dialogConfirm}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={dialogStyles.dialogBackgroundX}
-      >
-        {this.renderDialogChildren()}
-      </Dialog>
-    )
   }
 }
