@@ -187,31 +187,25 @@ export default class FriendListFileHandle {
       {
         onResult: async value => {
           if (value === true) {
-            RNFS.readFile(FriendListFileHandle.friendListFile_ol).then(
-              async value => {
-                let onlineVersion = JSON.parse(value)
-                if (
-                  !FriendListFileHandle.friends ||
-                  onlineVersion.rev > FriendListFileHandle.friends.rev
-                ) {
-                  FriendListFileHandle.friends = onlineVersion
-                  await RNFS.writeFile(
-                    FriendListFileHandle.friendListFile,
-                    value,
-                  )
-                  if (FriendListFileHandle.refreshCallback) {
-                    FriendListFileHandle.refreshCallback(true)
-                  }
-                } else if (
-                  onlineVersion.rev < FriendListFileHandle.friends.rev
-                ) {
-                  await FriendListFileHandle.upload()
-                }
-                await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
-              },
+            let value = await RNFS.readFile(
+              FriendListFileHandle.friendListFile_ol,
             )
+            let onlineVersion = JSON.parse(value)
+            if (
+              !FriendListFileHandle.friends ||
+              onlineVersion.rev > FriendListFileHandle.friends.rev
+            ) {
+              FriendListFileHandle.friends = onlineVersion
+              await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
+            } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
+              await FriendListFileHandle.upload()
+            }
+            await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
           } else if (FriendListFileHandle.friends !== undefined) {
             await FriendListFileHandle.upload()
+          }
+          if (FriendListFileHandle.refreshCallback) {
+            FriendListFileHandle.refreshCallback(true)
           }
         },
       },
