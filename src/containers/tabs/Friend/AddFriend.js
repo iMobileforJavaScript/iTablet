@@ -140,7 +140,7 @@ class AddFriend extends Component {
       user: {
         name: curUserName,
         id: uuid,
-        groupId: uuid,
+        groupID: uuid,
         groupName: '',
       },
       time: time,

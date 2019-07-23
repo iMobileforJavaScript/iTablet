@@ -466,11 +466,17 @@ export default class MT_layerManager extends React.Component {
       this.toolBox.setVisible(true, themeType, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
+        updateLayerVisible: () =>
+          this.itemRefs[data.name] &&
+          this.itemRefs[data.name]._visible_change(),
       })
     } else if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
+        updateLayerVisible: () =>
+          this.itemRefs[data.name] &&
+          this.itemRefs[data.name]._visible_change(),
       })
     } else if (
       GLOBAL.Type === constants.MAP_PLOTTING &&
@@ -479,11 +485,17 @@ export default class MT_layerManager extends React.Component {
       this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
         height: ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
+        updateLayerVisible: () =>
+          this.itemRefs[data.name] &&
+          this.itemRefs[data.name]._visible_change(),
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
+        updateLayerVisible: () =>
+          this.itemRefs[data.name] &&
+          this.itemRefs[data.name]._visible_change(),
       })
     }
   }
@@ -495,7 +507,9 @@ export default class MT_layerManager extends React.Component {
       let layers = await SMap.getLayersByGroupPath(data.path)
       let child = []
       for (let i = 0; i < layers.length; i++) {
-        child.push(this._renderItem({ item: layers[i], section }))
+        child.push(
+          this._renderItem({ item: layers[i], section, parentData: data }),
+        )
       }
       this.container.setLoading(false)
       return child
@@ -507,7 +521,7 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  setLayerVisible = (data, value) => {
+  setLayerVisible = async (data, value) => {
     let layers = this.state.data[1].data
     let backMaps = this.state.data[2].data
     let Label = this.state.data[0].data
@@ -541,7 +555,7 @@ export default class MT_layerManager extends React.Component {
           break
         }
       }
-    SMap.setLayerVisible(data.path, value)
+    let result = await SMap.setLayerVisible(data.path, value)
 
     if (value) {
       // 显示多媒体callouts
@@ -550,6 +564,8 @@ export default class MT_layerManager extends React.Component {
       // 隐藏多媒体callouts
       SMediaCollector.hideMedia(data.name)
     }
+
+    return result
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -605,7 +621,7 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  _renderItem = ({ item, section, index }) => {
+  _renderItem = ({ item, section, index, parentData }) => {
     // sectionID = sectionID || 0
     if (section.visible) {
       if (item) {
@@ -641,12 +657,9 @@ export default class MT_layerManager extends React.Component {
         ) {
           action = this.taggingTool
         }
-        this.itemRefs[item.name] && this.itemRefs[item.name].refreshChildlist()
         return (
           <LayerManager_item
-            // key={item.name}
-            // sectionID={sectionID}
-            // rowID={item.index}
+            key={item.name}
             ref={ref => {
               if (!this.itemRefs) {
                 this.itemRefs = {}
@@ -654,16 +667,13 @@ export default class MT_layerManager extends React.Component {
               this.itemRefs[item.name] = ref
               return this.itemRefs[item.name]
             }}
-            {...this.props}
             // swipeEnabled={true}
-            // map={this.map}
             data={item}
+            parentData={parentData}
             index={index}
             isClose={this.state.currentOpenItemName !== item.name}
-            mapControl={this.mapControl}
             setLayerVisible={this.setLayerVisible}
             onOpen={data => {
-              // data, sectionID, rowID
               if (this.state.currentOpenItemName !== data.name) {
                 let item = this.itemRefs[this.state.currentOpenItemName]
                 item && item.close()
@@ -672,13 +682,15 @@ export default class MT_layerManager extends React.Component {
                 currentOpenItemName: data.name,
               })
             }}
+            getLayers={this.props.getLayers}
             selectLayer={this.state.selectLayer}
             onPress={this.onPressRow}
             onAllPress={this.onAllPressRow}
-            onArrowPress={({ data, layer }) =>
-              this.getChildList({ data, layer, section })
-            }
+            onArrowPress={({ data }) => this.getChildList({ data, section })}
             onToolPress={action}
+            hasBaseMap={LayerUtils.isBaseLayer(
+              this.props.layers[this.props.layers.length - 1].name,
+            )}
           />
         )
       } else {
@@ -878,11 +890,15 @@ export default class MT_layerManager extends React.Component {
         language={this.props.language}
         curUserBaseMaps={this.curUserBaseMaps}
         ref={ref => (this.toolBox = ref)}
-        {...this.props}
         onPress={this.onPressRow}
         onThisPress={this.onThisPress}
         updateTagging={this.updateTagging}
         updateData={this.getData}
+        getLayers={this.props.getLayers}
+        setCurrentLayer={this.props.setCurrentLayer}
+        device={this.props.device}
+        user={this.props.user}
+        navigation={this.props.navigation}
       />
     )
   }
