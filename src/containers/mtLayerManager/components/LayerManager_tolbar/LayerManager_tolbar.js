@@ -65,8 +65,9 @@ export default class LayerManager_tolbar extends React.Component {
     getOverlayView: () => {},
     updateData?: () => {},
     device: Object,
-    layers: Object,
+    // layers: Object,
     user: Object,
+    navigation: Object,
     curUserBaseMaps: Array,
   }
 
@@ -102,22 +103,32 @@ export default class LayerManager_tolbar extends React.Component {
     this.isBoxShow = true
   }
 
-  getData = type => {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      JSON.stringify(nextProps) !== JSON.stringify(this.props)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  getData = (type, isGroup = false) => {
     let data = []
     let headerData = layerSettingCanVisit(this.props.language).concat(
       layerSettingCanSelect(this.props.language),
     )
     switch (type) {
       case ConstToolType.MAP_STYLE:
-        data = layersetting(this.props.language)
+        data = layersetting(this.props.language, isGroup)
         data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLE:
-        data = layerThemeSetting(this.props.language)
+        data = layerThemeSetting(this.props.language, isGroup)
         data[0].headers = headerData
         break
       case ConstToolType.MAP_THEME_STYLES:
-        data = layerThemeSettings(this.props.language)
+        data = layerThemeSettings(this.props.language, isGroup)
         data[0].headers = headerData
         break
       case ConstToolType.PLOTTING:
@@ -125,7 +136,7 @@ export default class LayerManager_tolbar extends React.Component {
         // headerData = headerData
         // .concat(layerSettingCanEdit(this.props.language))
         // .concat(layerSettingCanSnap(this.props.language))
-        data = layerPlottingSetting(this.props.language)
+        data = layerPlottingSetting(this.props.language, isGroup)
         data[0].headers = headerData
         break
 
@@ -134,7 +145,7 @@ export default class LayerManager_tolbar extends React.Component {
         headerData = headerData
           .concat(layerSettingCanEdit(this.props.language))
           .concat(layerSettingCanSnap(this.props.language))
-        data = layerCollectionSetting(this.props.language)
+        data = layerCollectionSetting(this.props.language, isGroup)
         data[0].headers = headerData
         break
       case ConstToolType.MAP_EDIT_STYLE:
@@ -263,6 +274,7 @@ export default class LayerManager_tolbar extends React.Component {
    *   height:          工具栏高度
    *   column:          表格列数（仅table可用）
    *   containerType:   容器的类型, list | table
+   *   layerdata:       图层数据
    * }
    **/
   setVisible = (isShow, type, params = {}) => {
@@ -270,18 +282,22 @@ export default class LayerManager_tolbar extends React.Component {
       params && typeof params.height === 'number'
         ? params.height
         : ConstToolType.HEIGHT[1]
-    let data = this.getData(type)
+    let data = this.getData(
+      type,
+      params.layerdata && !params.layerdata.datasetName,
+    )
+    let newState = this.updateMenuState(data, params.layerdata)
+    this.updateLayerVisible = params.updateLayerVisible
     this.setState(
       {
-        data: data,
         type: type,
-        layerdata: params.layerdata,
         index: params.index,
+        ...newState,
       },
       () => {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
-        this.updateMenuState()
+        // this.updateMenuState()
         this.updateOverlayerView()
       },
     )
@@ -297,9 +313,8 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   //更新菜单按钮状态
-  updateMenuState = () => {
-    let layerdata = this.state.layerdata
-    let data = this.state.data
+  updateMenuState = (data, layerdata) => {
+    let newState = { layerdata }
     if (data && data[0] && data[0].headers && GLOBAL.Type !== 'MAP_3D') {
       let tempheader0 = layerdata.isVisible
         ? layerSettingCanVisit(this.props.language)
@@ -317,10 +332,9 @@ export default class LayerManager_tolbar extends React.Component {
           : layerSettingCanNotSnap(this.props.language)
         data[0].headers = data[0].headers.concat(tempheader2, tempheader3)
       }
-      this.setState({
-        data,
-      })
     }
+    newState.data = data
+    return newState
   }
 
   //更新遮盖层状态
@@ -376,7 +390,6 @@ export default class LayerManager_tolbar extends React.Component {
       //'全幅显示当前图层') {
       this.setVisible(false)
       SMap.setLayerFullView(this.state.layerdata.path)
-      // eslint-disable-next-line react/prop-types
       this.props.navigation.navigate(
         GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
       )
@@ -654,7 +667,6 @@ export default class LayerManager_tolbar extends React.Component {
             },
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-        // eslint-disable-next-line react/prop-types
         this.props.navigation.navigate('MapView')
       } else {
         Toast.show(
@@ -672,42 +684,58 @@ export default class LayerManager_tolbar extends React.Component {
 
   //header点击事件
   headerAction = ({ item }) => {
-    let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
-    let rel,
-      needUpdate = false
-    switch (item.title) {
-      case getLanguage(this.props.language).Map_Layer.VISIBLE:
-      case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
-        layerdata.isVisible = !layerdata.isVisible
-        rel = SMap.setLayerVisible(layerdata.path, layerdata.isVisible)
-        needUpdate = true
-        break
-      case getLanguage(this.props.language).Map_Layer.EDITABLE:
-      case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
-        layerdata.isEditable = !layerdata.isEditable
-        rel = SMap.setLayerEditable(layerdata.path, layerdata.isEditable)
-        break
-      case getLanguage(this.props.language).Map_Layer.SNAPABLE:
-      case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
-        layerdata.isSnapable = !layerdata.isSnapable
-        rel = SMap.setLayerSnapable(layerdata.path, layerdata.isSnapable)
-        break
-      case getLanguage(this.props.language).Map_Layer.OPTIONAL:
-      case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
-        layerdata.isSelectable = !layerdata.isSelectable
-        rel = SMap.setLayerSelectable(layerdata.path, layerdata.isSelectable)
-        break
-    }
-    rel.then(isSuccess => {
-      if (isSuccess) {
+    (async function() {
+      let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
+      let rel,
+        needUpdate = false
+      switch (item.title) {
+        case getLanguage(this.props.language).Map_Layer.VISIBLE:
+        case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
+          layerdata.isVisible = !layerdata.isVisible
+          rel = await SMap.setLayerVisible(layerdata.path, layerdata.isVisible)
+          needUpdate = true
+          break
+        case getLanguage(this.props.language).Map_Layer.EDITABLE:
+        case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
+          layerdata.isEditable = !layerdata.isEditable
+          rel = await SMap.setLayerEditable(
+            layerdata.path,
+            layerdata.isEditable,
+          )
+          break
+        case getLanguage(this.props.language).Map_Layer.SNAPABLE:
+        case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
+          layerdata.isSnapable = !layerdata.isSnapable
+          rel = await SMap.setLayerSnapable(
+            layerdata.path,
+            layerdata.isSnapable,
+          )
+          break
+        case getLanguage(this.props.language).Map_Layer.OPTIONAL:
+        case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
+          layerdata.isSelectable = !layerdata.isSelectable
+          rel = await SMap.setLayerSelectable(
+            layerdata.path,
+            layerdata.isSelectable,
+          )
+          break
+      }
+      if (rel) {
+        let newState = this.updateMenuState(this.state.data, layerdata)
         this.setState(
-          {
-            layerdata,
-          },
+          newState,
           () => {
-            this.updateMenuState()
+            // this.updateMenuState()
             if (needUpdate && this.props.updateData) {
-              this.props.updateData()
+              if (
+                layerdata.groupName &&
+                this.updateLayerVisible &&
+                typeof this.updateLayerVisible === 'function'
+              ) {
+                this.updateLayerVisible()
+              } else {
+                this.props.updateData()
+              }
             } else {
               this.props.getLayers()
             }
@@ -720,7 +748,7 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
       }
-    })
+    }.bind(this)())
     // this.setVisible(false)
     // let overlayView = this.props.getOverlayView
     //   ? this.props.getOverlayView()
@@ -729,6 +757,7 @@ export default class LayerManager_tolbar extends React.Component {
     //   overlayView.setVisible(false)
     // }
   }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
