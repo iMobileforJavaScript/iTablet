@@ -7,9 +7,8 @@
 import * as React from 'react'
 import { Container, SearchBar, InfoView } from '../../../../components'
 import { Toast, LayerUtil } from '../../../../utils'
-import { ConstInfo, MAP_MODULE } from '../../../../constants'
+import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
-import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
@@ -287,26 +286,10 @@ export default class LayerAttributeSearch extends React.Component {
   }
 
   render() {
-    let title = ''
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
-        break
-    }
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
           navigation: this.props.navigation,
           headerCenter: this.renderSearchBar(),
           // headerRight: [

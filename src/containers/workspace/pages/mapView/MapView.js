@@ -36,8 +36,10 @@ import {
   PopModal,
   SurfaceView,
   SearchBar,
+  Progress,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
+import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -83,6 +85,7 @@ export default class MapView extends React.Component {
     device: PropTypes.object,
     online: PropTypes.object,
     analyst: PropTypes.object,
+    downloads: PropTypes.array,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -300,6 +303,22 @@ export default class MapView extends React.Component {
         } else {
           this.mapController.move({ bottom: 200 })
         }
+      }
+    }
+
+    if (
+      this.props.downloads.length > 0 &&
+      JSON.stringify(this.props.downloads) !==
+        JSON.stringify(prevProps.downloads)
+    ) {
+      let data
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+      }
+      if (data && this.mProgress) {
+        this.mProgress.progress = data.progress / 100
       }
     }
 
@@ -1574,7 +1593,28 @@ export default class MapView extends React.Component {
     ]
   }
 
-  render() {
+  renderProgress = () => {
+    let data
+    if (this.props.downloads.length > 0) {
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+          break
+        }
+      }
+    }
+    if (!data) return <View />
+    return (
+      <Progress
+        ref={ref => (this.mProgress = ref)}
+        style={styles.progressView}
+        progressAniDuration={0}
+        progressColor={color.item_selected_bg}
+      />
+    )
+  }
+
+  renderContainer = () => {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1676,6 +1716,15 @@ export default class MapView extends React.Component {
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
       </Container>
+    )
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        {this.renderContainer()}
+        {this.renderProgress()}
+      </View>
     )
   }
 }

@@ -42,17 +42,17 @@ const BoxClipData = () => [
     title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
     data: [
       {
-        title: 'x',
+        title: 'X',
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'y',
+        title: 'Y',
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'z',
+        title: 'Z',
         value: 0,
         iconType: 'Input',
       },
@@ -102,17 +102,17 @@ const CrossClipData = () => [
     title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
     data: [
       {
-        title: 'x',
+        title: 'X',
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'y',
+        title: 'Y',
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'z',
+        title: 'Z',
         value: 0,
         iconType: 'Input',
       },
@@ -122,17 +122,20 @@ const CrossClipData = () => [
     title: getLanguage(GLOBAL.language).Map_Main_Menu.ROTATE_SETTINGS,
     data: [
       {
-        title: 'x',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_XROT,
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'y',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_YROT,
         value: 0,
         iconType: 'Input',
       },
       {
-        title: 'z',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_ZROT,
         value: 0,
         iconType: 'Input',
       },

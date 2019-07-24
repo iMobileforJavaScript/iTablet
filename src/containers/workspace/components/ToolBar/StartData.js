@@ -967,7 +967,7 @@ function saveMap() {
 
   (async function() {
     try {
-      if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      if (GLOBAL.Type === constants.MAP_3D) {
         GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
         _params.setToolbarVisible && _params.setToolbarVisible(false)
         return

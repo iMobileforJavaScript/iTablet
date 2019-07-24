@@ -151,7 +151,7 @@ const basicSettings = () => [
   {
     title: getLanguage(global.language).Map_Settings.MAP_NAME,
     value: '',
-    iconType: 'arrow',
+    iconType: 'text',
   },
   {
     title: getLanguage(global.language).Map_Settings.SHOW_SCALE,
