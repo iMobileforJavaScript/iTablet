@@ -4072,7 +4072,7 @@ export default class ToolBar extends React.PureComponent {
               data: datalist,
               buttons: listSelectable
                 ? [
-                  ToolbarBtnType.THEME_CANCEL,
+                  //ToolbarBtnType.THEME_CANCEL,
                   ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ]
@@ -4220,6 +4220,7 @@ export default class ToolBar extends React.PureComponent {
                 title: alias,
                 image: require('../../../../assets/mapToolbar/list_type_udb.png'),
                 data: list,
+                allSelectType: true,
               },
             ]
             this.setState(
@@ -4227,8 +4228,8 @@ export default class ToolBar extends React.PureComponent {
                 themeDatasourceAlias: alias,
                 listSelectable: true, //单选框
                 buttons: [
-                  ToolbarBtnType.THEME_CANCEL,
-                  // ToolbarBtnType.THEME_ADD_BACK,
+                  //ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ],
                 data: dataList,
@@ -5963,7 +5964,8 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}
