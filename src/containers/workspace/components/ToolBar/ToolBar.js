@@ -2461,8 +2461,8 @@ export default class ToolBar extends React.PureComponent {
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.NEWTHEME_HEIGHT[2]
-              : ConstToolType.NEWTHEME_HEIGHT[2]
+              ? ConstToolType.TOOLBAR_HEIGHT[5]
+              : ConstToolType.TOOLBAR_HEIGHT[5]
           this.showToolbar()
           this.updateOverlayerView()
         },
@@ -4949,11 +4949,11 @@ export default class ToolBar extends React.PureComponent {
       let num
       Object.keys(rel).map(key => {
         switch (key) {
-          case 'x':
-          case 'y':
+          case 'X':
+          case 'Y':
             num = 6
             break
-          case 'z':
+          case 'Z':
             num = 1
             break
           case 'zRot':
@@ -4991,11 +4991,11 @@ export default class ToolBar extends React.PureComponent {
     let num
     Object.keys(rel).map(key => {
       switch (key) {
-        case 'x':
-        case 'y':
+        case 'X':
+        case 'Y':
           num = 6
           break
-        case 'z':
+        case 'Z':
           num = 1
           break
         case 'zRot':
@@ -5390,6 +5390,7 @@ export default class ToolBar extends React.PureComponent {
   }
   getClipData = type => {
     let clipData
+    let layerList = JSON.parse(JSON.stringify(this.props.layerList))
     switch (type) {
       case ConstToolType.MAP3D_BOX_CLIP:
         clipData = BoxClipData()
@@ -5401,7 +5402,7 @@ export default class ToolBar extends React.PureComponent {
         clipData = CrossClipData()
         break
     }
-    this.props.layerList.map(item => {
+    layerList.map(item => {
       let obj = item
       obj.title = item.name
       obj.iconType = 'Select'
