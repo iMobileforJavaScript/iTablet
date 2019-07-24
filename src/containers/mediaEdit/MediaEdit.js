@@ -39,7 +39,7 @@ export default class MediaEdit extends React.Component {
     let paths = []
 
     this.showInfo = {
-      mediaFileName: this.info.mediaFileName || '',
+      mediaName: this.info.mediaName || '',
       coordinate: this.info.coordinate || '',
       modifiedDate: this.info.modifiedDate || '',
       description: this.info.description || '',
@@ -342,15 +342,15 @@ export default class MediaEdit extends React.Component {
         <ScrollView style={{ flex: 1 }}>
           {this.renderItem({
             title: getLanguage(this.props.language).Map_Label.NAME,
-            value: this.state.mediaFileName,
+            value: this.state.mediaName,
             type: 'arrow',
             action: () => {
               NavigationService.navigate('InputPage', {
-                value: this.state.mediaFileName,
+                value: this.state.mediaName,
                 headerTitle: getLanguage(global.language).Map_Label.NAME,
                 cb: async value => {
                   this.setState({
-                    mediaFileName: value,
+                    mediaName: value,
                   })
                   NavigationService.goBack()
                 },

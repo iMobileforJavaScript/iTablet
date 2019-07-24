@@ -60,6 +60,8 @@ const Friends = {
   IMPORT_CONFIRM: '是否导入数据',
   RECEIVE_CONFIRM: '是否接收数据',
   OPENCOWORKFIRST: '请先打开协作地图',
+  LOCATION_COWORK_NOTIFY: '协作中不能打开位置',
+  LOCATION_SHARE_NOTIFY: '分享中不能打开位置',
   //CustomActions
   MAP: '地图',
   TEMPLATE: '模板',

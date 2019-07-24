@@ -11,8 +11,6 @@ import {
 } from 'react-native'
 // import MapView from 'react-native-maps'
 import { scaleSize } from '../../../../utils/screen'
-import NavigationService from '../../../NavigationService'
-import { ConstOnline } from '../../../../constants'
 import MSGConstant from '../MsgConstant'
 
 export default class CustomView extends React.Component {
@@ -20,11 +18,11 @@ export default class CustomView extends React.Component {
     user: Object,
     currentMessage: any,
     position: '',
-    onFileTouch: () => {},
+    onTouch: () => {},
   }
 
-  touchFileCallback = (type, message) => {
-    this.props.onFileTouch(type, message)
+  touchCallback = (type, message) => {
+    this.props.onTouch(type, message)
   }
 
   render() {
@@ -43,7 +41,6 @@ export default class CustomView extends React.Component {
       type === MSGConstant.MSG_LAYER ||
       type === MSGConstant.MSG_DATASET
     ) {
-      let fileType = this.props.currentMessage.type
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
       let fileSizeText = fileSize.toFixed(2) + 'B'
@@ -70,7 +67,7 @@ export default class CustomView extends React.Component {
       return (
         <TouchableWithoutFeedback
           onPress={() => {
-            this.touchFileCallback(fileType, this.props.currentMessage)
+            this.touchCallback(type, this.props.currentMessage)
           }}
         >
           <View
@@ -124,26 +121,7 @@ export default class CustomView extends React.Component {
         <TouchableOpacity
           style={[styles.container, this.props.containerStyle]}
           onPress={() => {
-            let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
-            wsData.layerIndex = 3
-            NavigationService.navigate('MapView', {
-              wsData,
-              isExample: true,
-              mapName: this.props.currentMessage.originMsg.message.message
-                .message,
-              showMarker: {
-                longitude: this.props.currentMessage.originMsg.message.message
-                  .longitude,
-                latitude: this.props.currentMessage.originMsg.message.message
-                  .latitude,
-              },
-              backAction: () => {
-                NavigationService.pop()
-                NavigationService.replace('CoworkTabs', {
-                  targetId: this.props.currentMessage.originMsg.user.groupID,
-                })
-              },
-            })
+            this.touchCallback(type, this.props.currentMessage)
           }}
         >
           <View

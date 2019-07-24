@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
-import { color } from '../../styles'
+import { color, zIndexLevel } from '../../styles'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
@@ -21,7 +21,7 @@ export default StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10001,
+    zIndex: zIndexLevel.FOUR + 1,
     width: '100%',
     paddingTop: HEADER_PADDINGTOP,
     height: HEADER_HEIGHT,
@@ -34,7 +34,7 @@ export default StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10001,
+    zIndex: zIndexLevel.FOUR + 1,
     width: '100%',
     paddingTop: HEADER_PADDINGTOP,
     height: HEADER_HEIGHT,
@@ -62,7 +62,7 @@ export default StyleSheet.create({
   },
   backBtn: {
     position: 'absolute',
-    zIndex: 10001,
+    zIndex: zIndexLevel.FOUR + 1,
     width: 60,
     padding: 5,
     marginLeft: scaleSize(20),
@@ -89,7 +89,7 @@ export default StyleSheet.create({
   },
   headerLeftView: {
     position: 'absolute',
-    zIndex: 10001,
+    zIndex: zIndexLevel.FOUR + 1,
     width: 60,
     // padding: 5,
     marginLeft: scaleSize(35),
@@ -100,7 +100,7 @@ export default StyleSheet.create({
   },
   headerRightView: {
     position: 'absolute',
-    zIndex: 10001,
+    zIndex: zIndexLevel.FOUR + 1,
     height: scaleSize(60),
     alignItems: 'center',
     // justifyContent: 'space-around',

@@ -164,4 +164,4 @@ const MapARTabs = createBottomTabNavigator(
   options,
 )
 
-export { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs, MapARTabs }
+export { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs, MapARTabs, MapView }

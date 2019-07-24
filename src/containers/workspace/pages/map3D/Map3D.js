@@ -15,7 +15,12 @@ import {
   Image,
 } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container, Dialog, InputDialog } from '../../../../components'
+import {
+  Container,
+  Dialog,
+  InputDialog,
+  Progress,
+} from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -24,6 +29,7 @@ import {
   OverlayView,
 } from '../../components'
 import { Toast, scaleSize } from '../../../../utils'
+import { color } from '../../../../styles'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
@@ -37,6 +43,7 @@ export default class Map3D extends React.Component {
     latestMap: Object,
     navigation: Object,
     online: Object,
+    downloads: Array,
     setEditLayer: () => {},
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
@@ -88,6 +95,24 @@ export default class Map3D extends React.Component {
       this.addCircleFlyListen()
       this.getLayers()
     })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.downloads.length > 0 &&
+      JSON.stringify(this.props.downloads) !==
+        JSON.stringify(prevProps.downloads)
+    ) {
+      let data
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+      }
+      if (data && this.mProgress) {
+        this.mProgress.progress = data.progress / 100
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -449,7 +474,28 @@ export default class Map3D extends React.Component {
     )
   }
 
-  render() {
+  renderProgress = () => {
+    let data
+    if (this.props.downloads.length > 0) {
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+          break
+        }
+      }
+    }
+    if (!data) return <View />
+    return (
+      <Progress
+        ref={ref => (this.mProgress = ref)}
+        style={styles.progressView}
+        progressAniDuration={0}
+        progressColor={color.item_selected_bg}
+      />
+    )
+  }
+
+  renderContainer = () => {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -489,6 +535,15 @@ export default class Map3D extends React.Component {
         {this.renderInputDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
       </Container>
+    )
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        {this.renderContainer()}
+        {this.renderProgress()}
+      </View>
     )
   }
 }

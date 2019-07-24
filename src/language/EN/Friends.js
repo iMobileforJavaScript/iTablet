@@ -62,6 +62,8 @@ const Friends = {
   IMPORT_CONFIRM: 'Do you want to import the data?',
   RECEIVE_CONFIRM: 'Do you want to download the data',
   OPENCOWORKFIRST: 'Please open cowork map first',
+  LOCATION_COWORK_NOTIFY: "Can't open location in cowork mode",
+  LOCATION_SHARE_NOTIFY: "Can't open location in sharing",
   //CustomActions
   MAP: 'Map',
   TEMPLATE: 'Template',
