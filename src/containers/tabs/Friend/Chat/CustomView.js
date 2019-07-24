@@ -14,6 +14,8 @@ import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { ConstOnline } from '../../../../constants'
 import MSGConstant from '../MsgConstant'
+import { Toast } from '../../../../utils'
+import { getLanguage } from '../../../../language/index'
 
 export default class CustomView extends React.Component {
   props: {
@@ -124,26 +126,26 @@ export default class CustomView extends React.Component {
         <TouchableOpacity
           style={[styles.container, this.props.containerStyle]}
           onPress={() => {
-            let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
-            wsData.layerIndex = 3
-            NavigationService.navigate('MapView', {
-              wsData,
-              isExample: true,
-              mapName: this.props.currentMessage.originMsg.message.message
-                .message,
-              showMarker: {
-                longitude: this.props.currentMessage.originMsg.message.message
-                  .longitude,
-                latitude: this.props.currentMessage.originMsg.message.message
-                  .latitude,
-              },
-              backAction: () => {
-                NavigationService.pop()
-                NavigationService.replace('CoworkTabs', {
-                  targetId: this.props.currentMessage.originMsg.user.groupID,
-                })
-              },
-            })
+            if (global.coworkMode) {
+              Toast.show(
+                getLanguage(global.language).Friends.LOCATION_COWORK_NOTIFY,
+              )
+            } else {
+              let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
+              wsData.layerIndex = 3
+              NavigationService.navigate('MapViewSingle', {
+                wsData,
+                isExample: true,
+                mapName: this.props.currentMessage.originMsg.message.message
+                  .message,
+                showMarker: {
+                  longitude: this.props.currentMessage.originMsg.message.message
+                    .longitude,
+                  latitude: this.props.currentMessage.originMsg.message.message
+                    .latitude,
+                },
+              })
+            }
           }}
         >
           <View

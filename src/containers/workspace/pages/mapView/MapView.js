@@ -899,7 +899,7 @@ export default class MapView extends React.Component {
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
       this.backAction = null
-      this.mapController.reset()
+      this.mapController && this.mapController.reset()
       return
     }
 
