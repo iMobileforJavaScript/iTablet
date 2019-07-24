@@ -31,30 +31,31 @@ const LAYER_GROUP = 'layerGroup'
 export default class LayerManager_item extends React.Component {
   props: {
     user: Object,
-    map: Object,
     data: Object,
-    mapControl: Object,
+    parentData?: Object,
     isClose: boolean,
     swipeEnabled: boolean,
     hasSelected: boolean, // 是否有选择Radio
     selected: boolean, // 选择Radio
     operable: boolean,
-    showRenameDialog: () => {},
-    showRemoveDialog: () => {},
-    setEditable: () => {},
-    onArrowPress: () => {},
-    onPress: () => {},
-    onAllPress: () => {},
-    onToolPress: () => {},
-    onOpen: () => {},
-    getLayers: () => {},
+    // showRenameDialog: () => {},
+    // showRemoveDialog: () => {},
+    // setEditable: () => {},
     child: Array,
     sectionID: number,
     rowID: number,
     selectLayer: Object,
     index: number,
     layers: Object,
+    hasBaseMap: boolean,
+
     setLayerVisible: () => {},
+    onArrowPress: () => {},
+    onPress: () => {},
+    onAllPress: () => {},
+    onToolPress: () => {},
+    onOpen: () => {},
+    getLayers: () => {},
   }
 
   static defaultProps = {
@@ -72,6 +73,7 @@ export default class LayerManager_item extends React.Component {
     let options = this.getOptions(data)
     let { showLevelOne, showLevelTwo, isVectorLayer } = this.getValidate(data)
     this.state = {
+      data: data,
       selected: props.selected,
       options: options,
       editable: data.isEditable,
@@ -88,8 +90,16 @@ export default class LayerManager_item extends React.Component {
       sectionID: props.sectionID || 0,
       rowID: props.rowID || 0,
     }
+  }
 
-    this.renderItem = this.renderItem.bind(this)
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(this.state) !== JSON.stringify(nextState) ||
+      JSON.stringify(this.props) !== JSON.stringify(nextProps)
+    ) {
+      return true
+    }
+    return false
   }
 
   componentDidUpdate(prevProps) {
@@ -172,8 +182,8 @@ export default class LayerManager_item extends React.Component {
     if (
       !isThemeLayer &&
       isVectorLayer &&
-      this.props.data.type !== DatasetType.TEXT &&
-      this.props.data.type !== DatasetType.CAD
+      data.type !== DatasetType.TEXT &&
+      data.type !== DatasetType.CAD
     ) {
       options.push({
         component: (
@@ -199,7 +209,7 @@ export default class LayerManager_item extends React.Component {
         ),
         onPress: this._openStyle,
       })
-    } else if (isThemeLayer || this.props.data.type === DatasetType.CAD) {
+    } else if (isThemeLayer || data.type === DatasetType.CAD) {
       options.push({
         component: (
           <View style={styles.btnImageView}>
@@ -226,7 +236,7 @@ export default class LayerManager_item extends React.Component {
       onPress: this._rename,
     })
 
-    if (this.props.data.type === 'layerGroup') {
+    if (data.type === 'layerGroup') {
       options.push({
         component: (
           <View style={styles.btnImageView}>
@@ -267,14 +277,22 @@ export default class LayerManager_item extends React.Component {
       ;(async function() {
         this.props.setLayerVisible(this.props.data, !oldVisibe)
       }.bind(this)())
-      return { visible: !oldVisibe }
+
+      let newState = {}
+      if (this.state.data.groupName) {
+        let data = JSON.parse(JSON.stringify(this.state.data))
+        data.isVisible = !oldVisibe
+        newState.data = data
+      }
+      newState.visible = !oldVisibe
+      return newState
     })
   }
 
   // _openTheme = () => {
   //   let title = '',
   //     themeType = ''
-  //   switch (this.props.data.themeType) {
+  //   switch (this.state.data.themeType) {
   //     case ThemeType.LABEL:
   //       title = Const.LABEL
   //       break
@@ -285,17 +303,17 @@ export default class LayerManager_item extends React.Component {
   //       title = Const.RANGE
   //       break
   //   }
-  //   if (this.props.data.type === DatasetType.CAD) {
+  //   if (this.state.data.type === DatasetType.CAD) {
   //     title = Const.LABEL
   //     themeType = ThemeType.LABEL
   //   }
   //   if (title) {
   //     let editLayer = this.props.layer
   //     Object.assign(editLayer, {
-  //       index: this.props.data.index,
-  //       themeType: themeType || this.props.data.themeType,
-  //       name: this.props.data.name,
-  //       caption: this.props.data.caption,
+  //       index: this.state.data.index,
+  //       themeType: themeType || this.state.data.themeType,
+  //       name: this.state.data.name,
+  //       caption: this.state.data.caption,
   //     })
   //     NavigationService.navigate('ThemeEdit', {
   //       title,
@@ -318,7 +336,7 @@ export default class LayerManager_item extends React.Component {
   //     layer: this.props.layer,
   //     map: this.props.map,
   //     mapControl: this.props.mapControl,
-  //     type: this.props.data.type,
+  //     type: this.state.data.type,
   //   })
   // }
 
@@ -329,18 +347,18 @@ export default class LayerManager_item extends React.Component {
 
   // _remove = () => {
   //   this.props.showRemoveDialog &&
-  //     this.props.showRemoveDialog(true, this.props.data, '是否要删除该图层？')
+  //     this.props.showRemoveDialog(true, this.state.data, '是否要删除该图层？')
   // }
 
   // _unGroup = () => {
   //   this.props.showRemoveDialog &&
-  //     this.props.showRemoveDialog(true, this.props.data, '是否要解散该图层组？')
+  //     this.props.showRemoveDialog(true, this.state.data, '是否要解散该图层组？')
   // }
 
   _pop_row = async () => {
     if (this.props.onPress) {
       await this.props.onPress({
-        data: this.props.data,
+        data: this.state.data,
       })
     } else return
   }
@@ -348,7 +366,7 @@ export default class LayerManager_item extends React.Component {
   _all_pop_row = async () => {
     if (this.props.onAllPress) {
       await this.props.onAllPress({
-        data: this.props.data,
+        data: this.state.data,
       })
     } else return
   }
@@ -356,44 +374,37 @@ export default class LayerManager_item extends React.Component {
   _tool_row = async () => {
     if (this.props.onToolPress) {
       await this.props.onToolPress({
-        data: this.props.data,
+        data: this.state.data,
         index: this.props.index,
       })
     } else return
   }
 
-  refreshChildlist = async () => {
+  refreshChildList = async () => {
     let isShow = this.state.rowShow
-    if (this.props.data.type === 'layerGroup') {
-      let child = []
+    let child
+    if (this.state.data.type === 'layerGroup') {
       if (isShow) {
         child =
           (this.props.onArrowPress &&
             (await this.props.onArrowPress({
-              layer: this.props.data.layer,
-              data: this.props.data,
-              // sectionID: this.state.sectionID,
+              data: this.state.data,
             }))) ||
           []
-
-        this.setState({
-          rowShow: isShow,
-          child: child,
-        })
       }
     }
+    return child
   }
+
   _arrow_pop_row = async () => {
     let isShow = !this.state.rowShow
-    if (this.props.data.type === 'layerGroup') {
+    if (this.state.data.type === 'layerGroup') {
       let child = []
       if (isShow) {
         child =
           (this.props.onArrowPress &&
             (await this.props.onArrowPress({
-              layer: this.props.data.layer,
-              data: this.props.data,
-              // sectionID: this.state.sectionID,
+              data: this.state.data,
             }))) ||
           []
       }
@@ -405,7 +416,7 @@ export default class LayerManager_item extends React.Component {
       this.setSelected(!this.state.selected, async () => {
         this.props.onPress &&
           (await this.props.onPress({
-            data: this.props.data,
+            data: this.state.data,
           }))
       })
     }
@@ -423,19 +434,19 @@ export default class LayerManager_item extends React.Component {
 
   getStyleIconByType = item => {
     if (item.themeType > 0) {
-      if (this.props.selectLayer === this.props.data.name) {
+      if (this.props.selectLayer === item.name) {
         return getThemeWhiteIconByType(item.themeType)
       } else {
         return getThemeIconByType(item.themeType)
       }
     } else if (item.isHeatmap) {
-      if (this.props.selectLayer === this.props.data.name) {
+      if (this.props.selectLayer === item.name) {
         return getThemeAssets().themeType.heatmap_selected
       } else {
         return getThemeAssets().themeType.heatmap
       }
     } else {
-      if (this.props.selectLayer === this.props.data.name) {
+      if (this.props.selectLayer === item.name) {
         return getLayerWhiteIconByType(item.type)
       } else {
         return getLayerIconByType(item.type)
@@ -464,7 +475,7 @@ export default class LayerManager_item extends React.Component {
         selected: select,
       },
       () => {
-        cb && cb(this.props.data)
+        cb && cb(this.state.data)
       },
     )
   }
@@ -523,15 +534,10 @@ export default class LayerManager_item extends React.Component {
         onPress: () => {
           (async function() {
             await SMap.moveToBottom(layer.path)
+            if (layer.path.indexOf('/') === -1 && this.props.hasBaseMap) {
+              SMap.moveUpLayer(layer.path)
+            }
           }.bind(this)())
-          if (
-            layer.path.indexOf('/') === -1 &&
-            LayerUtils.isBaseLayer(
-              this.props.layers[this.props.layers.length - 1].name,
-            )
-          ) {
-            SMap.moveUpLayer(layer.path)
-          }
           // if (
           //   this.props.layers[this.props.layers.length - 1].name.indexOf(
           //     'vec@TD',
@@ -555,8 +561,8 @@ export default class LayerManager_item extends React.Component {
       )
     })
   }
-  renderItem() {
-    let name = this.props.data.caption
+  renderItem = () => {
+    let name = this.state.data.caption
     const visibleImgWhite = this.state.visible
       ? require('../../../../assets/mapTools/icon_multi_selected_disable.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable.png')
@@ -568,15 +574,15 @@ export default class LayerManager_item extends React.Component {
       : require('../../../../assets/mapEdit/icon-arrow-left.png')
     let leftView = this.props.hasSelected ? (
       this.renderRadioBtn()
-    ) : this.props.data.groupName ? (
+    ) : this.state.data.groupName ? (
       <View style={styles.btn} />
     ) : null
     let select = 'transparent'
     let selectcolor = color.black
     let visibleImg = visibleImgBlack
     let moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
-    let image = this.getStyleIconByType(this.props.data)
-    if (this.props.selectLayer === this.props.data.name) {
+    let image = this.getStyleIconByType(this.state.data)
+    if (this.props.selectLayer === this.state.data.name) {
       select = '#4680df'
       selectcolor = color.white
       visibleImg = visibleImgWhite
@@ -588,7 +594,6 @@ export default class LayerManager_item extends React.Component {
       moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     }
 
-    let thisHandle = this
     let iTemView
     return (
       <TouchableOpacity
@@ -599,15 +604,15 @@ export default class LayerManager_item extends React.Component {
         onLongPress={() => {
           //非标注，底图
           if (
-            thisHandle.props.data.name.indexOf('@Label_') === -1 &&
-            !LayerUtils.isBaseLayer(thisHandle.props.data.name)
+            this.state.data.name.indexOf('@Label_') === -1 &&
+            !LayerUtils.isBaseLayer(this.state.data.name)
           ) {
-            this._showPopover(iTemView, this.props.data)
+            this._showPopover(iTemView, this.state.data)
           }
         }}
       >
         <View style={styles.btn_container}>
-          {this.props.data.type === LAYER_GROUP ? (
+          {this.state.data.type === LAYER_GROUP ? (
             <TouchableOpacity style={styles.btn} onPress={this._arrow_pop_row}>
               <Image
                 resizeMode={'contain'}
@@ -631,8 +636,8 @@ export default class LayerManager_item extends React.Component {
             <Image
               resizeMode={'contain'}
               style={[
-                this.props.data.type === DatasetType.POINT &&
-                this.props.data.themeType <= 0
+                this.state.data.type === DatasetType.POINT &&
+                this.state.data.themeType <= 0
                   ? styles.samllImage
                   : styles.btn_image,
               ]}
@@ -667,7 +672,7 @@ export default class LayerManager_item extends React.Component {
         backgroundColor={'white'}
         onOpen={() => {
           // 参数sectionID, rowID
-          this.props.onOpen && this.props.onOpen(this.props.data)
+          this.props.onOpen && this.props.onOpen(this.state.data)
         }}
         buttonWidth={scaleSize(100)}
         // onClose={() => console.log('===close') }

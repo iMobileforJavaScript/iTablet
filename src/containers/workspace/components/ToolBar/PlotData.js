@@ -3,6 +3,7 @@ import constants from '../../constants'
 import { ConstToolType } from '../../../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import { getLanguage } from '../../../../language/index'
+import { StyleUtils } from '../../../../utils'
 
 let _params = {}
 
@@ -188,6 +189,7 @@ function getCollectionData(libId, symbolCode, params) {
 /** 采集分类点击事件 **/
 async function showCollection(libId, symbolCode, type) {
   // await SMap.addCadLayer('PlotEdit')
+  StyleUtils.setDefaultMapControlStyle().then(() => {})
   await SMap.setPlotSymbol(libId, symbolCode)
   let { data, buttons } = getCollectionData(libId, symbolCode, _params)
   if (!_params.setToolbarVisible) return

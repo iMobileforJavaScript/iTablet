@@ -1,27 +1,22 @@
 import { getLanguage } from '../../../../language/index'
 
-function layersetting(param) {
-  return [
+function layersetting(type, isGroup = false) {
+  let setting = [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
           //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          //'设置为当前图层',
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
           //'可见比例尺范围',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_LAYER_STYLE,
+          title: getLanguage(type).Map_Layer.LAYERS_LAYER_STYLE,
           //'图层风格',
           image: require('../../../../assets/function/icon_function_style.png'),
         },
@@ -30,24 +25,24 @@ function layersetting(param) {
         //   data: [],
         // },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
         //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
         //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
         //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
         //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
         // },
         // {
@@ -59,12 +54,12 @@ function layersetting(param) {
         //   data: [],
         // },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
           //'分享图层',
           image: require('../../../../assets/function/icon_function_share.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
           //'移除',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
         },
@@ -76,6 +71,14 @@ function layersetting(param) {
       ],
     },
   ]
+  if (!isGroup) {
+    setting[0].data.splice(1, 0, {
+      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    })
+  }
+  return setting
 }
 const base3DListData = [
   {
@@ -104,60 +107,55 @@ const base3DListData = [
   },
 ]
 
-function layerThemeSetting(param) {
-  return [
+function layerThemeSetting(type, isGroup = false) {
+  let setting = [
     {
       title: '',
       //'设置为当前图层',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
           //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          //'设置为当前图层',
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
           //'可见比例尺范围',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_CREATE_THEMATIC_MAP,
+          title: getLanguage(type).Map_Layer.LAYERS_CREATE_THEMATIC_MAP,
           //'新建专题图',
           image: require('../../../../assets/layerToolbar/theme_new.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
         //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
         //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
         //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
         //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
         // },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
           //'分享图层',
           image: require('../../../../assets/function/icon_function_share.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
           //'移除',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
         },
@@ -165,131 +163,142 @@ function layerThemeSetting(param) {
       image: require('../../../../assets/layerToolbar/layer_this.png'),
     },
   ]
+  if (!isGroup) {
+    setting[0].data.splice(1, 0, {
+      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    })
+  }
+  return setting
 }
-function layerThemeSettings(param) {
-  return [
+function layerThemeSettings(type, isGroup = false) {
+  let setting = [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
           //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          //'设置为当前图层',
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
           //'可见比例尺范围',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
+          title: getLanguage(type).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
           //'修改专题图',
           image: require('../../../../assets/layerToolbar/theme_modify.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
         //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
         //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
         //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
         //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
         // },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
           //'分享图层',
           image: require('../../../../assets/function/icon_function_share.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
           //'移除',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
         },
       ],
     },
   ]
+  if (!isGroup) {
+    setting[0].data.splice(1, 0, {
+      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    })
+  }
+  return setting
 }
 
 /*
  * 顶部header菜单数据
  * */
-const layerSettingCanVisit = param => [
+const layerSettingCanVisit = type => [
   {
-    title: getLanguage(param).Map_Layer.VISIBLE,
+    title: getLanguage(type).Map_Layer.VISIBLE,
     // 设置图层可见
     image: require('../../../../assets/layerToolbar/layer_can_visible.png'),
   },
 ]
-const layerSettingCanNotVisit = param => [
+const layerSettingCanNotVisit = type => [
   {
-    title: getLanguage(param).Map_Layer.NOT_VISIBLE,
+    title: getLanguage(type).Map_Layer.NOT_VISIBLE,
     // 设置图层不可见
     image: require('../../../../assets/layerToolbar/layer_can_not_visible.png'),
   },
 ]
-const layerSettingCanSelect = param => [
+const layerSettingCanSelect = type => [
   {
-    title: getLanguage(param).Map_Layer.OPTIONAL,
+    title: getLanguage(type).Map_Layer.OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
 ]
-const layerSettingCanNotSelect = param => [
+const layerSettingCanNotSelect = type => [
   {
-    title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+    title: getLanguage(type).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
 ]
-const layerSettingCanEdit = param => [
+const layerSettingCanEdit = type => [
   {
-    title: getLanguage(param).Map_Layer.EDITABLE,
+    title: getLanguage(type).Map_Layer.EDITABLE,
     image: require('../../../../assets/layerToolbar/layer_can_edit.png'),
   },
 ]
-const layerSettingCanNotEdit = param => [
+const layerSettingCanNotEdit = type => [
   {
-    title: getLanguage(param).Map_Layer.NOT_EDITABLE,
+    title: getLanguage(type).Map_Layer.NOT_EDITABLE,
     image: require('../../../../assets/layerToolbar/layer_can_not_edit.png'),
   },
 ]
-const layerSettingCanSnap = param => [
+const layerSettingCanSnap = type => [
   {
-    title: getLanguage(param).Map_Layer.SNAPABLE,
+    title: getLanguage(type).Map_Layer.SNAPABLE,
     image: require('../../../../assets/layerToolbar/layer_can_catch.png'),
   },
 ]
-const layerSettingCanNotSnap = param => [
+const layerSettingCanNotSnap = type => [
   {
-    title: getLanguage(param).Map_Layer.NOT_SNAPABLE,
+    title: getLanguage(type).Map_Layer.NOT_SNAPABLE,
     image: require('../../../../assets/layerToolbar/layer_can_not_catch.png'),
   },
 ]
 
-const layer3dDefault = (param, selected) => {
+const layer3dDefault = (type, selected) => {
   let data = {
-    title: getLanguage(param).Map_Layer.NOT_OPTIONAL,
+    title: getLanguage(type).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
     type: 'setLayerSelect',
   }
   if (selected === false) {
     data = {
-      title: getLanguage(param).Map_Layer.OPTIONAL,
+      title: getLanguage(type).Map_Layer.OPTIONAL,
       image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
       type: 'setLayerSelect',
     }
@@ -299,7 +308,7 @@ const layer3dDefault = (param, selected) => {
       title: '',
       data: [
         {
-          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          // title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           title:
             global.language === 'CN'
               ? '缩放至当前图层'
@@ -319,7 +328,7 @@ function layere3dImage() {
       title: '',
       data: [
         {
-          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          // title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           title:
             global.language === 'CN'
               ? '缩放至当前图层'
@@ -339,7 +348,7 @@ function layere3dImage() {
           type: 'RemoveLayer3d_image',
         },
         // {
-        //   title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+        //   title: getLanguage(type).Map_Layer.BASEMAP_SWITH,
         //   image: require('../../../../assets/mapTools/icon_open_black.png'),
         // },
       ],
@@ -352,7 +361,7 @@ function layere3dTerrain() {
       title: '',
       data: [
         {
-          // title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          // title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           title:
             global.language === 'CN'
               ? '缩放至当前图层'
@@ -376,17 +385,17 @@ function layere3dTerrain() {
   ]
 }
 
-function layereditsetting(param) {
+function layereditsetting(type) {
   return [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.BASEMAP_SWITH,
+          title: getLanguage(type).Map_Layer.BASEMAP_SWITH,
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
           //'移除',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
         },
@@ -395,128 +404,134 @@ function layereditsetting(param) {
   ]
 }
 
-function taggingData(param) {
+function taggingData(type) {
   return [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.PLOTS_SET_AS_CURRENT,
+          title: getLanguage(type).Map_Layer.PLOTS_SET_AS_CURRENT,
           image: require('../../../../assets/function/icon_function_Tagging.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           image: require('../../../../assets/layerToolbar/layer_this.png'),
         },
         // {
-        //   title: getLanguage(param).Map_Layer.PLOTS_DELETE,
+        //   title: getLanguage(type).Map_Layer.PLOTS_DELETE,
         //   image: require('../../../../assets/layerToolbar/layer_this.png'),
         // },
       ],
     },
   ]
 }
-function layerPlottingSetting(param) {
-  return [
+function layerPlottingSetting(type, isGroup = false) {
+  let setting = [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
           //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          //'设置为当前图层',
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
           //'可见比例尺范围',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
           //'分享图层',
           image: require('../../../../assets/function/icon_function_share.png'),
         },
       ],
     },
   ]
+  if (!isGroup) {
+    setting[0].data.splice(1, 0, {
+      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    })
+  }
+  return setting
 }
-function layerCollectionSetting(param) {
-  return [
+function layerCollectionSetting(type, isGroup = false) {
+  let setting = [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
           //'全副显示图层',
           image: require('../../../../assets/layerToolbar/layer_full.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          //'设置为当前图层',
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
-        },
-        {
-          title: getLanguage(param).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
           //'可见比例尺范围',
           image: require('../../../../assets/layerToolbar/layer_range.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_RENAME,
+          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
           //'重命名',
           image: require('../../../../assets/layerToolbar/layer_rename.png'),
         },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_UP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
         //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_MOVE_DOWN,
+        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
         //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_TOP,
+        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
         //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
         // },
         // {
-        //   title: getLanguage(param).Map_Layer.LAYERS_BOTTOM,
+        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
         //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
         // },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_SHARE,
+          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
           //'分享图层',
           image: require('../../../../assets/function/icon_function_share.png'),
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_REMOVE,
+          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
           //'移除',
           image: require('../../../../assets/layerToolbar/layer_remove.png'),
         },
       ],
     },
   ]
+  if (!isGroup) {
+    setting[0].data.splice(1, 0, {
+      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+      //'设置为当前图层',
+      image: require('../../../../assets/layerToolbar/layer_this.png'),
+    })
+  }
+  return setting
 }
 
-function scaleData(param) {
+function scaleData(type) {
   return [
     {
       title: '',
       data: [
         {
-          title: getLanguage(param).Map_Layer.LAYERS_MAXIMUM,
+          title: getLanguage(type).Map_Layer.LAYERS_MAXIMUM,
           //'最大可见比例尺',
         },
         {
-          title: getLanguage(param).Map_Layer.LAYERS_MINIMUM,
+          title: getLanguage(type).Map_Layer.LAYERS_MINIMUM,
           //'最小可见比例尺',
         },
       ],

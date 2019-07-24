@@ -385,34 +385,39 @@ export default class LayerAttributeTable extends React.Component {
           })
         })
     } else {
-      for (let filter of this.props.buttonNameFilter) {
-        if (item.name === filter) {
-          buttonTitles = this.props.buttonTitles || []
-          buttonIndexes = [1]
-          this.props.buttonActions &&
-            this.props.buttonActions instanceof Array &&
-            this.props.buttonActions.forEach(action => {
-              buttonActions.push(row => {
-                if (typeof action === 'function') {
-                  if (item && item instanceof Array) {
-                    action({
-                      rowData: item,
-                      rowIndex: index,
-                      cellData: row.data,
-                      cellIndex: row.index,
-                    })
-                  } else {
-                    action({
-                      rowData: this.props.data,
-                      rowIndex: 0,
-                      cellData: item,
-                      cellIndex: index,
-                    })
+      if (
+        this.props.buttonNameFilter &&
+        this.props.buttonNameFilter instanceof Array
+      ) {
+        for (let filter of this.props.buttonNameFilter) {
+          if (item.name === filter) {
+            buttonTitles = this.props.buttonTitles || []
+            buttonIndexes = [1]
+            this.props.buttonActions &&
+              this.props.buttonActions instanceof Array &&
+              this.props.buttonActions.forEach(action => {
+                buttonActions.push(row => {
+                  if (typeof action === 'function') {
+                    if (item && item instanceof Array) {
+                      action({
+                        rowData: item,
+                        rowIndex: index,
+                        cellData: row.data,
+                        cellIndex: row.index,
+                      })
+                    } else {
+                      action({
+                        rowData: this.props.data,
+                        rowIndex: 0,
+                        cellData: item,
+                        cellIndex: index,
+                      })
+                    }
                   }
-                }
+                })
               })
-            })
-          break
+            break
+          }
         }
       }
       buttonTitles = this.props.buttonTitles || []

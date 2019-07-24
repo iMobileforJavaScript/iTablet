@@ -165,12 +165,59 @@ const layer3dSettingCanNotSelect = param => [
   changeState = canSelectable => {
     this.setState({ selectable: canSelectable })
   }
+  getIconType = item => {
+    let layerIcon
+    if (
+      this.props.toHeightItem.index === this.props.index &&
+      this.props.toHeightItem.itemName === item.name
+    ) {
+      layerIcon = require('../../assets/map/layer3dtype/layer3d_type_normal_white.png')
+      if (item.title === 'TianDiTu' || item.title === 'BingMap') {
+        layerIcon = require('../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png')
+        return layerIcon
+      }
+      if (item.title === 'NodeAnimation') {
+        layerIcon = require('../../assets/Mine/mine_my_plot_white.png')
+        return layerIcon
+      }
+      switch (item.type) {
+        //todo IMAGEFILE 白色  KML黑白
+        case 'IMAGEFILE':
+          layerIcon = require('../../assets/map/layer3dtype/layer3d_type_image.png')
+          return layerIcon
+        //case 'KML':
+        case 'Terrain':
+          layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile_white.png')
+          return layerIcon
+      }
+    } else {
+      layerIcon = require('../../assets/map/layer3dtype/layer3d_type_normal.png')
+      if (item.title === 'TianDiTu' || item.title === 'BingMap') {
+        layerIcon = require('../../assets/Mine/my_basemap.png')
+        return layerIcon
+      }
+      if (item.title === 'NodeAnimation') {
+        layerIcon = require('../../assets/Mine/mine_my_plot.png')
+        return layerIcon
+      }
+      switch (item.type) {
+        case 'IMAGEFILE':
+          layerIcon = require('../../assets/map/layer3dtype/layer3d_type_image.png')
+          return layerIcon
+        //case 'KML':
+        case 'Terrain':
+          layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
+          return layerIcon
+      }
+    }
+    return layerIcon
+  }
   render() {
     // let selectImg = this.state.selectable
     //   ? require('../../assets/map/Frenchgrey/icon_selectable_selected.png')
     //   : require('../../assets/map/Frenchgrey/icon_selectable.png')
     // let typeImg=require("")
-    let visibleImg, textColor, moreImg, typeImg
+    let visibleImg, textColor, moreImg
     if (
       this.props.toHeightItem.index === this.props.index &&
       this.props.toHeightItem.itemName === this.props.item.name
@@ -180,15 +227,14 @@ const layer3dSettingCanNotSelect = param => [
         ? require('../../assets/mapTools/icon_multi_selected_disable.png')
         : require('../../assets/mapTools/icon_multi_unselected_disable.png')
       moreImg = require('../../assets/map/Frenchgrey/icon_more_white.png')
-      typeImg = require('../../assets/map/Frenchgrey/icon_vectorfile_white.png')
     } else {
       visibleImg = this.state.visible
         ? require('../../assets/mapTools/icon_multi_selected_disable_black.png')
         : require('../../assets/mapTools/icon_multi_unselected_disable_black.png')
       textColor = { color: color.fontColorBlack }
       moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
-      typeImg = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
     }
+    let typeImg = this.getIconType(this.props.item)
     // console.log(this.state.visible, this.state.selectable)
     // console.log(selectImg, visibleImg)
     return (

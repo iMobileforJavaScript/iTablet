@@ -74,12 +74,9 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
-import MenuList from '../MenuList/MenuList'
-import {
-  BoxClipData,
-  CrossClipData,
-  PlaneClipData,
-} from '../../pages/map3D/Map3DClipMenuData'
+import MenuList from '../MenuList'
+import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
+
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -3086,6 +3083,7 @@ export default class ToolBar extends React.PureComponent {
         GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else if (
         type === ConstToolType.MAP_BOX_CLIP ||
+        type === ConstToolType.MAP3D_BOX_CLIP ||
         type === ConstToolType.MAP3D_CROSS_CLIP ||
         type === ConstToolType.MAP3D_PLANE_CLIP
       ) {
@@ -4982,7 +4980,7 @@ export default class ToolBar extends React.PureComponent {
       GLOBAL.MapSurfaceView.show(false)
       this.showMap3DTool(ConstToolType.MAP3D_BOX_CLIP)
     } else {
-      Toast.show('请先裁剪')
+      Toast.show(getLanguage(GLOBAL.language).Map_Main_Menu.CUT_FIRST)
     }
   }
 
