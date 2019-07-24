@@ -36,9 +36,11 @@ class ModuleList extends Component {
     this.moduleItems = []
     this.itemAction = this.itemAction.bind(this)
   }
+
   async componentDidMount() {
     this.homePath = await FileTools.appendingHomeDirectory()
   }
+
   _showAlert = (ref, downloadData, currentUserName) => {
     setTimeout(() => {
       this.props.showDialog && this.props.showDialog(true)
@@ -76,6 +78,7 @@ class ModuleList extends Component {
         background: true,
         fileName: downloadData.fileName,
         progressDivider: 1,
+        key: downloadData.key,
       }
       this.props
         .downloadFile(downloadOptions)
@@ -184,6 +187,7 @@ class ModuleList extends Component {
       }
 
       let downloadData = this.getDownloadData(language, item)
+      let currentDownloadData = this.getCurrentDownloadData(downloadData)
       let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
 
       let cachePath = this.homePath + ConstPath.CachePath
@@ -196,7 +200,8 @@ class ModuleList extends Component {
             this.moduleItems[index] &&
             (this.moduleItems[index].getDialogCheck() ||
               this.moduleItems[index].getDownloading())
-          )
+          ) &&
+          !currentDownloadData
         ) {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
@@ -254,10 +259,10 @@ class ModuleList extends Component {
     this.moduleItems[data.index] = ref
   }
 
-  getDownload = downloadData => {
+  getCurrentDownloadData = downloadData => {
     if (this.props.downloads.length > 0) {
       for (let i = 0; i < this.props.downloads.length; i++) {
-        if (this.props.downloads[i].id === downloadData.fileName) {
+        if (this.props.downloads[i].id === downloadData.key) {
           return this.props.downloads[i]
         }
       }
@@ -270,7 +275,7 @@ class ModuleList extends Component {
     return (
       <ModuleItem
         item={item}
-        downloadData={this.getDownload(downloadData)}
+        downloadData={this.getCurrentDownloadData(downloadData)}
         ref={ref => this.getRef({ item, index }, ref)}
         importWorkspace={this.props.importWorkspace}
         showDialog={this.props.showDialog}

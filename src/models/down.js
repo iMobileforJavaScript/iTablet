@@ -25,7 +25,7 @@ export const downloadFile = (params = {}) => async dispatch => {
     //   params.progress(res)
     // }
     const data = {
-      id: params.fileName,
+      id: params.key,
       progress: res.progress,
       params: params,
     }

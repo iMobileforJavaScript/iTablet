@@ -117,7 +117,7 @@ function SetMap(param) {
       },
     },
     {
-      key: '三维场景',
+      key: constants.MAP_3D,
       title: getLanguage(param).Map_Module.MAP_3D,
       baseImage:
         param === 'CN'

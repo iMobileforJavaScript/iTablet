@@ -24,6 +24,7 @@ const mapStateToProps = state => ({
   attributes: state.layers.toJS().attributes,
   device: state.device.toJS().device,
   online: state.online.toJS(),
+  downloads: state.down.toJS().downloads,
 })
 
 const mapDispatchToProps = {
