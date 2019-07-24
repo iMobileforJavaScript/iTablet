@@ -106,5 +106,6 @@ const Friends = {
   SYS_MSG_MOD_GROUP_NAME: ' 将群名称更改为 ',
   SYS_LOGIN_ON_OTHER_DEVICE: '您的账号已在别的设备上登录',
   SYS_MSG_REJ: '对方还未添加您为好友',
+  SYS_FRIEND_REQ_ACCEPT: '你们已经是朋友了，开始聊天吧',
 }
 export { Friends }

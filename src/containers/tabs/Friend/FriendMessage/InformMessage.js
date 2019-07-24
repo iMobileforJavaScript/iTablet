@@ -97,8 +97,8 @@ export default class InformMessage extends React.Component {
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
-      message: '我们已经是好友了,开始聊天吧',
-      type: MSGconstant.MSG_SINGLE,
+      message: '',
+      type: MSGconstant.MSG_ACCEPT_FRIEND,
       user: {
         name: curUserName,
         id: uuid,
@@ -115,6 +115,7 @@ export default class InformMessage extends React.Component {
 
     AddFriend.acceptFriendAdd(
       [item.originMsg.user.id, item.originMsg.user.name],
+      1,
       () => {
         this.friend.refreshList()
       },

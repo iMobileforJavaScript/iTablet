@@ -98,32 +98,16 @@ class AddFriend extends Component {
   }
 
   //targetUser:[id,name]
-  static acceptFriendAdd = (targetUser, callback) => {
-    //  this.target;
-    // let curUserName = this.state.currentUser.nickname
-    // let uuid = this.state.currentUser.userId
-    // let ctime = new Date()
-    // let time = Date.parse(ctime)
-    // let message = {
-    //   message: ' 我们已经是好友了,开始聊天吧',
-    //   type: 1,
-    //   user: { name: curUserName, id: uuid },
-    //   time: time,
-    // }
-    // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
-
+  static acceptFriendAdd = (targetUser, isFriend, callback) => {
     FriendListFileHandle.addToFriendList(
       {
         markName: targetUser[1],
         name: targetUser[1],
         id: targetUser[0],
-        info: { isFriend: 1 },
+        info: { isFriend: isFriend },
       },
       callback,
     )
-    // this.friend.refreshList();
-    // this.friend.refreshMessage();
-    // this.dialog.setDialogVisible(false)
   }
 
   addFriendRequest = async () => {
@@ -152,7 +136,7 @@ class AddFriend extends Component {
       return
     }
     this.friend._sendMessage(messageStr, item[0], true)
-    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], 0)
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

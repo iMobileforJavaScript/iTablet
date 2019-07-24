@@ -109,5 +109,6 @@ const Friends = {
   SYS_MSG_MOD_GROUP_NAME: ' changed the group name to ',
   SYS_LOGIN_ON_OTHER_DEVICE: 'Your account is logged in on other device',
   SYS_MSG_REJ: "The opposite haven't added you as friend yet",
+  SYS_FRIEND_REQ_ACCEPT: "You're friends now, enjoy taking!",
 }
 export { Friends }

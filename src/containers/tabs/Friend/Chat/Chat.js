@@ -288,6 +288,33 @@ class Chat extends React.Component {
     }
     return bGroup
   }
+
+  showNoFriendNotify = msgId => {
+    msgId += 1
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: '',
+      type: MSGConstant.MSG_REJECT,
+      user: {
+        name: this.targetUser.userName,
+        id: this.targetUser.userId,
+        groupID: this.targetUser.userId,
+        groupName: '',
+      },
+      time: time,
+    }
+    //保存
+    let storeMsg = this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let chatMsg = this._loadChatMsg(storeMsg)
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, chatMsg),
+      }
+    })
+  }
+
   //发送普通消息
   onSend(messages = []) {
     let bGroup = 1
@@ -323,6 +350,12 @@ class Chat extends React.Component {
       }
     })
     //发送
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -367,6 +400,12 @@ class Chat extends React.Component {
       }
     })
     //发送
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -443,6 +482,12 @@ class Chat extends React.Component {
       }
     })
     //发送文件及提醒
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendFile(
       JSON.stringify(message),
       filepath,

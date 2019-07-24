@@ -182,20 +182,20 @@ class FriendList extends Component {
           keyExtractor={(item, index) => index}
           numColumns={1}
           renderItem={({ item, index }) => this._renderItem(item, index)}
-          ListEmptyComponent={() => (
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: scaleSize(50),
-              }}
-            >
-              <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
-                {/* 您还未添加好友哦 */}
-                {getLanguage(this.props.language).Friends.NO_FRIEND}
-              </Text>
-            </View>
-          )} // 数据为空时调用
+          // ListEmptyComponent={() => (
+          //   <View
+          //     style={{
+          //       justifyContent: 'center',
+          //       alignItems: 'center',
+          //       marginTop: scaleSize(50),
+          //     }}
+          //   >
+          //     <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
+          //       {/* 您还未添加好友哦 */}
+          //       {getLanguage(this.props.language).Friends.NO_FRIEND}
+          //     </Text>
+          //   </View>
+          // )} // 数据为空时调用
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefresh}
