@@ -9,7 +9,7 @@ import { scaleSize, Toast } from '../../../../utils'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from '../MessageDataHandle'
 import { SimpleDialog } from '../index'
-// import MsgConstant from '../MsgConstant'
+import MsgConstant from '../MsgConstant'
 
 class ManageFriend extends Component {
   props: {
@@ -32,19 +32,24 @@ class ManageFriend extends Component {
   }
 
   _deleteFriend = async () => {
-    // let ctime = new Date()
-    // let time = Date.parse(ctime)
-    // await this.friend._sendMessage(JSON.stringify({
-    //   user:{
-    //     name: this.user.name,
-    //     id: this.user.id,
-    //     groupId: this.targetUser.id,
-    //     groupName:
-    //   },
-    //   type: MsgConstant.MSG_REMOVE_MEMBER,
-    //   time: time,
-    //   message:'',
-    // }), this.targetUser.id)
+    if (FriendListFileHandle.isFriend(this.targetId)) {
+      let ctime = new Date()
+      let time = Date.parse(ctime)
+      await this.friend._sendMessage(
+        JSON.stringify({
+          user: {
+            name: this.user.userName,
+            id: this.user.userId,
+            groupID: this.user.userId,
+            groupName: '',
+          },
+          type: MsgConstant.MSG_DEL_FRIEND,
+          time: time,
+          message: '',
+        }),
+        this.targetId,
+      )
+    }
     MessageDataHandle.delMessage({
       userId: this.user.userId, //当前登录账户的id
       talkId: this.targetUser.id, //会话ID

@@ -631,18 +631,21 @@ export default class MT_layerManager extends React.Component {
         ) {
           action = this.onToolPress
           if (
+            this.props.layers &&
             this.props.layers.length > 0 &&
             item.name === this.props.layers[this.props.layers.length - 1].name
           ) {
             if (LayerUtils.isBaseLayer(item.name)) return true
           }
           if (
+            this.props.layers &&
             this.props.layers.length > 1 &&
             item.name === this.props.layers[this.props.layers.length - 2].name
           ) {
             if (LayerUtils.isBaseLayer(item.name)) return true
           }
           if (
+            this.props.layers &&
             this.props.layers.length > 0 &&
             item.name.indexOf('@Label_') >= 0
           ) {
@@ -688,9 +691,15 @@ export default class MT_layerManager extends React.Component {
             onAllPress={this.onAllPressRow}
             onArrowPress={({ data }) => this.getChildList({ data, section })}
             onToolPress={action}
-            hasBaseMap={LayerUtils.isBaseLayer(
-              this.props.layers[this.props.layers.length - 1].name,
-            )}
+            hasBaseMap={() => {
+              let hasBaseMap = false
+              if (this.props.layers && this.props.layers.length > 0) {
+                hasBaseMap = LayerUtils.isBaseLayer(
+                  this.props.layers[this.props.layers.length - 1].name,
+                )
+              }
+              return hasBaseMap
+            }}
           />
         )
       } else {
