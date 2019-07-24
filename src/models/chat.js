@@ -121,8 +121,7 @@ export default handleActions(
           chats.unReadMsg++
         }
       } else if (payload.operate === 'edit') {
-        let message =
-          allChat[payload.userId][payload.talkId].history[payload.msgId]
+        let message = chats.history[payload.msgId]
         Object.assign(message, payload.editItem)
       }
 

@@ -465,28 +465,42 @@ export default class SecondMapSettings extends Component {
         })
         break
       case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings1', {
           title,
           cb: this.saveInput,
         })
         break
       case getLanguage(GLOBAL.language).Map_Settings.COORDINATE_SYSTEM:
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings2', {
           title,
           cb: this.setMapCoordinate,
         })
         break
       case getLanguage(GLOBAL.language).Map_Settings.CURRENT_VIEW_BOUNDS:
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings3', {
           title,
           rightBtn: getLanguage(GLOBAL.language).Map_Settings.COPY,
         })
         break
       case getLanguage(GLOBAL.language).Map_Settings.COPY_COORDINATE_SYSTEM:
+        this.props.navigation.navigate('SecondMapSettings7', {
+          title,
+          cb:
+            this.state.cb !== ''
+              ? this.state.cb
+              : ({ prjCoordSysName }) => {
+                let data = this.state.data.concat()
+                data[0].value = prjCoordSysName
+                this.setState({
+                  data,
+                })
+              },
+        })
+        break
       case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASOURCE:
       case getLanguage(GLOBAL.language).Map_Settings.FROM_DATASET:
       case getLanguage(GLOBAL.language).Map_Settings.FROM_FILE:
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings4', {
           title,
           cb:
             this.state.cb !== ''
@@ -501,7 +515,7 @@ export default class SecondMapSettings extends Component {
         })
         break
       case getLanguage(GLOBAL.language).Map_Settings.TRANSFER_METHOD:
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings5', {
           title,
           cb: this.setTransferMethod,
         })
@@ -550,7 +564,7 @@ export default class SecondMapSettings extends Component {
       case 'Position Vector(7-para)':
       case 'Coordinate Frame(7-para)':
       case 'Bursa-wolf(7-para)':
-        this.props.navigation.navigate('SecondMapSettings', {
+        this.props.navigation.navigate('SecondMapSettings6', {
           title,
           rightBtn: getLanguage(GLOBAL.language).Map_Settings.CONFIRM,
           cb: this.state.cb,

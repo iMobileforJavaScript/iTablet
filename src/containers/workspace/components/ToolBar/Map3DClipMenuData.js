@@ -3,38 +3,43 @@
  * Author: Asort
  * https://github.com/AsortKeven
  */
+import { getLanguage } from '../../../../language/index'
+
 const BoxClipData = () => [
   {
-    title: '裁剪图层',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
     data: [], //获取图层数据
   },
   {
-    title: '裁剪区域参数设置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS,
     data: [
       {
-        title: '底面长',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_LENGTH,
         value: 0,
         iconType: 'Text',
       },
       {
-        title: '底面宽',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_WIDTH,
         value: 0,
         iconType: 'Text',
       },
       {
-        title: '高度',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_HEIGHT,
         value: 0,
         iconType: 'Text',
       },
       // {
-      //   title:"z旋转",
+      //   title:getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT,
       //   value:0,
       //   iconType:"Input",
       // },
     ],
   },
   {
-    title: '位置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
     data: [
       {
         title: 'x',
@@ -54,14 +59,14 @@ const BoxClipData = () => [
     ],
   },
   {
-    title: '裁剪设置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
     data: [
       // {
-      //   title:"裁剪线颜色",
+      //   title:getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
       //   iconType:"Arrow",
       // },
       {
-        title: '区域内裁剪',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_INNER,
         iconType: 'Switch',
       },
     ],
@@ -70,31 +75,31 @@ const BoxClipData = () => [
 
 const CrossClipData = () => [
   {
-    title: '裁剪图层',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
     data: [],
   },
   {
-    title: '裁剪设置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
     data: [
       {
-        title: '裁剪线颜色',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
         iconType: 'Arrow',
       },
       {
-        title: '裁剪线透明度',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_OPACITY,
         value: 100,
         maxValue: 100,
         minValue: 0,
         iconType: 'Input',
       },
       {
-        title: '显示另一侧',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu.SHOW_OTHER_SIDE,
         iconType: 'Switch',
       },
     ],
   },
   {
-    title: '位置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
     data: [
       {
         title: 'x',
@@ -114,7 +119,7 @@ const CrossClipData = () => [
     ],
   },
   {
-    title: '旋转参数',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.ROTATE_SETTINGS,
     data: [
       {
         title: 'x',
@@ -137,24 +142,27 @@ const CrossClipData = () => [
 
 const PlaneClipData = () => [
   {
-    title: '裁剪图层',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
     data: [],
   },
   {
-    title: '裁剪面设置',
+    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SURFACE_SETTING,
     data: [
       {
-        title: '长度',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_LENGTH,
         value: 10,
         iconType: 'Input',
       },
       {
-        title: '宽度',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_WIDTH,
         value: 10,
         iconType: 'Input',
       },
       {
-        title: '高度',
+        title: getLanguage(GLOBAL.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_HEIGHT,
         value: 0,
         iconType: 'Input',
       },

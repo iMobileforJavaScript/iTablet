@@ -656,6 +656,48 @@ const AppNavigator = createStackNavigator(
         header: null,
       },
     },
+    SecondMapSettings1: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings2: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings3: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings4: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings5: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings6: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SecondMapSettings7: {
+      screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
   },
   {
     defaultNavigationOptions: {

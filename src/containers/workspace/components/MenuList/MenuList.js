@@ -12,13 +12,13 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  Platform,
   Switch,
 } from 'react-native'
 import styles from './style'
 import { scaleSize } from '../../../../utils'
 import color from '../../../../styles/color'
 import ConstToolType from '../../../../constants/ConstToolType'
+import { getLanguage } from '../../../../language'
 
 export default class MenuList extends Component {
   props: {
@@ -96,7 +96,7 @@ export default class MenuList extends Component {
     let layers = JSON.parse(JSON.stringify(this.state.layers))
     let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
     data[index].isChecked = !data[index].isChecked
-    if (title === '裁剪图层') {
+    if (title === getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER) {
       layers[index].isChecked = !layers[index].isChecked
       clipSetting.layers = layers.filter(item => item.isChecked === true)
     }
@@ -116,7 +116,7 @@ export default class MenuList extends Component {
   changeHeight = () => {
     let hiddenPart = this.state.hiddenPart
     let flag = hiddenPart
-      ? ConstToolType.MAP3D_CLIP
+      ? ConstToolType.MAP3D_CLIP_SHOW
       : ConstToolType.MAP3D_CLIP_HIDDEN
     this.props.changeHeight &&
       this.props.changeHeight(this.props.device.orientation, flag)
@@ -143,15 +143,15 @@ export default class MenuList extends Component {
         needSmallerThan360 = true
         needBigerThanZero = true
         break
-      case 'x旋转':
-      case 'y旋转':
-      case 'z旋转':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_XROT:
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_YROT:
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT:
         needSmallerThan360 = true
         needBigerThanZero = true
         break
-      case '底面长':
-      case '底面宽':
-      case '高度':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_LENGTH:
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_WIDTH:
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_HEIGHT:
         needBigerThanZero = true
         break
     }
@@ -220,7 +220,10 @@ export default class MenuList extends Component {
     let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
     let pos = ~~index
     data[pos].value = value
-    if (data[pos].title === '区域内裁剪') clipSetting.clipInner = value
+    if (
+      data[pos].title === getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_INNER
+    )
+      clipSetting.clipInner = value
     this.setState(
       {
         data,
@@ -238,12 +241,22 @@ export default class MenuList extends Component {
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
 
-    let layerIcon = require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png')
+    let layerIcon = require('../../../../assets/map/layer3dtype/layer3d_type_normal.png')
 
     switch (item.type) {
+      case 'IMAGEFILE':
+        layerIcon = require('../../../../assets/map/layer3dtype/layer3d_type_image.png')
+        break
+      //case 'KML':
       case 'Terrain':
         layerIcon = require('../../../../assets/map/Frenchgrey/icon_vectorfile.png')
         break
+    }
+    if (item.title === 'TianDiTu' || item.title === 'BingMap') {
+      layerIcon = require('../../../../assets/Mine/my_basemap.png')
+    }
+    if (item.title === 'NodeAnimation') {
+      layerIcon = require('../../../../assets/Mine/mine_my_plot.png')
     }
     return (
       <View>
@@ -253,22 +266,10 @@ export default class MenuList extends Component {
               this.changeListSelect(this.state.title, index)
             }}
           >
-            <Image
-              style={{
-                width: scaleSize(30),
-                height: scaleSize(30),
-                tintColor: color.imageColorBlack,
-              }}
-              source={visibleImgBlack}
-            />
+            <Image style={styles.icon} source={visibleImgBlack} />
           </TouchableOpacity>
           <Image
-            style={{
-              marginHorizontal: scaleSize(10),
-              width: scaleSize(30),
-              height: scaleSize(30),
-              tintColor: color.imageColorBlack,
-            }}
+            style={[styles.icon, { marginHorizontal: scaleSize(10) }]}
             source={layerIcon}
           />
           <Text>{item.title}</Text>
@@ -285,23 +286,9 @@ export default class MenuList extends Component {
         <View style={styles.row}>
           <Text style={{ flex: 1 }}>{item.title}</Text>
 
-          <View
-            style={{
-              width: scaleSize(122),
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            }}
-          >
+          <View style={styles.inputView}>
             <TouchableOpacity
-              style={[
-                styles.icon,
-                {
-                  borderRightWidth: 1,
-                  borderColor: color.gray,
-                  backgroundColor: color.white,
-                },
-              ]}
+              style={styles.minus}
               onPress={() => {
                 this.changeNumber({ flag: 'minus', title: item.title })
               }}
@@ -310,17 +297,7 @@ export default class MenuList extends Component {
             </TouchableOpacity>
             <TextInput
               value={item.value + ''}
-              style={{
-                textAlign: 'center',
-                width: scaleSize(110),
-                height: scaleSize(30),
-                backgroundColor: color.white,
-                ...Platform.select({
-                  android: {
-                    padding: 0,
-                  },
-                }),
-              }}
+              style={styles.inputItem}
               onChangeText={number => {
                 this.changeNumber({
                   title: item.title,
@@ -330,14 +307,7 @@ export default class MenuList extends Component {
               keyboardType={'number-pad'}
             />
             <TouchableOpacity
-              style={[
-                styles.icon,
-                {
-                  borderLeftWidth: 1,
-                  borderColor: color.gray,
-                  backgroundColor: color.white,
-                },
-              ]}
+              style={styles.plus}
               onPress={() => {
                 this.changeNumber({ flag: 'plus', title: item.title })
               }}
@@ -358,15 +328,7 @@ export default class MenuList extends Component {
           <View style={{ flex: 1 }}>
             <TextInput
               value={item.value + ''}
-              style={{
-                textAlign: 'right',
-                height: scaleSize(30),
-                ...Platform.select({
-                  android: {
-                    padding: 0,
-                  },
-                }),
-              }}
+              style={styles.rightText}
               keyboardType={'number-pad'}
               onChangeText={number => {
                 this.changeNumber({
@@ -481,23 +443,13 @@ export default class MenuList extends Component {
                 }}
               >
                 <Image
-                  style={{
-                    width: scaleSize(40),
-                    height: scaleSize(40),
-                    tintColor: color.imageColorBlack,
-                  }}
+                  style={styles.titleImage}
                   resizeMode={'contain'}
                   source={backImage}
                 />
               </TouchableOpacity>
             ) : (
-              <View
-                style={{
-                  width: scaleSize(40),
-                  height: scaleSize(40),
-                  tintColor: color.imageColorBlack,
-                }}
-              />
+              <View style={styles.titleImage} />
             )}
             <Text
               style={{
@@ -514,23 +466,13 @@ export default class MenuList extends Component {
               }}
             >
               <Image
-                style={{
-                  width: scaleSize(40),
-                  height: scaleSize(40),
-                  tintColor: color.imageColorBlack,
-                }}
+                style={styles.titleImage}
                 resizeMode={'contain'}
                 source={forwardImage}
               />
             </TouchableOpacity>
           ) : (
-            <View
-              style={{
-                width: scaleSize(40),
-                height: scaleSize(40),
-                tintColor: color.imageColorBlack,
-              }}
-            />
+            <View style={styles.titleImage} />
           )}
         </View>
       </View>
@@ -544,19 +486,19 @@ export default class MenuList extends Component {
       case 'z':
         key = item.title
         break
-      case 'z旋转':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT:
         key = 'zRot'
         break
-      case '底面长':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_LENGTH:
         key = 'length'
         break
-      case '底面宽':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_WIDTH:
         key = 'width'
         break
-      case '高度':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_HEIGHT:
         key = 'height'
         break
-      case '区域内裁剪':
+      case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_INNER:
         key = 'clipInner'
         break
     }
