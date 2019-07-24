@@ -202,7 +202,7 @@ export default class Home extends Component {
     this.dialog.setDialogVisible(value)
   }
 
-  getMoudleItem = (
+  getModuleItem = (
     ref,
     confirm,
     cancel,
@@ -461,7 +461,7 @@ export default class Home extends Component {
             device={this.props.device}
             downList={this.props.downList}
             showDialog={this.showDialog}
-            getMoudleItem={this.getMoudleItem}
+            getModuleItem={this.getModuleItem}
             latestMap={this.props.latestMap}
           />
           {this._renderModal()}

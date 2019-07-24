@@ -2,7 +2,6 @@ import NavigationService from '../containers/NavigationService'
 import { Platform } from 'react-native'
 import constants from '../containers/workspace/constants'
 import { FileTools } from '../native'
-import ConstToolType from './ConstToolType'
 import ConstOnline from './ConstOnline'
 import { ConstPath } from '../constants'
 import { scaleSize } from '../utils'
@@ -43,7 +42,7 @@ export { MAP_MODULE, getHeaderTitle }
 function SetMap(param) {
   return [
     {
-      key: '地图制图',
+      key: constants.MAP_EDIT,
       title: getLanguage(param).Map_Module.MAP_EDIT,
       baseImage:
         param === 'CN'
@@ -134,7 +133,7 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async () => {
-        GLOBAL.Type = ConstToolType.MAP_3D
+        GLOBAL.Type = constants.MAP_3D
         // if (user && user.userName) {
         //   let path = await FileTools.appendingHomeDirectory(
         //     ConstPath.UserPath + user.userName,
@@ -163,12 +162,6 @@ function SetMap(param) {
       },
     },
     // {
-    //   key: 'AR地图',
-    //   title: 'AR地图',
-    //   baseImage: require('../assets/home/icon_lefttop_vip.png'),
-    //   moduleImage: require('../assets/home/icon_ARmap.png'),
-    // },
-    // {
     //   key: '导航地图',
     //   title: '导航地图',
     //   baseImage: require('../assets/home/icon_rightbottom_vip.png'),
@@ -181,7 +174,7 @@ function SetMap(param) {
     //   },
     // },
     {
-      key: '专题制图',
+      key: constants.MAP_THEME,
       title: getLanguage(param).Map_Module.MAP_THEME,
       baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_thematicmap.png'),
@@ -251,7 +244,7 @@ function SetMap(param) {
       },
     },
     {
-      key: '外业采集',
+      key: constants.COLLECTION,
       title: getLanguage(param).Map_Module.MAP_COLLECTION,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
@@ -322,7 +315,7 @@ function SetMap(param) {
       },
     },
     {
-      key: '应急标绘',
+      key: constants.MAP_PLOTTING,
       title: getLanguage(param).Map_Module.MAP_PLOTTING,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_plot.png'),
@@ -393,22 +386,8 @@ function SetMap(param) {
         })
       },
     },
-
-    // {
-    //   key: '应急标绘',
-    //   title: '应急标绘',
-    //   baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-    //   moduleImage: require('../assets/home/icon_plot.png'),
-    //   style: {
-    //     width: scaleSize(60),
-    //     height: scaleSize(60),
-    //     position: 'absolute',
-    //     top: 0,
-    //     left: 0,
-    //   },
-    // },
     {
-      key: '数据分析',
+      key: constants.MAP_ANALYST,
       title: getLanguage(param).Map_Module.MAP_ANALYST,
       baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
       moduleImage: require('../assets/home/icon_mapanalysis.png'),
@@ -444,13 +423,13 @@ function SetMap(param) {
         NavigationService.navigate('AnalystTools', {
           operationType: constants.MAP_ANALYST,
           wsData,
-          mapName: MAP_MODULE.MAP_ANALYST,
+          mapName: getLanguage(param).Map_Module.MAP_ANALYST,
           isExample: false,
         })
       },
     },
     // {
-    //   key: 'AR地图',
+    //   key: constants.MAP_AR,
     //   title: getLanguage(param).Map_Module.MAP_AR,
     //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
     //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
