@@ -21,10 +21,10 @@ function getScreenHeight() {
   return deviceHeight
 }
 function getScreenSafeHeight() {
-  if (Platform.OS === 'ios') return deviceHeight
+  if (Platform.OS === 'ios') return getScreenHeight()
   let softMenuHeight = ExtraDimensions.getSoftMenuBarHeight()
   let screenHeight = ExtraDimensions.getRealWindowHeight()
-  if (deviceHeight < deviceWidth) {
+  if (getScreenHeight() < getScreenWidth()) {
     screenHeight = ExtraDimensions.getRealWindowWidth()
     softMenuHeight = 0
   }
