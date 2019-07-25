@@ -532,7 +532,6 @@ class AppRoot extends Component {
           'Trial_License',
           '.geojson'
         )
-        debugger
         let downloadOptions = {
           fromUrl: dataUrl,
           toFile: fileCachePath,
@@ -540,10 +539,8 @@ class AppRoot extends Component {
           fileName: 'Trial_License.slm',
           progressDivider: 1,
         }
-        debugger
         let res = await RNFS.downloadFile(downloadOptions)
         if(res){
-          SMap.getEnvironmentStatus()
           Toast.show("试用成功")
         }
         // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
