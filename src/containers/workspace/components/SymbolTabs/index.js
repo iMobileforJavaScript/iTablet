@@ -24,6 +24,7 @@ import { getLanguage } from '../../../../language/index'
 import PlotList from './PlotList'
 import PlotTab from './PlotTab'
 import constants from '../../constants'
+import PlotLibTab from './PlotLibTab'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -386,6 +387,23 @@ class SymbolTabs extends React.Component {
           setEditLayer={this.props.setEditLayer}
           getSymbolPlots={this.props.getSymbolPlots}
           setCurrentPlotList={this.props.setCurrentPlotList}
+          goToPage={this.goToPage}
+        />
+        <PlotLibTab
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.PLOTTING_LIB}
+          //"符号"
+          style={styles.temple}
+          user={this.props.user}
+          showToolbar={this.props.showToolbar}
+          template={this.props.template}
+          data={this.props.template.plotLibPaths}
+          layers={this.props.layers}
+          setCurrentPlotInfo={this.props.setCurrentPlotInfo}
+          setEditLayer={this.props.setEditLayer}
+          getSymbolPlots={this.props.getSymbolPlots}
+          setCurrentSymbol={this.props.setCurrentSymbol}
+          setCurrentPlotList={this.props.setCurrentPlotList}
+          device={this.props.device}
           goToPage={this.goToPage}
         />
         {/*<TemplateTab tabLabel="模板" />*/}
