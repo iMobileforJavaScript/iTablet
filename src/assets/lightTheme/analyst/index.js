@@ -24,6 +24,11 @@ const analysis_surface = require('./analysis_surface_light.png')
 const analysis_tracing = require('./analysis_tracing_light.png')
 const analysis_traveling = require('./analysis_traveling_light.png')
 
+/** 在线分析图标 **/
+const analysis_online = require('./analysis_online_light.png')
+const analysis_online_aggregate = require('./analysis_online_aggregate_light.png')
+const analysis_online_density = require('./analysis_online_density_light.png')
+
 export default {
   analysis_adjacent,
   analysis_buffer,
@@ -50,4 +55,7 @@ export default {
   analysis_surface,
   analysis_tracing,
   analysis_traveling,
+  analysis_online,
+  analysis_online_aggregate,
+  analysis_online_density,
 }

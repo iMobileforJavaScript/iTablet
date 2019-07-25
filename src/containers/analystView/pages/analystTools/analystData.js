@@ -92,7 +92,7 @@ function getData(language) {
           title: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
         })
       },
-      image: getThemeAssets().analyst.analysis_overlay,
+      image: getThemeAssets().analyst.analysis_online,
     },
   ]
   return data
