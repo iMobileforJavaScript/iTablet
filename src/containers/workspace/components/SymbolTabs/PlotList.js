@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native'
 import { TreeList } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { color } from '../../../../styles'
-// import { ConstToolType } from '../../../../constants'
 import { getLanguage } from '../../../../language/index'
 export default class PlotList extends React.Component {
   props: {
@@ -32,10 +31,6 @@ export default class PlotList extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getData()
-  }
-
   getData = () => {
     if (
       this.props.template.template.symbols &&
@@ -54,9 +49,7 @@ export default class PlotList extends React.Component {
         return mList
       }
       let data = dealData(this.props.template.template.symbols)
-      this.setState({
-        data,
-      })
+      return data
     }
   }
 
@@ -83,7 +76,8 @@ export default class PlotList extends React.Component {
         itemTextColor={color.themeText2}
         itemTextSize={color.themeText2}
         separator={true}
-        data={this.state.data}
+        // data={this.state.data}
+        data={this.getData()}
         onPress={this.action}
       />
     )
