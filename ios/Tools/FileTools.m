@@ -851,7 +851,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         hasImportedData = NO;
       }
       if(isImportSuccess){
-        [FileTools deleteFile:deletepath];
+        [FileTools deleteFile:destinationPath];
       }
       resolve(@(isImportSuccess));
     } @catch (NSException *exception) {

@@ -101,49 +101,12 @@ export default class MT_layerManager extends React.Component {
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
       this.getData()
-      // let baseData = []
-      // if (
-      //   this.props.layers.length > 0 &&
-      //   LayerUtils.isBaseLayer(
-      //     this.props.layers[this.props.layers.length - 1].name,
-      //   )
-      // ) {
-      //   baseData = [this.props.layers[this.props.layers.length - 1]]
-      // }
-      // (async function() {
-      //   dataList = await SMap.getTaggingLayers(
-      //     this.props.user.currentUser.userName,
-      //   )
-      //   newState.data = [
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.PLOTS,
-      //       //'我的标注',
-      //       data: dataList,
-      //       visible: true,
-      //     },
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.LAYERS,
-      //       //'我的图层',
-      //       data: this.props.layers,
-      //       visible: true,
-      //     },
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.BASEMAP,
-      //       //'我的底图',
-      //       data: baseData,
-      //       visible: true,
-      //     },
-      //   ]
-      //   if (Object.keys(newState).length > 0) {
-      //     this.setState(newState)
-      //   }
-      // }.bind(this)())
     }
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.state.type !== constants.MAP_ANALYST && this.getData(true)
+      this.getData(true)
     })
   }
 
@@ -441,6 +404,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolPress = async ({ data }) => {
+    let isGroup = data.type === 'layerGroup'
     if (GLOBAL.Type === constants.MAP_THEME) {
       let themeType
       switch (data.themeType) {
@@ -464,7 +428,9 @@ export default class MT_layerManager extends React.Component {
         themeType = ConstToolType.MAP_THEME_STYLES
       }
       this.toolBox.setVisible(true, themeType, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -472,7 +438,9 @@ export default class MT_layerManager extends React.Component {
       })
     } else if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -483,7 +451,9 @@ export default class MT_layerManager extends React.Component {
       data.name.substring(0, 9) === 'PlotEdit_'
     ) {
       this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
-        height: ConstToolType.TOOLBAR_HEIGHT[4],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -491,7 +461,9 @@ export default class MT_layerManager extends React.Component {
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
-        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&

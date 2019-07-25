@@ -664,7 +664,7 @@ export default class BufferAnalystViewTab extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ScrollView style={styles.container}>
           {this.renderTop()}
           {this.state.showAdvance && this.renderType()}

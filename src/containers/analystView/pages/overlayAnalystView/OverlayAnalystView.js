@@ -3,7 +3,7 @@ import { ScrollView, Text, View } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
-import TabNavigationService from '../../../TabNavigationService'
+// import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList } from '../../components'
 import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
@@ -230,9 +230,9 @@ export default class OverlayAnalystView extends Component {
           await this.props.getLayers()
 
           NavigationService.goBack('AnalystListEntry')
-          if (optionParameter.showResult) {
-            TabNavigationService.navigate('MapAnalystView')
-          }
+          // if (optionParameter.showResult) {
+          //   TabNavigationService.navigate('MapAnalystView')
+          // }
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
           }

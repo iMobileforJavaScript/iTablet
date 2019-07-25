@@ -1,85 +1,100 @@
 import { getLanguage } from '../../../../language/index'
 
-function layersetting(type, isGroup = false) {
-  let setting = [
+function getGroupData(type) {
+  return [
     {
-      title: '',
-      data: [
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'全副显示图层',
-          image: require('../../../../assets/layerToolbar/layer_full.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
-          //'可见比例尺范围',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_LAYER_STYLE,
-          //'图层风格',
-          image: require('../../../../assets/function/icon_function_style.png'),
-        },
-        // {
-        //   title: '图层属性',
-        //   data: [],
-        // },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
-          //'重命名',
-          image: require('../../../../assets/layerToolbar/layer_rename.png'),
-        },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
-        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
-        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
-        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
-        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        // },
-        // {
-        //   title: '复制',
-        //   data: [],
-        // },
-        // {
-        //   title: '插入复制的图层',
-        //   data: [],
-        // },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-          //'分享图层',
-          image: require('../../../../assets/function/icon_function_share.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
-          //'移除',
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-        },
-        // {
-        //   title: '取消',
-        //   data: [],
-        //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-        // },
-      ],
+      title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+      //'重命名',
+      image: require('../../../../assets/layerToolbar/layer_rename.png'),
+    },
+    {
+      title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
+      //'移除',
+      image: require('../../../../assets/layerToolbar/layer_remove.png'),
     },
   ]
-  if (!isGroup) {
-    setting[0].data.splice(1, 0, {
-      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-      //'设置为当前图层',
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
-    })
-  }
-  return setting
 }
+
+function layersetting(type, isGroup = false) {
+  let data = []
+  if (isGroup) {
+    data = getGroupData(type)
+  } else {
+    data = [
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_LAYER_STYLE,
+        //'图层风格',
+        image: require('../../../../assets/function/icon_function_style.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
+      //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+      // },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
+      //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+      // },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
+      //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+      // },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
+      //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+      // },
+      // {
+      //   title: '复制',
+      //   data: [],
+      // },
+      // {
+      //   title: '插入复制的图层',
+      //   data: [],
+      // },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+      // {
+      //   title: '取消',
+      //   data: [],
+      //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+      // },
+    ]
+  }
+  return [
+    {
+      title: '',
+      data: data,
+    },
+  ]
+}
+
 const base3DListData = [
   {
     title: '在线底图',
@@ -108,132 +123,104 @@ const base3DListData = [
 ]
 
 function layerThemeSetting(type, isGroup = false) {
-  let setting = [
+  let data = []
+  if (isGroup) {
+    data = getGroupData(type)
+  } else {
+    data = [
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_CREATE_THEMATIC_MAP,
+        //'新建专题图',
+        image: require('../../../../assets/layerToolbar/theme_new.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+    ]
+  }
+  return [
     {
       title: '',
-      //'设置为当前图层',
-      data: [
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'全副显示图层',
-          image: require('../../../../assets/layerToolbar/layer_full.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
-          //'可见比例尺范围',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_CREATE_THEMATIC_MAP,
-          //'新建专题图',
-          image: require('../../../../assets/layerToolbar/theme_new.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
-          //'重命名',
-          image: require('../../../../assets/layerToolbar/layer_rename.png'),
-        },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
-        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
-        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
-        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
-        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        // },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-          //'分享图层',
-          image: require('../../../../assets/function/icon_function_share.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
-          //'移除',
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-        },
-      ],
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
+      data: data,
     },
   ]
-  if (!isGroup) {
-    setting[0].data.splice(1, 0, {
-      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-      //'设置为当前图层',
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
-    })
-  }
-  return setting
 }
 function layerThemeSettings(type, isGroup = false) {
-  let setting = [
+  let data = []
+  if (isGroup) {
+    data = getGroupData(type)
+  } else {
+    data = [
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
+        //'修改专题图',
+        image: require('../../../../assets/layerToolbar/theme_modify.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+    ]
+  }
+  return [
     {
       title: '',
-      data: [
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'全副显示图层',
-          image: require('../../../../assets/layerToolbar/layer_full.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
-          //'可见比例尺范围',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
-          //'修改专题图',
-          image: require('../../../../assets/layerToolbar/theme_modify.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
-          //'重命名',
-          image: require('../../../../assets/layerToolbar/layer_rename.png'),
-        },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
-        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
-        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
-        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
-        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        // },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-          //'分享图层',
-          image: require('../../../../assets/function/icon_function_share.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
-          //'移除',
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-        },
-      ],
+      data: data,
     },
   ]
-  if (!isGroup) {
-    setting[0].data.splice(1, 0, {
-      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-      //'设置为当前图层',
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
-    })
-  }
-  return setting
 }
 
 /*
@@ -246,6 +233,7 @@ const layerSettingCanVisit = type => [
     image: require('../../../../assets/layerToolbar/layer_can_visible.png'),
   },
 ]
+
 const layerSettingCanNotVisit = type => [
   {
     title: getLanguage(type).Map_Layer.NOT_VISIBLE,
@@ -253,36 +241,42 @@ const layerSettingCanNotVisit = type => [
     image: require('../../../../assets/layerToolbar/layer_can_not_visible.png'),
   },
 ]
+
 const layerSettingCanSelect = type => [
   {
     title: getLanguage(type).Map_Layer.OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
 ]
+
 const layerSettingCanNotSelect = type => [
   {
     title: getLanguage(type).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
 ]
+
 const layerSettingCanEdit = type => [
   {
     title: getLanguage(type).Map_Layer.EDITABLE,
     image: require('../../../../assets/layerToolbar/layer_can_edit.png'),
   },
 ]
+
 const layerSettingCanNotEdit = type => [
   {
     title: getLanguage(type).Map_Layer.NOT_EDITABLE,
     image: require('../../../../assets/layerToolbar/layer_can_not_edit.png'),
   },
 ]
+
 const layerSettingCanSnap = type => [
   {
     title: getLanguage(type).Map_Layer.SNAPABLE,
     image: require('../../../../assets/layerToolbar/layer_can_catch.png'),
   },
 ]
+
 const layerSettingCanNotSnap = type => [
   {
     title: getLanguage(type).Map_Layer.NOT_SNAPABLE,
@@ -355,6 +349,7 @@ function layere3dImage() {
     },
   ]
 }
+
 function layere3dTerrain() {
   return [
     {
@@ -425,100 +420,91 @@ function taggingData(type) {
     },
   ]
 }
+
 function layerPlottingSetting(type, isGroup = false) {
-  let setting = [
+  let data = []
+  if (isGroup) {
+    data = getGroupData(type)
+  } else {
+    data = [
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+    ]
+  }
+  return [
     {
       title: '',
-      data: [
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'全副显示图层',
-          image: require('../../../../assets/layerToolbar/layer_full.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
-          //'可见比例尺范围',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
-          //'重命名',
-          image: require('../../../../assets/layerToolbar/layer_rename.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-          //'分享图层',
-          image: require('../../../../assets/function/icon_function_share.png'),
-        },
-      ],
+      data: data,
     },
   ]
-  if (!isGroup) {
-    setting[0].data.splice(1, 0, {
-      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-      //'设置为当前图层',
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
-    })
-  }
-  return setting
 }
 function layerCollectionSetting(type, isGroup = false) {
-  let setting = [
+  let data = []
+  if (isGroup) {
+    data = getGroupData(type)
+  } else {
+    data = [
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: require('../../../../assets/layerToolbar/layer_this.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: require('../../../../assets/layerToolbar/layer_range.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+      {
+        title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+    ]
+  }
+  return [
     {
       title: '',
-      data: [
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
-          //'全副显示图层',
-          image: require('../../../../assets/layerToolbar/layer_full.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
-          //'可见比例尺范围',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_RENAME,
-          //'重命名',
-          image: require('../../../../assets/layerToolbar/layer_rename.png'),
-        },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
-        //   image: require('../../../../assets/layerToolbar/layer_moveup.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_DOWN,
-        //   image: require('../../../../assets/layerToolbar/layer_movedown.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_TOP,
-        //   image: require('../../../../assets/layerToolbar/layer_move_top.png'),
-        // },
-        // {
-        //   title: getLanguage(type).Map_Layer.LAYERS_BOTTOM,
-        //   image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
-        // },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-          //'分享图层',
-          image: require('../../../../assets/function/icon_function_share.png'),
-        },
-        {
-          title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
-          //'移除',
-          image: require('../../../../assets/layerToolbar/layer_remove.png'),
-        },
-      ],
+      data: data,
     },
   ]
-  if (!isGroup) {
-    setting[0].data.splice(1, 0, {
-      title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-      //'设置为当前图层',
-      image: require('../../../../assets/layerToolbar/layer_this.png'),
-    })
-  }
-  return setting
 }
 
 function scaleData(type) {

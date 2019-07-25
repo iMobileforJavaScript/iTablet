@@ -66,7 +66,7 @@ import UpLoadList from './uploadList'
 import {
   MapTabs,
   Map3DTabs,
-  MapAnalystTabs,
+  // MapAnalystTabs,
   CoworkTabs,
   MapARTabs,
   MapView,
@@ -129,12 +129,12 @@ const AppNavigator = createStackNavigator(
         header: null,
       },
     },
-    MapAnalystTabs: {
-      screen: MapAnalystTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    // MapAnalystTabs: {
+    //   screen: MapAnalystTabs,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
     MapARTabs: {
       screen: MapARTabs,
       navigationOptions: {
