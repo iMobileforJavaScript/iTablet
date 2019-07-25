@@ -441,6 +441,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolPress = async ({ data }) => {
+    let isGroup = data.type === 'layerGroup'
     if (GLOBAL.Type === constants.MAP_THEME) {
       let themeType
       switch (data.themeType) {
@@ -464,7 +465,9 @@ export default class MT_layerManager extends React.Component {
         themeType = ConstToolType.MAP_THEME_STYLES
       }
       this.toolBox.setVisible(true, themeType, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -472,7 +475,9 @@ export default class MT_layerManager extends React.Component {
       })
     } else if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -483,7 +488,9 @@ export default class MT_layerManager extends React.Component {
       data.name.substring(0, 9) === 'PlotEdit_'
     ) {
       this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
-        height: ConstToolType.TOOLBAR_HEIGHT[4],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
@@ -491,7 +498,9 @@ export default class MT_layerManager extends React.Component {
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
-        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
         updateLayerVisible: () =>
           this.itemRefs[data.name] &&
