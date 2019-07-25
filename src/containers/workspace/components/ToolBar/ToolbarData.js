@@ -8,6 +8,7 @@ import StartData from './StartData'
 import CollectionData from './CollectionData'
 import PlotData from './PlotData'
 import EditData from './EditData'
+import AnalysisData from './AnalysisData'
 import ThemeMenuData from './ThemeMenuData'
 import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
@@ -68,6 +69,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = ThemeMenuData.getThemeMapCreateByLayer(type, params)
   } else if (type === ConstToolType.MAP_THEME_START_CREATE) {
     tabBarData = ThemeMenuData.getThemeMapStartCreate(type, params)
+  } else if (type === ConstToolType.MAP_ANALYSIS) {
+    tabBarData = AnalysisData.getAnalysisData()
   }
   return {
     data: tabBarData.data,

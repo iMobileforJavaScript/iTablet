@@ -1,8 +1,10 @@
 const Analyst_Modules = {
-  BUFFER_ANALYST: 'Buffer Analyst',
-  BUFFER_ANALYST_2: 'Buffer Analyst',
-  OVERLAY_ANALYST: 'Overlay Analyst',
-  ONLINE_ANALYST: 'Online Analyst',
+  BUFFER_ANALYSIS: 'Buffer Analysis',
+  BUFFER_ANALYSIS_2: 'Buffer Analysis',
+  BUFFER_ANALYST_SINGLE: 'Buffer Analysis',
+  BUFFER_ANALYST_MULTIPLE: 'Multi-Buffer Analysis',
+  OVERLAY_ANALYSIS: 'Overlay Analysis',
+  ONLINE_ANALYSIS: 'Online Analysis',
 
   OPTIMAL_PATH: 'Optimal Path',
   CONNECTIVITY_ANALYSIS: 'Connectivity Analysis',

@@ -101,49 +101,12 @@ export default class MT_layerManager extends React.Component {
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
       this.getData()
-      // let baseData = []
-      // if (
-      //   this.props.layers.length > 0 &&
-      //   LayerUtils.isBaseLayer(
-      //     this.props.layers[this.props.layers.length - 1].name,
-      //   )
-      // ) {
-      //   baseData = [this.props.layers[this.props.layers.length - 1]]
-      // }
-      // (async function() {
-      //   dataList = await SMap.getTaggingLayers(
-      //     this.props.user.currentUser.userName,
-      //   )
-      //   newState.data = [
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.PLOTS,
-      //       //'我的标注',
-      //       data: dataList,
-      //       visible: true,
-      //     },
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.LAYERS,
-      //       //'我的图层',
-      //       data: this.props.layers,
-      //       visible: true,
-      //     },
-      //     {
-      //       title: getLanguage(this.props.language).Map_Layer.BASEMAP,
-      //       //'我的底图',
-      //       data: baseData,
-      //       visible: true,
-      //     },
-      //   ]
-      //   if (Object.keys(newState).length > 0) {
-      //     this.setState(newState)
-      //   }
-      // }.bind(this)())
     }
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.state.type !== constants.MAP_ANALYST && this.getData(true)
+      this.getData(true)
     })
   }
 
