@@ -5,6 +5,9 @@ import styles from './styles'
 import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
 import { scaleSize } from '../../utils'
+
+import { getThemeAssets, getPublicAssets } from '../../assets'
+
 export default class Layer3DItem extends Component {
   props: {
     item: Object,
@@ -171,7 +174,7 @@ const layer3dSettingCanNotSelect = param => [
       this.props.toHeightItem.index === this.props.index &&
       this.props.toHeightItem.itemName === item.name
     ) {
-      layerIcon = require('../../assets/map/layer3dtype/layer3d_type_normal_white.png')
+      layerIcon = getThemeAssets().layer3dType.layer3d_type_normal
       if (item.title === 'TianDiTu' || item.title === 'BingMap') {
         layerIcon = require('../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png')
         return layerIcon
@@ -183,7 +186,7 @@ const layer3dSettingCanNotSelect = param => [
       switch (item.type) {
         //todo IMAGEFILE 白色  KML黑白
         case 'IMAGEFILE':
-          layerIcon = require('../../assets/map/layer3dtype/layer3d_type_image.png')
+          layerIcon = getThemeAssets().layer3dType.layer3d_type_image
           return layerIcon
         //case 'KML':
         case 'Terrain':
@@ -191,7 +194,7 @@ const layer3dSettingCanNotSelect = param => [
           return layerIcon
       }
     } else {
-      layerIcon = require('../../assets/map/layer3dtype/layer3d_type_normal.png')
+      layerIcon = getPublicAssets().layer3dType.layer3d_type_normal
       if (item.title === 'TianDiTu' || item.title === 'BingMap') {
         layerIcon = require('../../assets/Mine/my_basemap.png')
         return layerIcon
@@ -202,7 +205,7 @@ const layer3dSettingCanNotSelect = param => [
       }
       switch (item.type) {
         case 'IMAGEFILE':
-          layerIcon = require('../../assets/map/layer3dtype/layer3d_type_image.png')
+          layerIcon = getPublicAssets().layer3dType.layer3d_type_image
           return layerIcon
         //case 'KML':
         case 'Terrain':
