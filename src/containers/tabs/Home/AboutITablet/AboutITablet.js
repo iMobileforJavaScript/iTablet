@@ -77,13 +77,13 @@ export default class AboutITablet extends Component {
           >
             SuperMap iTablet
           </Text>
-          <Text style={styles.version}>v 2.0.5</Text>
+          <Text style={styles.version}>10i beta</Text>
         </View>
         <View
           style={[
             styles.contentView,
             {
-              width: this.props.device.width,
+              width: "100%",
               marginTop: 0.0528 * this.props.device.height,
             },
           ]}
