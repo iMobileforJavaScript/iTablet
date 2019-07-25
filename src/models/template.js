@@ -15,6 +15,7 @@ export const SET_CURRENT_TEMPLATE_SYMBOL_LIST =
   'SET_CURRENT_TEMPLATE_SYMBOL_LIST'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 export const SET_PLOT_LIBIDS = 'SET_PLOT_LIBIDS'
+export const SET_PLOT_LIB_PATHS = 'SET_PLOT_LIB_PATHS'
 export const SET_CURRENT_PLOT_INFO = 'SET_CURRENT_PLOT_INFO'
 export const SET_CURRENT_PLOT_SYMBOL_LIST = 'SET_CURRENT_PLOT_SYMBOL_LIST'
 
@@ -255,6 +256,32 @@ export const setCurrentPlotInfo = (params, cb = () => {}) => async dispatch => {
   cb && cb(params)
   return
 }
+export const getPlotLibs = async (path, dispatch) => {
+  try {
+    let data = []
+    let plotLibPaths = await FileTools.getPathList(path)
+
+    if (plotLibPaths && plotLibPaths.length > 0) {
+      plotLibPaths.forEach(item => {
+        let name = item.name
+        item.title = name
+        item.name = name
+        item.path = item.path
+        // item.image = require('../../../../assets/mapToolbar/list_type_template_black.png')
+        data.push(item)
+      })
+    }
+
+    dispatch({
+      type: SET_PLOT_LIB_PATHS,
+      payload: data || [],
+    })
+    // cb && cb()
+  } catch (e) {
+    // cb && cb()
+    return
+  }
+}
 
 export const getSymbolPlots = (params, cb = () => {}) => async (
   dispatch,
@@ -279,6 +306,12 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
 
     let plotLibIds = []
     let plotlibIdAndNameArr = []
+
+    if (isFirst) {
+      let libPath = path.substring(0, path.lastIndexOf('/'))
+      await getPlotLibs(libPath, dispatch)
+    }
+
     await fs.readDir(plotLibPath).then(async data => {
       let plotLibPaths = []
       for (let i = 0; i < data.length; i++) {
@@ -547,6 +580,7 @@ const initialState = fromJS({
   currentPlotList: [],
   latestPlotSymbols: [],
   plotLibIds: [],
+  plotLibPaths: [],
 })
 
 const maxLength = 20
@@ -582,6 +616,9 @@ export default handleActions(
     },
     [`${SET_PLOT_LIBIDS}`]: (state, { payload }) => {
       return state.setIn(['plotLibIds'], fromJS(payload))
+    },
+    [`${SET_PLOT_LIB_PATHS}`]: (state, { payload }) => {
+      return state.setIn(['plotLibPaths'], fromJS(payload))
     },
     [`${SET_TEMPLATE}`]: (state, { payload }) => {
       let newData = state.toJS().templates || []
@@ -675,6 +712,7 @@ export default handleActions(
         data.currentTemplateInfo = {}
         data.currentTemplateList = []
         data.plotLibIds = []
+        data.plotLibPaths = []
         data.currentPlotInfo = {}
         data.currentPlotList = []
         if (data.latestPlotSymbols === undefined) data.latestPlotSymbols = []

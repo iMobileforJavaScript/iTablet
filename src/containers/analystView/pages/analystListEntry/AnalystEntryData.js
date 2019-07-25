@@ -109,7 +109,7 @@ function getOnlineAnalystData(language) {
           onlineAnalysisTypes.DENSITY,
           cb,
         ),
-      image: getThemeAssets().analyst.analysis_density,
+      image: getThemeAssets().analyst.analysis_online_density,
     },
     {
       key: getLanguage(language).Analyst_Methods.AGGREGATE_POINTS_ANALYSIS,
@@ -120,7 +120,7 @@ function getOnlineAnalystData(language) {
           onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS,
           cb,
         ),
-      image: getThemeAssets().analyst.analysis_overlay_union,
+      image: getThemeAssets().analyst.analysis_online_aggregate,
     },
   ]
   return data

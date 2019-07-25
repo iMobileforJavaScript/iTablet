@@ -183,6 +183,7 @@ export default class HomePopupModal extends PureComponent {
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     const screenHeight = screen.getScreenSafeHeight()
+    // const screenWidth = screen.getScreenWidth()
     let animationType = 'fade'
     return (
       <Modal
@@ -206,9 +207,9 @@ export default class HomePopupModal extends PureComponent {
           }}
           style={{
             position: 'absolute',
-            height: screenHeight,
             left: 0,
             right: 0,
+            height: screenHeight,
             top: 0,
             backgroundColor: color.modalBgColor,
           }}

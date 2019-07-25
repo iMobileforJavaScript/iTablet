@@ -64,9 +64,10 @@ class ModuleList extends Component {
     } else {
       keyword = downloadData.fileName + '_示范数据'
     }
-    let dataUrl = await FetchUtils.getFindUserZipDataUrl(
+    let dataUrl = await FetchUtils.getFindUserDataUrl(
       'xiezhiyan123',
       keyword,
+      '.zip',
     )
     let cachePath = downloadData.cachePath
     let fileDirPath = cachePath + downloadData.fileName

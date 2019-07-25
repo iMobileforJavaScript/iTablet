@@ -28,6 +28,8 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
 
+  ANALYSIS: 'Analysis',
+
   LEGEND_COLUMN: 'Column Number',
   LEGEND_WIDTH: 'Width',
   LEGEND_HEIGHT: 'Height',

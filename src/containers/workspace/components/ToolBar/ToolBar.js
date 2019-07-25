@@ -5965,8 +5965,7 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}

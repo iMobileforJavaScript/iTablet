@@ -40,6 +40,9 @@ import UserType from './src/constants/UserType'
 import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
+import FetchUtils from './src/utils/FetchUtils'
+import RNFS from 'react-native-fs'
+
 
 const {persistor, store} = ConfigStore()
 
@@ -224,12 +227,12 @@ class AppRoot extends Component {
       }
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // path = await FileTools.appendingHomeDirectory(customerPath)
-      this.props.openWorkspace({server: path})
       await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
+      this.props.openWorkspace({server: path})
     }).bind(this)()
 
     GLOBAL.clearMapData = () => {
@@ -498,7 +501,7 @@ class AppRoot extends Component {
     }
   }
 
-  renderExitDialogChildren = () => {
+  renderLicenseDialogChildren = () => {
     return (
       <View style={styles.dialogHeaderView}>
         <Image
@@ -517,17 +520,41 @@ class AppRoot extends Component {
     return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      confirmAction={() => {
+      confirmAction={async () => {
         this.exit.setDialogVisible(false)
-        NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
+        let fileCachePath = await FileTools.appendingHomeDirectory('/iTablet/license/Trial_License.slm')
+        let bRes = await RNFS.exists(fileCachePath)
+        if(bRes){
+          await RNFS.unlink(fileCachePath)
+        }
+        let dataUrl = await FetchUtils.getFindUserDataUrl(
+          'xiezhiyan123',
+          'Trial_License',
+          '.geojson'
+        )
+        debugger
+        let downloadOptions = {
+          fromUrl: dataUrl,
+          toFile: fileCachePath,
+          background: true,
+          fileName: 'Trial_License.slm',
+          progressDivider: 1,
+        }
+        debugger
+        let res = await RNFS.downloadFile(downloadOptions)
+        if(res){
+          SMap.getEnvironmentStatus()
+          Toast.show("试用成功")
+        }
+        // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
       }}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
-      confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+      confirmBtnTitle={global.language==='CN' ? '试用' : 'The trial'}
       cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
-      {this.renderExitDialogChildren()}
+      {this.renderLicenseDialogChildren()}
     </Dialog>
     )
   }
