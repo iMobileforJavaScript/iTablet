@@ -52,7 +52,7 @@ import MediaViewer from './MediaViewer'
 import LinkageList from './LinkageList'
 import TouchableItem from './TouchableItem'
 import ImagePicker from './ImagePicker'
-
+import PopView from './PopView'
 export {
   Container,
   BtnOne,
@@ -113,4 +113,5 @@ export {
   LinkageList,
   TouchableItem,
   ImagePicker,
+  PopView,
 }

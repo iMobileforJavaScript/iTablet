@@ -9,7 +9,7 @@ import {
   ListItem,
   TableList,
   MediaViewer,
-  PopModal,
+  PopView,
   ImagePicker,
 } from '../../components'
 import { Toast, checkType } from '../../utils'
@@ -275,7 +275,7 @@ export default class MediaEdit extends React.Component {
 
   renderPopView = () => {
     return (
-      <PopModal ref={ref => (this.popModal = ref)}>
+      <PopView ref={ref => (this.popModal = ref)}>
         <TouchableOpacity
           style={[styles.popBtn, { width: '100%' }]}
           onPress={() => {
@@ -303,7 +303,7 @@ export default class MediaEdit extends React.Component {
             {getLanguage(this.props.language).Map_Tools.FROM_ALBUM}
           </Text>
         </TouchableOpacity>
-      </PopModal>
+      </PopView>
     )
   }
 

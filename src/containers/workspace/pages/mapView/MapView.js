@@ -33,7 +33,7 @@ import {
   SaveMapNameDialog,
   SaveDialog,
   InputDialog,
-  PopModal,
+  PopView,
   SurfaceView,
   SearchBar,
   Progress,
@@ -1675,12 +1675,9 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
-        <PopModal
-          ref={ref => (this.popModal = ref)}
-          modalVisible={this.state.editControllerVisible}
-        >
+        <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
-        </PopModal>
+        </PopView>
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}

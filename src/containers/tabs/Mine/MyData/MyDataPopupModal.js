@@ -1,24 +1,18 @@
 import React, { PureComponent } from 'react'
-import {
-  Modal,
-  Platform,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { color, size } from '../../../../styles'
-import { scaleSize, screen } from '../../../../utils'
-import { Button } from '../../../../components'
+import { scaleSize } from '../../../../utils'
+import { Button, PopView } from '../../../../components'
 
 import { getLanguage } from '../../../../language/index'
 
 const styles = StyleSheet.create({
   topContainer: {
+    flex: 1,
     flexDirection: 'column',
     backgroundColor: color.contentColorWhite,
   },
   item: {
-    flex: 1,
     backgroundColor: color.contentColorWhite,
     height: scaleSize(80),
     borderRadius: 0,
@@ -47,7 +41,6 @@ export default class MyDataPopupModal extends PureComponent {
   props: {
     hasCancel: boolean,
     modalVisible: boolean,
-    onCloseModal: () => {},
     data: Object,
   }
 
@@ -59,16 +52,13 @@ export default class MyDataPopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.height = props.data
+      ? (props.data.length + 1) * scaleSize(80)
+      : scaleSize(80)
   }
 
-  _onRequestClose = () => {
-    if (Platform.OS === 'android') {
-      this._onCloseModal()
-    }
-  }
-
-  _onCloseModal = () => {
-    this.props.onCloseModal && this.props.onCloseModal()
+  setVisible = visible => {
+    this.PopView && this.PopView.setVisible(visible)
   }
 
   _renderSeparatorLine = info => {
@@ -121,53 +111,20 @@ export default class MyDataPopupModal extends PureComponent {
   }
 
   render() {
-    // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
-    let animationType = 'fade'
-    let screenHeight = screen.getScreenSafeHeight()
-    let screenWidth = screen.getScreenWidth()
     return (
-      <Modal
-        animationType={animationType}
-        transparent={true}
-        onRequestClose={this._onRequestClose}
-        supportedOrientations={[
-          'portrait',
-          'portrait-upside-down',
-          'landscape',
-          'landscape-left',
-          'landscape-right',
-        ]}
-        style={{ flex: 1 }}
-        visible={this.props.modalVisible}
-      >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            this._onCloseModal()
-          }}
+      <PopView ref={ref => (this.PopView = ref)}>
+        <View
           style={{
-            position: 'absolute',
-            top: 0,
-            width: screenWidth,
-            height: screenHeight,
-            backgroundColor: color.modalBgColor,
+            width: '100%',
+            height: this.height,
+            backgroundColor: color.contentColorWhite,
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          >
-            {this._renderList()}
-            {this._renderSeparatorLine()}
-            {this.props.hasCancel && this._renderCancelBtn()}
-          </View>
-        </TouchableOpacity>
-      </Modal>
+          {this._renderList()}
+          {this._renderSeparatorLine()}
+          {this.props.hasCancel && this._renderCancelBtn()}
+        </View>
+      </PopView>
     )
   }
 }

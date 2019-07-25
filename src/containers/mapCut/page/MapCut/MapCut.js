@@ -20,7 +20,7 @@ import {
   TextBtn,
   ImageButton,
   Button,
-  PopModal,
+  PopView,
 } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
 import { CheckStatus } from '../../../../constants'
@@ -798,9 +798,7 @@ export default class MapCut extends React.Component {
   /** 选择数据源弹框 **/
   renderDS = () => {
     return (
-      <PopModal ref={ref => (this.dsModal = ref)}>
-        {this.renderDSList()}
-      </PopModal>
+      <PopView ref={ref => (this.dsModal = ref)}>{this.renderDSList()}</PopView>
     )
   }
 

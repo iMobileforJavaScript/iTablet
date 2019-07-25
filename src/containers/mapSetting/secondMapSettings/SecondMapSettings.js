@@ -4,7 +4,7 @@
  * https://github.com/AsortKeven
  */
 import React, { Component } from 'react'
-import { Container, PopModal } from '../../../components'
+import { Container, PopView } from '../../../components'
 import { ColorTable, SelectList, FilterList } from './components'
 import LinkageList from '../../../components/LinkageList'
 import {
@@ -1140,9 +1140,9 @@ export default class SecondMapSettings extends Component {
         />
         {this.state.title ===
           getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING && (
-          <PopModal ref={ref => (this.popModal = ref)}>
+          <PopView ref={ref => (this.popModal = ref)}>
             {this.renderPopItem()}
-          </PopModal>
+          </PopView>
         )}
       </Container>
     )

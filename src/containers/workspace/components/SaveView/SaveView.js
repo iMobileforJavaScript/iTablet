@@ -11,7 +11,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   Platform,
 } from 'react-native'
 import { Button } from '../../../../components'
@@ -148,7 +147,6 @@ export default class SaveView extends React.Component {
   render() {
     let animationType = this.props.animated ? 'fade' : 'none'
     const deviceHeight = screen.getScreenSafeHeight()
-    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={animationType}
@@ -167,7 +165,6 @@ export default class SaveView extends React.Component {
             styles.overlay,
             Platform.OS === 'android' && {
               height: deviceHeight,
-              width: deviceWidth,
             },
           ]}
           activeOpacity={1}
