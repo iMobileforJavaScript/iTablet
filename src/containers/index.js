@@ -69,6 +69,7 @@ import {
   MapAnalystTabs,
   CoworkTabs,
   MapARTabs,
+  MapView,
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
@@ -114,6 +115,12 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         header: null,
         gesturesEnabled: false,
+      },
+    },
+    MapViewSingle: {
+      screen: MapView,
+      navigationOptions: {
+        header: null,
       },
     },
     CoworkTabs: {

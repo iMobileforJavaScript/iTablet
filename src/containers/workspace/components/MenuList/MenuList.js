@@ -15,10 +15,11 @@ import {
   Switch,
 } from 'react-native'
 import styles from './style'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import color from '../../../../styles/color'
 import ConstToolType from '../../../../constants/ConstToolType'
 import { getLanguage } from '../../../../language'
+import { getThemeAssets } from '../../../../assets'
 
 export default class MenuList extends Component {
   props: {
@@ -42,7 +43,6 @@ export default class MenuList extends Component {
       clipSetting: props.clipSetting,
     }
     //函数防抖
-    this.startTime = 0
     this.INTERVAL = 400
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -71,6 +71,14 @@ export default class MenuList extends Component {
     }
     title = this.props.data[currentIndex].title
     data = this.props.data[currentIndex].data
+    let length = data.length
+    switch (length) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+    }
     this.setState({
       data,
       title,
@@ -132,15 +140,14 @@ export default class MenuList extends Component {
     let stepNum = 1
     let needSmallerThan360 = false
     switch (title) {
-      case 'x':
-      case 'y':
+      case 'X':
+      case 'Y':
         stepNum = 0.00001
         needSmallerThan360 = true
         needBigerThanZero = true
         break
-      case 'z':
+      case 'Z':
         stepNum = 0.5
-        needSmallerThan360 = true
         needBigerThanZero = true
         break
       case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_XROT:
@@ -201,7 +208,30 @@ export default class MenuList extends Component {
       clipSetting,
     })
   }
-
+  changeNumberDebounce = ({ title, number }) => {
+    let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
+    let canClip = true
+    if (title === 'X' || title === 'Y') {
+      number = number < 360 ? (number > -360 ? number : -360) : 360
+    } else if (title === 'width' || title === 'height' || title === 'length') {
+      number = number < 0 ? 0 : number
+      canClip = number
+    }
+    let key = title
+      .replace('旋转', 'Rot')
+      .replace('底面长', 'length')
+      .replace('底面宽', 'width')
+      .replace('高度', 'height')
+    clipSetting[key] = number
+    this.setState(
+      {
+        clipSetting,
+      },
+      () => {
+        canClip && this.debounce(this.mapcut)
+      },
+    )
+  }
   debounce = fn => {
     if (
       this.state.clipSetting.width === 0 ||
@@ -213,7 +243,12 @@ export default class MenuList extends Component {
     if (this.timer) {
       clearTimeout(this.timer)
     }
-    this.timer = setTimeout(fn, this.INTERVAL)
+    let that = this
+    this.timer = setTimeout(() => {
+      fn()
+      clearTimeout(that.timer)
+      that.timer = null
+    }, this.INTERVAL)
   }
   changeSwitchValue = ({ value, index }) => {
     let data = JSON.parse(JSON.stringify(this.state.data))
@@ -241,11 +276,11 @@ export default class MenuList extends Component {
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
 
-    let layerIcon = require('../../../../assets/map/layer3dtype/layer3d_type_normal.png')
+    let layerIcon = getThemeAssets().layer3dType.layer3d_type_normal
 
     switch (item.type) {
       case 'IMAGEFILE':
-        layerIcon = require('../../../../assets/map/layer3dtype/layer3d_type_image.png')
+        layerIcon = getThemeAssets().layer3dType.layer3d_type_image
         break
       //case 'KML':
       case 'Terrain':
@@ -293,15 +328,19 @@ export default class MenuList extends Component {
                 this.changeNumber({ flag: 'minus', title: item.title })
               }}
             >
-              <Image style={styles.icon} source={minus} />
+              <Image
+                style={styles.icon}
+                source={minus}
+                resizeMode={'contain'}
+              />
             </TouchableOpacity>
             <TextInput
-              value={item.value + ''}
+              defaultValue={item.value + ''}
               style={styles.inputItem}
-              onChangeText={number => {
-                this.changeNumber({
+              onEndEditing={evt => {
+                this.changeNumberDebounce({
                   title: item.title,
-                  number: Number.parseFloat(number),
+                  number: Number.parseFloat(evt.nativeEvent.text),
                 })
               }}
               keyboardType={'number-pad'}
@@ -312,7 +351,7 @@ export default class MenuList extends Component {
                 this.changeNumber({ flag: 'plus', title: item.title })
               }}
             >
-              <Image style={styles.icon} source={plus} />
+              <Image style={styles.icon} source={plus} resizeMode={'contain'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -327,13 +366,13 @@ export default class MenuList extends Component {
           <Text style={{ flex: 1 }}>{item.title}</Text>
           <View style={{ flex: 1 }}>
             <TextInput
-              value={item.value + ''}
+              defaultValue={item.value + ''}
               style={styles.rightText}
               keyboardType={'number-pad'}
-              onChangeText={number => {
-                this.changeNumber({
+              onEndEditing={evt => {
+                this.changeNumberDebounce({
                   title: item.title,
-                  number: Number.parseFloat(number),
+                  number: Number.parseFloat(evt.nativeEvent.text),
                 })
               }}
             />
@@ -453,6 +492,7 @@ export default class MenuList extends Component {
             )}
             <Text
               style={{
+                fontSize: setSpText(20),
                 marginLeft: scaleSize(20),
               }}
             >
@@ -481,9 +521,9 @@ export default class MenuList extends Component {
   renderItem = ({ item, index }) => {
     let key
     switch (item.title) {
-      case 'x':
-      case 'y':
-      case 'z':
+      case 'X':
+      case 'Y':
+      case 'Z':
         key = item.title
         break
       case getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT:

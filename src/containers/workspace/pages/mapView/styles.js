@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native'
 // import * as Util from '../../../../utils/constUtil'
 import { scaleSize, constUtil as Util } from '../../../../utils'
-import { color, size } from '../../../../styles'
+import { color, size, zIndexLevel } from '../../../../styles'
 const FUNCTIONHEIGHT = scaleSize(143) + (Platform.OS === 'ios' ? 20 : 0)
 export default StyleSheet.create({
   container: {
@@ -124,5 +124,15 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  progressView: {
+    position: 'absolute',
+    height: 20,
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: zIndexLevel.FIVE,
+    backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
 })

@@ -1,5 +1,5 @@
 export default {
-  // MSG_IP: '192.168.0.104',
+  // MSG_IP: '192.168.0.115',
   // MSG_Port: 5672,
   // MSG_HostName: '/',
   // MSG_UserName: 'androidtest',
@@ -13,6 +13,8 @@ export default {
   MSG_SINGLE: 1, //单人消息
   MSG_GROUP: 2, //群组消息
   MSG_ADD_FRIEND: 901, //添加好友
+  MSG_DEL_FRIEND: 902, //删除好友关系
+  MSG_ACCEPT_FRIEND: 903, //同意添加好友
   MSG_MODIFY_GROUP_NAME: 911, //修改群名
   MSG_CREATE_GROUP: 912, //创建群
   MSG_REMOVE_MEMBER: 913, //退出群

@@ -164,6 +164,7 @@ const Map_Main_Menu = {
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
   THEME_HEATMAP: 'HeatMap',
 
+  THEME_ALL_SELECTED: 'All selected',
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
   THEME_UNIQUE_EXPRESSION: 'Unique Expression',

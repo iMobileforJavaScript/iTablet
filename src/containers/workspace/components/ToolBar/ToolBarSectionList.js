@@ -257,9 +257,90 @@ export default class ToolBarSectionList extends React.Component {
               </Text>
             </TouchableOpacity>
           )}
+          {section.allSelectType && (
+            <TouchableOpacity
+              style={
+                (styles.selectImgView,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  right: scaleSize(30),
+                  height: scaleSize(80),
+                })
+              }
+              onPress={() => this.sectionAllPress(section)}
+            >
+              <Text style={[styles.sectionSelectedTitle]}>
+                {getLanguage(global.language).Map_Main_Menu.THEME_ALL_SELECTED}
+                {/* 全部选中 */}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableHighlight>
     )
+  }
+
+  sectionAllPress = section => {
+    if (section.allSelectType) {
+      let sections = JSON.parse(JSON.stringify(this.state.sections))
+      let selectList = JSON.parse(JSON.stringify(this.state.selectList))
+      let title = section.title
+      for (let i = 0; i < sections.length; i++) {
+        if (JSON.stringify(sections[i]) === JSON.stringify(section)) {
+          for (let k = 0; k < sections[i].data.length; k++) {
+            if (sections[i].data[k].isSelected) continue
+
+            sections[i].data[k].isSelected = true
+            if (!selectList[title]) selectList[title] = []
+            let pushObj = {}
+            let pushName =
+              sections[i].data[k].title ||
+              sections[i].data[k].name ||
+              sections[i].data[k].expression ||
+              sections[i].data[k].datasetName
+            pushObj[pushName] = false
+            if (
+              JSON.stringify(selectList[title]).indexOf(pushName) < 0 &&
+              selectList[title][pushName] !== true
+            ) {
+              selectList[title].push(pushObj)
+            } else {
+              for (let l = 0; l < selectList[title].length; l++)
+                if (pushName in selectList[title][l]) {
+                  selectList[title][l][pushName] = false
+                  break
+                }
+            }
+            //
+            // let pushName =
+            //   sections[i].data[k].title ||
+            //   sections[i].data[k].name ||
+            //   sections[i].data[k].expression ||
+            //   sections[i].data[k].datasetName
+            // for (let j = 0; j < selectList[title].length; j++) {
+            //   //let pushName = section.data[index].datasetName
+            //   if (pushName in selectList[title][j]) {
+            //     selectList[title][j][pushName] = true
+            //     break
+            //   }
+            // }
+          }
+        }
+        break
+      }
+      this.setState(
+        {
+          sections,
+          selectList,
+        },
+        () => {
+          this.props.listSelectableAction &&
+            this.props.listSelectableAction({ selectList })
+        },
+      )
+    }
   }
 
   renderItem = ({ item, index, section }) => {

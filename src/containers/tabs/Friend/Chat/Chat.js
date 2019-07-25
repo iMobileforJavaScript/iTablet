@@ -25,7 +25,7 @@ import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
-import { ConstPath } from '../../../../constants'
+import { ConstPath, ConstOnline } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
@@ -288,6 +288,33 @@ class Chat extends React.Component {
     }
     return bGroup
   }
+
+  showNoFriendNotify = msgId => {
+    msgId += 1
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: '',
+      type: MSGConstant.MSG_REJECT,
+      user: {
+        name: this.targetUser.userName,
+        id: this.targetUser.userId,
+        groupID: this.targetUser.userId,
+        groupName: '',
+      },
+      time: time,
+    }
+    //保存
+    let storeMsg = this.friend.storeMessage(message, this.targetUser.id, msgId)
+    //显示
+    let chatMsg = this._loadChatMsg(storeMsg)
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, chatMsg),
+      }
+    })
+  }
+
   //发送普通消息
   onSend(messages = []) {
     let bGroup = 1
@@ -323,6 +350,12 @@ class Chat extends React.Component {
       }
     })
     //发送
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -367,6 +400,12 @@ class Chat extends React.Component {
       }
     })
     //发送
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
@@ -443,6 +482,12 @@ class Chat extends React.Component {
       }
     })
     //发送文件及提醒
+    let isFriend = FriendListFileHandle.getIsFriend(this.targetUser.id)
+    if (isFriend === 0) {
+      //对方还未添加您为好友
+      this.showNoFriendNotify(msgId)
+      return
+    }
     this.friend._sendFile(
       JSON.stringify(message),
       filepath,
@@ -480,6 +525,41 @@ class Chat extends React.Component {
       message.user._id,
       message.originMsg.message.message.fileSize,
     )
+  }
+
+  onCustomViewTouch = async (type, message) => {
+    switch (type) {
+      case MSGConstant.MSG_FILE_NOTIFY:
+      case MSGConstant.MSG_LAYER:
+      case MSGConstant.MSG_DATASET:
+        this.onCustomViewFileTouch(type, message)
+        break
+      case MSGConstant.MSG_LOCATION:
+        this.onCustomViewLocationTouch(message)
+        break
+      default:
+        break
+    }
+  }
+
+  onCustomViewLocationTouch = message => {
+    if (global.coworkMode) {
+      Toast.show(getLanguage(global.language).Friends.LOCATION_COWORK_NOTIFY)
+    } else if (this.action) {
+      Toast.show(getLanguage(global.language).Friends.LOCATION_SHARE_NOTIFY)
+    } else {
+      let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
+      wsData.layerIndex = 3
+      NavigationService.navigate('MapViewSingle', {
+        wsData,
+        isExample: true,
+        mapName: message.originMsg.message.message.message,
+        showMarker: {
+          longitude: message.originMsg.message.message.longitude,
+          latitude: message.originMsg.message.message.latitude,
+        },
+      })
+    }
   }
 
   onCustomViewFileTouch = async (type, message) => {
@@ -541,7 +621,7 @@ class Chat extends React.Component {
     } catch (error) {
       mapOpen = false
     }
-    if (!mapOpen) {
+    if (!(global.coworkMode && mapOpen)) {
       Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
       return
     }
@@ -616,7 +696,7 @@ class Chat extends React.Component {
     } catch (error) {
       mapOpen = false
     }
-    if (!mapOpen) {
+    if (!(global.coworkMode && mapOpen)) {
       Toast.show(getLanguage(global.language).Friends.OPENCOWORKFIRST)
       return
     }
@@ -953,7 +1033,7 @@ class Chat extends React.Component {
   }
 
   renderCustomView = props => {
-    return <CustomView {...props} onFileTouch={this.onCustomViewFileTouch} />
+    return <CustomView {...props} onTouch={this.onCustomViewTouch} />
   }
 
   // eslint-disable-next-line
