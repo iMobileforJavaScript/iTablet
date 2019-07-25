@@ -172,7 +172,7 @@ function getCollectionData(libId, symbolCode, params) {
     key: constants.SUBMIT,
     title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
     //constants.SUBMIT,
-    action: () => collectionSubmit(),
+    action: () => collectionSubmit(libId, symbolCode),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_submit_black.png'),
   })
@@ -219,9 +219,10 @@ async function showCollection(libId, symbolCode, type) {
   })
 }
 
-async function collectionSubmit() {
+async function collectionSubmit(libId, symbolCode) {
   await SMap.submit()
   await SMap.refreshMap()
+  SMap.setPlotSymbol(libId, symbolCode)
 }
 
 async function cancel(libId, symbolCode) {
