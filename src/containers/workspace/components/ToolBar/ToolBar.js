@@ -4242,11 +4242,9 @@ export default class ToolBar extends React.PureComponent {
                   let names = les[alias]
                   for (let j = 0, dataLen = data.length; j < dataLen; j++) {
                     let curDataSetName = data[j].datasetName
-                    if (JSON.stringify(names).indexOf(curDataSetName) >= 0) {
-                      for (let i = 0, l = names.length; i < l; i++) {
-                        if (curDataSetName in names[i]) {
-                          data[j].isSelected = !names[i][curDataSetName]
-                        }
+                    for (let i = 0, l = names.length; i < l; i++) {
+                      if (curDataSetName in names[i]) {
+                        data[j].isSelected = !names[i][curDataSetName]
                       }
                     }
                   }
