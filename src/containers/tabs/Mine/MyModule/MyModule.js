@@ -154,7 +154,9 @@ export default class MyModule extends Component {
 
   saveItemInfo = ({ item, index, section }) => {
     this.itemInfo = { item, index, section }
-    this.setState({ modalIsVisible: true })
+    this.setState({ modalIsVisible: true }, () => {
+      this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+    })
   }
 
   _showMyDataPopupModal = () => {
@@ -186,9 +188,8 @@ export default class MyModule extends Component {
     return (
       <MyDataPopupModal
         // onDeleteData={this._onDeleteData}
+        ref={ref => (this.MyDataPopModal = ref)}
         data={data}
-        onCloseModal={this._closeModal}
-        modalVisible={this.state.modalIsVisible}
       />
     )
   }

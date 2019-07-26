@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { PopModal, FingerMenu } from '../../../components'
+import { PopView, FingerMenu } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { size, color } from '../../../styles'
 import { getLanguage } from '../../../language'
@@ -172,7 +172,7 @@ export default class PopSwitchList extends React.Component {
 
   render() {
     return (
-      <PopModal ref={ref => (this.popModal = ref)}>
+      <PopView ref={ref => (this.popModal = ref)}>
         <ScrollableTabView
           ref={ref => (this.scrollTab = ref)}
           style={styles.scrollView}
@@ -198,7 +198,7 @@ export default class PopSwitchList extends React.Component {
         <View style={[styles.popView, { width: '100%' }]}>
           {this.renderBottom()}
         </View>
-      </PopModal>
+      </PopView>
     )
   }
 }

@@ -11,7 +11,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
   Platform,
 } from 'react-native'
 import { Button } from '../../../../components'
@@ -20,11 +19,7 @@ import { color, zIndexLevel, size } from '../../../../styles'
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0,
+    flex: 1,
     zIndex: zIndexLevel.FOUR,
     backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
@@ -148,7 +143,6 @@ export default class SaveView extends React.Component {
   render() {
     let animationType = this.props.animated ? 'fade' : 'none'
     const deviceHeight = screen.getScreenSafeHeight()
-    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={animationType}
@@ -167,7 +161,6 @@ export default class SaveView extends React.Component {
             styles.overlay,
             Platform.OS === 'android' && {
               height: deviceHeight,
-              width: deviceWidth,
             },
           ]}
           activeOpacity={1}

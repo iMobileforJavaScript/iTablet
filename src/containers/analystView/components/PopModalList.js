@@ -11,7 +11,7 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native'
-import { PopModal, FingerMenu } from '../../../components'
+import { PopView, FingerMenu } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { size, color } from '../../../styles'
 import { getLanguage } from '../../../language'
@@ -223,12 +223,12 @@ export default class PopModalList extends React.Component {
 
   render() {
     return (
-      <PopModal ref={ref => (this.popModal = ref)}>
+      <PopView ref={ref => (this.popModal = ref)}>
         <View style={[styles.popView, { width: '100%' }]}>
           {this.renderContent()}
           {this.renderBottom()}
         </View>
-      </PopModal>
+      </PopView>
     )
   }
 }

@@ -1,14 +1,9 @@
 import React, { PureComponent } from 'react'
-import {
-  Modal,
-  Platform,
-  TouchableOpacity,
-  Text,
-  View,
-  Dimensions,
-} from 'react-native'
+import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../styles'
-import { scaleSize, screen } from '../../utils'
+import { scaleSize } from '../../utils'
+import ConstToolType from '../../constants/ConstToolType'
+import Const from '../../constants/Const'
 
 export default class PopModal extends PureComponent {
   props: {
@@ -113,13 +108,10 @@ export default class PopModal extends PureComponent {
     return (
       <View
         style={{
-          flex: 1,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          width: '100%',
+          maxHeight: ConstToolType.HEIGHT[3] + Const.BOTTOM_HEIGHT,
+          minHeight: Const.BOTTOM_HEIGHT,
           backgroundColor: color.contentColorWhite,
-          paddingBottom: this.virtualMenuHeight,
         }}
       >
         {this.props.children}
@@ -130,8 +122,6 @@ export default class PopModal extends PureComponent {
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let animationType = 'fade'
-    const deviceHeight = screen.getScreenSafeHeight()
-    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={animationType}
@@ -147,7 +137,7 @@ export default class PopModal extends PureComponent {
         style={{ flex: 1 }}
         visible={this.state.modalVisible}
       >
-        <View style={{ height: deviceHeight, width: deviceWidth }}>
+        <View style={{ flex: 1 }}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {

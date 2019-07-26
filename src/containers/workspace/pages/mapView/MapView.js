@@ -33,7 +33,7 @@ import {
   SaveMapNameDialog,
   SaveDialog,
   InputDialog,
-  PopModal,
+  PopView,
   SurfaceView,
   SearchBar,
   Progress,
@@ -273,9 +273,12 @@ export default class MapView extends React.Component {
         JSON.stringify(prevProps.analyst.params) !==
         JSON.stringify(this.props.analyst.params)
       ) {
+        this.toolBox && this.toolBox.setVisible(false)
+        // Android 物理返回键事件
         this.backAction =
-          (this.props.navigation.state.params &&
-            this.props.navigation.state.params.backAction) ||
+          (Platform.OS === 'android' &&
+            (this.props.analyst.params &&
+              this.props.analyst.params.backAction)) ||
           null
       }
       // 网络分析模式下，地图控制器 横竖屏切换位置变化
@@ -1327,10 +1330,17 @@ export default class MapView extends React.Component {
         type={this.props.analyst.params.type}
         back={() => {
           let action =
-            (this.props.navigation.state.params &&
-              this.props.navigation.state.params.backAction) ||
+            (this.props.analyst.params &&
+              this.props.analyst.params.backAction) ||
             null
           action && action()
+          GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
+          this.toolBox.setVisible(true, GLOBAL.currentToolbarType, {
+            isFullScreen: true,
+            column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+            height: ConstToolType.HEIGHT[2],
+            tableType: 'normal',
+          })
         }}
         setAnalystParams={this.props.setAnalystParams}
         language={this.props.language}
@@ -1653,15 +1663,15 @@ export default class MapView extends React.Component {
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
-          this.props.analyst.params &&
-          this.renderAnalystMapToolbar()}
-        {!this.isExample &&
           !this.props.analyst.params &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
           this.renderOverLayer()}
-        {!this.isExample && !this.props.analyst.params && this.renderTool()}
+        {!this.isExample && this.renderTool()}
+        {!this.isExample &&
+          this.props.analyst.params &&
+          this.renderAnalystMapToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
           this.renderMenuDialog()}
@@ -1675,12 +1685,9 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
-        <PopModal
-          ref={ref => (this.popModal = ref)}
-          modalVisible={this.state.editControllerVisible}
-        >
+        <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
-        </PopModal>
+        </PopView>
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}

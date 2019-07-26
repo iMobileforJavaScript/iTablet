@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import { Dimensions } from 'react-native'
+// import { Dimensions } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 // import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import styles from './styles'
-import { scaleSize, Toast } from '../../../../utils'
+import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language'
-import ScrollableTabView, {
-  DefaultTabBar,
-} from 'react-native-scrollable-tab-view'
+// import ScrollableTabView, {
+//   DefaultTabBar,
+// } from 'react-native-scrollable-tab-view'
 import { SAnalyst, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import TabNavigationService from '../../../TabNavigationService'
@@ -32,6 +32,7 @@ export default class BufferAnalystView extends Component {
     super(props)
     const { params } = props.navigation.state
     this.cb = params && params.cb
+    this.type = (params && params.type) || 'single' // single | multiple
     this.state = {
       canBeAnalyst: false,
     }
@@ -64,7 +65,8 @@ export default class BufferAnalystView extends Component {
           true,
           getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
         )
-        if (this.currentTabIndex === 0) {
+        // if (this.currentTabIndex === 0) {
+        if (this.type === 'single') {
           let {
             sourceData,
             resultData,
@@ -97,10 +99,11 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
-                NavigationService.goBack('AnalystListEntry')
-                if (optionParameter.showResult) {
-                  TabNavigationService.navigate('MapAnalystView')
-                }
+                NavigationService.goBack()
+                // NavigationService.goBack('AnalystListEntry')
+                // if (optionParameter.showResult) {
+                //   TabNavigationService.navigate('MapAnalystView')
+                // }
                 this.cb && this.cb()
               }
             },
@@ -185,8 +188,12 @@ export default class BufferAnalystView extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: getLanguage(this.props.language).Analyst_Modules
-            .BUFFER_ANALYST_2,
+          title:
+            this.type === 'single'
+              ? getLanguage(this.props.language).Analyst_Modules
+                .BUFFER_ANALYST_SINGLE
+              : getLanguage(this.props.language).Analyst_Modules
+                .BUFFER_ANALYST_MULTIPLE,
           navigation: this.props.navigation,
           backAction: this.back,
           headerRight: (
@@ -202,64 +209,76 @@ export default class BufferAnalystView extends Component {
           ),
         }}
       >
-        <ScrollableTabView
-          renderTabBar={() => <DefaultTabBar style={styles.tabView} />}
-          initialPage={0}
-          tabBarUnderlineStyle={{
-            backgroundColor: 'rgba(70,128,223,1.0)',
-            height: 2,
-            width: 20,
-            marginLeft: Dimensions.get('window').width / 4 - 10,
+        <BufferAnalystViewTab
+          ref={ref => (this.currentTab = ref)}
+          // tabLabel={
+          //   getLanguage(this.props.language).Analyst_Labels.MULTI_BUFFER_ZONE
+          // }
+          type={this.type}
+          currentUser={this.props.currentUser}
+          language={this.props.language}
+          checkData={result => {
+            this.checkData(result)
           }}
-          tabBarBackgroundColor="white"
-          tabBarActiveTextColor="rgba(70,128,223,1.0)"
-          tabBarInactiveTextColor="black"
-          tabBarTextStyle={{
-            fontSize: scaleSize(25),
-            textAlign: 'center',
-            marginTop: 10,
-          }}
-          onChangeTab={({ i }) => {
-            this.currentTabIndex = i
-            switch (i) {
-              case 0:
-                this.currentTab = this.singleBuffer
-                break
-              case 1:
-                this.currentTab = this.multiBuffer
-                break
-            }
-          }}
-        >
-          <BufferAnalystViewTab
-            ref={ref => (this.singleBuffer = ref)}
-            tabLabel={
-              getLanguage(this.props.language).Analyst_Labels.BUFFER_ZONE
-            }
-            type="single"
-            currentUser={this.props.currentUser}
-            language={this.props.language}
-            checkData={result => {
-              if (this.currentTabIndex === 0) {
-                this.checkData(result)
-              }
-            }}
-          />
-          <BufferAnalystViewTab
-            ref={ref => (this.multiBuffer = ref)}
-            tabLabel={
-              getLanguage(this.props.language).Analyst_Labels.MULTI_BUFFER_ZONE
-            }
-            type="multiple"
-            currentUser={this.props.currentUser}
-            language={this.props.language}
-            checkData={result => {
-              if (this.currentTabIndex === 1) {
-                this.checkData(result)
-              }
-            }}
-          />
-        </ScrollableTabView>
+        />
+        {/*<ScrollableTabView*/}
+        {/*renderTabBar={() => <DefaultTabBar style={styles.tabView} />}*/}
+        {/*initialPage={0}*/}
+        {/*tabBarUnderlineStyle={{*/}
+        {/*backgroundColor: 'rgba(70,128,223,1.0)',*/}
+        {/*height: 2,*/}
+        {/*width: 20,*/}
+        {/*marginLeft: Dimensions.get('window').width / 4 - 10,*/}
+        {/*}}*/}
+        {/*tabBarBackgroundColor="white"*/}
+        {/*tabBarActiveTextColor="rgba(70,128,223,1.0)"*/}
+        {/*tabBarInactiveTextColor="black"*/}
+        {/*tabBarTextStyle={{*/}
+        {/*fontSize: scaleSize(25),*/}
+        {/*textAlign: 'center',*/}
+        {/*marginTop: 10,*/}
+        {/*}}*/}
+        {/*onChangeTab={({ i }) => {*/}
+        {/*this.currentTabIndex = i*/}
+        {/*switch (i) {*/}
+        {/*case 0:*/}
+        {/*this.currentTab = this.singleBuffer*/}
+        {/*break*/}
+        {/*case 1:*/}
+        {/*this.currentTab = this.multiBuffer*/}
+        {/*break*/}
+        {/*}*/}
+        {/*}}*/}
+        {/*>*/}
+        {/*<BufferAnalystViewTab*/}
+        {/*ref={ref => (this.singleBuffer = ref)}*/}
+        {/*tabLabel={*/}
+        {/*getLanguage(this.props.language).Analyst_Labels.BUFFER_ZONE*/}
+        {/*}*/}
+        {/*type="single"*/}
+        {/*currentUser={this.props.currentUser}*/}
+        {/*language={this.props.language}*/}
+        {/*checkData={result => {*/}
+        {/*if (this.currentTabIndex === 0) {*/}
+        {/*this.checkData(result)*/}
+        {/*}*/}
+        {/*}}*/}
+        {/*/>*/}
+        {/*<BufferAnalystViewTab*/}
+        {/*ref={ref => (this.multiBuffer = ref)}*/}
+        {/*tabLabel={*/}
+        {/*getLanguage(this.props.language).Analyst_Labels.MULTI_BUFFER_ZONE*/}
+        {/*}*/}
+        {/*type="multiple"*/}
+        {/*currentUser={this.props.currentUser}*/}
+        {/*language={this.props.language}*/}
+        {/*checkData={result => {*/}
+        {/*if (this.currentTabIndex === 1) {*/}
+        {/*this.checkData(result)*/}
+        {/*}*/}
+        {/*}}*/}
+        {/*/>*/}
+        {/*</ScrollableTabView>*/}
       </Container>
     )
   }

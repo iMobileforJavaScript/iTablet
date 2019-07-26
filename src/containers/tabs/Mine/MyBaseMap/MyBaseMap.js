@@ -5,7 +5,7 @@ import { FlatList, View, TouchableOpacity, Image } from 'react-native'
 // import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
 // import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
-import MyDataPopupModal from '../MyData/MyDataPopupModal'
+// import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import BaseMapItem from './BaseMapItem'
 import { color } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
@@ -55,33 +55,31 @@ export default class MyBaseMap extends Component {
     return index
   }
 
-  _closeModal = () => {
-    this.setState({ modalIsVisible: false })
-  }
+  // saveItemInfo = ({ item, index }) => {
+  //   this.itemInfo = { item, index }
+  //   this.setState({ modalIsVisible: true },()=>{
+  //     this.MyDataPopModal.setVisible(true)
+  //   })
+  // }
 
-  saveItemInfo = ({ item, index }) => {
-    this.itemInfo = { item, index }
-    this.setState({ modalIsVisible: true })
-  }
-
-  _showMyDataPopupModal = () => {
-    let data = [
-      {
-        title: '游览地图',
-        action: () => {
-          // SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
-        },
-      },
-    ]
-    return (
-      <MyDataPopupModal
-        // onDeleteData={this._onDeleteData}
-        data={data}
-        onCloseModal={this._closeModal}
-        modalVisible={this.state.modalIsVisible}
-      />
-    )
-  }
+  // _showMyDataPopupModal = () => {
+  //   let data = [
+  //     {
+  //       title: '游览地图',
+  //       action: () => {
+  //         // SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
+  //       },
+  //     },
+  //   ]
+  //   return (
+  //     <MyDataPopupModal
+  //       // onDeleteData={this._onDeleteData}
+  //       ref={ref=>(this.MyDataPopModal = ref)}
+  //       data={data}
+  //       modalVisible={this.state.modalIsVisible}
+  //     />
+  //   )
+  // }
 
   _renderHeaderBtn = () => {
     let Img = require('../../../../assets/Mine/mine_my_local_import_white.png')
@@ -125,7 +123,7 @@ export default class MyBaseMap extends Component {
             />
           )}
         />
-        {this._showMyDataPopupModal()}
+        {/*{this._showMyDataPopupModal()}*/}
       </Container>
     )
   }

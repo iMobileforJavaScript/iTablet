@@ -86,8 +86,6 @@ export default class extends React.PureComponent {
         }),
       }),
     )
-    const deviceHeight = screen.getScreenSafeHeight()
-    const deviceWidth = Dimensions.get('window').width
     return (
       <Modal
         animationType={'slide'}
@@ -95,7 +93,7 @@ export default class extends React.PureComponent {
         style={{ flex: 1 }}
         onRequestClose={this._onRequestClose}
       >
-        <View style={{ height: deviceHeight, width: deviceWidth }}>
+        <View style={{ flex: 1 }}>
           <NavigationDoor />
         </View>
       </Modal>

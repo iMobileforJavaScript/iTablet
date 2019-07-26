@@ -2,9 +2,9 @@
  * 分析常量
  */
 export default {
-  BUFFER_ANALYST: '缓冲分析',
-  BUFFER_ANALYST_2: '缓冲区分析',
-  OVERLAY_ANALYST: '叠加分析',
+  BUFFER_ANALYSIS: '缓冲分析',
+  BUFFER_ANALYSIS_2: '缓冲区分析',
+  OVERLAY_ANALYSIS: '叠加分析',
 
   CLIP: '裁剪',
   UNION: '合并',
