@@ -294,20 +294,27 @@ export default class TouchProgress extends Component {
             break
           case ThemeType.LABEL: // 标签专题图
             {
-              this.fontsize =
-                value !== undefined
-                  ? value
-                  : await SThemeCartography.getUniformLabelFontSize({
-                    LayerName: this.props.currentLayer.name,
-                  })
-              this._panBtnStyles.style.left =
-                (this.fontsize * progressWidth) / 20 + panBtnDevLeft
-              this._previousLeft = (this.fontsize * progressWidth) / 20
-              this._BackLine.style.width = (this.fontsize * progressWidth) / 20
-              tips =
-                getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
-                '     ' +
-                parseInt(this.fontsize)
+              //避免切换地图后 图例设置走这个case
+              if (
+                this.props.selectName === '字号' ||
+                this.props.selectName === 'fontsize'
+              ) {
+                this.fontsize =
+                  value !== undefined
+                    ? value
+                    : await SThemeCartography.getUniformLabelFontSize({
+                      LayerName: this.props.currentLayer.name,
+                    })
+                this._panBtnStyles.style.left =
+                  (this.fontsize * progressWidth) / 20 + panBtnDevLeft
+                this._previousLeft = (this.fontsize * progressWidth) / 20
+                this._BackLine.style.width =
+                  (this.fontsize * progressWidth) / 20
+                tips =
+                  getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+                  '     ' +
+                  parseInt(this.fontsize)
+              }
             }
             break
           case ThemeType.GRAPH:
