@@ -137,7 +137,7 @@ const Prompt = {
   NETWORK_ERROR: '网络错误',
   NO_NETWORK: '未连接到网络',
 
-  LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
+  LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
 
   GET_LAYER_GROUP_FAILD: '获取图层组失败',

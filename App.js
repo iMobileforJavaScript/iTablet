@@ -545,7 +545,9 @@ class AppRoot extends Component {
         }
         let res = await RNFS.downloadFile(downloadOptions)
         if(res){
-          Toast.show("试用成功")
+          Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+        }else{
+          Toast.show(global.language==='CN'?"许可申请失败":'License application failed')
         }
         // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
       }}
