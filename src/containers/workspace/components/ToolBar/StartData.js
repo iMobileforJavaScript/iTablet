@@ -11,7 +11,7 @@ import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 let _params = {}
-import { SMap, SScene } from 'imobile_for_reactnative'
+import { SMap, SScene, SMediaCollector } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 function setParams(params) {
   _params = params
@@ -765,6 +765,9 @@ function create() {
               getLanguage(global.language).Prompt.CREATING,
               // ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
             )
+
+          // 移除多媒体采集Callout
+          SMediaCollector.removeMedias()
           await _params.closeMap()
           let userPath =
             ConstPath.UserPath +

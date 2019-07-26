@@ -89,8 +89,6 @@ export default class MT_layerManager extends React.Component {
 
   componentDidUpdate(prevProps) {
     let newState = {}
-    // eslint-disable-next-line
-    let dataList = []
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
@@ -528,6 +526,7 @@ export default class MT_layerManager extends React.Component {
         }
       }
     let result = await SMap.setLayerVisible(data.path, value)
+    this.props.getLayers()
 
     if (value) {
       // 显示多媒体callouts
