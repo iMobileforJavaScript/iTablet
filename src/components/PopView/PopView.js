@@ -32,10 +32,6 @@ export default class PopView extends PureComponent {
     }
   }
 
-  back = () => {
-    this.state.modalVisible && this.setVisible(false)
-  }
-
   setVisible = (visible, cb) => {
     if (visible === undefined) {
       visible = !this.state.modalVisible
