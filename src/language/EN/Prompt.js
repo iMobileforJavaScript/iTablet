@@ -142,7 +142,7 @@ const Prompt = {
   NO_NETWORK: 'No Internet connection',
 
   LICENSE_EXPIRED:
-    'Trial license has expired. Please apply for a new one and restart.',
+    'The trial license has expired. Do you want to continue the trial?',
   APPLY_LICENSE: 'Apply License',
 
   GET_LAYER_GROUP_FAILD: 'Failed to get layer group',

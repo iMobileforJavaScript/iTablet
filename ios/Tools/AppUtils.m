@@ -43,4 +43,13 @@ RCT_REMAP_METHOD(getCurrentLocation, resolve:(RCTPromiseResolveBlock)resolve rej
     reject(@"AppUtils", exception.reason, nil);
   }
 }
+RCT_REMAP_METHOD(pause, pauseTime:(int) time resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      resolve(@(YES));
+    });
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
 @end

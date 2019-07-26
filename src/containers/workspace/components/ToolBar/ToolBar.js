@@ -49,7 +49,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated, Platform } from 'react-native'
+import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
   SScene,
@@ -677,7 +677,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform.OS === 'android' && {
+          {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -4251,11 +4251,9 @@ export default class ToolBar extends React.PureComponent {
                   let names = les[alias]
                   for (let j = 0, dataLen = data.length; j < dataLen; j++) {
                     let curDataSetName = data[j].datasetName
-                    if (JSON.stringify(names).indexOf(curDataSetName) >= 0) {
-                      for (let i = 0, l = names.length; i < l; i++) {
-                        if (curDataSetName in names[i]) {
-                          data[j].isSelected = !names[i][curDataSetName]
-                        }
+                    for (let i = 0, l = names.length; i < l; i++) {
+                      if (curDataSetName in names[i]) {
+                        data[j].isSelected = !names[i][curDataSetName]
                       }
                     }
                   }

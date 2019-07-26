@@ -232,7 +232,7 @@ export default class MediaEdit extends React.Component {
             let imgPath = itemInfo.uri
             if (
               Platform.OS === 'android' &&
-              imgPath.toLowerCase().indexOf('contents://') !== 0
+              imgPath.toLowerCase().indexOf('content://') !== 0
             ) {
               imgPath = 'file://' + imgPath
             }

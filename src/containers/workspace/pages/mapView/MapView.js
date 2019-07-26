@@ -274,9 +274,11 @@ export default class MapView extends React.Component {
         JSON.stringify(this.props.analyst.params)
       ) {
         this.toolBox && this.toolBox.setVisible(false)
+        // Android 物理返回键事件
         this.backAction =
-          (this.props.navigation.state.params &&
-            this.props.navigation.state.params.backAction) ||
+          (Platform.OS === 'android' &&
+            (this.props.analyst.params &&
+              this.props.analyst.params.backAction)) ||
           null
       }
       // 网络分析模式下，地图控制器 横竖屏切换位置变化

@@ -22,6 +22,7 @@ import {
 } from './src/models/template'
 import { Dialog, Loading } from './src/components'
 import { setMapSetting } from './src/models/setting'
+import { setAnalystParams } from './src/models/analyst'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
@@ -122,6 +123,7 @@ class AppRoot extends Component {
     saveMap: PropTypes.func,
     setCurrentAttribute: PropTypes.func,
     setAttributes: PropTypes.func,
+    setAnalystParams: PropTypes.func,
   }
 
   constructor (props) {
@@ -239,6 +241,7 @@ class AppRoot extends Component {
       this.props.setEditLayer(null) // 清空地图图层中的数据
       this.props.setSelection(null) // 清空地图选中目标中的数据
       this.props.setMapSetting(null) // 清空地图设置中的数据
+      this.props.setAnalystParams(null) // 清空分析中的数据
       this.props.setCollectionInfo() // 清空Collection中的数据
       this.props.setCurrentTemplateInfo() // 清空当前模板
       this.props.setTemplate() // 清空模板
@@ -440,6 +443,7 @@ class AppRoot extends Component {
     if (this.props.map.currentMap.Template) {
       addition.Template = this.props.map.currentMap.Template
     }
+
     await this.saveMapName(mapName, '', addition, this.closeMapHandler)
   }
 
@@ -541,7 +545,9 @@ class AppRoot extends Component {
         }
         let res = await RNFS.downloadFile(downloadOptions)
         if(res){
-          Toast.show("试用成功")
+          Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+        }else{
+          Toast.show(global.language==='CN'?"许可申请失败":'License application failed')
         }
         // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
       }}
@@ -661,6 +667,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setCurrentTemplateInfo,
   setTemplate,
   setMapSetting,
+  setAnalystParams,
   saveMap,
 })(AppRoot)
 
