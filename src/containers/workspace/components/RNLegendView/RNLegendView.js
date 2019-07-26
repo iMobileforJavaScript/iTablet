@@ -24,18 +24,16 @@ export default class RNLegendView extends React.Component {
   props: {
     device: Object,
     language: String,
+    legendSettings: Object,
+    setMapLegend: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      columns: props.device.orientation === 'LANDSCAPE' ? 4 : 2,
-      backgroundColor: '#FFFFFF',
       title: getLanguage(this.props.language).Map_Settings.THEME_LEGEND,
       width: 600,
       height: 420,
-      widthPercent: 80,
-      heightPercent: 80,
       currentPosition: 'topLeft',
       topLeft: { left: 0, top: HEADER_HEIGHT },
       topRight: { right: 0, top: HEADER_HEIGHT },
@@ -49,33 +47,44 @@ export default class RNLegendView extends React.Component {
     this.INTERVAL = 300
   }
 
+  setMapLegend = ({ backgroundColor }) => {
+    let settings = this.props.legendSettings
+    settings.backgroundColor = backgroundColor
+    this.props.setMapLegend && this.props.setMapLegend(settings)
+  }
+
   UNSAFE_componentWillMount() {
     if (this.state.legendSource === '') {
       this.getLegendData()
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
-    let returnFlag = false
-    if (this.props.device.orientation !== nextProps.device.orientation) {
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   let returnFlag = false
+  //   if (this.props.device.orientation !== nextProps.device.orientation) {
+  //     let flatListKey = this.state.flatListKey + 1
+  //     this.setState({
+  //       columns: this.props.legendSettings.column,
+  //       flatListKey,
+  //     })
+  //     returnFlag = true
+  //   }
+  //   if (
+  //     nextState.legendSource !== this.state.legendSource ||
+  //     JSON.stringify(nextProps) !== JSON.stringify(this.props)
+  //   ) {
+  //     returnFlag = true
+  //   }
+  //   return returnFlag
+  // }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.legendSettings.column !== this.props.legendSettings.column) {
       let flatListKey = this.state.flatListKey + 1
       this.setState({
-        columns: this.props.device.orientation === 'LANDSCAPE' ? 2 : 4,
         flatListKey,
       })
-      returnFlag = true
     }
-    if (
-      nextState.backgroundColor !== this.state.backgroundColor ||
-      nextState.widthPercent !== this.state.widthPercent ||
-      nextState.heightPercent !== this.state.heightPercent ||
-      nextState.legendSource !== this.state.legendSource ||
-      nextState.columns !== this.state.columns
-    ) {
-      returnFlag = true
-    }
-    return returnFlag
   }
-
   componentWillUnmount() {
     SMap.removeLegendListener()
   }
@@ -152,7 +161,7 @@ export default class RNLegendView extends React.Component {
     return (
       <TouchableOpacity
         style={{
-          width: (1 / this.state.columns) * 100 + '%',
+          width: (1 / this.props.legendSettings.column) * 100 + '%',
           height: scaleSize(80),
           justifyContent: 'center',
           alignItems: 'center',
@@ -209,24 +218,26 @@ export default class RNLegendView extends React.Component {
       <View
         style={{
           position: 'absolute',
-          width: scaleSize((this.state.width * this.state.widthPercent) / 100),
+          width: scaleSize(
+            (this.state.width * this.props.legendSettings.widthPercent) / 100,
+          ),
           height: scaleSize(
-            (this.state.height * this.state.heightPercent) / 100,
+            (this.state.height * this.props.legendSettings.heightPercent) / 100,
           ),
           borderColor: 'black',
           borderWidth: scaleSize(3),
           paddingRight: scaleSize(5),
-          backgroundColor: this.state.backgroundColor,
+          backgroundColor: this.props.legendSettings.backgroundColor,
           zIndex: 1,
           ...this.state[this.state.currentPosition],
         }}
       >
         <Text
           style={{
-            left: '49%',
+            left: '46%',
             position: 'absolute',
             top: 0,
-            fontSize: setSpText(12),
+            fontSize: setSpText(18),
             letterSpacing: scaleSize(2),
             color: color.white,
             fontWeight: '900',
@@ -237,10 +248,10 @@ export default class RNLegendView extends React.Component {
         <Text
           style={{
             position: 'absolute',
-            top: 0.5,
-            left: '49%',
-            letterSpacing: scaleSize(3),
-            fontSize: setSpText(12),
+            top: 1,
+            left: '46%',
+            letterSpacing: scaleSize(4),
+            fontSize: setSpText(18),
           }}
         >
           {this.state.title}
@@ -252,7 +263,7 @@ export default class RNLegendView extends React.Component {
           renderItem={this.renderLegendItem}
           data={this.state.legendSource}
           keyExtractor={(item, index) => item.title + index}
-          numColumns={this.state.columns}
+          numColumns={this.props.legendSettings.column}
           key={this.state.flatListKey}
         />
       </View>
