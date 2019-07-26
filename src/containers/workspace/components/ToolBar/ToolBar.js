@@ -49,7 +49,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated, Platform } from 'react-native'
+import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
   SScene,
@@ -677,7 +677,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform.OS === 'android' && {
+          {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
