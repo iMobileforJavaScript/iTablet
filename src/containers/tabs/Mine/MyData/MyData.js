@@ -374,12 +374,19 @@ export default class MyLocalData extends Component {
             onPress={() => {
               this.itemInfo = info
               if (this.state.isFirstLoadingModal) {
-                this.setState({
-                  modalIsVisible: true,
-                  isFirstLoadingModal: false,
-                })
+                this.setState(
+                  {
+                    modalIsVisible: true,
+                    isFirstLoadingModal: false,
+                  },
+                  () => {
+                    this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+                  },
+                )
               } else {
-                this.setState({ modalIsVisible: true })
+                this.setState({ modalIsVisible: true }, () => {
+                  this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+                })
               }
             }}
           >
@@ -450,12 +457,20 @@ export default class MyLocalData extends Component {
               onPress={() => {
                 this.itemInfo = info
                 if (this.state.isFirstLoadingModal) {
-                  this.setState({
-                    modalIsVisible: true,
-                    isFirstLoadingModal: false,
-                  })
+                  this.setState(
+                    {
+                      modalIsVisible: true,
+                      isFirstLoadingModal: false,
+                    },
+                    () => {
+                      this.MyDataPopModal &&
+                        this.MyDataPopModal.setVisible(true)
+                    },
+                  )
                 } else {
-                  this.setState({ modalIsVisible: true })
+                  this.setState({ modalIsVisible: true }, () => {
+                    this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+                  })
                 }
               }}
             >
@@ -485,7 +500,9 @@ export default class MyLocalData extends Component {
     return 'id:' + index
   }
   _closeModal = () => {
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.MyDataPopModal && this.MyDataPopModal.setVisible(false)
+    })
   }
 
   _onUploadData = async type => {
@@ -916,10 +933,10 @@ export default class MyLocalData extends Component {
       }
       return (
         <MyDataPopupModal
+          ref={ref => (this.MyDataPopModal = ref)}
           // onDeleteData={this._onDeleteData}
           data={data}
           onCloseModal={this._closeModal}
-          modalVisible={this.state.modalIsVisible}
         />
       )
     }

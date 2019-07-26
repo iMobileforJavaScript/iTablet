@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react'
-import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
+import { TouchableOpacity, Text, View } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import PopView from '../../../../components/PopView/PopView'
 const screenWidth = '100%'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
     language: string,
-    modalVisible: boolean,
-    onCloseModal: () => {},
     onDeleteData: () => {},
     onImportWorkspace: () => {},
     onPublishService: () => {},
@@ -17,22 +16,9 @@ export default class LocalDataPopupModal extends PureComponent {
     data: Object,
   }
 
-  defaultProps: {
-    modalVisible: false,
-  }
-
   constructor(props) {
     super(props)
     this.fontSize = size.fontSize.fontSizeXl
-  }
-
-  _onRequestClose = () => {
-    if (Platform.OS === 'android') {
-      this._onCloseModal()
-    }
-  }
-  _onCloseModal = () => {
-    this.props.onCloseModal()
   }
 
   _renderSeparatorLine = () => {
@@ -100,6 +86,9 @@ export default class LocalDataPopupModal extends PureComponent {
     )
   }
 
+  setVisible = visible => {
+    this.PopView && this.PopView.setVisible(visible)
+  }
   _publishServiceButton = () => {
     let title = getLanguage(global.language).Profile.PUBLISH_SERVICE
     //'发布服务'
@@ -205,45 +194,58 @@ export default class LocalDataPopupModal extends PureComponent {
 
   render() {
     // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
-    let animationType = 'fade'
+    //let animationType = 'fade'
     return (
-      <Modal
-        animationType={animationType}
-        transparent={true}
-        onRequestClose={this._onRequestClose}
-        supportedOrientations={[
-          'portrait',
-          'portrait-upside-down',
-          'landscape',
-          'landscape-left',
-          'landscape-right',
-        ]}
-        style={{ flex: 1 }}
-        visible={this.props.modalVisible}
-      >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            this._onCloseModal()
+      <PopView ref={ref => (this.PopView = ref)}>
+        <View
+          style={{
+            width: '100%',
+            backgroundColor: color.contentColorWhite,
           }}
-          style={{ flex: 1, backgroundColor: color.modalBgColor }}
         >
-          <View
-            style={{
-              flex: 1,
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          >
-            {this.props.onImportWorkspace && this._onImportWorkspace()}
-            {this._publishServiceButton()}
-            {this._onDeleteButton()}
-            {this._dataVisibleButton()}
-          </View>
-        </TouchableOpacity>
-      </Modal>
+          {this.props.onImportWorkspace && this._onImportWorkspace()}
+          {this._publishServiceButton()}
+          {this._onDeleteButton()}
+          {this._dataVisibleButton()}
+        </View>
+      </PopView>
+      // <Modal
+      //   animationType={animationType}
+      //   transparent={true}
+      //   onRequestClose={this._onRequestClose}
+      //   supportedOrientations={[
+      //     'portrait',
+      //     'portrait-upside-down',
+      //     'landscape',
+      //     'landscape-left',
+      //     'landscape-right',
+      //   ]}
+      //   style={{ flex: 1 }}
+      //   visible={this.props.modalVisible}
+      // >
+      //   <TouchableOpacity
+      //     activeOpacity={1}
+      //     onPress={() => {
+      //       this._onCloseModal()
+      //     }}
+      //     style={{ flex: 1, backgroundColor: color.modalBgColor }}
+      //   >
+      //     <View
+      //       style={{
+      //         flex: 1,
+      //         position: 'absolute',
+      //         bottom: 0,
+      //         left: 0,
+      //         right: 0,
+      //       }}
+      //     >
+      //       {this.props.onImportWorkspace && this._onImportWorkspace()}
+      //       {this._publishServiceButton()}
+      //       {this._onDeleteButton()}
+      //       {this._dataVisibleButton()}
+      //     </View>
+      //   </TouchableOpacity>
+      // </Modal>
     )
   }
 }

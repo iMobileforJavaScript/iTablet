@@ -88,7 +88,7 @@ export default class MyDataPopupModal extends PureComponent {
         // {'取消'}
         key={'取消'}
         onPress={() => {
-          this._onCloseModal()
+          this.setVisible(false)
         }}
         activeOpacity={0.5}
       />
@@ -104,6 +104,7 @@ export default class MyDataPopupModal extends PureComponent {
         key={item.title}
         onPress={() => {
           item.action && item.action()
+          this.setVisible(false)
         }}
         activeOpacity={0.5}
       />
