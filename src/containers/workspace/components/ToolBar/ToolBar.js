@@ -119,7 +119,7 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
-    mapLegend?: Boolean, //图例显隐
+    mapLegend?: Object, //图例参数对象
     setMapLegend?: () => {}, //设置图例显隐的redux状态
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
@@ -3621,7 +3621,8 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = this.props.mapLegend
+    let legendData = this.props.mapLegend
+    let type = legendData.isShow
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3630,7 +3631,15 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    this.props.setMapLegend(type === ConstToolType.LEGEND)
+    legendData.isShow = type === ConstToolType.LEGEND
+    GLOBAL.legend.setState(
+      {
+        ...legendData,
+      },
+      () => {
+        this.props.setMapLegend && this.props.setMapLegend(legendData)
+      },
+    )
   }
 
   showBox = (autoFullScreen = false) => {

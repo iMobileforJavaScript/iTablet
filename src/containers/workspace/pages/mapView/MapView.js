@@ -73,7 +73,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
-    mapLegend: PropTypes.bool,
+    mapLegend: PropTypes.object,
     mapScaleView: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
@@ -1642,8 +1642,10 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && GLOBAL.Type === constants.MAP_THEME && (
+        {this.props.mapLegend.isShow && GLOBAL.Type === constants.MAP_THEME && (
           <RNLegendView
+            setMapLegend={this.props.setMapLegend}
+            legendSettings={this.props.mapLegend}
             device={this.props.device}
             language={this.props.language}
             ref={ref => (GLOBAL.legend = ref)}

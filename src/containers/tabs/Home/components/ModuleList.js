@@ -14,6 +14,17 @@ import { connect } from 'react-redux'
 import { getLanguage } from '../../../../language'
 import ModuleItem from './ModuleItem'
 
+let isWaiting = false // 防止重复点击
+
+async function composeWaiting(action) {
+  if (isWaiting) return
+  isWaiting = true
+  if (action && typeof action === 'function') {
+    await action()
+  }
+  isWaiting = false
+}
+
 class ModuleList extends Component {
   props: {
     language: string,
@@ -34,7 +45,6 @@ class ModuleList extends Component {
       isShowProgressView: false,
     }
     this.moduleItems = []
-    this.itemAction = this.itemAction.bind(this)
   }
 
   async componentDidMount() {
@@ -163,7 +173,8 @@ class ModuleList extends Component {
       tmpCurrentUser: tmpCurrentUser,
     }
   }
-  async itemAction(language, { item, index }) {
+
+  itemAction = async (language, { item, index }) => {
     try {
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
@@ -206,11 +217,7 @@ class ModuleList extends Component {
         ) {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
-        if (latestMap) {
-          item.action && item.action(tmpCurrentUser, latestMap)
-        } else {
-          item.action && item.action(tmpCurrentUser)
-        }
+        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
       } else {
         let filePath2
         let filePath = arrFile[0].filePath
@@ -246,7 +253,7 @@ class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-        item.action && item.action(tmpCurrentUser, latestMap)
+        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
       }
     } catch (e) {
       this.moduleItems[index].setNewState({

@@ -48,6 +48,7 @@ import JPushService from './JPushService'
 import { Buffer } from 'buffer'
 import SMessageServiceHTTP from './SMessageServiceHTTP'
 const SMessageServiceiOS = NativeModules.SMessageService
+const appUtilsModule = NativeModules.AppUtils
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 // let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -87,6 +88,7 @@ export default class Friend extends Component {
     }
     AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
+    this.stateChangeCount = 0
     this._receiveMessage = this._receiveMessage.bind(this)
     global.getFriend = this._getFriend
   }
@@ -124,6 +126,8 @@ export default class Friend extends Component {
 
   componentWillUnmount() {
     this.removeFileListener()
+    AppState.removeEventListener('change', this.handleStateChange)
+    NetInfo.removeEventListener('connectionChange', this.handleNetworkState)
   }
   // eslint-disable-next-line
   shouldComponentUpdate(prevProps, prevState) {
@@ -139,16 +143,30 @@ export default class Friend extends Component {
     return false
   }
 
-  handleStateChange = appState => {
+  handleStateChange = async appState => {
     if (
       this.props.user.currentUser &&
       this.props.user.currentUser.userType &&
       this.props.user.currentUser.userType !== UserType.PROBATION_USER
     ) {
-      if (appState === 'active') {
-        this.restartService()
-      } else if (appState === 'background') {
-        this.disconnectService()
+      if (appState === 'inactive') {
+        return
+      }
+      let count = this.stateChangeCount + 1
+      this.stateChangeCount = count
+      await appUtilsModule.pause(2)
+      if (this.stateChangeCount !== count) {
+        return
+      } else if (this.prevAppstate === appState) {
+        return
+      } else {
+        this.prevAppstate = appState
+        this.stateChangeCount = 0
+        if (appState === 'active') {
+          this.restartService()
+        } else if (appState === 'background') {
+          this.disconnectService()
+        }
       }
     }
   }

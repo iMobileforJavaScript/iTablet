@@ -141,7 +141,8 @@ public class MainActivity extends ReactActivity {
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.KILL_BACKGROUND_PROCESSES)
+                        Manifest.permission.KILL_BACKGROUND_PROCESSES,
+                        Manifest.permission.CAMERA)
                 .subscribe(new Consumer<Permission>() {
                     @Override
                     public void accept(Permission permission) throws Exception {

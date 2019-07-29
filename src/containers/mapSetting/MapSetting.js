@@ -30,7 +30,7 @@ export default class MapSetting extends Component {
     closeMap: () => {},
     mapSetting: any,
     device: Object,
-    mapLegend: boolean,
+    mapLegend: Object,
     setMapLegend: () => {},
   }
 
@@ -182,7 +182,14 @@ export default class MapSetting extends Component {
     if (
       title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
     ) {
-      this.props.setMapLegend(true)
+      let mapLegend = this.props.mapLegend
+      this.props.setMapLegend({
+        isShow: true,
+        backgroundColor: mapLegend.backgroundColor,
+        column: mapLegend.column,
+        widthPercent: mapLegend.widthPercent,
+        heightPercent: mapLegend.heightPercent,
+      })
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
           containerType: 'colortable',
