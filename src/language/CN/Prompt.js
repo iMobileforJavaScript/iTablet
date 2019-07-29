@@ -41,6 +41,7 @@ const Prompt = {
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
   SWITCHING_PLOT_LIB: '正在切换标绘库',
   NON_SELECTED_OBJ: '没有选择对象',
+  CHANGE_BASE_MAP: '当前底图为空，请先切换底图',
 
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',

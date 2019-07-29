@@ -272,22 +272,21 @@ export default class LayerManager_item extends React.Component {
     Toast.show('待做')
   }
 
-  _visible_change = () => {
-    this.setState(oldstate => {
-      let oldVisibe = oldstate.visible
-      ;(async function() {
-        this.props.setLayerVisible(this.props.data, !oldVisibe)
-      }.bind(this)())
-
-      let newState = {}
-      // if (this.state.data.groupName) {
-      let data = JSON.parse(JSON.stringify(this.state.data))
-      data.isVisible = !oldVisibe
-      newState.data = data
-      // }
-      newState.visible = !oldVisibe
-      return newState
-    })
+  _visible_change = async () => {
+    let oldVisibe = this.state.visible
+    let rel = await this.props.setLayerVisible(this.props.data, !oldVisibe)
+    if (rel) {
+      this.setState(() => {
+        let newState = {}
+        // if (this.state.data.groupName) {
+        let data = JSON.parse(JSON.stringify(this.state.data))
+        data.isVisible = !oldVisibe
+        newState.data = data
+        newState.visible = !oldVisibe
+        // }
+        return newState
+      })
+    }
   }
 
   // _openTheme = () => {

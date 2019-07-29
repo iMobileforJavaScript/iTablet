@@ -41,6 +41,7 @@ const Prompt = {
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
   SWITCHING_PLOT_LIB: 'Switching',
   NON_SELECTED_OBJ: 'No object selected',
+  CHANGE_BASE_MAP: 'Empty base map, please change first',
 
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',

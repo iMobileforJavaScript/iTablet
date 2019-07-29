@@ -498,44 +498,49 @@ export default class MT_layerManager extends React.Component {
     let hasDeal = false
     let name = data.name
     let curData = this.state.data.concat()
-    for (let i = 0, l = layers.length; i < l; i++) {
-      if (name === layers[i].name) {
-        curData[1].data[i].isVisible = value
-        /*
-         *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
-         *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
-         */
-        //hasDeal = true
-        break
-      }
-    }
-    if (!hasDeal)
-      for (let j = 0, l = backMaps.length; j < l; j++) {
-        if (name === backMaps[j].name) {
-          curData[2].data[j].isVisible = value
-          hasDeal = true
+    let result = false
+    if (data.path !== '') {
+      for (let i = 0, l = layers.length; i < l; i++) {
+        if (name === layers[i].name) {
+          curData[1].data[i].isVisible = value
+          /*
+           *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+           *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+           */
+          //hasDeal = true
           break
         }
       }
-    if (!hasDeal)
-      for (let j = 0, l = Label.length; j < l; j++) {
-        if (name === Label[j].name) {
-          curData[0].data[j].isVisible = value
-          hasDeal = true
-          break
+      if (!hasDeal)
+        for (let j = 0, l = backMaps.length; j < l; j++) {
+          if (name === backMaps[j].name) {
+            curData[2].data[j].isVisible = value
+            hasDeal = true
+            break
+          }
         }
-      }
-    let result = await SMap.setLayerVisible(data.path, value)
-    this.props.getLayers()
+      if (!hasDeal)
+        for (let j = 0, l = Label.length; j < l; j++) {
+          if (name === Label[j].name) {
+            curData[0].data[j].isVisible = value
+            hasDeal = true
+            break
+          }
+        }
+      result = await SMap.setLayerVisible(data.path, value)
 
-    if (value) {
-      // 显示多媒体callouts
-      SMediaCollector.showMedia(data.name)
+      this.props.getLayers()
+
+      if (value) {
+        // 显示多媒体callouts
+        SMediaCollector.showMedia(data.name)
+      } else {
+        // 隐藏多媒体callouts
+        SMediaCollector.hideMedia(data.name)
+      }
     } else {
-      // 隐藏多媒体callouts
-      SMediaCollector.hideMedia(data.name)
+      Toast.show(getLanguage(this.props.language).Prompt.CHANGE_BASE_MAP)
     }
-
     return result
   }
 
