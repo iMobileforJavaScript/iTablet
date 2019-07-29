@@ -4,7 +4,7 @@
  * https://github.com/AsortKeven
  */
 import { Platform, StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
   titleImage: {
@@ -35,6 +35,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     width: scaleSize(110),
     height: scaleSize(40),
+    fontSize: setSpText(16),
     backgroundColor: color.white,
     ...Platform.select({
       android: {
@@ -59,10 +60,15 @@ export default StyleSheet.create({
   rightText: {
     textAlign: 'right',
     height: scaleSize(40),
+    fontSize: setSpText(16),
     ...Platform.select({
       android: {
         padding: 0,
       },
     }),
+  },
+  itemTitle: {
+    fontSize: setSpText(18),
+    flex: 1,
   },
 })
