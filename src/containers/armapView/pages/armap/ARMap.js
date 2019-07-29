@@ -6,8 +6,10 @@ import styles from './styles'
 import analystData from './ARMapData'
 import { getLanguage } from '../../../../language'
 // eslint-disable-next-line
-import { SMDynamicArrowView } from 'imobile_for_reactnative'
-import { RNCamera } from 'react-native-camera'
+// import { SMDynamicArrowView } from 'imobile_for_reactnative'
+import { SMAIDetectView } from 'imobile_for_reactnative'
+import { SAIDetectView } from 'imobile_for_reactnative'
+// import { RNCamera } from 'react-native-camera'
 import { getPublicAssets } from '../../../../assets'
 import { scaleSize } from '../../../../utils'
 
@@ -28,6 +30,10 @@ export default class ARMap extends Component {
     }
   }
 
+  componentDidMount() {
+    SAIDetectView.startDetect()
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps.language !== this.props.language) {
       this.setState({
@@ -38,6 +44,10 @@ export default class ARMap extends Component {
 
   goToMapView = () => {
     this.props.navigation && this.props.navigation.navigate('ARMap')
+  }
+
+  onPressLearnMore = () => {
+    SAIDetectView.startDetect()
   }
 
   renderToolBar = () => {
@@ -78,7 +88,7 @@ export default class ARMap extends Component {
                   styles.headerBtn,
                   { marginRight: scaleSize(15) },
                 ]}
-                onPress={this.showUndoView}
+                onPress={this.onPressLearnMore}
               />,
             ]
             : null,
@@ -86,7 +96,7 @@ export default class ARMap extends Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        <RNCamera
+        {/* <RNCamera
           style={styles.preview}
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.on}
@@ -107,8 +117,9 @@ export default class ARMap extends Component {
             // recordAudioPermissionStatus
             if (status === 'READY') this.camera = camera
           }}
-        </RNCamera>
-        {<SMDynamicArrowView ref={ref => (GLOBAL.DynamicArrowView = ref)} />}
+        </RNCamera>*/}
+        {/* {<SMDynamicArrowView ref={ref => (GLOBAL.DynamicArrowView = ref)} />}*/}
+        {<SMAIDetectView ref={ref => (GLOBAL.SMAIDetectView = ref)} />}
         {/*{!this.isExample && this.renderFunctionToolbar()}*/}
       </Container>
     )
