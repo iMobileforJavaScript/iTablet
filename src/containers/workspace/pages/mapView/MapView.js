@@ -976,6 +976,7 @@ export default class MapView extends React.Component {
           )
           await this.props.closeMap()
           await this._removeGeometrySelectedListener()
+          GLOBAL.Type = null
           GLOBAL.clearMapData()
           this.setLoading(false)
           NavigationService.goBack()
