@@ -4834,6 +4834,7 @@ export default class ToolBar extends React.PureComponent {
         //ConstInfo.MAP_CHANGING
       )
       if (this.props.map.currentMap.name) {
+        await SMap.removeLegendListener()
         await this.props.closeMap()
       }
       // 移除地图上所有callout
@@ -4849,7 +4850,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
-          SMap.addLegendListener({
+          await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
         }
