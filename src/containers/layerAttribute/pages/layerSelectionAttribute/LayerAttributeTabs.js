@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Container, MTBtn, PopModal } from '../../../../components'
+import { Container, MTBtn, PopView } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -685,12 +685,12 @@ export default class LayerAttributeTabs extends React.Component {
             onPress={() => this.showDrawer(false)}
           />
         )}
-        <PopModal
+        <PopView
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}
         >
           {this.renderEditControllerView()}
-        </PopModal>
+        </PopView>
         <DrawerBar
           ref={ref => (this.drawer = ref)}
           data={this.props.selection}

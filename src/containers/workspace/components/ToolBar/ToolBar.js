@@ -49,7 +49,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated, Platform } from 'react-native'
+import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
   SScene,
@@ -119,7 +119,7 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
-    mapLegend?: Boolean, //图例显隐
+    mapLegend?: Object, //图例参数对象
     setMapLegend?: () => {}, //设置图例显隐的redux状态
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
@@ -677,7 +677,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform.OS === 'android' && {
+          {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -2461,8 +2461,8 @@ export default class ToolBar extends React.PureComponent {
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.NEWTHEME_HEIGHT[2]
-              : ConstToolType.NEWTHEME_HEIGHT[2]
+              ? ConstToolType.TOOLBAR_HEIGHT[5]
+              : ConstToolType.TOOLBAR_HEIGHT[5]
           this.showToolbar()
           this.updateOverlayerView()
         },
@@ -3621,7 +3621,8 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = this.props.mapLegend
+    let legendData = this.props.mapLegend
+    let type = legendData.isShow
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3630,7 +3631,15 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    this.props.setMapLegend(type === ConstToolType.LEGEND)
+    legendData.isShow = type === ConstToolType.LEGEND
+    GLOBAL.legend.setState(
+      {
+        ...legendData,
+      },
+      () => {
+        this.props.setMapLegend && this.props.setMapLegend(legendData)
+      },
+    )
   }
 
   showBox = (autoFullScreen = false) => {
@@ -4072,7 +4081,7 @@ export default class ToolBar extends React.PureComponent {
               data: datalist,
               buttons: listSelectable
                 ? [
-                  ToolbarBtnType.THEME_CANCEL,
+                  //ToolbarBtnType.THEME_CANCEL,
                   ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ]
@@ -4220,6 +4229,7 @@ export default class ToolBar extends React.PureComponent {
                 title: alias,
                 image: require('../../../../assets/mapToolbar/list_type_udb.png'),
                 data: list,
+                allSelectType: true,
               },
             ]
             this.setState(
@@ -4227,8 +4237,8 @@ export default class ToolBar extends React.PureComponent {
                 themeDatasourceAlias: alias,
                 listSelectable: true, //单选框
                 buttons: [
-                  ToolbarBtnType.THEME_CANCEL,
-                  // ToolbarBtnType.THEME_ADD_BACK,
+                  //ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
                   ToolbarBtnType.THEME_COMMIT,
                 ],
                 data: dataList,
@@ -4241,11 +4251,9 @@ export default class ToolBar extends React.PureComponent {
                   let names = les[alias]
                   for (let j = 0, dataLen = data.length; j < dataLen; j++) {
                     let curDataSetName = data[j].datasetName
-                    if (JSON.stringify(names).indexOf(curDataSetName) >= 0) {
-                      for (let i = 0, l = names.length; i < l; i++) {
-                        if (curDataSetName in names[i]) {
-                          data[j].isSelected = !names[i][curDataSetName]
-                        }
+                    for (let i = 0, l = names.length; i < l; i++) {
+                      if (curDataSetName in names[i]) {
+                        data[j].isSelected = !names[i][curDataSetName]
                       }
                     }
                   }
@@ -4949,11 +4957,11 @@ export default class ToolBar extends React.PureComponent {
       let num
       Object.keys(rel).map(key => {
         switch (key) {
-          case 'x':
-          case 'y':
+          case 'X':
+          case 'Y':
             num = 6
             break
-          case 'z':
+          case 'Z':
             num = 1
             break
           case 'zRot':
@@ -4991,11 +4999,11 @@ export default class ToolBar extends React.PureComponent {
     let num
     Object.keys(rel).map(key => {
       switch (key) {
-        case 'x':
-        case 'y':
+        case 'X':
+        case 'Y':
           num = 6
           break
-        case 'z':
+        case 'Z':
           num = 1
           break
         case 'zRot':
@@ -5390,6 +5398,7 @@ export default class ToolBar extends React.PureComponent {
   }
   getClipData = type => {
     let clipData
+    let layerList = JSON.parse(JSON.stringify(this.props.layerList))
     switch (type) {
       case ConstToolType.MAP3D_BOX_CLIP:
         clipData = BoxClipData()
@@ -5401,7 +5410,7 @@ export default class ToolBar extends React.PureComponent {
         clipData = CrossClipData()
         break
     }
-    this.props.layerList.map(item => {
+    layerList.map(item => {
       let obj = item
       obj.title = item.name
       obj.iconType = 'Select'

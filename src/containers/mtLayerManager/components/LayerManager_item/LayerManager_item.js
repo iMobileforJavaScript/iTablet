@@ -69,7 +69,7 @@ export default class LayerManager_item extends React.Component {
 
   constructor(props) {
     super(props)
-    let data = this.props.data
+    let data = JSON.parse(JSON.stringify(this.props.data))
     let options = this.getOptions(data)
     let { showLevelOne, showLevelTwo, isVectorLayer } = this.getValidate(data)
     this.state = {
@@ -152,6 +152,7 @@ export default class LayerManager_item extends React.Component {
       let options = this.getOptions(data)
       let { showLevelOne, isVectorLayer } = this.getValidate(data)
       this.setState({
+        data,
         showLevelOne: !showLevelOne,
         isVectorLayer: isVectorLayer,
         options: options,
@@ -279,11 +280,11 @@ export default class LayerManager_item extends React.Component {
       }.bind(this)())
 
       let newState = {}
-      if (this.state.data.groupName) {
-        let data = JSON.parse(JSON.stringify(this.state.data))
-        data.isVisible = !oldVisibe
-        newState.data = data
-      }
+      // if (this.state.data.groupName) {
+      let data = JSON.parse(JSON.stringify(this.state.data))
+      data.isVisible = !oldVisibe
+      newState.data = data
+      // }
       newState.visible = !oldVisibe
       return newState
     })

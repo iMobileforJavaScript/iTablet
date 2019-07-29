@@ -133,7 +133,13 @@ const initialState = fromJS({
   settingData: [],
   mapSetting: [],
   language: 'CN',
-  mapLegend: false,
+  mapLegend: {
+    isShow: false,
+    backgroundColor: 'white',
+    column: 2,
+    widthPercent: 80,
+    heightPercent: 80,
+  },
   mapScaleView: true,
 })
 
@@ -204,7 +210,13 @@ export default handleActions(
       if (payload) {
         data = payload
       } else {
-        data = false
+        data = {
+          isShow: false,
+          backgroundColor: 'white',
+          column: 2,
+          widthPercent: 80,
+          heightPercent: 80,
+        }
       }
       return state.setIn(['mapLegend'], fromJS(data))
     },

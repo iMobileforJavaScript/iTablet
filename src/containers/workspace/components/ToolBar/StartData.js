@@ -11,7 +11,7 @@ import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 let _params = {}
-import { SMap, SScene } from 'imobile_for_reactnative'
+import { SMap, SScene, SMediaCollector } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 function setParams(params) {
   _params = params
@@ -253,14 +253,15 @@ function getStart(type, params) {
           action: saveMapAs,
           image: require('../../../../assets/mapTools/icon_save_as_black.png'),
         },
-        {
-          key: constants.CHANGE_PLOT_LIB,
-          title: getLanguage(global.language).Map_Main_Menu.PLOTTING_LIB_CHANGE,
-          //constants.SAVE_AS,
-          size: 'large',
-          action: changePlotLib,
-          image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
-        },
+        //切换标绘库修改到符号显示的最后一列
+        // {
+        //   key: constants.CHANGE_PLOT_LIB,
+        //   title: getLanguage(global.language).Map_Main_Menu.PLOTTING_LIB_CHANGE,
+        //   //constants.SAVE_AS,
+        //   size: 'large',
+        //   action: changePlotLib,
+        //   image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_THEME_START:
@@ -368,50 +369,50 @@ function openWorkspace(cb) {
   })
 }
 
-/** 切换标绘库 **/
-function changePlotLib() {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-  ;(async function() {
-    let data = [],
-      path =
-        (await FileTools.appendingHomeDirectory(
-          _params.user && _params.user.currentUser.userName
-            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
-            : ConstPath.CustomerPath,
-        )) + ConstPath.RelativePath.Plotting
+// /** 切换标绘库 **/
+// function changePlotLib() {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
+//   ;(async function() {
+//     let data = [],
+//       path =
+//         (await FileTools.appendingHomeDirectory(
+//           _params.user && _params.user.currentUser.userName
+//             ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+//             : ConstPath.CustomerPath,
+//         )) + ConstPath.RelativePath.Plotting
 
-    let userFileList
+//     let userFileList
 
-    userFileList = await FileTools.getPathList(path)
+//     userFileList = await FileTools.getPathList(path)
 
-    if (userFileList && userFileList.length > 0) {
-      let userList = []
-      userFileList.forEach(item => {
-        let name = item.name
-        item.title = name
-        item.name = name
-        item.path = item.path
-        item.image = require('../../../../assets/mapToolbar/list_type_template_black.png')
-        userList.push(item)
-      })
-    }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.PLOTTING_LIB,
-      //'我的地图',
-      image: require('../../../../assets/mapToolbar/list_type_maps.png'),
-      data: userFileList || [],
-    })
-    _params.setToolbarVisible(true, ConstToolType.PLOT_LIB_CHANGE, {
-      containerType: 'list',
-      height:
-        _params.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[4]
-          : ConstToolType.HEIGHT[3],
-      data,
-    })
-  })()
-}
+//     if (userFileList && userFileList.length > 0) {
+//       let userList = []
+//       userFileList.forEach(item => {
+//         let name = item.name
+//         item.title = name
+//         item.name = name
+//         item.path = item.path
+//         item.image = require('../../../../assets/mapToolbar/list_type_template_black.png')
+//         userList.push(item)
+//       })
+//     }
+//     data.push({
+//       title: getLanguage(global.language).Map_Main_Menu.PLOTTING_LIB,
+//       //'我的地图',
+//       image: require('../../../../assets/mapToolbar/list_type_maps.png'),
+//       data: userFileList || [],
+//     })
+//     _params.setToolbarVisible(true, ConstToolType.PLOT_LIB_CHANGE, {
+//       containerType: 'list',
+//       height:
+//         _params.device.orientation === 'LANDSCAPE'
+//           ? ConstToolType.THEME_HEIGHT[4]
+//           : ConstToolType.HEIGHT[3],
+//       data,
+//     })
+//   })()
+// }
 
 /** 打开地图 **/
 function openMap() {
@@ -764,6 +765,9 @@ function create() {
               getLanguage(global.language).Prompt.CREATING,
               // ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
             )
+
+          // 移除多媒体采集Callout
+          SMediaCollector.removeMedias()
           await _params.closeMap()
           let userPath =
             ConstPath.UserPath +
@@ -967,7 +971,7 @@ function saveMap() {
 
   (async function() {
     try {
-      if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      if (GLOBAL.Type === constants.MAP_3D) {
         GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
         _params.setToolbarVisible && _params.setToolbarVisible(false)
         return

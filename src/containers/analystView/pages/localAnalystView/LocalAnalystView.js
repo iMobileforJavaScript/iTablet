@@ -7,7 +7,7 @@ import { Toast, AnalystTools } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
-import TabNavigationService from '../../../TabNavigationService'
+// import TabNavigationService from '../../../TabNavigationService'
 import {
   SMap,
   SFacilityAnalyst,
@@ -127,26 +127,34 @@ export default class LocalAnalystView extends Component {
         if (res.result) {
           this.props.setAnalystParams({
             ...params2,
-          })
-          await AnalystTools.clear(this.type)
-          this.setLoading(false)
-          await SMap.setLayerFullView(res.layerInfo.path)
-          NavigationService.goBack()
-          // NavigationService.goBack('AnalystListEntry')
-          TabNavigationService.navigate('MapAnalystView', {
             backAction: () => {
               AnalystTools.clear(this.type)
               this.props.setAnalystParams(null)
-              TabNavigationService.navigate('AnalystTools')
-              // NavigationService.navigate('AnalystListEntry', {
-              //   ...params1,
-              // })
               NavigationService.navigate('LocalAnalystView', {
                 ...params2,
                 reloadData: false,
               })
             },
           })
+          await AnalystTools.clear(this.type)
+          this.setLoading(false)
+          await SMap.setLayerFullView(res.layerInfo.path)
+          NavigationService.goBack()
+          // NavigationService.goBack('AnalystListEntry')
+          // TabNavigationService.navigate('MapAnalystView', {
+          //   backAction: () => {
+          //     AnalystTools.clear(this.type)
+          //     this.props.setAnalystParams(null)
+          //     TabNavigationService.navigate('AnalystTools')
+          //     // NavigationService.navigate('AnalystListEntry', {
+          //     //   ...params1,
+          //     // })
+          //     NavigationService.navigate('LocalAnalystView', {
+          //       ...params2,
+          //       reloadData: false,
+          //     })
+          //   },
+          // })
         } else {
           this.setLoading(false)
           Toast.show(

@@ -3,6 +3,7 @@ import constants from '../../constants'
 import { ConstToolType } from '../../../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import { getLanguage } from '../../../../language/index'
+import { StyleUtils } from '../../../../utils'
 
 let _params = {}
 
@@ -171,7 +172,7 @@ function getCollectionData(libId, symbolCode, params) {
     key: constants.SUBMIT,
     title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
     //constants.SUBMIT,
-    action: () => collectionSubmit(),
+    action: () => collectionSubmit(libId, symbolCode),
     size: 'large',
     image: require('../../../../assets/mapTools/icon_submit_black.png'),
   })
@@ -188,6 +189,7 @@ function getCollectionData(libId, symbolCode, params) {
 /** 采集分类点击事件 **/
 async function showCollection(libId, symbolCode, type) {
   // await SMap.addCadLayer('PlotEdit')
+  StyleUtils.setDefaultMapControlStyle().then(() => {})
   await SMap.setPlotSymbol(libId, symbolCode)
   let { data, buttons } = getCollectionData(libId, symbolCode, _params)
   if (!_params.setToolbarVisible) return
@@ -217,9 +219,10 @@ async function showCollection(libId, symbolCode, type) {
   })
 }
 
-async function collectionSubmit() {
+async function collectionSubmit(libId, symbolCode) {
   await SMap.submit()
   await SMap.refreshMap()
+  SMap.setPlotSymbol(libId, symbolCode)
 }
 
 async function cancel(libId, symbolCode) {

@@ -18,7 +18,7 @@ import Setting from '../setting'
 import MapSetting from '../mapSetting'
 import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
-import { AnalystTools } from '../analystView/pages'
+// import { AnalystTools } from '../analystView/pages'
 import { ARMap } from '../armapView/pages'
 import TabNavigationService from '../TabNavigationService'
 
@@ -106,27 +106,27 @@ const CoworkTabs = createBottomTabNavigator(
   options,
 )
 
-const analystTabsOptions = Object.assign({}, options, {
-  initialRouteIndex: 1,
-  lazy: false,
-  backBehavior: 'none',
-})
-const MapAnalystTabs = compose(
-  createBottomTabNavigator(
-    {
-      MapAnalystView: {
-        screen: MapView,
-      },
-      AnalystTools: {
-        screen: AnalystTools,
-      },
-      LayerAnalystManager: {
-        screen: LayerManager,
-      },
-    },
-    analystTabsOptions,
-  ),
-)
+// const analystTabsOptions = Object.assign({}, options, {
+//   initialRouteIndex: 1,
+//   lazy: false,
+//   backBehavior: 'none',
+// })
+// const MapAnalystTabs = compose(
+//   createBottomTabNavigator(
+//     {
+//       MapAnalystView: {
+//         screen: MapView,
+//       },
+//       AnalystTools: {
+//         screen: AnalystTools,
+//       },
+//       LayerAnalystManager: {
+//         screen: LayerManager,
+//       },
+//     },
+//     analystTabsOptions,
+//   ),
+// )
 
 const Map3DTabs = createBottomTabNavigator(
   {
@@ -164,4 +164,4 @@ const MapARTabs = createBottomTabNavigator(
   options,
 )
 
-export { MapTabs, Map3DTabs, MapAnalystTabs, CoworkTabs, MapARTabs }
+export { MapTabs, Map3DTabs, CoworkTabs, MapARTabs, MapView }

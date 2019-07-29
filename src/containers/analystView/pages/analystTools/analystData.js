@@ -60,39 +60,54 @@ function getData(language) {
       image: getThemeAssets().analyst.analysis_traveling,
     },
     {
-      key: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
-      title: getLanguage(language).Analyst_Modules.BUFFER_ANALYST,
+      key: getLanguage(language).Analyst_Modules.BUFFER_ANALYST_SINGLE,
+      title: getLanguage(language).Analyst_Modules.BUFFER_ANALYST_SINGLE,
       action: (params = {}) => {
-        NavigationService.navigate('BufferAnalystView', params)
+        NavigationService.navigate('BufferAnalystView', {
+          ...params,
+          type: 'single',
+        })
       },
       size: 'large',
       image: getThemeAssets().analyst.analysis_buffer,
     },
     {
-      key: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
-      title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
+      key: getLanguage(language).Analyst_Modules.BUFFER_ANALYST_MULTIPLE,
+      title: getLanguage(language).Analyst_Modules.BUFFER_ANALYST_MULTIPLE,
+      action: (params = {}) => {
+        NavigationService.navigate('BufferAnalystView', {
+          ...params,
+          type: 'multiple',
+        })
+      },
+      size: 'large',
+      image: getThemeAssets().analyst.analysis_buffer,
+    },
+    {
+      key: getLanguage(language).Analyst_Modules.OVERLAY_ANALYSIS,
+      title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYSIS,
       size: 'large',
       action: (params = {}) => {
         NavigationService.navigate('AnalystListEntry', {
           ...params,
-          type: Analyst_Types.OVERLAY_ANALYST,
-          title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYST,
+          type: Analyst_Types.OVERLAY_ANALYSIS,
+          title: getLanguage(language).Analyst_Modules.OVERLAY_ANALYSIS,
         })
       },
       image: getThemeAssets().analyst.analysis_overlay,
     },
     {
-      key: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
-      title: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
+      key: getLanguage(language).Analyst_Modules.ONLINE_ANALYSIS,
+      title: getLanguage(language).Analyst_Modules.ONLINE_ANALYSIS,
       size: 'large',
       action: (params = {}) => {
         NavigationService.navigate('AnalystListEntry', {
           ...params,
-          type: Analyst_Types.ONLINE_ANALYST,
-          title: getLanguage(language).Analyst_Modules.ONLINE_ANALYST,
+          type: Analyst_Types.ONLINE_ANALYSIS,
+          title: getLanguage(language).Analyst_Modules.ONLINE_ANALYSIS,
         })
       },
-      image: getThemeAssets().analyst.analysis_overlay,
+      image: getThemeAssets().analyst.analysis_online,
     },
   ]
   return data

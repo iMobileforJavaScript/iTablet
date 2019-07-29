@@ -9,7 +9,7 @@ import {
   ListItem,
   TableList,
   MediaViewer,
-  PopModal,
+  PopView,
   ImagePicker,
 } from '../../components'
 import { Toast, checkType } from '../../utils'
@@ -39,7 +39,7 @@ export default class MediaEdit extends React.Component {
     let paths = []
 
     this.showInfo = {
-      mediaFileName: this.info.mediaFileName || '',
+      mediaName: this.info.mediaName || '',
       coordinate: this.info.coordinate || '',
       modifiedDate: this.info.modifiedDate || '',
       description: this.info.description || '',
@@ -232,7 +232,7 @@ export default class MediaEdit extends React.Component {
             let imgPath = itemInfo.uri
             if (
               Platform.OS === 'android' &&
-              imgPath.toLowerCase().indexOf('contents://') !== 0
+              imgPath.toLowerCase().indexOf('content://') !== 0
             ) {
               imgPath = 'file://' + imgPath
             }
@@ -275,7 +275,7 @@ export default class MediaEdit extends React.Component {
 
   renderPopView = () => {
     return (
-      <PopModal ref={ref => (this.popModal = ref)}>
+      <PopView ref={ref => (this.popModal = ref)}>
         <TouchableOpacity
           style={[styles.popBtn, { width: '100%' }]}
           onPress={() => {
@@ -303,7 +303,7 @@ export default class MediaEdit extends React.Component {
             {getLanguage(this.props.language).Map_Tools.FROM_ALBUM}
           </Text>
         </TouchableOpacity>
-      </PopModal>
+      </PopView>
     )
   }
 
@@ -342,15 +342,15 @@ export default class MediaEdit extends React.Component {
         <ScrollView style={{ flex: 1 }}>
           {this.renderItem({
             title: getLanguage(this.props.language).Map_Label.NAME,
-            value: this.state.mediaFileName,
+            value: this.state.mediaName,
             type: 'arrow',
             action: () => {
               NavigationService.navigate('InputPage', {
-                value: this.state.mediaFileName,
+                value: this.state.mediaName,
                 headerTitle: getLanguage(global.language).Map_Label.NAME,
                 cb: async value => {
                   this.setState({
-                    mediaFileName: value,
+                    mediaName: value,
                   })
                   NavigationService.goBack()
                 },

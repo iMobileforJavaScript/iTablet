@@ -64,6 +64,7 @@ const mapStateToProps = state => ({
   mapLegend: state.setting.toJS().mapLegend,
   mapScaleView: state.setting.toJS().mapScaleView,
   analyst: state.analyst.toJS(),
+  downloads: state.down.toJS().downloads,
 })
 
 const mapDispatchToProps = {

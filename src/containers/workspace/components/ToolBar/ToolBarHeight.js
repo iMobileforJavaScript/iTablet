@@ -59,10 +59,10 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_TOOL:
       height = ConstToolType.HEIGHT[2]
       if (orientation === 'PORTRAIT') {
-        // height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        // height = ConstToolType.THEME_HEIGHT[0]
+        height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break
@@ -288,7 +288,7 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP3D_CLIP_SHOW:
-      height = ConstToolType.NEWTHEME_HEIGHT[2]
+      height = ConstToolType.TOOLBAR_HEIGHT[5]
       break
     case ConstToolType.MAP3D_CLIP_HIDDEN:
       height = ConstToolType.HEIGHT[5]
@@ -302,6 +302,14 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.HEIGHT[0]
       }
       column = 4
+      break
+    case ConstToolType.MAP_ANALYSIS:
+      if (orientation === 'PORTRAIT') {
+        column = 4
+      } else {
+        column = 5
+      }
+      height = ConstToolType.HEIGHT[2]
       break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:

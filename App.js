@@ -22,6 +22,7 @@ import {
 } from './src/models/template'
 import { Dialog, Loading } from './src/components'
 import { setMapSetting } from './src/models/setting'
+import { setAnalystParams } from './src/models/analyst'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
@@ -40,6 +41,9 @@ import UserType from './src/constants/UserType'
 import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
+import FetchUtils from './src/utils/FetchUtils'
+import RNFS from 'react-native-fs'
+
 
 const {persistor, store} = ConfigStore()
 
@@ -119,6 +123,7 @@ class AppRoot extends Component {
     saveMap: PropTypes.func,
     setCurrentAttribute: PropTypes.func,
     setAttributes: PropTypes.func,
+    setAnalystParams: PropTypes.func,
   }
 
   constructor (props) {
@@ -224,18 +229,19 @@ class AppRoot extends Component {
       }
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // path = await FileTools.appendingHomeDirectory(customerPath)
-      this.props.openWorkspace({server: path})
       await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
+      this.props.openWorkspace({server: path})
     }).bind(this)()
 
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
       this.props.setSelection(null) // 清空地图选中目标中的数据
       this.props.setMapSetting(null) // 清空地图设置中的数据
+      this.props.setAnalystParams(null) // 清空分析中的数据
       this.props.setCollectionInfo() // 清空Collection中的数据
       this.props.setCurrentTemplateInfo() // 清空当前模板
       this.props.setTemplate() // 清空模板
@@ -437,6 +443,7 @@ class AppRoot extends Component {
     if (this.props.map.currentMap.Template) {
       addition.Template = this.props.map.currentMap.Template
     }
+
     await this.saveMapName(mapName, '', addition, this.closeMapHandler)
   }
 
@@ -498,7 +505,7 @@ class AppRoot extends Component {
     }
   }
 
-  renderExitDialogChildren = () => {
+  renderLicenseDialogChildren = () => {
     return (
       <View style={styles.dialogHeaderView}>
         <Image
@@ -517,17 +524,40 @@ class AppRoot extends Component {
     return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      confirmAction={() => {
+      confirmAction={async () => {
         this.exit.setDialogVisible(false)
-        NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
+        let fileCachePath = await FileTools.appendingHomeDirectory('/iTablet/license/Trial_License.slm')
+        let bRes = await RNFS.exists(fileCachePath)
+        if(bRes){
+          await RNFS.unlink(fileCachePath)
+        }
+        let dataUrl = await FetchUtils.getFindUserDataUrl(
+          'xiezhiyan123',
+          'Trial_License',
+          '.geojson'
+        )
+        let downloadOptions = {
+          fromUrl: dataUrl,
+          toFile: fileCachePath,
+          background: true,
+          fileName: 'Trial_License.slm',
+          progressDivider: 1,
+        }
+        let res = await RNFS.downloadFile(downloadOptions)
+        if(res){
+          Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+        }else{
+          Toast.show(global.language==='CN'?"许可申请失败":'License application failed')
+        }
+        // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
       }}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
-      confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+      confirmBtnTitle={global.language==='CN' ? '试用' : 'The trial'}
       cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
-      {this.renderExitDialogChildren()}
+      {this.renderLicenseDialogChildren()}
     </Dialog>
     )
   }
@@ -637,6 +667,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setCurrentTemplateInfo,
   setTemplate,
   setMapSetting,
+  setAnalystParams,
   saveMap,
 })(AppRoot)
 

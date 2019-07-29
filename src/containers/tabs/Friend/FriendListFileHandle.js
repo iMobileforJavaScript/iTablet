@@ -178,6 +178,9 @@ export default class FriendListFileHandle {
       let value = await RNFS.readFile(friendListFile)
       if (isJSON(value) === true) {
         FriendListFileHandle.friends = JSON.parse(value)
+        if (FriendListFileHandle.refreshCallback) {
+          FriendListFileHandle.refreshCallback(true)
+        }
       }
     }
 
@@ -197,15 +200,15 @@ export default class FriendListFileHandle {
             ) {
               FriendListFileHandle.friends = onlineVersion
               await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
+              if (FriendListFileHandle.refreshCallback) {
+                FriendListFileHandle.refreshCallback(true)
+              }
             } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
               await FriendListFileHandle.upload()
             }
             await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
           } else if (FriendListFileHandle.friends !== undefined) {
             await FriendListFileHandle.upload()
-          }
-          if (FriendListFileHandle.refreshCallback) {
-            FriendListFileHandle.refreshCallback(true)
           }
         },
       },
@@ -277,6 +280,24 @@ export default class FriendListFileHandle {
     }
   }
 
+  //管理关系
+  static modifyIsFriend(id, isFriend) {
+    for (let key in FriendListFileHandle.friends.userInfo) {
+      let friend = FriendListFileHandle.friends.userInfo[key]
+      if (id === friend.id) {
+        friend.info.isFriend = isFriend
+
+        FriendListFileHandle.friends['rev'] += 1
+        let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+        FriendListFileHandle.saveHelper(
+          friendsStr,
+          FriendListFileHandle.refreshMessageCallback,
+        )
+        break
+      }
+    }
+  }
+
   static modifyFriendList(id, name) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
@@ -332,11 +353,11 @@ export default class FriendListFileHandle {
 
   //判断是否是好友，以后可能会改变判断逻辑
   static isFriend(id) {
-    let isFriend = false
-    if (this.findFromFriendList(id)) {
-      isFriend = true
+    let isFriend = FriendListFileHandle.getIsFriend(id)
+    if (isFriend === 1) {
+      return true
     }
-    return isFriend
+    return false
   }
 
   static getFriend(id) {
@@ -344,6 +365,17 @@ export default class FriendListFileHandle {
       for (let key in FriendListFileHandle.friends.userInfo) {
         if (FriendListFileHandle.friends.userInfo[key].id === id) {
           return FriendListFileHandle.friends.userInfo[key]
+        }
+      }
+    }
+    return undefined
+  }
+
+  static getIsFriend(id) {
+    if (FriendListFileHandle.friends) {
+      for (let key in FriendListFileHandle.friends.userInfo) {
+        if (FriendListFileHandle.friends.userInfo[key].id === id) {
+          return FriendListFileHandle.friends.userInfo[key].info.isFriend
         }
       }
     }

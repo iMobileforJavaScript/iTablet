@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, View, InteractionManager } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import NavigationService from '../../../NavigationService'
-import TabNavigationService from '../../../TabNavigationService'
+// import TabNavigationService from '../../../TabNavigationService'
 import { getLanguage } from '../../../../language'
 import { Toast } from '../../../../utils'
 import { AnalystItem, PopModalList } from '../../components'
@@ -172,7 +172,7 @@ export default class OnlineAnalystView extends Component {
       layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
       this.container.setLoading(false)
       NavigationService.goBack('AnalystListEntry')
-      TabNavigationService.navigate('MapAnalystView')
+      // TabNavigationService.navigate('MapAnalystView')
       if (this.cb && typeof this.cb === 'function') {
         this.cb()
       }

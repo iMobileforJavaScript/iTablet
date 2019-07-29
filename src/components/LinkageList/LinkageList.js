@@ -23,9 +23,7 @@ export default class LinkageList extends React.Component {
     this.state = {
       selected: 0,
       // data: props.data || [],
-      rightData:
-        (props.data && props.data > 0 && props.data[0] && props.data[0].data) ||
-        [],
+      rightData: (props.data && props.data[0] && props.data[0].data) || [],
     }
     this.styles = this.props.styles
       ? Object.assign(styles, this.props.styles)

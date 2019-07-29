@@ -66,9 +66,10 @@ import UpLoadList from './uploadList'
 import {
   MapTabs,
   Map3DTabs,
-  MapAnalystTabs,
+  // MapAnalystTabs,
   CoworkTabs,
   MapARTabs,
+  MapView,
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
@@ -116,18 +117,24 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: false,
       },
     },
+    MapViewSingle: {
+      screen: MapView,
+      navigationOptions: {
+        header: null,
+      },
+    },
     CoworkTabs: {
       screen: CoworkTabs,
       navigationOptions: {
         header: null,
       },
     },
-    MapAnalystTabs: {
-      screen: MapAnalystTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    // MapAnalystTabs: {
+    //   screen: MapAnalystTabs,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
     MapARTabs: {
       screen: MapARTabs,
       navigationOptions: {

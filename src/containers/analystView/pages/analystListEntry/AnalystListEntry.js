@@ -22,7 +22,7 @@ export default class AnalystListEntry extends Component {
     super(props)
     const { params } = props.navigation.state
     this.cb = params && params.cb
-    this.type = (params && params.type) || Analyst_Types.ONLINE_ANALYST
+    this.type = (params && params.type) || Analyst_Types.ONLINE_ANALYSIS
     // TODO 根据类型获取数据列表
     this.state = {
       title: (params && params.title) || '',
@@ -62,10 +62,10 @@ export default class AnalystListEntry extends Component {
             Analyst_Types.FIND_TSP_PATH,
           ) || []
         break
-      case Analyst_Types.ONLINE_ANALYST:
+      case Analyst_Types.ONLINE_ANALYSIS:
         data = AnalystEntryData.getOnlineAnalystData(this.props.language) || []
         break
-      case Analyst_Types.OVERLAY_ANALYST:
+      case Analyst_Types.OVERLAY_ANALYSIS:
       default:
         data = AnalystEntryData.getOverlayAnalystData(this.props.language) || []
         break

@@ -463,6 +463,20 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showAnalysis = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
+      toolRef.setVisible(true, GLOBAL.currentToolbarType, {
+        isFullScreen: true,
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        height: ConstToolType.HEIGHT[2],
+        tableType: 'normal',
+      })
+    }
+  }
+
   showMore = async type => {
     this.hideThemeMenuDialog()
     const toolRef = this.props.getToolRef()
@@ -519,10 +533,10 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        height: ConstToolType.NEWTHEME_HEIGHT[4],
-        // this.props.device.orientation === 'LANDSCAPE'
-        //   ? ConstToolType.HEIGHT[0]
-        //   : ConstToolType.HEIGHT[2],
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.NEWTHEME_HEIGHT[3]
+            : ConstToolType.NEWTHEME_HEIGHT[4],
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
         // this.props.device.orientation === 'LANDSCAPE'
         //   ? ConstToolType.HEIGHT[2]
@@ -1064,12 +1078,12 @@ export default class FunctionToolbar extends React.Component {
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
-          // {
-          //   key: constants.EDIT,
-          //   title: constants.EDIT,
-          //   action: this.showEdit,
-          //   image: require('../../../../assets/function/icon_edit.png'),
-          // },
+          {
+            key: constants.ANALYSIS,
+            title: getLanguage(this.props.language).Map_Main_Menu.ANALYSIS,
+            action: this.showAnalysis,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
           {
             key: constants.TOOL,
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
@@ -1109,19 +1123,19 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_edit.png'),
           },
           {
-            //工具
-            key: constants.TOOL,
-            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-            action: this.showTool,
-            image: require('../../../../assets/function/icon_function_tool.png'),
-          },
-          {
-            //动画
+            //推演
             key: constants.PLOTTING_ANIMATION,
             title: getLanguage(this.props.language).Map_Main_Menu
               .PLOTTING_ANIMATION,
             action: this.showAnimationList,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
+          },
+          {
+            //工具
+            key: constants.TOOL,
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
             //分享

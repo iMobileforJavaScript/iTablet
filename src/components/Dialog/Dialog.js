@@ -85,17 +85,6 @@ export default class Dialog extends PureComponent {
     if (!this.props.showBtns) return null
     return (
       <View style={this.props.onlyOneBtn ? styles.oneBtn : styles.btns}>
-        {this.props.confirmBtnVisible && (
-          <TouchableOpacity
-            activeOpacity={this.props.activeOpacity}
-            style={[styles.btnStyle, this.props.confirmBtnStyle]}
-            onPress={this.confirm}
-          >
-            <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
-              {this.props.confirmBtnTitle}
-            </Text>
-          </TouchableOpacity>
-        )}
         {this.props.cancelBtnVisible && (
           <TouchableOpacity
             activeOpacity={this.props.activeOpacity}
@@ -104,6 +93,17 @@ export default class Dialog extends PureComponent {
           >
             <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
               {this.props.cancelBtnTitle}
+            </Text>
+          </TouchableOpacity>
+        )}
+        {this.props.confirmBtnVisible && (
+          <TouchableOpacity
+            activeOpacity={this.props.activeOpacity}
+            style={[styles.btnStyle, this.props.confirmBtnStyle]}
+            onPress={this.confirm}
+          >
+            <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
+              {this.props.confirmBtnTitle}
             </Text>
           </TouchableOpacity>
         )}

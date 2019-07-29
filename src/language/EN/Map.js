@@ -28,6 +28,8 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
 
+  ANALYSIS: 'Analysis',
+
   LEGEND_COLUMN: 'Column Number',
   LEGEND_WIDTH: 'Width',
   LEGEND_HEIGHT: 'Height',
@@ -164,6 +166,7 @@ const Map_Main_Menu = {
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
   THEME_HEATMAP: 'HeatMap',
 
+  THEME_ALL_SELECTED: 'All selected',
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
   THEME_UNIQUE_EXPRESSION: 'Unique Expression',

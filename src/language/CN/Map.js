@@ -33,6 +33,8 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  ANALYSIS: '分析',
+
   //图例设置
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',
@@ -178,6 +180,7 @@ const Map_Main_Menu = {
   THEME_GRADUATED_SYMBOLS_MAP: '等级符号图',
   THEME_HEATMAP: '热力图',
 
+  THEME_ALL_SELECTED: '全部选中',
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
   THEME_UNIQUE_EXPRESSION: '单值表达式',

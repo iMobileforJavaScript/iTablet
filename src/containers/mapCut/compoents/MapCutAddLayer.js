@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
-import { PopModal } from '../../../components'
+import { PopView } from '../../../components'
 import { color } from '../../../styles'
 import MapCutAddLayerListItem from './MapCutAddLayerListItem'
 import styles from '../styles'
@@ -97,7 +97,7 @@ export default class MapCutAddLayer extends React.Component {
 
   render() {
     return (
-      <PopModal ref={ref => (this.addLayerModal = ref)}>
+      <PopView ref={ref => (this.addLayerModal = ref)}>
         <View style={[styles.popView, { width: '100%' }]}>
           <FlatList
             style={styles.dsList}
@@ -118,7 +118,7 @@ export default class MapCutAddLayer extends React.Component {
           />
           {this.renderBottom()}
         </View>
-      </PopModal>
+      </PopView>
     )
   }
 }

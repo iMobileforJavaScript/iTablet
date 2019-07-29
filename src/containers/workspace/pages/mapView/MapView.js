@@ -33,11 +33,13 @@ import {
   SaveMapNameDialog,
   SaveDialog,
   InputDialog,
-  PopModal,
+  PopView,
   SurfaceView,
   SearchBar,
+  Progress,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
+import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import {
@@ -71,7 +73,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
-    mapLegend: PropTypes.bool,
+    mapLegend: PropTypes.object,
     mapScaleView: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
@@ -83,6 +85,7 @@ export default class MapView extends React.Component {
     device: PropTypes.object,
     online: PropTypes.object,
     analyst: PropTypes.object,
+    downloads: PropTypes.array,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -270,9 +273,12 @@ export default class MapView extends React.Component {
         JSON.stringify(prevProps.analyst.params) !==
         JSON.stringify(this.props.analyst.params)
       ) {
+        this.toolBox && this.toolBox.setVisible(false)
+        // Android 物理返回键事件
         this.backAction =
-          (this.props.navigation.state.params &&
-            this.props.navigation.state.params.backAction) ||
+          (Platform.OS === 'android' &&
+            (this.props.analyst.params &&
+              this.props.analyst.params.backAction)) ||
           null
       }
       // 网络分析模式下，地图控制器 横竖屏切换位置变化
@@ -300,6 +306,22 @@ export default class MapView extends React.Component {
         } else {
           this.mapController.move({ bottom: 200 })
         }
+      }
+    }
+
+    if (
+      this.props.downloads.length > 0 &&
+      JSON.stringify(this.props.downloads) !==
+        JSON.stringify(prevProps.downloads)
+    ) {
+      let data
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+      }
+      if (data && this.mProgress) {
+        this.mProgress.progress = data.progress / 100
       }
     }
 
@@ -899,7 +921,7 @@ export default class MapView extends React.Component {
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
       this.backAction = null
-      this.mapController.reset()
+      this.mapController && this.mapController.reset()
       return
     }
 
@@ -1308,10 +1330,17 @@ export default class MapView extends React.Component {
         type={this.props.analyst.params.type}
         back={() => {
           let action =
-            (this.props.navigation.state.params &&
-              this.props.navigation.state.params.backAction) ||
+            (this.props.analyst.params &&
+              this.props.analyst.params.backAction) ||
             null
           action && action()
+          GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
+          this.toolBox.setVisible(true, GLOBAL.currentToolbarType, {
+            isFullScreen: true,
+            column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+            height: ConstToolType.HEIGHT[2],
+            tableType: 'normal',
+          })
         }}
         setAnalystParams={this.props.setAnalystParams}
         language={this.props.language}
@@ -1574,7 +1603,28 @@ export default class MapView extends React.Component {
     ]
   }
 
-  render() {
+  renderProgress = () => {
+    let data
+    if (this.props.downloads.length > 0) {
+      for (let i = 0; i < this.props.downloads.length; i++) {
+        if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+          break
+        }
+      }
+    }
+    if (!data) return <View />
+    return (
+      <Progress
+        ref={ref => (this.mProgress = ref)}
+        style={styles.progressView}
+        progressAniDuration={0}
+        progressColor={color.item_selected_bg}
+      />
+    )
+  }
+
+  renderContainer = () => {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1592,8 +1642,10 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend && GLOBAL.Type === constants.MAP_THEME && (
+        {this.props.mapLegend.isShow && GLOBAL.Type === constants.MAP_THEME && (
           <RNLegendView
+            setMapLegend={this.props.setMapLegend}
+            legendSettings={this.props.mapLegend}
             device={this.props.device}
             language={this.props.language}
             ref={ref => (GLOBAL.legend = ref)}
@@ -1613,15 +1665,15 @@ export default class MapView extends React.Component {
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
-          this.props.analyst.params &&
-          this.renderAnalystMapToolbar()}
-        {!this.isExample &&
           !this.props.analyst.params &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
           this.renderOverLayer()}
-        {!this.isExample && !this.props.analyst.params && this.renderTool()}
+        {!this.isExample && this.renderTool()}
+        {!this.isExample &&
+          this.props.analyst.params &&
+          this.renderAnalystMapToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
           this.renderMenuDialog()}
@@ -1635,12 +1687,9 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
-        <PopModal
-          ref={ref => (this.popModal = ref)}
-          modalVisible={this.state.editControllerVisible}
-        >
+        <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
-        </PopModal>
+        </PopView>
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
@@ -1676,6 +1725,15 @@ export default class MapView extends React.Component {
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
       </Container>
+    )
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        {this.renderContainer()}
+        {this.renderProgress()}
+      </View>
     )
   }
 }

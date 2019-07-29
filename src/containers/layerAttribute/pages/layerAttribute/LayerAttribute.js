@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
+import { Container, MTBtn, PopView, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
@@ -1133,12 +1133,12 @@ export default class LayerAttribute extends React.Component {
             locateToPosition={this.locateToPosition}
           />
         </View>
-        <PopModal
+        <PopView
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}
         >
           {this.renderEditControllerView()}
-        </PopModal>
+        </PopView>
       </Container>
     )
   }

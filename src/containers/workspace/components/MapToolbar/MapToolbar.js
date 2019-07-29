@@ -61,6 +61,7 @@ export default class MapToolbar extends React.Component {
       case constants.MAP_PLOTTING:
       case constants.COLLECTION:
       case constants.MAP_THEME:
+      case constants.MAP_ANALYST:
         list = [
           {
             key: 'MapView',
@@ -156,40 +157,40 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
-      case constants.MAP_ANALYST:
-        list = [
-          {
-            key: 'MapAnalystView',
-            title: getLanguage(global.language).Map_Label.MAP,
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('MapAnalystView', { type })
-            },
-          },
-          {
-            key: 'AnalystTools',
-            title: getLanguage(global.language).Map_Label.TOOL_BOX,
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('AnalystTools', { type })
-            },
-          },
-          {
-            key: 'LayerAnalystManager',
-            title: getLanguage(global.language).Map_Label.LAYER,
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAnalystManager', { type })
-            },
-          },
-        ]
-        break
+      // case constants.MAP_ANALYST:
+      //   list = [
+      //     {
+      //       key: 'MapAnalystView',
+      //       title: getLanguage(global.language).Map_Label.MAP,
+      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('MapAnalystView', { type })
+      //       },
+      //     },
+      //     {
+      //       key: 'AnalystTools',
+      //       title: getLanguage(global.language).Map_Label.TOOL_BOX,
+      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('AnalystTools', { type })
+      //       },
+      //     },
+      //     {
+      //       key: 'LayerAnalystManager',
+      //       title: getLanguage(global.language).Map_Label.LAYER,
+      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('LayerAnalystManager', { type })
+      //       },
+      //     },
+      //   ]
+      //   break
       case constants.MAP_3D:
         list = [
           {

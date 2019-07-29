@@ -48,6 +48,7 @@ import JPushService from './JPushService'
 import { Buffer } from 'buffer'
 import SMessageServiceHTTP from './SMessageServiceHTTP'
 const SMessageServiceiOS = NativeModules.SMessageService
+const appUtilsModule = NativeModules.AppUtils
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 // let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -87,6 +88,7 @@ export default class Friend extends Component {
     }
     AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
+    this.stateChangeCount = 0
     this._receiveMessage = this._receiveMessage.bind(this)
     global.getFriend = this._getFriend
   }
@@ -124,6 +126,8 @@ export default class Friend extends Component {
 
   componentWillUnmount() {
     this.removeFileListener()
+    AppState.removeEventListener('change', this.handleStateChange)
+    NetInfo.removeEventListener('connectionChange', this.handleNetworkState)
   }
   // eslint-disable-next-line
   shouldComponentUpdate(prevProps, prevState) {
@@ -139,16 +143,30 @@ export default class Friend extends Component {
     return false
   }
 
-  handleStateChange = appState => {
+  handleStateChange = async appState => {
     if (
       this.props.user.currentUser &&
       this.props.user.currentUser.userType &&
       this.props.user.currentUser.userType !== UserType.PROBATION_USER
     ) {
-      if (appState === 'active') {
-        this.restartService()
-      } else if (appState === 'background') {
-        this.disconnectService()
+      if (appState === 'inactive') {
+        return
+      }
+      let count = this.stateChangeCount + 1
+      this.stateChangeCount = count
+      await appUtilsModule.pause(2)
+      if (this.stateChangeCount !== count) {
+        return
+      } else if (this.prevAppstate === appState) {
+        return
+      } else {
+        this.prevAppstate = appState
+        this.stateChangeCount = 0
+        if (appState === 'active') {
+          this.restartService()
+        } else if (appState === 'background') {
+          this.disconnectService()
+        }
       }
     }
   }
@@ -506,6 +524,9 @@ export default class Friend extends Component {
       case MSGConstant.MSG_TEXT:
         text = msg.originMsg.message
         break
+      case MSGConstant.MSG_ACCEPT_FRIEND:
+        text = getLanguage(this.props.language).Friends.SYS_FRIEND_REQ_ACCEPT
+        break
       case MSGConstant.MSG_REJECT:
         text = getLanguage(this.props.language).Friends.SYS_MSG_REJ
         break
@@ -775,30 +796,47 @@ export default class Friend extends Component {
 
     if (!bSystem) {
       //普通消息
-      let obj = undefined
-      if (messageObj.type === 1) {
-        obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
-      } else if (messageObj.type === 2) {
-        obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
+      if (messageObj.type === 2) {
+        let obj = FriendListFileHandle.findFromGroupList(
+          messageObj.user.groupID,
+        )
         if (!obj) {
           return
         }
       }
-      if (!obj) {
-        //非好友
-        let ctime = new Date()
-        let time = Date.parse(ctime)
-        let message = {
-          message: '对方还未添加您为好友',
+
+      let isFriend = FriendListFileHandle.getIsFriend(messageObj.user.id)
+      if (isFriend === undefined || isFriend === 0) {
+        //非好友,正常情况下不应该收到非好友的消息，收到后让对方删除
+        let delMessage = {
+          message: '',
+          type: MSGConstant.MSG_DEL_FRIEND,
+          user: {
+            name: this.props.user.currentUser.userName,
+            id: this.props.user.currentUser.userId,
+            groupID: this.props.user.currentUser.userId,
+          },
+          time: Date.parse(new Date()),
+        }
+        SMessageService.sendMessage(
+          JSON.stringify(delMessage),
+          messageObj.user.id,
+        )
+
+        let rejMessage = {
+          message: '',
           type: MSGConstant.MSG_REJECT,
           user: {
             name: this.props.user.currentUser.userName,
             id: this.props.user.currentUser.userId,
             groupID: this.props.user.currentUser.userId,
           },
-          time: time,
+          time: Date.parse(new Date()),
         }
-        SMessageService.sendMessage(JSON.stringify(message), messageObj.user.id)
+        SMessageService.sendMessage(
+          JSON.stringify(rejMessage),
+          messageObj.user.id,
+        )
         return
       }
 
@@ -811,12 +849,61 @@ export default class Friend extends Component {
       }
     } else {
       //系统消息，做处理机制
+      let isFriend = FriendListFileHandle.getIsFriend(messageObj.user.groupID)
+      let time = Date.parse(new Date())
       /*
        * 添加好友
        */
       if (messageObj.type === MSGConstant.MSG_ADD_FRIEND) {
+        if (isFriend === undefined) {
+          bSysStore = true
+          messageObj.consumed = false
+        } else if (isFriend === 0) {
+          FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
+          let message = {
+            message: '',
+            type: MSGConstant.MSG_ACCEPT_FRIEND,
+            user: {
+              name: this.props.user.currentUser.userName,
+              id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
+              groupName: '',
+            },
+            time: time,
+          }
+          SMessageService.sendMessage(
+            JSON.stringify(message),
+            messageObj.user.id,
+          )
+        } else if (isFriend === 1) {
+          let message = {
+            message: '',
+            type: MSGConstant.MSG_ACCEPT_FRIEND,
+            user: {
+              name: this.props.user.currentUser.userName,
+              id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
+              groupName: '',
+            },
+            time: time,
+          }
+          SMessageService.sendMessage(
+            JSON.stringify(message),
+            messageObj.user.id,
+          )
+        }
+      } else if (messageObj.type === MSGConstant.MSG_ACCEPT_FRIEND) {
+        /*
+         * 同意添加好友
+         */
         bSysStore = true
-        messageObj.consumed = false
+        bSysShow = true
+        FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
+      } else if (messageObj.type === MSGConstant.MSG_DEL_FRIEND) {
+        /*
+         * 删除好友关系
+         */
+        FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 0)
       } else if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
         /*
          * 添加群员

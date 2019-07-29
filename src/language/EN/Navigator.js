@@ -1,7 +1,7 @@
 //底部导航、首页弹出框选项
 const Navigator_Label = {
   HOME: 'Home',
-  FRIENDS: 'Friends',
+  FRIENDS: 'Contacts',
   EXPLORE: 'Explore',
   PROFILE: 'Profile',
 

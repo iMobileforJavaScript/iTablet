@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, Image, Text, Switch, TouchableOpacity } from 'react-native'
-import { ImageButton, PopModal } from '../../../components'
+import { ImageButton, PopView } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { CheckStatus } from '../../../constants'
 import { color } from '../../../styles'
@@ -312,13 +312,13 @@ export default class MapCutSetting extends React.Component {
 
   render() {
     return (
-      <PopModal ref={ref => (this.settingModal = ref)}>
+      <PopView ref={ref => (this.settingModal = ref)}>
         <View style={[styles.popView, { width: '100%' }]}>
           {this.renderTop()}
           {this.renderContent()}
           {this.renderBottom()}
         </View>
-      </PopModal>
+      </PopView>
     )
   }
 }
