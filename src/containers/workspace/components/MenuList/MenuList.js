@@ -71,14 +71,6 @@ export default class MenuList extends Component {
     }
     title = this.props.data[currentIndex].title
     data = this.props.data[currentIndex].data
-    let length = data.length
-    switch (length) {
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-    }
     this.setState({
       data,
       title,
@@ -91,31 +83,28 @@ export default class MenuList extends Component {
     return this.state.layers.filter(item => item.isChecked === true)
   }
 
-  componentDidMount() {
-    let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
-    clipSetting.layers = this.getlayers()
-    this.setState({
-      clipSetting,
-    })
-  }
+  // componentDidMount() {
+  //   let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
+  //   clipSetting.layers = this.getlayers()
+  //   this.setState({
+  //     clipSetting,
+  //   })
+  // }
   //改变第一页图层的选中状态
   changeListSelect = (title, index) => {
     let data = JSON.parse(JSON.stringify(this.state.data))
     let layers = JSON.parse(JSON.stringify(this.state.layers))
-    let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
     data[index].isChecked = !data[index].isChecked
     if (title === getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER) {
       layers[index].isChecked = !layers[index].isChecked
-      clipSetting.layers = layers.filter(item => item.isChecked === true)
     }
     this.setState(
       {
         layers,
         data,
-        clipSetting,
       },
       () => {
-        this.debounce(this.mapcut)
+        this.mapcut()
       },
     )
   }
@@ -201,9 +190,10 @@ export default class MenuList extends Component {
   }
 
   mapcut = async () => {
-    let data = this.state.clipSetting
+    let data = JSON.parse(JSON.stringify(this.state.clipSetting))
     data.layers = this.getlayers()
     let clipSetting = await this.props.dataChangeCall(data)
+    clipSetting.isCliped = true
     this.setState({
       clipSetting,
     })
@@ -307,7 +297,7 @@ export default class MenuList extends Component {
             style={[styles.icon, { marginHorizontal: scaleSize(10) }]}
             source={layerIcon}
           />
-          <Text>{item.title}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
         </View>
         {this.renderLine()}
       </View>
@@ -319,7 +309,7 @@ export default class MenuList extends Component {
     return (
       <View>
         <View style={styles.row}>
-          <Text style={{ flex: 1 }}>{item.title}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
 
           <View style={styles.inputView}>
             <TouchableOpacity
@@ -363,7 +353,7 @@ export default class MenuList extends Component {
     return (
       <View>
         <View style={styles.row}>
-          <Text style={{ flex: 1 }}>{item.title}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
           <View style={{ flex: 1 }}>
             <TextInput
               defaultValue={item.value + ''}
@@ -386,7 +376,7 @@ export default class MenuList extends Component {
     return (
       <View>
         <View style={styles.row}>
-          <Text>{item.title}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
           <Switch
             trackColor={{ false: color.bgG, true: color.switch }}
             thumbColor={item.value ? color.bgW : color.bgW}
@@ -406,7 +396,7 @@ export default class MenuList extends Component {
     return (
       <View>
         <TouchableOpacity onPress={() => {}} style={styles.row}>
-          <Text style={{ flex: 1 }}>{item.title}</Text>
+          <Text style={styles.itemTitle}>{item.title}</Text>
           <Image style={styles.icon} source={arrowIcon} />
         </TouchableOpacity>
         {this.renderLine()}

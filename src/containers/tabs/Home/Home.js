@@ -257,9 +257,9 @@ export default class Home extends Component {
     let fileName = null
     if (this.state.downloadData !== null) {
       switch (this.state.downloadData.fileName) {
-        case 'qdwj_示范数据':
-          fileName = '强渡乌江'
-          storage = '  0.99MB'
+        case '福建_示范数据':
+          fileName = '福建'
+          storage = '  3.23MB'
           break
         case '地理国情普查_示范数据':
           fileName = '地理国情普查'

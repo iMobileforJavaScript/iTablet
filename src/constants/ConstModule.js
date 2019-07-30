@@ -355,7 +355,7 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = '强渡乌江'
+          let moduleMapName = '福建'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
