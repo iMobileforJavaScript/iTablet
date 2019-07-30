@@ -5,6 +5,8 @@ const Analyst_Types = {
   OPTIMAL_PATH: 4,
   CONNECTIVITY_ANALYSIS: 5,
   FIND_TSP_PATH: 6,
+  THIESSEN_POLYGON: 7,
+  MEASURE_DISTANCE: 8,
 }
 
 const AggregatePointParams = {

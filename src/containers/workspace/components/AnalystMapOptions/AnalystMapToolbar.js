@@ -1,8 +1,12 @@
 import * as React from 'react'
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import { scaleSize, AnalystTools } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 import { Const, TouchType } from '../../../../constants'
+import { TextBtn } from '../../../../components'
+import { Analyst_Types } from '../../../analystView/AnalystType'
+import { SMap, Action } from 'imobile_for_reactnative'
 
 const styles = StyleSheet.create({
   buttons: {
@@ -27,15 +31,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  btnText: {
+    color: 'white',
+    fontSize: size.fontSize.fontSizeXl,
+  },
 })
 
 export default class AnalystMapToolbar extends React.Component {
   props: {
-    type: Number,
+    type: Number, // 界面样式
+    actionType: Number, // 按钮事件  select | draw
     back: () => {},
     analyst?: () => {},
     setAnalystParams?: () => {},
     language: string,
+  }
+
+  reset = () => {
+    switch (this.props.actionType) {
+      case 'select':
+        SMap.setAction(Action.SELECT)
+        break
+      case 'draw':
+        SMap.setAction(Action.CREATEPOLYGON)
+        break
+    }
   }
 
   renderBottomBtn = (img, action) => {
@@ -46,7 +66,13 @@ export default class AnalystMapToolbar extends React.Component {
     )
   }
 
-  render() {
+  renderBottomTextBtn = (text, action) => {
+    return (
+      <TextBtn btnText={text} textStyle={styles.btnText} btnClick={action} />
+    )
+  }
+
+  renderToolbarWithBack = () => {
     return (
       <View style={styles.buttons}>
         {this.renderBottomBtn(
@@ -78,5 +104,33 @@ export default class AnalystMapToolbar extends React.Component {
         )}
       </View>
     )
+  }
+
+  renderToolbarWithReset = () => {
+    return (
+      <View style={styles.buttons}>
+        {this.renderBottomTextBtn(
+          getLanguage(this.props.language).Analyst_Labels.RESET,
+          this.reset,
+        )}
+        {this.renderBottomTextBtn(
+          getLanguage(this.props.language).Analyst_Labels.CONFIRM,
+          () => {
+            this.props.back && this.props.back()
+          },
+        )}
+      </View>
+    )
+  }
+
+  render() {
+    switch (this.props.type) {
+      case Analyst_Types.OPTIMAL_PATH:
+      case Analyst_Types.CONNECTIVITY_ANALYSIS:
+      case Analyst_Types.FIND_TSP_PATH:
+        return this.renderToolbarWithBack()
+      case Analyst_Types.THIESSEN_POLYGON:
+        return this.renderToolbarWithReset()
+    }
   }
 }

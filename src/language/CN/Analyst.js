@@ -4,6 +4,8 @@ const Analyst_Modules = {
   BUFFER_ANALYST_SINGLE: '单缓冲区',
   BUFFER_ANALYST_MULTIPLE: '多重缓冲区',
   OVERLAY_ANALYSIS: '叠加分析',
+  THIESSEN_POLYGON: '泰森多边形',
+  MEASURE_DISTANCE: '距离计算',
   ONLINE_ANALYSIS: '在线分析',
 
   OPTIMAL_PATH: '路径分析',
@@ -28,6 +30,7 @@ const Analyst_Methods = {
 const Analyst_Labels = {
   ANALYST: '分析',
   CONFIRM: '确定',
+  RESET: '重置',
   CANCEL: '取消',
   NEXT: '下一步',
   PREVIOUS: '上一步',
@@ -127,6 +130,22 @@ const Analyst_Labels = {
   DOWN: '下',
   RIGHT: '右',
   UP: '上',
+
+  // 邻近分析
+  DISPLAY_REGION_SETTINGS: '显示区域设置',
+  CUSTOM_LOCALE: '自定义区域',
+  SELECT_REGION: '选择面',
+  DRAW_REGION: '绘制面',
+  MEASURE_DISTANCE: '距离计算',
+  REFERENCE_DATASET: '邻近数据',
+  PARAMETER_SETTINGS: '参数设置',
+  MEASURE_TYPE: '计算方式',
+  MIN_DISTANCE_2: '最近距离',
+  DISTANCE_IN_RANGE: '范围内距离',
+  QUERY_RANGE: '查询范围',
+  MIN_DISTANCE: '最小距离',
+  MAX_DISTANCE: '最大距离',
+  ASSOCIATE_BROWSING_RESULT: '关联浏览结果',
 }
 
 const Analyst_Params = {
@@ -203,6 +222,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_NOT_CONNECTED: '两点不连通',
   NOT_FIND_SUITABLE_PATH: '没有查找到合适的路径',
   SELECT_DATA_SOURCE_FIRST: '请先选择数据源',
+  PLEASE_SELECT_A_REGION: '请选择一个面',
 }
 
 export {

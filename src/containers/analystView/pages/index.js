@@ -9,6 +9,7 @@ import SourceDatasetPage from './sourceDatasetPage'
 import AnalystRangePage from './analystRangePage'
 import WeightAndStatistic from './weightAndStatistic'
 import LocalAnalystView from './localAnalystView'
+import ReferenceAnalystView from './referenceAnalystView'
 
 export {
   AnalystTools,
@@ -22,4 +23,5 @@ export {
   AnalystRangePage,
   WeightAndStatistic,
   LocalAnalystView,
+  ReferenceAnalystView,
 }

@@ -471,7 +471,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, GLOBAL.currentToolbarType, {
         isFullScreen: true,
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[2],
         tableType: 'normal',
       })
     }

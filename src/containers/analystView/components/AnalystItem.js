@@ -82,6 +82,15 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: size.fontSize.fontSizeSm,
   },
+
+  btnOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: 'transparent',
+  },
 })
 
 export default class AnalystItem extends PureComponent {
@@ -95,6 +104,7 @@ export default class AnalystItem extends PureComponent {
     returnKeyLabel?: string,
     returnKeyType?: string,
     autoCheckNumber?: boolean, // 自动检查输入数字是否合法。只有自定义onChangeText方法，该值才生效
+    disable?: boolean, // 是否可以操作
     style?: Object,
     onChange?: () => {},
     onPress?: () => {},
@@ -111,6 +121,7 @@ export default class AnalystItem extends PureComponent {
     returnKeyLabel: '完成', // TextInput returnKeyLabel
     returnKeyType: 'done', // TextInput returnKeyType
     autoCheckNumber: false,
+    disable: false,
   }
 
   constructor(props) {
@@ -172,12 +183,14 @@ export default class AnalystItem extends PureComponent {
         rightView = (
           <View style={[styles.rightView, this.props.rightStyle]}>
             <Switch
+              disable={this.props.disable}
               style={styles.switch}
               trackColor={{ false: color.bgG, true: color.switch }}
               thumbColor={this.props.value ? color.bgW : color.bgW}
               ios_backgroundColor={this.props.value ? color.switch : color.bgG}
               value={this.props.value}
               onValueChange={value => {
+                if (this.props.disable) return
                 if (
                   this.props.onChange &&
                   typeof this.props.onChange === 'function'
@@ -186,6 +199,7 @@ export default class AnalystItem extends PureComponent {
                 }
               }}
             />
+            {this.props.disable && <View style={styles.btnOverlay} />}
           </View>
         )
         break
@@ -193,6 +207,7 @@ export default class AnalystItem extends PureComponent {
       case 'number':
       default:
         if (
+          !this.props.disable &&
           this.props.rightType === 'input' &&
           (this.props.radioStatus === CheckStatus.CHECKED ||
             this.props.radioStatus === undefined ||
@@ -273,10 +288,14 @@ export default class AnalystItem extends PureComponent {
     let icon
     switch (this.props.radioStatus) {
       case CheckStatus.CHECKED:
-        icon = getPublicAssets().common.icon_radio_selected
+        icon = this.props.disable
+          ? getPublicAssets().common.icon_radio_selected_disable
+          : getPublicAssets().common.icon_radio_selected
         break
       case CheckStatus.UN_CHECK:
-        icon = getPublicAssets().common.icon_radio_unselected
+        icon = this.props.disable
+          ? getPublicAssets().common.icon_radio_unselected_disable
+          : getPublicAssets().common.icon_radio_unselected
         break
       case CheckStatus.CHECKED_DISABLE:
         icon = getPublicAssets().common.icon_radio_selected_disable
