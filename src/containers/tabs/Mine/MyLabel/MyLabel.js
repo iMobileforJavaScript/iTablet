@@ -91,12 +91,16 @@ export default class MyLabel extends Component {
   }
 
   _closeModal = () => {
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.MyDataPopModal.setVisible(false)
+    })
   }
 
   saveItemInfo = ({ item, index }) => {
     this.itemInfo = { item, index }
-    this.setState({ modalIsVisible: true })
+    this.setState({ modalIsVisible: true }, () => {
+      this.MyDataPopModal.setVisible(true)
+    })
   }
 
   uploadListOfAdd = data => {
@@ -242,9 +246,8 @@ export default class MyLabel extends Component {
     return (
       <MyDataPopupModal
         // onDeleteData={this._onDeleteData}
+        ref={ref => (this.MyDataPopModal = ref)}
         data={data}
-        onCloseModal={this._closeModal}
-        modalVisible={this.state.modalIsVisible}
       />
     )
   }

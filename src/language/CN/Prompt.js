@@ -41,6 +41,7 @@ const Prompt = {
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
   SWITCHING_PLOT_LIB: '正在切换标绘库',
   NON_SELECTED_OBJ: '没有选择对象',
+  CHANGE_BASE_MAP: '当前底图为空，请先切换底图',
 
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',
@@ -137,7 +138,7 @@ const Prompt = {
   NETWORK_ERROR: '网络错误',
   NO_NETWORK: '未连接到网络',
 
-  LICENSE_EXPIRED: '试用许可已过期,请更换许可后重启',
+  LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
 
   GET_LAYER_GROUP_FAILD: '获取图层组失败',

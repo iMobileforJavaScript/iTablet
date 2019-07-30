@@ -33,6 +33,8 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  ANALYSIS: '分析',
+
   //图例设置
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',

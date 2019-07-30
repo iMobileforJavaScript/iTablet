@@ -39,7 +39,7 @@ export default class FetchUtils {
     }
   }
   /** 获取用户数据的下载url*/
-  static getFindUserZipDataUrl = async (nickname, keyword) => {
+  static getFindUserDataUrl = async (nickname, keyword, type) => {
     let url
     try {
       let time = new Date().getTime()
@@ -49,7 +49,7 @@ export default class FetchUtils {
       let findDataId
       for (let i = 0; i < arrContent.length; i++) {
         let objContent = arrContent[i]
-        let fileName = keyword + '.zip'
+        let fileName = keyword + type
         if (
           nickname === objContent.nickname &&
           fileName === objContent.fileName

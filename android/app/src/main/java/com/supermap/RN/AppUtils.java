@@ -58,6 +58,27 @@ public class AppUtils extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
+    @ReactMethod
+    public void pause (int time, Promise promise){
+        try {
+            final int timeInMS = time * 1000;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(timeInMS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    promise.resolve(true);
+                }
+            }).start();
+        }catch (Exception e){
+            promise.reject(e);
+        }
+    }
+
     public static void sendShareResult(String result) {
         mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_SHARERESULT, result);
     }

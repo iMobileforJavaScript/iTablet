@@ -1,8 +1,10 @@
 const Analyst_Modules = {
-  BUFFER_ANALYST: '缓冲分析',
-  BUFFER_ANALYST_2: '缓冲区分析',
-  OVERLAY_ANALYST: '叠加分析',
-  ONLINE_ANALYST: '在线分析',
+  BUFFER_ANALYSIS: '缓冲分析',
+  BUFFER_ANALYSIS_2: '缓冲区分析',
+  BUFFER_ANALYST_SINGLE: '单缓冲区',
+  BUFFER_ANALYST_MULTIPLE: '多重缓冲区',
+  OVERLAY_ANALYSIS: '叠加分析',
+  ONLINE_ANALYSIS: '在线分析',
 
   OPTIMAL_PATH: '路径分析',
   CONNECTIVITY_ANALYSIS: '连通性分析',

@@ -400,10 +400,10 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async user => {
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
+        // let data = Object.assign({}, ConstOnline['Google'])
+        // data.layerIndex = 1
         GLOBAL.Type = constants.MAP_ANALYST
-        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+        // GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
 
         let homePath = await FileTools.appendingHomeDirectory()
         let userPath = ConstPath.CustomerPath
@@ -418,9 +418,9 @@ function SetMap(param) {
             // layerIndex: 0,
             type: 'Workspace',
           },
-          data,
+          // data,
         ]
-        NavigationService.navigate('AnalystTools', {
+        NavigationService.navigate('MapView', {
           operationType: constants.MAP_ANALYST,
           wsData,
           mapName: getLanguage(param).Map_Module.MAP_ANALYST,

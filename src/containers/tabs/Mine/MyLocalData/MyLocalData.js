@@ -161,18 +161,32 @@ export default class MyLocalData extends Component {
   itemOnpress = info => {
     this.itemInfo = info
     if (this.state.isFirstLoadingModal) {
-      this.setState({ modalIsVisible: true, isFirstLoadingModal: false })
+      this.setState(
+        { modalIsVisible: true, isFirstLoadingModal: false },
+        () => {
+          this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
+        },
+      )
     } else {
-      this.setState({ modalIsVisible: true })
+      this.setState({ modalIsVisible: true }, () => {
+        this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
+      })
     }
   }
 
   onlineItemOnPress = (item = {}) => {
     this.itemInfo = item
     if (this.state.isFirstLoadingModal) {
-      this.setState({ modalIsVisible: true, isFirstLoadingModal: false })
+      this.setState(
+        { modalIsVisible: true, isFirstLoadingModal: false },
+        () => {
+          this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
+        },
+      )
     } else {
-      this.setState({ modalIsVisible: true })
+      this.setState({ modalIsVisible: true }, () => {
+        this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
+      })
     }
   }
 
@@ -213,7 +227,9 @@ export default class MyLocalData extends Component {
   }
 
   _closeModal = () => {
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+    })
   }
 
   _onDeleteData = async () => {
@@ -257,7 +273,13 @@ export default class MyLocalData extends Component {
               break
             }
           }
-          this.setState({ sectionData: sectionData, modalIsVisible: false })
+          this.setState(
+            { sectionData: sectionData, modalIsVisible: false },
+            () => {
+              this.LocalDataPopupModal &&
+                this.LocalDataPopupModal.setVisible(false)
+            },
+          )
         }
       }
     } catch (e) {
@@ -371,7 +393,9 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, '发布服务中...')
     Toast.show(getLanguage(this.props.language).Prompt.PUBLISHING)
     //'发布服务中...')
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+    })
     try {
       let dataId = this.itemInfo.id + ''
       let result = await SOnlineService.publishServiceWithDataId(dataId)
@@ -415,7 +439,9 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, '删除服务中...')
     Toast.show(getLanguage(this.props.language).Prompt.DELETING_SERVICE)
     //'删除服务中...')
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+    })
     try {
       let result = await SOnlineService.deleteServiceWithDataName(
         this.itemInfo.fileName,
@@ -454,7 +480,9 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING_DATA)
     //'删除数据中...')
     Toast.show(getLanguage(this.props.language).Prompt.DELETING_DATA)
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+    })
     this.deleteDataing = true
     try {
       let objContent = this.itemInfo
@@ -485,7 +513,9 @@ export default class MyLocalData extends Component {
   _onChangeDataVisibility = async () => {
     //this.setLoading(true, getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
     //'改变数据可见性中...')
-    this.setState({ modalIsVisible: false })
+    this.setState({ modalIsVisible: false }, () => {
+      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+    })
     try {
       let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
       let oldOnline = sectionData[sectionData.length - 1]
@@ -536,6 +566,7 @@ export default class MyLocalData extends Component {
     if (!this.state.isFirstLoadingModal) {
       return (
         <LocalDataPopupModal
+          ref={ref => (this.LocalDataPopupModal = ref)}
           data={this.itemInfo}
           language={this.props.language}
           onDeleteData={this.deleteData}
@@ -543,8 +574,6 @@ export default class MyLocalData extends Component {
           onDeleteService={this._onDeleteService}
           onImportWorkspace={this.importData}
           onChangeDataVisibility={this._onChangeDataVisibility}
-          onCloseModal={this._closeModal}
-          modalVisible={this.state.modalIsVisible}
         />
       )
     }

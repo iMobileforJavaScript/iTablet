@@ -41,6 +41,7 @@ const Prompt = {
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
   SWITCHING_PLOT_LIB: 'Switching',
   NON_SELECTED_OBJ: 'No object selected',
+  CHANGE_BASE_MAP: 'Empty base map, please change first',
 
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
@@ -142,7 +143,7 @@ const Prompt = {
   NO_NETWORK: 'No Internet connection',
 
   LICENSE_EXPIRED:
-    'Trial license has expired. Please apply for a new one and restart.',
+    'The trial license has expired. Do you want to continue the trial?',
   APPLY_LICENSE: 'Apply License',
 
   GET_LAYER_GROUP_FAILD: 'Failed to get layer group',

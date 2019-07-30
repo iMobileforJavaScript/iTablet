@@ -49,7 +49,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated, Platform } from 'react-native'
+import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
   SScene,
@@ -119,7 +119,7 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
-    mapLegend?: Boolean, //图例显隐
+    mapLegend?: Object, //图例参数对象
     setMapLegend?: () => {}, //设置图例显隐的redux状态
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
@@ -677,7 +677,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform.OS === 'android' && {
+          {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -3621,7 +3621,8 @@ export default class ToolBar extends React.PureComponent {
 
   //改变图例组件的显隐
   changeLegendVisible = () => {
-    let type = this.props.mapLegend
+    let legendData = this.props.mapLegend
+    let type = legendData.isShow
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3630,7 +3631,15 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    this.props.setMapLegend(type === ConstToolType.LEGEND)
+    legendData.isShow = type === ConstToolType.LEGEND
+    GLOBAL.legend.setState(
+      {
+        ...legendData,
+      },
+      () => {
+        this.props.setMapLegend && this.props.setMapLegend(legendData)
+      },
+    )
   }
 
   showBox = (autoFullScreen = false) => {
@@ -4242,11 +4251,9 @@ export default class ToolBar extends React.PureComponent {
                   let names = les[alias]
                   for (let j = 0, dataLen = data.length; j < dataLen; j++) {
                     let curDataSetName = data[j].datasetName
-                    if (JSON.stringify(names).indexOf(curDataSetName) >= 0) {
-                      for (let i = 0, l = names.length; i < l; i++) {
-                        if (curDataSetName in names[i]) {
-                          data[j].isSelected = !names[i][curDataSetName]
-                        }
+                    for (let i = 0, l = names.length; i < l; i++) {
+                      if (curDataSetName in names[i]) {
+                        data[j].isSelected = !names[i][curDataSetName]
                       }
                     }
                   }
@@ -4827,6 +4834,7 @@ export default class ToolBar extends React.PureComponent {
         //ConstInfo.MAP_CHANGING
       )
       if (this.props.map.currentMap.name) {
+        await SMap.removeLegendListener()
         await this.props.closeMap()
       }
       // 移除地图上所有callout
@@ -4842,7 +4850,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
-          SMap.addLegendListener({
+          await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
         }

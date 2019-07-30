@@ -282,8 +282,16 @@ export default class LayerManager_tolbar extends React.Component {
       params && typeof params.height === 'number'
         ? params.height
         : ConstToolType.HEIGHT[1]
-    let data = this.getData(type, params.type && params.type === 'layerGroup')
-    let newState = this.updateMenuState(data, params.layerdata)
+    let newState = {}
+    if (isShow) {
+      let data = this.getData(
+        type,
+        params.layerdata &&
+          params.layerdata.type &&
+          params.layerdata.type === 'layerGroup',
+      )
+      newState = this.updateMenuState(data, params.layerdata)
+    }
     this.updateLayerVisible = params.updateLayerVisible
     this.setState(
       {
