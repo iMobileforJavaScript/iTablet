@@ -145,7 +145,7 @@ class ModuleList extends Component {
         fileName = 'OlympicGreen_ios'
       }
     } else if (moduleKey === constants.MAP_PLOTTING) {
-      fileName = 'qdwj_示范数据'
+      fileName = '福建_示范数据'
     }
 
     let tmpCurrentUser = this.props.currentUser

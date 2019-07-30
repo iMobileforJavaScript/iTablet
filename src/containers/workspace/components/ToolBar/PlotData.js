@@ -186,7 +186,7 @@ function getCollectionData(libId, symbolCode, params) {
   return { data, buttons }
 }
 
-/** 采集分类点击事件 **/
+/** 标绘分类点击事件 **/
 async function showCollection(libId, symbolCode, type) {
   // await SMap.addCadLayer('PlotEdit')
   StyleUtils.setDefaultMapControlStyle().then(() => {})
