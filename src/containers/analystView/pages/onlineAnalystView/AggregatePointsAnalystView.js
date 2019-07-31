@@ -123,6 +123,25 @@ export default class AggregatePointsAnalystView extends Component {
     })
   }
 
+  reset = () => {
+    this.setState({
+      aggregateType: onlineParamsData.getAggregateType(this.props.language)[0],
+      meshType: onlineParamsData.getMeshType(this.props.language)[0],
+      bounds: [],
+      meshSize: 30,
+      meshSizeUnit: getLanguage(this.props.language).Analyst_Params.METER,
+      weightAndStatisticMode: [],
+      weight: 1,
+      statisticModes: '',
+      numericPrecision: 1,
+      rangeMode: onlineParamsData.getRangeMode(this.props.language)[0],
+      rangeCount: 0,
+      colorGradientType: onlineParamsData.getColorGradientType(
+        this.props.language,
+      )[0],
+    })
+  }
+
   /** 分析参数 **/
   renderAnalystParams = () => {
     return (

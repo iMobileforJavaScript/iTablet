@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { ScrollView, View, InteractionManager } from 'react-native'
-import { Container, TextBtn } from '../../../../components'
+import { Container } from '../../../../components'
 import NavigationService from '../../../NavigationService'
 // import TabNavigationService from '../../../TabNavigationService'
 import { getLanguage } from '../../../../language'
 import { Toast } from '../../../../utils'
-import { AnalystItem, PopModalList } from '../../components'
+import { AnalystItem, PopModalList, AnalystBar } from '../../components'
 import styles from './styles'
 import AggregatePointsAnalystView from './AggregatePointsAnalystView'
 import DensityAnalystView from './DensityAnalystView'
@@ -242,6 +242,19 @@ export default class OnlineAnalystView extends Component {
     }
   }
 
+  // 重置页面数据
+  reset = () => {
+    this.currentPop = ''
+    switch (this.state.type) {
+      case AnalystEntryData.onlineAnalysisTypes.AGGREGATE_POINTS_ANALYSIS:
+        this.aggregatePointsView && this.aggregatePointsView.reset()
+        break
+      case AnalystEntryData.onlineAnalysisTypes.DENSITY:
+        this.densityView && this.densityView.reset()
+        break
+    }
+  }
+
   /** 服务和数据集 **/
   renderTop = () => {
     return (
@@ -381,6 +394,18 @@ export default class OnlineAnalystView extends Component {
     )
   }
 
+  renderAnalystBar = () => {
+    return (
+      <AnalystBar
+        leftTitle={getLanguage(this.props.language).Analyst_Labels.RESET}
+        rightTitle={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+        leftAction={this.reset}
+        rightAction={this.analyst}
+        rightDisable={!this.state.canBeAnalyst}
+      />
+    )
+  }
+
   render() {
     return (
       <Container
@@ -390,23 +415,24 @@ export default class OnlineAnalystView extends Component {
           title: this.state.title,
           navigation: this.props.navigation,
           // backAction: this.back,
-          headerRight: (
-            <TextBtn
-              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-              textStyle={
-                this.state.canBeAnalyst
-                  ? styles.headerBtnTitle
-                  : styles.headerBtnTitleDisable
-              }
-              btnClick={this.analyst}
-            />
-          ),
+          // headerRight: (
+          //   <TextBtn
+          //     btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+          //     textStyle={
+          //       this.state.canBeAnalyst
+          //         ? styles.headerBtnTitle
+          //         : styles.headerBtnTitleDisable
+          //     }
+          //     btnClick={this.analyst}
+          //   />
+          // ),
         }}
       >
         <ScrollView style={styles.container}>
           {this.renderTop()}
           {this.renderAnalystParams()}
         </ScrollView>
+        {this.renderAnalystBar()}
         {this.renderPopList()}
       </Container>
     )
