@@ -634,6 +634,16 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  hasBaseMap = () => {
+    let hasBaseMap = false
+    if (this.props.layers && this.props.layers.length > 0) {
+      hasBaseMap = LayerUtils.isBaseLayer(
+        this.props.layers[this.props.layers.length - 1].name,
+      )
+    }
+    return hasBaseMap
+  }
+
   _renderItem = ({ item, section, index, parentData }) => {
     // sectionID = sectionID || 0
     if (section.visible) {
@@ -684,6 +694,7 @@ export default class MT_layerManager extends React.Component {
               return this.itemRefs[item.name]
             }}
             // swipeEnabled={true}
+            user={this.props.user}
             data={item}
             parentData={parentData}
             index={index}
@@ -710,15 +721,7 @@ export default class MT_layerManager extends React.Component {
                   this.itemRefs[data.name].setChildrenList(children)
               })
             }}
-            hasBaseMap={() => {
-              let hasBaseMap = false
-              if (this.props.layers && this.props.layers.length > 0) {
-                hasBaseMap = LayerUtils.isBaseLayer(
-                  this.props.layers[this.props.layers.length - 1].name,
-                )
-              }
-              return hasBaseMap
-            }}
+            hasBaseMap={this.hasBaseMap()}
           />
         )
       } else {

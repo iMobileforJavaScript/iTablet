@@ -521,7 +521,9 @@ export default class LayerManager_item extends React.Component {
             await SMap.moveToTop(layer.path)
             if (layer.path.indexOf('/') === -1) {
               let count = await SMap.getTaggingLayerCount(
-                this.props.user.currentUser.userName,
+                (this.props.user.currentUser &&
+                  this.props.user.currentUser.userName) ||
+                  'Customer',
               )
               for (let i = 0; i < count; i++) {
                 await SMap.moveDownLayer(layer.path)
