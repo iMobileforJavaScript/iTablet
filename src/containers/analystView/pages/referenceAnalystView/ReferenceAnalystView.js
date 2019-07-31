@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
-import { Container, TextBtn } from '../../../../components'
+import { Container } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
 // import TabNavigationService from '../../../TabNavigationService'
-import { AnalystItem, PopModalList } from '../../components'
+import { AnalystItem, PopModalList, AnalystBar } from '../../components'
 import { ConstPath, CheckStatus, TouchType } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
@@ -26,6 +26,36 @@ const popTypes = {
   ReferenceDataSet: 'ReferenceDataSet',
   ResultDataSource: 'ResultDataSource',
   ResultDataSet: 'ResultDataSet',
+}
+
+const defaultState = {
+  // 源数据
+  dataSource: null,
+  dataSet: null,
+  // 显示区域设置
+  isCustomLocale: false,
+  selectRegionStatus: CheckStatus.CHECKED, // 选择面
+  drawRegionStatus: CheckStatus.UN_CHECK, // 绘制面
+
+  // 邻近数据
+  referenceDataSource: null,
+  referenceDataSet: null,
+
+  // 参数设置
+  measureType: '',
+  distanceInRange: [],
+  minDistance: 0,
+  maxDistance: 1,
+
+  // 结果数据
+  resultDataSource: null,
+  resultDataSet: null,
+
+  // 弹出框数据
+  popData: [],
+  currentPopData: null,
+
+  canBeAnalyst: false,
 }
 
 export default class ReferenceAnalystView extends Component {
@@ -54,33 +84,7 @@ export default class ReferenceAnalystView extends Component {
     } else {
       this.state = {
         title: (params && params.title) || '',
-        // 源数据
-        dataSource: null,
-        dataSet: null,
-        // 显示区域设置
-        isCustomLocale: false,
-        selectRegionStatus: CheckStatus.CHECKED, // 选择面
-        drawRegionStatus: CheckStatus.UN_CHECK, // 绘制面
-
-        // 邻近数据
-        referenceDataSource: null,
-        referenceDataSet: null,
-
-        // 参数设置
-        measureType: '',
-        distanceInRange: [],
-        minDistance: 0,
-        maxDistance: 1,
-
-        // 结果数据
-        resultDataSource: null,
-        resultDataSet: null,
-
-        // 弹出框数据
-        popData: [],
-        currentPopData: null,
-
-        canBeAnalyst: false,
+        ...defaultState,
       }
     }
 
@@ -311,6 +315,12 @@ export default class ReferenceAnalystView extends Component {
       },
       () => cb && cb(),
     )
+  }
+
+  // 重置页面数据
+  reset = () => {
+    this.setState(Object.assign({}, this.state, defaultState))
+    this.currentPop = ''
   }
 
   renderSourceData = () => {
@@ -689,6 +699,18 @@ export default class ReferenceAnalystView extends Component {
     )
   }
 
+  renderAnalystBar = () => {
+    return (
+      <AnalystBar
+        leftTitle={getLanguage(this.props.language).Analyst_Labels.RESET}
+        rightTitle={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+        leftAction={this.reset}
+        rightAction={this.analyst}
+        rightDisable={!this.state.canBeAnalyst}
+      />
+    )
+  }
+
   render() {
     return (
       <Container
@@ -698,17 +720,17 @@ export default class ReferenceAnalystView extends Component {
           title: this.state.title,
           navigation: this.props.navigation,
           backAction: this.back,
-          headerRight: (
-            <TextBtn
-              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-              textStyle={
-                this.state.canBeAnalyst
-                  ? styles.headerBtnTitle
-                  : styles.headerBtnTitleDisable
-              }
-              btnClick={this.analyst}
-            />
-          ),
+          // headerRight: (
+          //   <TextBtn
+          //     btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+          //     textStyle={
+          //       this.state.canBeAnalyst
+          //         ? styles.headerBtnTitle
+          //         : styles.headerBtnTitleDisable
+          //     }
+          //     btnClick={this.analyst}
+          //   />
+          // ),
         }}
       >
         <ScrollView style={styles.container}>
@@ -719,6 +741,7 @@ export default class ReferenceAnalystView extends Component {
             this.renderReferenceData()}
           {this.renderResultData()}
         </ScrollView>
+        {this.renderAnalystBar()}
         {this.renderPopList()}
       </Container>
     )

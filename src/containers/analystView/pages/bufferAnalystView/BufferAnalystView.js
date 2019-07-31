@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import { Dimensions } from 'react-native'
-import { Container, TextBtn } from '../../../../components'
+import { Container } from '../../../../components'
 // import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -53,8 +53,8 @@ export default class BufferAnalystView extends Component {
 
   analyst = async () => {
     if (!this.state.canBeAnalyst) return
-    if (!this.currentTab && this.singleBuffer)
-      this.currentTab = this.singleBuffer
+    // if (!this.currentTab && this.singleBuffer)
+    //   this.currentTab = this.singleBuffer
     try {
       if (this.currentTab) {
         Toast.show(
@@ -196,17 +196,17 @@ export default class BufferAnalystView extends Component {
                 .BUFFER_ANALYST_MULTIPLE,
           navigation: this.props.navigation,
           backAction: this.back,
-          headerRight: (
-            <TextBtn
-              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-              textStyle={
-                this.state.canBeAnalyst
-                  ? styles.headerBtnTitle
-                  : styles.headerBtnTitleDisable
-              }
-              btnClick={this.analyst}
-            />
-          ),
+          // headerRight: (
+          //   <TextBtn
+          //     btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+          //     textStyle={
+          //       this.state.canBeAnalyst
+          //         ? styles.headerBtnTitle
+          //         : styles.headerBtnTitleDisable
+          //     }
+          //     btnClick={this.analyst}
+          //   />
+          // ),
         }}
       >
         <BufferAnalystViewTab
@@ -220,6 +220,8 @@ export default class BufferAnalystView extends Component {
           checkData={result => {
             this.checkData(result)
           }}
+          analyst={this.analyst}
+          canBeAnalyst={this.state.canBeAnalyst}
         />
         {/*<ScrollableTabView*/}
         {/*renderTabBar={() => <DefaultTabBar style={styles.tabView} />}*/}

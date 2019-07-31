@@ -89,10 +89,14 @@ export default class ToolBarSectionList extends React.Component {
             sections[i].data[index].expression ||
             sections[i].data[index].datasetName
           pushObj[pushName] = false
-          if (
-            JSON.stringify(selectList[title]).indexOf(pushName) < 0 &&
-            selectList[title][pushName] !== true
-          ) {
+          // 判断是否被选中
+          let exist = false
+          for (let j = 0; j < selectList[title].length; j++) {
+            if (selectList[title][j][pushName] !== undefined) {
+              exist = true
+            }
+          }
+          if (!exist && selectList[title][pushName] !== true) {
             selectList[title].push(pushObj)
           } else {
             for (let l = 0; l < selectList[title].length; l++)

@@ -85,6 +85,8 @@ export default class MT_layerManager extends React.Component {
       selectLayer: this.props.currentLayer.caption,
       type: (params && params.type) || GLOBAL.Type, // 底部Tabbar类型
     }
+    this.itemRefs = {} // 记录列表items
+    this.currentItemRef = {} // 当前被选中的item
   }
 
   componentDidUpdate(prevProps) {
@@ -159,6 +161,8 @@ export default class MT_layerManager extends React.Component {
       let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
+      this.currentItemRef =
+        this.itemRefs && this.itemRefs[this.props.currentLayer.name]
       this.setState({
         data: [
           {
@@ -197,7 +201,7 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  onAllPressRow = async ({ data }) => {
+  onAllPressRow = async ({ data, parentData, section }) => {
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         // 切换地图，清除历史记录
@@ -207,12 +211,45 @@ export default class MT_layerManager extends React.Component {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
       })
-    this.setState({
-      selectLayer: data.name,
-    })
+    // 之前点击的图层组中的某一项
+    let prevParentData =
+      this.currentItemRef && this.currentItemRef.props.parentData
+    this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
+    if (parentData || prevParentData) {
+      this.setState(
+        {
+          selectLayer: data.name,
+        },
+        () => {
+          if (parentData) {
+            this.getChildList({ data: parentData, section }).then(children => {
+              this.itemRefs[parentData.name] &&
+                this.itemRefs[parentData.name].setChildrenList(children)
+            })
+          }
+          // 若两次选中的item不再同一个图层组中
+          if (
+            prevParentData &&
+            (!parentData || parentData.name !== prevParentData.name)
+          ) {
+            this.getChildList({ data: prevParentData, section }).then(
+              children => {
+                this.itemRefs[prevParentData.name] &&
+                  this.itemRefs[prevParentData.name].setChildrenList(children)
+              },
+            )
+          }
+        },
+      )
+    } else {
+      this.setState({
+        selectLayer: data.name,
+      })
+    }
   }
 
   onThisPress = async ({ data }) => {
+    this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
     this.setState({
       selectLayer: data.name,
     })
@@ -473,7 +510,7 @@ export default class MT_layerManager extends React.Component {
   getChildList = async ({ data, section }) => {
     try {
       if (data.type !== 'layerGroup') return
-      this.container.setLoading(true)
+      // this.container.setLoading(true)
       let layers = await SMap.getLayersByGroupPath(data.path)
       let child = []
       for (let i = 0; i < layers.length; i++) {
@@ -481,10 +518,10 @@ export default class MT_layerManager extends React.Component {
           this._renderItem({ item: layers[i], section, parentData: data }),
         )
       }
-      this.container.setLoading(false)
+      // this.container.setLoading(false)
       return child
     } catch (e) {
-      this.container.setLoading(false)
+      // this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.GET_LAYER_GROUP_FAILD)
       //'获取失败')
       return []
@@ -664,9 +701,15 @@ export default class MT_layerManager extends React.Component {
             getLayers={this.props.getLayers}
             selectLayer={this.state.selectLayer}
             onPress={this.onPressRow}
-            onAllPress={this.onAllPressRow}
+            onAllPress={data => this.onAllPressRow({ ...data, section })}
             onArrowPress={({ data }) => this.getChildList({ data, section })}
             onToolPress={action}
+            refreshParent={data => {
+              this.getChildList({ data, section }).then(children => {
+                this.itemRefs[data.name] &&
+                  this.itemRefs[data.name].setChildrenList(children)
+              })
+            }}
             hasBaseMap={() => {
               let hasBaseMap = false
               if (this.props.layers && this.props.layers.length > 0) {
@@ -697,8 +740,8 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? (image = getThemeAssets().publicAssets.list_section_packup)
-      : (image = getThemeAssets().publicAssets.list_section_spread)
+      ? getThemeAssets().publicAssets.list_section_packup
+      : getThemeAssets().publicAssets.list_section_spread
     if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
       return (
         <TouchableOpacity
