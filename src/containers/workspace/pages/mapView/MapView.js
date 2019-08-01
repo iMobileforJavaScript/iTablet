@@ -129,8 +129,6 @@ export default class MapView extends React.Component {
     const { params } = this.props.navigation.state
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
-    // this.operationType =
-    //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
@@ -144,19 +142,6 @@ export default class MapView extends React.Component {
     this.path = (params && params.path) || ''
     this.showDialogCaption =
       params && params.path ? !params.path.endsWith('.smwu') : true
-    // this.savepath =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    // let wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(params.path.lastIndexOf('/') + 1)
-    // wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : wsName.lastIndexOf('.') > 0 &&
-    //       wsName.substring(0, wsName.lastIndexOf('.'))
     this.backAction = (params && params.backAction) || null
     this.state = {
       showMap: false, // 控制地图初始化显示
@@ -170,6 +155,8 @@ export default class MapView extends React.Component {
       editLayer: {},
       showMapMenu: false,
       // changeLayerBtnBottom: scaleSize(200),
+      canBeUndo: false,
+      canBeRedo: false,
     }
     this.closeInfo = [
       {
@@ -1470,7 +1457,15 @@ export default class MapView extends React.Component {
 
   /** 展示撤销Modal **/
   showUndoView = () => {
-    this.popModal && this.popModal.setVisible(true)
+    (async function() {
+      this.popModal && this.popModal.setVisible(true)
+      let historyCount = await SMap.getMapHistoryCount()
+      let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+      this.setState({
+        canBeUndo: currentHistoryCount >= 0,
+        canBeRedo: currentHistoryCount < historyCount - 1,
+      })
+    }.bind(this)())
   }
 
   renderMenuDialog = () => {
@@ -1560,18 +1555,50 @@ export default class MapView extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
           //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.undo()}
+          onPress={() => {
+            if (!this.state.canBeUndo) return
+            ;(async function() {
+              await SMap.undo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         <MTBtn
           key={'redo'}
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
           //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.redo()}
+          onPress={() => {
+            if (!this.state.canBeRedo) return
+            ;(async function() {
+              await SMap.redo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         {/*<MTBtn*/}
         {/*key={'revert'}*/}
