@@ -358,18 +358,22 @@ export default class LayerManager_tolbar extends React.Component {
     } else return
   }
 
+  _refreshParentList = async () => {
+    if (
+      this.refreshParentList &&
+      typeof this.refreshParentList === 'function'
+    ) {
+      await this.refreshParentList()
+    }
+  }
+
   setThislayer = async () => {
     if (this.props.onThisPress) {
       await this.props.onThisPress({
         data: this.state.layerData,
       })
       // 无论是否是图层组中的图层，都调用refreshParentList刷新，若之前的是子图层，则刷新图层组，若不是，则不刷新
-      if (
-        this.refreshParentList &&
-        typeof this.refreshParentList === 'function'
-      ) {
-        await this.refreshParentList()
-      }
+      this._refreshParentList()
     } else return
   }
 
@@ -396,6 +400,7 @@ export default class LayerManager_tolbar extends React.Component {
       (async function() {
         await SMap.removeLayer(this.state.layerData.path)
         await this.props.getLayers()
+        await this._refreshParentList()
       }.bind(this)())
       this.setVisible(false)
     } else if (
@@ -541,6 +546,7 @@ export default class LayerManager_tolbar extends React.Component {
             (async function() {
               await SMap.renameLayer(this.state.layerData.path, value)
               await this.props.getLayers()
+              await this._refreshParentList()
             }.bind(this)())
           }
           await this.setVisible(false)

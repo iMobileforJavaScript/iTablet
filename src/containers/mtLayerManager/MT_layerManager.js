@@ -445,7 +445,10 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data, parentData, section }) => {
     let isGroup = data.type === 'layerGroup'
     let refreshParentList = async () => {
-      let prevParentData = this.prevItemRef && this.prevItemRef.props.parentData
+      let prevParentData =
+        this.prevItemRef &&
+        this.prevItemRef.props &&
+        this.prevItemRef.props.parentData
       if (prevParentData || parentData) {
         let parent = prevParentData || parentData
         let children = await this.getChildList({ data: parent, section })
