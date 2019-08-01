@@ -784,6 +784,7 @@ function address() {
   })
 }
 
+//多媒体采集
 function captureImage() {
   (async function() {
     let isTaggingLayer = await SMap.isTaggingLayer(
