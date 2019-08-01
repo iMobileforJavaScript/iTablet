@@ -378,6 +378,7 @@ export default class LayerManager_item extends React.Component {
       await this.props.onToolPress({
         data: this.state.data,
         index: this.props.index,
+        parentData: this.props.parentData,
       })
     } else return
   }
