@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, Platform } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import constants from '../../../../containers/workspace/constants'
 import ConstModule from '../../../../constants/ConstModule'
-import { scaleSize } from '../../../../utils'
+import { scaleSize ,screen} from '../../../../utils'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
@@ -13,6 +13,7 @@ import { downloadFile, deleteDownloadFile } from '../../../../models/down'
 import { connect } from 'react-redux'
 import { getLanguage } from '../../../../language'
 import ModuleItem from './ModuleItem'
+
 
 let isWaiting = false // 防止重复点击
 
@@ -310,22 +311,28 @@ class ModuleList extends Component {
   }
 
   render() {
-    // console.warn("render "+this.props.device.orientation)
+    let data = ConstModule(this.props.language)
+    let height = scaleSize(300)*data.length/2
+    let scrollEnabled = height >= screen.deviceHeight-scaleSize(88)-scaleSize(96)
+    scrollEnabled && (height -= scaleSize(40))
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
           this._renderScrollView()
         ) : (
-          <FlatList
-            key={'list'}
-            style={styles.flatList}
-            data={ConstModule(this.props.language)}
-            renderItem={this._renderItem}
-            horizontal={false}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'always'}
-          />
+          <View style={{width:"100%",height:height}}>
+            <FlatList
+              key={'list'}
+              style={styles.flatList}
+              data={data}
+              renderItem={this._renderItem}
+              scrollEnabled={scrollEnabled}
+              horizontal={false}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps={'always'}
+            />
+          </View>
         )}
       </View>
     )
@@ -355,7 +362,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     alignSelf: 'center',
-    flex: 1,
+    flex:1,
   },
   flatListView: {
     height: scaleSize(300),
