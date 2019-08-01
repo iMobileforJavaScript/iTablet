@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Text } from 'react-native'
-import { AnalystItem, PopModalList } from '../../components'
+import { AnalystItem, PopModalList, AnalystBar } from '../../components'
 import { CheckStatus, ConstPath } from '../../../../constants'
 import { getLanguage } from '../../../../language'
 // import { CheckBox } from '../../../../components'
@@ -48,50 +48,56 @@ const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
   key: k + 1,
 }))
 
+const defaultState = {
+  dataSource: null,
+  dataSet: null,
+  // 只针对被选择对象进行缓冲操作
+  isOperateForSelectedObj: false,
+  // 缓冲类型
+  roundTypeStatus: CheckStatus.CHECKED,
+  flatTypeStatus: CheckStatus.UN_CHECK,
+  // 缓冲半径
+  bufferRadius: 10,
+  bufferRadiuses: [10, 20, 30],
+  bufferRadiusUnit: 'Meter',
+  // 结果设置
+  isUnionBuffer: false,
+  isRetainAttribute: true,
+  isShowOnMap: true,
+  isShowOnScene: false,
+  semicircleArcNum: {
+    key: 100,
+    value: 100,
+  },
+  isRing: false,
+  // 结果数据
+  resultDataSource: null,
+  resultDataSet: null,
+
+  // 弹出框数据
+  popData: [],
+  currentPopData: null,
+
+  showAdvance: false,
+}
+
 export default class BufferAnalystViewTab extends Component {
   props: {
     navigation: Object,
     currentUser: Object,
     language: string,
     data: Array,
+    canBeAnalyst: boolean,
     type: string, // single, multiple
     checkData: () => {},
+    analyst: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      dataSource: null,
-      dataSet: null,
-      // 只针对被选择对象进行缓冲操作
-      isOperateForSelectedObj: false,
-      // 缓冲类型
-      roundTypeStatus: CheckStatus.CHECKED,
-      flatTypeStatus: CheckStatus.UN_CHECK,
+      ...defaultState,
       flatType: getFlatType(this.props.language)[0],
-      // 缓冲半径
-      bufferRadius: 10,
-      bufferRadiuses: [10, 20, 30],
-      bufferRadiusUnit: 'Meter',
-      // 结果设置
-      isUnionBuffer: false,
-      isRetainAttribute: true,
-      isShowOnMap: true,
-      isShowOnScene: false,
-      semicircleArcNum: {
-        key: 100,
-        value: 100,
-      },
-      isRing: false,
-      // 结果数据
-      resultDataSource: null,
-      resultDataSet: null,
-
-      // 弹出框数据
-      popData: [],
-      currentPopData: null,
-
-      showAdvance: false,
     }
 
     this.currentPop = ''
@@ -262,6 +268,19 @@ export default class BufferAnalystViewTab extends Component {
       roundTypeStatus,
       flatTypeStatus,
     })
+  }
+
+  // 重置页面数据
+  reset = () => {
+    this.setState(
+      Object.assign(
+        {
+          flatType: getFlatType(this.props.language)[0],
+        },
+        defaultState,
+      ),
+    )
+    this.currentPop = ''
   }
 
   renderTop = () => {
@@ -605,6 +624,18 @@ export default class BufferAnalystViewTab extends Component {
     )
   }
 
+  renderAnalystBar = () => {
+    return (
+      <AnalystBar
+        leftTitle={getLanguage(this.props.language).Analyst_Labels.RESET}
+        rightTitle={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+        leftAction={this.reset}
+        rightAction={this.props.analyst}
+        rightDisable={!this.props.canBeAnalyst}
+      />
+    )
+  }
+
   /** 选择数据源弹出框 **/
   renderPopList = () => {
     return (
@@ -672,6 +703,7 @@ export default class BufferAnalystViewTab extends Component {
           {this.state.showAdvance && this.renderResultSetting()}
           {this.state.showAdvance && this.renderResultData()}
         </ScrollView>
+        {this.renderAnalystBar()}
         {this.renderPopList()}
       </View>
     )

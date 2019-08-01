@@ -13,7 +13,6 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: scaleSize(80),
-    backgroundColor: '#F0F0F0',
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -83,7 +82,7 @@ export default StyleSheet.create({
     fontSize: setSpText(22),
     color: '#777',
     backgroundColor: '#F0F0F0',
-    paddingTop: scaleSize(30),
-    paddingHorizontal: scaleSize(30),
+    padding: scaleSize(20),
+    paddingLeft: scaleSize(30),
   },
 })

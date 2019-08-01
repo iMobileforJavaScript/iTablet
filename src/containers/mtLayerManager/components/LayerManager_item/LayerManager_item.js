@@ -56,6 +56,7 @@ export default class LayerManager_item extends React.Component {
     onToolPress: () => {},
     onOpen: () => {},
     getLayers: () => {},
+    refreshParent: () => {},
   }
 
   static defaultProps = {
@@ -272,22 +273,21 @@ export default class LayerManager_item extends React.Component {
     Toast.show('待做')
   }
 
-  _visible_change = () => {
-    this.setState(oldstate => {
-      let oldVisibe = oldstate.visible
-      ;(async function() {
-        this.props.setLayerVisible(this.props.data, !oldVisibe)
-      }.bind(this)())
-
-      let newState = {}
-      // if (this.state.data.groupName) {
-      let data = JSON.parse(JSON.stringify(this.state.data))
-      data.isVisible = !oldVisibe
-      newState.data = data
-      // }
-      newState.visible = !oldVisibe
-      return newState
-    })
+  _visible_change = async () => {
+    let oldVisibe = this.state.visible
+    let rel = await this.props.setLayerVisible(this.props.data, !oldVisibe)
+    if (rel) {
+      this.setState(() => {
+        let newState = {}
+        // if (this.state.data.groupName) {
+        let data = JSON.parse(JSON.stringify(this.state.data))
+        data.isVisible = !oldVisibe
+        newState.data = data
+        newState.visible = !oldVisibe
+        // }
+        return newState
+      })
+    }
   }
 
   // _openTheme = () => {
@@ -368,6 +368,7 @@ export default class LayerManager_item extends React.Component {
     if (this.props.onAllPress) {
       await this.props.onAllPress({
         data: this.state.data,
+        parentData: this.props.parentData,
       })
     } else return
   }
@@ -377,24 +378,15 @@ export default class LayerManager_item extends React.Component {
       await this.props.onToolPress({
         data: this.state.data,
         index: this.props.index,
+        parentData: this.props.parentData,
       })
     } else return
   }
 
-  refreshChildList = async () => {
-    let isShow = this.state.rowShow
-    let child
-    if (this.state.data.type === 'layerGroup') {
-      if (isShow) {
-        child =
-          (this.props.onArrowPress &&
-            (await this.props.onArrowPress({
-              data: this.state.data,
-            }))) ||
-          []
-      }
-    }
-    return child
+  setChildrenList = async children => {
+    this.setState({
+      child: children,
+    })
   }
 
   _arrow_pop_row = async () => {
@@ -500,7 +492,12 @@ export default class LayerManager_item extends React.Component {
         onPress: () => {
           (async function() {
             await SMap.moveUpLayer(layer.path)
-            await this.props.getLayers()
+            if (this.props.parentData) {
+              this.props.refreshParent &&
+                this.props.refreshParent(this.props.parentData)
+            } else {
+              await this.props.getLayers()
+            }
           }.bind(this)())
         },
       },
@@ -509,7 +506,12 @@ export default class LayerManager_item extends React.Component {
         onPress: () => {
           (async function() {
             await SMap.moveDownLayer(layer.path)
-            await this.props.getLayers()
+            if (this.props.parentData) {
+              this.props.refreshParent &&
+                this.props.refreshParent(this.props.parentData)
+            } else {
+              await this.props.getLayers()
+            }
           }.bind(this)())
         },
       },
@@ -520,13 +522,20 @@ export default class LayerManager_item extends React.Component {
             await SMap.moveToTop(layer.path)
             if (layer.path.indexOf('/') === -1) {
               let count = await SMap.getTaggingLayerCount(
-                this.props.user.currentUser.userName,
+                (this.props.user.currentUser &&
+                  this.props.user.currentUser.userName) ||
+                  'Customer',
               )
               for (let i = 0; i < count; i++) {
                 await SMap.moveDownLayer(layer.path)
               }
             }
-            await this.props.getLayers()
+            if (this.props.parentData) {
+              this.props.refreshParent &&
+                this.props.refreshParent(this.props.parentData)
+            } else {
+              await this.props.getLayers()
+            }
           }.bind(this)())
         },
       },
@@ -546,7 +555,12 @@ export default class LayerManager_item extends React.Component {
           // ) {
           //   SMap.moveToBottom(layer.name)
           // }
-          this.props.getLayers()
+          if (this.props.parentData) {
+            this.props.refreshParent &&
+              this.props.refreshParent(this.props.parentData)
+          } else {
+            this.props.getLayers()
+          }
         },
       },
     ]

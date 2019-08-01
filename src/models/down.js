@@ -19,20 +19,36 @@ export const setDownInformation = (
   cb && cb()
 }
 
-export const downloadFile = (params = {}) => async dispatch => {
+export const downloadFile = (params = {}) => async (dispatch, getState) => {
   params.progress = async res => {
-    // if (params.progress) {
-    //   params.progress(res)
-    // }
-    const data = {
-      id: params.key,
-      progress: res.progress,
-      params: params,
+    let value = res.progress >= 0 ? ~~res.progress.toFixed(0) : 0
+
+    let shouldUpdate = false,
+      isExist = false
+    let downloads = getState().down.toJS().downloads
+    for (let index = 0; index < downloads.length; index++) {
+      const element = downloads[index]
+      if (element.id === params.key) {
+        isExist = true
+        shouldUpdate = value !== downloads[index].progress
+        break
+      }
     }
-    await dispatch({
-      type: DOWNLOADING_FILE,
-      payload: data,
-    })
+    if (!isExist) {
+      shouldUpdate = true
+    }
+
+    if (shouldUpdate) {
+      const data = {
+        id: params.key,
+        progress: value,
+        params: params,
+      }
+      await dispatch({
+        type: DOWNLOADING_FILE,
+        payload: data,
+      })
+    }
   }
   let result = RNFS.downloadFile(params)
   return result.promise
@@ -102,7 +118,10 @@ export default handleActions(
           let isItem = false
           for (let index = 0; index < downloads.length; index++) {
             const element = downloads[index]
-            if (element.id === payload.id) {
+            if (
+              element.id === payload.id &&
+              payload.progress !== downloads[index].progress
+            ) {
               isItem = true
               downloads[index] = payload
               break

@@ -6,6 +6,7 @@ import friend from './friend'
 import collection from './collection'
 import analyst from './analyst'
 import layer3dType from './layer3dType'
+import layerType from './layerType'
 export default {
   publicAssets,
   tabBar,
@@ -15,4 +16,5 @@ export default {
   collection,
   analyst,
   layer3dType,
+  layerType,
 }

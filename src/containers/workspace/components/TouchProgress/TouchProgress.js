@@ -6,8 +6,8 @@ import {
   Image,
   Text,
   Platform,
-  StatusBar,
-  AsyncStorage,
+  // StatusBar,
+  // AsyncStorage,
 } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import {
@@ -68,6 +68,7 @@ export default class TouchProgress extends Component {
       },
     }
     this._linewidth = 0
+    this.INTERVAL = 100
     this._BackLine = {
       style: {
         width: this._linewidth,
@@ -87,11 +88,28 @@ export default class TouchProgress extends Component {
     this._initStatusBarVisible()
   }
 
+  debounce = fn => {
+    if (this.timer) {
+      clearTimeout(this.timer)
+    }
+    let that = this
+    this.timer = setTimeout(() => {
+      fn()
+      clearTimeout(that.timer)
+      that.timer = null
+    }, this.INTERVAL)
+  }
+
+  _setMapLegend = data => {
+    this.debounce(this.props.setMapLegend.bind(this, data))
+  }
+
   _initStatusBarVisible = async () => {
-    let result = await AsyncStorage.getItem('StatusBarVisible')
-    let invisible = result === 'true'
-    let android_statusHeight = invisible ? 0 : StatusBar.currentHeight
-    this.statusBarHeight = Platform.OS === 'ios' ? 20 : android_statusHeight //获取状态栏高度
+    // let result = await AsyncStorage.getItem('StatusBarVisible')
+    // let invisible = result === 'true'
+    // let android_statusHeight = invisible ? 0 : StatusBar.currentHeight
+    //安卓进度条ToolBar直接扣除了状态栏和软键盘高度
+    this.statusBarHeight = Platform.OS === 'ios' ? 20 : 0 //获取状态栏高度
   }
 
   _updateNativeStyles = () => {
@@ -951,15 +969,7 @@ export default class TouchProgress extends Component {
           columns = 4
         }
         legendSettings.column = columns
-        let flatListKey = GLOBAL.legend.state.flatListKey + 1
-        GLOBAL.legend.setState(
-          {
-            flatListKey,
-          },
-          () => {
-            this.props.setMapLegend && this.props.setMapLegend(legendSettings)
-          },
-        )
+        this._setMapLegend(legendSettings)
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
@@ -972,7 +982,7 @@ export default class TouchProgress extends Component {
           value = 20
         }
         legendSettings.widthPercent = value
-        this.props.setMapLegend && this.props.setMapLegend(legendSettings)
+        this._setMapLegend(legendSettings)
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
@@ -985,7 +995,7 @@ export default class TouchProgress extends Component {
           value = 20
         }
         legendSettings.heightPercent = value
-        this.props.setMapLegend && this.props.setMapLegend(legendSettings)
+        this._setMapLegend(legendSettings)
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
           '     ' +

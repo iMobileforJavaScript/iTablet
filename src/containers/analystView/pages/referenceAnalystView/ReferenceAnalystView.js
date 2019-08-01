@@ -5,24 +5,25 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 // import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList, AnalystBar } from '../../components'
-import { ConstPath } from '../../../../constants'
+import { ConstPath, CheckStatus, TouchType } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
 import { getLanguage } from '../../../../language'
+import { Analyst_Types } from '../../AnalystType'
 import {
   SMap,
   EngineType,
   SAnalyst,
   DatasetType,
-  GeoStyle,
+  Action,
 } from 'imobile_for_reactnative'
 
 const popTypes = {
   DataSource: 'DataSource',
   DataSet: 'DataSet',
-  OverlayDataSource: 'OverlayDataSource',
-  OverlayDataSet: 'OverlayDataSet',
+  ReferenceDataSource: 'ReferenceDataSource',
+  ReferenceDataSet: 'ReferenceDataSet',
   ResultDataSource: 'ResultDataSource',
   ResultDataSet: 'ResultDataSet',
 }
@@ -31,9 +32,21 @@ const defaultState = {
   // 源数据
   dataSource: null,
   dataSet: null,
-  // 叠加数据
-  overlayDataSource: null,
-  overlayDataSet: null,
+  // 显示区域设置
+  isCustomLocale: false,
+  selectRegionStatus: CheckStatus.CHECKED, // 选择面
+  drawRegionStatus: CheckStatus.UN_CHECK, // 绘制面
+
+  // 邻近数据
+  referenceDataSource: null,
+  referenceDataSet: null,
+
+  // 参数设置
+  measureType: '',
+  distanceInRange: [],
+  minDistance: 0,
+  maxDistance: 1,
+
   // 结果数据
   resultDataSource: null,
   resultDataSet: null,
@@ -45,71 +58,53 @@ const defaultState = {
   canBeAnalyst: false,
 }
 
-export default class OverlayAnalystView extends Component {
+export default class ReferenceAnalystView extends Component {
   props: {
     language: String,
     navigation: Object,
     device: Object,
     currentUser: Object,
+    map: Object,
+    layers: Array,
+    selection: Array,
     getLayers: () => {},
+    setSelection: () => {},
+    setAnalystParams: () => {},
+    setBackAction: () => {},
   }
 
   constructor(props) {
     super(props)
     const { params } = props.navigation.state
     this.cb = params && params.cb
-    this.state = {
-      title: (params && params.title) || '',
-      ...defaultState,
+    this.type = params && params.type
+    this.defaultState = params && params.defaultState
+    if (this.defaultState) {
+      this.state = this.defaultState
+    } else {
+      this.state = {
+        title: (params && params.title) || '',
+        ...defaultState,
+      }
     }
 
     this.currentPop = ''
   }
 
+  componentDidMount() {
+    this.props.setBackAction({
+      action: () => this.back(),
+    })
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevState.dataSource) !==
-        JSON.stringify(this.state.dataSource) ||
-      JSON.stringify(prevState.dataSet) !==
-        JSON.stringify(this.state.dataSet) ||
-      JSON.stringify(prevState.overlayDataSource) !==
-        JSON.stringify(this.state.overlayDataSource) ||
-      JSON.stringify(prevState.overlayDataSet) !==
-        JSON.stringify(this.state.overlayDataSet) ||
-      JSON.stringify(prevState.resultDataSource) !==
-        JSON.stringify(this.state.resultDataSource) ||
-      JSON.stringify(prevState.resultDataSet) !==
-        JSON.stringify(this.state.resultDataSet)
-    ) {
+    if (JSON.stringify(prevState) !== JSON.stringify(this.state)) {
       let canBeAnalyst = this.checkData()
       canBeAnalyst !== this.state.canBeAnalyst &&
         this.setState({
           canBeAnalyst,
         })
     }
-  }
-
-  /**
-   * 获取源数据过滤数据类型
-   * @returns {Array}
-   */
-  getDataLimit = () => {
-    let limit = []
-    switch (this.state.title) {
-      case getLanguage(this.props.language).Analyst_Methods.UPDATE:
-      case getLanguage(this.props.language).Analyst_Methods.UNION:
-      case getLanguage(this.props.language).Analyst_Methods.XOR:
-        limit = [DatasetType.REGION]
-        break
-      case getLanguage(this.props.language).Analyst_Methods.CLIP:
-      case getLanguage(this.props.language).Analyst_Methods.ERASE:
-      case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
-      case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
-      default:
-        limit = []
-        break
-    }
-    return limit
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -121,8 +116,8 @@ export default class OverlayAnalystView extends Component {
     if (
       this.state.dataSource &&
       this.state.dataSet &&
-      this.state.overlayDataSource &&
-      this.state.overlayDataSet &&
+      // this.state.overlayDataSource &&
+      // this.state.overlayDataSet &&
       this.state.resultDataSource &&
       this.state.resultDataSet
     ) {
@@ -133,6 +128,36 @@ export default class OverlayAnalystView extends Component {
 
   analyst = () => {
     if (!this.checkData) return
+
+    let optionParameter = {}
+    // 泰森
+    if (
+      this.type === Analyst_Types.THIESSEN_POLYGON &&
+      this.state.isCustomLocale
+    ) {
+      // 检查选择面
+      if (this.state.selectRegionStatus === CheckStatus.CHECKED) {
+        if (
+          this.props.selection.length > 0 &&
+          this.props.selection[0].ids.length > 0 &&
+          this.props.selection[0].layerInfo.type === DatasetType.REGION
+        ) {
+          optionParameter = {
+            selectRegion: {
+              layerPath: this.props.selection[0].layerInfo.path,
+              geoId: this.props.selection[0].ids[0],
+            },
+          }
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Analyst_Prompt
+              .PLEASE_SELECT_A_REGION,
+          )
+          return
+        }
+      }
+    }
+
     Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
     ;(async function() {
       try {
@@ -140,86 +165,42 @@ export default class OverlayAnalystView extends Component {
           true,
           getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
         )
-        let geoStyle = new GeoStyle()
-        geoStyle.setLineColor(50, 240, 50)
-        geoStyle.setLineStyle(0)
-        geoStyle.setLineWidth(0.5)
-        geoStyle.setMarkerStyle(351)
-        geoStyle.setMarkerSize(5)
-        geoStyle.setFillForeColor(244, 50, 50)
-        geoStyle.setFillOpaqueRate(70)
         let sourceData = {
             datasource: this.state.dataSource.value,
             dataset: this.state.dataSet.value,
-          },
-          targetData = {
-            datasource: this.state.overlayDataSource.value,
-            dataset: this.state.overlayDataSet.value,
           },
           resultData = {
             datasource: this.state.resultDataSource.value,
             dataset: this.state.resultDataSet.value,
           },
-          optionParameter = {
-            geoStyle,
-          },
           result = false
-        switch (this.state.title) {
-          case getLanguage(this.props.language).Analyst_Methods.CLIP:
-            result = await SAnalyst.clip(
+        switch (this.type) {
+          case Analyst_Types.THIESSEN_POLYGON:
+            if (this.state.isCustomLocale) {
+              if (this.state.selectRegionStatus === CheckStatus.CHECKED) {
+                optionParameter = {
+                  selectRegion: {
+                    layerPath: this.props.selection[0].layerInfo.path,
+                    geoId: this.props.selection[0].ids[0],
+                  },
+                }
+              } else {
+                optionParameter = { drawRegion: true }
+              }
+            }
+            result = await SAnalyst.thiessenAnalyst(
               sourceData,
-              targetData,
               resultData,
               optionParameter,
             )
             break
-          case getLanguage(this.props.language).Analyst_Methods.ERASE:
-            result = await SAnalyst.erase(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
-            break
-          case getLanguage(this.props.language).Analyst_Methods.IDENTITY:
-            result = await SAnalyst.identity(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
-            break
-          case getLanguage(this.props.language).Analyst_Methods.INTERSECT:
-            result = await SAnalyst.intersect(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
-            break
-          case getLanguage(this.props.language).Analyst_Methods.UNION:
-            result = await SAnalyst.union(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
-            break
-          case getLanguage(this.props.language).Analyst_Methods.UPDATE:
-            result = await SAnalyst.update(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
-            break
-          case getLanguage(this.props.language).Analyst_Methods.XOR:
-            result = await SAnalyst.xOR(
-              sourceData,
-              targetData,
-              resultData,
-              optionParameter,
-            )
+          case Analyst_Types.MEASURE_DISTANCE:
+            // result = await SAnalyst.erase(
+            //   sourceData,
+            //   targetData,
+            //   resultData,
+            //   optionParameter,
+            // )
             break
         }
         this.setLoading(false)
@@ -230,13 +211,11 @@ export default class OverlayAnalystView extends Component {
             : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
         )
         if (result) {
+          SMap.setAction(Action.PAN)
           SMap.viewEntire()
           await this.props.getLayers()
 
-          NavigationService.goBack('AnalystListEntry')
-          // if (optionParameter.showResult) {
-          //   TabNavigationService.navigate('MapAnalystView')
-          // }
+          NavigationService.goBack('ReferenceAnalystView')
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
           }
@@ -251,7 +230,10 @@ export default class OverlayAnalystView extends Component {
   }
 
   back = () => {
-    NavigationService.goBack()
+    SMap.clearSelection()
+    SMap.setAction(Action.PAN)
+    this.props.setSelection && this.props.setSelection(null)
+    NavigationService.goBack('ReferenceAnalystView')
   }
 
   getDataSources = async () => {
@@ -313,6 +295,28 @@ export default class OverlayAnalystView extends Component {
     return dss
   }
 
+  changeBufferType = (title, cb) => {
+    let selectRegionStatus
+    let drawRegionStatus
+    switch (title) {
+      case getLanguage(this.props.language).Analyst_Labels.SELECT_REGION:
+        selectRegionStatus = CheckStatus.CHECKED
+        drawRegionStatus = CheckStatus.UN_CHECK
+        break
+      case getLanguage(this.props.language).Analyst_Labels.DRAW_REGION:
+        selectRegionStatus = CheckStatus.UN_CHECK
+        drawRegionStatus = CheckStatus.CHECKED
+        break
+    }
+    this.setState(
+      {
+        selectRegionStatus,
+        drawRegionStatus,
+      },
+      () => cb && cb(),
+    )
+  }
+
   // 重置页面数据
   reset = () => {
     this.setState(Object.assign({}, this.state, defaultState))
@@ -361,7 +365,7 @@ export default class OverlayAnalystView extends Component {
               this.state.dataSource.path,
             )
             let filter = {}
-            filter.typeFilter = this.getDataLimit()
+            filter.typeFilter = [DatasetType.POINT]
             if (this.state.overlayDataSet && this.state.overlayDataSet.value) {
               filter.exclude = {
                 dataSource: this.state.overlayDataSource.value,
@@ -391,7 +395,7 @@ export default class OverlayAnalystView extends Component {
     )
   }
 
-  renderOverlayData = () => {
+  renderReferenceData = () => {
     return (
       <View key="overlayData" style={styles.topView}>
         <View style={styles.subTitleView}>
@@ -470,6 +474,129 @@ export default class OverlayAnalystView extends Component {
     )
   }
 
+  renderDisplaySettingsData = () => {
+    return (
+      <View key="overlayData" style={styles.topView}>
+        <View style={styles.subTitleView}>
+          <Text style={styles.subTitle}>
+            {
+              getLanguage(this.props.language).Analyst_Labels
+                .DISPLAY_REGION_SETTINGS
+            }
+          </Text>
+        </View>
+        <AnalystItem
+          title={getLanguage(this.props.language).Analyst_Labels.CUSTOM_LOCALE}
+          value={this.state.isCustomLocale}
+          disable={
+            this.props.layers === undefined || this.props.layers.length === 0
+          }
+          onChange={value => {
+            this.setState({
+              isCustomLocale: value,
+            })
+          }}
+        />
+        {this.state.isCustomLocale && (
+          <View>
+            <AnalystItem
+              radioStatus={this.state.selectRegionStatus}
+              title={
+                getLanguage(this.props.language).Analyst_Labels.SELECT_REGION
+              }
+              value={''}
+              onPress={() => {
+                this.changeBufferType(
+                  getLanguage(this.props.language).Analyst_Labels.SELECT_REGION,
+                  () => {
+                    let params = Object.assign(
+                      {},
+                      this.props.navigation.state.params,
+                      { defaultState: this.state },
+                    )
+                    this.props
+                      .setAnalystParams({
+                        ...params,
+                        actionType: 'select',
+                        title: getLanguage(this.props.language).Analyst_Labels
+                          .SELECT_REGION,
+                        backAction: () => {
+                          this.props.setAnalystParams(null)
+                          // SMap.setAction(Action.PAN)
+                          NavigationService.navigate('ReferenceAnalystView', {
+                            ...params,
+                          })
+                        },
+                      })
+                      .then(() => {
+                        SMap.getAction().then(type => {
+                          if (type !== Action.SELECT) {
+                            SMap.setAction(Action.SELECT)
+                          }
+                          NavigationService.goBack('ReferenceAnalystView')
+                        })
+                      })
+                  },
+                )
+              }}
+              onRadioPress={() => {
+                this.changeBufferType(
+                  getLanguage(this.props.language).Analyst_Labels.SELECT_REGION,
+                )
+              }}
+            />
+            <AnalystItem
+              radioStatus={this.state.drawRegionStatus}
+              title={
+                getLanguage(this.props.language).Analyst_Labels.DRAW_REGION
+              }
+              value={''}
+              onPress={() => {
+                this.changeBufferType(
+                  getLanguage(this.props.language).Analyst_Labels.DRAW_REGION,
+                  () => {
+                    let params = Object.assign(
+                      {},
+                      this.props.navigation.state.params,
+                      { defaultState: this.state },
+                    )
+                    this.props
+                      .setAnalystParams({
+                        ...params,
+                        actionType: 'draw',
+                        title: getLanguage(this.props.language).Analyst_Labels
+                          .DRAW_REGION,
+                        backAction: () => {
+                          this.props.setAnalystParams(null)
+                          NavigationService.navigate('ReferenceAnalystView', {
+                            ...params,
+                          })
+                        },
+                      })
+                      .then(() => {
+                        GLOBAL.TouchType = TouchType.REFERENCE
+                        SMap.getAction().then(type => {
+                          if (type !== Action.CREATEPOLYGON) {
+                            SMap.setAction(Action.CREATEPOLYGON)
+                          }
+                          NavigationService.goBack('ReferenceAnalystView')
+                        })
+                      })
+                  },
+                )
+              }}
+              onRadioPress={() => {
+                this.changeBufferType(
+                  getLanguage(this.props.language).Analyst_Labels.DRAW_REGION,
+                )
+              }}
+            />
+          </View>
+        )}
+      </View>
+    )
+  }
+
   renderResultData = () => {
     return (
       <View key="resultData" style={styles.topView}>
@@ -521,7 +648,7 @@ export default class OverlayAnalystView extends Component {
                 .RESULT_DATASET_NAME,
               placeholder: '',
               cb: async value => {
-                NavigationService.goBack()
+                NavigationService.goBack('InputPage')
                 this.setState({
                   resultDataSet: {
                     value: value.toString().trim(),
@@ -551,11 +678,11 @@ export default class OverlayAnalystView extends Component {
             case popTypes.DataSet:
               newStateData = { dataSet: data }
               break
-            case popTypes.OverlayDataSource:
-              newStateData = { overlayDataSource: data }
+            case popTypes.ReferenceDataSource:
+              newStateData = { referenceDataSource: data }
               break
-            case popTypes.OverlayDataSet:
-              newStateData = { overlayDataSet: data }
+            case popTypes.ReferenceDataSet:
+              newStateData = { referenceDataSet: data }
               break
             case popTypes.ResultDataSource:
               newStateData = { resultDataSource: data }
@@ -608,7 +735,10 @@ export default class OverlayAnalystView extends Component {
       >
         <ScrollView style={styles.container}>
           {this.renderSourceData()}
-          {this.renderOverlayData()}
+          {this.type === Analyst_Types.THIESSEN_POLYGON &&
+            this.renderDisplaySettingsData()}
+          {this.type === Analyst_Types.MEASURE_DISTANCE &&
+            this.renderReferenceData()}
           {this.renderResultData()}
         </ScrollView>
         {this.renderAnalystBar()}

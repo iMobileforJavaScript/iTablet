@@ -11,11 +11,12 @@ export const BACK_ACTION_REMOVE = 'BACK_ACTION_REMOVE'
 // Actions
 // --------------------------------------------------
 export const setAnalystParams = (params = {}) => async dispatch => {
-  await dispatch({
+  return dispatch({
     type: SET_ANALYST_PARAMS,
     payload: params,
   })
 }
+
 export const removeBackAction = (params = {}) => async (dispatch, getState) => {
   if (!params.key) {
     let nav = getState().nav.toJS()

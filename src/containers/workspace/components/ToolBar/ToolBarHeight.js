@@ -309,7 +309,7 @@ function getToorbarHeight(orientation, type) {
       } else {
         column = 5
       }
-      height = ConstToolType.HEIGHT[2]
+      height = ConstToolType.TOOLBAR_HEIGHT[2]
       break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:

@@ -35,7 +35,7 @@ import {
   InputDialog,
   PopView,
   SurfaceView,
-  SearchBar,
+  // SearchBar,
   Progress,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
@@ -57,6 +57,7 @@ import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
 import ScaleView from '../../components/ScaleView/ScaleView'
+import { Analyst_Types } from '../../../analystView/AnalystType'
 
 const markerTag = 117868
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -128,47 +129,34 @@ export default class MapView extends React.Component {
     const { params } = this.props.navigation.state
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
-    // this.operationType =
-    //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
-    this.mapName = ''
-    if (params && params.mapName) {
-      this.mapName = params.mapName
+    this.mapTitle = ''
+    if (params && params.mapTitle) {
+      this.mapTitle = params.mapTitle
     } else if (GLOBAL.Type) {
-      this.mapName = getHeaderTitle(GLOBAL.Type)
+      this.mapTitle = getHeaderTitle(GLOBAL.Type)
     }
 
     this.path = (params && params.path) || ''
     this.showDialogCaption =
       params && params.path ? !params.path.endsWith('.smwu') : true
-    // this.savepath =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    // let wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(params.path.lastIndexOf('/') + 1)
-    // wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : wsName.lastIndexOf('.') > 0 &&
-    //       wsName.substring(0, wsName.lastIndexOf('.'))
     this.backAction = (params && params.backAction) || null
     this.state = {
       showMap: false, // 控制地图初始化显示
       data: params ? params.data : [],
       popShow: false, //  一级popView显示控制
       popType: '',
-      mapName: '',
+      mapTitle: this.mapTitle,
       // wsName: wsName,
       measureShow: false,
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
       // changeLayerBtnBottom: scaleSize(200),
+      canBeUndo: false,
+      canBeRedo: false,
     }
     this.closeInfo = [
       {
@@ -266,21 +254,38 @@ export default class MapView extends React.Component {
 
     // 网络分析模式下
     if (this.props.analyst.params) {
-      this.container && this.container.setHeaderVisible(false)
-      this.container && this.container.setBottomVisible(false)
       // 网络分析模式下，设置返回按钮事件
       if (
         JSON.stringify(prevProps.analyst.params) !==
         JSON.stringify(this.props.analyst.params)
       ) {
-        this.toolBox && this.toolBox.setVisible(false)
-        // Android 物理返回键事件
+        this.toolBox &&
+          this.toolBox.setVisible(false, null, {
+            cb: () => {
+              if (
+                this.props.analyst.params.type === Analyst_Types.OPTIMAL_PATH ||
+                this.props.analyst.params.type ===
+                  Analyst_Types.CONNECTIVITY_ANALYSIS ||
+                this.props.analyst.params.type === Analyst_Types.FIND_TSP_PATH
+              ) {
+                this.container && this.container.setHeaderVisible(false)
+              } else {
+                this.mapController && this.mapController.setVisible(false)
+              }
+              this.container && this.container.setBottomVisible(false)
+              if (
+                this.props.analyst.params.title &&
+                this.props.analyst.params.title !== this.state.mapTitle
+              ) {
+                this.setState({ mapTitle: this.props.analyst.params.title })
+              }
+            },
+          })
         this.backAction =
-          (Platform.OS === 'android' &&
-            (this.props.analyst.params &&
-              this.props.analyst.params.backAction)) ||
+          (this.props.analyst.params && this.props.analyst.params.backAction) ||
           null
       }
+
       // 网络分析模式下，地图控制器 横竖屏切换位置变化
       if (this.props.device.orientation !== prevProps.device.orientation) {
         if (this.analystRecommendVisible) {
@@ -295,7 +300,11 @@ export default class MapView extends React.Component {
       this.backAction = null
       this.container && this.container.setHeaderVisible(true)
       this.container && this.container.setBottomVisible(true)
+      if (this.state.mapTitle !== this.mapTitle) {
+        this.setState({ mapTitle: this.mapTitle })
+      }
     }
+
     if (
       this.props.device.orientation !== prevProps.device.orientation &&
       this.props.analyst.params
@@ -447,12 +456,12 @@ export default class MapView extends React.Component {
                 {
                   path: (this.DSParams && this.DSParams.server) || this.path,
                   type: this.type,
-                  name: this.mapName,
+                  name: this.mapTitle,
                   image: uri,
                   DSParams: this.DSParams,
                   labelDSParams: this.labelDSParams,
                   layerIndex: this.layerIndex,
-                  mapName: this.mapName,
+                  mapTitle: this.mapTitle,
                 },
                 cb,
               )
@@ -574,7 +583,7 @@ export default class MapView extends React.Component {
 
   // 导出(保存)工作空间中地图到模块
   saveMapName = (
-    mapName = '',
+    mapTitle = '',
     nModule = '',
     addition = {},
     isNew = false,
@@ -582,7 +591,7 @@ export default class MapView extends React.Component {
   ) => {
     try {
       this.setLoading(true, getLanguage(this.props.language).Prompt.SAVING)
-      this.props.saveMap({ mapName, nModule, addition, isNew }).then(
+      this.props.saveMap({ mapTitle, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
           Toast.show(
@@ -596,7 +605,7 @@ export default class MapView extends React.Component {
           this.setLoading(false)
         },
       )
-      // SMap.saveMapName(mapName, nModule, addition, isNew).then(
+      // SMap.saveMapName(mapTitle, nModule, addition, isNew).then(
       //   result => {
       //     this.setLoading(false)
       //     Toast.show(
@@ -646,13 +655,13 @@ export default class MapView extends React.Component {
   }
 
   // 地图保存为xml(fileName, cb)
-  saveMapToXML = mapName => {
+  saveMapToXML = mapTitle => {
     this.setLoading(true, '正在保存')
     ;(async function() {
       try {
         const filePath =
           (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-          mapName +
+          mapTitle +
           '.xml'
         let config = await jsonUtil.readConfig()
         SMap.saveMapToXML(filePath).then(result => {
@@ -671,7 +680,7 @@ export default class MapView extends React.Component {
               }
 
               for (let i = 0; i < config.data[0].maps.length; i++) {
-                if (config.data[0].maps[i].mapName === mapName + '.xml') {
+                if (config.data[0].maps[i].mapTitle === mapTitle + '.xml') {
                   config.data[0].maps[i].UDBName = data
                   break
                 }
@@ -691,13 +700,13 @@ export default class MapView extends React.Component {
   }
 
   // 地图保存为xml(fileName, cb)
-  saveMapToXMLWithDialog = ({ mapName }) => {
+  saveMapToXMLWithDialog = ({ mapTitle }) => {
     // this.setLoading(true, '正在保存')
     (async function() {
       try {
         const filePath =
           (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-          mapName +
+          mapTitle +
           '.xml'
         let config = await jsonUtil.readConfig()
         SMap.saveMapToXML(filePath).then(result => {
@@ -717,7 +726,7 @@ export default class MapView extends React.Component {
                 data[i] = dataSourceAlias[i].title
               }
 
-              jsonUtil.saveMapInfo(config, mapName, data)
+              jsonUtil.saveMapInfo(config, mapTitle, data)
             })
           }
         })
@@ -741,8 +750,8 @@ export default class MapView extends React.Component {
         } else {
           try {
             (async function() {
-              let mapName = await SMap.getMapName()
-              await this.saveMapToXML(mapName)
+              let mapTitle = await SMap.getMapName()
+              await this.saveMapToXML(mapTitle)
             }.bind(this)())
           } catch (e) {
             Toast.show('保存失败')
@@ -757,10 +766,10 @@ export default class MapView extends React.Component {
     // this.setLoading(true, '正在保存')
     (async function() {
       try {
-        let mapName = await SMap.getMapName()
+        let mapTitle = await SMap.getMapName()
         const filePath =
           (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-          mapName +
+          mapTitle +
           '.xml'
         let config = await jsonUtil.readConfig()
 
@@ -781,7 +790,7 @@ export default class MapView extends React.Component {
                 data[i] = dataSourceAlias[i].title
               }
 
-              jsonUtil.saveMapInfo(config, mapName, data)
+              jsonUtil.saveMapInfo(config, mapTitle, data)
             })
           }
         })
@@ -801,10 +810,10 @@ export default class MapView extends React.Component {
     )
     ;(async function() {
       try {
-        let mapName = await SMap.getMapName()
+        let mapTitle = await SMap.getMapName()
         const filePath =
           (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-          mapName +
+          mapTitle +
           '.xml'
         let config = await jsonUtil.readConfig()
 
@@ -828,7 +837,7 @@ export default class MapView extends React.Component {
               }
 
               for (let i = 0; i < config.data[0].maps.length; i++) {
-                if (config.data[0].maps[i].mapName === mapName + '.xml') {
+                if (config.data[0].maps[i].mapTitle === mapTitle + '.xml') {
                   config.data[0].maps[i].UDBName = data
                   break
                 }
@@ -976,6 +985,7 @@ export default class MapView extends React.Component {
           )
           await this.props.closeMap()
           await this._removeGeometrySelectedListener()
+          GLOBAL.Type = null
           GLOBAL.clearMapData()
           this.setLoading(false)
           NavigationService.goBack()
@@ -1290,6 +1300,12 @@ export default class MapView extends React.Component {
 
   /** 地图分析模式左侧按钮 **/
   renderAnalystMapButtons = () => {
+    if (
+      this.props.analyst.params.type !== Analyst_Types.OPTIMAL_PATH &&
+      this.props.analyst.params.type !== Analyst_Types.CONNECTIVITY_ANALYSIS &&
+      this.props.analyst.params.type !== Analyst_Types.FIND_TSP_PATH
+    )
+      return null
     return (
       <AnalystMapButtons
         language={this.props.language}
@@ -1328,6 +1344,7 @@ export default class MapView extends React.Component {
     return (
       <AnalystMapToolbar
         type={this.props.analyst.params.type}
+        actionType={this.props.analyst.params.actionType}
         back={() => {
           let action =
             (this.props.analyst.params &&
@@ -1335,10 +1352,14 @@ export default class MapView extends React.Component {
             null
           action && action()
           GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
+          if (this.state.mapTitle !== this.mapTitle) {
+            this.setState({ mapTitle: this.mapTitle })
+          }
+          // TODO 不同类型高度修改
           this.toolBox.setVisible(true, GLOBAL.currentToolbarType, {
             isFullScreen: true,
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-            height: ConstToolType.HEIGHT[2],
+            height: ConstToolType.TOOLBAR_HEIGHT[2],
             tableType: 'normal',
           })
         }}
@@ -1436,7 +1457,15 @@ export default class MapView extends React.Component {
 
   /** 展示撤销Modal **/
   showUndoView = () => {
-    this.popModal && this.popModal.setVisible(true)
+    (async function() {
+      this.popModal && this.popModal.setVisible(true)
+      let historyCount = await SMap.getMapHistoryCount()
+      let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+      this.setState({
+        canBeUndo: currentHistoryCount >= 0,
+        canBeRedo: currentHistoryCount < historyCount - 1,
+      })
+    }.bind(this)())
   }
 
   renderMenuDialog = () => {
@@ -1526,18 +1555,50 @@ export default class MapView extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
           //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.undo()}
+          onPress={() => {
+            if (!this.state.canBeUndo) return
+            ;(async function() {
+              await SMap.undo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         <MTBtn
           key={'redo'}
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
           //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.redo()}
+          onPress={() => {
+            if (!this.state.canBeRedo) return
+            ;(async function() {
+              await SMap.redo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         {/*<MTBtn*/}
         {/*key={'revert'}*/}
@@ -1554,22 +1615,23 @@ export default class MapView extends React.Component {
   }
 
   renderSearchBar = () => {
-    if (!this.props.analyst.params) return null
-    return (
-      <SearchBar
-        ref={ref => (this.searchBar = ref)}
-        onSubmitEditing={searchKey => {
-          this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
-          this.search(searchKey)
-        }}
-        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
-        //{'请输入搜索关键字'}
-      />
-    )
+    return null
+    // if (!this.props.analyst.params) return null
+    // return (
+    //   <SearchBar
+    //     ref={ref => (this.searchBar = ref)}
+    //     onSubmitEditing={searchKey => {
+    //       this.setLoading(true, getLanguage(global.language).Prompt.SEARCHING)
+    //       this.search(searchKey)
+    //     }}
+    //     placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
+    //     //{'请输入搜索关键字'}
+    //   />
+    // )
   }
 
   renderHeaderRight = () => {
-    if (this.isExample) return null
+    if (this.isExample || this.props.analyst.params) return null
     // if (this.props.analyst.params) {
     //   return [
     //     <TextBtn
@@ -1629,7 +1691,7 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.mapName,
+          title: this.state.mapTitle,
           navigation: this.props.navigation,
           // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
@@ -1705,13 +1767,13 @@ export default class MapView extends React.Component {
           ref={ref => (this.saveXMLDialog = ref)}
           confirmAction={this.saveMapToXMLWithDialog}
           showWsName={this.showDialogCaption}
-          mapName={this.state.mapName}
+          mapTitle={this.state.mapTitle}
         />
         <SaveMapNameDialog
           ref={ref => (this.saveMapDialog = ref)}
           confirmAction={this.saveMapToXMLAndClose}
           showWsName={this.showDialogCaption}
-          mapName={this.state.mapName}
+          mapTitle={this.state.mapTitle}
         />
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
@@ -1720,7 +1782,7 @@ export default class MapView extends React.Component {
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}
-          confirmAction={data => this.saveAsMap(data.mapName)}
+          confirmAction={data => this.saveAsMap(data.mapTitle)}
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />

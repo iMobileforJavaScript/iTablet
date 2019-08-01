@@ -55,7 +55,7 @@ export default class LayerManager_tolbar extends React.Component {
     type?: string,
     containerProps?: Object,
     data: Array,
-    layerdata?: Object,
+    layerData?: Object,
     existFullMap: () => {},
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
@@ -95,12 +95,13 @@ export default class LayerManager_tolbar extends React.Component {
       showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
-      layerdata: props.layerdata || '',
+      layerData: props.layerData || '',
       index: 0,
       // layerName: '',
     }
     this.isShow = false
     this.isBoxShow = true
+    this.refreshParentList = null // 当前选中图层如果是图层组中的子图层，则刷新该子图层的图层组列表
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -274,7 +275,7 @@ export default class LayerManager_tolbar extends React.Component {
    *   height:          工具栏高度
    *   column:          表格列数（仅table可用）
    *   containerType:   容器的类型, list | table
-   *   layerdata:       图层数据
+   *   layerData:       图层数据
    * }
    **/
   setVisible = (isShow, type, params = {}) => {
@@ -286,13 +287,15 @@ export default class LayerManager_tolbar extends React.Component {
     if (isShow) {
       let data = this.getData(
         type,
-        params.layerdata &&
-          params.layerdata.type &&
-          params.layerdata.type === 'layerGroup',
+        params.layerData &&
+          params.layerData.type &&
+          params.layerData.type === 'layerGroup',
       )
-      newState = this.updateMenuState(data, params.layerdata)
+      newState = this.updateMenuState(data, params.layerData)
     }
-    this.updateLayerVisible = params.updateLayerVisible
+    if (isShow) {
+      this.refreshParentList = params.refreshParentList
+    }
     this.setState(
       {
         type: type,
@@ -318,21 +321,21 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   //更新菜单按钮状态
-  updateMenuState = (data, layerdata) => {
-    let newState = { layerdata }
+  updateMenuState = (data, layerData) => {
+    let newState = { layerData }
     if (data && data[0] && data[0].headers && GLOBAL.Type !== 'MAP_3D') {
-      let tempheader0 = layerdata.isVisible
+      let tempheader0 = layerData.isVisible
         ? layerSettingCanVisit(this.props.language)
         : layerSettingCanNotVisit(this.props.language)
-      let tempheader1 = layerdata.isSelectable
+      let tempheader1 = layerData.isSelectable
         ? layerSettingCanSelect(this.props.language)
         : layerSettingCanNotSelect(this.props.language)
       data[0].headers = tempheader0.concat(tempheader1)
       if (GLOBAL.Type === 'COLLECTION') {
-        let tempheader2 = layerdata.isEditable
+        let tempheader2 = layerData.isEditable
           ? layerSettingCanEdit(this.props.language)
           : layerSettingCanNotEdit(this.props.language)
-        let tempheader3 = layerdata.isSnapable
+        let tempheader3 = layerData.isSnapable
           ? layerSettingCanSnap(this.props.language)
           : layerSettingCanNotSnap(this.props.language)
         data[0].headers = data[0].headers.concat(tempheader2, tempheader3)
@@ -350,16 +353,27 @@ export default class LayerManager_tolbar extends React.Component {
   mapStyle = async () => {
     if (this.props.onPress) {
       await this.props.onPress({
-        data: this.state.layerdata,
+        data: this.state.layerData,
       })
     } else return
+  }
+
+  _refreshParentList = async () => {
+    if (
+      this.refreshParentList &&
+      typeof this.refreshParentList === 'function'
+    ) {
+      await this.refreshParentList()
+    }
   }
 
   setThislayer = async () => {
     if (this.props.onThisPress) {
       await this.props.onThisPress({
-        data: this.state.layerdata,
+        data: this.state.layerData,
       })
+      // 无论是否是图层组中的图层，都调用refreshParentList刷新，若之前的是子图层，则刷新图层组，若不是，则不刷新
+      this._refreshParentList()
     } else return
   }
 
@@ -384,8 +398,9 @@ export default class LayerManager_tolbar extends React.Component {
     ) {
       //'移除'
       (async function() {
-        await SMap.removeLayer(this.state.layerdata.path)
+        await SMap.removeLayer(this.state.layerData.path)
         await this.props.getLayers()
+        await this._refreshParentList()
       }.bind(this)())
       this.setVisible(false)
     } else if (
@@ -394,7 +409,7 @@ export default class LayerManager_tolbar extends React.Component {
     ) {
       //'全幅显示当前图层') {
       this.setVisible(false)
-      SMap.setLayerFullView(this.state.layerdata.path)
+      SMap.setLayerFullView(this.state.layerData.path)
       this.props.navigation.navigate(
         GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
       )
@@ -404,7 +419,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'切换底图') {
       this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
-        layerdata: this.state.layerdata,
+        layerData: this.state.layerData,
       })
     } else if (
       section.title ===
@@ -420,7 +435,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'可见比例尺范围'
       this.setVisible(true, ConstToolType.MAP_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[1],
-        layerdata: this.state.layerdata,
+        layerData: this.state.layerData,
       })
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM
@@ -428,7 +443,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'最大可见比例尺') {
       this.setVisible(true, ConstToolType.MAP_MAX_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
-        layerdata: this.state.layerdata,
+        layerData: this.state.layerData,
       })
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_MINIMUM
@@ -436,85 +451,85 @@ export default class LayerManager_tolbar extends React.Component {
       //'最小可见比例尺') {
       this.setVisible(true, ConstToolType.MAP_MIN_SCALE, {
         height: ConstToolType.TOOLBAR_HEIGHT[6],
-        layerdata: this.state.layerdata,
+        layerData: this.state.layerData,
       })
     } else if (section.title === '1:5,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 5000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 5000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 5000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 5000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:10,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 10000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 10000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 10000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 10000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:25,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 25000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 25000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 25000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 25000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:50,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 50000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 50000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 50000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 50000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:100,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 100000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 100000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 100000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 100000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:250,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 250000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 250000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 250000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 250000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:500,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 500000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 500000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 500000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 500000)
           this.setVisible(false)
         }
       }.bind(this)())
     } else if (section.title === '1:1,000,000') {
       (async function() {
         if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerdata.path, 1000000)
+          await SMap.setMinVisibleScale(this.state.layerData.path, 1000000)
           this.setVisible(false)
         } else {
-          await SMap.setMaxVisibleScale(this.state.layerdata.path, 1000000)
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 1000000)
           this.setVisible(false)
         }
       }.bind(this)())
@@ -525,12 +540,13 @@ export default class LayerManager_tolbar extends React.Component {
       NavigationService.navigate('InputPage', {
         headerTitle: getLanguage(global.language).Map_Layer.LAYERS_LAYER_NAME,
         //'图层名称',
-        value: this.state.layerdata ? this.state.layerdata.caption : '',
+        value: this.state.layerData ? this.state.layerData.caption : '',
         cb: async value => {
           if (value !== '') {
             (async function() {
-              await SMap.renameLayer(this.state.layerdata.path, value)
+              await SMap.renameLayer(this.state.layerData.path, value)
               await this.props.getLayers()
+              await this._refreshParentList()
             }.bind(this)())
           }
           await this.setVisible(false)
@@ -544,7 +560,7 @@ export default class LayerManager_tolbar extends React.Component {
     // ) {
     //   //''上移') {
     //   (async function() {
-    //     await SMap.moveUpLayer(this.state.layerdata.name)
+    //     await SMap.moveUpLayer(this.state.layerData.name)
     //     await this.props.getLayers()
     //   }.bind(this)())
     // } else if (
@@ -552,7 +568,7 @@ export default class LayerManager_tolbar extends React.Component {
     // ) {
     //   //''下移') {
     //   (async function() {
-    //     await SMap.moveDownLayer(this.state.layerdata.name)
+    //     await SMap.moveDownLayer(this.state.layerData.name)
     //     await this.props.getLayers()
     //   }.bind(this)())
     // } else if (
@@ -560,12 +576,12 @@ export default class LayerManager_tolbar extends React.Component {
     // ) {
     //   //''置顶') {
     //   (async function() {
-    //     await SMap.moveToTop(this.state.layerdata.name)
+    //     await SMap.moveToTop(this.state.layerData.name)
     //     let count = await SMap.getTaggingLayerCount(
     //       this.props.user.currentUser.userName,
     //     )
     //     for (let i = 0; i < count; i++) {
-    //       await SMap.moveDownLayer(this.state.layerdata.name)
+    //       await SMap.moveDownLayer(this.state.layerData.name)
     //     }
     //     await this.props.getLayers()
     //     this.setVisible(false)
@@ -575,15 +591,15 @@ export default class LayerManager_tolbar extends React.Component {
     // ) {
     //   //''置底') {
     //   (async function() {
-    //     await SMap.moveToBottom(this.state.layerdata.name)
+    //     await SMap.moveToBottom(this.state.layerData.name)
     //   }.bind(this)())
-    //   SMap.moveUpLayer(this.state.layerdata.name)
+    //   SMap.moveUpLayer(this.state.layerData.name)
     //   if (
     //     this.props.layers[this.props.layers.length - 1].name.indexOf(
     //       'vec@TD',
     //     ) >= 0
     //   ) {
-    //     SMap.moveUpLayer(this.state.layerdata.name)
+    //     SMap.moveUpLayer(this.state.layerData.name)
     //   }
     //   this.props.getLayers()
     //   this.setVisible(false)
@@ -595,7 +611,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'设置为当前标注'
       (async function() {
         GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
-          this.state.layerdata.path,
+          this.state.layerData.path,
         )
         this.updateTagging()
         this.setVisible(false)
@@ -608,7 +624,7 @@ export default class LayerManager_tolbar extends React.Component {
     //   //'设置为当前标注'
     //   (async function() {
     //     GLOBAL.TaggingDatasetName = await SMap.removeTaggingDataset(
-    //       this.state.layerdata.datasetName,
+    //       this.state.layerData.datasetName,
     //       this.props.user.currentUser.userName,
     //     )
     //     this.updateTagging()
@@ -621,13 +637,13 @@ export default class LayerManager_tolbar extends React.Component {
     ) {
       //'设置为当前图层'
       this.props.setCurrentLayer &&
-        this.props.setCurrentLayer(this.state.layerdata)
+        this.props.setCurrentLayer(this.state.layerData)
       this.setThislayer()
       Toast.show(
         //'当前图层为'
         getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
           '  ' +
-          this.state.layerdata.caption,
+          this.state.layerData.caption,
       )
       this.setVisible(false)
     } else if (
@@ -642,8 +658,8 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_CREATE_THEMATIC_MAP
     ) {
       //'新建专题图') {
-      let themeType = this.state.layerdata.themeType
-      let type = this.state.layerdata.type
+      let themeType = this.state.layerData.themeType
+      let type = this.state.layerData.type
       if (parseInt(themeType) > 0) {
         Toast.show(
           getLanguage(global.language).Prompt.LAYER_CANNOT_CREATE_THEMATIC_MAP,
@@ -668,7 +684,7 @@ export default class LayerManager_tolbar extends React.Component {
                 this.props.device.orientation === 'LANDSCAPE'
                   ? ConstToolType.THEME_HEIGHT[4]
                   : ConstToolType.THEME_HEIGHT[10],
-              createThemeByLayer: this.state.layerdata.path,
+              createThemeByLayer: this.state.layerData.path,
             },
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
@@ -683,66 +699,60 @@ export default class LayerManager_tolbar extends React.Component {
       section.title === getLanguage(global.language).Map_Layer.LAYERS_SHARE
     ) {
       //分享图层
-      this.setVisible(true, 'Share', { layerdata: this.state.layerdata })
+      this.setVisible(true, 'Share', { layerData: this.state.layerData })
     }
   }
 
   //header点击事件
   headerAction = ({ item }) => {
     (async function() {
-      let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
-      let rel,
-        needUpdate = false
+      let layerData = JSON.parse(JSON.stringify(this.state.layerData))
+      let rel
       switch (item.title) {
         case getLanguage(this.props.language).Map_Layer.VISIBLE:
         case getLanguage(this.props.language).Map_Layer.NOT_VISIBLE:
-          layerdata.isVisible = !layerdata.isVisible
-          rel = await SMap.setLayerVisible(layerdata.path, layerdata.isVisible)
-          needUpdate = true
+          layerData.isVisible = !layerData.isVisible
+          rel = await SMap.setLayerVisible(layerData.path, layerData.isVisible)
           break
         case getLanguage(this.props.language).Map_Layer.EDITABLE:
         case getLanguage(this.props.language).Map_Layer.NOT_EDITABLE:
-          layerdata.isEditable = !layerdata.isEditable
+          layerData.isEditable = !layerData.isEditable
           rel = await SMap.setLayerEditable(
-            layerdata.path,
-            layerdata.isEditable,
+            layerData.path,
+            layerData.isEditable,
           )
           break
         case getLanguage(this.props.language).Map_Layer.SNAPABLE:
         case getLanguage(this.props.language).Map_Layer.NOT_SNAPABLE:
-          layerdata.isSnapable = !layerdata.isSnapable
+          layerData.isSnapable = !layerData.isSnapable
           rel = await SMap.setLayerSnapable(
-            layerdata.path,
-            layerdata.isSnapable,
+            layerData.path,
+            layerData.isSnapable,
           )
           break
         case getLanguage(this.props.language).Map_Layer.OPTIONAL:
         case getLanguage(this.props.language).Map_Layer.NOT_OPTIONAL:
-          layerdata.isSelectable = !layerdata.isSelectable
+          layerData.isSelectable = !layerData.isSelectable
           rel = await SMap.setLayerSelectable(
-            layerdata.path,
-            layerdata.isSelectable,
+            layerData.path,
+            layerData.isSelectable,
           )
           break
       }
       if (rel) {
-        let newState = this.updateMenuState(this.state.data, layerdata)
+        let newState = this.updateMenuState(this.state.data, layerData)
         this.setState(
           newState,
           () => {
-            // this.updateMenuState()
-            if (needUpdate && this.props.updateData) {
+            if (layerData.groupName) {
               if (
-                layerdata.groupName &&
-                this.updateLayerVisible &&
-                typeof this.updateLayerVisible === 'function'
+                this.refreshParentList &&
+                typeof this.refreshParentList === 'function'
               ) {
-                this.updateLayerVisible()
-              } else {
-                this.props.updateData()
+                this.refreshParentList()
               }
             } else {
-              this.props.getLayers()
+              this.props.updateData && this.props.updateData()
             }
             Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
           },
@@ -754,13 +764,6 @@ export default class LayerManager_tolbar extends React.Component {
         Toast.show(getLanguage(global.language).Prompt.SETTING_FAILED)
       }
     }.bind(this)())
-    // this.setVisible(false)
-    // let overlayView = this.props.getOverlayView
-    //   ? this.props.getOverlayView()
-    //   : null
-    // if (overlayView) {
-    //   overlayView.setVisible(false)
-    // }
   }
 
   renderList = () => {
@@ -789,7 +792,7 @@ export default class LayerManager_tolbar extends React.Component {
         }}
       >
         {section.headers.map((item, index) => {
-          if (this.state.layerdata.themeType === 7 && index === 1) {
+          if (this.state.layerData.themeType === 7 && index === 1) {
             return (
               <TouchableOpacity
                 key={index}
@@ -935,7 +938,7 @@ export default class LayerManager_tolbar extends React.Component {
       return
     }
     Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
-    let layerdata = JSON.parse(JSON.stringify(this.state.layerdata))
+    let layerData = JSON.parse(JSON.stringify(this.state.layerData))
     this.setVisible(false)
     let homePath = await FileTools.appendingHomeDirectory()
     let tempPath =
@@ -945,9 +948,9 @@ export default class LayerManager_tolbar extends React.Component {
       '/' +
       ConstPath.RelativePath.Temp
 
-    let targetPath = tempPath + layerdata.name + '.xml'
+    let targetPath = tempPath + layerData.name + '.xml'
     let zipPath = tempPath + 'MyExportLayer.zip'
-    let xmlLayer = await SMap.getLayerAsXML(layerdata.path)
+    let xmlLayer = await SMap.getLayerAsXML(layerData.path)
     if (await FileTools.fileIsExist(targetPath)) {
       await FileTools.deleteFile(targetPath)
     }
@@ -959,16 +962,16 @@ export default class LayerManager_tolbar extends React.Component {
       name: 'onSendFile',
       type: MsgConstant.MSG_LAYER,
       filePath: zipPath,
-      fileName: layerdata.caption,
+      fileName: layerData.caption,
     }
     let action = [layerAction]
 
     if (this.shareDataset) {
-      let datasetPath = tempPath + layerdata.datasetName + '.json'
+      let datasetPath = tempPath + layerData.datasetName + '.json'
       let datasetZipPath = tempPath + 'MyExportDataset.zip'
       await SMap.getDatasetToGeoJson(
-        layerdata.datasourceAlias,
-        layerdata.datasetName,
+        layerData.datasourceAlias,
+        layerData.datasetName,
         datasetPath,
       )
       await FileTools.zipFile(datasetPath, datasetZipPath)
@@ -977,9 +980,9 @@ export default class LayerManager_tolbar extends React.Component {
         name: 'onSendFile',
         type: MsgConstant.MSG_DATASET,
         filePath: datasetZipPath,
-        fileName: layerdata.datasetName,
+        fileName: layerData.datasetName,
         extraInfo: {
-          datasourceAlias: layerdata.datasourceAlias,
+          datasourceAlias: layerData.datasourceAlias,
         },
       }
       action.push(datasetAction)
@@ -1045,7 +1048,7 @@ export default class LayerManager_tolbar extends React.Component {
   // cancel = () => {
   //   if (this.state.layerName !== '') {
   //     (async function() {
-  //       await SMap.renameLayer(this.state.layerdata.name, this.state.layerName)
+  //       await SMap.renameLayer(this.state.layerData.name, this.state.layerName)
   //       await this.props.getLayers()
   //     }.bind(this)())
   //   }
@@ -1079,7 +1082,7 @@ export default class LayerManager_tolbar extends React.Component {
   //           }}
   //           placeholderTextColor={color.themeText2}
   //           defaultValue={
-  //             this.state.layerdata ? this.state.layerdata.caption : ''
+  //             this.state.layerData ? this.state.layerData.caption : ''
   //           }
   //           placeholder={'请输入图层名称'}
   //           keyboardAppearance="dark"

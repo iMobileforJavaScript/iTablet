@@ -1,5 +1,11 @@
 import React from 'react'
-import { Toast, scaleSize, jsonUtil, setSpText } from '../../../../utils'
+import {
+  Toast,
+  scaleSize,
+  jsonUtil,
+  setSpText,
+  screen,
+} from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -3282,7 +3288,7 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (GLOBAL.legend.state.visible) {
+          if (this.props.mapLegend.isShow) {
             buttons = [
               ToolbarBtnType.CANCEL,
               ToolbarBtnType.NOT_VISIBLE,
@@ -3632,14 +3638,7 @@ export default class ToolBar extends React.PureComponent {
       buttons: buttons,
     })
     legendData.isShow = type === ConstToolType.LEGEND
-    GLOBAL.legend.setState(
-      {
-        ...legendData,
-      },
-      () => {
-        this.props.setMapLegend && this.props.setMapLegend(legendData)
-      },
-    )
+    this.props.setMapLegend && this.props.setMapLegend(legendData)
   }
 
   showBox = (autoFullScreen = false) => {
@@ -4834,6 +4833,7 @@ export default class ToolBar extends React.PureComponent {
         //ConstInfo.MAP_CHANGING
       )
       if (this.props.map.currentMap.name) {
+        await SMap.removeLegendListener()
         await this.props.closeMap()
       }
       // 移除地图上所有callout
@@ -4849,7 +4849,7 @@ export default class ToolBar extends React.PureComponent {
         )
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
-          SMap.addLegendListener({
+          await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
         }
@@ -5478,7 +5478,7 @@ export default class ToolBar extends React.PureComponent {
         list = heatmapMenuInfo(this.props.language)
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      if (GLOBAL.legend.state.visible) {
+      if (this.props.mapLegend.isShow) {
         list = legendMenuInfoNotVisible(this.props.language)
       } else {
         list = legendMenuInfo(this.props.language)
@@ -5944,6 +5944,9 @@ export default class ToolBar extends React.PureComponent {
     let height = this.state.isFullScreen
       ? { height: this.props.device.height }
       : {}
+    if (this.state.isFullScreen && this.state.isTouchProgress) {
+      height = { height: screen.getScreenSafeHeight() }
+    }
     // if (this.state.isFullScreen) {
     //   if (this.props.device.orientation === 'LANDSCAPE') {
     //     height =

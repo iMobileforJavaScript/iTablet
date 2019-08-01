@@ -4,6 +4,8 @@ const Analyst_Modules = {
   BUFFER_ANALYST_SINGLE: 'Buffer Analysis',
   BUFFER_ANALYST_MULTIPLE: 'Multi-Buffer Analysis',
   OVERLAY_ANALYSIS: 'Overlay Analysis',
+  THIESSEN_POLYGON: 'Thiessen Polygon',
+  MEASURE_DISTANCE: 'Measure Distance',
   ONLINE_ANALYSIS: 'Online Analysis',
 
   OPTIMAL_PATH: 'Optimal Path',
@@ -28,6 +30,7 @@ const Analyst_Methods = {
 const Analyst_Labels = {
   ANALYST: 'Analyst',
   CONFIRM: 'Confirm',
+  RESET: 'Reset',
   CANCEL: 'Cancel',
   NEXT: 'Next',
   PREVIOUS: 'Previous',
@@ -127,6 +130,22 @@ const Analyst_Labels = {
   DOWN: 'Down',
   RIGHT: 'Right',
   UP: 'Up',
+
+  // 邻近分析
+  DISPLAY_REGION_SETTINGS: 'Display Region Settings',
+  CUSTOM_LOCALE: 'Custom Locale',
+  SELECT_REGION: 'Select Region',
+  DRAW_REGION: 'Draw Region',
+  MEASURE_DISTANCE: 'Measure Distance',
+  REFERENCE_DATASET: 'Reference Dataset',
+  PARAMETER_SETTINGS: 'Parameter Settings',
+  MEASURE_TYPE: 'Measure Type',
+  MIN_DISTANCE_2: 'Min Distance',
+  DISTANCE_IN_RANGE: 'Distance in Range',
+  QUERY_RANGE: 'Query Range',
+  MIN_DISTANCE: 'Min Distance',
+  MAX_DISTANCE: 'Max Distance',
+  ASSOCIATE_BROWSING_RESULT: 'Associate Browsing Result',
 }
 
 const Analyst_Params = {
@@ -204,6 +223,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_NOT_CONNECTED: 'The two nodes are not connected',
   NOT_FIND_SUITABLE_PATH: 'Did not find suitable path',
   SELECT_DATA_SOURCE_FIRST: 'Please select datasource first',
+  PLEASE_SELECT_A_REGION: 'Please select a region',
 }
 
 export {

@@ -91,6 +91,7 @@ import {
   AnalystRangePage,
   WeightAndStatistic,
   LocalAnalystView,
+  ReferenceAnalystView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -652,6 +653,13 @@ const AppNavigator = createStackNavigator(
     },
     LocalAnalystView: {
       screen: LocalAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ReferenceAnalystView: {
+      screen: ReferenceAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
