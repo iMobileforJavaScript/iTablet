@@ -135,4 +135,8 @@ export default StyleSheet.create({
     zIndex: zIndexLevel.FIVE,
     backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
+  search: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
 })
