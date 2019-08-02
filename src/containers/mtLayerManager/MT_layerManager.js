@@ -162,28 +162,33 @@ export default class MT_layerManager extends React.Component {
       let dataList = await SMap.getTaggingLayers(
         this.props.user.currentUser.userName,
       )
-      this.prevItemRef = this.currentItemRef
-      this.currentItemRef =
-        this.itemRefs && this.itemRefs[this.props.currentLayer.name]
+      if (this.props.currentLayer.name) {
+        this.prevItemRef = this.currentItemRef
+        this.currentItemRef =
+          this.itemRefs && this.itemRefs[this.props.currentLayer.name]
+      }
       this.setState({
         data: [
           {
             title: getLanguage(this.props.language).Map_Layer.PLOTS,
             //'我的标注',
             data: dataList,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[0].visible : true,
           },
           {
             title: getLanguage(this.props.language).Map_Layer.LAYERS,
             //'我的图层',
             data: layers,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[1].visible : true,
           },
           {
             title: getLanguage(this.props.language).Map_Layer.BASEMAP,
             // '我的底图',
             data: baseMap,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[2].visible : true,
           },
         ],
         selectLayer: this.props.currentLayer.name,
@@ -536,13 +541,13 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  setLayerVisible = async (data, value) => {
+  setLayerVisible = async (data, value, section) => {
     let layers = this.state.data[1].data
     let backMaps = this.state.data[2].data
     let Label = this.state.data[0].data
     let hasDeal = false
     let name = data.name
-    let curData = this.state.data.concat()
+    let curData = JSON.parse(JSON.stringify(this.state.data))
     let result = false
     if (data.path !== '') {
       for (let i = 0, l = layers.length; i < l; i++) {
@@ -574,7 +579,22 @@ export default class MT_layerManager extends React.Component {
         }
       result = await SMap.setLayerVisible(data.path, value)
 
-      this.props.getLayers()
+      if (
+        data.groupName &&
+        this.itemRefs &&
+        this.itemRefs[data.name] &&
+        this.itemRefs[data.groupName]
+      ) {
+        this.getChildList({
+          data: this.itemRefs[data.name].props.parentData,
+          section,
+        }).then(children => {
+          this.itemRefs[data.groupName] &&
+            this.itemRefs[data.groupName].setChildrenList(children)
+        })
+      } else {
+        this.props.getLayers()
+      }
 
       if (value) {
         // 显示多媒体callouts
@@ -707,7 +727,9 @@ export default class MT_layerManager extends React.Component {
             parentData={parentData}
             index={index}
             isClose={this.state.currentOpenItemName !== item.name}
-            setLayerVisible={this.setLayerVisible}
+            setLayerVisible={(data, value) =>
+              this.setLayerVisible(data, value, section)
+            }
             onOpen={data => {
               if (this.state.currentOpenItemName !== data.name) {
                 let item = this.itemRefs[this.state.currentOpenItemName]

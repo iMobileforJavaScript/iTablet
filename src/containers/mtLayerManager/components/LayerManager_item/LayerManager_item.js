@@ -383,7 +383,7 @@ export default class LayerManager_item extends React.Component {
     } else return
   }
 
-  setChildrenList = async children => {
+  setChildrenList = children => {
     this.setState({
       child: children,
     })
@@ -413,12 +413,6 @@ export default class LayerManager_item extends React.Component {
           }))
       })
     }
-  }
-
-  updateChild = (child = []) => {
-    this.setState({
-      child: child,
-    })
   }
 
   _renderAdditionView = () => {

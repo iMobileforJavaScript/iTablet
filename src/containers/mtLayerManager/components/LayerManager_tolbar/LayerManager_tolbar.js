@@ -322,15 +322,21 @@ export default class LayerManager_tolbar extends React.Component {
 
   //更新菜单按钮状态
   updateMenuState = (data, layerData) => {
+    let newData = JSON.parse(JSON.stringify(data))
     let newState = { layerData }
-    if (data && data[0] && data[0].headers && GLOBAL.Type !== 'MAP_3D') {
+    if (
+      newData &&
+      newData[0] &&
+      newData[0].headers &&
+      GLOBAL.Type !== 'MAP_3D'
+    ) {
       let tempheader0 = layerData.isVisible
         ? layerSettingCanVisit(this.props.language)
         : layerSettingCanNotVisit(this.props.language)
       let tempheader1 = layerData.isSelectable
         ? layerSettingCanSelect(this.props.language)
         : layerSettingCanNotSelect(this.props.language)
-      data[0].headers = tempheader0.concat(tempheader1)
+      newData[0].headers = tempheader0.concat(tempheader1)
       if (GLOBAL.Type === 'COLLECTION') {
         let tempheader2 = layerData.isEditable
           ? layerSettingCanEdit(this.props.language)
@@ -338,10 +344,10 @@ export default class LayerManager_tolbar extends React.Component {
         let tempheader3 = layerData.isSnapable
           ? layerSettingCanSnap(this.props.language)
           : layerSettingCanNotSnap(this.props.language)
-        data[0].headers = data[0].headers.concat(tempheader2, tempheader3)
+        newData[0].headers = newData[0].headers.concat(tempheader2, tempheader3)
       }
     }
-    newState.data = data
+    newState.data = newData
     return newState
   }
 
