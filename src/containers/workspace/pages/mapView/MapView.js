@@ -13,6 +13,7 @@ import {
   SCollector,
   EngineType,
   SMediaCollector,
+  //SMAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -1468,6 +1469,17 @@ export default class MapView extends React.Component {
     }.bind(this)())
   }
 
+  _onArObjectClick = data => {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      // let params = {
+      //   ID: data.id,
+      //   Name: data.name,
+      //   Info: data.info,
+      // }
+      Toast.show(data.name + ', ' + data.info + ', ' + data.id)
+    }
+  }
+
   renderMenuDialog = () => {
     return (
       <MenuAlertDialog
@@ -1720,6 +1732,11 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        {/* {(
+          <SMAIDetectView
+            ref={ref => (GLOBAL.SMAIDetectView = ref)}
+            onArObjectClick={this._onArObjectClick}/>
+        )}*/}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {!this.isExample &&

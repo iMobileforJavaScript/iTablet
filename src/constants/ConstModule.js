@@ -442,6 +442,8 @@ function SetMap(param) {
     //     bottom: 0,
     //   },
     //   action: async user => {
+    //     let data = Object.assign({}, ConstOnline['Google'])
+    //     data.layerIndex = 1
     //     GLOBAL.Type = constants.MAP_AR
     //
     //     let homePath = await FileTools.appendingHomeDirectory()
@@ -457,9 +459,9 @@ function SetMap(param) {
     //         // layerIndex: 0,
     //         type: 'Workspace',
     //       },
-    //       null,
+    //       data,
     //     ]
-    //     NavigationService.navigate('ARMap', {
+    //     NavigationService.navigate('MapView', {
     //       operationType: constants.MAP_AR,
     //       wsData,
     //       mapName: getLanguage(param).Map_Module.MAP_AR,
