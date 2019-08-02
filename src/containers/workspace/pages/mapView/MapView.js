@@ -53,7 +53,14 @@ import {
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import { setGestureDetectorListener } from '../../../GestureDetectorListener'
-import { Platform, View, Text, InteractionManager } from 'react-native'
+import {
+  Platform,
+  View,
+  Text,
+  InteractionManager,
+  Image,
+  TouchableOpacity,
+} from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
@@ -1674,6 +1681,20 @@ export default class MapView extends React.Component {
         imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
         onPress={this.showUndoView}
       />,
+      <TouchableOpacity
+        key={'search'}
+        onPress={async () => {
+          NavigationService.navigate('PointAnalyst', {
+            type: 'pointSearch',
+          })
+        }}
+      >
+        <Image
+          resizeMode={'contain'}
+          source={require('../../../../assets/header/icon_search.png')}
+          style={styles.search}
+        />
+      </TouchableOpacity>,
     ]
   }
 
