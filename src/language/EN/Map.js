@@ -7,6 +7,7 @@ const Map_Label = {
   SCENE: 'Scene',
   NAME: 'Name',
   TOOL_BOX: 'Toolbox',
+  ARMAP: 'Scenery',
 }
 
 //地图、场景主菜单
@@ -391,7 +392,7 @@ const Map_Settings = {
   //二级菜单 坐标系设置
   COORDINATE_SYSTEM: 'Coordinate System',
   COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
-  DYNAMIC_PROJECTION: 'Dynamic Projection',
+  DYNAMIC_PROJECTION: 'Enable Dynamic Projection',
   TRANSFER_METHOD: 'Transfer Method',
 
   //二级菜单 高级设置

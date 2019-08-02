@@ -14,7 +14,7 @@ const MAP_MODULE = {
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
   MAP_ANALYST: '数据分析',
-  MAP_AR: 'AR地图',
+  MAP_AR: '视频地图',
 }
 
 function getHeaderTitle(type) {
@@ -431,8 +431,9 @@ function SetMap(param) {
     // {
     //   key: constants.MAP_AR,
     //   title: getLanguage(param).Map_Module.MAP_AR,
-    //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
-    //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
+    //   baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+    //   moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
+    //   moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
     //   style: {
     //     width: scaleSize(70),
     //     height: scaleSize(67),

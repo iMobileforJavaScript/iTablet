@@ -378,11 +378,12 @@ export default class LayerManager_item extends React.Component {
       await this.props.onToolPress({
         data: this.state.data,
         index: this.props.index,
+        parentData: this.props.parentData,
       })
     } else return
   }
 
-  setChildrenList = async children => {
+  setChildrenList = children => {
     this.setState({
       child: children,
     })
@@ -412,12 +413,6 @@ export default class LayerManager_item extends React.Component {
           }))
       })
     }
-  }
-
-  updateChild = (child = []) => {
-    this.setState({
-      child: child,
-    })
   }
 
   _renderAdditionView = () => {

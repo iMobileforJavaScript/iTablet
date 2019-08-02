@@ -7,11 +7,14 @@ import analystData from './ARMapData'
 import { getLanguage } from '../../../../language'
 // eslint-disable-next-line
 // import { SMDynamicArrowView } from 'imobile_for_reactnative'
-import { SMAIDetectView } from 'imobile_for_reactnative'
-import { SAIDetectView } from 'imobile_for_reactnative'
+import {
+  SMAIDetectView,
+  SAIDetectView /*,SMDynamicArrowView*/,
+} from 'imobile_for_reactnative'
 // import { RNCamera } from 'react-native-camera'
 import { getPublicAssets } from '../../../../assets'
-import { scaleSize } from '../../../../utils'
+import { scaleSize , Toast } from '../../../../utils'
+
 
 export default class ARMap extends Component {
   props: {
@@ -27,11 +30,14 @@ export default class ARMap extends Component {
     super(props)
     this.state = {
       data: analystData.getData(this.props.language),
+      isDetect: false,
     }
   }
 
   componentDidMount() {
-    SAIDetectView.startDetect()
+    this.setState({
+      isDetect: true,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -40,13 +46,34 @@ export default class ARMap extends Component {
         data: analystData.getData(this.props.language),
       })
     }
+    if (this.state.isDetect) {
+      SAIDetectView.initAIDetect()
+      SAIDetectView.startDetect()
+    }
+  }
+
+  componentWillUnmount() {
+    SAIDetectView.pauseDetect()
+    SAIDetectView.dispose()
+  }
+
+  _onArObjectClick = data => {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      // let params = {
+      //   ID: data.id,
+      //   Name: data.name,
+      //   Info: data.info,
+      // }
+      Toast.show(data.name + ', ' + data.info + ', ' + data.id)
+    }
   }
 
   goToMapView = () => {
-    this.props.navigation && this.props.navigation.navigate('ARMap')
+    this.props.navigation && this.props.navigation.navigate('MapView')
   }
 
   onPressLearnMore = () => {
+    // SAIDetectView.savePreviewBitmap()
     SAIDetectView.startDetect()
   }
 
@@ -82,7 +109,7 @@ export default class ARMap extends Component {
           headerRight: !this.isExample
             ? [
               <MTBtn
-                key={'undo'}
+                key={'search'}
                 image={getPublicAssets().common.icon_search}
                 imageStyle={[
                   styles.headerBtn,
@@ -119,7 +146,13 @@ export default class ARMap extends Component {
           }}
         </RNCamera>*/}
         {/* {<SMDynamicArrowView ref={ref => (GLOBAL.DynamicArrowView = ref)} />}*/}
-        {<SMAIDetectView ref={ref => (GLOBAL.SMAIDetectView = ref)} />}
+        {this.state.isDetect && (
+          <SMAIDetectView
+            ref={ref => (GLOBAL.SMAIDetectView = ref)}
+            style={styles.aiview}
+            onArObjectClick={this._onArObjectClick}
+          />
+        )}
         {/*{!this.isExample && this.renderFunctionToolbar()}*/}
       </Container>
     )

@@ -9,6 +9,7 @@ const Map_Label = {
   SCENE: '场景',
   NAME: '名称',
   TOOL_BOX: '工具箱',
+  ARMAP: '实景',
 }
 
 //地图、场景主菜单

@@ -113,7 +113,7 @@ export default class MapToolbar extends React.Component {
         list = [
           {
             key: 'ARMap',
-            title: getLanguage(global.language).Map_Label.MAP,
+            title: getLanguage(global.language).Map_Label.ARMAP,
             //'地图',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
