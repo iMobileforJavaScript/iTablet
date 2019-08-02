@@ -103,6 +103,7 @@ class ModuleList extends Component {
           FileTools.deleteFile(fileDirPath + '_')
           FileTools.deleteFile(fileDirPath + '.zip')
           this.props.deleteDownloadFile({ id: downloadData.key })
+          ref.setDownloading(false)
         })
         .catch(() => {
           Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)

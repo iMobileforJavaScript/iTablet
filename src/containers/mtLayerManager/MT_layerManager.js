@@ -171,19 +171,22 @@ export default class MT_layerManager extends React.Component {
             title: getLanguage(this.props.language).Map_Layer.PLOTS,
             //'我的标注',
             data: dataList,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[0].visible : true,
           },
           {
             title: getLanguage(this.props.language).Map_Layer.LAYERS,
             //'我的图层',
             data: layers,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[1].visible : true,
           },
           {
             title: getLanguage(this.props.language).Map_Layer.BASEMAP,
             // '我的底图',
             data: baseMap,
-            visible: true,
+            visible:
+              this.state.data.length === 3 ? this.state.data[2].visible : true,
           },
         ],
         selectLayer: this.props.currentLayer.name,
