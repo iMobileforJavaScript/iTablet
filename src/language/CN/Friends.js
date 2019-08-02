@@ -62,6 +62,7 @@ const Friends = {
   OPENCOWORKFIRST: '请先打开协作地图',
   LOCATION_COWORK_NOTIFY: '协作中不能打开位置',
   LOCATION_SHARE_NOTIFY: '分享中不能打开位置',
+  WAIT_DOWNLOADING: '请等待数据下载完成',
   //CustomActions
   MAP: '地图',
   TEMPLATE: '模板',

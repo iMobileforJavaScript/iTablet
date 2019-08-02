@@ -140,9 +140,10 @@ class Chat extends React.Component {
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
           m.originMsg.message.message.progress = value.percentage
-
+          m.downloading = true
           if (value.percentage === 100) {
             m.originMsg.message.message.isReceived = 1
+            m.downloading = false
           }
         }
         return {
@@ -564,18 +565,21 @@ class Chat extends React.Component {
 
   onCustomViewFileTouch = async (type, message) => {
     if (message.user._id !== this.curUser.userId) {
-      if (message.originMsg.message.message.progress !== 100) {
+      if (message.downloading) {
+        Toast.show(getLanguage(global.language).Friends.WAIT_DOWNLOADING)
+      } else if (message.originMsg.message.message.progress !== 100) {
         let userPath = ConstPath.UserPath + this.curUser.userName
         let receivePath = userPath + '/ReceivedFiles'
         this.SimpleDialog.setConfirm(() => {
           this.SimpleDialog.setVisible(false)
           this.receiveFile(message, receivePath)
+          message.downloading = true
         })
         this.SimpleDialog.setText(
           getLanguage(global.language).Friends.RECEIVE_CONFIRM,
         )
         this.SimpleDialog.setVisible(true)
-      } else {
+      } else if (message.originMsg.message.message.progress === 100) {
         switch (type) {
           case MSGConstant.MSG_FILE_NOTIFY:
             this.SimpleDialog.setConfirm(() => {

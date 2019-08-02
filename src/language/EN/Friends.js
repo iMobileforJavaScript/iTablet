@@ -64,6 +64,7 @@ const Friends = {
   OPENCOWORKFIRST: 'Please open cowork map first',
   LOCATION_COWORK_NOTIFY: "Can't open location in cowork mode",
   LOCATION_SHARE_NOTIFY: "Can't open location in sharing",
+  WAIT_DOWNLOADING: 'Please wait until download completed',
   //CustomActions
   MAP: 'Map',
   TEMPLATE: 'Template',
