@@ -68,7 +68,6 @@ import {
   Map3DTabs,
   // MapAnalystTabs,
   CoworkTabs,
-  MapARTabs,
   MapView,
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
@@ -136,12 +135,6 @@ const AppNavigator = createStackNavigator(
     //     header: null,
     //   },
     // },
-    MapARTabs: {
-      screen: MapARTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
     Map3DTabs: {
       screen: Map3DTabs,
       navigationOptions: {

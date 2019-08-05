@@ -13,6 +13,7 @@ import {
   SCollector,
   EngineType,
   SMediaCollector,
+  SMAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -164,6 +165,7 @@ export default class MapView extends React.Component {
       // changeLayerBtnBottom: scaleSize(200),
       canBeUndo: false,
       canBeRedo: false,
+      showAIDetect: GLOBAL.Type === constants.MAP_AR,
     }
     this.closeInfo = [
       {
@@ -1475,6 +1477,59 @@ export default class MapView extends React.Component {
     }.bind(this)())
   }
 
+  //多媒体采集
+  captureImage = params => {
+    //保存数据->跳转
+    (async function() {
+      let isTaggingLayer = await SMap.isTaggingLayer(
+        this.props.user.currentUser.userName,
+      )
+      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
+        await SMap.setTaggingGrid(
+          GLOBAL.TaggingDatasetName,
+          this.props.user.currentUser.userName,
+        )
+        const datasourceAlias =
+          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
+        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+        let targetPath = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Media,
+        )
+        SMediaCollector.initMediaCollector(targetPath)
+
+        let result = await SMediaCollector.addArMedia({
+          datasourceName: datasourceAlias,
+          datasetName: datasetName,
+          mediaName: params.mediaName,
+        })
+        if (result) {
+          this.switchAr()
+          Toast.show(params.mediaName + ' 添加成功')
+        }
+      } else {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+        )
+        this.props.navigation.navigate('LayerManager')
+      }
+    }.bind(this)())
+  }
+
+  _onArObjectClick = data => {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      let params = {
+        ID: data.id,
+        mediaName: data.name,
+        Info: data.info,
+      }
+      // Toast.show(data.name + ', ' + data.info + ', ' + data.id)
+      this.captureImage(params)
+    }
+  }
+
   renderMenuDialog = () => {
     return (
       <MenuAlertDialog
@@ -1707,6 +1762,35 @@ export default class MapView extends React.Component {
     )
   }
 
+  /** 切换ar和地图浏览 **/
+  switchAr = () => {
+    if (this.state.showAIDetect) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
+      this.setState({
+        showAIDetect: false,
+      })
+    } else {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(true)
+      this.setState({
+        showAIDetect: true,
+      })
+    }
+  }
+  _renderArModeIcon = () => {
+    return (
+      <View style={styles.btnView}>
+        <MTBtn
+          style={styles.iconAr}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          onPress={this.switchAr}
+          activeOpacity={0.5}
+          // separator={scaleSize(2)}
+        />
+      </View>
+    )
+  }
+
   renderContainer = () => {
     return (
       <Container
@@ -1741,14 +1825,21 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        {this.state.showAIDetect && (
+          <SMAIDetectView
+            ref={ref => (GLOBAL.SMAIDetectView = ref)}
+            onArObjectClick={this._onArObjectClick}
+          />
+        )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
-        {this.renderMapController()}
+        {!this.state.showAIDetect && this.renderMapController()}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
           !this.props.analyst.params &&
+          !this.state.showAIDetect &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
@@ -1763,7 +1854,10 @@ export default class MapView extends React.Component {
         {this.state.measureShow &&
           !this.props.analyst.params &&
           this.renderMeasureLabel()}
-        {this.props.mapScaleView && (
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_AR &&
+          this._renderArModeIcon()}
+        {this.props.mapScaleView && !this.state.showAIDetect && (
           <ScaleView
             device={this.props.device}
             language={this.props.language}

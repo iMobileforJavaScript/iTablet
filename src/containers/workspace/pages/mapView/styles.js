@@ -139,4 +139,17 @@ export default StyleSheet.create({
     width: scaleSize(40),
     height: scaleSize(40),
   },
+  iconAr: {
+    position: 'absolute',
+    right: scaleSize(31),
+    borderRadius: scaleSize(4),
+    elevation: 20,
+    shadowOffset: { width: 0, height: 0 },
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    shadowRadius: 2,
+    bottom: scaleSize(290),
+    // backgroundColor: 'transparent',
+    backgroundColor: color.white,
+  },
 })
