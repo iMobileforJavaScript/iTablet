@@ -42,7 +42,6 @@ import { SMap, DatasetType } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
-import constants from '../../../workspace/constants'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
 import { CheckBox } from '../../../../../src/components'
@@ -410,9 +409,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'全幅显示当前图层') {
       this.setVisible(false)
       SMap.setLayerFullView(this.state.layerData.path)
-      this.props.navigation.navigate(
-        GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
-      )
+      this.props.navigation.navigate('MapView')
     } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {
