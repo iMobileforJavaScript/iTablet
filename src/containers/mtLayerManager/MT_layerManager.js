@@ -220,7 +220,10 @@ export default class MT_layerManager extends React.Component {
       })
     // 之前点击的图层组中的某一项
     this.prevItemRef = this.currentItemRef
-    let prevParentData = this.prevItemRef && this.prevItemRef.props.parentData
+    let prevParentData =
+      this.prevItemRef &&
+      this.prevItemRef.props &&
+      this.prevItemRef.props.parentData
     this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
     if (parentData || prevParentData) {
       this.setState(
