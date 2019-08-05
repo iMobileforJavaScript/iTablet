@@ -12,7 +12,7 @@ import { getLanguage } from '../../../../language'
 // } from 'react-native-scrollable-tab-view'
 import { SAnalyst, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
-import TabNavigationService from '../../../TabNavigationService'
+// import TabNavigationService from '../../../TabNavigationService'
 
 import BufferAnalystViewTab from './BufferAnalystViewTab'
 
@@ -144,13 +144,14 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
-                NavigationService.goBack('AnalystListEntry')
-                if (
-                  params.optionParameter &&
-                  params.optionParameter.showResult
-                ) {
-                  TabNavigationService.navigate('MapAnalystView')
-                }
+                NavigationService.goBack()
+                // NavigationService.goBack('AnalystListEntry')
+                // if (
+                //   params.optionParameter &&
+                //   params.optionParameter.showResult
+                // ) {
+                //   TabNavigationService.navigate('MapView')
+                // }
                 this.cb && this.cb()
               }
             },

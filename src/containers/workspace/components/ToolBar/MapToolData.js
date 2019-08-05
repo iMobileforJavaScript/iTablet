@@ -623,12 +623,15 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
   if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
     switch (type) {
       case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
+        _params.showMeasureResult && _params.showMeasureResult(true, '0m')
         SMap.setAction(Action.MEASURELENGTH)
         break
       case ConstToolType.MAP_TOOL_MEASURE_AREA:
+        _params.showMeasureResult && _params.showMeasureResult(true, '0㎡')
         SMap.setAction(Action.MEASUREAREA)
         break
       case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
+        _params.showMeasureResult && _params.showMeasureResult(true, '0°')
         SMap.setAction(Action.MEASUREANGLE)
         break
     }

@@ -42,7 +42,6 @@ import { SMap, DatasetType } from 'imobile_for_reactnative'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
-import constants from '../../../workspace/constants'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
 import { CheckBox } from '../../../../../src/components'
@@ -322,21 +321,15 @@ export default class LayerManager_tolbar extends React.Component {
 
   //更新菜单按钮状态
   updateMenuState = (data, layerData) => {
-    let newData = JSON.parse(JSON.stringify(data))
     let newState = { layerData }
-    if (
-      newData &&
-      newData[0] &&
-      newData[0].headers &&
-      GLOBAL.Type !== 'MAP_3D'
-    ) {
+    if (data && data[0] && data[0].headers && GLOBAL.Type !== 'MAP_3D') {
       let tempheader0 = layerData.isVisible
         ? layerSettingCanVisit(this.props.language)
         : layerSettingCanNotVisit(this.props.language)
       let tempheader1 = layerData.isSelectable
         ? layerSettingCanSelect(this.props.language)
         : layerSettingCanNotSelect(this.props.language)
-      newData[0].headers = tempheader0.concat(tempheader1)
+      data[0].headers = tempheader0.concat(tempheader1)
       if (GLOBAL.Type === 'COLLECTION') {
         let tempheader2 = layerData.isEditable
           ? layerSettingCanEdit(this.props.language)
@@ -344,10 +337,10 @@ export default class LayerManager_tolbar extends React.Component {
         let tempheader3 = layerData.isSnapable
           ? layerSettingCanSnap(this.props.language)
           : layerSettingCanNotSnap(this.props.language)
-        newData[0].headers = newData[0].headers.concat(tempheader2, tempheader3)
+        data[0].headers = data[0].headers.concat(tempheader2, tempheader3)
       }
     }
-    newState.data = newData
+    newState.data = data
     return newState
   }
 
@@ -416,9 +409,7 @@ export default class LayerManager_tolbar extends React.Component {
       //'全幅显示当前图层') {
       this.setVisible(false)
       SMap.setLayerFullView(this.state.layerData.path)
-      this.props.navigation.navigate(
-        GLOBAL.Type === constants.MAP_ANALYST ? 'MapAnalystView' : 'MapView',
-      )
+      this.props.navigation.navigate('MapView')
     } else if (
       section.title === getLanguage(global.language).Map_Layer.BASEMAP_SWITH
     ) {

@@ -1599,7 +1599,7 @@ export default class MapView extends React.Component {
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         //title={'提示'}
-        info={getLanguage(this.props.language).Prompt.TURN_ON_AUTO_SPLIT_REGION}
+        info={getLanguage(this.props.language).Prompt.ENABLE_DYNAMIC_PROJECTION}
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
         //{'是'}
