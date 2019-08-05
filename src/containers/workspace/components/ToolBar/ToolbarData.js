@@ -10,6 +10,7 @@ import PlotData from './PlotData'
 import EditData from './EditData'
 import AnalysisData from './AnalysisData'
 import ThemeMenuData from './ThemeMenuData'
+import AiAssistant from './AiAssistant'
 import { Toast } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import SMap from 'imobile_for_reactnative/NativeModule/interfaces/mapping/SMap'
@@ -71,6 +72,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = ThemeMenuData.getThemeMapStartCreate(type, params)
   } else if (type === ConstToolType.MAP_ANALYSIS) {
     tabBarData = AnalysisData.getAnalysisData()
+  } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
+    tabBarData = AiAssistant.getAiAssistantData()
   }
   return {
     data: tabBarData.data,

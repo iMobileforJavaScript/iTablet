@@ -258,6 +258,13 @@ const Map_Main_Menu = {
   SHARE_WECHAT: 'Wechat',
   SHARE_FRIENDS: 'Friends',
   SHARE_EXPLORE: 'Explore',
+
+  MAP_AR_AI_ASSISTANT: 'AI Assitant',
+  MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
+  MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
+  MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: 'Illegal Collect',
+  MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
+  MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
 }
 
 //图层
