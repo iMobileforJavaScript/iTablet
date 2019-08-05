@@ -530,7 +530,7 @@ export default class Friend extends Component {
       case MSGConstant.MSG_REJECT:
         text = getLanguage(this.props.language).Friends.SYS_MSG_REJ
         break
-      case MSGConstant.MSG_FILE_NOTIFY:
+      case MSGConstant.MSG_MAP:
         text = getLanguage(this.props.language).Friends.SYS_MSG_MAP
         break
       case MSGConstant.MSG_LAYER:
@@ -703,7 +703,6 @@ export default class Friend extends Component {
           let message = this.props.chat[this.props.user.currentUser.userId][
             talkId
           ].history[msgId]
-          message.originMsg.message.message.isReceived = 1
           message.originMsg.message.message.filePath =
             receivePath + '/' + fileName
           MessageDataHandle.editMessage({
@@ -838,14 +837,6 @@ export default class Friend extends Component {
           messageObj.user.id,
         )
         return
-      }
-
-      //文件通知消息
-      if (
-        messageObj.message.type &&
-        messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY
-      ) {
-        messageObj.message.message.isReceived = 0
       }
     } else {
       //系统消息，做处理机制

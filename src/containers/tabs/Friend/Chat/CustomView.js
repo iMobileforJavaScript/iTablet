@@ -37,7 +37,7 @@ export default class CustomView extends React.Component {
      * 文件下载通知消息，包括图层，数据集等
      */
     if (
-      type === MSGConstant.MSG_FILE_NOTIFY ||
+      type === MSGConstant.MSG_MAP ||
       type === MSGConstant.MSG_LAYER ||
       type === MSGConstant.MSG_DATASET
     ) {
@@ -54,7 +54,7 @@ export default class CustomView extends React.Component {
       }
       let typeText = ''
       switch (type) {
-        case MSGConstant.MSG_FILE_NOTIFY:
+        case MSGConstant.MSG_MAP:
           typeText = 'Map'
           break
         case MSGConstant.MSG_LAYER:

@@ -142,7 +142,6 @@ class Chat extends React.Component {
           m.originMsg.message.message.progress = value.percentage
           m.downloading = true
           if (value.percentage === 100) {
-            m.originMsg.message.message.isReceived = 1
             m.downloading = false
           }
         }
@@ -530,7 +529,7 @@ class Chat extends React.Component {
 
   onCustomViewTouch = async (type, message) => {
     switch (type) {
-      case MSGConstant.MSG_FILE_NOTIFY:
+      case MSGConstant.MSG_MAP:
       case MSGConstant.MSG_LAYER:
       case MSGConstant.MSG_DATASET:
         this.onCustomViewFileTouch(type, message)
@@ -581,7 +580,7 @@ class Chat extends React.Component {
         this.SimpleDialog.setVisible(true)
       } else if (message.originMsg.message.message.progress === 100) {
         switch (type) {
-          case MSGConstant.MSG_FILE_NOTIFY:
+          case MSGConstant.MSG_MAP:
             this.SimpleDialog.setConfirm(() => {
               this.SimpleDialog.setVisible(false)
               this.importMap(message)
@@ -866,7 +865,7 @@ class Chat extends React.Component {
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
               if (
-                props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
+                props.currentMessage.type === MSGConstant.MSG_MAP ||
                 props.currentMessage.type === MSGConstant.MSG_LOCATION ||
                 props.currentMessage.type === MSGConstant.MSG_LAYER ||
                 props.currentMessage.type === MSGConstant.MSG_DATASET
@@ -894,7 +893,7 @@ class Chat extends React.Component {
         callBack={value => this.setState({ chatBottom: value })}
         sendCallBack={(type, value, fileName) => {
           if (type === 1) {
-            this.onSendFile(MSGConstant.MSG_FILE_NOTIFY, value, fileName)
+            this.onSendFile(MSGConstant.MSG_MAP, value, fileName)
           } else if (type === 3) {
             this.onSendLocation(value)
           }
@@ -1000,8 +999,7 @@ class Chat extends React.Component {
     let currentMessage = props
 
     if (
-      (currentMessage.type &&
-        currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) ||
+      (currentMessage.type && currentMessage.type === MSGConstant.MSG_MAP) ||
       currentMessage.type === MSGConstant.MSG_LAYER ||
       currentMessage.type === MSGConstant.MSG_DATASET
     ) {

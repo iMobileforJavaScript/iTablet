@@ -686,7 +686,7 @@ export default class MyLocalData extends Component {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
           ) {
-            type = MsgConstant.MSG_FILE_NOTIFY
+            type = MsgConstant.MSG_MAP
           }
           let action = [
             {
