@@ -15,6 +15,8 @@ const Friends = {
   MSG_SERVICE_NOT_CONNECT: 'Unable to connect to message service',
   SEND_SUCCESS: 'Send successfully',
   RECEIVE_SUCCESS: 'Receive successfully',
+  RECEIVE_FAIL_EXPIRE: 'Receive failed, the file might have expired',
+  RECEIVE_FAIL_NETWORK: 'Receive failed, please check you network',
   //FriendMessage
   MARK_READ: 'Mark read', //*
   MARK_UNREAD: 'Mark unread', //*
@@ -65,6 +67,7 @@ const Friends = {
   LOCATION_COWORK_NOTIFY: "Can't open location in cowork mode",
   LOCATION_SHARE_NOTIFY: "Can't open location in sharing",
   WAIT_DOWNLOADING: 'Please wait until download completed',
+  DATA_NOT_FOUND: 'Data not fond, would you like to download it again?',
   //CustomActions
   MAP: 'Map',
   TEMPLATE: 'Template',

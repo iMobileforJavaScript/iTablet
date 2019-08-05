@@ -512,19 +512,51 @@ class Chat extends React.Component {
     })
   }
 
-  receiveFile = (message, receivePath) => {
+  receiveFile = async (message, receivePath) => {
+    let storeFileName = await this.getAvailableFileName(
+      receivePath,
+      message.originMsg.message.message.fileName,
+    )
     message.originMsg.message.message.filePath =
-      receivePath + '/' + message.originMsg.message.message.fileName
+      receivePath + '/' + storeFileName
+
+    message.downloading = true
 
     this.friend._receiveFile(
-      message.originMsg.message.message.fileName,
+      storeFileName,
       message.originMsg.message.message.queueName,
       receivePath,
       this.targetUser.id,
       message._id,
       message.user._id,
       message.originMsg.message.message.fileSize,
+      res => {
+        if (res === false) {
+          message.downloading = false
+        }
+      },
     )
+  }
+
+  getAvailableFileName = async (filePath, fullFileName) => {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let fileName = fullFileName.substr(0, fullFileName.lastIndexOf('.'))
+    let suffix = fullFileName.substr(fullFileName.lastIndexOf('.'))
+    let tempFullName = ''
+    if (await FileTools.fileIsExist(homePath + filePath + '/' + fullFileName)) {
+      for (let i = 1; ; i++) {
+        tempFullName = fileName + '_' + i + suffix
+        if (
+          !(await FileTools.fileIsExist(
+            homePath + filePath + '/' + tempFullName,
+          ))
+        ) {
+          return tempFullName
+        }
+      }
+    } else {
+      return fullFileName
+    }
   }
 
   onCustomViewTouch = async (type, message) => {
@@ -563,22 +595,35 @@ class Chat extends React.Component {
   }
 
   onCustomViewFileTouch = async (type, message) => {
+    let userPath = ConstPath.UserPath + this.curUser.userName
+    let receivePath = userPath + '/ReceivedFiles'
+
     if (message.user._id !== this.curUser.userId) {
       if (message.downloading) {
         Toast.show(getLanguage(global.language).Friends.WAIT_DOWNLOADING)
       } else if (message.originMsg.message.message.progress !== 100) {
-        let userPath = ConstPath.UserPath + this.curUser.userName
-        let receivePath = userPath + '/ReceivedFiles'
         this.SimpleDialog.setConfirm(() => {
           this.SimpleDialog.setVisible(false)
           this.receiveFile(message, receivePath)
-          message.downloading = true
         })
         this.SimpleDialog.setText(
           getLanguage(global.language).Friends.RECEIVE_CONFIRM,
         )
         this.SimpleDialog.setVisible(true)
       } else if (message.originMsg.message.message.progress === 100) {
+        let homePath = await FileTools.appendingHomeDirectory()
+        let filePath = homePath + message.originMsg.message.message.filePath
+        if (!(await FileTools.fileIsExist(filePath))) {
+          this.SimpleDialog.setConfirm(() => {
+            this.SimpleDialog.setVisible(false)
+            this.receiveFile(message, receivePath)
+          })
+          this.SimpleDialog.setText(
+            getLanguage(global.language).Friends.DATA_NOT_FOUND,
+          )
+          this.SimpleDialog.setVisible(true)
+          return
+        }
         switch (type) {
           case MSGConstant.MSG_MAP:
             this.SimpleDialog.setConfirm(() => {

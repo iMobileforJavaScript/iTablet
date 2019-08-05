@@ -686,6 +686,7 @@ export default class Friend extends Component {
     msgId,
     userId,
     fileSize,
+    cb,
   ) => {
     if (g_connectService) {
       let homePath = await FileTools.appendingHomeDirectory()
@@ -698,11 +699,11 @@ export default class Friend extends Component {
         userId,
         fileSize,
       ).then(res => {
+        let message = this.props.chat[this.props.user.currentUser.userId][
+          talkId
+        ].history[msgId]
         if (res === true) {
           Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
-          let message = this.props.chat[this.props.user.currentUser.userId][
-            talkId
-          ].history[msgId]
           message.originMsg.message.message.filePath =
             receivePath + '/' + fileName
           MessageDataHandle.editMessage({
@@ -711,8 +712,21 @@ export default class Friend extends Component {
             msgId: msgId,
             editItem: message,
           })
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Friends.RECEIVE_FAIL_EXPIRE,
+          )
+          FileTools.deleteFile(homePath + receivePath + '/' + fileName)
+        }
+        if (cb && typeof cb === 'function') {
+          cb(res)
         }
       })
+    } else {
+      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_NETWORK)
+      if (cb && typeof cb === 'function') {
+        cb(false)
+      }
     }
   }
 

@@ -15,6 +15,8 @@ const Friends = {
   MSG_SERVICE_NOT_CONNECT: '未能连接消息服务！',
   SEND_SUCCESS: '分享完成',
   RECEIVE_SUCCESS: '接收完成',
+  RECEIVE_FAIL_EXPIRE: '下载失败，文件可能已经过期',
+  RECEIVE_FAIL_NETWORK: '下载失败，请检查网络',
   //FriendMessage
   MARK_READ: '标记已读',
   MARK_UNREAD: '标记未读',
@@ -63,6 +65,7 @@ const Friends = {
   LOCATION_COWORK_NOTIFY: '协作中不能打开位置',
   LOCATION_SHARE_NOTIFY: '分享中不能打开位置',
   WAIT_DOWNLOADING: '请等待数据下载完成',
+  DATA_NOT_FOUND: '找不到文件，是否重新下载?',
   //CustomActions
   MAP: '地图',
   TEMPLATE: '模板',
