@@ -34,6 +34,7 @@ const MAP_EDIT = 'MAP_EDIT'
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
+import { getThemeAssets } from '../../../../assets'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 const BottomHeight = scaleSize(100)
@@ -120,6 +121,23 @@ export default class FunctionToolbar extends React.Component {
     } else {
       height = ConstToolType.HEIGHT[2]
     }
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, type, {
+        containerType: 'table',
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        height: height,
+      })
+    }
+  }
+
+  //AI助手
+  aiAssistant = type => {
+    const toolRef = this.props.getToolRef()
+    let height =
+      this.props.device.orientation === 'LANDSCAPE'
+        ? ConstToolType.HEIGHT[0]
+        : ConstToolType.HEIGHT[2]
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
@@ -1156,6 +1174,33 @@ export default class FunctionToolbar extends React.Component {
             // title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: getLanguage(this.props.language).Map_Main_Menu.OPEN,
+            //constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: '风格',
+            title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
+            //'风格',
+            action: this.mapStyle,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_style.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: 'AI助手',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT,
+            //'风格',
+            action: () => this.aiAssistant(ConstToolType.MAP_AR_AIASSISTANT),
+            size: 'large',
+            image: getThemeAssets().ar.icon_ai_assistant,
+            selectMode: 'flash',
           },
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
