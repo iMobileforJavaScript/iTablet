@@ -65,7 +65,10 @@ function showMsg(type, isSuccess, language = 'CN') {
         getLanguage(language).Analyst_Prompt.NOT_FIND_SUITABLE_PATH
       break
   }
-  msg && Toast.show(msg)
+  msg &&
+    Toast.show(msg, {
+      duration: Toast.DURATION.TOAST_LONG,
+    })
 }
 
 export default {
