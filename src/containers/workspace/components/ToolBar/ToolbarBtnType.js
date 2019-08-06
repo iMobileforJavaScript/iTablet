@@ -34,6 +34,12 @@ export default {
   SHARE: 'SHARE',
   END_ANIMATION: 'endAnimation',
 
+  //推演动画
+  PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list', //推演动画的xml列表
+  PLOT_ANIMATION_PLAY: 'plot_animation_play', //播放推演动画
+  PLOT_ANIMATIONGO_OBJECT_LIST: 'plot_animationgo_object_list', //推演动画的节点对象列表
+  PLOT_ANIMATION_SAVE: 'plot_animation_save', //保存推演动画成xml文件
+
   //专题制图
   THEME_CANCEL: 'theme_cancel',
   THEME_MENU: 'theme_menu',

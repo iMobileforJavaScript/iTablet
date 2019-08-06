@@ -344,6 +344,12 @@ function getToorbarHeight(orientation, type) {
       }
       column = 4
       break
+    case ConstToolType.PLOT_ANIMATION_START:
+      height = ConstToolType.HEIGHT[4]
+      break
+    case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
+      height = ConstToolType.HEIGHT[2]
+      break
     default:
       height = 0
   }

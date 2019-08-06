@@ -526,6 +526,16 @@ export default class MapView extends React.Component {
         }
         break
       }
+      case ConstToolType.PLOT_ANIMATION_START: {
+        let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+        this.toolBox.setVisible(true, type, {
+          isFullScreen: true,
+          height: ConstToolType.TOOLBAR_HEIGHT[5],
+          containerType: 'createPlotAnimation',
+          cb: () => {},
+        })
+        break
+      }
       default:
         // 除了编辑状态，其余点选对象所在图层全设置为选择状态
         if (event.layerInfo.editable) {
