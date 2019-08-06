@@ -165,12 +165,20 @@ export default class ReferenceAnalystView extends Component {
           true,
           getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
         )
+
+        let server = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            (this.props.currentUser.userName || 'Customer') +
+            '/' +
+            ConstPath.RelativePath.Datasource,
+        )
         let sourceData = {
             datasource: this.state.dataSource.value,
             dataset: this.state.dataSet.value,
           },
           resultData = {
             datasource: this.state.resultDataSource.value,
+            server: server + this.state.resultDataSource.value + '.udb',
             dataset: this.state.resultDataSet.value,
           },
           result = false
@@ -215,6 +223,7 @@ export default class ReferenceAnalystView extends Component {
           SMap.viewEntire()
           await this.props.getLayers()
 
+          GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
           NavigationService.goBack('ReferenceAnalystView')
           if (this.cb && typeof this.cb === 'function') {
             this.cb()

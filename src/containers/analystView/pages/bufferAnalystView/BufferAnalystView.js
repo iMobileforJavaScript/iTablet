@@ -74,7 +74,7 @@ export default class BufferAnalystView extends Component {
             isUnion,
             isAttributeRetained,
             optionParameter,
-          } = this.currentTab.getAnalystParams()
+          } = await this.currentTab.getAnalystParams()
           SAnalyst.createBuffer(
             sourceData,
             resultData,
@@ -99,6 +99,7 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
+                GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
                 NavigationService.goBack()
                 // NavigationService.goBack('AnalystListEntry')
                 // if (optionParameter.showResult) {
@@ -117,7 +118,7 @@ export default class BufferAnalystView extends Component {
           )
         } else {
           // let { sourceData, resultData, bufferRadiuses, bufferRadiusUnit, semicircleSegments, isUnion, isAttributeRetained, isRing, optionParameter } = this.currentTab.getAnalystParams()
-          let params = this.currentTab.getAnalystParams()
+          let params = await this.currentTab.getAnalystParams()
           SAnalyst.createMultiBuffer(
             params.sourceData,
             params.resultData,
@@ -144,6 +145,7 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
+                GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
                 NavigationService.goBack()
                 // NavigationService.goBack('AnalystListEntry')
                 // if (
