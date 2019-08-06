@@ -1693,6 +1693,7 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {!this.isExample &&

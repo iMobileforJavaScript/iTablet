@@ -97,6 +97,8 @@ import {
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
 
+import ArView from './workspace/components/ArView'
+
 const AppNavigator = createStackNavigator(
   {
     Tabs: {
@@ -709,6 +711,12 @@ const AppNavigator = createStackNavigator(
     },
     SecondMapSettings7: {
       screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    ArView: {
+      screen: ArView,
       navigationOptions: {
         header: null,
       },
