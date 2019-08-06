@@ -57,7 +57,7 @@ const Prompt = {
   SAVE_SUCCESSFULLY: 'Saved Successfully',
   NO_NEED_TO_SAVE: 'No need to save',
   SAVE_FAILED: 'Failed to Save',
-  TURN_ON_AUTO_SPLIT_REGION: 'Turn on Auto Split Region?',
+  ENABLE_DYNAMIC_PROJECTION: 'Enable Dynamic Projection?',
   TURN_ON: 'Turn on',
 
   NO_PLOTTING_DEDUCTION: 'No Plotting Deduction in the current map',

@@ -91,6 +91,32 @@ function getAnalysisData() {
       image: getThemeAssets().analyst.analysis_overlay,
     },
     {
+      key: getLanguage(global.language).Analyst_Modules.THIESSEN_POLYGON,
+      title: getLanguage(global.language).Analyst_Modules.THIESSEN_POLYGON,
+      size: 'large',
+      action: (params = {}) => {
+        NavigationService.navigate('ReferenceAnalystView', {
+          ...params,
+          type: Analyst_Types.THIESSEN_POLYGON,
+          title: getLanguage(global.language).Analyst_Modules.THIESSEN_POLYGON,
+        })
+      },
+      image: getThemeAssets().analyst.analysis_thiessen,
+    },
+    // {
+    //   key: getLanguage(global.language).Analyst_Modules.MEASURE_DISTANCE,
+    //   title: getLanguage(global.language).Analyst_Modules.MEASURE_DISTANCE,
+    //   size: 'large',
+    //   action: (params = {}) => {
+    //     NavigationService.navigate('ReferenceAnalystView', {
+    //       ...params,
+    //       type: Analyst_Types.MEASURE_DISTANCE,
+    //       title: getLanguage(global.language).Analyst_Modules.MEASURE_DISTANCE,
+    //     })
+    //   },
+    //   image: getThemeAssets().analyst.analysis_measure,
+    // },
+    {
       key: getLanguage(global.language).Analyst_Modules.ONLINE_ANALYSIS,
       title: getLanguage(global.language).Analyst_Modules.ONLINE_ANALYSIS,
       size: 'large',

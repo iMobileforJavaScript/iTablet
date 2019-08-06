@@ -68,7 +68,6 @@ import {
   Map3DTabs,
   // MapAnalystTabs,
   CoworkTabs,
-  MapARTabs,
   MapView,
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
@@ -91,6 +90,7 @@ import {
   AnalystRangePage,
   WeightAndStatistic,
   LocalAnalystView,
+  ReferenceAnalystView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -135,12 +135,6 @@ const AppNavigator = createStackNavigator(
     //     header: null,
     //   },
     // },
-    MapARTabs: {
-      screen: MapARTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
     Map3DTabs: {
       screen: Map3DTabs,
       navigationOptions: {
@@ -652,6 +646,13 @@ const AppNavigator = createStackNavigator(
     },
     LocalAnalystView: {
       screen: LocalAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ReferenceAnalystView: {
+      screen: ReferenceAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

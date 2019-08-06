@@ -19,7 +19,6 @@ import MapSetting from '../mapSetting'
 import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
 // import { AnalystTools } from '../analystView/pages'
-import { ARMap } from '../armapView/pages'
 import TabNavigationService from '../TabNavigationService'
 
 function compose(Component) {
@@ -146,22 +145,4 @@ const Map3DTabs = createBottomTabNavigator(
   options,
 )
 
-const MapARTabs = createBottomTabNavigator(
-  {
-    ARMap: {
-      screen: ARMap,
-    },
-    LayerARManager: {
-      screen: LayerManager,
-    },
-    LayerARAttribute: {
-      screen: LayerAttribute,
-    },
-    MapARSetting: {
-      screen: MapSetting,
-    },
-  },
-  options,
-)
-
-export { MapTabs, Map3DTabs, CoworkTabs, MapARTabs, MapView }
+export { MapTabs, Map3DTabs, CoworkTabs, MapView }

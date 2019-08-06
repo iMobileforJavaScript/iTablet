@@ -23,11 +23,18 @@ const analysis_shortestpath = require('./analysis_shortestpath_light.png')
 const analysis_surface = require('./analysis_surface_light.png')
 const analysis_tracing = require('./analysis_tracing_light.png')
 const analysis_traveling = require('./analysis_traveling_light.png')
+const analysis_measure = require('./analysis_measure_light.png')
+const analysis_thiessen = require('./analysis_thiessen_light.png')
 
 /** 在线分析图标 **/
 const analysis_online = require('./analysis_online_light.png')
 const analysis_online_aggregate = require('./analysis_online_aggregate_light.png')
 const analysis_online_density = require('./analysis_online_density_light.png')
+const analysis_online_overlay = require('./analysis_online_overlay_light.png')
+const analysis_online_query = require('./analysis_online_query_light.png')
+const analysis_online_region = require('./analysis_online_region_light.png')
+const analysis_online_tracks = require('./analysis_online_tracks_light.png')
+const analysis_online_clip = require('./analysis_online_clip_light.png')
 
 export default {
   analysis_adjacent,
@@ -55,7 +62,15 @@ export default {
   analysis_surface,
   analysis_tracing,
   analysis_traveling,
+  analysis_measure,
+  analysis_thiessen,
+
   analysis_online,
   analysis_online_aggregate,
   analysis_online_density,
+  analysis_online_overlay,
+  analysis_online_query,
+  analysis_online_region,
+  analysis_online_tracks,
+  analysis_online_clip,
 }

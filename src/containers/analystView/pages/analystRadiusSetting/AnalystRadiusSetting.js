@@ -23,14 +23,31 @@ export default class AnalystRadiusSetting extends React.Component {
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
     this.backcb = params && params.backcb
+    let bufferRadiuses = params && params.bufferRadiuses
+    let startValue =
+      bufferRadiuses && bufferRadiuses.length > 1 ? bufferRadiuses[0] : 10
+    let endValue =
+      bufferRadiuses && bufferRadiuses.length > 1
+        ? bufferRadiuses[bufferRadiuses.length - 1]
+        : 10
+    let stepSize = params && params.stepSize > -1 ? params.stepSize : 3
+    let segments = params && params.segments > -1 ? params.segments : 3
+    let stepSizeStatus =
+      params &&
+      (params.stepSize > -1 ||
+        (params.stepSize === -1 && params.segments === -1))
     this.state = {
-      startValue: 10,
-      endValue: 30,
+      startValue,
+      endValue,
 
-      stepSizeStatus: CheckStatus.CHECKED,
-      segmentsStatus: CheckStatus.UN_CHECK,
-      stepSize: 3,
-      segments: 3,
+      stepSizeStatus: stepSizeStatus
+        ? CheckStatus.CHECKED
+        : CheckStatus.UN_CHECK,
+      segmentsStatus: !stepSizeStatus
+        ? CheckStatus.CHECKED
+        : CheckStatus.UN_CHECK,
+      stepSize,
+      segments,
 
       clickAble: true,
     }
@@ -65,45 +82,52 @@ export default class AnalystRadiusSetting extends React.Component {
   }
 
   confirm = () => {
-    if (
-      this.state.clickAble &&
-      this.canBenClick &&
-      this.cb &&
-      typeof this.cb === 'function'
-    ) {
-      this.canBenClick = false
-      this.startItem && this.startItem._blur()
-      this.endItem && this.endItem._blur()
-      this.stepSizeItem && this.stepSizeItem._blur()
-      this.segmentsItem && this.segmentsItem._blur()
+    try {
+      if (
+        this.state.clickAble &&
+        this.canBenClick &&
+        this.cb &&
+        typeof this.cb === 'function'
+      ) {
+        this.canBenClick = false
+        this.startItem && this.startItem._blur()
+        this.endItem && this.endItem._blur()
+        this.stepSizeItem && this.stepSizeItem._blur()
+        this.segmentsItem && this.segmentsItem._blur()
 
-      let radiuses = []
-      if (this.state.stepSizeStatus === CheckStatus.CHECKED) {
-        let value = this.state.startValue
-        while (value < this.state.endValue) {
-          radiuses.push(value)
-          value += this.state.stepSize
+        let data = {}
+        let radiuses = []
+        let startValue = parseFloat(this.state.startValue + '')
+        let endValue = parseFloat(this.state.endValue + '')
+        let stepSize = parseFloat(this.state.stepSize + '')
+        let segments = parseFloat(this.state.segments + '')
+        if (this.state.stepSizeStatus === CheckStatus.CHECKED) {
+          let value = startValue
+          while (value < endValue) {
+            radiuses.push(value)
+            value += stepSize
+          }
+          radiuses.push(endValue)
+          data.stepSize = stepSize
+        } else {
+          let value = endValue
+          let segment = (endValue - startValue) / (segments - 1)
+          while (radiuses.length < segments) {
+            radiuses.unshift(value)
+            value -= segment
+          }
+          data.segments = segments
         }
-        radiuses.push(this.state.endValue)
-      } else {
-        let value = this.state.endValue
-        let segment =
-          (this.state.endValue - this.state.startValue) /
-          (this.state.segments - 1)
-        while (radiuses.length < this.state.segments) {
-          radiuses.unshift(value)
-          value -= segment
-        }
+        data.radiuses = radiuses
+        data.unit = 'Meter'
+
+        this.cb && this.cb(data)
+        setTimeout(() => {
+          this.canBenClick = true
+        }, 1500)
       }
-
-      this.cb &&
-        this.cb({
-          radiuses,
-          unit: 'Meter',
-        })
-      setTimeout(() => {
-        this.canBenClick = true
-      }, 1500)
+    } catch (e) {
+      this.canBenClick = true
     }
   }
 
@@ -135,10 +159,10 @@ export default class AnalystRadiusSetting extends React.Component {
   }
 
   checkValidation = () => {
-    let startValue = parseFloat(this.state.startValue)
-    let endValue = parseFloat(this.state.endValue)
-    let stepSize = parseFloat(this.state.stepSize)
-    let segments = parseInt(this.state.segments)
+    let startValue = parseFloat(this.state.startValue || 0)
+    let endValue = parseFloat(this.state.endValue || 0)
+    let stepSize = parseFloat(this.state.stepSize || 0)
+    let segments = parseInt(this.state.segments || 0)
     if (
       isNaN(startValue) ||
       isNaN(endValue) ||
@@ -147,8 +171,7 @@ export default class AnalystRadiusSetting extends React.Component {
       startValue >= endValue ||
       (this.state.stepSizeStatus === CheckStatus.CHECKED && stepSize <= 0) ||
       (this.state.segmentsStatus === CheckStatus.CHECKED &&
-        segments < 1 &&
-        segments > 1000)
+        (segments < 1 || segments > 1000))
     ) {
       return false
     }
@@ -165,6 +188,14 @@ export default class AnalystRadiusSetting extends React.Component {
           value={this.state.startValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.startValue
+            }
+            this.setState({
+              startValue: value,
+            })
+          }}
+          onBlur={value => {
             this.setState({
               startValue: value,
             })
@@ -178,8 +209,16 @@ export default class AnalystRadiusSetting extends React.Component {
           value={this.state.endValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.endValue
+            }
             this.setState({
-              startValue: value,
+              endValue: value,
+            })
+          }}
+          onBlur={value => {
+            this.setState({
+              endValue: value,
             })
           }}
         />
@@ -209,6 +248,14 @@ export default class AnalystRadiusSetting extends React.Component {
                 stepSize: _value <= 0 ? this.state.stepSize : _value,
               })
           }}
+          onBlur={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.stepSize
+            }
+            this.setState({
+              stepSize: value,
+            })
+          }}
           onChangeText={text => {
             if (text === '') {
               this.setState({
@@ -237,6 +284,14 @@ export default class AnalystRadiusSetting extends React.Component {
               getLanguage(this.props.language).Analyst_Labels.RANGE_COUNT,
             )
           }
+          onBlur={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.segments
+            }
+            this.setState({
+              segments: value,
+            })
+          }}
           onRadiusPress={text => {
             if (text === '') {
               this.setState({

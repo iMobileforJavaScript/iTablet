@@ -51,7 +51,7 @@ const SMessageServiceiOS = NativeModules.SMessageService
 const appUtilsModule = NativeModules.AppUtils
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 // let searchImg = getThemeAssets().friend.friend_search
-let addFriendImg = getThemeAssets().friend.friend_add
+let addFriendImg = getThemeAssets().friend.friend_addMenu
 
 let g_connectService = false
 export default class Friend extends Component {
@@ -530,7 +530,7 @@ export default class Friend extends Component {
       case MSGConstant.MSG_REJECT:
         text = getLanguage(this.props.language).Friends.SYS_MSG_REJ
         break
-      case MSGConstant.MSG_FILE_NOTIFY:
+      case MSGConstant.MSG_MAP:
         text = getLanguage(this.props.language).Friends.SYS_MSG_MAP
         break
       case MSGConstant.MSG_LAYER:
@@ -686,6 +686,7 @@ export default class Friend extends Component {
     msgId,
     userId,
     fileSize,
+    cb,
   ) => {
     if (g_connectService) {
       let homePath = await FileTools.appendingHomeDirectory()
@@ -698,12 +699,11 @@ export default class Friend extends Component {
         userId,
         fileSize,
       ).then(res => {
+        let message = this.props.chat[this.props.user.currentUser.userId][
+          talkId
+        ].history[msgId]
         if (res === true) {
           Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
-          let message = this.props.chat[this.props.user.currentUser.userId][
-            talkId
-          ].history[msgId]
-          message.originMsg.message.message.isReceived = 1
           message.originMsg.message.message.filePath =
             receivePath + '/' + fileName
           MessageDataHandle.editMessage({
@@ -712,8 +712,21 @@ export default class Friend extends Component {
             msgId: msgId,
             editItem: message,
           })
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Friends.RECEIVE_FAIL_EXPIRE,
+          )
+          FileTools.deleteFile(homePath + receivePath + '/' + fileName)
+        }
+        if (cb && typeof cb === 'function') {
+          cb(res)
         }
       })
+    } else {
+      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_NETWORK)
+      if (cb && typeof cb === 'function') {
+        cb(false)
+      }
     }
   }
 
@@ -838,14 +851,6 @@ export default class Friend extends Component {
           messageObj.user.id,
         )
         return
-      }
-
-      //文件通知消息
-      if (
-        messageObj.message.type &&
-        messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY
-      ) {
-        messageObj.message.message.isReceived = 0
       }
     } else {
       //系统消息，做处理机制

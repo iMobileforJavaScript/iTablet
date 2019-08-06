@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, Platform } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import constants from '../../../../containers/workspace/constants'
 import ConstModule from '../../../../constants/ConstModule'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, screen } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
@@ -103,6 +103,7 @@ class ModuleList extends Component {
           FileTools.deleteFile(fileDirPath + '_')
           FileTools.deleteFile(fileDirPath + '.zip')
           this.props.deleteDownloadFile({ id: downloadData.key })
+          ref.setDownloading(false)
         })
         .catch(() => {
           Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
@@ -310,22 +311,40 @@ class ModuleList extends Component {
   }
 
   render() {
-    // console.warn("render "+this.props.device.orientation)
+    let data = ConstModule(this.props.language)
+    let height = (scaleSize(300) * data.length) / 2
+    let dOffset = 20
+    if (Platform.OS === 'android') {
+      dOffset = 40
+    }
+    let contentH =
+      screen.getScreenHeight() -
+      scaleSize(88) -
+      scaleSize(96) -
+      scaleSize(dOffset)
+    let scrollEnabled = false
+    if (height >= contentH) {
+      height = contentH
+      scrollEnabled = true
+    }
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
           this._renderScrollView()
         ) : (
-          <FlatList
-            key={'list'}
-            style={styles.flatList}
-            data={ConstModule(this.props.language)}
-            renderItem={this._renderItem}
-            horizontal={false}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'always'}
-          />
+          <View style={{ width: '100%', height: height }}>
+            <FlatList
+              key={'list'}
+              style={styles.flatList}
+              data={data}
+              renderItem={this._renderItem}
+              scrollEnabled={scrollEnabled}
+              horizontal={false}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps={'always'}
+            />
+          </View>
         )}
       </View>
     )

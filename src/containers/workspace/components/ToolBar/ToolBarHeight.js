@@ -263,17 +263,20 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_POINT:
       height = ConstToolType.HEIGHT[0]
+      column = orientation === 'PORTRAIT' ? 4 : 5
       break
     case ConstToolType.MAP_EDIT_LINE:
+    case ConstToolType.MAP_EDIT_REGION:
+      height = ConstToolType.HEIGHT[2]
+      column = orientation === 'PORTRAIT' ? 4 : 5
+      break
     case ConstToolType.MAP3D_TOOL_FLYLIST:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.HEIGHT[3]
       } else {
         height = ConstToolType.HEIGHT[2]
       }
-      break
-    case ConstToolType.MAP_EDIT_REGION:
-      height = ConstToolType.HEIGHT[2]
+      column = orientation === 'PORTRAIT' ? 4 : 5
       break
     case ConstToolType.MAP_SHARE:
     case ConstToolType.MAP_MORE:
@@ -309,7 +312,7 @@ function getToorbarHeight(orientation, type) {
       } else {
         column = 5
       }
-      height = ConstToolType.HEIGHT[2]
+      height = ConstToolType.TOOLBAR_HEIGHT[2]
       break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:

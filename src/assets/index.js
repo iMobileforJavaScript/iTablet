@@ -50,7 +50,7 @@ function getThemeIconByType(type) {
       icon = getThemeAssets().themeType.theme_grid_range
       break
     default:
-      icon = require('./public/mapLoad.png')
+      icon = getThemeAssets().layerType.icon_unknown
       break
   }
   return icon
@@ -86,7 +86,7 @@ function getThemeWhiteIconByType(type) {
       icon = getThemeAssets().themeType.theme_grid_range_selected
       break
     default:
-      icon = require('./public/mapLoad.png')
+      icon = getThemeAssets().layerType.icon_unknown
       break
   }
   return icon
@@ -98,7 +98,7 @@ function getLayerIconByType(type) {
   let icon
   switch (type) {
     case LAYER_GROUP:
-      icon = require('./map/icon-layer-group.png')
+      icon = getThemeAssets().layerType.layer_group
       break
     case DatasetType.POINT: // 点数据集
       icon = require('./map/icon-shallow-dot_black.png')
@@ -128,7 +128,7 @@ function getLayerIconByType(type) {
       icon = require('./map/icon-grid_black.png')
       break
     default:
-      icon = require('./public/mapLoad.png')
+      icon = getThemeAssets().layerType.icon_unknown
       break
   }
   return icon
@@ -138,7 +138,7 @@ function getLayerWhiteIconByType(type) {
   let icon
   switch (type) {
     case LAYER_GROUP:
-      icon = require('./map/icon-layer-group.png')
+      icon = getThemeAssets().layerType.layer_group
       break
     case DatasetType.POINT: // 点数据集
       icon = require('./map/icon-shallow-dot.png')
@@ -168,7 +168,7 @@ function getLayerWhiteIconByType(type) {
       icon = require('./map/icon-grid.png')
       break
     default:
-      icon = require('./public/mapLoad.png')
+      icon = getThemeAssets().layerType.icon_unknown_selected
       break
   }
   return icon

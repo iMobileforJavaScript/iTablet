@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import { Dimensions } from 'react-native'
-import { Container, TextBtn } from '../../../../components'
+import { Container } from '../../../../components'
 // import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -12,7 +12,7 @@ import { getLanguage } from '../../../../language'
 // } from 'react-native-scrollable-tab-view'
 import { SAnalyst, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
-import TabNavigationService from '../../../TabNavigationService'
+// import TabNavigationService from '../../../TabNavigationService'
 
 import BufferAnalystViewTab from './BufferAnalystViewTab'
 
@@ -53,8 +53,8 @@ export default class BufferAnalystView extends Component {
 
   analyst = async () => {
     if (!this.state.canBeAnalyst) return
-    if (!this.currentTab && this.singleBuffer)
-      this.currentTab = this.singleBuffer
+    // if (!this.currentTab && this.singleBuffer)
+    //   this.currentTab = this.singleBuffer
     try {
       if (this.currentTab) {
         Toast.show(
@@ -74,7 +74,7 @@ export default class BufferAnalystView extends Component {
             isUnion,
             isAttributeRetained,
             optionParameter,
-          } = this.currentTab.getAnalystParams()
+          } = await this.currentTab.getAnalystParams()
           SAnalyst.createBuffer(
             sourceData,
             resultData,
@@ -99,6 +99,7 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
+                GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
                 NavigationService.goBack()
                 // NavigationService.goBack('AnalystListEntry')
                 // if (optionParameter.showResult) {
@@ -117,7 +118,7 @@ export default class BufferAnalystView extends Component {
           )
         } else {
           // let { sourceData, resultData, bufferRadiuses, bufferRadiusUnit, semicircleSegments, isUnion, isAttributeRetained, isRing, optionParameter } = this.currentTab.getAnalystParams()
-          let params = this.currentTab.getAnalystParams()
+          let params = await this.currentTab.getAnalystParams()
           SAnalyst.createMultiBuffer(
             params.sourceData,
             params.resultData,
@@ -144,13 +145,15 @@ export default class BufferAnalystView extends Component {
                 let layers = await this.props.getLayers()
                 layers.length > 0 &&
                   (await SMap.setLayerFullView(layers[0].path))
-                NavigationService.goBack('AnalystListEntry')
-                if (
-                  params.optionParameter &&
-                  params.optionParameter.showResult
-                ) {
-                  TabNavigationService.navigate('MapAnalystView')
-                }
+                GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
+                NavigationService.goBack()
+                // NavigationService.goBack('AnalystListEntry')
+                // if (
+                //   params.optionParameter &&
+                //   params.optionParameter.showResult
+                // ) {
+                //   TabNavigationService.navigate('MapView')
+                // }
                 this.cb && this.cb()
               }
             },
@@ -196,17 +199,17 @@ export default class BufferAnalystView extends Component {
                 .BUFFER_ANALYST_MULTIPLE,
           navigation: this.props.navigation,
           backAction: this.back,
-          headerRight: (
-            <TextBtn
-              btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-              textStyle={
-                this.state.canBeAnalyst
-                  ? styles.headerBtnTitle
-                  : styles.headerBtnTitleDisable
-              }
-              btnClick={this.analyst}
-            />
-          ),
+          // headerRight: (
+          //   <TextBtn
+          //     btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
+          //     textStyle={
+          //       this.state.canBeAnalyst
+          //         ? styles.headerBtnTitle
+          //         : styles.headerBtnTitleDisable
+          //     }
+          //     btnClick={this.analyst}
+          //   />
+          // ),
         }}
       >
         <BufferAnalystViewTab
@@ -220,6 +223,8 @@ export default class BufferAnalystView extends Component {
           checkData={result => {
             this.checkData(result)
           }}
+          analyst={this.analyst}
+          canBeAnalyst={this.state.canBeAnalyst}
         />
         {/*<ScrollableTabView*/}
         {/*renderTabBar={() => <DefaultTabBar style={styles.tabView} />}*/}
