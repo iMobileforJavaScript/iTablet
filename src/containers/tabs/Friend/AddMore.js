@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   Modal,
   Platform,
+  Image,
 } from 'react-native'
 import { scaleSize } from '../../../utils/screen'
 import { getLanguage } from '../../../language/index'
+import { getThemeAssets } from '../../../assets'
 let Top = scaleSize(88)
 if (Platform.OS === 'ios') {
   Top += 20
@@ -88,12 +90,15 @@ export default class AddMore extends React.Component {
 
           <View style={styles.modal}>
             <TouchableOpacity
-              activeOpacity={1}
               onPress={() => {
                 this.props.addMore(1), this.closeModal()
               }}
               style={styles.itemView}
             >
+              <Image
+                style={styles.imgStyle}
+                source={getThemeAssets().friend.add_contacts}
+              />
               <Text style={styles.textStyle}>
                 {getLanguage(global.language).Friends.ADD_FRIENDS}
 
@@ -102,12 +107,15 @@ export default class AddMore extends React.Component {
             </TouchableOpacity>
             <View style={styles.seperator} />
             <TouchableOpacity
-              activeOpacity={1}
               onPress={() => {
                 this.props.addMore(2), this.closeModal()
               }}
               style={styles.itemView}
             >
+              <Image
+                style={styles.imgStyle}
+                source={getThemeAssets().friend.new_chat}
+              />
               <Text style={styles.textStyle}>
                 {getLanguage(global.language).Friends.NEW_GROUP_CHAT}
 
@@ -116,12 +124,15 @@ export default class AddMore extends React.Component {
             </TouchableOpacity>
             <View style={styles.seperator} />
             <TouchableOpacity
-              activeOpacity={1}
               onPress={() => {
                 this.props.addMore(3), this.closeModal()
               }}
               style={styles.itemView}
             >
+              <Image
+                style={styles.imgStyle}
+                source={getThemeAssets().friend.friend_mobileCon}
+              />
               <Text style={styles.textStyle}>
                 {getLanguage(global.language).Friends.RECOMMEND_FRIEND}
               </Text>
@@ -142,40 +153,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#rgba(0,0,0,0)',
   },
   modal: {
-    backgroundColor: '#505050',
+    backgroundColor: '#F0F0F0',
     // width: scaleSize(300),
     // height: scaleSize(170),
     position: 'absolute',
     left: scaleSize(25),
     top: Top,
-    padding: scaleSize(5),
+    paddingVertical: scaleSize(5),
     paddingLeft: scaleSize(20),
+    paddingRight: scaleSize(40),
     justifyContent: 'center',
-    // alignItems: 'flex-start',
     borderRadius: 3,
   },
   itemView: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flex: 1,
-    marginTop: scaleSize(15),
-    marginBottom: scaleSize(15),
-    marginLeft: scaleSize(10),
-    marginRight: scaleSize(20),
+    marginVertical: scaleSize(20),
   },
   textStyle: {
-    color: '#fff',
-    fontSize: scaleSize(24),
+    color: '#505050',
+    fontSize: scaleSize(26),
   },
   imgStyle: {
-    width: 20,
-    height: 20,
+    width: scaleSize(48),
+    height: scaleSize(48),
+    marginRight: scaleSize(15),
   },
   seperator: {
     height: scaleSize(1),
-    marginLeft: scaleSize(10),
-    marginRight: scaleSize(20),
+    marginLeft: scaleSize(63),
     backgroundColor: '#A0A0A0',
   },
 })

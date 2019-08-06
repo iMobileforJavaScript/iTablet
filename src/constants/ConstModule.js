@@ -39,7 +39,52 @@ function getHeaderTitle(type) {
 
 export { MAP_MODULE, getHeaderTitle }
 
+let arModule = null
+
 function SetMap(param) {
+  if (Platform.OS === 'android') {
+    arModule = {
+      key: constants.MAP_AR,
+      title: getLanguage(param).Map_Module.MAP_AR,
+      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
+      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+      style: {
+        width: scaleSize(70),
+        height: scaleSize(67),
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+      },
+      action: async user => {
+        let data = Object.assign({}, ConstOnline['Google'])
+        data.layerIndex = 1
+        GLOBAL.Type = constants.MAP_AR
+
+        let homePath = await FileTools.appendingHomeDirectory()
+        let userPath = ConstPath.CustomerPath
+        if (user && user.userName) {
+          userPath = ConstPath.UserPath + user.userName + '/'
+        }
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let wsData = [
+          {
+            DSParams: { server: wsPath },
+            // layerIndex: 0,
+            type: 'Workspace',
+          },
+          data,
+        ]
+        NavigationService.navigate('MapView', {
+          operationType: constants.MAP_AR,
+          wsData,
+          mapName: getLanguage(param).Map_Module.MAP_AR,
+          isExample: false,
+        })
+      },
+    }
+  }
   return [
     {
       key: constants.MAP_EDIT,
@@ -428,47 +473,7 @@ function SetMap(param) {
         })
       },
     },
-    {
-      key: constants.MAP_AR,
-      title: getLanguage(param).Map_Module.MAP_AR,
-      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
-      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async user => {
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_AR
-
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
-        let wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_AR,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_AR,
-          isExample: false,
-        })
-      },
-    },
+    arModule,
   ]
 }
 

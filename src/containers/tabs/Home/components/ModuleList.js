@@ -313,9 +313,12 @@ class ModuleList extends Component {
   render() {
     let data = ConstModule(this.props.language)
     let height = (scaleSize(300) * data.length) / 2
-    let scrollEnabled =
-      height >= screen.deviceHeight - scaleSize(88) - scaleSize(96)
-    scrollEnabled && (height -= scaleSize(40))
+    let contentH = screen.deviceHeight - scaleSize(88) - scaleSize(96)
+    let scrollEnabled = false
+    if (height >= contentH) {
+      height = contentH - scaleSize(20)
+      scrollEnabled = true
+    }
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
