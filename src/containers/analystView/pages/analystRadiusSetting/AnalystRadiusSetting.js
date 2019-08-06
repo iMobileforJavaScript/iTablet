@@ -159,10 +159,10 @@ export default class AnalystRadiusSetting extends React.Component {
   }
 
   checkValidation = () => {
-    let startValue = parseFloat(this.state.startValue)
-    let endValue = parseFloat(this.state.endValue)
-    let stepSize = parseFloat(this.state.stepSize)
-    let segments = parseInt(this.state.segments)
+    let startValue = parseFloat(this.state.startValue || 0)
+    let endValue = parseFloat(this.state.endValue || 0)
+    let stepSize = parseFloat(this.state.stepSize || 0)
+    let segments = parseInt(this.state.segments || 0)
     if (
       isNaN(startValue) ||
       isNaN(endValue) ||
@@ -171,8 +171,7 @@ export default class AnalystRadiusSetting extends React.Component {
       startValue >= endValue ||
       (this.state.stepSizeStatus === CheckStatus.CHECKED && stepSize <= 0) ||
       (this.state.segmentsStatus === CheckStatus.CHECKED &&
-        segments < 1 &&
-        segments > 1000)
+        (segments < 1 || segments > 1000))
     ) {
       return false
     }
@@ -189,6 +188,9 @@ export default class AnalystRadiusSetting extends React.Component {
           value={this.state.startValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.startValue
+            }
             this.setState({
               startValue: value,
             })
@@ -207,6 +209,9 @@ export default class AnalystRadiusSetting extends React.Component {
           value={this.state.endValue}
           keyboardType={'numeric'}
           onSubmitEditing={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.endValue
+            }
             this.setState({
               endValue: value,
             })
@@ -243,6 +248,14 @@ export default class AnalystRadiusSetting extends React.Component {
                 stepSize: _value <= 0 ? this.state.stepSize : _value,
               })
           }}
+          onBlur={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.stepSize
+            }
+            this.setState({
+              stepSize: value,
+            })
+          }}
           onChangeText={text => {
             if (text === '') {
               this.setState({
@@ -271,6 +284,14 @@ export default class AnalystRadiusSetting extends React.Component {
               getLanguage(this.props.language).Analyst_Labels.RANGE_COUNT,
             )
           }
+          onBlur={value => {
+            if (isNaN(value) && value !== '') {
+              value = this.state.segments
+            }
+            this.setState({
+              segments: value,
+            })
+          }}
           onRadiusPress={text => {
             if (text === '') {
               this.setState({
