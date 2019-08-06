@@ -515,7 +515,6 @@ export default class MapView extends React.Component {
             case DatasetType.POINT:
               type = ConstToolType.MAP_EDIT_POINT
               height = ConstToolType.HEIGHT[0]
-              column = 5
               break
             case DatasetType.LINE:
               type = ConstToolType.MAP_EDIT_LINE
