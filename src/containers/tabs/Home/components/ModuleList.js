@@ -317,7 +317,7 @@ class ModuleList extends Component {
     if(Platform.OS === "android"){
       dOffset = 40
     }
-    let contentH = screen.deviceHeight - scaleSize(88) - scaleSize(96) - scaleSize(dOffset)
+    let contentH = screen.getScreenHeight() - scaleSize(88) - scaleSize(96) - scaleSize(dOffset)
     let scrollEnabled = false
     if(height >=  contentH){
       height =  contentH
