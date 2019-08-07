@@ -34,7 +34,7 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService, SIPortalService } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
@@ -212,7 +212,7 @@ class AppRoot extends Component {
       await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
       SOnlineService.removeCookie()
-
+      SIPortalService.init()
       let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
       if (
         this.props.user.currentUser.userType !== UserType.PROBATION_USER ||

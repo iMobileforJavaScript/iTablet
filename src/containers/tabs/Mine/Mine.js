@@ -89,7 +89,7 @@ export default class Mine extends Component {
   }
 
   goToLogin = () => {
-    NavigationService.navigate('Login')
+    NavigationService.navigate('SelectLogin')
   }
 
   goToPersonal = () => {

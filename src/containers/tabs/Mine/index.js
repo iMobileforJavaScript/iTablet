@@ -3,7 +3,7 @@ import Mine from './Mine'
 import { setUser } from '../../../models/user'
 import { closeWorkspace, openWorkspace } from '../../../models/map'
 import Register from './Register'
-import Login from './Login'
+import { SelectLogin, Login, IPortalLogin } from './Login'
 import Personal from './Personal'
 import ToggleAccount from './ToggleAccount'
 
@@ -42,7 +42,9 @@ export {
   ScanOnlineMap,
   Personal,
   ToggleAccount,
+  SelectLogin,
   Login,
+  IPortalLogin,
   MyLabel,
   MyBaseMap,
   MyModule,

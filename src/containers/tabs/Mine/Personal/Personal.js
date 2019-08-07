@@ -6,10 +6,11 @@ import { FileTools } from '../../../../native'
 import { color, size } from '../../../../styles'
 import UserType from '../../../../constants/UserType'
 import NavigationService from '../../../NavigationService'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import styles from './styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import { SimpleDialog } from '../../Friend'
 
 export default class Personal extends Component {
   props: {
@@ -24,12 +25,26 @@ export default class Personal extends Component {
     super(props)
   }
 
+  _logoutConfirm = () => {
+    this.SimpleDialog.setConfirm(() => {
+      this.SimpleDialog.setVisible(false)
+      this._logout()
+    })
+    this.SimpleDialog.setText(getLanguage(global.language).Prompt.LOG_OUT)
+    this.SimpleDialog.setVisible(true)
+  }
+
   _logout = () => {
     if (this.container) {
       //this.container.setLoading(true, '注销中...')
     }
     try {
-      SOnlineService.logout()
+      let userType = this.props.user.currentUser.userType
+      if (userType === UserType.COMMON_USER) {
+        SOnlineService.logout()
+      } else if (userType === UserType.IPORTAL_COMMON_USER) {
+        SIPortalService.logout()
+      }
       this.props.closeWorkspace(async () => {
         SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
@@ -42,8 +57,7 @@ export default class Personal extends Component {
           userName: 'Customer',
           userType: UserType.PROBATION_USER,
         })
-        // NavigationService.goBack()
-        NavigationService.popToTop('Tabs')
+        NavigationService.popToTop()
         await this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {
@@ -218,7 +232,7 @@ export default class Personal extends Component {
         accessibilityLabel={''}
         activeOpacity={0.8}
         style={styles.item2}
-        onPress={this._logout}
+        onPress={this._logoutConfirm}
       >
         <Text
           style={{
@@ -231,6 +245,10 @@ export default class Personal extends Component {
         </Text>
       </TouchableOpacity>
     )
+  }
+
+  _renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   render() {
@@ -252,6 +270,7 @@ export default class Personal extends Component {
           {this._renderToggleAccount()}
           {this._renderLine()}
           {this._renderLogout()}
+          {this._renderSimpleDialog()}
           {/*{this._renderLine()}*/}
         </ScrollView>
       </Container>

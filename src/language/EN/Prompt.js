@@ -19,6 +19,8 @@ const Prompt = {
   LOG_OUT: 'Are you sure you want to log out?',
   FAILED_TO_LOG: 'Failed to Login',
   INCORRECT_USER_INFO: 'Account not exist or password error',
+  INCORRECT_IPORTAL_ADDRESS:
+    'Failed to Login, Please check your server address',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
