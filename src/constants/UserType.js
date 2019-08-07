@@ -24,6 +24,11 @@ const COLLECTION_IVP_USER = 'collection_vip_user'
  *
  */
 const THEME_MAP_VIP_USER = 'theme_map_vip_user'
+/**
+ *  iPortal用户
+ *
+ */
+const IPORTAL_COMMON_USER = 'iPortal_common_user'
 
 export default {
   PROBATION_USER,
@@ -31,4 +36,5 @@ export default {
   ALL_MODULE_VIP_USER,
   COLLECTION_IVP_USER,
   THEME_MAP_VIP_USER,
+  IPORTAL_COMMON_USER,
 }

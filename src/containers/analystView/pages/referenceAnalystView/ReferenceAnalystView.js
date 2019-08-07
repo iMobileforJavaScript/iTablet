@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View, InteractionManager } from 'react-native'
 import { Container } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
@@ -159,11 +159,18 @@ export default class ReferenceAnalystView extends Component {
     }
 
     Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
-    ;(async function() {
+    InteractionManager.runAfterInteractions(async () => {
       try {
         this.setLoading(
           true,
           getLanguage(this.props.language).Analyst_Prompt.ANALYSING,
+        )
+
+        let server = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            (this.props.currentUser.userName || 'Customer') +
+            '/' +
+            ConstPath.RelativePath.Datasource,
         )
         let sourceData = {
             datasource: this.state.dataSource.value,
@@ -171,6 +178,7 @@ export default class ReferenceAnalystView extends Component {
           },
           resultData = {
             datasource: this.state.resultDataSource.value,
+            server: server + this.state.resultDataSource.value + '.udb',
             dataset: this.state.resultDataSet.value,
           },
           result = false
@@ -212,9 +220,10 @@ export default class ReferenceAnalystView extends Component {
         )
         if (result) {
           SMap.setAction(Action.PAN)
-          SMap.viewEntire()
-          await this.props.getLayers()
+          let layers = await this.props.getLayers()
+          layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
 
+          GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
           NavigationService.goBack('ReferenceAnalystView')
           if (this.cb && typeof this.cb === 'function') {
             this.cb()
@@ -226,7 +235,10 @@ export default class ReferenceAnalystView extends Component {
           getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
         )
       }
-    }.bind(this)())
+    })
+    // ;(async function() {
+    //
+    // }.bind(this)())
   }
 
   back = () => {

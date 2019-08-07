@@ -559,7 +559,7 @@ export default class ToolBarSectionList extends React.Component {
 
   getSectionDatasetTypeImg = item => {
     let img
-    switch (item.datasetType) {
+    switch (item.datasetType.toUpperCase()) {
       case 'POINT':
         img = require('../../../../assets/mapToolbar/dataset_type_point.png')
         break
@@ -593,7 +593,7 @@ export default class ToolBarSectionList extends React.Component {
 
   getDatasetTypeImg = item => {
     let img
-    switch (item.datasetType) {
+    switch (item.datasetType.toUpperCase()) {
       // case 'POINT':
       //   item.isSelected
       //     ? (img = require('../../../../assets/mapToolbar/dataset_type_point.png'))

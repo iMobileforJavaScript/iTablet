@@ -314,13 +314,17 @@ class ModuleList extends Component {
     let data = ConstModule(this.props.language)
     let height = (scaleSize(300) * data.length) / 2
     let dOffset = 20
-    if(Platform.OS === "android"){
+    if (Platform.OS === 'android') {
       dOffset = 40
     }
-    let contentH = screen.getScreenHeight() - scaleSize(88) - scaleSize(96) - scaleSize(dOffset)
+    let contentH =
+      screen.getScreenHeight() -
+      scaleSize(88) -
+      scaleSize(96) -
+      scaleSize(dOffset)
     let scrollEnabled = false
-    if(height >=  contentH){
-      height =  contentH
+    if (height >= contentH) {
+      height = contentH
       scrollEnabled = true
     }
     return (

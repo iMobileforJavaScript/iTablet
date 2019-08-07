@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View, InteractionManager } from 'react-native'
 import { Container } from '../../../../components'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
@@ -134,7 +134,7 @@ export default class OverlayAnalystView extends Component {
   analyst = () => {
     if (!this.checkData) return
     Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
-    ;(async function() {
+    InteractionManager.runAfterInteractions(async () => {
       try {
         this.setLoading(
           true,
@@ -148,6 +148,13 @@ export default class OverlayAnalystView extends Component {
         geoStyle.setMarkerSize(5)
         geoStyle.setFillForeColor(244, 50, 50)
         geoStyle.setFillOpaqueRate(70)
+
+        let server = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            (this.props.currentUser.userName || 'Customer') +
+            '/' +
+            ConstPath.RelativePath.Datasource,
+        )
         let sourceData = {
             datasource: this.state.dataSource.value,
             dataset: this.state.dataSet.value,
@@ -158,6 +165,7 @@ export default class OverlayAnalystView extends Component {
           },
           resultData = {
             datasource: this.state.resultDataSource.value,
+            server: server + this.state.resultDataSource.value + '.udb',
             dataset: this.state.resultDataSet.value,
           },
           optionParameter = {
@@ -227,12 +235,13 @@ export default class OverlayAnalystView extends Component {
         Toast.show(
           result
             ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
-            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
         )
         if (result) {
-          SMap.viewEntire()
-          await this.props.getLayers()
+          let layers = await this.props.getLayers()
+          layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
 
+          GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
           NavigationService.goBack('AnalystListEntry')
           // if (optionParameter.showResult) {
           //   TabNavigationService.navigate('MapAnalystView')
@@ -247,7 +256,7 @@ export default class OverlayAnalystView extends Component {
           getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
         )
       }
-    }.bind(this)())
+    })
   }
 
   back = () => {

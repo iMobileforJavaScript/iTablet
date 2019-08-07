@@ -60,6 +60,8 @@ const defaultState = {
   bufferRadius: 10,
   bufferRadiuses: [10, 20, 30],
   bufferRadiusUnit: 'Meter',
+  stepSize: -1,
+  segments: -1,
   // 结果设置
   isUnionBuffer: false,
   isRetainAttribute: true,
@@ -152,7 +154,7 @@ export default class BufferAnalystViewTab extends Component {
     return available
   }
 
-  getAnalystParams = () => {
+  getAnalystParams = async () => {
     let geoStyle = new GeoStyle()
     geoStyle.setLineColor(50, 240, 50)
     geoStyle.setLineStyle(0)
@@ -161,6 +163,13 @@ export default class BufferAnalystViewTab extends Component {
     geoStyle.setMarkerSize(5)
     geoStyle.setFillForeColor(147, 16, 133)
     geoStyle.setFillOpaqueRate(70)
+
+    let server = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        (this.props.currentUser.userName || 'Customer') +
+        '/' +
+        ConstPath.RelativePath.Datasource,
+    )
     let params = {
       sourceData: {
         datasource: this.state.dataSource.value,
@@ -168,6 +177,7 @@ export default class BufferAnalystViewTab extends Component {
       },
       resultData: {
         datasource: this.state.resultDataSource.value,
+        server: server + this.state.resultDataSource.value + '.udb',
         dataset: this.state.resultDataSet.value,
       },
       isUnion: this.state.isUnionBuffer,
@@ -441,16 +451,26 @@ export default class BufferAnalystViewTab extends Component {
               })
             } else {
               NavigationService.navigate('AnalystRadiusSetting', {
-                value: this.state.bufferRadius,
+                bufferRadiuses: this.state.bufferRadiuses,
+                stepSize: this.state.stepSize,
+                segments: this.state.segments,
                 headerTitle: getLanguage(this.props.language).Analyst_Labels
                   .BATCH_ADD,
                 keyboardType: 'numeric',
                 cb: async data => {
                   NavigationService.goBack()
-                  this.setState({
+                  let newState = {
                     bufferRadiuses: data.radiuses,
                     bufferRadiusUnit: data.unit,
-                  })
+                  }
+                  if (data.stepSize) {
+                    newState.stepSize = data.stepSize
+                    newState.segments = -1
+                  } else if (data.segments) {
+                    newState.stepSize = -1
+                    newState.segments = data.segments
+                  }
+                  this.setState(newState)
                 },
               })
             }

@@ -33,8 +33,11 @@ import {
   transferData,
   coordMenuData,
   coordMenuTitle,
+  getPOISettings,
+  getDetectTypesSettings,
+  getDetectStyleSettings,
 } from '../settingData'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SAIDetectView } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils'
 import color from '../../../styles/color'
 import styles from './styles'
@@ -145,6 +148,19 @@ export default class SecondMapSettings extends Component {
           'xml,prj',
         )
         break
+      case getLanguage(GLOBAL.language).Map_Settings.POI_SETTING:
+        data = getPOISettings()
+        data[0].value = await SAIDetectView.isProjectionModeEnable()
+        data[1].value = await SAIDetectView.isPOIOverlapEnable()
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE:
+        data = await this.getDetectTypesSettings()
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_STYLE:
+        data = getDetectStyleSettings()
+        data[0].value = await SAIDetectView.isDrawTileEnable()
+        data[1].value = await SAIDetectView.isDrawConfidenceEnable()
+        break
       case 'Geocentric Transalation(3-para)':
         data = transfer3ParamsSetting()
         data[0].value[0].value = this.state.title
@@ -250,6 +266,20 @@ export default class SecondMapSettings extends Component {
     return data
   }
 
+  // 识别类型数据
+  getDetectTypesSettings = async () => {
+    let data = await getDetectTypesSettings()
+    let array = await SAIDetectView.getDetectArrayToUse()
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < data.length; j++) {
+        if (data[j].key === array[i]) {
+          data[j].value = true
+        }
+      }
+    }
+    return data
+  }
+
   //范围设置数据
   getRangeData = async () => {
     let data = await rangeSettings()
@@ -346,6 +376,44 @@ export default class SecondMapSettings extends Component {
         data[index + 1].value = value
           ? this.state.transferMethod
           : getLanguage(GLOBAL.language).Map_Settings.OFF
+        break
+      case getLanguage(GLOBAL.language).Map_Settings
+        .POI_SETTING_PROJECTION_MODE:
+        await SAIDetectView.setProjectionModeEnable(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.POI_SETTING_OVERLAP_MODE:
+        await SAIDetectView.setPOIOverlapEnable(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_STYLE_IS_DRAW_TITLE:
+        await SAIDetectView.setDrawTileEnable(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings
+        .DETECT_STYLE_IS_DRAW_CONFIDENCE:
+        await SAIDetectView.setDrawConfidenceEnable(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_PERSON:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BICYCLE:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_CAR:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_MOTORCYCLE:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BUS:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_TRUCK:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_TRAFFICLIGHT:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_FIREHYDRANT:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_CUP:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_CHAIR:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BIRD:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_CAT:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_DOG:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_POTTEDPLANT:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_TV:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_LAPTOP:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_MOUSE:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_KEYBOARD:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_CELLPHONE:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BOOK:
+      case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BOTTLE:
+        await SAIDetectView.setDetectItemEnable(item.key, value)
+        break
     }
     data[index].value = value
     this.setState({

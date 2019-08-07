@@ -40,7 +40,6 @@ function getHeaderTitle(type) {
 export { MAP_MODULE, getHeaderTitle }
 
 function SetMap(param) {
- 
   let moduleDatas = [
     {
       key: constants.MAP_EDIT,
@@ -472,8 +471,8 @@ function SetMap(param) {
     },
   ]
 
-  if(Platform.OS === "ios"){
-    moduleDatas.splice(moduleDatas.length-1,1)
+  if (Platform.OS === 'ios') {
+    moduleDatas.splice(moduleDatas.length - 1, 1)
   }
 
   return moduleDatas
