@@ -192,7 +192,8 @@ function getPlotOperationData(type, params) {
   }
 
   buttons = [
-    ToolbarBtnType.CANCEL,
+    // ToolbarBtnType.CANCEL,
+    ToolbarBtnType.END_ANIMATION,
     ToolbarBtnType.PLOT_ANIMATION_XML_LIST,
     ToolbarBtnType.PLOT_ANIMATION_PLAY,
     // ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST,     //动画节点
