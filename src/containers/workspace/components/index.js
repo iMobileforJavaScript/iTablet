@@ -20,6 +20,7 @@ import {
   AnalystMapToolbar,
 } from './AnalystMapOptions'
 import MenuList from './MenuList'
+import PoiInfoContainer from './PoiInfoContainer'
 export {
   PopList,
   NetworkAnalystToolBar,
@@ -41,4 +42,5 @@ export {
   AnalystMapRecommend,
   AnalystMapToolbar,
   MenuList,
+  PoiInfoContainer,
 }
