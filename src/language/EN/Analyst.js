@@ -207,6 +207,7 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSING: 'Analysing',
   ANALYSIS_START: 'Analysing',
   ANALYSIS_SUCCESS: 'Analysis successfully',
   ANALYSIS_FAIL: 'Analysis failed',

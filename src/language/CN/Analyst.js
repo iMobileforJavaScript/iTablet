@@ -207,6 +207,7 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSING: '分析中',
   ANALYSIS_START: '开始分析',
   ANALYSIS_SUCCESS: '分析成功',
   ANALYSIS_FAIL: '分析失败',
