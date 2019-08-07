@@ -375,6 +375,42 @@ const Map_Settings = {
   ADVANCED_SETTING: 'Advanced Settings',
   LEGEND_SETTING: 'Legend Settings',
 
+  //视频地图设置:一级菜单
+  POI_SETTING: 'POI Settings',
+  DETECT_TYPE: 'Detect Types',
+  DETECT_STYLE: 'Detect Style',
+
+  POI_SETTING_PROJECTION_MODE: 'Projection Mode',
+  POI_SETTING_OVERLAP_MODE: 'Overlap Mode',
+
+  DETECT_TYPE_PERSON: 'Person',
+  DETECT_TYPE_BICYCLE: 'Bycycle',
+  DETECT_TYPE_CAR: 'Car',
+  DETECT_TYPE_MOTORCYCLE: 'Motorcycle',
+  DETECT_TYPE_BUS: 'Bus',
+  DETECT_TYPE_TRUCK: 'Truck',
+  DETECT_TYPE_TRAFFICLIGHT: 'Traffic Light',
+  DETECT_TYPE_FIREHYDRANT: 'Fire Hydrant',
+  DETECT_TYPE_CUP: 'Cup',
+  DETECT_TYPE_CHAIR: 'Chair',
+  DETECT_TYPE_BIRD: 'Bird',
+  DETECT_TYPE_CAT: 'Car',
+  DETECT_TYPE_DOG: 'Dog',
+  DETECT_TYPE_POTTEDPLANT: 'Potted Plant',
+  DETECT_TYPE_TV: 'TV',
+  DETECT_TYPE_LAPTOP: 'Laptop',
+  DETECT_TYPE_MOUSE: 'Mouse',
+  DETECT_TYPE_KEYBOARD: 'Keyboard',
+  DETECT_TYPE_CELLPHONE: 'Cellphone',
+  DETECT_TYPE_BOOK: 'Book',
+  DETECT_TYPE_BOTTLE: 'Bottle',
+
+  DETECT_STYLE_IS_DRAW_TITLE: 'Draw Tiele',
+  DETECT_STYLE_IS_DRAW_CONFIDENCE: 'Diaw Conifidence',
+  DETECT_STYLE_IS_SAME_COLOR: 'Same Color',
+  DETECT_STYLE_SAME_COLOR: 'Same Color Value',
+  DETECT_STYLE_STROKE_WIDTH: 'Stroke Width',
+
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',
   SHOW_SCALE: 'Show Scale',

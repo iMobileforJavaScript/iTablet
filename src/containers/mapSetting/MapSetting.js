@@ -12,7 +12,11 @@ import {
   Image,
 } from 'react-native'
 import styles from './styles'
-import { getlegendSetting, getThematicMapSettings } from './settingData'
+import {
+  getlegendSetting,
+  getMapARSettings,
+  getThematicMapSettings,
+} from './settingData'
 import SettingSection from './SettingSection'
 import { getLanguage } from '../../language/index'
 import { ConstToolType, getHeaderTitle } from '../../constants'
@@ -68,6 +72,8 @@ export default class MapSetting extends Component {
     let newData = getThematicMapSettings()
     if (GLOBAL.Type === constants.MAP_THEME) {
       newData = newData.concat(getlegendSetting())
+    } else if (GLOBAL.Type === constants.MAP_AR) {
+      newData = newData.concat(getMapARSettings())
     }
     this.setState({
       data: newData,

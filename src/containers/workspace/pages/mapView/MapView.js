@@ -166,6 +166,7 @@ export default class MapView extends React.Component {
       canBeUndo: false,
       canBeRedo: false,
       showAIDetect: GLOBAL.Type === constants.MAP_AR,
+      showArModeIcon: true,
     }
     this.closeInfo = [
       {
@@ -1444,6 +1445,7 @@ export default class MapView extends React.Component {
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
     GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    this.setState({ showArModeIcon: full })
     this.fullMap = !full
   }
 
@@ -1778,7 +1780,7 @@ export default class MapView extends React.Component {
   }
   _renderArModeIcon = () => {
     return (
-      <View style={styles.btnView}>
+      <View style={styles.btnView} ref={ref => (GLOBAL.ArModeIcon = ref)}>
         <MTBtn
           style={styles.iconAr}
           size={MTBtn.Size.NORMAL}
@@ -1856,6 +1858,7 @@ export default class MapView extends React.Component {
           this.renderMeasureLabel()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_AR &&
+          this.state.showArModeIcon &&
           this._renderArModeIcon()}
         {this.props.mapScaleView && !this.state.showAIDetect && (
           <ScaleView
