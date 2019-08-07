@@ -253,6 +253,7 @@ const Map_Main_Menu = {
   PLOTTING_LIB: 'Plotting Lib',
   PLOTTING_ANIMATION: 'Infer',
   PLOTTING_ANIMATION_DEDUCTION: 'Plotting Animation Deduction',
+  PLOTTING_ANIMATION_RESET: 'Reset',
 
   SHARE: 'Share',
   SHARE_WECHAT: 'Wechat',
@@ -265,6 +266,27 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: 'Illegal Collect',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
+}
+
+//推演动画
+const Map_Plotting = {
+  PLOTTING_ANIMATION_MODE: 'Animation Mode',
+  PLOTTING_ANIMATION_OPERATION: 'Result Operation',
+  PLOTTING_ANIMATION_START_MODE: 'Start',
+
+  PLOTTING_ANIMATION_WAY: 'Way',
+  PLOTTING_ANIMATION_BLINK: 'Blink',
+  PLOTTING_ANIMATION_ATTRIBUTE: 'Attribute',
+  PLOTTING_ANIMATION_SHOW: 'Shou',
+  PLOTTING_ANIMATION_ROTATE: 'Rotate',
+  PLOTTING_ANIMATION_SCALE: 'Scale',
+  PLOTTING_ANIMATION_GROW: 'Grow',
+
+  PLOTTING_ANIMATION_START_TIME: 'Start Time',
+  PLOTTING_ANIMATION_DURATION: 'Duration Time',
+  PLOTTING_ANIMATION_FLLOW_LAST: 'Follow Last Animation Play',
+  PLOTTING_ANIMATION_CLICK_START: 'Click Start',
+  PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
 }
 
 //图层
@@ -508,6 +530,7 @@ export {
   Map_Main_Menu,
   Map_Label,
   Map_Layer,
+  Map_Plotting,
   Map_Attribute,
   Map_Setting,
   Map_Settings,

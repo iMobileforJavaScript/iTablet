@@ -69,6 +69,7 @@ import {
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
+import PlotAnimationView from '../PlotAnimationView'
 import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
@@ -90,6 +91,7 @@ const tabs = 'tabs'
 const symbol = 'symbol'
 const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
+const createPlotAnimation = 'createPlotAnimation'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -2613,6 +2615,10 @@ export default class ToolBar extends React.PureComponent {
       this.showAnimation(type)
       // return
     }
+    if (type === ConstToolType.PLOT_ANIMATION_XML_LIST && isShow) {
+      this.showAnimation(type)
+      // return
+    }
     if (
       this.isShow !== isShow ||
       this.state.type !== type ||
@@ -3380,6 +3386,47 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
+  showAnimationXmlList = async () => {
+    let height = ConstToolType.HEIGHT[2]
+    this.props.showFullMap && this.props.showFullMap(true)
+    // let type = ConstToolType.PLOT_ANIMATION_XML_LIST
+    let type = ConstToolType.MAP_PLOTTING_ANIMATION
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      containerType: 'list',
+      // cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
+  animationPlay = async () => {
+    // await SMap.initAnimation()
+    // await SMap.animationPlay()
+    let height = ConstToolType.HEIGHT[0]
+    this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_PALY
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      // cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
+  animationSave = async () => {
+    let mapName = await SMap.getMapName()
+    let userName = this.props.user.currentUser.userName || 'Customer'
+    let savePath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativeFilePath.Animation +
+        '/' +
+        mapName,
+    )
+    await SMap.animationSave(savePath)
+  }
   // menuCommit = () => {
   //   this.menuDialog && this.menuDialog.callCurrentAction()
   // }
@@ -3781,7 +3828,9 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
+    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
+
+    this.animationPlay()
   }
 
   listThemeAction = ({ item }) => {
@@ -5071,6 +5120,17 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  renderCreatePlotAnimation = () => {
+    return (
+      <PlotAnimationView
+        ref={ref => (this.plotAnimationView = ref)}
+        data={this.state.data}
+        Heighttype={this.state.type}
+        device={this.props.device}
+      />
+    )
+  }
+
   renderHorizontalTable = () => {
     return (
       <HorizontalTableList
@@ -5561,6 +5621,9 @@ export default class ToolBar extends React.PureComponent {
       case horizontalTable:
         box = this.renderHorizontalTable()
         break
+      case createPlotAnimation:
+        box = this.renderCreatePlotAnimation()
+        break
       case table:
       default:
         box = this.renderTable()
@@ -5877,6 +5940,26 @@ export default class ToolBar extends React.PureComponent {
           image = getThemeAssets().themeType.theme_graphmap_selected
           action = this.changeGraphType
           break
+        case ToolbarBtnType.PLOT_ANIMATION_XML_LIST:
+          //推演动画xml列表
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+          action = this.showAnimationXmlList
+          break
+        case ToolbarBtnType.PLOT_ANIMATION_PLAY:
+          //播放推演动画
+          image = require('../../../../assets/mapEdit/icon_packUP.png')
+          action = this.animationPlay
+          break
+        case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:
+          //显示动画节点对象列表
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+
+          break
+        case ToolbarBtnType.PLOT_ANIMATION_SAVE:
+          //保存推演动画节点mapTools/icon_save_black
+          image = require('../../../../assets/mapTools/icon_save.png')
+          action = this.animationSave
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -5924,6 +6007,29 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
+      let createInfo =
+        this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+      if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+        createInfo.geoId = this.props.selection[0].ids[0]
+        createInfo.layerName = this.props.selection[0].layerInfo.name
+      }
+      SMap.createAnimationGo(createInfo)
+
+      // let length=createInfo.length
+      // // this.showToolbarAndBox(false)
+      // this.isBoxShow = true
+      // GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else {
       this.setVisible(false)
     }

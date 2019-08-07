@@ -16,7 +16,7 @@ const Friends = {
   SEND_SUCCESS: 'Send successfully',
   RECEIVE_SUCCESS: 'Receive successfully',
   RECEIVE_FAIL_EXPIRE: 'Receive failed, the file might have expired',
-  RECEIVE_FAIL_NETWORK: 'Receive failed, please check you network',
+  RECEIVE_FAIL_NETWORK: 'Receive failed, please check your network',
   //FriendMessage
   MARK_READ: 'Mark read', //*
   MARK_UNREAD: 'Mark unread', //*

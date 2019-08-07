@@ -271,6 +271,7 @@ const Map_Main_Menu = {
   PLOTTING_LIB: '标绘库',
   PLOTTING_ANIMATION: '推演',
   PLOTTING_ANIMATION_DEDUCTION: '态势推演',
+  PLOTTING_ANIMATION_RESET: '复位',
 
   //分享
   SHARE: '分享',
@@ -284,6 +285,27 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
+}
+
+//推演动画
+const Map_Plotting = {
+  PLOTTING_ANIMATION_MODE: '动画类型',
+  PLOTTING_ANIMATION_OPERATION: '效果选项',
+  PLOTTING_ANIMATION_START_MODE: '开始',
+
+  PLOTTING_ANIMATION_WAY: '路径',
+  PLOTTING_ANIMATION_BLINK: '闪烁',
+  PLOTTING_ANIMATION_ATTRIBUTE: '属性',
+  PLOTTING_ANIMATION_SHOW: '显隐',
+  PLOTTING_ANIMATION_ROTATE: '旋转',
+  PLOTTING_ANIMATION_SCALE: '比例',
+  PLOTTING_ANIMATION_GROW: '生长',
+
+  PLOTTING_ANIMATION_START_TIME: '开始时间',
+  PLOTTING_ANIMATION_DURATION: '持续时间',
+  PLOTTING_ANIMATION_FLLOW_LAST: '上一动作之后播放',
+  PLOTTING_ANIMATION_CLICK_START: '点击开始',
+  PLOTTING_ANIMATION_TOGETHER_LAST: '上一动作同时播放',
 }
 
 //图层
@@ -529,6 +551,7 @@ export {
   Map_Main_Menu,
   Map_Label,
   Map_Layer,
+  Map_Plotting,
   Map_Attribute,
   Map_Setting,
   Map_Settings,

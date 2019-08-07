@@ -1,4 +1,4 @@
-import { SMap, SMCollectorType } from 'imobile_for_reactnative'
+import { SMap, SMCollectorType, Action } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { ConstToolType } from '../../../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -135,6 +135,73 @@ function getCollectionOperationData(type, params) {
 }
 
 /**
+ * 获取标绘操作数据
+ */
+function getPlotOperationData(type, params) {
+  _params = params
+  let data = [],
+    buttons = []
+  switch (type) {
+    case ConstToolType.PLOT_ANIMATION_START:
+      data = []
+      break
+    case ConstToolType.PLOT_ANIMATION_NODE_CREATE:
+      data = []
+      break
+    case ConstToolType.PLOT_ANIMATION_XML_LIST:
+      data = []
+      break
+    case ConstToolType.PLOT_ANIMATION_PALY:
+      data = [
+        {
+          key: 'startFly',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_START,
+          //'开始播放',
+          action: () => {
+            SMap.initAnimation()
+            SMap.animationPlay()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_play.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_play.png'),
+        },
+        {
+          key: 'stop',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_PAUSE,
+          //'暂停',
+          action: () => {
+            SMap.animationPause()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_stop.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
+          // selectMode:"flash"
+        },
+        {
+          key: 'reset',
+          title: getLanguage(global.language).Map_Main_Menu
+            .PLOTTING_ANIMATION_RESET,
+          //'复原',
+          action: () => reset(),
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_cancel_1.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_cancel_1.png'),
+          // selectMode:"flash"
+        },
+      ]
+  }
+
+  buttons = [
+    ToolbarBtnType.CANCEL,
+    ToolbarBtnType.PLOT_ANIMATION_XML_LIST,
+    ToolbarBtnType.PLOT_ANIMATION_PLAY,
+    // ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST,     //动画节点
+    ToolbarBtnType.PLOT_ANIMATION_SAVE,
+  ]
+
+  return { data, buttons }
+}
+/**
  * 获取采集操作数据
  * @param type
  * @returns {*}
@@ -240,9 +307,24 @@ function redo() {
   SMap.refreshMap()
 }
 
+function reset() {
+  // SMap.animationStop()
+  SMap.animationReset()
+  let height = 0
+  _params.showFullMap && _params.showFullMap(true)
+  let type = ConstToolType.PLOT_ANIMATION_START
+  GLOBAL.currentToolbarType = type
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height,
+    cb: () => SMap.setAction(Action.SELECT),
+  })
+}
+
 export default {
   setParams,
   getCollectionOperationData,
   getCollectionData,
   showCollection,
+  getPlotOperationData,
 }

@@ -13,8 +13,7 @@ import {
 } from 'imobile_for_reactnative'
 // import { RNCamera } from 'react-native-camera'
 import { getPublicAssets } from '../../../../assets'
-import { scaleSize , Toast } from '../../../../utils'
-
+import { scaleSize, Toast } from '../../../../utils'
 
 export default class ARMap extends Component {
   props: {

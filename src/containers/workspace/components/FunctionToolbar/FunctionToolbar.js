@@ -429,12 +429,18 @@ export default class FunctionToolbar extends React.Component {
 
   showAnimationList = async () => {
     const toolRef = this.props.getToolRef()
+    let height = 0
+
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      let type = ConstToolType.MAP_PLOTTING_ANIMATION
+      // let type = ConstToolType.MAP_PLOTTING_ANIMATION
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
       toolRef.setVisible(true, type, {
         isFullScreen: false,
-        cb: () => {},
+        height,
+        // cb: () => {},
+        cb: () => SMap.setAction(Action.SELECT),
       })
     }
   }

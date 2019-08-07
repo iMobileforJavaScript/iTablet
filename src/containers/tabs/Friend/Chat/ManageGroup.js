@@ -142,7 +142,7 @@ class ManageGroup extends Component {
         <TouchableItemView
           item={{
             //发消息
-            image: getThemeAssets().friend.friend_message,
+            image: getThemeAssets().friend.new_chat,
             text: getLanguage(this.language).Friends.SEND_MESSAGE,
           }}
           onPress={() => {

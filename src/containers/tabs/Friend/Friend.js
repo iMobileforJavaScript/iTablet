@@ -51,7 +51,7 @@ const SMessageServiceiOS = NativeModules.SMessageService
 const appUtilsModule = NativeModules.AppUtils
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 // let searchImg = getThemeAssets().friend.friend_search
-let addFriendImg = getThemeAssets().friend.friend_add
+let addFriendImg = getThemeAssets().friend.friend_addMenu
 
 let g_connectService = false
 export default class Friend extends Component {
