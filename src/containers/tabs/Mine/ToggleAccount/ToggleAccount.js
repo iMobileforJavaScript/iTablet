@@ -3,10 +3,11 @@ import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import Container from '../../../../components/Container'
 import { color, size } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import UserType from '../../../../constants/UserType'
 export default class ToggleAccount extends Component {
   props: {
     navigation: Object,
@@ -24,6 +25,7 @@ export default class ToggleAccount extends Component {
   _renderItem = info => {
     let userName = info.item.userName
     let password = info.item.password
+    let userType = info.item.userType
     if (userName && password) {
       let itemHeight = scaleSize(80)
       let fontSize = size.fontSize.fontSizeXl
@@ -36,9 +38,8 @@ export default class ToggleAccount extends Component {
         <TouchableOpacity
           onPress={async () => {
             try {
-              let isEmail = info.item.isEmail
-
               if (
+                this.props.user.currentUser.userType === userType &&
                 this.props.user.currentUser.userName === userName &&
                 this.props.user.currentUser.password === password
               ) {
@@ -51,19 +52,16 @@ export default class ToggleAccount extends Component {
                   getLanguage(global.language).Profile.SWITCHING,
                 )
               }
-              // this.props.setUser({
-              //   userName: userName,
-              //   password: password,
-              //   isEmail: isEmail,
-              // })
-              // await SOnlineService.removeCookie()
               let result
-              if (isEmail === true) {
+              if (userType === UserType.COMMON_USER) {
                 result = await SOnlineService.login(userName, password)
-              } else if (isEmail === false) {
-                result = await SOnlineService.loginWithPhoneNumber(
+              } else if (userType === UserType.IPORTAL_COMMON_USER) {
+                let url = info.item.serverUrl
+                result = await SIPortalService.login(
+                  url,
                   userName,
                   password,
+                  true,
                 )
               }
               if (this.containerRef) {
