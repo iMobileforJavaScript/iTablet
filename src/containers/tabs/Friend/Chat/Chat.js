@@ -799,6 +799,7 @@ class Chat extends React.Component {
     return (
       <Animated.View style={{ flex: 1, bottom: this.state.chatBottom }}>
         <Container
+          style={{ backgroundColor:'rgba(240,240,240,1.0)' }}
           ref={ref => (this.container = ref)}
           headerProps={{
             title: this.state.title,
@@ -996,7 +997,7 @@ class Chat extends React.Component {
           left: {
             //对方的气泡
             marginTop: scaleSize(1),
-            backgroundColor: 'white',
+            backgroundColor: '#rgba(255, 255, 255, 1.0)',
             overflow: 'hidden',
             borderRadius: scaleSize(10),
           },
