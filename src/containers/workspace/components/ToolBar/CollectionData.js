@@ -297,7 +297,11 @@ async function createCollector(type) {
   switch (type) {
     case SMCollectorType.POINT_GPS:
     case SMCollectorType.POINT_HAND: {
-      if (_params.symbol.currentSymbol.type === 'marker') {
+      if (
+        _params.symbol.currentSymbol &&
+        _params.symbol.currentSymbol.type &&
+        _params.symbol.currentSymbol.type.toLowerCase() === 'marker'
+      ) {
         geoStyle.setMarkerStyle(_params.symbol.currentSymbol.id)
       }
       mType = DatasetType.POINT
@@ -307,7 +311,11 @@ async function createCollector(type) {
     case SMCollectorType.LINE_GPS_PATH:
     case SMCollectorType.LINE_HAND_POINT:
     case SMCollectorType.LINE_HAND_PATH: {
-      if (_params.symbol.currentSymbol.type === 'line') {
+      if (
+        _params.symbol.currentSymbol &&
+        _params.symbol.currentSymbol.type &&
+        _params.symbol.currentSymbol.type.toLowerCase() === 'line'
+      ) {
         geoStyle.setLineStyle(_params.symbol.currentSymbol.id)
       }
       mType = DatasetType.LINE
@@ -317,7 +325,11 @@ async function createCollector(type) {
     case SMCollectorType.REGION_GPS_PATH:
     case SMCollectorType.REGION_HAND_POINT:
     case SMCollectorType.REGION_HAND_PATH: {
-      if (_params.symbol.currentSymbol.type === 'fill') {
+      if (
+        _params.symbol.currentSymbol &&
+        _params.symbol.currentSymbol.type &&
+        _params.symbol.currentSymbol.type.toLowerCase() === 'fill'
+      ) {
         geoStyle.setFillStyle(_params.symbol.currentSymbol.id)
       }
       mType = DatasetType.REGION

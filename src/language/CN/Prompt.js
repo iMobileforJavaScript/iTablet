@@ -19,6 +19,7 @@ const Prompt = {
   LOG_OUT: '是否退出登录？',
   FAILED_TO_LOG: '登录失败',
   INCORRECT_USER_INFO: '用户名或用户密码错误',
+  INCORRECT_IPORTAL_ADDRESS: '请检查服务器地址是否正确',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',

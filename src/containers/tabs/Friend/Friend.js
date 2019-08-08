@@ -88,6 +88,7 @@ export default class Friend extends Component {
     }
     AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
+    this.addFileListener()
     this.stateChangeCount = 0
     this._receiveMessage = this._receiveMessage.bind(this)
     global.getFriend = this._getFriend
@@ -102,9 +103,10 @@ export default class Friend extends Component {
   }
 
   componentDidMount() {
-    this.restartService()
-    this.addFileListener()
-    JPushService.init(this.props.user.currentUser.userId)
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      this.restartService()
+      JPushService.init(this.props.user.currentUser.userId)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -144,11 +146,7 @@ export default class Friend extends Component {
   }
 
   handleStateChange = async appState => {
-    if (
-      this.props.user.currentUser &&
-      this.props.user.currentUser.userType &&
-      this.props.user.currentUser.userType !== UserType.PROBATION_USER
-    ) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
       if (appState === 'inactive') {
         return
       }
@@ -173,11 +171,7 @@ export default class Friend extends Component {
 
   // eslint-disable-next-line no-unused-vars
   handleNetworkState = state => {
-    if (
-      this.props.user.currentUser &&
-      this.props.user.currentUser.userType &&
-      this.props.user.currentUser.userType !== UserType.PROBATION_USER
-    ) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
       this.restartService()
     }
   }
@@ -1112,7 +1106,7 @@ export default class Friend extends Component {
       }
     }
 
-    this.setState({ bHasUserInfo })
+    // this.setState({ bHasUserInfo })
   }
 
   disconnectService = async fromRestarting => {
@@ -1182,7 +1176,7 @@ export default class Friend extends Component {
         headerProps={{
           title: getLanguage(this.props.language).Navigator_Label.FRIENDS,
           headerLeft:
-            this.state.bHasUserInfo === true ? (
+            this.props.user.currentUser.userType === UserType.COMMON_USER ? (
               <TouchableOpacity
                 style={styles.addFriendView}
                 onPress={() => {
@@ -1213,7 +1207,7 @@ export default class Friend extends Component {
           navigation: this.props.navigation,
         }}
       >
-        {this.state.bHasUserInfo === true
+        {this.props.user.currentUser.userType === UserType.COMMON_USER
           ? this.renderTab()
           : this.renderNOFriend()}
         <AddMore

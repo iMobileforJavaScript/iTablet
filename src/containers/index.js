@@ -17,7 +17,9 @@ import {
   ToggleAccount,
   Setting,
   AboutITablet,
+  SelectLogin,
   Login,
+  IPortalLogin,
   // Chat,
   AddFriend,
   InformMessage,
@@ -416,8 +418,22 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    SelectLogin: {
+      screen: SelectLogin,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     Login: {
       screen: Login,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    IPortalLogin: {
+      screen: IPortalLogin,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
