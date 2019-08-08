@@ -888,6 +888,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
+        this.expressionData.list = allExpressions
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
@@ -5997,7 +5998,7 @@ export default class ToolBar extends React.PureComponent {
         createInfo.geoId = this.props.selection[0].ids[0]
         createInfo.layerName = this.props.selection[0].layerInfo.name
       }
-      SMap.createAnimationGo(createInfo)
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
 
       // let length=createInfo.length
       // // this.showToolbarAndBox(false)
