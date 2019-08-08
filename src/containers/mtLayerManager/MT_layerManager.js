@@ -408,7 +408,10 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
-        if (GLOBAL.Type === constants.MAP_EDIT) {
+        if (
+          GLOBAL.Type === constants.MAP_EDIT ||
+          GLOBAL.Type === constants.MAP_ANALYST
+        ) {
           if (data.themeType <= 0) {
             this.mapEdit(data)
           } else {
@@ -493,7 +496,10 @@ export default class MT_layerManager extends React.Component {
         layerData: data,
         refreshParentList: refreshParentList,
       })
-    } else if (GLOBAL.Type === constants.MAP_EDIT) {
+    } else if (
+      GLOBAL.Type === constants.MAP_EDIT ||
+      GLOBAL.Type === constants.MAP_ANALYST
+    ) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: isGroup
           ? ConstToolType.TOOLBAR_HEIGHT[2]
