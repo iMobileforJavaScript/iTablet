@@ -22,16 +22,14 @@ function getScreenHeight() {
 }
 function getScreenSafeHeight() {
   if (Platform.OS === 'ios') return getScreenHeight()
-  let softMenuHeight = ExtraDimensions.getSoftMenuBarHeight()
   let screenHeight = ExtraDimensions.getRealWindowHeight()
   if (getScreenHeight() < getScreenWidth()) {
     screenHeight = ExtraDimensions.getRealWindowWidth()
-    softMenuHeight = 0
   }
-  deviceSafeHeight =
-    screenHeight - ExtraDimensions.getStatusBarHeight() - softMenuHeight
+  deviceSafeHeight = screenHeight - ExtraDimensions.getStatusBarHeight()
   return deviceSafeHeight
 }
+
 //px转换成dp
 // let w2 = deviceWidth > 320 ? 720 / defaultPixel : 640 / defaultPixel
 // let h2 = deviceWidth > 320 ? 1080 / defaultPixel : 1136 / defaultPixel

@@ -51,6 +51,7 @@ import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
 import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
@@ -210,6 +211,7 @@ export default class ToolBar extends React.PureComponent {
       selectKey: '',
       listExpressions: {},
       themeSymbolType: '',
+      hasSoftMenuBottom: false,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -221,6 +223,11 @@ export default class ToolBar extends React.PureComponent {
       setLastState: this.setLastState,
       scrollListToLocation: this.scrollListToLocation,
       ...this.props,
+    })
+    ExtraDimensions.addSoftMenuBarWidthChangeListener({
+      softBarPositionChange: val => {
+        this.setState({ hasSoftMenuBottom: val })
+      },
     })
   }
 
@@ -6052,7 +6059,10 @@ export default class ToolBar extends React.PureComponent {
       ? { height: this.props.device.height }
       : {}
     if (this.state.isFullScreen && this.state.isTouchProgress) {
-      height = { height: screen.getScreenSafeHeight() }
+      let softBarHeight = this.state.hasSoftMenuBottom
+        ? ExtraDimensions.getSoftMenuBarHeight()
+        : 0
+      height = { height: screen.getScreenSafeHeight() - softBarHeight }
     }
     // if (this.state.isFullScreen) {
     //   if (this.props.device.orientation === 'LANDSCAPE') {
