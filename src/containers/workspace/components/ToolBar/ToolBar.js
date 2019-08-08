@@ -55,6 +55,7 @@ import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
+import ToolbarButtonAction from './ToolbarButtonAction'
 import { FileTools } from '../../../../native'
 import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
@@ -894,6 +895,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
+        this.expressionData.list = allExpressions
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
@@ -988,8 +990,12 @@ export default class ToolBar extends React.PureComponent {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
                 temp[selectedExpressions[index]] = false
-                listExpressionsArr.push(temp)
                 item.isSelected = item.expression === selectedExpressions[index]
+                if (item.isSelected === true) {
+                  //add xiezhy
+                  listExpressionsArr.push(temp)
+                  break
+                }
               }
             } else {
               item.isSelected = false
@@ -5775,30 +5781,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
-          action = () => {
-            if (
-              this.props.selection.length === 0
-              // !this.props.selection.layerInfo ||
-              // !this.props.selection.layerInfo.path
-            ) {
-              Toast.show(
-                getLanguage(this.props.language).Prompt.NON_SELECTED_OBJ,
-              )
-              return
-            }
-            let selectObjNums = 0
-            this.props.selection.forEach(item => {
-              selectObjNums += item.ids.length
-            })
-            selectObjNums === 0 && Toast.show(ConstInfo.NON_SELECTED_OBJ)
-
-            NavigationService.navigate(
-              'LayerSelectionAttribute',
-              GLOBAL.SelectedSelectionAttribute && {
-                selectionAttribute: GLOBAL.SelectedSelectionAttribute,
-              },
-            )
-          }
+          action = () => ToolbarButtonAction.showAttribute(this.props.selection)
           break
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
@@ -6022,7 +6005,7 @@ export default class ToolBar extends React.PureComponent {
         createInfo.geoId = this.props.selection[0].ids[0]
         createInfo.layerName = this.props.selection[0].layerInfo.name
       }
-      SMap.createAnimationGo(createInfo)
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
 
       // let length=createInfo.length
       // // this.showToolbarAndBox(false)

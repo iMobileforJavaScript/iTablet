@@ -38,11 +38,11 @@ import { SOnlineService, SScene, SMap,SMessageService, SIPortalService } from 'i
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 import FetchUtils from './src/utils/FetchUtils'
 import RNFS from 'react-native-fs'
+import constants from "./src/containers/workspace/constants";
 
 
 const {persistor, store} = ConfigStore()
@@ -156,7 +156,7 @@ class AppRoot extends Component {
   }
 
   async login(){
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
 
       let isEmail = this.props.user.currentUser.isEmail
       let userName = this.props.user.currentUser.userName
@@ -181,7 +181,15 @@ class AppRoot extends Component {
         }
         // Toast.show('登陆')
       }
-
+    } else if (UserType.isIPortalUser(this.props.user.currentUser)){
+      if(!this.IPortalLoggedin){
+        let url = this.props.user.currentUser.serverUrl
+        let userName = this.props.user.currentUser.userName
+        let password = this.props.user.currentUser.password
+        SIPortalService.init()
+        SIPortalService.login(url, userName, password, true)
+        this.IPortalLoggedin = true
+      }
     }
   }
 
@@ -194,16 +202,6 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
-      SMessageService.connectService(
-        MSGConstant.MSG_IP,
-        MSGConstant.MSG_Port,
-        MSGConstant.MSG_HostName,
-        MSGConstant.MSG_UserName,
-        MSGConstant.MSG_Password,
-        this.props.user.currentUser.userId,
-      )
-    }
     this.login()
     this.reCircleLogin()
     AppState.addEventListener('change', this.handleStateChange)
@@ -211,7 +209,7 @@ class AppRoot extends Component {
       await this.initDirectories()
       await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
-      SOnlineService.removeCookie()
+      // SOnlineService.removeCookie()
       SIPortalService.init()
       let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
       if (
@@ -275,7 +273,7 @@ class AppRoot extends Component {
   }
 
   handleStateChange = appState => {
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
       if (appState === 'active') {
         SMessageService.resume()
         this.reCircleLogin()
@@ -427,6 +425,9 @@ class AppRoot extends Component {
       GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
       return
     }
+    if (GLOBAL.Type === constants.MAP_AR) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
+    }
     let mapName = ''
     if (this.props.map.currentMap.name) { // 获取当前打开的地图xml的名称
       mapName = this.props.map.currentMap.name
@@ -487,6 +488,9 @@ class AppRoot extends Component {
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       return
+    }
+    if (GLOBAL.Type === constants.MAP_AR) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
     }
     if (GLOBAL.isBackHome) {
       try {

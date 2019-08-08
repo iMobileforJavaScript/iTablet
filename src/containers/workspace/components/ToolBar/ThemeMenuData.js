@@ -143,14 +143,14 @@ async function createThemeGridUniqueMap(params) {
       errorInfo = err.message
     })
   if (isSuccess) {
-    Toast.show('创建专题图成功')
+    // Toast.show('创建专题图成功')
     //设置当前图层
     _toolbarParams.getLayers(-1, layers => {
       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -173,14 +173,14 @@ async function createThemeGridRangeMap(params) {
       errorInfo = err.message
     })
   if (isSuccess) {
-    Toast.show('创建专题图成功')
+    // Toast.show('创建专题图成功')
     //设置当前图层
     _toolbarParams.getLayers(-1, layers => {
       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -202,14 +202,14 @@ async function createThemeGridUniqueMapByLayer() {
       errorInfo = err.message
     })
   if (isSuccess) {
-    Toast.show('创建专题图成功')
+    // Toast.show('创建专题图成功')
     //设置当前图层
     _toolbarParams.getLayers(-1, layers => {
       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -231,14 +231,14 @@ async function createThemeGridRangeMapByLayer() {
       errorInfo = err.message
     })
   if (isSuccess) {
-    Toast.show('创建专题图成功')
+    // Toast.show('创建专题图成功')
     //设置当前图层
     _toolbarParams.getLayers(-1, layers => {
       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -3125,7 +3125,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -3268,7 +3268,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
   }
 }
 
@@ -3374,14 +3374,16 @@ async function createHeatMap(params) {
       errorInfo = err.message
     })
   if (isSuccess) {
-    Toast.show('创建专题图成功')
+    // Toast.show('创建专题图成功')
     //设置当前图层
     _toolbarParams.getLayers(-1, layers => {
       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
+    if('TypeError' === errorInfo){
+      Toast.show(global.language==='CN'?'只有点数据集可以创建':'Only point dataset can be created')
+    }
   }
 }
 
