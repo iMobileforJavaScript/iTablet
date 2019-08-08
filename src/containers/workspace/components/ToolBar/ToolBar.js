@@ -54,6 +54,7 @@ import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
+import ToolbarButtonAction from './ToolbarButtonAction'
 import { FileTools } from '../../../../native'
 import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
@@ -981,8 +982,12 @@ export default class ToolBar extends React.PureComponent {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
                 temp[selectedExpressions[index]] = false
-                listExpressionsArr.push(temp)
                 item.isSelected = item.expression === selectedExpressions[index]
+                if (item.isSelected === true) {
+                  //add xiezhy
+                  listExpressionsArr.push(temp)
+                  break
+                }
               }
             } else {
               item.isSelected = false
@@ -5768,30 +5773,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
-          action = () => {
-            if (
-              this.props.selection.length === 0
-              // !this.props.selection.layerInfo ||
-              // !this.props.selection.layerInfo.path
-            ) {
-              Toast.show(
-                getLanguage(this.props.language).Prompt.NON_SELECTED_OBJ,
-              )
-              return
-            }
-            let selectObjNums = 0
-            this.props.selection.forEach(item => {
-              selectObjNums += item.ids.length
-            })
-            selectObjNums === 0 && Toast.show(ConstInfo.NON_SELECTED_OBJ)
-
-            NavigationService.navigate(
-              'LayerSelectionAttribute',
-              GLOBAL.SelectedSelectionAttribute && {
-                selectionAttribute: GLOBAL.SelectedSelectionAttribute,
-              },
-            )
-          }
+          action = () => ToolbarButtonAction.showAttribute(this.props.selection)
           break
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
