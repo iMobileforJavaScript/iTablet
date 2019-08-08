@@ -888,6 +888,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
+        this.expressionData.list = allExpressions
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
