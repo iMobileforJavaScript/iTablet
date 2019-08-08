@@ -43,6 +43,7 @@ import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 import FetchUtils from './src/utils/FetchUtils'
 import RNFS from 'react-native-fs'
+import constants from "./src/containers/workspace/constants";
 
 
 const {persistor, store} = ConfigStore()
@@ -427,6 +428,9 @@ class AppRoot extends Component {
       GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
       return
     }
+    if (GLOBAL.Type === constants.MAP_AR) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
+    }
     let mapName = ''
     if (this.props.map.currentMap.name) { // 获取当前打开的地图xml的名称
       mapName = this.props.map.currentMap.name
@@ -487,6 +491,9 @@ class AppRoot extends Component {
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       return
+    }
+    if (GLOBAL.Type === constants.MAP_AR) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
     }
     if (GLOBAL.isBackHome) {
       try {
