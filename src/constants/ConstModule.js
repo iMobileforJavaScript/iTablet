@@ -355,7 +355,8 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = '福建'
+          // let moduleMapName = '福建'
+          let moduleMapName = 'TourLine'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
