@@ -26,6 +26,7 @@ import {
   OverlayView,
   AnalystMapButtons,
   AnalystMapToolbar,
+  PoiInfoContainer,
 } from '../../components'
 import {
   Container,
@@ -1913,6 +1914,7 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
+        <PoiInfoContainer ref={ref => (GLOBAL.PoiInfoContainer = ref)} />
       </Container>
     )
   }
