@@ -34,11 +34,10 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService, SIPortalService } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
 import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 import FetchUtils from './src/utils/FetchUtils'
@@ -156,7 +155,7 @@ class AppRoot extends Component {
   }
 
   async login(){
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
 
       let isEmail = this.props.user.currentUser.isEmail
       let userName = this.props.user.currentUser.userName
@@ -181,7 +180,15 @@ class AppRoot extends Component {
         }
         // Toast.show('登陆')
       }
-
+    } else if (UserType.isIPortalUser(this.props.user.currentUser)){
+      if(!this.IPortalLoggedin){
+        let url = this.props.user.currentUser.serverUrl
+        let userName = this.props.user.currentUser.userName
+        let password = this.props.user.currentUser.password
+        SIPortalService.init()
+        SIPortalService.login(url, userName, password, true)
+        this.IPortalLoggedin = true
+      }
     }
   }
 
@@ -194,16 +201,6 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
-      SMessageService.connectService(
-        MSGConstant.MSG_IP,
-        MSGConstant.MSG_Port,
-        MSGConstant.MSG_HostName,
-        MSGConstant.MSG_UserName,
-        MSGConstant.MSG_Password,
-        this.props.user.currentUser.userId,
-      )
-    }
     this.login()
     this.reCircleLogin()
     AppState.addEventListener('change', this.handleStateChange)
@@ -211,8 +208,8 @@ class AppRoot extends Component {
       await this.initDirectories()
       await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
-      SOnlineService.removeCookie()
-
+      // SOnlineService.removeCookie()
+      SIPortalService.init()
       let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
       if (
         this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
@@ -275,7 +272,7 @@ class AppRoot extends Component {
   }
 
   handleStateChange = appState => {
-    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
       if (appState === 'active') {
         SMessageService.resume()
         this.reCircleLogin()

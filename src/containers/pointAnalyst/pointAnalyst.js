@@ -156,10 +156,17 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
+        let x = this.state.searchData[index].x
+        let y = this.state.searchData[index].y
         this.setState({ searchValue: pointName, searchData: [] })
         let result = await SMap.toLocationPoint(index)
         if (result) {
           this.container.setLoading(false)
+          GLOBAL.PoiInfoContainer &&
+            GLOBAL.PoiInfoContainer.setState({
+              destination: this.state.searchValue,
+              position: { x, y },
+            })
           NavigationService.goBack()
         } else {
           Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)

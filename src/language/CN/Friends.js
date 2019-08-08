@@ -2,7 +2,7 @@
 const Friends = {
   LOCALE: 'zh-cn',
 
-  LOGOUT: '登录以联系好友',
+  LOGOUT: '登录Online账号以联系好友',
   MESSAGES: '消息',
   FRIENDS: '好友',
   GROUPS: '群组',

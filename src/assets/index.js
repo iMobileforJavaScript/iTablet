@@ -122,7 +122,7 @@ function getLayerIconByType(type) {
       icon = require('./Mine/mine_my_plot.png')
       break
     case DatasetType.Network: // 复合数据集
-      icon = require('./map/icon-network.png')
+      icon = require('./mapToolbar/dataset_type_network_black.png')
       break
     case DatasetType.GRID: // GRID数据集
       icon = require('./map/icon-grid_black.png')
@@ -162,7 +162,7 @@ function getLayerWhiteIconByType(type) {
       icon = require('./Mine/mine_my_plot_white.png')
       break
     case DatasetType.Network: // 复合数据集
-      icon = require('./map/icon-network.png')
+      icon = require('./mapToolbar/dataset_type_network.png')
       break
     case DatasetType.GRID: // GRID数据集
       icon = require('./map/icon-grid.png')

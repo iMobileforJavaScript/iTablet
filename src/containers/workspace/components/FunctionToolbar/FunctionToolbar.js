@@ -1109,6 +1109,15 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_edit.png'),
           },
           {
+            key: '风格',
+            title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
+            //'风格',
+            action: this.mapStyle,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_style.png'),
+            selectMode: 'flash',
+          },
+          {
             key: constants.TOOL,
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             action: this.showTool,

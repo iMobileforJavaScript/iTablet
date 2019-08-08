@@ -130,8 +130,6 @@ export default class LayerAttributeTabs extends React.Component {
 
     this.currentTabRefs = []
     this.init = !!selectionAttribute
-
-    this.relateAction = this.relateAction.bind(this)
   }
 
   componentDidMount() {
@@ -321,7 +319,7 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   /** 关联事件 **/
-  relateAction() {
+  relateAction = () => {
     if (
       this.state.currentTabIndex >= this.currentTabRefs.length &&
       !this.currentTabRefs[this.state.currentTabIndex]
@@ -383,7 +381,8 @@ export default class LayerAttributeTabs extends React.Component {
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
 
         StyleUtils.setSelectionStyle(
-          this.props.currentLayer.path || objs[0].layerPath,
+          // this.props.currentLayer.path || objs[0].layerPath,
+          layerPath,
         )
         if (data instanceof Array && data.length > 0) {
           SMap.moveToPoint({

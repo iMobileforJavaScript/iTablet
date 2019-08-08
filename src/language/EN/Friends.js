@@ -2,7 +2,7 @@
 const Friends = {
   LOCALE: 'en',
 
-  LOGOUT: 'Login and keep in touch with your friends',
+  LOGOUT: 'Login Online service and keep in touch with your friends',
   MESSAGES: 'Messages',
   FRIENDS: 'Friends',
   GROUPS: 'Groups',

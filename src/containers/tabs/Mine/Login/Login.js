@@ -28,8 +28,10 @@ import NavigationService from '../../../NavigationService'
 import color from '../../../../styles/color'
 import UserType from '../../../../constants/UserType'
 import { getLanguage } from '../../../../language/index'
+import { setUser } from '../../../../models/user'
+import { connect } from 'react-redux'
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   props: {
     language: string,
     navigation: Object,
@@ -376,7 +378,7 @@ export default class Login extends React.Component {
         style={styles.container}
         headerProps={{
           //登录
-          title: getLanguage(this.props.language).Profile.LOGIN,
+          title: getLanguage(this.props.language).Profile.LOGIN + ' Online',
           withoutBack: this.state.isFirstLogin,
           navigation: this.props.navigation,
         }}
@@ -530,3 +532,16 @@ export default class Login extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
+  user: state.user.toJS(),
+})
+
+const mapDispatchToProps = {
+  setUser,
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Login)

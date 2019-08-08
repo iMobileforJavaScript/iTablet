@@ -5,12 +5,13 @@ import { color, size } from '../../../../styles'
 import { Progress } from '../../../../components'
 import { getLanguage } from '../../../../language'
 // import { SMap } from 'imobile_for_reactnative'
-// import UserType from '../../../../constants/UserType'
+import UserType from '../../../../constants/UserType'
 // import ConstPath from '../../../../constants/ConstPath'
 // import {downloadFile} from 'react-native-fs'
 // import { FileTools } from '../../../../native';
 export default class OnlineDataItem extends Component {
   props: {
+    user: Object,
     item: Object,
     itemOnPress: () => {},
     down: Array,
@@ -54,6 +55,12 @@ export default class OnlineDataItem extends Component {
   }
 
   render() {
+    let serverUrl
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      serverUrl = 'https://www.supermapol.com/web'
+    } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+      serverUrl = this.props.user.currentUser.serverUrl
+    }
     return (
       <TouchableOpacity
         style={{
@@ -124,9 +131,7 @@ export default class OnlineDataItem extends Component {
               }}
             >
               {getLanguage(global.language).Profile.PATH +
-                `:https://www.supermapol.com/web/mycontent/datas/${
-                  this.props.item.id
-                }`}
+                `:${serverUrl}/mycontent/datas/${this.props.item.id}`}
             </Text>
           </View>
           <Image
