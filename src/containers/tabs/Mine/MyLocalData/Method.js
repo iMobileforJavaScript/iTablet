@@ -1,10 +1,15 @@
 import { NetInfo } from 'react-native'
-import { ConstPath } from '../../../../constants'
+import { ConstPath, UserType } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language/index'
 import { downloadFile } from 'react-native-fs'
-import { SOnlineService, SMap, SScene } from 'imobile_for_reactnative'
+import {
+  SOnlineService,
+  SMap,
+  SScene,
+  SIPortalService,
+} from 'imobile_for_reactnative'
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -208,10 +213,20 @@ async function _constructTecentOfweixin() {
 async function _getHomePath() {
   return await FileTools.appendingHomeDirectory()
 }
-async function getOnlineData(currentPage, pageSize, cb = () => {}) {
+async function getOnlineData(
+  currentUser,
+  currentPage,
+  pageSize,
+  cb = () => {},
+) {
   let newData = []
   try {
-    let strDataList = await SOnlineService.getDataList(currentPage, pageSize)
+    let strDataList
+    if (UserType.isOnlineUser(currentUser)) {
+      strDataList = await SOnlineService.getDataList(currentPage, pageSize)
+    } else if (UserType.isIPortalUser(currentUser)) {
+      strDataList = await SIPortalService.getMyDatas(currentPage, pageSize)
+    }
     let objDataList = JSON.parse(strDataList)
     if (objDataList.content) {
       //过滤friendlist
@@ -250,7 +265,7 @@ async function getOnlineData(currentPage, pageSize, cb = () => {}) {
 async function downFileAction(
   down,
   itemInfo,
-  userName,
+  currentUser,
   cookie,
   updateDownList,
   importWorkspace,
@@ -269,20 +284,25 @@ async function downFileAction(
     if (itemInfo.id) {
       let path =
         ConstPath.UserPath +
-        userName +
+        currentUser.userName +
         '/' +
         ConstPath.RelativePath.ExternalData +
         itemInfo.fileName
       let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
       let toPath = await FileTools.appendingHomeDirectory(path)
       // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-      let dataUrl = `https://www.supermapol.com/web/datas/${
-        itemInfo.id
-      }/download`
+      let dataUrl = `https://www.supermapol.com/web/datas/${itemInfo.id}/download`
+      if (UserType.isIPortalUser(currentUser)) {
+        let url = currentUser.serverUrl
+        if (url.indexOf('http') !== 0) {
+          url = 'http://' + currentUser.serverUrl
+        }
+        dataUrl = `${url}/datas/${itemInfo.id}/download`
+      }
       let headers = {}
       if (cookie) {
         headers = {
-          Cookie: 'JSESSIONID=' + cookie,
+          Cookie: cookie,
           'Cache-Control': 'no-cache',
         }
       }

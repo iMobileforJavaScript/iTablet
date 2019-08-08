@@ -208,7 +208,7 @@ class AppRoot extends Component {
       await this.initDirectories()
       await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
-      SOnlineService.removeCookie()
+      // SOnlineService.removeCookie()
       SIPortalService.init()
       let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
       if (
