@@ -68,7 +68,7 @@ import RNLegendView from '../../components/RNLegendView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 
-const markerTag = 117868
+const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
 export default class MapView extends React.Component {

@@ -982,8 +982,12 @@ export default class ToolBar extends React.PureComponent {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
                 temp[selectedExpressions[index]] = false
-                listExpressionsArr.push(temp)
                 item.isSelected = item.expression === selectedExpressions[index]
+                if (item.isSelected === true) {
+                  //add xiezhy
+                  listExpressionsArr.push(temp)
+                  break
+                }
               }
             } else {
               item.isSelected = false
