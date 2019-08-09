@@ -1104,6 +1104,7 @@ export default class MapView extends React.Component {
             path: plotIconPath,
             isFirst: true,
           })
+          GLOBAL.newPlotMapName = ''
         }
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()

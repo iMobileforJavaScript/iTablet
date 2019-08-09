@@ -31,6 +31,8 @@ const Map_Main_Menu = {
 
   ANALYSIS: 'Analysis',
 
+  NEW_DATASOURCE: 'New Datasource',
+
   LEGEND_COLUMN: 'Column Number',
   LEGEND_WIDTH: 'Width',
   LEGEND_HEIGHT: 'Height',
