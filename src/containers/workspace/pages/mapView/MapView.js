@@ -39,6 +39,7 @@ import {
   SurfaceView,
   // SearchBar,
   Progress,
+  BubblePane,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
 import { color } from '../../../../styles'
@@ -1104,6 +1105,7 @@ export default class MapView extends React.Component {
             path: plotIconPath,
             isFirst: true,
           })
+          GLOBAL.newPlotMapName = ''
         }
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
@@ -1877,6 +1879,7 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
+        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} />
         <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
         </PopView>

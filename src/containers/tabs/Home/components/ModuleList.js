@@ -149,7 +149,8 @@ class ModuleList extends Component {
     } else if (moduleKey === constants.COLLECTION) {
       fileName = '地理国情普查_示范数据'
     } else if (moduleKey === constants.MAP_ANALYST) {
-      fileName = 'Xiamen_CN'
+      // fileName = 'Xiamen_CN'
+      fileName = '数据分析数据'
     } else if (moduleKey === constants.MAP_3D) {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'

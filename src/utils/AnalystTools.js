@@ -4,7 +4,6 @@ import {
 } from 'imobile_for_reactnative'
 import { Analyst_Types } from '../containers/analystView/AnalystType'
 import { getLanguage } from '../language'
-import { Toast } from '../utils'
 
 async function analyst(type) {
   let result
@@ -65,10 +64,22 @@ function showMsg(type, isSuccess, language = 'CN') {
         getLanguage(language).Analyst_Prompt.NOT_FIND_SUITABLE_PATH
       break
   }
+  // msg &&
+  //   Toast.show(msg, {
+  //     duration: Toast.DURATION.TOAST_LONG,
+  //   })
   msg &&
-    Toast.show(msg, {
-      duration: Toast.DURATION.TOAST_LONG,
-    })
+    GLOBAL.bubblePane &&
+    GLOBAL.bubblePane.addBubble(
+      {
+        title: msg,
+        type: isSuccess ? 'success' : 'error',
+      },
+      !isSuccess && {
+        top: 120,
+        right: 20,
+      },
+    )
 }
 
 export default {

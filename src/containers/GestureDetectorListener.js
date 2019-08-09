@@ -50,27 +50,48 @@ async function touchCallback(event) {
       })
       break
     case TouchType.SET_START_STATION:
-      STransportationAnalyst.setStartPoint(event.screenPoint)
+      STransportationAnalyst.setStartPoint(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.START_STATION,
+      )
       break
     case TouchType.MIDDLE_STATIONS:
-      STransportationAnalyst.addNode(event.screenPoint)
+      STransportationAnalyst.addNode(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.MIDDLE_STATION,
+      )
       break
     case TouchType.SET_END_STATION:
-      STransportationAnalyst.setEndPoint(event.screenPoint)
+      STransportationAnalyst.setEndPoint(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.END_STATION,
+      )
       break
     case TouchType.SET_AS_START_STATION:
-      STransportationAnalyst.setStartPoint(event.screenPoint)
+      STransportationAnalyst.setStartPoint(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.START_STATION,
+      )
       // SFacilityAnalyst.setStartPoint(event.screenPoint)
       break
     case TouchType.SET_AS_END_STATION:
-      STransportationAnalyst.setEndPoint(event.screenPoint)
+      STransportationAnalyst.setEndPoint(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.END_STATION,
+      )
       // SFacilityAnalyst.setEndPoint(event.screenPoint)
       break
     case TouchType.ADD_STATIONS:
-      STransportationAnalyst.addNode(event.screenPoint)
+      STransportationAnalyst.addNode(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.NODE,
+      )
       break
     case TouchType.ADD_BARRIER_NODES:
-      STransportationAnalyst.addBarrierNode(event.screenPoint)
+      STransportationAnalyst.addBarrierNode(
+        event.screenPoint,
+        getLanguage(global.language).Analyst_Labels.BARRIER_NODE,
+      )
       break
     case TouchType.ADD_NODES:
     case TouchType.NULL:

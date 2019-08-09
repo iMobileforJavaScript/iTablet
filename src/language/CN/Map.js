@@ -36,6 +36,7 @@ const Map_Main_Menu = {
 
   ANALYSIS: '分析',
 
+  NEW_DATASOURCE: '新建数据源',
   //图例设置
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',

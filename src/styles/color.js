@@ -129,4 +129,14 @@ export default {
   overlay_tint: 'rgba(48,48,48,0.85)', //遮罩颜色为#303030,85%不透明度
   item_selected_bg: '#4680DF', //列表选中背景
   item_text_selected: '#F0F0F0', //列表文字选中颜色
+
+  // 提示消息颜色
+  infoBg: '#EDF1FB',
+  warningBg: '#FAF5EC',
+  successBg: '#F2F9EB',
+  errorBg: '#FAEFEF',
+  info: '#8F9198',
+  warning: '#D4A146',
+  success: '#88C148',
+  error: '#D96C6C',
 }

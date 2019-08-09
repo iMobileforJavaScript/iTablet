@@ -51,6 +51,7 @@ import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
 import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
@@ -211,6 +212,7 @@ export default class ToolBar extends React.PureComponent {
       selectKey: '',
       listExpressions: {},
       themeSymbolType: '',
+      hasSoftMenuBottom: false,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -222,6 +224,11 @@ export default class ToolBar extends React.PureComponent {
       setLastState: this.setLastState,
       scrollListToLocation: this.scrollListToLocation,
       ...this.props,
+    })
+    ExtraDimensions.addSoftMenuBarWidthChangeListener({
+      softBarPositionChange: val => {
+        this.setState({ hasSoftMenuBottom: val })
+      },
     })
   }
 
@@ -888,6 +895,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
+        this.expressionData.list = allExpressions //add xiezhy 过滤结果就应该保存
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
@@ -2594,6 +2602,7 @@ export default class ToolBar extends React.PureComponent {
   setVisible = (isShow, type = this.state.type, params = {}) => {
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
+      GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
     }
     this.setOverlayViewVisible(isShow)
 
@@ -5997,7 +6006,7 @@ export default class ToolBar extends React.PureComponent {
         createInfo.geoId = this.props.selection[0].ids[0]
         createInfo.layerName = this.props.selection[0].layerInfo.name
       }
-      SMap.createAnimationGo(createInfo)
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
 
       // let length=createInfo.length
       // // this.showToolbarAndBox(false)
@@ -6034,7 +6043,10 @@ export default class ToolBar extends React.PureComponent {
       ? { height: this.props.device.height }
       : {}
     if (this.state.isFullScreen && this.state.isTouchProgress) {
-      height = { height: screen.getScreenSafeHeight() }
+      let softBarHeight = this.state.hasSoftMenuBottom
+        ? ExtraDimensions.getSoftMenuBarHeight()
+        : 0
+      height = { height: screen.getScreenSafeHeight() - softBarHeight }
     }
     // if (this.state.isFullScreen) {
     //   if (this.props.device.orientation === 'LANDSCAPE') {

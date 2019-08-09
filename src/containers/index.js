@@ -97,6 +97,7 @@ import {
 
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
+import MeasureView from './arMeasure'
 
 const AppNavigator = createStackNavigator(
   {
@@ -584,6 +585,13 @@ const AppNavigator = createStackNavigator(
     /** 相机界面 **/
     Camera: {
       screen: Camera,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MeasureView: {
+      screen: MeasureView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

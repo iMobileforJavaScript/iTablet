@@ -814,6 +814,7 @@ function create() {
               isFirst: true,
               newName: value,
             })
+            GLOBAL.newPlotMapName = value
           }
 
           _params.saveMap &&
