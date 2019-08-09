@@ -15,7 +15,7 @@ export default function request(url, method = 'GET', { body, headers }) {
     extraData = Object.assign(extraData, { body: JSON.stringify(body) })
   }
 
-  if (method === 'POST' && body) {
+  if (method === 'PUT' && body) {
     extraData = Object.assign(extraData, { body: JSON.stringify(body) })
   }
 

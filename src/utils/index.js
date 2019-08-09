@@ -11,6 +11,7 @@ import ModelUtils from './ModelUtils'
 import request from './request'
 import AnalystTools from './AnalystTools'
 import StyleUtils from './StyleUtils'
+import OnlineServicesUtils from './OnlineServicesUtils'
 export {
   screen,
   scaleSize,
@@ -29,4 +30,5 @@ export {
   /** 分析公共方法 **/
   AnalystTools,
   StyleUtils,
+  OnlineServicesUtils,
 }
