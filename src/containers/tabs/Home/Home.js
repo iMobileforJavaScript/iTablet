@@ -296,9 +296,13 @@ export default class Home extends Component {
           fileName = 'LosAngeles'
           storage = '  23.73MB'
           break
-        case 'Xiamen_CN':
-          fileName = 'Xiamen_CN'
-          storage = '  1.9MB'
+        // case 'Xiamen_CN':
+        //   fileName = 'Xiamen_CN'
+        //   storage = '  1.9MB'
+        //   break
+        case '数据分析数据':
+          fileName = '数据分析数据'
+          storage = '  5.3MB'
           break
       }
     }
