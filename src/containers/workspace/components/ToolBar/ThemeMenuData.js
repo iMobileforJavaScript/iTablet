@@ -128,20 +128,19 @@ function showExpressionList(type) {
 async function createThemeGridUniqueMap(params) {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   paramsTheme = {
     DatasourceAlias: params.themeDatasourceAlias,
     DatasetName: params.themeDatasetName,
     GridUniqueColorScheme: 'EE_Lake',
   }
-  await SThemeCartography.createThemeGridUniqueMap(paramsTheme)
-    .then(msg => {
-      isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
+  await SThemeCartography.createThemeGridUniqueMap(paramsTheme).then(msg => {
+    isSuccess = msg.Result
+    // errorInfo = msg.Error && msg.Error
+  })
+  // .catch(err => {
+  //   errorInfo = err.message
+  // })
   if (isSuccess) {
     // Toast.show('创建专题图成功')
     //设置当前图层
@@ -150,7 +149,7 @@ async function createThemeGridUniqueMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -158,20 +157,19 @@ async function createThemeGridUniqueMap(params) {
 async function createThemeGridRangeMap(params) {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   paramsTheme = {
     DatasourceAlias: params.themeDatasourceAlias,
     DatasetName: params.themeDatasetName,
     GridRangeColorScheme: 'FF_Blues',
   }
-  await SThemeCartography.createThemeGridRangeMap(paramsTheme)
-    .then(msg => {
-      isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
+  await SThemeCartography.createThemeGridRangeMap(paramsTheme).then(msg => {
+    isSuccess = msg.Result
+    // errorInfo = msg.Error && msg.Error
+  })
+  // .catch(err => {
+  //   errorInfo = err.message
+  // })
   if (isSuccess) {
     // Toast.show('创建专题图成功')
     //设置当前图层
@@ -180,7 +178,7 @@ async function createThemeGridRangeMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -188,19 +186,20 @@ async function createThemeGridRangeMap(params) {
 async function createThemeGridUniqueMapByLayer() {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   paramsTheme = {
     LayerName: _createThemeByLayer,
     GridUniqueColorScheme: 'EE_Lake',
   }
-  await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme)
-    .then(msg => {
+  await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme).then(
+    msg => {
       isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
+      // errorInfo = msg.Error && msg.Error
+    },
+  )
+  // .catch(err => {
+  //   errorInfo = err.message
+  // })
   if (isSuccess) {
     // Toast.show('创建专题图成功')
     //设置当前图层
@@ -209,7 +208,7 @@ async function createThemeGridUniqueMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -217,19 +216,20 @@ async function createThemeGridUniqueMapByLayer() {
 async function createThemeGridRangeMapByLayer() {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   paramsTheme = {
     LayerName: _createThemeByLayer,
     GridRangeColorScheme: 'FF_Blues',
   }
-  await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme)
-    .then(msg => {
+  await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme).then(
+    msg => {
       isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
+      // errorInfo = msg.Error && msg.Error
+    },
+  )
+  // .catch(err => {
+  //   errorInfo = err.message
+  // })
   if (isSuccess) {
     // Toast.show('创建专题图成功')
     //设置当前图层
@@ -238,7 +238,7 @@ async function createThemeGridRangeMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -2991,7 +2991,7 @@ async function getUnifyStyleAdd() {
 async function createThemeByDataset(item, ToolbarParams = {}) {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   switch (ToolbarParams.themeCreateType) {
     case constants.THEME_UNIQUE_STYLE:
       //单值风格
@@ -3002,13 +3002,12 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         // ColorGradientType: 'CYANWHITE',
         ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
       }
-      await SThemeCartography.createThemeUniqueMap(paramsTheme)
-        .then(msg => {
-          isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+      await SThemeCartography.createThemeUniqueMap(paramsTheme).then(msg => {
+        isSuccess = msg
+      })
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_RANGE_STYLE:
       //分段风格
@@ -3020,13 +3019,12 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         RangeParameter: '11.0',
         ColorScheme: 'FF_Blues',
       }
-      await SThemeCartography.createThemeRangeMap(paramsTheme)
-        .then(msg => {
-          isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+      await SThemeCartography.createThemeRangeMap(paramsTheme).then(msg => {
+        isSuccess = msg
+      })
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_DOT_DENSITY:
       //点密度专题图
@@ -3036,13 +3034,14 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         DotExpression: item.expression,
         Value: '20',
       }
-      await SThemeCartography.createDotDensityThemeMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createDotDensityThemeMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_GRADUATED_SYMBOL:
       //等级符号专题图
@@ -3053,13 +3052,14 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         GraduatedMode: 'LOGARITHM',
         //SymbolSize: '30',
       }
-      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_UNIFY_LABEL:
       //统一标签
@@ -3072,13 +3072,14 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         // FontSize: '15.0',
         ForeColor: '#000000',
       }
-      await SThemeCartography.createUniformThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createUniformThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_UNIQUE_LABEL:
       //单值标签
@@ -3090,13 +3091,14 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         //RangeParameter: '11.0',
         ColorScheme: 'DA_Ragular',
       }
-      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_RANGE_LABEL:
       //分段标签
@@ -3108,13 +3110,14 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         RangeParameter: '5.0',
         ColorScheme: 'CD_Cyans',
       }
-      await SThemeCartography.createRangeThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createRangeThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
   }
   if (isSuccess) {
@@ -3125,7 +3128,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3135,7 +3138,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
 async function createThemeByLayer(item, ToolbarParams = {}) {
   let paramsTheme = {}
   let isSuccess = false
-  let errorInfo = ''
+  // let errorInfo = ''
   switch (ToolbarParams.themeCreateType) {
     case constants.THEME_UNIQUE_STYLE:
       //单值风格
@@ -3145,13 +3148,12 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         UniqueExpression: item.expression,
         ColorScheme: 'BB_Green',
       }
-      await SThemeCartography.createThemeUniqueMap(paramsTheme)
-        .then(msg => {
-          isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+      await SThemeCartography.createThemeUniqueMap(paramsTheme).then(msg => {
+        isSuccess = msg
+      })
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_RANGE_STYLE:
       //分段风格
@@ -3163,13 +3165,12 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         RangeParameter: '11.0',
         ColorScheme: 'CD_Cyans',
       }
-      await SThemeCartography.createThemeRangeMap(paramsTheme)
-        .then(msg => {
-          isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+      await SThemeCartography.createThemeRangeMap(paramsTheme).then(msg => {
+        isSuccess = msg
+      })
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_DOT_DENSITY:
       //点密度专题图
@@ -3179,13 +3180,14 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         DotExpression: item.expression,
         Value: '20',
       }
-      await SThemeCartography.createDotDensityThemeMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createDotDensityThemeMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_GRADUATED_SYMBOL:
       //等级符号专题图
@@ -3196,13 +3198,14 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         GraduatedMode: 'LOGARITHM',
         //SymbolSize: '30',
       }
-      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_UNIFY_LABEL:
       //统一标签
@@ -3215,13 +3218,14 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         // FontSize: '15.0',
         ForeColor: '#000000',
       }
-      await SThemeCartography.createUniformThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createUniformThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_UNIQUE_LABEL:
       //单值标签
@@ -3233,13 +3237,14 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         //RangeParameter: '11.0',
         ColorScheme: 'DA_Ragular',
       }
-      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
     case constants.THEME_RANGE_LABEL:
       //分段标签
@@ -3251,13 +3256,14 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         RangeParameter: '5.0',
         ColorScheme: 'CD_Cyans',
       }
-      await SThemeCartography.createRangeThemeLabelMap(paramsTheme)
-        .then(msg => {
+      await SThemeCartography.createRangeThemeLabelMap(paramsTheme).then(
+        msg => {
           isSuccess = msg
-        })
-        .catch(err => {
-          errorInfo = err.message
-        })
+        },
+      )
+      // .catch(err => {
+      //   errorInfo = err.message
+      // })
       break
   }
   if (isSuccess) {
@@ -3268,7 +3274,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3381,8 +3387,12 @@ async function createHeatMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    if('TypeError' === errorInfo){
-      Toast.show(global.language==='CN'?'只有点数据集可以创建':'Only point dataset can be created')
+    if ('TypeError' === errorInfo) {
+      Toast.show(
+        global.language === 'CN'
+          ? '只有点数据集可以创建'
+          : 'Only point dataset can be created',
+      )
     }
   }
 }

@@ -53,6 +53,7 @@ import LinkageList from './LinkageList'
 import TouchableItem from './TouchableItem'
 import ImagePicker from './ImagePicker'
 import PopView from './PopView'
+import BubblePane from './Bubble'
 export {
   Container,
   BtnOne,
@@ -114,4 +115,5 @@ export {
   TouchableItem,
   ImagePicker,
   PopView,
+  BubblePane,
 }

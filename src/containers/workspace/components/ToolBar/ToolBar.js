@@ -895,7 +895,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
-        this.expressionData.list = allExpressions//add xiezhy 过滤结果就应该保存
+        this.expressionData.list = allExpressions //add xiezhy 过滤结果就应该保存
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
@@ -2602,6 +2602,7 @@ export default class ToolBar extends React.PureComponent {
   setVisible = (isShow, type = this.state.type, params = {}) => {
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
+      GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
     }
     this.setOverlayViewVisible(isShow)
 
