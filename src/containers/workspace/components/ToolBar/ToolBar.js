@@ -888,7 +888,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
-        this.expressionData.list = allExpressions
+        this.expressionData.list = allExpressions//add xiezhy 过滤结果就应该保存
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
