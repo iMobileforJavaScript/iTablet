@@ -1,5 +1,6 @@
 const analysis_adjacent = require('./analysis_adjacent_light.png')
 const analysis_buffer = require('./analysis_buffer_light.png')
+const analysis_multibuffer = require('./analysis_multibuffer_light.png')
 const analysis_closest_facility = require('./analysis_closest_facility_light.png')
 const analysis_connectivity = require('./analysis_connectivity_light.png')
 const analysis_converter = require('./analysis_converter_light.png')
@@ -35,10 +36,15 @@ const analysis_online_query = require('./analysis_online_query_light.png')
 const analysis_online_region = require('./analysis_online_region_light.png')
 const analysis_online_tracks = require('./analysis_online_tracks_light.png')
 const analysis_online_clip = require('./analysis_online_clip_light.png')
+const analysis_online_buffer = require('./analysis_online_buffer_light.png')
+const analysis_online_odline = require('./analysis_online_odline_light.png')
+const analysis_online_topology = require('./analysis_online_topology_light.png')
+const analysis_online_features = require('./analysis_online_features_light.png')
 
 export default {
   analysis_adjacent,
   analysis_buffer,
+  analysis_multibuffer,
   analysis_closest_facility,
   analysis_connectivity,
   analysis_converter,
@@ -73,4 +79,8 @@ export default {
   analysis_online_region,
   analysis_online_tracks,
   analysis_online_clip,
+  analysis_online_buffer,
+  analysis_online_odline,
+  analysis_online_topology,
+  analysis_online_features,
 }

@@ -261,7 +261,7 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOUR,
           action: tour,
           size: 'large',
-          image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
+          image: getPublicAssets().mapTools.tour,
         },
         // {
         //   key: 'captureVideo',

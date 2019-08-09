@@ -75,7 +75,7 @@ function getAnalysisData() {
         })
       },
       size: 'large',
-      image: getThemeAssets().analyst.analysis_buffer,
+      image: getThemeAssets().analyst.analysis_multibuffer,
     },
     {
       key: getLanguage(global.language).Analyst_Modules.OVERLAY_ANALYSIS,
