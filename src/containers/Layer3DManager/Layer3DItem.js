@@ -184,7 +184,7 @@ const layer3dSettingCanNotSelect = param => [
         return layerIcon
       }
       switch (item.type) {
-        //todo IMAGEFILE 白色  KML黑白
+        //todo   KML黑白 图层组类型是否是layerGroup
         case 'IMAGEFILE':
           layerIcon = getThemeAssets().layer3dType.layer3d_type_image
           return layerIcon
@@ -192,6 +192,9 @@ const layer3dSettingCanNotSelect = param => [
         case 'Terrain':
           layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile_white.png')
           return layerIcon
+        case 'layerGroup':
+          layerIcon = getThemeAssets().layerType.layer_group
+          break
       }
     } else {
       layerIcon = getPublicAssets().layer3dType.layer3d_type_normal
@@ -211,6 +214,9 @@ const layer3dSettingCanNotSelect = param => [
         case 'Terrain':
           layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
           return layerIcon
+        case 'layerGroup':
+          layerIcon = getPublicAssets().layerType.layer_group
+          break
       }
     }
     return layerIcon

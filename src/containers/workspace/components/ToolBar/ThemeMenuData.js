@@ -128,6 +128,7 @@ function showExpressionList(type) {
 async function createThemeGridUniqueMap(params) {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   paramsTheme = {
     DatasourceAlias: params.themeDatasourceAlias,
@@ -150,7 +151,7 @@ async function createThemeGridUniqueMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -158,6 +159,7 @@ async function createThemeGridUniqueMap(params) {
 async function createThemeGridRangeMap(params) {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   paramsTheme = {
     DatasourceAlias: params.themeDatasourceAlias,
@@ -180,7 +182,7 @@ async function createThemeGridRangeMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -188,6 +190,7 @@ async function createThemeGridRangeMap(params) {
 async function createThemeGridUniqueMapByLayer() {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   paramsTheme = {
     LayerName: _createThemeByLayer,
@@ -209,7 +212,7 @@ async function createThemeGridUniqueMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -217,6 +220,7 @@ async function createThemeGridUniqueMapByLayer() {
 async function createThemeGridRangeMapByLayer() {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   paramsTheme = {
     LayerName: _createThemeByLayer,
@@ -238,7 +242,7 @@ async function createThemeGridRangeMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -2991,6 +2995,7 @@ async function getUnifyStyleAdd() {
 async function createThemeByDataset(item, ToolbarParams = {}) {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   switch (ToolbarParams.themeCreateType) {
     case constants.THEME_UNIQUE_STYLE:
@@ -3125,7 +3130,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3135,6 +3140,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
 async function createThemeByLayer(item, ToolbarParams = {}) {
   let paramsTheme = {}
   let isSuccess = false
+  //eslint-disable-next-line
   let errorInfo = ''
   switch (ToolbarParams.themeCreateType) {
     case constants.THEME_UNIQUE_STYLE:
@@ -3268,7 +3274,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3381,8 +3387,12 @@ async function createHeatMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    if('TypeError' === errorInfo){
-      Toast.show(global.language==='CN'?'只有点数据集可以创建':'Only point dataset can be created')
+    if ('TypeError' === errorInfo) {
+      Toast.show(
+        global.language === 'CN'
+          ? '只有点数据集可以创建'
+          : 'Only point dataset can be created',
+      )
     }
   }
 }
