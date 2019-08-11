@@ -80,7 +80,7 @@ function getTabBarData(type, params = {}) {
   ) {
     tabBarData = PlotData.getPlotOperationData(type, params)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
-    tabBarData = AiAssistant.getAiAssistantData()
+    tabBarData = AiAssistant.getAiAssistantData(type, params)
   }
   return {
     data: tabBarData.data,

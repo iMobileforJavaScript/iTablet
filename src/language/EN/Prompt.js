@@ -74,6 +74,7 @@ const Prompt = {
     'The current layer cannot be styled, and please reselect another one',
 
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
+  DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
 
   SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
 

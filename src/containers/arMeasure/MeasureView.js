@@ -1,33 +1,15 @@
 import * as React from 'react'
-import {
-  InteractionManager,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from 'react-native'
+import { InteractionManager, TouchableOpacity, View, Image } from 'react-native'
 import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
 import NavigationService from '../../containers/NavigationService'
-import { getPublicAssets, getThemeAssets } from '../../assets'
+import { getThemeAssets } from '../../assets'
 import { SMMeasureView, SMeasureView } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
-import { getLanguage } from '../../language'
+// import { getLanguage } from '../../language'
 
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
-
-const TYPE = {
-  PHOTO: 1,
-  VIDEO: 2,
-  AUDIO: 3,
-}
-
-const RECORD_STATUS = {
-  UN_RECORD: 1, // 未拍摄
-  RECORDING: 2, // 拍摄中，拍照没有这个状态
-  RECORDED: 3, // 拍摄完
-}
 
 /*
  * AR高精度采集界面
@@ -51,7 +33,6 @@ export default class MeasureView extends React.Component {
 
     this.state = {
       data: null,
-      type: TYPE.PHOTO,
     }
   }
 
@@ -61,10 +42,6 @@ export default class MeasureView extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.recordTimer) {
-      clearInterval(this.recordTimer)
-      this.recordTimer = null
-    }
     // Orientation.unlockAllOrientations()
   }
 
@@ -95,6 +72,9 @@ export default class MeasureView extends React.Component {
     await SMeasureView.clearAll()
   }
 
+  /** 保存 **/
+  save = async () => {}
+
   /** 重置/切换模式 **/
   remake = () => {
     //安排任务在交互和动画完成之后执行
@@ -115,86 +95,39 @@ export default class MeasureView extends React.Component {
   // }
 
   /** 确认 **/
-  confirm = () => {
-    (async function() {
-      let sourcePath = this.state.data.uri.replace('file://', '')
-
-      let result = false
-      if (this.cb && typeof this.cb === 'function') {
-        result = true
-        this.cb([sourcePath])
-      } else {
-        result = await this.addMedia([sourcePath])
-      }
-
-      this.state.type === TYPE.PHOTO &&
-        this.camera &&
-        this.camera.resumePreview()
-      if (result) {
-        NavigationService.goBack()
-      }
-    }.bind(this)())
-  }
+  confirm = () => {}
 
   renderBottomBtns = () => {
-    // if (this.state.recordStatus === RECORD_STATUS.RECORDING) return null
-    if (this.state.recordStatus === RECORD_STATUS.RECORDED) {
-      return (
-        <View style={styles.buttonView}>
-          <TouchableOpacity
-            onPress={() => this.remake()}
-            style={styles.iconView}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={getPublicAssets().common.icon_rephotograph}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.confirm()}
-            style={styles.iconView}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={getPublicAssets().common.icon_confirm}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-        </View>
-      )
-    } else {
-      return (
-        <View style={styles.buttonView}>
-          <TouchableOpacity onPress={() => this.undo()} style={styles.iconView}>
-            <Image
-              resizeMode={'contain'}
-              source={getThemeAssets().ar.icon_ai_measure_cancel}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.clearAll()}
-            style={styles.iconView}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={getThemeAssets().ar.icon_ai_measure_flag}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-        </View>
-      )
-    }
+    return (
+      <View style={styles.buttonView}>
+        <TouchableOpacity onPress={() => this.undo()} style={styles.iconView}>
+          <Image
+            resizeMode={'contain'}
+            source={getThemeAssets().ar.icon_ar_measure_cancel}
+            style={styles.smallIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.clearAll()}
+          style={styles.iconView}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={getThemeAssets().ar.icon_ar_measure_clear}
+            style={styles.smallIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   renderCenterBtn = () => {
-    // 照片/视频拍摄完成不显示此按钮
     return (
       <ImageButton
         containerStyle={styles.capture}
         iconStyle={styles.iconView}
-        icon={getThemeAssets().ar.icon_ai_measure_cross}
+        activeOpacity={0.5}
+        icon={getThemeAssets().ar.icon_ar_measure_add}
         onPress={() => {
           this.addNewRecord()
         }}
@@ -202,37 +135,25 @@ export default class MeasureView extends React.Component {
     )
   }
 
-  renderChangeBtns = () => {
-    // if (this.state.recordStatus !== RECORD_STATUS.UN_RECORD) return null
+  renderTopBtns = () => {
     return (
-      <View style={styles.changeView}>
+      <View style={styles.topView}>
         <TouchableOpacity
-          onPress={() => this.changeType(TYPE.VIDEO)}
-          style={styles.typeBtn}
+          onPress={() => NavigationService.goBack()}
+          style={styles.iconView}
         >
-          <Text
-            style={
-              this.state.type === TYPE.VIDEO
-                ? styles.typeTextSelected
-                : styles.typeText
-            }
-          >
-            {getLanguage(this.props.language).Map_Tools.VIDEO}
-          </Text>
+          <Image
+            resizeMode={'contain'}
+            source={getThemeAssets().ar.icon_ar_measure_back}
+            style={styles.smallIcon}
+          />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.changeType(TYPE.PHOTO)}
-          style={styles.typeBtn}
-        >
-          <Text
-            style={
-              this.state.type === TYPE.PHOTO
-                ? styles.typeTextSelected
-                : styles.typeText
-            }
-          >
-            {getLanguage(this.props.language).Map_Tools.PHOTO}
-          </Text>
+        <TouchableOpacity onPress={() => this.save()} style={styles.iconView}>
+          <Image
+            resizeMode={'contain'}
+            source={getThemeAssets().ar.icon_ar_measure_save}
+            style={styles.smallIcon}
+          />
         </TouchableOpacity>
       </View>
     )
@@ -244,7 +165,7 @@ export default class MeasureView extends React.Component {
         <SMMeasureView ref={ref => (this.SMMeasureView = ref)} />
         {this.renderBottomBtns()}
         {this.renderCenterBtn()}
-        {/*{this.renderChangeBtns()}*/}
+        {this.renderTopBtns()}
       </View>
     )
   }

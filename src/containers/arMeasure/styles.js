@@ -50,6 +50,19 @@ export default StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  topView: {
+    position: 'absolute',
+    flexDirection: 'row',
+    height: Const.BOTTOM_HEIGHT,
+    paddingHorizontal: scaleSize(20),
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    top: 20,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
 
   // Change Controller
   changeView: {
