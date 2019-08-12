@@ -11,6 +11,7 @@ import { color } from '../../../../styles'
 import styles from '../../styles'
 import MTBtn from '../../../../components/mapTools/MT_Btn'
 import FileTools from '../../../../native/FileTools'
+import { getLanguage } from '../../../../language'
 
 export default class MapCutDS extends React.Component {
   props: {
@@ -32,7 +33,7 @@ export default class MapCutDS extends React.Component {
   newDatasource = async () => {
     let homeDir = await FileTools.getHomeDirectory()
     NavigationService.navigate('InputPage', {
-      headerTitle: '新建数据源',
+      headerTitle: getLanguage(GLOBAL.language).Map_Main_Menu.NEW_DATASOURCE,
       cb: async value => {
         let params = {
           alias: value,
@@ -80,7 +81,7 @@ export default class MapCutDS extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: '地图裁剪',
+          title: getLanguage(GLOBAL.language).Map_Main_Menu.MAP_CLIP,
           navigation: this.props.navigation,
           backAction: () => {
             this.cb && this.cb({ msg: 'showModal' })
@@ -89,7 +90,7 @@ export default class MapCutDS extends React.Component {
           headerRight: [
             <MTBtn
               key={'newDatasource'}
-              title={'新建数据源'}
+              title={getLanguage(GLOBAL.language).Map_Main_Menu.NEW_DATASOURCE}
               textStyle={styles.headerBtnTitle}
               onPress={this.newDatasource}
             />,

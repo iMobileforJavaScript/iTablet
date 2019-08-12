@@ -36,6 +36,7 @@ const Map_Main_Menu = {
 
   ANALYSIS: '分析',
 
+  NEW_DATASOURCE: '新建数据源',
   //图例设置
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',
@@ -285,6 +286,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
+  MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: '高精采集',
 }
 
 //推演动画

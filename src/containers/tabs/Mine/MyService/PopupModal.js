@@ -4,11 +4,11 @@ import Toast from '../../../../utils/Toast'
 
 import { color, size } from '../../../../styles'
 import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, OnlineServicesUtils } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import { UserType } from '../../../../constants'
 const screenWidth = '100%'
-
+var JSIPortalService
 export default class PopupModal extends PureComponent {
   props: {
     user: Object,
@@ -24,6 +24,7 @@ export default class PopupModal extends PureComponent {
   constructor(props) {
     super(props)
     this.fontSize = size.fontSize.fontSizeXl
+    JSIPortalService = new OnlineServicesUtils('iportal')
   }
 
   _onClose = () => {
@@ -77,7 +78,7 @@ export default class PopupModal extends PureComponent {
               isPublish,
             )
           } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
-            result = await SIPortalService.setServicesShareConfig(
+            result = await JSIPortalService.setServicesShareConfig(
               this.props.itemId,
               isPublish,
             )

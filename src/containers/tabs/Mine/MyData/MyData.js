@@ -19,7 +19,7 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
 
@@ -120,6 +120,7 @@ export default class MyLocalData extends Component {
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
     this.callBackMode = params.callBackMode
+    this._onUploadData = this._onUploadData.bind(this)
   }
 
   componentDidMount() {
@@ -506,7 +507,7 @@ export default class MyLocalData extends Component {
     })
   }
 
-  _onUploadData = async type => {
+  async _onUploadData(type) {
     try {
       // this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       //'分享中')
@@ -650,6 +651,31 @@ export default class MyLocalData extends Component {
               },
             })
           }
+        } else if (type === 'iportal') {
+          this.ModalBtns && this.ModalBtns.setVisible(false)
+          let result
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            result = await this._exportData(true)
+          } else {
+            result = await FileTools.zipFiles(archivePaths, targetPath)
+          }
+          if (!result) {
+            Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+            //'分享失败')
+            this.setLoading(false)
+            return
+          }
+          let uploadResult = await SIPortalService.uploadData(
+            targetPath,
+            fileName + '.zip',
+          )
+          this.setLoading(false)
+          uploadResult
+            ? Toast.show(getLanguage(this.props.language).Prompt.SHARE_SUCCESS)
+            : Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+          FileTools.deleteFile(targetPath)
         } else if (this.formChat) {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
@@ -1104,7 +1130,16 @@ export default class MyLocalData extends Component {
           ref={ref => {
             this.ModalBtns = ref
           }}
-          actionOfOnline={() => this._onUploadData('online')}
+          actionOfOnline={
+            UserType.isOnlineUser(this.props.user.currentUser)
+              ? () => this._onUploadData('online')
+              : undefined
+          }
+          actionOfIPortal={
+            UserType.isIPortalUser(this.props.user.currentUser)
+              ? () => this._onUploadData('iportal')
+              : undefined
+          }
           actionOfWechat={() => {
             this._onUploadData('weChat')
           }}

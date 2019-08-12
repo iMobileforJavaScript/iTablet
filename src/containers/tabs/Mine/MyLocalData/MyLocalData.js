@@ -31,7 +31,8 @@ import {
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 
-import { scaleSize, FetchUtils } from '../../../../utils'
+import { scaleSize, FetchUtils, OnlineServicesUtils } from '../../../../utils'
+let JSIPortalService
 
 export default class MyLocalData extends Component {
   props: {
@@ -61,6 +62,7 @@ export default class MyLocalData extends Component {
     this.currentPage = 1
     this.deleteDataing = false
     this.itemInfo = {}
+    JSIPortalService = new OnlineServicesUtils('iportal')
   }
   componentDidMount() {
     this._setSectionDataState3()
@@ -414,7 +416,7 @@ export default class MyLocalData extends Component {
       if (UserType.isOnlineUser(this.props.user.currentUser)) {
         result = await SOnlineService.publishServiceWithDataId(dataId)
       } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
-        result = await SIPortalService.publishService(dataId)
+        result = await JSIPortalService.publishService(dataId)
       }
       if (typeof result === 'boolean' && result) {
         let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
@@ -553,10 +555,18 @@ export default class MyLocalData extends Component {
           break
         }
       }
-      let result = await SOnlineService.changeDataVisibilityWithDataId(
-        this.itemInfo.id,
-        !isPublish,
-      )
+      let result
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        result = await SOnlineService.changeDataVisibilityWithDataId(
+          this.itemInfo.id,
+          !isPublish,
+        )
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        result = await JSIPortalService.setDatasShareConfig(
+          this.itemInfo.id,
+          !isPublish,
+        )
+      }
       if (typeof result === 'boolean' && result) {
         if (isPublish) {
           authorizeSetting.splice(splice, 1)

@@ -77,6 +77,7 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
+        <meta-data android:name="com.google.ar.core" android:value="optional" />
     </application>
 
     <supports-screens

@@ -70,6 +70,7 @@ const Prompt = {
   THE_CURRENT_LAYER_CANNOT_BE_STYLED: '当前图层无法设置风格，请重新选择图层',
 
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
+  DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
 
   SELECT_TWO_MEDIAS_AT_LEAST: '至少选中两个多媒体文件',
 
