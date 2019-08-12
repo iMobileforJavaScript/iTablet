@@ -10,7 +10,12 @@ import {
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
+import {
+  SMap,
+  EngineType,
+  SOnlineService,
+  SIPortalService,
+} from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
@@ -192,7 +197,7 @@ export default class MyLabel extends Component {
                   FileTools.deleteFile(targetPath)
                 },
               )
-          } else {
+          } else if (this.uploadType === 'online') {
             SOnlineService.uploadFile(targetPath, name, {
               onProgress: progress => {
                 return progress
@@ -205,6 +210,17 @@ export default class MyLabel extends Component {
                 FileTools.deleteFile(archivePath)
               },
             })
+          } else if (this.uploadType === 'iportal') {
+            let uploadResult = await SIPortalService.uploadData(
+              targetPath,
+              fileName,
+            )
+            uploadResult
+              ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+              : Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+            this.container.setLoading(false)
+            FileTools.deleteFile(targetPath)
+            FileTools.deleteFile(archivePath)
           }
         }
       }
@@ -345,18 +361,39 @@ export default class MyLabel extends Component {
           ref={ref => {
             this.ModalBtns = ref
           }}
-          actionOfOnline={() => {
-            if (this.uploadList.length > 0) {
-              this.dialog.setDialogVisible(true)
-              this.ModalBtns.setVisible(false)
-              this.uploadType = 'online'
-            } else {
-              Toast.show(
-                getLanguage(global.language).Prompt.SELECT_DATASET_TO_SHARE,
-              )
-              //'请选择要分享的数据集')
-            }
-          }}
+          actionOfOnline={
+            UserType.isOnlineUser(this.props.user.currentUser)
+              ? () => {
+                if (this.uploadList.length > 0) {
+                  this.dialog.setDialogVisible(true)
+                  this.ModalBtns.setVisible(false)
+                  this.uploadType = 'online'
+                } else {
+                  Toast.show(
+                    getLanguage(global.language).Prompt
+                      .SELECT_DATASET_TO_SHARE,
+                  )
+                  //'请选择要分享的数据集')
+                }
+              }
+              : undefined
+          }
+          actionOfIPortal={
+            UserType.isIPortalUser(this.props.user.currentUser)
+              ? () => {
+                if (this.uploadList.length > 0) {
+                  this.dialog.setDialogVisible(true)
+                  this.ModalBtns.setVisible(false)
+                  this.uploadType = 'iportal'
+                } else {
+                  Toast.show(
+                    getLanguage(global.language).Prompt
+                      .SELECT_DATASET_TO_SHARE,
+                  )
+                }
+              }
+              : undefined
+          }
           actionOfWechat={() => {
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)

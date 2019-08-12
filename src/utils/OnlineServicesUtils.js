@@ -6,14 +6,16 @@ export default class OnlineServicesUtils {
   constructor(type) {
     if (type === 'iportal') {
       let url = SIPortalService.getIPortalUrl()
-      this.serverUrl = url
-      if (url.indexOf('http') !== 0) {
-        this.serverUrl = 'http://' + url
-      }
-      if (Platform.OS === 'android') {
-        SIPortalService.getIPortalCookie().then(cookie => {
-          this.cookie = cookie
-        })
+      if (url) {
+        this.serverUrl = url
+        if (url.indexOf('http') !== 0) {
+          this.serverUrl = 'http://' + url
+        }
+        if (Platform.OS === 'android') {
+          SIPortalService.getIPortalCookie().then(cookie => {
+            this.cookie = cookie
+          })
+        }
       }
     }
     if (type === 'online') {
@@ -41,6 +43,31 @@ export default class OnlineServicesUtils {
       body: true,
     })
     return result.succeed
+  }
+
+  async publishServiceByName(dataName) {
+    let id = await this.getDataIdByName(dataName)
+    return await this.publishService(id)
+  }
+
+  async getDataIdByName(dataName) {
+    let url =
+      this.serverUrl +
+      `/mycontent/datas.rjson?keywords=[${dataName}]&filterFields=["FILENAME"]`
+    let headers = {}
+    if (this.cookie) {
+      headers = {
+        cookie: this.cookie,
+      }
+    }
+    let result = await request(url, 'GET', {
+      headers: headers,
+      body: true,
+    })
+    if (result.total === 1) {
+      return result.content[0].id
+    }
+    return undefined
   }
 
   async setServicesShareConfig(id, isPublic) {
