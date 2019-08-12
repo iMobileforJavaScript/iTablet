@@ -12,6 +12,8 @@ import { TableList } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+// import { getPublicAssets } from '../../../../assets'
+import { getThemeAssets } from '../../../../assets'
 // import { TextInput } from 'react-native-gesture-handler';
 
 var StartMode = {
@@ -61,38 +63,38 @@ export default class PlotAnimationView extends React.Component {
     let data = []
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_WAY,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_grow,
       animationMode: AnimationMode.WAY,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_BLINK,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_appear,
       animationMode: AnimationMode.BLINK,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting
         .PLOTTING_ANIMATION_ATTRIBUTE,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_arcs,
       animationMode: AnimationMode.ATTRIBUTE,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_SHOW,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_shrink,
       animationMode: AnimationMode.SHOW,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_ROTATE,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_fade_in,
       animationMode: AnimationMode.ROTATE,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_SCALE,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_fade_out,
       animationMode: AnimationMode.SCALE,
     })
     data.push({
       name: getLanguage(global.language).Map_Plotting.PLOTTING_ANIMATION_GROW,
-      image: '',
+      image: getThemeAssets().plot.plot_animation_flash,
       animationMode: AnimationMode.GROW,
     })
     return data
@@ -115,14 +117,15 @@ export default class PlotAnimationView extends React.Component {
           flexDirection: 'column',
           backgroundColor:
             item.animationMode == this.state.animationMode
-              ? color.overlay
+              ? color.gray3
               : color.bgW,
         }}
         key={item.name}
         onPress={() => this.action({ item })}
       >
         <Image
-          source={{ uri: 'file://' + item.image }}
+          //   source={{ uri: 'file://' + item.image }}
+          source={item.image}
           style={styles.tableItemImg}
         />
         <View style={styles.listItemContent}>
@@ -143,7 +146,7 @@ export default class PlotAnimationView extends React.Component {
         </View>
 
         <TableList
-          style={styles.container}
+          style={styles.table}
           data={animationModeData}
           // data={this.state.data}
           // type={'scroll'}
@@ -160,7 +163,7 @@ export default class PlotAnimationView extends React.Component {
           </Text>
         </View>
         <View style={styles.startTime}>
-          <Text>
+          <Text style={styles.startTimeText}>
             {
               getLanguage(global.language).Map_Plotting
                 .PLOTTING_ANIMATION_START_TIME
@@ -194,7 +197,7 @@ export default class PlotAnimationView extends React.Component {
         </View>
         <View style={styles.lineStyle} />
         <View style={styles.startTime}>
-          <Text>
+          <Text style={styles.startTimeText}>
             {
               getLanguage(global.language).Map_Plotting
                 .PLOTTING_ANIMATION_DURATION
@@ -238,7 +241,7 @@ export default class PlotAnimationView extends React.Component {
         </View>
         <TouchableOpacity onPress={this.setStratModeFllowLast}>
           <View style={styles.startTime}>
-            <Text>
+            <Text style={styles.startTimeText}>
               {
                 getLanguage(global.language).Map_Plotting
                   .PLOTTING_ANIMATION_FLLOW_LAST
@@ -259,7 +262,7 @@ export default class PlotAnimationView extends React.Component {
         <View style={styles.lineStyle} />
         <TouchableOpacity onPress={this.setStratModePointStart}>
           <View style={styles.startTime}>
-            <Text>
+            <Text style={styles.startTimeText}>
               {
                 getLanguage(global.language).Map_Plotting
                   .PLOTTING_ANIMATION_CLICK_START
@@ -280,7 +283,7 @@ export default class PlotAnimationView extends React.Component {
         <View style={styles.lineStyle} />
         <TouchableOpacity onPress={this.setStratModeTogetherLast}>
           <View style={styles.startTime}>
-            <Text>
+            <Text style={styles.startTimeText}>
               {
                 getLanguage(global.language).Map_Plotting
                   .PLOTTING_ANIMATION_TOGETHER_LAST
@@ -382,7 +385,8 @@ const styles = StyleSheet.create({
   table: {
     flex: 1,
     //   paddingHorizontal: scaleSize(30),
-    alignItems: 'center',
+    // paddingVertical:scaleSize(20),
+    // alignItems: 'center',
     backgroundColor: color.bgW,
   },
   tableItem: {
@@ -398,6 +402,7 @@ const styles = StyleSheet.create({
   tableItemtext: {
     height: scaleSize(40),
     width: scaleSize(64),
+    fontSize: setSpText(18),
     alignContent: 'center',
     justifyContent: 'center',
     textAlign: 'center',
@@ -406,13 +411,13 @@ const styles = StyleSheet.create({
   titleView: {
     alignContent: 'center',
     justifyContent: 'center',
-    paddingLeft: scaleSize(80),
+    paddingLeft: scaleSize(60),
     height: scaleSize(80),
-    backgroundColor: color.bgG,
+    backgroundColor: color.gray3,
   },
   textTitle: {
     // padding: scaleSize(5),
-    fontSize: setSpText(24),
+    fontSize: setSpText(20),
     // paddingLeft: scaleSize(80),
     // height: scaleSize(80),
     textAlign: 'auto',
@@ -431,7 +436,7 @@ const styles = StyleSheet.create({
   lineStyle: {
     flex: 1,
     backgroundColor: color.bgG,
-    height: scaleSize(2),
+    height: scaleSize(1.5),
     marginLeft: scaleSize(20),
     marginRight: scaleSize(20),
   },
@@ -442,6 +447,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // alignSelf: 'center',
   },
+  startTimeText: {
+    fontSize: setSpText(18),
+    textAlign: 'auto',
+    color: color.themeText2,
+  },
   modifyTime: {
     height: scaleSize(60),
     width: scaleSize(60),
@@ -449,6 +459,7 @@ const styles = StyleSheet.create({
   inputTime: {
     height: scaleSize(100),
     width: scaleSize(60),
+    fontSize: setSpText(18),
     textAlign: 'center',
   },
   startMode: {

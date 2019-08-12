@@ -1,3 +1,4 @@
+/* eslint-disable */
 import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
 // import { Toast } from '../../../../utils'
@@ -150,7 +151,7 @@ async function createThemeGridUniqueMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -180,7 +181,7 @@ async function createThemeGridRangeMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -209,7 +210,7 @@ async function createThemeGridUniqueMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -238,7 +239,7 @@ async function createThemeGridRangeMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3125,7 +3126,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3268,7 +3269,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language==='CN' ?'字段不合法':'Field illegal')
+    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
   }
 }
 
@@ -3381,8 +3382,12 @@ async function createHeatMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    if('TypeError' === errorInfo){
-      Toast.show(global.language==='CN'?'只有点数据集可以创建':'Only point dataset can be created')
+    if ('TypeError' === errorInfo) {
+      Toast.show(
+        global.language === 'CN'
+          ? '只有点数据集可以创建'
+          : 'Only point dataset can be created',
+      )
     }
   }
 }
