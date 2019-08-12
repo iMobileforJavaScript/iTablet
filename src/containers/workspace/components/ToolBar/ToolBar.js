@@ -81,7 +81,7 @@ import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
-import { getThemeAssets } from '../../../../assets'
+import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
 import MenuList from '../MenuList'
 import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
@@ -5934,12 +5934,13 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.PLOT_ANIMATION_XML_LIST:
           //推演动画xml列表
-          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+          image = getPublicAssets().plot.plot_animation_list
           action = this.showAnimationXmlList
           break
         case ToolbarBtnType.PLOT_ANIMATION_PLAY:
           //播放推演动画
-          image = require('../../../../assets/mapEdit/icon_packUP.png')
+          // image = require('../../../../assets/mapEdit/icon_packUP.png')
+          image = getPublicAssets().plot.plot_play
           action = this.animationPlay
           break
         case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:
