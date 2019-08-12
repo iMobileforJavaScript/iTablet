@@ -3,10 +3,37 @@ const tools_camera = require('./tools_camera.png')
 const tools_legend_on = require('./tab_legend_on.png')
 const tools_legend_off = require('./tab_legend_off.png')
 const tour = require('./tour_light.png')
+const tools_new_thematic_map = require('./new_thematic_map.png')
+const tools_modify_thematic_map = require('./modify_thematic_map.png')
+const tools_visible_scale_range = require('./visible_scale_range.png')
+const tools_set_current_layer = require('./set_current_layer.png')
+const tools_layer_rename = require('./layer_rename.png')
+const tools_layer_info = require('./layer_info.png')
+const tools_layer_copy = require('./layer_copy.png')
+const tools_layer_paste = require('./layer_paste.png')
+const tools_layer_delete = require('./layer_delete.png')
 export default {
   tools_rectangle_cut,
   tools_camera,
   tools_legend_on,
   tools_legend_off,
   tour,
+  /*修改专题图*/
+  tools_modify_thematic_map,
+  /*新建专题图*/
+  tools_new_thematic_map,
+  /*可见比例尺范围*/
+  tools_visible_scale_range,
+  /*设置为当前图层*/
+  tools_set_current_layer,
+  /*重命名图层*/
+  tools_layer_rename,
+  /*图层信息*/
+  tools_layer_info,
+  /*复制图层*/
+  tools_layer_copy,
+  /*粘贴图层*/
+  tools_layer_paste,
+  /*移除图层*/
+  tools_layer_delete,
 }
