@@ -1,4 +1,3 @@
-/* eslint-disable */
 import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
 // import { Toast } from '../../../../utils'
