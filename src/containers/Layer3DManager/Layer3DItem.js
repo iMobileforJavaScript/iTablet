@@ -6,7 +6,7 @@ import { ConstToolType } from '../../constants'
 import { color } from '../../styles'
 import { scaleSize } from '../../utils'
 
-import { getThemeAssets, getPublicAssets } from '../../assets'
+import { getThemeAssets } from '../../assets'
 
 export default class Layer3DItem extends Component {
   props: {
@@ -174,7 +174,7 @@ const layer3dSettingCanNotSelect = param => [
       this.props.toHeightItem.index === this.props.index &&
       this.props.toHeightItem.itemName === item.name
     ) {
-      layerIcon = getThemeAssets().layer3dType.layer3d_type_normal
+      layerIcon = getThemeAssets().layer3dType.layer3d_type_normal_selected
       if (item.title === 'TianDiTu' || item.title === 'BingMap') {
         layerIcon = require('../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png')
         return layerIcon
@@ -186,18 +186,18 @@ const layer3dSettingCanNotSelect = param => [
       switch (item.type) {
         //todo   KML黑白 图层组类型是否是layerGroup
         case 'IMAGEFILE':
-          layerIcon = getThemeAssets().layer3dType.layer3d_type_image
+          layerIcon = getThemeAssets().layer3dType.layer3d_type_image_selected
           return layerIcon
         //case 'KML':
         case 'Terrain':
           layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile_white.png')
           return layerIcon
         case 'layerGroup':
-          layerIcon = getThemeAssets().layerType.layer_group
+          layerIcon = getThemeAssets().layerType.layer_group_selected
           break
       }
     } else {
-      layerIcon = getPublicAssets().layer3dType.layer3d_type_normal
+      layerIcon = getThemeAssets().layer3dType.layer3d_type_normal
       if (item.title === 'TianDiTu' || item.title === 'BingMap') {
         layerIcon = require('../../assets/Mine/my_basemap.png')
         return layerIcon
@@ -208,14 +208,14 @@ const layer3dSettingCanNotSelect = param => [
       }
       switch (item.type) {
         case 'IMAGEFILE':
-          layerIcon = getPublicAssets().layer3dType.layer3d_type_image
+          layerIcon = getThemeAssets().layer3dType.layer3d_type_image
           return layerIcon
         //case 'KML':
         case 'Terrain':
           layerIcon = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
           return layerIcon
         case 'layerGroup':
-          layerIcon = getPublicAssets().layerType.layer_group
+          layerIcon = getThemeAssets().layerType.layer_group
           break
       }
     }
