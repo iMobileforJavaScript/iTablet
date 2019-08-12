@@ -181,6 +181,9 @@ export default class PlotAnimationView extends React.Component {
             </TouchableOpacity>
             <TextInput
               style={styles.inputTime}
+              onChangeText={text => {
+                this.setState({ startTime: text.replace(/[^0-9.]*/g, '') })
+              }}
               keyboardType="numeric"
               value={this.state.startTime + ''}
             />
@@ -217,6 +220,9 @@ export default class PlotAnimationView extends React.Component {
             <TextInput
               style={styles.inputTime}
               keyboardType="numeric"
+              onChangeText={text => {
+                this.setState({ durationTime: text.replace(/[^0-9.]*/g, '') })
+              }}
               value={this.state.durationTime + ''}
             />
             <TouchableOpacity
@@ -305,13 +311,13 @@ export default class PlotAnimationView extends React.Component {
     )
   }
   addDurationTime = () => {
-    let time = this.state.durationTime + 1
+    let time = Number(this.state.durationTime) + 1
     this.setState({
       durationTime: time,
     })
   }
   subDurationTime = () => {
-    let time = this.state.durationTime - 1
+    let time = Number(this.state.durationTime) - 1
     time = time < 0 ? 0 : time
     this.setState({
       durationTime: time,
@@ -326,13 +332,13 @@ export default class PlotAnimationView extends React.Component {
   }
 
   addStartTime = () => {
-    let time = this.state.startTime + 1
+    let time = Number(this.state.startTime) + 1
     this.setState({
       startTime: time,
     })
   }
   subStartTime = () => {
-    let time = this.state.startTime - 1
+    let time = Number(this.state.startTime) - 1
     time = time < 0 ? 0 : time
     this.setState({
       startTime: time,

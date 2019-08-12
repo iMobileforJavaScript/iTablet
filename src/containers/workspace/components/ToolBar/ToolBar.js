@@ -3811,6 +3811,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.setAction(Action.PAN)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+    GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
   }
 
   endFly = () => {
