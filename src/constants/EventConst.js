@@ -17,4 +17,7 @@ export default {
     'com.supermap.RN.MessageService.send_file_progress',
   MESSAGE_SERVICE_RECEIVE_FILE:
     'com.supermap.RN.MessageService.receive_file_progress',
+  IPORTAL_SERVICE_UPLOADING: 'com.supermap.RN.iPortalService_uploading',
+  IPORTAL_SERVICE_UPLOADED: 'com.supermap.RN.iPortalService_uploaded',
+  IPORTAL_SERVICE_DOWNLOADING: 'com.supermap.RN.iPortalService_downloading',
 }
