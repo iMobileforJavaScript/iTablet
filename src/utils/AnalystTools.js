@@ -9,18 +9,18 @@ async function analyst(type) {
   let result
   switch (type) {
     case Analyst_Types.OPTIMAL_PATH:
-      result = await STransportationAnalyst.findPath({
+      result = STransportationAnalyst.findPath({
         weightName: 'length',
       })
       break
     case Analyst_Types.CONNECTIVITY_ANALYSIS:
-      result = await STransportationAnalyst.findPath({
+      result = STransportationAnalyst.findPath({
         weightName: 'length',
       })
       // result = await SFacilityAnalyst.findPathFromNodes()
       break
     case Analyst_Types.FIND_TSP_PATH:
-      result = await STransportationAnalyst.findTSPPath({
+      result = STransportationAnalyst.findTSPPath({
         weightName: 'length',
       })
       break
