@@ -4,8 +4,7 @@ import attribute from './attribute'
 import common from './common'
 import theme from './theme'
 import mapTools from './mapTools'
-import layer3dType from './layer3dType'
-import layerType from './layerType'
+import plot from './plot'
 export default {
   // publicAssets,
   // tabBar,
@@ -13,6 +12,5 @@ export default {
   common,
   theme,
   mapTools,
-  layer3dType,
-  layerType,
+  plot,
 }

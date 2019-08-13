@@ -17,8 +17,11 @@ const theme_graph_graduatedmode_log = require('./theme_graph_graduatedmode_log.p
 const theme_graph_graduatedmode_square = require('./theme_graph_graduatedmode_square.png')
 const theme_create_unify_style = require('./theme_create_unify_style.png')
 const theme_create_unique_style = require('./theme_create_unique_style.png')
+const theme_create_unique_style_selected = require('./theme_create_unique_style_white.png')
 const theme_create_range_style = require('./theme_create_range_style.png')
+const theme_create_range_style_selected = require('./theme_create_range_style_selected.png')
 const theme_create_unify_label = require('./theme_create_unify_label.png')
+const theme_create_unify_label_selected = require('./theme_create_unify_label_selected.png')
 const theme_create_unique_label = require('./theme_create_unique_label.png')
 const theme_create_range_label = require('./theme_create_range_label.png')
 const theme_dot_density = require('./theme_dot_density.png')
@@ -58,10 +61,13 @@ export default {
   theme_create_unify_style,
   //单值风格
   theme_create_unique_style,
+  theme_create_unique_style_selected,
   //分段风格
   theme_create_range_style,
+  theme_create_range_style_selected,
   //统一标签
   theme_create_unify_label,
+  theme_create_unify_label_selected,
   //单值标签
   theme_create_unique_label,
   //分段标签
