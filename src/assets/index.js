@@ -24,7 +24,7 @@ function getThemeIconByType(type) {
   let icon
   switch (type) {
     case ThemeType.UNIQUE: // 单值专题图
-      icon = getThemeAssets().layerType.theme_create_unique_style
+      icon = getThemeAssets().themeType.theme_create_unique_style
       break
     case ThemeType.RANGE: // 分段专题图
       icon = getThemeAssets().themeType.theme_create_range_style
@@ -60,7 +60,7 @@ function getThemeWhiteIconByType(type) {
   let icon
   switch (type) {
     case ThemeType.UNIQUE: // 单值专题图
-      icon = getThemeAssets().layerType.theme_create_unique_style_selected
+      icon = getThemeAssets().themeType.theme_create_unique_style_selected
       break
     case ThemeType.RANGE: // 分段专题图
       icon = getThemeAssets().themeType.theme_create_range_style_selected
