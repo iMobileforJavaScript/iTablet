@@ -24,15 +24,15 @@ function getThemeIconByType(type) {
   let icon
   switch (type) {
     case ThemeType.UNIQUE: // 单值专题图
-      icon = require('./map/layers_theme_unique_style_black.png')
+      icon = getThemeAssets().themeType.theme_create_unique_style
       break
     case ThemeType.RANGE: // 分段专题图
-      icon = require('./map/layers_theme_range_style_black.png')
+      icon = getThemeAssets().themeType.theme_create_range_style
       break
     case ThemeType.LABEL: // 标签专题图
     case ThemeType.LABELUNIQUE:
     case ThemeType.LABELRANGE:
-      icon = require('./map/layers_theme_unify_label_style_black.png')
+      icon = getThemeAssets().themeType.theme_create_unify_label
       break
     case ThemeType.GRAPH: // 统计专题图
       icon = getThemeAssets().themeType.theme_graphmap
@@ -60,15 +60,15 @@ function getThemeWhiteIconByType(type) {
   let icon
   switch (type) {
     case ThemeType.UNIQUE: // 单值专题图
-      icon = require('./map/layers_theme_unique_style.png')
+      icon = getThemeAssets().themeType.theme_create_unique_style_selected
       break
     case ThemeType.RANGE: // 分段专题图
-      icon = require('./map/layers_theme_range_style.png')
+      icon = getThemeAssets().themeType.theme_create_range_style_selected
       break
     case ThemeType.LABEL: // 标签专题图
     case ThemeType.LABELUNIQUE:
     case ThemeType.LABELRANGE:
-      icon = require('./map/layers_theme_unify_label_style.png')
+      icon = getThemeAssets().themeType.theme_create_unify_label_selected
       break
     case ThemeType.GRAPH: // 统计专题图
       icon = getThemeAssets().themeType.theme_graphmap_selected
@@ -115,14 +115,14 @@ function getLayerIconByType(type) {
     case DatasetType.MBImage: // 多波段影像
     case DatasetType.IMAGE: // 影像数据集
       // icon = require('./map/icon-shallow-image_black.png')
-      icon = require('./Mine/my_basemap.png')
+      icon = getThemeAssets().layerType.layer_type_image
       break
     case DatasetType.CAD: // 复合数据集
       // icon = require('./map/icon-cad_black.png')
-      icon = require('./Mine/mine_my_plot.png')
+      icon = getThemeAssets().layerType.layer_type_CAD
       break
     case DatasetType.Network: // 复合数据集
-      icon = require('./mapToolbar/dataset_type_network_black.png')
+      icon = getThemeAssets().layerType.layer_type_network
       break
     case DatasetType.GRID: // GRID数据集
       icon = require('./map/icon-grid_black.png')
@@ -155,14 +155,14 @@ function getLayerWhiteIconByType(type) {
     case DatasetType.MBImage: // 多波段影像
     case DatasetType.IMAGE: // 影像数据集
       // icon = require('./map/icon-shallow-image.png')
-      icon = require('./Mine/my_basemap.png')
+      icon = getThemeAssets().layerType.layer_type_image_selected
       break
-    case DatasetType.CAD: // 复合数据集
+    case DatasetType.CAD: // CAD数据集
       // icon = require('./map/icon-cad.png')
-      icon = require('./Mine/mine_my_plot_white.png')
+      icon = getThemeAssets().layerType.layer_type_CAD_selected
       break
-    case DatasetType.Network: // 复合数据集
-      icon = require('./mapToolbar/dataset_type_network.png')
+    case DatasetType.Network: // 网络数据集
+      icon = getThemeAssets().layerType.layer_type_network_selected
       break
     case DatasetType.GRID: // GRID数据集
       icon = require('./map/icon-grid.png')

@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools, NativeMethod } from '../../../../native'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
@@ -296,6 +296,17 @@ export default class MyModule extends Component {
               this.ModalBtns.setVisible(false)
             },
           })
+        } else if (type === 'iportal') {
+          this.ModalBtns.setVisible(false)
+          let uploadResult = await SIPortalService.uploadData(
+            toPath,
+            fileName + '.zip',
+          )
+          uploadResult
+            ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+            : Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+          FileTools.deleteFile(toPath)
+          this.container.setLoading(false)
         } else if (this.chatCallBack) {
           this.container.setLoading(false)
           this.chatCallBack && this.chatCallBack(toPath)
@@ -384,7 +395,16 @@ export default class MyModule extends Component {
         {this._showMyDataPopupModal()}
         <ModalBtns
           ref={ref => (this.ModalBtns = ref)}
-          actionOfOnline={() => this.shareData('online')}
+          actionOfOnline={
+            UserType.isOnlineUser(this.props.user.currentUser)
+              ? () => this.shareData('online')
+              : undefined
+          }
+          actionOfIPortal={
+            UserType.isIPortalUser(this.props.user.currentUser)
+              ? () => this.shareData('iportal')
+              : undefined
+          }
           actionOfWechat={() => this.shareData('weChat')}
         />
       </Container>

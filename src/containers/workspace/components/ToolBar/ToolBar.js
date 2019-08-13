@@ -81,7 +81,7 @@ import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
-import { getThemeAssets } from '../../../../assets'
+import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
 import MenuList from '../MenuList'
 import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
@@ -3811,6 +3811,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.setAction(Action.PAN)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+    GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
   }
 
   endFly = () => {
@@ -5140,6 +5141,10 @@ export default class ToolBar extends React.PureComponent {
       <PlotAnimationView
         ref={ref => (this.plotAnimationView = ref)}
         data={this.state.data}
+        layerName={
+          this.props.selection[0] && this.props.selection[0].layerInfo.name
+        }
+        geoId={this.props.selection[0] && this.props.selection[0].ids[0]}
         Heighttype={this.state.type}
         device={this.props.device}
       />
@@ -5934,12 +5939,13 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.PLOT_ANIMATION_XML_LIST:
           //推演动画xml列表
-          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+          image = getPublicAssets().plot.plot_animation_list
           action = this.showAnimationXmlList
           break
         case ToolbarBtnType.PLOT_ANIMATION_PLAY:
           //播放推演动画
-          image = require('../../../../assets/mapEdit/icon_packUP.png')
+          // image = require('../../../../assets/mapEdit/icon_packUP.png')
+          image = getPublicAssets().plot.plot_play
           action = this.animationPlay
           break
         case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:

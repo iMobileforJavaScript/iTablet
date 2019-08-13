@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
-import { Image, StyleSheet, View, Text, Platform } from 'react-native'
+import { Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
 import { getThemeAssets } from '../../assets'
 import { color } from '../../styles'
@@ -138,13 +138,7 @@ const Tabs = createBottomTabNavigator(
                 source_focuse={getThemeAssets().tabBar.tab_friend_selected}
                 source_unfocuse={getThemeAssets().tabBar.tab_friend}
                 renderExtra={() => {
-                  return (
-                    <InformSpot
-                      style={{
-                        right: Platform.OS === 'android' ? scaleSize(50) : 0,
-                      }}
-                    />
-                  )
+                  return <InformSpot />
                 }}
               />
             )

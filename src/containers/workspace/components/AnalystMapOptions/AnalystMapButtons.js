@@ -13,7 +13,7 @@ const BTN_GAPE = scaleSize(20)
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: scaleSize(30),
+    right: scaleSize(30),
     top: scaleSize(80),
     justifyContent: 'center',
     alignItems: 'center',
@@ -152,6 +152,7 @@ export default class AnalystMapButtons extends React.Component {
       title: getLanguage(this.props.language).Analyst_Labels.CLEAR,
       action: () => {
         AnalystTools.clear(type)
+        GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
       },
     })
     return curData
