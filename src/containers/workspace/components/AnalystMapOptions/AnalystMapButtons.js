@@ -152,6 +152,7 @@ export default class AnalystMapButtons extends React.Component {
       title: getLanguage(this.props.language).Analyst_Labels.CLEAR,
       action: () => {
         AnalystTools.clear(type)
+        GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
       },
     })
     return curData

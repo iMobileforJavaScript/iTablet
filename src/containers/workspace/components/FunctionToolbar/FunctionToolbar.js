@@ -1106,7 +1106,7 @@ export default class FunctionToolbar extends React.Component {
             key: constants.ANALYSIS,
             title: getLanguage(this.props.language).Map_Main_Menu.ANALYSIS,
             action: this.showAnalysis,
-            image: require('../../../../assets/function/icon_edit.png'),
+            image: getThemeAssets().functionBar.rightbar_analysis,
           },
           {
             key: '风格',
