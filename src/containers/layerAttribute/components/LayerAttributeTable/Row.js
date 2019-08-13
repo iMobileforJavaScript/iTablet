@@ -19,25 +19,25 @@ const styles = StyleSheet.create({
     height: ROW_HEIGHT,
     backgroundColor: color.white,
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: color.bgG,
+    // borderBottomWidth: 1,
+    //borderBottomColor: color.bgG,
   },
   cell: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: 'transparent',
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
     justifyContent: 'center',
   },
   selectedCell: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: color.selected,
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
     justifyContent: 'center',
   },
   indexCell: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: color.itemColorGray,
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
@@ -150,9 +150,9 @@ export default class Row extends Component {
     if (this.props.renderCell && typeof this.props.renderCell === 'function') {
       return this.props.renderCell({ item, index })
     }
-    let isLastCell = isSingleData
-      ? index === 1
-      : this.props.data.length - 1 === index
+    // let isLastCell = isSingleData
+    //   ? index === 1
+    //   : this.props.data.length - 1 === index
     let isSingleData =
       typeof item !== 'object' || item === undefined || item === null
     let value = isSingleData ? item : item.value
@@ -191,8 +191,9 @@ export default class Row extends Component {
           style={[
             cellStyle,
             width ? { width } : { flex: 1 },
-            !isLastCell && {
+            {
               borderRightWidth: 1,
+              borderBottomWidth: 1,
               borderColor: this.props.separatorColor,
             },
             // { width },
@@ -235,8 +236,9 @@ export default class Row extends Component {
           style={[
             cellStyle,
             width ? { width } : { flex: 1 },
-            !isLastCell && {
+            {
               borderRightWidth: 1,
+              borderBottomWidth: 1,
               borderColor: this.props.separatorColor,
             },
             // { width },
@@ -258,8 +260,9 @@ export default class Row extends Component {
             cellStyle,
             this.props.cellStyle,
             width ? { width } : { flex: 1 },
-            !isLastCell && {
+            {
               borderRightWidth: 1,
+              borderBottomWidth: 1,
               borderColor: this.props.separatorColor,
             },
             // { width },

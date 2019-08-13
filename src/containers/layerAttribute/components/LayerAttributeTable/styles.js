@@ -56,7 +56,7 @@ export default StyleSheet.create({
     borderColor: '#A0A0A0',
   },
   indexCell: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: color.itemColorGray,
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
@@ -68,14 +68,14 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
   },
   cell: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: 'transparent',
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
     justifyContent: 'center',
   },
   disableCellStyle: {
-    height: ROW_HEIGHT - 1,
+    height: ROW_HEIGHT,
     backgroundColor: color.bgW,
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
