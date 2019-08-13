@@ -13,7 +13,7 @@ const BTN_GAPE = scaleSize(20)
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: scaleSize(30),
+    right: scaleSize(30),
     top: scaleSize(80),
     justifyContent: 'center',
     alignItems: 'center',
