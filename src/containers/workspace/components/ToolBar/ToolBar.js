@@ -7,6 +7,7 @@ import {
   screen,
 } from '../../../../utils'
 import {
+  Row,
   MTBtn,
   TableList,
   ColorTableList,
@@ -57,7 +58,15 @@ import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import ToolbarButtonAction from './ToolbarButtonAction'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Animated,
+  Text,
+  FlatList,
+  Keyboard,
+} from 'react-native'
 import {
   SMap,
   SScene,
@@ -2588,6 +2597,21 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  _keyboardDelegate = e => {
+    let keyboardHeight = 0
+    if (e.endCoordinates.screenY !== screen.getScreenHeight()) {
+      keyboardHeight = e.endCoordinates.height
+    }
+    this.setState(
+      {
+        keyboardHeight,
+      },
+      () => {
+        this.showToolbarAndBox(true)
+      },
+    )
+  }
+
   /**
    * 设置是否显示
    * isShow: 是否显示
@@ -2600,6 +2624,22 @@ export default class ToolBar extends React.PureComponent {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
+    //标注Toolbar需要跟随键盘弹起
+    if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      if (isShow) {
+        this.keyBoardShowListener = Keyboard.addListener(
+          'keyboardDidShow',
+          this._keyboardDelegate,
+        )
+        this.keyBoardHideListener = Keyboard.addListener(
+          'keyboardDidHide',
+          this._keyboardDelegate,
+        )
+      } else {
+        this.keyBoardShowListener.remove()
+        this.keyBoardHideListener.remove()
+      }
+    }
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
@@ -2713,13 +2753,24 @@ export default class ToolBar extends React.PureComponent {
 
   showToolbarAndBox = (isShow, type = this.state.type) => {
     let animatedList = []
+    let keyboardHeight = this.state.keyboardHeight || 0
+    //标注 如果横屏高度不够键盘弹起，则部分弹起，除掉底部功能栏
+    if (
+      this.props.device.height - ConstToolType.NEWTHEME_HEIGHT[2] <
+      keyboardHeight
+    ) {
+      keyboardHeight -= Const.BOTTOM_HEIGHT
+    }
     // Toolbar的显示和隐藏
-    if (this.isShow !== isShow) {
+    if (
+      this.isShow !== isShow ||
+      type === ConstToolType.MAP_TOOL_TAGGING_SETTING
+    ) {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
           toValue: isShow
-            ? 0
+            ? 0 + keyboardHeight
             : -(this.props.device.height >= this.props.device.width
               ? this.props.device.height
               : this.props.device.width),
@@ -3022,7 +3073,9 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-
+      if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+        await SMap.undo()
+      }
       // if (type===ConstToolType.MAP_STYLE)
       {
         if (this.currentLayerStyle) {
@@ -3578,7 +3631,7 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[3]
+                  ? ConstToolType.NEWTHEME_HEIGHT[2]
                   : ConstToolType.NEWTHEME_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
@@ -3591,6 +3644,32 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      let name = this.tools_name || ''
+      let remark = this.tools_remarks || ''
+      let address = this.tools_http || ''
+      ;(async function() {
+        name !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'name',
+            name,
+            this.props.user.currentUser.userName,
+          ))
+        remark !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'remark',
+            remark,
+            this.props.user.currentUser.userName,
+          ))
+        address !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'address',
+            address,
+            this.props.user.currentUser.userName,
+          ))
+      }.bind(this)())
       // this.taggingback()
       this.close()
     }
@@ -5512,6 +5591,49 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  //标注 RecordSet数据改变
+  _onValueChange = ({ title, text }) => {
+    switch (title) {
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_NAME:
+        this.tools_name = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS:
+        this.tools_remarks = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP:
+        this.tools_http = text
+        break
+    }
+  }
+  renderInputView = () => {
+    let data = this.state.data[0]
+    let renderList = ({ item }) => {
+      return (
+        <Row
+          style={styles.row}
+          customRightStyle={styles.customInput}
+          title={item.title}
+          getValue={this._onValueChange}
+          defaultValue={item.value}
+        />
+      )
+    }
+    if (data) {
+      return (
+        <View>
+          <View style={styles.textHeader}>
+            <Text style={styles.textFont}>{data.title}</Text>
+          </View>
+          <FlatList
+            renderItem={renderList}
+            data={data.data}
+            keyExtractor={(item, index) => item.value + index}
+          />
+        </View>
+      )
+    }
+    return null
+  }
   renderMap3DList = () => {
     return (
       <Map3DToolBar
@@ -5623,6 +5745,9 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_PLANE_CLIP:
           case ConstToolType.MAP3D_CROSS_CLIP:
             box = this.renderMap3DClip()
+            break
+          case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+            box = this.renderInputView()
             break
           default:
             box = this.renderList()
