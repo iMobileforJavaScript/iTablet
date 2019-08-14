@@ -3,8 +3,8 @@
  * Author: Asort
  * https://github.com/AsortKeven
  */
-const layer3d_type_normal = require('./layer3d_type_normal_white.png')
-const layer3d_type_image = require('./layer3d_type_image_white.png')
+const layer3d_type_normal = require('./layer3d_type_normal.png')
+const layer3d_type_image = require('./layer3d_type_image.png')
 const layer3d_type_normal_selected = require('./layer3d_type_normal_white.png')
 const layer3d_type_image_selected = require('./layer3d_type_image_white.png')
 const layer3d_type_kml = require('./layer3d_type_kml.png')
