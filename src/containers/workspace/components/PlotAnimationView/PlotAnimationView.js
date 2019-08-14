@@ -211,7 +211,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -228,7 +228,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -249,7 +249,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -266,7 +266,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -453,8 +453,8 @@ const styles = StyleSheet.create({
   titleView: {
     alignContent: 'center',
     justifyContent: 'center',
-    paddingLeft: scaleSize(46),
-    height: scaleSize(80),
+    paddingLeft: scaleSize(20),
+    height: scaleSize(60),
     backgroundColor: color.gray3,
   },
   textTitle: {
@@ -479,13 +479,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.bgG,
     height: scaleSize(1.5),
-    marginLeft: scaleSize(20),
-    marginRight: scaleSize(20),
+    marginLeft: scaleSize(30),
+    marginRight: scaleSize(30),
   },
   startTime: {
     flexDirection: 'row',
-    height: scaleSize(100),
-    padding: scaleSize(20),
+    height: scaleSize(80),
+    padding: scaleSize(30),
     alignItems: 'center',
     // alignSelf: 'center',
   },
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
     width: scaleSize(60),
   },
   inputTime: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     width: scaleSize(60),
     fontSize: setSpText(18),
     textAlign: 'center',
@@ -510,14 +510,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   startModetext: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     // width:scaleSize(100),
     // flex:2,
     paddingLeft: scaleSize(20),
   },
   startModeImage: {
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(46),
+    width: scaleSize(46),
     // flex:1,
     justifyContent: 'flex-end',
     alignItems: 'center',
