@@ -4913,7 +4913,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if (GLOBAL.legend) {
+        if (GLOBAL.legend && GLOBAL.Type === constants.MAP_THEME) {
           await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
@@ -5908,12 +5908,12 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_on
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.NOT_VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_not_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_off
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.MENU_COMMIT:
