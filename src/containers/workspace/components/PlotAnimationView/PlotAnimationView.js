@@ -39,6 +39,7 @@ export default class PlotAnimationView extends React.Component {
     geoId: number,
     device: Object,
     themeSymbolType: '',
+    saveAndContinue: () => {},
   }
 
   constructor(props) {
@@ -139,6 +140,7 @@ export default class PlotAnimationView extends React.Component {
   action = ({ item }) => {
     this.setState({
       animationMode: item.animationMode,
+      data: this.state.data.concat(),
     })
   }
 
@@ -147,7 +149,7 @@ export default class PlotAnimationView extends React.Component {
       <TouchableOpacity
         // style={styles.tableItem}
         style={{
-          paddingVertical: scaleSize(20),
+          // paddingVertical: scaleSize(20),
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
@@ -210,7 +212,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -227,7 +229,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -248,7 +250,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -265,7 +267,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -342,8 +344,24 @@ export default class PlotAnimationView extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
+        <View style={styles.endlineStyle} />
+        <View style={styles.saveAndContinueText}>
+          <TouchableOpacity onPress={this.saveAndContinue}>
+            <Text style={styles.saveAndContinueText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .PLOTTING_ANIMATION_CONTINUE
+              }
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
+  }
+  saveAndContinue = () => {
+    this.props.saveAndContinue()
+    // this.scrollView.scrollTo(0,0)
+    this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
   addDurationTime = () => {
     let time = Number(this.state.durationTime) + 1
@@ -413,7 +431,11 @@ export default class PlotAnimationView extends React.Component {
   }
 
   render() {
-    return <ScrollView style={styles.container}>{this.renderView()}</ScrollView>
+    return (
+      <ScrollView style={styles.container} ref={ref => (this.scrollView = ref)}>
+        {this.renderView()}
+      </ScrollView>
+    )
   }
 }
 
@@ -452,13 +474,13 @@ const styles = StyleSheet.create({
   titleView: {
     alignContent: 'center',
     justifyContent: 'center',
-    paddingLeft: scaleSize(46),
-    height: scaleSize(80),
+    paddingLeft: scaleSize(20),
+    height: scaleSize(60),
     backgroundColor: color.gray3,
   },
   textTitle: {
     // padding: scaleSize(5),
-    fontSize: setSpText(20),
+    fontSize: setSpText(24),
     // paddingLeft: scaleSize(80),
     // height: scaleSize(80),
     textAlign: 'auto',
@@ -478,18 +500,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.bgG,
     height: scaleSize(1.5),
-    marginLeft: scaleSize(20),
-    marginRight: scaleSize(20),
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(40),
   },
   startTime: {
     flexDirection: 'row',
-    height: scaleSize(100),
-    padding: scaleSize(20),
+    height: scaleSize(80),
+    padding: scaleSize(40),
     alignItems: 'center',
     // alignSelf: 'center',
   },
   startTimeText: {
-    fontSize: setSpText(18),
+    fontSize: setSpText(20),
     textAlign: 'auto',
     color: color.themeText2,
   },
@@ -498,9 +520,9 @@ const styles = StyleSheet.create({
     width: scaleSize(60),
   },
   inputTime: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     width: scaleSize(60),
-    fontSize: setSpText(18),
+    fontSize: setSpText(20),
     textAlign: 'center',
   },
   startMode: {
@@ -509,16 +531,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   startModetext: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     // width:scaleSize(100),
     // flex:2,
     paddingLeft: scaleSize(20),
   },
   startModeImage: {
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(46),
+    width: scaleSize(46),
     // flex:1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  endlineStyle: {
+    flex: 1,
+    backgroundColor: color.bgG,
+    height: scaleSize(1.5),
+  },
+  saveAndContinueText: {
+    paddingTop: scaleSize(10),
+    alignItems: 'center',
+    height: scaleSize(80),
+    fontSize: setSpText(24),
+    textAlign: 'center',
+    color: color.themeText2,
   },
 })

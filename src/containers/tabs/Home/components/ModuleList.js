@@ -178,13 +178,6 @@ class ModuleList extends Component {
 
   itemAction = async (language, { item, index }) => {
     try {
-      let moduleKey = item.key
-      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === constants.MAP_AR) {
-        item.action && item.action(this.props.currentUser)
-        return
-      }
-
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
@@ -198,6 +191,11 @@ class ModuleList extends Component {
         this.props.latestMap[currentUserName][module].length > 0
       ) {
         latestMap = this.props.latestMap[currentUserName][module][0]
+      }
+
+      if (item.key === constants.MAP_AR) {
+        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        return
       }
 
       let downloadData = this.getDownloadData(language, item)
