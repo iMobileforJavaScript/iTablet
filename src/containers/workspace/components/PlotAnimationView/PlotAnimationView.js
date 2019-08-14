@@ -139,6 +139,7 @@ export default class PlotAnimationView extends React.Component {
   action = ({ item }) => {
     this.setState({
       animationMode: item.animationMode,
+      data: this.state.data.concat(),
     })
   }
 
@@ -147,7 +148,7 @@ export default class PlotAnimationView extends React.Component {
       <TouchableOpacity
         // style={styles.tableItem}
         style={{
-          paddingVertical: scaleSize(20),
+          // paddingVertical: scaleSize(20),
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
