@@ -5141,6 +5141,7 @@ export default class ToolBar extends React.PureComponent {
       <PlotAnimationView
         ref={ref => (this.plotAnimationView = ref)}
         data={this.state.data}
+        saveAndContinue={this.saveAnimationAndContinue}
         layerName={
           this.props.selection[0] && this.props.selection[0].layerInfo.name
         }
@@ -5173,6 +5174,16 @@ export default class ToolBar extends React.PureComponent {
         device={this.props.device}
       />
     )
+  }
+
+  saveAnimationAndContinue = () => {
+    let createInfo =
+      this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+    if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+      createInfo.geoId = this.props.selection[0].ids[0]
+      createInfo.layerName = this.props.selection[0].layerInfo.name
+    }
+    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
   }
 
   itemaction = async item => {

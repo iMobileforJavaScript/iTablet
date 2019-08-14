@@ -39,6 +39,7 @@ export default class PlotAnimationView extends React.Component {
     geoId: number,
     device: Object,
     themeSymbolType: '',
+    saveAndContinue: () => {},
   }
 
   constructor(props) {
@@ -343,8 +344,24 @@ export default class PlotAnimationView extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
+        <View style={styles.endlineStyle} />
+        <View style={styles.saveAndContinueText}>
+          <TouchableOpacity onPress={this.saveAndContinue}>
+            <Text style={styles.saveAndContinueText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .PLOTTING_ANIMATION_CONTINUE
+              }
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
+  }
+  saveAndContinue = () => {
+    this.props.saveAndContinue()
+    // this.scrollView.scrollTo(0,0)
+    this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
   addDurationTime = () => {
     let time = Number(this.state.durationTime) + 1
@@ -414,7 +431,11 @@ export default class PlotAnimationView extends React.Component {
   }
 
   render() {
-    return <ScrollView style={styles.container}>{this.renderView()}</ScrollView>
+    return (
+      <ScrollView style={styles.container} ref={ref => (this.scrollView = ref)}>
+        {this.renderView()}
+      </ScrollView>
+    )
   }
 }
 
@@ -459,7 +480,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     // padding: scaleSize(5),
-    fontSize: setSpText(20),
+    fontSize: setSpText(24),
     // paddingLeft: scaleSize(80),
     // height: scaleSize(80),
     textAlign: 'auto',
@@ -479,18 +500,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.bgG,
     height: scaleSize(1.5),
-    marginLeft: scaleSize(30),
-    marginRight: scaleSize(30),
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(40),
   },
   startTime: {
     flexDirection: 'row',
     height: scaleSize(80),
-    padding: scaleSize(30),
+    padding: scaleSize(40),
     alignItems: 'center',
     // alignSelf: 'center',
   },
   startTimeText: {
-    fontSize: setSpText(18),
+    fontSize: setSpText(20),
     textAlign: 'auto',
     color: color.themeText2,
   },
@@ -501,7 +522,7 @@ const styles = StyleSheet.create({
   inputTime: {
     height: scaleSize(80),
     width: scaleSize(60),
-    fontSize: setSpText(18),
+    fontSize: setSpText(20),
     textAlign: 'center',
   },
   startMode: {
@@ -521,5 +542,18 @@ const styles = StyleSheet.create({
     // flex:1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  endlineStyle: {
+    flex: 1,
+    backgroundColor: color.bgG,
+    height: scaleSize(1.5),
+  },
+  saveAndContinueText: {
+    paddingTop: scaleSize(10),
+    alignItems: 'center',
+    height: scaleSize(80),
+    fontSize: setSpText(24),
+    textAlign: 'center',
+    color: color.themeText2,
   },
 })
