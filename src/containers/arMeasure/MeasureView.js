@@ -1,7 +1,12 @@
 import * as React from 'react'
-import { InteractionManager, TouchableOpacity, View, Image } from 'react-native'
-import { ConstPath } from '../../constants'
-import { FileTools } from '../../native'
+import {
+  InteractionManager,
+  TouchableOpacity,
+  View,
+  Image,
+  Text,
+  DeviceEventEmitter,
+} from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
 import { SMMeasureView, SMeasureView } from 'imobile_for_reactnative'
@@ -26,13 +31,11 @@ export default class MeasureView extends React.Component {
     super(props)
     const { params } = this.props.navigation.state || {}
     this.datasourceAlias = params.datasourceAlias || ''
-    this.datasetName = params.datasetName || 'MediaDataset'
-    this.limit = params.limit >= 0 ? params.limit : 9
-    this.cb = params.cb
-    this.camera = null
+    this.datasetName = params.datasetName
 
     this.state = {
-      data: null,
+      currentLength: 0,
+      totalLength: 0,
     }
   }
 
@@ -41,20 +44,50 @@ export default class MeasureView extends React.Component {
     Orientation.lockToPortrait()
   }
 
-  componentWillUnmount() {
-    // Orientation.unlockAllOrientations()
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      // 初始化数据
+      (async function() {
+        SMeasureView.initMeasureCollector(
+          this.datasourceAlias,
+          this.datasetName,
+        )
+        //注册监听
+        DeviceEventEmitter.addListener(
+          'onCurrentLengthChanged',
+          this.onCurrentLengthChanged,
+        )
+        DeviceEventEmitter.addListener(
+          'onTotalLengthChanged',
+          this.onTotalLengthChanged,
+        )
+      }.bind(this)())
+    })
   }
 
-  componentDidMount() {
-    (async function() {
-      let targetPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath +
-          this.props.user.currentUser.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Media,
-      )
-      SMeasureView.saveDataset(targetPath, targetPath)
-    }.bind(this)())
+  componentWillUnmount() {
+    // Orientation.unlockAllOrientations()
+    //移除监听
+    DeviceEventEmitter.removeListener(
+      'onCurrentLengthChanged',
+      this.onCurrentLengthChanged,
+    )
+    DeviceEventEmitter.removeListener(
+      'onTotalLengthChanged',
+      this.onTotalLengthChanged,
+    )
+  }
+
+  onCurrentLengthChanged = params => {
+    this.setState({
+      currentLength: params.current,
+    })
+  }
+
+  onTotalLengthChanged = params => {
+    this.setState({
+      totalLength: params.total,
+    })
   }
 
   /** 添加 **/
@@ -73,7 +106,13 @@ export default class MeasureView extends React.Component {
   }
 
   /** 保存 **/
-  save = async () => {}
+  save = async () => {
+    if (!this.datasourceAlias && !this.datasetName) return
+    let result = await SMeasureView.saveDataset()
+    if (result) {
+      await SMeasureView.clearAll()
+    }
+  }
 
   /** 重置/切换模式 **/
   remake = () => {
@@ -82,17 +121,6 @@ export default class MeasureView extends React.Component {
       // 重置数据
     })
   }
-
-  // addMedia = async (mediaPaths = []) => {
-  //   // TODO 添加提示
-  //   if (!this.datasourceAlias) return
-  //   let result = await SMediaCollector.addMedia({
-  //     datasourceName: this.datasourceAlias,
-  //     datasetName: this.datasetName,
-  //     mediaPaths,
-  //   })
-  //   return result
-  // }
 
   /** 确认 **/
   confirm = () => {}
@@ -159,6 +187,19 @@ export default class MeasureView extends React.Component {
     )
   }
 
+  renderLengthChangeView() {
+    return (
+      <View style={styles.lengthChangeView}>
+        <Text style={styles.title}>
+          {'Total Length:' + this.state.totalLength + 'm'}
+        </Text>
+        <Text style={styles.title}>
+          {'Current Length:' + this.state.currentLength + 'm'}
+        </Text>
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -166,6 +207,7 @@ export default class MeasureView extends React.Component {
         {this.renderBottomBtns()}
         {this.renderCenterBtn()}
         {this.renderTopBtns()}
+        {this.renderLengthChangeView()}
       </View>
     )
   }
