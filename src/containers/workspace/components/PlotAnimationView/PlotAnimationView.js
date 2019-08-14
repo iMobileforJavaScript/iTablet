@@ -15,6 +15,7 @@ import { getLanguage } from '../../../../language/index'
 // import { getPublicAssets } from '../../../../assets'
 import { getThemeAssets } from '../../../../assets'
 // import { TextInput } from 'react-native-gesture-handler';
+import { SMap } from 'imobile_for_reactnative'
 
 var StartMode = {
   START_FOLLOW_LAST: 1,
@@ -34,6 +35,8 @@ export default class PlotAnimationView extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
     layerData: Object,
+    layerName: string,
+    geoId: number,
     device: Object,
     themeSymbolType: '',
   }
@@ -46,7 +49,40 @@ export default class PlotAnimationView extends React.Component {
       startTime: 0,
       durationTime: 5,
       startMode: 1,
+      data: [],
     }
+  }
+
+  componentDidMount() {
+    this.getCurrentGeometryType()
+  }
+
+  getCurrentGeometryType = async () => {
+    let type = await SMap.getGeometryTypeById(
+      this.props.layerName,
+      this.props.geoId,
+    )
+    let data = this.getData()
+    let subData = []
+    switch (type) {
+      case 1:
+        // subData.push(data[0])   //路径动画，暂不支持
+        subData.push(data[1])
+        // subData.push(data[2])
+        subData.push(data[3])
+        subData.push(data[4])
+        subData.push(data[5])
+        break
+      case 2:
+        subData.push(data[1])
+        // subData.push(data[2])
+        subData.push(data[3])
+        subData.push(data[6])
+        break
+    }
+    this.setState({
+      data: subData,
+    })
   }
 
   getCreateInfo = () => {
@@ -136,7 +172,7 @@ export default class PlotAnimationView extends React.Component {
   }
 
   renderView() {
-    let animationModeData = this.getData()
+    // let animationModeData = this.getData()
     return (
       <View style={styles.container}>
         <View style={styles.titleView}>
@@ -147,9 +183,8 @@ export default class PlotAnimationView extends React.Component {
 
         <TableList
           style={styles.table}
-          data={animationModeData}
-          // data={this.state.data}
-          // type={'scroll'}
+          // data={animationModeData}
+          data={this.state.data}
           numColumns={4}
           renderCell={this._renderItem}
           device={this.props.device}
@@ -417,7 +452,7 @@ const styles = StyleSheet.create({
   titleView: {
     alignContent: 'center',
     justifyContent: 'center',
-    paddingLeft: scaleSize(60),
+    paddingLeft: scaleSize(46),
     height: scaleSize(80),
     backgroundColor: color.gray3,
   },

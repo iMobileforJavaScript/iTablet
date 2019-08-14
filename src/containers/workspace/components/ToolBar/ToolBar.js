@@ -5141,6 +5141,10 @@ export default class ToolBar extends React.PureComponent {
       <PlotAnimationView
         ref={ref => (this.plotAnimationView = ref)}
         data={this.state.data}
+        layerName={
+          this.props.selection[0] && this.props.selection[0].layerInfo.name
+        }
+        geoId={this.props.selection[0] && this.props.selection[0].ids[0]}
         Heighttype={this.state.type}
         device={this.props.device}
       />
