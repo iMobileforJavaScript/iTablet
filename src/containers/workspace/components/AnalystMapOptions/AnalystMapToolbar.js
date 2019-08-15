@@ -87,18 +87,27 @@ export default class AnalystMapToolbar extends React.Component {
             if (this.props.analyst) {
               this.props.analyst()
             } else {
-              let { edges } = await AnalystTools.analyst(this.props.type)
-              if (edges && edges.length > 0) {
-                GLOBAL.TouchType = TouchType.NULL // 关闭分析界面，触摸事件置空
-                this.props.setAnalystParams(null)
-                AnalystTools.showMsg(this.props.type, true, this.props.language)
-              } else {
-                AnalystTools.showMsg(
-                  this.props.type,
-                  false,
-                  this.props.language,
-                )
-              }
+              AnalystTools.analyst(this.props.type)
+                .then(({ edges }) => {
+                  if (edges && edges.length > 0) {
+                    GLOBAL.TouchType = TouchType.NULL // 关闭分析界面，触摸事件置空
+                    this.props.setAnalystParams(null)
+                    AnalystTools.showMsg(
+                      this.props.type,
+                      true,
+                      this.props.language,
+                    )
+                  } else {
+                    AnalystTools.showMsg(
+                      this.props.type,
+                      false,
+                      this.props.language,
+                    )
+                  }
+                })
+                .catch(() => {
+                  AnalystTools.showMsg(-1, false, this.props.language)
+                })
             }
           },
         )}

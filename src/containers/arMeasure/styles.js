@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native'
 import { Const } from '../../constants'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 import { size, color } from '../../styles'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: 'transparent',
   },
   preview: {
     flex: 1,
@@ -58,10 +58,33 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'space-between',
     alignItems: 'center',
-    top: 20,
+    top: 10,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  lengthChangeView: {
+    position: 'absolute',
+    flexDirection: 'column',
+    height: scaleSize(150),
+    paddingVertical: scaleSize(20),
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    top: 80,
+    left: 0,
+    right: 15,
+    bottom: 0,
+  },
+  title: {
+    height: scaleSize(50),
+    width: scaleSize(340),
+    fontSize: setSpText(30),
+    backgroundColor: '#rgba(240, 240, 240, 0.6)',
+    color: '#rgba(70, 128, 223, 1)',
+    // textAlign: 'center',
+    paddingLeft: 5,
+    textAlign: 'left',
   },
 
   // Change Controller

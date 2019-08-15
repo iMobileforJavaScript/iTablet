@@ -3,8 +3,8 @@
  */
 
 import React, { Component } from 'react'
-import { scaleSize } from '../../../../utils/screen'
-import { View } from 'react-native'
+import { scaleSize } from '../../../../utils'
+import { View, Platform } from 'react-native'
 export default class InformSpot extends Component {
   props: {
     navigation: Object,
@@ -12,6 +12,7 @@ export default class InformSpot extends Component {
     chat: Array,
     addChat: () => {},
     style: Object,
+    device: Object,
   }
 
   constructor(props) {
@@ -46,6 +47,7 @@ export default class InformSpot extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
+      JSON.stringify(prevProps.device) !== JSON.stringify(this.props.device) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
     ) {
       return true
@@ -62,6 +64,12 @@ export default class InformSpot extends Component {
     }
   }
   render() {
+    let right =
+      Platform.OS === 'android'
+        ? this.props.device.width > this.props.device.height
+          ? scaleSize(100)
+          : scaleSize(50)
+        : 0
     return this.state.bRefesh ? (
       <View
         style={[
@@ -73,7 +81,7 @@ export default class InformSpot extends Component {
             width: scaleSize(15),
             borderRadius: scaleSize(25),
             top: scaleSize(0),
-            right: scaleSize(0),
+            right: right,
           },
           this.props.style,
         ]}
