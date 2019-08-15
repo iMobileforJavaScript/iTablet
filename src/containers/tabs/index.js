@@ -20,6 +20,8 @@ import Mine, {
   MyLabel,
   MyBaseMap,
   MyModule,
+  DatasourcePage,
+  NewDataset,
 } from './Mine'
 import Find from './Find'
 import SuperMapKnown from './Find/superMapKnown'
@@ -270,6 +272,8 @@ export {
   ScanOnlineMap,
   Personal,
   ToggleAccount,
+  DatasourcePage,
+  NewDataset,
   /**Home*/
   Setting,
   AboutITablet,
