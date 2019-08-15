@@ -69,15 +69,15 @@ export default class PlotAnimationView extends React.Component {
       case 1:
         // subData.push(data[0])   //路径动画，暂不支持
         subData.push(data[1])
-        // subData.push(data[2])
-        subData.push(data[3])
+        subData.push(data[2])
+        // subData.push(data[3])
         subData.push(data[4])
         subData.push(data[5])
         break
       case 2:
         subData.push(data[1])
-        // subData.push(data[2])
-        subData.push(data[3])
+        subData.push(data[2])
+        // subData.push(data[3])
         subData.push(data[6])
         break
     }
@@ -345,14 +345,20 @@ export default class PlotAnimationView extends React.Component {
           </View>
         </TouchableOpacity>
         <View style={styles.endlineStyle} />
-        <View style={styles.saveAndContinueText}>
+        <View>
           <TouchableOpacity onPress={this.saveAndContinue}>
-            <Text style={styles.saveAndContinueText}>
-              {
-                getLanguage(global.language).Map_Plotting
-                  .PLOTTING_ANIMATION_CONTINUE
-              }
-            </Text>
+            <View style={styles.saveAndContinueView2}>
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.saveAndContinueImage}
+              />
+              <Text style={styles.saveAndContinueText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_CONTINUE
+                }
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -508,11 +514,11 @@ const styles = StyleSheet.create({
     height: scaleSize(80),
     padding: scaleSize(40),
     alignItems: 'center',
-    // alignSelf: 'center',
+    alignSelf: 'center',
   },
   startTimeText: {
     fontSize: setSpText(20),
-    textAlign: 'auto',
+    height: scaleSize(20),
     color: color.themeText2,
   },
   modifyTime: {
@@ -548,12 +554,20 @@ const styles = StyleSheet.create({
     backgroundColor: color.bgG,
     height: scaleSize(1.5),
   },
-  saveAndContinueText: {
-    paddingTop: scaleSize(10),
-    alignItems: 'center',
+  saveAndContinueImage: {
+    height: scaleSize(40),
+    width: scaleSize(40),
+    // backgroundColor:color.blue1,
+  },
+  saveAndContinueView2: {
+    flexDirection: 'row',
     height: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saveAndContinueText: {
     fontSize: setSpText(24),
     textAlign: 'center',
-    color: color.themeText2,
+    color: color.blue2,
   },
 })
