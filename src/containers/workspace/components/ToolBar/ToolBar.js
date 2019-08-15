@@ -3799,7 +3799,10 @@ export default class ToolBar extends React.PureComponent {
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
-      height: ConstToolType.HEIGHT[3],
+      height:
+        this.props.device.orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       cb: () => SCollector.stopCollect(),
     })
   }
