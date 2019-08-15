@@ -393,6 +393,11 @@ export default class MyLocalData extends Component {
               this.itemInfo = info
               this._onUploadData('')
             }
+          } else if (
+            this.state.title === getLanguage(this.props.language).Profile.DATA
+          ) {
+            this.itemInfo = info
+            this._openData()
           }
         }}
       >
@@ -981,15 +986,9 @@ export default class MyLocalData extends Component {
         } else if (this.state.sectionData[0].title.indexOf('MY_DATA') !== -1) {
           data = [
             {
-              title: getLanguage(this.props.language).Profile.OPEN_DATA,
-              action: () => {
-                this._openData(false, true)
-              },
-            },
-            {
               title: getLanguage(this.props.language).Profile.NEW_DATASET,
               action: () => {
-                this._createDataset(false, true)
+                this._createDataset()
               },
             },
             {
@@ -1046,15 +1045,9 @@ export default class MyLocalData extends Component {
         } else if (this.state.sectionData[0].title.indexOf('DATA') !== -1) {
           data = [
             {
-              title: getLanguage(this.props.language).Profile.OPEN_DATA,
-              action: () => {
-                this._openData(false, true)
-              },
-            },
-            {
               title: getLanguage(this.props.language).Profile.NEW_DATASET,
               action: () => {
-                this._createDataset(false, true)
+                this._createDataset()
               },
             },
             {
@@ -1091,12 +1084,14 @@ export default class MyLocalData extends Component {
     let data
     data = [
       {
-        title: '新建数据源',
+        title: getLanguage(global.language).Profile.NEW_DATASOURCE,
         action: () => {
           this._closeModal()
           NavigationService.navigate('InputPage', {
-            placeholder: '请输入数据源别名',
-            headerTitle: '设置别名',
+            placeholder: getLanguage(global.language).Profile
+              .ENTER_DATASOURCE_NAME,
+            headerTitle: getLanguage(global.language).Profile
+              .SET_DATASOURCE_NAME,
             cb: async name => {
               let datasourcePath
               let homePath = await FileTools.appendingHomeDirectory()
@@ -1180,7 +1175,7 @@ export default class MyLocalData extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.state.title === Const.DATA) {
+    if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
       let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
       return (
         <TouchableOpacity

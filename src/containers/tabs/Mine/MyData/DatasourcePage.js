@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList } from 'react-native'
+import { ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
 import { Container } from '../../../../components'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import TouchableItemView from '../../Friend/TouchableItemView'
+import { Toast, scaleSize } from '../../../../utils'
+import { getLanguage } from '../../../../language'
+import MyDataPopupModal from './MyDataPopupModal'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
@@ -25,23 +28,100 @@ class DatasourcePage extends Component {
       data: params.data,
       datasets: null,
     }
-    this._getDatasets()
+  }
+
+  componentDidMount() {
+    this._openDatasource().then(this._getDatasets)
   }
 
   componentWillUnmount() {
     SMap.closeDatasource(this.state.title)
+    this.container.setLoading(false)
+  }
+
+  _openDatasource = async () => {
+    try {
+      let homePath = await FileTools.appendingHomeDirectory()
+      let datasourceParams = {}
+      datasourceParams.server = homePath + this.state.data.path
+      datasourceParams.engineType = EngineType.UDB
+      datasourceParams.alias = this.state.title
+      await SMap.openDatasource2(datasourceParams)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Profile.OPEN_DATASROUCE_FAILED)
+    }
   }
 
   _getDatasets = async () => {
-    let homePath = await FileTools.appendingHomeDirectory()
-    let datasourceParams = {}
-    datasourceParams.server = homePath + this.state.data.path
-    datasourceParams.engineType = EngineType.UDB
-    datasourceParams.alias = this.state.title
-    await SMap.openDatasource(datasourceParams)
-    let datasets = []
-    datasets = await SMap.getDatasetsByDatasource({ alias: this.state.title })
-    this.setState({ datasets: datasets.list })
+    try {
+      this.container.setLoading(
+        true,
+        getLanguage(global.language).Prompt.LOADING,
+      )
+      let datasets = []
+      datasets = await SMap.getDatasetsByDatasource({ alias: this.state.title })
+      this.setState({ datasets: datasets.list })
+      setTimeout(() => {
+        this.container.setLoading(false)
+      }, 1000)
+    } catch (error) {
+      setTimeout(() => {
+        this.container.setLoading(false)
+        Toast.show(getLanguage(global.language).Profile.OPEN_DATASROUCE_FAILED)
+      }, 1000)
+    }
+  }
+
+  _deleteDataset = async () => {
+    try {
+      let datasetName = this.itemInfo.datasetName
+      await SMap.deleteDataset(this.state.title, datasetName)
+      this._getDatasets()
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
+  }
+
+  _renderDatasetPopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.DELETE_DATASET,
+        action: () => {
+          this._deleteDataset()
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.DatasetPopup = ref)}
+        data={data}
+        onCloseModal={() => {
+          this.DatasetPopup.setVisible(false)
+        }}
+      />
+    )
+  }
+
+  _renderRight = ({ param }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.itemInfo = param
+          this.DatasetPopup.setVisible(true)
+        }}
+      >
+        <Image
+          style={{
+            flex: 1,
+            height: scaleSize(40),
+            width: scaleSize(40),
+            marginRight: scaleSize(20),
+          }}
+          source={require('../../../../assets/Mine/icon_more_gray.png')}
+        />
+      </TouchableOpacity>
+    )
   }
 
   _renderItem = ({ item }) => {
@@ -60,12 +140,15 @@ class DatasourcePage extends Component {
     }
     return (
       <TouchableItemView
+        renderRight={this._renderRight}
+        param={item}
         item={{
           image: img,
           text: item.datasetName,
         }}
         onPress={() => {
-          //
+          // this.itemInfo = item
+          // this.DatasetPopup.setVisible(true)
         }}
       />
     )
@@ -88,6 +171,7 @@ class DatasourcePage extends Component {
             renderItem={this._renderItem}
           />
         </ScrollView>
+        {this._renderDatasetPopupModal()}
       </Container>
     )
   }

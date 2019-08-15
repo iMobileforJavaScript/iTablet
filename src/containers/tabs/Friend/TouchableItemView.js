@@ -39,7 +39,7 @@ export default class TouchableItemView extends Component {
               {this.props.item.text}
             </Text>
           </TouchableOpacity>
-          {this.props.renderRight ? this.props.renderRight() : null}
+          {this.props.renderRight ? this.props.renderRight(this.props) : null}
         </View>
         <View style={styles.seperator} />
       </View>
