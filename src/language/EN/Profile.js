@@ -42,6 +42,8 @@ const Profile = {
   IMPORT_DATA: 'Import Data',
   UPLOAD_DATA: 'Upload Data',
   DELETE_DATA: 'Delete Data',
+  OPEN_DATA: 'Open Data',
+  NEW_DATASET: 'New Dataset',
   UPLOAD_MAP: 'Upload Map',
   EXPORT_MAP: 'Export Map',
   DELETE_MAP: 'Delete Map',

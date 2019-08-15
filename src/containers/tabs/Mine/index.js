@@ -15,6 +15,8 @@ import MyData from './MyData'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
 import MyModule from './MyModule'
+import DatasourcePage from './MyData/DatasourcePage'
+import NewDataset from './MyData/NewDataset'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -48,4 +50,6 @@ export {
   MyLabel,
   MyBaseMap,
   MyModule,
+  DatasourcePage,
+  NewDataset,
 }

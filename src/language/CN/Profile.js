@@ -74,6 +74,8 @@ const Profile = {
   IMPORT_DATA: '导入数据',
   UPLOAD_DATA: '分享数据',
   DELETE_DATA: '删除数据',
+  OPEN_DATA: '打开数据',
+  NEW_DATASET: '新建数据集',
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   DELETE_MAP: '删除地图',

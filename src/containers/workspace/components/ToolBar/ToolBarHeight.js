@@ -347,12 +347,19 @@ function getToorbarHeight(orientation, type) {
       }
       column = 4
       break
+    case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+      if (orientation === 'LANDSCAPE') {
+        height = ConstToolType.NEWTHEME_HEIGHT[2]
+      } else {
+        height = ConstToolType.NEWTHEME_HEIGHT[3]
+      }
+      break
     case ConstToolType.PLOT_ANIMATION_START:
       height = ConstToolType.HEIGHT[4]
       break
-    case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
-      height = ConstToolType.HEIGHT[2]
-      break
+    // case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
+    //   height = ConstToolType.HEIGHT[2]
+    //   break
     default:
       height = 0
   }

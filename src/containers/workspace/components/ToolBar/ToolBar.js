@@ -7,6 +7,7 @@ import {
   screen,
 } from '../../../../utils'
 import {
+  Row,
   MTBtn,
   TableList,
   ColorTableList,
@@ -57,7 +58,16 @@ import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import ToolbarButtonAction from './ToolbarButtonAction'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Animated,
+  Text,
+  FlatList,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native'
 import {
   SMap,
   SScene,
@@ -2713,6 +2723,14 @@ export default class ToolBar extends React.PureComponent {
 
   showToolbarAndBox = (isShow, type = this.state.type) => {
     let animatedList = []
+    //let keyboardHeight = this.keyboardHeight ? 344 : 0
+    //标注 如果横屏高度不够键盘弹起，则部分弹起，除掉底部功能栏
+    // if (
+    //   this.props.device.height - ConstToolType.NEWTHEME_HEIGHT[2] <
+    //   keyboardHeight
+    // ) {
+    //   keyboardHeight -= Const.BOTTOM_HEIGHT
+    // }
     // Toolbar的显示和隐藏
     if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
@@ -3022,7 +3040,9 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-
+      if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+        await SMap.undo()
+      }
       // if (type===ConstToolType.MAP_STYLE)
       {
         if (this.currentLayerStyle) {
@@ -3578,7 +3598,7 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[3]
+                  ? ConstToolType.NEWTHEME_HEIGHT[2]
                   : ConstToolType.NEWTHEME_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
@@ -3591,8 +3611,36 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      let name = this.tools_name || ''
+      let remark = this.tools_remarks || ''
+      let address = this.tools_http || ''
+      ;(async function() {
+        name !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'name',
+            name,
+            this.props.user.currentUser.userName,
+          ))
+        remark !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'remark',
+            remark,
+            this.props.user.currentUser.userName,
+          ))
+        address !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'address',
+            address,
+            this.props.user.currentUser.userName,
+          ))
+      }.bind(this)())
       // this.taggingback()
-      this.close()
+      this.setVisible(false, this.state.type, {
+        height: 0,
+      })
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -3751,7 +3799,10 @@ export default class ToolBar extends React.PureComponent {
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
-      height: ConstToolType.HEIGHT[3],
+      height:
+        this.props.device.orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       cb: () => SCollector.stopCollect(),
     })
   }
@@ -4913,7 +4964,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if (GLOBAL.legend) {
+        if (GLOBAL.legend && GLOBAL.Type === constants.MAP_THEME) {
           await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
@@ -5523,6 +5574,49 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  //标注 RecordSet数据改变
+  _onValueChange = ({ title, text }) => {
+    switch (title) {
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_NAME:
+        this.tools_name = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS:
+        this.tools_remarks = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP:
+        this.tools_http = text
+        break
+    }
+  }
+  renderInputView = () => {
+    let data = this.state.data[0]
+    let renderList = ({ item }) => {
+      return (
+        <Row
+          style={styles.row}
+          customRightStyle={styles.customInput}
+          title={item.title}
+          getValue={this._onValueChange}
+          defaultValue={item.value}
+        />
+      )
+    }
+    if (data) {
+      return (
+        <View>
+          <View style={styles.textHeader}>
+            <Text style={styles.textFont}>{data.title}</Text>
+          </View>
+          <FlatList
+            renderItem={renderList}
+            data={data.data}
+            keyExtractor={(item, index) => item.value + index}
+          />
+        </View>
+      )
+    }
+    return null
+  }
   renderMap3DList = () => {
     return (
       <Map3DToolBar
@@ -5634,6 +5728,9 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_PLANE_CLIP:
           case ConstToolType.MAP3D_CROSS_CLIP:
             box = this.renderMap3DClip()
+            break
+          case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+            box = this.renderInputView()
             break
           default:
             box = this.renderList()
@@ -5919,12 +6016,12 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_on
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.NOT_VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_not_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_off
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.MENU_COMMIT:
@@ -6078,6 +6175,14 @@ export default class ToolBar extends React.PureComponent {
     //         : { height: screen.deviceWidth }
     //   }
     // }
+    let keyboardVerticalOffset
+    if (Platform.OS === 'android') {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+    } else {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+    }
     return (
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
@@ -6104,19 +6209,24 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View
-          style={[
-            styles.containers,
-            !(
-              this.state.isFullScreen &&
-              !this.state.isTouchProgress &&
-              !this.state.showMenuDialog
-            ) && styles.containers_border,
-          ]}
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          behavior={'position'}
         >
-          {this.renderView()}
-          {this.renderBottomBtns()}
-        </View>
+          <View
+            style={[
+              styles.containers,
+              !(
+                this.state.isFullScreen &&
+                !this.state.isTouchProgress &&
+                !this.state.showMenuDialog
+              ) && styles.containers_border,
+            ]}
+          >
+            {this.renderView()}
+            {this.renderBottomBtns()}
+          </View>
+        </KeyboardAvoidingView>
       </Animated.View>
     )
   }
