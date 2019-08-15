@@ -65,7 +65,8 @@ import {
   Animated,
   Text,
   FlatList,
-  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native'
 import {
   SMap,
@@ -2597,21 +2598,6 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  _keyboardDelegate = e => {
-    let keyboardHeight = 0
-    if (e.endCoordinates.screenY !== screen.getScreenHeight()) {
-      keyboardHeight = e.endCoordinates.height
-    }
-    this.setState(
-      {
-        keyboardHeight,
-      },
-      () => {
-        this.showToolbarAndBox(true)
-      },
-    )
-  }
-
   /**
    * 设置是否显示
    * isShow: 是否显示
@@ -2624,22 +2610,6 @@ export default class ToolBar extends React.PureComponent {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
-    //标注Toolbar需要跟随键盘弹起
-    if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
-      if (isShow) {
-        this.keyBoardShowListener = Keyboard.addListener(
-          'keyboardDidShow',
-          this._keyboardDelegate,
-        )
-        this.keyBoardHideListener = Keyboard.addListener(
-          'keyboardDidHide',
-          this._keyboardDelegate,
-        )
-      } else {
-        this.keyBoardShowListener.remove()
-        this.keyBoardHideListener.remove()
-      }
-    }
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
@@ -2753,24 +2723,21 @@ export default class ToolBar extends React.PureComponent {
 
   showToolbarAndBox = (isShow, type = this.state.type) => {
     let animatedList = []
-    let keyboardHeight = this.state.keyboardHeight || 0
+    //let keyboardHeight = this.keyboardHeight ? 344 : 0
     //标注 如果横屏高度不够键盘弹起，则部分弹起，除掉底部功能栏
-    if (
-      this.props.device.height - ConstToolType.NEWTHEME_HEIGHT[2] <
-      keyboardHeight
-    ) {
-      keyboardHeight -= Const.BOTTOM_HEIGHT
-    }
+    // if (
+    //   this.props.device.height - ConstToolType.NEWTHEME_HEIGHT[2] <
+    //   keyboardHeight
+    // ) {
+    //   keyboardHeight -= Const.BOTTOM_HEIGHT
+    // }
     // Toolbar的显示和隐藏
-    if (
-      this.isShow !== isShow ||
-      type === ConstToolType.MAP_TOOL_TAGGING_SETTING
-    ) {
+    if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
           toValue: isShow
-            ? 0 + keyboardHeight
+            ? 0
             : -(this.props.device.height >= this.props.device.width
               ? this.props.device.height
               : this.props.device.width),
@@ -3671,7 +3638,9 @@ export default class ToolBar extends React.PureComponent {
           ))
       }.bind(this)())
       // this.taggingback()
-      this.close()
+      this.setVisible(false, this.state.type, {
+        height: 0,
+      })
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -6203,6 +6172,14 @@ export default class ToolBar extends React.PureComponent {
     //         : { height: screen.deviceWidth }
     //   }
     // }
+    let keyboardVerticalOffset
+    if (Platform.OS === 'android') {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+    } else {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+    }
     return (
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
@@ -6229,19 +6206,24 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View
-          style={[
-            styles.containers,
-            !(
-              this.state.isFullScreen &&
-              !this.state.isTouchProgress &&
-              !this.state.showMenuDialog
-            ) && styles.containers_border,
-          ]}
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          behavior={'position'}
         >
-          {this.renderView()}
-          {this.renderBottomBtns()}
-        </View>
+          <View
+            style={[
+              styles.containers,
+              !(
+                this.state.isFullScreen &&
+                !this.state.isTouchProgress &&
+                !this.state.showMenuDialog
+              ) && styles.containers_border,
+            ]}
+          >
+            {this.renderView()}
+            {this.renderBottomBtns()}
+          </View>
+        </KeyboardAvoidingView>
       </Animated.View>
     )
   }
