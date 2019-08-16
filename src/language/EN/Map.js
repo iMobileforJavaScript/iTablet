@@ -269,6 +269,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
   MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: 'HighPrecision Collection',
+  MAP_AR_AI_ASSISTANT_CLASSIFY: 'AI Classify',
 }
 
 //推演动画

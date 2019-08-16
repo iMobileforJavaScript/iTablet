@@ -98,6 +98,7 @@ import {
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
 import MeasureView from './arMeasure'
+import ClassifyView from './aiClassifyView'
 
 const AppNavigator = createStackNavigator(
   {
@@ -592,6 +593,13 @@ const AppNavigator = createStackNavigator(
     },
     MeasureView: {
       screen: MeasureView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ClassifyView: {
+      screen: ClassifyView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
