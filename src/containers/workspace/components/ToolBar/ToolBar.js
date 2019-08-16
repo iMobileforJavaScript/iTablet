@@ -78,6 +78,7 @@ import {
   SMCollectorType,
   SCartography,
   SMediaCollector,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -3581,12 +3582,31 @@ export default class ToolBar extends React.PureComponent {
       }
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
       (async function() {
-        let isTaggingLayer = await SMap.isTaggingLayer(
-          this.props.user.currentUser.userName,
-        )
-        if (isTaggingLayer) {
+        let currentLayer = this.props.currentLayer
+        let reg = /^Label_(.*)#$/
+        let isTaggingLayer = false,
+          isPointLayer = false,
+          isLineLayer = false,
+          isRegionLayer = false,
+          isTextLayer = false
+        if (currentLayer) {
+          isTaggingLayer =
+            currentLayer.type === DatasetType.CAD &&
+            currentLayer.datasourceAlias.match(reg)
+          isPointLayer = currentLayer.type === DatasetType.POINT
+          isLineLayer = currentLayer.type === DatasetType.LINE
+          isRegionLayer = currentLayer.type === DatasetType.REGION
+          isTextLayer = currentLayer.type === DatasetType.TEXT
+        }
+        if (
+          isTaggingLayer ||
+          isPointLayer ||
+          isLineLayer ||
+          isRegionLayer ||
+          isTextLayer
+        ) {
           SMap.setTaggingGrid(
-            GLOBAL.TaggingDatasetName,
+            currentLayer.datasetName,
             this.props.user.currentUser.userName,
           )
           SMap.submit()
@@ -3611,27 +3631,32 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      let datasourceName = GLOBAL.currentLayer.datasourceAlias
+      let datasetName = GLOBAL.currentLayer.datasetName
       let name = this.tools_name || ''
       let remark = this.tools_remarks || ''
       let address = this.tools_http || ''
       ;(async function() {
         name !== '' &&
           (await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
+            datasourceName,
+            datasetName,
             'name',
             name,
             this.props.user.currentUser.userName,
           ))
         remark !== '' &&
           (await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
+            datasourceName,
+            datasetName,
             'remark',
             remark,
             this.props.user.currentUser.userName,
           ))
         address !== '' &&
           (await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
+            datasourceName,
+            datasetName,
             'address',
             address,
             this.props.user.currentUser.userName,

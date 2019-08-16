@@ -447,7 +447,7 @@ export default class MT_layerManager extends React.Component {
 
   taggingTool = async ({ data, index }) => {
     this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-      height: ConstToolType.TOOLBAR_HEIGHT[1],
+      height: ConstToolType.TOOLBAR_HEIGHT[0],
       layerData: data,
       index: index,
     })

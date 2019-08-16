@@ -405,10 +405,10 @@ function taggingData(type) {
     {
       title: '',
       data: [
-        {
-          title: getLanguage(type).Map_Layer.PLOTS_SET_AS_CURRENT,
-          image: require('../../../../assets/function/icon_function_Tagging.png'),
-        },
+        // {
+        //   title: getLanguage(type).Map_Layer.PLOTS_SET_AS_CURRENT,
+        //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+        // },
         {
           title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
           image: getPublicAssets().mapTools.tools_set_current_layer,
