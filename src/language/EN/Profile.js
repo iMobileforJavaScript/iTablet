@@ -45,6 +45,9 @@ const Profile = {
   IMPORT_DATA: 'Import Data',
   UPLOAD_DATA: 'Upload Data',
   DELETE_DATA: 'Delete Data',
+  OPEN_DATA: 'Open Data',
+  NEW_DATASET: 'Create Dataset',
+  DELETE_DATASET: 'Delete Dataset',
   UPLOAD_MAP: 'Upload Map',
   EXPORT_MAP: 'Export Map',
   DELETE_MAP: 'Delete Map',
@@ -108,5 +111,25 @@ const Profile = {
   MAP_2D: '2D Map',
   MAP_3D: '3D Map',
   BROWSE_MAP: 'Browse',
+
+  //创建数据集
+  PLEASE_ADD_DATASET: 'Please add dataset',
+  ADD_DATASET: 'Add Dataset',
+  ENTER_DATASET_NAME: 'Please enter dataset name',
+  SELECT_DATASET_TYPE: 'Please select dataset type',
+  DATASET_NAME: 'Dataset Name',
+  DATASET_TYPE: 'Dataset type',
+  DATASET_TYPE_POINT: 'point',
+  DATASET_TYPE_LINE: 'line',
+  DATASET_TYPE_REGION: 'region',
+  DATASET_TYPE_TEXT: 'text',
+  CLEAR: 'Clear',
+  CREATE: 'Create',
+
+  //创建数据源
+  NEW_DATASOURCE: 'Create Datasource',
+  SET_DATASOURCE_NAME: 'Set Datasource Name',
+  ENTER_DATASOURCE_NAME: 'Please enter datasource name',
+  OPEN_DATASROUCE_FAILED: 'Failed to open datasource',
 }
 export { Profile }

@@ -263,17 +263,20 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_POINT:
       height = ConstToolType.HEIGHT[0]
+      column = orientation === 'PORTRAIT' ? 4 : 5
       break
     case ConstToolType.MAP_EDIT_LINE:
+    case ConstToolType.MAP_EDIT_REGION:
+      height = ConstToolType.HEIGHT[2]
+      column = orientation === 'PORTRAIT' ? 4 : 5
+      break
     case ConstToolType.MAP3D_TOOL_FLYLIST:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.HEIGHT[3]
       } else {
         height = ConstToolType.HEIGHT[2]
       }
-      break
-    case ConstToolType.MAP_EDIT_REGION:
-      height = ConstToolType.HEIGHT[2]
+      column = orientation === 'PORTRAIT' ? 4 : 5
       break
     case ConstToolType.MAP_SHARE:
     case ConstToolType.MAP_MORE:
@@ -344,6 +347,19 @@ function getToorbarHeight(orientation, type) {
       }
       column = 4
       break
+    case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+      if (orientation === 'LANDSCAPE') {
+        height = ConstToolType.NEWTHEME_HEIGHT[2]
+      } else {
+        height = ConstToolType.NEWTHEME_HEIGHT[3]
+      }
+      break
+    case ConstToolType.PLOT_ANIMATION_START:
+      height = ConstToolType.HEIGHT[4]
+      break
+    // case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
+    //   height = ConstToolType.HEIGHT[2]
+    //   break
     default:
       height = 0
   }

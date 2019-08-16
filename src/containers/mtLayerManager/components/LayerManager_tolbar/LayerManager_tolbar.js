@@ -112,7 +112,52 @@ export default class LayerManager_tolbar extends React.Component {
     }
     return false
   }
-
+  componentDidUpdate() {
+    this.getHeight()
+  }
+  getHeight = () => {
+    let device = this.props.device
+    let boxHeight
+    if (this.state.isGroup) {
+      boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
+    } else {
+      switch (this.state.type) {
+        case ConstToolType.MAP_STYLE:
+          if (device.orientation === 'LANDSCAPE') {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[3]
+          } else {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[6]
+          }
+          break
+        case ConstToolType.PLOTTING:
+          if (device.orientation === 'LANDSCAPE') {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
+          } else {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[4]
+          }
+          break
+        case ConstToolType.COLLECTION:
+          if (device.orientation === 'LANDSCAPE') {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
+          } else {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[5]
+          }
+          break
+        case ConstToolType.MAP_MAX_SCALE:
+        case ConstToolType.MAP_MIN_SCALE:
+          if (device.orientation === 'LANDSCAPE') {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[3]
+          } else {
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[5]
+          }
+          break
+        default:
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
+          break
+      }
+    }
+    this.height = boxHeight
+  }
   getData = (type, isGroup = false) => {
     let data = []
     let headerData = layerSettingCanVisit(this.props.language).concat(
@@ -283,13 +328,13 @@ export default class LayerManager_tolbar extends React.Component {
         ? params.height
         : ConstToolType.HEIGHT[1]
     let newState = {}
+    let isGroup = false
     if (isShow) {
-      let data = this.getData(
-        type,
+      isGroup =
         params.layerData &&
-          params.layerData.type &&
-          params.layerData.type === 'layerGroup',
-      )
+        params.layerData.type &&
+        params.layerData.type === 'layerGroup'
+      let data = this.getData(type, isGroup)
       newState = this.updateMenuState(data, params.layerData)
     }
     if (isShow) {
@@ -299,6 +344,7 @@ export default class LayerManager_tolbar extends React.Component {
       {
         type: type,
         index: params.index,
+        isGroup,
         ...newState,
       },
       () => {

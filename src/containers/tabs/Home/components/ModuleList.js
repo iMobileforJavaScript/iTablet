@@ -149,7 +149,8 @@ class ModuleList extends Component {
     } else if (moduleKey === constants.COLLECTION) {
       fileName = '地理国情普查_示范数据'
     } else if (moduleKey === constants.MAP_ANALYST) {
-      fileName = 'Xiamen_CN'
+      // fileName = 'Xiamen_CN'
+      fileName = '数据分析数据'
     } else if (moduleKey === constants.MAP_3D) {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
@@ -177,13 +178,6 @@ class ModuleList extends Component {
 
   itemAction = async (language, { item, index }) => {
     try {
-      let moduleKey = item.key
-      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === constants.MAP_AR) {
-        item.action && item.action(this.props.currentUser)
-        return
-      }
-
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
@@ -197,6 +191,11 @@ class ModuleList extends Component {
         this.props.latestMap[currentUserName][module].length > 0
       ) {
         latestMap = this.props.latestMap[currentUserName][module][0]
+      }
+
+      if (item.key === constants.MAP_AR) {
+        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        return
       }
 
       let downloadData = this.getDownloadData(language, item)
@@ -313,10 +312,18 @@ class ModuleList extends Component {
   render() {
     let data = ConstModule(this.props.language)
     let height = (scaleSize(300) * data.length) / 2
-    let contentH = screen.deviceHeight - scaleSize(88) - scaleSize(96)
+    let dOffset = 20
+    if (Platform.OS === 'android') {
+      dOffset = 40
+    }
+    let contentH =
+      screen.getScreenHeight() -
+      scaleSize(88) -
+      scaleSize(96) -
+      scaleSize(dOffset)
     let scrollEnabled = false
     if (height >= contentH) {
-      height = contentH - scaleSize(20)
+      height = contentH
       scrollEnabled = true
     }
     return (

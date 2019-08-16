@@ -1,13 +1,16 @@
 import Toast from 'react-native-root-toast'
 
 function show(msg, option = null) {
-  let op = option || {
-    duration: DURATION.TOAST_SHOT,
-    position: POSITION.TOP,
-    shadow: true,
-    animation: true,
-    delay: 0,
-  }
+  let op = Object.assign(
+    {
+      duration: DURATION.TOAST_SHOT,
+      position: POSITION.TOP,
+      shadow: true,
+      animation: true,
+      delay: 0,
+    },
+    option,
+  )
   Toast.show(msg, op)
 }
 

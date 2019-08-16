@@ -42,25 +42,28 @@ function getMapTool(type, params) {
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
               //'名称',
-              action: name,
+              value: '',
+              //action: name,
             },
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
               //'备注',
-              action: remark,
+              value: '',
+              //action: remark,
             },
             // { title: '风格', action: remark },
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
               //'http地址',
-              action: address,
+              value: '',
+              //action: address,
             },
             // { title: '图片', action: address },
           ],
         },
       ]
       buttons = [
-        // ToolbarBtnType.TAGGING_BACK,
+        ToolbarBtnType.CANCEL,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.COMMIT,
@@ -261,7 +264,7 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOUR,
           action: tour,
           size: 'large',
-          image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
+          image: getPublicAssets().mapTools.tour,
         },
         // {
         //   key: 'captureVideo',
@@ -730,62 +733,62 @@ async function freecover() {
   }
 }
 
-function name() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'name',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function name() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'name',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
-function remark() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'remark',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
-
-function address() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'address',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function remark() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'remark',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
+//
+// function address() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'address',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
 //多媒体采集
 function captureImage() {

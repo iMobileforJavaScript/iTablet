@@ -8,6 +8,8 @@ import analyst from './analyst'
 import layer3dType from './layer3dType'
 import layerType from './layerType'
 import ar from './ar'
+import plot from './plot'
+import functionBar from './function'
 export default {
   publicAssets,
   tabBar,
@@ -19,4 +21,6 @@ export default {
   layer3dType,
   layerType,
   ar,
+  plot,
+  functionBar,
 }

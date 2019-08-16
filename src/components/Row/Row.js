@@ -16,6 +16,7 @@ export default class Row extends PureComponent {
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
+    customRightStyle?: StyleSheet,
     title: string,
     defaultValue?: any,
     customRgihtView?: any,
@@ -84,7 +85,7 @@ export default class Row extends PureComponent {
             keyboardType={
               this.props.inputType === 'numeric' ? 'numeric' : 'default'
             }
-            style={styles.input}
+            style={[styles.input, this.props.customRightStyle]}
             accessible={true}
             value={this.state.value + ''}
             defaultValue={this.props.defaultValue + ''}

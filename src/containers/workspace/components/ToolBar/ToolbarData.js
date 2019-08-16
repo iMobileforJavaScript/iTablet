@@ -72,8 +72,15 @@ function getTabBarData(type, params = {}) {
     tabBarData = ThemeMenuData.getThemeMapStartCreate(type, params)
   } else if (type === ConstToolType.MAP_ANALYSIS) {
     tabBarData = AnalysisData.getAnalysisData()
+  } else if (
+    type === ConstToolType.PLOT_ANIMATION_START ||
+    type === ConstToolType.PLOT_ANIMATION_NODE_CREATE ||
+    type === ConstToolType.PLOT_ANIMATION_PALY
+    // ||type === ConstToolType.PLOT_ANIMATION_XML_LIST
+  ) {
+    tabBarData = PlotData.getPlotOperationData(type, params)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
-    tabBarData = AiAssistant.getAiAssistantData()
+    tabBarData = AiAssistant.getAiAssistantData(type, params)
   }
   return {
     data: tabBarData.data,

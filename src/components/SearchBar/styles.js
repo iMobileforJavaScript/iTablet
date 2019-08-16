@@ -4,7 +4,7 @@ import { scaleSize } from '../../utils'
 
 export default StyleSheet.create({
   container: {
-    marginHorizontal: scaleSize(120),
+    marginHorizontal: scaleSize(60),
     height: scaleSize(44),
     backgroundColor: color.bgW,
     borderRadius: scaleSize(22),

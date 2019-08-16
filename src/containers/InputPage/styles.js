@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   headerBtnTitle: {
     color: 'white',
-    width: scaleSize(100),
+    width: scaleSize(150),
     textAlign: 'right',
     fontSize: size.fontSize.fontSizeXXl,
   },

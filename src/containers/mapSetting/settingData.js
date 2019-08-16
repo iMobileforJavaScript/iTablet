@@ -143,6 +143,7 @@ const getlegendSetting = () => [
     title: getLanguage(global.language).Map_Settings.LEGEND_SETTING,
   },
 ]
+
 const getnavigationSetting = () => [
   {
     title: getLanguage(global.language).Map_Settings.ENCLOSURE_NAME,
@@ -159,6 +160,191 @@ const getnavigationSetting = () => [
   {
     title: getLanguage(global.language).Map_Settings.DRAWING_RANGE,
   },
+]
+
+// 视频地图设置
+const getMapARSettings = () => [
+  {
+    title: getLanguage(global.language).Map_Settings.POI_SETTING,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.DETECT_STYLE,
+  },
+]
+// POI设置
+const getPOISettings = () => [
+  {
+    title: getLanguage(global.language).Map_Settings
+      .POI_SETTING_PROJECTION_MODE,
+    value: true,
+    iconType: 'switch',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.POI_SETTING_OVERLAP_MODE,
+    value: false,
+    iconType: 'switch',
+  },
+]
+// 识别类型设置
+const getDetectTypesSettings = () => [
+  {
+    key: '人员',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_PERSON,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '自行车',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_BICYCLE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '车辆',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_CAR,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '摩托车',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_MOTORCYCLE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '公交车',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_BUS,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '卡车',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_TRUCK,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '交通信号灯',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_TRAFFICLIGHT,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '消防栓',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_FIREHYDRANT,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '杯子',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_CUP,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '椅子',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_CHAIR,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '鸟',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_BIRD,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '猫',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_CAT,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '狗',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_DOG,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '盆栽植物',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_POTTEDPLANT,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '显示器',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_TV,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '笔记本电脑',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_LAPTOP,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '鼠标',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_MOUSE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '键盘',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_KEYBOARD,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '手机',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_CELLPHONE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '书',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_BOOK,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    key: '瓶子',
+    title: getLanguage(global.language).Map_Settings.DETECT_TYPE_BOTTLE,
+    value: false,
+    iconType: 'switch',
+  },
+]
+// 识别框风格设置
+const getDetectStyleSettings = () => [
+  {
+    title: getLanguage(global.language).Map_Settings.DETECT_STYLE_IS_DRAW_TITLE,
+    value: false,
+    iconType: 'switch',
+  },
+  {
+    title: getLanguage(global.language).Map_Settings
+      .DETECT_STYLE_IS_DRAW_CONFIDENCE,
+    value: false,
+    iconType: 'switch',
+  },
+  // {
+  //   title: getLanguage(global.language).Map_Settings.DETECT_STYLE_IS_SAME_COLOR,
+  //   value: false,
+  //   iconType: 'switch',
+  // },
+  // {
+  //   title: getLanguage(global.language).Map_Settings.DETECT_STYLE_SAME_COLOR,
+  //   value: '',
+  //   iconType: 'arrow',
+  // },
+  // {
+  //   title: getLanguage(global.language).Map_Settings.DETECT_STYLE_STROKE_WIDTH,
+  //   value: '2mm',
+  //   iconType: 'arrow',
+  // },
 ]
 /*
  * 二级 三级地图菜单 设置
@@ -630,4 +816,8 @@ export {
   fourRanges,
   transferData,
   getnavigationSetting,
+  getMapARSettings,
+  getPOISettings,
+  getDetectTypesSettings,
+  getDetectStyleSettings,
 }

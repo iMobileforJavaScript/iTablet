@@ -9,7 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { Container } from '../../../../components'
-import { SOnlineService, SScene } from 'imobile_for_reactnative'
+import {
+  SOnlineService,
+  SScene,
+  SIPortalService,
+} from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -27,7 +31,8 @@ import {
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 
-import { scaleSize, FetchUtils } from '../../../../utils'
+import { scaleSize, FetchUtils, OnlineServicesUtils } from '../../../../utils'
+let JSIPortalService
 
 export default class MyLocalData extends Component {
   props: {
@@ -57,13 +62,20 @@ export default class MyLocalData extends Component {
     this.currentPage = 1
     this.deleteDataing = false
     this.itemInfo = {}
+    JSIPortalService = new OnlineServicesUtils('iportal')
   }
   componentDidMount() {
     this._setSectionDataState3()
     if (Platform.OS === 'android') {
-      SOnlineService.getAndroidSessionID().then(cookie => {
-        this.cookie = cookie
-      })
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        SOnlineService.getAndroidSessionID().then(cookie => {
+          this.cookie = cookie
+        })
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        SIPortalService.getIPortalCookie().then(cookie => {
+          this.cookie = cookie
+        })
+      }
     }
   }
 
@@ -108,6 +120,7 @@ export default class MyLocalData extends Component {
       }
       this.currentPage = 1
       let onlineData = await getOnlineData(
+        this.props.user.currentUser,
         this.currentPage,
         this.pageSize,
         result => {
@@ -209,6 +222,7 @@ export default class MyLocalData extends Component {
       }
       return (
         <OnlineDataItem
+          user={this.props.user}
           item={info.item}
           itemOnPress={this.onlineItemOnPress}
           down={this.props.down}
@@ -364,7 +378,7 @@ export default class MyLocalData extends Component {
       downFileAction(
         this.props.down,
         this.itemInfo,
-        this.props.user.currentUser.userName,
+        this.props.user.currentUser,
         this.cookie,
         this.props.updateDownList,
         this.props.importWorkspace,
@@ -398,7 +412,12 @@ export default class MyLocalData extends Component {
     })
     try {
       let dataId = this.itemInfo.id + ''
-      let result = await SOnlineService.publishServiceWithDataId(dataId)
+      let result
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        result = await SOnlineService.publishServiceWithDataId(dataId)
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        result = await JSIPortalService.publishService(dataId)
+      }
       if (typeof result === 'boolean' && result) {
         let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
         let oldOnline = sectionData[sectionData.length - 1]
@@ -487,7 +506,12 @@ export default class MyLocalData extends Component {
     try {
       let objContent = this.itemInfo
       let dataId = objContent.id + ''
-      let result = await SOnlineService.deleteDataWithDataId(dataId)
+      let result
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        result = await SOnlineService.deleteDataWithDataId(dataId)
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        result = await SIPortalService.deleteMyData(dataId)
+      }
       if (typeof result === 'boolean' && result) {
         let sectionData = JSON.parse(JSON.stringify(this.state.sectionData)) // [...this.state.sectionData]
         let oldOnline = sectionData[sectionData.length - 1]
@@ -531,10 +555,18 @@ export default class MyLocalData extends Component {
           break
         }
       }
-      let result = await SOnlineService.changeDataVisibilityWithDataId(
-        this.itemInfo.id,
-        !isPublish,
-      )
+      let result
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        result = await SOnlineService.changeDataVisibilityWithDataId(
+          this.itemInfo.id,
+          !isPublish,
+        )
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        result = await JSIPortalService.setDatasShareConfig(
+          this.itemInfo.id,
+          !isPublish,
+        )
+      }
       if (typeof result === 'boolean' && result) {
         if (isPublish) {
           authorizeSetting.splice(splice, 1)
@@ -611,7 +643,11 @@ export default class MyLocalData extends Component {
       let oldData = oldOnlineData.data
       sectionData.splice(sectionData.length - 1, 1)
       this.currentPage = this.currentPage + 1
-      let data = await getOnlineData(this.currentPage, 10)
+      let data = await getOnlineData(
+        this.props.user.currentUser,
+        this.currentPage,
+        10,
+      )
       if (data.length > 0) {
         let newData = oldData.concat(data)
         let online = {

@@ -16,13 +16,14 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import styles from './Styles'
 import { color, size } from '../../../../styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import { UserType } from '../../../../constants'
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -107,7 +108,12 @@ export default class MyService extends Component {
     try {
       let arrPublishServiceList = []
       let arrPrivateServiceList = []
-      let strServiceList = await SOnlineService.getServiceList(1, pageSize)
+      let strServiceList
+      if (UserType.isOnlineUser(this.props.user.currentUser)) {
+        strServiceList = await SOnlineService.getServiceList(1, pageSize)
+      } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+        strServiceList = await SIPortalService.getMyServices(1, pageSize)
+      }
       if (typeof strServiceList === 'string') {
         let objServiceList = JSON.parse(strServiceList)
         this.serviceListTotal = objServiceList.total
@@ -115,7 +121,17 @@ export default class MyService extends Component {
         /** 构造SectionsData数据*/
         for (let page = 1; page <= currentPage; page++) {
           if (page > 1) {
-            strServiceList = await SOnlineService.getServiceList(page, pageSize)
+            if (UserType.isOnlineUser(this.props.user.currentUser)) {
+              strServiceList = await SOnlineService.getServiceList(
+                page,
+                pageSize,
+              )
+            } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+              strServiceList = await SIPortalService.getMyServices(
+                page,
+                pageSize,
+              )
+            }
             objServiceList = JSON.parse(strServiceList)
           }
 
@@ -294,6 +310,7 @@ export default class MyService extends Component {
     if (this.state.modalIsVisible) {
       return (
         <PopupModal
+          user={this.props.user}
           onRefresh={this._onModalRefresh2}
           onCloseModal={this._onCloseModal}
           modalVisible={this.state.modalIsVisible}

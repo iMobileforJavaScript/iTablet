@@ -8,6 +8,7 @@ import { getLanguage } from '../../../../language'
 export default class ModalBtns extends Component {
   props: {
     actionOfOnline: () => {},
+    actionOfIPortal: () => {},
     cancel: () => {},
     actionOfWechat: () => {},
     actionOfFriend: () => {},
@@ -45,6 +46,18 @@ export default class ModalBtns extends Component {
               }}
             />
           )}
+          {this.props.actionOfIPortal && (
+            <MTBtn
+              key={'iportal'}
+              title={'iPortal'}
+              style={styles.button}
+              image={require('../../../../assets/mapTools/icon_share_online_black.png')}
+              imageStyle={styles.headerBtn}
+              onPress={() => {
+                this.props.actionOfIPortal && this.props.actionOfIPortal()
+              }}
+            />
+          )}
           {this.props.actionOfWechat && (
             <MTBtn
               key={'wechat'}
@@ -69,7 +82,9 @@ export default class ModalBtns extends Component {
               }}
             />
           )}
-          {!this.props.actionOfOnline && <View style={styles.button} />}
+          {!this.props.actionOfOnline && !this.props.actionOfIPortal && (
+            <View style={styles.button} />
+          )}
           {!this.props.actionOfWechat && <View style={styles.button} />}
           {!this.props.actionOfFriend && <View style={styles.button} />}
           {this.showCancel && (

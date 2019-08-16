@@ -4,24 +4,23 @@ import {
 } from 'imobile_for_reactnative'
 import { Analyst_Types } from '../containers/analystView/AnalystType'
 import { getLanguage } from '../language'
-import { Toast } from '../utils'
 
 async function analyst(type) {
   let result
   switch (type) {
     case Analyst_Types.OPTIMAL_PATH:
-      result = await STransportationAnalyst.findPath({
+      result = STransportationAnalyst.findPath({
         weightName: 'length',
       })
       break
     case Analyst_Types.CONNECTIVITY_ANALYSIS:
-      result = await STransportationAnalyst.findPath({
+      result = STransportationAnalyst.findPath({
         weightName: 'length',
       })
       // result = await SFacilityAnalyst.findPathFromNodes()
       break
     case Analyst_Types.FIND_TSP_PATH:
-      result = await STransportationAnalyst.findTSPPath({
+      result = STransportationAnalyst.findTSPPath({
         weightName: 'length',
       })
       break
@@ -65,7 +64,22 @@ function showMsg(type, isSuccess, language = 'CN') {
         getLanguage(language).Analyst_Prompt.NOT_FIND_SUITABLE_PATH
       break
   }
-  msg && Toast.show(msg)
+  // msg &&
+  //   Toast.show(msg, {
+  //     duration: Toast.DURATION.TOAST_LONG,
+  //   })
+  msg &&
+    GLOBAL.bubblePane &&
+    GLOBAL.bubblePane.addBubble(
+      {
+        title: msg,
+        type: isSuccess ? 'success' : 'error',
+      },
+      !isSuccess && {
+        top: 120,
+        right: 20,
+      },
+    )
 }
 
 export default {

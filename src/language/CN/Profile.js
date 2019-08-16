@@ -77,6 +77,9 @@ const Profile = {
   IMPORT_DATA: '导入数据',
   UPLOAD_DATA: '分享数据',
   DELETE_DATA: '删除数据',
+  OPEN_DATA: '打开数据',
+  NEW_DATASET: '新建数据集',
+  DELETE_DATASET: '删除数据集',
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   DELETE_MAP: '删除地图',
@@ -111,6 +114,26 @@ const Profile = {
   MAP_2D: '二维地图',
   MAP_3D: '三维场景',
   BROWSE_MAP: '浏览地图',
+
+  //创建数据集
+  PLEASE_ADD_DATASET: '请添加数据集',
+  ADD_DATASET: '添加数据集',
+  ENTER_DATASET_NAME: '请填写数据集名称',
+  SELECT_DATASET_TYPE: '请选择数据集类型',
+  DATASET_NAME: '数据集名称',
+  DATASET_TYPE: '数据集类型',
+  DATASET_TYPE_POINT: '点',
+  DATASET_TYPE_LINE: '线',
+  DATASET_TYPE_REGION: '面',
+  DATASET_TYPE_TEXT: '文本',
+  CLEAR: '清空',
+  CREATE: '创建',
+
+  //创建数据源
+  NEW_DATASOURCE: '新建数据源',
+  SET_DATASOURCE_NAME: '设置数据源名称',
+  ENTER_DATASOURCE_NAME: '请输入数据源名称',
+  OPEN_DATASROUCE_FAILED: '打开数据源失败',
 }
 
 export { Profile }

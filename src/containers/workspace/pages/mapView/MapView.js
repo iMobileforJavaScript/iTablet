@@ -26,6 +26,7 @@ import {
   OverlayView,
   AnalystMapButtons,
   AnalystMapToolbar,
+  PoiInfoContainer,
 } from '../../components'
 import {
   Container,
@@ -38,6 +39,7 @@ import {
   SurfaceView,
   // SearchBar,
   Progress,
+  BubblePane,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
 import { color } from '../../../../styles'
@@ -72,7 +74,7 @@ import { Analyst_Types } from '../../../analystView/AnalystType'
 import Map2Dto3D from '../../components/Map2Dto3D/Map2Dto3D'
 import FloorListView from '../../components/FloorListView'
 
-const markerTag = 117868
+const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
 export default class MapView extends React.Component {
@@ -180,6 +182,7 @@ export default class MapView extends React.Component {
       canBeRedo: false,
       showAIDetect: GLOBAL.Type === constants.MAP_AR,
       showRoadView: true,
+      showArModeIcon: true,
     }
     this.closeInfo = [
       {
@@ -535,7 +538,6 @@ export default class MapView extends React.Component {
             case DatasetType.POINT:
               type = ConstToolType.MAP_EDIT_POINT
               height = ConstToolType.HEIGHT[0]
-              column = 5
               break
             case DatasetType.LINE:
               type = ConstToolType.MAP_EDIT_LINE
@@ -562,6 +564,16 @@ export default class MapView extends React.Component {
                 SMap.appointEditGeometry(event.id, event.layerInfo.path),
             })
         }
+        break
+      }
+      case ConstToolType.PLOT_ANIMATION_START: {
+        let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+        this.toolBox.setVisible(true, type, {
+          isFullScreen: true,
+          height: ConstToolType.TOOLBAR_HEIGHT[5],
+          containerType: 'createPlotAnimation',
+          cb: () => {},
+        })
         break
       }
       default:
@@ -1113,6 +1125,7 @@ export default class MapView extends React.Component {
             path: plotIconPath,
             isFirst: true,
           })
+          GLOBAL.newPlotMapName = ''
         }
 
         // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
@@ -1464,6 +1477,7 @@ export default class MapView extends React.Component {
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
     GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    this.setState({ showArModeIcon: full })
     this.fullMap = !full
   }
 
@@ -1798,7 +1812,7 @@ export default class MapView extends React.Component {
   }
   _renderArModeIcon = () => {
     return (
-      <View style={styles.btnView}>
+      <View style={styles.btnView} ref={ref => (GLOBAL.ArModeIcon = ref)}>
         <MTBtn
           style={styles.iconAr}
           size={MTBtn.Size.NORMAL}
@@ -1961,6 +1975,7 @@ export default class MapView extends React.Component {
           this.renderMeasureLabel()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_AR &&
+          this.state.showArModeIcon &&
           this._renderArModeIcon()}
         {this.props.mapScaleView &&
           !this.state.showAIDetect &&
@@ -1971,6 +1986,7 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
+        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} />
         <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
         </PopView>
@@ -2008,6 +2024,7 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
+        <PoiInfoContainer ref={ref => (GLOBAL.PoiInfoContainer = ref)} />
       </Container>
     )
   }

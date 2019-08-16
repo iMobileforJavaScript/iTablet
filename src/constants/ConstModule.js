@@ -42,96 +42,8 @@ function getHeaderTitle(type) {
 
 export { MAP_MODULE, getHeaderTitle }
 
-let arModule = null
-let navigationModule = null
-
 function SetMap(param) {
-  if (Platform.OS === 'android') {
-    arModule = {
-      key: constants.MAP_AR,
-      title: getLanguage(param).Map_Module.MAP_AR,
-      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
-      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async user => {
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_AR
-
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
-        let wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_AR,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_AR,
-          isExample: false,
-        })
-      },
-    }
-
-    navigationModule = {
-      key: constants.MAP_NAVIGATION,
-      title: getLanguage(param).Map_Module.MAP_NAVIGATION,
-      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
-      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async user => {
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_NAVIGATION
-
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
-        let wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_NAVIGATION,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_NAVIGATION,
-          isExample: false,
-        })
-      },
-    }
-  }
-  return [
+  let moduleDatas = [
     {
       key: constants.MAP_EDIT,
       title: getLanguage(param).Map_Module.MAP_EDIT,
@@ -446,7 +358,8 @@ function SetMap(param) {
             ...lastMap,
           }
         } else {
-          let moduleMapName = '福建'
+          // let moduleMapName = '福建'
+          let moduleMapName = 'TourLine'
           let moduleMapFullName = moduleMapName + '.xml'
           // 地图用相对路径
           let moduleMapPath =
@@ -519,9 +432,113 @@ function SetMap(param) {
         })
       },
     },
-    arModule,
-    navigationModule,
+    {
+      key: constants.MAP_AR,
+      title: getLanguage(param).Map_Module.MAP_AR,
+      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
+      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+      style: {
+        width: scaleSize(70),
+        height: scaleSize(67),
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+      },
+      action: async (user, lastMap) => {
+        let data = ConstOnline['Google']
+        data.layerIndex = 1
+        GLOBAL.Type = constants.MAP_AR
+        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+        GLOBAL.showMenu = true
+        // GLOBAL.showFlex = true
+        let homePath = await FileTools.appendingHomeDirectory()
+        let userPath = ConstPath.CustomerPath
+        if (user && user.userName) {
+          userPath = ConstPath.UserPath + user.userName + '/'
+        }
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let wsData,
+          isOpenLastMap = false
+
+        if (lastMap) {
+          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+            lastMap.path,
+          )
+        }
+
+        if (isOpenLastMap) {
+          data = {
+            type: 'Map',
+            ...lastMap,
+          }
+        }
+
+        wsData = [
+          {
+            DSParams: { server: wsPath },
+            type: 'Workspace',
+          },
+          data,
+        ]
+
+        NavigationService.navigate('MapView', {
+          operationType: constants.MAP_AR,
+          wsData,
+          mapName: getLanguage(param).Map_Module.MAP_AR,
+          isExample: false,
+        })
+      },
+    },
+    {
+      key: constants.MAP_NAVIGATION,
+      title: getLanguage(param).Map_Module.MAP_NAVIGATION,
+      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
+      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+      style: {
+        width: scaleSize(70),
+        height: scaleSize(67),
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+      },
+      action: async user => {
+        let data = Object.assign({}, ConstOnline['Google'])
+        data.layerIndex = 1
+        GLOBAL.Type = constants.MAP_NAVIGATION
+
+        let homePath = await FileTools.appendingHomeDirectory()
+        let userPath = ConstPath.CustomerPath
+        if (user && user.userName) {
+          userPath = ConstPath.UserPath + user.userName + '/'
+        }
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let wsData = [
+          {
+            DSParams: { server: wsPath },
+            // layerIndex: 0,
+            type: 'Workspace',
+          },
+          data,
+        ]
+        NavigationService.navigate('MapView', {
+          operationType: constants.MAP_NAVIGATION,
+          wsData,
+          mapName: getLanguage(param).Map_Module.MAP_NAVIGATION,
+          isExample: false,
+        })
+      },
+    },
   ]
+
+  if (Platform.OS === 'ios') {
+    moduleDatas.splice(moduleDatas.length - 2, 1)
+  }
+
+  return moduleDatas
 }
 
 export default SetMap

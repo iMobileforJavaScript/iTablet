@@ -1,11 +1,12 @@
 import { getLanguage } from '../../../../language/index'
+import { getPublicAssets } from '../../../../assets'
 
 function getGroupData(type) {
   return [
     {
       title: getLanguage(type).Map_Layer.LAYERS_RENAME,
       //'重命名',
-      image: require('../../../../assets/layerToolbar/layer_rename.png'),
+      image: getPublicAssets().mapTools.tools_layer_rename,
     },
     {
       title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
@@ -29,12 +30,12 @@ function layersetting(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
         //'设置为当前图层',
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
+        image: getPublicAssets().mapTools.tools_set_current_layer,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
         //'可见比例尺范围',
-        image: require('../../../../assets/layerToolbar/layer_range.png'),
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_LAYER_STYLE,
@@ -44,7 +45,7 @@ function layersetting(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
-        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+        image: getPublicAssets().mapTools.tools_layer_rename,
       },
       // {
       //   title: getLanguage(type).Map_Layer.LAYERS_MOVE_UP,
@@ -136,22 +137,22 @@ function layerThemeSetting(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
         //'设置为当前图层',
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
+        image: getPublicAssets().mapTools.tools_set_current_layer,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
         //'可见比例尺范围',
-        image: require('../../../../assets/layerToolbar/layer_range.png'),
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_CREATE_THEMATIC_MAP,
         //'新建专题图',
-        image: require('../../../../assets/layerToolbar/theme_new.png'),
+        image: getPublicAssets().mapTools.tools_new_thematic_map,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
-        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+        image: getPublicAssets().mapTools.tools_layer_rename,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SHARE,
@@ -186,22 +187,22 @@ function layerThemeSettings(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
         //'设置为当前图层',
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
+        image: getPublicAssets().mapTools.tools_set_current_layer,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
         //'可见比例尺范围',
-        image: require('../../../../assets/layerToolbar/layer_range.png'),
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP,
         //'修改专题图',
-        image: require('../../../../assets/layerToolbar/theme_modify.png'),
+        image: getPublicAssets().mapTools.tools_modify_thematic_map,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
-        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+        image: getPublicAssets().mapTools.tools_layer_rename,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SHARE,
@@ -307,7 +308,7 @@ const layer3dDefault = (type, selected) => {
             global.language === 'CN'
               ? '缩放至当前图层'
               : 'Scale to the current layer',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          image: getPublicAssets().mapTools.tools_visible_scale_range,
           type: 'scaleToLayer',
         },
         data,
@@ -327,7 +328,7 @@ function layere3dImage() {
             global.language === 'CN'
               ? '缩放至当前图层'
               : 'Scale to the current layer',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          image: getPublicAssets().mapTools.tools_visible_scale_range,
           type: 'scaleToLayer',
         },
         {
@@ -361,7 +362,7 @@ function layere3dTerrain() {
             global.language === 'CN'
               ? '缩放至当前图层'
               : 'Scale to the current layer',
-          image: require('../../../../assets/layerToolbar/layer_range.png'),
+          image: getPublicAssets().mapTools.tools_visible_scale_range,
           type: 'scaleToLayer',
         },
         {
@@ -410,11 +411,11 @@ function taggingData(type) {
         },
         {
           title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
-          image: require('../../../../assets/layerToolbar/layer_this.png'),
+          image: getPublicAssets().mapTools.tools_set_current_layer,
         },
         // {
         //   title: getLanguage(type).Map_Layer.PLOTS_DELETE,
-        //   image: require('../../../../assets/layerToolbar/layer_this.png'),
+        //   image: getPublicAssets().mapTools.tools_set_current_layer,
         // },
       ],
     },
@@ -435,17 +436,17 @@ function layerPlottingSetting(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
         //'设置为当前图层',
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
+        image: getPublicAssets().mapTools.tools_set_current_layer,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
         //'可见比例尺范围',
-        image: require('../../../../assets/layerToolbar/layer_range.png'),
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
-        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+        image: getPublicAssets().mapTools.tools_layer_rename,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SHARE,
@@ -475,17 +476,17 @@ function layerCollectionSetting(type, isGroup = false) {
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
         //'设置为当前图层',
-        image: require('../../../../assets/layerToolbar/layer_this.png'),
+        image: getPublicAssets().mapTools.tools_set_current_layer,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
         //'可见比例尺范围',
-        image: require('../../../../assets/layerToolbar/layer_range.png'),
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
-        image: require('../../../../assets/layerToolbar/layer_rename.png'),
+        image: getPublicAssets().mapTools.tools_layer_rename,
       },
       {
         title: getLanguage(type).Map_Layer.LAYERS_SHARE,

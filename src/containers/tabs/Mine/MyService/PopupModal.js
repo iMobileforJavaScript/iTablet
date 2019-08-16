@@ -3,13 +3,15 @@ import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 import Toast from '../../../../utils/Toast'
 
 import { color, size } from '../../../../styles'
-import { SOnlineService } from 'imobile_for_reactnative'
-import { scaleSize } from '../../../../utils'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
+import { scaleSize, OnlineServicesUtils } from '../../../../utils'
 import { getLanguage } from '../../../../language'
+import { UserType } from '../../../../constants'
 const screenWidth = '100%'
-
+var JSIPortalService
 export default class PopupModal extends PureComponent {
   props: {
+    user: Object,
     onRefresh: () => {},
     onCloseModal: () => {},
     isPublish: boolean,
@@ -22,6 +24,7 @@ export default class PopupModal extends PureComponent {
   constructor(props) {
     super(props)
     this.fontSize = size.fontSize.fontSizeXl
+    JSIPortalService = new OnlineServicesUtils('iportal')
   }
 
   _onClose = () => {
@@ -68,10 +71,18 @@ export default class PopupModal extends PureComponent {
         style={{ backgroundColor: color.contentColorWhite }}
         onPress={async () => {
           this._onClose()
-          let result = await SOnlineService.changeServiceVisibilityWithServiceId(
-            this.props.itemId,
-            isPublish,
-          )
+          let result
+          if (UserType.isOnlineUser(this.props.user.currentUser)) {
+            result = await SOnlineService.changeServiceVisibilityWithServiceId(
+              this.props.itemId,
+              isPublish,
+            )
+          } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+            result = await JSIPortalService.setServicesShareConfig(
+              this.props.itemId,
+              isPublish,
+            )
+          }
           if (typeof result === 'boolean' && result) {
             Toast.show(getLanguage(global.language).Prompt.SETTING_SUCCESS)
             //'设置成功')
@@ -106,9 +117,14 @@ export default class PopupModal extends PureComponent {
         onPress={async () => {
           try {
             this._onClose()
-            let result = await SOnlineService.deleteServiceWithServiceId(
-              this.props.itemId,
-            )
+            let result
+            if (UserType.isOnlineUser(this.props.user.currentUser)) {
+              result = await SOnlineService.deleteServiceWithServiceId(
+                this.props.itemId,
+              )
+            } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+              result = await SIPortalService.deleteMyService(this.props.itemId)
+            }
             if (typeof result === 'boolean' && result) {
               this.deleteService = true
               this._onRefresh()

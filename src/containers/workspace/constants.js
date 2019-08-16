@@ -178,4 +178,5 @@ export default {
   FRIEND: '好友',
   DISCOVERY: '发现',
   SAVE_AS_IMAGE: '保存为图片',
+  SUPERMAP_IPORTAL: 'SuperMap iPortal',
 }

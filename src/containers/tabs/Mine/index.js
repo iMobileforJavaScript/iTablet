@@ -3,7 +3,7 @@ import Mine from './Mine'
 import { setUser } from '../../../models/user'
 import { closeWorkspace, openWorkspace } from '../../../models/map'
 import Register from './Register'
-import Login from './Login'
+import { SelectLogin, Login, IPortalLogin } from './Login'
 import Personal from './Personal'
 import ToggleAccount from './ToggleAccount'
 
@@ -15,6 +15,8 @@ import MyData from './MyData'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
 import MyModule from './MyModule'
+import DatasourcePage from './MyData/DatasourcePage'
+import NewDataset from './MyData/NewDataset'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -42,8 +44,12 @@ export {
   ScanOnlineMap,
   Personal,
   ToggleAccount,
+  SelectLogin,
   Login,
+  IPortalLogin,
   MyLabel,
   MyBaseMap,
   MyModule,
+  DatasourcePage,
+  NewDataset,
 }

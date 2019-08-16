@@ -15,7 +15,12 @@ import { ModuleList } from './components'
 import styles from './styles'
 // import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
-import { SScene, SMap, SOnlineService } from 'imobile_for_reactnative'
+import {
+  SScene,
+  SMap,
+  SOnlineService,
+  SIPortalService,
+} from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
 import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
@@ -171,8 +176,10 @@ export default class Home extends Component {
       //this.container.setLoading(true, '注销中...')
     }
     try {
-      if (this.props.currentUser.userType !== UserType.PROBATION_USER) {
+      if (UserType.isOnlineUser(this.props.currentUser)) {
         SOnlineService.logout()
+      } else if (UserType.isIPortalUser(this.props.currentUser)) {
+        SIPortalService.logout()
       }
       this.props.closeWorkspace(async () => {
         SOnlineService.removeCookie()
@@ -289,9 +296,13 @@ export default class Home extends Component {
           fileName = 'LosAngeles'
           storage = '  23.73MB'
           break
-        case 'Xiamen_CN':
-          fileName = 'Xiamen_CN'
-          storage = '  1.9MB'
+        // case 'Xiamen_CN':
+        //   fileName = 'Xiamen_CN'
+        //   storage = '  1.9MB'
+        //   break
+        case '数据分析数据':
+          fileName = '数据分析数据'
+          storage = '  5.3MB'
           break
       }
     }

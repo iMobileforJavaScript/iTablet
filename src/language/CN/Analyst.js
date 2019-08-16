@@ -53,14 +53,19 @@ const Analyst_Labels = {
   MIDDLE_STATIONS: '添加途经点',
   SET_END_STATION: '设置终点',
   LOCATION: '选中位置',
-  SET_AS_START_STATION: '设为起点',
-  SET_AS_END_STATION: '设为终点',
+  SET_AS_START_STATION: '设置起点',
+  SET_AS_END_STATION: '设置终点',
   ADD_STATIONS: '添加站点',
-  ADD_BARRIER_NODES: '添加障碍点	',
+  ADD_BARRIER_NODES: '添加障碍点',
   ADD_NODES: '添加节点',
   UPSTREAM_TRACKING: '上游追踪',
   DOWNSTREAM_TRACKING: '下游追踪',
   CLEAR: '清除',
+  START_STATION: '起点',
+  MIDDLE_STATION: '途经点',
+  END_STATION: '终点',
+  BARRIER_NODE: '障碍点',
+  NODE: '站点',
 
   BUFFER_ZONE: '缓冲区',
   MULTI_BUFFER_ZONE: '多重缓冲区',
@@ -207,6 +212,7 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSING: '分析中',
   ANALYSIS_START: '开始分析',
   ANALYSIS_SUCCESS: '分析成功',
   ANALYSIS_FAIL: '分析失败',

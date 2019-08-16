@@ -61,6 +61,11 @@ const Analyst_Labels = {
   UPSTREAM_TRACKING: 'Upstream Tracking',
   DOWNSTREAM_TRACKING: 'Downstream Tracking',
   CLEAR: 'Clear',
+  START_STATION: 'Start Station',
+  MIDDLE_STATION: 'Middle Station',
+  END_STATION: 'End Station',
+  BARRIER_NODE: 'Barrier Node',
+  NODE: 'Node',
 
   BUFFER_ZONE: 'Buffer',
   MULTI_BUFFER_ZONE: 'Multi-buffer',
@@ -207,6 +212,7 @@ const Analyst_Params = {
 }
 
 const Analyst_Prompt = {
+  ANALYSING: 'Analysing',
   ANALYSIS_START: 'Analysing',
   ANALYSIS_SUCCESS: 'Analysis successfully',
   ANALYSIS_FAIL: 'Analysis failed',

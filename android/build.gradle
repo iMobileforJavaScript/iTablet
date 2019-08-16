@@ -24,8 +24,8 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         maven { url "https://jitpack.io" }
-//        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
         google()
-        maven { url "https://maven.google.com" }
+//        maven { url "https://maven.google.com" }
     }
 }

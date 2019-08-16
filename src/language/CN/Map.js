@@ -39,6 +39,7 @@ const Map_Main_Menu = {
 
   ANALYSIS: '分析',
 
+  NEW_DATASOURCE: '新建数据源',
   //图例设置
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',
@@ -274,6 +275,7 @@ const Map_Main_Menu = {
   PLOTTING_LIB: '标绘库',
   PLOTTING_ANIMATION: '推演',
   PLOTTING_ANIMATION_DEDUCTION: '态势推演',
+  PLOTTING_ANIMATION_RESET: '复位',
 
   //分享
   SHARE: '分享',
@@ -289,6 +291,29 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
+  MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: '高精采集',
+}
+
+//推演动画
+const Map_Plotting = {
+  PLOTTING_ANIMATION_MODE: '动画类型',
+  PLOTTING_ANIMATION_OPERATION: '效果选项',
+  PLOTTING_ANIMATION_START_MODE: '开始',
+
+  PLOTTING_ANIMATION_WAY: '路径',
+  PLOTTING_ANIMATION_BLINK: '闪烁',
+  PLOTTING_ANIMATION_ATTRIBUTE: '属性',
+  PLOTTING_ANIMATION_SHOW: '显隐',
+  PLOTTING_ANIMATION_ROTATE: '旋转',
+  PLOTTING_ANIMATION_SCALE: '比例',
+  PLOTTING_ANIMATION_GROW: '生长',
+
+  PLOTTING_ANIMATION_START_TIME: '开始时间',
+  PLOTTING_ANIMATION_DURATION: '持续时间',
+  PLOTTING_ANIMATION_FLLOW_LAST: '上一动作之后播放',
+  PLOTTING_ANIMATION_CLICK_START: '点击开始',
+  PLOTTING_ANIMATION_TOGETHER_LAST: '上一动作同时播放',
+  PLOTTING_ANIMATION_CONTINUE: '继续创建',
 }
 
 //图层
@@ -406,6 +431,42 @@ const Map_Settings = {
   REMARKS: '备注',
   DRAWING_RANGE: '绘制范围',
 
+  //视频地图设置:一级菜单
+  POI_SETTING: 'POI设置',
+  DETECT_TYPE: '识别类型',
+  DETECT_STYLE: '识别框',
+
+  POI_SETTING_PROJECTION_MODE: '投射模式',
+  POI_SETTING_OVERLAP_MODE: '避让模式',
+
+  DETECT_TYPE_PERSON: '人员',
+  DETECT_TYPE_BICYCLE: '自行车',
+  DETECT_TYPE_CAR: '车辆',
+  DETECT_TYPE_MOTORCYCLE: '摩托车',
+  DETECT_TYPE_BUS: '公交车',
+  DETECT_TYPE_TRUCK: '卡车',
+  DETECT_TYPE_TRAFFICLIGHT: '交通信号灯',
+  DETECT_TYPE_FIREHYDRANT: '消防栓',
+  DETECT_TYPE_CUP: '杯子',
+  DETECT_TYPE_CHAIR: '椅子',
+  DETECT_TYPE_BIRD: '鸟',
+  DETECT_TYPE_CAT: '猫',
+  DETECT_TYPE_DOG: '狗',
+  DETECT_TYPE_POTTEDPLANT: '盆栽植物',
+  DETECT_TYPE_TV: '显示器',
+  DETECT_TYPE_LAPTOP: '笔记本电脑',
+  DETECT_TYPE_MOUSE: '鼠标',
+  DETECT_TYPE_KEYBOARD: '键盘',
+  DETECT_TYPE_CELLPHONE: '手机',
+  DETECT_TYPE_BOOK: '书',
+  DETECT_TYPE_BOTTLE: '瓶子',
+
+  DETECT_STYLE_IS_DRAW_TITLE: '绘制目标检测名称',
+  DETECT_STYLE_IS_DRAW_CONFIDENCE: '绘制目标检测可信度',
+  DETECT_STYLE_IS_SAME_COLOR: '统一颜色',
+  DETECT_STYLE_SAME_COLOR: '统一颜色值',
+  DETECT_STYLE_STROKE_WIDTH: '检测目标绘制框线宽',
+
   //二级菜单 基本设置
   MAP_NAME: '地图名称',
   SHOW_SCALE: '显示比例尺',
@@ -503,6 +564,7 @@ export {
   Map_Main_Menu,
   Map_Label,
   Map_Layer,
+  Map_Plotting,
   Map_Attribute,
   Map_Setting,
   Map_Settings,

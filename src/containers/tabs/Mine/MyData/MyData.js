@@ -19,7 +19,12 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
-import { SOnlineService } from 'imobile_for_reactnative'
+import {
+  SOnlineService,
+  SIPortalService,
+  SMap,
+  EngineType,
+} from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
 
@@ -120,6 +125,7 @@ export default class MyLocalData extends Component {
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
     this.callBackMode = params.callBackMode
+    this._onUploadData = this._onUploadData.bind(this)
   }
 
   componentDidMount() {
@@ -250,6 +256,31 @@ export default class MyLocalData extends Component {
     }
   }
 
+  createDatasource = async (
+    datasourcePath,
+    datasourceName,
+    datasourceAlias,
+  ) => {
+    let newDatasourcePath = datasourcePath + datasourceName + '.udb'
+    let datasourceParams = {}
+    datasourceParams.server = newDatasourcePath
+    datasourceParams.engineType = EngineType.UDB
+    datasourceParams.alias = datasourceAlias
+    await SMap.createDatasource(datasourceParams)
+  }
+
+  _openData = () => {
+    NavigationService.navigate('DatasourcePage', {
+      data: this.itemInfo.item,
+    })
+  }
+
+  _createDataset = () => {
+    NavigationService.navigate('NewDataset', {
+      data: this.itemInfo.item,
+    })
+  }
+
   _renderSectionHeader = info => {
     let title = info.section.title
     if (title !== undefined) {
@@ -362,6 +393,11 @@ export default class MyLocalData extends Component {
               this.itemInfo = info
               this._onUploadData('')
             }
+          } else if (
+            this.state.title === getLanguage(this.props.language).Profile.DATA
+          ) {
+            this.itemInfo = info
+            this._openData()
           }
         }}
       >
@@ -503,10 +539,11 @@ export default class MyLocalData extends Component {
   _closeModal = () => {
     this.setState({ modalIsVisible: false }, () => {
       this.MyDataPopModal && this.MyDataPopModal.setVisible(false)
+      this.DataPopModal && this.DataPopModal.setVisible(false)
     })
   }
 
-  _onUploadData = async type => {
+  async _onUploadData(type) {
     try {
       // this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       //'分享中')
@@ -650,6 +687,31 @@ export default class MyLocalData extends Component {
               },
             })
           }
+        } else if (type === 'iportal') {
+          this.ModalBtns && this.ModalBtns.setVisible(false)
+          let result
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            result = await this._exportData(true)
+          } else {
+            result = await FileTools.zipFiles(archivePaths, targetPath)
+          }
+          if (!result) {
+            Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+            //'分享失败')
+            this.setLoading(false)
+            return
+          }
+          let uploadResult = await SIPortalService.uploadData(
+            targetPath,
+            fileName + '.zip',
+          )
+          this.setLoading(false)
+          uploadResult
+            ? Toast.show(getLanguage(this.props.language).Prompt.SHARE_SUCCESS)
+            : Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+          FileTools.deleteFile(targetPath)
         } else if (this.formChat) {
           if (
             this.state.title === getLanguage(this.props.language).Profile.MAP
@@ -921,6 +983,27 @@ export default class MyLocalData extends Component {
               action: this._onDeleteData,
             },
           ]
+        } else if (this.state.sectionData[0].title.indexOf('MY_DATA') !== -1) {
+          data = [
+            {
+              title: getLanguage(this.props.language).Profile.NEW_DATASET,
+              action: () => {
+                this._createDataset()
+              },
+            },
+            {
+              title: getLanguage(this.props.language).Profile.UPLOAD_DATA,
+              action: () => {
+                this._closeModal()
+                this.ModalBtns && this.ModalBtns.setVisible(true)
+              },
+            },
+            {
+              //'删除数据'
+              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              action: this._onDeleteData,
+            },
+          ]
         } else if (this.state.sectionData[0].title.indexOf('MY') !== -1) {
           let _type = this.state.sectionData[0].title.split('_')[1]
           data = [
@@ -959,6 +1042,20 @@ export default class MyLocalData extends Component {
               action: this._onDeleteData,
             },
           ]
+        } else if (this.state.sectionData[0].title.indexOf('DATA') !== -1) {
+          data = [
+            {
+              title: getLanguage(this.props.language).Profile.NEW_DATASET,
+              action: () => {
+                this._createDataset()
+              },
+            },
+            {
+              //'删除数据'
+              title: getLanguage(this.props.language).Profile.DELETE_DATA,
+              action: this._onDeleteData,
+            },
+          ]
         } else {
           let _type = this.state.sectionData[0].title.split('_')
           data = [
@@ -981,6 +1078,51 @@ export default class MyLocalData extends Component {
         />
       )
     }
+  }
+
+  _showDataPopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.NEW_DATASOURCE,
+        action: () => {
+          this._closeModal()
+          NavigationService.navigate('InputPage', {
+            placeholder: getLanguage(global.language).Profile
+              .ENTER_DATASOURCE_NAME,
+            headerTitle: getLanguage(global.language).Profile
+              .SET_DATASOURCE_NAME,
+            cb: async name => {
+              let datasourcePath
+              let homePath = await FileTools.appendingHomeDirectory()
+              if (UserType.isProbationUser(this.props.user.currentUser)) {
+                datasourcePath =
+                  homePath +
+                  ConstPath.CustomerPath +
+                  ConstPath.RelativePath.Datasource
+              } else {
+                datasourcePath =
+                  homePath +
+                  ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/' +
+                  ConstPath.RelativePath.Datasource
+              }
+              await this.createDatasource(datasourcePath, name, name)
+              this.getData()
+              NavigationService.goBack()
+            },
+          })
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.DataPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
   }
 
   goToMyOnlineData = async () => {
@@ -1032,6 +1174,27 @@ export default class MyLocalData extends Component {
     ) : null
   }
 
+  _renderHeaderRight = () => {
+    if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
+      let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.DataPopModal.setVisible(true)
+          }}
+          style={styles.moreView}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={moreImg}
+            style={styles.moreImg}
+          />
+        </TouchableOpacity>
+      )
+    }
+    return null
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
@@ -1041,6 +1204,7 @@ export default class MyLocalData extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderRight(),
         }}
       >
         <Text
@@ -1100,11 +1264,21 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor2}
         />*/}
         {this._showMyDataPopupModal()}
+        {this._showDataPopupModal()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
           }}
-          actionOfOnline={() => this._onUploadData('online')}
+          actionOfOnline={
+            UserType.isOnlineUser(this.props.user.currentUser)
+              ? () => this._onUploadData('online')
+              : undefined
+          }
+          actionOfIPortal={
+            UserType.isIPortalUser(this.props.user.currentUser)
+              ? () => this._onUploadData('iportal')
+              : undefined
+          }
           actionOfWechat={() => {
             this._onUploadData('weChat')
           }}

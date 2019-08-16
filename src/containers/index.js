@@ -17,7 +17,11 @@ import {
   ToggleAccount,
   Setting,
   AboutITablet,
+  SelectLogin,
   Login,
+  IPortalLogin,
+  DatasourcePage,
+  NewDataset,
   // Chat,
   AddFriend,
   InformMessage,
@@ -95,6 +99,7 @@ import {
 
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
+import MeasureView from './arMeasure'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
@@ -419,8 +424,22 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    SelectLogin: {
+      screen: SelectLogin,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     Login: {
       screen: Login,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    IPortalLogin: {
+      screen: IPortalLogin,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -449,6 +468,20 @@ const AppNavigator = createStackNavigator(
     },
     MyData: {
       screen: MyData,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    DatasourcePage: {
+      screen: DatasourcePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    NewDataset: {
+      screen: NewDataset,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -571,6 +604,13 @@ const AppNavigator = createStackNavigator(
     /** 相机界面 **/
     Camera: {
       screen: Camera,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MeasureView: {
+      screen: MeasureView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

@@ -19,6 +19,7 @@ const Prompt = {
   LOG_OUT: '是否退出登录？',
   FAILED_TO_LOG: '登录失败',
   INCORRECT_USER_INFO: '用户名或用户密码错误',
+  INCORRECT_IPORTAL_ADDRESS: '请检查服务器地址是否正确',
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
@@ -58,6 +59,7 @@ const Prompt = {
   SAVE_FAILED: '保存失败',
   ENABLE_DYNAMIC_PROJECTION: '是否开启动态投影',
   TURN_ON: '是',
+  CREATE_FAILED: '创建失败',
 
   NO_PLOTTING_DEDUCTION: '当前地图没有推演列表',
   NO_FLY: '当前场景无飞行轨迹',
@@ -69,6 +71,7 @@ const Prompt = {
   THE_CURRENT_LAYER_CANNOT_BE_STYLED: '当前图层无法设置风格，请重新选择图层',
 
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
+  DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
 
   SELECT_TWO_MEDIAS_AT_LEAST: '至少选中两个多媒体文件',
 

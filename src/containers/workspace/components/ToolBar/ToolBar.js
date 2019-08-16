@@ -7,6 +7,7 @@ import {
   screen,
 } from '../../../../utils'
 import {
+  Row,
   MTBtn,
   TableList,
   ColorTableList,
@@ -51,11 +52,22 @@ import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
 import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
+import * as ExtraDimensions from 'react-native-extra-dimensions-android'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
+import ToolbarButtonAction from './ToolbarButtonAction'
 import { FileTools } from '../../../../native'
-import { View, TouchableOpacity, Image, Animated } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Animated,
+  Text,
+  FlatList,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native'
 import {
   SMap,
   SScene,
@@ -69,6 +81,7 @@ import {
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
+import PlotAnimationView from '../PlotAnimationView'
 import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
@@ -78,7 +91,7 @@ import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
-import { getThemeAssets } from '../../../../assets'
+import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
 import MenuList from '../MenuList'
 import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
@@ -90,6 +103,7 @@ const tabs = 'tabs'
 const symbol = 'symbol'
 const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
+const createPlotAnimation = 'createPlotAnimation'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -208,6 +222,7 @@ export default class ToolBar extends React.PureComponent {
       selectKey: '',
       listExpressions: {},
       themeSymbolType: '',
+      hasSoftMenuBottom: false,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -219,6 +234,11 @@ export default class ToolBar extends React.PureComponent {
       setLastState: this.setLastState,
       scrollListToLocation: this.scrollListToLocation,
       ...this.props,
+    })
+    ExtraDimensions.addSoftMenuBarWidthChangeListener({
+      softBarPositionChange: val => {
+        this.setState({ hasSoftMenuBottom: val })
+      },
     })
   }
 
@@ -885,6 +905,7 @@ export default class ToolBar extends React.PureComponent {
             allExpressions.push(item)
           }
         }
+        this.expressionData.list = allExpressions //add xiezhy 过滤结果就应该保存
         // }
         // allExpressions.forEach(item => {
         //   item.info = {
@@ -979,8 +1000,12 @@ export default class ToolBar extends React.PureComponent {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
                 temp[selectedExpressions[index]] = false
-                listExpressionsArr.push(temp)
                 item.isSelected = item.expression === selectedExpressions[index]
+                if (item.isSelected === true) {
+                  //add xiezhy
+                  listExpressionsArr.push(temp)
+                  break
+                }
               }
             } else {
               item.isSelected = false
@@ -2587,6 +2612,7 @@ export default class ToolBar extends React.PureComponent {
   setVisible = (isShow, type = this.state.type, params = {}) => {
     if (isShow) {
       GLOBAL.TouchType = TouchType.NULL
+      GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
     }
     this.setOverlayViewVisible(isShow)
 
@@ -2610,6 +2636,10 @@ export default class ToolBar extends React.PureComponent {
       return
     }
     if (type === ConstToolType.MAP_PLOTTING_ANIMATION && isShow) {
+      this.showAnimation(type)
+      // return
+    }
+    if (type === ConstToolType.PLOT_ANIMATION_XML_LIST && isShow) {
       this.showAnimation(type)
       // return
     }
@@ -2693,6 +2723,14 @@ export default class ToolBar extends React.PureComponent {
 
   showToolbarAndBox = (isShow, type = this.state.type) => {
     let animatedList = []
+    //let keyboardHeight = this.keyboardHeight ? 344 : 0
+    //标注 如果横屏高度不够键盘弹起，则部分弹起，除掉底部功能栏
+    // if (
+    //   this.props.device.height - ConstToolType.NEWTHEME_HEIGHT[2] <
+    //   keyboardHeight
+    // ) {
+    //   keyboardHeight -= Const.BOTTOM_HEIGHT
+    // }
     // Toolbar的显示和隐藏
     if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
@@ -3002,7 +3040,9 @@ export default class ToolBar extends React.PureComponent {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
       }
-
+      if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+        await SMap.undo()
+      }
       // if (type===ConstToolType.MAP_STYLE)
       {
         if (this.currentLayerStyle) {
@@ -3380,6 +3420,47 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
+  showAnimationXmlList = async () => {
+    let height = ConstToolType.HEIGHT[2]
+    this.props.showFullMap && this.props.showFullMap(true)
+    // let type = ConstToolType.PLOT_ANIMATION_XML_LIST
+    let type = ConstToolType.MAP_PLOTTING_ANIMATION
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      containerType: 'list',
+      // cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
+  animationPlay = async () => {
+    // await SMap.initAnimation()
+    // await SMap.animationPlay()
+    let height = ConstToolType.HEIGHT[0]
+    this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_PALY
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      // cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
+  animationSave = async () => {
+    let mapName = await SMap.getMapName()
+    let userName = this.props.user.currentUser.userName || 'Customer'
+    let savePath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativeFilePath.Animation +
+        '/' +
+        mapName,
+    )
+    await SMap.animationSave(savePath)
+  }
   // menuCommit = () => {
   //   this.menuDialog && this.menuDialog.callCurrentAction()
   // }
@@ -3517,7 +3598,7 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[3]
+                  ? ConstToolType.NEWTHEME_HEIGHT[2]
                   : ConstToolType.NEWTHEME_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
@@ -3530,8 +3611,36 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     }
     if (type === ConstToolType.MAP_TOOL_TAGGING_SETTING) {
+      let name = this.tools_name || ''
+      let remark = this.tools_remarks || ''
+      let address = this.tools_http || ''
+      ;(async function() {
+        name !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'name',
+            name,
+            this.props.user.currentUser.userName,
+          ))
+        remark !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'remark',
+            remark,
+            this.props.user.currentUser.userName,
+          ))
+        address !== '' &&
+          (await SMap.addRecordset(
+            GLOBAL.TaggingDatasetName,
+            'address',
+            address,
+            this.props.user.currentUser.userName,
+          ))
+      }.bind(this)())
       // this.taggingback()
-      this.close()
+      this.setVisible(false, this.state.type, {
+        height: 0,
+      })
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -3690,7 +3799,10 @@ export default class ToolBar extends React.PureComponent {
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
-      height: ConstToolType.HEIGHT[3],
+      height:
+        this.props.device.orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       cb: () => SCollector.stopCollect(),
     })
   }
@@ -3747,8 +3859,10 @@ export default class ToolBar extends React.PureComponent {
 
   endAnimation = () => {
     SMap.animationClose()
+    SMap.setAction(Action.PAN)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+    GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
   }
 
   endFly = () => {
@@ -3781,7 +3895,9 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
+    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
+
+    this.animationPlay()
   }
 
   listThemeAction = ({ item }) => {
@@ -4848,7 +4964,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if (GLOBAL.legend) {
+        if (GLOBAL.legend && GLOBAL.Type === constants.MAP_THEME) {
           await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
@@ -5071,6 +5187,22 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  renderCreatePlotAnimation = () => {
+    return (
+      <PlotAnimationView
+        ref={ref => (this.plotAnimationView = ref)}
+        data={this.state.data}
+        saveAndContinue={this.saveAnimationAndContinue}
+        layerName={
+          this.props.selection[0] && this.props.selection[0].layerInfo.name
+        }
+        geoId={this.props.selection[0] && this.props.selection[0].ids[0]}
+        Heighttype={this.state.type}
+        device={this.props.device}
+      />
+    )
+  }
+
   renderHorizontalTable = () => {
     return (
       <HorizontalTableList
@@ -5093,6 +5225,16 @@ export default class ToolBar extends React.PureComponent {
         device={this.props.device}
       />
     )
+  }
+
+  saveAnimationAndContinue = () => {
+    let createInfo =
+      this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+    if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+      createInfo.geoId = this.props.selection[0].ids[0]
+      createInfo.layerName = this.props.selection[0].layerInfo.name
+    }
+    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
   }
 
   itemaction = async item => {
@@ -5432,6 +5574,49 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  //标注 RecordSet数据改变
+  _onValueChange = ({ title, text }) => {
+    switch (title) {
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_NAME:
+        this.tools_name = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS:
+        this.tools_remarks = text
+        break
+      case getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP:
+        this.tools_http = text
+        break
+    }
+  }
+  renderInputView = () => {
+    let data = this.state.data[0]
+    let renderList = ({ item }) => {
+      return (
+        <Row
+          style={styles.row}
+          customRightStyle={styles.customInput}
+          title={item.title}
+          getValue={this._onValueChange}
+          defaultValue={item.value}
+        />
+      )
+    }
+    if (data) {
+      return (
+        <View>
+          <View style={styles.textHeader}>
+            <Text style={styles.textFont}>{data.title}</Text>
+          </View>
+          <FlatList
+            renderItem={renderList}
+            data={data.data}
+            keyExtractor={(item, index) => item.value + index}
+          />
+        </View>
+      )
+    }
+    return null
+  }
   renderMap3DList = () => {
     return (
       <Map3DToolBar
@@ -5544,6 +5729,9 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_CROSS_CLIP:
             box = this.renderMap3DClip()
             break
+          case ConstToolType.MAP_TOOL_TAGGING_SETTING:
+            box = this.renderInputView()
+            break
           default:
             box = this.renderList()
             break
@@ -5560,6 +5748,9 @@ export default class ToolBar extends React.PureComponent {
         break
       case horizontalTable:
         box = this.renderHorizontalTable()
+        break
+      case createPlotAnimation:
+        box = this.renderCreatePlotAnimation()
         break
       case table:
       default:
@@ -5704,30 +5895,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
-          action = () => {
-            if (
-              this.props.selection.length === 0
-              // !this.props.selection.layerInfo ||
-              // !this.props.selection.layerInfo.path
-            ) {
-              Toast.show(
-                getLanguage(this.props.language).Prompt.NON_SELECTED_OBJ,
-              )
-              return
-            }
-            let selectObjNums = 0
-            this.props.selection.forEach(item => {
-              selectObjNums += item.ids.length
-            })
-            selectObjNums === 0 && Toast.show(ConstInfo.NON_SELECTED_OBJ)
-
-            NavigationService.navigate(
-              'LayerSelectionAttribute',
-              GLOBAL.SelectedSelectionAttribute && {
-                selectionAttribute: GLOBAL.SelectedSelectionAttribute,
-              },
-            )
-          }
+          action = () => ToolbarButtonAction.showAttribute(this.props.selection)
           break
         case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
@@ -5848,12 +6016,12 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_on
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.NOT_VISIBLE:
           // 图例的显示与隐藏
-          image = require('../../../../assets/layerToolbar/layer_can_not_visible.png')
+          image = getPublicAssets().mapTools.tools_legend_off
           action = this.changeLegendVisible
           break
         case ToolbarBtnType.MENU_COMMIT:
@@ -5876,6 +6044,27 @@ export default class ToolBar extends React.PureComponent {
           //统计专题图类型
           image = getThemeAssets().themeType.theme_graphmap_selected
           action = this.changeGraphType
+          break
+        case ToolbarBtnType.PLOT_ANIMATION_XML_LIST:
+          //推演动画xml列表
+          image = getPublicAssets().plot.plot_animation_list
+          action = this.showAnimationXmlList
+          break
+        case ToolbarBtnType.PLOT_ANIMATION_PLAY:
+          //播放推演动画
+          // image = require('../../../../assets/mapEdit/icon_packUP.png')
+          image = getPublicAssets().plot.plot_play
+          action = this.animationPlay
+          break
+        case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:
+          //显示动画节点对象列表
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+
+          break
+        case ToolbarBtnType.PLOT_ANIMATION_SAVE:
+          //保存推演动画节点mapTools/icon_save_black
+          image = require('../../../../assets/mapTools/icon_save.png')
+          action = this.animationSave
           break
       }
 
@@ -5924,6 +6113,29 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
+      let createInfo =
+        this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+      if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+        createInfo.geoId = this.props.selection[0].ids[0]
+        createInfo.layerName = this.props.selection[0].layerInfo.name
+      }
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+
+      // let length=createInfo.length
+      // // this.showToolbarAndBox(false)
+      // this.isBoxShow = true
+      // GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else {
       this.setVisible(false)
     }
@@ -5945,7 +6157,10 @@ export default class ToolBar extends React.PureComponent {
       ? { height: this.props.device.height }
       : {}
     if (this.state.isFullScreen && this.state.isTouchProgress) {
-      height = { height: screen.getScreenSafeHeight() }
+      let softBarHeight = this.state.hasSoftMenuBottom
+        ? ExtraDimensions.getSoftMenuBarHeight()
+        : 0
+      height = { height: screen.getScreenSafeHeight() - softBarHeight }
     }
     // if (this.state.isFullScreen) {
     //   if (this.props.device.orientation === 'LANDSCAPE') {
@@ -5960,6 +6175,14 @@ export default class ToolBar extends React.PureComponent {
     //         : { height: screen.deviceWidth }
     //   }
     // }
+    let keyboardVerticalOffset
+    if (Platform.OS === 'android') {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+    } else {
+      keyboardVerticalOffset =
+        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+    }
     return (
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
@@ -5986,19 +6209,24 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View
-          style={[
-            styles.containers,
-            !(
-              this.state.isFullScreen &&
-              !this.state.isTouchProgress &&
-              !this.state.showMenuDialog
-            ) && styles.containers_border,
-          ]}
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          behavior={'position'}
         >
-          {this.renderView()}
-          {this.renderBottomBtns()}
-        </View>
+          <View
+            style={[
+              styles.containers,
+              !(
+                this.state.isFullScreen &&
+                !this.state.isTouchProgress &&
+                !this.state.showMenuDialog
+              ) && styles.containers_border,
+            ]}
+          >
+            {this.renderView()}
+            {this.renderBottomBtns()}
+          </View>
+        </KeyboardAvoidingView>
       </Animated.View>
     )
   }

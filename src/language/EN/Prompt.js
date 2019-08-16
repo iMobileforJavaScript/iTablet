@@ -19,6 +19,8 @@ const Prompt = {
   LOG_OUT: 'Are you sure you want to log out?',
   FAILED_TO_LOG: 'Failed to Login',
   INCORRECT_USER_INFO: 'Account not exist or password error',
+  INCORRECT_IPORTAL_ADDRESS:
+    'Failed to Login, Please check your server address',
 
   DELETE_STOP: 'Are you sure you want to delete stop?',
   DELETE_OBJECT: 'Are you sure you want to permanently delete the Object?',
@@ -59,6 +61,7 @@ const Prompt = {
   SAVE_FAILED: 'Failed to Save',
   ENABLE_DYNAMIC_PROJECTION: 'Enable Dynamic Projection?',
   TURN_ON: 'Turn on',
+  CREATE_FAILED: 'Create failed',
 
   NO_PLOTTING_DEDUCTION: 'No Plotting Deduction in the current map',
   NO_FLY: 'No Fly in the current scene',
@@ -72,6 +75,7 @@ const Prompt = {
     'The current layer cannot be styled, and please reselect another one',
 
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
+  DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
 
   SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
 
