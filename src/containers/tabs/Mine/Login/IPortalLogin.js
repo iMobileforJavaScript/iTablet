@@ -16,6 +16,8 @@ import { getLanguage } from '../../../../language/index'
 import { setUser } from '../../../../models/user'
 import { connect } from 'react-redux'
 import styles from './Styles'
+import ConstPath from '../../../../constants/ConstPath'
+import { FileTools } from '../../../../native'
 
 class IPortalLogin extends React.Component {
   props: {
@@ -59,6 +61,7 @@ class IPortalLogin extends React.Component {
 
       let result = await SIPortalService.login(url, userName, password, true)
       if (typeof result === 'boolean' && result) {
+        await this.initUserDirectories(userName)
         let info = await SIPortalService.getMyAccount()
         if (info) {
           let userInfo = JSON.parse(info)
@@ -90,6 +93,32 @@ class IPortalLogin extends React.Component {
     } catch (e) {
       this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
+    }
+  }
+
+  initUserDirectories = async userName => {
+    try {
+      let paths = Object.keys(ConstPath.RelativePath)
+      let isCreate = true,
+        absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        let path =
+          ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
+        absolutePath = await FileTools.appendingHomeDirectory(path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(path)
+        let fileCreated =
+          exist || (await FileTools.createDirectory(absolutePath))
+        isCreate = fileCreated && isCreate
+      }
+      if (isCreate) {
+        FileTools.initUserDefaultData(userName).then(result => {
+          !result && Toast.show('初始化用户数据失败')
+        })
+      } else {
+        Toast.show('创建用户目录失败')
+      }
+    } catch (e) {
+      Toast.show('创建用户目录失败')
     }
   }
 

@@ -7,6 +7,7 @@ const Analyst_Modules = {
   THIESSEN_POLYGON: '泰森多边形',
   MEASURE_DISTANCE: '距离计算',
   ONLINE_ANALYSIS: '在线分析',
+  INTERPOLATION_ANALYSIS: '插值分析',
 
   OPTIMAL_PATH: '路径分析',
   CONNECTIVITY_ANALYSIS: '连通性分析',
@@ -151,6 +152,37 @@ const Analyst_Labels = {
   MIN_DISTANCE: '最小距离',
   MAX_DISTANCE: '最大距离',
   ASSOCIATE_BROWSING_RESULT: '关联浏览结果',
+
+  // 插值分析
+  INTERPOLATION_METHOD: '插值方法',
+  INTERPOLATION_FIELD: '插值字段',
+  SCALE_FACTOR: '缩放比例',
+  RESOLUTION: '分辨率',
+  PIXEL_FORMAT: '像素格式',
+  INTERPOLATION_BOUNDS: '插值范围',
+  SAMPLE_POINT_SETTINGS: '样本点查找设置',
+  SEARCH_MODE: '查找方式',
+  MAX_RADIUS: '最大半径',
+  SEARCH_RADIUS_2: '查找半径',
+  SEARCH_POINT_COUNT: '查找点数',
+  MIX_COUNT: '最小点数',
+  MOST_INVOLVED: '最多参与点数',
+  MOST_IN_BLOCK: '块内最多点数',
+  OTHER_PARAMETERS: '其他参数',
+  POWER: '幂次',
+  TENSION: '张力系数',
+  SMOOTHNESS: '光滑系数',
+  SEMIVARIOGRAM: '半变异函数',
+  ROTATION: '旋转角度',
+  SILL: '基台值',
+  RANGE: '自相关阈值',
+  NUGGET_EFFECT: '块金效应值',
+  MEAN: '平均值',
+  EXPONENT: '阶数',
+  HISTOGRAM: '直方图',
+  FUNCTION: '变换函数',
+  SHOW_STATISTICS: '显示统计信息',
+  EXPORT_TO_ALBUM: '保存到相册',
 }
 
 const Analyst_Params = {
@@ -209,6 +241,30 @@ const Analyst_Params = {
   // 聚合类型
   AGGREGATE_WITH_GRID: '网格面聚合',
   AGGREGATE_WITH_REGION: '多边形聚合',
+
+  // 插值方法
+  IDW: '距离反比权重',
+  SPLINE: '样条',
+  ORDINARY_KRIGING: '普通克吕金',
+  SIMPLE_KRIGING: '简单克吕金',
+  UNIVERSAL_KRIGING: '泛克吕金',
+
+  // 像素格式
+  UBIT1: '1位无符号',
+  UBIT16: '16位',
+  UBIT32: '32位',
+  SINGLE: '单精度浮点型',
+  DOUBLE: '双精度浮点型',
+
+  // 查找方法
+  SEARCH_VARIABLE_LENGTH: '变长查找',
+  SEARCH_FIXED_LENGTH: '定长查找',
+  SEARCH_BLOCK: '块查找',
+
+  // 半变异函数
+  SPHERICAL: '球函数	',
+  EXPONENTIAL: '指数函数',
+  GAUSSIAN: '高斯函数',
 }
 
 const Analyst_Prompt = {
@@ -228,6 +284,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_NOT_CONNECTED: '两点不连通',
   NOT_FIND_SUITABLE_PATH: '没有查找到合适的路径',
   SELECT_DATA_SOURCE_FIRST: '请先选择数据源',
+  SELECT_DATA_SET_FIRST: '请先选择数据数据集',
   PLEASE_SELECT_A_REGION: '请选择一个面',
 }
 

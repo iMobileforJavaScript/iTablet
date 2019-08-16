@@ -1,7 +1,12 @@
 /**
  * 获取地图工具数据
  */
-import { SMap, Action, SMediaCollector } from 'imobile_for_reactnative'
+import {
+  SMap,
+  Action,
+  SMediaCollector,
+  DatasetType,
+} from 'imobile_for_reactnative'
 import { ConstToolType, TouchType, ConstPath } from '../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
@@ -17,6 +22,7 @@ let _params = {}
 /**
  * 获取工具操作
  * @param type
+ * @param params
  * @returns {{data: Array, buttons: Array}}
  */
 function getMapTool(type, params) {
@@ -644,10 +650,17 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
 async function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isPointLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isPointLayer = currentLayer.type === DatasetType.POINT
+  }
+  if (isTaggingLayer || isPointLayer) {
     SMap.setAction(Action.CREATEPOINT)
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
@@ -659,10 +672,17 @@ async function point() {
 }
 
 async function words() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isTextLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isTextLayer = currentLayer.type === DatasetType.TEXT
+  }
+  if (isTaggingLayer || isTextLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -674,10 +694,17 @@ async function words() {
 }
 
 async function pointline() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isLineLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isLineLayer = currentLayer.type === DatasetType.LINE
+  }
+  if (isTaggingLayer || isLineLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -689,10 +716,17 @@ async function pointline() {
 }
 
 async function freeline() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isLineLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isLineLayer = currentLayer.type === DatasetType.LINE
+  }
+  if (isTaggingLayer || isLineLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -704,10 +738,17 @@ async function freeline() {
 }
 
 async function pointcover() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isRegionLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isRegionLayer = currentLayer.type === DatasetType.REGION
+  }
+  if (isTaggingLayer || isRegionLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -719,10 +760,17 @@ async function pointcover() {
 }
 
 async function freecover() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isRegionLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isRegionLayer = currentLayer.type === DatasetType.REGION
+  }
+  if (isTaggingLayer || isRegionLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],

@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
 
 export default class AnalystBar extends React.Component {
   props: {
+    style?: Object,
     leftTitle: string,
     rightTitle: string,
     leftAction: () => {},
@@ -82,7 +83,7 @@ export default class AnalystBar extends React.Component {
 
   render() {
     return (
-      <View style={styles.buttons}>
+      <View style={[styles.buttons, this.props.style]}>
         {this.props.leftTitle ? (
           this.renderBottomTextBtn(
             this.props.leftTitle,

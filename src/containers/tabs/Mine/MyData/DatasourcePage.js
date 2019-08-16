@@ -36,7 +36,7 @@ class DatasourcePage extends Component {
 
   componentWillUnmount() {
     SMap.closeDatasource(this.state.title)
-    this.container.setLoading(false)
+    this.container && this.container.setLoading(false)
   }
 
   _openDatasource = async () => {
@@ -62,11 +62,11 @@ class DatasourcePage extends Component {
       datasets = await SMap.getDatasetsByDatasource({ alias: this.state.title })
       this.setState({ datasets: datasets.list })
       setTimeout(() => {
-        this.container.setLoading(false)
+        this.container && this.container.setLoading(false)
       }, 1000)
     } catch (error) {
       setTimeout(() => {
-        this.container.setLoading(false)
+        this.container && this.container.setLoading(false)
         Toast.show(getLanguage(global.language).Profile.OPEN_DATASROUCE_FAILED)
       }, 1000)
     }

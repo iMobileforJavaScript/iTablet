@@ -29,16 +29,7 @@ export default class MenuDialog extends React.Component {
   constructor(props) {
     super(props)
     const data = this.dealData(props.data)
-    let currentIndex =
-      props.data.length > 0 ? Math.floor(this.props.viewableItems / 2) : 0
-    if (props.initialKey !== undefined && props.initialKey !== '') {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].key !== undefined && data[i].key === props.initialKey) {
-          currentIndex = i
-          break
-        }
-      }
-    }
+    let currentIndex = this._getCurrentIndex(data)
 
     this.state = {
       currentIndex,
@@ -82,9 +73,27 @@ export default class MenuDialog extends React.Component {
       this.props.data.length > 0 &&
       prevProps.data !== this.props.data
     ) {
+      let data = this.dealData(this.props.data)
+      let currentIndex = this._getCurrentIndex(data)
+      this.setState(
+        {
+          data: data,
+          currentIndex,
+        },
+        () => {
+          this.list &&
+            this.list.scrollToIndex({
+              index: this.state.currentIndex,
+              viewPosition: 0.5,
+              animated: false,
+            })
+        },
+      )
+    } else if (!this.props.data || this.props.data.length === 0) {
       this.setState({
-        data: this.dealData(this.props.data),
+        data: [],
       })
+      this.contentOffset = null
     }
   }
 
@@ -105,6 +114,23 @@ export default class MenuDialog extends React.Component {
       newData.push({})
     }
     return newData
+  }
+
+  _getCurrentIndex = data => {
+    let currentIndex =
+      data.length > 0 ? Math.floor(this.props.viewableItems / 2) : 0
+    if (this.props.initialKey !== undefined && this.props.initialKey !== '') {
+      for (let i = 0; i < data.length; i++) {
+        if (
+          data[i].key !== undefined &&
+          data[i].key === this.props.initialKey
+        ) {
+          currentIndex = i
+          break
+        }
+      }
+    }
+    return currentIndex
   }
 
   getCurrentData = () => {
@@ -255,6 +281,7 @@ export default class MenuDialog extends React.Component {
             }
           }}
           getItemLayout={this.getItemLayout}
+          extraData={this.state.currentIndex}
         />
       </View>
     )

@@ -308,6 +308,13 @@ export default class MediaEdit extends React.Component {
   }
 
   render() {
+    let coordinate =
+      this.state.coordinate.x !== undefined &&
+      this.state.coordinate.y !== undefined
+        ? this.state.coordinate.x.toFixed(6) +
+          ',' +
+          this.state.coordinate.y.toFixed(6)
+        : ''
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -359,7 +366,7 @@ export default class MediaEdit extends React.Component {
           })}
           {this.renderItem({
             title: getLanguage(this.props.language).Map_Main_Menu.COORDINATE,
-            value: this.state.coordinate.x + ',' + this.state.coordinate.y,
+            value: coordinate,
             type: 'arrow',
           })}
           {this.renderItem({

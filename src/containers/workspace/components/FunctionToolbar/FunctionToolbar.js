@@ -495,7 +495,10 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, GLOBAL.currentToolbarType, {
         isFullScreen: true,
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.TOOLBAR_HEIGHT[2]
+            : ConstToolType.TOOLBAR_HEIGHT[3],
         tableType: 'normal',
       })
     }
@@ -1118,7 +1121,7 @@ export default class FunctionToolbar extends React.Component {
             image: getThemeAssets().functionBar.rightbar_analysis,
           },
           {
-            key: '风格',
+            key: constants.STYLE,
             title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
             //'风格',
             action: this.mapStyle,

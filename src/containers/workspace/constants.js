@@ -27,6 +27,7 @@ export default {
   INCREMENT: '增量',
   ENCLOSURE: '围栏',
   ANALYSIS: '分析',
+  STYLE: '风格',
   ROUTANALYSIS: '路径分析',
   CONNETCTED: '连通分析',
   TRAVEL: '商旅分析',
