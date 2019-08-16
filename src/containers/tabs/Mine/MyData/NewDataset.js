@@ -156,7 +156,7 @@ class NewDataset extends Component {
     return (
       <View style={styles.itemStyle}>
         {this._renderItemHead(index)}
-        <View style={styles.longSeperator}></View>
+        <View style={styles.longSeperator} />
         {this._renderItemBody(item)}
       </View>
     )
@@ -193,7 +193,7 @@ class NewDataset extends Component {
             }}
           />
         </View>
-        <View style={styles.longSeperator}></View>
+        <View style={styles.longSeperator} />
         <View>
           <Text style={styles.textStyle}>
             {/* {'数据集类型'} */}
