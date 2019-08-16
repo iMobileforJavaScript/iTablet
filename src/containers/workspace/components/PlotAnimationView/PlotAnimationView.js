@@ -15,6 +15,7 @@ import { getLanguage } from '../../../../language/index'
 // import { getPublicAssets } from '../../../../assets'
 import { getThemeAssets } from '../../../../assets'
 // import { TextInput } from 'react-native-gesture-handler';
+import { SMap } from 'imobile_for_reactnative'
 
 var StartMode = {
   START_FOLLOW_LAST: 1,
@@ -34,8 +35,11 @@ export default class PlotAnimationView extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
     layerData: Object,
+    layerName: string,
+    geoId: number,
     device: Object,
     themeSymbolType: '',
+    saveAndContinue: () => {},
   }
 
   constructor(props) {
@@ -46,7 +50,40 @@ export default class PlotAnimationView extends React.Component {
       startTime: 0,
       durationTime: 5,
       startMode: 1,
+      data: [],
     }
+  }
+
+  componentDidMount() {
+    this.getCurrentGeometryType()
+  }
+
+  getCurrentGeometryType = async () => {
+    let type = await SMap.getGeometryTypeById(
+      this.props.layerName,
+      this.props.geoId,
+    )
+    let data = this.getData()
+    let subData = []
+    switch (type) {
+      case 1:
+        // subData.push(data[0])   //路径动画，暂不支持
+        subData.push(data[1])
+        subData.push(data[2])
+        // subData.push(data[3])
+        subData.push(data[4])
+        subData.push(data[5])
+        break
+      case 2:
+        subData.push(data[1])
+        subData.push(data[2])
+        // subData.push(data[3])
+        subData.push(data[6])
+        break
+    }
+    this.setState({
+      data: subData,
+    })
   }
 
   getCreateInfo = () => {
@@ -103,6 +140,7 @@ export default class PlotAnimationView extends React.Component {
   action = ({ item }) => {
     this.setState({
       animationMode: item.animationMode,
+      data: this.state.data.concat(),
     })
   }
 
@@ -111,7 +149,7 @@ export default class PlotAnimationView extends React.Component {
       <TouchableOpacity
         // style={styles.tableItem}
         style={{
-          paddingVertical: scaleSize(20),
+          // paddingVertical: scaleSize(20),
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
@@ -136,7 +174,7 @@ export default class PlotAnimationView extends React.Component {
   }
 
   renderView() {
-    let animationModeData = this.getData()
+    // let animationModeData = this.getData()
     return (
       <View style={styles.container}>
         <View style={styles.titleView}>
@@ -147,9 +185,8 @@ export default class PlotAnimationView extends React.Component {
 
         <TableList
           style={styles.table}
-          data={animationModeData}
-          // data={this.state.data}
-          // type={'scroll'}
+          // data={animationModeData}
+          data={this.state.data}
           numColumns={4}
           renderCell={this._renderItem}
           device={this.props.device}
@@ -175,7 +212,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -192,7 +229,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addStartTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -213,7 +250,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.subDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-缩小.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -230,7 +267,7 @@ export default class PlotAnimationView extends React.Component {
               onPress={this.addDurationTime}
             >
               <Image
-                source={require('../../../../assets/mapEdit/Frenchgrey/工具条-放大.png')}
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.tableItemImg}
               />
             </TouchableOpacity>
@@ -307,8 +344,30 @@ export default class PlotAnimationView extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
+        <View style={styles.endlineStyle} />
+        <View>
+          <TouchableOpacity onPress={this.saveAndContinue}>
+            <View style={styles.saveAndContinueView2}>
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.saveAndContinueImage}
+              />
+              <Text style={styles.saveAndContinueText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_CONTINUE
+                }
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     )
+  }
+  saveAndContinue = () => {
+    this.props.saveAndContinue()
+    // this.scrollView.scrollTo(0,0)
+    this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
   addDurationTime = () => {
     let time = Number(this.state.durationTime) + 1
@@ -378,7 +437,11 @@ export default class PlotAnimationView extends React.Component {
   }
 
   render() {
-    return <ScrollView style={styles.container}>{this.renderView()}</ScrollView>
+    return (
+      <ScrollView style={styles.container} ref={ref => (this.scrollView = ref)}>
+        {this.renderView()}
+      </ScrollView>
+    )
   }
 }
 
@@ -417,13 +480,13 @@ const styles = StyleSheet.create({
   titleView: {
     alignContent: 'center',
     justifyContent: 'center',
-    paddingLeft: scaleSize(60),
-    height: scaleSize(80),
+    paddingLeft: scaleSize(20),
+    height: scaleSize(60),
     backgroundColor: color.gray3,
   },
   textTitle: {
     // padding: scaleSize(5),
-    fontSize: setSpText(20),
+    fontSize: setSpText(24),
     // paddingLeft: scaleSize(80),
     // height: scaleSize(80),
     textAlign: 'auto',
@@ -443,19 +506,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.bgG,
     height: scaleSize(1.5),
-    marginLeft: scaleSize(20),
-    marginRight: scaleSize(20),
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(40),
   },
   startTime: {
     flexDirection: 'row',
-    height: scaleSize(100),
-    padding: scaleSize(20),
+    height: scaleSize(80),
+    padding: scaleSize(40),
     alignItems: 'center',
-    // alignSelf: 'center',
+    alignSelf: 'center',
   },
   startTimeText: {
-    fontSize: setSpText(18),
-    textAlign: 'auto',
+    fontSize: setSpText(20),
+    height: scaleSize(20),
     color: color.themeText2,
   },
   modifyTime: {
@@ -463,9 +526,9 @@ const styles = StyleSheet.create({
     width: scaleSize(60),
   },
   inputTime: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     width: scaleSize(60),
-    fontSize: setSpText(18),
+    fontSize: setSpText(20),
     textAlign: 'center',
   },
   startMode: {
@@ -474,16 +537,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   startModetext: {
-    height: scaleSize(100),
+    height: scaleSize(80),
     // width:scaleSize(100),
     // flex:2,
     paddingLeft: scaleSize(20),
   },
   startModeImage: {
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(46),
+    width: scaleSize(46),
     // flex:1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  endlineStyle: {
+    flex: 1,
+    backgroundColor: color.bgG,
+    height: scaleSize(1.5),
+  },
+  saveAndContinueImage: {
+    height: scaleSize(40),
+    width: scaleSize(40),
+    // backgroundColor:color.blue1,
+  },
+  saveAndContinueView2: {
+    flexDirection: 'row',
+    height: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saveAndContinueText: {
+    fontSize: setSpText(24),
+    textAlign: 'center',
+    color: color.blue2,
   },
 })

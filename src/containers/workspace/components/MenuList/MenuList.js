@@ -272,7 +272,9 @@ export default class MenuList extends Component {
       case 'IMAGEFILE':
         layerIcon = getThemeAssets().layer3dType.layer3d_type_image
         break
-      //case 'KML':
+      case 'KML':
+        layerIcon = getThemeAssets().layer3dType.layer3d_type_kml
+        break
       case 'Terrain':
         layerIcon = require('../../../../assets/map/Frenchgrey/icon_vectorfile.png')
         break

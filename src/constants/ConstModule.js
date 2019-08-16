@@ -442,11 +442,13 @@ function SetMap(param) {
         right: 0,
         bottom: 0,
       },
-      action: async user => {
-        let data = Object.assign({}, ConstOnline['Google'])
+      action: async (user, lastMap) => {
+        let data = ConstOnline['Google']
         data.layerIndex = 1
         GLOBAL.Type = constants.MAP_AR
-
+        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+        GLOBAL.showMenu = true
+        // GLOBAL.showFlex = true
         let homePath = await FileTools.appendingHomeDirectory()
         let userPath = ConstPath.CustomerPath
         if (user && user.userName) {
@@ -454,14 +456,30 @@ function SetMap(param) {
         }
         let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
 
-        let wsData = [
+        let wsData,
+          isOpenLastMap = false
+
+        if (lastMap) {
+          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+            lastMap.path,
+          )
+        }
+
+        if (isOpenLastMap) {
+          data = {
+            type: 'Map',
+            ...lastMap,
+          }
+        }
+
+        wsData = [
           {
             DSParams: { server: wsPath },
-            // layerIndex: 0,
             type: 'Workspace',
           },
           data,
         ]
+
         NavigationService.navigate('MapView', {
           operationType: constants.MAP_AR,
           wsData,

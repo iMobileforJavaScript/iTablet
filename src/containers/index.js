@@ -20,6 +20,8 @@ import {
   SelectLogin,
   Login,
   IPortalLogin,
+  DatasourcePage,
+  NewDataset,
   // Chat,
   AddFriend,
   InformMessage,
@@ -465,6 +467,20 @@ const AppNavigator = createStackNavigator(
     },
     MyData: {
       screen: MyData,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    DatasourcePage: {
+      screen: DatasourcePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    NewDataset: {
+      screen: NewDataset,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

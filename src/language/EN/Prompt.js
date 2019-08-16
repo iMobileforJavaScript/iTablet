@@ -61,6 +61,7 @@ const Prompt = {
   SAVE_FAILED: 'Failed to Save',
   ENABLE_DYNAMIC_PROJECTION: 'Enable Dynamic Projection?',
   TURN_ON: 'Turn on',
+  CREATE_FAILED: 'Create failed',
 
   NO_PLOTTING_DEDUCTION: 'No Plotting Deduction in the current map',
   NO_FLY: 'No Fly in the current scene',

@@ -290,6 +290,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_FLLOW_LAST: 'Follow Last Animation Play',
   PLOTTING_ANIMATION_CLICK_START: 'Click Start',
   PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
+  PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
 }
 
 //图层

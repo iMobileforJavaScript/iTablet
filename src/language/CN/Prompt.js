@@ -59,6 +59,7 @@ const Prompt = {
   SAVE_FAILED: '保存失败',
   ENABLE_DYNAMIC_PROJECTION: '是否开启动态投影',
   TURN_ON: '是',
+  CREATE_FAILED: '创建失败',
 
   NO_PLOTTING_DEDUCTION: '当前地图没有推演列表',
   NO_FLY: '当前场景无飞行轨迹',
