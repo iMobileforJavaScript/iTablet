@@ -12,7 +12,11 @@ import {
   Image,
 } from 'react-native'
 import styles from './styles'
-import { getlegendSetting, getThematicMapSettings } from './settingData'
+import {
+  getlegendSetting,
+  getThematicMapSettings,
+  getnavigationSetting,
+} from './settingData'
 import SettingSection from './SettingSection'
 import { getLanguage } from '../../language/index'
 import { ConstToolType, getHeaderTitle } from '../../constants'
@@ -68,6 +72,9 @@ export default class MapSetting extends Component {
     let newData = getThematicMapSettings()
     if (GLOBAL.Type === constants.MAP_THEME) {
       newData = newData.concat(getlegendSetting())
+    }
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      newData = getnavigationSetting()
     }
     this.setState({
       data: newData,
@@ -183,13 +190,23 @@ export default class MapSetting extends Component {
       title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
     ) {
       let mapLegend = this.props.mapLegend
-      this.props.setMapLegend({
-        isShow: true,
-        backgroundColor: mapLegend.backgroundColor,
-        column: mapLegend.column,
-        widthPercent: mapLegend.widthPercent,
-        heightPercent: mapLegend.heightPercent,
-      })
+      if (mapLegend.isShow) {
+        this.props.setMapLegend({
+          isShow: true,
+          backgroundColor: mapLegend.backgroundColor,
+          column: mapLegend.column,
+          widthPercent: mapLegend.widthPercent,
+          heightPercent: mapLegend.heightPercent,
+        })
+      } else {
+        this.props.setMapLegend({
+          isShow: true,
+          backgroundColor: 'white',
+          column: 2,
+          widthPercent: 80,
+          heightPercent: 80,
+        })
+      }
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
           containerType: 'colortable',

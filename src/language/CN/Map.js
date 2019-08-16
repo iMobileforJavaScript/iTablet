@@ -9,6 +9,10 @@ const Map_Label = {
   SCENE: '场景',
   NAME: '名称',
   TOOL_BOX: '工具箱',
+  ARMAP: '实景',
+  NAVIGATION: '导航',
+  INCREMENT: '增量',
+  ENCLOSURE: '围栏',
 }
 
 //地图、场景主菜单
@@ -276,6 +280,15 @@ const Map_Main_Menu = {
   SHARE_WECHAT: '微信',
   SHARE_FRIENDS: '好友',
   SHARE_EXPLORE: '发现',
+
+  MAO_ROAD_DISTRIBUTION: '路网',
+
+  MAP_AR_AI_ASSISTANT: 'AI助手',
+  MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: '通用采集',
+  MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: '市政采集',
+  MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: '违章采集',
+  MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
+  MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
 }
 
 //图层
@@ -387,6 +400,11 @@ const Map_Settings = {
   COORDINATE_SYSTEM_SETTING: '坐标系设置',
   ADVANCED_SETTING: '高级设置',
   LEGEND_SETTING: '图例设置',
+  ENCLOSURE_NAME: '围栏名称',
+  START_TIME: '开始时间',
+  END_TIME: '结束时间',
+  REMARKS: '备注',
+  DRAWING_RANGE: '绘制范围',
 
   //二级菜单 基本设置
   MAP_NAME: '地图名称',

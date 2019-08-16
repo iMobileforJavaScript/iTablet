@@ -56,7 +56,7 @@ const Prompt = {
   SAVE_SUCCESSFULLY: '保存成功',
   NO_NEED_TO_SAVE: '不需要保存',
   SAVE_FAILED: '保存失败',
-  TURN_ON_AUTO_SPLIT_REGION: '是否开启动态投影',
+  ENABLE_DYNAMIC_PROJECTION: '是否开启动态投影',
   TURN_ON: '是',
 
   NO_PLOTTING_DEDUCTION: '当前地图没有推演列表',

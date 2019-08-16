@@ -527,28 +527,55 @@ class AppRoot extends Component {
       type={'modal'}
       confirmAction={async () => {
         this.exit.setDialogVisible(false)
-        let fileCachePath = await FileTools.appendingHomeDirectory('/iTablet/license/Trial_License.slm')
-        let bRes = await RNFS.exists(fileCachePath)
-        if(bRes){
-          await RNFS.unlink(fileCachePath)
-        }
-        let dataUrl = await FetchUtils.getFindUserDataUrl(
-          'xiezhiyan123',
-          'Trial_License',
-          '.geojson'
+        GLOBAL.Loading.setLoading(
+          true,
+          global.language==='CN'?"许可申请中...":"Applying"
         )
-        let downloadOptions = {
-          fromUrl: dataUrl,
-          toFile: fileCachePath,
-          background: true,
-          fileName: 'Trial_License.slm',
-          progressDivider: 1,
-        }
-        let res = await RNFS.downloadFile(downloadOptions)
-        if(res){
-          Toast.show(global.language==='CN'?"试用成功":'Successful trial')
-        }else{
-          Toast.show(global.language==='CN'?"许可申请失败":'License application failed')
+        try{
+          let fileCachePath = await FileTools.appendingHomeDirectory('/iTablet/license/Trial_License.slm')
+          let bRes = await RNFS.exists(fileCachePath)
+          if(bRes){
+            await RNFS.unlink(fileCachePath)
+          }
+          let dataUrl = undefined
+          setTimeout(()=>{
+            if(dataUrl === undefined){
+              GLOBAL.Loading.setLoading(
+                false,
+                global.language==='CN'?"许可申请中...":"Applying..."
+              )
+              Toast.show(global.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
+            }
+          }, 10000 )
+          dataUrl = await FetchUtils.getFindUserDataUrl(
+            'xiezhiyan123',
+            'Trial_License',
+            '.geojson',
+          )
+          let downloadOptions = {
+            fromUrl: dataUrl,
+            toFile: fileCachePath,
+            background: true,
+            fileName: 'Trial_License.slm',
+            progressDivider: 1,
+          }
+
+          const ret =  RNFS.downloadFile(downloadOptions)
+
+          ret.promise
+            .then(async () => {
+              GLOBAL.Loading.setLoading(
+                false,
+                global.language==='CN'?"许可申请中...":"Applying"
+              )
+              Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+            })
+        }catch (e) {
+          GLOBAL.Loading.setLoading(
+            false,
+            global.language==='CN'?"许可申请中...":"Applying"
+          )
+          Toast.show(global.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
         }
         // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
       }}

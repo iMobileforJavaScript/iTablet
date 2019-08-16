@@ -13,6 +13,7 @@ import {
   SCollector,
   EngineType,
   SMediaCollector,
+  SMAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -52,12 +53,24 @@ import {
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import { setGestureDetectorListener } from '../../../GestureDetectorListener'
-import { Platform, View, Text, InteractionManager } from 'react-native'
+import {
+  Platform,
+  View,
+  Text,
+  InteractionManager,
+  Image,
+  TouchableOpacity,
+} from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
+import NavigationView from '../../components/NavigationView'
+import NavigationPoiView from '../../components/NavigationPoiView'
+import ChangeArView from '../../components/ChangeArView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
+import Map2Dto3D from '../../components/Map2Dto3D/Map2Dto3D'
+import FloorListView from '../../components/FloorListView'
 
 const markerTag = 117868
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -75,7 +88,11 @@ export default class MapView extends React.Component {
     currentLayer: PropTypes.object,
     template: PropTypes.object,
     mapLegend: PropTypes.object,
+    mapNavigation: PropTypes.object,
+    map2Dto3D: PropTypes.bool,
+    mapNavigationShow: PropTypes.bool,
     mapScaleView: PropTypes.bool,
+    mapIs3D: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -119,6 +136,10 @@ export default class MapView extends React.Component {
     setCurrentSymbols: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
+    setMapNavigation: PropTypes.func,
+    setMapNavigationShow: PropTypes.func,
+    setMap2Dto3D: PropTypes.func,
+    setMapIs3D: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
@@ -129,8 +150,6 @@ export default class MapView extends React.Component {
     const { params } = this.props.navigation.state
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
-    // this.operationType =
-    //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.showMarker = params && params.showMarker
@@ -144,19 +163,6 @@ export default class MapView extends React.Component {
     this.path = (params && params.path) || ''
     this.showDialogCaption =
       params && params.path ? !params.path.endsWith('.smwu') : true
-    // this.savepath =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    // let wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : params.path.substring(params.path.lastIndexOf('/') + 1)
-    // wsName =
-    //   params.type === 'ONLINE' || !params.path
-    //     ? null
-    //     : wsName.lastIndexOf('.') > 0 &&
-    //       wsName.substring(0, wsName.lastIndexOf('.'))
     this.backAction = (params && params.backAction) || null
     this.state = {
       showMap: false, // 控制地图初始化显示
@@ -170,6 +176,10 @@ export default class MapView extends React.Component {
       editLayer: {},
       showMapMenu: false,
       // changeLayerBtnBottom: scaleSize(200),
+      canBeUndo: false,
+      canBeRedo: false,
+      showAIDetect: GLOBAL.Type === constants.MAP_AR,
+      showRoadView: true,
     }
     this.closeInfo = [
       {
@@ -242,6 +252,12 @@ export default class MapView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.mapNavigation) !==
+      JSON.stringify(this.props.mapNavigation)
+    ) {
+      this.showFullMap(this.props.mapNavigation.isShow)
+    }
     if (
       JSON.stringify(prevProps.editLayer) !==
         JSON.stringify(this.props.editLayer) &&
@@ -1470,7 +1486,68 @@ export default class MapView extends React.Component {
 
   /** 展示撤销Modal **/
   showUndoView = () => {
-    this.popModal && this.popModal.setVisible(true)
+    (async function() {
+      this.popModal && this.popModal.setVisible(true)
+      let historyCount = await SMap.getMapHistoryCount()
+      let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+      this.setState({
+        canBeUndo: currentHistoryCount >= 0,
+        canBeRedo: currentHistoryCount < historyCount - 1,
+      })
+    }.bind(this)())
+  }
+
+  //多媒体采集
+  captureImage = params => {
+    //保存数据->跳转
+    (async function() {
+      let isTaggingLayer = await SMap.isTaggingLayer(
+        this.props.user.currentUser.userName,
+      )
+      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
+        await SMap.setTaggingGrid(
+          GLOBAL.TaggingDatasetName,
+          this.props.user.currentUser.userName,
+        )
+        const datasourceAlias =
+          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
+        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+        let targetPath = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Media,
+        )
+        SMediaCollector.initMediaCollector(targetPath)
+
+        let result = await SMediaCollector.addArMedia({
+          datasourceName: datasourceAlias,
+          datasetName: datasetName,
+          mediaName: params.mediaName,
+        })
+        if (result) {
+          this.switchAr()
+          Toast.show(params.mediaName + ' 添加成功')
+        }
+      } else {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+        )
+        this.props.navigation.navigate('LayerManager')
+      }
+    }.bind(this)())
+  }
+
+  _onArObjectClick = data => {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      let params = {
+        ID: data.id,
+        mediaName: data.name,
+        Info: data.info,
+      }
+      // Toast.show(data.name + ', ' + data.info + ', ' + data.id)
+      this.captureImage(params)
+    }
   }
 
   renderMenuDialog = () => {
@@ -1542,7 +1619,7 @@ export default class MapView extends React.Component {
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         //title={'提示'}
-        info={getLanguage(this.props.language).Prompt.TURN_ON_AUTO_SPLIT_REGION}
+        info={getLanguage(this.props.language).Prompt.ENABLE_DYNAMIC_PROJECTION}
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
         //{'是'}
@@ -1560,18 +1637,50 @@ export default class MapView extends React.Component {
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_UNDO}
           //{'撤销'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_undo}
+          textColor={!this.state.canBeUndo && color.contentColorGray}
+          image={
+            this.state.canBeUndo
+              ? getThemeAssets().publicAssets.icon_undo
+              : getPublicAssets().attribute.icon_undo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.undo()}
+          onPress={() => {
+            if (!this.state.canBeUndo) return
+            ;(async function() {
+              await SMap.undo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         <MTBtn
           key={'redo'}
           title={getLanguage(this.props.language).Map_Attribute.ATTRIBUTE_REDO}
           //{'恢复'}
           style={styles.button}
-          image={getThemeAssets().publicAssets.icon_redo}
+          textColor={!this.state.canBeRedo && color.contentColorGray}
+          image={
+            this.state.canBeRedo
+              ? getThemeAssets().publicAssets.icon_redo
+              : getPublicAssets().attribute.icon_redo_disable
+          }
           imageStyle={styles.headerBtn}
-          onPress={() => SMap.redo()}
+          onPress={() => {
+            if (!this.state.canBeRedo) return
+            ;(async function() {
+              await SMap.redo()
+              let historyCount = await SMap.getMapHistoryCount()
+              let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
+              this.setState({
+                canBeUndo: currentHistoryCount >= 0,
+                canBeRedo: currentHistoryCount < historyCount - 1,
+              })
+            }.bind(this)())
+          }}
         />
         {/*<MTBtn*/}
         {/*key={'revert'}*/}
@@ -1635,6 +1744,20 @@ export default class MapView extends React.Component {
         imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
         onPress={this.showUndoView}
       />,
+      <TouchableOpacity
+        key={'search'}
+        onPress={async () => {
+          NavigationService.navigate('PointAnalyst', {
+            type: 'pointSearch',
+          })
+        }}
+      >
+        <Image
+          resizeMode={'contain'}
+          source={require('../../../../assets/header/icon_search.png')}
+          style={styles.search}
+        />
+      </TouchableOpacity>,
     ]
   }
 
@@ -1657,6 +1780,88 @@ export default class MapView extends React.Component {
         progressColor={color.item_selected_bg}
       />
     )
+  }
+
+  /** 切换ar和地图浏览 **/
+  switchAr = () => {
+    if (this.state.showAIDetect) {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
+      this.setState({
+        showAIDetect: false,
+      })
+    } else {
+      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(true)
+      this.setState({
+        showAIDetect: true,
+      })
+    }
+  }
+  _renderArModeIcon = () => {
+    return (
+      <View style={styles.btnView}>
+        <MTBtn
+          style={styles.iconAr}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          onPress={this.switchAr}
+          activeOpacity={0.5}
+          // separator={scaleSize(2)}
+        />
+      </View>
+    )
+  }
+
+  _renderNavigationIcon = () => {
+    return (
+      <View style={styles.navigation}>
+        <MTBtn
+          style={styles.iconNav}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          onPress={async () => {
+            NavigationService.navigate('PointAnalyst', {
+              type: 'pointSearch',
+            })
+          }}
+          activeOpacity={0.5}
+        />
+      </View>
+    )
+  }
+
+  _renderARNavigationIcon = () => {
+    return (
+      <View style={styles.arnavigation}>
+        <MTBtn
+          style={styles.iconNav}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          activeOpacity={0.5}
+        />
+      </View>
+    )
+  }
+
+  _renderNavigationView = () => {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+        }}
+      >
+        <NavigationView />
+      </View>
+    )
+  }
+
+  _renderNavigationPoiView = () => {
+    return <NavigationPoiView />
+  }
+
+  _renderChangeArView = () => {
+    return <ChangeArView />
   }
 
   renderContainer = () => {
@@ -1686,22 +1891,60 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.legend = ref)}
           />
         )}
-        {this.state.showMap && (
+        {!this.props.map2Dto3D && this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
             style={styles.map}
             onGetInstance={this._onGetInstance}
           />
         )}
-
+        {this.props.map2Dto3D && (
+          <Map2Dto3D
+            mapIs3D={this.props.mapIs3D}
+            openMap={this.props.openMap}
+            openWorkspace={this.props.openWorkspace}
+          />
+        )}
+        {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
+        {this.state.showAIDetect && (
+          <SMAIDetectView
+            ref={ref => (GLOBAL.SMAIDetectView = ref)}
+            onArObjectClick={this._onArObjectClick}
+          />
+        )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
-        {this.renderMapController()}
+        {!this.state.showAIDetect && this.renderMapController()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          this.props.mapNavigation.isPointShow &&
+          this._renderNavigationView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          this.props.mapNavigation.isShow &&
+          this._renderNavigationPoiView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigation.isPointShow &&
+          this._renderChangeArView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          !this.props.mapNavigation.isShow &&
+          this._renderNavigationIcon()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigation.isPointShow &&
+          this.props.mapNavigationShow &&
+          this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
           !this.props.analyst.params &&
+          !this.state.showAIDetect &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
@@ -1716,7 +1959,12 @@ export default class MapView extends React.Component {
         {this.state.measureShow &&
           !this.props.analyst.params &&
           this.renderMeasureLabel()}
-        {this.props.mapScaleView && (
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_AR &&
+          this._renderArModeIcon()}
+        {this.props.mapScaleView &&
+          !this.state.showAIDetect &&
+          !this.props.mapNavigation.isShow && (
           <ScaleView
             device={this.props.device}
             language={this.props.language}

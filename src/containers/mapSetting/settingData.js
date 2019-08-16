@@ -143,6 +143,23 @@ const getlegendSetting = () => [
     title: getLanguage(global.language).Map_Settings.LEGEND_SETTING,
   },
 ]
+const getnavigationSetting = () => [
+  {
+    title: getLanguage(global.language).Map_Settings.ENCLOSURE_NAME,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.START_TIME,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.END_TIME,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.REMARKS,
+  },
+  {
+    title: getLanguage(global.language).Map_Settings.DRAWING_RANGE,
+  },
+]
 /*
  * 二级 三级地图菜单 设置
  * */
@@ -612,4 +629,5 @@ export {
   colorMode,
   fourRanges,
   transferData,
+  getnavigationSetting,
 }

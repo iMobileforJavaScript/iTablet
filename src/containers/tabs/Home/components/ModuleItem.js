@@ -54,10 +54,11 @@ export default class ModuleItem extends Component {
 
   _renderProgressView = () => {
     if (!this.props.downloadData) return <View />
-    let value =
-      (this.props.downloadData.progress >= 0
-        ? ~~this.props.downloadData.progress.toFixed(0)
-        : 0) + '%'
+    // let value =
+    //   (this.props.downloadData.progress >= 0
+    //     ? ~~this.props.downloadData.progress.toFixed(0)
+    //     : 0) + '%'
+    let value = this.props.downloadData.progress + '%'
     let progress =
       this.props.downloadData.progress >= 100
         ? getLanguage(global.language).Prompt.IMPORTING

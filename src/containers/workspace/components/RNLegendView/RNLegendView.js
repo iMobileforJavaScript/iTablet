@@ -248,9 +248,9 @@ export default class RNLegendView extends React.Component {
         <Text
           style={{
             position: 'absolute',
-            top: 1,
+            top: 0,
             left: '46%',
-            letterSpacing: scaleSize(4),
+            letterSpacing: scaleSize(2),
             fontSize: setSpText(18),
           }}
         >

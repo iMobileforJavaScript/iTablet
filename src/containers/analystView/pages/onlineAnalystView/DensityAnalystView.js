@@ -120,6 +120,24 @@ export default class OnlineAnalystView extends Component {
     })
   }
 
+  reset = () => {
+    this.setState({
+      analystMethod: onlineParamsData.getAnalysisMethod(this.props.language)[0],
+      meshType: onlineParamsData.getMeshType(this.props.language)[0],
+      meshSizeUnit: getLanguage(this.props.language).Analyst_Params.METER,
+      weight: '',
+      bounds: [],
+      meshSize: 30,
+      radius: 300,
+      areaUnit: onlineParamsData.getAreaUnit(this.props.language)[0],
+      rangeMode: onlineParamsData.getRangeMode(this.props.language)[0],
+      rangeCount: 0,
+      colorGradientType: onlineParamsData.getColorGradientType(
+        this.props.language,
+      )[0],
+    })
+  }
+
   /** 分析参数 **/
   renderAnalystParams = () => {
     return (

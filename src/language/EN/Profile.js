@@ -13,6 +13,9 @@ const Profile = {
   TEMPLATE: 'Template',
   COLLECTION_TEMPLATE: 'Collection Template',
   PLOTTING_TEMPLATE: 'Plotting Template',
+  NAVIGATION: 'Navigation',
+  INCREMENT: 'Increment',
+  ENCLOSURE: 'Enclosure',
 
   //我的——登录
   LOGIN: 'Login',

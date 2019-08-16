@@ -68,7 +68,6 @@ import {
   Map3DTabs,
   // MapAnalystTabs,
   CoworkTabs,
-  MapARTabs,
   MapView,
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
@@ -98,6 +97,7 @@ import MediaEdit from './mediaEdit'
 import Camera from './camera'
 
 import ArView from './workspace/components/ArView'
+import Map2Dto3D from './workspace/components/Map2Dto3D'
 
 const AppNavigator = createStackNavigator(
   {
@@ -138,12 +138,6 @@ const AppNavigator = createStackNavigator(
     //     header: null,
     //   },
     // },
-    MapARTabs: {
-      screen: MapARTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
     Map3DTabs: {
       screen: Map3DTabs,
       navigationOptions: {
@@ -717,6 +711,12 @@ const AppNavigator = createStackNavigator(
     },
     ArView: {
       screen: ArView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Map2Dto3D: {
+      screen: Map2Dto3D,
       navigationOptions: {
         header: null,
       },

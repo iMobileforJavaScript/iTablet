@@ -7,6 +7,10 @@ const Map_Label = {
   SCENE: 'Scene',
   NAME: 'Name',
   TOOL_BOX: 'Toolbox',
+  ARMAP: 'Scenery',
+  NAVIGATION: 'Navigation',
+  INCREMENT: 'Increment',
+  ENCLOSURE: 'Enclosure',
 }
 
 //地图、场景主菜单
@@ -257,6 +261,15 @@ const Map_Main_Menu = {
   SHARE_WECHAT: 'Wechat',
   SHARE_FRIENDS: 'Friends',
   SHARE_EXPLORE: 'Explore',
+
+  MAO_ROAD_DISTRIBUTION: 'Road Distribution',
+
+  MAP_AR_AI_ASSISTANT: 'AI Assitant',
+  MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
+  MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
+  MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: 'Illegal Collect',
+  MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
+  MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
 }
 
 //图层
@@ -366,6 +379,11 @@ const Map_Settings = {
   COORDINATE_SYSTEM_SETTING: 'Coordinate System Settings',
   ADVANCED_SETTING: 'Advanced Settings',
   LEGEND_SETTING: 'Legend Settings',
+  ENCLOSURE_NAME: 'Enclosure Nmae',
+  START_TIME: 'Start Time',
+  END_TIME: 'End Time',
+  REMARKS: 'Remarks',
+  DRAWING_RANGE: 'Drawing Range',
 
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',
@@ -391,7 +409,7 @@ const Map_Settings = {
   //二级菜单 坐标系设置
   COORDINATE_SYSTEM: 'Coordinate System',
   COPY_COORDINATE_SYSTEM: 'Copy Coordinate System',
-  DYNAMIC_PROJECTION: 'Dynamic Projection',
+  DYNAMIC_PROJECTION: 'Enable Dynamic Projection',
   TRANSFER_METHOD: 'Transfer Method',
 
   //二级菜单 高级设置

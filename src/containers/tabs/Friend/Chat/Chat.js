@@ -140,9 +140,9 @@ class Chat extends React.Component {
       messages: this.state.messages.map(m => {
         if (m._id === value.msgId) {
           m.originMsg.message.message.progress = value.percentage
-
+          m.downloading = true
           if (value.percentage === 100) {
-            m.originMsg.message.message.isReceived = 1
+            m.downloading = false
           }
         }
         return {
@@ -512,24 +512,56 @@ class Chat extends React.Component {
     })
   }
 
-  receiveFile = (message, receivePath) => {
+  receiveFile = async (message, receivePath) => {
+    let storeFileName = await this.getAvailableFileName(
+      receivePath,
+      message.originMsg.message.message.fileName,
+    )
     message.originMsg.message.message.filePath =
-      receivePath + '/' + message.originMsg.message.message.fileName
+      receivePath + '/' + storeFileName
+
+    message.downloading = true
 
     this.friend._receiveFile(
-      message.originMsg.message.message.fileName,
+      storeFileName,
       message.originMsg.message.message.queueName,
       receivePath,
       this.targetUser.id,
       message._id,
       message.user._id,
       message.originMsg.message.message.fileSize,
+      res => {
+        if (res === false) {
+          message.downloading = false
+        }
+      },
     )
+  }
+
+  getAvailableFileName = async (filePath, fullFileName) => {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let fileName = fullFileName.substr(0, fullFileName.lastIndexOf('.'))
+    let suffix = fullFileName.substr(fullFileName.lastIndexOf('.'))
+    let tempFullName = ''
+    if (await FileTools.fileIsExist(homePath + filePath + '/' + fullFileName)) {
+      for (let i = 1; ; i++) {
+        tempFullName = fileName + '_' + i + suffix
+        if (
+          !(await FileTools.fileIsExist(
+            homePath + filePath + '/' + tempFullName,
+          ))
+        ) {
+          return tempFullName
+        }
+      }
+    } else {
+      return fullFileName
+    }
   }
 
   onCustomViewTouch = async (type, message) => {
     switch (type) {
-      case MSGConstant.MSG_FILE_NOTIFY:
+      case MSGConstant.MSG_MAP:
       case MSGConstant.MSG_LAYER:
       case MSGConstant.MSG_DATASET:
         this.onCustomViewFileTouch(type, message)
@@ -563,10 +595,13 @@ class Chat extends React.Component {
   }
 
   onCustomViewFileTouch = async (type, message) => {
+    let userPath = ConstPath.UserPath + this.curUser.userName
+    let receivePath = userPath + '/ReceivedFiles'
+
     if (message.user._id !== this.curUser.userId) {
-      if (message.originMsg.message.message.progress !== 100) {
-        let userPath = ConstPath.UserPath + this.curUser.userName
-        let receivePath = userPath + '/ReceivedFiles'
+      if (message.downloading) {
+        Toast.show(getLanguage(global.language).Friends.WAIT_DOWNLOADING)
+      } else if (message.originMsg.message.message.progress !== 100) {
         this.SimpleDialog.setConfirm(() => {
           this.SimpleDialog.setVisible(false)
           this.receiveFile(message, receivePath)
@@ -575,9 +610,22 @@ class Chat extends React.Component {
           getLanguage(global.language).Friends.RECEIVE_CONFIRM,
         )
         this.SimpleDialog.setVisible(true)
-      } else {
+      } else if (message.originMsg.message.message.progress === 100) {
+        let homePath = await FileTools.appendingHomeDirectory()
+        let filePath = homePath + message.originMsg.message.message.filePath
+        if (!(await FileTools.fileIsExist(filePath))) {
+          this.SimpleDialog.setConfirm(() => {
+            this.SimpleDialog.setVisible(false)
+            this.receiveFile(message, receivePath)
+          })
+          this.SimpleDialog.setText(
+            getLanguage(global.language).Friends.DATA_NOT_FOUND,
+          )
+          this.SimpleDialog.setVisible(true)
+          return
+        }
         switch (type) {
-          case MSGConstant.MSG_FILE_NOTIFY:
+          case MSGConstant.MSG_MAP:
             this.SimpleDialog.setConfirm(() => {
               this.SimpleDialog.setVisible(false)
               this.importMap(message)
@@ -862,7 +910,7 @@ class Chat extends React.Component {
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
               if (
-                props.currentMessage.type === MSGConstant.MSG_FILE_NOTIFY ||
+                props.currentMessage.type === MSGConstant.MSG_MAP ||
                 props.currentMessage.type === MSGConstant.MSG_LOCATION ||
                 props.currentMessage.type === MSGConstant.MSG_LAYER ||
                 props.currentMessage.type === MSGConstant.MSG_DATASET
@@ -890,7 +938,7 @@ class Chat extends React.Component {
         callBack={value => this.setState({ chatBottom: value })}
         sendCallBack={(type, value, fileName) => {
           if (type === 1) {
-            this.onSendFile(MSGConstant.MSG_FILE_NOTIFY, value, fileName)
+            this.onSendFile(MSGConstant.MSG_MAP, value, fileName)
           } else if (type === 3) {
             this.onSendLocation(value)
           }
@@ -996,8 +1044,7 @@ class Chat extends React.Component {
     let currentMessage = props
 
     if (
-      (currentMessage.type &&
-        currentMessage.type === MSGConstant.MSG_FILE_NOTIFY) ||
+      (currentMessage.type && currentMessage.type === MSGConstant.MSG_MAP) ||
       currentMessage.type === MSGConstant.MSG_LAYER ||
       currentMessage.type === MSGConstant.MSG_DATASET
     ) {

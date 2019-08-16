@@ -10,21 +10,29 @@ import {
 import { Container, SearchBar } from '../../components'
 // import { scaleSize} from '../../utils'
 // import { ConstInfo } from '../../constants'
-import { SScene } from 'imobile_for_reactnative'
+import { SScene, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 import { Toast } from '../../utils'
 import styles from './styles'
 import { getLanguage } from '../../language/index'
+import constants from '../workspace/constants'
+import PropTypes from 'prop-types'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
     navigation: Object,
   }
 
+  static propTypes = {
+    mapNavigation: PropTypes.object,
+    setMapNavigation: PropTypes.func,
+  }
+
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
+    this.is3D = GLOBAL.Type === constants.MAP_3D
     this.PointType = null
     this.state = {
       searchValue: null,
@@ -36,17 +44,24 @@ export default class PointAnalyst extends Component {
   }
 
   componentDidMount() {
-    SScene.initPointSearch()
-    SScene.setPointSearchListener({
-      callback: result => {
-        if (this.type === 'pointAnalyst') {
-          this.setState({ analystData: result })
-        } else {
-          this.setState({ searchData: result })
-          this.setLoading(false)
-        }
-      },
-    })
+    if (this.is3D) {
+      SScene.initPointSearch()
+      SScene.setPointSearchListener({
+        callback: result => {
+          if (this.type === 'pointAnalyst') {
+            this.setState({ analystData: result })
+          } else {
+            this.setState({ searchData: result })
+            this.setLoading(false)
+          }
+        },
+      })
+    } else {
+      SMap.initPointSearch()
+      SMap.setPointSearchListener({
+        callback: result => this.setState({ searchData: result }),
+      })
+    }
   }
 
   renderHeaderOfAnalyst = () => {
@@ -108,19 +123,36 @@ export default class PointAnalyst extends Component {
 
   toLocationPoint = async (pointName, index) => {
     try {
-      if (this.PointType) {
-        if (this.PointType === 'firstPoint') {
-          await SScene.savePoint(index, this.PointType)
-          this.setState({ firstPoint: pointName, analystData: [] })
+      if (this.is3D) {
+        if (this.PointType) {
+          if (this.PointType === 'firstPoint') {
+            await SScene.savePoint(index, this.PointType)
+            this.setState({ firstPoint: pointName, analystData: [] })
+          } else {
+            await SScene.savePoint(index, this.PointType)
+            this.container.setLoading(
+              true,
+              getLanguage(global.language).Prompt.ANALYSING,
+            )
+            //'路径分析中')
+            this.setState({ secondPoint: pointName, analystData: [] })
+            let result = await SScene.navigationLine()
+            if (result) {
+              this.container.setLoading(false)
+              NavigationService.goBack()
+            } else {
+              Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
+              //'网络错误')
+            }
+          }
         } else {
-          await SScene.savePoint(index, this.PointType)
           this.container.setLoading(
             true,
-            getLanguage(global.language).Prompt.ANALYSING,
+            getLanguage(global.language).Prompt.SERCHING,
           )
-          //'路径分析中')
-          this.setState({ secondPoint: pointName, analystData: [] })
-          let result = await SScene.navigationLine()
+          // '位置搜索中')
+          this.setState({ searchValue: pointName, searchData: [] })
+          let result = await SScene.toLocationPoint(index)
           if (result) {
             this.container.setLoading(false)
             NavigationService.goBack()
@@ -130,19 +162,21 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
-        this.container.setLoading(
-          true,
-          getLanguage(global.language).Prompt.SERCHING,
-        )
-        // '位置搜索中')
         this.setState({ searchValue: pointName, searchData: [] })
-        let result = await SScene.toLocationPoint(index)
+        if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          await SMap.routeAnalyst(index)
+          this.props.setMapNavigation({
+            isShow: true,
+            name: pointName,
+            isPointShow: true,
+          })
+        }
+        let result = await SMap.toLocationPoint(index)
         if (result) {
           this.container.setLoading(false)
           NavigationService.goBack()
         } else {
           Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
-          //'网络错误')
         }
       }
     } catch (error) {
@@ -261,9 +295,15 @@ export default class PointAnalyst extends Component {
         ref={ref => (this.searchBar = ref)}
         onSubmitEditing={searchKey => {
           // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
-          SScene.pointSearch(searchKey).then(() => {
-            // this.setLoading(false)
-          })
+          if (this.is3D) {
+            SScene.pointSearch(searchKey).then(() => {
+              // this.setLoading(false)
+            })
+          } else {
+            SMap.pointSearch(searchKey).then(() => {
+              // this.setLoading(false)
+            })
+          }
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
         //{'请输入搜索关键字'}

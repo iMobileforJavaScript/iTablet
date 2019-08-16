@@ -21,6 +21,7 @@ import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
+import { MsgConstant } from '../../Friend'
 
 const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
@@ -664,6 +665,46 @@ export default class MyLocalData extends Component {
               NavigationService.goBack()
             }
           }
+        } else if (type === 'friend') {
+          this.ModalBtns && this.ModalBtns.setVisible(false)
+          let result
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            result = await this._exportData(true)
+          } else {
+            result = await FileTools.zipFiles(archivePaths, targetPath)
+          }
+
+          if (!result) {
+            Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+            //'分享失败')
+            this.setLoading(false)
+            return
+          }
+          let type
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            type = MsgConstant.MSG_MAP
+          }
+          let action = [
+            {
+              name: 'onSendFile',
+              type: type,
+              filePath: targetPath,
+              fileName: fileName,
+            },
+          ]
+          NavigationService.navigate('SelectFriend', {
+            user: this.props.user,
+            callBack: async targetId => {
+              NavigationService.replace('CoworkTabs', {
+                targetId: targetId,
+                action: action,
+              })
+            },
+          })
         }
       }
     } catch (e) {
@@ -1067,6 +1108,11 @@ export default class MyLocalData extends Component {
           actionOfWechat={() => {
             this._onUploadData('weChat')
           }}
+          actionOfFriend={
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+              ? () => this._onUploadData('friend')
+              : undefined
+          }
         />
       </Container>
     )
