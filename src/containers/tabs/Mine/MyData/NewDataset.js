@@ -88,11 +88,6 @@ class NewDataset extends Component {
           if (!newDatasets[i].datasetName) {
             Toast.show(getLanguage(global.language).Profile.ENTER_DATASET_NAME)
             return
-          } else {
-            //if(!name) {
-            //   Toast.show('名称不符合规则')
-            //   return
-            // }
           }
           if (!newDatasets[i].datasetType) {
             Toast.show(getLanguage(global.language).Profile.SELECT_DATASET_TYPE)
@@ -109,26 +104,51 @@ class NewDataset extends Component {
         datasourceParams.engineType = EngineType.UDB
         datasourceParams.alias = this.state.title
         await SMap.openDatasource2(datasourceParams)
-        for (let i = 0; i < newDatasets.length; i++) {
-          await SMap.createDataset(
-            this.state.title,
-            newDatasets[i].datasetName,
-            newDatasets[i].datasetType,
-          )
+        if (!(await this._isAvailableDatasetName(newDatasets))) {
+          setTimeout(() => {
+            Toast.show(getLanguage(global.language).Prompt.INVALID_DATASET_NAME)
+            this.container && this.container.setLoading(false)
+          }, 1000)
+        } else {
+          for (let i = 0; i < newDatasets.length; i++) {
+            await SMap.createDataset(
+              this.state.title,
+              newDatasets[i].datasetName,
+              newDatasets[i].datasetType,
+            )
+          }
+          setTimeout(() => {
+            Toast.show(getLanguage(global.language).Prompt.CREATE_SUCCESSFULLY)
+            this._clearDatasets()
+            this.container && this.container.setLoading(false)
+          }, 1000)
         }
         SMap.closeDatasource(this.state.title)
-        setTimeout(() => {
-          Toast.show(getLanguage(global.language).Prompt.CREATE_SUCCESSFULLY)
-          this._clearDatasets()
-          this.container.setLoading(false)
-        }, 1000)
       }
     } catch (error) {
       SMap.closeDatasource(this.state.title)
       setTimeout(() => {
         Toast.show(getLanguage(global.language).Prompt.CREATE_FAILED)
-        this.container.setLoading(false)
+        this.container && this.container.setLoading(false)
       }, 1000)
+    }
+  }
+
+  _isAvailableDatasetName = async datasets => {
+    if (datasets.length === 0) {
+      return false
+    } else {
+      for (let i = 0; i < datasets.length; i++) {
+        if (
+          !(await SMap.isAvailableDatasetName(
+            this.state.title,
+            datasets[i].datasetName,
+          ))
+        ) {
+          return false
+        }
+      }
+      return true
     }
   }
 

@@ -976,7 +976,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   _onShare = async type => {
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+    if (!UserType.isOnlineUser(this.props.user.currentUser)) {
       Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
       return
     }

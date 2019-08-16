@@ -62,6 +62,7 @@ const Prompt = {
   ENABLE_DYNAMIC_PROJECTION: 'Enable Dynamic Projection?',
   TURN_ON: 'Turn on',
   CREATE_FAILED: 'Create failed',
+  INVALID_DATASET_NAME: 'Invalid dataset name',
 
   NO_PLOTTING_DEDUCTION: 'No Plotting Deduction in the current map',
   NO_FLY: 'No Fly in the current scene',
