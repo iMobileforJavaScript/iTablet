@@ -13,6 +13,7 @@ import { color, size } from '../../../styles'
 import { scaleSize, screen } from '../../../utils'
 import { getThemeAssets, getPublicAssets } from '../../../assets'
 import { CheckStatus } from '../../../constants'
+import { NumberCounter } from '../../../components'
 
 const styles = StyleSheet.create({
   itemContainer: {
@@ -100,10 +101,12 @@ export default class AnalystItem extends PureComponent {
     rightStyle?: any,
     inputStyle?: any,
     rightType?: string,
+    rightProps?: Object,
     keyboardType?: string,
     returnKeyLabel?: string,
     returnKeyType?: string,
     autoCheckNumber?: boolean, // 自动检查输入数字是否合法。只有自定义onChangeText方法，该值才生效
+    numberRange?: string, // 数字范围 [0, 100]: 0 <= a <= 100 | (0, 100]: 0 < a <= 100 | [0, ]: 0 <= a, 只支持[], (), (], [)
     disable?: boolean, // 是否可以操作
     style?: Object,
     onChange?: () => {},
@@ -116,16 +119,18 @@ export default class AnalystItem extends PureComponent {
   }
 
   static defaultProps = {
-    rightType: 'text', // text || input
+    rightType: 'text', // text || input || number_counter
     keyboardType: 'default', // TextInput keyboardType
     returnKeyLabel: '完成', // TextInput returnKeyLabel
     returnKeyType: 'done', // TextInput returnKeyType
     autoCheckNumber: false,
+    rightProps: {},
     disable: false,
   }
 
   constructor(props) {
     super(props)
+    this.defaultValue = props.value
     this.state = {
       inputValue: props.value,
     }
@@ -144,23 +149,71 @@ export default class AnalystItem extends PureComponent {
   }
 
   onSubmitEditing = () => {
+    let text = this.checkNumberRange(this.state.inputValue)
     if (
       this.props.onSubmitEditing &&
       typeof this.props.onSubmitEditing === 'function'
     ) {
-      this.props.onSubmitEditing(this.state.inputValue)
+      this.props.onSubmitEditing(text)
       // this.props.onSubmitEditing(this.inputValue)
     }
   }
 
   onBlur = () => {
+    let text = this.checkNumberRange(this.state.inputValue)
     if (this.props.onBlur && typeof this.props.onBlur === 'function') {
-      this.props.onBlur(this.state.inputValue)
+      this.props.onBlur(text)
     }
   }
 
   _blur = () => {
     this.input && this.input.blur()
+  }
+
+  checkNumberRange = text => {
+    if (this.props.numberRange === '') {
+      if (
+        this.props.keyboardType !== 'number-pad' &&
+        this.props.keyboardType !== 'decimal-pad' &&
+        this.props.keyboardType !== 'numeric'
+      ) {
+        return text
+      } else {
+        return isNaN(text) ? '' : text
+      }
+    }
+    let temp = this.props.numberRange
+      .replace('[', '')
+      .replace(']', '')
+      .replace('(', '')
+      .replace(')', '')
+    let tempArr = temp.split(',')
+    tempArr = tempArr.map(value => value.trim())
+
+    if (tempArr[0] === '' && tempArr[1] === '') {
+      return isNaN(text) ? '' : text
+    }
+    if (isNaN(text)) {
+      text = tempArr[0] === '' ? tempArr[1] : tempArr[0]
+    }
+
+    if (tempArr[0] !== '' && parseFloat(text) <= parseFloat(tempArr[0])) {
+      if (this.props.numberRange.indexOf('[') >= 0) {
+        text = tempArr[0]
+      } else if (this.props.numberRange.indexOf('(') >= 0) {
+        text = this.defaultValue
+      }
+    } else if (
+      tempArr[1] !== '' &&
+      parseFloat(text) >= parseFloat(tempArr[1])
+    ) {
+      if (this.props.numberRange.indexOf(']') >= 0) {
+        text = tempArr[1]
+      } else if (this.props.numberRange.indexOf(')') >= 0) {
+        text = this.defaultValue
+      }
+    }
+    return isNaN(text) ? '' : text
   }
 
   checkNumber = text => {
@@ -178,6 +231,24 @@ export default class AnalystItem extends PureComponent {
 
   renderRight = () => {
     let rightView = null
+    if (this.props.rightType === 'number_counter') {
+      return (
+        <View style={[styles.rightView, this.props.rightStyle]}>
+          <NumberCounter
+            value={this.props.value}
+            getValue={value => {
+              if (
+                this.props.onChange &&
+                typeof this.props.onChange === 'function'
+              ) {
+                this.props.onChange(value)
+              }
+            }}
+            {...this.props.rightProps}
+          />
+        </View>
+      )
+    }
     switch (typeof this.props.value) {
       case 'boolean':
         rightView = (

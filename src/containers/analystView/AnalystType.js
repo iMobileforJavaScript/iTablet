@@ -7,6 +7,7 @@ const Analyst_Types = {
   FIND_TSP_PATH: 6,
   THIESSEN_POLYGON: 7,
   MEASURE_DISTANCE: 8,
+  INTERPOLATION_ANALYSIS: 9,
 }
 
 const AggregatePointParams = {

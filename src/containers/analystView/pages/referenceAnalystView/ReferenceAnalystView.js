@@ -127,7 +127,7 @@ export default class ReferenceAnalystView extends Component {
   }
 
   analyst = () => {
-    if (!this.checkData) return
+    if (!this.checkData()) return
 
     let optionParameter = {}
     // 泰森
@@ -686,12 +686,26 @@ export default class ReferenceAnalystView extends Component {
           switch (this.currentPop) {
             case popTypes.DataSource:
               newStateData = { dataSource: data }
+              if (
+                this.state.dataSource &&
+                data.name !== this.state.dataSource.name
+              ) {
+                newStateData = Object.assign(newStateData, { dataSet: null })
+              }
               break
             case popTypes.DataSet:
               newStateData = { dataSet: data }
               break
             case popTypes.ReferenceDataSource:
               newStateData = { referenceDataSource: data }
+              if (
+                this.state.referenceDataSource &&
+                data.name !== this.state.referenceDataSource.name
+              ) {
+                newStateData = Object.assign(newStateData, {
+                  referenceDataSet: null,
+                })
+              }
               break
             case popTypes.ReferenceDataSet:
               newStateData = { referenceDataSet: data }
