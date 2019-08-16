@@ -309,10 +309,11 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_ANALYSIS:
       if (orientation === 'PORTRAIT') {
         column = 4
+        height = ConstToolType.TOOLBAR_HEIGHT[3]
       } else {
         column = 5
+        height = ConstToolType.TOOLBAR_HEIGHT[2]
       }
-      height = ConstToolType.TOOLBAR_HEIGHT[2]
       break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:

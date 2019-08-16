@@ -126,7 +126,10 @@ export default class PopModalList extends React.Component {
       <FingerMenu
         ref={ref => (this.fingerMenu = ref)}
         data={this.props.popData}
-        initialKey={this.props.currentPopData && this.props.currentPopData.key}
+        initialKey={
+          (this.props.currentPopData && this.props.currentPopData.key) ||
+          (this.props.popData.length > 0 && this.props.popData[0].key)
+        }
       />
     )
   }

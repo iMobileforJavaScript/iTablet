@@ -132,7 +132,7 @@ export default class OverlayAnalystView extends Component {
   }
 
   analyst = () => {
-    if (!this.checkData) return
+    if (!this.checkData()) return
     Toast.show(getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_START)
     InteractionManager.runAfterInteractions(async () => {
       try {
@@ -556,12 +556,26 @@ export default class OverlayAnalystView extends Component {
           switch (this.currentPop) {
             case popTypes.DataSource:
               newStateData = { dataSource: data }
+              if (
+                this.state.dataSource &&
+                data.name !== this.state.dataSource.name
+              ) {
+                newStateData = Object.assign(newStateData, { dataSet: null })
+              }
               break
             case popTypes.DataSet:
               newStateData = { dataSet: data }
               break
             case popTypes.OverlayDataSource:
               newStateData = { overlayDataSource: data }
+              if (
+                this.state.overlayDataSource &&
+                data.name !== this.state.overlayDataSource.name
+              ) {
+                newStateData = Object.assign(newStateData, {
+                  overlayDataSet: null,
+                })
+              }
               break
             case popTypes.OverlayDataSet:
               newStateData = { overlayDataSet: data }

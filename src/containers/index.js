@@ -95,6 +95,8 @@ import {
   WeightAndStatistic,
   LocalAnalystView,
   ReferenceAnalystView,
+  InterpolationAnalystView,
+  InterpolationAnalystDetailView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -693,6 +695,20 @@ const AppNavigator = createStackNavigator(
     },
     ReferenceAnalystView: {
       screen: ReferenceAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    InterpolationAnalystView: {
+      screen: InterpolationAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    InterpolationAnalystDetailView: {
+      screen: InterpolationAnalystDetailView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

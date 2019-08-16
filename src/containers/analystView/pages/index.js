@@ -10,6 +10,8 @@ import AnalystRangePage from './analystRangePage'
 import WeightAndStatistic from './weightAndStatistic'
 import LocalAnalystView from './localAnalystView'
 import ReferenceAnalystView from './referenceAnalystView'
+import InterpolationAnalystView from './interpolationAnalystView'
+import InterpolationAnalystDetailView from './interpolationAnalystDetailView'
 
 export {
   AnalystTools,
@@ -24,4 +26,6 @@ export {
   WeightAndStatistic,
   LocalAnalystView,
   ReferenceAnalystView,
+  InterpolationAnalystView,
+  InterpolationAnalystDetailView,
 }
