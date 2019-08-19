@@ -291,6 +291,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CLICK_START: 'Click Start',
   PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
+  PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
 }
 
 //图层

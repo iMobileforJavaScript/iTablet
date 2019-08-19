@@ -2610,7 +2610,7 @@ export default class ToolBar extends React.PureComponent {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
-    if (isShow) {
+    if (isShow && GLOBAL.TouchType != TouchType.ANIMATION_WAY) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
     }
@@ -3860,6 +3860,8 @@ export default class ToolBar extends React.PureComponent {
   endAnimation = () => {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
+    SMap.endAnimationWayPoint(false)
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
     GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
@@ -5199,6 +5201,7 @@ export default class ToolBar extends React.PureComponent {
         geoId={this.props.selection[0] && this.props.selection[0].ids[0]}
         Heighttype={this.state.type}
         device={this.props.device}
+        showToolbar={this.setVisible}
       />
     )
   }
@@ -6121,7 +6124,7 @@ export default class ToolBar extends React.PureComponent {
         createInfo.layerName = this.props.selection[0].layerInfo.name
       }
       SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
-
+      GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
       // let length=createInfo.length
       // // this.showToolbarAndBox(false)
       // this.isBoxShow = true

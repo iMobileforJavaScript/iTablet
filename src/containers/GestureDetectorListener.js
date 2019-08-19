@@ -93,6 +93,9 @@ async function touchCallback(event) {
         getLanguage(global.language).Analyst_Labels.BARRIER_NODE,
       )
       break
+    case TouchType.ANIMATION_WAY:
+      SMap.addAnimationWayPoint(event.screenPoint, true)
+      break
     case TouchType.ADD_NODES:
     case TouchType.NULL:
       break
