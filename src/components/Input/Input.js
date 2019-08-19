@@ -55,6 +55,14 @@ export default class Input extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      this.setState({
+        value: this.props.value,
+      })
+    }
+  }
+
   clear = () => {
     this.setState({
       value: '',

@@ -669,6 +669,17 @@ export default class BufferAnalystViewTab extends Component {
           switch (this.currentPop) {
             case popTypes.DataSource:
               newStateData = { dataSource: data }
+              if (
+                this.state.dataSource &&
+                data.name !== this.state.dataSource.name
+              ) {
+                newStateData = Object.assign(newStateData, {
+                  dataSet: null,
+                  showAdvance: false,
+                  roundTypeStatus: CheckStatus.CHECKED,
+                  flatTypeStatus: CheckStatus.UN_CHECK,
+                })
+              }
               break
             case popTypes.DataSet: {
               let roundTypeStatus = CheckStatus.CHECKED

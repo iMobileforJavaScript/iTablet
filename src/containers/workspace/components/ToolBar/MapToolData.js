@@ -1,7 +1,12 @@
 /**
  * 获取地图工具数据
  */
-import { SMap, Action, SMediaCollector } from 'imobile_for_reactnative'
+import {
+  SMap,
+  Action,
+  SMediaCollector,
+  DatasetType,
+} from 'imobile_for_reactnative'
 import { ConstToolType, TouchType, ConstPath } from '../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
@@ -17,6 +22,7 @@ let _params = {}
 /**
  * 获取工具操作
  * @param type
+ * @param params
  * @returns {{data: Array, buttons: Array}}
  */
 function getMapTool(type, params) {
@@ -42,25 +48,28 @@ function getMapTool(type, params) {
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
               //'名称',
-              action: name,
+              value: '',
+              //action: name,
             },
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
               //'备注',
-              action: remark,
+              value: '',
+              //action: remark,
             },
             // { title: '风格', action: remark },
             {
               title: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
               //'http地址',
-              action: address,
+              value: '',
+              //action: address,
             },
             // { title: '图片', action: address },
           ],
         },
       ]
       buttons = [
-        // ToolbarBtnType.TAGGING_BACK,
+        ToolbarBtnType.CANCEL,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.COMMIT,
@@ -641,10 +650,17 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
 async function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isPointLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isPointLayer = currentLayer.type === DatasetType.POINT
+  }
+  if (isTaggingLayer || isPointLayer) {
     SMap.setAction(Action.CREATEPOINT)
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
@@ -656,10 +672,17 @@ async function point() {
 }
 
 async function words() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isTextLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isTextLayer = currentLayer.type === DatasetType.TEXT
+  }
+  if (isTaggingLayer || isTextLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -671,10 +694,17 @@ async function words() {
 }
 
 async function pointline() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isLineLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isLineLayer = currentLayer.type === DatasetType.LINE
+  }
+  if (isTaggingLayer || isLineLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -686,10 +716,17 @@ async function pointline() {
 }
 
 async function freeline() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isLineLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isLineLayer = currentLayer.type === DatasetType.LINE
+  }
+  if (isTaggingLayer || isLineLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -701,10 +738,17 @@ async function freeline() {
 }
 
 async function pointcover() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isRegionLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isRegionLayer = currentLayer.type === DatasetType.REGION
+  }
+  if (isTaggingLayer || isRegionLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -716,10 +760,17 @@ async function pointcover() {
 }
 
 async function freecover() {
-  let isTaggingLayer = await SMap.isTaggingLayer(
-    _params.user.currentUser.userName,
-  )
-  if (isTaggingLayer) {
+  let currentLayer = _params.currentLayer
+  let reg = /^Label_(.*)#$/
+  let isTaggingLayer = false,
+    isRegionLayer = false
+  if (currentLayer) {
+    isTaggingLayer =
+      currentLayer.type === DatasetType.CAD &&
+      currentLayer.datasourceAlias.match(reg)
+    isRegionLayer = currentLayer.type === DatasetType.REGION
+  }
+  if (isTaggingLayer || isRegionLayer) {
     GLOBAL.ToolBar.setVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -730,62 +781,62 @@ async function freecover() {
   }
 }
 
-function name() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'name',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function name() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'name',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
-function remark() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'remark',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
-
-function address() {
-  return NavigationService.navigate('InputPage', {
-    headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
-    cb: async value => {
-      if (value !== '') {
-        (async function() {
-          await SMap.addRecordset(
-            GLOBAL.TaggingDatasetName,
-            'address',
-            value,
-            _params.user.currentUser.userName,
-          )
-        }.bind(this)())
-      }
-      NavigationService.goBack()
-    },
-  })
-}
+// function remark() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_REMARKS,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'remark',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
+//
+// function address() {
+//   return NavigationService.navigate('InputPage', {
+//     headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_HTTP,
+//     cb: async value => {
+//       if (value !== '') {
+//         (async function() {
+//           await SMap.addRecordset(
+//             GLOBAL.TaggingDatasetName,
+//             'address',
+//             value,
+//             _params.user.currentUser.userName,
+//           )
+//         }.bind(this)())
+//       }
+//       NavigationService.goBack()
+//     },
+//   })
+// }
 
 //多媒体采集
 function captureImage() {

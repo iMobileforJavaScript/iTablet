@@ -47,6 +47,7 @@ function goBack(routeName, immediate) {
         }
       }
     }
+    if (routeName && !key) return
     await _navigator.dispatch(
       NavigationActions.back({
         key,

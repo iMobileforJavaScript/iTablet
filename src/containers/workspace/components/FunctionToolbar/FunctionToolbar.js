@@ -495,7 +495,10 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, GLOBAL.currentToolbarType, {
         isFullScreen: true,
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.TOOLBAR_HEIGHT[2]
+            : ConstToolType.TOOLBAR_HEIGHT[3],
         tableType: 'normal',
       })
     }
@@ -745,11 +748,10 @@ export default class FunctionToolbar extends React.Component {
   /**专题图-添加 */
   getThemeMapAdd = async () => {
     let data = [],
-      buttons = []
-    buttons = [
-      ToolbarBtnType.THEME_CANCEL,
-      // ToolbarBtnType.THEME_COMMIT,
-    ]
+      buttons = [
+        ToolbarBtnType.THEME_CANCEL,
+        // ToolbarBtnType.THEME_COMMIT,
+      ]
     // let customerUDBPath = await FileTools.appendingHomeDirectory(
     //   ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
     // )
@@ -767,6 +769,8 @@ export default class FunctionToolbar extends React.Component {
     // })
 
     let userUDBPath, userUDBs
+    //过滤掉标注和标绘匹配正则
+    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
     if (
       this.props.user &&
       this.props.user.currentUser.userName &&
@@ -781,13 +785,17 @@ export default class FunctionToolbar extends React.Component {
         extension: 'udb',
         type: 'file',
       })
-      userUDBs.forEach(item => {
+      //过滤掉标注和标绘
+      let filterUDBs = userUDBs.filter(item => {
+        item.name = this.basename(item.path)
+        return !item.name.match(checkLabelAndPlot)
+      })
+      filterUDBs.map(item => {
         item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
         }
-        item.name = this.basename(item.path)
       })
 
       let mapData = await FileTools.getPathListByFilter(
@@ -815,7 +823,7 @@ export default class FunctionToolbar extends React.Component {
           title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
           //Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-          data: userUDBs,
+          data: filterUDBs,
         },
         {
           title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
@@ -832,13 +840,17 @@ export default class FunctionToolbar extends React.Component {
         extension: 'udb',
         type: 'file',
       })
-      customerUDBs.forEach(item => {
+      //过滤掉标注和标绘
+      let filterUDBs = customerUDBs.filter(item => {
+        item.name = this.basename(item.path)
+        return !item.name.match(checkLabelAndPlot)
+      })
+      filterUDBs.map(item => {
         item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
         }
-        item.name = this.basename(item.path)
       })
       let customerPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath,
@@ -863,7 +875,7 @@ export default class FunctionToolbar extends React.Component {
           title: getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE,
           //Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-          data: customerUDBs,
+          data: filterUDBs,
         },
         {
           title: getLanguage(this.props.language).Map_Main_Menu.OPEN_MAP,
@@ -1109,7 +1121,7 @@ export default class FunctionToolbar extends React.Component {
             image: getThemeAssets().functionBar.rightbar_analysis,
           },
           {
-            key: '风格',
+            key: constants.STYLE,
             title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
             //'风格',
             action: this.mapStyle,
@@ -1140,6 +1152,14 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu.START,
             action: () => this.start(ConstToolType.MAP_PLOTTING_START),
             image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: getLanguage(this.props.language).Map_Main_Menu.OPEN,
+            //constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             //标绘
@@ -1242,6 +1262,14 @@ export default class FunctionToolbar extends React.Component {
             // title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: getLanguage(this.props.language).Map_Main_Menu.OPEN,
+            //constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             title: getLanguage(this.props.language).Map_Main_Menu.COLLECTION,

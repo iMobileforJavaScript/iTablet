@@ -117,6 +117,21 @@ function getAnalysisData() {
     //   image: getThemeAssets().analyst.analysis_measure,
     // },
     {
+      key: getLanguage(global.language).Analyst_Modules.INTERPOLATION_ANALYSIS,
+      title: getLanguage(global.language).Analyst_Modules
+        .INTERPOLATION_ANALYSIS,
+      size: 'large',
+      action: (params = {}) => {
+        NavigationService.navigate('InterpolationAnalystView', {
+          ...params,
+          type: Analyst_Types.INTERPOLATION_ANALYSIS,
+          title: getLanguage(global.language).Analyst_Modules
+            .INTERPOLATION_ANALYSIS,
+        })
+      },
+      image: getThemeAssets().analyst.analysis_interpolation,
+    },
+    {
       key: getLanguage(global.language).Analyst_Modules.ONLINE_ANALYSIS,
       title: getLanguage(global.language).Analyst_Modules.ONLINE_ANALYSIS,
       size: 'large',

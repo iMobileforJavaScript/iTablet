@@ -20,6 +20,8 @@ import {
   SelectLogin,
   Login,
   IPortalLogin,
+  DatasourcePage,
+  NewDataset,
   // Chat,
   AddFriend,
   InformMessage,
@@ -93,6 +95,8 @@ import {
   WeightAndStatistic,
   LocalAnalystView,
   ReferenceAnalystView,
+  InterpolationAnalystView,
+  InterpolationAnalystDetailView,
 } from './analystView/pages'
 
 import MediaEdit from './mediaEdit'
@@ -469,6 +473,20 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    DatasourcePage: {
+      screen: DatasourcePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    NewDataset: {
+      screen: NewDataset,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     MyService: {
       screen: MyService,
       navigationOptions: {
@@ -685,6 +703,20 @@ const AppNavigator = createStackNavigator(
     },
     ReferenceAnalystView: {
       screen: ReferenceAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    InterpolationAnalystView: {
+      screen: InterpolationAnalystView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    InterpolationAnalystDetailView: {
+      screen: InterpolationAnalystDetailView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

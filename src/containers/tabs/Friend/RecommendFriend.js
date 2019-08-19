@@ -129,37 +129,41 @@ class RecommendFriend extends Component {
       let number = this.formatPhoneNumber(val.phoneNumbers[i].number)
       let result = await SOnlineService.getUserInfoBy(number, 0)
       if (result !== false && result !== '获取用户id失败') {
-        let array = this.state.contacts
-        array.push({
-          familyName: val.familyName,
-          givenName: val.givenName,
-          phoneNumbers: val.phoneNumbers[i],
-          id: result[0],
-          name: result[1],
-        })
-        this.setState({
-          contacts: this.state.contacts.map(item => {
-            return item
-          }),
-        })
+        if (result[0] && result[0] !== this.user.userId) {
+          let array = this.state.contacts
+          array.push({
+            familyName: val.familyName,
+            givenName: val.givenName,
+            phoneNumbers: val.phoneNumbers[i],
+            id: result[0],
+            name: result[1],
+          })
+          this.setState({
+            contacts: this.state.contacts.map(item => {
+              return item
+            }),
+          })
+        }
       }
     }
     for (let i = 0; i < val.emails.length; i++) {
       let result = await SOnlineService.getUserInfoBy(val.emails[i].email, 0)
       if (result !== false && result !== '获取用户id失败') {
-        let array = this.state.contacts
-        array.push({
-          familyName: val.familyName,
-          givenName: val.givenName,
-          email: val.emails[i].email,
-          id: result[0],
-          name: result[1],
-        })
-        this.setState({
-          contacts: this.state.contacts.map(item => {
-            return item
-          }),
-        })
+        if (result[0] && result[0] !== this.user.userId) {
+          let array = this.state.contacts
+          array.push({
+            familyName: val.familyName,
+            givenName: val.givenName,
+            email: val.emails[i].email,
+            id: result[0],
+            name: result[1],
+          })
+          this.setState({
+            contacts: this.state.contacts.map(item => {
+              return item
+            }),
+          })
+        }
       }
     }
   }

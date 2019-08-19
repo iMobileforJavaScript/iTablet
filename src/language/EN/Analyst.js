@@ -7,6 +7,7 @@ const Analyst_Modules = {
   THIESSEN_POLYGON: 'Thiessen Polygon',
   MEASURE_DISTANCE: 'Measure Distance',
   ONLINE_ANALYSIS: 'Online Analysis',
+  INTERPOLATION_ANALYSIS: 'Interpolation Analysis',
 
   OPTIMAL_PATH: 'Optimal Path',
   CONNECTIVITY_ANALYSIS: 'Connectivity Analysis',
@@ -151,6 +152,37 @@ const Analyst_Labels = {
   MIN_DISTANCE: 'Min Distance',
   MAX_DISTANCE: 'Max Distance',
   ASSOCIATE_BROWSING_RESULT: 'Associate Browsing Result',
+
+  // 插值分析
+  INTERPOLATION_METHOD: 'Interpolation Analysis',
+  INTERPOLATION_FIELD: 'Interpolation Methods',
+  SCALE_FACTOR: 'Scale Factor',
+  RESOLUTION: 'Resolution',
+  PIXEL_FORMAT: 'Pixel Format',
+  INTERPOLATION_BOUNDS: 'Bounds',
+  SAMPLE_POINT_SETTINGS: 'Sample Point Settings',
+  SEARCH_MODE: 'Search Mode',
+  MAX_RADIUS: 'Max Radius',
+  SEARCH_RADIUS_2: 'Search Radius',
+  SEARCH_POINT_COUNT: 'Point Count',
+  MIX_COUNT: 'Min Count',
+  MOST_INVOLVED: 'Most Involved',
+  MOST_IN_BLOCK: 'Most in Block',
+  OTHER_PARAMETERS: 'Other Parameters',
+  POWER: 'Power',
+  TENSION: 'Tension',
+  SMOOTHNESS: 'Smoothness',
+  SEMIVARIOGRAM: 'Semivariogram',
+  ROTATION: 'Rotation',
+  SILL: 'Sill',
+  RANGE: 'Range',
+  NUGGET_EFFECT: 'Nugget Effect',
+  MEAN: 'Mean',
+  EXPONENT: 'Exponent',
+  HISTOGRAM: 'Histogram',
+  FUNCTION: 'Function',
+  SHOW_STATISTICS: 'Show Statistics',
+  EXPORT_TO_ALBUM: 'Export to Album',
 }
 
 const Analyst_Params = {
@@ -209,6 +241,28 @@ const Analyst_Params = {
   // 聚合类型
   AGGREGATE_WITH_GRID: 'Aggregate with Grid',
   AGGREGATE_WITH_REGION: 'Aggregate with Region',
+
+  // 插值方法
+  IDW: 'IDW',
+  SPLINE: 'Spline',
+  ORDINARY_KRIGING: 'Ordinary Kriging',
+  SIMPLE_KRIGING: 'Simple Kriging',
+  UNIVERSAL_KRIGING: 'Universal Kriging',
+
+  // 像素格式
+  UBIT1: 'UBIT1',
+  UBIT16: 'UBIT16',
+  UBIT32: 'UBIT32',
+  SINGLE: 'Single',
+  DOUBLE: 'Double',
+
+  // 查找方法
+  SEARCH_VARIABLE_LENGTH: 'Variable Length',
+  SEARCH_FIXED_LENGTH: 'Fixed Length',
+  SEARCH_BLOCK: 'Block',
+  SPHERICAL: 'Spherical	',
+  EXPONENTIAL: 'Exponential',
+  GAUSSIAN: 'Gaussian',
 }
 
 const Analyst_Prompt = {
@@ -229,6 +283,7 @@ const Analyst_Prompt = {
   TWO_NODES_ARE_NOT_CONNECTED: 'The two nodes are not connected',
   NOT_FIND_SUITABLE_PATH: 'Did not find suitable path',
   SELECT_DATA_SOURCE_FIRST: 'Please select datasource first',
+  SELECT_DATA_SET_FIRST: 'Please select dataset first',
   PLEASE_SELECT_A_REGION: 'Please select a region',
 }
 

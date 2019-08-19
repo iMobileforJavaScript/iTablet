@@ -152,7 +152,7 @@ export default class LayerManager_tolbar extends React.Component {
           }
           break
         default:
-          boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT[0]
           break
       }
     }
@@ -647,19 +647,19 @@ export default class LayerManager_tolbar extends React.Component {
     //   this.props.getLayers()
     //   this.setVisible(false)
     // }
-    else if (
-      section.title ===
-      getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
-    ) {
-      //'设置为当前标注'
-      (async function() {
-        GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
-          this.state.layerData.path,
-        )
-        this.updateTagging()
-        this.setVisible(false)
-      }.bind(this)())
-    }
+    // else if (
+    //   section.title ===
+    //   getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
+    // ) {
+    //   //'设置为当前标注'
+    //   (async function() {
+    //     GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
+    //       this.state.layerData.path,
+    //     )
+    //     this.updateTagging()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // }
     // if (
     //   section.title ===
     //   getLanguage(global.language).Map_Layer.PLOTS_DELETE
@@ -679,16 +679,27 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
       //'设置为当前图层'
-      this.props.setCurrentLayer &&
-        this.props.setCurrentLayer(this.state.layerData)
-      this.setThislayer()
-      Toast.show(
-        //'当前图层为'
-        getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
-          '  ' +
-          this.state.layerData.caption,
-      )
-      this.setVisible(false)
+      (async function() {
+        await SMap.setLayerVisible(this.state.layerData.path, true)
+        await SMap.setLayerEditable(this.state.layerData.path, true)
+        let newState = this.updateMenuState(
+          this.state.data,
+          this.state.layerData,
+        )
+        this.setState(newState, async () => {
+          this.props.updateData && (await this.props.updateData())
+          this.props.setCurrentLayer &&
+            this.props.setCurrentLayer(this.state.layerData)
+        })
+        this.setThislayer()
+        Toast.show(
+          //'当前图层为'
+          getLanguage(global.language).Prompt.THE_CURRENT_LAYER +
+            '  ' +
+            this.state.layerData.caption,
+        )
+        this.setVisible(false)
+      }.bind(this)())
     } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_MODIFY_THEMATIC_MAP
@@ -976,7 +987,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   _onShare = async type => {
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+    if (!UserType.isOnlineUser(this.props.user.currentUser)) {
       Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
       return
     }

@@ -65,7 +65,9 @@ android/build.gradle
 android/app/src/main/assets/Trial_License.slm
 android/.DS_Store
 src/.DS_Store
-
+android/app/src/main/assets/*.so
+android/app/src/main/assets/PIL.zip
+android/app/src/main/assets/python2.7.zip
 
 ios/SuperMap.framework
 ios/Trial_License.slm
