@@ -1,6 +1,6 @@
-import PointAnalyst from './pointAnalyst'
+import NavigationView from './NavigationView'
 import { connect } from 'react-redux'
-import { setMapNavigation } from '../../models/setting'
+import { setMapNavigation } from '../../../../models/setting'
 
 const mapStateToProps = state => ({
   mapNavigation: state.setting.toJS().mapNavigation,
@@ -8,7 +8,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setMapNavigation,
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PointAnalyst)
+)(NavigationView)

@@ -23,6 +23,9 @@ export default {
   MOVE: '平移',
   MODIFIED: '修改',
   SETTING: '设置',
+  NAVIGATION: '导航',
+  INCREMENT: '增量',
+  ENCLOSURE: '围栏',
   ANALYSIS: '分析',
   STYLE: '风格',
   ROUTANALYSIS: '路径分析',
@@ -166,6 +169,7 @@ export default {
   MAP_ANALYST: 'MAP_ANALYST',
   NETWORK: 'NETWORK',
   MAP_AR: 'MAP_AR',
+  MAP_NAVIGATION: 'MAP_NAVIGATION',
 
   // ==================分享===================
   QQ: 'QQ',

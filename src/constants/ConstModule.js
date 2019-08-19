@@ -15,6 +15,7 @@ const MAP_MODULE = {
   MAP_PLOTTING: '应急标绘',
   MAP_ANALYST: '数据分析',
   MAP_AR: '视频地图',
+  MAP_NAVIGATION: '导航地图',
 }
 
 function getHeaderTitle(type) {
@@ -34,6 +35,8 @@ function getHeaderTitle(type) {
       return getLanguage(global.language).Map_Module.MAP_ANALYST
     case constants.MAP_AR:
       return getLanguage(global.language).Map_Module.MAP_AR
+    case constants.MAP_NAVIGATION:
+      return getLanguage(global.language).Map_Module.MAP_NAVIGATION
   }
 }
 
@@ -488,10 +491,51 @@ function SetMap(param) {
         })
       },
     },
+    {
+      key: constants.MAP_NAVIGATION,
+      title: getLanguage(param).Map_Module.MAP_NAVIGATION,
+      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+      moduleImage: require('../assets/home/Frenchgrey/icon_videomap.png'),
+      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+      style: {
+        width: scaleSize(70),
+        height: scaleSize(67),
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+      },
+      action: async user => {
+        let data = Object.assign({}, ConstOnline['Google'])
+        data.layerIndex = 1
+        GLOBAL.Type = constants.MAP_NAVIGATION
+
+        let homePath = await FileTools.appendingHomeDirectory()
+        let userPath = ConstPath.CustomerPath
+        if (user && user.userName) {
+          userPath = ConstPath.UserPath + user.userName + '/'
+        }
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+        let wsData = [
+          {
+            DSParams: { server: wsPath },
+            // layerIndex: 0,
+            type: 'Workspace',
+          },
+          data,
+        ]
+        NavigationService.navigate('MapView', {
+          operationType: constants.MAP_NAVIGATION,
+          wsData,
+          mapName: getLanguage(param).Map_Module.MAP_NAVIGATION,
+          isExample: false,
+        })
+      },
+    },
   ]
 
   if (Platform.OS === 'ios') {
-    moduleDatas.splice(moduleDatas.length - 1, 1)
+    moduleDatas.splice(moduleDatas.length - 2, 1)
   }
 
   return moduleDatas
