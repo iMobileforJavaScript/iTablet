@@ -3605,10 +3605,11 @@ export default class ToolBar extends React.PureComponent {
           isRegionLayer ||
           isTextLayer
         ) {
-          SMap.setTaggingGrid(
-            currentLayer.datasetName,
-            this.props.user.currentUser.userName,
-          )
+          isTaggingLayer &&
+            SMap.setTaggingGrid(
+              currentLayer.datasetName,
+              this.props.user.currentUser.userName,
+            )
           SMap.submit()
           SMap.refreshMap()
           SMap.setAction(Action.PAN)
@@ -6234,10 +6235,26 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <KeyboardAvoidingView
-          keyboardVerticalOffset={keyboardVerticalOffset}
-          behavior={'position'}
-        >
+        {this.state.type === ConstToolType.MAP_TOOL_TAGGING_SETTING ? (
+          <KeyboardAvoidingView
+            keyboardVerticalOffset={keyboardVerticalOffset}
+            behavior={'position'}
+          >
+            <View
+              style={[
+                styles.containers,
+                !(
+                  this.state.isFullScreen &&
+                  !this.state.isTouchProgress &&
+                  !this.state.showMenuDialog
+                ) && styles.containers_border,
+              ]}
+            >
+              {this.renderView()}
+              {this.renderBottomBtns()}
+            </View>
+          </KeyboardAvoidingView>
+        ) : (
           <View
             style={[
               styles.containers,
@@ -6251,7 +6268,7 @@ export default class ToolBar extends React.PureComponent {
             {this.renderView()}
             {this.renderBottomBtns()}
           </View>
-        </KeyboardAvoidingView>
+        )}
       </Animated.View>
     )
   }
