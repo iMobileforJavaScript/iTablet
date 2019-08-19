@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
-import { ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
-import { Container } from '../../../../components'
+import {
+  View,
+  ScrollView,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native'
+import { Container, CheckBox } from '../../../../components'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import TouchableItemView from '../../Friend/TouchableItemView'
@@ -27,6 +34,7 @@ class DatasourcePage extends Component {
         params.data.name.substr(0, params.data.name.lastIndexOf('.')),
       data: params.data,
       datasets: null,
+      batchDelete: false,
     }
   }
 
@@ -52,21 +60,22 @@ class DatasourcePage extends Component {
     }
   }
 
-  _getDatasets = async () => {
+  _getDatasets = async (showLoading = true) => {
     try {
-      this.container.setLoading(
-        true,
-        getLanguage(global.language).Prompt.LOADING,
-      )
+      showLoading &&
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.LOADING,
+        )
       let datasets = []
       datasets = await SMap.getDatasetsByDatasource({ alias: this.state.title })
       this.setState({ datasets: datasets.list })
       setTimeout(() => {
-        this.container && this.container.setLoading(false)
+        showLoading && this.container && this.container.setLoading(false)
       }, 1000)
     } catch (error) {
       setTimeout(() => {
-        this.container && this.container.setLoading(false)
+        showLoading && this.container && this.container.setLoading(false)
         Toast.show(getLanguage(global.language).Profile.OPEN_DATASROUCE_FAILED)
       }, 1000)
     }
@@ -76,10 +85,69 @@ class DatasourcePage extends Component {
     try {
       let datasetName = this.itemInfo.datasetName
       await SMap.deleteDataset(this.state.title, datasetName)
-      this._getDatasets()
+      this._getDatasets(false)
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
     } catch (error) {
       Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
     }
+  }
+
+  _batchDelete = async () => {
+    try {
+      if (this.deleteArr.length === 0) {
+        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      this.setState({ batchDelete: false })
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        await SMap.deleteDataset(
+          this.state.title,
+          this.deleteArr[i].datasetName,
+        )
+      }
+      this._getDatasets(false)
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
+  }
+
+  _onItemCheck = (item, checked) => {
+    if (checked) {
+      this.deleteArr.push(item)
+    } else {
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        if (this.deleteArr[i].datasetName === item.datasetName) {
+          this.deleteArr.splice(i, 1)
+          break
+        }
+      }
+    }
+  }
+
+  _renderDatasourcePopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        action: () => {
+          this.deleteArr = []
+          this.setState({
+            batchDelete: !this.state.batchDelete,
+            datasets: Object.assign([], this.state.datasets),
+          })
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.DatasourcePopup = ref)}
+        data={data}
+        onCloseModal={() => {
+          this.DatasourcePopup.setVisible(false)
+        }}
+      />
+    )
   }
 
   _renderDatasetPopupModal = () => {
@@ -124,6 +192,21 @@ class DatasourcePage extends Component {
     )
   }
 
+  _renderRightSelect = ({ param }) => {
+    return (
+      <CheckBox
+        style={{
+          height: scaleSize(30),
+          width: scaleSize(30),
+          marginRight: scaleSize(30),
+        }}
+        onChange={checked => {
+          this._onItemCheck(param, checked)
+        }}
+      />
+    )
+  }
+
   _renderItem = ({ item }) => {
     let type = item.datasetType
     let img = undefined
@@ -140,7 +223,9 @@ class DatasourcePage extends Component {
     }
     return (
       <TouchableItemView
-        renderRight={this._renderRight}
+        renderRight={
+          this.state.batchDelete ? this._renderRightSelect : this._renderRight
+        }
         param={item}
         item={{
           image: img,
@@ -150,18 +235,66 @@ class DatasourcePage extends Component {
           // this.itemInfo = item
           // this.DatasetPopup.setVisible(true)
         }}
+        seperatorStyle={{ marginLeft: 0 }}
       />
+    )
+  }
+
+  _renderHeaderRight = () => {
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+    if (this.state.batchDelete) {
+      return null
+    }
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.DatasourcePopup.setVisible(true)
+        }}
+        style={styles.moreView}
+      >
+        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
+      </TouchableOpacity>
+    )
+  }
+
+  _renderBottom = () => {
+    return (
+      <View style={styles.bottomStyle}>
+        <TouchableOpacity
+          onPress={() => {
+            this.setState({
+              batchDelete: !this.state.batchDelete,
+              datasets: Object.assign([], this.state.datasets),
+            })
+          }}
+        >
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._batchDelete}>
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+          />
+        </TouchableOpacity>
+      </View>
     )
   }
 
   render() {
     return (
       <Container
+        style={{
+          backgroundColor: '#F0F0F0',
+        }}
         ref={ref => (this.container = ref)}
         headerProps={{
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderRight(),
         }}
       >
         <ScrollView>
@@ -172,9 +305,36 @@ class DatasourcePage extends Component {
           />
         </ScrollView>
         {this._renderDatasetPopupModal()}
+        {this._renderDatasourcePopupModal()}
+        {this.state.batchDelete && this._renderBottom()}
       </Container>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    // width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreImg: {
+    flex: 1,
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+})
 
 export default DatasourcePage
