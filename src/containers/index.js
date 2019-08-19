@@ -102,6 +102,7 @@ import {
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
 import MeasureView from './arMeasure'
+import ClassifyView from './aiClassifyView'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
@@ -613,6 +614,13 @@ const AppNavigator = createStackNavigator(
     },
     MeasureView: {
       screen: MeasureView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ClassifyView: {
+      screen: ClassifyView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

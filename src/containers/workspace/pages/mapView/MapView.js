@@ -1541,7 +1541,11 @@ export default class MapView extends React.Component {
         })
         if (result) {
           this.switchAr()
-          Toast.show(params.mediaName + ' 添加成功')
+          Toast.show(
+            params.mediaName +
+              ':' +
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+          )
         }
       } else {
         Toast.show(
