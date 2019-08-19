@@ -176,7 +176,8 @@ export default class PointAnalyst extends Component {
         let result = await SMap.toLocationPoint(index)
         if (result) {
           this.container.setLoading(false)
-          GLOBAL.PoiInfoContainer &&
+          GLOBAL.Type !== constants.MAP_NAVIGATION &&
+            GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState({
               destination: this.state.searchValue,
               position: { x, y },
