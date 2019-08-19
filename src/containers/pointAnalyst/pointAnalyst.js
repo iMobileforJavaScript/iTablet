@@ -16,10 +16,16 @@ import { Toast } from '../../utils'
 import styles from './styles'
 import { getLanguage } from '../../language/index'
 import constants from '../workspace/constants'
+import PropTypes from 'prop-types'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
     navigation: Object,
+  }
+
+  static propTypes = {
+    mapNavigation: PropTypes.object,
+    setMapNavigation: PropTypes.func,
   }
 
   constructor(props) {
@@ -159,10 +165,19 @@ export default class PointAnalyst extends Component {
         let x = this.state.searchData[index].x
         let y = this.state.searchData[index].y
         this.setState({ searchValue: pointName, searchData: [] })
+        if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          await SMap.routeAnalyst(index)
+          this.props.setMapNavigation({
+            isShow: true,
+            name: pointName,
+            isPointShow: true,
+          })
+        }
         let result = await SMap.toLocationPoint(index)
         if (result) {
           this.container.setLoading(false)
-          GLOBAL.PoiInfoContainer &&
+          GLOBAL.Type !== constants.MAP_NAVIGATION &&
+            GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState({
               destination: this.state.searchValue,
               position: { x, y },

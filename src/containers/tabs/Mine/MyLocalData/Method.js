@@ -291,7 +291,9 @@ async function downFileAction(
       let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
       let toPath = await FileTools.appendingHomeDirectory(path)
       // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-      let dataUrl = `https://www.supermapol.com/web/datas/${itemInfo.id}/download`
+      let dataUrl = `https://www.supermapol.com/web/datas/${
+        itemInfo.id
+      }/download`
       if (UserType.isIPortalUser(currentUser)) {
         let url = currentUser.serverUrl
         if (url.indexOf('http') !== 0) {

@@ -16,6 +16,10 @@ export const MAP_SETTING = 'MAP_SETTING'
 export const SETTING_LANGUAGE = 'SETTING_LANGUAGE'
 export const MAP_LEGEND = 'MAP_LEGEND'
 export const MAP_SCALEVIEW = 'MAP_SCALEVIEW'
+export const MAP_NAVIGATION = 'MAP_NAVIGATION'
+export const MAP_2DTO3D = 'MAP_2DTO3D'
+export const MAP_IS3D = 'MAP_IS3D'
+export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -76,6 +80,30 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
 export const setMapLegend = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_LEGEND,
+    payload: params || false,
+  })
+}
+export const setMapNavigation = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_NAVIGATION,
+    payload: params || false,
+  })
+}
+export const setMap2Dto3D = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_2DTO3D,
+    payload: params || false,
+  })
+}
+export const setMapIs3D = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_IS3D,
+    payload: params || false,
+  })
+}
+export const setMapNavigationShow = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_NAVIGATIONSHOW,
     payload: params || false,
   })
 }
@@ -140,6 +168,14 @@ const initialState = fromJS({
     widthPercent: 80,
     heightPercent: 80,
   },
+  mapNavigation: {
+    isShow: false,
+    isPointShow: false,
+    name: '',
+  },
+  map2Dto3D: false,
+  mapIs3D: false,
+  mapNavigationShow: true,
   mapScaleView: true,
 })
 
@@ -219,6 +255,46 @@ export default handleActions(
         }
       }
       return state.setIn(['mapLegend'], fromJS(data))
+    },
+    [`${MAP_NAVIGATION}`]: (state, { payload }) => {
+      let data = state.toJS().mapNavigation
+      if (payload) {
+        data = payload
+      } else {
+        data = {
+          isShow: false,
+          isPointShow: false,
+          name: '',
+        }
+      }
+      return state.setIn(['mapNavigation'], fromJS(data))
+    },
+    [`${MAP_2DTO3D}`]: (state, { payload }) => {
+      let data = state.toJS().map2Dto3D
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = false
+      }
+      return state.setIn(['map2Dto3D'], fromJS(data))
+    },
+    [`${MAP_IS3D}`]: (state, { payload }) => {
+      let data = state.toJS().mapIs3D
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = false
+      }
+      return state.setIn(['mapIs3D'], fromJS(data))
+    },
+    [`${MAP_NAVIGATIONSHOW}`]: (state, { payload }) => {
+      let data = state.toJS().mapNavigationShow
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = true
+      }
+      return state.setIn(['mapNavigationShow'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
       // if (payload && payload.setting) {

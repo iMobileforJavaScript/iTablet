@@ -51,7 +51,11 @@ class NewDataset extends Component {
     }
     let datasets = Object.assign([], this.state.datasets)
     datasets.push(data)
-    this.setState({ datasets })
+    this.setState({ datasets }, () => {
+      setTimeout(() => {
+        this.ScrollView.scrollToEnd(true)
+      }, 500)
+    })
   }
 
   _deleteDataset = index => {
@@ -75,41 +79,76 @@ class NewDataset extends Component {
   }
 
   _createDatasets = async () => {
-    if (this.state.datasets.length === 0) {
-      Toast.show('请添加数据集')
-    } else {
-      let newDatasets = this.state.datasets
-      for (let i = 0; i < newDatasets.length; i++) {
-        if (!newDatasets[i].datasetName) {
-          Toast.show('请填写数据集名称')
-          return
-        } else {
-          //if(!name) {
-          //   Toast.show('名称不符合规则')
-          //   return
-          // }
+    try {
+      if (this.state.datasets.length === 0) {
+        Toast.show(getLanguage(global.language).Profile.PLEASE_ADD_DATASET)
+      } else {
+        let newDatasets = this.state.datasets
+        for (let i = 0; i < newDatasets.length; i++) {
+          if (!newDatasets[i].datasetName) {
+            Toast.show(getLanguage(global.language).Profile.ENTER_DATASET_NAME)
+            return
+          }
+          if (!newDatasets[i].datasetType) {
+            Toast.show(getLanguage(global.language).Profile.SELECT_DATASET_TYPE)
+            return
+          }
         }
-        if (!newDatasets[i].datasetType) {
-          Toast.show('请选择数据集类型')
-          return
-        }
-      }
-      let homePath = await FileTools.appendingHomeDirectory()
-      let datasourceParams = {}
-      datasourceParams.server = homePath + this.state.data.path
-      datasourceParams.engineType = EngineType.UDB
-      datasourceParams.alias = this.state.title
-      await SMap.openDatasource(datasourceParams)
-      for (let i = 0; i < newDatasets.length; i++) {
-        await SMap.createDataset(
-          this.state.title,
-          newDatasets[i].datasetName,
-          newDatasets[i].datasetType,
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.CREATING,
         )
+        let homePath = await FileTools.appendingHomeDirectory()
+        let datasourceParams = {}
+        datasourceParams.server = homePath + this.state.data.path
+        datasourceParams.engineType = EngineType.UDB
+        datasourceParams.alias = this.state.title
+        await SMap.openDatasource2(datasourceParams)
+        if (!(await this._isAvailableDatasetName(newDatasets))) {
+          setTimeout(() => {
+            Toast.show(getLanguage(global.language).Prompt.INVALID_DATASET_NAME)
+            this.container && this.container.setLoading(false)
+          }, 1000)
+        } else {
+          for (let i = 0; i < newDatasets.length; i++) {
+            await SMap.createDataset(
+              this.state.title,
+              newDatasets[i].datasetName,
+              newDatasets[i].datasetType,
+            )
+          }
+          setTimeout(() => {
+            Toast.show(getLanguage(global.language).Prompt.CREATE_SUCCESSFULLY)
+            this._clearDatasets()
+            this.container && this.container.setLoading(false)
+          }, 1000)
+        }
+        SMap.closeDatasource(this.state.title)
       }
+    } catch (error) {
       SMap.closeDatasource(this.state.title)
-      Toast.show('创建完成')
-      this._clearDatasets()
+      setTimeout(() => {
+        Toast.show(getLanguage(global.language).Prompt.CREATE_FAILED)
+        this.container && this.container.setLoading(false)
+      }, 1000)
+    }
+  }
+
+  _isAvailableDatasetName = async datasets => {
+    if (datasets.length === 0) {
+      return false
+    } else {
+      for (let i = 0; i < datasets.length; i++) {
+        if (
+          !(await SMap.isAvailableDatasetName(
+            this.state.title,
+            datasets[i].datasetName,
+          ))
+        ) {
+          return false
+        }
+      }
+      return true
     }
   }
 
@@ -117,7 +156,7 @@ class NewDataset extends Component {
     return (
       <View style={styles.itemStyle}>
         {this._renderItemHead(index)}
-        <View style={styles.longSeperator}></View>
+        <View style={styles.longSeperator} />
         {this._renderItemBody(item)}
       </View>
     )
@@ -142,7 +181,10 @@ class NewDataset extends Component {
     return (
       <View style={styles.itemBodyStyle}>
         <View style={styles.datasetNameStyle}>
-          <Text style={styles.textStyle}>{'数据集名称'}</Text>
+          <Text style={styles.textStyle}>
+            {/* {'数据集名称'} */}
+            {getLanguage(global.language).Profile.DATASET_NAME}
+          </Text>
           <Input
             style={styles.textInputStyle}
             value={item.datasetName || ''}
@@ -151,9 +193,12 @@ class NewDataset extends Component {
             }}
           />
         </View>
-        <View style={styles.longSeperator}></View>
+        <View style={styles.longSeperator} />
         <View>
-          <Text style={styles.textStyle}>{'数据集类型'}</Text>
+          <Text style={styles.textStyle}>
+            {/* {'数据集类型'} */}
+            {getLanguage(global.language).Profile.DATASET_TYPE}
+          </Text>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
@@ -172,16 +217,16 @@ class NewDataset extends Component {
     let text
     let img
     if (type === DatasetType.POINT) {
-      text = '点'
+      text = getLanguage(global.language).Profile.DATASET_TYPE_POINT
       img = pointImg
     } else if (type === DatasetType.LINE) {
-      text = '线'
+      text = getLanguage(global.language).Profile.DATASET_TYPE_LINE
       img = lineImg
     } else if (type === DatasetType.REGION) {
-      text = '面'
+      text = getLanguage(global.language).Profile.DATASET_TYPE_REGION
       img = regionImg
     } else if (type === DatasetType.TEXT) {
-      text = '文本'
+      text = getLanguage(global.language).Profile.DATASET_TYPE_TEXT
       img = textImg
     } else if (type === DatasetType.CAD) {
       text = 'CAD'
@@ -214,7 +259,8 @@ class NewDataset extends Component {
           <View style={styles.addStyle}>
             <Image style={styles.imgStyle} source={addImg} />
             <Text style={[styles.textStyle, { color: '#4680DF' }]}>
-              {'添加数据集'}
+              {/* {'添加数据集'} */}
+              {getLanguage(global.language).Profile.ADD_DATASET}
             </Text>
           </View>
         </TouchableOpacity>
@@ -224,9 +270,10 @@ class NewDataset extends Component {
 
   _renderScroll = () => {
     return (
-      <ScrollView>
+      <ScrollView ref={ref => (this.ScrollView = ref)}>
         <View style={styles.scrollViewStyle}>
           <FlatList
+            style={styles.flatListStyle}
             data={this.state.datasets}
             keyExtractor={(item, index) => index.toString()}
             renderItem={this._renderItem}
@@ -242,12 +289,14 @@ class NewDataset extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity onPress={this._clearDatasets}>
           <Text style={[styles.textStyle, { padding: scaleSize(10) }]}>
-            {'清空'}
+            {/* {'清空'} */}
+            {getLanguage(global.language).Profile.CLEAR}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this._createDatasets}>
           <Text style={[styles.textStyle, { padding: scaleSize(10) }]}>
-            {'创建'}
+            {/* {'创建'} */}
+            {getLanguage(global.language).Profile.CREATE}
           </Text>
         </TouchableOpacity>
       </View>
@@ -260,7 +309,6 @@ class NewDataset extends Component {
         ref={ref => (this.container = ref)}
         style={{
           backgroundColor: color.contentColorWhite,
-          alignItems: 'center',
         }}
         headerProps={{
           title: getLanguage(global.language).Profile.NEW_DATASET,
@@ -279,6 +327,10 @@ const styles = StyleSheet.create({
   scrollViewStyle: {
     alignItems: 'center',
     marginBottom: scaleSize(80),
+    paddingHorizontal: scaleSize(50),
+  },
+  flatListStyle: {
+    width: '100%',
   },
   bottomStyle: {
     backgroundColor: color.contentColorWhite,
@@ -295,10 +347,8 @@ const styles = StyleSheet.create({
   itemStyle: {
     flex: 1,
     flexDirection: 'column',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    margin: scaleSize(50),
+    marginTop: scaleSize(50),
     borderRadius: scaleSize(10),
   },
   itemHeadStyle: {
@@ -319,10 +369,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: color.contentColorWhite,
+    padding: scaleSize(5),
     borderRadius: scaleSize(5),
     marginVertical: scaleSize(10),
   },
   addStyle: {
+    marginTop: scaleSize(50),
     flexDirection: 'row',
     alignItems: 'center',
   },

@@ -66,8 +66,13 @@ import {
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
+import NavigationView from '../../components/NavigationView'
+import NavigationPoiView from '../../components/NavigationPoiView'
+import ChangeArView from '../../components/ChangeArView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
+import Map2Dto3D from '../../components/Map2Dto3D/Map2Dto3D'
+import FloorListView from '../../components/FloorListView'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -85,7 +90,11 @@ export default class MapView extends React.Component {
     currentLayer: PropTypes.object,
     template: PropTypes.object,
     mapLegend: PropTypes.object,
+    mapNavigation: PropTypes.object,
+    map2Dto3D: PropTypes.bool,
+    mapNavigationShow: PropTypes.bool,
     mapScaleView: PropTypes.bool,
+    mapIs3D: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -129,6 +138,10 @@ export default class MapView extends React.Component {
     setCurrentSymbols: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
+    setMapNavigation: PropTypes.func,
+    setMapNavigationShow: PropTypes.func,
+    setMap2Dto3D: PropTypes.func,
+    setMapIs3D: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
@@ -168,6 +181,7 @@ export default class MapView extends React.Component {
       canBeUndo: false,
       canBeRedo: false,
       showAIDetect: GLOBAL.Type === constants.MAP_AR,
+      showRoadView: true,
       showArModeIcon: true,
     }
     this.closeInfo = [
@@ -241,6 +255,12 @@ export default class MapView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.mapNavigation) !==
+      JSON.stringify(this.props.mapNavigation)
+    ) {
+      this.showFullMap(this.props.mapNavigation.isShow)
+    }
     if (
       JSON.stringify(prevProps.editLayer) !==
         JSON.stringify(this.props.editLayer) &&
@@ -1521,7 +1541,11 @@ export default class MapView extends React.Component {
         })
         if (result) {
           this.switchAr()
-          Toast.show(params.mediaName + ' 添加成功')
+          Toast.show(
+            params.mediaName +
+              ':' +
+              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+          )
         }
       } else {
         Toast.show(
@@ -1805,6 +1829,59 @@ export default class MapView extends React.Component {
     )
   }
 
+  _renderNavigationIcon = () => {
+    return (
+      <View style={styles.navigation}>
+        <MTBtn
+          style={styles.iconNav}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          onPress={async () => {
+            NavigationService.navigate('PointAnalyst', {
+              type: 'pointSearch',
+            })
+          }}
+          activeOpacity={0.5}
+        />
+      </View>
+    )
+  }
+
+  _renderARNavigationIcon = () => {
+    return (
+      <View style={styles.arnavigation}>
+        <MTBtn
+          style={styles.iconNav}
+          size={MTBtn.Size.NORMAL}
+          image={getThemeAssets().ar.icon_ar}
+          activeOpacity={0.5}
+        />
+      </View>
+    )
+  }
+
+  _renderNavigationView = () => {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: '100%',
+        }}
+      >
+        <NavigationView />
+      </View>
+    )
+  }
+
+  _renderNavigationPoiView = () => {
+    return <NavigationPoiView />
+  }
+
+  _renderChangeArView = () => {
+    return <ChangeArView />
+  }
+
   renderContainer = () => {
     return (
       <Container
@@ -1832,13 +1909,21 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.legend = ref)}
           />
         )}
-        {this.state.showMap && (
+        {!this.props.map2Dto3D && this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
             style={styles.map}
             onGetInstance={this._onGetInstance}
           />
         )}
+        {this.props.map2Dto3D && (
+          <Map2Dto3D
+            mapIs3D={this.props.mapIs3D}
+            openMap={this.props.openMap}
+            openWorkspace={this.props.openWorkspace}
+          />
+        )}
+        {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
         {this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}
@@ -1847,6 +1932,30 @@ export default class MapView extends React.Component {
         )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {!this.state.showAIDetect && this.renderMapController()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          this.props.mapNavigation.isPointShow &&
+          this._renderNavigationView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          this.props.mapNavigation.isShow &&
+          this._renderNavigationPoiView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigation.isPointShow &&
+          this._renderChangeArView()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigationShow &&
+          !this.props.mapNavigation.isShow &&
+          this._renderNavigationIcon()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.mapNavigation.isPointShow &&
+          this.props.mapNavigationShow &&
+          this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
@@ -1872,7 +1981,9 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {this.props.mapScaleView && !this.state.showAIDetect && (
+        {this.props.mapScaleView &&
+          !this.state.showAIDetect &&
+          !this.props.mapNavigation.isShow && (
           <ScaleView
             device={this.props.device}
             language={this.props.language}
