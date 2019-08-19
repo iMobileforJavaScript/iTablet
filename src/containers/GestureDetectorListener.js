@@ -6,7 +6,7 @@ import {
 import NavigationService from './NavigationService'
 import { getLanguage } from '../language'
 import { TouchType } from '../constants'
-
+//eslint-disable-next-line
 let _params = {}
 
 function setGestureDetectorListener(params) {
@@ -33,10 +33,12 @@ async function touchCallback(event) {
         headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
         cb: async value => {
           if (value !== '') {
+            let datasourceName = GLOBAL.currentLayer.datasourceAlias
+            let datasetName = GLOBAL.currentLayer.datasetName
             await SMap.addTextRecordset(
-              GLOBAL.TaggingDatasetName,
+              datasourceName,
+              datasetName,
               value,
-              _params.user.currentUser.userName,
               event.screenPoint.x,
               event.screenPoint.y,
             )
