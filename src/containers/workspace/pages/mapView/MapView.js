@@ -1530,17 +1530,20 @@ export default class MapView extends React.Component {
   captureImage = params => {
     //保存数据->跳转
     (async function() {
-      let isTaggingLayer = await SMap.isTaggingLayer(
-        this.props.user.currentUser.userName,
-      )
-      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-        await SMap.setTaggingGrid(
-          GLOBAL.TaggingDatasetName,
-          this.props.user.currentUser.userName,
-        )
+      let currentLayer = this.props.currentLayer
+      let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer =
+          currentLayer.type === DatasetType.CAD &&
+          currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
         const datasourceAlias =
           'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
-        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+        const datasetName = await SMap.getCurrentTaggingDataset(
+          currentLayer.name,
+        ) // 标注图层名称
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +

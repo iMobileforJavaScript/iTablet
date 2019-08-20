@@ -14,6 +14,8 @@ import Orientation from 'react-native-orientation'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { Container } from '../../components'
+import { Toast } from '../../utils'
+import { getLanguage } from '../../language'
 // import { getLanguage } from '../../language'
 
 /*
@@ -111,6 +113,7 @@ export default class MeasureView extends React.Component {
     let result = await SMeasureView.saveDataset()
     if (result) {
       await SMeasureView.clearAll()
+      Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
     }
   }
 
