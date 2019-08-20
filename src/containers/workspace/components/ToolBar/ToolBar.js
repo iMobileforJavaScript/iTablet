@@ -3424,8 +3424,8 @@ export default class ToolBar extends React.PureComponent {
   showAnimationXmlList = async () => {
     let height = ConstToolType.HEIGHT[2]
     this.props.showFullMap && this.props.showFullMap(true)
-    // let type = ConstToolType.PLOT_ANIMATION_XML_LIST
-    let type = ConstToolType.MAP_PLOTTING_ANIMATION
+    let type = ConstToolType.PLOT_ANIMATION_XML_LIST
+    // let type = ConstToolType.MAP_PLOTTING_ANIMATION
     GLOBAL.currentToolbarType = type
     this.setVisible(true, type, {
       isFullScreen: false,
@@ -3939,8 +3939,6 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
-
     this.animationPlay()
   }
 
@@ -6158,6 +6156,16 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.PLOT_ANIMATION_XML_LIST) {
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       let createInfo =
         this.plotAnimationView && this.plotAnimationView.getCreateInfo()
