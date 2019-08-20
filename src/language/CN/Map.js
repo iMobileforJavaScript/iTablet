@@ -28,6 +28,7 @@ const Map_Main_Menu = {
   START_NEW_SENCE: '新建场景',
   START_SAVE_SENCE: '保存场景',
   START_SAVE_AS_SENCE: '另存场景',
+  PLOT_SAVE_ANIMATION: '保存动画',
 
   PLOT: '标绘',
 
