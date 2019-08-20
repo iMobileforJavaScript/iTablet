@@ -3456,7 +3456,9 @@ export default class ToolBar extends React.PureComponent {
       ConstPath.UserPath +
         userName +
         '/' +
-        ConstPath.RelativeFilePath.Animation,
+        ConstPath.RelativeFilePath.Animation +
+        '/' +
+        mapName,
     )
     let defaultAnimationName = mapName
     NavigationService.navigate('InputPage', {
@@ -3471,8 +3473,7 @@ export default class ToolBar extends React.PureComponent {
             true,
             getLanguage(global.language).Prompt.SAVEING,
           )
-        let path = savePath + '/' + value
-        await SMap.animationSave(path)
+        await SMap.animationSave(savePath, value)
 
         GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
 
