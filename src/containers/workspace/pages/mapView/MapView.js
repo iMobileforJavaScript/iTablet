@@ -506,7 +506,22 @@ export default class MapView extends React.Component {
 
   _onGetInstance = async mapView => {
     this.mapView = mapView
-    this._addMap()
+
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
+      let wsPath =
+        homePath + userPath + ConstPath.RelativeFilePath.NavigationWorkspace
+      try {
+        let result = await this.props.openWorkspace({ server: wsPath })
+        result && SMap.open2DNavigationMap()
+        this.setLoading(false)
+      } catch (e) {
+        this.setLoading(false)
+      }
+    } else {
+      this._addMap()
+    }
   }
 
   geometrySelected = event => {
