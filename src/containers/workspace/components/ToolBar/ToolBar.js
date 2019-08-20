@@ -3635,8 +3635,8 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[2]
-                  : ConstToolType.NEWTHEME_HEIGHT[3],
+                  ? ConstToolType.TOOLBAR_HEIGHT[3]
+                  : ConstToolType.TOOLBAR_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
           }
@@ -6223,10 +6223,10 @@ export default class ToolBar extends React.PureComponent {
     let keyboardVerticalOffset
     if (Platform.OS === 'android') {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+        this.props.device.orientation === 'LANDSCAPE' ? 0 : 200
     } else {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+        this.props.device.orientation === 'LANDSCAPE' ? 250 : 500
     }
     return (
       <Animated.View
