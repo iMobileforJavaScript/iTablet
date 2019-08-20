@@ -3456,7 +3456,9 @@ export default class ToolBar extends React.PureComponent {
       ConstPath.UserPath +
         userName +
         '/' +
-        ConstPath.RelativeFilePath.Animation,
+        ConstPath.RelativeFilePath.Animation +
+        '/' +
+        mapName,
     )
     let defaultAnimationName = mapName
     NavigationService.navigate('InputPage', {
@@ -3471,8 +3473,7 @@ export default class ToolBar extends React.PureComponent {
             true,
             getLanguage(global.language).Prompt.SAVEING,
           )
-        let path = savePath + '/' + value
-        await SMap.animationSave(path)
+        await SMap.animationSave(savePath, value)
 
         GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
 
@@ -3939,8 +3940,6 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
-
     this.animationPlay()
   }
 
@@ -6158,6 +6157,16 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       let createInfo =
         this.plotAnimationView && this.plotAnimationView.getCreateInfo()

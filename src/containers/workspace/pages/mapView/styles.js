@@ -149,7 +149,7 @@ export default StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 2,
-    bottom: scaleSize(290),
+    bottom: scaleSize(135),
     // backgroundColor: 'transparent',
     backgroundColor: color.white,
   },

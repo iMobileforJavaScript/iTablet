@@ -71,65 +71,73 @@ function getAiAssistantData(type, params) {
   let buttons = []
   let data = [
     {
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT,
+      //目标分类
+      key: 'aiClassify',
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT,
-      // action:openMap,
+        .MAP_AR_AI_ASSISTANT_CLASSIFY,
+      action: aiClassify,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_classify_light,
     },
     {
+      //目标采集
       key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT,
+        .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT,
+        .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
       // action:openMap,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_collect_light,
     },
     {
+      //态势采集
       key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT,
+        .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT,
+        .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
       // action:openMap,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar
+        .rightbar_ai_aggregate_collect_light,
     },
     {
+      //违章采集
       key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
+        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
+        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
       // action:openMap,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
     },
+    // {
+    //   //路面采集
+    //   key: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
+    //   title: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
+    //   // action:openMap,
+    //   size: 'large',
+    //   image: getThemeAssets().ar.icon_ar,
+    // },
     {
+      //POI地图
       key: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_POI_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_POI_COLLECT,
       // action: openMap,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_poi_light,
     },
     {
+      //户型图采集
       key: 'arMeasureCollect',
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_MEASURE_COLLECT,
+        .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT,
       action: arMeasureCollect,
       size: 'large',
-      image: getThemeAssets().ar.icon_ar,
-    },
-    {
-      key: 'aiClassify',
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_CLASSIFY,
-      action: aiClassify,
-      size: 'large',
-      image: getThemeAssets().ar.icon_ar,
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_layout_light,
     },
   ]
   return { data, buttons }

@@ -11,10 +11,10 @@ import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
 import { SMMeasureView, SMeasureView } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
-// import { getLanguage } from '../../language'
-
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
+import { Container } from '../../components'
+// import { getLanguage } from '../../language'
 
 /*
  * AR高精度采集界面
@@ -125,26 +125,50 @@ export default class MeasureView extends React.Component {
   /** 确认 **/
   confirm = () => {}
 
+  back = () => {
+    NavigationService.goBack()
+    return true
+  }
+
   renderBottomBtns = () => {
     return (
-      <View style={styles.buttonView}>
-        <TouchableOpacity onPress={() => this.undo()} style={styles.iconView}>
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_measure_cancel}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.clearAll()}
-          style={styles.iconView}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_measure_clear}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
+      <View style={styles.toolbar}>
+        <View style={styles.buttonView}>
+          <TouchableOpacity
+            onPress={() => this.clearAll()}
+            style={styles.iconView}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_close}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.undo()} style={styles.iconView}>
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_undo}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.addNewRecord()}
+            style={styles.iconView}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_switch}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.save()} style={styles.iconView}>
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_save}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -190,11 +214,18 @@ export default class MeasureView extends React.Component {
   renderLengthChangeView() {
     return (
       <View style={styles.lengthChangeView}>
-        <Text style={styles.title}>
-          {'Total Length:' + this.state.totalLength + 'm'}
+        <Text style={styles.titleTotal}>
+          {'总长度:' + this.state.totalLength + 'm'}
         </Text>
+      </View>
+    )
+  }
+
+  renderCurrentLengthChangeView() {
+    return (
+      <View style={styles.currentLengthChangeView}>
         <Text style={styles.title}>
-          {'Current Length:' + this.state.currentLength + 'm'}
+          {'视点距离:' + this.state.currentLength + 'm'}
         </Text>
       </View>
     )
@@ -202,13 +233,23 @@ export default class MeasureView extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <Container
+        ref={ref => (this.Container = ref)}
+        headerProps={{
+          title: '视频地图',
+          navigation: this.props.navigation,
+          backAction: this.back,
+          type: 'fix',
+        }}
+        bottomProps={{ type: 'fix' }}
+      >
         <SMMeasureView ref={ref => (this.SMMeasureView = ref)} />
         {this.renderBottomBtns()}
-        {this.renderCenterBtn()}
-        {this.renderTopBtns()}
+        {/*{this.renderCenterBtn()}*/}
+        {/*{this.renderTopBtns()}*/}
         {this.renderLengthChangeView()}
-      </View>
+        {this.renderCurrentLengthChangeView()}
+      </Container>
     )
   }
 }
