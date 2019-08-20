@@ -34,6 +34,10 @@ import {
   setOverlaySetting,
   getMapSetting,
   setMapLegend,
+  setMapNavigation,
+  setMap2Dto3D,
+  setMapNavigationShow,
+  setMapIs3D,
 } from '../../../../models/setting'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
@@ -60,6 +64,10 @@ const mapStateToProps = state => ({
   device: state.device.toJS().device,
   online: state.online.toJS(),
   mapLegend: state.setting.toJS().mapLegend,
+  mapNavigation: state.setting.toJS().mapNavigation,
+  map2Dto3D: state.setting.toJS().map2Dto3D,
+  mapNavigationShow: state.setting.toJS().mapNavigationShow,
+  mapIs3D: state.setting.toJS().mapIs3D,
   mapScaleView: state.setting.toJS().mapScaleView,
   analyst: state.analyst.toJS(),
   downloads: state.down.toJS().downloads,
@@ -99,6 +107,10 @@ const mapDispatchToProps = {
   setBackAction,
   removeBackAction,
   setAnalystParams,
+  setMapNavigation,
+  setMap2Dto3D,
+  setMapNavigationShow,
+  setMapIs3D,
 }
 
 export default connect(

@@ -13,7 +13,7 @@ function setParams(params) {
   _params = params
 }
 
-//高精度采集
+//高精度采集(户型图)
 function arMeasureCollect() {
   (async function() {
     let isSupportedARCore = await SMeasureView.isSupportedARCore()
@@ -32,6 +32,30 @@ function arMeasureCollect() {
       const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
       const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
       NavigationService.navigate('MeasureView', {
+        datasourceAlias,
+        datasetName,
+      })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+  }.bind(this)())
+}
+
+//AI分类
+function aiClassify() {
+  (async function() {
+    let isTaggingLayer = await SMap.isTaggingLayer(
+      _params.user.currentUser.userName,
+    )
+    if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
+      await SMap.setTaggingGrid(
+        GLOBAL.TaggingDatasetName,
+        _params.user.currentUser.userName,
+      )
+      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
+      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      NavigationService.navigate('ClassifyView', {
         datasourceAlias,
         datasetName,
       })
@@ -96,6 +120,14 @@ function getAiAssistantData(type, params) {
       title: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_MEASURE_COLLECT,
       action: arMeasureCollect,
+      size: 'large',
+      image: getThemeAssets().ar.icon_ar,
+    },
+    {
+      key: 'aiClassify',
+      title: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_CLASSIFY,
+      action: aiClassify,
       size: 'large',
       image: getThemeAssets().ar.icon_ar,
     },

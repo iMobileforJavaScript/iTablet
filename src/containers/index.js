@@ -102,6 +102,10 @@ import {
 import MediaEdit from './mediaEdit'
 import Camera from './camera'
 import MeasureView from './arMeasure'
+import ClassifyView from './aiClassifyView'
+
+import ArView from './workspace/components/ArView'
+import Map2Dto3D from './workspace/components/Map2Dto3D'
 
 const AppNavigator = createStackNavigator(
   {
@@ -615,6 +619,13 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    ClassifyView: {
+      screen: ClassifyView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /**************************** Analyst ***************************/
     // AnalystTools: {
     //   screen: AnalystTools,
@@ -758,6 +769,18 @@ const AppNavigator = createStackNavigator(
     },
     SecondMapSettings7: {
       screen: SecondMapSettings,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    ArView: {
+      screen: ArView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Map2Dto3D: {
+      screen: Map2Dto3D,
       navigationOptions: {
         header: null,
       },

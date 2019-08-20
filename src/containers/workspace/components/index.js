@@ -14,6 +14,11 @@ import SymbolTabs from './SymbolTabs'
 import MenuAlertDialog from './MenuAlertDialog'
 import SaveView from './SaveView'
 import OverlayView from './OverlayView'
+import ChangeArView from './ChangeArView'
+import NavigationView from './NavigationView'
+import NavigationPoiView from './NavigationPoiView'
+import Map2Dto3D from './Map2Dto3D'
+import FloorListView from './FloorListView'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -42,5 +47,10 @@ export {
   AnalystMapRecommend,
   AnalystMapToolbar,
   MenuList,
+  ChangeArView,
+  NavigationView,
+  NavigationPoiView,
+  Map2Dto3D,
+  FloorListView,
   PoiInfoContainer,
 }

@@ -14,6 +14,9 @@ const Profile = {
   TEMPLATE: '模板',
   COLLECTION_TEMPLATE: '采集模板',
   PLOTTING_TEMPLATE: '标绘模板',
+  NAVIGATION: '导航',
+  INCREMENT: '增量',
+  ENCLOSURE: '围栏',
 
   //我的——登录
   LOGIN: '登录',

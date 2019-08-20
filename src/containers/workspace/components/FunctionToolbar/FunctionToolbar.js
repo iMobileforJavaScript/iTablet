@@ -1253,6 +1253,58 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
+      case constants.MAP_NAVIGATION:
+        data = [
+          {
+            key: '开始',
+            title: getLanguage(this.props.language).Map_Main_Menu.START,
+            // title: '开始',
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: getLanguage(this.props.language).Map_Main_Menu.OPEN,
+            //constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: '风格',
+            title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
+            //'风格',
+            action: this.mapStyle,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_style.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: '路网',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .MAO_ROAD_DISTRIBUTION,
+            //'风格',
+            action: () => this.aiAssistant(ConstToolType.MAP_AR_AIASSISTANT),
+            size: 'large',
+            image: getThemeAssets().ar.icon_ai_assistant,
+            selectMode: 'flash',
+          },
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+            //'工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
+            //'分享',
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
       case constants.COLLECTION:
       default:
         data = [

@@ -8,6 +8,9 @@ const Map_Label = {
   NAME: 'Name',
   TOOL_BOX: 'Toolbox',
   ARMAP: 'Scenery',
+  NAVIGATION: 'Navigation',
+  INCREMENT: 'Increment',
+  ENCLOSURE: 'Enclosure',
 }
 
 //地图、场景主菜单
@@ -262,6 +265,8 @@ const Map_Main_Menu = {
   SHARE_FRIENDS: 'Friends',
   SHARE_EXPLORE: 'Explore',
 
+  MAO_ROAD_DISTRIBUTION: 'Road Distribution',
+
   MAP_AR_AI_ASSISTANT: 'AI Assitant',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
@@ -269,6 +274,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
   MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: 'HighPrecision Collection',
+  MAP_AR_AI_ASSISTANT_CLASSIFY: 'AI Classify',
 }
 
 //推演动画
@@ -291,6 +297,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CLICK_START: 'Click Start',
   PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
+  PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
 }
 
 //图层
@@ -400,6 +407,11 @@ const Map_Settings = {
   COORDINATE_SYSTEM_SETTING: 'Coordinate System Settings',
   ADVANCED_SETTING: 'Advanced Settings',
   LEGEND_SETTING: 'Legend Settings',
+  ENCLOSURE_NAME: 'Enclosure Nmae',
+  START_TIME: 'Start Time',
+  END_TIME: 'End Time',
+  REMARKS: 'Remarks',
+  DRAWING_RANGE: 'Drawing Range',
 
   //视频地图设置:一级菜单
   POI_SETTING: 'POI Settings',

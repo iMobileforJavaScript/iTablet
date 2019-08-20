@@ -79,6 +79,8 @@ function getTabBarData(type, params = {}) {
     // ||type === ConstToolType.PLOT_ANIMATION_XML_LIST
   ) {
     tabBarData = PlotData.getPlotOperationData(type, params)
+  } else if (type === ConstToolType.PLOT_ANIMATION_WAY) {
+    tabBarData = PlotData.getAnimationWayData(type, params)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
     tabBarData = AiAssistant.getAiAssistantData(type, params)
   }
