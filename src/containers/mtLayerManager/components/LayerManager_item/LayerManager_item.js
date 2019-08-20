@@ -370,6 +370,7 @@ export default class LayerManager_item extends React.Component {
         data: this.state.data,
         parentData: this.props.parentData,
       })
+      await SMap.setLayerEditable(this.state.data.path, true)
     } else return
   }
 
