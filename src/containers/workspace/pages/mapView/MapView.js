@@ -1820,7 +1820,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconAr}
           size={MTBtn.Size.NORMAL}
-          image={getThemeAssets().ar.icon_ar}
+          image={getThemeAssets().ar.switch_ar_light}
           onPress={this.switchAr}
           activeOpacity={0.5}
           // separator={scaleSize(2)}
