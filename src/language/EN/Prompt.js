@@ -105,6 +105,8 @@ const Prompt = {
   PUBLISH_SUCCESS: 'Published Successfully',
   PUBLISH_FAILED: 'Failed to Publish',
 
+  SELECT_AT_LEAST_ONE: 'Please select at least one item',
+
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
   CLIP_ENTER_MAP_NAME: 'Enter the map name',

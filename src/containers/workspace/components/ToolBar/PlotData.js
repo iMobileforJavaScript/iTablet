@@ -202,6 +202,38 @@ function getPlotOperationData(type, params) {
 
   return { data, buttons }
 }
+
+/**
+ * 获取创建路径按钮数据
+ */
+function getAnimationWayData(type, params) {
+  _params = params
+  let data = [],
+    buttons = []
+  switch (type) {
+    case ConstToolType.PLOT_ANIMATION_WAY:
+      data.push({
+        key: constants.UNDO,
+        title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+        action: () => animationWayUndo(),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_undo_black.png'),
+      })
+      data.push({
+        key: constants.SUBMIT,
+        title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
+        action: () => endAnimationWayPoint(),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_submit_black.png'),
+      })
+      break
+  }
+
+  buttons = [ToolbarBtnType.END_ANIMATION]
+
+  return { data, buttons }
+}
+
 /**
  * 获取采集操作数据
  * @param type
@@ -287,6 +319,23 @@ async function showCollection(libId, symbolCode, type) {
   })
 }
 
+async function endAnimationWayPoint() {
+  let points = await SMap.endAnimationWayPoint(true)
+  GLOBAL.animationWayData && (GLOBAL.animationWayData.points = points)
+
+  let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+  this.toolBox.setVisible(true, type, {
+    isFullScreen: true,
+    height: ConstToolType.TOOLBAR_HEIGHT[5],
+    containerType: 'createPlotAnimation',
+    cb: () => {},
+  })
+}
+
+async function animationWayUndo() {
+  await SMap.addAnimationWayPoint(null, false)
+}
+
 async function collectionSubmit(libId, symbolCode) {
   await SMap.submit()
   await SMap.refreshMap()
@@ -328,4 +377,5 @@ export default {
   getCollectionData,
   showCollection,
   getPlotOperationData,
+  getAnimationWayData,
 }

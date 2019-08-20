@@ -11,6 +11,7 @@ export default class TouchableItemView extends Component {
     contentStyle: {},
     imageStyle: {},
     textStyle: {},
+    seperatorStyle: {},
   }
 
   constructor(props) {
@@ -41,7 +42,7 @@ export default class TouchableItemView extends Component {
           </TouchableOpacity>
           {this.props.renderRight ? this.props.renderRight(this.props) : null}
         </View>
-        <View style={styles.seperator} />
+        <View style={[styles.seperator, this.props.seperatorStyle]} />
       </View>
     )
   }
