@@ -542,7 +542,20 @@ const Map_Tools = {
   FROM_ALBUM: 'Choose from album',
   VIEW: 'View',
 }
-
+//POI title
+const Map_PoiTitle = {
+  FOOD: 'Food',
+  SCENE: 'Scenic spot',
+  BANK: 'Bank',
+  SUPERMARKET: 'Supermarket',
+  HOTEL: 'Hotel',
+  TOILET: 'Toilet',
+  BUS_STOP: 'Bus stop',
+  PARKING_LOT: 'Parking lot',
+  HOSPITAL: 'Hospital',
+  GAS_STATION: 'Gas station',
+  MARKET: 'Market',
+}
 export {
   Map_Main_Menu,
   Map_Label,
@@ -552,4 +565,5 @@ export {
   Map_Setting,
   Map_Settings,
   Map_Tools,
+  Map_PoiTitle,
 }
