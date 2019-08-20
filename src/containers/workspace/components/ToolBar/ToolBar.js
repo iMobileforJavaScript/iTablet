@@ -3456,15 +3456,31 @@ export default class ToolBar extends React.PureComponent {
       ConstPath.UserPath +
         userName +
         '/' +
-        ConstPath.RelativeFilePath.Animation +
-        '/' +
-        mapName,
+        ConstPath.RelativeFilePath.Animation,
     )
-    await SMap.animationSave(savePath)
+    let defaultAnimationName = mapName
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .PLOT_SAVE_ANIMATION,
+      //'保存推演动画',
+      value: defaultAnimationName,
+      placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      cb: async value => {
+        GLOBAL.Loading &&
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SAVEING,
+          )
+        let path = savePath + '/' + value
+        await SMap.animationSave(path)
+
+        GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+
+        NavigationService.goBack()
+        Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      },
+    })
   }
-  // menuCommit = () => {
-  //   this.menuDialog && this.menuDialog.callCurrentAction()
-  // }
   menuCommit = (type = this.state.type, actionFirst = false) => {
     (async function() {
       let actionType = Action.PAN

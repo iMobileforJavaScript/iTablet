@@ -82,6 +82,7 @@ const Prompt = {
 
   NETWORK_REQUEST_FAILED: 'Network Request Failed',
 
+  SAVEING: 'Saveing',
   CREATING: 'Creating',
   PLEASE_ADD_DATASOURCE: 'Please Add a Datasource',
   NO_ATTRIBUTES: 'No Attributes',
@@ -112,6 +113,7 @@ const Prompt = {
   CLIP_ENTER_MAP_NAME: 'Enter the map name',
   ENTER_NAME: 'Please enter the name',
   ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
+  ENTER_ANIMATION_NAME: 'Please enter the animation name',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
