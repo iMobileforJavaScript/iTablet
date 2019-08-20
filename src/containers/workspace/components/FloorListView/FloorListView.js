@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SMFloorListView } from 'imobile_for_reactnative'
-import { View } from 'react-native'
+
 import { scaleSize } from '../../../../utils'
 
 export default class FloorListView extends React.Component {

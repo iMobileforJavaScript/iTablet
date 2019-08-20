@@ -8,6 +8,7 @@ import {
   Image,
   Text,
 } from 'react-native'
+import { ConstToolType, TouchType } from '../../../../constants'
 import { TableList } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
@@ -15,7 +16,7 @@ import { getLanguage } from '../../../../language/index'
 // import { getPublicAssets } from '../../../../assets'
 import { getThemeAssets } from '../../../../assets'
 // import { TextInput } from 'react-native-gesture-handler';
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, Action } from 'imobile_for_reactnative'
 
 var StartMode = {
   START_FOLLOW_LAST: 1,
@@ -40,6 +41,7 @@ export default class PlotAnimationView extends React.Component {
     device: Object,
     themeSymbolType: '',
     saveAndContinue: () => {},
+    showToolbar: () => {},
   }
 
   constructor(props) {
@@ -51,6 +53,7 @@ export default class PlotAnimationView extends React.Component {
       durationTime: 5,
       startMode: 1,
       data: [],
+      wayPoints: [],
     }
   }
 
@@ -67,7 +70,7 @@ export default class PlotAnimationView extends React.Component {
     let subData = []
     switch (type) {
       case 1:
-        // subData.push(data[0])   //路径动画，暂不支持
+        subData.push(data[0]) //路径动画，暂不支持
         subData.push(data[1])
         subData.push(data[2])
         // subData.push(data[3])
@@ -81,9 +84,20 @@ export default class PlotAnimationView extends React.Component {
         subData.push(data[6])
         break
     }
-    this.setState({
-      data: subData,
-    })
+    if (GLOBAL.animationWayData) {
+      this.setState({
+        data: subData,
+        animationMode: GLOBAL.animationWayData.animationMode,
+        startTime: GLOBAL.animationWayData.startTime,
+        durationTime: GLOBAL.animationWayData.durationTime,
+        startMode: GLOBAL.animationWayData.startMode,
+        wayPoints: GLOBAL.animationWayData.points,
+      })
+    } else {
+      this.setState({
+        data: subData,
+      })
+    }
   }
 
   getCreateInfo = () => {
@@ -92,6 +106,7 @@ export default class PlotAnimationView extends React.Component {
       startTime: this.state.startTime,
       durationTime: this.state.durationTime,
       startMode: this.state.startMode,
+      wayPoints: this.state.wayPoints,
     }
   }
 
@@ -345,6 +360,27 @@ export default class PlotAnimationView extends React.Component {
           </View>
         </TouchableOpacity>
         <View style={styles.endlineStyle} />
+        {/* <View>
+          this.state.animationMode==0?<View> */}
+        <TouchableOpacity onPress={this.createAnimationWay}>
+          <View style={styles.startTime}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .PLOTTING_ANIMATION_WAY_SET
+              }
+            </Text>
+            <View style={styles.startTimeView}>
+              <Image
+                source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                style={styles.startModeImage}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
+        {/* </View>:null
+        </View> */}
+        <View style={styles.endlineStyle} />
         <View>
           <TouchableOpacity onPress={this.saveAndContinue}>
             <View style={styles.saveAndContinueView2}>
@@ -366,6 +402,7 @@ export default class PlotAnimationView extends React.Component {
   }
   saveAndContinue = () => {
     this.props.saveAndContinue()
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     // this.scrollView.scrollTo(0,0)
     this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
   }
@@ -434,6 +471,19 @@ export default class PlotAnimationView extends React.Component {
     this.setState({
       startMode: StartMode.START_TOGETHER_LAST,
     })
+  }
+
+  createAnimationWay = () => {
+    if (this.state.animationMode == 0) {
+      GLOBAL.animationWayData = this.getCreateInfo()
+      GLOBAL.TouchType = TouchType.ANIMATION_WAY
+      this.props.showToolbar(true, ConstToolType.PLOT_ANIMATION_WAY, {
+        containerType: 'table',
+        height: ConstToolType.HEIGHT[0],
+        isFullScreen: false,
+        cb: () => SMap.setAction(Action.PAN),
+      })
+    }
   }
 
   render() {
@@ -518,8 +568,9 @@ const styles = StyleSheet.create({
   },
   startTimeText: {
     fontSize: setSpText(20),
-    height: scaleSize(20),
+    height: scaleSize(30),
     color: color.themeText2,
+    textAlign: 'center',
   },
   modifyTime: {
     height: scaleSize(60),

@@ -182,6 +182,7 @@ export default {
   PLOT_ANIMATION_NODE_CREATE: 'plot_animation_node_create',
   PLOT_ANIMATION_PALY: 'plot_animation_play',
   PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list',
+  PLOT_ANIMATION_WAY: 'plot_animation_way',
 
   ATTRIBUTE_RELATE: 'ATTRIBUTE_RELATE',
   ATTRIBUTE_SELECTION_RELATE: 'ATTRIBUTE_SELECTION_RELATE',

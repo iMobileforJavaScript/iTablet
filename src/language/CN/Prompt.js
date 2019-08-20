@@ -101,6 +101,8 @@ const Prompt = {
   PUBLISH_SUCCESS: '发布成功',
   PUBLISH_FAILED: '发布失败',
 
+  SELECT_AT_LEAST_ONE: '请至少选择一个数据',
+
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',
   CLIP_ENTER_MAP_NAME: '请输入地图名字',

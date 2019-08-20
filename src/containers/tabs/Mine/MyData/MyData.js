@@ -9,7 +9,12 @@ import {
   NativeModules,
   RefreshControl,
 } from 'react-native'
-import { Container, ListSeparator, TextBtn } from '../../../../components'
+import {
+  Container,
+  ListSeparator,
+  TextBtn,
+  CheckBox,
+} from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -97,6 +102,16 @@ const styles = StyleSheet.create({
     height: scaleSize(40),
     width: scaleSize(40),
   },
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
 })
 
 export default class MyLocalData extends Component {
@@ -121,6 +136,7 @@ export default class MyLocalData extends Component {
       textDisplay: 'none',
       title: (params && params.title) || '',
       isRefreshing: false,
+      batchDelete: false,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -267,6 +283,7 @@ export default class MyLocalData extends Component {
     datasourceParams.engineType = EngineType.UDB
     datasourceParams.alias = datasourceAlias
     await SMap.createDatasource(datasourceParams)
+    SMap.closeDatasource(datasourceAlias)
   }
 
   _openData = () => {
@@ -279,6 +296,69 @@ export default class MyLocalData extends Component {
     NavigationService.navigate('NewDataset', {
       data: this.itemInfo.item,
     })
+  }
+
+  _onItemCheck = (info, checked) => {
+    if (checked) {
+      this.deleteArr.push(info)
+    } else {
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        if (this.deleteArr[i].item.name === info.item.name) {
+          this.deleteArr.splice(i, 1)
+          break
+        }
+      }
+    }
+  }
+
+  _batchDelete = async () => {
+    try {
+      if (this.deleteArr.length === 0) {
+        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      this.setState({ batchDelete: false })
+      let deleteItem
+      switch (this.state.title) {
+        case getLanguage(this.props.language).Profile.MAP:
+          deleteItem = async info => {
+            this.itemInfo = info
+            await this._deleteMap()
+          }
+          break
+        case getLanguage(this.props.language).Profile.DATA:
+          deleteItem = async info => {
+            this.itemInfo = info
+            await this._deleteDatasource()
+          }
+          break
+        case getLanguage(this.props.language).Profile.SCENE:
+          deleteItem = async info => {
+            this.itemInfo = info
+            await this._deleteScene()
+          }
+          break
+        case getLanguage(this.props.language).Profile.SYMBOL:
+          deleteItem = async info => {
+            this.itemInfo = info
+            await this._deleteSymbol()
+          }
+          break
+        case getLanguage(this.props.language).Profile.MINE_COLOR:
+          deleteItem = async info => {
+            this.itemInfo = info
+            await this._deleteSymbol()
+          }
+          break
+      }
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        await deleteItem(this.deleteArr[i])
+      }
+      this.getData()
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
   }
 
   _renderSectionHeader = info => {
@@ -385,6 +465,9 @@ export default class MyLocalData extends Component {
       <TouchableOpacity
         style={[styles.item, { display: display }]}
         onPress={async () => {
+          if (this.state.batchDelete) {
+            return
+          }
           if (this.formChat && this.chatCallBack) {
             if (this.callBackMode && this.callBackMode === 'getName') {
               this.itemInfo = info
@@ -405,35 +488,53 @@ export default class MyLocalData extends Component {
         <Text numberOfLines={1} style={styles.itemText}>
           {txtInfo}
         </Text>
-        {isShowMore && (
-          <TouchableOpacity
-            style={styles.moreView}
-            onPress={() => {
-              this.itemInfo = info
-              if (this.state.isFirstLoadingModal) {
-                this.setState(
-                  {
-                    modalIsVisible: true,
-                    isFirstLoadingModal: false,
-                  },
-                  () => {
-                    this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
-                  },
-                )
-              } else {
-                this.setState({ modalIsVisible: true }, () => {
-                  this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
-                })
-              }
-            }}
-          >
-            <Image
-              style={styles.moreImg}
-              resizeMode={'contain'}
-              source={require('../../../../assets/Mine/icon_more_gray.png')}
-            />
-          </TouchableOpacity>
-        )}
+        {isShowMore && this._renderItemRight(info)}
+      </TouchableOpacity>
+    )
+  }
+
+  _renderItemRight = info => {
+    if (this.state.batchDelete) {
+      return (
+        <CheckBox
+          style={{
+            height: scaleSize(30),
+            width: scaleSize(30),
+            marginRight: scaleSize(30),
+          }}
+          onChange={checked => {
+            this._onItemCheck(info, checked)
+          }}
+        />
+      )
+    }
+    return (
+      <TouchableOpacity
+        style={styles.moreView}
+        onPress={() => {
+          this.itemInfo = info
+          if (this.state.isFirstLoadingModal) {
+            this.setState(
+              {
+                modalIsVisible: true,
+                isFirstLoadingModal: false,
+              },
+              () => {
+                this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+              },
+            )
+          } else {
+            this.setState({ modalIsVisible: true }, () => {
+              this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
+            })
+          }
+        }}
+      >
+        <Image
+          style={styles.moreImg}
+          resizeMode={'contain'}
+          source={require('../../../../assets/Mine/icon_more_gray.png')}
+        />
       </TouchableOpacity>
     )
   }
@@ -1084,38 +1185,53 @@ export default class MyLocalData extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.NEW_DATASOURCE,
+        title: getLanguage(global.language).Profile.BATCH_DELETE,
         action: () => {
-          this._closeModal()
-          NavigationService.navigate('InputPage', {
-            placeholder: getLanguage(global.language).Profile
-              .ENTER_DATASOURCE_NAME,
-            headerTitle: getLanguage(global.language).Profile
-              .SET_DATASOURCE_NAME,
-            cb: async name => {
-              let datasourcePath
-              let homePath = await FileTools.appendingHomeDirectory()
-              if (UserType.isProbationUser(this.props.user.currentUser)) {
-                datasourcePath =
-                  homePath +
-                  ConstPath.CustomerPath +
-                  ConstPath.RelativePath.Datasource
-              } else {
-                datasourcePath =
-                  homePath +
-                  ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/' +
-                  ConstPath.RelativePath.Datasource
-              }
-              await this.createDatasource(datasourcePath, name, name)
-              this.getData()
-              NavigationService.goBack()
-            },
+          this.deleteArr = []
+          this.setState({
+            batchDelete: !this.state.batchDelete,
+            sectionData: Object.assign([], this.state.sectionData),
           })
         },
       },
     ]
+    if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
+      let dataData = [
+        {
+          title: getLanguage(global.language).Profile.NEW_DATASOURCE,
+          action: () => {
+            this._closeModal()
+            NavigationService.navigate('InputPage', {
+              placeholder: getLanguage(global.language).Profile
+                .ENTER_DATASOURCE_NAME,
+              headerTitle: getLanguage(global.language).Profile
+                .SET_DATASOURCE_NAME,
+              cb: async name => {
+                let datasourcePath
+                let homePath = await FileTools.appendingHomeDirectory()
+                if (UserType.isProbationUser(this.props.user.currentUser)) {
+                  datasourcePath =
+                    homePath +
+                    ConstPath.CustomerPath +
+                    ConstPath.RelativePath.Datasource
+                } else {
+                  datasourcePath =
+                    homePath +
+                    ConstPath.UserPath +
+                    this.props.user.currentUser.userName +
+                    '/' +
+                    ConstPath.RelativePath.Datasource
+                }
+                await this.createDatasource(datasourcePath, name, name)
+                this.getData()
+                NavigationService.goBack()
+              },
+            })
+          },
+        },
+      ]
+      data = dataData.concat(data)
+    }
     return (
       <MyDataPopupModal
         ref={ref => (this.DataPopModal = ref)}
@@ -1175,24 +1291,46 @@ export default class MyLocalData extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
-      let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
-      return (
+    if (this.state.batchDelete) {
+      return null
+    }
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.DataPopModal.setVisible(true)
+        }}
+        style={styles.moreView}
+      >
+        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
+      </TouchableOpacity>
+    )
+  }
+
+  _renderBottom = () => {
+    return (
+      <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
-            this.DataPopModal.setVisible(true)
+            this.setState({
+              batchDelete: !this.state.batchDelete,
+              datasets: Object.assign([], this.state.sectionData),
+            })
           }}
-          style={styles.moreView}
         >
           <Image
-            resizeMode={'contain'}
-            source={moreImg}
-            style={styles.moreImg}
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
           />
         </TouchableOpacity>
-      )
-    }
-    return null
+        <TouchableOpacity onPress={this._batchDelete}>
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   render() {
@@ -1265,6 +1403,7 @@ export default class MyLocalData extends Component {
         />*/}
         {this._showMyDataPopupModal()}
         {this._showDataPopupModal()}
+        {this.state.batchDelete && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
