@@ -1539,11 +1539,8 @@ export default class MapView extends React.Component {
           currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {
-        const datasourceAlias =
-          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
-        const datasetName = await SMap.getCurrentTaggingDataset(
-          currentLayer.name,
-        ) // 标注图层名称
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +

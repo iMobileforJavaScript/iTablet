@@ -30,8 +30,8 @@ function arMeasureCollect() {
         currentLayer.datasourceAlias.match(reg)
     }
     if (isTaggingLayer) {
-      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
-      const datasetName = await SMap.getCurrentTaggingDataset(currentLayer.name) // 标注图层名称
+      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+      const datasetName = currentLayer.datasetName // 标注图层名称
       NavigationService.navigate('MeasureView', {
         datasourceAlias,
         datasetName,
