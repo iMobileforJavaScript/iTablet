@@ -350,9 +350,9 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_TOOL_TAGGING_SETTING:
       if (orientation === 'LANDSCAPE') {
-        height = ConstToolType.NEWTHEME_HEIGHT[2]
+        height = ConstToolType.TOOLBAR_HEIGHT[3]
       } else {
-        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        height = ConstToolType.TOOLBAR_HEIGHT[3]
       }
       break
     case ConstToolType.PLOT_ANIMATION_START:

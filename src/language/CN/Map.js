@@ -565,6 +565,20 @@ const Map_Tools = {
   VIEW: '查看',
 }
 
+//POI title
+const Map_PoiTitle = {
+  FOOD: '美食',
+  SCENE: '景点',
+  BANK: '银行',
+  SUPERMARKET: '超市',
+  HOTEL: '酒店',
+  TOILET: '厕所',
+  BUS_STOP: '公交站',
+  PARKING_LOT: '停车场',
+  HOSPITAL: '医院',
+  GAS_STATION: '加油站',
+  MARKET: '商场',
+}
 export {
   Map_Main_Menu,
   Map_Label,
@@ -574,4 +588,5 @@ export {
   Map_Setting,
   Map_Settings,
   Map_Tools,
+  Map_PoiTitle,
 }

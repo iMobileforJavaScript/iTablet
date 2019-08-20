@@ -841,20 +841,24 @@ async function freecover() {
 //多媒体采集
 function captureImage() {
   (async function() {
-    let isTaggingLayer = await SMap.isTaggingLayer(
-      _params.user.currentUser.userName,
-    )
-    if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-      await SMap.setTaggingGrid(
-        GLOBAL.TaggingDatasetName,
-        _params.user.currentUser.userName,
-      )
-      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
-      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
-      NavigationService.navigate('Camera', {
-        datasourceAlias,
-        datasetName,
-      })
+    let currentLayer = GLOBAL.currentLayer
+    let reg = /^Label_(.*)#$/
+    if (currentLayer) {
+      let isTaggingLayer =
+        currentLayer.type === DatasetType.CAD &&
+        currentLayer.datasourceAlias.match(reg)
+      if (isTaggingLayer) {
+        await SMap.setTaggingGrid(
+          currentLayer.datasetName,
+          _params.user.currentUser.userName,
+        )
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
+        NavigationService.navigate('Camera', {
+          datasourceAlias,
+          datasetName,
+        })
+      }
     } else {
       Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
       _params.navigation.navigate('LayerManager')

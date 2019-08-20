@@ -154,8 +154,12 @@ export default class LayerManager_tolbar extends React.Component {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[5]
           }
           break
+        case ConstToolType.MAP_SCALE:
         case ConstToolType.MAP_EDIT_STYLE:
           boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
+          break
+        case ConstToolType.MAP_EDIT_TAGGING:
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
           break
         default:
           boxHeight = ConstToolType.TOOLBAR_HEIGHT[0]
