@@ -28,6 +28,7 @@ const Map_Main_Menu = {
   START_NEW_SENCE: '新建场景',
   START_SAVE_SENCE: '保存场景',
   START_SAVE_AS_SENCE: '另存场景',
+  PLOT_SAVE_ANIMATION: '保存动画',
 
   PLOT: '标绘',
 
@@ -317,6 +318,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CLICK_START: '点击开始',
   PLOTTING_ANIMATION_TOGETHER_LAST: '上一动作同时播放',
   PLOTTING_ANIMATION_CONTINUE: '继续创建',
+  PLOTTING_ANIMATION_WAY_SET: '路径设置',
 }
 
 //图层

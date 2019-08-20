@@ -2611,7 +2611,7 @@ export default class ToolBar extends React.PureComponent {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
-    if (isShow) {
+    if (isShow && GLOBAL.TouchType != TouchType.ANIMATION_WAY) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
     }
@@ -3460,11 +3460,28 @@ export default class ToolBar extends React.PureComponent {
         '/' +
         mapName,
     )
-    await SMap.animationSave(savePath)
+    let defaultAnimationName = mapName
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .PLOT_SAVE_ANIMATION,
+      //'保存推演动画',
+      value: defaultAnimationName,
+      placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      cb: async value => {
+        GLOBAL.Loading &&
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SAVEING,
+          )
+        await SMap.animationSave(savePath, value)
+
+        GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+
+        NavigationService.goBack()
+        Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      },
+    })
   }
-  // menuCommit = () => {
-  //   this.menuDialog && this.menuDialog.callCurrentAction()
-  // }
   menuCommit = (type = this.state.type, actionFirst = false) => {
     (async function() {
       let actionType = Action.PAN
@@ -3605,10 +3622,11 @@ export default class ToolBar extends React.PureComponent {
           isRegionLayer ||
           isTextLayer
         ) {
-          SMap.setTaggingGrid(
-            currentLayer.datasetName,
-            this.props.user.currentUser.userName,
-          )
+          isTaggingLayer &&
+            SMap.setTaggingGrid(
+              currentLayer.datasetName,
+              this.props.user.currentUser.userName,
+            )
           SMap.submit()
           SMap.refreshMap()
           SMap.setAction(Action.PAN)
@@ -3885,6 +3903,8 @@ export default class ToolBar extends React.PureComponent {
   endAnimation = () => {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
+    SMap.endAnimationWayPoint(false)
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
     GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
@@ -3920,8 +3940,6 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
-
     this.animationPlay()
   }
 
@@ -5224,6 +5242,7 @@ export default class ToolBar extends React.PureComponent {
         geoId={this.props.selection[0] && this.props.selection[0].ids[0]}
         Heighttype={this.state.type}
         device={this.props.device}
+        showToolbar={this.setVisible}
       />
     )
   }
@@ -6138,6 +6157,16 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       let createInfo =
         this.plotAnimationView && this.plotAnimationView.getCreateInfo()
@@ -6146,7 +6175,7 @@ export default class ToolBar extends React.PureComponent {
         createInfo.layerName = this.props.selection[0].layerInfo.name
       }
       SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
-
+      GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
       // let length=createInfo.length
       // // this.showToolbarAndBox(false)
       // this.isBoxShow = true
@@ -6234,10 +6263,26 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <KeyboardAvoidingView
-          keyboardVerticalOffset={keyboardVerticalOffset}
-          behavior={'position'}
-        >
+        {this.state.type === ConstToolType.MAP_TOOL_TAGGING_SETTING ? (
+          <KeyboardAvoidingView
+            keyboardVerticalOffset={keyboardVerticalOffset}
+            behavior={'position'}
+          >
+            <View
+              style={[
+                styles.containers,
+                !(
+                  this.state.isFullScreen &&
+                  !this.state.isTouchProgress &&
+                  !this.state.showMenuDialog
+                ) && styles.containers_border,
+              ]}
+            >
+              {this.renderView()}
+              {this.renderBottomBtns()}
+            </View>
+          </KeyboardAvoidingView>
+        ) : (
           <View
             style={[
               styles.containers,
@@ -6251,7 +6296,7 @@ export default class ToolBar extends React.PureComponent {
             {this.renderView()}
             {this.renderBottomBtns()}
           </View>
-        </KeyboardAvoidingView>
+        )}
       </Animated.View>
     )
   }

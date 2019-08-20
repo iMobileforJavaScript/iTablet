@@ -10,6 +10,8 @@ export default class NavigationPoiView extends React.Component {
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
+    mapNavigationShow: PropTypes.bool,
+    setMapNavigationShow: PropTypes.func,
   }
 
   constructor(props) {
@@ -97,6 +99,16 @@ export default class NavigationPoiView extends React.Component {
     )
   }
 
+  Navigation = () => {
+    this.props.setMapNavigationShow(false)
+    SMap.startNavigation()
+    SMap.setIndustryNavigationListener({
+      callback: () => {
+        this.props.setMapNavigationShow(true)
+      },
+    })
+  }
+
   changeHeight = () => {
     if (this.state.isroad) {
       this.props.setMapNavigation({
@@ -157,8 +169,9 @@ export default class NavigationPoiView extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.itemView}
-          // onPress={() => {
-          // }}
+          onPress={() => {
+            this.Navigation()
+          }}
         >
           <Text style={styles.text}>第三人称</Text>
         </TouchableOpacity>

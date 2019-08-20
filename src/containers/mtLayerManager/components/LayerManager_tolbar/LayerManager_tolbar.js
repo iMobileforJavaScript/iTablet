@@ -123,6 +123,8 @@ export default class LayerManager_tolbar extends React.Component {
     } else {
       switch (this.state.type) {
         case ConstToolType.MAP_STYLE:
+        case ConstToolType.MAP_THEME_STYLE:
+        case ConstToolType.MAP_THEME_STYLES:
           if (device.orientation === 'LANDSCAPE') {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[3]
           } else {
@@ -130,6 +132,7 @@ export default class LayerManager_tolbar extends React.Component {
           }
           break
         case ConstToolType.PLOTTING:
+        case ConstToolType.MAP_EDIT_MORE_STYLE:
           if (device.orientation === 'LANDSCAPE') {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
           } else {
@@ -150,6 +153,9 @@ export default class LayerManager_tolbar extends React.Component {
           } else {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[5]
           }
+          break
+        case ConstToolType.MAP_EDIT_STYLE:
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
           break
         default:
           boxHeight = ConstToolType.TOOLBAR_HEIGHT[0]

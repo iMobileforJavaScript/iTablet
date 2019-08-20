@@ -20,4 +20,7 @@ export default {
 
   // 邻近分析
   REFERENCE: 'REFERENCE',
+
+  //创建动画路径
+  ANIMATION_WAY: 'ANIMATION_WAY',
 }

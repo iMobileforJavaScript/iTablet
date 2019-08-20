@@ -25,6 +25,7 @@ const Map_Main_Menu = {
   START_NEW_SENCE: 'New Scene',
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
+  PLOT_SAVE_ANIMATION: 'Save Animation',
 
   PLOT: 'Plot',
   OPEN: 'Add',
@@ -299,6 +300,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CLICK_START: 'Click Start',
   PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
+  PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
 }
 
 //图层
