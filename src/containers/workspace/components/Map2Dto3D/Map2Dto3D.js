@@ -1,14 +1,9 @@
-/*
- Copyright © SuperMap. All rights reserved.
- Author: Yang Shanglong
- E-mail: yangshanglong@supermap.com
- */
 import * as React from 'react'
-import { SMMapView, SMSceneView, SMap, SScene } from 'imobile_for_reactnative'
+import { SMMapView, SMSceneView, SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 import { View } from 'react-native'
-import { FileTools } from '../../../../native'
-import { ConstPath } from '../../../../constants'
+// import { FileTools } from '../../../../native'
+// import { ConstPath } from '../../../../constants'
 
 export default class Map2Dto3D extends React.Component {
   props: {
@@ -32,14 +27,14 @@ export default class Map2Dto3D extends React.Component {
 
   _addMap = () => {
     (async function() {
-      // SMap.open2DNavigationMap()
-      let homePath = await FileTools.appendingHomeDirectory()
-      let userPath = ConstPath.CustomerPath
-      let wsPath =
-        homePath + userPath + ConstPath.RelativeFilePath.Navigation2DWorkspace
+      // let homePath = await FileTools.appendingHomeDirectory()
+      // let userPath = ConstPath.CustomerPath
+      // let wsPath =
+      //   homePath + userPath + ConstPath.RelativeFilePath.Navigation2DWorkspace
       try {
-        let result = await this.props.openWorkspace({ server: wsPath })
-        result && SMap.open2DNavigationMap()
+        // let result = await this.props.openWorkspace({ server: wsPath })
+        // result && SMap.open2DNavigationMap()
+        // SMap.startIndoorNavigation()
       } catch (e) {
         this.setLoading(false)
       }

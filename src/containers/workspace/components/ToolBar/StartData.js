@@ -332,6 +332,72 @@ function getStart(type, params) {
         },
       ]
       break
+    case ConstToolType.MAP_NAVIGATION_START:
+      data = [
+        {
+          key: constants.NAVIGATION,
+          title: constants.NAVIGATION,
+          action: naviWorkSpace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
+        },
+        {
+          key: constants.OPEN,
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+          //constants.CREATE,
+          size: 'large',
+          action: () => isNeedToSave(openTemplate),
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
+          //constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_history_black.png'),
+        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.BASE_MAP,
+        //   size: 'large',
+        //   action: changeBaseLayer,
+        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        // },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
+        {
+          key: constants.SAVE,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_MAP,
+          //constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_save_black.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
+          //constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_save_as_black.png'),
+        },
+      ]
+      break
   }
   return { data, buttons }
 }
@@ -367,6 +433,49 @@ function openWorkspace(cb) {
       }
     },
   })
+}
+
+/** 打开导航工作空间 **/
+function naviWorkSpace() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  ;(async function() {
+    let data = [],
+      path =
+        (await FileTools.appendingHomeDirectory(
+          _params.user && _params.user.currentUser.userName
+            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+            : ConstPath.CustomerPath,
+        )) + ConstPath.RelativeFilePath.NaviWorkspace
+    let userFileList
+
+    userFileList = await FileTools.getNavigationWorkspace(path)
+
+    if (userFileList && userFileList.length > 0) {
+      let userList = []
+      userFileList.forEach(item => {
+        let name = item.name
+        item.title = name
+        item.name = name.split('.')[0]
+        item.image = require('../../../../assets/mapTools/icon_open_black.png')
+        userList.push(item)
+      })
+    }
+    data.push({
+      title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_WORKSPACE,
+      //'导航工作空间',
+      image: require('../../../../assets/mapTools/icon_open.png'),
+      data: userFileList || [],
+    })
+    _params.setToolbarVisible(true, ConstToolType.WORKSPACE_CHANGE, {
+      containerType: 'list',
+      height:
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[4]
+          : ConstToolType.HEIGHT[3],
+      data,
+    })
+  })()
 }
 
 // /** 切换标绘库 **/
