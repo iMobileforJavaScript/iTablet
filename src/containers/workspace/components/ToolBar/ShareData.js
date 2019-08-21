@@ -13,6 +13,7 @@ import constants from '../../constants'
 import { FileTools } from '../../../../native'
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language'
+import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
@@ -303,7 +304,9 @@ async function shareMap(type, list = [], name = '') {
       let layers = await SMap.getLayersByType()
       let notExportMapIndexes = []
       for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-        notExportMapIndexes.push(layers.length - i)
+        if (LayerUtils.isBaseLayer(layers[layers.length - i].name)) {
+          notExportMapIndexes.push(layers.length - i)
+        }
       }
       let notExport = {
         [_params.map.currentMap.name]: notExportMapIndexes,
