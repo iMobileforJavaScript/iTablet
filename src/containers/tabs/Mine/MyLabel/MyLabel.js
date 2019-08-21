@@ -20,12 +20,12 @@ import {
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
-import LabelItem from './LabelItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
 import { getLanguage } from '../../../../language/index'
+import { MineItem } from '../component'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
@@ -77,14 +77,17 @@ export default class MyLabel extends Component {
   }
 
   _renderItem = ({ item, index }) => {
+    let img = require('../../../../assets/Mine/mine_my_online_data_black.png')
     return (
-      <LabelItem
+      <MineItem
         item={item}
-        index={index}
-        saveItemInfo={this.saveItemInfo}
-        onItemCheck={this._OnItemCheck}
-        showSelect={this.state.showselect}
-        batchDelete={this.state.batchDelete}
+        image={img}
+        text={item.title}
+        disableTouch={this.state.batchDelete || this.state.showselect}
+        showCheck={this.state.batchDelete || this.state.showselect}
+        onPressMore={() => {
+          this.saveItemInfo({ item, index })
+        }}
       />
     )
   }
@@ -113,13 +116,14 @@ export default class MyLabel extends Component {
 
   _batchDelete = async () => {
     try {
-      if (this.deleteArr.length === 0) {
+      let deleteArr = this._getSelectedList()
+      if (deleteArr.length === 0) {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
       this.setState({ batchDelete: false })
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        await SMap.removeDatasetByName(this.state.udbPath, this.deleteArr[i])
+      for (let i = 0; i < deleteArr.length; i++) {
+        await SMap.removeDatasetByName(this.state.udbPath, deleteArr[i])
       }
       this.getData()
       Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
@@ -128,35 +132,30 @@ export default class MyLabel extends Component {
     }
   }
 
-  _OnItemCheck = (data, checked) => {
-    if (this.state.showselect) {
-      if (checked) {
-        this.uploadListOfAdd(data)
-      } else {
-        this.removeDataFromUpList(data)
-      }
-    } else if (this.state.batchDelete) {
-      if (checked) {
-        this.deleteArr.push(data)
-      } else {
-        for (let i = 0; i < this.deleteArr.length; i++) {
-          if (this.deleteArr[i] === data) {
-            this.deleteArr.splice(i, 1)
-            break
-          }
-        }
+  _selectAll = () => {
+    let datasets = Object.assign([], this.state.data)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = true
+    }
+    this.setState({ datasets })
+  }
+
+  _deseleteAll = () => {
+    let datasets = Object.assign([], this.state.data)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = false
+    }
+    this.setState({ datasets })
+  }
+
+  _getSelectedList = () => {
+    let list = []
+    for (let i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].checked === true) {
+        list.push(this.state.data[i].title)
       }
     }
-  }
-
-  uploadListOfAdd = data => {
-    this.uploadList.push(data)
-  }
-
-  removeDataFromUpList = data => {
-    let index = this.uploadList.indexOf(data)
-    if (index === -1) return
-    this.uploadList.splice(index, 1)
+    return list
   }
 
   creatDatasource = async datasourcePath => {
@@ -180,11 +179,11 @@ export default class MyLabel extends Component {
   }
 
   upload = async name => {
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
-      //'请登录')
-      return
-    }
+    // if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+    //   Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+    //   //'请登录')
+    //   return
+    // }
     try {
       // this.container.setLoading(true, '正在分享')
       Toast.show(getLanguage(global.language).Prompt.SHARING)
@@ -265,7 +264,9 @@ export default class MyLabel extends Component {
           }
         }
       }
+      this._deseleteAll()
     } catch (error) {
+      this._deseleteAll()
       Toast.show('分享失败')
       this.container.setLoading(false)
     }
@@ -277,7 +278,6 @@ export default class MyLabel extends Component {
       {
         title: getLanguage(global.language).Profile.BATCH_DELETE,
         action: () => {
-          this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
           })
@@ -363,6 +363,7 @@ export default class MyLabel extends Component {
         }}
         cancelAction={() => {
           this.dialog.setDialogVisible(false)
+          this._deseleteAll()
           this.setState({ showselect: false })
         }}
         confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
@@ -375,7 +376,18 @@ export default class MyLabel extends Component {
 
   _renderHeaderRight = () => {
     if (this.state.batchDelete || this.state.showselect) {
-      return null
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this._selectAll()
+          }}
+          style={styles.moreView}
+        >
+          <Text style={{ color: '#F0F0F0' }}>
+            {getLanguage(global.language).Profile.SELECT_ALL}
+          </Text>
+        </TouchableOpacity>
+      )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
@@ -395,6 +407,7 @@ export default class MyLabel extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
+            this._deseleteAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })
@@ -473,6 +486,7 @@ export default class MyLabel extends Component {
           actionOfOnline={
             UserType.isOnlineUser(this.props.user.currentUser)
               ? () => {
+                this.uploadList = this._getSelectedList()
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
                   this.ModalBtns.setVisible(false)
@@ -490,6 +504,7 @@ export default class MyLabel extends Component {
           actionOfIPortal={
             UserType.isIPortalUser(this.props.user.currentUser)
               ? () => {
+                this.uploadList = this._getSelectedList()
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
                   this.ModalBtns.setVisible(false)
@@ -504,6 +519,7 @@ export default class MyLabel extends Component {
               : undefined
           }
           actionOfWechat={() => {
+            this.uploadList = this._getSelectedList()
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)
               this.ModalBtns.setVisible(false)
@@ -517,6 +533,7 @@ export default class MyLabel extends Component {
           }}
           cancel={() => {
             this.uploadList = []
+            this._deseleteAll()
             this.setState({ showselect: false })
           }}
         />

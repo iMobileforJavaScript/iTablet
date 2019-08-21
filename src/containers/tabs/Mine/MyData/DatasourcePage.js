@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import {
   View,
+  Text,
   FlatList,
   Image,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
-import { Container, CheckBox } from '../../../../components'
+import { Container } from '../../../../components'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
-import TouchableItemView from '../../Friend/TouchableItemView'
 import { Toast, scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import MyDataPopupModal from './MyDataPopupModal'
+import { MineItem } from '../component'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
@@ -93,34 +94,19 @@ class DatasourcePage extends Component {
 
   _batchDelete = async () => {
     try {
-      if (this.deleteArr.length === 0) {
+      let deleteArr = this._getSelectedList()
+      if (deleteArr.length === 0) {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
       this.setState({ batchDelete: false })
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        await SMap.deleteDataset(
-          this.state.title,
-          this.deleteArr[i].datasetName,
-        )
+      for (let i = 0; i < deleteArr.length; i++) {
+        await SMap.deleteDataset(this.state.title, deleteArr[i].datasetName)
       }
       this._getDatasets(false)
       Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
     } catch (error) {
       Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
-    }
-  }
-
-  _onItemCheck = (item, checked) => {
-    if (checked) {
-      this.deleteArr.push(item)
-    } else {
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        if (this.deleteArr[i].datasetName === item.datasetName) {
-          this.deleteArr.splice(i, 1)
-          break
-        }
-      }
     }
   }
 
@@ -130,7 +116,6 @@ class DatasourcePage extends Component {
       {
         title: getLanguage(global.language).Profile.BATCH_DELETE,
         action: () => {
-          this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
           })
@@ -169,43 +154,6 @@ class DatasourcePage extends Component {
     )
   }
 
-  _renderRight = ({ param }) => {
-    return (
-      <TouchableOpacity
-        style={{
-          marginRight: scaleSize(20),
-        }}
-        onPress={() => {
-          this.itemInfo = param
-          this.DatasetPopup.setVisible(true)
-        }}
-      >
-        <Image
-          resizeMode={'contain'}
-          style={{
-            height: scaleSize(40),
-            width: scaleSize(40),
-          }}
-          source={require('../../../../assets/Mine/icon_more_gray.png')}
-        />
-      </TouchableOpacity>
-    )
-  }
-
-  _renderRightSelect = ({ param }) => {
-    return (
-      <CheckBox
-        style={{
-          height: scaleSize(80),
-          width: scaleSize(80),
-        }}
-        onChange={checked => {
-          this._onItemCheck(param, checked)
-        }}
-      />
-    )
-  }
-
   _renderItem = ({ item }) => {
     let type = item.datasetType
     let img = undefined
@@ -221,29 +169,62 @@ class DatasourcePage extends Component {
       img = CADImg
     }
     return (
-      <TouchableItemView
+      <MineItem
+        item={item}
+        image={img}
+        text={item.datasetName}
         disableTouch={this.state.batchDelete}
-        renderRight={
-          this.state.batchDelete ? this._renderRightSelect : this._renderRight
-        }
-        param={item}
-        item={{
-          image: img,
-          text: item.datasetName,
+        showCheck={this.state.batchDelete}
+        onPress={() => {}}
+        onPressMore={() => {
+          this.itemInfo = item
+          this.DatasetPopup.setVisible(true)
         }}
-        onPress={() => {
-          // this.itemInfo = item
-          // this.DatasetPopup.setVisible(true)
-        }}
-        seperatorStyle={{ marginLeft: 0 }}
       />
     )
+  }
+
+  _selectAll = () => {
+    let datasets = Object.assign([], this.state.datasets)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = true
+    }
+    this.setState({ datasets })
+  }
+
+  _deseleteAll = () => {
+    let datasets = Object.assign([], this.state.datasets)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = false
+    }
+    this.setState({ datasets })
+  }
+
+  _getSelectedList = () => {
+    let list = []
+    for (let i = 0; i < this.state.datasets.length; i++) {
+      if (this.state.datasets[i].checked === true) {
+        list.push(this.state.datasets[i])
+      }
+    }
+    return list
   }
 
   _renderHeaderRight = () => {
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     if (this.state.batchDelete) {
-      return null
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this._selectAll()
+          }}
+          style={styles.moreView}
+        >
+          <Text style={{ color: '#F0F0F0' }}>
+            {getLanguage(global.language).Profile.SELECT_ALL}
+          </Text>
+        </TouchableOpacity>
+      )
     }
     return (
       <TouchableOpacity
@@ -262,6 +243,7 @@ class DatasourcePage extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
+            this._deseleteAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })

@@ -16,12 +16,12 @@ import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import NavigationService from '../../../NavigationService'
-import ModuleItem from './ModuleItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
 import { getLanguage } from '../../../../language/index'
+import { MineItem } from '../component'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -132,15 +132,18 @@ export default class MyModule extends Component {
     if (!section.isShowItem) {
       return <View />
     }
+    let img = require('../../../../assets/mapToolbar/list_type_map_black.png')
     return (
-      <ModuleItem
+      <MineItem
         item={item}
-        index={index}
-        section={section}
-        saveItemInfo={this.saveItemInfo}
-        isShowMore={this.isShowMore}
-        onItemCheck={this._OnItemCheck}
-        batchDelete={this.state.batchDelete}
+        image={img}
+        text={item.name}
+        disableTouch={this.state.batchDelete}
+        showRight={this.isShowMore}
+        showCheck={this.state.batchDelete}
+        onPressMore={() => {
+          this.saveItemInfo({ item, section, index })
+        }}
       />
     )
   }
@@ -162,26 +165,27 @@ export default class MyModule extends Component {
 
   _batchDelete = async () => {
     try {
-      if (this.deleteArr.length === 0) {
+      let deleteArr = this._getSelectedList()
+      if (deleteArr.length === 0) {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
       this.setState({ batchDelete: false })
-      for (let i = 0; i < this.deleteArr.length; i++) {
+      for (let i = 0; i < deleteArr.length; i++) {
         let filePath
         if (
-          this.deleteArr[i].section.title ===
+          deleteArr[i].section.title ===
           getLanguage(global.language).Profile.COLLECTION_TEMPLATE
         ) {
-          filePath = this.deleteArr[i].item.path.substring(
+          filePath = deleteArr[i].item.path.substring(
             0,
-            this.deleteArr[i].item.path.lastIndexOf('/'),
+            deleteArr[i].item.path.lastIndexOf('/'),
           )
         } else if (
-          this.deleteArr[i].section.title ===
+          deleteArr[i].section.title ===
           getLanguage(global.language).Profile.PLOTTING_TEMPLATE
         ) {
-          filePath = this.deleteArr[i].item.path
+          filePath = deleteArr[i].item.path
         }
         await FileTools.deleteFile(filePath)
       }
@@ -192,20 +196,39 @@ export default class MyModule extends Component {
     }
   }
 
-  _OnItemCheck = (data, checked) => {
-    if (checked) {
-      this.deleteArr.push(data)
-    } else {
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        if (
-          this.deleteArr[i].section.title === data.section.title &&
-          this.deleteArr[i].item.name === data.item.name
-        ) {
-          this.deleteArr.splice(i, 1)
-          break
+  _selectAll = () => {
+    let section = Object.assign([], this.state.sectionData)
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        section[i].data[n].checked = true
+      }
+    }
+    this.setState({ section })
+  }
+
+  _deseleteAll = () => {
+    let section = Object.assign([], this.state.sectionData)
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        section[i].data[n].checked = false
+      }
+    }
+    this.setState({ section })
+  }
+
+  _getSelectedList = () => {
+    let list = []
+    for (let i = 0; i < this.state.sectionData.length; i++) {
+      for (let n = 0; n < this.state.sectionData[i].data.length; n++) {
+        if (this.state.sectionData[i].data[n].checked === true) {
+          list.push({
+            item: this.state.sectionData[i].data[n],
+            section: this.state.sectionData[i],
+          })
         }
       }
     }
+    return list
   }
 
   _showMyDataPopupModal = () => {
@@ -419,7 +442,6 @@ export default class MyModule extends Component {
       {
         title: getLanguage(global.language).Profile.BATCH_DELETE,
         action: () => {
-          this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
           })
@@ -437,7 +459,18 @@ export default class MyModule extends Component {
 
   _renderHeaderRight = () => {
     if (this.state.batchDelete) {
-      return null
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this._selectAll()
+          }}
+          style={styles.moreView}
+        >
+          <Text style={{ color: '#F0F0F0' }}>
+            {getLanguage(global.language).Profile.SELECT_ALL}
+          </Text>
+        </TouchableOpacity>
+      )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
@@ -457,6 +490,7 @@ export default class MyModule extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
+            this._deseleteAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })
