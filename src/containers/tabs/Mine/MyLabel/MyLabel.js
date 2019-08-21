@@ -7,6 +7,7 @@ import {
   Text,
   NativeModules,
   RefreshControl,
+  StyleSheet,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -22,7 +23,7 @@ import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import LabelItem from './LabelItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
 import { getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
@@ -42,6 +43,7 @@ export default class MyLabel extends Component {
       udbPath: '',
       showselect: false,
       isRefreshing: false,
+      batchDelete: false,
     }
     this.uploadList = []
     this.uploadType = null
@@ -80,9 +82,9 @@ export default class MyLabel extends Component {
         item={item}
         index={index}
         saveItemInfo={this.saveItemInfo}
-        uploadListOfAdd={this.uploadListOfAdd}
-        removeDataFromUpList={this.removeDataFromUpList}
-        getShowSelect={this.getShowSelect}
+        onItemCheck={this._OnItemCheck}
+        showSelect={this.state.showselect}
+        batchDelete={this.state.batchDelete}
       />
     )
   }
@@ -98,6 +100,7 @@ export default class MyLabel extends Component {
   _closeModal = () => {
     this.setState({ modalIsVisible: false }, () => {
       this.MyDataPopModal.setVisible(false)
+      this.MyLabelPopModal.setVisible(false)
     })
   }
 
@@ -106,6 +109,44 @@ export default class MyLabel extends Component {
     this.setState({ modalIsVisible: true }, () => {
       this.MyDataPopModal.setVisible(true)
     })
+  }
+
+  _batchDelete = async () => {
+    try {
+      if (this.deleteArr.length === 0) {
+        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      this.setState({ batchDelete: false })
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        await SMap.removeDatasetByName(this.state.udbPath, this.deleteArr[i])
+      }
+      this.getData()
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
+  }
+
+  _OnItemCheck = (data, checked) => {
+    if (this.state.showselect) {
+      if (checked) {
+        this.uploadListOfAdd(data)
+      } else {
+        this.removeDataFromUpList(data)
+      }
+    } else if (this.state.batchDelete) {
+      if (checked) {
+        this.deleteArr.push(data)
+      } else {
+        for (let i = 0; i < this.deleteArr.length; i++) {
+          if (this.deleteArr[i] === data) {
+            this.deleteArr.splice(i, 1)
+            break
+          }
+        }
+      }
+    }
   }
 
   uploadListOfAdd = data => {
@@ -230,6 +271,28 @@ export default class MyLabel extends Component {
     }
   }
 
+  _renderMyLabelPopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        action: () => {
+          this.deleteArr = []
+          this.setState({
+            batchDelete: !this.state.batchDelete,
+          })
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.MyLabelPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
+  }
+
   _showMyDataPopupModal = () => {
     let data = [
       {
@@ -310,6 +373,48 @@ export default class MyLabel extends Component {
     )
   }
 
+  _renderHeaderRight = () => {
+    if (this.state.batchDelete || this.state.showselect) {
+      return null
+    }
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.MyLabelPopModal.setVisible(true)
+        }}
+        style={styles.moreView}
+      >
+        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
+      </TouchableOpacity>
+    )
+  }
+
+  _renderBottom = () => {
+    return (
+      <View style={styles.bottomStyle}>
+        <TouchableOpacity
+          onPress={() => {
+            this.setState({
+              batchDelete: !this.state.batchDelete,
+            })
+          }}
+        >
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._batchDelete}>
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -318,6 +423,7 @@ export default class MyLabel extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderRight(),
         }}
       >
         <FlatList
@@ -325,6 +431,7 @@ export default class MyLabel extends Component {
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
           data={this.state.data}
+          keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => (
             <View
               style={{
@@ -355,8 +462,10 @@ export default class MyLabel extends Component {
             />
           }
         />
+        {this._renderMyLabelPopupModal()}
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}
+        {this.state.batchDelete && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
@@ -407,6 +516,7 @@ export default class MyLabel extends Component {
             }
           }}
           cancel={() => {
+            this.uploadList = []
             this.setState({ showselect: false })
           }}
         />
@@ -414,3 +524,28 @@ export default class MyLabel extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    // width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreImg: {
+    flex: 1,
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+})

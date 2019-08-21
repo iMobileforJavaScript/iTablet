@@ -55,7 +55,7 @@ export default class CheckBox extends React.Component {
 
   render() {
     let icon
-    if (this.props.disable) {
+    if (!this.props.disable) {
       icon = this.state.checked
         ? getPublicAssets().common.icon_check
         : getPublicAssets().common.icon_uncheck

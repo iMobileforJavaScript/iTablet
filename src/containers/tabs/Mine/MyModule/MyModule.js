@@ -39,6 +39,7 @@ export default class MyModule extends Component {
       title: params.title,
       modalIsVisible: false,
       isRefreshing: false,
+      batchDelete: false,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -137,9 +138,9 @@ export default class MyModule extends Component {
         index={index}
         section={section}
         saveItemInfo={this.saveItemInfo}
-        uploadListOfAdd={this.uploadListOfAdd}
-        removeDataFromUpList={this.removeDataFromUpList}
         isShowMore={this.isShowMore}
+        onItemCheck={this._OnItemCheck}
+        batchDelete={this.state.batchDelete}
       />
     )
   }
@@ -157,6 +158,54 @@ export default class MyModule extends Component {
     this.setState({ modalIsVisible: true }, () => {
       this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
     })
+  }
+
+  _batchDelete = async () => {
+    try {
+      if (this.deleteArr.length === 0) {
+        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      this.setState({ batchDelete: false })
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        let filePath
+        if (
+          this.deleteArr[i].section.title ===
+          getLanguage(global.language).Profile.COLLECTION_TEMPLATE
+        ) {
+          filePath = this.deleteArr[i].item.path.substring(
+            0,
+            this.deleteArr[i].item.path.lastIndexOf('/'),
+          )
+        } else if (
+          this.deleteArr[i].section.title ===
+          getLanguage(global.language).Profile.PLOTTING_TEMPLATE
+        ) {
+          filePath = this.deleteArr[i].item.path
+        }
+        await FileTools.deleteFile(filePath)
+      }
+      this.getData()
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
+  }
+
+  _OnItemCheck = (data, checked) => {
+    if (checked) {
+      this.deleteArr.push(data)
+    } else {
+      for (let i = 0; i < this.deleteArr.length; i++) {
+        if (
+          this.deleteArr[i].section.title === data.section.title &&
+          this.deleteArr[i].item.name === data.item.name
+        ) {
+          this.deleteArr.splice(i, 1)
+          break
+        }
+      }
+    }
   }
 
   _showMyDataPopupModal = () => {
@@ -364,6 +413,70 @@ export default class MyModule extends Component {
     )
   }
 
+  _renderMyModulePopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        action: () => {
+          this.deleteArr = []
+          this.setState({
+            batchDelete: !this.state.batchDelete,
+          })
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.MyModulePopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
+  }
+
+  _renderHeaderRight = () => {
+    if (this.state.batchDelete) {
+      return null
+    }
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.MyModulePopModal.setVisible(true)
+        }}
+        style={styles.moreView}
+      >
+        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
+      </TouchableOpacity>
+    )
+  }
+
+  _renderBottom = () => {
+    return (
+      <View style={styles.bottomStyle}>
+        <TouchableOpacity
+          onPress={() => {
+            this.setState({
+              batchDelete: !this.state.batchDelete,
+            })
+          }}
+        >
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._batchDelete}>
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -372,6 +485,7 @@ export default class MyModule extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderRight(),
         }}
       >
         <SectionList
@@ -379,6 +493,7 @@ export default class MyModule extends Component {
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
           sections={this.state.sectionData}
+          keyExtractor={(item, index) => index.toString()}
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}
@@ -393,6 +508,8 @@ export default class MyModule extends Component {
           renderSectionHeader={this._renderSectionHeader}
         />
         {this._showMyDataPopupModal()}
+        {this._renderMyModulePopupModal()}
+        {this.state.batchDelete && this._renderBottom()}
         <ModalBtns
           ref={ref => (this.ModalBtns = ref)}
           actionOfOnline={
@@ -430,5 +547,27 @@ const styles = StyleSheet.create({
     fontSize: setSpText(26),
     fontWeight: 'bold',
     backgroundColor: 'transparent',
+  },
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    // width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreImg: {
+    flex: 1,
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
   },
 })

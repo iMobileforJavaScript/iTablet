@@ -463,6 +463,7 @@ export default class MyLocalData extends Component {
     }
     return (
       <TouchableOpacity
+        disabled={this.state.batchDelete}
         style={[styles.item, { display: display }]}
         onPress={async () => {
           if (this.state.batchDelete) {
@@ -498,9 +499,8 @@ export default class MyLocalData extends Component {
       return (
         <CheckBox
           style={{
-            height: scaleSize(30),
-            width: scaleSize(30),
-            marginRight: scaleSize(30),
+            height: scaleSize(80),
+            width: scaleSize(80),
           }}
           onChange={checked => {
             this._onItemCheck(info, checked)
@@ -1190,7 +1190,6 @@ export default class MyLocalData extends Component {
           this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
-            sectionData: Object.assign([], this.state.sectionData),
           })
         },
       },
@@ -1314,7 +1313,6 @@ export default class MyLocalData extends Component {
           onPress={() => {
             this.setState({
               batchDelete: !this.state.batchDelete,
-              datasets: Object.assign([], this.state.sectionData),
             })
           }}
         >

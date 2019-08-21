@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   contentView: {
+    height: scaleSize(80),
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: scaleSize(40),
-    paddingVertical: scaleSize(20),
   },
   touchView: {
     flex: 1,

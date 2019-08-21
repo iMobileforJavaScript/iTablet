@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   FlatList,
   Image,
   TouchableOpacity,
@@ -134,7 +133,6 @@ class DatasourcePage extends Component {
           this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
-            datasets: Object.assign([], this.state.datasets),
           })
         },
       },
@@ -174,17 +172,19 @@ class DatasourcePage extends Component {
   _renderRight = ({ param }) => {
     return (
       <TouchableOpacity
+        style={{
+          marginRight: scaleSize(20),
+        }}
         onPress={() => {
           this.itemInfo = param
           this.DatasetPopup.setVisible(true)
         }}
       >
         <Image
+          resizeMode={'contain'}
           style={{
-            flex: 1,
             height: scaleSize(40),
             width: scaleSize(40),
-            marginRight: scaleSize(20),
           }}
           source={require('../../../../assets/Mine/icon_more_gray.png')}
         />
@@ -196,9 +196,8 @@ class DatasourcePage extends Component {
     return (
       <CheckBox
         style={{
-          height: scaleSize(30),
-          width: scaleSize(30),
-          marginRight: scaleSize(30),
+          height: scaleSize(80),
+          width: scaleSize(80),
         }}
         onChange={checked => {
           this._onItemCheck(param, checked)
@@ -223,6 +222,7 @@ class DatasourcePage extends Component {
     }
     return (
       <TouchableItemView
+        disableTouch={this.state.batchDelete}
         renderRight={
           this.state.batchDelete ? this._renderRightSelect : this._renderRight
         }
@@ -264,7 +264,6 @@ class DatasourcePage extends Component {
           onPress={() => {
             this.setState({
               batchDelete: !this.state.batchDelete,
-              datasets: Object.assign([], this.state.datasets),
             })
           }}
         >
@@ -297,13 +296,12 @@ class DatasourcePage extends Component {
           headerRight: this._renderHeaderRight(),
         }}
       >
-        <ScrollView>
-          <FlatList
-            data={this.state.datasets}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={this._renderItem}
-          />
-        </ScrollView>
+        <FlatList
+          data={this.state.datasets}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={this._renderItem}
+          forUpdate={this.state.batchDelete}
+        />
         {this._renderDatasetPopupModal()}
         {this._renderDatasourcePopupModal()}
         {this.state.batchDelete && this._renderBottom()}
