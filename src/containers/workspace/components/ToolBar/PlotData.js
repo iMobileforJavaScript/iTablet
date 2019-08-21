@@ -141,12 +141,19 @@ function getPlotOperationData(type, params) {
   _params = params
   let data = [],
     buttons = []
+  buttons = [
+    ToolbarBtnType.END_ANIMATION,
+    ToolbarBtnType.PLOT_ANIMATION_XML_LIST,
+    ToolbarBtnType.PLOT_ANIMATION_PLAY,
+    ToolbarBtnType.PLOT_ANIMATION_SAVE,
+  ]
   switch (type) {
     case ConstToolType.PLOT_ANIMATION_START:
       data = []
       break
     case ConstToolType.PLOT_ANIMATION_NODE_CREATE:
       data = []
+      buttons = [ToolbarBtnType.END_ANIMATION]
       break
     case ConstToolType.PLOT_ANIMATION_XML_LIST:
       data = []
@@ -190,15 +197,6 @@ function getPlotOperationData(type, params) {
         },
       ]
   }
-
-  buttons = [
-    // ToolbarBtnType.CANCEL,
-    ToolbarBtnType.END_ANIMATION,
-    ToolbarBtnType.PLOT_ANIMATION_XML_LIST,
-    ToolbarBtnType.PLOT_ANIMATION_PLAY,
-    // ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST,     //动画节点
-    ToolbarBtnType.PLOT_ANIMATION_SAVE,
-  ]
 
   return { data, buttons }
 }

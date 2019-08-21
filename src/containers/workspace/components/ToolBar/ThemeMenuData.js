@@ -19,10 +19,12 @@ async function showDatasetsList() {
     return
   }
   let data = []
+  let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
   SThemeCartography.getAllDatasetNames().then(getdata => {
     getdata.reverse()
     for (let i = 0; i < getdata.length; i++) {
       let datalist = getdata[i]
+      if (datalist.datasource.alias.match(checkLabelAndPlot)) continue
       datalist.list.forEach(item => {
         if (item.geoCoordSysType && item.prjCoordSysType) {
           item.info = {
@@ -32,11 +34,11 @@ async function showDatasetsList() {
           }
         }
       })
-      data[i] = {
+      data.push({
         title: datalist.datasource.alias,
         image: require('../../../../assets/mapToolbar/list_type_udb.png'),
         data: datalist.list,
-      }
+      })
     }
     _toolbarParams.setToolbarVisible &&
       _toolbarParams.setToolbarVisible(
@@ -2907,6 +2909,7 @@ async function getUnifyStyleAdd() {
     ToolbarBtnType.THEME_CANCEL,
     // ToolbarBtnType.THEME_COMMIT,
   ]
+  let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
   let customerUDBPath = await FileTools.appendingHomeDirectory(
     ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
   )
@@ -2914,15 +2917,17 @@ async function getUnifyStyleAdd() {
     extension: 'udb',
     type: 'file',
   })
-  customerUDBs.forEach(item => {
+  let customFilterUDBs = customerUDBs.filter(item => {
+    item.name = basename(item.path)
+    return !item.name.match(checkLabelAndPlot)
+  })
+  customFilterUDBs.map(item => {
     item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
     item.info = {
       infoType: 'mtime',
       lastModifiedDate: item.mtime,
     }
-    item.name = basename(item.path)
   })
-
   let userUDBPath, userUDBs
   if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
     userUDBPath =
@@ -2934,13 +2939,16 @@ async function getUnifyStyleAdd() {
       extension: 'udb',
       type: 'file',
     })
-    userUDBs.forEach(item => {
+    let userFilterUDBs = userUDBs.filter(item => {
+      item.name = basename(item.path)
+      return !item.name.match(checkLabelAndPlot)
+    })
+    userFilterUDBs.map(item => {
       item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
       }
-      item.name = basename(item.path)
     })
 
     data = [
@@ -2952,7 +2960,7 @@ async function getUnifyStyleAdd() {
         title: getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE,
         // Const.DATA_SOURCE,
         image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-        data: userUDBs,
+        data: userFilterUDBs,
       },
     ]
   } else {
@@ -2961,7 +2969,7 @@ async function getUnifyStyleAdd() {
         title: getLanguage(global.language).Map_Main_Menu.OPEN_DATASOURCE,
         //  Const.DATA_SOURCE,
         image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-        data: customerUDBs,
+        data: customFilterUDBs,
       },
     ]
   }

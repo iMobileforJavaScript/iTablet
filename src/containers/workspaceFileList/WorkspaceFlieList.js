@@ -36,7 +36,7 @@ export default class WorkSpaceFileList extends Component {
     this.userName = props.user.currentUser.userName
     this.path = props.user.currentUser.userName
       ? ConstPath.UserPath + props.user.currentUser.userName + '/'
-      : ConstPath.CustomerPath
+      : ConstPath.DefaultWorkspaceDir
     this.title = params.title
     this.cb = params.cb
     this.state = {
