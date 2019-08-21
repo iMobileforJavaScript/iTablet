@@ -552,7 +552,7 @@ function SetMap(param) {
   ]
 
   if (Platform.OS === 'ios') {
-    moduleDatas.splice(moduleDatas.length - 2, 1)
+    moduleDatas.splice(moduleDatas.length - 2, 2)
   }
 
   return moduleDatas
