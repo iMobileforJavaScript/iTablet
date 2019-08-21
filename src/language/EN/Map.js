@@ -547,16 +547,17 @@ const Map_Tools = {
 //POI title
 const Map_PoiTitle = {
   FOOD: 'Food',
-  SCENE: 'Scenic spot',
+  SCENE: 'Scenic',
   BANK: 'Bank',
-  SUPERMARKET: 'Supermarket',
+  SUPERMARKET: 'Market',
   HOTEL: 'Hotel',
   TOILET: 'Toilet',
-  BUS_STOP: 'Bus stop',
-  PARKING_LOT: 'Parking lot',
+  BUS_STOP: 'Bus',
+  PARKING_LOT: 'Park',
   HOSPITAL: 'Hospital',
   GAS_STATION: 'Gas station',
-  MARKET: 'Market',
+  MARKET: 'Mall',
+  SUBWAY: 'Subway',
 }
 export {
   Map_Main_Menu,

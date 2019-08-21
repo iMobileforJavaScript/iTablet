@@ -578,6 +578,7 @@ const Map_PoiTitle = {
   HOSPITAL: '医院',
   GAS_STATION: '加油站',
   MARKET: '商场',
+  SUBWAY: '地铁',
 }
 export {
   Map_Main_Menu,
