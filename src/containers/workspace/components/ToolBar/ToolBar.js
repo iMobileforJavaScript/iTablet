@@ -3461,11 +3461,28 @@ export default class ToolBar extends React.PureComponent {
         '/' +
         mapName,
     )
-    await SMap.animationSave(savePath)
+    let defaultAnimationName = mapName
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .PLOT_SAVE_ANIMATION,
+      //'保存推演动画',
+      value: defaultAnimationName,
+      placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      cb: async value => {
+        GLOBAL.Loading &&
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SAVEING,
+          )
+        await SMap.animationSave(savePath, value)
+
+        GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+
+        NavigationService.goBack()
+        Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      },
+    })
   }
-  // menuCommit = () => {
-  //   this.menuDialog && this.menuDialog.callCurrentAction()
-  // }
   menuCommit = (type = this.state.type, actionFirst = false) => {
     (async function() {
       let actionType = Action.PAN
@@ -3620,8 +3637,8 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[2]
-                  : ConstToolType.NEWTHEME_HEIGHT[3],
+                  ? ConstToolType.TOOLBAR_HEIGHT[3]
+                  : ConstToolType.TOOLBAR_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
           }
@@ -3924,8 +3941,6 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
-
     this.animationPlay()
   }
 
@@ -6231,6 +6246,16 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       let createInfo =
         this.plotAnimationView && this.plotAnimationView.getCreateInfo()
@@ -6296,10 +6321,10 @@ export default class ToolBar extends React.PureComponent {
     let keyboardVerticalOffset
     if (Platform.OS === 'android') {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+        this.props.device.orientation === 'LANDSCAPE' ? 0 : 200
     } else {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+        this.props.device.orientation === 'LANDSCAPE' ? 250 : 500
     }
     return (
       <Animated.View

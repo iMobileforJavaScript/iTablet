@@ -25,6 +25,7 @@ const Map_Main_Menu = {
   START_NEW_SENCE: 'New Scene',
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
+  PLOT_SAVE_ANIMATION: 'Save Animation',
 
   PLOT: 'Plot',
   OPEN: 'Add',
@@ -275,11 +276,13 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT: 'AI Assitant',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
-  MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: 'Illegal Collect',
+  MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT: 'Violation Collect',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
-  MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: 'HighPrecision Collection',
-  MAP_AR_AI_ASSISTANT_CLASSIFY: 'AI Classify',
+  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: 'Layout Collect',
+  MAP_AR_AI_ASSISTANT_CLASSIFY: 'Target Classify',
+  MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: 'Aggregate Collect',
+  MAP_AR_AI_ASSISTANT_TARGET_COLLECT: 'Target Collect',
 }
 
 //推演动画
@@ -546,7 +549,20 @@ const Map_Tools = {
   FROM_ALBUM: 'Choose from album',
   VIEW: 'View',
 }
-
+//POI title
+const Map_PoiTitle = {
+  FOOD: 'Food',
+  SCENE: 'Scenic spot',
+  BANK: 'Bank',
+  SUPERMARKET: 'Supermarket',
+  HOTEL: 'Hotel',
+  TOILET: 'Toilet',
+  BUS_STOP: 'Bus stop',
+  PARKING_LOT: 'Parking lot',
+  HOSPITAL: 'Hospital',
+  GAS_STATION: 'Gas station',
+  MARKET: 'Market',
+}
 export {
   Map_Main_Menu,
   Map_Label,
@@ -556,4 +572,5 @@ export {
   Map_Setting,
   Map_Settings,
   Map_Tools,
+  Map_PoiTitle,
 }

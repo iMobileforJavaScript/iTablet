@@ -80,6 +80,7 @@ const Prompt = {
 
   NETWORK_REQUEST_FAILED: '网络请求失败',
 
+  SAVEING: '正在保存',
   CREATING: '正在创建',
   PLEASE_ADD_DATASOURCE: '请先添加数据源',
   NO_ATTRIBUTES: '暂无属性',
@@ -109,6 +110,7 @@ const Prompt = {
   ENTER_MAP_NAME: '请输入地图名字',
   CLIP_ENTER_MAP_NAME: '请输入地图名字',
   ENTER_SERVICE_ADDRESS: '请输入服务地址',
+  ENTER_ANIMATION_NAME: '请输入动画名字',
 
   ENTER_NAME: '请输入名称',
 

@@ -1517,17 +1517,17 @@ export default class MapView extends React.Component {
   captureImage = params => {
     //保存数据->跳转
     (async function() {
-      let isTaggingLayer = await SMap.isTaggingLayer(
-        this.props.user.currentUser.userName,
-      )
-      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-        await SMap.setTaggingGrid(
-          GLOBAL.TaggingDatasetName,
-          this.props.user.currentUser.userName,
-        )
-        const datasourceAlias =
-          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
-        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      let currentLayer = this.props.currentLayer
+      let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer =
+          currentLayer.type === DatasetType.CAD &&
+          currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +
@@ -1822,7 +1822,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconAr}
           size={MTBtn.Size.NORMAL}
-          image={getThemeAssets().ar.icon_ar}
+          image={getThemeAssets().ar.switch_ar_light}
           onPress={this.switchAr}
           activeOpacity={0.5}
           // separator={scaleSize(2)}
