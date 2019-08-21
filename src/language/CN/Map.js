@@ -37,6 +37,11 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  NAVIGATION_WORKSPACE: '导航工作空间',
+  NAVIGATION_MAP: '导航地图',
+  NETWORK: '路网',
+  NETMODEL: '网络模型',
+
   ANALYSIS: '分析',
 
   NEW_DATASOURCE: '新建数据源',

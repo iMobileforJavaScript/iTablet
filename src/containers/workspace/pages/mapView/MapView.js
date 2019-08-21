@@ -95,6 +95,7 @@ export default class MapView extends React.Component {
     mapNavigationShow: PropTypes.bool,
     mapScaleView: PropTypes.bool,
     mapIs3D: PropTypes.bool,
+    mapIndoorNavigation: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -142,6 +143,7 @@ export default class MapView extends React.Component {
     setMapNavigationShow: PropTypes.func,
     setMap2Dto3D: PropTypes.func,
     setMapIs3D: PropTypes.func,
+    setMapIndoorNavigation: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
@@ -506,22 +508,7 @@ export default class MapView extends React.Component {
 
   _onGetInstance = async mapView => {
     this.mapView = mapView
-
-    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      let homePath = await FileTools.appendingHomeDirectory()
-      let userPath = ConstPath.CustomerPath
-      let wsPath =
-        homePath + userPath + ConstPath.RelativeFilePath.NavigationWorkspace
-      try {
-        let result = await this.props.openWorkspace({ server: wsPath })
-        result && SMap.open2DNavigationMap()
-        this.setLoading(false)
-      } catch (e) {
-        this.setLoading(false)
-      }
-    } else {
-      this._addMap()
-    }
+    this._addMap()
   }
 
   geometrySelected = event => {
@@ -1852,14 +1839,49 @@ export default class MapView extends React.Component {
           size={MTBtn.Size.NORMAL}
           image={getThemeAssets().ar.icon_ar}
           onPress={async () => {
-            NavigationService.navigate('PointAnalyst', {
-              type: 'pointSearch',
-            })
+            this.indoorNavi()
           }}
           activeOpacity={0.5}
         />
       </View>
     )
+  }
+
+  indoorNavi = () => {
+    if (!this.props.mapIndoorNavigation) {
+      NavigationService.navigate('PointAnalyst', {
+        type: 'pointSearch',
+      })
+    } else {
+      (async function() {
+        this.showFullMap(true)
+        let data = []
+        let maplist = await SMap.getNavigationData()
+        if (maplist && maplist.length > 0) {
+          let userList = []
+          maplist.forEach(item => {
+            let name = item.dataset
+            item.title = name
+            item.name = name.split('.')[0]
+            item.image = require('../../../../assets/Navigation/network.png')
+            userList.push(item)
+          })
+        }
+
+        data.push({
+          title: getLanguage(global.language).Map_Main_Menu.NETWORK,
+          //'路网',
+          image: require('../../../../assets/Navigation/network_white.png'),
+          data: maplist || [],
+        })
+
+        this.toolBox.setVisible(true, ConstToolType.NETWORK, {
+          containerType: 'list',
+          height: ConstToolType.THEME_HEIGHT[4],
+          data,
+        })
+      }.bind(this)())
+    }
   }
 
   _renderARNavigationIcon = () => {

@@ -82,6 +82,8 @@ const Prompt = {
 
   NETWORK_REQUEST_FAILED: 'Network Request Failed',
 
+  OPENING: 'Opening',
+
   CREATING: 'Creating',
   PLEASE_ADD_DATASOURCE: 'Please Add a Datasource',
   NO_ATTRIBUTES: 'No Attributes',

@@ -27,6 +27,8 @@ const Prompt = {
   CONFIRM: '确定',
   COMPLETE: '完成',
 
+  OPENING: '正在打开',
+
   QUIT: '确认退出SuperMap iTablet?',
   MAP_LOADING: '地图加载中',
   LOADING: '加载中',

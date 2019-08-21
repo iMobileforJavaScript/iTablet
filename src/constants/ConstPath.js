@@ -53,6 +53,7 @@ const RelativeFilePath = {
   MapTheme: Data + 'Map/' + MapTheme + '/',
   Media: Data + 'Media/',
   Animation: Data + 'Animation/',
+  NaviWorkspace: Data + 'Workspace/',
 }
 
 // 默认创建的目录
