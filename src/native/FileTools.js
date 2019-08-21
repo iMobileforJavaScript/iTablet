@@ -304,6 +304,36 @@ async function getMaps(path = '', filter = {}) {
 }
 
 /**
+ * 获取指定路径下的工作空间
+ * @param path
+ * @param filter
+ * @returns {Promise.<*>}
+ */
+async function getNavigationWorkspace(path = '', filter = {}) {
+  try {
+    if (!path) return []
+    return await FileTools.getNavigationWorkspace(path, filter)
+  } catch (e) {
+    return e
+  }
+}
+
+/**
+ * 获取指定路径下的网络模型
+ * @param path
+ * @param filter
+ * @returns {Promise.<*>}
+ */
+async function getNetModel(path = '', filter = {}) {
+  try {
+    if (!path) return []
+    return await FileTools.getNetModel(path, filter)
+  } catch (e) {
+    return e
+  }
+}
+
+/**
  * 返回视频缩略图
  * @param path
  * @returns {Promise.<*>}
@@ -337,6 +367,8 @@ export default {
   initUserDefaultData,
   getFilterFiles,
   getMaps,
+  getNavigationWorkspace,
+  getNetModel,
   getAvailableMapName,
   EnvironmentIsValid,
   addImportExternalData,

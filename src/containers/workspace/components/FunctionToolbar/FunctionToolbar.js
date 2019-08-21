@@ -112,7 +112,8 @@ export default class FunctionToolbar extends React.Component {
     let height
     if (
       ConstToolType.MAP_EDIT_START === type ||
-      ConstToolType.MAP_COLLECTION_START === type
+      ConstToolType.MAP_COLLECTION_START === type ||
+      ConstToolType.MAP_NAVIGATION_START === type
     ) {
       height =
         this.props.device.orientation === 'LANDSCAPE'
@@ -1259,7 +1260,7 @@ export default class FunctionToolbar extends React.Component {
             key: '开始',
             title: getLanguage(this.props.language).Map_Main_Menu.START,
             // title: '开始',
-            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            action: () => this.start(ConstToolType.MAP_NAVIGATION_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {

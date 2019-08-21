@@ -361,6 +361,13 @@ function getToorbarHeight(orientation, type) {
     // case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
     //   height = ConstToolType.HEIGHT[2]
     //   break
+    case ConstToolType.PLOT_ANIMATION_NODE_CREATE:
+      if (orientation === 'LANDSCAPE') {
+        height = ConstToolType.TOOLBAR_HEIGHT[3]
+      } else {
+        height = ConstToolType.TOOLBAR_HEIGHT[5]
+      }
+      break
     default:
       height = 0
   }
