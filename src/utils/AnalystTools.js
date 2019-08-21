@@ -63,6 +63,9 @@ function showMsg(type, isSuccess, language = 'CN') {
         !isSuccess &&
         getLanguage(language).Analyst_Prompt.NOT_FIND_SUITABLE_PATH
       break
+    case -1:
+    default:
+      msg = getLanguage(language).Analyst_Prompt.ANALYZING_FAILED
   }
   // msg &&
   //   Toast.show(msg, {
@@ -75,10 +78,9 @@ function showMsg(type, isSuccess, language = 'CN') {
         title: msg,
         type: isSuccess ? 'success' : 'error',
       },
-      !isSuccess && {
-        top: 120,
-        right: 20,
-      },
+      // !isSuccess && {
+      //   top: 60,
+      // },
     )
 }
 

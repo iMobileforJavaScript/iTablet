@@ -70,17 +70,17 @@ export default class PlotAnimationView extends React.Component {
     let subData = []
     switch (type) {
       case 1:
-        subData.push(data[0]) //路径动画，暂不支持
         subData.push(data[1])
         subData.push(data[2])
-        // subData.push(data[3])
+        subData.push(data[3])
+        subData.push(data[0])
         subData.push(data[4])
         subData.push(data[5])
         break
       case 2:
         subData.push(data[1])
         subData.push(data[2])
-        // subData.push(data[3])
+        subData.push(data[3])
         subData.push(data[6])
         break
     }
@@ -189,7 +189,6 @@ export default class PlotAnimationView extends React.Component {
   }
 
   renderView() {
-    // let animationModeData = this.getData()
     return (
       <View style={styles.container}>
         <View style={styles.titleView}>
@@ -359,27 +358,33 @@ export default class PlotAnimationView extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
-        <View style={styles.endlineStyle} />
-        {/* <View>
-          this.state.animationMode==0?<View> */}
-        <TouchableOpacity onPress={this.createAnimationWay}>
-          <View style={styles.startTime}>
-            <Text style={styles.startTimeText}>
-              {
-                getLanguage(global.language).Map_Plotting
-                  .PLOTTING_ANIMATION_WAY_SET
-              }
-            </Text>
-            <View style={styles.startTimeView}>
-              <Image
-                source={require('../../../../assets/Mine/mine_my_arrow.png')}
-                style={styles.startModeImage}
-              />
+        {this.state.animationMode != 0 ? null : (
+          <View style={styles.endlineStyle} />
+        )}
+        {this.state.animationMode != 0 ? null : (
+          <TouchableOpacity
+            style={{
+              height: this.state.animationMode == 0 ? scaleSize(80) : 0,
+            }}
+            onPress={this.createAnimationWay}
+          >
+            <View style={styles.startTime}>
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_WAY_SET
+                }
+              </Text>
+              <View style={styles.startTimeView}>
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.startModeImage}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-        {/* </View>:null
-        </View> */}
+          </TouchableOpacity>
+        )}
+
         <View style={styles.endlineStyle} />
         <View>
           <TouchableOpacity onPress={this.saveAndContinue}>
