@@ -3,7 +3,7 @@
  */
 import { getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language'
-import { SMap, SMeasureView } from 'imobile_for_reactnative'
+import { SMeasureView, DatasetType } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
 
@@ -21,16 +21,17 @@ function arMeasureCollect() {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
       return
     }
-    let isTaggingLayer = await SMap.isTaggingLayer(
-      _params.user.currentUser.userName,
-    )
-    if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-      await SMap.setTaggingGrid(
-        GLOBAL.TaggingDatasetName,
-        _params.user.currentUser.userName,
-      )
-      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
-      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+    let currentLayer = GLOBAL.currentLayer
+    let reg = /^Label_(.*)#$/
+    let isTaggingLayer = false
+    if (currentLayer) {
+      isTaggingLayer =
+        currentLayer.type === DatasetType.CAD &&
+        currentLayer.datasourceAlias.match(reg)
+    }
+    if (isTaggingLayer) {
+      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+      const datasetName = currentLayer.datasetName // 标注图层名称
       NavigationService.navigate('MeasureView', {
         datasourceAlias,
         datasetName,
@@ -45,16 +46,17 @@ function arMeasureCollect() {
 //AI分类
 function aiClassify() {
   (async function() {
-    let isTaggingLayer = await SMap.isTaggingLayer(
-      _params.user.currentUser.userName,
-    )
-    if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-      await SMap.setTaggingGrid(
-        GLOBAL.TaggingDatasetName,
-        _params.user.currentUser.userName,
-      )
-      const datasourceAlias = 'Label_' + _params.user.currentUser.userName + '#' // 标注数据源名称
-      const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+    let currentLayer = GLOBAL.currentLayer
+    let reg = /^Label_(.*)#$/
+    let isTaggingLayer = false
+    if (currentLayer) {
+      isTaggingLayer =
+        currentLayer.type === DatasetType.CAD &&
+        currentLayer.datasourceAlias.match(reg)
+    }
+    if (isTaggingLayer) {
+      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+      const datasetName = currentLayer.datasetName // 标注图层名称
       NavigationService.navigate('ClassifyView', {
         datasourceAlias,
         datasetName,

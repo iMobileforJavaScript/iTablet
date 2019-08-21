@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   DeviceEventEmitter,
+  ScrollView,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -14,6 +15,9 @@ import Orientation from 'react-native-orientation'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { Container } from '../../components'
+import { Toast } from '../../utils'
+import { getLanguage } from '../../language'
+import Button from '../../components/Button/Button'
 // import { getLanguage } from '../../language'
 
 /*
@@ -36,6 +40,7 @@ export default class MeasureView extends React.Component {
     this.state = {
       currentLength: 0,
       totalLength: 0,
+      showModelViews: false,
     }
   }
 
@@ -95,6 +100,13 @@ export default class MeasureView extends React.Component {
     await SMeasureView.addNewRecord()
   }
 
+  /** 添加 **/
+  switchModelViews = async () => {
+    this.setState({
+      showModelViews: !this.state.showModelViews,
+    })
+  }
+
   /** 撤销 **/
   undo = async () => {
     await SMeasureView.undoDraw()
@@ -111,6 +123,7 @@ export default class MeasureView extends React.Component {
     let result = await SMeasureView.saveDataset()
     if (result) {
       await SMeasureView.clearAll()
+      Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
     }
   }
 
@@ -128,6 +141,15 @@ export default class MeasureView extends React.Component {
   back = () => {
     NavigationService.goBack()
     return true
+  }
+
+  choseMoreModel = () => {
+    const datasourceAlias = 'currentLayer.datasourceAlias' // 标注数据源名称
+    const datasetName = 'currentLayer.datasetName' // 标注图层名称
+    NavigationService.navigate('ModelChoseView', {
+      datasourceAlias,
+      datasetName,
+    })
   }
 
   renderBottomBtns = () => {
@@ -152,7 +174,7 @@ export default class MeasureView extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.addNewRecord()}
+            onPress={() => this.switchModelViews()}
             style={styles.iconView}
           >
             <Image
@@ -184,6 +206,47 @@ export default class MeasureView extends React.Component {
           this.addNewRecord()
         }}
       />
+    )
+  }
+
+  renderModelItem = () => {
+    return (
+      <View style={styles.ModelItemView}>
+        <Image
+          source={getThemeAssets().ar.icon_ar_measure_add}
+          style={styles.img}
+        />
+        <Text style={styles.titleSwitchModelsView}>{'一种模型'}</Text>
+      </View>
+    )
+  }
+
+  renderSwitchModels = () => {
+    return (
+      <View style={styles.SwitchModelsView}>
+        <Text style={styles.titleSwitchModelsView}>{'请选择你的模型'}</Text>
+        <View style={styles.DividingLine} />
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContentContainer}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          {this.renderModelItem()}
+          {this.renderModelItem()}
+          {this.renderModelItem()}
+          {this.renderModelItem()}
+          {this.renderModelItem()}
+        </ScrollView>
+        <Button
+          style={styles.btnSwitchModelsView}
+          titleStyle={styles.txtBtnSwitchModelsView}
+          title={'查看更多'}
+          type={'BLUE'}
+          activeOpacity={0.5}
+          onPress={() => this.choseMoreModel()}
+        />
+      </View>
     )
   }
 
@@ -247,6 +310,7 @@ export default class MeasureView extends React.Component {
         {this.renderBottomBtns()}
         {/*{this.renderCenterBtn()}*/}
         {/*{this.renderTopBtns()}*/}
+        {this.state.showModelViews && this.renderSwitchModels()}
         {this.renderLengthChangeView()}
         {this.renderCurrentLengthChangeView()}
       </Container>
