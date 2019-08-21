@@ -95,6 +95,7 @@ export default class MapView extends React.Component {
     mapNavigationShow: PropTypes.bool,
     mapScaleView: PropTypes.bool,
     mapIs3D: PropTypes.bool,
+    mapIndoorNavigation: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -142,6 +143,7 @@ export default class MapView extends React.Component {
     setMapNavigationShow: PropTypes.func,
     setMap2Dto3D: PropTypes.func,
     setMapIs3D: PropTypes.func,
+    setMapIndoorNavigation: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
@@ -1515,17 +1517,17 @@ export default class MapView extends React.Component {
   captureImage = params => {
     //保存数据->跳转
     (async function() {
-      let isTaggingLayer = await SMap.isTaggingLayer(
-        this.props.user.currentUser.userName,
-      )
-      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-        await SMap.setTaggingGrid(
-          GLOBAL.TaggingDatasetName,
-          this.props.user.currentUser.userName,
-        )
-        const datasourceAlias =
-          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
-        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      let currentLayer = this.props.currentLayer
+      let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer =
+          currentLayer.type === DatasetType.CAD &&
+          currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +
@@ -1820,7 +1822,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconAr}
           size={MTBtn.Size.NORMAL}
-          image={getThemeAssets().ar.icon_ar}
+          image={getThemeAssets().ar.switch_ar_light}
           onPress={this.switchAr}
           activeOpacity={0.5}
           // separator={scaleSize(2)}
@@ -1837,14 +1839,49 @@ export default class MapView extends React.Component {
           size={MTBtn.Size.NORMAL}
           image={getThemeAssets().ar.icon_ar}
           onPress={async () => {
-            NavigationService.navigate('PointAnalyst', {
-              type: 'pointSearch',
-            })
+            this.indoorNavi()
           }}
           activeOpacity={0.5}
         />
       </View>
     )
+  }
+
+  indoorNavi = () => {
+    if (!this.props.mapIndoorNavigation) {
+      NavigationService.navigate('PointAnalyst', {
+        type: 'pointSearch',
+      })
+    } else {
+      (async function() {
+        this.showFullMap(true)
+        let data = []
+        let maplist = await SMap.getNavigationData()
+        if (maplist && maplist.length > 0) {
+          let userList = []
+          maplist.forEach(item => {
+            let name = item.dataset
+            item.title = name
+            item.name = name.split('.')[0]
+            item.image = require('../../../../assets/Navigation/network.png')
+            userList.push(item)
+          })
+        }
+
+        data.push({
+          title: getLanguage(global.language).Map_Main_Menu.NETWORK,
+          //'路网',
+          image: require('../../../../assets/Navigation/network_white.png'),
+          data: maplist || [],
+        })
+
+        this.toolBox.setVisible(true, ConstToolType.NETWORK, {
+          containerType: 'list',
+          height: ConstToolType.THEME_HEIGHT[4],
+          data,
+        })
+      }.bind(this)())
+    }
   }
 
   _renderARNavigationIcon = () => {

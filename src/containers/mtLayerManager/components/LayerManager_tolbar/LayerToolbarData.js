@@ -405,18 +405,21 @@ function taggingData(type) {
     {
       title: '',
       data: [
-        // {
-        //   title: getLanguage(type).Map_Layer.PLOTS_SET_AS_CURRENT,
-        //   image: require('../../../../assets/function/icon_function_Tagging.png'),
-        // },
+        {
+          title: getLanguage(type).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+          //'全副显示图层',
+          image: require('../../../../assets/layerToolbar/layer_full.png'),
+        },
         {
           title: getLanguage(type).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+          //'设置为当前图层',
           image: getPublicAssets().mapTools.tools_set_current_layer,
         },
-        // {
-        //   title: getLanguage(type).Map_Layer.PLOTS_DELETE,
-        //   image: getPublicAssets().mapTools.tools_set_current_layer,
-        // },
+        {
+          title: getLanguage(type).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+          //'可见比例尺范围',
+          image: getPublicAssets().mapTools.tools_visible_scale_range,
+        },
       ],
     },
   ]

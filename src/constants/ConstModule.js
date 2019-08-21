@@ -504,7 +504,7 @@ function SetMap(param) {
         right: 0,
         bottom: 0,
       },
-      action: async user => {
+      action: async (user, lastMap) => {
         let data = Object.assign({}, ConstOnline['Google'])
         data.layerIndex = 1
         GLOBAL.Type = constants.MAP_NAVIGATION
@@ -514,9 +514,26 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath + userPath + ConstPath.RelativeFilePath.NavigationWorkspace
 
-        let wsData = [
+        let wsData,
+          isOpenLastMap = false
+
+        if (lastMap) {
+          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+            lastMap.path,
+          )
+        }
+
+        if (isOpenLastMap) {
+          data = {
+            type: 'Map',
+            ...lastMap,
+          }
+        }
+
+        wsData = [
           {
             DSParams: { server: wsPath },
             // layerIndex: 0,
@@ -535,7 +552,7 @@ function SetMap(param) {
   ]
 
   if (Platform.OS === 'ios') {
-    moduleDatas.splice(moduleDatas.length - 2, 1)
+    moduleDatas.splice(moduleDatas.length - 2, 2)
   }
 
   return moduleDatas

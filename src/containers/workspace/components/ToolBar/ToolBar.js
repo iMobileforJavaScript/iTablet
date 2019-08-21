@@ -174,6 +174,7 @@ export default class ToolBar extends React.PureComponent {
     clearAttributeHistory: () => {},
     layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
+    setMapIndoorNavigation: () => {},
   }
 
   static defaultProps = {
@@ -3460,11 +3461,28 @@ export default class ToolBar extends React.PureComponent {
         '/' +
         mapName,
     )
-    await SMap.animationSave(savePath)
+    let defaultAnimationName = mapName
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .PLOT_SAVE_ANIMATION,
+      //'保存推演动画',
+      value: defaultAnimationName,
+      placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      cb: async value => {
+        GLOBAL.Loading &&
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SAVEING,
+          )
+        await SMap.animationSave(savePath, value)
+
+        GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+
+        NavigationService.goBack()
+        Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      },
+    })
   }
-  // menuCommit = () => {
-  //   this.menuDialog && this.menuDialog.callCurrentAction()
-  // }
   menuCommit = (type = this.state.type, actionFirst = false) => {
     (async function() {
       let actionType = Action.PAN
@@ -3619,8 +3637,8 @@ export default class ToolBar extends React.PureComponent {
               containerType: 'list',
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.NEWTHEME_HEIGHT[2]
-                  : ConstToolType.NEWTHEME_HEIGHT[3],
+                  ? ConstToolType.TOOLBAR_HEIGHT[3]
+                  : ConstToolType.TOOLBAR_HEIGHT[3],
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
             })
           }
@@ -3923,8 +3941,6 @@ export default class ToolBar extends React.PureComponent {
 
   setAnimation = path => {
     SMap.readAnimationXmlFile(path)
-    // this.showPlotAnimationTool(ConstToolType.MAP_PLOTTING_ANIMATION_ITEM)
-
     this.animationPlay()
   }
 
@@ -4526,6 +4542,94 @@ export default class ToolBar extends React.PureComponent {
       //     currentLayerIndex: 0,
       //   })
       // }
+    } else if (this.state.type === ConstToolType.WORKSPACE_CHANGE) {
+      (async function() {
+        GLOBAL.Loading &&
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(this.props.language).Prompt.OPENING,
+          )
+        let data = []
+        let homePath = await FileTools.appendingHomeDirectory()
+        GLOBAL.homePath = homePath
+        await SMap.closeWorkspace()
+        let maplist = await SMap.open2DNavigationMap({
+          server: homePath + item.path,
+        })
+        GLOBAL.Loading.setLoading(false)
+        if (maplist && maplist.length > 0) {
+          let userList = []
+          maplist.forEach(item => {
+            let name = item.name
+            item.title = name
+            item.name = name.split('.')[0]
+            item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+            userList.push(item)
+          })
+        }
+
+        data.push({
+          title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_MAP,
+          //'我的地图',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+          data: maplist || [],
+        })
+
+        this.setVisible(true, ConstToolType.OPEN_MAP, {
+          containerType: 'list',
+          height: ConstToolType.THEME_HEIGHT[4],
+          data,
+        })
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.OPEN_MAP) {
+      (async function() {
+        this.props.setMapIndoorNavigation(true)
+        await SMap.openMap(item.name)
+        this.props.setContainerLoading(false)
+        this.setVisible(false)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.NETWORK) {
+      (async function() {
+        GLOBAL.navidataset = item.dataset
+        let data = [],
+          path =
+            (await FileTools.appendingHomeDirectory(
+              this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                    this.props.user.currentUser.userName +
+                    '/'
+                : ConstPath.CustomerPath,
+            )) + ConstPath.RelativeFilePath.NaviWorkspace
+        let userFileList
+
+        userFileList = await FileTools.getNetModel(path)
+
+        if (userFileList && userFileList.length > 0) {
+          let userList = []
+          userFileList.forEach(item => {
+            let name = item.name
+            item.title = name
+            item.name = name.split('.')[0]
+            item.image = require('../../../../assets/Navigation/network.png')
+            userList.push(item)
+          })
+        }
+        data.push({
+          title: getLanguage(global.language).Map_Main_Menu.NETMODEL,
+          //'网络模型',
+          image: require('../../../../assets/Navigation/network_white.png'),
+          data: userFileList || [],
+        })
+        this.setVisible(true, ConstToolType.NETMODEL, {
+          containerType: 'list',
+          height: ConstToolType.THEME_HEIGHT[4],
+          data,
+        })
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.NETMODEL) {
+      // let path = GLOBAL.homePath+item.path
+      // SMap.startNavigation(GLOBAL.navidataset,path)
+      this.setVisible(false)
     }
   }
 
@@ -6142,6 +6246,16 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+      let height = 0
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ConstToolType.PLOT_ANIMATION_START
+      GLOBAL.currentToolbarType = type
+      this.setVisible(true, type, {
+        isFullScreen: false,
+        height,
+        cb: () => SMap.setAction(Action.SELECT),
+      })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       let createInfo =
         this.plotAnimationView && this.plotAnimationView.getCreateInfo()
@@ -6207,10 +6321,10 @@ export default class ToolBar extends React.PureComponent {
     let keyboardVerticalOffset
     if (Platform.OS === 'android') {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 20 : 150
+        this.props.device.orientation === 'LANDSCAPE' ? 0 : 200
     } else {
       keyboardVerticalOffset =
-        this.props.device.orientation === 'LANDSCAPE' ? 300 : 400
+        this.props.device.orientation === 'LANDSCAPE' ? 250 : 500
     }
     return (
       <Animated.View

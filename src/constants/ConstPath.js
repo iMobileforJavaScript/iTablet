@@ -43,6 +43,7 @@ const RelativeFilePath = {
   DefaultWorkspaceDir: DefaultData + 'Workspace/', // 工作空间默认数据文件夹目录
   Workspace: DefaultData + 'Workspace/Workspace.sxwu', // 工作空间
   Navigation2DWorkspace: DefaultData + '3DNaviDemo/室内外导航/beijing.smwu',
+  NavigationWorkspace: DefaultData + 'Navigation2Data/navi_beijing.smwu',
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
   Map: Data + 'Map/',
@@ -52,6 +53,7 @@ const RelativeFilePath = {
   MapTheme: Data + 'Map/' + MapTheme + '/',
   Media: Data + 'Media/',
   Animation: Data + 'Animation/',
+  NaviWorkspace: Data + 'Workspace/',
 }
 
 // 默认创建的目录

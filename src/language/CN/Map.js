@@ -28,6 +28,7 @@ const Map_Main_Menu = {
   START_NEW_SENCE: '新建场景',
   START_SAVE_SENCE: '保存场景',
   START_SAVE_AS_SENCE: '另存场景',
+  PLOT_SAVE_ANIMATION: '保存动画',
 
   PLOT: '标绘',
 
@@ -36,6 +37,11 @@ const Map_Main_Menu = {
   OPEN_DATASOURCE: '数据源',
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
+
+  NAVIGATION_WORKSPACE: '导航工作空间',
+  NAVIGATION_MAP: '导航地图',
+  NETWORK: '路网',
+  NETMODEL: '网络模型',
 
   ANALYSIS: '分析',
 
@@ -288,11 +294,13 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT: 'AI助手',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: '通用采集',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: '市政采集',
-  MAP_AR_AI_ASSISTANT_ILLEGAL_COLLECT: '违章采集',
+  MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
-  MAP_AR_AI_ASSISTANT_MEASURE_COLLECT: '高精采集',
-  MAP_AR_AI_ASSISTANT_CLASSIFY: 'AI分类',
+  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: '户型图采集',
+  MAP_AR_AI_ASSISTANT_CLASSIFY: '目标分类',
+  MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: '态势采集',
+  MAP_AR_AI_ASSISTANT_TARGET_COLLECT: '目标采集',
 }
 
 //推演动画
@@ -562,6 +570,21 @@ const Map_Tools = {
   VIEW: '查看',
 }
 
+//POI title
+const Map_PoiTitle = {
+  FOOD: '美食',
+  SCENE: '景点',
+  BANK: '银行',
+  SUPERMARKET: '超市',
+  HOTEL: '酒店',
+  TOILET: '厕所',
+  BUS_STOP: '公交站',
+  PARKING_LOT: '停车场',
+  HOSPITAL: '医院',
+  GAS_STATION: '加油站',
+  MARKET: '商场',
+  SUBWAY: '地铁',
+}
 export {
   Map_Main_Menu,
   Map_Label,
@@ -571,4 +594,5 @@ export {
   Map_Setting,
   Map_Settings,
   Map_Tools,
+  Map_PoiTitle,
 }
