@@ -106,7 +106,11 @@ export default class AnalystMapToolbar extends React.Component {
                   }
                 })
                 .catch(() => {
-                  AnalystTools.showMsg(-1, false, this.props.language)
+                  AnalystTools.showMsg(
+                    this.props.type,
+                    false,
+                    this.props.language,
+                  )
                 })
             }
           },
