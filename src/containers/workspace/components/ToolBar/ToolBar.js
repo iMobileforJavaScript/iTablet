@@ -3601,16 +3601,15 @@ export default class ToolBar extends React.PureComponent {
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
       (async function() {
         let currentLayer = this.props.currentLayer
-        let reg = /^Label_(.*)#$/
+        // let reg = /^Label_(.*)#$/
         let isTaggingLayer = false,
           isPointLayer = false,
           isLineLayer = false,
           isRegionLayer = false,
           isTextLayer = false
         if (currentLayer) {
-          isTaggingLayer =
-            currentLayer.type === DatasetType.CAD &&
-            currentLayer.datasourceAlias.match(reg)
+          isTaggingLayer = currentLayer.type === DatasetType.CAD
+          // && currentLayer.datasourceAlias.match(reg)
           isPointLayer = currentLayer.type === DatasetType.POINT
           isLineLayer = currentLayer.type === DatasetType.LINE
           isRegionLayer = currentLayer.type === DatasetType.REGION
