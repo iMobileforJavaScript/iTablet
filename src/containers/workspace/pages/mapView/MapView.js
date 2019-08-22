@@ -1518,12 +1518,11 @@ export default class MapView extends React.Component {
     //保存数据->跳转
     (async function() {
       let currentLayer = this.props.currentLayer
-      let reg = /^Label_(.*)#$/
+      // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer =
-          currentLayer.type === DatasetType.CAD &&
-          currentLayer.datasourceAlias.match(reg)
+        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {
         const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称

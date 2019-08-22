@@ -23,7 +23,7 @@ import Toast from '../../../utils/Toast'
 import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
-
+import styles from './styles'
 const Customer = 'Customer'
 export default class Mine extends Component {
   props: {
@@ -493,13 +493,223 @@ export default class Mine extends Component {
     )
   }
 
+  _onPressAvater = () => {
+    this.goToPersonal()
+  }
+
+  _onPressMore = () => {
+    this.goToLogin()
+  }
+
+  _onPressSwitch = () => {
+    NavigationService.navigate('ToggleAccount')
+  }
+
+  _getItems = () => {
+    let data = []
+    data = [
+      {
+        title: getLanguage(this.props.language).Profile.IMPORT,
+        leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
+        onClick: this.goToMyLocalData,
+      },
+      {
+        title: getLanguage(this.props.language).Profile.MY_SERVICE,
+        leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
+        onClick: this.goToMyService,
+      },
+      {
+        title: getLanguage(this.props.language).Profile.DATA,
+        leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+        onClick: () =>
+          this.goToMyData(getLanguage(this.props.language).Profile.DATA),
+      },
+      {
+        title: getLanguage(this.props.language).Profile.MARK,
+        leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
+        onClick: () => {
+          this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
+        },
+      },
+      {
+        title: getLanguage(this.props.language).Profile.MAP,
+        leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
+        onClick: () =>
+          this.goToMyData(getLanguage(this.props.language).Profile.MAP),
+      },
+      {
+        title: getLanguage(this.props.language).Profile.SCENE,
+        leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
+        onClick: () =>
+          this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
+      },
+      {
+        title: getLanguage(this.props.language).Profile.BASEMAP,
+        leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+        onClick: () => {
+          this.goToMyBaseMap()
+        },
+      },
+      {
+        title: getLanguage(this.props.language).Profile.SYMBOL,
+        leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
+        onClick: () =>
+          this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
+      },
+      // {
+      //   title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
+      //   leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
+      //   onClick: () =>
+      //     this.goToMyData(
+      //       getLanguage(this.props.language).Profile.COLOR_SCHEME,
+      //     ),
+      // },
+      {
+        title: getLanguage(this.props.language).Profile.TEMPLATE,
+        leftImagePath: require('../../../assets/function/icon_function_style.png'),
+        onClick: () =>
+          this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
+      },
+    ]
+    return data
+  }
+
+  _renderProfile = () => {
+    return (
+      <View style={styles.profileContainer}>
+        {this._renderMyProfile()}
+        {this._renderSearch()}
+        {this._renderSideItem()}
+      </View>
+    )
+  }
+
+  _renderMyProfile = () => {
+    let isPro = !UserType.isProbationUser(this.props.user.currentUser)
+    let headerImage = isPro
+      ? {
+        uri:
+            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+      }
+      : require('../../../assets/home/system_default_header_image.png')
+    let headerTitle = isPro
+      ? this.props.user.currentUser.userName
+        ? this.props.user.currentUser.userName
+        : Customer
+      : getLanguage(this.props.language).Profile.LOGIN_NOW
+    let statusText
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      statusText = 'Online'
+    } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+      statusText = 'iPortal'
+    } else {
+      statusText = null
+    }
+    return (
+      <View style={styles.MyProfileStyle}>
+        <View style={styles.profileHeadStyle}>
+          <TouchableOpacity
+            disabled={!isPro}
+            activeOpacity={0.7}
+            onPress={this._onPressAvater}
+            style={styles.porfileAvaterStyle}
+          >
+            <Image style={styles.headImgStyle} source={headerImage} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={this._onPressMore}
+            style={styles.moreViewStyle}
+          >
+            <View style={styles.moreX}>
+              <View style={styles.moreY} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.userNameStyle}>{headerTitle}</Text>
+        <Text style={styles.statusTextStyle}>{statusText}</Text>
+      </View>
+    )
+  }
+
+  _renderSearch = () => {
+    return null
+  }
+
+  _renderSideItem = () => {
+    if (UserType.isProbationUser(this.props.user.currentUser)) {
+      return null
+    }
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={this._onPressSwitch}
+        style={styles.sideItemStyle}
+      >
+        <Text style={styles.SideTextStyle}>
+          {getLanguage(this.props.language).Profile.SWITCH_ACCOUNT}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+  _renderDatas = () => {
+    return (
+      <View style={styles.datasContainer}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.scrollContentStyle}>{this._renderItems()}</View>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  _renderItems = () => {
+    let items = this._getItems()
+    let renderItems = []
+    for (let i = 0; i < items.length; i++) {
+      let show = this._itemFilter(items[i])
+      if (show) {
+        renderItems.push(this.renderItem(items[i]))
+      }
+    }
+    return renderItems
+  }
+
+  renderItem = item => {
+    return (
+      <TouchableOpacity onPress={item.onClick} style={styles.itemView}>
+        <Image style={styles.itemImg} source={item.leftImagePath} />
+        <Text style={styles.itemText}>{item.title}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  _itemFilter = item => {
+    if (UserType.isProbationUser(this.props.user.currentUser)) {
+      if (item.title === getLanguage(this.props.language).Profile.MY_SERVICE) {
+        return false
+      }
+    } else if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      //
+    } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
+      //
+    } else {
+      return false
+    }
+
+    return true
+  }
+
+  _renderMineContainer = () => {
+    return (
+      <View style={styles.mineContainer}>
+        {this._renderProfile()}
+        {this._renderDatas()}
+      </View>
+    )
+  }
+
   render() {
-    // if (
-    //   this.props.user &&
-    //   this.props.user.currentUser &&
-    //   (this.props.user.currentUser.userName ||
-    //     this.props.user.currentUser.userType)
-    // ) {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -509,14 +719,9 @@ export default class Mine extends Component {
           navigation: this.props.navigation,
         }}
       >
-        {this._selectionRender()}
+        {/* {this._selectionRender()} */}
+        {this._renderMineContainer()}
       </Container>
     )
-    // }
-
-    // else {
-    // return <View />
-    // return <Login setUser={this.props.setUser} user={this.props.user} />
-    // }
   }
 }
