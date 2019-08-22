@@ -370,7 +370,7 @@ export default class InterpolationAnalystView extends Component {
           rightType={'number_counter'}
           onChange={value => {
             this.setState({
-              scale: value === '' ? value : parseFloat(value),
+              scale: value,
             })
           }}
           onSubmitEditing={text => {
@@ -463,7 +463,7 @@ export default class InterpolationAnalystView extends Component {
           rightType={'number_counter'}
           onChange={value => {
             this.setState({
-              resolution: value === '' ? value : parseFloat(value),
+              resolution: value,
             })
           }}
           onSubmitEditing={text => {
@@ -644,10 +644,10 @@ export default class InterpolationAnalystView extends Component {
                     }
                     let bounds = (await SMap.getDatasetBounds(sourceData)) || {}
                     newStateData = Object.assign(newStateData, {
-                      left: bounds.left,
-                      bottom: bounds.bottom,
-                      right: bounds.right,
-                      top: bounds.top,
+                      left: bounds.left.toFixed(6),
+                      bottom: bounds.bottom.toFixed(6),
+                      right: bounds.right.toFixed(6),
+                      top: bounds.top.toFixed(6),
                     })
                   }
                   newStateData.dataSet =
@@ -738,11 +738,11 @@ export default class InterpolationAnalystView extends Component {
                   : styles.headerBtnTitleDisable
               }
               btnClick={() => {
-                // this.state.btnAvailable &&
-                NavigationService.navigate('InterpolationAnalystDetailView', {
-                  title: this.state.method.key,
-                  data: this.state,
-                })
+                this.state.btnAvailable &&
+                  NavigationService.navigate('InterpolationAnalystDetailView', {
+                    title: this.state.method.key,
+                    data: this.state,
+                  })
               }}
             />
           ),
