@@ -206,7 +206,7 @@ export default class MyLabel extends Component {
         let archivePath, targetPath
         archivePath = userPath + ConstPath.RelativePath.ExternalData + name
         targetPath =
-          userPath + ConstPath.RelativePath.ExternalData + name + '_标注.zip'
+          userPath + ConstPath.RelativePath.ExternalData + 'MyExportLable.zip'
         await SMap.copyDataset(
           datasourcePath,
           todatasourcePath,
