@@ -98,6 +98,7 @@ export default class AnalystItem extends PureComponent {
   props: {
     title: string,
     value: any,
+    defaultValue?: any,
     rightStyle?: any,
     inputStyle?: any,
     rightType?: string,
@@ -126,13 +127,15 @@ export default class AnalystItem extends PureComponent {
     autoCheckNumber: false,
     rightProps: {},
     disable: false,
+    numberRange: '',
   }
 
   constructor(props) {
     super(props)
-    this.defaultValue = props.value
+    this.defaultValue =
+      props.value !== undefined ? props.value : props.defaultValue
     this.state = {
-      inputValue: props.value,
+      inputValue: this.defaultValue,
     }
   }
 
@@ -292,7 +295,7 @@ export default class AnalystItem extends PureComponent {
                 underlineColorAndroid={'transparent'}
                 style={[styles.input, this.props.inputStyle]}
                 keyboardType={this.props.keyboardType}
-                // defaultValue={this.props.value + ''}
+                defaultValue={this.props.defaultValue + ''}
                 value={(this.state.inputValue || '') + ''}
                 returnKeyLabel={this.props.returnKeyLabel}
                 returnKeyType={this.props.returnKeyType}

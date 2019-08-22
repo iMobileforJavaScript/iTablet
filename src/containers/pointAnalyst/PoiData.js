@@ -4,55 +4,56 @@
  * https://github.com/AsortKeven
  */
 import { getLanguage } from '../../language'
+import { getThemeAssets } from '../../assets'
 
 const PoiData = () => [
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.FOOD,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_food,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.SCENE,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_scenic,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.BANK,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_bank,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.SUPERMARKET,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_market,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.HOTEL,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_hotel,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.TOILET,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_toilet,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.BUS_STOP,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_bus,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.PARKING_LOT,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_park,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.HOSPITAL,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_hospital,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.GAS_STATION,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_gas_station,
   },
   {
     title: getLanguage(GLOBAL.language).Map_PoiTitle.MARKET,
-    icon: '',
+    icon: getThemeAssets().search.search_icon_mall,
   },
   {
-    title: getLanguage(GLOBAL.language).Map_PoiTitle.FOOD,
-    icon: '',
+    title: getLanguage(GLOBAL.language).Map_PoiTitle.SUBWAY,
+    icon: getThemeAssets().search.search_icon_subway,
   },
 ]
 
