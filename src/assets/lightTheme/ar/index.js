@@ -11,6 +11,7 @@ const icon_ar_measure_restart = require('./restart.png')
 const icon_ar_back_white = require('./back_white.png')
 const icon_ar_save_white = require('./save_white.png')
 const switch_ar_light = require('./switch_ar_light.png')
+const icon_camera_classify = require('./camera_classify.png')
 export default {
   functiontoolbar,
   toolbar,
@@ -25,4 +26,5 @@ export default {
   icon_ar_back_white,
   icon_ar_save_white,
   switch_ar_light,
+  icon_camera_classify,
 }

@@ -8,7 +8,7 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
-import { getPublicAssets, getThemeAssets } from '../../assets'
+import { getThemeAssets } from '../../assets'
 import {
   SMAIClassifyView,
   SAIClassifyView,
@@ -17,7 +17,7 @@ import {
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 // import { getLanguage } from '../../language'
-
+import { Container } from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
@@ -43,11 +43,15 @@ export default class ClassifyView extends React.Component {
     this.datasetName = params.datasetName
 
     this.state = {
+      isCameraVisible: false,
       first_result: '',
+      first_result_confidence: '',
       isFirstShow: false,
       second_result: '',
+      second_result_confidence: '',
       isSecondShow: false,
       third_result: '',
+      third_result_confidence: '',
       isThirdShow: false,
     }
   }
@@ -65,6 +69,9 @@ export default class ClassifyView extends React.Component {
         //   this.datasourceAlias,
         //   this.datasetName,
         // )
+        this.setState({
+          isCameraVisible: true,
+        })
         //注册监听
         DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
       }.bind(this)())
@@ -83,7 +90,8 @@ export default class ClassifyView extends React.Component {
       let item = this.results[0]
       this.setState({
         isFirstShow: true,
-        first_result: item.Title + ':' + item.Confidence,
+        first_result: item.Title,
+        first_result_confidence: item.Confidence,
       })
     } else {
       this.setState({
@@ -95,6 +103,7 @@ export default class ClassifyView extends React.Component {
       this.setState({
         isSecondShow: true,
         second_result: item.Title + ':' + item.Confidence,
+        second_result_confidence: item.Confidence,
       })
     } else {
       this.setState({
@@ -106,6 +115,7 @@ export default class ClassifyView extends React.Component {
       this.setState({
         isThirdShow: true,
         third_result: item.Title + ':' + item.Confidence,
+        third_result_confidence: item.Confidence,
       })
     } else {
       this.setState({
@@ -180,29 +190,36 @@ export default class ClassifyView extends React.Component {
   /** 确认 **/
   confirm = () => {}
 
+  back = () => {
+    NavigationService.goBack()
+    return true
+  }
+
   renderBottomBtns = () => {
     return (
-      <View style={styles.buttonView}>
-        <TouchableOpacity
-          onPress={() => NavigationService.goBack()}
-          style={styles.iconView}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_back_white}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.startPreview()}
-          style={styles.iconView}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_measure_restart}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
+      <View style={styles.toolbar}>
+        <View style={styles.buttonView}>
+          <TouchableOpacity
+            onPress={() => NavigationService.goBack()}
+            style={styles.iconView}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_delete}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.startPreview()}
+            style={styles.iconView}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_save}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -211,9 +228,9 @@ export default class ClassifyView extends React.Component {
     return (
       <ImageButton
         containerStyle={styles.capture}
-        iconStyle={styles.iconView}
-        activeOpacity={0.5}
-        icon={getPublicAssets().common.icon_take_camera}
+        iconStyle={styles.cameraIcon}
+        activeOpacity={0.8}
+        icon={getThemeAssets().ar.icon_camera_classify}
         onPress={() => {
           this.captureImage()
         }}
@@ -221,26 +238,22 @@ export default class ClassifyView extends React.Component {
     )
   }
 
-  renderTopBtns = () => {
+  renderOverlayPreview = () => {
     return (
-      <View style={styles.topView}>
-        <TouchableOpacity
-          onPress={() => NavigationService.goBack()}
-          style={styles.iconView}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_measure_back}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.save()} style={styles.iconView}>
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.icon_ar_measure_save}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
+      <View style={styles.preview}>
+        {<View style={styles.overlayPreviewLeft} />}
+        {<View style={styles.overlayPreviewTop} />}
+        {<View style={styles.overlayPreviewRight} />}
+        {<View style={styles.overlayPreviewBottom} />}
+      </View>
+    )
+  }
+
+  renderClassifyTitle = () => {
+    return (
+      <View style={styles.classifyTitleView}>
+        <Text style={styles.classifyTitle}>{'识别结果'}</Text>
+        <Text style={styles.classifyTitle}>{'置信度'}</Text>
       </View>
     )
   }
@@ -248,28 +261,38 @@ export default class ClassifyView extends React.Component {
   renderLengthChangeView() {
     return (
       <View style={styles.InfoChangeView}>
+        {this.renderClassifyTitle()}
         {this.state.isFirstShow && (
           <TouchableOpacity
             onPress={() => this.save(this.state.first_result)}
-            style={styles.container}
+            style={styles.classifyTitleView}
           >
             <Text style={styles.title}>{this.state.first_result}</Text>
+            <Text style={styles.title}>
+              {this.state.first_result_confidence}
+            </Text>
           </TouchableOpacity>
         )}
         {this.state.isSecondShow && (
           <TouchableOpacity
             onPress={() => this.save(this.state.second_result)}
-            style={styles.container}
+            style={styles.classifyTitleView}
           >
             <Text style={styles.title}>{this.state.second_result}</Text>
+            <Text style={styles.title}>
+              {this.state.second_result_confidence}
+            </Text>
           </TouchableOpacity>
         )}
         {this.state.isThirdShow && (
           <TouchableOpacity
             onPress={() => this.save(this.state.third_result)}
-            style={styles.container}
+            style={styles.classifyTitleView}
           >
             <Text style={styles.title}>{this.state.third_result}</Text>
+            <Text style={styles.title}>
+              {this.state.third_result_confidence}
+            </Text>
           </TouchableOpacity>
         )}
       </View>
@@ -278,13 +301,24 @@ export default class ClassifyView extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />
+      <Container
+        ref={ref => (this.Container = ref)}
+        headerProps={{
+          title: '目标分类',
+          navigation: this.props.navigation,
+          backAction: this.back,
+          type: 'fix',
+        }}
+        bottomProps={{ type: 'fix' }}
+      >
+        {this.state.isCameraVisible && (
+          <SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />
+        )}
+        {this.renderOverlayPreview()}
         {this.renderBottomBtns()}
         {this.renderCenterBtn()}
-        {/*{this.renderTopBtns()}*/}
         {this.renderLengthChangeView()}
-      </View>
+      </Container>
     )
   }
 }
