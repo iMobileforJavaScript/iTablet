@@ -697,11 +697,11 @@ export default class LayerManager_tolbar extends React.Component {
           this.state.layerData,
         )
         this.setState(newState, async () => {
-          this.props.updateData && (await this.props.updateData())
+          // this.props.updateData && (await this.props.updateData())
           this.props.setCurrentLayer &&
             this.props.setCurrentLayer(this.state.layerData)
+          this.setThislayer()
         })
-        this.setThislayer()
         Toast.show(
           //'当前图层为'
           getLanguage(global.language).Prompt.THE_CURRENT_LAYER +

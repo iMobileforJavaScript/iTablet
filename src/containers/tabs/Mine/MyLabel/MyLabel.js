@@ -7,6 +7,7 @@ import {
   Text,
   NativeModules,
   RefreshControl,
+  StyleSheet,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -19,12 +20,12 @@ import {
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
-import LabelItem from './LabelItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
 import { getLanguage } from '../../../../language/index'
+import { MineItem } from '../component'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
@@ -42,6 +43,7 @@ export default class MyLabel extends Component {
       udbPath: '',
       showselect: false,
       isRefreshing: false,
+      batchDelete: false,
     }
     this.uploadList = []
     this.uploadType = null
@@ -75,14 +77,17 @@ export default class MyLabel extends Component {
   }
 
   _renderItem = ({ item, index }) => {
+    let img = require('../../../../assets/Mine/mine_my_online_data_black.png')
     return (
-      <LabelItem
+      <MineItem
         item={item}
-        index={index}
-        saveItemInfo={this.saveItemInfo}
-        uploadListOfAdd={this.uploadListOfAdd}
-        removeDataFromUpList={this.removeDataFromUpList}
-        getShowSelect={this.getShowSelect}
+        image={img}
+        text={item.title}
+        disableTouch={this.state.batchDelete || this.state.showselect}
+        showCheck={this.state.batchDelete || this.state.showselect}
+        onPressMore={() => {
+          this.saveItemInfo({ item, index })
+        }}
       />
     )
   }
@@ -98,6 +103,7 @@ export default class MyLabel extends Component {
   _closeModal = () => {
     this.setState({ modalIsVisible: false }, () => {
       this.MyDataPopModal.setVisible(false)
+      this.MyLabelPopModal.setVisible(false)
     })
   }
 
@@ -108,14 +114,48 @@ export default class MyLabel extends Component {
     })
   }
 
-  uploadListOfAdd = data => {
-    this.uploadList.push(data)
+  _batchDelete = async () => {
+    try {
+      let deleteArr = this._getSelectedList()
+      if (deleteArr.length === 0) {
+        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      this.setState({ batchDelete: false })
+      for (let i = 0; i < deleteArr.length; i++) {
+        await SMap.removeDatasetByName(this.state.udbPath, deleteArr[i])
+      }
+      this.getData()
+      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    }
   }
 
-  removeDataFromUpList = data => {
-    let index = this.uploadList.indexOf(data)
-    if (index === -1) return
-    this.uploadList.splice(index, 1)
+  _selectAll = () => {
+    let datasets = Object.assign([], this.state.data)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = true
+    }
+    this.setState({ datasets })
+  }
+
+  _deseleteAll = () => {
+    let datasets = Object.assign([], this.state.data)
+    for (let i = 0; i < datasets.length; i++) {
+      datasets[i].checked = false
+    }
+    this.setState({ datasets })
+  }
+
+  _getSelectedList = () => {
+    let list = []
+    for (let i = 0; i < this.state.data.length; i++) {
+      if (this.state.data[i].checked === true) {
+        list.push(this.state.data[i].title)
+      }
+    }
+    return list
   }
 
   creatDatasource = async datasourcePath => {
@@ -139,11 +179,11 @@ export default class MyLabel extends Component {
   }
 
   upload = async name => {
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
-      //'请登录')
-      return
-    }
+    // if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+    //   Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
+    //   //'请登录')
+    //   return
+    // }
     try {
       // this.container.setLoading(true, '正在分享')
       Toast.show(getLanguage(global.language).Prompt.SHARING)
@@ -224,10 +264,33 @@ export default class MyLabel extends Component {
           }
         }
       }
+      this._deseleteAll()
     } catch (error) {
+      this._deseleteAll()
       Toast.show('分享失败')
       this.container.setLoading(false)
     }
+  }
+
+  _renderMyLabelPopupModal = () => {
+    let data
+    data = [
+      {
+        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        action: () => {
+          this.setState({
+            batchDelete: !this.state.batchDelete,
+          })
+        },
+      },
+    ]
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.MyLabelPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
   }
 
   _showMyDataPopupModal = () => {
@@ -300,6 +363,7 @@ export default class MyLabel extends Component {
         }}
         cancelAction={() => {
           this.dialog.setDialogVisible(false)
+          this._deseleteAll()
           this.setState({ showselect: false })
         }}
         confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
@@ -307,6 +371,60 @@ export default class MyLabel extends Component {
         cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
         //{'取消'}
       />
+    )
+  }
+
+  _renderHeaderRight = () => {
+    if (this.state.batchDelete || this.state.showselect) {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this._selectAll()
+          }}
+          style={styles.moreView}
+        >
+          <Text style={{ color: '#F0F0F0' }}>
+            {getLanguage(global.language).Profile.SELECT_ALL}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.MyLabelPopModal.setVisible(true)
+        }}
+        style={styles.moreView}
+      >
+        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
+      </TouchableOpacity>
+    )
+  }
+
+  _renderBottom = () => {
+    return (
+      <View style={styles.bottomStyle}>
+        <TouchableOpacity
+          onPress={() => {
+            this._deseleteAll()
+            this.setState({
+              batchDelete: !this.state.batchDelete,
+            })
+          }}
+        >
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this._batchDelete}>
+          <Image
+            style={{ height: scaleSize(40), width: scaleSize(40) }}
+            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+          />
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -318,6 +436,7 @@ export default class MyLabel extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderRight(),
         }}
       >
         <FlatList
@@ -325,6 +444,7 @@ export default class MyLabel extends Component {
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
           data={this.state.data}
+          keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => (
             <View
               style={{
@@ -355,8 +475,10 @@ export default class MyLabel extends Component {
             />
           }
         />
+        {this._renderMyLabelPopupModal()}
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}
+        {this.state.batchDelete && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
@@ -364,6 +486,7 @@ export default class MyLabel extends Component {
           actionOfOnline={
             UserType.isOnlineUser(this.props.user.currentUser)
               ? () => {
+                this.uploadList = this._getSelectedList()
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
                   this.ModalBtns.setVisible(false)
@@ -381,6 +504,7 @@ export default class MyLabel extends Component {
           actionOfIPortal={
             UserType.isIPortalUser(this.props.user.currentUser)
               ? () => {
+                this.uploadList = this._getSelectedList()
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
                   this.ModalBtns.setVisible(false)
@@ -395,6 +519,7 @@ export default class MyLabel extends Component {
               : undefined
           }
           actionOfWechat={() => {
+            this.uploadList = this._getSelectedList()
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)
               this.ModalBtns.setVisible(false)
@@ -407,6 +532,8 @@ export default class MyLabel extends Component {
             }
           }}
           cancel={() => {
+            this.uploadList = []
+            this._deseleteAll()
             this.setState({ showselect: false })
           }}
         />
@@ -414,3 +541,28 @@ export default class MyLabel extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    // width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreImg: {
+    flex: 1,
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+})

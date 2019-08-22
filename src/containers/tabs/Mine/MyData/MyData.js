@@ -9,12 +9,7 @@ import {
   NativeModules,
   RefreshControl,
 } from 'react-native'
-import {
-  Container,
-  ListSeparator,
-  TextBtn,
-  CheckBox,
-} from '../../../../components'
+import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -32,6 +27,7 @@ import {
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
+import { MineItem } from '../component'
 
 const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
@@ -298,22 +294,10 @@ export default class MyLocalData extends Component {
     })
   }
 
-  _onItemCheck = (info, checked) => {
-    if (checked) {
-      this.deleteArr.push(info)
-    } else {
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        if (this.deleteArr[i].item.name === info.item.name) {
-          this.deleteArr.splice(i, 1)
-          break
-        }
-      }
-    }
-  }
-
   _batchDelete = async () => {
     try {
-      if (this.deleteArr.length === 0) {
+      let deleteArr = this._getSelectedList()
+      if (deleteArr.length === 0) {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
@@ -351,14 +335,46 @@ export default class MyLocalData extends Component {
           }
           break
       }
-      for (let i = 0; i < this.deleteArr.length; i++) {
-        await deleteItem(this.deleteArr[i])
+      for (let i = 0; i < deleteArr.length; i++) {
+        await deleteItem({ item: deleteArr[i] })
       }
       this.getData()
       Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
     } catch (error) {
       Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
     }
+  }
+
+  _selectAll = () => {
+    let section = Object.assign([], this.state.sectionData)
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        section[i].data[n].checked = true
+      }
+    }
+    this.setState({ section })
+  }
+
+  _deseleteAll = () => {
+    let section = Object.assign([], this.state.sectionData)
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        section[i].data[n].checked = false
+      }
+    }
+    this.setState({ section })
+  }
+
+  _getSelectedList = () => {
+    let list = []
+    for (let i = 0; i < this.state.sectionData.length; i++) {
+      for (let n = 0; n < this.state.sectionData[i].data.length; n++) {
+        if (this.state.sectionData[i].data[n].checked === true) {
+          list.push(this.state.sectionData[i].data[n])
+        }
+      }
+    }
+    return list
   }
 
   _renderSectionHeader = info => {
@@ -422,7 +438,7 @@ export default class MyLocalData extends Component {
     let txtType =
       name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
 
-    let display = info.section.isShowItem ? 'flex' : 'none'
+    // let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
     let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
@@ -448,7 +464,7 @@ export default class MyLocalData extends Component {
           img = require('../../../../assets/map/icon-shallow-polygon_black.png')
         } else {
           // 默认
-          img = require('../../../../assets/Mine/mine_my_online_data.png')
+          img = require('../../../../assets/Mine/mine_my_online_data_black.png')
         }
         break
       case getLanguage(this.props.language).Profile.SCENE:
@@ -458,12 +474,17 @@ export default class MyLocalData extends Component {
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
       default:
-        img = require('../../../../assets/Mine/mine_my_online_data.png')
+        img = require('../../../../assets/Mine/mine_my_online_data_black.png')
         break
     }
     return (
-      <TouchableOpacity
-        style={[styles.item, { display: display }]}
+      <MineItem
+        item={info.item}
+        image={img}
+        text={txtInfo}
+        disableTouch={this.state.batchDelete}
+        showRight={isShowMore}
+        showCheck={this.state.batchDelete}
         onPress={async () => {
           if (this.state.batchDelete) {
             return
@@ -483,35 +504,7 @@ export default class MyLocalData extends Component {
             this._openData()
           }
         }}
-      >
-        <Image style={styles.img} resizeMode={'contain'} source={img} />
-        <Text numberOfLines={1} style={styles.itemText}>
-          {txtInfo}
-        </Text>
-        {isShowMore && this._renderItemRight(info)}
-      </TouchableOpacity>
-    )
-  }
-
-  _renderItemRight = info => {
-    if (this.state.batchDelete) {
-      return (
-        <CheckBox
-          style={{
-            height: scaleSize(30),
-            width: scaleSize(30),
-            marginRight: scaleSize(30),
-          }}
-          onChange={checked => {
-            this._onItemCheck(info, checked)
-          }}
-        />
-      )
-    }
-    return (
-      <TouchableOpacity
-        style={styles.moreView}
-        onPress={() => {
+        onPressMore={() => {
           this.itemInfo = info
           if (this.state.isFirstLoadingModal) {
             this.setState(
@@ -529,13 +522,7 @@ export default class MyLocalData extends Component {
             })
           }
         }}
-      >
-        <Image
-          style={styles.moreImg}
-          resizeMode={'contain'}
-          source={require('../../../../assets/Mine/icon_more_gray.png')}
-        />
-      </TouchableOpacity>
+      />
     )
   }
 
@@ -1187,10 +1174,8 @@ export default class MyLocalData extends Component {
       {
         title: getLanguage(global.language).Profile.BATCH_DELETE,
         action: () => {
-          this.deleteArr = []
           this.setState({
             batchDelete: !this.state.batchDelete,
-            sectionData: Object.assign([], this.state.sectionData),
           })
         },
       },
@@ -1291,8 +1276,20 @@ export default class MyLocalData extends Component {
   }
 
   _renderHeaderRight = () => {
+    if (this.formChat) return null
     if (this.state.batchDelete) {
-      return null
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this._selectAll()
+          }}
+          style={styles.moreView}
+        >
+          <Text style={{ color: '#F0F0F0' }}>
+            {getLanguage(global.language).Profile.SELECT_ALL}
+          </Text>
+        </TouchableOpacity>
+      )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
@@ -1312,9 +1309,9 @@ export default class MyLocalData extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
+            this._deseleteAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
-              datasets: Object.assign([], this.state.sectionData),
             })
           }}
         >

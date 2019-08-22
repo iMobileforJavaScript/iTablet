@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     right: scaleSize(30),
-    top: scaleSize(80),
+    // top: scaleSize(80),
+    bottom: scaleSize(135),
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',

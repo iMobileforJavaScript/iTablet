@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Platform } from 'react-native'
+import { scaleSize } from '../../utils'
 import Bubble from './Bubble'
 
 const DEFAULT_POSITION = {
   left: 20,
-  top: 120,
+  top: scaleSize((Platform.OS === 'ios' ? 20 : 0) + 108),
 }
 
 export default class BubblePane extends React.Component {
@@ -96,10 +97,7 @@ export default class BubblePane extends React.Component {
       return
     this.setState({
       bubbles: [],
-      position: {
-        left: 20,
-        top: 120,
-      },
+      position: DEFAULT_POSITION,
     })
   }
 
