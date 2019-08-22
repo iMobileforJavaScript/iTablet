@@ -10,6 +10,7 @@ import layerType from './layerType'
 import ar from './ar'
 import plot from './plot'
 import functionBar from './function'
+import search from './search'
 export default {
   publicAssets,
   tabBar,
@@ -23,4 +24,5 @@ export default {
   ar,
   plot,
   functionBar,
+  search,
 }
