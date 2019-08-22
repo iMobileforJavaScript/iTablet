@@ -3904,6 +3904,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
     SMap.endAnimationWayPoint(false)
+    GLOBAL.TouchType = TouchType.NULL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
