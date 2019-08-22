@@ -13,7 +13,7 @@ import {
   SMAIClassifyView,
   SAIClassifyView,
   SMediaCollector,
-  SMap,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 // import { getLanguage } from '../../language'
@@ -24,6 +24,7 @@ import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
+import RadioButton from './RadioButton'
 
 /*
  * AI分类
@@ -41,9 +42,11 @@ export default class ClassifyView extends React.Component {
     const { params } = this.props.navigation.state || {}
     this.datasourceAlias = params.datasourceAlias
     this.datasetName = params.datasetName
+    this.checkedItem = 0
 
     this.state = {
       isCameraVisible: false,
+      isClassifyInfoVisible: false,
       first_result: '',
       first_result_confidence: '',
       isFirstShow: false,
@@ -86,13 +89,28 @@ export default class ClassifyView extends React.Component {
 
   recognizeImage = params => {
     this.results = params.results
+    if (this.results.length > 0) {
+      this.setState({
+        isClassifyInfoVisible: true,
+      })
+    } else {
+      return
+    }
     if (this.results[0]) {
       let item = this.results[0]
-      this.setState({
-        isFirstShow: true,
-        first_result: item.Title,
-        first_result_confidence: item.Confidence,
-      })
+      this.setState(
+        {
+          isFirstShow: true,
+          first_result: item.Title,
+          first_result_confidence: item.Confidence,
+        },
+        () => {
+          if (this.FirstRB) {
+            this.checkedItem = 1
+            this.FirstRB.setChecked(true) //默认选中第一个
+          }
+        },
+      )
     } else {
       this.setState({
         isFirstShow: false,
@@ -102,7 +120,7 @@ export default class ClassifyView extends React.Component {
       let item = this.results[1]
       this.setState({
         isSecondShow: true,
-        second_result: item.Title + ':' + item.Confidence,
+        second_result: item.Title,
         second_result_confidence: item.Confidence,
       })
     } else {
@@ -114,7 +132,7 @@ export default class ClassifyView extends React.Component {
       let item = this.results[2]
       this.setState({
         isThirdShow: true,
-        third_result: item.Title + ':' + item.Confidence,
+        third_result: item.Title,
         third_result_confidence: item.Confidence,
       })
     } else {
@@ -134,22 +152,22 @@ export default class ClassifyView extends React.Component {
 
   captureImage = async () => {
     await SAIClassifyView.captureImage()
+    // await SAIClassifyView.pausePreview()
   }
 
-  save = async name => {
+  save = async () => {
     //保存数据->跳转
     (async function() {
-      let isTaggingLayer = await SMap.isTaggingLayer(
-        this.props.user.currentUser.userName,
-      )
-      if (isTaggingLayer && GLOBAL.TaggingDatasetName) {
-        await SMap.setTaggingGrid(
-          GLOBAL.TaggingDatasetName,
-          this.props.user.currentUser.userName,
-        )
-        const datasourceAlias =
-          'Label_' + this.props.user.currentUser.userName + '#' // 标注数据源名称
-        const datasetName = GLOBAL.TaggingDatasetName // 标注图层名称
+      let currentLayer = GLOBAL.currentLayer
+      // let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        // && currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
         let targetPath = await FileTools.appendingHomeDirectory(
           ConstPath.UserPath +
             this.props.user.currentUser.userName +
@@ -161,11 +179,11 @@ export default class ClassifyView extends React.Component {
         let result = await SMediaCollector.addAIClassifyMedia({
           datasourceName: datasourceAlias,
           datasetName: datasetName,
-          mediaName: name,
+          mediaName: this.results[this.checkedItem].Title,
         })
         if (result) {
           Toast.show(
-            name +
+            this.results[this.checkedItem].Title +
               ':' +
               getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
           )
@@ -195,12 +213,35 @@ export default class ClassifyView extends React.Component {
     return true
   }
 
+  clear = () => {
+    this.setState({
+      isClassifyInfoVisible: false,
+    })
+  }
+
+  RadioButtonOnChange = index => {
+    if (index === 1) {
+      this.FirstRB && this.FirstRB.setChecked(true)
+      this.SecondRB && this.SecondRB.setChecked(false)
+      this.ThridRB && this.ThridRB.setChecked(false)
+    } else if (index === 2) {
+      this.FirstRB && this.FirstRB.setChecked(false)
+      this.SecondRB && this.SecondRB.setChecked(true)
+      this.ThridRB && this.ThridRB.setChecked(false)
+    } else if (index === 3) {
+      this.FirstRB && this.FirstRB.setChecked(false)
+      this.SecondRB && this.SecondRB.setChecked(false)
+      this.ThridRB && this.ThridRB.setChecked(true)
+    }
+    this.checkedItem = index
+  }
+
   renderBottomBtns = () => {
     return (
       <View style={styles.toolbar}>
         <View style={styles.buttonView}>
           <TouchableOpacity
-            onPress={() => NavigationService.goBack()}
+            onPress={() => this.clear()}
             style={styles.iconView}
           >
             <Image
@@ -209,10 +250,7 @@ export default class ClassifyView extends React.Component {
               style={styles.smallIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.startPreview()}
-            style={styles.iconView}
-          >
+          <TouchableOpacity onPress={() => this.save()} style={styles.iconView}>
             <Image
               resizeMode={'contain'}
               source={getThemeAssets().ar.toolbar.icon_save}
@@ -252,49 +290,79 @@ export default class ClassifyView extends React.Component {
   renderClassifyTitle = () => {
     return (
       <View style={styles.classifyTitleView}>
-        <Text style={styles.classifyTitle}>{'识别结果'}</Text>
-        <Text style={styles.classifyTitle}>{'置信度'}</Text>
+        <View style={styles.takeplace} />
+        <Text style={styles.title}>{'识别结果'}</Text>
+        <Text style={styles.titleConfidence}>{'置信度'}</Text>
       </View>
     )
   }
 
-  renderLengthChangeView() {
+  renderClassifyInfoView() {
     return (
       <View style={styles.InfoChangeView}>
         {this.renderClassifyTitle()}
         {this.state.isFirstShow && (
           <TouchableOpacity
-            onPress={() => this.save(this.state.first_result)}
+            onPress={() => this.RadioButtonOnChange(1)}
             style={styles.classifyTitleView}
           >
+            <RadioButton
+              ref={ref => (this.FirstRB = ref)}
+              onChange={() => {
+                this.RadioButtonOnChange(1)
+              }}
+            />
             <Text style={styles.title}>{this.state.first_result}</Text>
-            <Text style={styles.title}>
+            <Text style={styles.titleConfidence}>
               {this.state.first_result_confidence}
             </Text>
           </TouchableOpacity>
         )}
         {this.state.isSecondShow && (
           <TouchableOpacity
-            onPress={() => this.save(this.state.second_result)}
+            onPress={() => this.RadioButtonOnChange(2)}
             style={styles.classifyTitleView}
           >
+            <RadioButton
+              ref={ref => (this.SecondRB = ref)}
+              onChange={() => {
+                this.RadioButtonOnChange(2)
+              }}
+            />
             <Text style={styles.title}>{this.state.second_result}</Text>
-            <Text style={styles.title}>
+            <Text style={styles.titleConfidence}>
               {this.state.second_result_confidence}
             </Text>
           </TouchableOpacity>
         )}
         {this.state.isThirdShow && (
           <TouchableOpacity
-            onPress={() => this.save(this.state.third_result)}
+            onPress={() => this.RadioButtonOnChange(3)}
             style={styles.classifyTitleView}
           >
+            <RadioButton
+              ref={ref => (this.ThridRB = ref)}
+              onChange={() => {
+                this.RadioButtonOnChange(3)
+              }}
+            />
             <Text style={styles.title}>{this.state.third_result}</Text>
-            <Text style={styles.title}>
+            <Text style={styles.titleConfidence}>
               {this.state.third_result_confidence}
             </Text>
           </TouchableOpacity>
         )}
+        {/* {(
+          <TouchableOpacity
+            onPress={() => this.save(this.state.third_result)}
+            style={styles.classifyTitleView}
+          >
+            <CheckBox onChange={value => {
+              this.firstOnChange(value)
+            }}/>
+            <Text style={styles.titleElse}>{'以上结果都不对'}</Text>
+          </TouchableOpacity>
+        )}*/}
       </View>
     )
   }
@@ -317,7 +385,7 @@ export default class ClassifyView extends React.Component {
         {this.renderOverlayPreview()}
         {this.renderBottomBtns()}
         {this.renderCenterBtn()}
-        {this.renderLengthChangeView()}
+        {this.state.isClassifyInfoVisible && this.renderClassifyInfoView()}
       </Container>
     )
   }

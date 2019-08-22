@@ -12,6 +12,8 @@ const icon_ar_back_white = require('./back_white.png')
 const icon_ar_save_white = require('./save_white.png')
 const switch_ar_light = require('./switch_ar_light.png')
 const icon_camera_classify = require('./camera_classify.png')
+const radio_button_off = require('./radio_button_off.png')
+const radio_button_on = require('./radio_button_on.png')
 export default {
   functiontoolbar,
   toolbar,
@@ -27,4 +29,6 @@ export default {
   icon_ar_save_white,
   switch_ar_light,
   icon_camera_classify,
+  radio_button_off,
+  radio_button_on,
 }
