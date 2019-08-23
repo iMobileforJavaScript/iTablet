@@ -28,6 +28,7 @@ import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
 import { getLanguage } from '../../../language/index'
 import { getThemeAssets } from '../../../assets'
+import color from '../../../styles/color'
 
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
@@ -463,7 +464,7 @@ export default class Home extends Component {
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#FBFBFB',
+            backgroundColor: color.contentWhite,
           }}
         >
           <ModuleList

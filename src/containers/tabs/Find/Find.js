@@ -189,7 +189,10 @@ export default class Find extends Component {
 
   _selectionRender = () => {
     return (
-      <View opacity={1} style={{ flex: 1, backgroundColor: '#FBFBFB' }}>
+      <View
+        opacity={1}
+        style={{ flex: 1, backgroundColor: color.contentWhite }}
+      >
         <ScrollView
           style={{ flex: 1 }}
           showsHorizontalScrollIndicator={false}
