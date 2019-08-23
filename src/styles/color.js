@@ -46,6 +46,7 @@ const lightTheme = {
   itemColorBlack: '#303030',
   itemColorGray: '#505050',
 
+  contentWhite: '#FBFBFB',
   contentColorWhite: '#F0F0F0',
   contentColorWhite2: 'rgba(240,240,240, 0.85)',
   contentColorBlack: '#303030',

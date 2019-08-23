@@ -70,6 +70,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 2A89416022CADE2700AA0363 /* PlotLibData.zip */; };
+		2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AAEE197230E696800902D1D /* libxml2.tbd */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -641,6 +642,7 @@
 		23E1668885E74380A5197539 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		2A89416022CADE2700AA0363 /* PlotLibData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PlotLibData.zip; sourceTree = "<group>"; };
+		2AAEE197230E696800902D1D /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTablet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E13A8DD089744C6A9A2650C /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */,
 				0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */,
 				0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */,
 				0A6180A722A604B300E3D69B /* libRCTVideo.a in Frameworks */,
@@ -1081,6 +1084,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2AAEE197230E696800902D1D /* libxml2.tbd */,
 				0A13B46522A66D37005E4AEC /* ExternalAccessory.framework */,
 				0A61803D22A51A3500E3D69B /* RSKImageCropper.framework */,
 				0A334D1E229795E600E4F302 /* QBImagePicker.framework */,
@@ -1970,7 +1974,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
@@ -2003,7 +2007,9 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
-					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)..",
+					ode_modules,
+					"eact-native-contactsiosRCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/jcore-react-native/ios/RCTJCoreModule",
@@ -2011,6 +2017,7 @@
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2096,7 +2103,9 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(PROJECT_DIR)/SDKExport/SDKExport/",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
-					"$(SRCROOT)..\node_modules\neact-native-contactsiosRCTContacts",
+					"$(SRCROOT)..",
+					ode_modules,
+					"eact-native-contactsiosRCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/jcore-react-native/ios/RCTJCoreModule",
@@ -2104,6 +2113,7 @@
 					"$(SRCROOT)/../node_modules/jpush-react-native/ios/RCTJPushModule",
 					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
+					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

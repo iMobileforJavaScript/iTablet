@@ -47,6 +47,7 @@ import {
   UserType,
   legendMenuInfo,
   legendMenuInfoNotVisible,
+  smartCartography,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -708,7 +709,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          {
+          Platform === 'android' && {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -3323,7 +3324,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
         this.state.type === ConstToolType.LEGEND ||
-        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
+        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
+        this.state.type === ConstToolType.SMART_CARTOGRAPHY
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
@@ -3354,6 +3356,13 @@ export default class ToolBar extends React.PureComponent {
               ToolbarBtnType.MENU_COMMIT,
             ]
           }
+        } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+          buttons = [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ]
         } else {
           buttons = [
             ToolbarBtnType.CANCEL,
@@ -3608,16 +3617,15 @@ export default class ToolBar extends React.PureComponent {
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
       (async function() {
         let currentLayer = this.props.currentLayer
-        let reg = /^Label_(.*)#$/
+        // let reg = /^Label_(.*)#$/
         let isTaggingLayer = false,
           isPointLayer = false,
           isLineLayer = false,
           isRegionLayer = false,
           isTextLayer = false
         if (currentLayer) {
-          isTaggingLayer =
-            currentLayer.type === DatasetType.CAD &&
-            currentLayer.datasourceAlias.match(reg)
+          isTaggingLayer = currentLayer.type === DatasetType.CAD
+          // && currentLayer.datasourceAlias.match(reg)
           isPointLayer = currentLayer.type === DatasetType.POINT
           isLineLayer = currentLayer.type === DatasetType.LINE
           isRegionLayer = currentLayer.type === DatasetType.REGION
@@ -3912,6 +3920,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
     SMap.endAnimationWayPoint(false)
+    GLOBAL.TouchType = TouchType.NULL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -5408,6 +5417,7 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.plotAnimationView = ref)}
         data={this.state.data}
         saveAndContinue={this.saveAnimationAndContinue}
+        savePlotAnimationNode={this.savePlotAnimationNode}
         layerName={
           this.props.selection[0] && this.props.selection[0].layerInfo.name
         }
@@ -5884,6 +5894,8 @@ export default class ToolBar extends React.PureComponent {
       } else {
         list = legendMenuInfo(this.props.language)
       }
+    } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      list = smartCartography(this.props.language)
     }
     if (!list) {
       switch (this.props.currentLayer.type) {
@@ -6282,6 +6294,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapTools/icon_save.png')
           action = this.animationSave
           break
+        case ToolbarBtnType.SMART_CARTOGRAPHY:
+          // 智能配图
+          image = getPublicAssets().common.icon_album
+          action = MapToolData.matchPictureStyle
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -6300,6 +6317,29 @@ export default class ToolBar extends React.PureComponent {
       }
     })
     return <View style={styles.buttonz}>{btns}</View>
+  }
+
+  //保存推演动画节点
+  savePlotAnimationNode = () => {
+    let createInfo =
+      this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+    if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+      createInfo.geoId = this.props.selection[0].ids[0]
+      createInfo.layerName = this.props.selection[0].layerInfo.name
+    }
+    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
+
+    let height = 0
+    this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_START
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      cb: () => SMap.setAction(Action.SELECT),
+    })
   }
 
   overlayOnPress = () => {
@@ -6340,28 +6380,7 @@ export default class ToolBar extends React.PureComponent {
         cb: () => SMap.setAction(Action.SELECT),
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
-      let createInfo =
-        this.plotAnimationView && this.plotAnimationView.getCreateInfo()
-      if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
-        createInfo.geoId = this.props.selection[0].ids[0]
-        createInfo.layerName = this.props.selection[0].layerInfo.name
-      }
-      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
-      GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
-      // let length=createInfo.length
-      // // this.showToolbarAndBox(false)
-      // this.isBoxShow = true
-      // GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
-
-      let height = 0
-      this.props.showFullMap && this.props.showFullMap(true)
-      let type = ConstToolType.PLOT_ANIMATION_START
-      GLOBAL.currentToolbarType = type
-      this.setVisible(true, type, {
-        isFullScreen: false,
-        height,
-        cb: () => SMap.setAction(Action.SELECT),
-      })
+      this.savePlotAnimationNode()
     } else {
       this.setVisible(false)
     }

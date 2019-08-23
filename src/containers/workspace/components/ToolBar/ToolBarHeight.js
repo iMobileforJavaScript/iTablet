@@ -57,12 +57,12 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_TOOL:
-      height = ConstToolType.HEIGHT[2]
+      height = ConstToolType.NEWTHEME_HEIGHT[4]
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.NEWTHEME_HEIGHT[4]
+        // height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        // height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break
@@ -86,11 +86,12 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_TOOLS:
+      height = ConstToolType.NEWTHEME_HEIGHT[4]
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.NEWTHEME_HEIGHT[4]
+        // height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        // height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break
@@ -361,6 +362,13 @@ function getToorbarHeight(orientation, type) {
     // case ConstToolType.ConstToolType.PLOT_ANIMATION_START:
     //   height = ConstToolType.HEIGHT[2]
     //   break
+    case ConstToolType.PLOT_ANIMATION_NODE_CREATE:
+      if (orientation === 'LANDSCAPE') {
+        height = ConstToolType.TOOLBAR_HEIGHT[3]
+      } else {
+        height = ConstToolType.TOOLBAR_HEIGHT[5]
+      }
+      break
     default:
       height = 0
   }

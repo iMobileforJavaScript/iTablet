@@ -108,6 +108,8 @@ const Profile = {
 
   NO_SERVICE: 'No Service',
 
+  SELECT_ALL: 'Select All',
+
   MAP_ONLINE: 'Online Map',
   MAP_2D: '2D Map',
   MAP_3D: '3D Map',

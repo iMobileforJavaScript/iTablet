@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
-import { color, zIndexLevel } from '../../styles'
+import { zIndexLevel } from '../../styles'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
@@ -13,7 +13,7 @@ export default StyleSheet.create({
     // borderBottomWidth: 1,
     // borderBottomColor: '#e2e2e2',
     flexDirection: 'row',
-    backgroundColor: color.theme,
+    backgroundColor: '#303030',
     alignItems: 'center',
   },
   fixHeaderView: {
@@ -25,7 +25,7 @@ export default StyleSheet.create({
     width: '100%',
     paddingTop: HEADER_PADDINGTOP,
     height: HEADER_HEIGHT,
-    backgroundColor: color.theme,
+    backgroundColor: '#303030',
     flexDirection: 'row',
     alignItems: 'center',
   },

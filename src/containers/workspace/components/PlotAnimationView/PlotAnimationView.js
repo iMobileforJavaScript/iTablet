@@ -41,6 +41,7 @@ export default class PlotAnimationView extends React.Component {
     device: Object,
     themeSymbolType: '',
     saveAndContinue: () => {},
+    savePlotAnimationNode: () => {},
     showToolbar: () => {},
   }
 
@@ -70,17 +71,17 @@ export default class PlotAnimationView extends React.Component {
     let subData = []
     switch (type) {
       case 1:
-        subData.push(data[0]) //路径动画，暂不支持
         subData.push(data[1])
         subData.push(data[2])
-        // subData.push(data[3])
+        subData.push(data[3])
+        subData.push(data[0])
         subData.push(data[4])
         subData.push(data[5])
         break
       case 2:
         subData.push(data[1])
         subData.push(data[2])
-        // subData.push(data[3])
+        subData.push(data[3])
         subData.push(data[6])
         break
     }
@@ -189,7 +190,6 @@ export default class PlotAnimationView extends React.Component {
   }
 
   renderView() {
-    // let animationModeData = this.getData()
     return (
       <View style={styles.container}>
         <View style={styles.titleView}>
@@ -359,27 +359,33 @@ export default class PlotAnimationView extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
-        <View style={styles.endlineStyle} />
-        {/* <View>
-          this.state.animationMode==0?<View> */}
-        <TouchableOpacity onPress={this.createAnimationWay}>
-          <View style={styles.startTime}>
-            <Text style={styles.startTimeText}>
-              {
-                getLanguage(global.language).Map_Plotting
-                  .PLOTTING_ANIMATION_WAY_SET
-              }
-            </Text>
-            <View style={styles.startTimeView}>
-              <Image
-                source={require('../../../../assets/Mine/mine_my_arrow.png')}
-                style={styles.startModeImage}
-              />
+        {this.state.animationMode != 0 ? null : (
+          <View style={styles.endlineStyle} />
+        )}
+        {this.state.animationMode != 0 ? null : (
+          <TouchableOpacity
+            style={{
+              height: this.state.animationMode == 0 ? scaleSize(80) : 0,
+            }}
+            onPress={this.createAnimationWay}
+          >
+            <View style={styles.startTime}>
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_WAY_SET
+                }
+              </Text>
+              <View style={styles.startTimeView}>
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.startModeImage}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-        {/* </View>:null
-        </View> */}
+          </TouchableOpacity>
+        )}
+
         <View style={styles.endlineStyle} />
         <View>
           <TouchableOpacity onPress={this.saveAndContinue}>
@@ -473,6 +479,21 @@ export default class PlotAnimationView extends React.Component {
     })
   }
 
+  cancle = () => {
+    SMap.endAnimationWayPoint(false)
+    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
+    let height = 0
+    // this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_START
+    GLOBAL.currentToolbarType = type
+    this.props.showToolbar(true, type, {
+      isFullScreen: false,
+      height,
+      cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
   createAnimationWay = () => {
     if (this.state.animationMode == 0) {
       GLOBAL.animationWayData = this.getCreateInfo()
@@ -488,9 +509,36 @@ export default class PlotAnimationView extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container} ref={ref => (this.scrollView = ref)}>
-        {this.renderView()}
-      </ScrollView>
+      <View style={styles.container}>
+        <View style={styles.headerItem}>
+          <TouchableOpacity style={styles.startTimeText} onPress={this.cancle}>
+            <Text style={styles.startTimeText}>
+              {getLanguage(global.language).Map_Settings.CANCEL}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.startTimeText}
+              onPress={this.props.savePlotAnimationNode}
+            >
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_SAVE
+                }
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ScrollView
+          style={styles.container}
+          ref={ref => (this.scrollView = ref)}
+        >
+          {this.renderView()}
+        </ScrollView>
+      </View>
     )
   }
 }
@@ -571,6 +619,7 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     color: color.themeText2,
     textAlign: 'center',
+    padding: scaleSize(3),
   },
   modifyTime: {
     height: scaleSize(60),
@@ -620,5 +669,12 @@ const styles = StyleSheet.create({
     fontSize: setSpText(24),
     textAlign: 'center',
     color: color.blue2,
+  },
+  headerItem: {
+    flexDirection: 'row',
+    height: scaleSize(60),
+    padding: scaleSize(30),
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 })

@@ -27,6 +27,8 @@ import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
 import { getLanguage } from '../../../language/index'
+import { getThemeAssets } from '../../../assets'
+import color from '../../../styles/color'
 
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
@@ -421,7 +423,7 @@ export default class Home extends Component {
     let userImg =
       this.props.user.currentUser.userType === UserType.PROBATION_USER ||
       typeof this.props.user.currentUser.userType === 'undefined'
-        ? require('../../../assets/home/system_default_header_image.png')
+        ? getThemeAssets().tabBar.icon_home_photo
         : {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
@@ -458,9 +460,11 @@ export default class Home extends Component {
         <View
           style={{
             flex: 1,
+            width: '100%',
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: color.contentWhite,
           }}
         >
           <ModuleList

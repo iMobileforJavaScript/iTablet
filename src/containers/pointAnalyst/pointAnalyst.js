@@ -17,6 +17,7 @@ import styles from './styles'
 import { getLanguage } from '../../language/index'
 import constants from '../workspace/constants'
 import PropTypes from 'prop-types'
+import PoiData from './PoiData'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
@@ -40,6 +41,7 @@ export default class PointAnalyst extends Component {
       analystData: [],
       firstPoint: null,
       secondPoint: null,
+      showList: true,
     }
   }
 
@@ -55,11 +57,6 @@ export default class PointAnalyst extends Component {
             this.setLoading(false)
           }
         },
-      })
-    } else {
-      SMap.initPointSearch()
-      SMap.setPointSearchListener({
-        callback: result => this.setState({ searchData: result }),
       })
     }
   }
@@ -105,7 +102,7 @@ export default class PointAnalyst extends Component {
         <TouchableOpacity
           style={styles.itemView}
           onPress={() => {
-            this.toLocationPoint(item.pointName, index)
+            this.toLocationPoint({ item, pointName: item.pointName, index })
           }}
         >
           <Image
@@ -121,7 +118,7 @@ export default class PointAnalyst extends Component {
     )
   }
 
-  toLocationPoint = async (pointName, index) => {
+  toLocationPoint = async ({ item, pointName, index }) => {
     try {
       if (this.is3D) {
         if (this.PointType) {
@@ -162,8 +159,9 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
-        let x = this.state.searchData[index].x
-        let y = this.state.searchData[index].y
+        let x = item.x
+        let y = item.y
+        let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           await SMap.routeAnalyst(index)
@@ -173,15 +171,24 @@ export default class PointAnalyst extends Component {
             isPointShow: true,
           })
         }
-        let result = await SMap.toLocationPoint(index)
+        let result = await SMap.toLocationPoint(item)
         if (result) {
           this.container.setLoading(false)
           GLOBAL.Type !== constants.MAP_NAVIGATION &&
             GLOBAL.PoiInfoContainer &&
-            GLOBAL.PoiInfoContainer.setState({
-              destination: this.state.searchValue,
-              position: { x, y },
-            })
+            GLOBAL.PoiInfoContainer.setState(
+              {
+                destination: this.state.searchValue,
+                location: { x, y },
+                address,
+                showList: false,
+                neighbor: [],
+                resultList: [],
+              },
+              () => {
+                GLOBAL.PoiInfoContainer.setVisible(true)
+              },
+            )
           NavigationService.goBack()
         } else {
           Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
@@ -297,10 +304,50 @@ export default class PointAnalyst extends Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
+  getSearchResult = params => {
+    let searchStr = ''
+    let keys = Object.keys(params)
+    keys.map(key => {
+      searchStr += `&${key}=${params[key]}`
+    })
+    // location={"x":104.04801859009979,"y":30.64623399251152}&radius=5000keyWords=${key}
+    let url = `http://www.supermapol.com/iserver/services/localsearch/rest/searchdatas/China/poiinfos.json?&key=tY5A7zRBvPY0fTHDmKkDjjlr${searchStr}`
+    //console.warn(url)
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          Toast.show(getLanguage(global.language).Prompt.NO_SEARCH_RESULTS)
+        } else {
+          let poiInfos = data.poiInfos
+          let searchData = poiInfos.map(item => {
+            return {
+              pointName: item.name,
+              x: item.location.x,
+              y: item.location.y,
+              address: item.address,
+            }
+          })
+          this.setState({
+            searchData,
+            poiInfos,
+            showList: false,
+          })
+        }
+      })
+  }
   renderSearchBar = () => {
     return (
       <SearchBar
         ref={ref => (this.searchBar = ref)}
+        onClear={() => {
+          if (!this.is3D && this.type === 'pointSearch') {
+            this.setState({
+              showList: true,
+              searchData: [],
+            })
+          }
+        }}
         onSubmitEditing={searchKey => {
           // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
           if (this.is3D) {
@@ -308,14 +355,47 @@ export default class PointAnalyst extends Component {
               // this.setLoading(false)
             })
           } else {
-            SMap.pointSearch(searchKey).then(() => {
-              // this.setLoading(false)
-            })
+            this.getSearchResult({ keyWords: searchKey })
           }
         }}
         placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS}
         //{'请输入搜索关键字'}
       />
+    )
+  }
+
+  renderIconItem = () => {
+    let data = PoiData()
+    return (
+      <FlatList
+        style={styles.wrapper}
+        renderItem={this.renderIcons}
+        data={data}
+        keyExtractor={(item, index) => item.title + index}
+        numColumns={4}
+      />
+    )
+  }
+  renderIcons = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={async () => {
+          let location = await SMap.getMapcenterPosition()
+          this.getSearchResult({
+            keyWords: item.title,
+            location: JSON.stringify(location),
+            radius: 5000,
+          })
+        }}
+        style={styles.searchIconWrap}
+      >
+        <Image
+          style={styles.searchIcon}
+          source={item.icon}
+          resizeMode={'contain'}
+        />
+        <Text style={styles.iconTxt}>{item.title}</Text>
+      </TouchableOpacity>
     )
   }
 
@@ -332,6 +412,10 @@ export default class PointAnalyst extends Component {
             this.type === 'pointSearch' ? this.renderSearchBar() : <View />,
         }}
       >
+        {this.type === 'pointSearch' &&
+          !this.is3D &&
+          this.state.showList &&
+          this.renderIconItem()}
         {this.type === 'pointSearch'
           ? this.renderPointSearch()
           : this.renderPointAnalyst()}

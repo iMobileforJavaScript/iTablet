@@ -239,6 +239,8 @@ export default {
   MAP_AR_AIASSISTANT: 'MAP_AR_AIASSISTANT',
 
   MAP_MORE_THEME: 'MAP_MORE_THEME',
+  SMART_CARTOGRAPHY: 'SMART_CARTOGRAPHY', // 智能配图
+
   // 工具视图高度级别
   HEIGHT: [
     scaleSize(100),

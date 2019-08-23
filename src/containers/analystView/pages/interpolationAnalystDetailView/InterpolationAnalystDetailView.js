@@ -26,8 +26,8 @@ const defaultState = {
   // Settings
   radius: 0,
   pointCount: 12, // 2 - 12
-  maxPointCountForInterpolation: 0, // 块查找
-  maxPointCountInNode: 0, // 块查找
+  maxPointCountForInterpolation: 20, // 块查找
+  maxPointCountInNode: 5, // 块查找
   // Others
   // IDW
   power: 2,
@@ -264,16 +264,19 @@ export default class InterpolationAnalystDetailView extends Component {
   renderVariableLengthSetting = type => {
     let title1 = '',
       title2 = '',
-      numberRange = ''
+      numberRange1 = '',
+      numberRange2 = ''
     if (type === SAnalyst.SearchMode.KDTREE_FIXED_COUNT) {
       title1 = getLanguage(this.props.language).Analyst_Labels.MAX_RADIUS
       title2 = getLanguage(this.props.language).Analyst_Labels
         .SEARCH_POINT_COUNT
-      numberRange = '[1, 2147483647]'
+      numberRange1 = '[0, )'
+      numberRange2 = '[1, 2147483647]'
     } else if (type === SAnalyst.SearchMode.KDTREE_FIXED_RADIUS) {
       title1 = getLanguage(this.props.language).Analyst_Labels.SEARCH_RADIUS_2
       title2 = getLanguage(this.props.language).Analyst_Labels.MIX_COUNT
-      numberRange = '[2, 120]'
+      numberRange1 = '[0, )'
+      numberRange2 = '[2, 12]'
     }
     if (!title1 || !title2) return []
     return [
@@ -286,7 +289,7 @@ export default class InterpolationAnalystDetailView extends Component {
         rightStyle={{ flex: 1 }}
         inputStyle={{ flex: 1 }}
         autoCheckNumber
-        numberRange={numberRange}
+        numberRange={numberRange1}
         onChangeText={text => {
           this.setState({
             radius: text,
@@ -316,7 +319,7 @@ export default class InterpolationAnalystDetailView extends Component {
         rightStyle={{ flex: 1 }}
         inputStyle={{ flex: 1 }}
         autoCheckNumber
-        numberRange={'[0, 1]'}
+        numberRange={numberRange2}
         onChangeText={text => {
           this.setState({
             pointCount: text,
@@ -352,7 +355,7 @@ export default class InterpolationAnalystDetailView extends Component {
         rightStyle={{ flex: 1 }}
         inputStyle={{ flex: 1 }}
         autoCheckNumber
-        numberRange={'[1, 2147483647]'}
+        numberRange={'[4, 2147483647]'}
         onChangeText={text => {
           this.setState({
             maxPointCountForInterpolation: text,
@@ -757,7 +760,11 @@ export default class InterpolationAnalystDetailView extends Component {
           let newStateData = {}
           switch (this.currentPop) {
             case popTypes.SearchMethod:
-              newStateData = { searchMethod: data }
+              Object.assign(
+                newStateData,
+                { ...defaultState },
+                { searchMethod: data },
+              )
               break
             case popTypes.Semivariogram:
               newStateData = { semivariogram: data }

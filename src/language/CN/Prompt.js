@@ -62,7 +62,7 @@ const Prompt = {
   ENABLE_DYNAMIC_PROJECTION: '是否开启动态投影',
   TURN_ON: '是',
   CREATE_FAILED: '创建失败',
-  INVALID_DATASET_NAME: '数据集名称不合法',
+  INVALID_DATASET_NAME: '数据集名称不合法或重名',
 
   NO_PLOTTING_DEDUCTION: '当前地图没有推演列表',
   NO_FLY: '当前场景无飞行轨迹',

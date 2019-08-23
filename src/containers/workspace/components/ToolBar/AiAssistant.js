@@ -22,12 +22,11 @@ function arMeasureCollect() {
       return
     }
     let currentLayer = GLOBAL.currentLayer
-    let reg = /^Label_(.*)#$/
+    // let reg = /^Label_(.*)#$/
     let isTaggingLayer = false
     if (currentLayer) {
-      isTaggingLayer =
-        currentLayer.type === DatasetType.CAD &&
-        currentLayer.datasourceAlias.match(reg)
+      isTaggingLayer = currentLayer.type === DatasetType.CAD
+      // && currentLayer.datasourceAlias.match(reg)
     }
     if (isTaggingLayer) {
       const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
@@ -47,12 +46,11 @@ function arMeasureCollect() {
 function aiClassify() {
   (async function() {
     let currentLayer = GLOBAL.currentLayer
-    let reg = /^Label_(.*)#$/
+    // let reg = /^Label_(.*)#$/
     let isTaggingLayer = false
     if (currentLayer) {
-      isTaggingLayer =
-        currentLayer.type === DatasetType.CAD &&
-        currentLayer.datasourceAlias.match(reg)
+      isTaggingLayer = currentLayer.type === DatasetType.CAD
+      // && currentLayer.datasourceAlias.match(reg)
     }
     if (isTaggingLayer) {
       const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称

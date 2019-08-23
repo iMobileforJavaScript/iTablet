@@ -66,6 +66,7 @@ const Profile = {
   ADD_ACCOUNT: '添加账号',
 
   DELETE: '删除',
+  SELECT_ALL: '全选',
 
   //数据删除导出
   SHARE: '分享',

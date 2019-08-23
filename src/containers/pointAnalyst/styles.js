@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
@@ -122,5 +122,25 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: color.contentColorWhite2,
+  },
+  wrapper: {
+    flex: 1,
+    backgroundColor: color.background,
+    paddingHorizontal: scaleSize(20),
+    minHeight: scaleSize(320),
+  },
+  searchIconWrap: {
+    flex: 1,
+    height: scaleSize(100),
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  searchIcon: {
+    flex: 1,
+    height: scaleSize(80),
+  },
+  iconTxt: {
+    fontSize: setSpText(16),
   },
 })

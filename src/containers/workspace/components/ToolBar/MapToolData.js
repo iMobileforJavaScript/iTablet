@@ -272,6 +272,13 @@ function getMapTool(type, params) {
           size: 'large',
           image: getPublicAssets().mapTools.tour,
         },
+        {
+          key: 'matchPictureStyle',
+          title: getLanguage(global.language).Map_Main_Menu.SMART_CARTOGRAPHY,
+          action: matchPictureStyle,
+          size: 'large',
+          image: getPublicAssets().mapTools.tour,
+        },
         // {
         //   key: 'captureVideo',
         //   title: '视频',
@@ -651,13 +658,12 @@ async function point() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isPointLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isPointLayer = currentLayer.type === DatasetType.POINT
   }
   if (isTaggingLayer || isPointLayer) {
@@ -673,13 +679,12 @@ async function point() {
 
 async function words() {
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isTextLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isTextLayer = currentLayer.type === DatasetType.TEXT
   }
   if (isTaggingLayer || isTextLayer) {
@@ -695,13 +700,12 @@ async function words() {
 
 async function pointline() {
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
   if (isTaggingLayer || isLineLayer) {
@@ -717,13 +721,12 @@ async function pointline() {
 
 async function freeline() {
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
   if (isTaggingLayer || isLineLayer) {
@@ -739,13 +742,12 @@ async function freeline() {
 
 async function pointcover() {
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
   if (isTaggingLayer || isRegionLayer) {
@@ -761,13 +763,12 @@ async function pointcover() {
 
 async function freecover() {
   let currentLayer = _params.currentLayer
-  let reg = /^Label_(.*)#$/
+  // let reg = /^Label_(.*)#$/
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer =
-      currentLayer.type === DatasetType.CAD &&
-      currentLayer.datasourceAlias.match(reg)
+    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
   if (isTaggingLayer || isRegionLayer) {
@@ -842,11 +843,10 @@ async function freecover() {
 function captureImage() {
   (async function() {
     let currentLayer = GLOBAL.currentLayer
-    let reg = /^Label_(.*)#$/
+    // let reg = /^Label_(.*)#$/
     if (currentLayer) {
-      let isTaggingLayer =
-        currentLayer.type === DatasetType.CAD &&
-        currentLayer.datasourceAlias.match(reg)
+      let isTaggingLayer = currentLayer.type === DatasetType.CAD
+      // && currentLayer.datasourceAlias.match(reg)
       if (isTaggingLayer) {
         await SMap.setTaggingGrid(
           currentLayer.datasetName,
@@ -897,7 +897,6 @@ function tour() {
       value = '',
       cb = () => {},
     ) => {
-      // TODO 创建轨迹标注图层
       if (value !== '') {
         (async function() {
           await SMap.setLabelColor()
@@ -934,6 +933,28 @@ function tour() {
       },
     })
   }.bind(this)())
+}
+
+/**
+ * 智能配图
+ */
+function matchPictureStyle() {
+  ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
+  ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+
+  ImagePicker.getAlbum({
+    maxSize: 1,
+    callback: async data => {
+      if (data.length === 1) {
+        await SMap.matchPictureStyle(data[0].uri)
+        _params.showFullMap && _params.showFullMap(true)
+        GLOBAL.ToolBar.setVisible(true, ConstToolType.SMART_CARTOGRAPHY, {
+          isFullScreen: false,
+          height: 0,
+        })
+      }
+    },
+  })
 }
 
 // function captureVideo () {
@@ -1006,6 +1027,7 @@ function tour() {
 export default {
   getMapTool,
   clearMeasure,
+  matchPictureStyle,
   // addMapCutListener,
   // removeMapCutListener,
 }

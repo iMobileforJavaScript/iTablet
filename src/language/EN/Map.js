@@ -77,6 +77,7 @@ const Map_Main_Menu = {
   ROTATE_RIGHT: 'Rotate Right',
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
+  Saturation: 'saturation',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',
@@ -124,6 +125,8 @@ const Map_Main_Menu = {
   CAMERA: 'Camera',
   TOUR: 'Tour',
   TOUR_NAME: 'Tour Name',
+
+  SMART_CARTOGRAPHY: 'Smart Cartography',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
@@ -308,6 +311,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_TOGETHER_LAST: 'Together Last Animation Play',
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
   PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
+  PLOTTING_ANIMATION_SAVE: 'Save',
 }
 
 //图层
@@ -554,16 +558,17 @@ const Map_Tools = {
 //POI title
 const Map_PoiTitle = {
   FOOD: 'Food',
-  SCENE: 'Scenic spot',
+  SCENE: 'Scenic',
   BANK: 'Bank',
-  SUPERMARKET: 'Supermarket',
+  SUPERMARKET: 'Market',
   HOTEL: 'Hotel',
   TOILET: 'Toilet',
-  BUS_STOP: 'Bus stop',
-  PARKING_LOT: 'Parking lot',
+  BUS_STOP: 'Bus',
+  PARKING_LOT: 'Park',
   HOSPITAL: 'Hospital',
   GAS_STATION: 'Gas station',
-  MARKET: 'Market',
+  MARKET: 'Mall',
+  SUBWAY: 'Subway',
 }
 export {
   Map_Main_Menu,
