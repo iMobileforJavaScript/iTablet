@@ -177,22 +177,30 @@ export default class PlotAnimationView extends React.Component {
         key={item.name}
         onPress={() => this.action({ item })}
       >
-        {/* <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor: 'red',
-                  height: scaleSize(15),
-                  width: scaleSize(15),
-                  borderRadius: scaleSize(15),
-                  right: scaleSize(0),
-                  top: scaleSize(-5),
-                }}
-              /> */}
-        <Image
-          //   source={{ uri: 'file://' + item.image }}
-          source={item.image}
-          style={styles.tableItemImg}
-        />
+        <View>
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              height: item.animationMode == 0 ? scaleSize(15) : 0,
+              width: scaleSize(15),
+              borderRadius: scaleSize(15),
+              right: scaleSize(0),
+              top: scaleSize(2),
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'center',
+                color: color.bgW,
+                fontSize: setSpText(10),
+              }}
+            >
+              {this.state.wayPoints.length + ''}
+            </Text>
+          </View>
+          <Image source={item.image} style={styles.tableItemImg} />
+        </View>
         <View style={styles.listItemContent}>
           <Text style={styles.tableItemtext}>{item.name}</Text>
         </View>
