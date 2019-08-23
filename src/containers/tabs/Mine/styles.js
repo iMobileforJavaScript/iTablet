@@ -50,13 +50,12 @@ export default StyleSheet.create({
   //profile
   profileContainer: {
     backgroundColor: '#303030',
-    height: scaleSize(365),
     width: '100%',
     alignItems: 'center',
   },
   //Myprofile
   MyProfileStyle: {
-    marginTop: scaleSize(20),
+    marginVertical: scaleSize(20),
     alignItems: 'center',
   },
   profileHeadStyle: {
@@ -109,6 +108,27 @@ export default StyleSheet.create({
     fontSize: scaleSize(24),
     color: '#C2C2C2',
   },
+  //search
+  searchViewStyle: {
+    width: scaleSize(460),
+    height: scaleSize(48),
+    backgroundColor: '#505050',
+    borderRadius: scaleSize(24),
+    paddingHorizontal: scaleSize(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchImgStyle: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  searchInputStyle: {
+    // backgroundColor: 'white',
+    width: scaleSize(380),
+    paddingVertical: 0,
+    fontSize: scaleSize(20),
+    color: '#A7A7A7',
+  },
   //side
   sideItemStyle: {
     position: 'absolute',
@@ -128,23 +148,22 @@ export default StyleSheet.create({
   //datas
   datasContainer: {
     backgroundColor: color.contentWhite,
-    height: scaleSize(458),
   },
   scrollContentStyle: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    paddingHorizontal: scaleSize(20),
   },
   itemView: {
-    height: scaleSize(100),
-    width: scaleSize(160),
-    marginTop: scaleSize(30),
+    height: scaleSize(120),
+    marginVertical: scaleSize(15),
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'nowrap',
   },
   itemImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
   },
   itemText: {
     fontSize: scaleSize(24),

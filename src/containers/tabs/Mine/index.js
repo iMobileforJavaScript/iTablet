@@ -17,11 +17,13 @@ import MyBaseMap from './MyBaseMap'
 import MyModule from './MyModule'
 import DatasourcePage from './MyData/DatasourcePage'
 import NewDataset from './MyData/NewDataset'
+import SearchMine from './Search'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
   user: state.user.toJS(),
   workspace: state.map.toJS().workspace,
+  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {
@@ -52,4 +54,5 @@ export {
   MyModule,
   DatasourcePage,
   NewDataset,
+  SearchMine,
 }

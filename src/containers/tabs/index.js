@@ -22,6 +22,7 @@ import Mine, {
   MyModule,
   DatasourcePage,
   NewDataset,
+  SearchMine,
 } from './Mine'
 import Find from './Find'
 import SuperMapKnown from './Find/superMapKnown'
@@ -268,6 +269,7 @@ export {
   ToggleAccount,
   DatasourcePage,
   NewDataset,
+  SearchMine,
   /**Home*/
   Setting,
   AboutITablet,
