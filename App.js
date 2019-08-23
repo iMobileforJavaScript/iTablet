@@ -34,7 +34,7 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService, SIPortalService } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
@@ -42,7 +42,7 @@ import { getLanguage } from './src/language/index'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 import FetchUtils from './src/utils/FetchUtils'
 import RNFS from 'react-native-fs'
-import constants from "./src/containers/workspace/constants";
+import constants from "./src/containers/workspace/constants"
 
 
 const {persistor, store} = ConfigStore()
@@ -204,6 +204,7 @@ class AppRoot extends Component {
   componentDidMount () {
     this.login()
     this.reCircleLogin()
+    // this.initSpeechManager()
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
@@ -372,14 +373,14 @@ class AppRoot extends Component {
   }
 
   // 初始化录音
-  // initSpeechManager = async () => {
-  //   try {
-  //     GLOBAL.SpeechManager = new SpeechManager()
-  //     await GLOBAL.SpeechManager.init()
-  //   } catch (e) {
-  //     Toast.show('语音初始化失败')
-  //   }
-  // }
+  initSpeechManager = async () => {
+    try {
+      GLOBAL.SpeechManager = new SpeechManager()
+      await GLOBAL.SpeechManager.init()
+    } catch (e) {
+      Toast.show('语音初始化失败')
+    }
+  }
 
   // 初始化游客工作空间
   // initCustomerWorkspace = async () => {
