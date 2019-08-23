@@ -307,6 +307,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
   PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
   PLOTTING_ANIMATION_SAVE: 'Save',
+  PLOTTING_ANIMATION_BACK: 'Back',
 }
 
 //图层

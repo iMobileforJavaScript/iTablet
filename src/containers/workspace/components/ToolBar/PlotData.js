@@ -211,6 +211,15 @@ function getAnimationWayData(type, params) {
   switch (type) {
     case ConstToolType.PLOT_ANIMATION_WAY:
       data.push({
+        key: constants.CANCEL,
+        title: getLanguage(global.language).Map_Plotting
+          .PLOTTING_ANIMATION_BACK,
+        // constants.CANCEL,
+        action: () => cancelAnimationWay(),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_close_black.png'),
+      })
+      data.push({
         key: constants.UNDO,
         title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
         action: () => animationWayUndo(),
@@ -219,7 +228,8 @@ function getAnimationWayData(type, params) {
       })
       data.push({
         key: constants.SUBMIT,
-        title: getLanguage(global.language).Map_Main_Menu.COLLECTION_SUBMIT,
+        title: getLanguage(global.language).Map_Plotting
+          .PLOTTING_ANIMATION_SAVE,
         action: () => endAnimationWayPoint(),
         size: 'large',
         image: require('../../../../assets/mapTools/icon_submit_black.png'),
@@ -317,9 +327,22 @@ async function showCollection(libId, symbolCode, type) {
   })
 }
 
+function cancelAnimationWay() {
+  // GLOBAL.animationWayData && (GLOBAL.animationWayData.points = null)
+  // SMap.endAnimationWayPoint(false)
+  SMap.refreshAnimationWayPoint()
+  let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+  this.toolBox.setVisible(true, type, {
+    isFullScreen: true,
+    height: ConstToolType.TOOLBAR_HEIGHT[5],
+    containerType: 'createPlotAnimation',
+    cb: () => {},
+  })
+}
+
 async function endAnimationWayPoint() {
-  let points = await SMap.endAnimationWayPoint(true)
-  GLOBAL.animationWayData && (GLOBAL.animationWayData.points = points)
+  let wayPoints = await SMap.endAnimationWayPoint(true)
+  GLOBAL.animationWayData && (GLOBAL.animationWayData.wayPoints = wayPoints)
 
   let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
   this.toolBox.setVisible(true, type, {

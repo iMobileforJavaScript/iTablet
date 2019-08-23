@@ -92,7 +92,7 @@ export default class PlotAnimationView extends React.Component {
         startTime: GLOBAL.animationWayData.startTime,
         durationTime: GLOBAL.animationWayData.durationTime,
         startMode: GLOBAL.animationWayData.startMode,
-        wayPoints: GLOBAL.animationWayData.points,
+        wayPoints: GLOBAL.animationWayData.wayPoints,
       })
     } else {
       this.setState({
@@ -177,6 +177,17 @@ export default class PlotAnimationView extends React.Component {
         key={item.name}
         onPress={() => this.action({ item })}
       >
+        {/* <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'red',
+                  height: scaleSize(15),
+                  width: scaleSize(15),
+                  borderRadius: scaleSize(15),
+                  right: scaleSize(0),
+                  top: scaleSize(-5),
+                }}
+              /> */}
         <Image
           //   source={{ uri: 'file://' + item.image }}
           source={item.image}
