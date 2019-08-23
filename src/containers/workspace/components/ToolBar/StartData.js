@@ -469,10 +469,7 @@ function naviWorkSpace() {
     })
     _params.setToolbarVisible(true, ConstToolType.WORKSPACE_CHANGE, {
       containerType: 'list',
-      height:
-        _params.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[4]
-          : ConstToolType.HEIGHT[3],
+      height: ConstToolType.THEME_HEIGHT[4],
       data,
     })
   })()

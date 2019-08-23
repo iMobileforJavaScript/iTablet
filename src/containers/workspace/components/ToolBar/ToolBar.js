@@ -175,6 +175,9 @@ export default class ToolBar extends React.PureComponent {
     layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
     setMapIndoorNavigation: () => {},
+    setMapNavigationShow: () => {},
+    setMapNavigation: () => {},
+    setMap2Dto3D: () => {},
   }
 
   static defaultProps = {
@@ -2696,7 +2699,11 @@ export default class ToolBar extends React.PureComponent {
           // if (!showViewFirst) {
           this.height = newHeight
           this.showToolbarAndBox(isShow, type)
-          !isShow && this.props.existFullMap && this.props.existFullMap()
+          !GLOBAL.BEGINNAVI &&
+            !isShow &&
+            this.props.existFullMap &&
+            this.props.existFullMap()
+          GLOBAL.BEGINNAVI = false
           // }
           if (params.cb) {
             setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
@@ -4571,7 +4578,7 @@ export default class ToolBar extends React.PureComponent {
         data.push({
           title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_MAP,
           //'我的地图',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: maplist || [],
         })
 
@@ -4588,6 +4595,76 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading(false)
         this.setVisible(false)
       }.bind(this)())
+    } else if (this.state.type === ConstToolType.NETDATA) {
+      if (item.name === '室外数据') {
+        (async function() {
+          let data = []
+          let maplist = await SMap.getNavigationData()
+          if (maplist && maplist.length > 0) {
+            let userList = []
+            maplist.forEach(item => {
+              let name = item.dataset
+              item.title = name
+              item.name = name.split('.')[0]
+              item.image = require('../../../../assets/Navigation/network.png')
+              userList.push(item)
+            })
+          }
+          data.push({
+            title: getLanguage(global.language).Map_Main_Menu.NETWORK,
+            //'路网',
+            image: require('../../../../assets/Navigation/network_white.png'),
+            data: maplist || [],
+          })
+
+          this.setVisible(true, ConstToolType.NETWORK, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[4],
+            data,
+          })
+        }.bind(this)())
+      } else if (item.name === '室内数据') {
+        (async function() {
+          let data = [],
+            path =
+              (await FileTools.appendingHomeDirectory(
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                      this.props.user.currentUser.userName +
+                      '/'
+                  : ConstPath.CustomerPath,
+              )) + ConstPath.RelativeFilePath.NaviWorkspace
+          let userFileList
+
+          userFileList = await FileTools.getIndoorData(path)
+
+          if (userFileList && userFileList.length > 0) {
+            let userList = []
+            userFileList.forEach(item => {
+              let name = item.name
+              item.title = name
+              item.name = name.split('.')[0]
+              item.image = require('../../../../assets/Navigation/network.png')
+              userList.push(item)
+            })
+          }
+          data.push({
+            title: getLanguage(global.language).Map_Main_Menu.INDOORDATA,
+            //'室内数据源',
+            image: require('../../../../assets/Navigation/network_white.png'),
+            data: userFileList || [],
+          })
+          this.setVisible(true, ConstToolType.INDOORDATA, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[4],
+            data,
+          })
+        }.bind(this)())
+      } else if (item.name === '开始导航') {
+        this.props.setMapNavigationShow(true)
+        GLOBAL.BEGINNAVI = true
+        this.setVisible(false)
+      }
     } else if (this.state.type === ConstToolType.NETWORK) {
       (async function() {
         GLOBAL.navidataset = item.dataset
@@ -4627,8 +4704,14 @@ export default class ToolBar extends React.PureComponent {
         })
       }.bind(this)())
     } else if (this.state.type === ConstToolType.NETMODEL) {
-      // let path = GLOBAL.homePath+item.path
-      // SMap.startNavigation(GLOBAL.navidataset,path)
+      let path = GLOBAL.homePath + item.path
+      SMap.startNavigation(GLOBAL.navidataset, path)
+      this.setVisible(false)
+    } else if (this.state.type === ConstToolType.INDOORDATA) {
+      let name = item.name
+      SMap.getIndoorNavigationData(name)
+      SMap.startIndoorNavigation()
+      this.props.setMap2Dto3D(true)
       this.setVisible(false)
     }
   }

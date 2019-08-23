@@ -71,7 +71,6 @@ import NavigationPoiView from '../../components/NavigationPoiView'
 import ChangeArView from '../../components/ChangeArView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
-import Map2Dto3D from '../../components/Map2Dto3D/Map2Dto3D'
 import FloorListView from '../../components/FloorListView'
 
 const markerTag = 118081
@@ -1853,34 +1852,35 @@ export default class MapView extends React.Component {
         type: 'pointSearch',
       })
     } else {
-      (async function() {
-        this.showFullMap(true)
-        let data = []
-        let maplist = await SMap.getNavigationData()
-        if (maplist && maplist.length > 0) {
-          let userList = []
-          maplist.forEach(item => {
-            let name = item.dataset
-            item.title = name
-            item.name = name.split('.')[0]
-            item.image = require('../../../../assets/Navigation/network.png')
-            userList.push(item)
-          })
-        }
-
-        data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NETWORK,
-          //'路网',
-          image: require('../../../../assets/Navigation/network_white.png'),
-          data: maplist || [],
-        })
-
-        this.toolBox.setVisible(true, ConstToolType.NETWORK, {
-          containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[4],
-          data,
-        })
-      }.bind(this)())
+      this.showFullMap(true)
+      let data = []
+      data.push({
+        title: getLanguage(global.language).Map_Main_Menu.NETDATA,
+        //'路网',
+        image: require('../../../../assets/Navigation/network_white.png'),
+        data: [
+          {
+            title: '室外数据',
+            name: '室外数据',
+            image: require('../../../../assets/Navigation/network.png'),
+          },
+          {
+            title: '室内数据',
+            name: '室内数据',
+            image: require('../../../../assets/Navigation/network.png'),
+          },
+          {
+            title: '开始导航',
+            name: '开始导航',
+            image: require('../../../../assets/Navigation/network.png'),
+          },
+        ],
+      })
+      this.toolBox.setVisible(true, ConstToolType.NETDATA, {
+        containerType: 'list',
+        height: ConstToolType.THEME_HEIGHT[3],
+        data,
+      })
     }
   }
 
@@ -1916,7 +1916,7 @@ export default class MapView extends React.Component {
   }
 
   _renderChangeArView = () => {
-    return <ChangeArView />
+    return <ChangeArView showFullMap={this.showFullMap} />
   }
 
   renderContainer = () => {
@@ -1946,20 +1946,20 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.legend = ref)}
           />
         )}
-        {!this.props.map2Dto3D && this.state.showMap && (
+        {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
             style={styles.map}
             onGetInstance={this._onGetInstance}
           />
         )}
-        {this.props.map2Dto3D && (
-          <Map2Dto3D
-            mapIs3D={this.props.mapIs3D}
-            openMap={this.props.openMap}
-            openWorkspace={this.props.openWorkspace}
-          />
-        )}
+        {/*{this.props.map2Dto3D && (*/}
+        {/*<Map2Dto3D*/}
+        {/*mapIs3D={this.props.mapIs3D}*/}
+        {/*openMap={this.props.openMap}*/}
+        {/*openWorkspace={this.props.openWorkspace}*/}
+        {/*/>*/}
+        {/*)}*/}
         {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
         {this.state.showAIDetect && (
           <SMAIDetectView
@@ -1971,27 +1971,24 @@ export default class MapView extends React.Component {
         {!this.state.showAIDetect && this.renderMapController()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
           this.props.mapNavigation.isPointShow &&
           this._renderNavigationView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
           this.props.mapNavigation.isShow &&
           this._renderNavigationPoiView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isPointShow &&
+          this.props.mapNavigationShow &&
           this._renderChangeArView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
+          !this.props.mapNavigationShow &&
           !this.props.mapNavigation.isShow &&
           this._renderNavigationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.mapNavigation.isPointShow &&
-          this.props.mapNavigationShow &&
           this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&

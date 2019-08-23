@@ -182,7 +182,7 @@ const initialState = fromJS({
   },
   map2Dto3D: false,
   mapIs3D: false,
-  mapNavigationShow: true,
+  mapNavigationShow: false,
   mapScaleView: true,
   mapIndoorNavigation: false,
 })
