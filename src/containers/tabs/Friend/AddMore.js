@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#rgba(0,0,0,0)',
   },
   modal: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     // width: scaleSize(300),
     // height: scaleSize(170),
     position: 'absolute',

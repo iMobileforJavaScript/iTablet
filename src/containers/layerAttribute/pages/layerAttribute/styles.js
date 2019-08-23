@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     // alignItems: 'center',
     // justifyContent: 'center',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     width: '100%',
   },
   headerBtnTitle: {
@@ -27,7 +27,7 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     // backgroundColor: color.subTheme,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     width: '100%',
   },
   info: {

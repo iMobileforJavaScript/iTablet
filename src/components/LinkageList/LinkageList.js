@@ -65,24 +65,18 @@ export default class LinkageList extends React.Component {
   }
 
   renderLeftItem = ({ item, index }) => {
-    if (this.state.selected === index)
-      return (
-        <TouchableOpacity
-          style={this.styles.leftWrapSelect}
-          onPress={() => {
-            this.onLeftPress({ item, index })
-          }}
-        >
-          <Text style={this.styles.leftItem}>{item.title}</Text>
-        </TouchableOpacity>
-      )
     return (
       <TouchableOpacity
-        style={this.styles.leftWrap}
+        style={
+          this.state.selected === index
+            ? this.styles.leftWrapSelect
+            : this.styles.leftWrap
+        }
         onPress={() => {
           this.onLeftPress({ item, index })
         }}
       >
+        {this.state.selected === index && <View style={styles.leftSelectTag} />}
         <Text style={this.styles.leftItem}>{item.title}</Text>
       </TouchableOpacity>
     )
@@ -104,26 +98,29 @@ export default class LinkageList extends React.Component {
   render() {
     return (
       <View style={this.styles.container}>
-        <View style={this.styles.headContainer}>
-          <Text style={this.styles.menuTitle}>{this.props.titles[0]}</Text>
-          <Text style={this.styles.menuTitle}>{this.props.titles[1]}</Text>
-        </View>
-
         <View style={this.styles.leftFlatListContainer}>
+          <View style={this.styles.headContainer}>
+            <Text style={this.styles.menuTitle}>{this.props.titles[0]}</Text>
+          </View>
           <FlatList
+            style={{ flex: 1 }}
             renderItem={this.renderLeftItem}
             data={this.props.data}
             extraData={this.state.selected}
             keyExtractor={(item, index) => item + index}
           />
-
-          <View style={this.styles.rightFlatListContainer}>
-            <FlatList
-              renderItem={this.renderRightItem}
-              data={this.state.rightData}
-              keyExtractor={(item, index) => item + index}
-            />
+        </View>
+        <View style={this.styles.rightFlatListContainer}>
+          <View style={this.styles.headContainer}>
+            <View style={styles.shortLine1} />
+            <Text style={this.styles.menuTitle}>{this.props.titles[1]}</Text>
+            <View style={styles.shortLine2} />
           </View>
+          <FlatList
+            renderItem={this.renderRightItem}
+            data={this.state.rightData}
+            keyExtractor={(item, index) => item + index}
+          />
         </View>
       </View>
     )

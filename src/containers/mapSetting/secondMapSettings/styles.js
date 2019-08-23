@@ -81,7 +81,7 @@ export default StyleSheet.create({
   itemTitle: {
     fontSize: setSpText(22),
     color: '#777',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     padding: scaleSize(20),
     paddingLeft: scaleSize(30),
   },

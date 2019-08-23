@@ -30,7 +30,7 @@ export default StyleSheet.create({
   },
   headerText: {
     // color: color.themeText,
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     textAlign: 'center',
   },
   text: {

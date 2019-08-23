@@ -4,6 +4,8 @@ const icon_revert = require('./icon_revert_light.png')
 const list_section_packup = require('./list_section_packup.png')
 const list_section_spread = require('./list_section_spread.png')
 const icon_arrow_right = require('./icon_arrow_right_light.png')
+const icon_arrow_right_2 = require('./icon_arrow_right_2.png')
+const icon_arrow_down = require('./icon_arrow_down.png')
 
 export default {
   icon_undo,
@@ -12,4 +14,6 @@ export default {
   list_section_packup,
   list_section_spread,
   icon_arrow_right,
+  icon_arrow_right_2,
+  icon_arrow_down,
 }

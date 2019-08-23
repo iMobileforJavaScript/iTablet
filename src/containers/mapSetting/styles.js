@@ -3,7 +3,7 @@ import { scaleSize, setSpText } from '../../utils'
 // import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
   },
   section: {
     flex: 1,
@@ -17,7 +17,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: scaleSize(80),
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     paddingLeft: scaleSize(70),
     paddingRight: scaleSize(80),
     alignItems: 'center',
@@ -30,7 +30,7 @@ export default StyleSheet.create({
   },
   sectionsTitle: {
     // color: color.themeText,
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     fontSize: setSpText(26),
     marginLeft: scaleSize(25),
   },

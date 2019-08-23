@@ -21,6 +21,7 @@ export default StyleSheet.create({
   },
   rowOne: {
     // flex: 1,
+    paddingLeft: scaleSize(14),
     height: scaleSize(80),
     padding: scaleSize(6),
     flexDirection: 'row',
