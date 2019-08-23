@@ -466,7 +466,7 @@ export default class MyModule extends Component {
           }}
           style={styles.moreView}
         >
-          <Text style={{ color: '#F0F0F0' }}>
+          <Text style={{ color: '#FBFBFB' }}>
             {getLanguage(global.language).Profile.SELECT_ALL}
           </Text>
         </TouchableOpacity>

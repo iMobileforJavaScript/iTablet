@@ -3,7 +3,7 @@ import { scaleSize, setSpText } from '../../utils'
 import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
   },
   section: {
     flex: 1,
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     // marginLeft: scaleSize(10),
   },
   sectionsTitle: {
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     fontSize: setSpText(26),
     marginLeft: scaleSize(25),
   },
