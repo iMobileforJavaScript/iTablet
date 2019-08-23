@@ -121,12 +121,12 @@ export default class LayerManager_tolbar extends React.Component {
               image: require('../../../../assets/map/layers_theme_unique_style.png'),
             },
             data: [
-              {
-                title: 'BingMap',
-                name: 'BingMap',
-                type: 'AddBingmap',
-                image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
-              },
+              // {
+              //   title: 'BingMap',
+              //   name: 'BingMap',
+              //   type: 'AddBingmap',
+              //   image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
+              // },
               {
                 title: 'TianDiTu',
                 name: 'TianDiTu',
