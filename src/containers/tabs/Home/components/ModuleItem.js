@@ -22,6 +22,7 @@ export default class ModuleItem extends Component {
       progress: '',
       disabled: false,
       dialogCheck: false,
+      touch: false,
     }
   }
 
@@ -68,8 +69,8 @@ export default class ModuleItem extends Component {
         style={[
           {
             position: 'absolute',
-            width: scaleSize(260),
-            height: scaleSize(260),
+            width: scaleSize(200),
+            height: scaleSize(200),
             backgroundColor: '#rgba(112, 128, 144,0.9)',
             alignItems: 'center',
             justifyContent: 'center',
@@ -92,12 +93,25 @@ export default class ModuleItem extends Component {
 
   render() {
     let item = this.props.item
+    let image = this.state.touch ? item.moduleImageTouch : item.moduleImage
+    let textColor = this.state.touch ? { color: '#4680DF' } : {}
     return (
       <View style={styles.moduleView}>
         <TouchableOpacity
+          activeOpacity={1}
           disabled={this.state.disabled}
           onPress={() => {
             this.props.itemAction && this.props.itemAction(item)
+          }}
+          onPressIn={() => {
+            this.setState({
+              touch: true,
+            })
+          }}
+          onPressOut={() => {
+            this.setState({
+              touch: false,
+            })
           }}
           style={[styles.module]}
         >
@@ -106,10 +120,10 @@ export default class ModuleItem extends Component {
           <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}
-              source={item.moduleImage}
+              source={image}
               style={styles.moduleImage}
             />
-            <Text style={styles.title}>{item.title}</Text>
+            <Text style={[styles.title, textColor]}>{item.title}</Text>
           </View>
           {this._renderProgressView()}
         </TouchableOpacity>
@@ -120,21 +134,20 @@ export default class ModuleItem extends Component {
 
 const styles = StyleSheet.create({
   module: {
-    width: scaleSize(260),
-    height: scaleSize(260),
+    width: scaleSize(200),
+    height: scaleSize(200),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#707070',
     borderRadius: scaleSize(4),
   },
   moduleImage: {
-    width: scaleSize(100),
-    height: scaleSize(100),
+    width: scaleSize(120),
+    height: scaleSize(120),
   },
   moduleView: {
     width: scaleSize(300),
-    height: scaleSize(300),
+    height: scaleSize(220),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -148,7 +161,7 @@ const styles = StyleSheet.create({
     width: scaleSize(200),
     height: scaleSize(37),
     fontSize: setSpText(25),
-    color: '#FFFFFF',
+    color: '#5E5E5E',
     textAlign: 'center',
     marginTop: scaleSize(13),
   },

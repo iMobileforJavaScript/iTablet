@@ -105,6 +105,7 @@ import Camera from './camera'
 import MeasureView from './arMeasure'
 import ClassifyView from './aiClassifyView'
 import ModelChoseView from './arModelChoseView'
+import ClassifyResultEditView from './aiClassifyResultEdit'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
@@ -637,6 +638,13 @@ const AppNavigator = createStackNavigator(
     },
     ModelChoseView: {
       screen: ModelChoseView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ClassifyResultEditView: {
+      screen: ClassifyResultEditView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

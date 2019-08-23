@@ -4,7 +4,7 @@ import { scaleSize } from '../../../../utils/index'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
     width: '100%',
   },
   headerBtnTitle: {

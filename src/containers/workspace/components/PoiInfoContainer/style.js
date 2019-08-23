@@ -23,7 +23,7 @@ export default StyleSheet.create({
     bottom: 0,
     height: scaleSize(200),
     padding: scaleSize(20),
-    backgroundColor: '#FBFBFB',
+    backgroundColor: color.contentWhite,
   },
   closeBox: {
     position: 'absolute',

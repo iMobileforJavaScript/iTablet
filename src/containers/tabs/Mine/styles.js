@@ -147,7 +147,7 @@ export default StyleSheet.create({
 
   //datas
   datasContainer: {
-    backgroundColor: '#FBFBFB',
+    backgroundColor: color.contentWhite,
   },
   scrollContentStyle: {
     flexDirection: 'row',

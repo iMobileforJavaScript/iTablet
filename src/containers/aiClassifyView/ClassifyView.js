@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   DeviceEventEmitter,
+  Platform,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -106,7 +107,7 @@ export default class ClassifyView extends React.Component {
         },
         () => {
           if (this.FirstRB) {
-            this.checkedItem = 1
+            this.checkedItem = 0
             this.FirstRB.setChecked(true) //默认选中第一个
           }
         },
@@ -152,7 +153,7 @@ export default class ClassifyView extends React.Component {
 
   captureImage = async () => {
     await SAIClassifyView.captureImage()
-    // await SAIClassifyView.pausePreview()
+    await SAIClassifyView.stopPreview()
   }
 
   save = async () => {
@@ -176,17 +177,31 @@ export default class ClassifyView extends React.Component {
         )
         SMediaCollector.initMediaCollector(targetPath)
 
+        let mediaName = this.results[this.checkedItem].Title
+        let imagePath = targetPath + mediaName + '.jpg'
         let result = await SMediaCollector.addAIClassifyMedia({
           datasourceName: datasourceAlias,
           datasetName: datasetName,
-          mediaName: this.results[this.checkedItem].Title,
+          mediaName: mediaName,
         })
         if (result) {
-          Toast.show(
-            this.results[this.checkedItem].Title +
-              ':' +
-              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
-          )
+          // Toast.show(
+          //   madiaName +
+          //     ':' +
+          //     getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+          // )
+          if (
+            Platform.OS === 'android' &&
+            imagePath.toLowerCase().indexOf('content://') !== 0
+          ) {
+            imagePath = 'file://' + imagePath
+          }
+          NavigationService.navigate('ClassifyResultEditView', {
+            datasourceAlias,
+            datasetName,
+            imagePath,
+            mediaName,
+          })
         }
       } else {
         Toast.show(
@@ -217,18 +232,19 @@ export default class ClassifyView extends React.Component {
     this.setState({
       isClassifyInfoVisible: false,
     })
+    this.startPreview()
   }
 
   RadioButtonOnChange = index => {
-    if (index === 1) {
+    if (index === 0) {
       this.FirstRB && this.FirstRB.setChecked(true)
       this.SecondRB && this.SecondRB.setChecked(false)
       this.ThridRB && this.ThridRB.setChecked(false)
-    } else if (index === 2) {
+    } else if (index === 1) {
       this.FirstRB && this.FirstRB.setChecked(false)
       this.SecondRB && this.SecondRB.setChecked(true)
       this.ThridRB && this.ThridRB.setChecked(false)
-    } else if (index === 3) {
+    } else if (index === 2) {
       this.FirstRB && this.FirstRB.setChecked(false)
       this.SecondRB && this.SecondRB.setChecked(false)
       this.ThridRB && this.ThridRB.setChecked(true)
@@ -303,13 +319,13 @@ export default class ClassifyView extends React.Component {
         {this.renderClassifyTitle()}
         {this.state.isFirstShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(1)}
+            onPress={() => this.RadioButtonOnChange(0)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.FirstRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(1)
+                this.RadioButtonOnChange(0)
               }}
             />
             <Text style={styles.title}>{this.state.first_result}</Text>
@@ -320,13 +336,13 @@ export default class ClassifyView extends React.Component {
         )}
         {this.state.isSecondShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(2)}
+            onPress={() => this.RadioButtonOnChange(1)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.SecondRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(2)
+                this.RadioButtonOnChange(1)
               }}
             />
             <Text style={styles.title}>{this.state.second_result}</Text>
@@ -337,13 +353,13 @@ export default class ClassifyView extends React.Component {
         )}
         {this.state.isThirdShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(3)}
+            onPress={() => this.RadioButtonOnChange(2)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.ThridRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(3)
+                this.RadioButtonOnChange(2)
               }}
             />
             <Text style={styles.title}>{this.state.third_result}</Text>
