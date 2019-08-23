@@ -5,12 +5,14 @@
 */
 import React, { Component } from 'react'
 import {
+  Dimensions,
   View,
   Text,
   TouchableOpacity,
   Image,
   ScrollView,
   Platform,
+  TextInput,
 } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
@@ -23,6 +25,7 @@ import Toast from '../../../utils/Toast'
 import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
+import { getPublicAssets } from '../../../assets'
 import styles from './styles'
 const Customer = 'Customer'
 export default class Mine extends Component {
@@ -31,6 +34,7 @@ export default class Mine extends Component {
     navigation: Object,
     user: Object,
     workspace: Object,
+    device: Object,
     setUser: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
@@ -41,6 +45,7 @@ export default class Mine extends Component {
     this.state = {
       display: 'flex',
     }
+    this.searchText = ''
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
     this.goToMyLocalData = this.goToMyLocalData.bind(this)
@@ -576,7 +581,9 @@ export default class Mine extends Component {
 
   _renderProfile = () => {
     return (
-      <View style={styles.profileContainer}>
+      <View
+        style={[styles.profileContainer, { height: this.screenHeight * 0.34 }]}
+      >
         {this._renderMyProfile()}
         {this._renderSearch()}
         {this._renderSideItem()}
@@ -633,7 +640,37 @@ export default class Mine extends Component {
   }
 
   _renderSearch = () => {
-    return null
+    return (
+      <View style={styles.searchViewStyle}>
+        <Image
+          style={styles.searchImgStyle}
+          source={getPublicAssets().common.icon_search_a0}
+        />
+        <TextInput
+          ref={ref => (this.searchBar = ref)}
+          style={styles.searchInputStyle}
+          placeholder={'搜索'}
+          placeholderTextColor={'#A7A7A7'}
+          returnKeyType={'search'}
+          onSubmitEditing={this._onSerach}
+          onChangeText={value => {
+            this.searchText = value
+          }}
+        />
+      </View>
+    )
+  }
+
+  _onSerach = () => {
+    if (this.searchText === '') {
+      Toast.show('请输入搜索内容')
+      return
+    }
+    NavigationService.navigate('SearchMine', {
+      searchText: this.searchText,
+    })
+    this.searchText = ''
+    this.searchBar.clear()
   }
 
   _renderSideItem = () => {
@@ -655,7 +692,9 @@ export default class Mine extends Component {
 
   _renderDatas = () => {
     return (
-      <View style={styles.datasContainer}>
+      <View
+        style={[styles.datasContainer, { height: this.screenHeight * 0.42 }]}
+      >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.scrollContentStyle}>{this._renderItems()}</View>
         </ScrollView>
@@ -664,20 +703,27 @@ export default class Mine extends Component {
   }
 
   _renderItems = () => {
+    let colNum = this.props.device.orientation === 'LANDSCAPE' ? 5 : 4
     let items = this._getItems()
     let renderItems = []
     for (let i = 0; i < items.length; i++) {
       let show = this._itemFilter(items[i])
       if (show) {
-        renderItems.push(this.renderItem(items[i]))
+        renderItems.push(this.renderItem(items[i], colNum))
       }
     }
     return renderItems
   }
 
-  renderItem = item => {
+  renderItem = (item, colNum) => {
     return (
-      <TouchableOpacity onPress={item.onClick} style={styles.itemView}>
+      <TouchableOpacity
+        onPress={item.onClick}
+        style={[
+          styles.itemView,
+          { width: (this.screenWidth - scaleSize(40)) / colNum },
+        ]}
+      >
         <Image style={styles.itemImg} source={item.leftImagePath} />
         <Text style={styles.itemText}>{item.title}</Text>
       </TouchableOpacity>
@@ -710,6 +756,8 @@ export default class Mine extends Component {
   }
 
   render() {
+    this.screenWidth = Dimensions.get('window').width
+    this.screenHeight = Dimensions.get('window').height
     return (
       <Container
         ref={ref => (this.container = ref)}

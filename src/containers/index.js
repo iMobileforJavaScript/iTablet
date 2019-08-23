@@ -22,6 +22,7 @@ import {
   IPortalLogin,
   DatasourcePage,
   NewDataset,
+  SearchMine,
   // Chat,
   AddFriend,
   InformMessage,
@@ -486,6 +487,13 @@ const AppNavigator = createStackNavigator(
     },
     NewDataset: {
       screen: NewDataset,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SearchMine: {
+      screen: SearchMine,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
