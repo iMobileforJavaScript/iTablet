@@ -5325,6 +5325,7 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.plotAnimationView = ref)}
         data={this.state.data}
         saveAndContinue={this.saveAnimationAndContinue}
+        savePlotAnimationNode={this.savePlotAnimationNode}
         layerName={
           this.props.selection[0] && this.props.selection[0].layerInfo.name
         }
@@ -6219,6 +6220,29 @@ export default class ToolBar extends React.PureComponent {
     return <View style={styles.buttonz}>{btns}</View>
   }
 
+  //保存推演动画节点
+  savePlotAnimationNode = () => {
+    let createInfo =
+      this.plotAnimationView && this.plotAnimationView.getCreateInfo()
+    if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
+      createInfo.geoId = this.props.selection[0].ids[0]
+      createInfo.layerName = this.props.selection[0].layerInfo.name
+    }
+    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
+
+    let height = 0
+    this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_START
+    GLOBAL.currentToolbarType = type
+    this.setVisible(true, type, {
+      isFullScreen: false,
+      height,
+      cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
   overlayOnPress = () => {
     GLOBAL.TouchType = TouchType.NORMAL
     if (
@@ -6257,28 +6281,7 @@ export default class ToolBar extends React.PureComponent {
         cb: () => SMap.setAction(Action.SELECT),
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
-      let createInfo =
-        this.plotAnimationView && this.plotAnimationView.getCreateInfo()
-      if (this.props.selection.length > 0 && this.props.selection[0].ids > 0) {
-        createInfo.geoId = this.props.selection[0].ids[0]
-        createInfo.layerName = this.props.selection[0].layerInfo.name
-      }
-      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
-      GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
-      // let length=createInfo.length
-      // // this.showToolbarAndBox(false)
-      // this.isBoxShow = true
-      // GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
-
-      let height = 0
-      this.props.showFullMap && this.props.showFullMap(true)
-      let type = ConstToolType.PLOT_ANIMATION_START
-      GLOBAL.currentToolbarType = type
-      this.setVisible(true, type, {
-        isFullScreen: false,
-        height,
-        cb: () => SMap.setAction(Action.SELECT),
-      })
+      this.savePlotAnimationNode()
     } else {
       this.setVisible(false)
     }
