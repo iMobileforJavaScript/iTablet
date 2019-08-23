@@ -2064,7 +2064,10 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
-        <PoiInfoContainer ref={ref => (GLOBAL.PoiInfoContainer = ref)} />
+        <PoiInfoContainer
+          ref={ref => (GLOBAL.PoiInfoContainer = ref)}
+          device={this.props.device}
+        />
       </Container>
     )
   }
