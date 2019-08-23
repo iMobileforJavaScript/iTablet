@@ -191,7 +191,7 @@ export default class Find extends Component {
     return (
       <View
         opacity={1}
-        style={{ flex: 1, backgroundColor: color.contentColorWhite }}
+        style={{ flex: 1, backgroundColor: color.contentWhite }}
       >
         <ScrollView
           style={{ flex: 1 }}

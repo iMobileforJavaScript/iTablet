@@ -1115,6 +1115,7 @@ export default class LayerAttribute extends React.Component {
             flex: 1,
             flexDirection: 'column',
             justifyContent: 'flex-start',
+            backgroundColor: color.contentWhite,
           }}
         >
           {showContent
