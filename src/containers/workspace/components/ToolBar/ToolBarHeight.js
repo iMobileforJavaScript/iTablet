@@ -57,12 +57,12 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_TOOL:
-      height = ConstToolType.HEIGHT[2]
+      height = ConstToolType.NEWTHEME_HEIGHT[4]
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.NEWTHEME_HEIGHT[4]
+        // height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        // height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break
@@ -86,11 +86,12 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_TOOLS:
+      height = ConstToolType.NEWTHEME_HEIGHT[4]
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.NEWTHEME_HEIGHT[4]
+        // height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        height = ConstToolType.NEWTHEME_HEIGHT[3]
+        // height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break

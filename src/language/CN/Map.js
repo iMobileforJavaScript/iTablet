@@ -77,6 +77,7 @@ const Map_Main_Menu = {
   STYLE_STRIKEOUT: '删除线',
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
+  Saturation: '饱和度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
@@ -129,6 +130,8 @@ const Map_Main_Menu = {
   CAMERA: '多媒体采集',
   TOUR: '旅行轨迹',
   TOUR_NAME: '旅行轨迹名称',
+
+  SMART_CARTOGRAPHY: '智能配图',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',

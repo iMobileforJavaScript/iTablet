@@ -561,14 +561,11 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.NEWTHEME_HEIGHT[3]
-            : ConstToolType.NEWTHEME_HEIGHT[4],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        height: ConstToolType.NEWTHEME_HEIGHT[4],
         // this.props.device.orientation === 'LANDSCAPE'
-        //   ? ConstToolType.HEIGHT[2]
-        //   : ConstToolType.HEIGHT[3],
+        //   ? ConstToolType.NEWTHEME_HEIGHT[3]
+        //   : ConstToolType.NEWTHEME_HEIGHT[4],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }
   }
@@ -580,14 +577,11 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOLS, {
         isFullScreen: true,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.NEWTHEME_HEIGHT[3]
-            : ConstToolType.NEWTHEME_HEIGHT[4],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        height: ConstToolType.NEWTHEME_HEIGHT[4],
         // this.props.device.orientation === 'LANDSCAPE'
-        //   ? ConstToolType.HEIGHT[2]
-        //   : ConstToolType.HEIGHT[3],
+        //   ? ConstToolType.NEWTHEME_HEIGHT[3]
+        //   : ConstToolType.NEWTHEME_HEIGHT[4],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }
   }

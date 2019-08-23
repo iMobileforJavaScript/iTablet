@@ -36,6 +36,7 @@ import {
   heatmapMenuInfo,
   legendMenuInfo,
   legendMenuInfoNotVisible,
+  smartCartography,
 } from './FunctionToolbarModule'
 
 import {
@@ -93,4 +94,5 @@ export {
   getHeaderTitle,
   legendMenuInfo,
   legendMenuInfoNotVisible,
+  smartCartography,
 }

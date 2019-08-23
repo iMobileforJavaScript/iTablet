@@ -47,6 +47,7 @@ import {
   UserType,
   legendMenuInfo,
   legendMenuInfoNotVisible,
+  smartCartography,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -705,7 +706,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          {
+          Platform === 'android' && {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -3316,7 +3317,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
         this.state.type === ConstToolType.LEGEND ||
-        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
+        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
+        this.state.type === ConstToolType.SMART_CARTOGRAPHY
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
@@ -3347,6 +3349,13 @@ export default class ToolBar extends React.PureComponent {
               ToolbarBtnType.MENU_COMMIT,
             ]
           }
+        } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+          buttons = [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ]
         } else {
           buttons = [
             ToolbarBtnType.CANCEL,
@@ -5802,6 +5811,8 @@ export default class ToolBar extends React.PureComponent {
       } else {
         list = legendMenuInfo(this.props.language)
       }
+    } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      list = smartCartography(this.props.language)
     }
     if (!list) {
       switch (this.props.currentLayer.type) {
@@ -6199,6 +6210,11 @@ export default class ToolBar extends React.PureComponent {
           //保存推演动画节点mapTools/icon_save_black
           image = require('../../../../assets/mapTools/icon_save.png')
           action = this.animationSave
+          break
+        case ToolbarBtnType.SMART_CARTOGRAPHY:
+          // 智能配图
+          image = getPublicAssets().common.icon_album
+          action = MapToolData.matchPictureStyle
           break
       }
 

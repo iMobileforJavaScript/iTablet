@@ -125,7 +125,7 @@ export default StyleSheet.create({
   },
   sceneTitle: {
     fontSize: setSpText(28),
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     paddingLeft: scaleSize(30),
   },
   sceneItem: {
@@ -181,7 +181,7 @@ export default StyleSheet.create({
   },
   newText: {
     fontSize: setSpText(28),
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     marginRight: scaleSize(30),
   },
 })
