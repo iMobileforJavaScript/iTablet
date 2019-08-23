@@ -75,6 +75,7 @@ const Map_Main_Menu = {
   ROTATE_RIGHT: 'Rotate Right',
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
+  Saturation: 'saturation',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',
@@ -122,6 +123,8 @@ const Map_Main_Menu = {
   CAMERA: 'Camera',
   TOUR: 'Tour',
   TOUR_NAME: 'Tour Name',
+
+  SMART_CARTOGRAPHY: 'Smart Cartography',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
