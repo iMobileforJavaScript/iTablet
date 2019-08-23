@@ -232,30 +232,42 @@ export default class RNLegendView extends React.Component {
           ...this.state[this.state.currentPosition],
         }}
       >
-        <Text
-          style={{
-            left: '46%',
-            position: 'absolute',
-            top: 0,
-            fontSize: setSpText(18),
-            letterSpacing: scaleSize(2),
-            color: color.white,
-            fontWeight: '900',
-          }}
-        >
-          {this.state.title}
-        </Text>
-        <Text
+        <View
           style={{
             position: 'absolute',
+            left: 0,
             top: 0,
-            left: '46%',
-            letterSpacing: scaleSize(2),
-            fontSize: setSpText(18),
+            width: '100%',
+            height: scaleSize(30),
+            backgroundColor: 'white',
+            zIndex: 999,
           }}
         >
-          {this.state.title}
-        </Text>
+          <Text
+            style={{
+              left: '46%',
+              position: 'absolute',
+              top: 0,
+              fontSize: setSpText(18),
+              letterSpacing: scaleSize(2),
+              color: color.white,
+              fontWeight: '900',
+            }}
+          >
+            {this.state.title}
+          </Text>
+          <Text
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: '46%',
+              letterSpacing: scaleSize(2),
+              fontSize: setSpText(18),
+            }}
+          >
+            {this.state.title}
+          </Text>
+        </View>
         <FlatList
           style={{
             flex: 1,
