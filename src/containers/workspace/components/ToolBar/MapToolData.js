@@ -272,6 +272,13 @@ function getMapTool(type, params) {
           size: 'large',
           image: getPublicAssets().mapTools.tour,
         },
+        {
+          key: 'matchPictureStyle',
+          title: getLanguage(global.language).Map_Main_Menu.SMART_CARTOGRAPHY,
+          action: matchPictureStyle,
+          size: 'large',
+          image: getPublicAssets().mapTools.tour,
+        },
         // {
         //   key: 'captureVideo',
         //   title: '视频',
@@ -928,6 +935,28 @@ function tour() {
   }.bind(this)())
 }
 
+/**
+ * 智能配图
+ */
+function matchPictureStyle() {
+  ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
+  ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+
+  ImagePicker.getAlbum({
+    maxSize: 1,
+    callback: async data => {
+      if (data.length === 1) {
+        await SMap.matchPictureStyle(data[0].uri)
+        _params.showFullMap && _params.showFullMap(true)
+        GLOBAL.ToolBar.setVisible(true, ConstToolType.SMART_CARTOGRAPHY, {
+          isFullScreen: false,
+          height: 0,
+        })
+      }
+    },
+  })
+}
+
 // function captureVideo () {
 //   let options = {
 //     datasourceName: 'Hunan',
@@ -998,6 +1027,7 @@ function tour() {
 export default {
   getMapTool,
   clearMeasure,
+  matchPictureStyle,
   // addMapCutListener,
   // removeMapCutListener,
 }

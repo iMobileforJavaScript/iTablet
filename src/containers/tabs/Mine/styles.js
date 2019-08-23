@@ -127,7 +127,7 @@ export default StyleSheet.create({
 
   //datas
   datasContainer: {
-    backgroundColor: '#FBFBFB',
+    backgroundColor: color.contentWhite,
     height: scaleSize(458),
   },
   scrollContentStyle: {

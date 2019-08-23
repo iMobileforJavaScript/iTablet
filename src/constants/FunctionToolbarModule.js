@@ -1499,6 +1499,67 @@ const legendMenuInfoNotVisible = param => [
     //'高度',
   },
 ]
+
+//智能配图
+const smartCartography = param => [
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.Saturation,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: getLanguage(param).Map_Main_Menu.Saturation,
+          selectKey: getLanguage(param).Map_Main_Menu.Saturation,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
+    },
+    selectKey: getLanguage(param).Map_Main_Menu.Saturation,
+  },
+]
 export {
   layerAdd,
   // BotMap,
@@ -1521,4 +1582,5 @@ export {
   legendMenuInfo,
   legendMenuInfoNotVisible,
   heatmapMenuInfo,
+  smartCartography,
 }

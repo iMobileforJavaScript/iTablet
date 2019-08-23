@@ -55,4 +55,5 @@ export default {
   MENU_FLEX: 'menu_flex',
 
   MEASURE_CLEAR: 'measure_clear',
+  SMART_CARTOGRAPHY: 'smart_cartography',
 }
