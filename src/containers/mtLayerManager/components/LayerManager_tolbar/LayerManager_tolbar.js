@@ -44,7 +44,6 @@ import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
-import { CheckBox } from '../../../../../src/components'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -763,7 +762,8 @@ export default class LayerManager_tolbar extends React.Component {
       section.title === getLanguage(global.language).Map_Layer.LAYERS_SHARE
     ) {
       //分享图层
-      this.setVisible(true, 'Share', { layerData: this.state.layerData })
+      //this.setVisible(true, 'Share', { layerData: this.state.layerData })
+      this._onShare('friend')
     }
   }
 
@@ -950,58 +950,12 @@ export default class LayerManager_tolbar extends React.Component {
     )
   }
 
-  renderShare = () => {
-    this.shareDataset = false
-    return (
-      <View
-        style={{
-          margin: scaleSize(10),
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <CheckBox
-            style={{ height: scaleSize(30), width: scaleSize(30) }}
-            onChange={() => {
-              this.shareDataset = !this.shareDataset
-            }}
-          />
-          <Text style={{ marginLeft: scaleSize(5), fontSize: scaleSize(24) }}>
-            {getLanguage(global.language).Friends.SHARE_DATASET}
-            {/* {同时分享对应数据集}*/}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={{
-            marginTop: scaleSize(10),
-            marginLeft: scaleSize(20),
-            alignItems: 'flex-start',
-          }}
-          onPress={() => {
-            this._onShare('friend')
-          }}
-        >
-          <View style={{ alignItems: 'center' }}>
-            <Image
-              style={{ height: scaleSize(60), width: scaleSize(60) }}
-              source={require('../../../../assets/Mine/icon_mine_friend.png')}
-            />
-            <Text style={{ fontSize: scaleSize(24) }}>
-              {getLanguage(global.language).Navigator_Label.FRIENDS}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
   _onShare = async type => {
     if (!UserType.isOnlineUser(this.props.user.currentUser)) {
       Toast.show(getLanguage(global.language).Prompt.PLEASE_LOGIN_AND_SHARE)
       return
     }
-    Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
+    //Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
     let layerData = JSON.parse(JSON.stringify(this.state.layerData))
     this.setVisible(false)
     let homePath = await FileTools.appendingHomeDirectory()
@@ -1025,49 +979,57 @@ export default class LayerManager_tolbar extends React.Component {
     let layerAction = {
       name: 'onSendFile',
       type: MsgConstant.MSG_LAYER,
-      filePath: zipPath,
+      filepath: zipPath,
       fileName: layerData.caption,
     }
     let action = [layerAction]
 
-    if (this.shareDataset) {
-      let datasetPath = tempPath + layerData.datasetName + '.json'
-      let datasetZipPath = tempPath + 'MyExportDataset.zip'
-      await SMap.getDatasetToGeoJson(
-        layerData.datasourceAlias,
-        layerData.datasetName,
-        datasetPath,
-      )
-      await FileTools.zipFile(datasetPath, datasetZipPath)
-      await FileTools.deleteFile(datasetPath)
-      let datasetAction = {
-        name: 'onSendFile',
-        type: MsgConstant.MSG_DATASET,
-        filePath: datasetZipPath,
-        fileName: layerData.datasetName,
-        extraInfo: {
-          datasourceAlias: layerData.datasourceAlias,
-        },
-      }
-      action.push(datasetAction)
-    }
-
     if (type === 'friend') {
-      if (global.coworkMode) {
-        NavigationService.navigate('Chat')
-        let Chat = global.getFriend().curChat
-        Chat._handleAciton(action)
-      } else {
-        NavigationService.navigate('SelectFriend', {
-          user: this.props.user,
-          callBack: targetId => {
-            NavigationService.replace('CoworkTabs', {
-              targetId: targetId,
-              action: action,
-            })
-          },
-        })
+      let targetUser = ''
+      let Chat
+      if (GLOBAL.coworkMode) {
+        Chat = GLOBAL.getFriend().curChat
+        targetUser = Chat.targetUser
       }
+      NavigationService.navigate('SelectFriend', {
+        user: this.props.user,
+        type: 'ShareFromLayer',
+        layerData: this.state.layerData,
+        targetUser: targetUser,
+        callBack: async (targetUser, shareDataset, sendFile) => {
+          if (shareDataset) {
+            let datasetPath = tempPath + layerData.datasetName + '.json'
+            let datasetZipPath = tempPath + 'MyExportDataset.zip'
+            await SMap.getDatasetToGeoJson(
+              layerData.datasourceAlias,
+              layerData.datasetName,
+              datasetPath,
+            )
+            await FileTools.zipFile(datasetPath, datasetZipPath)
+            await FileTools.deleteFile(datasetPath)
+            let datasetAction = {
+              name: 'onSendFile',
+              type: MsgConstant.MSG_DATASET,
+              filepath: datasetZipPath,
+              fileName: layerData.datasetName,
+              extraInfo: {
+                datasourceAlias: layerData.datasourceAlias,
+              },
+            }
+            action.push(datasetAction)
+          }
+          if (GLOBAL.coworkMode) {
+            Chat = GLOBAL.getFriend().curChat
+            Chat._handleAciton(action)
+          } else {
+            action.map(item => {
+              sendFile && sendFile(item)
+            })
+          }
+          NavigationService.goBack()
+          Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
+        },
+      })
     }
   }
 
