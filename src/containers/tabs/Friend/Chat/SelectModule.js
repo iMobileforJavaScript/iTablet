@@ -29,17 +29,22 @@ export default class SelectModule extends Component {
           <FlatList
             data={ConstModule(global.language)}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableItemView
-                item={{
-                  image: item.moduleImageLight,
-                  text: item.title,
-                }}
-                onPress={() => {
-                  this.callBack && this.callBack(item)
-                }}
-              />
-            )}
+            renderItem={({ item }) => {
+              if (
+                item.title === getLanguage(global.language).Map_Module.MAP_3D
+              ) {
+                return null
+              }
+              return (
+                <TouchableItemView
+                  image={item.moduleImageLight}
+                  text={item.title}
+                  onPress={() => {
+                    this.callBack && this.callBack(item)
+                  }}
+                />
+              )
+            }}
           />
         </ScrollView>
       </Container>

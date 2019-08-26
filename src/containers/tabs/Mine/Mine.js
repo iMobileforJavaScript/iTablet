@@ -649,7 +649,7 @@ export default class Mine extends Component {
         <TextInput
           ref={ref => (this.searchBar = ref)}
           style={styles.searchInputStyle}
-          placeholder={'搜索'}
+          placeholder={getLanguage(this.props.language).Profile.SEARCH}
           placeholderTextColor={'#A7A7A7'}
           returnKeyType={'search'}
           onSubmitEditing={this._onSerach}
