@@ -213,10 +213,13 @@ export default class MapSetting extends Component {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
           containerType: 'colortable',
-          column: 8,
+          column: this.props.device.orientation === 'LANDSCAPE' ? 16 : 8,
           tableType: 'scroll',
           isFullScreen: false,
-          height: ConstToolType.THEME_HEIGHT[3],
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[2]
+              : ConstToolType.THEME_HEIGHT[3],
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
