@@ -314,7 +314,7 @@ class ModuleList extends Component {
     let height = (scaleSize(220) * data.length) / 2
     let dOffset = 20
     if (Platform.OS === 'android') {
-      dOffset = 40
+      dOffset = scaleSize(80)
     }
     let contentH =
       screen.getScreenHeight() -
