@@ -639,7 +639,9 @@ export default class Mine extends Component {
               : null,
           ]}
         >
-          <Text style={styles.userNameStyle}>{headerTitle}</Text>
+          <Text numberOfLines={1} style={styles.userNameStyle}>
+            {headerTitle}
+          </Text>
           <Text style={styles.statusTextStyle}>{statusText}</Text>
         </View>
       </View>

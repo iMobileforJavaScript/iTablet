@@ -51,7 +51,7 @@ export default StyleSheet.create({
   profileContainer: {
     backgroundColor: '#303030',
     width: '100%',
-    height: '40%',
+    height: '43%',
     alignItems: 'center',
   },
   //Myprofile
@@ -105,8 +105,10 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   profileTextLandscapeStyle: {
-    top: -scaleSize(120),
-    right: -scaleSize(160),
+    alignItems: 'flex-start',
+    width: scaleSize(300),
+    top: -scaleSize(130),
+    right: -scaleSize(250),
   },
   userNameStyle: {
     fontSize: scaleSize(40),
@@ -155,7 +157,7 @@ export default StyleSheet.create({
   //datas
   datasContainer: {
     backgroundColor: color.contentWhite,
-    height: '55%',
+    height: '53%',
   },
   scrollContentStyle: {
     flexDirection: 'row',
