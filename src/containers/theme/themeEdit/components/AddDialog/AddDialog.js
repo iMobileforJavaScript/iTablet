@@ -49,7 +49,7 @@ export default class AddDialog extends PureComponent {
       <Dialog
         ref={ref => (this.dialog = ref)}
         title={this.props.title}
-        style={{ marginVertical: 15 }}
+        // style={{ marginVertical: 15 }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'是'}

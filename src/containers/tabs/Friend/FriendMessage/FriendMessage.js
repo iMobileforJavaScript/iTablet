@@ -495,7 +495,7 @@ class FriendMessage extends Component {
           this.dialog.setDialogVisible(false)
         }}
         opacity={1}
-        opacityStyle={styles.opacityView}
+        opacityStyle={dialogStyles.dialogBackgroundX}
         style={dialogStyles.dialogBackgroundX}
       >
         {this.renderDialogChildren()}

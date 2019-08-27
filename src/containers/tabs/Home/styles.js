@@ -61,9 +61,8 @@ export default StyleSheet.create({
   },
   dialogBackground: {
     width: scaleSize(350),
-    height: scaleSize(270),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'transparent',
+    height: scaleSize(240),
+    backgroundColor: color.content_white,
   },
   dialogHeaderView: {
     flex: 1,
@@ -85,10 +84,12 @@ export default StyleSheet.create({
     // marginTop:scaleSize(21),
   },
   promptTtile: {
-    textAlign: 'center',
-    fontSize: setSpText(24),
+    fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
   },
   depict: {
     textAlign: 'center',
@@ -98,8 +99,7 @@ export default StyleSheet.create({
   },
   opacityView: {
     width: scaleSize(350),
-    height: scaleSize(270),
-    borderRadius: scaleSize(4),
+    height: scaleSize(240),
     backgroundColor: color.content_white,
   },
   btnTitle: {
