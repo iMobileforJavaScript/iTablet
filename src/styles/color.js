@@ -14,7 +14,7 @@ const darkTheme = {
   transOverlay: 'rgba(0, 0, 0, 0)',
   transView: 'rgba(48, 48, 48, 0.85)',
   blackBg: '#353537',
-  bgW: '#F0F0F0',
+  bgW: '#FBFBFB',
   bgG: '#A0A0A0',
 }
 
@@ -32,31 +32,33 @@ const lightTheme = {
   transOverlay: 'rgba(0, 0, 0, 0)',
   transView: 'rgba(240, 240, 240, 0.85)',
   blackBg: '#353537',
-  bgW: '#F0F0F0',
+  bgW: '#FBFBFB',
   bgG: '#A0A0A0',
   switch: '#4680DF',
   // selected: '#4680DF',
   selected: 'rgba(70, 128, 223, 0.5)',
 
-  fontColorWhite: '#F0F0F0',
+  fontColorWhite: '#FBFBFB',
   fontColorBlack: '#303030',
   fontColorGray: '#A0A0A0',
 
-  itemColorWhite: '#F0F0F0',
+  itemColorWhite: '#FBFBFB',
   itemColorBlack: '#303030',
   itemColorGray: '#505050',
 
-  contentColorWhite: '#F0F0F0',
+  contentColorWhite: '#FBFBFB',
+  contentWhite: '#FBFBFB',
   contentColorWhite2: 'rgba(240,240,240, 0.85)',
   contentColorBlack: '#303030',
   contentColorGray: '#505050',
 
   borderColorBlack: '#303030',
 
-  separateColorGray: '#A0A0A0',
+  // separateColorGray: '#A0A0A0',
+  separateColorGray: '#EEEEEE',
 
   imageColorBlack: '#303030',
-  imageColorWhite: '#F0F0F0',
+  imageColorWhite: '#FBFBFB',
 
   // modalBgColor: 'rgba(48, 48, 48, 0.85)',
   modalBgColor: 'rgba(0, 0, 0, 0.5)',
@@ -119,16 +121,16 @@ export default {
   content: '#555555',
   /** 浅色版*/
   item_separate_white: '#A0A0A0', //分割线
-  content_white: '#F0F0F0', //列表项目背景
+  content_white: '#FBFBFB', //列表项目背景
   font_color_white: '#303030', //列表项目文字颜色
   image_bg_white: '#727272',
   theme_white: '#303030',
   section_bg: '#505050', //列表一级标题背景
-  section_text: '#F0F0F0', //列表一级标题文字
+  section_text: '#FBFBFB', //列表一级标题文字
   bottomz: '#303030', //底部工具栏背景
   overlay_tint: 'rgba(48,48,48,0.85)', //遮罩颜色为#303030,85%不透明度
   item_selected_bg: '#4680DF', //列表选中背景
-  item_text_selected: '#F0F0F0', //列表文字选中颜色
+  item_text_selected: '#FBFBFB', //列表文字选中颜色
 
   // 提示消息颜色
   infoBg: '#EDF1FB',

@@ -5,7 +5,7 @@ import { getPublicAssets } from '../../../../assets'
 import TouchableItemView from '../../Friend/TouchableItemView'
 let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
 
-export default class MimeItem extends Component {
+export default class MineItem extends Component {
   props: {
     item: Object,
     image: Object,
@@ -74,7 +74,7 @@ export default class MimeItem extends Component {
       <TouchableOpacity
         style={styles.moreImgBtn}
         onPress={() => {
-          this.props.onPressMore(this.props.item)
+          this.props.onPressMore && this.props.onPressMore(this.props.item)
         }}
       >
         <Image source={moreImg} style={styles.moreImg} />
@@ -88,10 +88,8 @@ export default class MimeItem extends Component {
         disableTouch={this.props.showCheck}
         renderRight={this.props.showRight ? this._renderRight : null}
         param={this.props.item}
-        item={{
-          image: this.props.image,
-          text: this.props.text,
-        }}
+        image={this.props.image}
+        text={this.props.text}
         onPress={() => {
           this.props.onPress && this.props.onPress(this.props.item)
         }}

@@ -434,7 +434,7 @@ export default class LayerManager_tolbar extends React.Component {
           <Text
             style={{
               fontSize: setSpText(28),
-              color: '#F0F0F0',
+              color: '#FBFBFB',
               paddingLeft: scaleSize(30),
             }}
           >

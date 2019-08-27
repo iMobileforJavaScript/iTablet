@@ -22,6 +22,7 @@ import Mine, {
   MyModule,
   DatasourcePage,
   NewDataset,
+  SearchMine,
 } from './Mine'
 import Find from './Find'
 import SuperMapKnown from './Find/superMapKnown'
@@ -158,8 +159,8 @@ const Tabs = createBottomTabNavigator(
               <TabBarLabel
                 data={data}
                 title={'find'}
-                source_focuse={require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')}
-                source_unfocuse={require('../../assets/tabBar/Frenchgrey/tab_find.png')}
+                source_focuse={getThemeAssets().tabBar.tab_discover_selected}
+                source_unfocuse={getThemeAssets().tabBar.tab_discover}
               />
             )
           },
@@ -176,8 +177,8 @@ const Tabs = createBottomTabNavigator(
               <TabBarLabel
                 data={data}
                 title={'user'}
-                source_focuse={require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')}
-                source_unfocuse={require('../../assets/tabBar/Frenchgrey/tab_user.png')}
+                source_focuse={getThemeAssets().tabBar.tab_mine_selected}
+                source_unfocuse={getThemeAssets().tabBar.tab_mine}
               />
             )
           },
@@ -193,17 +194,17 @@ const Tabs = createBottomTabNavigator(
     backBehavior: 'initialRoute', // 按 back 键是否跳转到第一个Tab(首页)， none 为不跳转
     lazy: false,
     tabBarOptions: {
-      activeTintColor: color.blue2, // 文字和图片选中颜色
-      inactiveTintColor: '#999', // 文字和图片未选中颜色
+      activeTintColor: color.itemColorGray, // 文字和图片选中颜色
+      inactiveTintColor: color.itemColorGray, // 文字和图片未选中颜色
       showIcon: false, // android 默认不显示 icon, 需要设置为 true 才会显示
       indicatorStyle: {
         height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
       },
       style: {
-        backgroundColor: color.theme, // TabBar 背景色
+        backgroundColor: '#EEEEEE', // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
         height: scaleSize(96),
-        borderTopColor: color.border,
+        borderTopColor: '#EEEEEE',
         borderTopWidth: 1,
         // alignItems:"center",
         justifyContent: 'center',
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabText: {
-    color: color.fontColorWhite,
+    color: color.itemColorGray,
     fontSize: setSpText(20),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
@@ -268,6 +269,7 @@ export {
   ToggleAccount,
   DatasourcePage,
   NewDataset,
+  SearchMine,
   /**Home*/
   Setting,
   AboutITablet,

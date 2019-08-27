@@ -77,6 +77,7 @@ const Map_Main_Menu = {
   STYLE_STRIKEOUT: '删除线',
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
+  Saturation: '饱和度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
@@ -129,6 +130,8 @@ const Map_Main_Menu = {
   CAMERA: '多媒体采集',
   TOUR: '旅行轨迹',
   TOUR_NAME: '旅行轨迹名称',
+
+  SMART_CARTOGRAPHY: '智能配图',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',
@@ -324,6 +327,8 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_TOGETHER_LAST: '上一动作同时播放',
   PLOTTING_ANIMATION_CONTINUE: '继续创建',
   PLOTTING_ANIMATION_WAY_SET: '路径设置',
+  PLOTTING_ANIMATION_SAVE: '保存',
+  PLOTTING_ANIMATION_BACK: '返回',
 }
 
 //图层

@@ -41,6 +41,7 @@ export default class PlotAnimationView extends React.Component {
     device: Object,
     themeSymbolType: '',
     saveAndContinue: () => {},
+    savePlotAnimationNode: () => {},
     showToolbar: () => {},
   }
 
@@ -54,6 +55,8 @@ export default class PlotAnimationView extends React.Component {
       startMode: 1,
       data: [],
       wayPoints: [],
+
+      types: [],
     }
   }
 
@@ -84,6 +87,9 @@ export default class PlotAnimationView extends React.Component {
         subData.push(data[6])
         break
     }
+
+    let types = await SMap.getGeoAnimationTypes(this.props.geoId)
+
     if (GLOBAL.animationWayData) {
       this.setState({
         data: subData,
@@ -91,11 +97,15 @@ export default class PlotAnimationView extends React.Component {
         startTime: GLOBAL.animationWayData.startTime,
         durationTime: GLOBAL.animationWayData.durationTime,
         startMode: GLOBAL.animationWayData.startMode,
-        wayPoints: GLOBAL.animationWayData.points,
+        wayPoints: GLOBAL.animationWayData.wayPoints,
+
+        types: types,
       })
     } else {
       this.setState({
         data: subData,
+
+        types: types,
       })
     }
   }
@@ -176,11 +186,35 @@ export default class PlotAnimationView extends React.Component {
         key={item.name}
         onPress={() => this.action({ item })}
       >
-        <Image
-          //   source={{ uri: 'file://' + item.image }}
-          source={item.image}
-          style={styles.tableItemImg}
-        />
+        <View>
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              // height: item.animationMode == 0 ? scaleSize(15) : 0,
+              height:
+                this.state.types && this.state.types[item.animationMode] > 0
+                  ? scaleSize(15)
+                  : 0,
+              width: scaleSize(15),
+              borderRadius: scaleSize(15),
+              right: scaleSize(0),
+              top: scaleSize(2),
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'center',
+                color: color.bgW,
+                fontSize: setSpText(10),
+              }}
+            >
+              {/* {this.state.wayPoints.length + ''} */}
+              {this.state.types && this.state.types[item.animationMode] + ''}
+            </Text>
+          </View>
+          <Image source={item.image} style={styles.tableItemImg} />
+        </View>
         <View style={styles.listItemContent}>
           <Text style={styles.tableItemtext}>{item.name}</Text>
         </View>
@@ -405,11 +439,20 @@ export default class PlotAnimationView extends React.Component {
       </View>
     )
   }
-  saveAndContinue = () => {
+  saveAndContinue = async () => {
     this.props.saveAndContinue()
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     // this.scrollView.scrollTo(0,0)
     this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
+    // let types=await SMap.getGeoAnimationTypes(this.props.geoId);
+    if (this.state.animationMode != -1 && this.state.types) {
+      this.state.types[this.state.animationMode] =
+        this.state.types[this.state.animationMode] + 1
+      this.setState({
+        types: this.state.types,
+        data: this.state.data.concat(),
+      })
+    }
   }
   addDurationTime = () => {
     let time = Number(this.state.durationTime) + 1
@@ -478,6 +521,21 @@ export default class PlotAnimationView extends React.Component {
     })
   }
 
+  cancle = () => {
+    SMap.endAnimationWayPoint(false)
+    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
+    let height = 0
+    // this.props.showFullMap && this.props.showFullMap(true)
+    let type = ConstToolType.PLOT_ANIMATION_START
+    GLOBAL.currentToolbarType = type
+    this.props.showToolbar(true, type, {
+      isFullScreen: false,
+      height,
+      cb: () => SMap.setAction(Action.SELECT),
+    })
+  }
+
   createAnimationWay = () => {
     if (this.state.animationMode == 0) {
       GLOBAL.animationWayData = this.getCreateInfo()
@@ -493,9 +551,36 @@ export default class PlotAnimationView extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container} ref={ref => (this.scrollView = ref)}>
-        {this.renderView()}
-      </ScrollView>
+      <View style={styles.container}>
+        <View style={styles.headerItem}>
+          <TouchableOpacity style={styles.startTimeText} onPress={this.cancle}>
+            <Text style={styles.startTimeText}>
+              {getLanguage(global.language).Map_Settings.CANCEL}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.startTimeText}
+              onPress={this.props.savePlotAnimationNode}
+            >
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .PLOTTING_ANIMATION_SAVE
+                }
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ScrollView
+          style={styles.container}
+          ref={ref => (this.scrollView = ref)}
+        >
+          {this.renderView()}
+        </ScrollView>
+      </View>
     )
   }
 }
@@ -576,6 +661,7 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     color: color.themeText2,
     textAlign: 'center',
+    padding: scaleSize(3),
   },
   modifyTime: {
     height: scaleSize(60),
@@ -625,5 +711,12 @@ const styles = StyleSheet.create({
     fontSize: setSpText(24),
     textAlign: 'center',
     color: color.blue2,
+  },
+  headerItem: {
+    flexDirection: 'row',
+    height: scaleSize(60),
+    padding: scaleSize(30),
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 })

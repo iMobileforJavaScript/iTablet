@@ -11,6 +11,8 @@ import ar from './ar'
 import plot from './plot'
 import functionBar from './function'
 import search from './search'
+import mine from './mine'
+import nav from './nav'
 export default {
   publicAssets,
   tabBar,
@@ -25,4 +27,6 @@ export default {
   plot,
   functionBar,
   search,
+  mine,
+  nav,
 }

@@ -127,7 +127,7 @@ export default class PoiInfoContainer extends React.PureComponent {
       duration: 400,
     }).start()
     Animated.timing(this.boxHeight, {
-      toValue: scaleSize(this.props.device.height + scaleSize(200)),
+      toValue: scaleSize(this.props.device.height * 2),
       duration: 10,
     }).start()
     this.setState({

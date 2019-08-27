@@ -290,9 +290,11 @@ export default class MapSetting extends Component {
   }
 
   renderSelection = () => {
-    if (this.state.data.length === 0) return <View style={{ flex: 1 }} />
+    if (this.state.data.length === 0)
+      return <View style={{ flex: 1, backgroundColor: color.contentWhite }} />
     return (
       <FlatList
+        style={{ backgroundColor: color.contentWhite }}
         renderItem={this.renderFlatListItem}
         data={this.state.data}
         keyExtractor={(item, index) => item.title + index}

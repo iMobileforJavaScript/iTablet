@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     height: scaleSize(80),
   },
   textStyle: {
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     fontSize: scaleSize(80),
   },
 })

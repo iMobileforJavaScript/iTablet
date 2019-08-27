@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: color.subTheme,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FBFBFB',
   },
   head: {
     height: scaleSize(60),
@@ -29,7 +29,7 @@ export default StyleSheet.create({
   },
   headerText: {
     // color: color.themeText,
-    color: '#F0F0F0',
+    color: '#FBFBFB',
     textAlign: 'center',
   },
   text: {

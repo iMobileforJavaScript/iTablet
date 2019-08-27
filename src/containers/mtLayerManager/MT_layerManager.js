@@ -782,14 +782,14 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? getThemeAssets().publicAssets.list_section_packup
-      : getThemeAssets().publicAssets.list_section_spread
+      ? getThemeAssets().publicAssets.icon_arrow_down
+      : getThemeAssets().publicAssets.icon_arrow_right_2
     if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
       return (
         <TouchableOpacity
           style={{
             height: scaleSize(80),
-            backgroundColor: color.content,
+            backgroundColor: color.bgW,
             flexDirection: 'row',
             alignItems: 'center',
           }}
@@ -811,7 +811,7 @@ export default class MT_layerManager extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
               fontSize: size.fontSize.fontSizeXXl,
-              color: color.white,
+              color: color.content,
             }}
           >
             {section.title}
@@ -837,7 +837,7 @@ export default class MT_layerManager extends React.Component {
               <Image
                 resizeMode={'contain'}
                 style={{ height: scaleSize(60), width: scaleSize(60) }}
-                source={require('../../assets/function/new_tagging_white.png')}
+                source={getThemeAssets().mine.mine_my_plot_new}
               />
             </TouchableOpacity>
           </View>
@@ -848,7 +848,7 @@ export default class MT_layerManager extends React.Component {
         <TouchableOpacity
           style={{
             height: scaleSize(80),
-            backgroundColor: color.content,
+            backgroundColor: color.bgW,
             flexDirection: 'row',
             alignItems: 'center',
           }}
@@ -870,7 +870,7 @@ export default class MT_layerManager extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
               fontSize: size.fontSize.fontSizeXXl,
-              color: color.white,
+              color: color.content,
             }}
           >
             {section.title}
@@ -923,9 +923,10 @@ export default class MT_layerManager extends React.Component {
           <View
             style={{
               flexDirection: 'column',
+              marginLeft: scaleSize(84),
               width: '100%',
               height: 1,
-              backgroundColor: color.bgG,
+              backgroundColor: color.separateColorGray,
             }}
           />
         )
@@ -936,14 +937,21 @@ export default class MT_layerManager extends React.Component {
   }
 
   /**Section之间的分隔线组件 */
-  renderSectionFooter = () => {
+  renderSectionFooter = ({ section }) => {
+    if (
+      this.state.data &&
+      this.state.data.length > 0 &&
+      this.state.data[this.state.data.length - 1].title === section.title
+    ) {
+      return <View />
+    }
     return (
       <View
         style={{
           flexDirection: 'column',
           width: '100%',
-          height: 1,
-          backgroundColor: color.bgG,
+          height: scaleSize(10),
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
