@@ -131,7 +131,7 @@ export default StyleSheet.create({
   },
   searchIconWrap: {
     flex: 1,
-    height: scaleSize(100),
+    height: scaleSize(140),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,5 +142,10 @@ export default StyleSheet.create({
   },
   iconTxt: {
     fontSize: setSpText(16),
+    paddingBottom: scaleSize(20),
+  },
+  distance: {
+    fontSize: setSpText(16),
+    paddingRight: scaleSize(20),
   },
 })
