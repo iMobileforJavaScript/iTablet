@@ -418,7 +418,10 @@ export default class Map3D extends React.Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         style={{
-          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
+        opacityStyle={{
           width: scaleSize(420),
           height: scaleSize(250),
         }}

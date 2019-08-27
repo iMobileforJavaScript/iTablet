@@ -11,6 +11,7 @@ import {
 } from '../../../assets'
 import MSGConstant from './MsgConstant'
 import { stat } from 'react-native-fs'
+import color from '../../../styles/color'
 
 export default class SelectFriend extends Component {
   props: {
@@ -223,9 +224,8 @@ export default class SelectFriend extends Component {
         {this.type === 'ShareFromLayer' && (
           <Dialog
             ref={ref => (this.Dialog = ref)}
-            style={{
-              width: scaleSize(600),
-            }}
+            opacityStyle={styles.opacityView}
+            style={styles.dialogBackground}
             confirmBtnVisible={true}
             cancelBtnVisible={true}
             confirmAction={() => {
@@ -247,6 +247,16 @@ export default class SelectFriend extends Component {
 }
 
 const styles = StyleSheet.create({
+  dialogBackground: {
+    width: scaleSize(500),
+    height: scaleSize(350),
+    backgroundColor: color.content_white,
+  },
+  opacityView: {
+    width: scaleSize(500),
+    height: scaleSize(350),
+    backgroundColor: color.content_white,
+  },
   ItemViewStyle: {
     paddingLeft: scaleSize(20),
     height: scaleSize(70),

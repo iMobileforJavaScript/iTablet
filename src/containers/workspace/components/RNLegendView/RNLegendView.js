@@ -239,7 +239,7 @@ export default class RNLegendView extends React.Component {
             top: 0,
             width: '100%',
             height: scaleSize(30),
-            backgroundColor: 'white',
+            backgroundColor: this.props.legendSettings.backgroundColor,
             zIndex: 999,
           }}
         >
