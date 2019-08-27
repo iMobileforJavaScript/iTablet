@@ -12,7 +12,7 @@ import {
   Image,
   ScrollView,
   Platform,
-  TextInput,
+  // TextInput,
 } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
@@ -581,9 +581,7 @@ export default class Mine extends Component {
 
   _renderProfile = () => {
     return (
-      <View
-        style={[styles.profileContainer, { height: this.screenHeight * 0.34 }]}
-      >
+      <View style={styles.profileContainer}>
         {this._renderMyProfile()}
         {this._renderSearch()}
         {this._renderSideItem()}
@@ -633,35 +631,56 @@ export default class Mine extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.userNameStyle}>{headerTitle}</Text>
-        <Text style={styles.statusTextStyle}>{statusText}</Text>
+        <View
+          style={[
+            styles.profileTextStyle,
+            this.props.device.orientation === 'LANDSCAPE'
+              ? styles.profileTextLandscapeStyle
+              : null,
+          ]}
+        >
+          <Text style={styles.userNameStyle}>{headerTitle}</Text>
+          <Text style={styles.statusTextStyle}>{statusText}</Text>
+        </View>
       </View>
     )
   }
 
   _renderSearch = () => {
+    if (this.props.device.orientation === 'LANDSCAPE') {
+      return null
+    }
     return (
-      <View style={styles.searchViewStyle}>
+      <TouchableOpacity
+        onPress={() => {
+          NavigationService.navigate('SearchMine')
+        }}
+        activeOpacity={1}
+        style={styles.searchViewStyle}
+      >
         <Image
           style={styles.searchImgStyle}
           source={getPublicAssets().common.icon_search_a0}
         />
-        <TextInput
+        {/* <TextInput
           ref={ref => (this.searchBar = ref)}
           style={styles.searchInputStyle}
           placeholder={getLanguage(this.props.language).Profile.SEARCH}
           placeholderTextColor={'#A7A7A7'}
           returnKeyType={'search'}
-          onSubmitEditing={this._onSerach}
+          onSubmitEditing={this._onSearch}
           onChangeText={value => {
             this.searchText = value
           }}
-        />
-      </View>
+        /> */}
+        <Text style={styles.searchInputStyle}>
+          {getLanguage(this.props.language).Profile.SEARCH}
+        </Text>
+      </TouchableOpacity>
     )
   }
 
-  _onSerach = () => {
+  _onSearch = () => {
     if (this.searchText === '') {
       Toast.show('请输入搜索内容')
       return
@@ -692,9 +711,7 @@ export default class Mine extends Component {
 
   _renderDatas = () => {
     return (
-      <View
-        style={[styles.datasContainer, { height: this.screenHeight * 0.42 }]}
-      >
+      <View style={styles.datasContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.scrollContentStyle}>{this._renderItems()}</View>
         </ScrollView>
@@ -722,6 +739,9 @@ export default class Mine extends Component {
         style={[
           styles.itemView,
           { width: (this.screenWidth - scaleSize(40)) / colNum },
+          this.props.device.orientation === 'LANDSCAPE'
+            ? styles.itemLandscapeView
+            : null,
         ]}
       >
         <Image style={styles.itemImg} source={item.leftImagePath} />
@@ -755,6 +775,22 @@ export default class Mine extends Component {
     )
   }
 
+  renderHeaderRight = () => {
+    if (this.props.device.orientation !== 'LANDSCAPE') {
+      return null
+    }
+    let searchImg = getPublicAssets().common.icon_search_a0
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          NavigationService.navigate('SearchMine')
+        }}
+      >
+        <Image resizeMode={'contain'} source={searchImg} />
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     this.screenWidth = Dimensions.get('window').width
     this.screenHeight = Dimensions.get('window').height
@@ -765,6 +801,7 @@ export default class Mine extends Component {
           title: getLanguage(this.props.language).Navigator_Label.PROFILE,
           withoutBack: true,
           navigation: this.props.navigation,
+          headerRight: this.renderHeaderRight(),
         }}
       >
         {/* {this._selectionRender()} */}

@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList } from 'react-native'
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
 import { Container } from '../../../../components'
 import { SMap } from 'imobile_for_reactnative'
 import { FileTools, NativeMethod } from '../../../../native'
@@ -8,6 +16,8 @@ import UserType from '../../../../constants/UserType'
 import { ConstPath } from '../../../../constants'
 import SearchItem from './SearchItem'
 import NavigationService from '../../../NavigationService'
+import { getPublicAssets } from '../../../../assets'
+import { scaleSize, Toast } from '../../../../utils'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
@@ -24,17 +34,23 @@ class SearchMine extends Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.searchText = params.searchText
+    this.searchText = params ? params.searchText || '' : ''
     this.state = {
+      searching: false,
       resultList: [],
     }
   }
 
   componentDidMount() {
-    this._search()
+    // this._search()
   }
 
   _search = async () => {
+    if (this.searchText === '') {
+      Toast.show(getLanguage(global.language).Prompt.ENTER_KEY_WORDS)
+      return
+    }
+    this.setState({ searching: true, resultList: [] })
     this.userPath = await FileTools.appendingHomeDirectory(
       this.props.user.currentUser.userType === UserType.PROBATION_USER
         ? ConstPath.CustomerPath
@@ -47,6 +63,7 @@ class SearchMine extends Component {
     await this._searchMyData('COLOR')
     await this._searchLabel()
     await this._searchTemplate()
+    this.setState({ searching: false })
   }
 
   _searchMyData = async type => {
@@ -67,7 +84,7 @@ class SearchMine extends Component {
       if (name === labelUDBName) {
         continue
       }
-      if (name.indexOf(this.searchText) > -1) {
+      if (this.searchText !== '' && name.indexOf(this.searchText) > -1) {
         result.push({
           title: title,
           data: data[i],
@@ -87,7 +104,7 @@ class SearchMine extends Component {
     let result = []
     for (let i = 0; i < dataLength; i++) {
       let name = data[i].title
-      if (name.indexOf(this.searchText) > -1) {
+      if (this.searchText !== '' && name.indexOf(this.searchText) > -1) {
         result.push({
           title: title,
           data: data[i],
@@ -107,7 +124,7 @@ class SearchMine extends Component {
     let result = []
     for (let i = 0; i < dataLength; i++) {
       let name = data[i].name
-      if (name.indexOf(this.searchText) > -1) {
+      if (this.searchText !== '' && name.indexOf(this.searchText) > -1) {
         result.push({
           title: title,
           data: data[i],
@@ -316,9 +333,17 @@ class SearchMine extends Component {
   }
 
   renderNoData = () => {
+    let text
+    if (this.searchText === '') {
+      text = getLanguage(global.language).Prompt.ENTER_KEY_WORDS
+    } else if (this.state.searching) {
+      text = getLanguage(global.language).Prompt.SERCHING
+    } else {
+      text = getLanguage(global.language).Profile.NO_SEARCH_RESULT
+    }
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{getLanguage(global.language).Profile.NO_SEARCH_RESULT}</Text>
+        <Text style={{ fontSize: scaleSize(20) }}>{text}</Text>
       </View>
     )
   }
@@ -331,7 +356,45 @@ class SearchMine extends Component {
         data={this.state.resultList}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={this.renderNoData}
+        searching={this.state.searching}
       />
+    )
+  }
+
+  renderHeaderCenter = () => {
+    return (
+      <View style={styles.searchViewStyle}>
+        <Image
+          style={styles.searchImgStyle}
+          source={getPublicAssets().common.icon_search_a0}
+        />
+        <TextInput
+          ref={ref => (this.searchBar = ref)}
+          style={styles.searchInputStyle}
+          placeholder={getLanguage(global.language).Profile.SEARCH}
+          placeholderTextColor={'#A7A7A7'}
+          returnKeyType={'search'}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={true}
+          onSubmitEditing={this._search}
+          onChangeText={value => {
+            this.searchText = value
+          }}
+        />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            this.searchText = ''
+            this.searchBar.clear()
+          }}
+        >
+          <Image
+            style={styles.clearImg}
+            resizeMode={'contain'}
+            source={require('../../../../assets/public/icon_input_clear.png')}
+          />
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -339,9 +402,9 @@ class SearchMine extends Component {
     return (
       <Container
         headerProps={{
-          title: getLanguage(global.language).Profile.SEARCH,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerCenter: this.renderHeaderCenter(),
         }}
       >
         {this.renderResult()}
@@ -349,5 +412,31 @@ class SearchMine extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  searchViewStyle: {
+    width: scaleSize(460),
+    height: scaleSize(48),
+    backgroundColor: '#505050',
+    borderRadius: scaleSize(24),
+    paddingHorizontal: scaleSize(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchImgStyle: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  searchInputStyle: {
+    width: scaleSize(360),
+    paddingVertical: 0,
+    fontSize: scaleSize(20),
+    color: '#A7A7A7',
+  },
+  clearImg: {
+    width: scaleSize(20),
+    height: scaleSize(20),
+  },
+})
 
 export default SearchMine
