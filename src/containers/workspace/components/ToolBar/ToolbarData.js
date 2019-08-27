@@ -309,6 +309,7 @@ function getMap3DData(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.FLY_AROUND_POINT,
           //'绕点飞行',
           action: () => {
+            GLOBAL.isCircleFlying = true
             SScene.startCircleFly()
           },
           size: 'large',
