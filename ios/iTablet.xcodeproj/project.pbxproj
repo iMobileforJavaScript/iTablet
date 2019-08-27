@@ -89,6 +89,10 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		6112EB6923151588005F89FC /* PIL in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB3023151588005F89FC /* PIL */; };
 		6112EB6B23151595005F89FC /* python2.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB6A23151595005F89FC /* python2.7.zip */; };
+		6112EBE7231516F1005F89FC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBAE231516F1005F89FC /* libiconv.tbd */; };
+		6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE8231516F9005F89FC /* libsqlite3.tbd */; };
+		6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */; };
+		6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBEC23151716005F89FC /* libbz2.tbd */; };
 		77F6BE748AD84DFBAE668F38 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAAB7B312D51420CBFD827D9 /* CFNetwork.framework */; };
 		7D02BE5C1E034E4AAE286DF7 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2174BA18CE944BC3A447F8A2 /* CoreTelephony.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -659,6 +663,10 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6112EB3023151588005F89FC /* PIL */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PIL; path = "../node_modules/imobile_for_reactnative/ios/python/Pillow-master/PIL"; sourceTree = "<group>"; };
 		6112EB6A23151595005F89FC /* python2.7.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python2.7.zip; path = "../node_modules/imobile_for_reactnative/ios/python/starcore_for_ios/python-2.7/python2.7.zip"; sourceTree = "<group>"; };
+		6112EBAE231516F1005F89FC /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		6112EBE8231516F9005F89FC /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		6112EBEC23151716005F89FC /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		616F9FBF550E4BF498A86BE9 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		64EBB0CEFDCC424896C92D54 /* CoreFoundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -690,6 +698,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */,
+				6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */,
+				6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */,
+				6112EBE7231516F1005F89FC /* libiconv.tbd in Frameworks */,
 				2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */,
 				0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */,
 				0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */,
@@ -1088,6 +1100,10 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6112EBEC23151716005F89FC /* libbz2.tbd */,
+				6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */,
+				6112EBE8231516F9005F89FC /* libsqlite3.tbd */,
+				6112EBAE231516F1005F89FC /* libiconv.tbd */,
 				2AAEE197230E696800902D1D /* libxml2.tbd */,
 				0A13B46522A66D37005E4AEC /* ExternalAccessory.framework */,
 				0A61803D22A51A3500E3D69B /* RSKImageCropper.framework */,
