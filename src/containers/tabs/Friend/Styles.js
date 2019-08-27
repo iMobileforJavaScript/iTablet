@@ -121,8 +121,8 @@ const dialogStyles = StyleSheet.create({
   dialogBackgroundX: {
     width: scaleSize(350),
     height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    // borderRadius: scaleSize(4),
+    // backgroundColor: 'white',
   },
 })
 

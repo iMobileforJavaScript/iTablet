@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
   dialogBackground: {
     width: scaleSize(350),
     height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    // borderRadius: scaleSize(4),
+    // backgroundColor: 'white',
   },
   opacityView: {
     width: scaleSize(350),
     height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    // borderRadius: scaleSize(4),
+    // backgroundColor: 'white',
   },
 })

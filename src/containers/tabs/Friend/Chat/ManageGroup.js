@@ -140,11 +140,9 @@ class ManageGroup extends Component {
     return (
       <ScrollView>
         <TouchableItemView
-          item={{
-            //发消息
-            image: getThemeAssets().friend.new_chat,
-            text: getLanguage(this.language).Friends.SEND_MESSAGE,
-          }}
+          //发消息
+          image={getThemeAssets().friend.new_chat}
+          text={getLanguage(this.language).Friends.SEND_MESSAGE}
           onPress={() => {
             if (this.chat) {
               NavigationService.goBack('ManageGroup')
@@ -158,11 +156,9 @@ class ManageGroup extends Component {
           }}
         />
         <TouchableItemView
-          item={{
-            //设置备注
-            image: getThemeAssets().friend.friend_edit,
-            text: getLanguage(this.language).Friends.SET_GROUPNAME,
-          }}
+          //设置备注
+          image={getThemeAssets().friend.friend_edit}
+          text={getLanguage(this.language).Friends.SET_GROUPNAME}
           onPress={() => {
             NavigationService.navigate('InputPage', {
               placeholder: FriendListFileHandle.getGroup(this.targetUser.id)
@@ -190,11 +186,9 @@ class ManageGroup extends Component {
           }}
         />
         <TouchableItemView
-          item={{
-            //查看群员
-            image: getThemeAssets().friend.friend_group,
-            text: getLanguage(this.language).Friends.LIST_MEMBERS,
-          }}
+          //查看群员
+          image={getThemeAssets().friend.friend_group}
+          text={getLanguage(this.language).Friends.LIST_MEMBERS}
           onPress={() => {
             NavigationService.navigate('GroupMemberList', {
               user: this.user,
@@ -207,11 +201,9 @@ class ManageGroup extends Component {
           }}
         />
         <TouchableItemView
-          item={{
-            //添加群员
-            image: getThemeAssets().friend.friend_group,
-            text: getLanguage(this.language).Friends.ADD_MEMBER,
-          }}
+          //添加群员
+          image={getThemeAssets().friend.friend_group}
+          text={getLanguage(this.language).Friends.ADD_MEMBER}
           onPress={() => {
             NavigationService.navigate('CreateGroupChat', {
               user: this.user,
@@ -224,11 +216,9 @@ class ManageGroup extends Component {
         />
         {this.user.userId === this.masterID ? (
           <TouchableItemView
-            item={{
-              //移除群员
-              image: getThemeAssets().friend.friend_group,
-              text: getLanguage(this.language).Friends.DELETE_MEMBER,
-            }}
+            //移除群员
+            image={getThemeAssets().friend.friend_group}
+            text={getLanguage(this.language).Friends.DELETE_MEMBER}
             onPress={() => {
               NavigationService.navigate('GroupMemberList', {
                 user: this.user,

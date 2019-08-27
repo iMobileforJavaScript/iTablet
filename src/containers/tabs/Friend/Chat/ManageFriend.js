@@ -82,11 +82,9 @@ class ManageFriend extends Component {
       <ScrollView>
         {!this.state.coworkMode && !this.chat.action && (
           <TouchableItemView
-            item={{
-              //地图协作
-              image: getThemeAssets().friend.friend_map,
-              text: getLanguage(global.language).Friends.COWORK,
-            }}
+            //地图协作
+            image={getThemeAssets().friend.friend_map}
+            text={getLanguage(global.language).Friends.COWORK}
             onPress={() => {
               NavigationService.navigate('SelectModule', {
                 callBack: value => {
@@ -102,11 +100,9 @@ class ManageFriend extends Component {
         )}
         {this.state.coworkMode ? (
           <TouchableItemView
-            item={{
-              //退出协作
-              image: getThemeAssets().friend.friend_map,
-              text: getLanguage(global.language).Friends.EXIT_COWORK,
-            }}
+            //退出协作
+            image={getThemeAssets().friend.friend_map}
+            text={getLanguage(global.language).Friends.EXIT_COWORK}
             onPress={() => {
               this.chat.back()
               // this.friend.setCurMap(undefined)
@@ -116,11 +112,9 @@ class ManageFriend extends Component {
           />
         ) : null}
         <TouchableItemView
-          item={{
-            //发消息
-            image: getThemeAssets().friend.friend_message,
-            text: getLanguage(this.language).Friends.SEND_MESSAGE,
-          }}
+          //发消息
+          image={getThemeAssets().friend.friend_message}
+          text={getLanguage(this.language).Friends.SEND_MESSAGE}
           onPress={() => {
             if (this.chat) {
               NavigationService.goBack('ManageFriend')
@@ -134,11 +128,9 @@ class ManageFriend extends Component {
           }}
         />
         <TouchableItemView
-          item={{
-            //设置备注
-            image: getThemeAssets().friend.friend_edit,
-            text: getLanguage(this.language).Friends.SET_MARKNAME,
-          }}
+          //设置备注
+          image={getThemeAssets().friend.friend_edit}
+          text={getLanguage(this.language).Friends.SET_MARKNAME}
           onPress={() => {
             NavigationService.navigate('InputPage', {
               placeholder: FriendListFileHandle.getFriend(this.targetUser.id)

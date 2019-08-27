@@ -134,5 +134,9 @@ const Profile = {
   SET_DATASOURCE_NAME: 'Set Datasource Name',
   ENTER_DATASOURCE_NAME: 'Please enter datasource name',
   OPEN_DATASROUCE_FAILED: 'Failed to open datasource',
+
+  //搜索
+  SEARCH: 'Search',
+  NO_SEARCH_RESULT: 'No search result',
 }
 export { Profile }

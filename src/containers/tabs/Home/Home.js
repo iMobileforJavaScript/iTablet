@@ -29,6 +29,7 @@ import UserType from '../../../constants/UserType'
 import { getLanguage } from '../../../language/index'
 import { getThemeAssets } from '../../../assets'
 import color from '../../../styles/color'
+import { scaleSize } from '../../../utils'
 
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
@@ -388,8 +389,8 @@ export default class Home extends Component {
         cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         confirmAction={this.exitConfirm}
         opacity={1}
-        opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
+        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
+        style={[styles.dialogBackground, { height: scaleSize(200) }]}
       >
         {this.renderExitDialogChildren()}
       </Dialog>

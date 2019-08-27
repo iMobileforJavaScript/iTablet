@@ -136,6 +136,10 @@ const Profile = {
   SET_DATASOURCE_NAME: '设置数据源名称',
   ENTER_DATASOURCE_NAME: '请输入数据源名称',
   OPEN_DATASROUCE_FAILED: '打开数据源失败',
+
+  //搜索
+  SEARCH: '搜索',
+  NO_SEARCH_RESULT: '没有搜索到相关数据',
 }
 
 export { Profile }

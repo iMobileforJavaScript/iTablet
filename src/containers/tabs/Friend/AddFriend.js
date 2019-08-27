@@ -186,7 +186,7 @@ class AddFriend extends Component {
         cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
         confirmAction={this.addFriendRequest}
         opacity={1}
-        opacityStyle={styles.opacityView}
+        opacityStyle={dialogStyles.dialogBackgroundX}
         style={dialogStyles.dialogBackgroundX}
       >
         {this.renderDialogChildren()}

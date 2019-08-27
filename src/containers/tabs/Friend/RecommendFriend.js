@@ -279,7 +279,7 @@ class RecommendFriend extends Component {
         cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
         confirmAction={this.addFriendRequest}
         opacity={1}
-        opacityStyle={styles.opacityView}
+        opacityStyle={dialogStyles.dialogBackgroundX}
         style={dialogStyles.dialogBackgroundX}
       >
         {this.renderDialogChildren()}
@@ -312,7 +312,7 @@ class RecommendFriend extends Component {
           this.permissionDeniedDialog.setDialogVisible(false)
         }}
         opacity={1}
-        opacityStyle={styles.opacityView}
+        opacityStyle={dialogStyles.dialogBackgroundX}
         style={dialogStyles.dialogBackgroundX}
       >
         <View style={dialogStyles.dialogHeaderViewX}>

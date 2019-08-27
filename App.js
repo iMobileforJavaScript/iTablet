@@ -85,15 +85,11 @@ const styles = StyleSheet.create({
   },
   dialogBackground: {
     width: scaleSize(350),
-    height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    height: scaleSize(220),
   },
   opacityView: {
     width: scaleSize(350),
-    height: scaleSize(240),
-    borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    height: scaleSize(220),
   },
 })
 

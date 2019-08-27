@@ -311,10 +311,10 @@ class ModuleList extends Component {
 
   render() {
     let data = ConstModule(this.props.language)
-    let height = (scaleSize(300) * data.length) / 2
+    let height = (scaleSize(220) * data.length) / 2
     let dOffset = 20
     if (Platform.OS === 'android') {
-      dOffset = 40
+      dOffset = scaleSize(80)
     }
     let contentH =
       screen.getScreenHeight() -
@@ -376,6 +376,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flatListView: {
-    height: scaleSize(300),
+    height: scaleSize(220),
   },
 })

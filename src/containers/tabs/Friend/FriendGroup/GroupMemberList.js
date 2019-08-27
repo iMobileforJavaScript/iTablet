@@ -114,10 +114,7 @@ class GroupMemberList extends Component {
   _renderMemberItem = ({ item }) => {
     return (
       <TouchableItemView
-        item={{
-          // image: getThemeAssets().friend.friend_edit,
-          text: item.name,
-        }}
+        text={item.name}
         disableTouch={
           this.mode === 'select' && this.user.userId === item.id ? true : false
         }

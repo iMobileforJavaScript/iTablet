@@ -43,6 +43,8 @@ export default class PointAnalyst extends Component {
       secondPoint: null,
       showList: true,
     }
+    //默认搜索半径5km 结果不足十条范围扩大十倍
+    this.radius = 5000
   }
 
   componentDidMount() {
@@ -111,6 +113,9 @@ export default class PointAnalyst extends Component {
           />
           {item.pointName && (
             <Text style={styles.itemText}>{item.pointName}</Text>
+          )}
+          {item.distance && (
+            <Text style={styles.distance}>{item.distance}</Text>
           )}
         </TouchableOpacity>
         <View style={styles.itemSeparator} />
@@ -186,7 +191,7 @@ export default class PointAnalyst extends Component {
                 resultList: [],
               },
               () => {
-                GLOBAL.PoiInfoContainer.setVisible(true)
+                GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
               },
             )
           NavigationService.goBack()
@@ -304,6 +309,23 @@ export default class PointAnalyst extends Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
+  getDistance = (p1, p2) => {
+    //经纬度差值转距离 单位 m
+    let R = 6371393
+    return Math.abs(
+      ((p2.x - p1.x) *
+        Math.PI *
+        R *
+        Math.cos((((p2.y + p1.y) / 2) * Math.PI) / 180)) /
+        180,
+    )
+  }
+
+  //属性排序
+  compare = prop => (a, b) => {
+    return a[prop] - b[prop]
+  }
+
   getSearchResult = params => {
     let searchStr = ''
     let keys = Object.keys(params)
@@ -320,19 +342,57 @@ export default class PointAnalyst extends Component {
           Toast.show(getLanguage(global.language).Prompt.NO_SEARCH_RESULTS)
         } else {
           let poiInfos = data.poiInfos
-          let searchData = poiInfos.map(item => {
-            return {
-              pointName: item.name,
-              x: item.location.x,
-              y: item.location.y,
-              address: item.address,
-            }
-          })
-          this.setState({
-            searchData,
-            poiInfos,
-            showList: false,
-          })
+          if (poiInfos.length < 10) {
+            this.radius = 50000
+            fetch(url.replace('radius=5000', 'radius=50000'))
+              .then(response => response.json())
+              .then(data2 => {
+                poiInfos = data2.poiInfos
+                let searchData = poiInfos.map(item => {
+                  return {
+                    pointName: item.name,
+                    x: item.location.x,
+                    y: item.location.y,
+                    address: item.address,
+                    distance: this.getDistance(item.location, this.location),
+                  }
+                })
+                searchData
+                  .sort(this.compare('distance'))
+                  .forEach((item, index) => {
+                    searchData[index].distance =
+                      item.distance > 1000
+                        ? (item.distance / 1000).toFixed(2) + 'km'
+                        : ~~item.distance + 'm'
+                  })
+                this.setState({
+                  searchData,
+                  poiInfos,
+                  showList: false,
+                })
+              })
+          } else {
+            let searchData = poiInfos.map(item => {
+              return {
+                pointName: item.name,
+                x: item.location.x,
+                y: item.location.y,
+                address: item.address,
+                distance: this.getDistance(item.location, this.location),
+              }
+            })
+            searchData.sort(this.compare('distance')).forEach((item, index) => {
+              searchData[index].distance =
+                item.distance > 1000
+                  ? (item.distance / 1000).toFixed(2) + 'km'
+                  : ~~item.distance + 'm'
+            })
+            this.setState({
+              searchData,
+              poiInfos,
+              showList: false,
+            })
+          }
         }
       })
   }
@@ -381,10 +441,11 @@ export default class PointAnalyst extends Component {
       <TouchableOpacity
         onPress={async () => {
           let location = await SMap.getMapcenterPosition()
+          this.location = location
           this.getSearchResult({
             keyWords: item.title,
             location: JSON.stringify(location),
-            radius: 5000,
+            radius: this.radius,
           })
         }}
         style={styles.searchIconWrap}
