@@ -187,6 +187,12 @@ const getPOISettings = () => [
     value: false,
     iconType: 'switch',
   },
+  {
+    title: getLanguage(global.language).Map_Settings
+      .POI_SETTING_POLYMERIZE_MODE,
+    value: false,
+    iconType: 'switch',
+  },
 ]
 // 识别类型设置
 const getDetectTypesSettings = () => [

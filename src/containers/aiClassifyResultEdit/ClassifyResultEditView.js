@@ -5,7 +5,9 @@ import Orientation from 'react-native-orientation'
 import styles from './styles'
 import { Container } from '../../components'
 import Button from '../../components/Button/Button'
-// import { getLanguage } from '../../language'
+import { SAIClassifyView } from 'imobile_for_reactnative'
+import { Toast } from '../../utils'
+import { getLanguage } from '../../language'
 
 /*
  * 模型选择界面
@@ -25,6 +27,10 @@ export default class ClassifyResultEditView extends React.Component {
     this.datasetName = params.datasetName || ''
     this.imagePath = params.imagePath || ''
     this.mediaName = params.mediaName || ''
+    this.classifyTime = params.classifyTime || ''
+    this.cb = params && params.cb
+
+    this.remarks = '' //备注
 
     this.state = {}
   }
@@ -51,6 +57,19 @@ export default class ClassifyResultEditView extends React.Component {
     return true
   }
 
+  save = async () => {
+    let result = await SAIClassifyView.modifyLastItem({
+      datasourceAlias: this.datasourceAlias,
+      datasetName: this.datasetName,
+      mediaName: this.mediaName,
+      remarks: this.remarks,
+    })
+    if (result) {
+      Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      this.cb && this.cb()
+    }
+  }
+
   renderImageViewer = () => {
     return (
       <View style={styles.imageContainer}>
@@ -68,13 +87,13 @@ export default class ClassifyResultEditView extends React.Component {
             underlineColorAndroid={'transparent'}
             style={styles.edit}
             numberOfLines={2}
-            onChangeText={text => this.setState({ text })}
+            onChangeText={text => (this.mediaName = text)}
             value={this.mediaName}
           />
         </View>
         <View style={styles.classifyTitleView}>
           <Text style={styles.title}>{'识别时间:'}</Text>
-          <Text style={styles.titleConfidence}>{'2019-05-23 15:45'}</Text>
+          <Text style={styles.titleConfidence}>{this.classifyTime}</Text>
         </View>
         <View style={styles.classifyTitleView}>
           <Text style={styles.title}>{'备注:'}</Text>
@@ -82,7 +101,7 @@ export default class ClassifyResultEditView extends React.Component {
             underlineColorAndroid={'transparent'}
             style={styles.edit}
             numberOfLines={2}
-            onChangeText={text => this.setState({ text })}
+            onChangeText={text => (this.remarks = text)}
             placeholder={'请填写备注'}
             placeholderTextColor={'#A0A0A0'}
           />
@@ -93,7 +112,7 @@ export default class ClassifyResultEditView extends React.Component {
           title={'保存'}
           type={'BLUE'}
           activeOpacity={0.8}
-          onPress={() => this.choseMoreModel()}
+          onPress={() => this.save()}
         />
       </View>
     )
