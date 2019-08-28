@@ -358,7 +358,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                         }
                     }
                     String filterType = "smwu";
-                    if (!isDirectory && extension.contains(filterType)) {
+                    String filterType1 = "sxwu";
+                    if ((!isDirectory && extension.contains(filterType))||(!isDirectory && extension.contains(filterType1))) {
                         WritableMap map = Arguments.createMap();
                         map.putString("path", p);
                         map.putString("name", n);
