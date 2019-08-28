@@ -50,13 +50,13 @@ export default StyleSheet.create({
   //profile
   profileContainer: {
     backgroundColor: '#303030',
-    height: scaleSize(365),
     width: '100%',
+    height: '43%',
     alignItems: 'center',
   },
   //Myprofile
   MyProfileStyle: {
-    marginTop: scaleSize(20),
+    marginVertical: scaleSize(20),
     alignItems: 'center',
   },
   profileHeadStyle: {
@@ -101,6 +101,15 @@ export default StyleSheet.create({
     height: scaleSize(30),
     borderRadius: 1,
   },
+  profileTextStyle: {
+    alignItems: 'center',
+  },
+  profileTextLandscapeStyle: {
+    alignItems: 'flex-start',
+    width: scaleSize(300),
+    top: -scaleSize(130),
+    right: -scaleSize(250),
+  },
   userNameStyle: {
     fontSize: scaleSize(40),
     color: '#FFFFFF',
@@ -109,11 +118,31 @@ export default StyleSheet.create({
     fontSize: scaleSize(24),
     color: '#C2C2C2',
   },
+  //search
+  searchViewStyle: {
+    width: scaleSize(460),
+    height: scaleSize(48),
+    backgroundColor: '#505050',
+    borderRadius: scaleSize(24),
+    paddingHorizontal: scaleSize(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchImgStyle: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  searchInputStyle: {
+    width: scaleSize(380),
+    paddingVertical: 0,
+    fontSize: scaleSize(20),
+    color: '#A7A7A7',
+  },
   //side
   sideItemStyle: {
     position: 'absolute',
     right: 0,
-    marginTop: scaleSize(20),
+    top: scaleSize(20),
     backgroundColor: '#ED372E',
     paddingVertical: scaleSize(10),
     paddingHorizontal: scaleSize(20),
@@ -128,23 +157,28 @@ export default StyleSheet.create({
   //datas
   datasContainer: {
     backgroundColor: color.contentWhite,
-    height: scaleSize(458),
+    height: '53%',
   },
   scrollContentStyle: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    paddingHorizontal: scaleSize(20),
   },
   itemView: {
-    height: scaleSize(100),
-    width: scaleSize(160),
-    marginTop: scaleSize(30),
+    height: scaleSize(120),
+    marginVertical: scaleSize(15),
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'nowrap',
   },
+  itemLandscapeView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: scaleSize(80),
+  },
   itemImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
   },
   itemText: {
     fontSize: scaleSize(24),

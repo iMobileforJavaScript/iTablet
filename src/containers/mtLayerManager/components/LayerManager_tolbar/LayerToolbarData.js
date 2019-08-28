@@ -102,14 +102,14 @@ const base3DListData = [
     index: 0,
     show: true,
     data: [
-      {
-        title: 'bingmap',
-        index: 0,
-        show: true,
-        type: 'l3dBingMaps',
-        name: 'bingmap',
-        url: 'http://t0.tianditu.com/img_c/wmts',
-      },
+      // {
+      //   title: 'bingmap',
+      //   index: 0,
+      //   show: true,
+      //   type: 'l3dBingMaps',
+      //   name: 'bingmap',
+      //   url: 'http://t0.tianditu.com/img_c/wmts',
+      // },
       {
         title: 'tianditu',
         index: 0,

@@ -59,6 +59,8 @@ export default class Dialog extends PureComponent {
     super(props)
     this.state = {
       visible: false,
+      confirmPress: false,
+      cancelPress: false,
     }
   }
 
@@ -82,6 +84,8 @@ export default class Dialog extends PureComponent {
   }
 
   renderBtns = () => {
+    let confirmPressColor = this.state.confirmPress ? { color: '#4680DF' } : {}
+    let cancelPressColor = this.state.cancelPress ? { color: '#4680DF' } : {}
     if (!this.props.showBtns) return null
     return (
       <View style={this.props.onlyOneBtn ? styles.oneBtn : styles.btns}>
@@ -90,19 +94,54 @@ export default class Dialog extends PureComponent {
             activeOpacity={this.props.activeOpacity}
             style={[styles.btnStyle, this.props.cancelBtnStyle]}
             onPress={this.cancel}
+            onPressIn={() => {
+              this.setState({
+                cancelPress: true,
+              })
+            }}
+            onPressOut={() => {
+              this.setState({
+                cancelPress: false,
+              })
+            }}
           >
-            <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
+            <Text
+              style={[
+                styles.btnTitle,
+                cancelPressColor,
+                this.props.cancelTitleStyle,
+              ]}
+            >
               {this.props.cancelBtnTitle}
             </Text>
           </TouchableOpacity>
+        )}
+        {this.props.cancelBtnVisible && this.props.confirmBtnVisible && (
+          <View style={styles.separateLine} />
         )}
         {this.props.confirmBtnVisible && (
           <TouchableOpacity
             activeOpacity={this.props.activeOpacity}
             style={[styles.btnStyle, this.props.confirmBtnStyle]}
             onPress={this.confirm}
+            onPressIn={() => {
+              this.setState({
+                confirmPress: true,
+              })
+            }}
+            onPressOut={() => {
+              this.setState({
+                confirmPress: false,
+              })
+            }}
           >
-            <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
+            <Text
+              style={[
+                styles.btnTitle,
+                confirmPressColor,
+                this.props.confirmTitleStyle,
+              ]}
+            >
               {this.props.confirmBtnTitle}
             </Text>
           </TouchableOpacity>

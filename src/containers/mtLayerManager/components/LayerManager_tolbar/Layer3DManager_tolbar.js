@@ -121,12 +121,12 @@ export default class LayerManager_tolbar extends React.Component {
               image: require('../../../../assets/map/layers_theme_unique_style.png'),
             },
             data: [
-              {
-                title: 'BingMap',
-                name: 'BingMap',
-                type: 'AddBingmap',
-                image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
-              },
+              // {
+              //   title: 'BingMap',
+              //   name: 'BingMap',
+              //   type: 'AddBingmap',
+              //   image: require('../../../../assets/map/layers_theme_unique_style_black.png'),
+              // },
               {
                 title: 'TianDiTu',
                 name: 'TianDiTu',
@@ -434,7 +434,7 @@ export default class LayerManager_tolbar extends React.Component {
           <Text
             style={{
               fontSize: setSpText(28),
-              color: '#F0F0F0',
+              color: '#FBFBFB',
               paddingLeft: scaleSize(30),
             }}
           >

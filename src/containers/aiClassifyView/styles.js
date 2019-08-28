@@ -9,6 +9,23 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'transparent',
   },
+  newcontainer: {
+    position: 'absolute',
+    flexDirection: 'column',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: '#rgba(45, 45, 47, 0.7)',
+  },
+  backImg: {
+    position: 'absolute',
+    // marginTop: scaleSize(120),
+    width: '100%',
+    height: '60%',
+  },
   preview: {
     flex: 1,
     justifyContent: 'flex-end',

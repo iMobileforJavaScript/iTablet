@@ -313,6 +313,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CONTINUE: 'Continue Create',
   PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
   PLOTTING_ANIMATION_SAVE: 'Save',
+  PLOTTING_ANIMATION_BACK: 'Back',
 }
 
 //图层
@@ -435,6 +436,7 @@ const Map_Settings = {
 
   POI_SETTING_PROJECTION_MODE: 'Projection Mode',
   POI_SETTING_OVERLAP_MODE: 'Overlap Mode',
+  POI_SETTING_POLYMERIZE_MODE: 'Polymerize Mode',
 
   DETECT_TYPE_PERSON: 'Person',
   DETECT_TYPE_BICYCLE: 'Bycycle',

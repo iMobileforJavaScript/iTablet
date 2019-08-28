@@ -249,11 +249,6 @@ class Login extends React.Component {
           NavigationService.popToTop('Tabs')
         }
       } else {
-        this.props.setUser({
-          userName: '',
-          password: '',
-          // userType:UserType.COMMON_USER,
-        })
         if (
           result === '用户名或用户密码错误' ||
           result === 'account not exist or password error'
@@ -275,11 +270,6 @@ class Login extends React.Component {
       this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
       //'登录异常')
-      this.props.setUser({
-        userName: '',
-        password: '',
-        // userType:UserType.COMMON_USER,
-      })
     }
   }
   _renderEmail = () => {

@@ -5,8 +5,14 @@ import { scaleSize } from '../../../utils/screen'
 export default class TouchableItemView extends Component {
   props: {
     item: Object,
+    text: String,
+    image: Object,
     disableTouch: Boolean,
     onPress: () => {},
+    renderImage: () => {},
+    renderText: () => {},
+    renderUpperText: () => {},
+    renderBottomText: () => {},
     renderRight: () => {},
     contentStyle: {},
     imageStyle: {},
@@ -18,31 +24,91 @@ export default class TouchableItemView extends Component {
     super(props)
   }
 
+  renderImage = () => {
+    if (this.props.renderImage) {
+      return this.props.renderImage(this.props)
+    }
+    return (
+      <Image
+        resizeMode={'contain'}
+        source={this.props.image}
+        style={[styles.image, this.props.imageStyle]}
+      />
+    )
+  }
+
+  renderText = () => {
+    if (this.props.renderText) {
+      return this.props.renderText(this.props)
+    }
+    return (
+      <View>
+        {this.renderUpperText()}
+        {this.renderBottomText()}
+      </View>
+    )
+  }
+
+  renderUpperText = () => {
+    if (this.props.renderUpperText) {
+      return this.props.renderUpperText(this.props)
+    }
+    return (
+      <Text style={[styles.upperText, this.props.textStyle]}>
+        {this.props.text}
+      </Text>
+    )
+  }
+
+  renderBottomText = () => {
+    if (this.props.renderBottomText) {
+      return this.props.renderBottomText(this.props)
+    }
+    return null
+  }
+
+  renderItem = () => {
+    return (
+      <TouchableOpacity
+        disabled={
+          this.props.disableTouch === undefined
+            ? false
+            : this.props.disableTouch
+        }
+        style={styles.touchView}
+        onPress={this.props.onPress}
+      >
+        {this.renderImage()}
+        {this.renderText()}
+      </TouchableOpacity>
+    )
+  }
+
+  renderRight = () => {
+    if (this.props.renderRight) {
+      return this.props.renderRight(this.props)
+    }
+    return null
+  }
+
+  renderContent = () => {
+    return (
+      <View style={[styles.contentView, this.props.contentStyle]}>
+        {this.renderItem()}
+        {this.renderRight()}
+      </View>
+    )
+  }
+
+  renderSeperator = () => {
+    return <View style={[styles.seperator, this.props.seperatorStyle]} />
+  }
+
   render() {
     return (
       <View style={styles.itemView}>
-        <View style={[styles.contentView, this.props.contentStyle]}>
-          <TouchableOpacity
-            disabled={
-              this.props.disableTouch === undefined
-                ? false
-                : this.props.disableTouch
-            }
-            style={styles.touchView}
-            onPress={this.props.onPress}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={this.props.item.image}
-              style={[styles.image, this.props.imageStyle]}
-            />
-            <Text style={[styles.textView, this.props.textStyle]}>
-              {this.props.item.text}
-            </Text>
-          </TouchableOpacity>
-          {this.props.renderRight ? this.props.renderRight(this.props) : null}
-        </View>
-        <View style={[styles.seperator, this.props.seperatorStyle]} />
+        {this.renderContent()}
+        {this.renderSeperator()}
       </View>
     )
   }
@@ -68,7 +134,7 @@ const styles = StyleSheet.create({
     height: scaleSize(48),
     marginRight: scaleSize(30),
   },
-  textView: {
+  upperText: {
     fontSize: scaleSize(26),
     color: '#505050',
   },

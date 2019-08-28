@@ -180,6 +180,7 @@ export default class ToolBar extends React.PureComponent {
     setMapNavigation: () => {},
     setMap2Dto3D: () => {},
     cancelincrement: () => {},
+    switchAr: () => {},
   }
 
   static defaultProps = {
@@ -301,6 +302,10 @@ export default class ToolBar extends React.PureComponent {
 
   showFullMap = () => {
     this.props.showFullMap && this.props.showFullMap(true)
+  }
+
+  switchAr = () => {
+    this.props.switchAr && this.props.switchAr()
   }
 
   existFullMap = () => {

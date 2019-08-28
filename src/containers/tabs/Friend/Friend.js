@@ -857,7 +857,7 @@ export default class Friend extends Component {
         if (isFriend === undefined) {
           bSysStore = true
           messageObj.consumed = false
-        } else if (isFriend === 0) {
+        } else if (isFriend === 0 || isFriend === 2) {
           FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
           let message = {
             message: '',

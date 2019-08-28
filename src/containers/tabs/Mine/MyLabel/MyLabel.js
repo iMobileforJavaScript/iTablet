@@ -140,7 +140,7 @@ export default class MyLabel extends Component {
     this.setState({ datasets })
   }
 
-  _deseleteAll = () => {
+  _deselectAll = () => {
     let datasets = Object.assign([], this.state.data)
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
@@ -264,9 +264,9 @@ export default class MyLabel extends Component {
           }
         }
       }
-      this._deseleteAll()
+      this._deselectAll()
     } catch (error) {
-      this._deseleteAll()
+      this._deselectAll()
       Toast.show('分享失败')
       this.container.setLoading(false)
     }
@@ -363,7 +363,7 @@ export default class MyLabel extends Component {
         }}
         cancelAction={() => {
           this.dialog.setDialogVisible(false)
-          this._deseleteAll()
+          this._deselectAll()
           this.setState({ showselect: false })
         }}
         confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
@@ -377,16 +377,28 @@ export default class MyLabel extends Component {
   _renderHeaderRight = () => {
     if (this.state.batchDelete || this.state.showselect) {
       return (
-        <TouchableOpacity
-          onPress={() => {
-            this._selectAll()
-          }}
-          style={styles.moreView}
-        >
-          <Text style={{ color: '#F0F0F0' }}>
-            {getLanguage(global.language).Profile.SELECT_ALL}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.headerRightTextView}>
+          <TouchableOpacity
+            onPress={() => {
+              this._deselectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.DESELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this._selectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.SELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -407,7 +419,7 @@ export default class MyLabel extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
-            this._deseleteAll()
+            this._deselectAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })
@@ -533,7 +545,7 @@ export default class MyLabel extends Component {
           }}
           cancel={() => {
             this.uploadList = []
-            this._deseleteAll()
+            this._deselectAll()
             this.setState({ showselect: false })
           }}
         />
@@ -564,5 +576,9 @@ const styles = StyleSheet.create({
     borderTopColor: '#A0A0A0',
     borderTopWidth: 1,
     backgroundColor: '#FFFFFF',
+  },
+  headerRightTextView: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

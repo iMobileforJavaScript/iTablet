@@ -80,7 +80,16 @@ export default class Map3D extends React.Component {
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       if (Platform.OS === 'android') {
-        this.props.setBackAction({ action: () => this.back() })
+        this.props.setBackAction({
+          action: async () => {
+            if (GLOBAL.isCircleFlying) {
+              await SScene.stopCircleFly()
+              await SScene.clearCirclePoint()
+            }
+            //GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
+            this.back()
+          },
+        })
       }
       GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
 
@@ -418,7 +427,10 @@ export default class Map3D extends React.Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         style={{
-          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
+        opacityStyle={{
           width: scaleSize(420),
           height: scaleSize(250),
         }}

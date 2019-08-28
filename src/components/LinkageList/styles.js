@@ -4,33 +4,38 @@
  * https://github.com/AsortKeven
  */
 import { StyleSheet } from 'react-native'
-import { scaleSize, setSpText } from '../../utils'
-import color from '../../styles/color'
+import { scaleSize } from '../../utils'
+import { color, size } from '../../styles'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
   },
   headContainer: {
     width: '100%',
-    height: scaleSize(60),
+    height: scaleSize(90),
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: color.background,
+    justifyContent: 'center',
+    backgroundColor: color.bgW,
   },
   menuTitle: {
-    flex: 1,
     textAlign: 'center',
-    fontSize: setSpText(22),
+    fontSize: size.fontSize.fontSizeLg,
   },
   leftFlatListContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   rightFlatListContainer: {
-    flex: 1,
-    backgroundColor: color.background,
+    flex: 2,
+    flexDirection: 'column',
+    backgroundColor: color.bgW,
+    borderLeftWidth: 1,
+    borderLeftColor: color.separateColorGray,
+    justifyContent: 'flex-start',
   },
   leftWrap: {
     flex: 1,
@@ -44,12 +49,12 @@ export default StyleSheet.create({
     height: scaleSize(60),
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: color.background,
+    backgroundColor: color.separateColorGray,
   },
   leftItem: {
     flex: 1,
     marginLeft: scaleSize(40),
-    fontSize: setSpText(20),
+    fontSize: size.fontSize.fontSizeSm,
   },
   rightWrap: {
     flex: 1,
@@ -60,6 +65,28 @@ export default StyleSheet.create({
   rightItem: {
     flex: 1,
     marginLeft: scaleSize(40),
-    fontSize: setSpText(20),
+    fontSize: size.fontSize.fontSizeSm,
+  },
+  leftSelectTag: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: scaleSize(20),
+    backgroundColor: color.switch,
+  },
+  shortLine1: {
+    flex: 1,
+    height: 1,
+    backgroundColor: color.separateColorGray,
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(28),
+  },
+  shortLine2: {
+    flex: 1,
+    height: 1,
+    backgroundColor: color.separateColorGray,
+    marginLeft: scaleSize(28),
+    marginRight: scaleSize(40),
   },
 })

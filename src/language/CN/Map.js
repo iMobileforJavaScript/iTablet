@@ -331,6 +331,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_CONTINUE: '继续创建',
   PLOTTING_ANIMATION_WAY_SET: '路径设置',
   PLOTTING_ANIMATION_SAVE: '保存',
+  PLOTTING_ANIMATION_BACK: '返回',
 }
 
 //图层
@@ -455,6 +456,7 @@ const Map_Settings = {
 
   POI_SETTING_PROJECTION_MODE: '投射模式',
   POI_SETTING_OVERLAP_MODE: '避让模式',
+  POI_SETTING_POLYMERIZE_MODE: '聚合模式',
 
   DETECT_TYPE_PERSON: '人员',
   DETECT_TYPE_BICYCLE: '自行车',

@@ -6,9 +6,10 @@ import {
   Image,
   Text,
   DeviceEventEmitter,
+  Platform,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
-import { getThemeAssets } from '../../assets'
+import { getPublicAssets, getThemeAssets } from '../../assets'
 import {
   SMAIClassifyView,
   SAIClassifyView,
@@ -17,14 +18,14 @@ import {
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 // import { getLanguage } from '../../language'
-import { Container } from '../../components'
+import { Container, ImagePicker, Loading } from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
-import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 import RadioButton from './RadioButton'
+import { Toast } from '../../utils'
 
 /*
  * AI分类
@@ -56,6 +57,7 @@ export default class ClassifyView extends React.Component {
       third_result: '',
       third_result_confidence: '',
       isThirdShow: false,
+      bgImageSource: '',
     }
   }
 
@@ -68,10 +70,11 @@ export default class ClassifyView extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       // 初始化数据
       (async function() {
-        // SMeasureView.initMeasureCollector(
-        //   this.datasourceAlias,
-        //   this.datasetName,
-        // )
+        SAIClassifyView.initAIClassify(
+          this.datasourceAlias,
+          this.datasetName,
+          this.props.language,
+        )
         this.setState({
           isCameraVisible: true,
         })
@@ -88,12 +91,15 @@ export default class ClassifyView extends React.Component {
   }
 
   recognizeImage = params => {
+    this.Loading.setLoading(false)
     this.results = params.results
     if (this.results.length > 0) {
       this.setState({
         isClassifyInfoVisible: true,
       })
     } else {
+      Toast.show('分类失败,请重试.')
+      this.clear()
       return
     }
     if (this.results[0]) {
@@ -106,7 +112,7 @@ export default class ClassifyView extends React.Component {
         },
         () => {
           if (this.FirstRB) {
-            this.checkedItem = 1
+            this.checkedItem = 0
             this.FirstRB.setChecked(true) //默认选中第一个
           }
         },
@@ -146,13 +152,18 @@ export default class ClassifyView extends React.Component {
     await SAIClassifyView.startPreview()
   }
 
+  stopPreview = async () => {
+    await SAIClassifyView.stopPreview()
+  }
+
   dispose = async () => {
     await SAIClassifyView.dispose()
   }
 
   captureImage = async () => {
+    this.Loading.setLoading(true, '正在分类中...')
     await SAIClassifyView.captureImage()
-    // await SAIClassifyView.pausePreview()
+    await SAIClassifyView.stopPreview()
   }
 
   save = async () => {
@@ -176,17 +187,38 @@ export default class ClassifyView extends React.Component {
         )
         SMediaCollector.initMediaCollector(targetPath)
 
+        let mediaName = this.results[this.checkedItem].Title
+        let classifyTime = this.results[this.checkedItem].Time
+        let imagePath = targetPath + mediaName + '.jpg'
         let result = await SMediaCollector.addAIClassifyMedia({
           datasourceName: datasourceAlias,
           datasetName: datasetName,
-          mediaName: this.results[this.checkedItem].Title,
+          mediaName: mediaName,
         })
         if (result) {
-          Toast.show(
-            this.results[this.checkedItem].Title +
-              ':' +
-              getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
-          )
+          // Toast.show(
+          //   madiaName +
+          //     ':' +
+          //     getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY,
+          // )
+          if (
+            Platform.OS === 'android' &&
+            imagePath.toLowerCase().indexOf('content://') !== 0
+          ) {
+            imagePath = 'file://' + imagePath
+          }
+          NavigationService.navigate('ClassifyResultEditView', {
+            datasourceAlias,
+            datasetName,
+            imagePath,
+            mediaName,
+            classifyTime,
+            cb: async () => {
+              NavigationService.goBack()
+              await this.clear()
+              await this.startPreview()
+            },
+          })
         }
       } else {
         Toast.show(
@@ -213,22 +245,56 @@ export default class ClassifyView extends React.Component {
     return true
   }
 
-  clear = () => {
+  clear = async () => {
     this.setState({
       isClassifyInfoVisible: false,
+      isCameraVisible: true,
+    })
+    this.startPreview()
+    await SAIClassifyView.clearBitmap()
+  }
+
+  openAlbum = () => {
+    ImagePicker.AlbumListView.defaultProps.showDialog = false
+    ImagePicker.AlbumListView.defaultProps.dialogConfirm = null
+    ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
+    ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+    ImagePicker.getAlbum({
+      maxSize: 1,
+      callback: async data => {
+        let mediaPaths = []
+        if (data.length > 0) {
+          data.forEach(item => {
+            mediaPaths.push(item.uri)
+          })
+          let path =
+            'file://' + (await SAIClassifyView.getImagePath(mediaPaths[0]))
+          this.setState(
+            {
+              isCameraVisible: false,
+              bgImageSource: path,
+            },
+            () => {
+              this.stopPreview()
+            },
+          )
+        } else {
+          Toast.show('未选择任何图片')
+        }
+      },
     })
   }
 
   RadioButtonOnChange = index => {
-    if (index === 1) {
+    if (index === 0) {
       this.FirstRB && this.FirstRB.setChecked(true)
       this.SecondRB && this.SecondRB.setChecked(false)
       this.ThridRB && this.ThridRB.setChecked(false)
-    } else if (index === 2) {
+    } else if (index === 1) {
       this.FirstRB && this.FirstRB.setChecked(false)
       this.SecondRB && this.SecondRB.setChecked(true)
       this.ThridRB && this.ThridRB.setChecked(false)
-    } else if (index === 3) {
+    } else if (index === 2) {
       this.FirstRB && this.FirstRB.setChecked(false)
       this.SecondRB && this.SecondRB.setChecked(false)
       this.ThridRB && this.ThridRB.setChecked(true)
@@ -240,23 +306,45 @@ export default class ClassifyView extends React.Component {
     return (
       <View style={styles.toolbar}>
         <View style={styles.buttonView}>
-          <TouchableOpacity
-            onPress={() => this.clear()}
-            style={styles.iconView}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={getThemeAssets().ar.toolbar.icon_delete}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.save()} style={styles.iconView}>
-            <Image
-              resizeMode={'contain'}
-              source={getThemeAssets().ar.toolbar.icon_save}
-              style={styles.smallIcon}
-            />
-          </TouchableOpacity>
+          {this.state.isClassifyInfoVisible && (
+            <TouchableOpacity
+              onPress={() => this.clear()}
+              style={styles.iconView}
+            >
+              <Image
+                resizeMode={'contain'}
+                source={getThemeAssets().ar.toolbar.icon_delete}
+                style={styles.smallIcon}
+              />
+            </TouchableOpacity>
+          )}
+          {this.state.isClassifyInfoVisible && (
+            <TouchableOpacity
+              onPress={() => this.save()}
+              style={styles.iconView}
+            >
+              <Image
+                resizeMode={'contain'}
+                source={getThemeAssets().ar.toolbar.icon_save}
+                style={styles.smallIcon}
+              />
+            </TouchableOpacity>
+          )}
+          {!this.state.isClassifyInfoVisible && (
+            <TouchableOpacity style={styles.iconView} />
+          )}
+          {!this.state.isClassifyInfoVisible && (
+            <TouchableOpacity
+              onPress={() => this.openAlbum()}
+              style={styles.iconView}
+            >
+              <Image
+                resizeMode={'contain'}
+                source={getPublicAssets().common.icon_album}
+                style={styles.smallIcon}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     )
@@ -297,19 +385,34 @@ export default class ClassifyView extends React.Component {
     )
   }
 
+  renderImgPickerView = () => {
+    let show = this.state.bgImageSource && this.state.bgImageSource !== ''
+    if (!show) return
+    return (
+      <View style={styles.newcontainer}>
+        <Image
+          style={styles.backImg}
+          // resizeMode={'contain'}
+          resizeMode={'cover'}
+          source={{ uri: this.state.bgImageSource }}
+        />
+      </View>
+    )
+  }
+
   renderClassifyInfoView() {
     return (
       <View style={styles.InfoChangeView}>
         {this.renderClassifyTitle()}
         {this.state.isFirstShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(1)}
+            onPress={() => this.RadioButtonOnChange(0)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.FirstRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(1)
+                this.RadioButtonOnChange(0)
               }}
             />
             <Text style={styles.title}>{this.state.first_result}</Text>
@@ -320,13 +423,13 @@ export default class ClassifyView extends React.Component {
         )}
         {this.state.isSecondShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(2)}
+            onPress={() => this.RadioButtonOnChange(1)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.SecondRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(2)
+                this.RadioButtonOnChange(1)
               }}
             />
             <Text style={styles.title}>{this.state.second_result}</Text>
@@ -337,13 +440,13 @@ export default class ClassifyView extends React.Component {
         )}
         {this.state.isThirdShow && (
           <TouchableOpacity
-            onPress={() => this.RadioButtonOnChange(3)}
+            onPress={() => this.RadioButtonOnChange(2)}
             style={styles.classifyTitleView}
           >
             <RadioButton
               ref={ref => (this.ThridRB = ref)}
               onChange={() => {
-                this.RadioButtonOnChange(3)
+                this.RadioButtonOnChange(2)
               }}
             />
             <Text style={styles.title}>{this.state.third_result}</Text>
@@ -379,13 +482,13 @@ export default class ClassifyView extends React.Component {
         }}
         bottomProps={{ type: 'fix' }}
       >
-        {this.state.isCameraVisible && (
-          <SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />
-        )}
-        {this.renderOverlayPreview()}
+        {<SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />}
+        {!this.state.isCameraVisible && this.renderImgPickerView()}
+        {this.state.isCameraVisible && this.renderOverlayPreview()}
         {this.renderBottomBtns()}
-        {this.renderCenterBtn()}
+        {!this.state.isClassifyInfoVisible && this.renderCenterBtn()}
         {this.state.isClassifyInfoVisible && this.renderClassifyInfoView()}
+        <Loading ref={ref => (this.Loading = ref)} initLoading={false} />
       </Container>
     )
   }

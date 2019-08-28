@@ -55,6 +55,8 @@ export default class PlotAnimationView extends React.Component {
       startMode: 1,
       data: [],
       wayPoints: [],
+
+      types: [],
     }
   }
 
@@ -85,6 +87,9 @@ export default class PlotAnimationView extends React.Component {
         subData.push(data[6])
         break
     }
+
+    let types = await SMap.getGeoAnimationTypes(this.props.geoId)
+
     if (GLOBAL.animationWayData) {
       this.setState({
         data: subData,
@@ -92,11 +97,15 @@ export default class PlotAnimationView extends React.Component {
         startTime: GLOBAL.animationWayData.startTime,
         durationTime: GLOBAL.animationWayData.durationTime,
         startMode: GLOBAL.animationWayData.startMode,
-        wayPoints: GLOBAL.animationWayData.points,
+        wayPoints: GLOBAL.animationWayData.wayPoints,
+
+        types: types,
       })
     } else {
       this.setState({
         data: subData,
+
+        types: types,
       })
     }
   }
@@ -177,11 +186,35 @@ export default class PlotAnimationView extends React.Component {
         key={item.name}
         onPress={() => this.action({ item })}
       >
-        <Image
-          //   source={{ uri: 'file://' + item.image }}
-          source={item.image}
-          style={styles.tableItemImg}
-        />
+        <View>
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              // height: item.animationMode == 0 ? scaleSize(15) : 0,
+              height:
+                this.state.types && this.state.types[item.animationMode] > 0
+                  ? scaleSize(15)
+                  : 0,
+              width: scaleSize(15),
+              borderRadius: scaleSize(15),
+              right: scaleSize(0),
+              top: scaleSize(2),
+            }}
+          >
+            <Text
+              style={{
+                textAlign: 'center',
+                color: color.bgW,
+                fontSize: setSpText(10),
+              }}
+            >
+              {/* {this.state.wayPoints.length + ''} */}
+              {this.state.types && this.state.types[item.animationMode] + ''}
+            </Text>
+          </View>
+          <Image source={item.image} style={styles.tableItemImg} />
+        </View>
         <View style={styles.listItemContent}>
           <Text style={styles.tableItemtext}>{item.name}</Text>
         </View>
@@ -406,11 +439,20 @@ export default class PlotAnimationView extends React.Component {
       </View>
     )
   }
-  saveAndContinue = () => {
+  saveAndContinue = async () => {
     this.props.saveAndContinue()
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     // this.scrollView.scrollTo(0,0)
     this.scrollView.scrollTo({ x: 0, y: 0, animated: true })
+    // let types=await SMap.getGeoAnimationTypes(this.props.geoId);
+    if (this.state.animationMode != -1 && this.state.types) {
+      this.state.types[this.state.animationMode] =
+        this.state.types[this.state.animationMode] + 1
+      this.setState({
+        types: this.state.types,
+        data: this.state.data.concat(),
+      })
+    }
   }
   addDurationTime = () => {
     let time = Number(this.state.durationTime) + 1
@@ -480,7 +522,8 @@ export default class PlotAnimationView extends React.Component {
   }
 
   cancle = () => {
-    SMap.endAnimationWayPoint(false)
+    // SMap.endAnimationWayPoint(false)
+    SMap.cancelAnimationWayPoint()
     GLOBAL.TouchType = TouchType.NULL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     let height = 0

@@ -1628,6 +1628,7 @@ export default class MapView extends React.Component {
           SMap.setAction(Action.PAN)
           this.setState({ incrementShow: true, showIncrement: false })
         }}
+        switchAr={this.switchAr}
         {...this.props}
       />
     )

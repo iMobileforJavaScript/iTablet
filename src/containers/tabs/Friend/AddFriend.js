@@ -136,7 +136,7 @@ class AddFriend extends Component {
       return
     }
     this.friend._sendMessage(messageStr, item[0], true)
-    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], 0)
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], 2)
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()
@@ -186,7 +186,7 @@ class AddFriend extends Component {
         cancelBtnTitle={getLanguage(this.language).Friends.CANCEL}
         confirmAction={this.addFriendRequest}
         opacity={1}
-        opacityStyle={styles.opacityView}
+        opacityStyle={dialogStyles.dialogBackgroundX}
         style={dialogStyles.dialogBackgroundX}
       >
         {this.renderDialogChildren()}

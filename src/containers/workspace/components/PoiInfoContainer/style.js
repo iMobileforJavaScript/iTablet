@@ -27,15 +27,15 @@ export default StyleSheet.create({
   },
   closeBox: {
     position: 'absolute',
-    right: scaleSize(-20),
+    right: 0,
     top: 0,
     width: scaleSize(40),
     height: scaleSize(40),
-    borderRadius: scaleSize(20),
+    zIndex: 100,
   },
   closeBtn: {
-    width: scaleSize(30),
-    height: scaleSize(30),
+    width: scaleSize(40),
+    height: scaleSize(40),
   },
   title: {
     fontSize: setSpText(24),
@@ -92,5 +92,9 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: scaleSize(24),
     marginLeft: scaleSize(15),
+  },
+  distance: {
+    fontSize: setSpText(16),
+    paddingRight: scaleSize(20),
   },
 })
