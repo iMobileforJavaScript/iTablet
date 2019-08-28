@@ -98,6 +98,8 @@ export default class ClassifyView extends React.Component {
         isClassifyInfoVisible: true,
       })
     } else {
+      Toast.show('分类失败,请重试.')
+      this.clear()
       return
     }
     if (this.results[0]) {
