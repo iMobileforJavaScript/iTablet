@@ -9,6 +9,8 @@ import { MTBtn } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 import styles from './styles'
 import PropTypes from 'prop-types'
+import { TouchType } from '../../../../constants'
+import { SMap } from 'imobile_for_reactnative'
 
 export default class ChangeArView extends React.Component {
   static propTypes = {
@@ -20,6 +22,10 @@ export default class ChangeArView extends React.Component {
     setMapNavigationShow: PropTypes.func,
   }
 
+  props: {
+    showFullMap: () => {},
+  }
+
   constructor(props) {
     super(props)
   }
@@ -29,8 +35,8 @@ export default class ChangeArView extends React.Component {
       <View
         style={{
           position: 'absolute',
-          right: scaleSize(20),
-          bottom: scaleSize(600),
+          right: scaleSize(31),
+          bottom: scaleSize(500),
           flexDirection: 'column',
           elevation: 20,
           shadowOffset: { width: 0, height: 0 },
@@ -44,30 +50,73 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
+          image={require('../../../../assets/Navigation/2d.png')}
+          onPress={async () => {}}
+        />
+        <MTBtn
+          style={styles.btn}
+          size={MTBtn.Size.NORMAL}
+          image={require('../../../../assets/Navigation/3d.png')}
+          onPress={async () => {}}
+        />
+        <MTBtn
+          style={styles.btn}
+          size={MTBtn.Size.NORMAL}
+          image={require('../../../../assets/mapToolbar/icon_scene_tool_start.png')}
           onPress={async () => {
-            this.props.setMap2Dto3D(true)
-            this.props.setMapIs3D(false)
-            this.props.setMapNavigationShow(false)
+            GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
           }}
         />
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
+          image={require('../../../../assets/mapToolbar/icon_scene_tool_end.png')}
           onPress={async () => {
-            this.props.setMap2Dto3D(true)
-            this.props.setMapIs3D(true)
-            this.props.setMapNavigationShow(false)
+            GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
           }}
         />
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
+          image={require('../../../../assets/Navigation/btn_navi.png')}
+          onPress={() => {
+            GLOBAL.TouchType = TouchType.NORMAL
+            if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+              SMap.beginNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            }
+            if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+              SMap.beginIndoorNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            }
+          }}
+        />
+        <MTBtn
+          style={styles.btn}
+          size={MTBtn.Size.NORMAL}
+          image={require('../../../../assets/Navigation/btn_clear.png')}
           onPress={async () => {
-            this.props.setMap2Dto3D(false)
-            this.props.setMapNavigationShow(true)
+            GLOBAL.TouchType = TouchType.NORMAL
+            SMap.clearPoint()
+          }}
+        />
+        <MTBtn
+          style={styles.btn}
+          size={MTBtn.Size.NORMAL}
+          image={require('../../../../assets/mapEdit/cancel_black.png')}
+          onPress={async () => {
+            GLOBAL.TouchType = TouchType.NORMAL
+            SMap.clearPoint()
+            this.props.setMapNavigationShow(false)
+            this.props.showFullMap(false)
           }}
         />
       </View>

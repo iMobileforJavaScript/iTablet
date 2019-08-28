@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
   },
 })
 export default class BottomDialog extends PureComponent {
-
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
@@ -60,9 +59,10 @@ export default class BottomDialog extends PureComponent {
   render() {
     return (
       <Dialog
-        ref={ref => this.dialog = ref}
+        ref={ref => (this.dialog = ref)}
         title={this.props.title}
-        style={{marginVertical: 15}}
+        style={{ height: scaleSize(240) }}
+        opacityStyle={{ height: scaleSize(240) }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'保存'}
@@ -70,10 +70,11 @@ export default class BottomDialog extends PureComponent {
         type={Dialog.Type.MODAL}
       >
         <ScrollView style={styles.content}>
-          <Text style={[styles.title, this.props.textStyle]}>{this.state.autioText}</Text>
+          <Text style={[styles.title, this.props.textStyle]}>
+            {this.state.autioText}
+          </Text>
         </ScrollView>
       </Dialog>
     )
   }
-
 }

@@ -21,14 +21,14 @@ export default StyleSheet.create({
   dialogStyle: {
     width: scaleSize(350),
     backgroundColor: color.content_white,
-    borderRadius: 26,
+    borderRadius: 12,
     // backgroundColor: 'transparent',
     paddingVertical: scaleSize(10),
   },
   opacityView: {
     position: 'absolute',
     width: scaleSize(350),
-    borderRadius: 26,
+    borderRadius: 12,
   },
   title: {
     fontSize: size.fontSize.fontSizeLg,
