@@ -19,6 +19,7 @@ import NavigationView from './NavigationView'
 import NavigationPoiView from './NavigationPoiView'
 import Map2Dto3D from './Map2Dto3D'
 import FloorListView from './FloorListView'
+import IncrementRoadView from './IncrementRoadView'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -53,4 +54,5 @@ export {
   Map2Dto3D,
   FloorListView,
   PoiInfoContainer,
+  IncrementRoadView,
 }

@@ -1,10 +1,13 @@
 export default {
   SUBMIT: '执行',
   UNDO: '撤销',
+  BEGIN: '开始',
+  STOP: '停止',
   ADD_NODE: '添加节点',
   EDIT_NODE: '编辑节点',
   DELETE_NODE: '删除节点',
   REDO: '重做',
+  COMMIT: '提交',
   CANCEL: '取消',
   CANCEL_SELECT: '取消选中',
   CREATE_POLYLINE: '绘制直线',

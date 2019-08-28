@@ -169,7 +169,8 @@ export default class PointAnalyst extends Component {
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          await SMap.routeAnalyst(index)
+          await SMap.openTrafficMap()
+          await SMap.routeAnalyst(x, y)
           this.props.setMapNavigation({
             isShow: true,
             name: pointName,
@@ -408,13 +409,15 @@ export default class PointAnalyst extends Component {
             })
           }
         }}
-        onSubmitEditing={searchKey => {
+        onSubmitEditing={async searchKey => {
           // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
           if (this.is3D) {
             SScene.pointSearch(searchKey).then(() => {
               // this.setLoading(false)
             })
           } else {
+            let location = await SMap.getMapcenterPosition()
+            this.location = location
             this.getSearchResult({ keyWords: searchKey })
           }
         }}

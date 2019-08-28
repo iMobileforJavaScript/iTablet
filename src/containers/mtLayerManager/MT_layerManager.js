@@ -397,7 +397,7 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  onPressRow = async ({ data }) => {
+  onPressRow = async ({ data, parentData, section }) => {
     // this.props.setMapLegend(false)
 
     this.props.setCurrentLayer &&
@@ -433,9 +433,43 @@ export default class MT_layerManager extends React.Component {
           }
         }
       })
-    this.setState({
-      selectLayer: data.name,
-    })
+    this.prevItemRef = this.currentItemRef
+    let prevParentData =
+      this.prevItemRef &&
+      this.prevItemRef.props &&
+      this.prevItemRef.props.parentData
+    this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
+    if (parentData || prevParentData) {
+      this.setState(
+        {
+          selectLayer: data.name,
+        },
+        () => {
+          if (parentData) {
+            this.getChildList({ data: parentData, section }).then(children => {
+              this.itemRefs[parentData.name] &&
+                this.itemRefs[parentData.name].setChildrenList(children)
+            })
+          }
+          // 若两次选中的item不再同一个图层组中
+          if (
+            prevParentData &&
+            (!parentData || parentData.name !== prevParentData.name)
+          ) {
+            this.getChildList({ data: prevParentData, section }).then(
+              children => {
+                this.itemRefs[prevParentData.name] &&
+                  this.itemRefs[prevParentData.name].setChildrenList(children)
+              },
+            )
+          }
+        },
+      )
+    } else {
+      this.setState({
+        selectLayer: data.name,
+      })
+    }
   }
 
   onToolBasePress = async ({ data }) => {
@@ -750,7 +784,7 @@ export default class MT_layerManager extends React.Component {
             }}
             getLayers={this.props.getLayers}
             selectLayer={this.state.selectLayer}
-            onPress={this.onPressRow}
+            onPress={data => this.onPressRow({ ...data, section })}
             onAllPress={data => this.onAllPressRow({ ...data, section })}
             onArrowPress={({ data }) => this.getChildList({ data, section })}
             onToolPress={data => action({ ...data, section })}

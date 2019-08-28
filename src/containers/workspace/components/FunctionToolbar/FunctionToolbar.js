@@ -66,6 +66,8 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     user: Object,
     map: Object,
+
+    incrementRoad: () => {},
   }
 
   static defaultProps = {
@@ -583,6 +585,12 @@ export default class FunctionToolbar extends React.Component {
         //   : ConstToolType.NEWTHEME_HEIGHT[4],
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
+    }
+  }
+
+  incrementRoad = () => {
+    if (GLOBAL.NAVIGATIONMAPOPEN) {
+      this.props.incrementRoad()
     }
   }
 
@@ -1279,7 +1287,7 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu
               .MAO_ROAD_DISTRIBUTION,
             //'风格',
-            action: () => this.aiAssistant(ConstToolType.MAP_AR_AIASSISTANT),
+            action: this.incrementRoad,
             size: 'large',
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',

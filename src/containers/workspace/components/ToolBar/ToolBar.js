@@ -176,6 +176,10 @@ export default class ToolBar extends React.PureComponent {
     layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
     setMapIndoorNavigation: () => {},
+    setMapNavigationShow: () => {},
+    setMapNavigation: () => {},
+    setMap2Dto3D: () => {},
+    cancelincrement: () => {},
     switchAr: () => {},
   }
 
@@ -2702,7 +2706,11 @@ export default class ToolBar extends React.PureComponent {
           // if (!showViewFirst) {
           this.height = newHeight
           this.showToolbarAndBox(isShow, type)
-          !isShow && this.props.existFullMap && this.props.existFullMap()
+          !GLOBAL.BEGINNAVI &&
+            !isShow &&
+            this.props.existFullMap &&
+            this.props.existFullMap()
+          GLOBAL.BEGINNAVI = false
           // }
           if (params.cb) {
             setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
@@ -3621,7 +3629,7 @@ export default class ToolBar extends React.PureComponent {
           isLineLayer = false,
           isRegionLayer = false,
           isTextLayer = false
-        if (currentLayer) {
+        if (currentLayer && !currentLayer.themeType) {
           isTaggingLayer = currentLayer.type === DatasetType.CAD
           // && currentLayer.datasourceAlias.match(reg)
           isPointLayer = currentLayer.type === DatasetType.POINT
@@ -4585,7 +4593,7 @@ export default class ToolBar extends React.PureComponent {
         data.push({
           title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_MAP,
           //'我的地图',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
           data: maplist || [],
         })
 
@@ -4600,8 +4608,79 @@ export default class ToolBar extends React.PureComponent {
         this.props.setMapIndoorNavigation(true)
         await SMap.openMap(item.name)
         this.props.setContainerLoading(false)
+        this.props.getLayers()
         this.setVisible(false)
       }.bind(this)())
+    } else if (this.state.type === ConstToolType.NETDATA) {
+      if (item.name === '室外数据') {
+        (async function() {
+          let data = []
+          let maplist = await SMap.getNavigationData()
+          if (maplist && maplist.length > 0) {
+            let userList = []
+            maplist.forEach(item => {
+              let name = item.dataset
+              item.title = name
+              item.name = name.split('.')[0]
+              item.image = require('../../../../assets/Navigation/network.png')
+              userList.push(item)
+            })
+          }
+          data.push({
+            title: getLanguage(global.language).Map_Main_Menu.NETWORK,
+            //'路网',
+            image: require('../../../../assets/Navigation/network_white.png'),
+            data: maplist || [],
+          })
+
+          this.setVisible(true, ConstToolType.NETWORK, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[4],
+            data,
+          })
+        }.bind(this)())
+      } else if (item.name === '室内数据') {
+        (async function() {
+          let data = [],
+            path =
+              (await FileTools.appendingHomeDirectory(
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                      this.props.user.currentUser.userName +
+                      '/'
+                  : ConstPath.CustomerPath,
+              )) + ConstPath.RelativeFilePath.NaviWorkspace
+          let userFileList
+
+          userFileList = await FileTools.getIndoorData(path)
+
+          if (userFileList && userFileList.length > 0) {
+            let userList = []
+            userFileList.forEach(item => {
+              let name = item.name
+              item.title = name
+              item.name = name.split('.')[0]
+              item.image = require('../../../../assets/Navigation/network.png')
+              userList.push(item)
+            })
+          }
+          data.push({
+            title: getLanguage(global.language).Map_Main_Menu.INDOORDATA,
+            //'室内数据源',
+            image: require('../../../../assets/Navigation/network_white.png'),
+            data: userFileList || [],
+          })
+          this.setVisible(true, ConstToolType.INDOORDATA, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[4],
+            data,
+          })
+        }.bind(this)())
+      } else if (item.name === '开始导航') {
+        this.props.setMapNavigationShow(true)
+        GLOBAL.BEGINNAVI = true
+        this.setVisible(false)
+      }
     } else if (this.state.type === ConstToolType.NETWORK) {
       (async function() {
         GLOBAL.navidataset = item.dataset
@@ -4641,9 +4720,22 @@ export default class ToolBar extends React.PureComponent {
         })
       }.bind(this)())
     } else if (this.state.type === ConstToolType.NETMODEL) {
-      // let path = GLOBAL.homePath+item.path
-      // SMap.startNavigation(GLOBAL.navidataset,path)
+      let path = GLOBAL.homePath + item.path
+      SMap.startNavigation(GLOBAL.navidataset, path)
       this.setVisible(false)
+    } else if (this.state.type === ConstToolType.INDOORDATA) {
+      GLOBAL.NAVIGATIONMAPOPEN = true
+      let name = item.name
+      SMap.getIndoorNavigationData(name)
+      SMap.startIndoorNavigation()
+      this.props.setMap2Dto3D(true)
+      this.setVisible(false)
+      this.props.existFullMap()
+    } else if (this.state.type === ConstToolType.NETWORKDATASET) {
+      (async function() {
+        await SMap.buildNetwork(item.name)
+        this.closeincrement()
+      }.bind(this)())
     }
   }
 
@@ -5661,13 +5753,13 @@ export default class ToolBar extends React.PureComponent {
         style={[styles.cell, { width: this.props.device.width / column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
-        textColor={color.font_color_white}
+        textColor={item.disable ? '#A0A0A0' : color.font_color_white}
         textStyle={{ fontSize: setSpText(20) }}
         // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {
-          this.itemaction(item)
+          !item.disable && this.itemaction(item)
         }}
       />
     )
@@ -5930,6 +6022,11 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  closeincrement = () => {
+    this.props.cancelincrement()
+    this.close()
+  }
+
   renderBottomBtns = () => {
     let btns = []
     if (this.state.buttons.length === 0) return null
@@ -5945,6 +6042,10 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.CANCEL:
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
+          break
+        case ToolbarBtnType.CANCEL_INCREMENT:
+          image = require('../../../../assets/mapEdit/icon_function_cancel.png')
+          action = this.closeincrement
           break
         case ToolbarBtnType.CANCEL_2:
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
