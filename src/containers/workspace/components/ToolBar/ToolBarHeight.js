@@ -374,6 +374,9 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.TOOLBAR_HEIGHT[5]
       }
       break
+    case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+      height = ConstToolType.HEIGHT[0]
+      break
     default:
       height = 0
   }

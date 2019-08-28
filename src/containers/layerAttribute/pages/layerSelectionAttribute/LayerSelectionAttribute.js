@@ -139,13 +139,19 @@ export default class LayerSelectionAttribute extends React.Component {
 
         // || attributes.data.length < PAGE_SIZE
 
-        if (attributes.data.length === 1) {
+        if (!attributes.data || attributes.data.length === 1) {
+          if (!attributes.data) {
+            attributes = {
+              head: [],
+              data: [],
+            }
+          }
           this.setState({
             showTable: true,
             attributes,
             currentIndex: 0,
             relativeIndex: 0,
-            currentFieldInfo: attributes.data[0],
+            currentFieldInfo: !attributes.data ? [] : attributes.data[0],
             startIndex: 0,
             ...others,
           })
