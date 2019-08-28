@@ -42,8 +42,9 @@ const Map_Main_Menu = {
   NAVIGATION_MAP: '导航地图',
   NETWORK: '路网',
   NETMODEL: '网络模型',
-  NETDATA: '选择数据',
+  NETDATA: '选择路网数据',
   INDOORDATA: '室内数据源',
+  DATASET: '选择数据集',
 
   ANALYSIS: '分析',
 

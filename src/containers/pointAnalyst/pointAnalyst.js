@@ -164,6 +164,7 @@ export default class PointAnalyst extends Component {
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          await SMap.openTrafficMap()
           await SMap.routeAnalyst(x, y)
           this.props.setMapNavigation({
             isShow: true,

@@ -39,6 +39,7 @@ const Map_Main_Menu = {
   NETMODEL: 'NETMODEL',
   NETDATA: 'NETDATA',
   INDOORDATA: 'INDOORDATA',
+  DATASET: 'DATASET',
 
   ANALYSIS: 'Analysis',
 

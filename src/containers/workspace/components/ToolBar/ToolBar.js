@@ -179,6 +179,7 @@ export default class ToolBar extends React.PureComponent {
     setMapNavigationShow: () => {},
     setMapNavigation: () => {},
     setMap2Dto3D: () => {},
+    cancelincrement: () => {},
   }
 
   static defaultProps = {
@@ -4602,6 +4603,7 @@ export default class ToolBar extends React.PureComponent {
         this.props.setMapIndoorNavigation(true)
         await SMap.openMap(item.name)
         this.props.setContainerLoading(false)
+        this.props.getLayers()
         this.setVisible(false)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.NETDATA) {
@@ -4717,11 +4719,18 @@ export default class ToolBar extends React.PureComponent {
       SMap.startNavigation(GLOBAL.navidataset, path)
       this.setVisible(false)
     } else if (this.state.type === ConstToolType.INDOORDATA) {
+      GLOBAL.NAVIGATIONMAPOPEN = true
       let name = item.name
       SMap.getIndoorNavigationData(name)
       SMap.startIndoorNavigation()
       this.props.setMap2Dto3D(true)
       this.setVisible(false)
+      this.props.existFullMap()
+    } else if (this.state.type === ConstToolType.NETWORKDATASET) {
+      (async function() {
+        await SMap.buildNetwork(item.name)
+        this.closeincrement()
+      }.bind(this)())
     }
   }
 
@@ -6008,6 +6017,11 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  closeincrement = () => {
+    this.props.cancelincrement()
+    this.close()
+  }
+
   renderBottomBtns = () => {
     let btns = []
     if (this.state.buttons.length === 0) return null
@@ -6023,6 +6037,10 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.CANCEL:
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
+          break
+        case ToolbarBtnType.CANCEL_INCREMENT:
+          image = require('../../../../assets/mapEdit/icon_function_cancel.png')
+          action = this.closeincrement
           break
         case ToolbarBtnType.CANCEL_2:
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')

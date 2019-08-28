@@ -484,8 +484,124 @@ function getMapTool(type, params) {
     case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT_CUT]
       break
+    case ConstToolType.MAP_TOOL_INCREMENT:
+      data = [
+        {
+          key: constants.UNDO,
+          title: getLanguage(global.language).Prompt.UNDO,
+          // action: this.showBox,
+          size: 'large',
+          image: require('../../../../assets/lightTheme/public/icon_undo_light.png'),
+        },
+        {
+          key: constants.REDO,
+          title: getLanguage(global.language).Prompt.REDO,
+          // action: this.showBox,
+          size: 'large',
+          image: require('../../../../assets/lightTheme/public/icon_redo_light.png'),
+        },
+        {
+          key: constants.CANCEL,
+          title: getLanguage(global.language).Prompt.CANCEL,
+          //constants.CANCEL_SELECT,
+          // action: cancelSelect,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_cancel_1.png'),
+        },
+        {
+          key: constants.COMMIT,
+          title: getLanguage(global.language).Prompt.COMMIT,
+          //constants.CANCEL_SELECT,
+          action: submit,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_submit_black.png'),
+        },
+      ]
+      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      break
+    case ConstToolType.MAP_TOOL_GPSINCREMENT:
+      data = [
+        {
+          key: constants.BEGIN,
+          title: getLanguage(global.language).Prompt.BEGIN,
+          action: begin,
+          size: 'large',
+          image: require('../../../../assets/Navigation/begin.png'),
+        },
+        {
+          key: constants.STOP,
+          title: getLanguage(global.language).Prompt.STOP,
+          action: stop,
+          size: 'large',
+          image: require('../../../../assets/Navigation/stop.png'),
+        },
+        {
+          key: constants.CANCEL,
+          title: getLanguage(global.language).Prompt.CANCEL,
+          //constants.CANCEL_SELECT,
+          // action: cancelSelect,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_cancel_1.png'),
+        },
+        {
+          key: constants.COMMIT,
+          title: getLanguage(global.language).Prompt.COMMIT,
+          //constants.CANCEL_SELECT,
+          action: submit,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_submit_black.png'),
+        },
+      ]
+      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      break
   }
   return { data, buttons }
+}
+
+function begin() {
+  SMap.gpsBegin()
+}
+
+function stop() {
+  SMap.gpsStop()
+}
+
+function submit() {
+  if (GLOBAL.INCREMENTDATASETNAME === '') {
+    Toast.show('请先创建路网数据集')
+    return
+  }
+  (async function() {
+    if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
+      await SMap.addGPSRecordset()
+    }
+    await SMap.submit()
+    let data = []
+    let maplist = await SMap.getNetWorkDataset()
+    if (maplist && maplist.length > 0) {
+      let userList = []
+      maplist.forEach(item => {
+        let name = item.dataset
+        item.title = name
+        item.name = name.split('.')[0]
+        item.image = require('../../../../assets/Navigation/network.png')
+        userList.push(item)
+      })
+    }
+    data.push({
+      title: getLanguage(global.language).Map_Main_Menu.NETDATA,
+      //'选择数据集',
+      image: require('../../../../assets/Navigation/network_white.png'),
+      data: maplist || [],
+    })
+    _params.setToolbarVisible(true, ConstToolType.NETWORKDATASET, {
+      containerType: 'list',
+      height: ConstToolType.THEME_HEIGHT[4],
+      data,
+      isFullScreen: false,
+      buttons: [ToolbarBtnType.CANCEL_INCREMENT],
+    })
+  }.bind(this)())
 }
 
 function select() {

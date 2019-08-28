@@ -115,7 +115,6 @@ export default class ChangeArView extends React.Component {
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NORMAL
             SMap.clearPoint()
-            this.props.setMap2Dto3D(false)
             this.props.setMapNavigationShow(false)
             this.props.showFullMap(false)
           }}
