@@ -3629,7 +3629,7 @@ export default class ToolBar extends React.PureComponent {
           isLineLayer = false,
           isRegionLayer = false,
           isTextLayer = false
-        if (currentLayer) {
+        if (currentLayer && !currentLayer.themeType) {
           isTaggingLayer = currentLayer.type === DatasetType.CAD
           // && currentLayer.datasourceAlias.match(reg)
           isPointLayer = currentLayer.type === DatasetType.POINT
@@ -5753,13 +5753,13 @@ export default class ToolBar extends React.PureComponent {
         style={[styles.cell, { width: this.props.device.width / column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
-        textColor={color.font_color_white}
+        textColor={item.disable ? '#A0A0A0' : color.font_color_white}
         textStyle={{ fontSize: setSpText(20) }}
         // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {
-          this.itemaction(item)
+          !item.disable && this.itemaction(item)
         }}
       />
     )

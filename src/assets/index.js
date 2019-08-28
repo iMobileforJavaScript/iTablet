@@ -138,7 +138,7 @@ function getLayerWhiteIconByType(type) {
   let icon
   switch (type) {
     case LAYER_GROUP:
-      icon = getThemeAssets().layerType.layer_group
+      icon = getThemeAssets().layerType.layer_group_selected
       break
     case DatasetType.POINT: // 点数据集
       icon = require('./map/icon-shallow-dot.png')

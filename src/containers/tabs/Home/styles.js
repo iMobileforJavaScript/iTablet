@@ -61,7 +61,7 @@ export default StyleSheet.create({
   },
   dialogBackground: {
     width: scaleSize(350),
-    height: scaleSize(240),
+    height: scaleSize(260),
     backgroundColor: color.content_white,
   },
   dialogHeaderView: {
@@ -99,7 +99,7 @@ export default StyleSheet.create({
   },
   opacityView: {
     width: scaleSize(350),
-    height: scaleSize(240),
+    height: scaleSize(260),
     backgroundColor: color.content_white,
   },
   btnTitle: {

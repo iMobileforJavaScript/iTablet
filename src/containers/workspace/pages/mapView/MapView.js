@@ -1654,6 +1654,8 @@ export default class MapView extends React.Component {
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         //title={'提示'}
+        style={styles.dialogStyle}
+        opacityStyle={styles.dialogStyle}
         info={getLanguage(this.props.language).Prompt.ENABLE_DYNAMIC_PROJECTION}
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
@@ -2136,6 +2138,8 @@ export default class MapView extends React.Component {
           info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
           // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
+          style={styles.dialogStyle}
+          opacityStyle={styles.dialogStyle}
           confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
           cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />

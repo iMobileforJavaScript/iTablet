@@ -8,6 +8,7 @@ import { View, Text, TextInput, KeyboardAvoidingView } from 'react-native'
 import Dialog from './Dialog'
 import { color } from '../../styles'
 import styles from './styles'
+import { scaleSize } from '../../utils'
 
 export default class InputDialog extends PureComponent {
   props: {
@@ -101,7 +102,8 @@ export default class InputDialog extends PureComponent {
       <Dialog
         ref={ref => (this.dialog = ref)}
         title={this.props.title}
-        style={{ marginVertical: 15 }}
+        style={{ height: scaleSize(240) }}
+        opacityStyle={{ height: scaleSize(240) }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={this.props.confirmBtnTitle}

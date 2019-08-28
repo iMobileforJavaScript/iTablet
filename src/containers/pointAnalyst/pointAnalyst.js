@@ -409,13 +409,15 @@ export default class PointAnalyst extends Component {
             })
           }
         }}
-        onSubmitEditing={searchKey => {
+        onSubmitEditing={async searchKey => {
           // this.setLoading(true, getLanguage(global.language).Prompt.SERCHING)
           if (this.is3D) {
             SScene.pointSearch(searchKey).then(() => {
               // this.setLoading(false)
             })
           } else {
+            let location = await SMap.getMapcenterPosition()
+            this.location = location
             this.getSearchResult({ keyWords: searchKey })
           }
         }}
