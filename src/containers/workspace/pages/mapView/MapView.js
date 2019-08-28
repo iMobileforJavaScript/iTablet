@@ -1886,6 +1886,7 @@ export default class MapView extends React.Component {
               NavigationService.goBack()
             },
           })
+          this.setState({ incrementShow: false, showIncrement: false })
           this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
             containerType: 'table',
             column: 4,
@@ -1908,7 +1909,7 @@ export default class MapView extends React.Component {
             },
           })
           SMap.setAction(Action.DRAWLINE)
-          this.setState({ incrementShow: false })
+          this.setState({ incrementShow: false, showIncrement: false })
           this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
             containerType: 'table',
             column: 4,

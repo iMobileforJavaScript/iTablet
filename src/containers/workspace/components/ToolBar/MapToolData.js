@@ -613,11 +613,15 @@ function getMapTool(type, params) {
 }
 
 function begin() {
-  SMap.gpsBegin()
+  GLOBAL.GPS = setInterval(() => {
+    SMap.gpsBegin()
+  }, 2000)
 }
 
 function stop() {
-  SMap.gpsStop()
+  if (GLOBAL.GPS !== undefined) {
+    clearInterval(GLOBAL.GPS)
+  }
 }
 
 function submit() {
