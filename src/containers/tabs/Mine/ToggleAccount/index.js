@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import ToggleAccount from './ToggleAccount'
-import { setUser } from '../../../../models/user'
+import { setUser, deleteUser } from '../../../../models/user'
 
 const mapStateToProps = state => ({
   user: state.user.toJS(),
@@ -8,6 +8,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setUser,
+  deleteUser,
 }
 
 export default connect(

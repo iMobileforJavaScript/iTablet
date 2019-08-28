@@ -64,9 +64,12 @@ const Profile = {
   CONNECT: '立即绑定',
   MANAGE_ACCOUNT: '账号管理',
   ADD_ACCOUNT: '添加账号',
+  DELETE_ACCOUNT: '删除账号',
+  UNABLE_DELETE_SELF: '不能删除当前用户',
 
   DELETE: '删除',
   SELECT_ALL: '全选',
+  DESELECT_ALL: '全不选',
 
   //数据删除导出
   SHARE: '分享',

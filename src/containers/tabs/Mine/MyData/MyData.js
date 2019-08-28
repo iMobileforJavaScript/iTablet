@@ -108,6 +108,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     backgroundColor: '#FFFFFF',
   },
+  headerRightTextView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 })
 
 export default class MyLocalData extends Component {
@@ -355,7 +359,7 @@ export default class MyLocalData extends Component {
     this.setState({ section })
   }
 
-  _deseleteAll = () => {
+  _deselectAll = () => {
     let section = Object.assign([], this.state.sectionData)
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
@@ -1291,16 +1295,28 @@ export default class MyLocalData extends Component {
     if (this.formChat) return null
     if (this.state.batchDelete) {
       return (
-        <TouchableOpacity
-          onPress={() => {
-            this._selectAll()
-          }}
-          style={styles.moreView}
-        >
-          <Text style={{ color: '#FBFBFB' }}>
-            {getLanguage(global.language).Profile.SELECT_ALL}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.headerRightTextView}>
+          <TouchableOpacity
+            onPress={() => {
+              this._deselectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.DESELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this._selectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.SELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -1321,7 +1337,7 @@ export default class MyLocalData extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
-            this._deseleteAll()
+            this._deselectAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })
@@ -1432,7 +1448,9 @@ export default class MyLocalData extends Component {
           }}
           actionOfFriend={
             this.state.title === getLanguage(this.props.language).Profile.MAP
-              ? () => this._onUploadData('friend')
+              ? UserType.isOnlineUser(this.props.user.currentUser)
+                ? () => this._onUploadData('friend')
+                : undefined
               : undefined
           }
         />

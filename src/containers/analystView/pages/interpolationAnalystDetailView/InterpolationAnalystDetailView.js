@@ -166,7 +166,7 @@ export default class InterpolationAnalystDetailView extends Component {
             break
         }
 
-        let result = await SAnalyst.interpolate(
+        SAnalyst.interpolate(
           sourceData,
           resultData,
           paramter,
@@ -174,24 +174,32 @@ export default class InterpolationAnalystDetailView extends Component {
           this.data.scale,
           this.data.pixelFormat.value,
         )
+          .then(async result => {
+            this.setLoading(false)
 
-        this.setLoading(false)
+            Toast.show(
+              result
+                ? getLanguage(this.props.language).Analyst_Prompt
+                  .ANALYSIS_SUCCESS
+                : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
+            )
+            if (result) {
+              let layers = await this.props.getLayers()
+              layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
 
-        Toast.show(
-          result
-            ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
-            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
-        )
-        if (result) {
-          let layers = await this.props.getLayers()
-          layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
-
-          GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
-          NavigationService.goBack('InterpolationAnalystView')
-          if (this.cb && typeof this.cb === 'function') {
-            this.cb()
-          }
-        }
+              GLOBAL.ToolBar && GLOBAL.ToolBar.setVisible(false)
+              NavigationService.goBack('InterpolationAnalystView')
+              if (this.cb && typeof this.cb === 'function') {
+                this.cb()
+              }
+            }
+          })
+          .catch(() => {
+            this.setLoading(false)
+            Toast.show(
+              getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
+            )
+          })
       } catch (e) {
         this.setLoading(false)
         Toast.show(

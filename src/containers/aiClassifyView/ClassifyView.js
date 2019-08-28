@@ -331,7 +331,7 @@ export default class ClassifyView extends React.Component {
             </TouchableOpacity>
           )}
           {!this.state.isClassifyInfoVisible && (
-            <TouchableOpacity style={styles.iconView}></TouchableOpacity>
+            <TouchableOpacity style={styles.iconView} />
           )}
           {!this.state.isClassifyInfoVisible && (
             <TouchableOpacity

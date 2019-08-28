@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 const mapStateToProps = state => ({
   user: state.user.toJS(),
   chat: state.chat.toJS(),
-  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {}

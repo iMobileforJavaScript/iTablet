@@ -243,6 +243,7 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async (user, lastMap) => {
+        GLOBAL.INCREMENTDATASETNAME = ''
         let data = Object.assign({}, ConstOnline['Google'])
         data.layerIndex = 1
         GLOBAL.Type = constants.MAP_NAVIGATION
@@ -252,8 +253,7 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath =
-          homePath + userPath + ConstPath.RelativeFilePath.NavigationWorkspace
+        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
 
         let wsData,
           isOpenLastMap = false

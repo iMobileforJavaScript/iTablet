@@ -357,6 +357,7 @@ export default class LayerManager_item extends React.Component {
     if (this.props.onPress) {
       await this.props.onPress({
         data: this.state.data,
+        parentData: this.props.parentData,
       })
     } else return
   }

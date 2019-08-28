@@ -99,15 +99,7 @@ export default class NavigationPoiView extends React.Component {
     )
   }
 
-  Navigation = () => {
-    this.props.setMapNavigationShow(false)
-    SMap.startNavigation()
-    SMap.setIndustryNavigationListener({
-      callback: () => {
-        this.props.setMapNavigationShow(true)
-      },
-    })
-  }
+  Navigation = () => {}
 
   changeHeight = () => {
     if (this.state.isroad) {
