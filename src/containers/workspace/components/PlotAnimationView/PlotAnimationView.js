@@ -522,7 +522,8 @@ export default class PlotAnimationView extends React.Component {
   }
 
   cancle = () => {
-    SMap.endAnimationWayPoint(false)
+    // SMap.endAnimationWayPoint(false)
+    SMap.cancelAnimationWayPoint()
     GLOBAL.TouchType = TouchType.NULL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     let height = 0

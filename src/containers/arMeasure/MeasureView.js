@@ -41,6 +41,7 @@ export default class MeasureView extends React.Component {
       currentLength: 0,
       totalLength: 0,
       showModelViews: false,
+      SearchingSurfacesSucceed: false,
     }
   }
 
@@ -66,6 +67,14 @@ export default class MeasureView extends React.Component {
           'onTotalLengthChanged',
           this.onTotalLengthChanged,
         )
+        DeviceEventEmitter.addListener(
+          'onSearchingSurfaces',
+          this.onSearchingSurfaces,
+        )
+        DeviceEventEmitter.addListener(
+          'onSearchingSurfacesSucceed',
+          this.onSearchingSurfacesSucceed,
+        )
       }.bind(this)())
     })
   }
@@ -81,6 +90,14 @@ export default class MeasureView extends React.Component {
       'onTotalLengthChanged',
       this.onTotalLengthChanged,
     )
+    DeviceEventEmitter.removeListener(
+      'onSearchingSurfaces',
+      this.onSearchingSurfaces,
+    )
+    DeviceEventEmitter.removeListener(
+      'onSearchingSurfacesSucceed',
+      this.onSearchingSurfacesSucceed,
+    )
   }
 
   onCurrentLengthChanged = params => {
@@ -92,6 +109,18 @@ export default class MeasureView extends React.Component {
   onTotalLengthChanged = params => {
     this.setState({
       totalLength: params.total,
+    })
+  }
+
+  onSearchingSurfaces = () => {
+    this.setState({
+      SearchingSurfacesSucceed: false,
+    })
+  }
+
+  onSearchingSurfacesSucceed = () => {
+    this.setState({
+      SearchingSurfacesSucceed: true,
     })
   }
 
@@ -152,6 +181,10 @@ export default class MeasureView extends React.Component {
     })
   }
 
+  setFlagType = async type => {
+    await SMeasureView.setFlagType(type)
+  }
+
   renderBottomBtns = () => {
     return (
       <View style={styles.toolbar}>
@@ -209,6 +242,50 @@ export default class MeasureView extends React.Component {
     )
   }
 
+  renderModelItemFirst = () => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => this.setFlagType('PIN_BOWLING')}
+        style={styles.ModelItemView}
+      >
+        <Image
+          source={getThemeAssets().ar.icon_ar_measure_add}
+          style={styles.img}
+        />
+        <Text style={styles.titleSwitchModelsView}>{'PIN_BOWLING'}</Text>
+      </TouchableOpacity>
+      // <View style={styles.ModelItemView}>
+      //   <Image
+      //     source={getThemeAssets().ar.icon_ar_measure_add}
+      //     style={styles.img}
+      //   />
+      //   <Text style={styles.titleSwitchModelsView}>{'PIN_BOWLING'}</Text>
+      // </View>
+    )
+  }
+  renderModelItemSecond = () => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => this.setFlagType('RED_FLAG')}
+        style={styles.ModelItemView}
+      >
+        <Image
+          source={getThemeAssets().ar.icon_ar_measure_add}
+          style={styles.img}
+        />
+        <Text style={styles.titleSwitchModelsView}>{'RED_FLAG'}</Text>
+      </TouchableOpacity>
+      // <View style={styles.ModelItemView}>
+      //   <Image
+      //     source={getThemeAssets().ar.icon_ar_measure_add}
+      //     style={styles.img}
+      //   />
+      //   <Text style={styles.titleSwitchModelsView}>{'RED_FLAG'}</Text>
+      // </View>
+    )
+  }
   renderModelItem = () => {
     return (
       <View style={styles.ModelItemView}>
@@ -232,8 +309,8 @@ export default class MeasureView extends React.Component {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          {this.renderModelItem()}
-          {this.renderModelItem()}
+          {this.renderModelItemFirst()}
+          {this.renderModelItemSecond()}
           {this.renderModelItem()}
           {this.renderModelItem()}
           {this.renderModelItem()}
@@ -294,6 +371,14 @@ export default class MeasureView extends React.Component {
     )
   }
 
+  renderSearchingView() {
+    return (
+      <View style={styles.currentLengthChangeView}>
+        <Text style={styles.title}>{'正在寻找平面...'}</Text>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -311,8 +396,10 @@ export default class MeasureView extends React.Component {
         {/*{this.renderCenterBtn()}*/}
         {/*{this.renderTopBtns()}*/}
         {this.state.showModelViews && this.renderSwitchModels()}
-        {this.renderLengthChangeView()}
-        {this.renderCurrentLengthChangeView()}
+        {this.state.SearchingSurfacesSucceed && this.renderLengthChangeView()}
+        {this.state.SearchingSurfacesSucceed &&
+          this.renderCurrentLengthChangeView()}
+        {!this.state.SearchingSurfacesSucceed && this.renderSearchingView()}
       </Container>
     )
   }
