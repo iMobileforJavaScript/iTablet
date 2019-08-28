@@ -98,6 +98,8 @@ const Profile = {
   CONNECT: 'Connect',
   MANAGE_ACCOUNT: 'Manage Account',
   ADD_ACCOUNT: 'Add Account',
+  DELETE_ACCOUNT: 'Delete Account',
+  UNABLE_DELETE_SELF: 'Unable to delete current user',
 
   DELETE_SERVICE: 'Delete Service',
   PUBLISH_SERVICE: 'Publish',
@@ -109,6 +111,7 @@ const Profile = {
   NO_SERVICE: 'No Service',
 
   SELECT_ALL: 'Select All',
+  DESELECT_ALL: 'Deselect All',
 
   MAP_ONLINE: 'Online Map',
   MAP_2D: '2D Map',
