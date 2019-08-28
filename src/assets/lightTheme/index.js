@@ -13,6 +13,7 @@ import functionBar from './function'
 import search from './search'
 import mine from './mine'
 import nav from './nav'
+import mapTools from './mapTools'
 export default {
   publicAssets,
   tabBar,
@@ -29,4 +30,5 @@ export default {
   search,
   mine,
   nav,
+  mapTools,
 }

@@ -9,7 +9,7 @@ import {
 } from 'imobile_for_reactnative'
 import { ConstToolType, TouchType, ConstPath } from '../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../utils'
-import { getPublicAssets } from '../../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import { ImagePicker } from '../../../../components'
 import constants from '../../constants'
@@ -19,6 +19,34 @@ import { getLanguage } from '../../../../language'
 
 let _params = {}
 
+/**
+ * 判断当前图层类型 控制标注相关功能是否可用
+ * @returns {string}
+ */
+function getCurrentLayerType() {
+  let currentLayer = GLOBAL.currentLayer
+  let layerType = ''
+  if (currentLayer && !currentLayer.themeType) {
+    switch (currentLayer.type) {
+      case DatasetType.CAD:
+        layerType = 'TAGGINGLAYER'
+        break
+      case DatasetType.POINT:
+        layerType = 'POINTLAYER'
+        break
+      case DatasetType.LINE:
+        layerType = 'LINELAYER'
+        break
+      case DatasetType.REGION:
+        layerType = 'REGIONLAYER'
+        break
+      case DatasetType.TEXT:
+        layerType = 'TEXTLAYER'
+        break
+    }
+  }
+  return layerType
+}
 /**
  * 获取工具操作
  * @param type
@@ -30,6 +58,7 @@ function getMapTool(type, params) {
     buttons = []
   _params = params
   GLOBAL.MapToolType = type
+  let layerType = ''
   if (type.indexOf(ConstToolType.MAP_TOOL) === -1) return { data, buttons }
   switch (type) {
     case ConstToolType.MAP_TOOL_TAGGING:
@@ -77,6 +106,7 @@ function getMapTool(type, params) {
       break
     case ConstToolType.MAP_TOOLS:
     case ConstToolType.MAP_TOOL:
+      layerType = getCurrentLayerType()
       data = [
         {
           key: 'distanceComput',
@@ -137,8 +167,12 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
           //constants.POINT,
           action: point,
+          disable: layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER',
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_point_black.png'),
+          image:
+            layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_point_disable
+              : require('../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
         },
         {
@@ -147,7 +181,11 @@ function getMapTool(type, params) {
           //constants.WORDS,
           size: 'large',
           action: words,
-          image: require('../../../../assets/mapTools/icon_words_black.png'),
+          disable: layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER',
+          image:
+            layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_text_disable
+              : require('../../../../assets/mapTools/icon_words_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
         },
         {
@@ -156,7 +194,11 @@ function getMapTool(type, params) {
           //constants.POINTLINE,
           size: 'large',
           action: pointline,
-          image: require('../../../../assets/mapTools/icon_point_line_black.png'),
+          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          image:
+            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_point_line_disable
+              : require('../../../../assets/mapTools/icon_point_line_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
         },
         {
@@ -165,7 +207,11 @@ function getMapTool(type, params) {
           //constants.FREELINE,
           size: 'large',
           action: freeline,
-          image: require('../../../../assets/mapTools/icon_free_line_black.png'),
+          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          image:
+            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_free_line_disable
+              : require('../../../../assets/mapTools/icon_free_line_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
         },
         {
@@ -174,7 +220,11 @@ function getMapTool(type, params) {
           //constants.POINTCOVER,
           size: 'large',
           action: pointcover,
-          image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          image:
+            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_region_disable
+              : require('../../../../assets/mapTools/icon_point_cover_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
         },
         {
@@ -183,7 +233,11 @@ function getMapTool(type, params) {
           //constants.FREECOVER,
           size: 'large',
           action: freecover,
-          image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          image:
+            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+              ? getThemeAssets().mapTools.icon_free_region_disable
+              : require('../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
         },
         // {
