@@ -176,6 +176,7 @@ export default class ToolBar extends React.PureComponent {
     layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
     setMapIndoorNavigation: () => {},
+    switchAr: () => {},
   }
 
   static defaultProps = {
@@ -297,6 +298,10 @@ export default class ToolBar extends React.PureComponent {
 
   showFullMap = () => {
     this.props.showFullMap && this.props.showFullMap(true)
+  }
+
+  switchAr = () => {
+    this.props.switchAr && this.props.switchAr()
   }
 
   existFullMap = () => {

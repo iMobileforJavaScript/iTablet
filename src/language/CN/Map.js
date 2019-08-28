@@ -453,6 +453,7 @@ const Map_Settings = {
 
   POI_SETTING_PROJECTION_MODE: '投射模式',
   POI_SETTING_OVERLAP_MODE: '避让模式',
+  POI_SETTING_POLYMERIZE_MODE: '聚合模式',
 
   DETECT_TYPE_PERSON: '人员',
   DETECT_TYPE_BICYCLE: '自行车',

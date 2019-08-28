@@ -1613,6 +1613,7 @@ export default class MapView extends React.Component {
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
+        switchAr={this.switchAr}
         {...this.props}
       />
     )

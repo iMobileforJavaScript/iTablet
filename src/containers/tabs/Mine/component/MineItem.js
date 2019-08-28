@@ -14,9 +14,13 @@ export default class MineItem extends Component {
     disableCheck: boolean,
     showRight: boolean,
     showCheck: boolean,
+    showSeperator: boolean,
     onPress: () => {},
     onPressMore: () => {},
     onPressCheck: () => {},
+    contentStyle: {},
+    imageStyle: {},
+    textStyle: {},
   }
 
   static defaultProps = {
@@ -24,6 +28,7 @@ export default class MineItem extends Component {
     showRight: true,
     showCheck: false,
     disableCheck: false,
+    showSeperator: true,
   }
 
   constructor(props) {
@@ -87,14 +92,19 @@ export default class MineItem extends Component {
       <TouchableItemView
         disableTouch={this.props.showCheck}
         renderRight={this.props.showRight ? this._renderRight : null}
-        param={this.props.item}
         image={this.props.image}
         text={this.props.text}
         onPress={() => {
           this.props.onPress && this.props.onPress(this.props.item)
         }}
-        seperatorStyle={{ marginLeft: 0 }}
+        seperatorStyle={[
+          { marginLeft: 0 },
+          this.props.showSeperator ? null : { height: 0 },
+        ]}
         checked={this.state.checked}
+        contentStyle={this.props.contentStyle}
+        imageStyle={this.props.imageStyle}
+        textStyle={this.props.textStyle}
       />
     )
   }

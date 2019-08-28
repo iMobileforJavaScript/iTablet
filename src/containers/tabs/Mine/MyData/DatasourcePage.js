@@ -192,7 +192,7 @@ class DatasourcePage extends Component {
     this.setState({ datasets })
   }
 
-  _deseleteAll = () => {
+  _deselectAll = () => {
     let datasets = Object.assign([], this.state.datasets)
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
@@ -214,16 +214,28 @@ class DatasourcePage extends Component {
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     if (this.state.batchDelete) {
       return (
-        <TouchableOpacity
-          onPress={() => {
-            this._selectAll()
-          }}
-          style={styles.moreView}
-        >
-          <Text style={{ color: '#FBFBFB' }}>
-            {getLanguage(global.language).Profile.SELECT_ALL}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.headerRightTextView}>
+          <TouchableOpacity
+            onPress={() => {
+              this._deselectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.DESELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this._selectAll()
+            }}
+            style={styles.moreView}
+          >
+            <Text style={{ color: '#FBFBFB' }}>
+              {getLanguage(global.language).Profile.SELECT_ALL}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )
     }
     return (
@@ -243,7 +255,7 @@ class DatasourcePage extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           onPress={() => {
-            this._deseleteAll()
+            this._deselectAll()
             this.setState({
               batchDelete: !this.state.batchDelete,
             })
@@ -314,6 +326,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: scaleSize(40),
     width: scaleSize(40),
+  },
+  headerRightTextView: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
 
