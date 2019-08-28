@@ -43,7 +43,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     SMap.deleteGestureDetector()
   }
 
-  setVisible = visible => {
+  setVisible = (visible, radius = 5000) => {
     if (visible === this.state.visible) {
       return
     }
@@ -66,7 +66,25 @@ export default class PoiInfoContainer extends React.PureComponent {
     }
     this.setState({
       visible,
+      radius,
     })
+  }
+
+  getDistance = (p1, p2) => {
+    //经纬度差值转距离 单位 m
+    let R = 6371393
+    return Math.abs(
+      ((p2.x - p1.x) *
+        Math.PI *
+        R *
+        Math.cos((((p2.y + p1.y) / 2) * Math.PI) / 180)) /
+        180,
+    )
+  }
+
+  //属性排序
+  compare = prop => (a, b) => {
+    return a[prop] - b[prop]
   }
 
   getSearchResult = params => {
@@ -91,7 +109,14 @@ export default class PoiInfoContainer extends React.PureComponent {
               x: item.location.x,
               y: item.location.y,
               address: item.address,
+              distance: this.getDistance(item.location, this.state.location),
             }
+          })
+          resultList.sort(this.compare('distance')).forEach((item, index) => {
+            resultList[index].distance =
+              item.distance > 1000
+                ? (item.distance / 1000).toFixed(2) + 'km'
+                : ~~item.distance + 'm'
           })
           Animated.timing(this.height, {
             toValue: scaleSize(450),
@@ -108,7 +133,7 @@ export default class PoiInfoContainer extends React.PureComponent {
             async () => {
               await SMap.addCallouts(resultList)
               SMap.setGestureDetector({
-                singleTapHandler: this.close,
+                singleTapHandler: this.clear,
               })
             },
           )
@@ -116,11 +141,15 @@ export default class PoiInfoContainer extends React.PureComponent {
       })
   }
 
-  close = () => {
+  clear = () => {
     SMap.removeAllCallout()
     this.setVisible(false)
   }
 
+  close = () => {
+    SMap.removePOICallout()
+    this.setVisible(false)
+  }
   searchNeighbor = () => {
     Animated.timing(this.height, {
       toValue: scaleSize(340),
@@ -183,7 +212,7 @@ export default class PoiInfoContainer extends React.PureComponent {
             this.getSearchResult({
               keyWords: item.title,
               location: JSON.stringify(this.state.location),
-              radius: 5000,
+              radius: this.state.radius,
             })
           }}
           style={styles.searchIconWrap}
@@ -224,6 +253,9 @@ export default class PoiInfoContainer extends React.PureComponent {
             <Image style={styles.pointImg} source={img} />
             {item.pointName && (
               <Text style={styles.itemText}>{item.pointName}</Text>
+            )}
+            {item.distance && (
+              <Text style={styles.distance}>{item.distance}</Text>
             )}
           </TouchableOpacity>
           <View style={styles.itemSeparator} />

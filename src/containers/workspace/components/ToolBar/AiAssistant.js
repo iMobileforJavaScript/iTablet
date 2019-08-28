@@ -3,7 +3,11 @@
  */
 import { getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language'
-import { SMeasureView, DatasetType } from 'imobile_for_reactnative'
+import {
+  SMeasureView,
+  DatasetType,
+  SAIDetectView,
+} from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
 
@@ -66,6 +70,28 @@ function aiClassify() {
   }.bind(this)())
 }
 
+//目标采集
+function aiDetect() {
+  (async function() {
+    await SAIDetectView.setProjectionModeEnable(true)
+    await SAIDetectView.setDrawTileEnable(false)
+    await SAIDetectView.setIsPolymerize(false)
+    GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+    GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+  }.bind(this)())
+}
+
+//态势采集(聚合模式)
+function polymerizeCollect() {
+  (async function() {
+    await SAIDetectView.setProjectionModeEnable(true)
+    await SAIDetectView.setDrawTileEnable(false)
+    await SAIDetectView.setIsPolymerize(true)
+    GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+    GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+  }.bind(this)())
+}
+
 function getAiAssistantData(type, params) {
   _params = params
   let buttons = []
@@ -85,7 +111,7 @@ function getAiAssistantData(type, params) {
         .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
-      // action:openMap,
+      action: aiDetect,
       size: 'large',
       image: getThemeAssets().ar.functiontoolbar.rightbar_ai_collect_light,
     },
@@ -95,7 +121,7 @@ function getAiAssistantData(type, params) {
         .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
-      // action:openMap,
+      action: polymerizeCollect,
       size: 'large',
       image: getThemeAssets().ar.functiontoolbar
         .rightbar_ai_aggregate_collect_light,
