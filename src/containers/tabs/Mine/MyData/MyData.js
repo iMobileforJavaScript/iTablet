@@ -929,6 +929,18 @@ export default class MyLocalData extends Component {
     let result = await FileTools.deleteFile(mapPath)
     result = result && (await FileTools.deleteFile(mapExpPath))
 
+    let dataPath = this.itemInfo.item.path.split('Data')
+    let animationPath = await FileTools.appendingHomeDirectory(
+      dataPath[0] +
+        'Data/Animation/' +
+        this.itemInfo.item.name.substring(
+          0,
+          this.itemInfo.item.name.lastIndexOf('.'),
+        ),
+    )
+    let path = animationPath
+    result && (await FileTools.deleteFile(path))
+
     return result
   }
 

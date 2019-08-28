@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform , View, TouchableOpacity, Text } from 'react-native'
 import Header from '../../../../components/Header'
-import { View, TouchableOpacity, Text } from 'react-native'
+
 import { scaleSize } from '../../../../utils'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)

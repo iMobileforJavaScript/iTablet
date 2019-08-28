@@ -685,22 +685,26 @@ export default class BufferAnalystViewTab extends Component {
               let roundTypeStatus = CheckStatus.CHECKED
               let flatTypeStatus = CheckStatus.UN_CHECK
 
-              if (
-                data.datasetType === DatasetType.REGION ||
-                data.datasetType === DatasetType.POINT
-              ) {
-                roundTypeStatus = CheckStatus.CHECKED_DISABLE
-                flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
+              newStateData = { dataSet: data }
+              if (data) {
+                if (
+                  data.datasetType === DatasetType.REGION ||
+                  data.datasetType === DatasetType.POINT
+                ) {
+                  roundTypeStatus = CheckStatus.CHECKED_DISABLE
+                  flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
+                }
+
+                newStateData = this.state.showAdvance
+                  ? { dataSet: data, roundTypeStatus, flatTypeStatus }
+                  : {
+                    dataSet: data,
+                    showAdvance: true,
+                    roundTypeStatus,
+                    flatTypeStatus,
+                  }
               }
 
-              newStateData = this.state.showAdvance
-                ? { dataSet: data, roundTypeStatus, flatTypeStatus }
-                : {
-                  dataSet: data,
-                  showAdvance: true,
-                  roundTypeStatus,
-                  flatTypeStatus,
-                }
               break
             }
             case popTypes.BufferType:
