@@ -488,7 +488,7 @@ async function share3DMap(type, list = []) {
     }
   } catch (error) {
     // GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
-    Toast.show('分享失败')
+    // Toast.show('分享失败')
   }
 }
 

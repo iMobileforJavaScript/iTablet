@@ -238,7 +238,7 @@ export default class MyLabel extends Component {
                 },
               )
           } else if (this.uploadType === 'online') {
-            SOnlineService.uploadFile(targetPath, name, {
+            SOnlineService.uploadFilebyType(targetPath, name, 'UDB', {
               onProgress: progress => {
                 return progress
               },
