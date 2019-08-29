@@ -94,6 +94,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 2,
   },
+  //登陆按钮
+  itemView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#505050',
+    paddingHorizontal: scaleSize(50),
+    width: scaleSize(450),
+    height: scaleSize(180),
+    marginVertical: scaleSize(50),
+    borderRadius: scaleSize(10),
+  },
+  imagStyle: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+  },
+  textStyle: {
+    color: '#FBFBFB',
+    fontSize: scaleSize(80),
+  },
 })
 
 const dialogStyles = StyleSheet.create({

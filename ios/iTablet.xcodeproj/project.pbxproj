@@ -61,6 +61,7 @@
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB6A23151595005F89FC /* python2.7.zip */; };
+		0AEFC201231762DA006FEDD8 /* PIL in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB3023151588005F89FC /* PIL */; };
 		0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF433CA224C78E4003FDADE /* SuperMap.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -1897,6 +1898,7 @@
 				0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				0AEFC201231762DA006FEDD8 /* PIL in Resources */,
 				2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */,
 				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
 				001E832822C995B90084A0B2 /* Trial_License.slm in Resources */,

@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 
 export default class OnlineServicesUtils {
   constructor(type) {
+    this.type = type
     if (type === 'iportal') {
       let url = SIPortalService.getIPortalUrl()
       if (url) {
@@ -28,6 +29,25 @@ export default class OnlineServicesUtils {
     }
   }
 
+  getCookie = async () => {
+    if (Platform.OS === 'ios') {
+      return undefined
+    }
+    if (this.cookie) {
+      return this.cookie
+    }
+
+    let cookie = undefined
+    if (this.type === 'iportal') {
+      cookie = await SIPortalService.getIPortalCookie()
+    } else if (this.type === 'online') {
+      cookie = await SOnlineService.getAndroidSessionID()
+    }
+
+    this.cookie = cookie
+    return cookie
+  }
+
   async publishService(id) {
     let url =
       this.serverUrl +
@@ -47,22 +67,24 @@ export default class OnlineServicesUtils {
 
   async publishServiceByName(dataName) {
     let id = await this.getDataIdByName(dataName)
-    return await this.publishService(id)
+    if (id) {
+      return await this.publishService(id)
+    } else {
+      return false
+    }
   }
 
   async getDataIdByName(dataName) {
-    let url =
-      this.serverUrl +
-      `/mycontent/datas.rjson?keywords=[${dataName}]&filterFields=["FILENAME"]`
+    let url = this.serverUrl + `/mycontent/datas.rjson?fileName=${dataName}`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let result = await request(url, 'GET', {
       headers: headers,
-      body: true,
     })
     if (result.total === 1) {
       return result.content[0].id

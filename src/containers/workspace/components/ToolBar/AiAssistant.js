@@ -92,6 +92,30 @@ function polymerizeCollect() {
   }.bind(this)())
 }
 
+//高精度采集
+function collectSceneForm() {
+  (async function() {
+    let currentLayer = GLOBAL.currentLayer
+    // let reg = /^Label_(.*)#$/
+    let isTaggingLayer = false
+    if (currentLayer) {
+      isTaggingLayer = currentLayer.type === DatasetType.CAD
+      // && currentLayer.datasourceAlias.match(reg)
+    }
+    if (isTaggingLayer) {
+      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+      const datasetName = currentLayer.datasetName // 标注图层名称
+      NavigationService.navigate('CollectSceneFormView', {
+        datasourceAlias,
+        datasetName,
+      })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+  }.bind(this)())
+}
+
 function getAiAssistantData(type, params) {
   _params = params
   let buttons = []
@@ -147,12 +171,12 @@ function getAiAssistantData(type, params) {
     //   image: getThemeAssets().ar.icon_ar,
     // },
     {
-      //POI地图
+      //高精度采集
       key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_POI_COLLECT,
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
       title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_POI_COLLECT,
-      // action: openMap,
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
+      action: collectSceneForm,
       size: 'large',
       image: getThemeAssets().ar.functiontoolbar.rightbar_ai_poi_light,
     },

@@ -6,7 +6,9 @@ import styles from './styles'
 import { scaleSize } from '../../utils'
 import { Layer3DManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
-import { getLanguage } from '../../language/index'
+import { getLanguage } from '../../language'
+import { getThemeAssets } from '../../assets'
+import { color } from '../../styles'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Layer3DManager extends Component {
   props: {
@@ -55,7 +57,7 @@ export default class Layer3DManager extends Component {
         : { backgroundColor: 'transparent' }
     if (item.isShow) {
       return (
-        <TouchableOpacity
+        <Layer3DItem
           style={[styles.itemBtn, itembtnStyle]}
           onPress={async () => {
             this.setState({
@@ -64,32 +66,35 @@ export default class Layer3DManager extends Component {
             // let data2 = await SScene.getAttributeByName(item.name)
             // console.log(data2)
           }}
-        >
-          <Layer3DItem
-            item={item}
-            getlayer3dToolbar={this.getlayer3dToolbar}
-            device={this.props.device}
-            toHeightItem={this.state.toHeightItem}
-            index={index}
-            overlayView={this.OverlayView}
-            setCurrentLayer3d={this.props.setCurrentLayer3d}
-          />
-        </TouchableOpacity>
+          item={item}
+          getlayer3dToolbar={this.getlayer3dToolbar}
+          device={this.props.device}
+          toHeightItem={this.state.toHeightItem}
+          index={index}
+          overlayView={this.OverlayView}
+          setCurrentLayer3d={this.props.setCurrentLayer3d}
+        />
       )
     } else {
       return <View />
     }
   }
-  renderSectionFooter = () => {
+  renderSectionFooter = ({ section }) => {
+    if (
+      this.state.data &&
+      this.state.data.length > 0 &&
+      this.state.data[this.state.data.length - 1].title === section.title
+    ) {
+      return <View />
+    }
     return <View style={styles.sectionFooter} />
   }
 
   renderListSectionHeader = ({ section }) => {
-    let image
     let visible = section.visible
-    visible
-      ? (image = require('../../assets/mapEdit/icon_spread.png'))
-      : (image = require('../../assets/mapEdit/icon_packUP.png'))
+    let image = visible
+      ? getThemeAssets().publicAssets.icon_arrow_down
+      : getThemeAssets().publicAssets.icon_arrow_right_2
     return (
       <TouchableOpacity
         style={styles.section}
@@ -97,7 +102,7 @@ export default class Layer3DManager extends Component {
           this.refreshList(section)
         }}
       >
-        <Image source={image} style={styles.selection} />
+        <Image source={image} style={styles.selectionImg} />
         <Text style={styles.sectionsTitle}>{section.title}</Text>
       </TouchableOpacity>
     )
@@ -119,6 +124,25 @@ export default class Layer3DManager extends Component {
     this.setState({
       data: newData.concat(),
     })
+  }
+
+  /**行与行之间的分隔线组件 */
+  _renderItemSeparator = ({ section }) => {
+    if (section.visible) {
+      return (
+        <View
+          style={{
+            flexDirection: 'column',
+            marginLeft: scaleSize(84),
+            width: '100%',
+            height: 1,
+            backgroundColor: color.separateColorGray,
+          }}
+        />
+      )
+    } else {
+      return <View />
+    }
   }
 
   renderSelection = () => {

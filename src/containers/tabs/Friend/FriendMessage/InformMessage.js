@@ -19,6 +19,7 @@ import MSGconstant from '../MsgConstant'
 import FriendListFileHandle from '../FriendListFileHandle'
 import { SimpleDialog } from '../index'
 import MessageDataHandle from '../MessageDataHandle'
+import moment from 'moment'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -165,17 +166,18 @@ export default class InformMessage extends React.Component {
     let lastMessage = this.friend.loadMsg(item)
     let time = item.originMsg.time
     let ctime = new Date(time)
-    let timeString =
-      '' +
-      ctime.getFullYear() +
-      '/' +
-      (ctime.getMonth() + 1) +
-      '/' +
-      ctime.getDate() +
-      ' ' +
-      ctime.getHours() +
-      ':' +
-      ctime.getMinutes()
+    let timeString = moment(ctime).format('YYYY/MM/DD HH:mm')
+    // let timeString =
+    //   '' +
+    //   ctime.getFullYear() +
+    //   '/' +
+    //   (ctime.getMonth() + 1) +
+    //   '/' +
+    //   ctime.getDate() +
+    //   ' ' +
+    //   ctime.getHours() +
+    //   ':' +
+    //   ctime.getMinutes()
     let opacity = 1.0
     if (item.originMsg.consumed) {
       opacity = 0.3

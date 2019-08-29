@@ -3405,15 +3405,24 @@ async function createHeatMap(params) {
   }
 }
 
-function isThemeFieldTypeAvailable(fieldType) {
-  return (
-    fieldType === 'DOUBLE' ||
-    fieldType === 'INT16' ||
-    fieldType === 'INT32' ||
-    fieldType === 'INT64' ||
-    fieldType === 'LONGBINARY' ||
-    fieldType === 'SINGLE'
-  )
+function isThemeFieldTypeAvailable(fieldType, themeType) {
+  if (
+    themeType &&
+    (themeType === constants.THEME_UNIFY_LABEL ||
+      themeType === constants.THEME_UNIQUE_LABEL ||
+      themeType === constants.THEME_RANGE_LABEL)
+  ) {
+    return true
+  } else {
+    return (
+      fieldType === 'DOUBLE' ||
+      fieldType === 'INT16' ||
+      fieldType === 'INT32' ||
+      fieldType === 'INT64' ||
+      fieldType === 'LONGBINARY' ||
+      fieldType === 'SINGLE'
+    )
+  }
 }
 
 export default {
