@@ -14,6 +14,7 @@ import { FileTools } from '../../../../native'
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language'
 import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
+import { getThemeAssets } from '../../../../assets'
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
@@ -43,7 +44,7 @@ function getShareData(type, params) {
             })
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
+          image: getThemeAssets().share.online,
         },
         {
           key: constants.SUPERMAP_IPORTAL,
@@ -57,7 +58,7 @@ function getShareData(type, params) {
             })
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
+          image: getThemeAssets().share.iportal,
         },
       ]
       break
@@ -93,7 +94,7 @@ function getShareData(type, params) {
             showSaveDialog(constants.SUPERMAP_ONLINE)
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
+          image: getThemeAssets().share.online,
         },
         {
           key: constants.SUPERMAP_IPORTAL,
@@ -103,7 +104,7 @@ function getShareData(type, params) {
             showSaveDialog(constants.SUPERMAP_IPORTAL)
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
+          image: getThemeAssets().share.iportal,
         },
         // {
         //   key: constants.FRIEND,

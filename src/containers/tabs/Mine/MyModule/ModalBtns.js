@@ -4,6 +4,7 @@ import { MTBtn } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
+import { getThemeAssets } from '../../../../assets'
 
 export default class ModalBtns extends Component {
   props: {
@@ -39,7 +40,7 @@ export default class ModalBtns extends Component {
               key={'online'}
               title={'Online'}
               style={styles.button}
-              image={require('../../../../assets/mapTools/icon_share_online_black.png')}
+              image={getThemeAssets().share.online}
               imageStyle={styles.headerBtn}
               onPress={() => {
                 this.props.actionOfOnline && this.props.actionOfOnline()
@@ -51,7 +52,7 @@ export default class ModalBtns extends Component {
               key={'iportal'}
               title={'iPortal'}
               style={styles.button}
-              image={require('../../../../assets/mapTools/icon_share_online_black.png')}
+              image={getThemeAssets().share.iportal}
               imageStyle={styles.headerBtn}
               onPress={() => {
                 this.props.actionOfIPortal && this.props.actionOfIPortal()
@@ -63,7 +64,7 @@ export default class ModalBtns extends Component {
               key={'wechat'}
               title={getLanguage(global.language).Prompt.WECHAT}
               style={styles.button}
-              image={require('../../../../assets/Mine/icon_mine_wechat.png')}
+              image={getThemeAssets().share.wechat}
               imageStyle={styles.headerBtn}
               onPress={() => {
                 this.props.actionOfWechat && this.props.actionOfWechat()
@@ -75,7 +76,7 @@ export default class ModalBtns extends Component {
               key={'friend'}
               title={getLanguage(global.language).Navigator_Label.FRIENDS}
               style={styles.button}
-              image={require('../../../../assets/Mine/icon_mine_friend.png')}
+              image={getThemeAssets().share.friend}
               imageStyle={styles.headerBtn}
               onPress={() => {
                 this.props.actionOfFriend && this.props.actionOfFriend()
