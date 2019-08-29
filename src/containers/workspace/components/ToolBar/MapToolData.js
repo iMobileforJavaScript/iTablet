@@ -1113,6 +1113,7 @@ function tour() {
  * 智能配图
  */
 function matchPictureStyle() {
+  ImagePicker.AlbumListView.defaultProps.showDialog = false
   ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
   ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
 
