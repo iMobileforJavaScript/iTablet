@@ -1,37 +1,37 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
-import { color } from '../../styles'
+import { color, size } from '../../styles'
 export default StyleSheet.create({
   container: {
     backgroundColor: '#FBFBFB',
   },
   section: {
     flex: 1,
-    flexDirection: 'row',
     height: scaleSize(80),
-    backgroundColor: '#505050',
-    paddingLeft: scaleSize(20),
+    backgroundColor: color.bgW,
+    flexDirection: 'row',
     alignItems: 'center',
   },
   row: {
     flex: 1,
+    paddingLeft: scaleSize(14),
+    height: scaleSize(80),
+    padding: scaleSize(6),
     flexDirection: 'row',
-    height: scaleSize(79),
-    backgroundColor: 'transparent',
-    paddingLeft: scaleSize(20),
-    // paddingRight: scaleSize(30),
     alignItems: 'center',
     // justifyContent: 'space-between',
   },
-  selection: {
+  selectionImg: {
     width: scaleSize(40),
     height: scaleSize(40),
-    // marginLeft: scaleSize(10),
+    marginLeft: scaleSize(20),
   },
   sectionsTitle: {
-    color: '#FBFBFB',
-    fontSize: setSpText(26),
     marginLeft: scaleSize(25),
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: size.fontSize.fontSizeXXl,
+    color: color.content,
   },
   itemName: {
     fontSize: setSpText(24),
@@ -54,6 +54,14 @@ export default StyleSheet.create({
     width: scaleSize(60),
     height: scaleSize(60),
     // backgroundColor: 'pink',
+  },
+  btn: {
+    height: scaleSize(50),
+    width: scaleSize(60),
+    marginLeft: scaleSize(6),
+    marginRight: scaleSize(6),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   visibleImg: {
     width: scaleSize(40),
@@ -84,8 +92,9 @@ export default StyleSheet.create({
     // backgroundColor:"#4680DF",
   },
   sectionFooter: {
-    flex: 1,
-    height: 1,
-    backgroundColor: color.fontColorGray,
+    flexDirection: 'column',
+    width: '100%',
+    height: scaleSize(10),
+    backgroundColor: color.separateColorGray,
   },
 })
