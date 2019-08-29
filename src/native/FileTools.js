@@ -334,6 +334,21 @@ async function getNetModel(path = '', filter = {}) {
 }
 
 /**
+ * 获取指定路径下的室内数据源
+ * @param path
+ * @param filter
+ * @returns {Promise.<*>}
+ */
+async function getIndoorData(path = '', filter = {}) {
+  try {
+    if (!path) return []
+    return await FileTools.getIndoorData(path, filter)
+  } catch (e) {
+    return e
+  }
+}
+
+/**
  * 返回视频缩略图
  * @param path
  * @returns {Promise.<*>}
@@ -369,6 +384,7 @@ export default {
   getMaps,
   getNavigationWorkspace,
   getNetModel,
+  getIndoorData,
   getAvailableMapName,
   EnvironmentIsValid,
   addImportExternalData,

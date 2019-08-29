@@ -184,6 +184,7 @@ android {
         noCompress "tflite"
         noCompress "lite"
     }
+    packagingOptions {exclude 'META-INF/proguard/androidx-annotations.pro'}
 }
 
 dependencies {

@@ -71,8 +71,8 @@ import NavigationPoiView from '../../components/NavigationPoiView'
 import ChangeArView from '../../components/ChangeArView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
-import Map2Dto3D from '../../components/Map2Dto3D/Map2Dto3D'
 import FloorListView from '../../components/FloorListView'
+import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -185,6 +185,10 @@ export default class MapView extends React.Component {
       showAIDetect: GLOBAL.Type === constants.MAP_AR,
       showRoadView: true,
       showArModeIcon: true,
+      showIncrement: false,
+      leftClick: false,
+      rightClick: true,
+      incrementShow: true,
     }
     this.closeInfo = [
       {
@@ -969,6 +973,9 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    this.props.setMapIndoorNavigation(false)
+    this.props.setMap2Dto3D(false)
+    GLOBAL.NAVIGATIONMAPOPEN = false
     // 优先处理其他界面跳转到MapView传来的返回事件
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
@@ -1433,6 +1440,10 @@ export default class MapView extends React.Component {
         device={this.props.device}
         setMapType={this.setMapType}
         online={this.props.online}
+        incrementRoad={() => {
+          this.showFullMap(true)
+          this.setState({ showIncrement: true })
+        }}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}
@@ -1613,6 +1624,10 @@ export default class MapView extends React.Component {
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
+        cancelincrement={() => {
+          SMap.setAction(Action.PAN)
+          this.setState({ incrementShow: true, showIncrement: false })
+        }}
         switchAr={this.switchAr}
         {...this.props}
       />
@@ -1639,6 +1654,8 @@ export default class MapView extends React.Component {
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         //title={'提示'}
+        style={styles.dialogStyle}
+        opacityStyle={styles.dialogStyle}
         info={getLanguage(this.props.language).Prompt.ENABLE_DYNAMIC_PROJECTION}
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
@@ -1853,34 +1870,84 @@ export default class MapView extends React.Component {
         type: 'pointSearch',
       })
     } else {
-      (async function() {
-        this.showFullMap(true)
-        let data = []
-        let maplist = await SMap.getNavigationData()
-        if (maplist && maplist.length > 0) {
-          let userList = []
-          maplist.forEach(item => {
-            let name = item.dataset
-            item.title = name
-            item.name = name.split('.')[0]
-            item.image = require('../../../../assets/Navigation/network.png')
-            userList.push(item)
+      if (this.state.showIncrement) {
+        if (this.state.leftClick) {
+          NavigationService.navigate('InputPage', {
+            headerTitle: getLanguage(this.props.language).Map_Main_Menu
+              .TOOLS_NAME,
+            placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            cb: async value => {
+              GLOBAL.INCREMENTDATASETNAME = value
+              if (value !== '') {
+                (async function() {
+                  await SMap.newIncrementRoad(value)
+                }.bind(this)())
+              }
+              NavigationService.goBack()
+            },
+          })
+          this.setState({ incrementShow: false, showIncrement: false })
+          this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+            containerType: 'table',
+            column: 4,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
+          })
+        } else if (this.state.rightClick) {
+          SMap.setLabelColor()
+          NavigationService.navigate('InputPage', {
+            headerTitle: getLanguage(this.props.language).Map_Main_Menu
+              .TOOLS_NAME,
+            placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            cb: async value => {
+              if (value !== '') {
+                (async function() {
+                  await SMap.newIncrementRoad(value)
+                }.bind(this)())
+              }
+              NavigationService.goBack()
+            },
+          })
+          SMap.setAction(Action.DRAWLINE)
+          this.setState({ incrementShow: false, showIncrement: false })
+          this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+            containerType: 'table',
+            column: 4,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
           })
         }
-
+      } else {
+        this.showFullMap(true)
+        let data = []
         data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NETWORK,
+          title: getLanguage(global.language).Map_Main_Menu.NETDATA,
           //'路网',
           image: require('../../../../assets/Navigation/network_white.png'),
-          data: maplist || [],
+          data: [
+            {
+              title: '室外数据',
+              name: '室外数据',
+              image: require('../../../../assets/Navigation/network.png'),
+            },
+            {
+              title: '室内数据',
+              name: '室内数据',
+              image: require('../../../../assets/Navigation/network.png'),
+            },
+            {
+              title: '开始导航',
+              name: '开始导航',
+              image: require('../../../../assets/Navigation/network.png'),
+            },
+          ],
         })
-
-        this.toolBox.setVisible(true, ConstToolType.NETWORK, {
+        this.toolBox.setVisible(true, ConstToolType.NETDATA, {
           containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[4],
+          height: ConstToolType.THEME_HEIGHT[3],
           data,
         })
-      }.bind(this)())
+      }
     }
   }
 
@@ -1911,12 +1978,46 @@ export default class MapView extends React.Component {
     )
   }
 
+  _renderIncrementRoad = () => {
+    if (this.state.showIncrement) {
+      return (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+          }}
+        >
+          <IncrementRoadView
+            leftClick={() => {
+              this.setState({ leftClick: true, rightClick: false })
+            }}
+            rightClick={() => {
+              this.setState({ rightClick: true, leftClick: false })
+            }}
+            headerProps={{
+              title: '增量路网',
+              navigation: this.props.navigation,
+              type: 'fix',
+              backAction: () => {
+                this.setState({ showIncrement: false })
+                this.showFullMap(false)
+              },
+            }}
+          />
+        </View>
+      )
+    } else {
+      return <View />
+    }
+  }
+
   _renderNavigationPoiView = () => {
     return <NavigationPoiView />
   }
 
   _renderChangeArView = () => {
-    return <ChangeArView />
+    return <ChangeArView showFullMap={this.showFullMap} />
   }
 
   renderContainer = () => {
@@ -1946,20 +2047,20 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.legend = ref)}
           />
         )}
-        {!this.props.map2Dto3D && this.state.showMap && (
+        {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
             style={styles.map}
             onGetInstance={this._onGetInstance}
           />
         )}
-        {this.props.map2Dto3D && (
-          <Map2Dto3D
-            mapIs3D={this.props.mapIs3D}
-            openMap={this.props.openMap}
-            openWorkspace={this.props.openWorkspace}
-          />
-        )}
+        {/*{this.props.map2Dto3D && (*/}
+        {/*<Map2Dto3D*/}
+        {/*mapIs3D={this.props.mapIs3D}*/}
+        {/*openMap={this.props.openMap}*/}
+        {/*openWorkspace={this.props.openWorkspace}*/}
+        {/*/>*/}
+        {/*)}*/}
         {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
         {this.state.showAIDetect && (
           <SMAIDetectView
@@ -1971,27 +2072,26 @@ export default class MapView extends React.Component {
         {!this.state.showAIDetect && this.renderMapController()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
           this.props.mapNavigation.isPointShow &&
           this._renderNavigationView()}
+        {this._renderIncrementRoad()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
           this.props.mapNavigation.isShow &&
           this._renderNavigationPoiView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isPointShow &&
+          this.props.mapNavigationShow &&
           this._renderChangeArView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
+          !this.props.mapNavigationShow &&
           !this.props.mapNavigation.isShow &&
+          this.state.incrementShow &&
           this._renderNavigationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.mapNavigation.isPointShow &&
-          this.props.mapNavigationShow &&
           this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&
@@ -2039,6 +2139,8 @@ export default class MapView extends React.Component {
           info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
           // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
+          style={styles.dialogStyle}
+          opacityStyle={styles.dialogStyle}
           confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
           cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         />

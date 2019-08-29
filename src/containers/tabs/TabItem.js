@@ -1,43 +1,63 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Image, StyleSheet, View, Text } from 'react-native'
+import { Image, StyleSheet, View, TouchableOpacity, Text } from 'react-native'
 import { color } from '../../styles'
 import { scaleSize, setSpText } from '../../utils'
-
-import { getThemeAssets } from '../../assets'
+import { getLanguage } from '../../language/index'
 
 class TabItem extends React.Component {
   props: {
-    data: Object,
-    user: Object,
-    currentUser: Object,
-  }
-
-  static defaultProps = {
-    data: {},
-    currentUser: {},
+    item: Object,
+    language: String,
+    selected: boolean,
+    onPress: () => {},
+    renderExtra: () => {},
   }
 
   constructor(props) {
     super(props)
   }
 
+  gettitle = () => {
+    let t = ''
+    switch (this.props.item.key) {
+      case 'Home':
+        t = getLanguage(this.props.language).Navigator_Label.HOME
+        break
+      case 'Friend':
+        t = getLanguage(this.props.language).Navigator_Label.FRIENDS
+        break
+      case 'Find':
+        t = getLanguage(this.props.language).Navigator_Label.EXPLORE
+        break
+      case 'Mine':
+        t = getLanguage(this.props.language).Navigator_Label.PROFILE
+        break
+    }
+    return t
+  }
+
   render() {
     return (
-      <View style={styles.labelView}>
-        <Image
-          resizeMode="contain"
-          source={
-            this.props.data.focused
-              ? getThemeAssets().tabBar.tab_friend_selected
-              : getThemeAssets().tabBar.tab_friend
-          }
-          style={styles.icon}
-        />
-        <Text style={styles.tabText}>
-          {'好友' + this.props.currentUser.userName}
-        </Text>
-      </View>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={this.props.onPress}
+        style={styles.touchView}
+      >
+        <View style={styles.labelView}>
+          <Image
+            resizeMode="contain"
+            source={
+              this.props.selected
+                ? this.props.item.selectedImage
+                : this.props.item.image
+            }
+            style={styles.icon}
+          />
+          <Text style={styles.tabText}>{this.gettitle()}</Text>
+          {this.props.renderExtra && this.props.renderExtra()}
+        </View>
+      </TouchableOpacity>
     )
   }
 }
@@ -45,7 +65,7 @@ class TabItem extends React.Component {
 const mapStateToProps = state => {
   return {
     user: state.user.toJS(),
-    currentUser: state.user.toJS().currentUser,
+    language: state.setting.toJS().language,
   }
 }
 
@@ -57,29 +77,18 @@ export default connect(
 )(TabItem)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   tabText: {
-    color: color.fontColorWhite,
+    color: color.itemColorGray,
     fontSize: setSpText(20),
-    // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
-  },
-  selectedTabText: {
-    color: color.blue2,
-    fontSize: setSpText(20),
-    // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   icon: {
     width: scaleSize(60),
     height: scaleSize(60),
-    // backgroundColor: "pink"
+  },
+  touchView: {
+    alignItems: 'center',
   },
   labelView: {
-    // marginTop: Platform.OS === 'android' ? scaleSize(2) : 0,
-    // backgroundColor: "red",
-    flex: 1,
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },

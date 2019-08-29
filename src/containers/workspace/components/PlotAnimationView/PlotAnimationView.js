@@ -76,7 +76,7 @@ export default class PlotAnimationView extends React.Component {
         subData.push(data[1])
         subData.push(data[2])
         subData.push(data[3])
-        subData.push(data[0])
+        // subData.push(data[0])  路径动画投影坐标有问题，暂时先屏蔽
         subData.push(data[4])
         subData.push(data[5])
         break

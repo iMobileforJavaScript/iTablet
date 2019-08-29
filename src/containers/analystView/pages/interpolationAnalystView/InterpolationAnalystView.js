@@ -105,6 +105,12 @@ export default class InterpolationAnalystView extends Component {
   checkData = () => {
     let available = false
     if (
+      this.state.resolution !== '' &&
+      !isNaN(this.state.resolution) &&
+      !isNaN(this.state.top) &&
+      !isNaN(this.state.bottom) &&
+      !isNaN(this.state.left) &&
+      !isNaN(this.state.right) &&
       this.state.method &&
       this.state.dataSource &&
       this.state.dataSet &&
@@ -644,10 +650,10 @@ export default class InterpolationAnalystView extends Component {
                     }
                     let bounds = (await SMap.getDatasetBounds(sourceData)) || {}
                     newStateData = Object.assign(newStateData, {
-                      left: bounds.left.toFixed(6),
-                      bottom: bounds.bottom.toFixed(6),
-                      right: bounds.right.toFixed(6),
-                      top: bounds.top.toFixed(6),
+                      left: parseFloat(bounds.left.toFixed(6)),
+                      bottom: parseFloat(bounds.bottom.toFixed(6)),
+                      right: parseFloat(bounds.right.toFixed(6)),
+                      top: parseFloat(bounds.top.toFixed(6)),
                     })
                   }
                   newStateData.dataSet =
@@ -658,8 +664,9 @@ export default class InterpolationAnalystView extends Component {
               case popTypes.DataSet: {
                 newStateData = { dataSet: data }
                 if (
-                  !this.state.dataSet ||
-                  data.datasetName !== this.state.dataSet.datasetName
+                  data &&
+                  (!this.state.dataSet ||
+                    data.datasetName !== this.state.dataSet.datasetName)
                 ) {
                   let sourceData = {
                     datasource: this.state.dataSource.value,
@@ -738,11 +745,19 @@ export default class InterpolationAnalystView extends Component {
                   : styles.headerBtnTitleDisable
               }
               btnClick={() => {
-                this.state.btnAvailable &&
+                if (this.state.btnAvailable) {
+                  let data = Object.assign({}, this.state, {
+                    resolution: parseFloat(this.state.resolution),
+                    top: parseFloat(this.state.top),
+                    left: parseFloat(this.state.left),
+                    bottom: parseFloat(this.state.bottom),
+                    right: parseFloat(this.state.right),
+                  })
                   NavigationService.navigate('InterpolationAnalystDetailView', {
                     title: this.state.method.key,
-                    data: this.state,
+                    data,
                   })
+                }
               }}
             />
           ),

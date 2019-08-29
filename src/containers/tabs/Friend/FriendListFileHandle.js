@@ -371,6 +371,14 @@ export default class FriendListFileHandle {
     return undefined
   }
 
+  /**
+   * @param {*} id
+   * @return:
+   * undefiend: 没在好友列表
+   * 0：被对方删除好友关系
+   * 1：互相是好友关系
+   * 2: 已添加好友，等待对方同意
+   */
   static getIsFriend(id) {
     if (FriendListFileHandle.friends) {
       for (let key in FriendListFileHandle.friends.userInfo) {
