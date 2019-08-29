@@ -908,7 +908,7 @@ export default class ToolBar extends React.PureComponent {
         // if (selectedExpression) {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
-          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr,this.state.themeCreateType)) {
             item.info = {
               infoType: 'fieldType',
               fieldType: item.fieldType,
@@ -1007,7 +1007,7 @@ export default class ToolBar extends React.PureComponent {
 
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
-          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr,this.state.themeCreateType)) {
             if (selectedExpressions) {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
@@ -4203,7 +4203,7 @@ export default class ToolBar extends React.PureComponent {
           let dataset = data.dataset
           let _list = []
           data.list.forEach(item => {
-            if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+            if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr,this.state.themeCreateType)) {
               item.info = {
                 infoType: 'fieldType',
                 fieldType: item.fieldType,
