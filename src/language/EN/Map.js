@@ -289,6 +289,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY: 'Target Classify',
   MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: 'Aggregate Collect',
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: 'Target Collect',
+  MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: 'High-Precision Collect',
 }
 
 //推演动画

@@ -169,9 +169,8 @@ export default class LayerManager_tolbar extends React.Component {
   }
   getData = (type, isGroup = false) => {
     let data = []
-    let headerData = layerSettingCanVisit(this.props.language).concat(
-      layerSettingCanSelect(this.props.language),
-    )
+    let headerData = layerSettingCanVisit(this.props.language)
+    !isGroup && headerData.concat(layerSettingCanSelect(this.props.language))
     switch (type) {
       case ConstToolType.MAP_STYLE:
         data = layersetting(this.props.language, isGroup)

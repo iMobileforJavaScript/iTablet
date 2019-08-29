@@ -331,7 +331,7 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.SMART_CARTOGRAPHY,
           action: matchPictureStyle,
           size: 'large',
-          image: getPublicAssets().mapTools.tour,
+          image: getThemeAssets().mapTools.rightbar_tool_style,
         },
         // {
         //   key: 'captureVideo',
@@ -1113,6 +1113,7 @@ function tour() {
  * 智能配图
  */
 function matchPictureStyle() {
+  ImagePicker.AlbumListView.defaultProps.showDialog = false
   ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
   ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
 
