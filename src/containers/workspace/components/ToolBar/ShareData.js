@@ -377,8 +377,8 @@ async function shareMap(type, list = [], name = '') {
             await SOnlineService.uploadFile(path, dataName, {
               onProgress: onProgeress,
               onResult: async () => {
-                let result = await SOnlineService.publishService(dataName)
-                onResult(result)
+                SOnlineService.publishService(dataName)
+                onResult(true)
               },
             })
           } else if (type === constants.SUPERMAP_IPORTAL) {
@@ -386,10 +386,8 @@ async function shareMap(type, list = [], name = '') {
               onProgress: onProgeress,
               onResult: async () => {
                 let JSIPortalService = new OnlineServicesUtils('iportal')
-                let result = await JSIPortalService.publishServiceByName(
-                  dataName,
-                )
-                onResult(result)
+                JSIPortalService.publishServiceByName(dataName + '.zip')
+                onResult(true)
               },
             })
           }

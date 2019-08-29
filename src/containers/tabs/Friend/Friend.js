@@ -1320,6 +1320,20 @@ export default class Friend extends Component {
   renderNOFriend() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            NavigationService.navigate('Login')
+          }}
+        >
+          <View style={styles.itemView}>
+            <Image
+              style={styles.imagStyle}
+              source={require('../../../assets/Mine/online_white.png')}
+            />
+            <Text style={styles.textStyle}>{'Online'}</Text>
+          </View>
+        </TouchableOpacity>
         <View>
           <Text
             style={{

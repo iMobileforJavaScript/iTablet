@@ -321,7 +321,7 @@ export default class Register extends React.Component {
         style={styles.container}
         headerProps={{
           //'注册'
-          title: getLanguage(this.props.language).Profile.REGISTER,
+          title: getLanguage(this.props.language).Profile.REGISTER + ' Online',
           navigation: this.props.navigation,
         }}
       >
