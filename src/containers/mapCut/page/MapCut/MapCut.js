@@ -163,14 +163,20 @@ export default class MapCut extends React.Component {
               newDatasourceUDDPath = filePath + newDatasourceName + '.udd'
               flag = await FileTools.fileIsExist(newDatasourcePath)
             }
+            //如果别名不可用 返回了新的别名 重新赋值
+            let returnName = await SMap.isAvilableAlias(newDatasourceName)
+            if (returnName !== newDatasourceName) {
+              newDatasourcePath = filePath + returnName + '.udb'
+              newDatasourceUDDPath = filePath + returnName + '.udd'
+              newDatasourceName = returnName
+            }
             datasourceParams.server = newDatasourcePath
             datasourceParams.engineType = EngineType.UDB
             datasourceParams.alias = newDatasourceName
-            SMap.createDatasource(datasourceParams).then(rel => {
-              if (rel === true) {
-                SMap.openDatasource(datasourceParams)
-              }
-            })
+            let rel = await SMap.createDatasource(datasourceParams)
+            if (rel === true) {
+              await SMap.openDatasource(datasourceParams)
+            }
             let prefix = `@Label_${this.props.currentUser.userName}#`
             let regexp = new RegExp(prefix)
             let layers = this.state.layers
@@ -179,7 +185,7 @@ export default class MapCut extends React.Component {
               .map(val => val.name)
           }
           let DSName = this.state.datasources.map(item => item.alias)
-          this.state.selected.forEach((value, key) => {
+          this.state.selected.forEach(async (value, key) => {
             let layerInfo = {}
             if (!value) return
             let info = this.state.extraData.get(key)
@@ -194,12 +200,11 @@ export default class MapCut extends React.Component {
               datasourceParams.server = newDatasourcePath
               datasourceParams.engineType = EngineType.UDB
               datasourceParams.alias = info.datasourceName
-              SMap.createDatasource(datasourceParams).then(rel => {
-                if (rel === true) {
-                  SMap.openDatasource(datasourceParams)
-                  DSName.push(info.datasourceName)
-                }
-              })
+              let rel = await SMap.createDatasource(datasourceParams)
+              if (rel === true) {
+                await SMap.openDatasource(datasourceParams)
+                DSName.push(info.datasourceName)
+              }
             }
 
             layerInfo.LayerName = key
