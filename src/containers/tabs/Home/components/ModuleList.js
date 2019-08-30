@@ -98,7 +98,7 @@ class ModuleList extends Component {
           let arrFile = await FileTools.getFilterFiles(fileDirPath)
           await this.props.importWorkspace(
             arrFile[0].filePath,
-            downloadData.copyFilePath,
+            // downloadData.copyFilePath,
           )
           FileTools.deleteFile(fileDirPath + '_')
           FileTools.deleteFile(fileDirPath + '.zip')
@@ -200,7 +200,7 @@ class ModuleList extends Component {
 
       let downloadData = this.getDownloadData(language, item)
       let currentDownloadData = this.getCurrentDownloadData(downloadData)
-      let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
+      // let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
 
       let cachePath = this.homePath + ConstPath.CachePath
       let fileDirPath = cachePath + downloadData.fileName
@@ -247,7 +247,8 @@ class ModuleList extends Component {
         }
         let isExist = await FileTools.fileIsExist(filePath2)
         if (!isExist) {
-          await this.props.importWorkspace(filePath, toPath, true)
+          // await this.props.importWorkspace(filePath, toPath, true)
+          await this.props.importWorkspace(filePath)
         }
         this.moduleItems[index].setNewState({
           disabled: false,

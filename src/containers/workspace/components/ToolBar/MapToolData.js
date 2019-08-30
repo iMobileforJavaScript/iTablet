@@ -317,6 +317,8 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.CAMERA,
           action: captureImage,
           size: 'large',
+          disable: layerType !== 'TAGGINGLAYER',
+          //todo 多媒体采集缺灰色图片
           image: getPublicAssets().mapTools.tools_camera,
         },
         {
@@ -1121,7 +1123,19 @@ function matchPictureStyle() {
     maxSize: 1,
     callback: async data => {
       if (data.length === 1) {
-        await SMap.matchPictureStyle(data[0].uri)
+        _params.setContainerLoading &&
+          _params.setContainerLoading(
+            true,
+            getLanguage(global.language).Prompt.IMAGE_RECOGNITION_ING,
+          )
+        await SMap.matchPictureStyle(data[0].uri, res => {
+          _params.setContainerLoading && _params.setContainerLoading(false)
+          if (!res || !res.result) {
+            Toast.show(
+              getLanguage(global.language).Prompt.IMAGE_RECOGNITION_FAILED,
+            )
+          }
+        })
         _params.showFullMap && _params.showFullMap(true)
         GLOBAL.ToolBar.setVisible(true, ConstToolType.SMART_CARTOGRAPHY, {
           isFullScreen: false,
