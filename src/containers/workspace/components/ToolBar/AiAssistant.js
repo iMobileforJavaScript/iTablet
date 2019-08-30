@@ -89,6 +89,7 @@ function polymerizeCollect() {
     await SAIDetectView.setIsPolymerize(true)
     GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
     GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+    await SAIDetectView.setIsPolymerize(true)
   }.bind(this)())
 }
 

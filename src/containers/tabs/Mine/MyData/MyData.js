@@ -795,10 +795,25 @@ export default class MyLocalData extends Component {
             this.setLoading(false)
             return
           }
-          let uploadResult = await SIPortalService.uploadData(
-            targetPath,
-            fileName + '.zip',
-          )
+          let uploadResult
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            uploadResult = await SIPortalService.uploadData(
+              targetPath,
+              fileName + '.zip',
+            )
+          } else {
+            uploadResult = await SIPortalService.uploadDataByType(
+              targetPath,
+              fileName + '.zip',
+              'UDB',
+            )
+          }
+          // let uploadResult = await SIPortalService.uploadData(
+          //   targetPath,
+          //   fileName + '.zip',
+          // )
           this.setLoading(false)
           uploadResult
             ? Toast.show(getLanguage(this.props.language).Prompt.SHARE_SUCCESS)

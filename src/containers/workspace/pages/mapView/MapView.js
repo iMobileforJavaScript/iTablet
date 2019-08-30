@@ -156,6 +156,7 @@ export default class MapView extends React.Component {
     this.mapType = (params && params.mapType) || 'DEFAULT'
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
+    this.operationType = params && params.operationType
     this.showMarker = params && params.showMarker
     this.mapTitle = ''
     if (params && params.mapTitle) {
@@ -1200,6 +1201,7 @@ export default class MapView extends React.Component {
             this.showMarker.latitude,
             markerTag,
           )
+        SMap.setIsMagnifierEnabled(true)
       } catch (e) {
         this.setLoading(false)
       }
