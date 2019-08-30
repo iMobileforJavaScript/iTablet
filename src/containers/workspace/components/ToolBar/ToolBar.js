@@ -3092,6 +3092,7 @@ export default class ToolBar extends React.PureComponent {
         type !== ConstToolType.MAP_TOOL_TAGGING &&
         type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
+        SMap.cancel()
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
