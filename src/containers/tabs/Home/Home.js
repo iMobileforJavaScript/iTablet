@@ -9,6 +9,7 @@ import {
   NativeModules,
   InteractionManager,
   Platform,
+  NetInfo,
 } from 'react-native'
 import { Container, Dialog } from '../../../components'
 import { ModuleList } from './components'
@@ -252,10 +253,17 @@ export default class Home extends Component {
     }
   }
 
-  confirm = () => {
-    let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
-    confirm &&
-      confirm(this.moduleItemRef, this.downloadData, this.state.dialogCheck)
+  confirm = async () => {
+    //先判断是否有网
+    NetInfo.isConnected.fetch().done(isConnected => {
+      if (isConnected) {
+        let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
+        confirm &&
+          confirm(this.moduleItemRef, this.downloadData, this.state.dialogCheck)
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
+      }
+    })
   }
 
   cancel = () => {

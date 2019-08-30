@@ -370,9 +370,10 @@ export default class MyModule extends Component {
           })
         } else if (type === 'iportal') {
           this.ModalBtns.setVisible(false)
-          let uploadResult = await SIPortalService.uploadData(
+          let uploadResult = await SIPortalService.uploadDataByType(
             toPath,
             fileName + '.zip',
+            'UDB',
           )
           uploadResult
             ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
