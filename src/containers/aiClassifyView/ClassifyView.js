@@ -18,14 +18,14 @@ import {
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 // import { getLanguage } from '../../language'
-import { Container, ImagePicker, Loading } from '../../components'
+import { Container, ImagePicker, Loading, MTBtn } from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import { getLanguage } from '../../language'
 import RadioButton from './RadioButton'
-import { Toast } from '../../utils'
+import { scaleSize, Toast } from '../../utils'
 
 /*
  * AI分类
@@ -254,6 +254,15 @@ export default class ClassifyView extends React.Component {
     await SAIClassifyView.clearBitmap()
   }
 
+  showClassifySettingsView = async () => {
+    const datasourceAlias = 'currentLayer.datasourceAlias' // 标注数据源名称
+    const datasetName = 'currentLayer.datasetName' // 标注图层名称
+    NavigationService.navigate('ClassifySettingsView', {
+      datasourceAlias,
+      datasetName,
+    })
+  }
+
   openAlbum = () => {
     ImagePicker.AlbumListView.defaultProps.showDialog = false
     ImagePicker.AlbumListView.defaultProps.dialogConfirm = null
@@ -479,6 +488,14 @@ export default class ClassifyView extends React.Component {
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
+          headerRight: [
+            <MTBtn
+              key={'settings'}
+              image={getThemeAssets().ar.toolbar.icon_classify_settings}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+              onPress={this.showClassifySettingsView}
+            />,
+          ],
         }}
         bottomProps={{ type: 'fix' }}
       >

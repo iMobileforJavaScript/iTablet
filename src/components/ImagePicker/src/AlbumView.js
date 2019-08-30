@@ -236,7 +236,13 @@ export default class extends React.PureComponent {
         selectedItems: [...selectedItems],
       })
     } else if (this.state.selectedItems.length >= this.props.maxSize) {
-      Alert.alert('', this.props.maxSizeChooseAlert(this.props.maxSize))
+      if (this.props.maxSize === 1) {
+        this.setState({
+          selectedItems: [itemuri],
+        })
+      } else {
+        Alert.alert('', this.props.maxSizeChooseAlert(this.props.maxSize))
+      }
     } else {
       this.setState({
         selectedItems: [...this.state.selectedItems, itemuri],

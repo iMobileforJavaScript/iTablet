@@ -69,6 +69,8 @@ export default {
   UserPath: AppPath + 'User/', // 存放用户数据
   UserPath2: AppPath + 'User', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据
+  Common_AIDetectModel: AppPath + 'Common/AI/DetectModel/', // 公共数据:检测模型
+  Common_AIClassifyModel: AppPath + 'Common/AI/ClassifyModel/', // 公共数据:分类模型
   Import: AppPath + 'Import', //导入外部数据文件夹
   PlotIconPath: AppPath + 'Common/PlotData/SymbolIcon', //标绘符号图标地址
   PlotLibPath: AppPath + 'Common/PlotData/Symbol', //标绘符号库地址
