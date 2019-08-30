@@ -34,6 +34,40 @@ RCT_REMAP_METHOD(sendFileOfWechat, sendFileOfWechat:(NSDictionary*)data resolve:
     reject(@"AppUtils", exception.reason, nil);
   }
 }
+RCT_REMAP_METHOD(isLocationOpen, LocationOpenWithresolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL isOpen = [CLLocationManager locationServicesEnabled];
+    resolve([NSNumber numberWithBool:isOpen]);
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
+RCT_REMAP_METHOD(isLocationAllowed, LocationAllowWithresolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL isAllowed;
+    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+      isAllowed = NO;
+    } else {
+      isAllowed = YES;
+    }
+    resolve([NSNumber numberWithBool:isAllowed]);
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
+RCT_REMAP_METHOD(startAppLoactionSetting, startLocationWithresolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    NSURL * url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];
+    if([[UIApplication sharedApplication] canOpenURL:url]) {
+      [[UIApplication sharedApplication] openURL:url];
+      resolve([NSNumber numberWithBool:YES]);
+    } else {
+      resolve([NSNumber numberWithBool:NO]);
+    }
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
 RCT_REMAP_METHOD(getCurrentLocation, resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     [NativeUtil openGPS];

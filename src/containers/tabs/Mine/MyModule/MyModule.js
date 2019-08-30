@@ -326,10 +326,7 @@ export default class MyModule extends Component {
           : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
       )
       let toPath =
-        userPath +
-        ConstPath.RelativePath.ExternalData +
-        ConstPath.RelativeFilePath.ExportData +
-        'MyExport.zip'
+        userPath + ConstPath.RelativePath.Temp + 'MyExportTemplate.zip'
       // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {

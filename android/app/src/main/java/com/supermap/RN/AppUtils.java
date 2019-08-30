@@ -1,6 +1,11 @@
 package com.supermap.RN;
 
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
+import android.provider.Settings;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -44,6 +49,33 @@ public class AppUtils extends ReactContextBaseJavaModule {
         }catch (Exception e){
             promise.reject(e);
         }
+    }
+
+    @ReactMethod
+    public void isLocationOpen(Promise promise) {
+        LocationManager locationManager = (LocationManager) mReactContext.getSystemService(Context.LOCATION_SERVICE);
+        promise.resolve(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+    }
+
+
+    @ReactMethod
+    public void startAppLoactionSetting(Promise promise) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try{
+            mReactContext.startActivity(intent);
+            promise.resolve(true);
+        } catch (ActivityNotFoundException e1){
+            intent .setAction(Settings.ACTION_SETTINGS);
+            try{
+                mReactContext.startActivity(intent);
+                promise.resolve(true);
+            } catch (Exception e2) {
+                promise.resolve(false);
+            }
+        }
+
     }
 
     @ReactMethod
