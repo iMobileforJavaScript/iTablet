@@ -14,6 +14,9 @@ const switch_ar_light = require('./switch_ar_light.png')
 const icon_camera_classify = require('./camera_classify.png')
 const radio_button_off = require('./radio_button_off.png')
 const radio_button_on = require('./radio_button_on.png')
+const classify_dustbin = require('./classify_dustbin.png')
+const classify_plant = require('./classify_plant.png')
+const classify_normal = require('./classify_normal.png')
 export default {
   functiontoolbar,
   toolbar,
@@ -31,4 +34,7 @@ export default {
   icon_camera_classify,
   radio_button_off,
   radio_button_on,
+  classify_dustbin,
+  classify_plant,
+  classify_normal,
 }
