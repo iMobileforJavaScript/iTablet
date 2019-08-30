@@ -359,7 +359,7 @@ export default class MyModule extends Component {
               },
             )
         } else if (type === 'online') {
-          SOnlineService.uploadFile(toPath, fileName, {
+          SOnlineService.uploadFilebyType(toPath, fileName, 'UDB', {
             onResult: () => {
               Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
               //'分享成功')

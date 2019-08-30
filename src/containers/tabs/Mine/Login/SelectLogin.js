@@ -17,11 +17,11 @@ export default class SelectLogin extends React.Component {
   renderBlock = type => {
     let image, text, loginPage
     if (type === 'online') {
-      image = require('../../../../assets/mapTools/icon_share_online.png')
+      image = require('../../../../assets/Mine/online_white.png')
       text = 'Online'
       loginPage = 'Login'
     } else if (type === 'iportal') {
-      image = require('../../../../assets/Mine/ip_logo.png')
+      image = require('../../../../assets/Mine/iportal_white.png')
       text = 'iPortal'
       loginPage = 'IPortalLogin'
     }

@@ -21,7 +21,7 @@ import { dialogStyles } from './../Styles'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from './../MessageDataHandle'
 import { getLanguage } from '../../../../language/index'
-
+import moment from 'moment'
 // import Friend from './../Friend'
 
 class FriendMessage extends Component {
@@ -343,17 +343,18 @@ class FriendMessage extends Component {
       lastMessage = this.props.friend.loadMsg(lastMessage)
       let time = lastMessage.originMsg.time
       let ctime = new Date(time)
-      let timeString =
-        '' +
-        ctime.getFullYear() +
-        '/' +
-        (ctime.getMonth() + 1) +
-        '/' +
-        ctime.getDate() +
-        ' ' +
-        ctime.getHours() +
-        ':' +
-        ctime.getMinutes()
+      let timeString = moment(ctime).format('YYYY/MM/DD HH:mm')
+      // let timeString =
+      //   '' +
+      //   ctime.getFullYear() +
+      //   '/' +
+      //   (ctime.getMonth() + 1) +
+      //   '/' +
+      //   ctime.getDate() +
+      //   ' ' +
+      //   ctime.getHours() +
+      //   ':' +
+      //   ctime.getMinutes()
 
       let iTemView
       return (

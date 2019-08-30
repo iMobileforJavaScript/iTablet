@@ -30,6 +30,7 @@ import { getLanguage } from '../../../language/index'
 import { getThemeAssets } from '../../../assets'
 import color from '../../../styles/color'
 import { scaleSize } from '../../../utils'
+import { SimpleDialog } from '../Friend'
 
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
@@ -150,7 +151,7 @@ export default class Home extends Component {
 
   _onLogin = () => {
     this._closeModal()
-    NavigationService.navigate('Login')
+    NavigationService.navigate('SelectLogin')
     // NavigationService.navigate('Mine')
   }
   _onRegister = () => {
@@ -172,6 +173,16 @@ export default class Home extends Component {
   _onToggleAccount = () => {
     this._closeModal()
     NavigationService.navigate('ToggleAccount')
+  }
+
+  _logoutConfirm = () => {
+    this._closeModal()
+    this.SimpleDialog.setConfirm(() => {
+      this.SimpleDialog.setVisible(false)
+      this._onLogout()
+    })
+    this.SimpleDialog.setText(getLanguage(this.props.language).Prompt.LOG_OUT)
+    this.SimpleDialog.setVisible(true)
   }
 
   _onLogout = () => {
@@ -409,7 +420,7 @@ export default class Home extends Component {
         onLogin={this._onLogin}
         onRegister={this._onRegister}
         onToggleAccount={this._onToggleAccount}
-        onLogout={this._onLogout}
+        onLogout={this._logoutConfirm}
         onSetting={this._onSetting}
         onAbout={this._onAbout}
         modalVisible={this.state.modalIsVisible}
@@ -418,6 +429,10 @@ export default class Home extends Component {
         getExit={this.getExit}
       />
     )
+  }
+
+  _renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   render() {
@@ -483,6 +498,7 @@ export default class Home extends Component {
           {this._renderModal()}
           {this.renderDialog()}
           {this.renderExitDialog()}
+          {this._renderSimpleDialog()}
         </View>
       </Container>
     )
