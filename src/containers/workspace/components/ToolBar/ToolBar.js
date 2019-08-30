@@ -2639,7 +2639,7 @@ export default class ToolBar extends React.PureComponent {
     this.setOverlayViewVisible(isShow)
 
     if (type === ConstToolType.MAP_STYLE) {
-      if (this.props.currentLayer && !this.currentLayerStyle) {
+      if (this.props.currentLayer) {
         SCartography.getLayerStyle(this.props.currentLayer.name).then(value => {
           this.currentLayerStyle = value
         })
