@@ -101,6 +101,7 @@ class Tabbar extends React.Component {
     let key = this.props.navigation.state.routes[NavIndex].key
     return (
       <TabItem
+        key={item.key}
         item={item}
         selected={key === item.key}
         onPress={() => {

@@ -88,12 +88,12 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (filePath, isFirstImportWorkspace) => {
+  _onImportWorkspace = async filePath => {
     try {
       if (filePath !== undefined) {
-        if (isFirstImportWorkspace === true) {
-          this.container && this.container.setLoading(true, '导入数据中...')
-        }
+        // if (isFirstImportWorkspace === true) {
+        //   this.container && this.container.setLoading(true, '导入数据中...')
+        // }
         let is3D = await SScene.is3DWorkspace({ server: filePath })
         if (is3D === true) {
           let result = await this.props.importSceneWorkspace({
@@ -118,9 +118,9 @@ export default class Home extends Component {
     } catch (e) {
       Toast.show('导入失败')
     } finally {
-      if (isFirstImportWorkspace === true) {
-        this.container && this.container.setLoading(false)
-      }
+      // if (isFirstImportWorkspace === true) {
+      //   this.container && this.container.setLoading(false)
+      // }
     }
   }
   headRender() {
