@@ -4,6 +4,7 @@ const icon_ar_toolbar_switch = require('./icon_ar_toolbar_switch.png')
 const icon_ar_toolbar_save = require('./icon_ar_toolbar_save.png')
 const icon_save = require('./icon_save.png')
 const icon_delete = require('./icon_delete.png')
+const icon_classify_settings = require('./icon_classify_settings.png')
 export default {
   icon_ar_toolbar_close,
   icon_ar_toolbar_undo,
@@ -11,4 +12,5 @@ export default {
   icon_ar_toolbar_save,
   icon_save,
   icon_delete,
+  icon_classify_settings,
 }
