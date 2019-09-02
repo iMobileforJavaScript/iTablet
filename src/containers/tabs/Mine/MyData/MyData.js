@@ -27,8 +27,8 @@ import {
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
-import { MineItem } from '../component'
-
+import { MineItem, BatchHeadBar } from '../component'
+import { getThemeAssets } from '../../../../assets'
 const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
   topContainer: {
@@ -108,6 +108,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     backgroundColor: '#FFFFFF',
   },
+  bottomItemStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   headerRightTextView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -136,7 +140,8 @@ export default class MyLocalData extends Component {
       textDisplay: 'none',
       title: (params && params.title) || '',
       isRefreshing: false,
-      batchDelete: false,
+      batchMode: false,
+      selectedNum: 0,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -173,7 +178,7 @@ export default class MyLocalData extends Component {
         let customerData = await this.getSectionData(customerPath, false)
         data.push(customerData)
       }
-      this.setState({ sectionData: data, textDisplay: 'none' })
+      this.setState({ sectionData: data, textDisplay: 'none', selectedNum: 0 })
     } catch (e) {
       this.setState({ textDisplay: 'none' })
     }
@@ -233,6 +238,7 @@ export default class MyLocalData extends Component {
           filter = {
             extension: 'udb',
             type: 'file',
+            exclued: 'Label_' + this.props.user.currentUser.userName + '#.udb',
           }
           title = isUser ? 'MY_DATA' : 'DATA'
           break
@@ -305,7 +311,6 @@ export default class MyLocalData extends Component {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
-      this.setState({ batchDelete: false })
       let deleteItem
       switch (this.state.title) {
         case getLanguage(this.props.language).Profile.MAP:
@@ -351,12 +356,14 @@ export default class MyLocalData extends Component {
 
   _selectAll = () => {
     let section = Object.assign([], this.state.sectionData)
+    let j = 0
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
         section[i].data[n].checked = true
+        j++
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: j })
   }
 
   _deselectAll = () => {
@@ -366,7 +373,18 @@ export default class MyLocalData extends Component {
         section[i].data[n].checked = false
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: 0 })
+  }
+
+  _getTotalItemNumber = () => {
+    let section = Object.assign([], this.state.sectionData)
+    let j = 0
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        j++
+      }
+    }
+    return j
   }
 
   _getSelectedList = () => {
@@ -445,10 +463,10 @@ export default class MyLocalData extends Component {
     // let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
-    let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
-    if (labelUDBName === txtInfo) {
-      return <View />
-    }
+    // let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
+    // if (labelUDBName === txtInfo) {
+    //   return <View />
+    // }
     if (this.formChat && this.chatCallBack) {
       isShowMore = false
     }
@@ -486,13 +504,10 @@ export default class MyLocalData extends Component {
         item={info.item}
         image={img}
         text={txtInfo}
-        disableTouch={this.state.batchDelete}
+        disableTouch={this.state.batchMode}
         showRight={isShowMore}
-        showCheck={this.state.batchDelete}
+        showCheck={this.state.batchMode}
         onPress={async () => {
-          if (this.state.batchDelete) {
-            return
-          }
           if (this.formChat && this.chatCallBack) {
             if (this.callBackMode && this.callBackMode === 'getName') {
               this.itemInfo = info
@@ -524,6 +539,14 @@ export default class MyLocalData extends Component {
             this.setState({ modalIsVisible: true }, () => {
               this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
             })
+          }
+        }}
+        onPressCheck={item => {
+          let selectedNum = this.state.selectedNum
+          if (item.checked) {
+            this.setState({ selectedNum: ++selectedNum })
+          } else {
+            this.setState({ selectedNum: --selectedNum })
           }
         }}
       />
@@ -795,10 +818,25 @@ export default class MyLocalData extends Component {
             this.setLoading(false)
             return
           }
-          let uploadResult = await SIPortalService.uploadData(
-            targetPath,
-            fileName + '.zip',
-          )
+          let uploadResult
+          if (
+            this.state.title === getLanguage(this.props.language).Profile.MAP
+          ) {
+            uploadResult = await SIPortalService.uploadData(
+              targetPath,
+              fileName + '.zip',
+            )
+          } else {
+            uploadResult = await SIPortalService.uploadDataByType(
+              targetPath,
+              fileName + '.zip',
+              'UDB',
+            )
+          }
+          // let uploadResult = await SIPortalService.uploadData(
+          //   targetPath,
+          //   fileName + '.zip',
+          // )
           this.setLoading(false)
           uploadResult
             ? Toast.show(getLanguage(this.props.language).Prompt.SHARE_SUCCESS)
@@ -1188,10 +1226,10 @@ export default class MyLocalData extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        title: getLanguage(global.language).Profile.BATCH_OPERATE,
         action: () => {
           this.setState({
-            batchDelete: !this.state.batchDelete,
+            batchMode: !this.state.batchMode,
           })
         },
       },
@@ -1293,27 +1331,18 @@ export default class MyLocalData extends Component {
 
   _renderHeaderRight = () => {
     if (this.formChat) return null
-    if (this.state.batchDelete) {
+    if (this.state.batchMode) {
       return (
         <View style={styles.headerRightTextView}>
           <TouchableOpacity
             onPress={() => {
               this._deselectAll()
+              this.setState({ batchMode: false })
             }}
             style={styles.moreView}
           >
             <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.DESELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this._selectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.SELECT_ALL}
+              {getLanguage(global.language).Prompt.COMPLETE}
             </Text>
           </TouchableOpacity>
         </View>
@@ -1332,27 +1361,35 @@ export default class MyLocalData extends Component {
     )
   }
 
+  _renderBatchHead = () => {
+    return (
+      <BatchHeadBar
+        select={this.state.selectedNum}
+        total={this._getTotalItemNumber()}
+        selectAll={this._selectAll}
+        deselectAll={this._deselectAll}
+      />
+    )
+  }
+
   _renderBottom = () => {
     return (
       <View style={styles.bottomStyle}>
         <TouchableOpacity
-          onPress={() => {
-            this._deselectAll()
-            this.setState({
-              batchDelete: !this.state.batchDelete,
-            })
-          }}
+          style={styles.bottomItemStyle}
+          onPress={this._batchDelete}
         >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+            style={{
+              height: scaleSize(60),
+              width: scaleSize(60),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().attribute.icon_delete}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._batchDelete}>
-          <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_submit_black.png')}
-          />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_DELETE}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -1382,6 +1419,7 @@ export default class MyLocalData extends Component {
         >
           {this.state.textValue}
         </Text>
+        {this.state.batchMode && this._renderBatchHead()}
         <SectionList
           style={{
             flex: 1,
@@ -1428,7 +1466,7 @@ export default class MyLocalData extends Component {
         />*/}
         {this._showMyDataPopupModal()}
         {this._showDataPopupModal()}
-        {this.state.batchDelete && this._renderBottom()}
+        {this.state.batchMode && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref

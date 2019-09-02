@@ -251,9 +251,10 @@ export default class MyLabel extends Component {
               },
             })
           } else if (this.uploadType === 'iportal') {
-            let uploadResult = await SIPortalService.uploadData(
+            let uploadResult = await SIPortalService.uploadDataByType(
               targetPath,
               fileName,
+              'UDB',
             )
             uploadResult
               ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)

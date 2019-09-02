@@ -8,7 +8,7 @@ import { View, Text, TextInput, KeyboardAvoidingView } from 'react-native'
 import Dialog from './Dialog'
 import { color } from '../../styles'
 import styles from './styles'
-import { scaleSize } from '../../utils'
+import { scaleSize, dataUtil } from '../../utils'
 
 export default class InputDialog extends PureComponent {
   props: {
@@ -39,9 +39,12 @@ export default class InputDialog extends PureComponent {
 
   constructor(props) {
     super(props)
+    let { result, error } = dataUtil.isLegalName(props.value, GLOBAL.language)
     this.state = {
       value: props.value,
       placeholder: props.placeholder,
+      isLegalName: result,
+      errorInfo: error,
     }
     this.params = {} // 临时数据
   }
@@ -80,6 +83,7 @@ export default class InputDialog extends PureComponent {
   }
 
   confirm = () => {
+    if (!this.state.isLegalName) return
     if (this.params.confirmAction) {
       this.params.confirmAction(this.state.value)
     } else if (this.props.confirmAction) {
@@ -97,46 +101,65 @@ export default class InputDialog extends PureComponent {
     this.setDialogVisible(false)
   }
 
+  renderInput = () => {
+    return (
+      <View style={styles.inputDialogContainer}>
+        {this.props.label ? (
+          <Text style={styles.label}>{this.props.label}</Text>
+        ) : null}
+        <TextInput
+          accessible={true}
+          accessibilityLabel={
+            this.props.placeholder ? this.props.placeholder : '输入框'
+          }
+          style={styles.input}
+          placeholder={this.state.placeholder}
+          underlineColorAndroid="transparent"
+          placeholderTextColor={color.themePlaceHolder}
+          value={this.state.value + ''}
+          onChangeText={text => {
+            let { result, error } = dataUtil.isLegalName(text, GLOBAL.language)
+            this.setState({
+              isLegalName: result,
+              errorInfo: error,
+              value: text,
+            })
+          }}
+          // selection={this.props.inputSelection || {
+          //   start: this.state.value.length - 1,
+          //   end: this.state.value.length - 1,
+          // }}
+          keyboardAppearance={this.props.keyboardAppearance}
+          returnKeyType={this.props.returnKeyType}
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
         title={this.props.title}
-        style={{ height: scaleSize(240) }}
-        opacityStyle={{ height: scaleSize(240) }}
+        style={{ height: scaleSize(250) }}
+        opacityStyle={{ height: scaleSize(250) }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={this.props.confirmBtnTitle}
         cancelBtnTitle={this.props.cancelBtnTitle}
+        confirmBtnDisable={!this.state.isLegalName}
         type={Dialog.Type.MODAL}
       >
         <KeyboardAvoidingView behavior="padding" enabled>
-          <View style={styles.inputDialogContainer}>
-            {this.props.label ? (
-              <Text style={styles.label}>{this.props.label}</Text>
-            ) : null}
-            <TextInput
-              accessible={true}
-              accessibilityLabel={
-                this.props.placeholder ? this.props.placeholder : '输入框'
-              }
-              style={styles.input}
-              placeholder={this.state.placeholder}
-              underlineColorAndroid="transparent"
-              placeholderTextColor={color.themePlaceHolder}
-              value={this.state.value + ''}
-              onChangeText={text => {
-                this.setState({
-                  value: text,
-                })
-              }}
-              // selection={this.props.inputSelection || {
-              //   start: this.state.value.length - 1,
-              //   end: this.state.value.length - 1,
-              // }}
-              keyboardAppearance={this.props.keyboardAppearance}
-              returnKeyType={this.props.returnKeyType}
-            />
+          <View style={styles.contentView}>
+            {this.renderInput()}
+            {!this.state.isLegalName && this.state.errorInfo && (
+              <View style={styles.errorView}>
+                <Text numberOfLines={2} style={styles.errorInfo}>
+                  {this.state.errorInfo}
+                </Text>
+              </View>
+            )}
           </View>
         </KeyboardAvoidingView>
       </Dialog>

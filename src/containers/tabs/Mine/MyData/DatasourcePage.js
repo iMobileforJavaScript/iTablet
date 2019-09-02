@@ -13,7 +13,8 @@ import { FileTools } from '../../../../native'
 import { Toast, scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import MyDataPopupModal from './MyDataPopupModal'
-import { MineItem } from '../component'
+import { MineItem, BatchHeadBar } from '../component'
+import { getThemeAssets } from '../../../../assets'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
@@ -34,7 +35,8 @@ class DatasourcePage extends Component {
         params.data.name.substr(0, params.data.name.lastIndexOf('.')),
       data: params.data,
       datasets: null,
-      batchDelete: false,
+      batchMode: false,
+      selectedNum: 0,
     }
   }
 
@@ -69,7 +71,7 @@ class DatasourcePage extends Component {
         )
       let datasets = []
       datasets = await SMap.getDatasetsByDatasource({ alias: this.state.title })
-      this.setState({ datasets: datasets.list })
+      this.setState({ datasets: datasets.list, selectedNum: 0 })
       setTimeout(() => {
         showLoading && this.container && this.container.setLoading(false)
       }, 1000)
@@ -99,7 +101,6 @@ class DatasourcePage extends Component {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
-      this.setState({ batchDelete: false })
       for (let i = 0; i < deleteArr.length; i++) {
         await SMap.deleteDataset(this.state.title, deleteArr[i].datasetName)
       }
@@ -114,10 +115,10 @@ class DatasourcePage extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        title: getLanguage(global.language).Profile.BATCH_OPERATE,
         action: () => {
           this.setState({
-            batchDelete: !this.state.batchDelete,
+            batchMode: !this.state.batchMode,
           })
         },
       },
@@ -173,12 +174,20 @@ class DatasourcePage extends Component {
         item={item}
         image={img}
         text={item.datasetName}
-        disableTouch={this.state.batchDelete}
-        showCheck={this.state.batchDelete}
+        disableTouch={this.state.batchMode}
+        showCheck={this.state.batchMode}
         onPress={() => {}}
         onPressMore={() => {
           this.itemInfo = item
           this.DatasetPopup.setVisible(true)
+        }}
+        onPressCheck={item => {
+          let selectedNum = this.state.selectedNum
+          if (item.checked) {
+            this.setState({ selectedNum: ++selectedNum })
+          } else {
+            this.setState({ selectedNum: --selectedNum })
+          }
         }}
       />
     )
@@ -186,10 +195,11 @@ class DatasourcePage extends Component {
 
   _selectAll = () => {
     let datasets = Object.assign([], this.state.datasets)
-    for (let i = 0; i < datasets.length; i++) {
+    let i = 0
+    for (i; i < datasets.length; i++) {
       datasets[i].checked = true
     }
-    this.setState({ datasets })
+    this.setState({ datasets, selectedNum: i })
   }
 
   _deselectAll = () => {
@@ -197,7 +207,7 @@ class DatasourcePage extends Component {
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
     }
-    this.setState({ datasets })
+    this.setState({ datasets, selectedNum: 0 })
   }
 
   _getSelectedList = () => {
@@ -210,29 +220,24 @@ class DatasourcePage extends Component {
     return list
   }
 
+  _getTotalItemNumber = () => {
+    return this.state.datasets.length
+  }
+
   _renderHeaderRight = () => {
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
-    if (this.state.batchDelete) {
+    if (this.state.batchMode) {
       return (
         <View style={styles.headerRightTextView}>
           <TouchableOpacity
             onPress={() => {
               this._deselectAll()
+              this.setState({ batchMode: false })
             }}
             style={styles.moreView}
           >
             <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.DESELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this._selectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.SELECT_ALL}
+              {getLanguage(global.language).Prompt.COMPLETE}
             </Text>
           </TouchableOpacity>
         </View>
@@ -250,27 +255,35 @@ class DatasourcePage extends Component {
     )
   }
 
+  _renderBatchHead = () => {
+    return (
+      <BatchHeadBar
+        select={this.state.selectedNum}
+        total={this._getTotalItemNumber()}
+        selectAll={this._selectAll}
+        deselectAll={this._deselectAll}
+      />
+    )
+  }
+
   _renderBottom = () => {
     return (
       <View style={styles.bottomStyle}>
         <TouchableOpacity
-          onPress={() => {
-            this._deselectAll()
-            this.setState({
-              batchDelete: !this.state.batchDelete,
-            })
-          }}
+          style={styles.bottomItemStyle}
+          onPress={this._batchDelete}
         >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+            style={{
+              height: scaleSize(60),
+              width: scaleSize(60),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().attribute.icon_delete}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._batchDelete}>
-          <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_submit_black.png')}
-          />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_DELETE}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -290,15 +303,16 @@ class DatasourcePage extends Component {
           headerRight: this._renderHeaderRight(),
         }}
       >
+        {this.state.batchMode && this._renderBatchHead()}
         <FlatList
           data={this.state.datasets}
           keyExtractor={(item, index) => index.toString()}
           renderItem={this._renderItem}
-          forUpdate={this.state.batchDelete}
+          forUpdate={this.state.batchMode}
         />
         {this._renderDatasetPopupModal()}
         {this._renderDatasourcePopupModal()}
-        {this.state.batchDelete && this._renderBottom()}
+        {this.state.batchMode && this._renderBottom()}
       </Container>
     )
   }
@@ -314,6 +328,10 @@ const styles = StyleSheet.create({
     borderTopColor: '#A0A0A0',
     borderTopWidth: 1,
     backgroundColor: '#FFFFFF',
+  },
+  bottomItemStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   moreView: {
     height: '100%',

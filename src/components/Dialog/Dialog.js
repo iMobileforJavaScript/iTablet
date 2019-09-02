@@ -31,6 +31,8 @@ export default class Dialog extends PureComponent {
     confirmBtnTitle?: string,
     confirmBtnVisible: boolean,
     cancelBtnVisible: boolean,
+    confirmBtnDisable?: boolean,
+    cancelBtnDisable?: boolean,
     cancelBtnStyle?: string,
     confirmBtnStyle?: string,
     confirmAction: () => {},
@@ -52,6 +54,8 @@ export default class Dialog extends PureComponent {
     showBtns: true,
     confirmBtnVisible: true,
     cancelBtnVisible: true,
+    confirmBtnDisable: true,
+    cancelBtnDisable: false,
     onlyOneBtn: false,
   }
 
@@ -74,10 +78,12 @@ export default class Dialog extends PureComponent {
   }
 
   confirm = () => {
+    if (this.props.confirmBtnDisable) return
     this.props.confirmAction && this.props.confirmAction()
   }
 
   cancel = () => {
+    if (this.props.cancelBtnDisable) return
     this.props.cancelAction && this.props.cancelAction()
 
     this.setDialogVisible(false)
@@ -107,7 +113,9 @@ export default class Dialog extends PureComponent {
           >
             <Text
               style={[
-                styles.btnTitle,
+                this.props.cancelBtnDisable
+                  ? styles.btnDisableTitle
+                  : styles.btnTitle,
                 cancelPressColor,
                 this.props.cancelTitleStyle,
               ]}
@@ -125,19 +133,23 @@ export default class Dialog extends PureComponent {
             style={[styles.btnStyle, this.props.confirmBtnStyle]}
             onPress={this.confirm}
             onPressIn={() => {
-              this.setState({
-                confirmPress: true,
-              })
+              !this.props.confirmBtnDisable &&
+                this.setState({
+                  confirmPress: true,
+                })
             }}
             onPressOut={() => {
-              this.setState({
-                confirmPress: false,
-              })
+              !this.props.confirmBtnDisable &&
+                this.setState({
+                  confirmPress: false,
+                })
             }}
           >
             <Text
               style={[
-                styles.btnTitle,
+                this.props.confirmBtnDisable
+                  ? styles.btnDisableTitle
+                  : styles.btnTitle,
                 confirmPressColor,
                 this.props.confirmTitleStyle,
               ]}

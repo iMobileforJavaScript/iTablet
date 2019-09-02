@@ -13,6 +13,7 @@ export default class TouchableItemView extends Component {
     renderText: () => {},
     renderUpperText: () => {},
     renderBottomText: () => {},
+    renderLeft: () => {},
     renderRight: () => {},
     contentStyle: {},
     imageStyle: {},
@@ -84,6 +85,13 @@ export default class TouchableItemView extends Component {
     )
   }
 
+  renderLeft = () => {
+    if (this.props.renderLeft) {
+      return this.props.renderLeft(this.props)
+    }
+    return null
+  }
+
   renderRight = () => {
     if (this.props.renderRight) {
       return this.props.renderRight(this.props)
@@ -93,7 +101,14 @@ export default class TouchableItemView extends Component {
 
   renderContent = () => {
     return (
-      <View style={[styles.contentView, this.props.contentStyle]}>
+      <View
+        style={[
+          styles.contentView,
+          this.props.renderLeft ? { paddingLeft: 0 } : null,
+          this.props.contentStyle,
+        ]}
+      >
+        {this.renderLeft()}
         {this.renderItem()}
         {this.renderRight()}
       </View>

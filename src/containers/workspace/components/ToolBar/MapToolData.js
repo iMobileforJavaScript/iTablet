@@ -317,6 +317,8 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.CAMERA,
           action: captureImage,
           size: 'large',
+          disable: layerType !== 'TAGGINGLAYER',
+          //todo 多媒体采集缺灰色图片
           image: getPublicAssets().mapTools.tools_camera,
         },
         {

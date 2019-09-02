@@ -245,7 +245,13 @@ async function getFilterFiles(
       return []
     }
     if (fileType === undefined) {
-      fileType = { smwu: 'smwu', sxwu: 'sxwu', sxw: 'sxw', smw: 'smw' }
+      fileType = {
+        smwu: 'smwu',
+        sxwu: 'sxwu',
+        sxw: 'sxw',
+        smw: 'smw',
+        snm: 'snm',
+      }
     }
     let isRecordFile = false
     let arrDirContent = await getDirectoryContent(fileDir)
@@ -260,7 +266,8 @@ async function getFilterFiles(
           (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
           (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
           (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
-          (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+          (fileType.udb && fileName.indexOf(fileType.udb) !== -1) ||
+          (fileType.snm && fileName.indexOf(fileType.snm) !== -1)
         ) {
           if (
             !(

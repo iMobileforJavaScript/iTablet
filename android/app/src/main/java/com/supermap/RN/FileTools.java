@@ -287,6 +287,10 @@ public class FileTools extends ReactContextBaseJavaModule {
                     String n = files[i].getName();
                     String mtime = getLastModifiedTime(files[i]);
                     int lastDot = n.lastIndexOf(".");
+
+                    // 不包含
+                    if (filter.toHashMap().containsKey("exclued") && n.toLowerCase().contains(filter.getString("exclued").toLowerCase().trim())) continue;
+
                     String name, extension = "";
                     if (lastDot > 0) {
                         name = n.substring(0, lastDot).toLowerCase();
@@ -462,6 +466,8 @@ public class FileTools extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
+
 
 
     @ReactMethod
@@ -892,7 +898,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         boolean isUnZipped = false;
         try {
             BufferedInputStream bi;
-//            String encodeType = getCharset(new File(archive));
+//            String encodeType = getCharset(new File(archive));getFindUserDataUrl
             ZipFile zf = new ZipFile(archive, "GBK");
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {

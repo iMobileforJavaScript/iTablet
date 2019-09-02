@@ -15,9 +15,25 @@ export default StyleSheet.create({
   },
   headerBtnTitle: {
     color: 'white',
-    width: scaleSize(150),
-    textAlign: 'right',
+    // width: scaleSize(150),
+    // textAlign: 'right',
+    fontSize: size.fontSize.fontSizeXXl,
+  },
+  headerBtnTitleDisable: {
+    color: color.fontColorGray,
     fontSize: size.fontSize.fontSizeXXl,
   },
   input: {},
+  errorView: {
+    height: scaleSize(40),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: scaleSize(30),
+  },
+  errorInfo: {
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.red,
+    textAlign: 'left',
+  },
 })

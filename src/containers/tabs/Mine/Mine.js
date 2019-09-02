@@ -725,18 +725,20 @@ export default class Mine extends Component {
     let colNum = this.props.device.orientation === 'LANDSCAPE' ? 5 : 4
     let items = this._getItems()
     let renderItems = []
+    let key = 0
     for (let i = 0; i < items.length; i++) {
       let show = this._itemFilter(items[i])
       if (show) {
-        renderItems.push(this.renderItem(items[i], colNum))
+        renderItems.push(this.renderItem(items[i], colNum, key++))
       }
     }
     return renderItems
   }
 
-  renderItem = (item, colNum) => {
+  renderItem = (item, colNum, key) => {
     return (
       <TouchableOpacity
+        key={key}
         onPress={item.onClick}
         style={[
           styles.itemView,
