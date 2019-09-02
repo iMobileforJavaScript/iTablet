@@ -892,7 +892,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         boolean isUnZipped = false;
         try {
             BufferedInputStream bi;
-//            String encodeType = getCharset(new File(archive));
+//            String encodeType = getCharset(new File(archive));getFindUserDataUrl
             ZipFile zf = new ZipFile(archive, "GBK");
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
