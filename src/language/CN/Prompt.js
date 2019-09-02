@@ -202,6 +202,10 @@ const Prompt = {
 
   IMAGE_RECOGNITION_ING: '识别中',
   IMAGE_RECOGNITION_FAILED: '图片识别失败',
+
+  ERROR_INFO_START_WITH_A_LETTER: '首字母必须为字母或汉字',
+  ERROR_INFO_ILLEGAL_CHARACTERS: '不能包含特殊字符',
+  ERROR_INFO_EMPTY: '不能为空',
 }
 
 export { Prompt }

@@ -209,6 +209,10 @@ const Prompt = {
 
   IMAGE_RECOGNITION_ING: 'Loading',
   IMAGE_RECOGNITION_FAILED: 'Image recognition failed',
+
+  ERROR_INFO_START_WITH_A_LETTER: 'The name can only start with a letter.',
+  ERROR_INFO_ILLEGAL_CHARACTERS: 'The name can not contain illegal characters.',
+  ERROR_INFO_EMPTY: 'The name can not be empty.',
 }
 
 export { Prompt }
