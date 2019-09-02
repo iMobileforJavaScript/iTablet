@@ -10,10 +10,12 @@ import { getThemeAssets } from '../../assets'
 
 export default class Layer3DItem extends Component {
   props: {
+    style?: Object,
     item: Object,
     device: Object,
     toHeightItem: Object,
     index: any,
+    onPress?: () => {},
     getlayer3dToolbar: () => {},
     setCurrentLayer3d: () => {},
     overlayView: () => {},
@@ -165,6 +167,12 @@ const layer3dSettingCanNotSelect = param => [
     }
   }
 
+  _onPress = () => {
+    if (this.props.onPress && typeof this.props.onPress === 'function') {
+      this.props.onPress({ data: this.props.item, index: this.props.index })
+    }
+  }
+
   changeState = canSelectable => {
     this.setState({ selectable: canSelectable })
   }
@@ -251,9 +259,12 @@ const layer3dSettingCanNotSelect = param => [
     // console.log(this.state.visible, this.state.selectable)
     // console.log(selectImg, visibleImg)
     return (
-      <View>
+      <TouchableOpacity
+        style={[styles.itemBtn, this.props.style]}
+        onPress={this._onPress}
+      >
         <View style={styles.row}>
-          <TouchableOpacity onPress={this.changeVisible}>
+          <TouchableOpacity style={styles.btn} onPress={this.changeVisible}>
             <Image source={visibleImg} style={styles.visibleImg} />
           </TouchableOpacity>
 
@@ -267,15 +278,7 @@ const layer3dSettingCanNotSelect = param => [
             <Image source={moreImg} style={styles.moreImg} />
           </TouchableOpacity>
         </View>
-        <View
-          style={[
-            styles.itemSeparator,
-            {
-              width: '100%',
-            },
-          ]}
-        />
-      </View>
+      </TouchableOpacity>
     )
   }
 }

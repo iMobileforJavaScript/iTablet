@@ -199,6 +199,9 @@ const Prompt = {
   PLEASE_ENTER: '请输入',
 
   REQUEST_TIMEOUT: '请求超时',
+
+  IMAGE_RECOGNITION_ING: '识别中',
+  IMAGE_RECOGNITION_FAILED: '图片识别失败',
 }
 
 export { Prompt }

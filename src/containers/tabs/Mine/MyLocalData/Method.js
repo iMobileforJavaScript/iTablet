@@ -234,6 +234,9 @@ async function getOnlineData(
         if (objDataList.content[i].fileName.indexOf('friend.list') != -1) {
           objDataList.content.splice(i, 1)
           objDataList.total -= 1
+        } else if (objDataList.content[i].type === 'UDB') {
+          objDataList.content.splice(i, 1)
+          objDataList.total -= 1
         }
       }
     }

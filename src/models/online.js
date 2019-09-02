@@ -40,32 +40,37 @@ export const uploading = (params = {}, cb = () => {}) => async dispatch => {
   )
   let uploadResult =
     zipResult &&
-    (await SOnlineService.uploadFile(params.targetPath, params.name, {
-      onProgress: async progress => {
-        await dispatch({
-          type: UPLOADING,
-          payload: {
-            progress,
-            archivePaths: params.archivePaths,
-            targetPath: params.targetPath,
-            name: params.name,
-          },
-        })
-        params.onProgress && params.onProgress(progress)
+    (await SOnlineService.uploadFilebyType(
+      params.targetPath,
+      params.name,
+      'UDB',
+      {
+        onProgress: async progress => {
+          await dispatch({
+            type: UPLOADING,
+            payload: {
+              progress,
+              archivePaths: params.archivePaths,
+              targetPath: params.targetPath,
+              name: params.name,
+            },
+          })
+          params.onProgress && params.onProgress(progress)
+        },
+        onResult: async result => {
+          await dispatch({
+            type: UPLOADING,
+            payload: {
+              archivePaths: params.archivePaths,
+              targetPath: params.targetPath,
+              name: params.name,
+            },
+          })
+          FileTools.deleteFile(params.targetPath)
+          params.onResult && params.onResult(result, params.name)
+        },
       },
-      onResult: async result => {
-        await dispatch({
-          type: UPLOADING,
-          payload: {
-            archivePaths: params.archivePaths,
-            targetPath: params.targetPath,
-            name: params.name,
-          },
-        })
-        FileTools.deleteFile(params.targetPath)
-        params.onResult && params.onResult(result, params.name)
-      },
-    }))
+    ))
   await dispatch({
     type: UPLOADING,
     payload: params,

@@ -267,7 +267,9 @@ export default class PlotAnimationView extends React.Component {
             <TextInput
               style={styles.inputTime}
               onChangeText={text => {
-                this.setState({ startTime: text.replace(/[^0-9.]*/g, '') })
+                this.setState({
+                  startTime: Number(text.replace(/[^0-9.]*/g, '')),
+                })
               }}
               keyboardType="numeric"
               value={this.state.startTime + ''}
@@ -306,7 +308,9 @@ export default class PlotAnimationView extends React.Component {
               style={styles.inputTime}
               keyboardType="numeric"
               onChangeText={text => {
-                this.setState({ durationTime: text.replace(/[^0-9.]*/g, '') })
+                this.setState({
+                  durationTime: Number(text.replace(/[^0-9.]*/g, '')),
+                })
               }}
               value={this.state.durationTime + ''}
             />

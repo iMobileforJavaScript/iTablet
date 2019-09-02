@@ -169,9 +169,8 @@ export default class LayerManager_tolbar extends React.Component {
   }
   getData = (type, isGroup = false) => {
     let data = []
-    let headerData = layerSettingCanVisit(this.props.language).concat(
-      layerSettingCanSelect(this.props.language),
-    )
+    let headerData = layerSettingCanVisit(this.props.language)
+    !isGroup && headerData.concat(layerSettingCanSelect(this.props.language))
     switch (type) {
       case ConstToolType.MAP_STYLE:
         data = layersetting(this.props.language, isGroup)
@@ -384,6 +383,12 @@ export default class LayerManager_tolbar extends React.Component {
       let tempheader1 = layerData.isSelectable
         ? layerSettingCanSelect(this.props.language)
         : layerSettingCanNotSelect(this.props.language)
+      if (
+        layerData.type === 'layerGroup' ||
+        layerData.type === DatasetType.IMAGE || layerData.type === DatasetType.MBImage
+      ) {
+        tempheader1 = layerSettingCanNotSelect(this.props.language)
+      }
       data[0].headers = tempheader0.concat(tempheader1)
       if (GLOBAL.Type === 'COLLECTION') {
         let tempheader2 = layerData.isEditable
@@ -843,6 +848,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   renderHeader = ({ section }) => {
+    let layerData = this.state.layerData
     if (!section.headers) {
       return <View style={{ height: 0 }} />
     }
@@ -856,7 +862,11 @@ export default class LayerManager_tolbar extends React.Component {
         }}
       >
         {section.headers.map((item, index) => {
-          if (this.state.layerData.themeType === 7 && index === 1) {
+          if (
+            (layerData.themeType === 7 && index === 1) ||
+            layerData.type === 'layerGroup' ||
+            layerData.type === DatasetType.IMAGE
+          ) {
             return (
               <TouchableOpacity
                 key={index}

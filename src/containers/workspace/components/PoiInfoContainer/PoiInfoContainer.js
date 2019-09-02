@@ -246,7 +246,7 @@ export default class PoiInfoContainer extends React.PureComponent {
           <TouchableOpacity
             style={styles.itemView}
             onPress={() => {
-              SMap.setCalloutToMapCenter(item)
+              SMap.setCenterCallout(item)
               //this.toLocationPoint({item,pointName:item.pointName, index})
             }}
           >

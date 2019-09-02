@@ -206,6 +206,9 @@ const Prompt = {
   PLEASE_ENTER: 'Please enter ',
 
   REQUEST_TIMEOUT: 'Request timeout',
+
+  IMAGE_RECOGNITION_ING: 'Loading',
+  IMAGE_RECOGNITION_FAILED: 'Image recognition failed',
 }
 
 export { Prompt }

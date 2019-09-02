@@ -908,7 +908,12 @@ export default class ToolBar extends React.PureComponent {
         // if (selectedExpression) {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
-          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+          if (
+            ThemeMenuData.isThemeFieldTypeAvailable(
+              item.fieldTypeStr,
+              this.state.themeCreateType,
+            )
+          ) {
             item.info = {
               infoType: 'fieldType',
               fieldType: item.fieldType,
@@ -1007,7 +1012,12 @@ export default class ToolBar extends React.PureComponent {
 
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
-          if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+          if (
+            ThemeMenuData.isThemeFieldTypeAvailable(
+              item.fieldTypeStr,
+              this.state.themeCreateType,
+            )
+          ) {
             if (selectedExpressions) {
               for (let index = 0; index < selectedExpressions.length; index++) {
                 let temp = {}
@@ -2629,7 +2639,7 @@ export default class ToolBar extends React.PureComponent {
     this.setOverlayViewVisible(isShow)
 
     if (type === ConstToolType.MAP_STYLE) {
-      if (this.props.currentLayer && !this.currentLayerStyle) {
+      if (this.props.currentLayer) {
         SCartography.getLayerStyle(this.props.currentLayer.name).then(value => {
           this.currentLayerStyle = value
         })
@@ -3082,6 +3092,7 @@ export default class ToolBar extends React.PureComponent {
         type !== ConstToolType.MAP_TOOL_TAGGING &&
         type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
       ) {
+        SMap.cancel()
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -4203,7 +4214,12 @@ export default class ToolBar extends React.PureComponent {
           let dataset = data.dataset
           let _list = []
           data.list.forEach(item => {
-            if (ThemeMenuData.isThemeFieldTypeAvailable(item.fieldTypeStr)) {
+            if (
+              ThemeMenuData.isThemeFieldTypeAvailable(
+                item.fieldTypeStr,
+                this.state.themeCreateType,
+              )
+            ) {
               item.info = {
                 infoType: 'fieldType',
                 fieldType: item.fieldType,

@@ -106,6 +106,8 @@ import MeasureView from './arMeasure'
 import ClassifyView from './aiClassifyView'
 import ModelChoseView from './arModelChoseView'
 import ClassifyResultEditView from './aiClassifyResultEdit'
+import CollectSceneFormView from './arCollectSceneFormView'
+import ClassifySettingsView from './ClassifySettingsView'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
@@ -645,6 +647,20 @@ const AppNavigator = createStackNavigator(
     },
     ClassifyResultEditView: {
       screen: ClassifyResultEditView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    CollectSceneFormView: {
+      screen: CollectSceneFormView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ClassifySettingsView: {
+      screen: ClassifySettingsView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

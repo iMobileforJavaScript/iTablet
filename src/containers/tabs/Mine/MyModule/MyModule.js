@@ -326,10 +326,7 @@ export default class MyModule extends Component {
           : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
       )
       let toPath =
-        userPath +
-        ConstPath.RelativePath.ExternalData +
-        ConstPath.RelativeFilePath.ExportData +
-        'MyExport.zip'
+        userPath + ConstPath.RelativePath.Temp + 'MyExportTemplate.zip'
       // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
@@ -359,7 +356,7 @@ export default class MyModule extends Component {
               },
             )
         } else if (type === 'online') {
-          SOnlineService.uploadFile(toPath, fileName, {
+          SOnlineService.uploadFilebyType(toPath, fileName, 'UDB', {
             onResult: () => {
               Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
               //'分享成功')
@@ -370,9 +367,10 @@ export default class MyModule extends Component {
           })
         } else if (type === 'iportal') {
           this.ModalBtns.setVisible(false)
-          let uploadResult = await SIPortalService.uploadData(
+          let uploadResult = await SIPortalService.uploadDataByType(
             toPath,
             fileName + '.zip',
+            'UDB',
           )
           uploadResult
             ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)

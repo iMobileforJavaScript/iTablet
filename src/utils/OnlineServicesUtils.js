@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 
 export default class OnlineServicesUtils {
   constructor(type) {
+    this.type = type
     if (type === 'iportal') {
       let url = SIPortalService.getIPortalUrl()
       if (url) {
@@ -19,7 +20,7 @@ export default class OnlineServicesUtils {
       }
     }
     if (type === 'online') {
-      this.serverUrl = 'https://www.supermapol.com/web/'
+      this.serverUrl = 'https://www.supermapol.com/web'
       if (Platform.OS === 'android') {
         SOnlineService.getAndroidSessionID().then(cookie => {
           this.cookie = cookie
@@ -28,14 +29,34 @@ export default class OnlineServicesUtils {
     }
   }
 
+  getCookie = async () => {
+    if (Platform.OS === 'ios') {
+      return undefined
+    }
+    if (this.cookie) {
+      return this.cookie
+    }
+
+    let cookie = undefined
+    if (this.type === 'iportal') {
+      cookie = await SIPortalService.getIPortalCookie()
+    } else if (this.type === 'online') {
+      cookie = await SOnlineService.getAndroidSessionID()
+    }
+
+    this.cookie = cookie
+    return cookie
+  }
+
   async publishService(id) {
     let url =
       this.serverUrl +
       `/mycontent/datas/${id}/publishstatus.rjson?serviceType=RESTMAP,RESTDATA`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let result = await request(url, 'PUT', {
@@ -47,22 +68,24 @@ export default class OnlineServicesUtils {
 
   async publishServiceByName(dataName) {
     let id = await this.getDataIdByName(dataName)
-    return await this.publishService(id)
+    if (id) {
+      return await this.publishService(id)
+    } else {
+      return false
+    }
   }
 
   async getDataIdByName(dataName) {
-    let url =
-      this.serverUrl +
-      `/mycontent/datas.rjson?keywords=[${dataName}]&filterFields=["FILENAME"]`
+    let url = this.serverUrl + `/mycontent/datas.rjson?fileName=${dataName}`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let result = await request(url, 'GET', {
       headers: headers,
-      body: true,
     })
     if (result.total === 1) {
       return result.content[0].id
@@ -73,9 +96,10 @@ export default class OnlineServicesUtils {
   async setServicesShareConfig(id, isPublic) {
     let url = this.serverUrl + `/services/sharesetting.rjson`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let entities
@@ -103,9 +127,10 @@ export default class OnlineServicesUtils {
   async setDatasShareConfig(id, isPublic) {
     let url = this.serverUrl + `/mycontent/datas/sharesetting.rjson`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let entities
