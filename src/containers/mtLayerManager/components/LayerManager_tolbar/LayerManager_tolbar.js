@@ -385,7 +385,8 @@ export default class LayerManager_tolbar extends React.Component {
         : layerSettingCanNotSelect(this.props.language)
       if (
         layerData.type === 'layerGroup' ||
-        layerData.type === DatasetType.IMAGE
+        layerData.type === DatasetType.IMAGE ||
+        layerData.type === DatasetType.MBImage
       ) {
         tempheader1 = layerSettingCanNotSelect(this.props.language)
       }

@@ -12,11 +12,16 @@ import {
   Text,
   Image,
   NativeModules,
+  NetInfo,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
+import { SimpleDialog } from '../Component'
+import { Toast } from '../../../../utils'
 let AppUtils = NativeModules.AppUtils
 
 // if (Platform.OS === 'android') {
@@ -95,6 +100,63 @@ export default class CustomActions extends React.Component {
     this.setState({ modalVisible: visible })
   }
 
+  handleLocationClick = async () => {
+    let isConnected = await NetInfo.isConnected.fetch()
+    if (!isConnected) {
+      Toast.show(getLanguage(global.language).Prompt.NO_NETWORK)
+      return
+    }
+    if (!(await AppUtils.isLocationOpen())) {
+      this.SimpleDialog.setConfirm(() => {
+        AppUtils.startAppLoactionSetting()
+      })
+      this.SimpleDialog.setText(
+        getLanguage(global.language).Prompt.OPEN_LOCATION,
+      )
+      this.SimpleDialog.setVisible(true)
+      return
+    }
+
+    let allowed = true
+    if (Platform.OS === 'ios') {
+      if (!(await AppUtils.isLocationAllowed())) {
+        allowed = false
+      }
+    } else {
+      let granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+      if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
+        allowed = false
+      }
+    }
+    if (!allowed) {
+      this.SimpleDialog.setConfirm(() => {
+        AppUtils.startAppLoactionSetting()
+      })
+      this.SimpleDialog.setText(
+        getLanguage(global.language).Prompt.REQUEST_LOCATION,
+      )
+      this.SimpleDialog.setVisible(true)
+      return
+    }
+
+    let location = await AppUtils.getCurrentLocation()
+    if (location.longitude === 0 && location.latitude === 0) {
+      Toast.show(getLanguage(global.language).Prompt.LOCATION_ERROR)
+      return
+    }
+    SOnlineService.reverseGeocoding(location.longitude, location.latitude, {
+      onResult: result => {
+        this.props.sendCallBack(3, {
+          address: result,
+          longitude: location.longitude,
+          latitude: location.latitude,
+        })
+      },
+    })
+  }
+
   renderIcon() {
     if (this.props.icon) {
       return this.props.icon()
@@ -104,6 +166,10 @@ export default class CustomActions extends React.Component {
         <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
       </View>
     )
+  }
+
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
   }
 
   render() {
@@ -151,23 +217,9 @@ export default class CustomActions extends React.Component {
           </View>
         </Modal>
         {this.renderIcon()}
+        {this.renderSimpleDialog()}
       </TouchableOpacity>
     )
-  }
-
-  handleLocationClick = () => {
-    AppUtils.getCurrentLocation().then(value => {
-      SOnlineService.reverseGeocoding(value.longitude, value.latitude, {
-        onResult: result => {
-          this.props.sendCallBack(3, {
-            address: result,
-            longitude: value.longitude,
-            latitude: value.latitude,
-          })
-          // alert(result)
-        },
-      })
-    })
   }
 }
 const modalStyles = StyleSheet.create({
