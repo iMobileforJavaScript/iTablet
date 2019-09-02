@@ -4758,7 +4758,7 @@ export default class ToolBar extends React.PureComponent {
                     this.props.user.currentUser.userName +
                     '/'
                 : ConstPath.CustomerPath,
-            )) + ConstPath.RelativeFilePath.NaviWorkspace
+            )) + ConstPath.RelativePath.Datasource
         let userFileList
 
         userFileList = await FileTools.getNetModel(path)

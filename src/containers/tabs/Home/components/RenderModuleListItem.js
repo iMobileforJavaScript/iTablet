@@ -102,7 +102,7 @@ export default class RenderModuleListItem extends Component {
         dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
       }
     } else if (moduleKey === '导航地图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1435593818/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1070422678/download'
     }
     let cachePath = this.downloadData.cachePath
     let fileDirPath = cachePath + this.downloadData.fileName

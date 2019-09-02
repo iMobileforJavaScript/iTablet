@@ -92,6 +92,8 @@ export default class Home extends Component {
   _onImportWorkspace = async filePath => {
     try {
       if (filePath !== undefined) {
+        let index = filePath.lastIndexOf('/')
+        await SMap.copyNaviSnmFile(filePath.substring(0, index))
         // if (isFirstImportWorkspace === true) {
         //   this.container && this.container.setLoading(true, '导入数据中...')
         // }
@@ -328,7 +330,7 @@ export default class Home extends Component {
           break
         case '导航数据':
           fileName = '导航数据'
-          storage = '  6.72MB'
+          storage = '  6.11MB'
           break
       }
     }
