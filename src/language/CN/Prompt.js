@@ -202,6 +202,10 @@ const Prompt = {
 
   IMAGE_RECOGNITION_ING: '识别中',
   IMAGE_RECOGNITION_FAILED: '图片识别失败',
+
+  OPEN_LOCATION: '请在系统设置中开启定位服务',
+  REQUEST_LOCATION: 'iTablet需要获取定位权限',
+  LOCATION_ERROR: '位置获取异常，请稍后尝试',
 }
 
 export { Prompt }

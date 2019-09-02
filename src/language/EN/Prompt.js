@@ -209,6 +209,10 @@ const Prompt = {
 
   IMAGE_RECOGNITION_ING: 'Loading',
   IMAGE_RECOGNITION_FAILED: 'Image recognition failed',
+
+  OPEN_LOCATION: 'Please open Location Service in System Setting',
+  REQUEST_LOCATION: 'iTablet need location permission to complete the action',
+  LOCATION_ERROR: 'Location request failed, please try agagin later',
 }
 
 export { Prompt }
