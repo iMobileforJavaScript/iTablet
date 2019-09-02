@@ -1541,14 +1541,14 @@ const smartCartography = param => [
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
   },
   {
-    key: getLanguage(param).Map_Main_Menu.Saturation,
+    key: getLanguage(param).Map_Main_Menu.SATURATION,
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: getLanguage(param).Map_Main_Menu.Saturation,
-          selectKey: getLanguage(param).Map_Main_Menu.Saturation,
+          selectName: getLanguage(param).Map_Main_Menu.SATURATION,
+          selectKey: getLanguage(param).Map_Main_Menu.SATURATION,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.SMART_CARTOGRAPHY,
@@ -1557,7 +1557,7 @@ const smartCartography = param => [
           ],
         })
     },
-    selectKey: getLanguage(param).Map_Main_Menu.Saturation,
+    selectKey: getLanguage(param).Map_Main_Menu.SATURATION,
   },
 ]
 export {

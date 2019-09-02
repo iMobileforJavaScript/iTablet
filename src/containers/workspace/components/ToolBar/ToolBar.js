@@ -3717,6 +3717,9 @@ export default class ToolBar extends React.PureComponent {
       this.setVisible(false, this.state.type, {
         height: 0,
       })
+      this.tools_name = ''
+      this.tools_remarks = ''
+      this.tools_http = ''
     }
     // this.props.existFullMap && this.props.existFullMap()
   }

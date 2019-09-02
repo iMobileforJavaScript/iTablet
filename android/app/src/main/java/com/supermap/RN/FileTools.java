@@ -287,6 +287,10 @@ public class FileTools extends ReactContextBaseJavaModule {
                     String n = files[i].getName();
                     String mtime = getLastModifiedTime(files[i]);
                     int lastDot = n.lastIndexOf(".");
+
+                    // 不包含
+                    if (filter.toHashMap().containsKey("exclued") && n.toLowerCase().contains(filter.getString("exclued").toLowerCase().trim())) continue;
+
                     String name, extension = "";
                     if (lastDot > 0) {
                         name = n.substring(0, lastDot).toLowerCase();

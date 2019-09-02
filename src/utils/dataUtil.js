@@ -1,3 +1,5 @@
+import { getLanguage } from '../language'
+
 function sortByPinYin(arr) {
   arr.sort(function compareFunction(param1, param2) {
     return param1.localeCompare(param2)
@@ -227,6 +229,49 @@ function checkIpPort(ip) {
   return false
 }
 
+//获取合法命名
+function getLegalName(text = '', re = '') {
+  if (text.length === 0) return text
+  let res = text.trim()
+  res = res.replace(/^[\d+|_+|@|#]+/, '') // 去掉字符串首部命名不合法
+  res = res.replace(/^[^a-zA-Z]+/, '') // 去掉字符串首部命名不合法
+  if (re) {
+    res = res.replace(re, '')
+  } else {
+    res = res.replace(
+      /\^|\.|\*|\?|!|\/|\\|\$|&|\||,|\[|]|{|}|\(|\)|\+|=|——|《|》|<|>|\/|\s|:|;|,|。|，|？|【|】|「|」|·|`|‘|’|“|0”|%/g,
+      '',
+    )
+  }
+  return res
+}
+
+//检查命名是否合法
+function isLegalName(text = '', language = 'CN') {
+  if (text.length === 0)
+    return {
+      result: false,
+      error: getLanguage(language).Prompt.ERROR_INFO_EMPTY,
+    }
+  let re = /^[0-9a-zA-Z_\u4e00-\u9fa5@#_]+$/
+  let re1 = /^[a-zA-Z\u4e00-\u9fa5]/ // 判断首字母
+  if (!re1.test(text)) {
+    return {
+      result: false,
+      error: getLanguage(language).Prompt.ERROR_INFO_START_WITH_A_LETTER,
+    }
+  }
+  if (!re.test(text)) {
+    return {
+      result: false,
+      error: getLanguage(language).Prompt.ERROR_INFO_ILLEGAL_CHARACTERS,
+    }
+  }
+  return {
+    result: true,
+  }
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -243,4 +288,6 @@ export default {
   cloneObj,
   getFileNameWithOutExt,
   checkIpPort,
+  getLegalName,
+  isLegalName,
 }

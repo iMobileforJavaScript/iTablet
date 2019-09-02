@@ -98,6 +98,7 @@ const Profile = {
   UPLOAD_COLOR_SCHEME: '分享色带',
   DELETE_COLOR_SCHEME: '删除色带',
   BATCH_DELETE: '批量删除',
+  BATCH_OPERATE: '批量操作',
 
   DELETE_SERVICE: '删除服务',
   PUBLISH_SERVICE: '发布服务',
