@@ -48,7 +48,7 @@ export default class MineItem extends Component {
     this.props.onPressCheck && this.props.onPressCheck(this.props.item)
   }
 
-  _renderRight = () => {
+  _renderLeft = () => {
     if (this.props.showCheck) {
       let icon
       if (!this.props.disableCheck) {
@@ -75,6 +75,12 @@ export default class MineItem extends Component {
         </TouchableOpacity>
       )
     }
+  }
+
+  _renderRight = () => {
+    if (this.props.showCheck) {
+      return null
+    }
     return (
       <TouchableOpacity
         style={styles.moreImgBtn}
@@ -91,6 +97,7 @@ export default class MineItem extends Component {
     return (
       <TouchableItemView
         disableTouch={this.props.showCheck}
+        renderLeft={this.props.showCheck ? this._renderLeft : null}
         renderRight={this.props.showRight ? this._renderRight : null}
         image={this.props.image}
         text={this.props.text}
