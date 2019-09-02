@@ -1822,12 +1822,10 @@ export default class MapView extends React.Component {
   /** 切换ar和地图浏览 **/
   switchAr = () => {
     if (this.state.showAIDetect) {
-      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
       this.setState({
         showAIDetect: false,
       })
     } else {
-      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(true)
       this.setState({
         showAIDetect: true,
       })

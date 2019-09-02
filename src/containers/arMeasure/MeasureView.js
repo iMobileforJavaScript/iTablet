@@ -17,7 +17,7 @@ import ImageButton from '../../components/ImageButton'
 import { Container } from '../../components'
 import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
-import Button from '../../components/Button/Button'
+// import Button from '../../components/Button/Button'
 // import { getLanguage } from '../../language'
 
 /*
@@ -250,10 +250,10 @@ export default class MeasureView extends React.Component {
         style={styles.ModelItemView}
       >
         <Image
-          source={getThemeAssets().ar.icon_ar_measure_add}
+          source={getThemeAssets().ar.navi_model_pin_bowling}
           style={styles.img}
         />
-        <Text style={styles.titleSwitchModelsView}>{'PIN_BOWLING'}</Text>
+        {/*<Text style={styles.titleSwitchModelsView}>{'PIN_BOWLING'}</Text>*/}
       </TouchableOpacity>
       // <View style={styles.ModelItemView}>
       //   <Image
@@ -272,10 +272,10 @@ export default class MeasureView extends React.Component {
         style={styles.ModelItemView}
       >
         <Image
-          source={getThemeAssets().ar.icon_ar_measure_add}
+          source={getThemeAssets().ar.navi_model_red_flag}
           style={styles.img}
         />
-        <Text style={styles.titleSwitchModelsView}>{'RED_FLAG'}</Text>
+        {/*<Text style={styles.titleSwitchModelsView}>{'RED_FLAG'}</Text>*/}
       </TouchableOpacity>
       // <View style={styles.ModelItemView}>
       //   <Image
@@ -311,18 +311,18 @@ export default class MeasureView extends React.Component {
         >
           {this.renderModelItemFirst()}
           {this.renderModelItemSecond()}
-          {this.renderModelItem()}
-          {this.renderModelItem()}
-          {this.renderModelItem()}
+          {/*{this.renderModelItem()}*/}
+          {/*{this.renderModelItem()}*/}
+          {/*{this.renderModelItem()}*/}
         </ScrollView>
-        <Button
+        {/* <Button
           style={styles.btnSwitchModelsView}
           titleStyle={styles.txtBtnSwitchModelsView}
           title={'查看更多'}
           type={'BLUE'}
           activeOpacity={0.5}
           onPress={() => this.choseMoreModel()}
-        />
+        />*/}
       </View>
     )
   }

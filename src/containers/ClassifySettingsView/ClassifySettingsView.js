@@ -40,7 +40,7 @@ export default class ClassifySettingsView extends React.Component {
 
     this.state = {
       currentModel: DEFAULT_MODEL, //当前使用的模型
-      defaultBtx: '正在使用',
+      defaultBtx: '',
       dustbinBtx: '',
       plantBtx: '',
     }
@@ -86,6 +86,28 @@ export default class ClassifySettingsView extends React.Component {
         this.setState({
           plantBtx: '下载',
         })
+      }
+      //当前使用的模型文件
+      let currentmodel = await SAIClassifyView.getCurrentModel()
+      if (currentmodel.ModelType === 'ASSETS_FILE') {
+        this.setState({
+          currentModel: DEFAULT_MODEL,
+          defaultBtx: '正在使用',
+        })
+      } else if (currentmodel.ModelType === 'ABSOLUTE_FILE_PATH') {
+        if (currentmodel.ModelPath.indexOf(DUSTBIN_MODEL) !== -1) {
+          this.setState({
+            currentModel: DUSTBIN_MODEL,
+            defaultBtx: '立即使用',
+            dustbinBtx: '正在使用',
+          })
+        } else if (currentmodel.ModelPath.indexOf(PLANT_MODEL) !== -1) {
+          this.setState({
+            currentModel: PLANT_MODEL,
+            defaultBtx: '立即使用',
+            plantBtx: '正在使用',
+          })
+        }
       }
     }.bind(this)())
     InteractionManager.runAfterInteractions(() => {})
@@ -201,7 +223,7 @@ export default class ClassifySettingsView extends React.Component {
       LabelPath: '',
     }
     if (title === '立即使用') {
-      this.Loading.setLoading(true)
+      this.Loading.setLoading(true, '切换中...')
       if (fileName === DEFAULT_MODEL) {
         params.ModelType = 'ASSETS_FILE'
       } else if (fileName === DUSTBIN_MODEL) {
@@ -247,11 +269,11 @@ export default class ClassifySettingsView extends React.Component {
     } else if (title === '下载') {
       if (fileName === DUSTBIN_MODEL) {
         this.setState({
-          dustbinBtx: '准备下载中',
+          dustbinBtx: '下载中',
         })
       } else if (fileName === PLANT_MODEL) {
         this.setState({
-          plantBtx: '准备下载中',
+          plantBtx: '下载中',
         })
       }
       let downloadData = this.getDownloadData(key, fileName)
