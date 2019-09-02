@@ -385,7 +385,8 @@ export default class LayerManager_tolbar extends React.Component {
         : layerSettingCanNotSelect(this.props.language)
       if (
         layerData.type === 'layerGroup' ||
-        layerData.type === DatasetType.IMAGE || layerData.type === DatasetType.MBImage
+        layerData.type === DatasetType.IMAGE ||
+        layerData.type === DatasetType.MBImage
       ) {
         tempheader1 = layerSettingCanNotSelect(this.props.language)
       }
@@ -865,7 +866,8 @@ export default class LayerManager_tolbar extends React.Component {
           if (
             (layerData.themeType === 7 && index === 1) ||
             layerData.type === 'layerGroup' ||
-            layerData.type === DatasetType.IMAGE
+            layerData.type === DatasetType.IMAGE ||
+            layerData.type === DatasetType.MBImage
           ) {
             return (
               <TouchableOpacity

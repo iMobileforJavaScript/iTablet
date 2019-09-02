@@ -210,6 +210,10 @@ const Prompt = {
   IMAGE_RECOGNITION_ING: 'Loading',
   IMAGE_RECOGNITION_FAILED: 'Image recognition failed',
 
+  ERROR_INFO_START_WITH_A_LETTER: 'The name can only start with a letter.',
+  ERROR_INFO_ILLEGAL_CHARACTERS: 'The name can not contain illegal characters.',
+  ERROR_INFO_EMPTY: 'The name can not be empty.',
+
   OPEN_LOCATION: 'Please open Location Service in System Setting',
   REQUEST_LOCATION: 'iTablet need location permission to complete the action',
   LOCATION_ERROR: 'Location request failed, please try agagin later',
