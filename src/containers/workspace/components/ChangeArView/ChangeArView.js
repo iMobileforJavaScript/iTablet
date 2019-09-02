@@ -62,7 +62,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapToolbar/icon_scene_tool_start.png')}
+          image={require('../../../../assets/Navigation/start_point.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
           }}
@@ -70,7 +70,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapToolbar/icon_scene_tool_end.png')}
+          image={require('../../../../assets/Navigation/end_point.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
           }}
@@ -78,7 +78,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/btn_navi.png')}
+          image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={() => {
             GLOBAL.TouchType = TouchType.NORMAL
             if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
@@ -102,7 +102,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/btn_clear.png')}
+          image={require('../../../../assets/Navigation/clean_route.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NORMAL
             SMap.clearPoint()
