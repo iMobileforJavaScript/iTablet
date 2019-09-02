@@ -89,10 +89,13 @@ export default class ClassifyView extends React.Component {
     DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
   }
 
+  /**
+   * 图片分类后的回调
+   */
   recognizeImage = params => {
     this.Loading.setLoading(false)
     this.results = params.results
-    if (this.results.length > 0) {
+    if (this.results && this.results.length > 0) {
       this.setState({
         isClassifyInfoVisible: true,
       })
@@ -165,15 +168,23 @@ export default class ClassifyView extends React.Component {
   captureImage = async () => {
     if (!this.camera) return
     this.Loading.setLoading(true, '正在分类中...')
-    const options = { quality: 0.5, base64: true, pauseAfterCapture: true }
+    const options = {
+      quality: 0.5,
+      base64: true,
+      pauseAfterCapture: true,
+      orientation: 'portrait',
+      fixOrientation: true,
+    }
     let data = await this.camera.takePictureAsync(options)
     this.setState({
       imgUri: data.uri,
     })
-    // let sourcePath = this.state.data.imgUri.replace('file://', '')
-    // let result = await this.addMedia([sourcePath])
-    // if (result) {
-    // }
+    let sourcePath = this.state.imgUri.replace('file://', '')
+    let result = await SAIClassifyView.loadImageUri(sourcePath)
+    if (!result) {
+      this.Loading.setLoading(false)
+      Toast.show('分类失败')
+    }
   }
 
   save = async () => {
@@ -291,7 +302,7 @@ export default class ClassifyView extends React.Component {
               bgImageSource: path,
             },
             () => {
-              this.stopPreview()
+              this.pausePreview()
             },
           )
         } else {

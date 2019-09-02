@@ -209,7 +209,7 @@ export default class ClassifySettingsView extends React.Component {
           showsVerticalScrollIndicator={false}
         >
           {this.renderModelItemFirst()}
-          {this.renderModelItemSecond()}
+          {/*{this.renderModelItemSecond()}*/}
           {this.renderModelItemThird()}
         </ScrollView>
       </View>
