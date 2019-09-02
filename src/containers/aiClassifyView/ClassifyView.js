@@ -84,7 +84,7 @@ export default class ClassifyView extends React.Component {
   }
 
   componentWillUnmount() {
-    // Orientation.unlockAllOrientations()
+    Orientation.unlockAllOrientations()
     //移除监听
     DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
   }
