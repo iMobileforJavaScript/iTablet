@@ -17,7 +17,7 @@ function setParams(params) {
   _params = params
 }
 
-//高精度采集(户型图)
+//户型图采集
 function arMeasureCollect() {
   (async function() {
     let isSupportedARCore = await SMeasureView.isSupportedARCore()
@@ -76,8 +76,9 @@ function aiDetect() {
     await SAIDetectView.setProjectionModeEnable(true)
     await SAIDetectView.setDrawTileEnable(false)
     await SAIDetectView.setIsPolymerize(false)
-    GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
-    GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
+    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    // await SAIDetectView.startCountTrackedObjs(true)
   }.bind(this)())
 }
 
@@ -87,15 +88,20 @@ function polymerizeCollect() {
     await SAIDetectView.setProjectionModeEnable(true)
     await SAIDetectView.setDrawTileEnable(false)
     await SAIDetectView.setIsPolymerize(true)
-    GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
-    GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
-    await SAIDetectView.setIsPolymerize(true)
+    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
+    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    // await SAIDetectView.startCountTrackedObjs(true)
   }.bind(this)())
 }
 
 //高精度采集
 function collectSceneForm() {
   (async function() {
+    let isSupportedARCore = await SMeasureView.isSupportedARCore()
+    if (!isSupportedARCore) {
+      Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
+      return
+    }
     let currentLayer = GLOBAL.currentLayer
     // let reg = /^Label_(.*)#$/
     let isTaggingLayer = false
@@ -151,16 +157,16 @@ function getAiAssistantData(type, params) {
       image: getThemeAssets().ar.functiontoolbar
         .rightbar_ai_aggregate_collect_light,
     },
-    {
-      //违章采集
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-      // action:openMap,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
-    },
+    // {
+    //   //违章采集
+    //   key: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
+    //   title: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
+    //   // action:openMap,
+    //   size: 'large',
+    //   image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
+    // },
     // {
     //   //路面采集
     //   key: getLanguage(global.language).Map_Main_Menu

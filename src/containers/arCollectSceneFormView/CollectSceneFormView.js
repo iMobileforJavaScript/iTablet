@@ -5,6 +5,7 @@ import {
   View,
   Image,
   Text,
+  DeviceEventEmitter,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -52,28 +53,27 @@ export default class CollectSceneFormView extends React.Component {
         //   this.datasourceAlias,
         //   this.datasetName,
         // )
-        // //注册监听
-        // DeviceEventEmitter.addListener(
-        //   'onTotalLengthChanged',
-        //   this.onTotalLengthChanged,
-        // )
+        //注册监听
+        DeviceEventEmitter.addListener(
+          'onTotalLengthChanged',
+          this.onTotalLengthChanged,
+        )
       }.bind(this)())
     })
   }
 
   componentWillUnmount() {
-    // Orientation.unlockAllOrientations()
+    Orientation.unlockAllOrientations()
     //移除监听
-    // DeviceEventEmitter.removeListener(
-    //   'onTotalLengthChanged',
-    //   this.onTotalLengthChanged,
-    // )
-    // SCollectSceneFormView.onDestroy()
+    DeviceEventEmitter.removeListener(
+      'onTotalLengthChanged',
+      this.onTotalLengthChanged,
+    )
   }
 
   onTotalLengthChanged = params => {
     this.setState({
-      totalLength: params.total,
+      totalLength: params.totalLength,
     })
   }
 
