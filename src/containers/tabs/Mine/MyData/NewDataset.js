@@ -12,8 +12,8 @@ import { Container, Input } from '../../../../components'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import { getLanguage } from '../../../../language'
-import { scaleSize, Toast } from '../../../../utils'
-import { color } from '../../../../styles'
+import { scaleSize, Toast, dataUtil } from '../../../../utils'
+import { color, size } from '../../../../styles'
 const closeImg = require('../../../../assets/mapTools/icon_close_black.png')
 const addImg = require('../../../../assets/mapTool/icon_plus.png')
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
@@ -37,15 +37,18 @@ class NewDataset extends Component {
       data: params.data,
       datasets: [
         {
+          key: new Date().getTime(),
           datasetName: undefined,
           datasetType: undefined,
         },
       ],
+      errorMap: (new Map(): Map<string, Object>),
     }
   }
 
   _addDataset = () => {
     let data = {
+      key: new Date().getTime(),
       datasetName: undefined,
       datasetType: undefined,
     }
@@ -59,23 +62,49 @@ class NewDataset extends Component {
   }
 
   _deleteDataset = index => {
-    let datasets = this.state.datasets
+    let datasets = JSON.parse(JSON.stringify(this.state.datasets))
+    const errorMap = new Map(this.state.errorMap)
+    errorMap.delete(this.state.datasets[index].key)
     datasets.splice(index, 1)
     if (datasets.length === 0) {
-      this.setState({ datasets: [] })
+      this.setState({ datasets: [], errorMap })
     } else {
-      this.setState({ datasets })
+      this.setState({ datasets, errorMap })
     }
   }
 
   _clearDatasets = () => {
     let datasets = [
       {
+        key: new Date().getTime(),
         datasetName: undefined,
         datasetType: undefined,
       },
     ]
-    this.setState({ datasets })
+    this.setState(state => {
+      const errorMap = new Map(state.errorMap)
+      errorMap.clear()
+      return { datasets, errorMap }
+    })
+  }
+
+  setErrorMap = (key, errorInfo) => {
+    if (key === undefined || key === '') return
+    this.setState(state => {
+      const errorMap = new Map(state.errorMap)
+      const target = errorMap.get(key)
+
+      if (target && target !== errorInfo) {
+        if (errorInfo === undefined || errorInfo === '') {
+          errorMap.delete(key)
+        } else {
+          errorMap.set(key, errorInfo)
+        }
+      } else {
+        errorMap.set(key, errorInfo)
+      }
+      return { errorMap }
+    })
   }
 
   _createDatasets = async () => {
@@ -84,6 +113,9 @@ class NewDataset extends Component {
         Toast.show(getLanguage(global.language).Profile.PLEASE_ADD_DATASET)
       } else {
         let newDatasets = this.state.datasets
+        if (this.state.errorMap.size) {
+          return
+        }
         for (let i = 0; i < newDatasets.length; i++) {
           if (!newDatasets[i].datasetName) {
             Toast.show(getLanguage(global.language).Profile.ENTER_DATASET_NAME)
@@ -187,11 +219,20 @@ class NewDataset extends Component {
           </Text>
           <Input
             style={styles.textInputStyle}
-            value={item.datasetName || ''}
+            defaultValue={item.datasetName || ''}
             onChangeText={text => {
               item.datasetName = text
+              let { error } = dataUtil.isLegalName(text, GLOBAL.language)
+              this.setErrorMap(item.key, error)
             }}
           />
+        </View>
+        <View style={styles.errorView}>
+          {this.state.errorMap.get(item.key) && (
+            <Text style={styles.errorInfo}>
+              {this.state.errorMap.get(item.key)}
+            </Text>
+          )}
         </View>
         <View style={styles.longSeperator} />
         <View>
@@ -277,6 +318,7 @@ class NewDataset extends Component {
             data={this.state.datasets}
             keyExtractor={(item, index) => index.toString()}
             renderItem={this._renderItem}
+            extraData={this.state.errorMap}
           />
           {this._renderAddDataset()}
         </View>
@@ -398,6 +440,18 @@ const styles = StyleSheet.create({
   imgStyle: {
     height: scaleSize(40),
     width: scaleSize(40),
+  },
+  errorView: {
+    height: scaleSize(40),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginLeft: scaleSize(200),
+  },
+  errorInfo: {
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.red,
+    textAlign: 'left',
   },
 })
 
