@@ -116,6 +116,7 @@ const Prompt = {
   CLIP_ENTER_MAP_NAME: '请输入地图名字',
   ENTER_SERVICE_ADDRESS: '请输入服务地址',
   ENTER_ANIMATION_NAME: '请输入动画名字',
+  ENTER_ANIMATION_NODE_NAME: '请输入动画节点名字',
 
   ENTER_NAME: '请输入名称',
 

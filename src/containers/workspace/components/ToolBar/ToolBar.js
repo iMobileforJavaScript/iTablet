@@ -97,6 +97,7 @@ import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
 import MenuList from '../MenuList'
 import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
+import AnimationNodeListView from '../AnimationNodeListView'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -106,6 +107,7 @@ const symbol = 'symbol'
 const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
 const createPlotAnimation = 'createPlotAnimation'
+const animationNode = 'animationNode'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -3469,6 +3471,27 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
+  showAnimationNodelist = () => {
+    // this.setOverlayViewVisible(true)
+    // let height = ConstToolType.TOOLBAR_HEIGHT[5]
+    // this.props.showFullMap && this.props.showFullMap(true)
+    // let type = ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST
+    // GLOBAL.currentToolbarType = type
+    // this.setVisible(true, type, {
+    //   isFullScreen: false,
+    //   height,
+    //   containerType: 'animationNode',
+    //   // cb: () => SMap.setAction(Action.SELECT),
+    // })
+
+    let type = ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST
+    this.setVisible(true, type, {
+      isFullScreen: true,
+      height: ConstToolType.TOOLBAR_HEIGHT[5],
+      containerType: 'animationNode',
+      cb: () => {},
+    })
+  }
   animationPlay = async () => {
     // await SMap.initAnimation()
     // await SMap.animationPlay()
@@ -5459,6 +5482,25 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  renderAnimationNodeList = () => {
+    return (
+      <AnimationNodeListView
+        ref={ref => (this.AnimationNodeListView = ref)}
+        data={this.state.data}
+        type={this.state.type}
+        // setfly={this.setfly}
+        // setAnimation={this.setAnimation}
+        // showToolbar={this.showToolbar}
+        // existFullMap={this.props.existFullMap}
+        // importSceneWorkspace={this.props.importSceneWorkspace}
+        // refreshLayer3dList={this.props.refreshLayer3dList}
+        device={this.props.device}
+        // newFly={this.newFly}
+        // changeLayerList={this.props.changeLayerList}
+      />
+    )
+  }
+
   renderHorizontalTable = () => {
     return (
       <HorizontalTableList
@@ -6010,6 +6052,9 @@ export default class ToolBar extends React.PureComponent {
       case createPlotAnimation:
         box = this.renderCreatePlotAnimation()
         break
+      case animationNode:
+        box = this.renderAnimationNodeList()
+        break
       case table:
       default:
         box = this.renderTable()
@@ -6326,7 +6371,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:
           //显示动画节点对象列表
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
-
+          action = this.showAnimationNodelist
           break
         case ToolbarBtnType.PLOT_ANIMATION_SAVE:
           //保存推演动画节点mapTools/icon_save_black
@@ -6408,7 +6453,10 @@ export default class ToolBar extends React.PureComponent {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
       GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
-    } else if (this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_PLOTTING_ANIMATION ||
+      this.state.type === ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST
+    ) {
       let height = 0
       this.props.showFullMap && this.props.showFullMap(true)
       let type = ConstToolType.PLOT_ANIMATION_START
