@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native'
+import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 import { Container } from '../../../../components'
 import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -15,6 +8,7 @@ import { getLanguage } from '../../../../language'
 import MyDataPopupModal from './MyDataPopupModal'
 import { MineItem, BatchHeadBar } from '../component'
 import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
@@ -225,24 +219,22 @@ class DatasourcePage extends Component {
   }
 
   _renderHeaderRight = () => {
-    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-              this.setState({ batchMode: false })
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Prompt.COMPLETE}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
+    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <TouchableOpacity
         onPress={() => {
@@ -275,8 +267,8 @@ class DatasourcePage extends Component {
         >
           <Image
             style={{
-              height: scaleSize(60),
-              width: scaleSize(60),
+              height: scaleSize(50),
+              width: scaleSize(50),
               marginRight: scaleSize(20),
             }}
             source={getThemeAssets().attribute.icon_delete}
@@ -317,38 +309,5 @@ class DatasourcePage extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  bottomItemStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})
 
 export default DatasourcePage

@@ -61,6 +61,7 @@ const Profile = {
   DELETE_MARK: 'Delete Mark',
   UPLOAD_COLOR_SCHEME: 'Upload Color Scheme',
   DELETE_COLOR_SCHEME: 'Delete Color Scheme',
+  BATCH_SHARE: 'Batch Share',
   BATCH_DELETE: 'Batch Delete',
   BATCH_OPERATE: 'Batch Operation',
 
