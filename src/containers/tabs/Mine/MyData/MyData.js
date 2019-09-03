@@ -5,7 +5,6 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
-  StyleSheet,
   NativeModules,
   RefreshControl,
 } from 'react-native'
@@ -14,7 +13,7 @@ import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import MyDataPopupModal from './MyDataPopupModal'
-import { color, size } from '../../../../styles'
+import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
@@ -27,92 +26,10 @@ import {
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
-import { MineItem } from '../component'
-
+import { MineItem, BatchHeadBar } from '../component'
+import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const appUtilsModule = NativeModules.AppUtils
-const styles = StyleSheet.create({
-  topContainer: {
-    flexDirection: 'column',
-    backgroundColor: color.contentColorWhite,
-  },
-  section: {
-    flex: 1,
-    height: scaleSize(80),
-    backgroundColor: color.contentColorGray,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  sectionText: {
-    flex: 1,
-    color: color.fontColorWhite,
-    paddingLeft: 10,
-    fontSize: size.fontSize.fontSizeXl,
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-  },
-  sectionImg: {
-    tintColor: color.fontColorWhite,
-    marginLeft: 10,
-    width: scaleSize(30),
-    height: scaleSize(30),
-  },
-  item: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: color.contentColorWhite,
-    alignItems: 'center',
-    height: scaleSize(80),
-  },
-  itemText: {
-    color: color.fontColorBlack,
-    paddingLeft: 15,
-    fontSize: size.fontSize.fontSizeXl,
-    flex: 1,
-  },
-  img: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    marginLeft: 20,
-    tintColor: color.fontColorBlack,
-  },
-  separator: {
-    // flex: 1,
-    marginHorizontal: scaleSize(16),
-    height: 1,
-    backgroundColor: color.separateColorGray,
-  },
-  title: {
-    // fontSize: size.fontSize.fontSizeLg,
-    fontSize: size.fontSize.fontSizeSm,
-    color: color.bgG,
-  },
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})
 
 export default class MyLocalData extends Component {
   props: {
@@ -136,7 +53,8 @@ export default class MyLocalData extends Component {
       textDisplay: 'none',
       title: (params && params.title) || '',
       isRefreshing: false,
-      batchDelete: false,
+      batchMode: false,
+      selectedNum: 0,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -173,7 +91,7 @@ export default class MyLocalData extends Component {
         let customerData = await this.getSectionData(customerPath, false)
         data.push(customerData)
       }
-      this.setState({ sectionData: data, textDisplay: 'none' })
+      this.setState({ sectionData: data, textDisplay: 'none', selectedNum: 0 })
     } catch (e) {
       this.setState({ textDisplay: 'none' })
     }
@@ -233,6 +151,7 @@ export default class MyLocalData extends Component {
           filter = {
             extension: 'udb',
             type: 'file',
+            exclued: 'Label_' + this.props.user.currentUser.userName + '#.udb',
           }
           title = isUser ? 'MY_DATA' : 'DATA'
           break
@@ -305,7 +224,6 @@ export default class MyLocalData extends Component {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
-      this.setState({ batchDelete: false })
       let deleteItem
       switch (this.state.title) {
         case getLanguage(this.props.language).Profile.MAP:
@@ -351,12 +269,14 @@ export default class MyLocalData extends Component {
 
   _selectAll = () => {
     let section = Object.assign([], this.state.sectionData)
+    let j = 0
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
         section[i].data[n].checked = true
+        j++
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: j })
   }
 
   _deselectAll = () => {
@@ -366,7 +286,18 @@ export default class MyLocalData extends Component {
         section[i].data[n].checked = false
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: 0 })
+  }
+
+  _getTotalItemNumber = () => {
+    let section = Object.assign([], this.state.sectionData)
+    let j = 0
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        j++
+      }
+    }
+    return j
   }
 
   _getSelectedList = () => {
@@ -445,10 +376,10 @@ export default class MyLocalData extends Component {
     // let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
-    let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
-    if (labelUDBName === txtInfo) {
-      return <View />
-    }
+    // let labelUDBName = 'Label_' + this.props.user.currentUser.userName + '#'
+    // if (labelUDBName === txtInfo) {
+    //   return <View />
+    // }
     if (this.formChat && this.chatCallBack) {
       isShowMore = false
     }
@@ -486,13 +417,10 @@ export default class MyLocalData extends Component {
         item={info.item}
         image={img}
         text={txtInfo}
-        disableTouch={this.state.batchDelete}
+        disableTouch={this.state.batchMode}
         showRight={isShowMore}
-        showCheck={this.state.batchDelete}
+        showCheck={this.state.batchMode}
         onPress={async () => {
-          if (this.state.batchDelete) {
-            return
-          }
           if (this.formChat && this.chatCallBack) {
             if (this.callBackMode && this.callBackMode === 'getName') {
               this.itemInfo = info
@@ -524,6 +452,14 @@ export default class MyLocalData extends Component {
             this.setState({ modalIsVisible: true }, () => {
               this.MyDataPopModal && this.MyDataPopModal.setVisible(true)
             })
+          }
+        }}
+        onPressCheck={item => {
+          let selectedNum = this.state.selectedNum
+          if (item.checked) {
+            this.setState({ selectedNum: ++selectedNum })
+          } else {
+            this.setState({ selectedNum: --selectedNum })
           }
         }}
       />
@@ -1203,10 +1139,10 @@ export default class MyLocalData extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        title: getLanguage(global.language).Profile.BATCH_OPERATE,
         action: () => {
           this.setState({
-            batchDelete: !this.state.batchDelete,
+            batchMode: !this.state.batchMode,
           })
         },
       },
@@ -1308,30 +1244,19 @@ export default class MyLocalData extends Component {
 
   _renderHeaderRight = () => {
     if (this.formChat) return null
-    if (this.state.batchDelete) {
+    if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.DESELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this._selectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.SELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -1347,27 +1272,35 @@ export default class MyLocalData extends Component {
     )
   }
 
+  _renderBatchHead = () => {
+    return (
+      <BatchHeadBar
+        select={this.state.selectedNum}
+        total={this._getTotalItemNumber()}
+        selectAll={this._selectAll}
+        deselectAll={this._deselectAll}
+      />
+    )
+  }
+
   _renderBottom = () => {
     return (
       <View style={styles.bottomStyle}>
         <TouchableOpacity
-          onPress={() => {
-            this._deselectAll()
-            this.setState({
-              batchDelete: !this.state.batchDelete,
-            })
-          }}
+          style={styles.bottomItemStyle}
+          onPress={this._batchDelete}
         >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+            style={{
+              height: scaleSize(50),
+              width: scaleSize(50),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().attribute.icon_delete}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._batchDelete}>
-          <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_submit_black.png')}
-          />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_DELETE}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -1397,6 +1330,7 @@ export default class MyLocalData extends Component {
         >
           {this.state.textValue}
         </Text>
+        {this.state.batchMode && this._renderBatchHead()}
         <SectionList
           style={{
             flex: 1,
@@ -1443,7 +1377,7 @@ export default class MyLocalData extends Component {
         />*/}
         {this._showMyDataPopupModal()}
         {this._showDataPopupModal()}
-        {this.state.batchDelete && this._renderBottom()}
+        {this.state.batchMode && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref

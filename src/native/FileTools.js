@@ -245,7 +245,12 @@ async function getFilterFiles(
       return []
     }
     if (fileType === undefined) {
-      fileType = { smwu: 'smwu', sxwu: 'sxwu', sxw: 'sxw', smw: 'smw' }
+      fileType = {
+        smwu: 'smwu',
+        sxwu: 'sxwu',
+        sxw: 'sxw',
+        smw: 'smw',
+      }
     }
     let isRecordFile = false
     let arrDirContent = await getDirectoryContent(fileDir)

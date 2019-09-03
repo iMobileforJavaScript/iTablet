@@ -28,13 +28,23 @@ export default class SimpleDialog extends PureComponent {
 
   setConfirm = action => {
     if (action && typeof action === 'function') {
-      this.setState({ confirmAction: action })
+      this.setState({
+        confirmAction: () => {
+          this.setVisible(false)
+          action()
+        },
+      })
     }
   }
 
   setCancel = action => {
     if (action && typeof action === 'function') {
-      this.setState({ cancelAction: action })
+      this.setState({
+        cancelAction: () => {
+          this.setVisible(false)
+          action()
+        },
+      })
     }
   }
 

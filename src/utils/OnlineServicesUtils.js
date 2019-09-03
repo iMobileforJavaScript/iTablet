@@ -20,7 +20,7 @@ export default class OnlineServicesUtils {
       }
     }
     if (type === 'online') {
-      this.serverUrl = 'https://www.supermapol.com/web/'
+      this.serverUrl = 'https://www.supermapol.com/web'
       if (Platform.OS === 'android') {
         SOnlineService.getAndroidSessionID().then(cookie => {
           this.cookie = cookie
@@ -53,9 +53,10 @@ export default class OnlineServicesUtils {
       this.serverUrl +
       `/mycontent/datas/${id}/publishstatus.rjson?serviceType=RESTMAP,RESTDATA`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let result = await request(url, 'PUT', {
@@ -95,9 +96,10 @@ export default class OnlineServicesUtils {
   async setServicesShareConfig(id, isPublic) {
     let url = this.serverUrl + `/services/sharesetting.rjson`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let entities
@@ -125,9 +127,10 @@ export default class OnlineServicesUtils {
   async setDatasShareConfig(id, isPublic) {
     let url = this.serverUrl + `/mycontent/datas/sharesetting.rjson`
     let headers = {}
-    if (this.cookie) {
+    let cookie = await this.getCookie()
+    if (cookie) {
       headers = {
-        cookie: this.cookie,
+        cookie: cookie,
       }
     }
     let entities

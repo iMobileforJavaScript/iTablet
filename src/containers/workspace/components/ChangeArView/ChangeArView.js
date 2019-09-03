@@ -1,16 +1,13 @@
-/*
- Copyright © SuperMap. All rights reserved.
- Author: Yang Shanglong
- E-mail: yangshanglong@supermap.com
- */
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, TouchableHighlight, Text } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, constUtil } from '../../../../utils'
 import styles from './styles'
 import PropTypes from 'prop-types'
 import { TouchType } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
+
+const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR_TINT
 
 export default class ChangeArView extends React.Component {
   static propTypes = {
@@ -47,22 +44,42 @@ export default class ChangeArView extends React.Component {
           borderRadius: scaleSize(4),
         }}
       >
-        <MTBtn
-          style={styles.btn}
-          size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/2d.png')}
+        <TouchableHighlight
+          style={{
+            backgroundColor: 'white',
+            borderRadius: scaleSize(4),
+            height: scaleSize(60),
+            width: scaleSize(60),
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+          }}
           onPress={async () => {}}
-        />
-        <MTBtn
-          style={styles.btn}
-          size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/3d.png')}
+          underlayColor={BTN_UNDERCOLOR}
+        >
+          <Text style={styles.text1}>2D</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={{
+            backgroundColor: 'white',
+            borderRadius: scaleSize(4),
+            height: scaleSize(60),
+            width: scaleSize(60),
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+          }}
           onPress={async () => {}}
-        />
+          underlayColor={BTN_UNDERCOLOR}
+        >
+          <Text style={styles.text1}>3D</Text>
+        </TouchableHighlight>
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapToolbar/icon_scene_tool_start.png')}
+          image={require('../../../../assets/Navigation/start_point.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
           }}
@@ -70,7 +87,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapToolbar/icon_scene_tool_end.png')}
+          image={require('../../../../assets/Navigation/end_point.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
           }}
@@ -78,7 +95,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/btn_navi.png')}
+          image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={() => {
             GLOBAL.TouchType = TouchType.NORMAL
             if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
@@ -102,7 +119,7 @@ export default class ChangeArView extends React.Component {
         <MTBtn
           style={styles.btn}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/btn_clear.png')}
+          image={require('../../../../assets/Navigation/clean_route.png')}
           onPress={async () => {
             GLOBAL.TouchType = TouchType.NORMAL
             SMap.clearPoint()

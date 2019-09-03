@@ -334,13 +334,13 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_NAVIGATION_START:
       data = [
-        {
-          key: constants.NAVIGATION,
-          title: constants.NAVIGATION,
-          action: naviWorkSpace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open_black.png'),
-        },
+        // {
+        //   key: constants.NAVIGATION,
+        //   title: constants.NAVIGATION,
+        //   action: naviWorkSpace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open_black.png'),
+        // },
         {
           key: constants.OPEN,
           title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
@@ -435,45 +435,45 @@ function openWorkspace(cb) {
   })
 }
 
-/** 打开导航工作空间 **/
-function naviWorkSpace() {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-  ;(async function() {
-    let data = [],
-      path =
-        (await FileTools.appendingHomeDirectory(
-          _params.user && _params.user.currentUser.userName
-            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
-            : ConstPath.CustomerPath,
-        )) + ConstPath.RelativeFilePath.NaviWorkspace
-    let userFileList
-
-    userFileList = await FileTools.getNavigationWorkspace(path)
-
-    if (userFileList && userFileList.length > 0) {
-      let userList = []
-      userFileList.forEach(item => {
-        let name = item.name
-        item.title = name
-        item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapTools/icon_open_black.png')
-        userList.push(item)
-      })
-    }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_WORKSPACE,
-      //'导航工作空间',
-      image: require('../../../../assets/mapTools/icon_open.png'),
-      data: userFileList || [],
-    })
-    _params.setToolbarVisible(true, ConstToolType.WORKSPACE_CHANGE, {
-      containerType: 'list',
-      height: ConstToolType.THEME_HEIGHT[4],
-      data,
-    })
-  })()
-}
+// /** 打开导航工作空间 **/
+// function naviWorkSpace() {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
+//   ;(async function() {
+//     let data = [],
+//       path =
+//         (await FileTools.appendingHomeDirectory(
+//           _params.user && _params.user.currentUser.userName
+//             ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+//             : ConstPath.CustomerPath,
+//         )) + ConstPath.RelativeFilePath.NaviWorkspace
+//     let userFileList
+//
+//     userFileList = await FileTools.getNavigationWorkspace(path)
+//
+//     if (userFileList && userFileList.length > 0) {
+//       let userList = []
+//       userFileList.forEach(item => {
+//         let name = item.name
+//         item.title = name
+//         item.name = name.split('.')[0]
+//         item.image = require('../../../../assets/mapTools/icon_open_black.png')
+//         userList.push(item)
+//       })
+//     }
+//     data.push({
+//       title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_WORKSPACE,
+//       //'导航工作空间',
+//       image: require('../../../../assets/mapTools/icon_open.png'),
+//       data: userFileList || [],
+//     })
+//     _params.setToolbarVisible(true, ConstToolType.WORKSPACE_CHANGE, {
+//       containerType: 'list',
+//       height: ConstToolType.THEME_HEIGHT[4],
+//       data,
+//     })
+//   })()
+// }
 
 // /** 切换标绘库 **/
 // function changePlotLib() {

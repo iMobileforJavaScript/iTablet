@@ -11,7 +11,7 @@ import {
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets, getThemeAssets } from '../../assets'
 import {
-  SMAIClassifyView,
+  // SMAIClassifyView,
   SAIClassifyView,
   SMediaCollector,
   DatasetType,
@@ -26,6 +26,7 @@ import { ConstPath } from '../../constants'
 import { getLanguage } from '../../language'
 import RadioButton from './RadioButton'
 import { scaleSize, Toast } from '../../utils'
+import { RNCamera } from 'react-native-camera'
 
 /*
  * AI分类
@@ -46,7 +47,8 @@ export default class ClassifyView extends React.Component {
     this.checkedItem = 0
 
     this.state = {
-      isCameraVisible: false,
+      imgUri: '',
+      isCameraVisible: true,
       isClassifyInfoVisible: false,
       first_result: '',
       first_result_confidence: '',
@@ -75,9 +77,6 @@ export default class ClassifyView extends React.Component {
           this.datasetName,
           this.props.language,
         )
-        this.setState({
-          isCameraVisible: true,
-        })
         //注册监听
         DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
       }.bind(this)())
@@ -90,10 +89,13 @@ export default class ClassifyView extends React.Component {
     DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
   }
 
+  /**
+   * 图片分类后的回调
+   */
   recognizeImage = params => {
     this.Loading.setLoading(false)
     this.results = params.results
-    if (this.results.length > 0) {
+    if (this.results && this.results.length > 0) {
       this.setState({
         isClassifyInfoVisible: true,
       })
@@ -149,21 +151,40 @@ export default class ClassifyView extends React.Component {
   }
 
   startPreview = async () => {
-    await SAIClassifyView.startPreview()
+    this.camera && this.camera.resumePreview()
   }
 
-  stopPreview = async () => {
-    await SAIClassifyView.stopPreview()
+  pausePreview = async () => {
+    this.camera && this.camera.pausePreview()
   }
 
   dispose = async () => {
     await SAIClassifyView.dispose()
   }
 
+  /**
+   * 照相
+   */
   captureImage = async () => {
+    if (!this.camera) return
     this.Loading.setLoading(true, '正在分类中...')
-    await SAIClassifyView.captureImage()
-    await SAIClassifyView.stopPreview()
+    const options = {
+      quality: 0.5,
+      base64: true,
+      pauseAfterCapture: true,
+      orientation: 'portrait',
+      fixOrientation: true,
+    }
+    let data = await this.camera.takePictureAsync(options)
+    this.setState({
+      imgUri: data.uri,
+    })
+    let sourcePath = this.state.imgUri.replace('file://', '')
+    let result = await SAIClassifyView.loadImageUri(sourcePath)
+    if (!result) {
+      this.Loading.setLoading(false)
+      Toast.show('分类失败')
+    }
   }
 
   save = async () => {
@@ -237,9 +258,6 @@ export default class ClassifyView extends React.Component {
     })
   }
 
-  /** 确认 **/
-  confirm = () => {}
-
   back = () => {
     NavigationService.goBack()
     return true
@@ -284,7 +302,7 @@ export default class ClassifyView extends React.Component {
               bgImageSource: path,
             },
             () => {
-              this.stopPreview()
+              this.pausePreview()
             },
           )
         } else {
@@ -380,6 +398,96 @@ export default class ClassifyView extends React.Component {
         {<View style={styles.overlayPreviewTop} />}
         {<View style={styles.overlayPreviewRight} />}
         {<View style={styles.overlayPreviewBottom} />}
+        <View
+          style={{
+            position: 'absolute',
+            left: scaleSize(60),
+            top: scaleSize(145),
+          }}
+        >
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            right: scaleSize(61),
+            top: scaleSize(144),
+            transform: [{ rotate: '90deg' }],
+          }}
+        >
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            left: scaleSize(60),
+            bottom: scaleSize(450),
+          }}
+        >
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            right: scaleSize(61),
+            bottom: scaleSize(449),
+            transform: [{ rotate: '-90deg' }],
+          }}
+        >
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
       </View>
     )
   }
@@ -479,6 +587,33 @@ export default class ClassifyView extends React.Component {
     )
   }
 
+  renderCamera() {
+    return (
+      <RNCamera
+        style={styles.cameraview}
+        type={RNCamera.Constants.Type.back}
+        flashMode={RNCamera.Constants.FlashMode.auto}
+        androidCameraPermissionOptions={{
+          title: 'Permission to use camera',
+          message: 'We need your permission to use your camera',
+          buttonPositive: 'Ok',
+          buttonNegative: 'Cancel',
+        }}
+        androidRecordAudioPermissionOptions={{
+          title: 'Permission to use audio recording',
+          message: 'We need your permission to use your audio',
+          buttonPositive: 'Ok',
+          buttonNegative: 'Cancel',
+        }}
+      >
+        {({ camera, status }) => {
+          // recordAudioPermissionStatus
+          if (status === 'READY') this.camera = camera
+        }}
+      </RNCamera>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -497,9 +632,11 @@ export default class ClassifyView extends React.Component {
             />,
           ],
         }}
+        // bottomBar={this.renderBottomBtns()}
         bottomProps={{ type: 'fix' }}
       >
-        {<SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />}
+        {/*{<SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />}*/}
+        {this.renderCamera()}
         {!this.state.isCameraVisible && this.renderImgPickerView()}
         {this.state.isCameraVisible && this.renderOverlayPreview()}
         {this.renderBottomBtns()}

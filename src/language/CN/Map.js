@@ -81,7 +81,7 @@ const Map_Main_Menu = {
   STYLE_STRIKEOUT: '删除线',
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
-  Saturation: '饱和度',
+  SATURATION: '饱和度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
@@ -453,8 +453,8 @@ const Map_Settings = {
 
   //视频地图设置:一级菜单
   POI_SETTING: 'POI设置',
-  DETECT_TYPE: '识别类型',
-  DETECT_STYLE: '识别框',
+  DETECT_TYPE: '检测类型',
+  DETECT_STYLE: '检测框风格',
 
   POI_SETTING_PROJECTION_MODE: '投射模式',
   POI_SETTING_OVERLAP_MODE: '避让模式',

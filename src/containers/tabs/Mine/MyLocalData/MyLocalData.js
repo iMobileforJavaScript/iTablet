@@ -13,6 +13,7 @@ import {
   SOnlineService,
   SScene,
   SIPortalService,
+  SMap,
 } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -356,6 +357,8 @@ export default class MyLocalData extends Component {
             )
           }
         } else {
+          let index = filePath.lastIndexOf('/')
+          await SMap.copyNaviSnmFile(filePath.substring(0, index))
           let result = await this.props.importWorkspace({ path: filePath })
           if (result.msg !== undefined) {
             Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)

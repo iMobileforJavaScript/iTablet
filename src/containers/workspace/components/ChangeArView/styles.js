@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
+import { size } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {
@@ -48,5 +49,12 @@ export default StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 2,
+  },
+  text1: {
+    fontSize: size.fontSize.fontSizeXXXl,
+    // fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    alignSelf: 'center',
   },
 })

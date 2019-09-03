@@ -96,14 +96,14 @@ class Tabbar extends React.Component {
     return list
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item }, key) => {
     let NavIndex = this.props.navigation.state.index
-    let key = this.props.navigation.state.routes[NavIndex].key
+    let routeKey = this.props.navigation.state.routes[NavIndex].key
     return (
       <TabItem
-        key={item.key}
+        key={key}
         item={item}
-        selected={key === item.key}
+        selected={routeKey === item.key}
         onPress={() => {
           item.btnClick && item.btnClick()
         }}
@@ -124,8 +124,9 @@ class Tabbar extends React.Component {
 
   renderItems = data => {
     let toolbar = []
+    let key = 0
     data.forEach((item, index) => {
-      toolbar.push(this._renderItem({ item, index }))
+      toolbar.push(this._renderItem({ item, index }, key++))
     })
     return toolbar
   }

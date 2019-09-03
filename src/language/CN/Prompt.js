@@ -203,6 +203,14 @@ const Prompt = {
 
   IMAGE_RECOGNITION_ING: '识别中',
   IMAGE_RECOGNITION_FAILED: '图片识别失败',
+
+  ERROR_INFO_START_WITH_A_LETTER: '首字母必须为字母或汉字',
+  ERROR_INFO_ILLEGAL_CHARACTERS: '不能包含特殊字符',
+  ERROR_INFO_EMPTY: '不能为空',
+
+  OPEN_LOCATION: '请在系统设置中开启定位服务',
+  REQUEST_LOCATION: 'iTablet需要获取定位权限',
+  LOCATION_ERROR: '位置获取异常，请稍后尝试',
 }
 
 export { Prompt }

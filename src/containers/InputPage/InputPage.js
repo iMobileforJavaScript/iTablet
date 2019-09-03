@@ -4,16 +4,18 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import { Container, Input, TextBtn } from '../../components'
 import { color } from '../../styles'
-import { getLanguage } from '../../language/index'
+import { getLanguage } from '../../language'
+import { dataUtil } from '../../utils'
 import styles from './styles'
 
 export default class InputPage extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
+    language: string,
   }
 
   constructor(props) {
@@ -21,8 +23,9 @@ export default class InputPage extends React.Component {
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
     this.backcb = params && params.backcb
+    let defaultValue = params && params.value !== undefined ? params.value : ''
     this.state = {
-      value: params && params.value ? params.value : '',
+      value: defaultValue,
       placeholder:
         params && params.placeholder !== undefined ? params.placeholder : '',
       headerTitle:
@@ -33,12 +36,14 @@ export default class InputPage extends React.Component {
           : getLanguage(global.language).Prompt.CONFIRM, //'确定',
       keyboardType:
         params && params.keyboardType ? params.keyboardType : 'default',
+      isLegalName: !!defaultValue,
+      errorInfo: '',
     }
-    this.clickAble = true
+    this.clickAble = true // 防止重复点击
   }
 
   confirm = () => {
-    if (this.clickAble) {
+    if (this.clickAble && this.state.isLegalName) {
       this.clickAble = false
       this.input && this.input.blur()
       this.cb && this.cb(this.state.value)
@@ -68,7 +73,11 @@ export default class InputPage extends React.Component {
           headerRight: (
             <TextBtn
               btnText={this.state.btnTitle}
-              textStyle={styles.headerBtnTitle}
+              textStyle={
+                this.state.isLegalName
+                  ? styles.headerBtnTitle
+                  : styles.headerBtnTitleDisable
+              }
               btnClick={this.confirm}
             />
           ),
@@ -84,14 +93,36 @@ export default class InputPage extends React.Component {
             placeholderTextColor={color.themePlaceHolder}
             value={this.state.value + ''}
             onChangeText={text => {
+              let { result, error } = dataUtil.isLegalName(
+                text,
+                this.props.language,
+              )
               this.setState({
+                isLegalName: result,
+                errorInfo: error,
                 value: text,
+              })
+            }}
+            onClear={() => {
+              let { result, error } = dataUtil.isLegalName(
+                '',
+                this.props.language,
+              )
+              this.setState({
+                isLegalName: result,
+                errorInfo: error,
+                value: '',
               })
             }}
             returnKeyType={'done'}
             keyboardType={this.state.keyboardType}
             showClear
           />
+          {!this.state.isLegalName && this.state.errorInfo && (
+            <View style={styles.errorView}>
+              <Text style={styles.errorInfo}>{this.state.errorInfo}</Text>
+            </View>
+          )}
         </View>
       </Container>
     )

@@ -19,7 +19,9 @@ export default StyleSheet.create({
     zIndex: zIndexLevel.FOUR,
   },
   dialogStyle: {
+    flexDirection: 'column',
     width: scaleSize(350),
+    height: scaleSize(750),
     backgroundColor: color.content_white,
     borderRadius: 12,
     // backgroundColor: 'transparent',
@@ -92,16 +94,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
-    // alignItems: 'center',
-    //height: scaleSize(40),
-    // paddingHorizontal: scaleSize(10),
-    // paddingLeft: scaleSize(20),
-    // paddingRight: scaleSize(20),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: color.content_white,
-    //borderWidth: 1,
-    //borderColor: color.bgG,
-    // width: scaleSize(110),
   },
   separateLine: {
     height: '100%',
@@ -118,6 +110,16 @@ export default StyleSheet.create({
     // backgroundColor:"red",
     textAlign: 'center',
   },
+  btnDisableTitle: {
+    flex: 1,
+    height: scaleSize(60),
+    lineHeight: scaleSize(60),
+    color: color.fontColorGray,
+    fontSize: size.fontSize.fontSizeSm,
+    backgroundColor: 'transparent',
+    // backgroundColor:"red",
+    textAlign: 'center',
+  },
 
   // InputDialog
   inputDialogContainer: {
@@ -127,7 +129,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     // marginTop: scaleSize(30),
     paddingVertical: scaleSize(30),
-    paddingHorizontal: scaleSize(60),
+    paddingHorizontal: scaleSize(30),
     // backgroundColor: 'yellow',
   },
   label: {
@@ -140,7 +142,6 @@ export default StyleSheet.create({
   },
   input: {
     flex: 1,
-    marginLeft: scaleSize(10),
     height: scaleSize(60),
     borderColor: color.grayLight2,
     borderWidth: 1,
@@ -154,5 +155,23 @@ export default StyleSheet.create({
         padding: 0,
       },
     }),
+  },
+
+  contentView: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  errorView: {
+    width: '100%',
+    minHeight: scaleSize(60),
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingHorizontal: scaleSize(30),
+  },
+  errorInfo: {
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.red,
+    textAlign: 'left',
   },
 })

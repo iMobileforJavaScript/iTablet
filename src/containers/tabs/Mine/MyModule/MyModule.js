@@ -6,7 +6,6 @@ import {
   Image,
   Text,
   RefreshControl,
-  StyleSheet,
   NativeModules,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
@@ -16,12 +15,13 @@ import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import NavigationService from '../../../NavigationService'
-import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
-import { Toast, scaleSize, setSpText } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from './ModalBtns'
 import { getLanguage } from '../../../../language/index'
-import { MineItem } from '../component'
+import { MineItem, BatchHeadBar } from '../component'
+import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -39,7 +39,8 @@ export default class MyModule extends Component {
       title: params.title,
       modalIsVisible: false,
       isRefreshing: false,
-      batchDelete: false,
+      batchMode: false,
+      selectedNum: 0,
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
@@ -90,7 +91,7 @@ export default class MyModule extends Component {
         isShowItem: isShowItem,
       })
     }
-    this.setState({ sectionData: data })
+    this.setState({ sectionData: data, selectedNum: 0 })
   }
 
   // _getPlotDataList = async userName => {
@@ -138,11 +139,19 @@ export default class MyModule extends Component {
         item={item}
         image={img}
         text={item.name}
-        disableTouch={this.state.batchDelete}
+        disableTouch={this.state.batchMode}
         showRight={this.isShowMore}
-        showCheck={this.state.batchDelete}
+        showCheck={this.state.batchMode}
         onPressMore={() => {
           this.saveItemInfo({ item, section, index })
+        }}
+        onPressCheck={item => {
+          let selectedNum = this.state.selectedNum
+          if (item.checked) {
+            this.setState({ selectedNum: ++selectedNum })
+          } else {
+            this.setState({ selectedNum: --selectedNum })
+          }
         }}
       />
     )
@@ -170,7 +179,6 @@ export default class MyModule extends Component {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
-      this.setState({ batchDelete: false })
       for (let i = 0; i < deleteArr.length; i++) {
         let filePath
         if (
@@ -198,12 +206,14 @@ export default class MyModule extends Component {
 
   _selectAll = () => {
     let section = Object.assign([], this.state.sectionData)
+    let j = 0
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
         section[i].data[n].checked = true
+        j++
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: j })
   }
 
   _deselectAll = () => {
@@ -213,7 +223,7 @@ export default class MyModule extends Component {
         section[i].data[n].checked = false
       }
     }
-    this.setState({ section })
+    this.setState({ section, selectedNum: 0 })
   }
 
   _getSelectedList = () => {
@@ -229,6 +239,17 @@ export default class MyModule extends Component {
       }
     }
     return list
+  }
+
+  _getTotalItemNumber = () => {
+    let section = Object.assign([], this.state.sectionData)
+    let j = 0
+    for (let i = 0; i < section.length; i++) {
+      for (let n = 0; n < section[i].data.length; n++) {
+        j++
+      }
+    }
+    return j
   }
 
   _showMyDataPopupModal = () => {
@@ -326,10 +347,7 @@ export default class MyModule extends Component {
           : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
       )
       let toPath =
-        userPath +
-        ConstPath.RelativePath.ExternalData +
-        ConstPath.RelativeFilePath.ExportData +
-        'MyExport.zip'
+        userPath + ConstPath.RelativePath.Temp + 'MyExportTemplate.zip'
       // console.warn(fromPath, toPath)
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
@@ -441,10 +459,10 @@ export default class MyModule extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        title: getLanguage(global.language).Profile.BATCH_OPERATE,
         action: () => {
           this.setState({
-            batchDelete: !this.state.batchDelete,
+            batchMode: !this.state.batchMode,
           })
         },
       },
@@ -459,30 +477,19 @@ export default class MyModule extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.state.batchDelete) {
+    if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.DESELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this._selectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.SELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -498,27 +505,35 @@ export default class MyModule extends Component {
     )
   }
 
+  _renderBatchHead = () => {
+    return (
+      <BatchHeadBar
+        select={this.state.selectedNum}
+        total={this._getTotalItemNumber()}
+        selectAll={this._selectAll}
+        deselectAll={this._deselectAll}
+      />
+    )
+  }
+
   _renderBottom = () => {
     return (
       <View style={styles.bottomStyle}>
         <TouchableOpacity
-          onPress={() => {
-            this._deselectAll()
-            this.setState({
-              batchDelete: !this.state.batchDelete,
-            })
-          }}
+          style={styles.bottomItemStyle}
+          onPress={this._batchDelete}
         >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+            style={{
+              height: scaleSize(50),
+              width: scaleSize(50),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().attribute.icon_delete}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this._batchDelete}>
-          <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_submit_black.png')}
-          />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_DELETE}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -535,6 +550,7 @@ export default class MyModule extends Component {
           headerRight: this._renderHeaderRight(),
         }}
       >
+        {this.state.batchMode && this._renderBatchHead()}
         <SectionList
           initialNumToRender={20}
           ref={ref => (this.ref = ref)}
@@ -556,7 +572,7 @@ export default class MyModule extends Component {
         />
         {this._showMyDataPopupModal()}
         {this._renderMyModulePopupModal()}
-        {this.state.batchDelete && this._renderBottom()}
+        {this.state.batchMode && this._renderBottom()}
         <ModalBtns
           ref={ref => (this.ModalBtns = ref)}
           actionOfOnline={
@@ -575,50 +591,3 @@ export default class MyModule extends Component {
     )
   }
 }
-const styles = StyleSheet.create({
-  sectionView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: color.contentColorGray,
-    height: scaleSize(80),
-  },
-  sectionImg: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    marginLeft: 10,
-    tintColor: color.imageColorWhite,
-  },
-  sectionText: {
-    color: color.fontColorWhite,
-    paddingLeft: 15,
-    fontSize: setSpText(26),
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-  },
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})

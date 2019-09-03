@@ -131,7 +131,7 @@ export default StyleSheet.create({
   SwitchModelsView: {
     position: 'absolute',
     flexDirection: 'column',
-    height: scaleSize(400),
+    minHeight: scaleSize(340),
     // width: '90%',
     paddingVertical: scaleSize(20),
     // backgroundColor: '#2D2D2F',
