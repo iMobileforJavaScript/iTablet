@@ -103,6 +103,17 @@ export default class InputPage extends React.Component {
                 value: text,
               })
             }}
+            onClear={() => {
+              let { result, error } = dataUtil.isLegalName(
+                '',
+                this.props.language,
+              )
+              this.setState({
+                isLegalName: result,
+                errorInfo: error,
+                value: '',
+              })
+            }}
             returnKeyType={'done'}
             keyboardType={this.state.keyboardType}
             showClear

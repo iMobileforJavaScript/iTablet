@@ -33,6 +33,7 @@ export default class Input extends PureComponent {
     textContentType?: string,
     secureTextEntry?: boolean,
     onChangeText?: () => {},
+    onClear?: () => {},
   }
 
   static defaultProps = {
@@ -75,6 +76,9 @@ export default class Input extends PureComponent {
   }
 
   clear = () => {
+    if (this.props.onClear && typeof this.props.onClear === 'function') {
+      this.props.onClear()
+    }
     this.setState({
       value: '',
     })
