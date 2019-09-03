@@ -19,6 +19,8 @@ const classify_plant = require('./classify_plant.png')
 const classify_normal = require('./classify_normal.png')
 const navi_model_pin_bowling = require('./navi_model_pin_bowling.png')
 const navi_model_red_flag = require('./navi_model_red_flag.png')
+const icon_ar_camera_circle_bg = require('./icon_ar_camera_circle_bg.png')
+const navi_object_classify_capture = require('./navi_object_classify_capture.png')
 export default {
   functiontoolbar,
   toolbar,
@@ -41,4 +43,6 @@ export default {
   classify_normal,
   navi_model_pin_bowling,
   navi_model_red_flag,
+  icon_ar_camera_circle_bg,
+  navi_object_classify_capture,
 }

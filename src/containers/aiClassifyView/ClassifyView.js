@@ -379,15 +379,23 @@ export default class ClassifyView extends React.Component {
 
   renderCenterBtn = () => {
     return (
-      <ImageButton
-        containerStyle={styles.capture}
-        iconStyle={styles.cameraIcon}
-        activeOpacity={0.8}
-        icon={getThemeAssets().ar.icon_camera_classify}
-        onPress={() => {
-          this.captureImage()
-        }}
-      />
+      <View style={styles.capture}>
+        <ImageButton
+          containerStyle={styles.capture}
+          iconStyle={styles.cameraIconBg}
+          activeOpacity={0.8}
+          icon={getThemeAssets().ar.icon_ar_camera_circle_bg}
+        />
+        <ImageButton
+          containerStyle={styles.capture}
+          iconStyle={styles.cameraIcon}
+          activeOpacity={0.8}
+          icon={getThemeAssets().ar.navi_object_classify_capture}
+          onPress={() => {
+            this.captureImage()
+          }}
+        />
+      </View>
     )
   }
 
