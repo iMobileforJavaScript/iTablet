@@ -1,36 +1,34 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
-import { color, size } from '../../../../styles'
 export default StyleSheet.create({
-  rowView: {
-    flex: 1,
-    flexDirection: 'row',
-    height: scaleSize(80),
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    // width: scaleSize(80),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  Img: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    marginLeft: 20,
-    tintColor: color.fontColorBlack,
-  },
-  title: {
-    color: color.fontColorBlack,
-    paddingLeft: 15,
-    fontSize: size.fontSize.fontSizeXl,
-    flex: 1,
-  },
-  selectImg: {
-    width: scaleSize(40),
-    height: scaleSize(40),
-    marginLeft: 20,
-  },
-  moreImgBtn: {
-    marginRight: 10,
+  headerRightTextStyle: {
+    color: '#FBFBFB',
+    fontSize: scaleSize(26),
   },
   moreImg: {
+    flex: 1,
     height: scaleSize(40),
     width: scaleSize(40),
+  },
+  bottomStyle: {
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(60),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopColor: '#A0A0A0',
+    borderTopWidth: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  bottomItemStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

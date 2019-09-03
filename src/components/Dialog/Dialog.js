@@ -54,7 +54,7 @@ export default class Dialog extends PureComponent {
     showBtns: true,
     confirmBtnVisible: true,
     cancelBtnVisible: true,
-    confirmBtnDisable: true,
+    confirmBtnDisable: false,
     cancelBtnDisable: false,
     onlyOneBtn: false,
   }

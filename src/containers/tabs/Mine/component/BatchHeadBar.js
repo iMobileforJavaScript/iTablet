@@ -19,9 +19,11 @@ export default class BatchHeadBar extends Component {
   render() {
     let icon
     icon =
-      this.props.total === this.props.select
-        ? getPublicAssets().common.icon_check
-        : getPublicAssets().common.icon_uncheck
+      this.props.total === 0
+        ? getPublicAssets().common.icon_uncheck
+        : this.props.total === this.props.select
+          ? getPublicAssets().common.icon_check
+          : getPublicAssets().common.icon_uncheck
     return (
       <View style={styles.batchHeadStyle}>
         <View style={styles.batchCheckStyle}>
