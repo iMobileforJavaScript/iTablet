@@ -145,6 +145,7 @@ function getPlotOperationData(type, params) {
     ToolbarBtnType.END_ANIMATION,
     ToolbarBtnType.PLOT_ANIMATION_XML_LIST,
     ToolbarBtnType.PLOT_ANIMATION_PLAY,
+    ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST,
     ToolbarBtnType.PLOT_ANIMATION_SAVE,
   ]
   switch (type) {
@@ -157,6 +158,9 @@ function getPlotOperationData(type, params) {
       break
     case ConstToolType.PLOT_ANIMATION_XML_LIST:
       data = []
+      break
+    case ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST:
+      data = getAnimationNodeListData()
       break
     case ConstToolType.PLOT_ANIMATION_PALY:
       data = [
@@ -199,6 +203,19 @@ function getPlotOperationData(type, params) {
   }
 
   return { data, buttons }
+}
+
+function getAnimationNodeListData() {
+  let animationNodeList = []
+  let data = [
+    {
+      title: getLanguage(global.language).Map_Main_Menu
+        .PLOTTING_ANIMATION_DEDUCTION,
+      // '态势推演列表',
+      data: animationNodeList,
+    },
+  ]
+  return data
 }
 
 /**
