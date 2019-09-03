@@ -5,7 +5,6 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
-  StyleSheet,
   NativeModules,
   RefreshControl,
 } from 'react-native'
@@ -14,7 +13,7 @@ import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import MyDataPopupModal from './MyDataPopupModal'
-import { color, size } from '../../../../styles'
+import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
@@ -29,94 +28,8 @@ import { getLanguage } from '../../../../language/index'
 import { MsgConstant } from '../../Friend'
 import { MineItem, BatchHeadBar } from '../component'
 import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const appUtilsModule = NativeModules.AppUtils
-const styles = StyleSheet.create({
-  topContainer: {
-    flexDirection: 'column',
-    backgroundColor: color.contentColorWhite,
-  },
-  section: {
-    flex: 1,
-    height: scaleSize(80),
-    backgroundColor: color.contentColorGray,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  sectionText: {
-    flex: 1,
-    color: color.fontColorWhite,
-    paddingLeft: 10,
-    fontSize: size.fontSize.fontSizeXl,
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-  },
-  sectionImg: {
-    tintColor: color.fontColorWhite,
-    marginLeft: 10,
-    width: scaleSize(30),
-    height: scaleSize(30),
-  },
-  item: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: color.contentColorWhite,
-    alignItems: 'center',
-    height: scaleSize(80),
-  },
-  itemText: {
-    color: color.fontColorBlack,
-    paddingLeft: 15,
-    fontSize: size.fontSize.fontSizeXl,
-    flex: 1,
-  },
-  img: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    marginLeft: 20,
-    tintColor: color.fontColorBlack,
-  },
-  separator: {
-    // flex: 1,
-    marginHorizontal: scaleSize(16),
-    height: 1,
-    backgroundColor: color.separateColorGray,
-  },
-  title: {
-    // fontSize: size.fontSize.fontSizeLg,
-    fontSize: size.fontSize.fontSizeSm,
-    color: color.bgG,
-  },
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  bottomItemStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})
 
 export default class MyLocalData extends Component {
   props: {
@@ -1333,19 +1246,17 @@ export default class MyLocalData extends Component {
     if (this.formChat) return null
     if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-              this.setState({ batchMode: false })
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Prompt.COMPLETE}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -1381,8 +1292,8 @@ export default class MyLocalData extends Component {
         >
           <Image
             style={{
-              height: scaleSize(60),
-              width: scaleSize(60),
+              height: scaleSize(50),
+              width: scaleSize(50),
               marginRight: scaleSize(20),
             }}
             source={getThemeAssets().attribute.icon_delete}

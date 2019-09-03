@@ -7,7 +7,6 @@ import {
   Text,
   NativeModules,
   RefreshControl,
-  StyleSheet,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -25,7 +24,9 @@ import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
 import { getLanguage } from '../../../../language/index'
-import { MineItem } from '../component'
+import { MineItem, BatchHeadBar } from '../component'
+import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
@@ -41,9 +42,9 @@ export default class MyLabel extends Component {
       title: params.title,
       modalIsVisible: false,
       udbPath: '',
-      showselect: false,
       isRefreshing: false,
-      batchDelete: false,
+      batchMode: false,
+      selectedNum: 0,
     }
     this.uploadList = []
     this.uploadType = null
@@ -71,7 +72,7 @@ export default class MyLabel extends Component {
       this.creatDatasource(path)
     }
     let data = await SMap.getUDBNameOfLabel(path)
-    this.setState({ data: data, udbPath: path }, () => {
+    this.setState({ data: data, udbPath: path, selectedNum: 0 }, () => {
       this.container.setLoading(false)
     })
   }
@@ -83,17 +84,21 @@ export default class MyLabel extends Component {
         item={item}
         image={img}
         text={item.title}
-        disableTouch={this.state.batchDelete || this.state.showselect}
-        showCheck={this.state.batchDelete || this.state.showselect}
+        disableTouch={this.state.batchMode}
+        showCheck={this.state.batchMode}
         onPressMore={() => {
           this.saveItemInfo({ item, index })
         }}
+        onPressCheck={item => {
+          let selectedNum = this.state.selectedNum
+          if (item.checked) {
+            this.setState({ selectedNum: ++selectedNum })
+          } else {
+            this.setState({ selectedNum: --selectedNum })
+          }
+        }}
       />
     )
-  }
-
-  getShowSelect = () => {
-    return this.state.showselect
   }
 
   _keyExtractor = index => {
@@ -121,7 +126,6 @@ export default class MyLabel extends Component {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
         return
       }
-      this.setState({ batchDelete: false })
       for (let i = 0; i < deleteArr.length; i++) {
         await SMap.removeDatasetByName(this.state.udbPath, deleteArr[i])
       }
@@ -137,7 +141,7 @@ export default class MyLabel extends Component {
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = true
     }
-    this.setState({ datasets })
+    this.setState({ datasets, selectedNum: datasets.length })
   }
 
   _deselectAll = () => {
@@ -145,7 +149,7 @@ export default class MyLabel extends Component {
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
     }
-    this.setState({ datasets })
+    this.setState({ datasets, selectedNum: 0 })
   }
 
   _getSelectedList = () => {
@@ -156,6 +160,10 @@ export default class MyLabel extends Component {
       }
     }
     return list
+  }
+
+  _getTotalItemNumber = () => {
+    return this.state.data.length
   }
 
   creatDatasource = async datasourcePath => {
@@ -277,10 +285,10 @@ export default class MyLabel extends Component {
     let data
     data = [
       {
-        title: getLanguage(global.language).Profile.BATCH_DELETE,
+        title: getLanguage(global.language).Profile.BATCH_OPERATE,
         action: () => {
           this.setState({
-            batchDelete: !this.state.batchDelete,
+            batchMode: !this.state.batchMode,
           })
         },
       },
@@ -302,7 +310,7 @@ export default class MyLabel extends Component {
         action: () => {
           this._closeModal()
           this.ModalBtns.setVisible(true)
-          this.setState({ showselect: true })
+          this.uploadList = [this.itemInfo.item.title]
         },
       },
       {
@@ -332,26 +340,6 @@ export default class MyLabel extends Component {
     )
   }
 
-  headerRight = () => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          if (this.uploadList.length > 0) {
-            this.dialog.setDialogVisible(true)
-          } else {
-            Toast.show(
-              getLanguage(global.language).Prompt.SELECT_DATASET_TO_SHARE,
-            )
-            //'请选择要分享的数据集')
-          }
-        }}
-      >
-        <Image />
-        <Text style={{ fontSize: 18, color: 'white' }}>{'分享'}</Text>
-      </TouchableOpacity>
-    )
-  }
-
   renderDiaolog = () => {
     return (
       <InputDialog
@@ -359,13 +347,10 @@ export default class MyLabel extends Component {
         placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
         // {'请输入数据名称'}
         confirmAction={() => {
-          this.setState({ showselect: false })
           this.uploadDialog(this.dialog.state.value)
         }}
         cancelAction={() => {
           this.dialog.setDialogVisible(false)
-          this._deselectAll()
-          this.setState({ showselect: false })
         }}
         confirmBtnTitle={getLanguage(global.language).Prompt.SHARE}
         //{'分享'}
@@ -376,30 +361,20 @@ export default class MyLabel extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.state.batchDelete || this.state.showselect) {
+    if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.DESELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this._selectAll()
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Profile.SELECT_ALL}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.ModalBtns && this.ModalBtns.setVisible(false)
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -415,27 +390,53 @@ export default class MyLabel extends Component {
     )
   }
 
+  _renderBatchHead = () => {
+    return (
+      <BatchHeadBar
+        select={this.state.selectedNum}
+        total={this._getTotalItemNumber()}
+        selectAll={this._selectAll}
+        deselectAll={this._deselectAll}
+      />
+    )
+  }
+
   _renderBottom = () => {
     return (
       <View style={styles.bottomStyle}>
         <TouchableOpacity
+          style={styles.bottomItemStyle}
           onPress={() => {
-            this._deselectAll()
-            this.setState({
-              batchDelete: !this.state.batchDelete,
-            })
+            this.ModalBtns.setVisible(true)
           }}
         >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_cancel_1.png')}
+            style={{
+              height: scaleSize(50),
+              width: scaleSize(50),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().share.share}
           />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_SHARE}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={this._batchDelete}>
+        <TouchableOpacity
+          style={styles.bottomItemStyle}
+          onPress={this._batchDelete}
+        >
           <Image
-            style={{ height: scaleSize(40), width: scaleSize(40) }}
-            source={require('../../../../assets/mapTools/icon_submit_black.png')}
+            style={{
+              height: scaleSize(50),
+              width: scaleSize(50),
+              marginRight: scaleSize(20),
+            }}
+            source={getThemeAssets().attribute.icon_delete}
           />
+          <Text style={{ fontSize: scaleSize(20) }}>
+            {getLanguage(global.language).Profile.BATCH_DELETE}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -452,6 +453,7 @@ export default class MyLabel extends Component {
           headerRight: this._renderHeaderRight(),
         }}
       >
+        {this.state.batchMode && this._renderBatchHead()}
         <FlatList
           initialNumToRender={20}
           ref={ref => (this.ref = ref)}
@@ -491,7 +493,7 @@ export default class MyLabel extends Component {
         {this._renderMyLabelPopupModal()}
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}
-        {this.state.batchDelete && this._renderBottom()}
+        {this.state.batchMode && this._renderBottom()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
@@ -499,10 +501,11 @@ export default class MyLabel extends Component {
           actionOfOnline={
             UserType.isOnlineUser(this.props.user.currentUser)
               ? () => {
-                this.uploadList = this._getSelectedList()
+                if (this.state.batchMode) {
+                  this.uploadList = this._getSelectedList()
+                }
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
-                  this.ModalBtns.setVisible(false)
                   this.uploadType = 'online'
                 } else {
                   Toast.show(
@@ -517,10 +520,11 @@ export default class MyLabel extends Component {
           actionOfIPortal={
             UserType.isIPortalUser(this.props.user.currentUser)
               ? () => {
-                this.uploadList = this._getSelectedList()
+                if (this.state.batchMode) {
+                  this.uploadList = this._getSelectedList()
+                }
                 if (this.uploadList.length > 0) {
                   this.dialog.setDialogVisible(true)
-                  this.ModalBtns.setVisible(false)
                   this.uploadType = 'iportal'
                 } else {
                   Toast.show(
@@ -532,10 +536,11 @@ export default class MyLabel extends Component {
               : undefined
           }
           actionOfWechat={() => {
-            this.uploadList = this._getSelectedList()
+            if (this.state.batchMode) {
+              this.uploadList = this._getSelectedList()
+            }
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)
-              this.ModalBtns.setVisible(false)
               this.uploadType = 'weChat'
             } else {
               Toast.show(
@@ -544,42 +549,9 @@ export default class MyLabel extends Component {
               //'请选择要分享的数据集')
             }
           }}
-          cancel={() => {
-            this.uploadList = []
-            this._deselectAll()
-            this.setState({ showselect: false })
-          }}
+          cancel={() => {}}
         />
       </Container>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})

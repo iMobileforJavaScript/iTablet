@@ -328,8 +328,8 @@ export default class Home extends Component {
           fileName = '数据分析数据'
           storage = '  5.3MB'
           break
-        case '导航数据':
-          fileName = '导航数据'
+        case 'NavigationData':
+          fileName = 'NavigationData'
           storage = '  6.11MB'
           break
       }

@@ -33,11 +33,11 @@ export default class Input extends PureComponent {
     textContentType?: string,
     secureTextEntry?: boolean,
     onChangeText?: () => {},
+    onClear?: () => {},
   }
 
   static defaultProps = {
     label: '',
-    value: '',
     keyboardAppearance: 'dark',
     returnKeyType: 'done',
     keyboardType: 'default',
@@ -57,18 +57,28 @@ export default class Input extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.value !== prevProps.value ||
-      this.props.value !== this._value
-    ) {
-      this._value = this.props.value
+    if (this.props.value !== undefined) {
+      if (
+        this.props.value !== prevProps.value ||
+        this.props.value !== this._value
+      ) {
+        this._value = this.props.value
+        this.setState({
+          value: this.props.value,
+        })
+      }
+    } else if (this.props.defaultValue !== prevProps.defaultValue) {
+      this._value = this.props.defaultValue
       this.setState({
-        value: this.props.value,
+        value: this.props.defaultValue,
       })
     }
   }
 
   clear = () => {
+    if (this.props.onClear && typeof this.props.onClear === 'function') {
+      this.props.onClear()
+    }
     this.setState({
       value: '',
     })
