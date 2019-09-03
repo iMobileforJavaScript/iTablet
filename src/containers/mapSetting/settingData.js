@@ -194,7 +194,7 @@ const getPOISettings = () => [
     iconType: 'switch',
   },
 ]
-// 识别类型设置
+// 检测类型设置
 const getDetectTypesSettings = () => [
   {
     key: '人员',

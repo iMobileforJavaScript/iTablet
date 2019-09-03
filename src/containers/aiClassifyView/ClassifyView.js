@@ -84,7 +84,7 @@ export default class ClassifyView extends React.Component {
   }
 
   componentWillUnmount() {
-    Orientation.unlockAllOrientations()
+    // Orientation.unlockAllOrientations()
     //移除监听
     DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
   }
@@ -398,6 +398,96 @@ export default class ClassifyView extends React.Component {
         {<View style={styles.overlayPreviewTop} />}
         {<View style={styles.overlayPreviewRight} />}
         {<View style={styles.overlayPreviewBottom} />}
+        <View
+          style={{
+            position: 'absolute',
+            left: scaleSize(60),
+            top: scaleSize(145),
+          }}
+        >
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            right: scaleSize(61),
+            top: scaleSize(144),
+            transform: [{ rotate: '90deg' }],
+          }}
+        >
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            left: scaleSize(60),
+            bottom: scaleSize(450),
+          }}
+        >
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
+        <View
+          style={{
+            position: 'absolute',
+            right: scaleSize(61),
+            bottom: scaleSize(449),
+            transform: [{ rotate: '-90deg' }],
+          }}
+        >
+          <View
+            style={{
+              height: scaleSize(60),
+              width: 2,
+              backgroundColor: '#37b44a',
+            }}
+          />
+          <View
+            style={{
+              height: 2,
+              width: scaleSize(60),
+              backgroundColor: '#37b44a',
+            }}
+          />
+        </View>
       </View>
     )
   }
