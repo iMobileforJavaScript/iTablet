@@ -17,6 +17,8 @@ const radio_button_on = require('./radio_button_on.png')
 const classify_dustbin = require('./classify_dustbin.png')
 const classify_plant = require('./classify_plant.png')
 const classify_normal = require('./classify_normal.png')
+const navi_model_pin_bowling = require('./navi_model_pin_bowling.png')
+const navi_model_red_flag = require('./navi_model_red_flag.png')
 export default {
   functiontoolbar,
   toolbar,
@@ -37,4 +39,6 @@ export default {
   classify_dustbin,
   classify_plant,
   classify_normal,
+  navi_model_pin_bowling,
+  navi_model_red_flag,
 }

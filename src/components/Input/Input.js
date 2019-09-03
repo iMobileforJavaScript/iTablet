@@ -53,10 +53,15 @@ export default class Input extends PureComponent {
     this.state = {
       value: props.value || props.defaultValue || '',
     }
+    this._value = props.value || props.defaultValue || '' // 实时输入的值
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value) {
+    if (
+      this.props.value !== prevProps.value ||
+      this.props.value !== this._value
+    ) {
+      this._value = this.props.value
       this.setState({
         value: this.props.value,
       })
@@ -120,6 +125,7 @@ export default class Input extends PureComponent {
               }
             }
             this.props.onChangeText && this.props.onChangeText(text)
+            this._value = text
             this.setState({
               value: text,
             })

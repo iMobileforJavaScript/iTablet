@@ -185,12 +185,10 @@ export default class MapCut extends React.Component {
               .map(val => val.name)
           }
           let DSName = this.state.datasources.map(item => item.alias)
-          this.state.selected.forEach(async (value, key) => {
+          //不另存地图需要新建数据源 for of中await
+          for (let item of this.state.selected) {
             let layerInfo = {}
-            if (!value) return
-            let info = this.state.extraData.get(key)
-            if (!info) return
-            // 不另存地图 需要新建并且打开的数据源
+            let info = this.state.extraData.get(item[0])
             if (
               DSName.indexOf(info.datasourceName) === -1 &&
               this.state.saveAsName === ''
@@ -206,8 +204,7 @@ export default class MapCut extends React.Component {
                 DSName.push(info.datasourceName)
               }
             }
-
-            layerInfo.LayerName = key
+            layerInfo.LayerName = item[0]
             layerInfo.IsClipInRegion =
               info.inRangeStatus === CheckStatus.CHECKED ||
               info.inRangeStatus === CheckStatus.CHECKED_DISABLE
@@ -226,7 +223,7 @@ export default class MapCut extends React.Component {
                 ? newDatasourceName
                 : info.datasourceName
             layersInfo.push(layerInfo)
-          })
+          }
 
           SMap.clipMap(
             this.state.points,

@@ -80,7 +80,7 @@ const Map_Main_Menu = {
   STYLE_STRIKEOUT: '删除线',
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
-  Saturation: '饱和度',
+  SATURATION: '饱和度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',

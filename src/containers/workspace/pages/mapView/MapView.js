@@ -974,7 +974,7 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    this.props.setMapIndoorNavigation(false)
+    // this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.NAVIGATIONMAPOPEN = false
     // 优先处理其他界面跳转到MapView传来的返回事件
@@ -1824,12 +1824,10 @@ export default class MapView extends React.Component {
   /** 切换ar和地图浏览 **/
   switchAr = () => {
     if (this.state.showAIDetect) {
-      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(false)
       this.setState({
         showAIDetect: false,
       })
     } else {
-      GLOBAL.SMAIDetectView && GLOBAL.SMAIDetectView.setVisible(true)
       this.setState({
         showAIDetect: true,
       })
@@ -1856,7 +1854,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
-          image={getThemeAssets().ar.icon_ar}
+          image={require('../../../../assets/Navigation/navi_icon_white.png')}
           onPress={async () => {
             this.indoorNavi()
           }}
@@ -1902,6 +1900,7 @@ export default class MapView extends React.Component {
               .TOOLS_NAME,
             placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
             cb: async value => {
+              GLOBAL.INCREMENTDATASETNAME = value
               if (value !== '') {
                 (async function() {
                   await SMap.newIncrementRoad(value)
@@ -1930,17 +1929,17 @@ export default class MapView extends React.Component {
             {
               title: '室外数据',
               name: '室外数据',
-              image: require('../../../../assets/Navigation/network.png'),
+              image: require('../../../../assets/Navigation/snm_model.png'),
             },
             {
               title: '室内数据',
               name: '室内数据',
-              image: require('../../../../assets/Navigation/network.png'),
+              image: require('../../../../assets/Navigation/indoor_datasource.png'),
             },
             {
               title: '开始导航',
               name: '开始导航',
-              image: require('../../../../assets/Navigation/network.png'),
+              image: require('../../../../assets/Navigation/navi_icon.png'),
             },
           ],
         })
@@ -1959,7 +1958,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
-          image={getThemeAssets().ar.icon_ar}
+          image={require('../../../../assets/Navigation/switch_ar_2d.png')}
           activeOpacity={0.5}
         />
       </View>

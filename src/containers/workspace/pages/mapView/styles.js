@@ -189,7 +189,7 @@ export default StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 2,
-    backgroundColor: color.white,
+    backgroundColor: color.blue2,
   },
   dialogStyle: {
     width: scaleSize(350),

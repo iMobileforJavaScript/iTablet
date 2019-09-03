@@ -50,6 +50,8 @@ export default class RenderModuleListItem extends Component {
         } else if (Platform.OS === 'ios') {
           fileName = 'OlympicGreen_ios'
         }
+      } else if (moduleKey === '导航地图') {
+        fileName = '导航数据'
       }
       let homePath = await FileTools.appendingHomeDirectory()
       let cachePath = homePath + ConstPath.CachePath
@@ -99,6 +101,8 @@ export default class RenderModuleListItem extends Component {
       } else if (Platform.OS === 'ios') {
         dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
       }
+    } else if (moduleKey === '导航地图') {
+      dataUrl = 'https://www.supermapol.com/web/datas/1070422678/download'
     }
     let cachePath = this.downloadData.cachePath
     let fileDirPath = cachePath + this.downloadData.fileName

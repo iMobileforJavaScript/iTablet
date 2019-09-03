@@ -79,6 +79,7 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
     NSString* filterName = filter[@"name"];
     NSString* filterEx = filter[@"extension"];
     NSString* type = filter[@"type"];
+    NSString* excluedFile = filter[@"exclued"];
 //    NSString* type = @"Directory";
 //    if (filter[@"type"]) {
 //      type = [filter[@"type"] isEqualToString:@""] ? @"Directory" : filter[@"type"];
@@ -98,6 +99,9 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
         NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
         NSString* extension = [tt pathExtension];
         NSString* fileName = [tt lastPathComponent];
+        
+        //不包含
+        if (excluedFile != nil && [fileName.lowercaseString containsString:[excluedFile.lowercaseString.lowercaseString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]]) continue;
         
         // 匹配后缀
         if (filterEx != nil) {

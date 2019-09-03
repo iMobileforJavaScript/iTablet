@@ -3717,6 +3717,9 @@ export default class ToolBar extends React.PureComponent {
       this.setVisible(false, this.state.type, {
         height: 0,
       })
+      this.tools_name = ''
+      this.tools_remarks = ''
+      this.tools_http = ''
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -4580,54 +4583,56 @@ export default class ToolBar extends React.PureComponent {
       //     currentLayerIndex: 0,
       //   })
       // }
-    } else if (this.state.type === ConstToolType.WORKSPACE_CHANGE) {
-      (async function() {
-        GLOBAL.Loading &&
-          GLOBAL.Loading.setLoading(
-            true,
-            getLanguage(this.props.language).Prompt.OPENING,
-          )
-        let data = []
-        let homePath = await FileTools.appendingHomeDirectory()
-        GLOBAL.homePath = homePath
-        await SMap.closeWorkspace()
-        let maplist = await SMap.open2DNavigationMap({
-          server: homePath + item.path,
-        })
-        GLOBAL.Loading.setLoading(false)
-        if (maplist && maplist.length > 0) {
-          let userList = []
-          maplist.forEach(item => {
-            let name = item.name
-            item.title = name
-            item.name = name.split('.')[0]
-            item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
-            userList.push(item)
-          })
-        }
-
-        data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_MAP,
-          //'我的地图',
-          image: require('../../../../assets/mapToolbar/list_type_map.png'),
-          data: maplist || [],
-        })
-
-        this.setVisible(true, ConstToolType.OPEN_MAP, {
-          containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[4],
-          data,
-        })
-      }.bind(this)())
-    } else if (this.state.type === ConstToolType.OPEN_MAP) {
-      (async function() {
-        this.props.setMapIndoorNavigation(true)
-        await SMap.openMap(item.name)
-        this.props.setContainerLoading(false)
-        this.props.getLayers()
-        this.setVisible(false)
-      }.bind(this)())
-    } else if (this.state.type === ConstToolType.NETDATA) {
+    }
+    // else if (this.state.type === ConstToolType.WORKSPACE_CHANGE) {
+    //   (async function() {
+    //     GLOBAL.Loading &&
+    //       GLOBAL.Loading.setLoading(
+    //         true,
+    //         getLanguage(this.props.language).Prompt.OPENING,
+    //       )
+    //     let data = []
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     GLOBAL.homePath = homePath
+    //     await SMap.closeWorkspace()
+    //     let maplist = await SMap.open2DNavigationMap({
+    //       server: homePath + item.path,
+    //     })
+    //     GLOBAL.Loading.setLoading(false)
+    //     if (maplist && maplist.length > 0) {
+    //       let userList = []
+    //       maplist.forEach(item => {
+    //         let name = item.name
+    //         item.title = name
+    //         item.name = name.split('.')[0]
+    //         item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+    //         userList.push(item)
+    //       })
+    //     }
+    //
+    //     data.push({
+    //       title: getLanguage(global.language).Map_Main_Menu.NAVIGATION_MAP,
+    //       //'我的地图',
+    //       image: require('../../../../assets/mapToolbar/list_type_map.png'),
+    //       data: maplist || [],
+    //     })
+    //
+    //     this.setVisible(true, ConstToolType.OPEN_MAP, {
+    //       containerType: 'list',
+    //       height: ConstToolType.THEME_HEIGHT[4],
+    //       data,
+    //     })
+    //   }.bind(this)())
+    // } else if (this.state.type === ConstToolType.OPEN_MAP) {
+    //   (async function() {
+    //     this.props.setMapIndoorNavigation(true)
+    //     await SMap.openMap(item.name)
+    //     this.props.setContainerLoading(false)
+    //     this.props.getLayers()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // }
+    else if (this.state.type === ConstToolType.NETDATA) {
       if (item.name === '室外数据') {
         (async function() {
           let data = []
@@ -4657,35 +4662,82 @@ export default class ToolBar extends React.PureComponent {
         }.bind(this)())
       } else if (item.name === '室内数据') {
         (async function() {
-          let data = [],
-            path =
-              (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.currentUser.userName
-                  ? ConstPath.UserPath +
-                      this.props.user.currentUser.userName +
-                      '/'
-                  : ConstPath.CustomerPath,
-              )) + ConstPath.RelativeFilePath.NaviWorkspace
-          let userFileList
-
-          userFileList = await FileTools.getIndoorData(path)
-
-          if (userFileList && userFileList.length > 0) {
-            let userList = []
-            userFileList.forEach(item => {
-              let name = item.name
-              item.title = name
-              item.name = name.split('.')[0]
-              item.image = require('../../../../assets/Navigation/network.png')
-              userList.push(item)
+          let data = []
+          let userUDBPath, userUDBs
+          //过滤掉标注和标绘匹配正则
+          let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
+          if (
+            this.props.user &&
+            this.props.user.currentUser.userName &&
+            this.props.user.currentUser.userType !== UserType.PROBATION_USER
+          ) {
+            let userPath =
+              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+              this.props.user.currentUser.userName +
+              '/'
+            userUDBPath = userPath + ConstPath.RelativePath.Datasource
+            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+              extension: 'udb',
+              type: 'file',
             })
+            //过滤掉标注和标绘
+            let filterUDBs = userUDBs.filter(item => {
+              item.name = this.basename(item.path)
+              return !item.name.match(checkLabelAndPlot)
+            })
+            filterUDBs.map(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
+            data = [
+              // {
+              //   title: Const.PUBLIC_DATA_SOURCE,
+              //   data: customerUDBs,
+              // },
+              {
+                title: getLanguage(this.props.language).Map_Main_Menu
+                  .OPEN_DATASOURCE,
+                //Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+                data: filterUDBs,
+              },
+            ]
+          } else {
+            let customerUDBPath = await FileTools.appendingHomeDirectory(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+            )
+            let customerUDBs = await FileTools.getPathListByFilter(
+              customerUDBPath,
+              {
+                extension: 'udb',
+                type: 'file',
+              },
+            )
+            //过滤掉标注和标绘
+            let filterUDBs = customerUDBs.filter(item => {
+              item.name = this.basename(item.path)
+              return !item.name.match(checkLabelAndPlot)
+            })
+            filterUDBs.map(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
+            data = [
+              {
+                title: getLanguage(this.props.language).Map_Main_Menu
+                  .OPEN_DATASOURCE,
+                //Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+                data: filterUDBs,
+              },
+            ]
           }
-          data.push({
-            title: getLanguage(global.language).Map_Main_Menu.INDOORDATA,
-            //'室内数据源',
-            image: require('../../../../assets/Navigation/network_white.png'),
-            data: userFileList || [],
-          })
           this.setVisible(true, ConstToolType.INDOORDATA, {
             containerType: 'list',
             height: ConstToolType.THEME_HEIGHT[4],
@@ -4699,6 +4751,7 @@ export default class ToolBar extends React.PureComponent {
       }
     } else if (this.state.type === ConstToolType.NETWORK) {
       (async function() {
+        // await FileTools.appendingHomeDirectory() + ConstPath.CachePath
         GLOBAL.navidataset = item.dataset
         let data = [],
           path =
@@ -4708,7 +4761,7 @@ export default class ToolBar extends React.PureComponent {
                     this.props.user.currentUser.userName +
                     '/'
                 : ConstPath.CustomerPath,
-            )) + ConstPath.RelativeFilePath.NaviWorkspace
+            )) + ConstPath.RelativePath.Datasource
         let userFileList
 
         userFileList = await FileTools.getNetModel(path)
@@ -4719,7 +4772,7 @@ export default class ToolBar extends React.PureComponent {
             let name = item.name
             item.title = name
             item.name = name.split('.')[0]
-            item.image = require('../../../../assets/Navigation/network.png')
+            item.image = require('../../../../assets/Navigation/snm_model.png')
             userList.push(item)
           })
         }
@@ -5197,6 +5250,7 @@ export default class ToolBar extends React.PureComponent {
         //ConstInfo.MAP_ALREADY_OPENED)
         return
       }
+      this.props.setMapIndoorNavigation(true)
       this.props.setContainerLoading(
         true,
         getLanguage(this.props.language).Prompt.SWITCHING,

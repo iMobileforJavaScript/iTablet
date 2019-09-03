@@ -10,7 +10,7 @@ import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 
 /*
- * 模型选择界面
+ * 分类结果编辑界面
  */
 export default class ClassifyResultEditView extends React.Component {
   props: {
@@ -26,13 +26,14 @@ export default class ClassifyResultEditView extends React.Component {
     this.datasourceAlias = params.datasourceAlias || ''
     this.datasetName = params.datasetName || ''
     this.imagePath = params.imagePath || ''
-    this.mediaName = params.mediaName || ''
     this.classifyTime = params.classifyTime || ''
     this.cb = params && params.cb
 
     this.remarks = '' //备注
 
-    this.state = {}
+    this.state = {
+      mediaName: params.mediaName || '',
+    }
   }
 
   // eslint-disable-next-line
@@ -61,7 +62,7 @@ export default class ClassifyResultEditView extends React.Component {
     let result = await SAIClassifyView.modifyLastItem({
       datasourceAlias: this.datasourceAlias,
       datasetName: this.datasetName,
-      mediaName: this.mediaName,
+      mediaName: this.state.mediaName,
       remarks: this.remarks,
     })
     if (result) {
@@ -87,8 +88,8 @@ export default class ClassifyResultEditView extends React.Component {
             underlineColorAndroid={'transparent'}
             style={styles.edit}
             numberOfLines={2}
-            onChangeText={text => (this.mediaName = text)}
-            value={this.mediaName}
+            onChangeText={text => this.setState({ mediaName: text })}
+            value={this.state.mediaName}
           />
         </View>
         <View style={styles.classifyTitleView}>
