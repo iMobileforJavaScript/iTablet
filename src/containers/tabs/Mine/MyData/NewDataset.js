@@ -101,7 +101,9 @@ class NewDataset extends Component {
           errorMap.set(key, errorInfo)
         }
       } else {
-        errorMap.set(key, errorInfo)
+        if (errorInfo !== undefined && errorInfo !== '') {
+          errorMap.set(key, errorInfo)
+        }
       }
       return { errorMap }
     })
