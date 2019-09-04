@@ -130,11 +130,9 @@ export default class CollectSceneFormView extends React.Component {
   /** 保存 **/
   save = async () => {
     NavigationService.navigate('InputPage', {
-      value: '请输入名称',
-      // headerTitle: getLanguage(this.props.language).Analyst_Labels.MESH_SIZE,
-      headerTitle: '高精采集名称',
-      placeholder: '',
-      keyboardType: 'numeric',
+      headerTitle: '高精采集',
+      value: '',
+      placeholder: '请输入采集名称',
       cb: async value => {
         NavigationService.goBack()
         await SCollectSceneFormView.saveData(value)
@@ -153,21 +151,21 @@ export default class CollectSceneFormView extends React.Component {
 
   _keyExtractor = item => item.name + item.index
 
-  onHistoryItemPress = async index => {
+  onHistoryItemPress = async item => {
     await SCollectSceneFormView.clearData()
-    await SCollectSceneFormView.loadData(index)
+    await SCollectSceneFormView.loadData(item.index)
     this.setState({
       showHistory: false,
     })
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.6}
         style={styles.historyItem}
         onPress={() => {
-          this.onHistoryItemPress({ index })
+          this.onHistoryItemPress(item)
         }}
       >
         <Text style={styles.historyItemText}>
