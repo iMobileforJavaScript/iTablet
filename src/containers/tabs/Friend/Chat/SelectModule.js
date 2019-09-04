@@ -37,7 +37,7 @@ export default class SelectModule extends Component {
               }
               return (
                 <TouchableItemView
-                  image={item.moduleImageLight}
+                  image={item.moduleImage}
                   text={item.title}
                   onPress={() => {
                     this.callBack && this.callBack(item)
