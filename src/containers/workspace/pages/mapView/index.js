@@ -39,6 +39,7 @@ import {
   setMapNavigationShow,
   setMapIs3D,
   setMapIndoorNavigation,
+  setNavigationChangeAR,
 } from '../../../../models/setting'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
@@ -70,6 +71,7 @@ const mapStateToProps = state => ({
   mapNavigationShow: state.setting.toJS().mapNavigationShow,
   mapIs3D: state.setting.toJS().mapIs3D,
   mapIndoorNavigation: state.setting.toJS().mapIndoorNavigation,
+  navigationChangeAR: state.setting.toJS().navigationChangeAR,
   mapScaleView: state.setting.toJS().mapScaleView,
   analyst: state.analyst.toJS(),
   downloads: state.down.toJS().downloads,
@@ -114,6 +116,7 @@ const mapDispatchToProps = {
   setMapNavigationShow,
   setMapIs3D,
   setMapIndoorNavigation,
+  setNavigationChangeAR,
 }
 
 export default connect(

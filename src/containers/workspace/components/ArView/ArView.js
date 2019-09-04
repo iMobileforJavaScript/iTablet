@@ -3,25 +3,14 @@ import { StyleSheet } from 'react-native'
 import { SMArView } from 'imobile_for_reactnative'
 
 export default class ArView extends React.Component {
-  props: {
-    device: Object,
-  }
+  props: {}
 
   constructor(props) {
     super(props)
     this.state = {
-      column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       name: '公交站',
       x: 104.06827,
       y: 30.537225,
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.device.orientation !== prevProps.device.orientation) {
-      this.setState({
-        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-      })
     }
   }
 

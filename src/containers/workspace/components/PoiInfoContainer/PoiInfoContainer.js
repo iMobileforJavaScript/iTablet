@@ -18,11 +18,14 @@ import { scaleSize } from '../../../../utils'
 import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
+import constants from '../../../workspace/constants'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
+    setMapNavigation: () => {},
   }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -147,8 +150,13 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   close = () => {
-    SMap.removePOICallout()
+    if (GLOBAL.Type !== constants.MAP_NAVIGATION) SMap.removePOICallout()
     this.setVisible(false)
+    this.props.setMapNavigation({
+      isShow: false,
+      isPointShow: false,
+      name: '',
+    })
   }
   searchNeighbor = () => {
     Animated.timing(this.height, {
@@ -164,43 +172,102 @@ export default class PoiInfoContainer extends React.PureComponent {
     })
   }
 
+  navitoHere = async () => {
+    await SMap.routeAnalyst(this.state.location.x, this.state.location.y)
+    // this.props.setMapNavigation({
+    //   isShow: true,
+    //   name: pointName,
+    //   isPointShow: true,
+    // })
+  }
+
   renderView = () => {
     let closeIcon = require('../../../../assets/mapTools/icon_close_black.png')
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            this.close()
-          }}
-          style={styles.closeBox}
-        >
-          <Image
-            source={closeIcon}
-            style={styles.closeBtn}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.title}>{this.state.destination}</Text>
-        </View>
-        <View>
-          <Text style={styles.info}>{this.state.address}</Text>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.search}
-          onPress={() => {
-            this.searchNeighbor()
+    if (GLOBAL.Type !== constants.MAP_NAVIGATION) {
+      return (
+        <View
+          style={{
+            flex: 1,
           }}
         >
-          <Text style={styles.searchTxt}>搜周边</Text>
-        </TouchableOpacity>
-      </View>
-    )
+          <TouchableOpacity
+            onPress={() => {
+              this.close()
+            }}
+            style={styles.closeBox}
+          >
+            <Image
+              source={closeIcon}
+              style={styles.closeBtn}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.search}
+            onPress={() => {
+              this.searchNeighbor()
+            }}
+          >
+            <Text style={styles.searchTxt}>搜周边</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              this.close()
+            }}
+            style={styles.closeBox}
+          >
+            <Image
+              source={closeIcon}
+              style={styles.closeBtn}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <View style={styles.searchBox}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.searchNeighbor()
+              }}
+            >
+              <Text style={styles.searchTxt}>搜周边</Text>
+            </TouchableOpacity>
+            <View style={{ width: 20 }} />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.navitoHere()
+              }}
+            >
+              <Text style={styles.searchTxt}>到这去</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
   }
 
   renderTable = () => {

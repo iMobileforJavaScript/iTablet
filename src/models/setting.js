@@ -21,6 +21,7 @@ export const MAP_2DTO3D = 'MAP_2DTO3D'
 export const MAP_IS3D = 'MAP_IS3D'
 export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 export const MAP_INDOORNAViGATION = 'MAP_INDOORNAViGATION'
+export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -114,6 +115,12 @@ export const setMapIndoorNavigation = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
+export const setNavigationChangeAR = (params = {}) => async dispatch => {
+  await dispatch({
+    type: NAVIGATION_CHANGEAR,
+    payload: params || false,
+  })
+}
 export const setMapScaleView = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_SCALEVIEW,
@@ -185,6 +192,7 @@ const initialState = fromJS({
   mapNavigationShow: false,
   mapScaleView: true,
   mapIndoorNavigation: false,
+  navigationChangeAR: false,
 })
 
 export default handleActions(
@@ -312,6 +320,15 @@ export default handleActions(
         data = false
       }
       return state.setIn(['mapIndoorNavigation'], fromJS(data))
+    },
+    [`${NAVIGATION_CHANGEAR}`]: (state, { payload }) => {
+      let data = state.toJS().navigationChangeAR
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = true
+      }
+      return state.setIn(['navigationChangeAR'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
       // if (payload && payload.setting) {
