@@ -11,11 +11,13 @@ import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
 import {
   SMCollectSceneFormView,
-  // SCollectSceneFormView,
+  SCollectSceneFormView,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 import styles from './styles'
 import { Container } from '../../components'
+import { FileTools } from '../../native'
+import { ConstPath } from '../../constants'
 // import { getLanguage } from '../../language'
 
 /*
@@ -34,6 +36,7 @@ export default class CollectSceneFormView extends React.Component {
     const { params } = this.props.navigation.state || {}
     this.datasourceAlias = params.datasourceAlias || ''
     this.datasetName = params.datasetName
+    this.SceneViewVisible = true
 
     this.state = {
       totalLength: 0,
@@ -46,13 +49,22 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   componentDidMount() {
+    //安排任务在交互和动画完成之后执行
     InteractionManager.runAfterInteractions(() => {
       // 初始化数据
       (async function() {
-        // SMeasureView.initMeasureCollector(
-        //   this.datasourceAlias,
-        //   this.datasetName,
-        // )
+        let udbPath = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.AR,
+        )
+        SCollectSceneFormView.initSceneFormView(
+          this.datasourceAlias,
+          this.datasetName,
+          this.props.language,
+          udbPath,
+        )
         //注册监听
         DeviceEventEmitter.addListener(
           'onTotalLengthChanged',
@@ -63,7 +75,7 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   componentWillUnmount() {
-    Orientation.unlockAllOrientations()
+    // Orientation.unlockAllOrientations()
     //移除监听
     DeviceEventEmitter.removeListener(
       'onTotalLengthChanged',
@@ -78,27 +90,23 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   /** 添加 **/
-  switchModelViews = async () => {}
-
-  /** 撤销 **/
-  undo = async () => {}
-
-  /** 清除 **/
-  clearAll = async () => {}
-
-  /** 保存 **/
-  save = async () => {}
-
-  /** 重置/切换模式 **/
-  remake = () => {
-    //安排任务在交互和动画完成之后执行
-    InteractionManager.runAfterInteractions(() => {
-      // 重置数据
-    })
+  switchViews = async () => {
+    this.SceneViewVisible = !this.SceneViewVisible
+    await SCollectSceneFormView.setArSceneViewVisible(this.SceneViewVisible)
   }
 
-  /** 确认 **/
-  confirm = () => {}
+  /** 历史 **/
+  history = async () => {}
+
+  /** 清除 **/
+  clearAll = async () => {
+    await SCollectSceneFormView.clearData()
+  }
+
+  /** 保存 **/
+  save = async () => {
+    await SCollectSceneFormView.saveData()
+  }
 
   back = () => {
     NavigationService.goBack()
@@ -119,15 +127,18 @@ export default class CollectSceneFormView extends React.Component {
               style={styles.smallIcon}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.undo()} style={styles.iconView}>
+          <TouchableOpacity
+            onPress={() => this.history()}
+            style={styles.iconView}
+          >
             <Image
               resizeMode={'contain'}
-              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_undo}
+              source={getThemeAssets().ar.toolbar.icon_ar_history}
               style={styles.smallIcon}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.switchModelViews()}
+            onPress={() => this.switchViews()}
             style={styles.iconView}
           >
             <Image

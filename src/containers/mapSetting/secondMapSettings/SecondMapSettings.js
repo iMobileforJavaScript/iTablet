@@ -267,7 +267,7 @@ export default class SecondMapSettings extends Component {
     return data
   }
 
-  // 识别类型数据
+  // 检测类型数据
   getDetectTypesSettings = async () => {
     let data = await getDetectTypesSettings()
     let array = await SAIDetectView.getDetectArrayToUse()

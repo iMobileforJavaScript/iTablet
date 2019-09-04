@@ -76,7 +76,8 @@ function getTabBarData(type, params = {}) {
   } else if (
     type === ConstToolType.PLOT_ANIMATION_START ||
     type === ConstToolType.PLOT_ANIMATION_NODE_CREATE ||
-    type === ConstToolType.PLOT_ANIMATION_PALY
+    type === ConstToolType.PLOT_ANIMATION_PALY ||
+    type === ToolbarBtnType.PLOT_ANIMATIONGO_OBJECT_LIST
     // ||type === ConstToolType.PLOT_ANIMATION_XML_LIST
   ) {
     tabBarData = PlotData.getPlotOperationData(type, params)

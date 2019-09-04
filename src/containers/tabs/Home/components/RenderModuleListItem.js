@@ -51,7 +51,7 @@ export default class RenderModuleListItem extends Component {
           fileName = 'OlympicGreen_ios'
         }
       } else if (moduleKey === '导航地图') {
-        fileName = '导航数据'
+        fileName = 'NavigationData'
       }
       let homePath = await FileTools.appendingHomeDirectory()
       let cachePath = homePath + ConstPath.CachePath

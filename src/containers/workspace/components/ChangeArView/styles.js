@@ -52,7 +52,7 @@ export default StyleSheet.create({
   },
   text1: {
     fontSize: size.fontSize.fontSizeXXXl,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     backgroundColor: 'transparent',
     textAlign: 'center',
     alignSelf: 'center',

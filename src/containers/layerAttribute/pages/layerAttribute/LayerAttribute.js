@@ -26,6 +26,7 @@ import {
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
+import constants from '../../../workspace/constants'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
@@ -619,6 +620,9 @@ export default class LayerAttribute extends React.Component {
           height: 0,
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      if (GLOBAL.Type === constants.MAP_AR && GLOBAL.showAIDetect) {
+        GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+      }
 
       StyleUtils.setSelectionStyle(this.props.currentLayer.path)
       if (data instanceof Array && data.length > 0) {
