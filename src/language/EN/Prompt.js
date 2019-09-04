@@ -121,6 +121,7 @@ const Prompt = {
   ENTER_NAME: 'Please enter the name',
   ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
   ENTER_ANIMATION_NAME: 'Please enter the animation name',
+  ENTER_ANIMATION_NODE_NAME: 'Please enter the animation node name',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',

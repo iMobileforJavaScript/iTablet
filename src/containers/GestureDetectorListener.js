@@ -61,6 +61,13 @@ async function longtouchCallback(event) {
 async function touchCallback(event) {
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
+      if (
+        GLOBAL.PoiInfoContainer &&
+        GLOBAL.PoiInfoContainer.state.resultList.length > 0 &&
+        !GLOBAL.PoiInfoContainer.state.showMore
+      ) {
+        GLOBAL.PoiInfoContainer.hidden()
+      }
       // if (isfull) {
       //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       // } else {

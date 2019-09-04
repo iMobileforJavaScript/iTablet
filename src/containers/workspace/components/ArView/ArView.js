@@ -11,6 +11,7 @@ export default class ArView extends React.Component {
       name: '公交站',
       x: 104.06827,
       y: 30.537225,
+      isNaviPoint: true,
     }
   }
 
@@ -19,9 +20,11 @@ export default class ArView extends React.Component {
       <SMArView
         style={styles.table}
         ARView={{
-          name: this.state.name,
-          x: this.state.x,
-          y: this.state.y,
+          name: GLOBAL.NAVIPOINTNAME,
+          address: GLOBAL.NAVIPOINTADDRESS,
+          isNaviPoint: this.state.isNaviPoint,
+          x: GLOBAL.NAVIPOINTX,
+          y: GLOBAL.NAVIPOINTY,
         }}
       />
     )

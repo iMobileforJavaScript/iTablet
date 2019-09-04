@@ -6,7 +6,6 @@ import {
   Image,
   Text,
   RefreshControl,
-  StyleSheet,
   NativeModules,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
@@ -16,13 +15,13 @@ import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import NavigationService from '../../../NavigationService'
-import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
-import { Toast, scaleSize, setSpText } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import ModalBtns from './ModalBtns'
 import { getLanguage } from '../../../../language/index'
 import { MineItem, BatchHeadBar } from '../component'
 import { getThemeAssets } from '../../../../assets'
+import styles from './styles'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -480,19 +479,17 @@ export default class MyModule extends Component {
   _renderHeaderRight = () => {
     if (this.state.batchMode) {
       return (
-        <View style={styles.headerRightTextView}>
-          <TouchableOpacity
-            onPress={() => {
-              this._deselectAll()
-              this.setState({ batchMode: false })
-            }}
-            style={styles.moreView}
-          >
-            <Text style={{ color: '#FBFBFB' }}>
-              {getLanguage(global.language).Prompt.COMPLETE}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            this._deselectAll()
+            this.setState({ batchMode: false })
+          }}
+          style={styles.moreView}
+        >
+          <Text style={styles.headerRightTextStyle}>
+            {getLanguage(global.language).Prompt.COMPLETE}
+          </Text>
+        </TouchableOpacity>
       )
     }
     let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
@@ -528,8 +525,8 @@ export default class MyModule extends Component {
         >
           <Image
             style={{
-              height: scaleSize(60),
-              width: scaleSize(60),
+              height: scaleSize(50),
+              width: scaleSize(50),
               marginRight: scaleSize(20),
             }}
             source={getThemeAssets().attribute.icon_delete}
@@ -594,54 +591,3 @@ export default class MyModule extends Component {
     )
   }
 }
-const styles = StyleSheet.create({
-  sectionView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: color.contentColorGray,
-    height: scaleSize(80),
-  },
-  sectionImg: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    marginLeft: 10,
-    tintColor: color.imageColorWhite,
-  },
-  sectionText: {
-    color: color.fontColorWhite,
-    paddingLeft: 15,
-    fontSize: setSpText(26),
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-  },
-  moreView: {
-    height: '100%',
-    marginRight: 10,
-    // width: scaleSize(80),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreImg: {
-    flex: 1,
-    height: scaleSize(40),
-    width: scaleSize(40),
-  },
-  bottomStyle: {
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(30),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopColor: '#A0A0A0',
-    borderTopWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  bottomItemStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerRightTextView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})

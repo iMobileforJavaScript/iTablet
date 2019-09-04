@@ -23,8 +23,9 @@ export default class InputPage extends React.Component {
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
     this.backcb = params && params.backcb
+    let defaultValue = params && params.value !== undefined ? params.value : ''
     this.state = {
-      value: params && params.value ? params.value : '',
+      value: defaultValue,
       placeholder:
         params && params.placeholder !== undefined ? params.placeholder : '',
       headerTitle:
@@ -35,7 +36,7 @@ export default class InputPage extends React.Component {
           : getLanguage(global.language).Prompt.CONFIRM, //'确定',
       keyboardType:
         params && params.keyboardType ? params.keyboardType : 'default',
-      isLegalName: true,
+      isLegalName: !!defaultValue,
       errorInfo: '',
     }
     this.clickAble = true // 防止重复点击
@@ -102,11 +103,22 @@ export default class InputPage extends React.Component {
                 value: text,
               })
             }}
+            onClear={() => {
+              let { result, error } = dataUtil.isLegalName(
+                '',
+                this.props.language,
+              )
+              this.setState({
+                isLegalName: result,
+                errorInfo: error,
+                value: '',
+              })
+            }}
             returnKeyType={'done'}
             keyboardType={this.state.keyboardType}
             showClear
           />
-          {!this.state.isLegalName && this.state.errorInfo && (
+          {!this.state.isLegalName && !!this.state.errorInfo && (
             <View style={styles.errorView}>
               <Text style={styles.errorInfo}>{this.state.errorInfo}</Text>
             </View>

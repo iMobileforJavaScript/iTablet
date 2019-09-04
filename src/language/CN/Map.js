@@ -29,6 +29,7 @@ const Map_Main_Menu = {
   START_SAVE_SENCE: '保存场景',
   START_SAVE_AS_SENCE: '另存场景',
   PLOT_SAVE_ANIMATION: '保存动画',
+  ANIMATION_NODE_NAME: '动画节点名称',
 
   PLOT: '标绘',
 
@@ -452,8 +453,8 @@ const Map_Settings = {
 
   //视频地图设置:一级菜单
   POI_SETTING: 'POI设置',
-  DETECT_TYPE: '识别类型',
-  DETECT_STYLE: '识别框',
+  DETECT_TYPE: '检测类型',
+  DETECT_STYLE: '检测框风格',
 
   POI_SETTING_PROJECTION_MODE: '投射模式',
   POI_SETTING_OVERLAP_MODE: '避让模式',

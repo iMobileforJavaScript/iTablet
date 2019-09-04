@@ -102,24 +102,12 @@ function collectSceneForm() {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
       return
     }
-    let currentLayer = GLOBAL.currentLayer
-    // let reg = /^Label_(.*)#$/
-    let isTaggingLayer = false
-    if (currentLayer) {
-      isTaggingLayer = currentLayer.type === DatasetType.CAD
-      // && currentLayer.datasourceAlias.match(reg)
-    }
-    if (isTaggingLayer) {
-      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
-      const datasetName = currentLayer.datasetName // 标注图层名称
-      NavigationService.navigate('CollectSceneFormView', {
-        datasourceAlias,
-        datasetName,
-      })
-    } else {
-      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
-      _params.navigation.navigate('LayerManager')
-    }
+    const datasourceAlias = 'AR高精度采集'
+    const datasetName = 'CollectSceneForm'
+    NavigationService.navigate('CollectSceneFormView', {
+      datasourceAlias,
+      datasetName,
+    })
   }.bind(this)())
 }
 

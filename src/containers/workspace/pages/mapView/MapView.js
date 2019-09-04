@@ -27,6 +27,7 @@ import {
   AnalystMapButtons,
   AnalystMapToolbar,
   PoiInfoContainer,
+  PoiTopSearchBar,
 } from '../../components'
 import {
   Container,
@@ -73,6 +74,7 @@ import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import FloorListView from '../../components/FloorListView'
 import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
+import Orientation from 'react-native-orientation'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -97,6 +99,7 @@ export default class MapView extends React.Component {
     mapIs3D: PropTypes.bool,
     mapIndoorNavigation: PropTypes.bool,
     navigationChangeAR: PropTypes.bool,
+    navigationPoiView: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -108,6 +111,7 @@ export default class MapView extends React.Component {
     online: PropTypes.object,
     analyst: PropTypes.object,
     downloads: PropTypes.array,
+    mapSearchHistory: PropTypes.array,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -146,9 +150,11 @@ export default class MapView extends React.Component {
     setMapIs3D: PropTypes.func,
     setMapIndoorNavigation: PropTypes.func,
     setNavigationChangeAR: PropTypes.func,
+    setNavigationPoiView: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
+    setMapSearchHistory: PropTypes.func,
   }
 
   constructor(props) {
@@ -224,6 +230,7 @@ export default class MapView extends React.Component {
 
     this.fullMap = false
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
+    GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
   }
 
   componentDidMount() {
@@ -400,6 +407,9 @@ export default class MapView extends React.Component {
   }
 
   componentWillUnmount() {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      Orientation.unlockAllOrientations()
+    }
     if (Platform.OS === 'android') {
       this.props.removeBackAction({
         key: this.props.navigation.state.routeName,
@@ -1829,10 +1839,12 @@ export default class MapView extends React.Component {
       this.setState({
         showAIDetect: false,
       })
+      GLOBAL.showAIDetect = false
     } else {
       this.setState({
         showAIDetect: true,
       })
+      GLOBAL.showAIDetect = true
     }
   }
   _renderArModeIcon = () => {
@@ -2021,7 +2033,12 @@ export default class MapView extends React.Component {
   }
 
   _renderNavigationPoiView = () => {
-    return <NavigationPoiView />
+    return (
+      <NavigationPoiView
+        setNavigationPoiView={this.props.setNavigationPoiView}
+        setNavigationChangeAR={this.props.setNavigationChangeAR}
+      />
+    )
   }
 
   _renderChangeArView = () => {
@@ -2078,15 +2095,15 @@ export default class MapView extends React.Component {
         )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {!this.state.showAIDetect && this.renderMapController()}
-        {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isPointShow &&
-          this._renderNavigationView()}
-        {this._renderIncrementRoad()}
         {/*{!this.isExample &&*/}
         {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
-        {/*this.props.mapNavigation.isShow &&*/}
-        {/*this._renderNavigationPoiView()}*/}
+        {/*this.props.mapNavigation.isPointShow &&*/}
+        {/*this._renderNavigationView()}*/}
+        {this._renderIncrementRoad()}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.navigationPoiView &&
+          this._renderNavigationPoiView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.mapNavigationShow &&
@@ -2175,10 +2192,17 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
+        <PoiTopSearchBar
+          ref={ref => (GLOBAL.PoiTopSearchBar = ref)}
+          setMapNavigation={this.props.setMapNavigation}
+        />
         <PoiInfoContainer
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
+          mapSearchHistory={this.props.mapSearchHistory}
+          setMapSearchHistory={this.props.setMapSearchHistory}
           device={this.props.device}
           setMapNavigation={this.props.setMapNavigation}
+          setNavigationPoiView={this.props.setNavigationPoiView}
         />
       </Container>
     )

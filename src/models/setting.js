@@ -22,6 +22,7 @@ export const MAP_IS3D = 'MAP_IS3D'
 export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 export const MAP_INDOORNAViGATION = 'MAP_INDOORNAViGATION'
 export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
+export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -121,6 +122,12 @@ export const setNavigationChangeAR = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
+export const setNavigationPoiView = (params = {}) => async dispatch => {
+  await dispatch({
+    type: NAVIGATION_POIVIEW,
+    payload: params || false,
+  })
+}
 export const setMapScaleView = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_SCALEVIEW,
@@ -184,7 +191,6 @@ const initialState = fromJS({
   },
   mapNavigation: {
     isShow: false,
-    isPointShow: false,
     name: '',
   },
   map2Dto3D: false,
@@ -193,6 +199,7 @@ const initialState = fromJS({
   mapScaleView: true,
   mapIndoorNavigation: false,
   navigationChangeAR: false,
+  navigationPoiView: false,
 })
 
 export default handleActions(
@@ -279,7 +286,6 @@ export default handleActions(
       } else {
         data = {
           isShow: false,
-          isPointShow: false,
           name: '',
         }
       }
@@ -329,6 +335,15 @@ export default handleActions(
         data = true
       }
       return state.setIn(['navigationChangeAR'], fromJS(data))
+    },
+    [`${NAVIGATION_POIVIEW}`]: (state, { payload }) => {
+      let data = state.toJS().navigationPoiView
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = true
+      }
+      return state.setIn(['navigationPoiView'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
       // if (payload && payload.setting) {

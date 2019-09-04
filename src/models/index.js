@@ -13,11 +13,13 @@ import chat from './chat'
 import backActions from './backActions'
 import analyst from './analyst'
 import localData from './localData'
+import history from './history'
 export {
   nav,
   layers,
   map,
   setting,
+  history,
   user,
   symbol,
   collection,
