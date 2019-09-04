@@ -40,6 +40,7 @@ import {
   setMapIs3D,
   setMapIndoorNavigation,
 } from '../../../../models/setting'
+import { setMapSearchHistory } from '../../../../models/histories'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
@@ -73,6 +74,7 @@ const mapStateToProps = state => ({
   mapScaleView: state.setting.toJS().mapScaleView,
   analyst: state.analyst.toJS(),
   downloads: state.down.toJS().downloads,
+  mapSearchHistory: state.histories.toJS().mapSearchHistory,
 })
 
 const mapDispatchToProps = {
@@ -114,6 +116,7 @@ const mapDispatchToProps = {
   setMapNavigationShow,
   setMapIs3D,
   setMapIndoorNavigation,
+  setMapSearchHistory,
 }
 
 export default connect(

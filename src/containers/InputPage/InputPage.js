@@ -93,15 +93,23 @@ export default class InputPage extends React.Component {
             placeholderTextColor={color.themePlaceHolder}
             value={this.state.value + ''}
             onChangeText={text => {
-              let { result, error } = dataUtil.isLegalName(
-                text,
-                this.props.language,
-              )
-              this.setState({
-                isLegalName: result,
-                errorInfo: error,
-                value: text,
-              })
+              if (this.state.keyboardType === 'numeric') {
+                this.setState({
+                  value: text,
+                  isLegalName:
+                    text !== '' && !isNaN(text) && text !== undefined,
+                })
+              } else {
+                let { result, error } = dataUtil.isLegalName(
+                  text,
+                  this.props.language,
+                )
+                this.setState({
+                  isLegalName: result,
+                  errorInfo: error,
+                  value: text,
+                })
+              }
             }}
             onClear={() => {
               let { result, error } = dataUtil.isLegalName(

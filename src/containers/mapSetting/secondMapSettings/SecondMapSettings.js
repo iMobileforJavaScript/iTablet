@@ -478,6 +478,7 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.ROTATION_ANGLE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
+          keyboardType: 'numeric',
           placeholder: data[index].value.replace('°', ''),
           cb: async value => {
             let isSetSuccess = false
@@ -519,6 +520,7 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
+          keyboardType: 'numeric',
           placeholder: data[index].value.replace('1:', ''),
           cb: async newValue => {
             let isSuccess = false
@@ -600,6 +602,7 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.TOP:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
+          keyboardType: 'numeric',
           placeholder: data[index].value,
           cb: async newValue => {
             let isSuccess = false
@@ -650,6 +653,7 @@ export default class SecondMapSettings extends Component {
       case 'Z':
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
+          keyboardType: 'numeric',
           placeholder: data[item.pos].value[index].value + '',
           cb: async newValue => {
             let isSuccess = false
