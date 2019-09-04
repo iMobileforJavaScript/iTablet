@@ -65,9 +65,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cameraIcon: {
+  cameraIconBg: {
     width: scaleSize(120),
     height: scaleSize(120),
+  },
+  cameraIcon: {
+    width: scaleSize(80),
+    height: scaleSize(80),
   },
   iconView: {
     width: scaleSize(60),

@@ -210,7 +210,7 @@ export default class ClassifySettingsView extends React.Component {
         >
           {this.renderModelItemFirst()}
           {/*{this.renderModelItemSecond()}*/}
-          {this.renderModelItemThird()}
+          {/*{this.renderModelItemThird()}*/}
         </ScrollView>
       </View>
     )

@@ -7,6 +7,7 @@ import { ConstPath } from '../constants'
 import { scaleSize } from '../utils'
 import { getLanguage } from '../language/index'
 import { getThemeAssets } from '../assets'
+import Orientation from 'react-native-orientation'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -220,6 +221,7 @@ function SetMap(param) {
           data,
         ]
 
+        await Orientation.lockToPortrait()
         NavigationService.navigate('MapView', {
           operationType: constants.MAP_AR,
           wsData,

@@ -74,6 +74,7 @@ import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import FloorListView from '../../components/FloorListView'
 import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
+import Orientation from 'react-native-orientation'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -225,6 +226,7 @@ export default class MapView extends React.Component {
 
     this.fullMap = false
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
+    GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
   }
 
   componentDidMount() {
@@ -401,6 +403,9 @@ export default class MapView extends React.Component {
   }
 
   componentWillUnmount() {
+    if (GLOBAL.Type === constants.MAP_AR) {
+      Orientation.unlockAllOrientations()
+    }
     if (Platform.OS === 'android') {
       this.props.removeBackAction({
         key: this.props.navigation.state.routeName,
@@ -1830,10 +1835,12 @@ export default class MapView extends React.Component {
       this.setState({
         showAIDetect: false,
       })
+      GLOBAL.showAIDetect = false
     } else {
       this.setState({
         showAIDetect: true,
       })
+      GLOBAL.showAIDetect = true
     }
   }
   _renderArModeIcon = () => {

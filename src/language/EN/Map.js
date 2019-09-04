@@ -26,6 +26,7 @@ const Map_Main_Menu = {
   START_SAVE_SENCE: 'Save Scene',
   START_SAVE_AS_SENCE: 'Save As ',
   PLOT_SAVE_ANIMATION: 'Save Animation',
+  ANIMATION_NODE_NAME: 'Animation Node Name',
 
   PLOT: 'Plot',
   OPEN: 'Add',
