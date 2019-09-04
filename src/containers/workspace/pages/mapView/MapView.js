@@ -27,6 +27,7 @@ import {
   AnalystMapButtons,
   AnalystMapToolbar,
   PoiInfoContainer,
+  PoiTopSearchBar,
 } from '../../components'
 import {
   Container,
@@ -108,6 +109,7 @@ export default class MapView extends React.Component {
     online: PropTypes.object,
     analyst: PropTypes.object,
     downloads: PropTypes.array,
+    mapSearchHistory: PropTypes.array,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -148,6 +150,7 @@ export default class MapView extends React.Component {
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
+    setMapSearchHistory: PropTypes.func,
   }
 
   constructor(props) {
@@ -2175,8 +2178,11 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
+        <PoiTopSearchBar ref={ref => (GLOBAL.PoiTopSearchBar = ref)} />
         <PoiInfoContainer
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
+          mapSearchHistory={this.props.mapSearchHistory}
+          setMapSearchHistory={this.props.setMapSearchHistory}
           device={this.props.device}
         />
       </Container>

@@ -124,10 +124,10 @@ export default StyleSheet.create({
     backgroundColor: color.contentColorWhite2,
   },
   wrapper: {
-    flex: 1,
+    width: '100%',
+    height: scaleSize(440),
     backgroundColor: color.background,
     paddingHorizontal: scaleSize(20),
-    minHeight: scaleSize(320),
   },
   searchIconWrap: {
     flex: 1,

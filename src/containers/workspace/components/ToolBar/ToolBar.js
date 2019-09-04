@@ -717,7 +717,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform === 'android' && {
+          Platform.OS === 'android' && {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,

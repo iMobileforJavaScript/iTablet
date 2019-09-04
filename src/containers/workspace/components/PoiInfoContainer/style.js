@@ -25,18 +25,18 @@ export default StyleSheet.create({
     padding: scaleSize(20),
     backgroundColor: color.contentWhite,
   },
-  closeBox: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    width: scaleSize(40),
-    height: scaleSize(40),
-    zIndex: 100,
-  },
-  closeBtn: {
-    width: scaleSize(40),
-    height: scaleSize(40),
-  },
+  // closeBox: {
+  //   position: 'absolute',
+  //   right: 0,
+  //   top: 0,
+  //   width: scaleSize(40),
+  //   height: scaleSize(40),
+  //   zIndex: 100,
+  // },
+  // closeBtn: {
+  //   width: scaleSize(40),
+  //   height: scaleSize(40),
+  // },
   title: {
     fontSize: setSpText(24),
   },
@@ -73,8 +73,8 @@ export default StyleSheet.create({
   },
   itemView: {
     flex: 1,
-    height: scaleSize(70),
-    flexDirection: 'row',
+    height: scaleSize(90),
+    flexDirection: 'column',
     alignItems: 'center',
   },
   itemSeparator: {
@@ -91,10 +91,26 @@ export default StyleSheet.create({
   itemText: {
     flex: 1,
     fontSize: scaleSize(24),
+    marginTop: scaleSize(20),
     marginLeft: scaleSize(15),
   },
   distance: {
+    marginTop: scaleSize(20),
     fontSize: setSpText(16),
     paddingRight: scaleSize(20),
+  },
+  address: {
+    marginLeft: scaleSize(15),
+    height: scaleSize(30),
+    fontSize: setSpText(16),
+    alignSelf: 'flex-start',
+  },
+  moreWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreText: {
+    fontSize: setSpText(20),
   },
 })
