@@ -864,10 +864,11 @@ export default class LayerManager_tolbar extends React.Component {
       >
         {section.headers.map((item, index) => {
           if (
-            (layerData.themeType === 7 && index === 1) ||
-            layerData.type === 'layerGroup' ||
-            layerData.type === DatasetType.IMAGE ||
-            layerData.type === DatasetType.MBImage
+            (layerData.themeType === 7 ||
+              layerData.type === 'layerGroup' ||
+              layerData.type === DatasetType.IMAGE ||
+              layerData.type === DatasetType.MBImage) &&
+            index === 1
           ) {
             return (
               <TouchableOpacity
