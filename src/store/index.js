@@ -7,7 +7,15 @@ import middlewares from './middlewares'
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['setting', 'user', 'chat', 'template', 'symbol', 'map'],
+  whitelist: [
+    'setting',
+    'user',
+    'chat',
+    'template',
+    'symbol',
+    'map',
+    'histories',
+  ],
   blacklist: [
     'nav',
     'collection',
