@@ -118,7 +118,7 @@ export default class InputPage extends React.Component {
             keyboardType={this.state.keyboardType}
             showClear
           />
-          {!this.state.isLegalName && this.state.errorInfo && (
+          {!this.state.isLegalName && !!this.state.errorInfo && (
             <View style={styles.errorView}>
               <Text style={styles.errorInfo}>{this.state.errorInfo}</Text>
             </View>
