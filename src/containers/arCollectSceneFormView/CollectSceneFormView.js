@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   DeviceEventEmitter,
+  FlatList,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -18,6 +19,7 @@ import styles from './styles'
 import { Container } from '../../components'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
+import { Toast } from '../../utils'
 // import { getLanguage } from '../../language'
 
 /*
@@ -37,9 +39,12 @@ export default class CollectSceneFormView extends React.Component {
     this.datasourceAlias = params.datasourceAlias || ''
     this.datasetName = params.datasetName
     this.SceneViewVisible = true
+    this.isRecording = true
 
     this.state = {
       totalLength: 0,
+      showHistory: false,
+      historyData: Array,
     }
   }
 
@@ -89,28 +94,122 @@ export default class CollectSceneFormView extends React.Component {
     })
   }
 
-  /** 添加 **/
-  switchViews = async () => {
-    this.SceneViewVisible = !this.SceneViewVisible
-    await SCollectSceneFormView.setArSceneViewVisible(this.SceneViewVisible)
+  /** 切换 **/
+  switchStatus = async () => {
+    this.isRecording = !this.isRecording
+    if (this.isRecording) {
+      Toast.show('开始记录')
+      await SCollectSceneFormView.startRecording()
+    } else {
+      Toast.show('暂停记录')
+      await SCollectSceneFormView.stopRecording()
+    }
   }
 
   /** 历史 **/
-  history = async () => {}
+  history = async () => {
+    let data = await SCollectSceneFormView.getHistoryData()
+    if (data && data.history.length > 0) {
+      this.setState({
+        showHistory: true,
+        historyData: data.history,
+      })
+    } else {
+      Toast.show('没有历史数据')
+    }
+  }
 
   /** 清除 **/
   clearAll = async () => {
     await SCollectSceneFormView.clearData()
+    this.setState({
+      totalLength: 0,
+    })
   }
 
   /** 保存 **/
   save = async () => {
-    await SCollectSceneFormView.saveData()
+    NavigationService.navigate('InputPage', {
+      value: '请输入名称',
+      // headerTitle: getLanguage(this.props.language).Analyst_Labels.MESH_SIZE,
+      headerTitle: '高精采集名称',
+      placeholder: '',
+      keyboardType: 'numeric',
+      cb: async value => {
+        NavigationService.goBack()
+        await SCollectSceneFormView.saveData(value)
+      },
+    })
   }
 
   back = () => {
     NavigationService.goBack()
     return true
+  }
+
+  _renderItemSeparatorComponent = () => {
+    return <View style={styles.ItemSeparatorComponent} />
+  }
+
+  _keyExtractor = item => item.name + item.index
+
+  onHistoryItemPress = async index => {
+    await SCollectSceneFormView.clearData()
+    await SCollectSceneFormView.loadData(index)
+    this.setState({
+      showHistory: false,
+    })
+  }
+
+  renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.historyItem}
+        onPress={() => {
+          this.onHistoryItemPress({ index })
+        }}
+      >
+        <Text style={styles.historyItemText}>
+          {item.name + '     ' + item.time}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+  hiddleHistoryView = () => {
+    this.setState({
+      showHistory: false,
+    })
+  }
+
+  renderHistoryView = () => {
+    if (!this.state.historyData && this.state.historyData.length === 0) {
+      return
+    }
+    return (
+      <View style={styles.historyDataView}>
+        <Text style={styles.historyTitle}>{'历史记录:'}</Text>
+        <TouchableOpacity
+          onPress={() => this.hiddleHistoryView()}
+          style={styles.historyCloseIcon}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={getThemeAssets().ar.toolbar.icon_ar_toolbar_close}
+            style={styles.smallIcon}
+          />
+        </TouchableOpacity>
+        <FlatList
+          data={this.state.historyData}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          style={styles.list}
+          renderItem={this.renderItem}
+          keyExtractor={this._keyExtractor}
+          extraData={this.state}
+        />
+      </View>
+    )
   }
 
   renderBottomBtns = () => {
@@ -138,7 +237,7 @@ export default class CollectSceneFormView extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.switchViews()}
+            onPress={() => this.switchStatus()}
             style={styles.iconView}
           >
             <Image
@@ -184,6 +283,7 @@ export default class CollectSceneFormView extends React.Component {
         <SMCollectSceneFormView
           ref={ref => (this.SMCollectSceneFormView = ref)}
         />
+        {this.state.showHistory && this.renderHistoryView()}
         {this.renderBottomBtns()}
         {this.renderLengthChangeView()}
       </Container>
