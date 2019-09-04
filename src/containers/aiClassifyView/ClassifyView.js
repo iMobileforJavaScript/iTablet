@@ -11,14 +11,18 @@ import {
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets, getThemeAssets } from '../../assets'
 import {
-  // SMAIClassifyView,
   SAIClassifyView,
   SMediaCollector,
   DatasetType,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 // import { getLanguage } from '../../language'
-import { Container, ImagePicker, Loading, MTBtn } from '../../components'
+import {
+  Container,
+  ImagePicker,
+  Loading,
+  // MTBtn,
+} from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
@@ -631,19 +635,18 @@ export default class ClassifyView extends React.Component {
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
-          headerRight: [
-            <MTBtn
-              key={'settings'}
-              image={getThemeAssets().ar.toolbar.icon_classify_settings}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showClassifySettingsView}
-            />,
-          ],
+          // headerRight: [
+          //   <MTBtn
+          //     key={'settings'}
+          //     image={getThemeAssets().ar.toolbar.icon_classify_settings}
+          //     imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          //     onPress={this.showClassifySettingsView}
+          //   />,
+          // ],
         }}
         // bottomBar={this.renderBottomBtns()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{<SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />}*/}
         {this.renderCamera()}
         {!this.state.isCameraVisible && this.renderImgPickerView()}
         {this.state.isCameraVisible && this.renderOverlayPreview()}
