@@ -309,6 +309,12 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: '态势采集',
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: '目标采集',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: '高精采集',
+
+  //智能配图
+  FILL: '填充',
+  BORDER: '轮廓',
+  LINE: '线',
+  MARK: '标注',
 }
 
 //推演动画
