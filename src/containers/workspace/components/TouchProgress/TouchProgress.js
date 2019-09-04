@@ -14,9 +14,11 @@ import {
   SCartography,
   SThemeCartography,
   ThemeType,
+  SMap,
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
+import TPData from './TPData'
 const IMAGE_SIZE = scaleSize(25)
 const MARGIN = scaleSize(30)
 
@@ -532,11 +534,30 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(height)
       }
+      if (
+        layerType === undefined &&
+        tips === '' &&
+        this.props.selectName instanceof Array
+      ) {
+        let mode = TPData.getMatchPictureMode(this.props.selectName)
+        let _value =
+          value !== undefined
+            ? value
+            : await SMap.getMapFixColorsModeValue(mode)
+        let _value2 = _value + 100
+        this._panBtnStyles.style.left =
+          (_value2 * progressWidth) / 200 + panBtnDevLeft
+        this._previousLeft = (_value2 * progressWidth) / 200
+        this._BackLine.style.width = (_value2 * progressWidth) / 200
+        tips = TPData.getMatchPictureTip(this.props.selectName, _value)
+      }
     }
 
-    this.setState({
-      tips,
-    })
+    if (tips !== this.state.tips) {
+      this.setState({
+        tips,
+      })
+    }
     this._updateNativeStyles()
     this._updateBackLine()
   }
@@ -575,7 +596,8 @@ export default class TouchProgress extends Component {
       this._updateNativeStyles()
       this._updateBackLine()
 
-      let value = this.dealData(x / progressWidth)
+      let _value = x / progressWidth
+      let value = this.dealData(_value > 1 ? 1 : _value)
       value !== undefined && this.setTips(value)
     }
   }
@@ -588,7 +610,8 @@ export default class TouchProgress extends Component {
       x = progressWidth + MARGIN - IMAGE_SIZE / 2
     this._previousLeft = x
 
-    let value = this.dealData(x / progressWidth)
+    let _value = x / progressWidth
+    let value = this.dealData(_value > 1 ? 1 : _value)
     value !== undefined && this.setData(value)
   }
 
@@ -641,7 +664,7 @@ export default class TouchProgress extends Component {
       }
     }
 
-    if (newValue === undefined) {
+    if (layerType !== undefined) {
       switch (layerType) {
         case 1:
           if (this.props.selectName === '大小') {
@@ -667,6 +690,17 @@ export default class TouchProgress extends Component {
             newValue = value * 200
           }
           break
+      }
+    } else if (this.props.selectName instanceof Array) {
+      if (
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION
+      ) {
+        newValue = value * 200
       }
     }
 
@@ -1001,6 +1035,32 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(value)
       }
+      if (
+        layerType === undefined &&
+        this.props.selectName instanceof Array &&
+        (this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+          this.props.selectName[this.props.selectName.length - 1] ===
+            getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
+          this.props.selectName[this.props.selectName.length - 1] ===
+            getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION)
+      ) {
+        if (value < 0) {
+          value = 0
+        } else if (value > 200) {
+          value = 200
+        }
+        value -= 100
+        tips =
+          this.props.selectName[this.props.selectName.length - 1] +
+          '     ' +
+          parseInt(value) +
+          '%'
+        let mode = TPData.getMatchPictureMode(this.props.selectName)
+        if (mode !== undefined) {
+          await SMap.updateMapFixColorsMode(mode, value)
+        }
+      }
     }
 
     tips !== this.state.tips &&
@@ -1240,6 +1300,24 @@ export default class TouchProgress extends Component {
             }
           }
           break
+        }
+      }
+      if (tips === '' && this.props.selectName instanceof Array) {
+        if (
+          this.props.selectName[this.props.selectName.length - 1] ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST ||
+          this.props.selectName[this.props.selectName.length - 1] ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+          this.props.selectName[this.props.selectName.length - 1] ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS
+        ) {
+          if (value < 0) {
+            value = 0
+          } else if (value > 200) {
+            value = 200
+          }
+          value -= 100
+          tips = TPData.getMatchPictureTip(this.props.selectName, value)
         }
       }
       if (this.props.selectName === '列数') {

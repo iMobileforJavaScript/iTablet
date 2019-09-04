@@ -110,7 +110,7 @@ export default class PoiInfoContainer extends React.PureComponent {
             fetch(url)
               .then(response => response.json())
               .then(async data => {
-                if (data.error) {
+                if (data.error || data.poiInfos.length === 0) {
                   Toast.show(
                     getLanguage(global.language).Prompt.NO_SEARCH_RESULTS,
                   )
