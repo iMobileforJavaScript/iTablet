@@ -228,8 +228,8 @@ export default class PopModalList extends React.Component {
     return (
       <PopView ref={ref => (this.popModal = ref)}>
         <View style={[styles.popView, { width: '100%' }]}>
-          {this.renderContent()}
           {this.renderBottom()}
+          {this.renderContent()}
         </View>
       </PopView>
     )
