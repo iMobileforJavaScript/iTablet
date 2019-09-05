@@ -1,22 +1,23 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 
 export default StyleSheet.create({
   nameView: {
     position: 'absolute',
-    width: '100%',
-    height: scaleSize(200),
-    backgroundColor: color.contentColorWhite2,
+    left: 0,
+    right: 0,
     bottom: 0,
-    borderBottomWidth: scaleSize(1),
-    borderColor: color.separateColorGray,
+    height: scaleSize(200),
+    padding: scaleSize(20),
+    backgroundColor: color.contentWhite,
   },
   text1: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: scaleSize(50),
-    height: scaleSize(40),
+    fontSize: setSpText(24),
+  },
+  info: {
+    paddingTop: scaleSize(20),
+    fontSize: setSpText(20),
   },
   text: {
     fontSize: 20,
@@ -25,9 +26,20 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   view: {
-    flexDirection: 'row',
+    height: scaleSize(80),
+  },
+  search: {
+    marginTop: scaleSize(20),
     height: scaleSize(60),
-    width: '100%',
+    flex: 1,
+    borderRadius: 5,
+    backgroundColor: color.blue1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchTxt: {
+    fontSize: setSpText(20),
+    color: color.white,
   },
   itemView: {
     flexDirection: 'row',
@@ -38,5 +50,17 @@ export default StyleSheet.create({
   itemView1: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  closeBox: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: scaleSize(40),
+    height: scaleSize(40),
+    zIndex: 100,
+  },
+  closeBtn: {
+    width: scaleSize(40),
+    height: scaleSize(40),
   },
 })

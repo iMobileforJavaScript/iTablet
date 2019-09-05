@@ -18,13 +18,17 @@ import { scaleSize } from '../../../../utils'
 import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
+import constants from '../../../workspace/constants'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
+    setMapNavigation: () => {},
     mapSearchHistory: Array,
     setMapSearchHistory: () => {},
+    setNavigationPoiView: () => {},
   }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -220,6 +224,10 @@ export default class PoiInfoContainer extends React.PureComponent {
   close = () => {
     SMap.removePOICallout()
     this.setVisible(false)
+    this.props.setMapNavigation({
+      isShow: false,
+      name: '',
+    })
   }
   searchNeighbor = () => {
     Animated.timing(this.height, {
@@ -235,30 +243,99 @@ export default class PoiInfoContainer extends React.PureComponent {
     })
   }
 
+  navitoHere = async () => {
+    await SMap.clearTarckingLayer()
+    await SMap.routeAnalyst(this.state.location.x, this.state.location.y)
+    GLOBAL.NAVIPOINTX = this.state.location.x
+    GLOBAL.NAVIPOINTY = this.state.location.y
+    GLOBAL.NAVIPOINTNAME = this.state.destination
+    GLOBAL.NAVIPOINTADDRESS = this.state.address
+    this.props.setNavigationPoiView(true)
+    Animated.timing(this.bottom, {
+      toValue: scaleSize(-200),
+      duration: 400,
+    }).start()
+    Animated.timing(this.height, {
+      toValue: scaleSize(200),
+      duration: 400,
+    }).start()
+    Animated.timing(this.boxHeight, {
+      toValue: scaleSize(200),
+      duration: 10,
+    }).start()
+    //同时隐藏顶部框
+    GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+
+    if (this.state.destination !== '') {
+      this.props.setMapNavigation({
+        isShow: true,
+        name: this.state.destination,
+      })
+    }
+  }
+
   renderView = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <View>
-          <Text style={styles.title}>{this.state.destination}</Text>
-        </View>
-        <View>
-          <Text style={styles.info}>{this.state.address}</Text>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.search}
-          onPress={() => {
-            this.searchNeighbor()
+    if (GLOBAL.Type !== constants.MAP_NAVIGATION) {
+      return (
+        <View
+          style={{
+            flex: 1,
           }}
         >
-          <Text style={styles.searchTxt}>搜周边</Text>
-        </TouchableOpacity>
-      </View>
-    )
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.search}
+            onPress={() => {
+              this.searchNeighbor()
+            }}
+          >
+            <Text style={styles.searchTxt}>搜周边</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <View style={styles.searchBox}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.searchNeighbor()
+              }}
+            >
+              <Text style={styles.searchTxt}>搜周边</Text>
+            </TouchableOpacity>
+            <View style={{ width: 20 }} />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.navitoHere()
+              }}
+            >
+              <Text style={styles.searchTxt}>到这去</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
   }
 
   renderTable = () => {
@@ -330,6 +407,7 @@ export default class PoiInfoContainer extends React.PureComponent {
                     showList: false,
                     neighbor: [],
                     resultList: [],
+                    location: { x: item.x, y: item.y },
                   },
                   async () => {
                     await this.clear()

@@ -18,7 +18,6 @@ import { Container } from '../../components'
 import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 // import Button from '../../components/Button/Button'
-// import { getLanguage } from '../../language'
 
 /*
  * AR高精度采集界面
@@ -301,7 +300,12 @@ export default class MeasureView extends React.Component {
   renderSwitchModels = () => {
     return (
       <View style={styles.SwitchModelsView}>
-        <Text style={styles.titleSwitchModelsView}>{'请选择你的模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>
+          {
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL
+          }
+        </Text>
         <View style={styles.DividingLine} />
         <ScrollView
           style={styles.scrollView}
@@ -355,7 +359,10 @@ export default class MeasureView extends React.Component {
     return (
       <View style={styles.lengthChangeView}>
         <Text style={styles.titleTotal}>
-          {'总长度:' + this.state.totalLength + 'm'}
+          {getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH +
+            this.state.totalLength +
+            'm'}
         </Text>
       </View>
     )
@@ -365,7 +372,10 @@ export default class MeasureView extends React.Component {
     return (
       <View style={styles.currentLengthChangeView}>
         <Text style={styles.title}>
-          {'视点距离:' + this.state.currentLength + 'm'}
+          {getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_VIEW_DISTANCE +
+            this.state.currentLength +
+            'm'}
         </Text>
       </View>
     )
@@ -374,7 +384,12 @@ export default class MeasureView extends React.Component {
   renderSearchingView() {
     return (
       <View style={styles.currentLengthChangeView}>
-        <Text style={styles.title}>{'正在寻找平面...'}</Text>
+        <Text style={styles.title}>
+          {
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING
+          }
+        </Text>
       </View>
     )
   }
@@ -384,7 +399,8 @@ export default class MeasureView extends React.Component {
       <Container
         ref={ref => (this.Container = ref)}
         headerProps={{
-          title: '视频地图',
+          title: getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT,
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
