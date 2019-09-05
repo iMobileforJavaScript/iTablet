@@ -1439,7 +1439,7 @@ export default class MapView extends React.Component {
     return (
       <FunctionToolbar
         language={this.props.language}
-        ref={ref => (this.functionToolbar = ref)}
+        ref={ref => (GLOBAL.FUNCTIONTOOLBAR = this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.type}
         getToolRef={() => this.toolBox}
@@ -1458,6 +1458,7 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
+        setMapIndoorNavigation={this.props.setMapIndoorNavigation}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

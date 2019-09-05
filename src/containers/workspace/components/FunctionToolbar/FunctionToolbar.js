@@ -68,6 +68,7 @@ export default class FunctionToolbar extends React.Component {
     map: Object,
 
     incrementRoad: () => {},
+    setMapIndoorNavigation: () => {},
   }
 
   static defaultProps = {
@@ -107,6 +108,10 @@ export default class FunctionToolbar extends React.Component {
       duration: immediately ? 0 : Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
+  }
+
+  isMapIndoorNavigation = () => {
+    this.props.setMapIndoorNavigation(false)
   }
 
   start = type => {
@@ -591,11 +596,17 @@ export default class FunctionToolbar extends React.Component {
   incrementRoad = () => {
     if (GLOBAL.NAVIGATIONMAPOPEN) {
       this.props.incrementRoad()
+    } else {
+      Toast.show('请先打开室内数据')
     }
   }
 
   openTraffic = async () => {
-    await SMap.openTrafficMap()
+    if (!GLOBAL.NAVIGATIONMAPOPEN) {
+      await SMap.openTrafficMap()
+    } else {
+      Toast.show('请使用在线导航功能')
+    }
   }
 
   mapStyle = () => {
