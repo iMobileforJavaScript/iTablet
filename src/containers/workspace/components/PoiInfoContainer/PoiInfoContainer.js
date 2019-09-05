@@ -18,31 +18,36 @@ import { scaleSize } from '../../../../utils'
 import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
+import constants from '../../../workspace/constants'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
+    setMapNavigation: () => {},
+    mapSearchHistory: Array,
+    setMapSearchHistory: () => {},
+    setNavigationPoiView: () => {},
   }
+
   constructor(props) {
     super(props)
     this.state = {
       destination: '',
       location: {},
       address: '',
+      showMore: false,
       showList: false,
       neighbor: [],
       resultList: [],
       visible: false,
+      radius: 5000,
     }
     this.bottom = new Animated.Value(scaleSize(-200))
     this.boxHeight = new Animated.Value(scaleSize(200))
     this.height = new Animated.Value(scaleSize(200))
   }
 
-  componentWillUnmount() {
-    SMap.deleteGestureDetector()
-  }
-
+  // 显示 底部存在搜周边按钮的状态  / 隐藏
   setVisible = (visible, radius = 5000) => {
     if (visible === this.state.visible) {
       return
@@ -59,9 +64,11 @@ export default class PoiInfoContainer extends React.PureComponent {
         duration: 400,
       }).start()
       Animated.timing(this.boxHeight, {
-        toValue: scaleSize(scaleSize(200)),
+        toValue: scaleSize(200),
         duration: 10,
       }).start()
+      //同时隐藏顶部框
+      GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
       GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
     }
     this.setState({
@@ -87,15 +94,14 @@ export default class PoiInfoContainer extends React.PureComponent {
     return a[prop] - b[prop]
   }
 
-  getSearchResult = params => {
+  getSearchResult = (params, cb) => {
+    let location = this.state.location
     let searchStr = ''
     let keys = Object.keys(params)
     keys.map(key => {
       searchStr += `&${key}=${params[key]}`
     })
-    // location={"x":104.04801859009979,"y":30.64623399251152}&radius=5000keyWords=${key}
     let url = `http://www.supermapol.com/iserver/services/localsearch/rest/searchdatas/China/poiinfos.json?&key=tY5A7zRBvPY0fTHDmKkDjjlr${searchStr}`
-    //console.warn(url)
     fetch(url)
       .then(response => response.json())
       .then(async data => {
@@ -103,52 +109,125 @@ export default class PoiInfoContainer extends React.PureComponent {
           Toast.show(getLanguage(global.language).Prompt.NO_SEARCH_RESULTS)
         } else {
           let poiInfos = data.poiInfos
-          let resultList = poiInfos.map(item => {
-            return {
-              pointName: item.name,
-              x: item.location.x,
-              y: item.location.y,
-              address: item.address,
-              distance: this.getDistance(item.location, this.state.location),
-            }
-          })
-          resultList.sort(this.compare('distance')).forEach((item, index) => {
-            resultList[index].distance =
-              item.distance > 1000
-                ? (item.distance / 1000).toFixed(2) + 'km'
-                : ~~item.distance + 'm'
-          })
-          Animated.timing(this.height, {
-            toValue: scaleSize(450),
-            duration: 400,
-          }).start()
-          Animated.timing(this.boxHeight, {
-            toValue: scaleSize(scaleSize(450)),
-            duration: 10,
-          }).start()
-          this.setState(
-            {
-              resultList,
-            },
-            async () => {
-              await SMap.addCallouts(resultList)
-              SMap.setGestureDetector({
-                singleTapHandler: this.clear,
+          if (poiInfos.length < 10 && url.indexOf('radius=5000') !== -1) {
+            url = url.replace('radius=5000', 'radius=50000')
+            fetch(url)
+              .then(response => response.json())
+              .then(async data => {
+                if (data.error || data.poiInfos.length === 0) {
+                  Toast.show(
+                    getLanguage(global.language).Prompt.NO_SEARCH_RESULTS,
+                  )
+                } else {
+                  let poiInfos = data.poiInfos
+                  let resultList = poiInfos.map(item => {
+                    return {
+                      pointName: item.name,
+                      x: item.location.x,
+                      y: item.location.y,
+                      address: item.address,
+                      distance: this.getDistance(item.location, location),
+                    }
+                  })
+                  resultList
+                    .sort(this.compare('distance'))
+                    .forEach((item, index) => {
+                      resultList[index].distance =
+                        item.distance > 1000
+                          ? (item.distance / 1000).toFixed(2) + 'km'
+                          : ~~item.distance + 'm'
+                    })
+                  this.setState(
+                    { resultList, radius: 50000, showList: true },
+                    async () => {
+                      this.show()
+                      await SMap.addCallouts(resultList)
+                      cb && cb()
+                    },
+                  )
+                }
               })
-            },
-          )
+          } else {
+            let resultList = poiInfos.map(item => {
+              return {
+                pointName: item.name,
+                x: item.location.x,
+                y: item.location.y,
+                address: item.address,
+                distance: this.getDistance(item.location, location),
+              }
+            })
+            resultList.sort(this.compare('distance')).forEach((item, index) => {
+              resultList[index].distance =
+                item.distance > 1000
+                  ? (item.distance / 1000).toFixed(2) + 'km'
+                  : ~~item.distance + 'm'
+            })
+            this.setState({ resultList, showList: true }, async () => {
+              this.show()
+              await SMap.addCallouts(resultList)
+              cb && cb()
+            })
+          }
         }
       })
   }
 
-  clear = () => {
-    SMap.removeAllCallout()
-    this.setVisible(false)
+  //显示 '点击查看更多' 时的状态
+  hidden = () => {
+    if (this.state.showList) {
+      Animated.timing(this.boxHeight, {
+        toValue: scaleSize(80),
+        duration: 0,
+      }).start()
+      Animated.timing(this.height, {
+        toValue: scaleSize(80),
+        duration: 0,
+      }).start()
+      this.setState({
+        showMore: true,
+      })
+    }
+  }
+
+  showTable = () => {
+    Animated.timing(this.height, {
+      toValue: scaleSize(200),
+      duration: 0,
+    }).start()
+    Animated.timing(this.boxHeight, {
+      toValue: scaleSize(200),
+      duration: 0,
+    }).start()
+  }
+
+  show = () => {
+    Animated.timing(this.height, {
+      toValue: scaleSize(450),
+      duration: 400,
+    }).start()
+    Animated.timing(this.boxHeight, {
+      toValue: scaleSize(450),
+      duration: 400,
+    }).start()
+    this.setState({
+      showMore: false,
+    })
+  }
+
+  clear = async () => {
+    let rel1 = await SMap.removePOICallout()
+    let rel2 = await SMap.removeAllCallout()
+    return rel1 && rel2
   }
 
   close = () => {
     SMap.removePOICallout()
     this.setVisible(false)
+    this.props.setMapNavigation({
+      isShow: false,
+      name: '',
+    })
   }
   searchNeighbor = () => {
     Animated.timing(this.height, {
@@ -164,43 +243,99 @@ export default class PoiInfoContainer extends React.PureComponent {
     })
   }
 
+  navitoHere = async () => {
+    await SMap.clearTarckingLayer()
+    await SMap.routeAnalyst(this.state.location.x, this.state.location.y)
+    GLOBAL.NAVIPOINTX = this.state.location.x
+    GLOBAL.NAVIPOINTY = this.state.location.y
+    GLOBAL.NAVIPOINTNAME = this.state.destination
+    GLOBAL.NAVIPOINTADDRESS = this.state.address
+    this.props.setNavigationPoiView(true)
+    Animated.timing(this.bottom, {
+      toValue: scaleSize(-200),
+      duration: 400,
+    }).start()
+    Animated.timing(this.height, {
+      toValue: scaleSize(200),
+      duration: 400,
+    }).start()
+    Animated.timing(this.boxHeight, {
+      toValue: scaleSize(200),
+      duration: 10,
+    }).start()
+    //同时隐藏顶部框
+    GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+
+    if (this.state.destination !== '') {
+      this.props.setMapNavigation({
+        isShow: true,
+        name: this.state.destination,
+      })
+    }
+  }
+
   renderView = () => {
-    let closeIcon = require('../../../../assets/mapTools/icon_close_black.png')
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            this.close()
-          }}
-          style={styles.closeBox}
-        >
-          <Image
-            source={closeIcon}
-            style={styles.closeBtn}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.title}>{this.state.destination}</Text>
-        </View>
-        <View>
-          <Text style={styles.info}>{this.state.address}</Text>
-        </View>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.search}
-          onPress={() => {
-            this.searchNeighbor()
+    if (GLOBAL.Type !== constants.MAP_NAVIGATION) {
+      return (
+        <View
+          style={{
+            flex: 1,
           }}
         >
-          <Text style={styles.searchTxt}>搜周边</Text>
-        </TouchableOpacity>
-      </View>
-    )
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.search}
+            onPress={() => {
+              this.searchNeighbor()
+            }}
+          >
+            <Text style={styles.searchTxt}>搜周边</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          <View>
+            <Text style={styles.title}>{this.state.destination}</Text>
+          </View>
+          <View>
+            <Text style={styles.info}>{this.state.address}</Text>
+          </View>
+          <View style={styles.searchBox}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.searchNeighbor()
+              }}
+            >
+              <Text style={styles.searchTxt}>搜周边</Text>
+            </TouchableOpacity>
+            <View style={{ width: 20 }} />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.navi}
+              onPress={() => {
+                this.navitoHere()
+              }}
+            >
+              <Text style={styles.searchTxt}>到这去</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    }
   }
 
   renderTable = () => {
@@ -209,11 +344,14 @@ export default class PoiInfoContainer extends React.PureComponent {
       return (
         <TouchableOpacity
           onPress={async () => {
+            await this.clear()
             this.getSearchResult({
               keyWords: item.title,
               location: JSON.stringify(this.state.location),
               radius: this.state.radius,
             })
+            GLOBAL.PoiTopSearchBar &&
+              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
           }}
           style={styles.searchIconWrap}
         >
@@ -239,24 +377,58 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   renderList = () => {
-    let img = require('../../../../assets/mapToolbar/icon_scene_position.png')
     let renderList = ({ item }) => {
       return (
         <View>
           <TouchableOpacity
             style={styles.itemView}
             onPress={() => {
-              SMap.setCenterCallout(item)
+              let historyArr = this.props.mapSearchHistory
+              let hasAdded = false
+              historyArr.map(v => {
+                if (v.pointName === item.pointName) hasAdded = true
+              })
+              if (!hasAdded) {
+                historyArr.push({
+                  x: item.x,
+                  y: item.y,
+                  pointName: item.pointName,
+                  address: item.address,
+                })
+              }
+              this.props.setMapSearchHistory(historyArr)
+              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
+              this.showTable()
+              setTimeout(async () => {
+                this.setState(
+                  {
+                    destination: item.pointName,
+                    address: item.address,
+                    showList: false,
+                    neighbor: [],
+                    resultList: [],
+                    location: { x: item.x, y: item.y },
+                  },
+                  async () => {
+                    await this.clear()
+                    await SMap.toLocationPoint(item)
+                  },
+                )
+              })
               //this.toLocationPoint({item,pointName:item.pointName, index})
             }}
           >
-            <Image style={styles.pointImg} source={img} />
-            {item.pointName && (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+              }}
+            >
+              {/*<Image style={styles.pointImg} source={img} />*/}
               <Text style={styles.itemText}>{item.pointName}</Text>
-            )}
-            {item.distance && (
               <Text style={styles.distance}>{item.distance}</Text>
-            )}
+            </View>
+            <Text style={styles.address}>{item.address}</Text>
           </TouchableOpacity>
           <View style={styles.itemSeparator} />
         </View>
@@ -273,6 +445,18 @@ export default class PoiInfoContainer extends React.PureComponent {
     )
   }
 
+  renderMore = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.show()
+        }}
+        style={styles.moreWrap}
+      >
+        <Text style={styles.moreText}>点击查看更多结果</Text>
+      </TouchableOpacity>
+    )
+  }
   render() {
     return (
       <Animated.View
@@ -294,12 +478,14 @@ export default class PoiInfoContainer extends React.PureComponent {
             height: this.height,
           }}
         >
+          {this.state.showMore && this.renderMore()}
           {!this.state.showList && this.renderView()}
           {this.state.showList &&
             this.state.resultList.length === 0 &&
             this.renderTable()}
           {this.state.showList &&
             this.state.resultList.length !== 0 &&
+            !this.state.showMore &&
             this.renderList()}
         </Animated.View>
       </Animated.View>

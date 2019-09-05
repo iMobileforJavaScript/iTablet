@@ -83,7 +83,12 @@ export default class ClassifyResultEditView extends React.Component {
     return (
       <View style={styles.infocontainer}>
         <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>{'物体名称:'}</Text>
+          <Text style={styles.title}>
+            {
+              getLanguage(global.language).Map_Main_Menu
+                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_NAME
+            }
+          </Text>
           <TextInput
             underlineColorAndroid={'transparent'}
             style={styles.edit}
@@ -93,24 +98,40 @@ export default class ClassifyResultEditView extends React.Component {
           />
         </View>
         <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>{'识别时间:'}</Text>
+          <Text style={styles.title}>
+            {
+              getLanguage(global.language).Map_Main_Menu
+                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_TIME
+            }
+          </Text>
           <Text style={styles.titleConfidence}>{this.classifyTime}</Text>
         </View>
         <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>{'备注:'}</Text>
+          <Text style={styles.title}>
+            {
+              getLanguage(global.language).Map_Main_Menu
+                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_REMARKS
+            }
+          </Text>
           <TextInput
             underlineColorAndroid={'transparent'}
             style={styles.edit}
             numberOfLines={2}
             onChangeText={text => (this.remarks = text)}
-            placeholder={'请填写备注'}
+            placeholder={
+              getLanguage(global.language).Map_Main_Menu
+                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS
+            }
             placeholderTextColor={'#A0A0A0'}
           />
         </View>
         <Button
           style={styles.btnSwitchModelsView}
           titleStyle={styles.txtBtnSwitchModelsView}
-          title={'保存'}
+          title={
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE
+          }
           type={'BLUE'}
           activeOpacity={0.8}
           onPress={() => this.save()}
@@ -124,7 +145,8 @@ export default class ClassifyResultEditView extends React.Component {
       <Container
         ref={ref => (this.Container = ref)}
         headerProps={{
-          title: '目标分类',
+          title: getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_CLASSIFY,
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',

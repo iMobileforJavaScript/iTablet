@@ -26,7 +26,7 @@ import {
   AnalystMapToolbar,
 } from './AnalystMapOptions'
 import MenuList from './MenuList'
-import PoiInfoContainer from './PoiInfoContainer'
+import { PoiInfoContainer, PoiTopSearchBar } from './PoiInfoContainer'
 export {
   PopList,
   NetworkAnalystToolBar,
@@ -54,5 +54,6 @@ export {
   Map2Dto3D,
   FloorListView,
   PoiInfoContainer,
+  PoiTopSearchBar,
   IncrementRoadView,
 }

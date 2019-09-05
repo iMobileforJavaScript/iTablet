@@ -11,19 +11,22 @@ import {
 import NavigationService from '../../containers/NavigationService'
 import { getPublicAssets, getThemeAssets } from '../../assets'
 import {
-  // SMAIClassifyView,
   SAIClassifyView,
   SMediaCollector,
   DatasetType,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
-// import { getLanguage } from '../../language'
-import { Container, ImagePicker, Loading, MTBtn } from '../../components'
+import { getLanguage } from '../../language'
+import {
+  Container,
+  ImagePicker,
+  Loading,
+  // MTBtn,
+} from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
-import { getLanguage } from '../../language'
 import RadioButton from './RadioButton'
 import { scaleSize, Toast } from '../../utils'
 import { RNCamera } from 'react-native-camera'
@@ -100,7 +103,10 @@ export default class ClassifyView extends React.Component {
         isClassifyInfoVisible: true,
       })
     } else {
-      Toast.show('分类失败,请重试.')
+      Toast.show(
+        getLanguage(global.language).Map_Main_Menu
+          .MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED,
+      )
       this.clear()
       return
     }
@@ -167,7 +173,11 @@ export default class ClassifyView extends React.Component {
    */
   captureImage = async () => {
     if (!this.camera) return
-    this.Loading.setLoading(true, '正在分类中...')
+    this.Loading.setLoading(
+      true,
+      getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING,
+    )
     const options = {
       quality: 0.5,
       base64: true,
@@ -183,7 +193,10 @@ export default class ClassifyView extends React.Component {
     let result = await SAIClassifyView.loadImageUri(sourcePath)
     if (!result) {
       this.Loading.setLoading(false)
-      Toast.show('分类失败')
+      Toast.show(
+        getLanguage(global.language).Map_Main_Menu
+          .MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED,
+      )
     }
   }
 
@@ -306,7 +319,10 @@ export default class ClassifyView extends React.Component {
             },
           )
         } else {
-          Toast.show('未选择任何图片')
+          Toast.show(
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_CLASSIFY_NOPICS,
+          )
         }
       },
     })
@@ -379,15 +395,23 @@ export default class ClassifyView extends React.Component {
 
   renderCenterBtn = () => {
     return (
-      <ImageButton
-        containerStyle={styles.capture}
-        iconStyle={styles.cameraIcon}
-        activeOpacity={0.8}
-        icon={getThemeAssets().ar.icon_camera_classify}
-        onPress={() => {
-          this.captureImage()
-        }}
-      />
+      <View style={styles.capture}>
+        <ImageButton
+          containerStyle={styles.capture}
+          iconStyle={styles.cameraIconBg}
+          activeOpacity={0.8}
+          icon={getThemeAssets().ar.icon_ar_camera_circle_bg}
+        />
+        <ImageButton
+          containerStyle={styles.capture}
+          iconStyle={styles.cameraIcon}
+          activeOpacity={0.8}
+          icon={getThemeAssets().ar.navi_object_classify_capture}
+          onPress={() => {
+            this.captureImage()
+          }}
+        />
+      </View>
     )
   }
 
@@ -496,8 +520,18 @@ export default class ClassifyView extends React.Component {
     return (
       <View style={styles.classifyTitleView}>
         <View style={styles.takeplace} />
-        <Text style={styles.title}>{'识别结果'}</Text>
-        <Text style={styles.titleConfidence}>{'置信度'}</Text>
+        <Text style={styles.title}>
+          {
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT
+          }
+        </Text>
+        <Text style={styles.titleConfidence}>
+          {
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_CLASSIFY_CONFIDENCE
+          }
+        </Text>
       </View>
     )
   }
@@ -619,23 +653,23 @@ export default class ClassifyView extends React.Component {
       <Container
         ref={ref => (this.Container = ref)}
         headerProps={{
-          title: '目标分类',
+          title: getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_CLASSIFY,
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
-          headerRight: [
-            <MTBtn
-              key={'settings'}
-              image={getThemeAssets().ar.toolbar.icon_classify_settings}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showClassifySettingsView}
-            />,
-          ],
+          // headerRight: [
+          //   <MTBtn
+          //     key={'settings'}
+          //     image={getThemeAssets().ar.toolbar.icon_classify_settings}
+          //     imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          //     onPress={this.showClassifySettingsView}
+          //   />,
+          // ],
         }}
         // bottomBar={this.renderBottomBtns()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{<SMAIClassifyView ref={ref => (this.SMAIClassifyView = ref)} />}*/}
         {this.renderCamera()}
         {!this.state.isCameraVisible && this.renderImgPickerView()}
         {this.state.isCameraVisible && this.renderOverlayPreview()}

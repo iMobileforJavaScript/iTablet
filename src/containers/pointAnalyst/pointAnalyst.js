@@ -12,21 +12,26 @@ import { Container, SearchBar } from '../../components'
 // import { ConstInfo } from '../../constants'
 import { SScene, SMap } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
-import { Toast } from '../../utils'
+import { scaleSize, setSpText, Toast } from '../../utils'
 import styles from './styles'
 import { getLanguage } from '../../language/index'
 import constants from '../workspace/constants'
 import PropTypes from 'prop-types'
 import PoiData from './PoiData'
+import color from '../../styles/color'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
     navigation: Object,
+    mapSearchHistory: Array,
+    setMapSearchHistory: () => {},
   }
 
   static propTypes = {
     mapNavigation: PropTypes.object,
+    navigationChangeAR: PropTypes.bool,
     setMapNavigation: PropTypes.func,
+    setNavigationChangeAR: PropTypes.func,
   }
 
   constructor(props) {
@@ -104,6 +109,24 @@ export default class PointAnalyst extends Component {
         <TouchableOpacity
           style={styles.itemView}
           onPress={() => {
+            if (!this.is3D) {
+              let historyArr = this.props.mapSearchHistory
+              let hasAdded = false
+              historyArr.map(v => {
+                if (v.pointName === item.pointName) hasAdded = true
+              })
+              if (!hasAdded) {
+                historyArr.push({
+                  x: item.x,
+                  y: item.y,
+                  pointName: item.pointName,
+                  address: item.address,
+                })
+              }
+              this.props.setMapSearchHistory(historyArr)
+              GLOBAL.PoiTopSearchBar.setVisible(true)
+              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
+            }
             this.toLocationPoint({ item, pointName: item.pointName, index })
           }}
         >
@@ -170,18 +193,18 @@ export default class PointAnalyst extends Component {
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           await SMap.openTrafficMap()
-          await SMap.routeAnalyst(x, y)
+          await SMap.clearTarckingLayer()
+          // this.props.setNavigationChangeAR(true)
           this.props.setMapNavigation({
             isShow: true,
+            isPointShow: false,
             name: pointName,
-            isPointShow: true,
           })
         }
         let result = await SMap.toLocationPoint(item)
         if (result) {
           this.container.setLoading(false)
-          GLOBAL.Type !== constants.MAP_NAVIGATION &&
-            GLOBAL.PoiInfoContainer &&
+          GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState(
               {
                 destination: this.state.searchValue,
@@ -300,7 +323,11 @@ export default class PointAnalyst extends Component {
           />
         </View> */}
         <View>
-          <FlatList data={this.state.searchData} renderItem={this.renderItem} />
+          <FlatList
+            data={this.state.searchData}
+            renderItem={this.renderItem}
+            keyExtractor={(item, index) => (item.pointName + index).toString()}
+          />
         </View>
       </View>
     )
@@ -333,7 +360,6 @@ export default class PointAnalyst extends Component {
     keys.map(key => {
       searchStr += `&${key}=${params[key]}`
     })
-    // location={"x":104.04801859009979,"y":30.64623399251152}&radius=5000keyWords=${key}
     let url = `http://www.supermapol.com/iserver/services/localsearch/rest/searchdatas/China/poiinfos.json?&key=tY5A7zRBvPY0fTHDmKkDjjlr${searchStr}`
     //console.warn(url)
     fetch(url)
@@ -430,13 +456,53 @@ export default class PointAnalyst extends Component {
   renderIconItem = () => {
     let data = PoiData()
     return (
-      <FlatList
-        style={styles.wrapper}
-        renderItem={this.renderIcons}
-        data={data}
-        keyExtractor={(item, index) => item.title + index}
-        numColumns={4}
-      />
+      <View
+        style={{
+          width: '100%',
+        }}
+      >
+        <FlatList
+          style={styles.wrapper}
+          renderItem={this.renderIcons}
+          data={data}
+          keyExtractor={(item, index) => item.title + index}
+          numColumns={4}
+        />
+        {this.props.mapSearchHistory.length > 0 && (
+          <FlatList
+            style={{
+              maxHeight: scaleSize(400),
+            }}
+            renderItem={this.renderItem}
+            data={this.props.mapSearchHistory}
+            keyExtractor={(item, index) => item.pointName + index}
+            numColumns={1}
+          />
+        )}
+        {this.props.mapSearchHistory.length > 0 && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: color.background,
+              width: '100%',
+              height: scaleSize(70),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              this.props.setMapSearchHistory &&
+                this.props.setMapSearchHistory([])
+            }}
+          >
+            <Text
+              style={{
+                fontSize: setSpText(20),
+              }}
+            >
+              清除搜索记录
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
     )
   }
   renderIcons = ({ item }) => {
@@ -445,11 +511,40 @@ export default class PointAnalyst extends Component {
         onPress={async () => {
           let location = await SMap.getMapcenterPosition()
           this.location = location
-          this.getSearchResult({
-            keyWords: item.title,
-            location: JSON.stringify(location),
-            radius: this.radius,
-          })
+          if (GLOBAL.PoiInfoContainer) {
+            GLOBAL.PoiInfoContainer.setState({
+              showList: true,
+              location: this.location,
+            })
+            GLOBAL.PoiInfoContainer.getSearchResult(
+              {
+                keyWords: item.title,
+                location: JSON.stringify(location),
+                radius: this.radius,
+              },
+              () => {
+                GLOBAL.PoiInfoContainer.setVisible(true)
+                GLOBAL.PoiTopSearchBar.setVisible(true)
+                GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+                NavigationService.navigate('MapView')
+              },
+            )
+
+            GLOBAL.PoiTopSearchBar.setVisible(true)
+            GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+
+            if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+              await SMap.openTrafficMap()
+              await SMap.clearTarckingLayer()
+              // this.props.setNavigationChangeAR(true)
+              this.props.setMapNavigation({
+                isShow: true,
+                name: item.title,
+              })
+            }
+
+            NavigationService.navigate('MapView')
+          }
         }}
         style={styles.searchIconWrap}
       >

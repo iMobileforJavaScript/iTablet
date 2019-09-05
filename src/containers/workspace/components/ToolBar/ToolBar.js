@@ -92,6 +92,7 @@ import constants from '../../constants'
 import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
+import ToolbarPicker from './ToolbarPicker'
 import { color } from '../../../../styles'
 import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language/index'
@@ -248,6 +249,42 @@ export default class ToolBar extends React.PureComponent {
     ExtraDimensions.addSoftMenuBarWidthChangeListener({
       softBarPositionChange: val => {
         this.setState({ hasSoftMenuBottom: val })
+      },
+    })
+    // 智能配图用到的选择器
+    ToolbarPicker.init({
+      onPickerConfirm: item => {
+        this.setState(
+          {
+            selectKey: item,
+            selectName: item,
+            isFullScreen: true,
+            showMenuDialog: false,
+            isTouchProgress: true,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.SMART_CARTOGRAPHY,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          },
+          () => {
+            this.updateOverlayerView()
+          },
+        )
+      },
+      onPickerCancel: () => {
+        this.setState({
+          isFullScreen: false,
+          showMenuDialog: false,
+          isTouchProgress: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.SMART_CARTOGRAPHY,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
       },
     })
   }
@@ -717,7 +754,7 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
-          Platform === 'android' && {
+          Platform.OS === 'android' && {
             key: 'boxClip',
             title: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_BOX_CLIP,
@@ -3044,6 +3081,11 @@ export default class ToolBar extends React.PureComponent {
     (async function() {
       let actionType = Action.PAN
 
+      // 取消智能配图配图后 亮度/饱和度/对比度 的调整
+      if (type === ConstToolType.SMART_CARTOGRAPHY) {
+        await SMap.resetMapFixColorsModeValue(true)
+      }
+
       if (actionFirst) {
         await this.closeSubAction(type, actionType)
       }
@@ -3307,7 +3349,9 @@ export default class ToolBar extends React.PureComponent {
   menu = () => {
     let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
-      if (
+      if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+        ToolbarPicker.toggle()
+      } else if (
         GLOBAL.Type === constants.MAP_EDIT ||
         this.state.type === ConstToolType.GRID_STYLE ||
         this.state.type === ConstToolType.MAP_STYLE ||
@@ -3426,6 +3470,16 @@ export default class ToolBar extends React.PureComponent {
       showMenuDialog = !this.state.showMenuDialog
       isTouchProgress = this.state.showMenuDialog
       setData()
+    } else if (
+      (this.state.selectKey === '' || this.state.selectKey instanceof Array) &&
+      this.state.type === ConstToolType.SMART_CARTOGRAPHY
+    ) {
+      // 智能配图
+      isTouchProgress = false
+      isFullScreen = false
+      showMenuDialog = false
+      setData()
+      showBox()
     } else {
       (isFullScreen = !this.state.showMenuDialog),
       (showMenuDialog = !this.state.showMenuDialog),
@@ -6548,19 +6602,6 @@ export default class ToolBar extends React.PureComponent {
         : 0
       height = { height: screen.getScreenSafeHeight() - softBarHeight }
     }
-    // if (this.state.isFullScreen) {
-    //   if (this.props.device.orientation === 'LANDSCAPE') {
-    //     height =
-    //       screen.deviceHeight < screen.deviceWidth
-    //         ? { height: screen.deviceHeight }
-    //         : { height: screen.deviceWidth }
-    //   } else {
-    //     height =
-    //       screen.deviceHeight > screen.deviceWidth
-    //         ? { height: screen.deviceHeight }
-    //         : { height: screen.deviceWidth }
-    //   }
-    // }
     let keyboardVerticalOffset
     if (Platform.OS === 'android') {
       keyboardVerticalOffset =
@@ -6574,6 +6615,7 @@ export default class ToolBar extends React.PureComponent {
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
         {this.state.isFullScreen &&
+          this.state.type !== ConstToolType.SMART_CARTOGRAPHY &&
           !this.state.isTouchProgress &&
           !this.state.showMenuDialog && (
           <TouchableOpacity

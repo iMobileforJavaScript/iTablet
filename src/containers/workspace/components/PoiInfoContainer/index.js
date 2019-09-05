@@ -4,4 +4,5 @@
  * https://github.com/AsortKeven
  */
 import PoiInfoContainer from './PoiInfoContainer'
-export default PoiInfoContainer
+import PoiTopSearchBar from './PoiTopSearchBar'
+export { PoiInfoContainer, PoiTopSearchBar }

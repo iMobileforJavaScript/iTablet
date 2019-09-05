@@ -93,15 +93,23 @@ export default class InputPage extends React.Component {
             placeholderTextColor={color.themePlaceHolder}
             value={this.state.value + ''}
             onChangeText={text => {
-              let { result, error } = dataUtil.isLegalName(
-                text,
-                this.props.language,
-              )
-              this.setState({
-                isLegalName: result,
-                errorInfo: error,
-                value: text,
-              })
+              if (this.state.keyboardType === 'numeric') {
+                this.setState({
+                  value: text,
+                  isLegalName:
+                    text !== '' && !isNaN(text) && text !== undefined,
+                })
+              } else {
+                let { result, error } = dataUtil.isLegalName(
+                  text,
+                  this.props.language,
+                )
+                this.setState({
+                  isLegalName: result,
+                  errorInfo: error,
+                  value: text,
+                })
+              }
             }}
             onClear={() => {
               let { result, error } = dataUtil.isLegalName(
@@ -118,7 +126,7 @@ export default class InputPage extends React.Component {
             keyboardType={this.state.keyboardType}
             showClear
           />
-          {!this.state.isLegalName && this.state.errorInfo && (
+          {!this.state.isLegalName && !!this.state.errorInfo && (
             <View style={styles.errorView}>
               <Text style={styles.errorInfo}>{this.state.errorInfo}</Text>
             </View>
