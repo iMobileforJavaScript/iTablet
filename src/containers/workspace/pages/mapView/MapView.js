@@ -2091,6 +2091,7 @@ export default class MapView extends React.Component {
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}
             onArObjectClick={this._onArObjectClick}
+            language={this.props.language}
           />
         )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
