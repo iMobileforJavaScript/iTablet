@@ -20,7 +20,7 @@ import { Container } from '../../components'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import { Toast } from '../../utils'
-// import { getLanguage } from '../../language'
+import { getLanguage } from '../../language'
 
 /*
  * AR高精度采集界面
@@ -98,10 +98,16 @@ export default class CollectSceneFormView extends React.Component {
   switchStatus = async () => {
     this.isRecording = !this.isRecording
     if (this.isRecording) {
-      Toast.show('开始记录')
+      Toast.show(
+        getLanguage(global.language).Map_Main_Menu
+          .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_START,
+      )
       await SCollectSceneFormView.startRecording()
     } else {
-      Toast.show('暂停记录')
+      Toast.show(
+        getLanguage(global.language).Map_Main_Menu
+          .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP,
+      )
       await SCollectSceneFormView.stopRecording()
     }
   }
@@ -115,7 +121,10 @@ export default class CollectSceneFormView extends React.Component {
         historyData: data.history,
       })
     } else {
-      Toast.show('没有历史数据')
+      Toast.show(
+        getLanguage(global.language).Map_Main_Menu
+          .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
+      )
     }
   }
 
@@ -130,9 +139,11 @@ export default class CollectSceneFormView extends React.Component {
   /** 保存 **/
   save = async () => {
     NavigationService.navigate('InputPage', {
-      headerTitle: '高精采集',
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
       value: '',
-      placeholder: '请输入采集名称',
+      placeholder: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
       cb: async value => {
         NavigationService.goBack()
         await SCollectSceneFormView.saveData(value)
@@ -187,7 +198,12 @@ export default class CollectSceneFormView extends React.Component {
     }
     return (
       <View style={styles.historyDataView}>
-        <Text style={styles.historyTitle}>{'历史记录:'}</Text>
+        <Text style={styles.historyTitle}>
+          {
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_HISTORY
+          }
+        </Text>
         <TouchableOpacity
           onPress={() => this.hiddleHistoryView()}
           style={styles.historyCloseIcon}
@@ -260,7 +276,10 @@ export default class CollectSceneFormView extends React.Component {
     return (
       <View style={styles.lengthChangeView}>
         <Text style={styles.titleTotal}>
-          {'总长度:' + this.state.totalLength + 'm'}
+          {getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH +
+            this.state.totalLength +
+            'm'}
         </Text>
       </View>
     )
@@ -271,7 +290,8 @@ export default class CollectSceneFormView extends React.Component {
       <Container
         ref={ref => (this.Container = ref)}
         headerProps={{
-          title: '高精采集',
+          title: getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',

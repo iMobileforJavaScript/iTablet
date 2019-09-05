@@ -6,9 +6,11 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Keyboard,
+  Animated,
+  Dimensions,
 } from 'react-native'
 import Container from '../../../../components/Container'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import { SIPortalService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
@@ -31,8 +33,53 @@ class IPortalLogin extends React.Component {
     super(props)
     this.state = {
       behavior: 'padding',
+      left: new Animated.Value(0),
     }
   }
+
+  goNext = async () => {
+    if (this.iportalAddress) {
+      this.container.setLoading(
+        true,
+        getLanguage(global.language).Profile.CONNECTING,
+      )
+      let url = this.iportalAddress + '/login.rjson'
+      if (this.iportalAddress.indexOf('http') !== 0) {
+        url = 'http://' + url
+      }
+      let status = undefined
+      try {
+        let response = await Promise.race([
+          fetch(url),
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              reject(new Error('request timeout'))
+            }, 10000)
+          }),
+        ])
+        status = response.status
+      } catch (error) {
+        // console.log(error)
+      }
+      if (status === 405) {
+        setTimeout(() => {
+          this.container.setLoading(false)
+          Animated.timing(this.state.left, {
+            toValue: -this.screenWidth,
+            duration: 500,
+          }).start()
+        }, 1000)
+      } else {
+        setTimeout(() => {
+          Toast.show(getLanguage(global.language).Profile.CONNECT_SERVER_FAIL)
+          this.container.setLoading(false)
+        }, 1000)
+      }
+    } else {
+      Toast.show(getLanguage(this.props.language).Profile.ENTER_SERVER_ADDRESS)
+    }
+  }
+
   _login = async () => {
     let url = this.iportalAddress
     let userName = this.iportalUser
@@ -122,53 +169,108 @@ class IPortalLogin extends React.Component {
     }
   }
 
-  _renderIPortal = () => {
+  _renderServer = () => {
     return (
-      <View style={{ width: '70%' }}>
-        <TextInput
-          clearButtonMode={'while-editing'}
-          keyboardType={'default'}
-          placeholder={
-            getLanguage(this.props.language).Profile.ENTER_SERVER_ADDRESS
-          }
-          multiline={false}
-          defaultValue={this.iportalAddress || ''}
-          style={styles.textInputStyle}
-          onChangeText={text => {
-            this.iportalAddress = text
+      <View style={styles.sectionViewStyle}>
+        <View style={styles.inpuViewStyle}>
+          <TextInput
+            clearButtonMode={'while-editing'}
+            keyboardType={'default'}
+            placeholder={
+              getLanguage(this.props.language).Profile.ENTER_SERVER_ADDRESS
+            }
+            multiline={false}
+            defaultValue={this.iportalAddress || ''}
+            style={styles.textInputStyle}
+            onChangeText={text => {
+              this.iportalAddress = text
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'NEXT'}
+          style={styles.loginStyle}
+          onPress={() => {
+            Keyboard.dismiss()
+            this.goNext()
           }}
-        />
-        <Text style={{ color: '#A0A0A0', fontSize: scaleSize(20) }}>
-          {'Example: <server>:<port>/iportal/web'}
-        </Text>
-        <TextInput
-          clearButtonMode={'while-editing'}
-          keyboardType={'default'}
-          placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME2}
-          multiline={false}
-          defaultValue={this.iportalUser || ''}
-          style={styles.textInputStyle}
-          onChangeText={text => {
-            this.iportalUser = text
-          }}
-        />
-        <TextInput
-          clearButtonMode={'while-editing'}
-          secureTextEntry={true}
-          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
-          multiline={false}
-          password={true}
-          style={styles.textInputStyle}
-          defaultValue={this.iportalPassword || ''}
-          onChangeText={text => {
-            this.iportalPassword = text
-          }}
-        />
+        >
+          <Text style={[styles.titleContainerStyle]}>
+            {getLanguage(global.language).Profile.NEXT}
+          </Text>
+        </TouchableOpacity>
       </View>
     )
   }
 
+  _renderUser = () => {
+    return (
+      <View style={styles.sectionViewStyle}>
+        <View style={styles.inpuViewStyle}>
+          <TextInput
+            clearButtonMode={'while-editing'}
+            keyboardType={'default'}
+            placeholder={
+              getLanguage(this.props.language).Profile.ENTER_USERNAME2
+            }
+            multiline={false}
+            defaultValue={this.iportalUser || ''}
+            style={styles.textInputStyle}
+            onChangeText={text => {
+              this.iportalUser = text
+            }}
+          />
+          <TextInput
+            clearButtonMode={'while-editing'}
+            secureTextEntry={true}
+            placeholder={
+              getLanguage(this.props.language).Profile.ENTER_PASSWORD
+            }
+            multiline={false}
+            password={true}
+            style={styles.textInputStyle}
+            defaultValue={this.iportalPassword || ''}
+            onChangeText={text => {
+              this.iportalPassword = text
+            }}
+          />
+        </View>
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={getLanguage(this.props.language).Profile.LOGIN}
+          style={styles.loginStyle}
+          onPress={() => {
+            Keyboard.dismiss()
+            this._login()
+          }}
+        >
+          <Text style={[styles.titleContainerStyle]}>
+            {/* 登录 */}
+            {getLanguage(this.props.language).Profile.LOGIN}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderLoginSection = () => {
+    let left = this.state.left
+    return (
+      <Animated.View
+        style={[
+          styles.loginSectionView,
+          { left: left._value === 0 ? left : -this.screenWidth },
+        ]}
+      >
+        {this._renderServer()}
+        {this._renderUser()}
+      </Animated.View>
+    )
+  }
+
   render() {
+    this.screenWidth = Dimensions.get('window').width
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -180,31 +282,9 @@ class IPortalLogin extends React.Component {
         <KeyboardAvoidingView
           enabled={true}
           keyboardVerticalOffset={0}
-          style={{ flex: 1, alignItems: 'center' }}
-          contentContainerStyle={{
-            flex: 1,
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
           behavior={this.state.behavior}
         >
-          {this._renderIPortal()}
-
-          {/* 登录 */}
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel={getLanguage(this.props.language).Profile.LOGIN}
-            style={styles.loginStyle}
-            onPress={() => {
-              Keyboard.dismiss()
-              this._login()
-            }}
-          >
-            <Text style={[styles.titleContainerStyle]}>
-              {/* 登录 */}
-              {getLanguage(this.props.language).Profile.LOGIN}
-            </Text>
-          </TouchableOpacity>
+          {this.renderLoginSection()}
         </KeyboardAvoidingView>
       </Container>
     )
