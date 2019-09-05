@@ -98,6 +98,8 @@ export default class MapView extends React.Component {
     mapScaleView: PropTypes.bool,
     mapIs3D: PropTypes.bool,
     mapIndoorNavigation: PropTypes.bool,
+    navigationChangeAR: PropTypes.bool,
+    navigationPoiView: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -147,6 +149,8 @@ export default class MapView extends React.Component {
     setMap2Dto3D: PropTypes.func,
     setMapIs3D: PropTypes.func,
     setMapIndoorNavigation: PropTypes.func,
+    setNavigationChangeAR: PropTypes.func,
+    setNavigationPoiView: PropTypes.func,
     setBackAction: PropTypes.func,
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
@@ -1970,9 +1974,14 @@ export default class MapView extends React.Component {
           size={MTBtn.Size.NORMAL}
           image={require('../../../../assets/Navigation/switch_ar_2d.png')}
           activeOpacity={0.5}
+          onPress={this.changeAR}
         />
       </View>
     )
+  }
+
+  changeAR = () => {
+    NavigationService.navigate('ArView')
   }
 
   _renderNavigationView = () => {
@@ -2024,7 +2033,12 @@ export default class MapView extends React.Component {
   }
 
   _renderNavigationPoiView = () => {
-    return <NavigationPoiView />
+    return (
+      <NavigationPoiView
+        setNavigationPoiView={this.props.setNavigationPoiView}
+        setNavigationChangeAR={this.props.setNavigationChangeAR}
+      />
+    )
   }
 
   _renderChangeArView = () => {
@@ -2082,14 +2096,14 @@ export default class MapView extends React.Component {
         )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {!this.state.showAIDetect && this.renderMapController()}
-        {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isPointShow &&
-          this._renderNavigationView()}
+        {/*{!this.isExample &&*/}
+        {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
+        {/*this.props.mapNavigation.isPointShow &&*/}
+        {/*this._renderNavigationView()}*/}
         {this._renderIncrementRoad()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isShow &&
+          this.props.navigationPoiView &&
           this._renderNavigationPoiView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
@@ -2103,7 +2117,7 @@ export default class MapView extends React.Component {
           this._renderNavigationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigation.isPointShow &&
+          this.props.navigationChangeAR &&
           this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&
@@ -2179,12 +2193,17 @@ export default class MapView extends React.Component {
           type="normal"
         />
         <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
-        <PoiTopSearchBar ref={ref => (GLOBAL.PoiTopSearchBar = ref)} />
+        <PoiTopSearchBar
+          ref={ref => (GLOBAL.PoiTopSearchBar = ref)}
+          setMapNavigation={this.props.setMapNavigation}
+        />
         <PoiInfoContainer
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}
           setMapSearchHistory={this.props.setMapSearchHistory}
           device={this.props.device}
+          setMapNavigation={this.props.setMapNavigation}
+          setNavigationPoiView={this.props.setNavigationPoiView}
         />
       </Container>
     )

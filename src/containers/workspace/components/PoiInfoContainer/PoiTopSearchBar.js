@@ -21,6 +21,10 @@ const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default class PoiTopSearchBar extends React.Component {
+  props: {
+    setMapNavigation: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.top = new Animated.Value(-HEADER_HEIGHT)
@@ -65,6 +69,10 @@ export default class PoiTopSearchBar extends React.Component {
                 resultList: [],
               })
             }
+            this.props.setMapNavigation({
+              isShow: false,
+              name: '',
+            })
             this.setVisible(false)
           }}
         >
