@@ -52,7 +52,7 @@
     "react-native-picker": "^4.3.7",
     "react-native-progress": "^3.5.0",
     "react-native-root-siblings": "^3.2.1",
-    "react-native-root-toast": "^3.1.2",
+    "react-native-root-toast": "3.1.2",
     "react-native-scrollable-tab-view": "^0.10.0",
     "react-native-search-box": "^0.0.16",
     "react-native-splash-screen": "^3.1.1",

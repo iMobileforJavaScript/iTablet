@@ -966,7 +966,8 @@ export default class SecondMapSettings extends Component {
           <TouchableOpacity
             onPress={async () => {
               let isSuccess = await SMap.setPrjCoordSys(item.value)
-              isSuccess && this.state.cb(item.name) && this.backAction()
+              isSuccess && this.state.cb(item.name)
+              isSuccess && this.backAction()
             }}
           >
             <View style={styles.row}>
