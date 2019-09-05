@@ -148,7 +148,6 @@ export default class InputDialog extends PureComponent {
         confirmBtnTitle={this.props.confirmBtnTitle}
         cancelBtnTitle={this.props.cancelBtnTitle}
         confirmBtnDisable={!this.state.isLegalName}
-        type={Dialog.Type.MODAL}
       >
         <KeyboardAvoidingView behavior="padding" enabled>
           <View style={styles.contentView}>
