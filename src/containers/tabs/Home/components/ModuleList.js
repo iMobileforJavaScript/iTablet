@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, FlatList, StyleSheet, Platform } from 'react-native'
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Platform,
+  NativeModules,
+  PermissionsAndroid,
+} from 'react-native'
 import { ConstPath } from '../../../../constants'
 import constants from '../../../../containers/workspace/constants'
 import ConstModule from '../../../../constants/ConstModule'
@@ -13,6 +20,8 @@ import { downloadFile, deleteDownloadFile } from '../../../../models/down'
 import { connect } from 'react-redux'
 import { getLanguage } from '../../../../language'
 import ModuleItem from './ModuleItem'
+import { SimpleDialog } from '../../Friend/Component'
+let AppUtils = NativeModules.AppUtils
 
 let isWaiting = false // 防止重复点击
 
@@ -180,6 +189,21 @@ class ModuleList extends Component {
 
   itemAction = async (language, { item, index }) => {
     try {
+      if (Platform.OS === 'android') {
+        let granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        )
+        if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
+          this.SimpleDialog.setConfirm(() => {
+            AppUtils.startAppLoactionSetting()
+          })
+          this.SimpleDialog.setText(
+            getLanguage(global.language).Prompt.REQUEST_LOCATION,
+          )
+          this.SimpleDialog.setVisible(true)
+          return
+        }
+      }
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
@@ -312,6 +336,10 @@ class ModuleList extends Component {
     )
   }
 
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
+  }
+
   render() {
     let data = ConstModule(this.props.language)
     let height = (scaleSize(220) * data.length) / 2
@@ -348,6 +376,7 @@ class ModuleList extends Component {
             />
           </View>
         )}
+        {this.renderSimpleDialog()}
       </View>
     )
   }
