@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, TouchableOpacity } from 'react-native'
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
+  NativeModules,
+} from 'react-native'
 import { Container } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
@@ -10,11 +17,13 @@ import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from '../MessageDataHandle'
 import { SimpleDialog } from '../index'
 import MsgConstant from '../MsgConstant'
+import { connect } from 'react-redux'
+let AppUtils = NativeModules.AppUtils
 
 class ManageFriend extends Component {
   props: {
     navigation: Object,
-    user: Object,
+    latestMap: Object,
   }
 
   constructor(props) {
@@ -58,6 +67,42 @@ class ManageFriend extends Component {
     NavigationService.popToTop()
   }
 
+  navigateToModule = async module => {
+    if (Platform.OS === 'android') {
+      let granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      )
+      if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
+        this.SimpleDialog.setConfirm(() => {
+          AppUtils.startAppLoactionSetting()
+        })
+        this.SimpleDialog.setText(
+          getLanguage(global.language).Prompt.REQUEST_LOCATION,
+        )
+        this.SimpleDialog.setVisible(true)
+        return
+      }
+    }
+    let tmpCurrentUser = this.user
+    let currentUserName = tmpCurrentUser.userName
+      ? tmpCurrentUser.userName
+      : 'Customer'
+
+    let latestMap
+    if (
+      this.props.latestMap[currentUserName] &&
+      this.props.latestMap[currentUserName][module.key] &&
+      this.props.latestMap[currentUserName][module.key].length > 0
+    ) {
+      latestMap = this.props.latestMap[currentUserName][module.key][0]
+    }
+    this.friend.setCurMod(module)
+    module.action(this.user, latestMap)
+    this.setState({ coworkMode: true })
+    this.chat.setCoworkMode(true)
+    global.coworkMode = true
+  }
+
   render() {
     return (
       <Container
@@ -88,11 +133,7 @@ class ManageFriend extends Component {
             onPress={() => {
               NavigationService.navigate('SelectModule', {
                 callBack: value => {
-                  this.friend.setCurMod(value)
-                  NavigationService.goBack('ManageFriend')
-                  this.setState({ coworkMode: true })
-                  this.chat.setCoworkMode(true)
-                  global.coworkMode = true
+                  this.navigateToModule(value)
                 },
               })
             }}
@@ -181,4 +222,11 @@ class ManageFriend extends Component {
   }
 }
 
-export default ManageFriend
+const mapStateToProps = state => ({
+  latestMap: state.map.toJS().latestMap,
+})
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ManageFriend)
