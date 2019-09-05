@@ -66,6 +66,20 @@ let styles = StyleSheet.create({
     justifyContent: 'space-between',
     // borderBottomColor: '#ff00aa',
   },
+  //iPortalLogin
+  loginSectionView: {
+    flexDirection: 'row',
+    width: '200%',
+    marginTop: scaleSize(50),
+  },
+  sectionViewStyle: {
+    width: '50%',
+    alignItems: 'center',
+  },
+  inpuViewStyle: {
+    width: '75%',
+    alignItems: 'center',
+  },
 })
 export default styles
 export { titleOnFocusBackgroundColor, titleOnBlurBackgroundColor }
