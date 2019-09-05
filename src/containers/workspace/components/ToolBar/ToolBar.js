@@ -2937,7 +2937,10 @@ export default class ToolBar extends React.PureComponent {
 
         if (resultArr && resultArr.length > 0) {
           this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+            if (layers.length > 0) {
+              this.props.setCurrentLayer(layers[0])
+              SMap.setLayerEditable(layers[0].path, true)
+            }
           })
 
           this.setVisible(false)
