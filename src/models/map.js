@@ -179,6 +179,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
 // 关闭地图
 export const closeMap = (cb = () => {}) => async dispatch => {
   try {
+    await SMap.resetMapFixColorsModeValue(false)
     await SMap.closeMap()
     await SMap.removeMap(-1) // 移除所有地图
     await SMap.closeDatasource()

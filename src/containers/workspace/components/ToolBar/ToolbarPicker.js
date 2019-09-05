@@ -1,9 +1,14 @@
+import { Platform } from 'react-native'
 import Picker from 'react-native-picker'
 import { getLanguage } from '../../../../language'
 import { size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 
+let isShow = false
+let _params
 function init(params = {}) {
+  isShow = false
+  _params = params
   const options = [
     getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST,
     getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS,
@@ -41,9 +46,11 @@ function init(params = {}) {
     selectedValue: selectedValue,
     onPickerConfirm: data => {
       params.onPickerConfirm && params.onPickerConfirm(data)
+      isShow = false
     },
     onPickerCancel: data => {
       params.onPickerCancel && params.onPickerCancel(data)
+      isShow = false
     },
     onPickerSelect: data => {
       params.onPickerSelect && params.onPickerSelect(data)
@@ -52,15 +59,20 @@ function init(params = {}) {
 }
 
 function show() {
+  _params && init(_params)
   Picker.show()
+  isShow = true
 }
 
 function hide() {
   Picker.hide()
+  isShow = false
 }
 
 function toggle() {
+  _params && init(_params)
   Picker.toggle()
+  isShow = !isShow
 }
 
 /**
@@ -71,7 +83,16 @@ function select(item) {
 }
 
 function isPickerShow() {
-  return Picker.isPickerShow()
+  // return Picker.isPickerShow()
+  return isShow
+}
+
+function updateView() {
+  if (isShow) {
+    Platform.OS === 'ios' && show()
+  } else {
+    hide()
+  }
 }
 
 export default {
@@ -81,4 +102,5 @@ export default {
   toggle,
   select,
   isPickerShow,
+  updateView,
 }

@@ -29,7 +29,9 @@ export default class PointAnalyst extends Component {
 
   static propTypes = {
     mapNavigation: PropTypes.object,
+    navigationChangeAR: PropTypes.bool,
     setMapNavigation: PropTypes.func,
+    setNavigationChangeAR: PropTypes.func,
   }
 
   constructor(props) {
@@ -190,19 +192,18 @@ export default class PointAnalyst extends Component {
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          await SMap.openTrafficMap()
-          await SMap.routeAnalyst(x, y)
+          await SMap.clearTarckingLayer()
+          // this.props.setNavigationChangeAR(true)
           this.props.setMapNavigation({
             isShow: true,
+            isPointShow: false,
             name: pointName,
-            isPointShow: true,
           })
         }
         let result = await SMap.toLocationPoint(item)
         if (result) {
           this.container.setLoading(false)
-          GLOBAL.Type !== constants.MAP_NAVIGATION &&
-            GLOBAL.PoiInfoContainer &&
+          GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState(
               {
                 destination: this.state.searchValue,
@@ -527,6 +528,20 @@ export default class PointAnalyst extends Component {
                 NavigationService.navigate('MapView')
               },
             )
+
+            GLOBAL.PoiTopSearchBar.setVisible(true)
+            GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+
+            if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+              await SMap.clearTarckingLayer()
+              // this.props.setNavigationChangeAR(true)
+              this.props.setMapNavigation({
+                isShow: true,
+                name: item.title,
+              })
+            }
+
+            NavigationService.navigate('MapView')
           }
         }}
         style={styles.searchIconWrap}

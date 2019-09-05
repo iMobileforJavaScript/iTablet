@@ -594,6 +594,10 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  openTraffic = async () => {
+    await SMap.openTrafficMap()
+  }
+
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
     if (this.props.layers.themeType <= 0) {
@@ -1272,6 +1276,14 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: constants.TRAFFIC,
+            title: getLanguage(this.props.language).Map_Main_Menu.Traffic,
+            //路况
+            size: 'large',
+            action: this.openTraffic,
+            image: require('../../../../assets/Navigation/road.png'),
           },
           {
             key: '风格',
