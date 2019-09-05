@@ -25,13 +25,13 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_BEGIN:
       (async function() {
-        SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y)
         GLOBAL.STARTX = event.mapPoint.x
         GLOBAL.STARTY = event.mapPoint.y
         let result = await SMap.isIndoorPoint(
           event.mapPoint.x,
           event.mapPoint.y,
         )
+        SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, result.isindoor)
         if (result.isindoor) {
           GLOBAL.INDOORSTART = true
         } else {
@@ -41,13 +41,13 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
-        SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y)
         GLOBAL.ENDX = event.mapPoint.x
         GLOBAL.ENDY = event.mapPoint.y
         let endresult = await SMap.isIndoorPoint(
           event.mapPoint.x,
           event.mapPoint.y,
         )
+        SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, endresult.isindoor)
         if (endresult.isindoor) {
           GLOBAL.INDOOREND = true
         } else {

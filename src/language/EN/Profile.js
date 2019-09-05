@@ -34,7 +34,10 @@ const Profile = {
   ENTER_EMAIL: 'Please enter your email',
   ENTER_SERVER_ADDRESS: 'Please enter server address',
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
-
+  CONNECTING: 'Connecting',
+  CONNECT_SERVER_FAIL:
+    'Failed to connect to the server, please check the network or server address',
+  NEXT: 'Next',
   //
   SHARE: 'Share',
   PATH: 'Path',

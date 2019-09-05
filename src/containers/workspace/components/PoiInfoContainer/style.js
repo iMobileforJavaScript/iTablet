@@ -99,6 +99,23 @@ export default StyleSheet.create({
     fontSize: setSpText(16),
     paddingRight: scaleSize(20),
   },
+  searchBox: {
+    marginTop: scaleSize(20),
+    height: scaleSize(60),
+    flex: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  navi: {
+    height: scaleSize(60),
+    flex: 1,
+    borderRadius: 5,
+    backgroundColor: color.blue1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   address: {
     marginLeft: scaleSize(15),
     height: scaleSize(30),

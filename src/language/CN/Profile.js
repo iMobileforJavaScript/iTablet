@@ -35,6 +35,9 @@ const Profile = {
   ENTER_EMAIL: '请输入邮箱',
   ENTER_SERVER_ADDRESS: '请输入服务地址',
   ENTER_VALID_SERVER_ADDRESS: '请输入合法的服务地址',
+  CONNECTING: '连接中',
+  CONNECT_SERVER_FAIL: '未能连接到服务器，请检查网络或服务器地址',
+  NEXT: '下一步',
 
   SWITCH_ACCOUNT: '切换账号',
   LOG_OUT: '退出登录',
