@@ -26,7 +26,7 @@ export default class TouchProgress extends Component {
   props: {
     language: string,
     currentLayer: Object,
-    selectName: '',
+    selectName: any, // 智能配图 selectName 为Array；其余为String
     value: '',
     mapLegend?: Object,
     setMapLegend?: () => {},
@@ -131,7 +131,19 @@ export default class TouchProgress extends Component {
     let panBtnDevLeft = MARGIN - IMAGE_SIZE / 2 // 图片相对左边偏差
 
     let tips = ''
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    if (tips === '' && this.props.selectName instanceof Array) {
+      // 智能配图 selectName 为数组
+      let mode = TPData.getMatchPictureMode(this.props.selectName)
+      let _value =
+        value !== undefined ? value : await SMap.getMapFixColorsModeValue(mode)
+      let _value2 = _value + 100
+      this._panBtnStyles.style.left =
+        (_value2 * progressWidth) / 200 + panBtnDevLeft
+      this._previousLeft = (_value2 * progressWidth) / 200
+      this._BackLine.style.width = (_value2 * progressWidth) / 200
+      tips = TPData.getMatchPictureTip(this.props.selectName, _value)
+    }
+    if (tips === '' && GLOBAL.Type === constants.MAP_THEME) {
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
           this.nuclearRadius =
@@ -534,23 +546,6 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(height)
       }
-      if (
-        layerType === undefined &&
-        tips === '' &&
-        this.props.selectName instanceof Array
-      ) {
-        let mode = TPData.getMatchPictureMode(this.props.selectName)
-        let _value =
-          value !== undefined
-            ? value
-            : await SMap.getMapFixColorsModeValue(mode)
-        let _value2 = _value + 100
-        this._panBtnStyles.style.left =
-          (_value2 * progressWidth) / 200 + panBtnDevLeft
-        this._previousLeft = (_value2 * progressWidth) / 200
-        this._BackLine.style.width = (_value2 * progressWidth) / 200
-        tips = TPData.getMatchPictureTip(this.props.selectName, _value)
-      }
     }
 
     if (tips !== this.state.tips) {
@@ -636,7 +631,19 @@ export default class TouchProgress extends Component {
 
     let newValue
 
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    if (this.props.selectName instanceof Array) {
+      // 智能配图 selectName 为数组
+      if (
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION
+      ) {
+        newValue = value * 200
+      }
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
@@ -662,9 +669,7 @@ export default class TouchProgress extends Component {
       } else if (this.props.selectName === '最大颜色权重') {
         newValue = value * 100
       }
-    }
-
-    if (layerType !== undefined) {
+    } else if (layerType !== undefined) {
       switch (layerType) {
         case 1:
           if (this.props.selectName === '大小') {
@@ -691,20 +696,7 @@ export default class TouchProgress extends Component {
           }
           break
       }
-    } else if (this.props.selectName instanceof Array) {
-      if (
-        this.props.selectName[this.props.selectName.length - 1] ===
-          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
-        this.props.selectName[this.props.selectName.length - 1] ===
-          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
-        this.props.selectName[this.props.selectName.length - 1] ===
-          getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION
-      ) {
-        newValue = value * 200
-      }
-    }
-
-    if (newValue === undefined) {
+    } else {
       if (this.props.selectName === '列数') {
         newValue = value * 100
       } else if (this.props.selectName === '宽度') {
@@ -725,7 +717,33 @@ export default class TouchProgress extends Component {
     let layerType = this.props.currentLayer.type
     let themeType = this.props.currentLayer.themeType
     let tips = ''
-    if (GLOBAL.Type === constants.MAP_THEME) {
+
+    if (
+      this.props.selectName instanceof Array &&
+      (this.props.selectName[this.props.selectName.length - 1] ===
+        getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION)
+    ) {
+      // 智能配图 selectName 为数组
+      if (value < 0) {
+        value = 0
+      } else if (value > 200) {
+        value = 200
+      }
+      value -= 100
+      tips =
+        this.props.selectName[this.props.selectName.length - 1] +
+        '     ' +
+        parseInt(value) +
+        '%'
+      let mode = TPData.getMatchPictureMode(this.props.selectName)
+      if (mode !== undefined) {
+        await SMap.updateMapFixColorsMode(mode, value)
+      }
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
@@ -843,9 +861,7 @@ export default class TouchProgress extends Component {
         }
         await SThemeCartography.setHeatMapMaxColorWeight(_params)
       }
-    }
-
-    if (tips === '') {
+    } else {
       switch (layerType) {
         case 1: {
           if (this.props.selectName === '大小') {
@@ -1035,32 +1051,6 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(value)
       }
-      if (
-        layerType === undefined &&
-        this.props.selectName instanceof Array &&
-        (this.props.selectName[this.props.selectName.length - 1] ===
-          getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
-          this.props.selectName[this.props.selectName.length - 1] ===
-            getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST ||
-          this.props.selectName[this.props.selectName.length - 1] ===
-            getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION)
-      ) {
-        if (value < 0) {
-          value = 0
-        } else if (value > 200) {
-          value = 200
-        }
-        value -= 100
-        tips =
-          this.props.selectName[this.props.selectName.length - 1] +
-          '     ' +
-          parseInt(value) +
-          '%'
-        let mode = TPData.getMatchPictureMode(this.props.selectName)
-        if (mode !== undefined) {
-          await SMap.updateMapFixColorsMode(mode, value)
-        }
-      }
     }
 
     tips !== this.state.tips &&
@@ -1076,7 +1066,25 @@ export default class TouchProgress extends Component {
   setTips = value => {
     let layerType = this.props.currentLayer.type
     let tips = ''
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    if (tips === '' && this.props.selectName instanceof Array) {
+      // 智能配图 selectName 为数组
+      if (
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS ||
+        this.props.selectName[this.props.selectName.length - 1] ===
+          getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS
+      ) {
+        if (value < 0) {
+          value = 0
+        } else if (value > 200) {
+          value = 200
+        }
+        value -= 100
+        tips = TPData.getMatchPictureTip(this.props.selectName, value)
+      }
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'

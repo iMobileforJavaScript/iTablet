@@ -475,7 +475,8 @@ const coordinateSystemSettings = () => [
   {
     title: getLanguage(global.language).Map_Settings.COORDINATE_SYSTEM,
     value: 'GCS_WGS 1984',
-    iconType: 'arrow',
+    // iconType: 'arrow', 暂时屏蔽地图坐标系设置
+    iconType: 'text',
   },
   {
     title: getLanguage(global.language).Map_Settings.COPY_COORDINATE_SYSTEM,
@@ -530,11 +531,11 @@ const coordMenuTitle = () => [
 ]
 //坐标系数据
 const coordinateData = () => [
-  {
-    title: getLanguage(global.language).Map_Settings.PLAN_COORDINATE_SYSTEM,
-    visible: true,
-    data: [],
-  },
+  // {
+  //   title: getLanguage(global.language).Map_Settings.PLAN_COORDINATE_SYSTEM,
+  //   visible: true,
+  //   data: [],
+  // },
   {
     title: getLanguage(global.language).Map_Settings
       .GEOGRAPHIC_COORDINATE_SYSTEM,

@@ -109,9 +109,11 @@ export default class ModuleItem extends Component {
             })
           }}
           onPressOut={() => {
-            this.setState({
-              touch: false,
-            })
+            setTimeout(() => {
+              this.setState({
+                touch: false,
+              })
+            }, 3000)
           }}
           style={[styles.module]}
         >

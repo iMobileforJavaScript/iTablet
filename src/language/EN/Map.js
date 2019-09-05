@@ -41,6 +41,7 @@ const Map_Main_Menu = {
   NETDATA: 'NETDATA',
   INDOORDATA: 'INDOORDATA',
   DATASET: 'DATASET',
+  Traffic: 'Traffic',
 
   ANALYSIS: 'Analysis',
 

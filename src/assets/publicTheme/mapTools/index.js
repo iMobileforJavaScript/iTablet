@@ -1,5 +1,6 @@
 const tools_rectangle_cut = require('./tools_rectangle_cut.png')
 const tools_camera = require('./tools_camera.png')
+const tools_camera_disable = require('./tools_camera_disable.png')
 const tools_legend_on = require('./tab_legend_on.png')
 const tools_legend_off = require('./tab_legend_off.png')
 const tour = require('./tour_light.png')
@@ -14,7 +15,10 @@ const tools_layer_paste = require('./layer_paste.png')
 const tools_layer_delete = require('./layer_delete.png')
 export default {
   tools_rectangle_cut,
+  /*多媒体采集*/
   tools_camera,
+  tools_camera_disable,
+  /*图例开关*/
   tools_legend_on,
   tools_legend_off,
   tour,

@@ -44,9 +44,9 @@ export default class extends React.PureComponent {
   render() {
     const callback = data => {
       this.props.callback && this.props.callback(data)
-      InteractionManager.runAfterInteractions(() => {
-        this.props.onDestroy && this.props.onDestroy()
-      })
+      // InteractionManager.runAfterInteractions(() => {
+      this.props.onDestroy && this.props.onDestroy()
+      // })
     }
     const allscenes = {
       [PageKeys.album_list]: AlbumListView,

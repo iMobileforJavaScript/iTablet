@@ -78,6 +78,8 @@ export default class MapCut extends React.Component {
       (async function() {
         let layers = await this.props.getLayers()
         SMap.getDatasources().then(datasources => {
+          let reg = /^Label_(.*)#$/
+          datasources = datasources.filter(item => !item.alias.match(reg))
           this.setState({
             datasources,
           })
@@ -632,7 +634,9 @@ export default class MapCut extends React.Component {
         changeRangeCut={() => this.changeRangeCut(item)}
         changeErase={() => this.changeErase(item)}
         changeExactCut={() => this.changeExactCut(item)}
-        showDatasource={() => this.showDatasource(item)}
+        showDatasource={() => {
+          this.showDatasource(item)
+        }}
         changeCaption={caption => this.changeCaption(item, caption)}
       />
     )

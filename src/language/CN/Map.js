@@ -46,6 +46,7 @@ const Map_Main_Menu = {
   NETDATA: '选择路网数据',
   INDOORDATA: '室内数据源',
   DATASET: '选择数据集',
+  Traffic: '路况',
 
   ANALYSIS: '分析',
 
