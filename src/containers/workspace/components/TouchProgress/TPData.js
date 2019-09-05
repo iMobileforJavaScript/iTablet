@@ -74,10 +74,10 @@ function getMatchPictureTip(arr, value) {
       '%'
   } else if (
     arr[arr.length - 1] ===
-    getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS
+    getLanguage(global.language).Map_Main_Menu.SATURATION
   ) {
     tips =
-      getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+      getLanguage(global.language).Map_Main_Menu.SATURATION +
       '     ' +
       parseInt(value) +
       '%'

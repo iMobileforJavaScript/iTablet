@@ -117,6 +117,7 @@ const Prompt = {
   ENTER_SERVICE_ADDRESS: '请输入服务地址',
   ENTER_ANIMATION_NAME: '请输入动画名字',
   ENTER_ANIMATION_NODE_NAME: '请输入动画节点名字',
+  PLEASE_SELECT_PLOT_SYMBOL: '请选择标绘符号',
 
   ENTER_NAME: '请输入名称',
 

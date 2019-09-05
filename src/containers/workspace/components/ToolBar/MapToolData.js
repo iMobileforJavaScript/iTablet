@@ -318,8 +318,10 @@ function getMapTool(type, params) {
           action: captureImage,
           size: 'large',
           disable: layerType !== 'TAGGINGLAYER',
-          //todo 多媒体采集缺灰色图片
-          image: getPublicAssets().mapTools.tools_camera,
+          image:
+            layerType !== 'TAGGINGLAYER'
+              ? getPublicAssets().mapTools.tools_camera_disable
+              : getPublicAssets().mapTools.tools_camera,
         },
         {
           key: 'tour',

@@ -304,11 +304,14 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
+      if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+        ToolbarPicker.updateView()
+      }
       if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
         return
       }
       // 点采集，GPS打点类型为0
-      (this.state.type || this.state.type === 0) &&
+      this.state.type !== undefined &&
         this.changeHeight(this.props.device.orientation, this.state.type)
     }
   }
@@ -2851,7 +2854,9 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -this.props.device.height,
+          toValue: isShow
+            ? 0
+            : -Math.max(this.props.device.height, this.props.device.width),
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -2932,7 +2937,10 @@ export default class ToolBar extends React.PureComponent {
 
         if (resultArr && resultArr.length > 0) {
           this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+            if (layers.length > 0) {
+              this.props.setCurrentLayer(layers[0])
+              SMap.setLayerEditable(layers[0].path, true)
+            }
           })
 
           this.setVisible(false)
@@ -3083,6 +3091,7 @@ export default class ToolBar extends React.PureComponent {
 
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
       if (type === ConstToolType.SMART_CARTOGRAPHY) {
+        ToolbarPicker.hide()
         await SMap.resetMapFixColorsModeValue(true)
       }
 
@@ -3600,6 +3609,10 @@ export default class ToolBar extends React.PureComponent {
       if (actionFirst) {
         await this.closeSubAction(type, actionType)
       }
+
+      // if (type === ConstToolType.SMART_CARTOGRAPHY) {
+      //   ToolbarPicker.hide()
+      // }
 
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听

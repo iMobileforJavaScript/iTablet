@@ -122,6 +122,7 @@ const Prompt = {
   ENTER_SERVICE_ADDRESS: 'Please enter the Service Address',
   ENTER_ANIMATION_NAME: 'Please enter the animation name',
   ENTER_ANIMATION_NODE_NAME: 'Please enter the animation node name',
+  PLEASE_SELECT_PLOT_SYMBOL: 'Please select plot symbol',
 
   CLIPPING: 'Clipping',
   CLIPPED_SUCCESS: 'Clipped Successfully',
