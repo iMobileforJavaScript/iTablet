@@ -475,7 +475,7 @@ export default class PointAnalyst extends Component {
             }}
             renderItem={this.renderItem}
             data={this.props.mapSearchHistory}
-            keyExtractor={(item, index) => item.title + index}
+            keyExtractor={(item, index) => item.pointName + index}
             numColumns={1}
           />
         )}
@@ -524,6 +524,9 @@ export default class PointAnalyst extends Component {
               },
               () => {
                 GLOBAL.PoiInfoContainer.setVisible(true)
+                GLOBAL.PoiTopSearchBar.setVisible(true)
+                GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+                NavigationService.navigate('MapView')
               },
             )
 

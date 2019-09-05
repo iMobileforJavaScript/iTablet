@@ -42,7 +42,7 @@ import {
   setNavigationChangeAR,
   setNavigationPoiView,
 } from '../../../../models/setting'
-import { setMapSearchHistory } from '../../../../models/history'
+import { setMapSearchHistory } from '../../../../models/histories'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
@@ -78,7 +78,7 @@ const mapStateToProps = state => ({
   mapScaleView: state.setting.toJS().mapScaleView,
   analyst: state.analyst.toJS(),
   downloads: state.down.toJS().downloads,
-  mapSearchHistory: state.history.toJS().mapSearchHistory,
+  mapSearchHistory: state.histories.toJS().mapSearchHistory,
 })
 
 const mapDispatchToProps = {

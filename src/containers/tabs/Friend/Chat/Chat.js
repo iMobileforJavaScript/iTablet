@@ -764,7 +764,7 @@ class Chat extends React.Component {
     }
     await FileTools.deleteFile(fileDir)
     await SMap.refreshMap()
-    NavigationService.navigate('MapView')
+    // NavigationService.navigate('MapView')
     Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
     //todo refresh
   }
