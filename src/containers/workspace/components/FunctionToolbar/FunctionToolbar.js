@@ -21,6 +21,7 @@ import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
 import { Bar } from 'react-native-progress'
+import ConstOnline from '../../../../constants/ConstOnline'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -603,7 +604,7 @@ export default class FunctionToolbar extends React.Component {
 
   openTraffic = async () => {
     if (!GLOBAL.NAVIGATIONMAPOPEN) {
-      await SMap.openTrafficMap()
+      await SMap.openDatasource(ConstOnline.TrafficMap.DSParams, 0, true)
     } else {
       Toast.show('请使用在线导航功能')
     }

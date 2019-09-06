@@ -130,4 +130,15 @@ export default {
     layerIndex: 0,
     mapName: 'SuperMapCloud',
   },
+  TrafficMap: {
+    type: 'Datasource',
+    DSParams: {
+      server:
+        'https://www.supermapol.com/iserver/services/traffic/rest/maps/tencent',
+      engineType: 225,
+      alias: 'TrafficMap',
+    },
+    layerIndex: 0,
+    mapName: 'TrafficMap',
+  },
 }
