@@ -24,7 +24,6 @@ export default class InputDialog extends PureComponent {
     returnKeyType: string,
     confirmBtnTitle: string,
     cancelBtnTitle: string,
-    // inputSelection: Object,
   }
 
   static defaultProps = {
@@ -125,10 +124,6 @@ export default class InputDialog extends PureComponent {
               value: text,
             })
           }}
-          // selection={this.props.inputSelection || {
-          //   start: this.state.value.length - 1,
-          //   end: this.state.value.length - 1,
-          // }}
           keyboardAppearance={this.props.keyboardAppearance}
           returnKeyType={this.props.returnKeyType}
         />
@@ -150,16 +145,14 @@ export default class InputDialog extends PureComponent {
         confirmBtnDisable={!this.state.isLegalName}
       >
         <KeyboardAvoidingView behavior="padding" enabled>
-          <View style={styles.contentView}>
-            {this.renderInput()}
-            {!this.state.isLegalName && this.state.errorInfo && (
-              <View style={styles.errorView}>
-                <Text numberOfLines={2} style={styles.errorInfo}>
-                  {this.state.errorInfo}
-                </Text>
-              </View>
-            )}
-          </View>
+          {this.renderInput()}
+          {!this.state.isLegalName && this.state.errorInfo && (
+            <View style={styles.errorView}>
+              <Text numberOfLines={2} style={styles.errorInfo}>
+                {this.state.errorInfo}
+              </Text>
+            </View>
+          )}
         </KeyboardAvoidingView>
       </Dialog>
     )

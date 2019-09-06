@@ -75,9 +75,14 @@ export default class Map3D extends React.Component {
     }
     this.name = params.name || ''
     this.type = params.type || 'MAP_3D'
+    this.mapLoaded = false // 判断地图是否加载完成
   }
 
   componentDidMount() {
+    this.container.setLoading(
+      true,
+      getLanguage(this.props.language).Prompt.LOADING,
+    )
     InteractionManager.runAfterInteractions(() => {
       if (Platform.OS === 'android') {
         this.props.setBackAction({
@@ -94,10 +99,6 @@ export default class Map3D extends React.Component {
       GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
 
       // 三维地图只允许单例
-      this.container.setLoading(
-        true,
-        getLanguage(this.props.language).Prompt.LOADING,
-      )
       // setTimeout(this._addScene, 2000)
       this._addScene()
       this.addAttributeListener()
@@ -188,6 +189,7 @@ export default class Map3D extends React.Component {
       setTimeout(() => {
         this.container.setLoading(false)
         Toast.show(getLanguage(this.props.language).Prompt.NO_SCENE)
+        this.mapLoaded = true
         //'无场景显示')
       }, 1500)
       return
@@ -207,11 +209,13 @@ export default class Map3D extends React.Component {
           // Toast.show('无场景显示')
         }, 1500)
         this.props.refreshLayer3dList && this.props.refreshLayer3dList()
+        this.mapLoaded = true
       })
     } catch (e) {
       setTimeout(() => {
         this.container.setLoading(false)
         // Toast.show('无场景显示')
+        this.mapLoaded = true
       }, 1500)
     }
     await SScene.changeBaseLayer(1)
@@ -281,6 +285,7 @@ export default class Map3D extends React.Component {
     //   NavigationService.goBack()
     // }
     // GLOBAL.sceneName = ''
+    if (!this.mapLoaded) return
     try {
       this.container &&
         this.container.setLoading(

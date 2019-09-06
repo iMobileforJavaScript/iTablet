@@ -354,7 +354,7 @@ function getStart(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
           //constants.CREATE,
           size: 'large',
-          action: () => isNeedToSave(openTemplate),
+          action: () => isNeedToSave(create),
           image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
@@ -847,9 +847,11 @@ function create() {
   if (
     GLOBAL.Type === constants.MAP_EDIT ||
     GLOBAL.Type === constants.MAP_THEME ||
-    GLOBAL.Type === constants.MAP_PLOTTING
+    GLOBAL.Type === constants.MAP_PLOTTING ||
+    GLOBAL.Type === constants.MAP_NAVIGATION
   ) {
     (async function() {
+      GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
       let userPath =
         _params.user.currentUser.userName &&
         _params.user.currentUser.userType !== UserType.PROBATION_USER
