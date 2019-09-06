@@ -100,6 +100,16 @@ export default {
     layerIndex: 3,
     mapName: 'GOOGLE地图',
   },
+  BingMap: {
+    type: 'Datasource',
+    DSParams: {
+      server: 'http://cn.bing.com/ditu',
+      engineType: 230,
+      alias: 'bingMap',
+    },
+    layerIndex: 0,
+    mapName: 'Bing地图',
+  },
   OSM: {
     type: 'Datasource',
     DSParams: {
