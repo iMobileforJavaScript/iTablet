@@ -100,6 +100,16 @@ export default {
     layerIndex: 3,
     mapName: 'GOOGLE地图',
   },
+  BingMap: {
+    type: 'Datasource',
+    DSParams: {
+      server: 'http://cn.bing.com/ditu',
+      engineType: 230,
+      alias: 'bingMap',
+    },
+    layerIndex: 0,
+    mapName: 'Bing地图',
+  },
   OSM: {
     type: 'Datasource',
     DSParams: {
@@ -119,5 +129,16 @@ export default {
     },
     layerIndex: 0,
     mapName: 'SuperMapCloud',
+  },
+  TrafficMap: {
+    type: 'Datasource',
+    DSParams: {
+      server:
+        'https://www.supermapol.com/iserver/services/traffic/rest/maps/tencent',
+      engineType: 225,
+      alias: 'TrafficMap',
+    },
+    layerIndex: 0,
+    mapName: 'TrafficMap',
   },
 }

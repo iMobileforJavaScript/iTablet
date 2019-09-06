@@ -292,8 +292,14 @@ export default class LayerManager_tolbar extends React.Component {
       let selectable = this.layer3dItem.selectable
       let canChoose = !selectable
       SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
-        this.setVisible(false)
-        this.props.overlayView && this.props.overlayView.setVisible(false)
+        let type = canChoose
+          ? ConstToolType.MAP3D_LAYER3D_DEFAULT_SELECTED
+          : ConstToolType.MAP3D_LAYER3D_DEFAULT
+        this.setVisible(true, type, {
+          height: ConstToolType.TOOLBAR_HEIGHT[1],
+        })
+        this.layer3dItem.selectable = canChoose
+        //this.props.overlayView && this.props.overlayView.setVisible(false)
         if (result) {
           this.changeState(canChoose)
         }

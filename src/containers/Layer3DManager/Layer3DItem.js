@@ -42,6 +42,8 @@ export default class Layer3DItem extends Component {
   // }
   shouldComponentUpdate(prevProps, prevState) {
     if (
+      JSON.stringify(prevProps.toHeightItem) !==
+        JSON.stringify(this.props.toHeightItem) ||
       JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
     ) {
@@ -125,12 +127,12 @@ const layer3dSettingCanNotSelect = param => [
           ) {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_BASE, {
               isFullScreen: true,
-              height: scaleSize(88) * 2,
+              height: ConstToolType.TOOLBAR_HEIGHT[1],
             })
           } else {
             layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_IMAGE, {
               isFullScreen: true,
-              height: scaleSize(88) * 3,
+              height: ConstToolType.TOOLBAR_HEIGHT[2],
             })
           }
           break
@@ -138,7 +140,7 @@ const layer3dSettingCanNotSelect = param => [
         case 'Terrain':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3D_TERRAIN, {
             isFullScreen: true,
-            height: scaleSize(88) * 3,
+            height: ConstToolType.TOOLBAR_HEIGHT[2],
           })
           break
         default: {
@@ -148,7 +150,7 @@ const layer3dSettingCanNotSelect = param => [
           }
           layer3dToolbar.setVisible(true, type, {
             isFullScreen: true,
-            height: scaleSize(88) * 2,
+            height: ConstToolType.TOOLBAR_HEIGHT[1],
           })
           layer3dToolbar.getLayer3dItem(this.state, this.changeState)
           break

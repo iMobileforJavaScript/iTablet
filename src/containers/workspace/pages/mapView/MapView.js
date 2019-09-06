@@ -529,7 +529,7 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
-  geometrySelected = event => {
+  geometrySelected = async event => {
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -587,13 +587,23 @@ export default class MapView extends React.Component {
         break
       }
       case ConstToolType.PLOT_ANIMATION_START: {
-        let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
-        this.toolBox.setVisible(true, type, {
-          isFullScreen: true,
-          height: ConstToolType.TOOLBAR_HEIGHT[5],
-          containerType: 'createPlotAnimation',
-          cb: () => {},
-        })
+        let type = await SMap.getGeometryTypeById(
+          event.layerInfo.name,
+          event.id,
+        )
+        if (type == -1) {
+          Toast.show(
+            getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
+          )
+        } else {
+          let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+          this.toolBox.setVisible(true, type, {
+            isFullScreen: true,
+            height: ConstToolType.TOOLBAR_HEIGHT[5],
+            containerType: 'createPlotAnimation',
+            cb: () => {},
+          })
+        }
         break
       }
       default:
@@ -1987,6 +1997,7 @@ export default class MapView extends React.Component {
   }
 
   changeAR = () => {
+    Toast.show('提示：超过1.5km则无法显示目的地')
     NavigationService.navigate('ArView')
   }
 
@@ -2210,6 +2221,7 @@ export default class MapView extends React.Component {
           device={this.props.device}
           setMapNavigation={this.props.setMapNavigation}
           setNavigationPoiView={this.props.setNavigationPoiView}
+          setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
       </Container>
     )

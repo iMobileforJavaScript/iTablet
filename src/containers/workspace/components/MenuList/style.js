@@ -8,8 +8,8 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
   titleImage: {
-    width: scaleSize(50),
-    height: scaleSize(50),
+    width: scaleSize(40),
+    height: scaleSize(40),
     tintColor: color.imageColorBlack,
   },
   row: {
