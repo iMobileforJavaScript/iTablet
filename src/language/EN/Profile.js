@@ -11,7 +11,7 @@ const Profile = {
   SETTINGS: 'Settings',
   COLOR_SCHEME: 'Color Scheme',
   TEMPLATE: 'Template',
-  COLLECTION_TEMPLATE: 'Collection Template',
+  COLLECTION_TEMPLATE: 'Surveying Template',
   PLOTTING_TEMPLATE: 'Plotting Template',
   NAVIGATION: 'Navigation',
   INCREMENT: 'Increment',
