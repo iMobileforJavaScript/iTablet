@@ -42,6 +42,8 @@ export default class Layer3DItem extends Component {
   // }
   shouldComponentUpdate(prevProps, prevState) {
     if (
+      JSON.stringify(prevProps.toHeightItem) !==
+        JSON.stringify(this.props.toHeightItem) ||
       JSON.stringify(prevProps.item) !== JSON.stringify(this.props.item) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
     ) {
