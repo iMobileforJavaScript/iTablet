@@ -446,6 +446,7 @@ class FriendMessage extends Component {
         if (i > 4) break
         texts.push(
           <Text
+            key={i}
             style={{ fontSize: scaleSize(18), color: 'white', top: 2, left: 1 }}
           >
             {item['users'][i].name[0].toUpperCase() + ' '}

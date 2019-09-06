@@ -24,20 +24,45 @@ function isJSON(str) {
   }
 }
 export default class FriendListFileHandle {
+  static user = undefined
   static friends = undefined
   static refreshCallback = undefined
   static refreshMessageCallback = undefined
   static friendListFile = ''
   static friendListFile_ol = ''
 
-  static async getContacts(path, file, resultCallBack) {
-    // FriendListFileHandle.friends = undefined
-    // let friendListFile = path + '/' + file
-    // let onlineList = path + '/ol_fl'
+  /**
+   * 初始化friendlist路径及读取本刷新列表
+   * @param {*} user currentUser
+   */
+  static async init(user) {
+    FriendListFileHandle.user = undefined
+    FriendListFileHandle.friends = undefined
 
-    // FriendListFileHandle.friendListFile = friendListFile
-    // FriendListFileHandle.friendListFile_ol = onlineList
+    if (user.userId === undefined) {
+      return
+    }
+    FriendListFileHandle.user = user
 
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + user.userName + '/Data/Temp',
+    )
+
+    let friendListFile = userPath + '/friend.list'
+    let onlineList = userPath + '/ol_fl'
+
+    FriendListFileHandle.friendListFile = friendListFile
+    FriendListFileHandle.friendListFile_ol = onlineList
+    //读取本地文件并刷新
+    await FriendListFileHandle.getLocalFriendList()
+    //同步online文件并刷新
+    await FriendListFileHandle.syncOnlineFriendList()
+  }
+
+  /**
+   * 读取本地列表，删除online列表
+   */
+  static async getLocalFriendList() {
     if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile)) {
       let value = await RNFS.readFile(FriendListFileHandle.friendListFile)
       if (isJSON(value) === true) {
@@ -50,9 +75,50 @@ export default class FriendListFileHandle {
     }
 
     FriendListFileHandle.checkFriendList()
-    resultCallBack(FriendListFileHandle.friends)
+    FriendListFileHandle.refreshCallback()
+    return FriendListFileHandle.friends
   }
-  static getContactsLocal() {
+
+  /**
+   * 保持本地和online的文件一致
+   */
+  static async syncOnlineFriendList() {
+    SOnlineService.downloadFileWithCallBack(
+      FriendListFileHandle.friendListFile_ol,
+      'friend.list',
+      {
+        onResult: async value => {
+          if (value === true) {
+            let value = await RNFS.readFile(
+              FriendListFileHandle.friendListFile_ol,
+            )
+            let onlineVersion = JSON.parse(value)
+            if (
+              !FriendListFileHandle.friends ||
+              onlineVersion.rev > FriendListFileHandle.friends.rev
+            ) {
+              //没有本地friendlist或online的版本较新，更新本地文件
+              FriendListFileHandle.friends = onlineVersion
+              await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
+              FriendListFileHandle.refreshCallback()
+            } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
+              //本地版本较新，将本地文件更新到online
+              await FriendListFileHandle.upload()
+            }
+            await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
+          } else if (FriendListFileHandle.friends !== undefined) {
+            //没有获取到online文件，尝试更新本地到online
+            await FriendListFileHandle.upload()
+          }
+        },
+      },
+    )
+  }
+
+  /**
+   * 直接获取friendlist,friendlist更新完成后调用
+   */
+  static getFriendList() {
     return FriendListFileHandle.friends
   }
 
@@ -157,63 +223,6 @@ export default class FriendListFileHandle {
     }
   }
 
-  static async download(user) {
-    FriendListFileHandle.friends = undefined
-
-    if (user.userId === undefined) {
-      return
-    }
-
-    let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + user.userName + '/Data/Temp',
-    )
-
-    let friendListFile = userPath + '/friend.list'
-    let onlineList = userPath + '/ol_fl'
-
-    FriendListFileHandle.friendListFile = friendListFile
-    FriendListFileHandle.friendListFile_ol = onlineList
-
-    if (await FileTools.fileIsExist(friendListFile)) {
-      let value = await RNFS.readFile(friendListFile)
-      if (isJSON(value) === true) {
-        FriendListFileHandle.friends = JSON.parse(value)
-        if (FriendListFileHandle.refreshCallback) {
-          FriendListFileHandle.refreshCallback(true)
-        }
-      }
-    }
-
-    SOnlineService.downloadFileWithCallBack(
-      FriendListFileHandle.friendListFile_ol,
-      'friend.list',
-      {
-        onResult: async value => {
-          if (value === true) {
-            let value = await RNFS.readFile(
-              FriendListFileHandle.friendListFile_ol,
-            )
-            let onlineVersion = JSON.parse(value)
-            if (
-              !FriendListFileHandle.friends ||
-              onlineVersion.rev > FriendListFileHandle.friends.rev
-            ) {
-              FriendListFileHandle.friends = onlineVersion
-              await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
-              if (FriendListFileHandle.refreshCallback) {
-                FriendListFileHandle.refreshCallback(true)
-              }
-            } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
-              await FriendListFileHandle.upload()
-            }
-            await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
-          } else if (FriendListFileHandle.friends !== undefined) {
-            await FriendListFileHandle.upload()
-          }
-        },
-      },
-    )
-  }
   static async upload() {
     //上传
     await SOnlineService.deleteData('friend.list')

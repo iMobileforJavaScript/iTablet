@@ -102,10 +102,22 @@ export default class Friend extends Component {
     }
   }
 
+  onUserLoggedin = async () => {
+    this.updateServices()
+  }
+
+  /**
+   * 用户登陆后再更新服务
+   */
+  updateServices = async () => {
+    await FriendListFileHandle.init(this.props.user.currentUser)
+    this.restartService()
+    JPushService.init(this.props.user.currentUser.userId)
+  }
+
   componentDidMount() {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
-      this.restartService()
-      JPushService.init(this.props.user.currentUser.userId)
+      FriendListFileHandle.getLocalFriendList()
     }
   }
 
@@ -114,16 +126,8 @@ export default class Friend extends Component {
       JSON.stringify(prevProps.user.currentUser.userId) !==
       JSON.stringify(this.props.user.currentUser.userId)
     ) {
-      this.downloadFriendList(this.props.user.currentUser)
-      this.restartService()
-      JPushService.init(this.props.user.currentUser.userId)
+      this.updateServices()
     }
-    // if (
-    //   JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
-    //   JSON.stringify(this.props.user.currentUser.hasUpdateFriend)
-    // ) {
-    //   this.refreshList()
-    // }
   }
 
   componentWillUnmount() {
@@ -217,10 +221,6 @@ export default class Friend extends Component {
   refreshList = () => {
     if (this.friendList && this.friendList.refresh) this.friendList.refresh()
     if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
-  }
-
-  downloadFriendList = async user => {
-    FriendListFileHandle.download(user)
   }
 
   setCurChat = chat => {
@@ -770,12 +770,12 @@ export default class Friend extends Component {
       messageObj.message = Buffer.from(messageObj.message, 'base64').toString()
     }
 
-    if (!FriendListFileHandle.friends) {
-      setTimeout(() => {
-        this._receiveMessage(message)
-      }, 500)
-      return
-    }
+    // if (!FriendListFileHandle.friends) {
+    //   setTimeout(() => {
+    //     this._receiveMessage(message)
+    //   }, 500)
+    //   return
+    // }
 
     let bSystem = false
     let bUnReadMsg = false
@@ -1019,13 +1019,6 @@ export default class Friend extends Component {
         JPushService.sendLocalNotification(messageObj)
       }
     }
-  }
-
-  getContacts = async () => {
-    let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + this.props.user.currentUser.userName + '/Data/Temp',
-    )
-    await FriendListFileHandle.getContacts(userPath, 'friend.list', () => {})
   }
 
   connectService = async () => {
@@ -1281,6 +1274,7 @@ export default class Friend extends Component {
             />
           )}
           initialPage={1}
+          prerenderingSiblingsNumber={1}
           tabBarUnderlineStyle={{
             backgroundColor: 'rgba(70,128,223,1.0)',
             height: 2,
