@@ -217,6 +217,16 @@ const layerManagerData = [
     type: DatasetType.IMAGE,
     themeType: -1,
   },
+  {
+    title: 'BingMap',
+    action: () => {
+      return OpenData(ConstOnline.BingMap, 0)
+    },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
+    type: DatasetType.IMAGE,
+    themeType: -1,
+  },
   // {
   //   title: '全球矢量地图',
   //   action: () => {

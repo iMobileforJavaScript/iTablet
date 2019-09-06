@@ -162,6 +162,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
   },
   errorView: {
+    marginTop: Platform.OS === 'ios' ? scaleSize(4) : 0,
     width: '100%',
     minHeight: scaleSize(60),
     flexDirection: 'row',

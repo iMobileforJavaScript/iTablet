@@ -684,6 +684,8 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
     }
   }
   
+  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/%@/",@"license"]];
+  
   NSString *labelUDB = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", dataPath, @"Datasource/Label_",userName,@"#.udb"];
   
   if(![[NSFileManager defaultManager]fileExistsAtPath:labelUDB]){
