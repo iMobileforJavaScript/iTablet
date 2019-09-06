@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Container extends PureComponent {
+export default class IndicatorLoading extends PureComponent {
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
