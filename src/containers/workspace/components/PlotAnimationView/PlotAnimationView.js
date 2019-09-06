@@ -11,7 +11,7 @@ import {
 import { ConstToolType, TouchType } from '../../../../constants'
 import { TableList } from '../../../../components'
 import { color } from '../../../../styles'
-import { Toast, scaleSize, setSpText } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 // import { getPublicAssets } from '../../../../assets'
 import { getThemeAssets } from '../../../../assets'
@@ -69,12 +69,6 @@ export default class PlotAnimationView extends React.Component {
       this.props.layerName,
       this.props.geoId,
     )
-    if (type == -1) {
-      Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL)
-      this.cancle()
-      return
-    }
-
     let data = this.getData()
     let subData = []
     switch (type) {

@@ -228,12 +228,19 @@ export default class MapView extends React.Component {
       },
     ]
 
+    this.mapLoaded = false // 判断地图是否加载完成
     this.fullMap = false
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
   }
 
   componentDidMount() {
+    this.container &&
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+        //'地图加载中'
+      )
     InteractionManager.runAfterInteractions(() => {
       GLOBAL.SaveMapView &&
         GLOBAL.SaveMapView.setTitle(
@@ -241,12 +248,6 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.SAVE_YES,
           getLanguage(this.props.language).Prompt.SAVE_NO,
           getLanguage(this.props.language).Prompt.CANCEL,
-        )
-      this.container &&
-        this.container.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.LOADING,
-          //'地图加载中'
         )
 
       this.setState({
@@ -528,7 +529,7 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
-  geometrySelected = event => {
+  geometrySelected = async event => {
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -586,13 +587,23 @@ export default class MapView extends React.Component {
         break
       }
       case ConstToolType.PLOT_ANIMATION_START: {
-        let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
-        this.toolBox.setVisible(true, type, {
-          isFullScreen: true,
-          height: ConstToolType.TOOLBAR_HEIGHT[5],
-          containerType: 'createPlotAnimation',
-          cb: () => {},
-        })
+        let type = await SMap.getGeometryTypeById(
+          event.layerInfo.name,
+          event.id,
+        )
+        if (type == -1) {
+          Toast.show(
+            getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
+          )
+        } else {
+          let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
+          this.toolBox.setVisible(true, type, {
+            isFullScreen: true,
+            height: ConstToolType.TOOLBAR_HEIGHT[5],
+            containerType: 'createPlotAnimation',
+            cb: () => {},
+          })
+        }
         break
       }
       default:
@@ -986,6 +997,7 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    if (!this.mapLoaded) return
     // this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.NAVIGATIONMAPOPEN = false
@@ -1191,6 +1203,8 @@ export default class MapView extends React.Component {
           },
         )
 
+        this.mapLoaded = true
+
         this._addGeometrySelectedListener()
         this.setLoading(false)
 
@@ -1216,6 +1230,7 @@ export default class MapView extends React.Component {
         SMap.setIsMagnifierEnabled(true)
       } catch (e) {
         this.setLoading(false)
+        this.mapLoaded = true
       }
     }.bind(this)())
   }
