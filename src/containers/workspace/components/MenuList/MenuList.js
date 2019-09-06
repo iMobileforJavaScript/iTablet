@@ -177,6 +177,10 @@ export default class MenuList extends Component {
         clipSetting[key] += stepNum
       }
     }
+    //容错检验
+    if (clipSetting[key].toString().replace(/^\d*./, '').length > 6) {
+      clipSetting[key] = clipSetting[key].toFixed(6) - 0
+    }
     this.setState(
       {
         clipSetting,
@@ -330,9 +334,11 @@ export default class MenuList extends Component {
               defaultValue={item.value + ''}
               style={styles.inputItem}
               onEndEditing={evt => {
+                let val = evt.nativeEvent.text
+                !val && (val = 0)
                 this.changeNumberDebounce({
                   title: item.title,
-                  number: Number.parseFloat(evt.nativeEvent.text),
+                  number: Number.parseFloat(val),
                 })
               }}
               keyboardType={'number-pad'}
@@ -356,15 +362,17 @@ export default class MenuList extends Component {
       <View>
         <View style={styles.row}>
           <Text style={styles.itemTitle}>{item.title}</Text>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, paddingRight: scaleSize(20) }}>
             <TextInput
               defaultValue={item.value + ''}
               style={styles.rightText}
               keyboardType={'number-pad'}
               onEndEditing={evt => {
+                let val = evt.nativeEvent.text
+                !val && (val = 0)
                 this.changeNumberDebounce({
                   title: item.title,
-                  number: Number.parseFloat(evt.nativeEvent.text),
+                  number: Number.parseFloat(val),
                 })
               }}
             />
