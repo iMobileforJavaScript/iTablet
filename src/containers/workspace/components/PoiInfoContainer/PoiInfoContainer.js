@@ -27,6 +27,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     mapSearchHistory: Array,
     setMapSearchHistory: () => {},
     setNavigationPoiView: () => {},
+    setNavigationChangeAR: () => {},
   }
 
   constructor(props) {
@@ -265,6 +266,8 @@ export default class PoiInfoContainer extends React.PureComponent {
     }).start()
     //同时隐藏顶部框
     GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+
+    this.props.setNavigationChangeAR(true)
 
     if (this.state.destination !== '') {
       this.props.setMapNavigation({

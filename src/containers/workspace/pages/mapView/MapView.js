@@ -1982,6 +1982,7 @@ export default class MapView extends React.Component {
   }
 
   changeAR = () => {
+    Toast.show('提示：超过1.5km则无法显示目的地')
     NavigationService.navigate('ArView')
   }
 
@@ -2205,6 +2206,7 @@ export default class MapView extends React.Component {
           device={this.props.device}
           setMapNavigation={this.props.setMapNavigation}
           setNavigationPoiView={this.props.setNavigationPoiView}
+          setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
       </Container>
     )
