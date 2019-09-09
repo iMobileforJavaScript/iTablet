@@ -205,11 +205,17 @@ export default class MenuList extends Component {
   changeNumberDebounce = ({ title, number }) => {
     let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
     let canClip = true
-    if (title === 'X' || title === 'Y') {
-      number = number < 360 ? (number > -360 ? number : -360) : 360
-    } else if (title === 'width' || title === 'height' || title === 'length') {
-      number = number < 0 ? 0 : number
-      canClip = number
+    if (number !== null) {
+      if (title === 'X' || title === 'Y') {
+        number = number < 360 ? (number > -360 ? number : -360) : 360
+      } else if (
+        title === 'width' ||
+        title === 'height' ||
+        title === 'length'
+      ) {
+        number = number < 0 ? 0 : number
+        canClip = number
+      }
     }
     let key = title
       .replace('旋转', 'Rot')
@@ -264,6 +270,14 @@ export default class MenuList extends Component {
     )
   }
 
+  onInputBlur = item => {
+    if (item.value) {
+      this.changeNumberDebounce({
+        title: item.title,
+        number: Number.parseFloat(item.value),
+      })
+    }
+  }
   renderSelectableItem = ({ item, index }) => {
     item = this.state.layers[index]
     let visibleImgBlack = item.isChecked
@@ -333,13 +347,34 @@ export default class MenuList extends Component {
             <TextInput
               defaultValue={item.value + ''}
               style={styles.inputItem}
-              onEndEditing={evt => {
-                let val = evt.nativeEvent.text
-                !val && (val = 0)
-                this.changeNumberDebounce({
-                  title: item.title,
-                  number: Number.parseFloat(val),
-                })
+              onChangeText={text => {
+                let val = text - 0
+                if (text !== '') text = val > 360 ? 360 : val
+                else text = 0
+                let clipSetting = JSON.parse(
+                  JSON.stringify(this.state.clipSetting),
+                )
+                let key = item.title.replace('旋转', 'Rot')
+                if (val === 0 || val > 360) {
+                  clipSetting[key] = val === 0 ? '' : val
+                  this.setState(
+                    {
+                      clipSetting,
+                    },
+                    () => {
+                      clipSetting = JSON.parse(
+                        JSON.stringify(this.state.clipSetting),
+                      )
+                      clipSetting[key] = val === 0 ? 0 : 360
+                      this.setState({ clipSetting })
+                    },
+                  )
+                } else {
+                  clipSetting[key] = text
+                  this.setState({
+                    clipSetting,
+                  })
+                }
               }}
               keyboardType={'number-pad'}
             />
@@ -367,14 +402,50 @@ export default class MenuList extends Component {
               defaultValue={item.value + ''}
               style={styles.rightText}
               keyboardType={'number-pad'}
-              onEndEditing={evt => {
-                let val = evt.nativeEvent.text
-                !val && (val = 0)
-                this.changeNumberDebounce({
-                  title: item.title,
-                  number: Number.parseFloat(val),
-                })
+              onChangeText={text => {
+                let val = text - 0
+                if (text !== '')
+                  text = val > 100000 ? 100000 : val < 0 ? 0 : val
+                else text = 0
+                let clipSetting = JSON.parse(
+                  JSON.stringify(this.state.clipSetting),
+                )
+                let key = item.title
+                  .replace('底面长', 'length')
+                  .replace('底面宽', 'width')
+                  .replace('高度', 'height')
+                if (val === 0 || val > 100000) {
+                  clipSetting[key] = val === 0 ? '' : val
+                  this.setState(
+                    {
+                      clipSetting,
+                    },
+                    () => {
+                      clipSetting = JSON.parse(
+                        JSON.stringify(this.state.clipSetting),
+                      )
+                      clipSetting[key] = val === 0 ? 0 : 100000
+                      this.setState({ clipSetting })
+                    },
+                  )
+                } else {
+                  clipSetting[key] = text
+                  this.setState({
+                    clipSetting,
+                  })
+                }
               }}
+              onBlur={() => {
+                this.onInputBlur(item)
+              }}
+              // onEndEditing={evt => {
+              //   let val = evt.nativeEvent.text
+              //   !val && (val = 0)
+              //   this.changeNumberDebounce({
+              //     title: item.title,
+              //     number: Number.parseFloat(val),
+              //   })
+              // }}
             />
           </View>
         </View>
