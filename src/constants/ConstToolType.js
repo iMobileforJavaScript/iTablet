@@ -4,6 +4,7 @@
 import { scaleSize } from '../utils'
 
 const TOOLBAR_HEIGHT_1 = 88
+const TOOLBAR_HEIGHT_2 = 80
 export default {
   // Map
   MAP_BASE: 'MAP_BASE',
@@ -245,6 +246,7 @@ export default {
 
   MAP_MORE_THEME: 'MAP_MORE_THEME',
   SMART_CARTOGRAPHY: 'SMART_CARTOGRAPHY', // 智能配图
+  SMART_CARTOGRAPHY_PICKER: 'SMART_CARTOGRAPHY_PICKER', // 智能配图属性选择器
 
   // 工具视图高度级别
   HEIGHT: [
@@ -283,6 +285,15 @@ export default {
     scaleSize(TOOLBAR_HEIGHT_1 * 5),
     scaleSize(TOOLBAR_HEIGHT_1 * 6),
     scaleSize(TOOLBAR_HEIGHT_1 * 7),
+  ],
+  TOOLBAR_HEIGHT_2: [
+    scaleSize(TOOLBAR_HEIGHT_2),
+    scaleSize(TOOLBAR_HEIGHT_2 * 2),
+    scaleSize(TOOLBAR_HEIGHT_2 * 3),
+    scaleSize(TOOLBAR_HEIGHT_2 * 4),
+    scaleSize(TOOLBAR_HEIGHT_2 * 5),
+    scaleSize(TOOLBAR_HEIGHT_2 * 6),
+    scaleSize(TOOLBAR_HEIGHT_2 * 7),
   ],
   TOOLBAR_BASEMAP_HEIGHT: [],
 }

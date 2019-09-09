@@ -288,13 +288,13 @@ const layerSettingCanNotSnap = type => [
 const layer3dDefault = (type, selected) => {
   let data = {
     title: getLanguage(type).Map_Layer.NOT_OPTIONAL,
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
     type: 'setLayerSelect',
   }
   if (selected === false) {
     data = {
       title: getLanguage(type).Map_Layer.OPTIONAL,
-      image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+      image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
       type: 'setLayerSelect',
     }
   }

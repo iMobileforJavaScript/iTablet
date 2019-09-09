@@ -8,7 +8,7 @@ import MenuItem from './MenuItem'
 const ITEM_HEIGHT = scaleSize(80)
 const VIEW_WIDTH = scaleSize(360)
 
-export default class MenuDialog extends React.Component {
+export default class FingerMenu extends React.Component {
   props: {
     data: Array, // 数据
     initialKey: string, // 初始数据
@@ -16,7 +16,9 @@ export default class MenuDialog extends React.Component {
     viewableItems?: number, // 可见范围item的数量，单数
     autoSelect?: boolean, // 松手自动选择
     onSelect?: () => {}, // 选中item的回调
+    onScroll?: () => {}, // 滚动选中item的回调
     rowHeight?: number,
+    style?: Object,
   }
 
   static defaultProps = {
@@ -201,18 +203,19 @@ export default class MenuDialog extends React.Component {
     }
   }
 
-  _scrollToIndex = () => {
+  _scrollToIndex = (index = 0) => {
     if (!this.list || !this.contentOffset) return
     let zombieNums = Math.floor(this.props.viewableItems / 2)
-    let currentIndex = parseInt(
-      (this.contentOffset.y / this.props.rowHeight).toFixed(),
-    )
+    // let currentIndex = index >= 0 ? index : parseInt(
+    //   (this.contentOffset.y / this.props.rowHeight).toFixed(),
+    // )
+    let currentIndex = index + zombieNums
     if (currentIndex === this.state.currentIndex) return
     if (currentIndex >= 0) {
       let index =
-        currentIndex + zombieNums >= this.state.data.length - zombieNums
+        currentIndex >= this.state.data.length - zombieNums
           ? this.state.data.length - zombieNums - 1
-          : currentIndex + zombieNums
+          : currentIndex
 
       this.list.scrollToIndex({
         index: index,
@@ -233,7 +236,7 @@ export default class MenuDialog extends React.Component {
 
   render() {
     return (
-      <View style={[styles.menuContainer, { width: '100%' }]}>
+      <View style={[styles.menuContainer, { width: '100%' }, this.props.style]}>
         {this.renderSelectedView()}
         <FlatList
           initialNumToRender={20}
@@ -245,6 +248,7 @@ export default class MenuDialog extends React.Component {
           }}
           data={this.state.data}
           renderItem={this._renderItem}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
           // onMomentumScrollEnd={event => {
           //   if (this.timer) {
@@ -269,15 +273,22 @@ export default class MenuDialog extends React.Component {
           onScroll={event => {
             this.contentOffset = event.nativeEvent.contentOffset
             let zombieNums = Math.floor(this.props.viewableItems / 2)
-            let currentIndex = parseInt(
+            let _index = parseInt(
               (
                 event.nativeEvent.contentOffset.y / this.props.rowHeight
               ).toFixed(),
             )
-            if (currentIndex >= 0 && currentIndex !== this.state.currentIndex) {
+            let currentIndex = _index + zombieNums
+            if (
+              currentIndex >= zombieNums &&
+              currentIndex !== this.state.currentIndex
+            ) {
               this.setState({
-                currentIndex: currentIndex + zombieNums,
+                currentIndex: currentIndex,
               })
+              if (this.props.onScroll && typeof this.props.onScroll) {
+                this.props.onScroll(this.state.data[currentIndex])
+              }
             }
           }}
           getItemLayout={this.getItemLayout}

@@ -4,8 +4,8 @@ import {
   FlatList,
   StyleSheet,
   Platform,
-  NativeModules,
-  PermissionsAndroid,
+  // NativeModules,
+  // PermissionsAndroid,
 } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import constants from '../../../../containers/workspace/constants'
@@ -21,7 +21,7 @@ import { connect } from 'react-redux'
 import { getLanguage } from '../../../../language'
 import ModuleItem from './ModuleItem'
 import { SimpleDialog } from '../../Friend/Component'
-let AppUtils = NativeModules.AppUtils
+// let AppUtils = NativeModules.AppUtils
 
 let isWaiting = false // 防止重复点击
 
@@ -189,21 +189,21 @@ class ModuleList extends Component {
 
   itemAction = async (language, { item, index }) => {
     try {
-      if (Platform.OS === 'android') {
-        let granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        )
-        if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
-          this.SimpleDialog.setConfirm(() => {
-            AppUtils.startAppLoactionSetting()
-          })
-          this.SimpleDialog.setText(
-            getLanguage(global.language).Prompt.REQUEST_LOCATION,
-          )
-          this.SimpleDialog.setVisible(true)
-          return
-        }
-      }
+      // if (Platform.OS === 'android') {
+      //   let granted = await PermissionsAndroid.request(
+      //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      //   )
+      //   if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
+      //     this.SimpleDialog.setConfirm(() => {
+      //       AppUtils.startAppLoactionSetting()
+      //     })
+      //     this.SimpleDialog.setText(
+      //       getLanguage(global.language).Prompt.REQUEST_LOCATION,
+      //     )
+      //     this.SimpleDialog.setVisible(true)
+      //     return
+      //   }
+      // }
       let tmpCurrentUser = this.props.currentUser
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName

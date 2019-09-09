@@ -3,9 +3,9 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Platform,
-  PermissionsAndroid,
-  NativeModules,
+  // Platform,
+  // PermissionsAndroid,
+  // NativeModules,
 } from 'react-native'
 import { Container } from '../../../../components'
 import { getLanguage } from '../../../../language/index'
@@ -18,7 +18,7 @@ import MessageDataHandle from '../MessageDataHandle'
 import { SimpleDialog } from '../index'
 import MsgConstant from '../MsgConstant'
 import { connect } from 'react-redux'
-let AppUtils = NativeModules.AppUtils
+// let AppUtils = NativeModules.AppUtils
 
 class ManageFriend extends Component {
   props: {
@@ -68,21 +68,21 @@ class ManageFriend extends Component {
   }
 
   navigateToModule = async module => {
-    if (Platform.OS === 'android') {
-      let granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      )
-      if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
-        this.SimpleDialog.setConfirm(() => {
-          AppUtils.startAppLoactionSetting()
-        })
-        this.SimpleDialog.setText(
-          getLanguage(global.language).Prompt.REQUEST_LOCATION,
-        )
-        this.SimpleDialog.setVisible(true)
-        return
-      }
-    }
+    // if (Platform.OS === 'android') {
+    //   let granted = await PermissionsAndroid.request(
+    //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    //   )
+    //   if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
+    //     this.SimpleDialog.setConfirm(() => {
+    //       AppUtils.startAppLoactionSetting()
+    //     })
+    //     this.SimpleDialog.setText(
+    //       getLanguage(global.language).Prompt.REQUEST_LOCATION,
+    //     )
+    //     this.SimpleDialog.setVisible(true)
+    //     return
+    //   }
+    // }
     let tmpCurrentUser = this.user
     let currentUserName = tmpCurrentUser.userName
       ? tmpCurrentUser.userName
