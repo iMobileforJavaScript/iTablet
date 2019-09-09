@@ -6695,7 +6695,15 @@ export default class ToolBar extends React.PureComponent {
           <TouchProgress
             //language={this.props.language}
             selectName={this.state.selectName}
-            showMenu={this.menu}
+            showMenu={() => {
+              // 智能配图选择器，唤起选择器菜单
+              if (this.state.type === ConstToolType.SMART_CARTOGRAPHY_PICKER) {
+                this.showPicker()
+                return
+              } else {
+                this.menu()
+              }
+            }}
           />
         )}
         {/*{this.state.showMenuDialog && (*/}
