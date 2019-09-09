@@ -32,7 +32,7 @@ export default class FriendListFileHandle {
   static friendListFile_ol = ''
 
   /**
-   * 初始化friendlist路径及读取本刷新列表
+   * 初始化friendlist路径
    * @param {*} user currentUser
    */
   static async init(user) {
@@ -53,6 +53,24 @@ export default class FriendListFileHandle {
 
     FriendListFileHandle.friendListFile = friendListFile
     FriendListFileHandle.friendListFile_ol = onlineList
+  }
+
+  /**
+   * 初始化后读取本地列表
+   * @param {*} user currentUser
+   */
+  static async initLocalFriendList(user) {
+    await FriendListFileHandle.init(user)
+    //读取本地文件并刷新
+    FriendListFileHandle.getLocalFriendList()
+  }
+
+  /**
+   * 初始化后读取本地列表，再读取online列表
+   * @param {*} user currentUser
+   */
+  static async initFriendList(user) {
+    await FriendListFileHandle.init(user)
     //读取本地文件并刷新
     await FriendListFileHandle.getLocalFriendList()
     //同步online文件并刷新

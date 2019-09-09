@@ -110,14 +110,14 @@ export default class Friend extends Component {
    * 用户登陆后再更新服务
    */
   updateServices = async () => {
-    await FriendListFileHandle.init(this.props.user.currentUser)
+    await FriendListFileHandle.initFriendList(this.props.user.currentUser)
     this.restartService()
     JPushService.init(this.props.user.currentUser.userId)
   }
 
   componentDidMount() {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
-      FriendListFileHandle.getLocalFriendList()
+      FriendListFileHandle.initLocalFriendList(this.props.user.currentUser)
     }
   }
 

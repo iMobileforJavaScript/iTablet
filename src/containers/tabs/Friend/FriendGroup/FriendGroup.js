@@ -44,6 +44,10 @@ class FriendGroup extends Component {
     }
   }
 
+  componentDidMount() {
+    this.getContacts()
+  }
+
   refresh = () => {
     this.getContacts()
     this.setState({ isRefresh: false })

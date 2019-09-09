@@ -44,6 +44,10 @@ class FriendList extends Component {
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
   }
 
+  componentDidMount() {
+    this.getContacts()
+  }
+
   refresh = () => {
     this.getContacts()
     this.setState({ isRefresh: false })
