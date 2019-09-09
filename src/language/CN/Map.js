@@ -136,7 +136,7 @@ const Map_Main_Menu = {
   TOUR: '旅行轨迹',
   TOUR_NAME: '旅行轨迹名称',
 
-  SMART_CARTOGRAPHY: '智能配图',
+  STYLE_TRANSFER: '智能配图',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',

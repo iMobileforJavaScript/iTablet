@@ -85,7 +85,7 @@ function getTabBarData(type, params = {}) {
     tabBarData = PlotData.getAnimationWayData(type, params)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
     tabBarData = AiAssistant.getAiAssistantData(type, params)
-  } else if (type === ConstToolType.SMART_CARTOGRAPHY) {
+  } else if (type === ConstToolType.STYLE_TRANSFER) {
     tabBarData = getSmartCartography()
   }
   return {
@@ -387,8 +387,8 @@ function getSmartCartography() {
   let data = [],
     buttons = [
       ToolbarBtnType.CANCEL,
-      ToolbarBtnType.SMART_CARTOGRAPHY,
-      ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+      ToolbarBtnType.STYLE_TRANSFER,
+      ToolbarBtnType.STYLE_TRANSFER_PICKER,
       ToolbarBtnType.MENU_COMMIT,
     ]
   return { data, buttons }

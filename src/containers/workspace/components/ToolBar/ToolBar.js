@@ -264,8 +264,8 @@ export default class ToolBar extends React.PureComponent {
     //         isTouchProgress: true,
     //         buttons: [
     //           ToolbarBtnType.CANCEL,
-    //           ToolbarBtnType.SMART_CARTOGRAPHY,
-    //           ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+    //           ToolbarBtnType.STYLE_TRANSFER,
+    //           ToolbarBtnType.STYLE_TRANSFER_PICKER,
     //           ToolbarBtnType.MENU_COMMIT,
     //         ],
     //       },
@@ -281,8 +281,8 @@ export default class ToolBar extends React.PureComponent {
     //       isTouchProgress: false,
     //       buttons: [
     //         ToolbarBtnType.CANCEL,
-    //         ToolbarBtnType.SMART_CARTOGRAPHY,
-    //         ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+    //         ToolbarBtnType.STYLE_TRANSFER,
+    //         ToolbarBtnType.STYLE_TRANSFER_PICKER,
     //         ToolbarBtnType.MENU_COMMIT,
     //       ],
     //     })
@@ -305,7 +305,7 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
-      // if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      // if (this.state.type === ConstToolType.STYLE_TRANSFER) {
       //   ToolbarPicker.updateView()
       // }
       if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
@@ -3091,7 +3091,7 @@ export default class ToolBar extends React.PureComponent {
       let actionType = Action.PAN
 
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
-      if (type === ConstToolType.SMART_CARTOGRAPHY) {
+      if (type === ConstToolType.STYLE_TRANSFER) {
         // ToolbarPicker.hide()
         await SMap.resetMapFixColorsModeValue(true)
       }
@@ -3359,7 +3359,7 @@ export default class ToolBar extends React.PureComponent {
   menu = () => {
     let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
-      // if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      // if (this.state.type === ConstToolType.STYLE_TRANSFER) {
       //   ToolbarPicker.toggle()
       // } else
       if (
@@ -3594,7 +3594,7 @@ export default class ToolBar extends React.PureComponent {
         await this.closeSubAction(type, actionType)
       }
 
-      // if (type === ConstToolType.SMART_CARTOGRAPHY) {
+      // if (type === ConstToolType.STYLE_TRANSFER) {
       //   ToolbarPicker.hide()
       // }
 
@@ -3962,7 +3962,7 @@ export default class ToolBar extends React.PureComponent {
 
   showPicker = () => {
     this.props.showFullMap && this.props.showFullMap(true)
-    this.setVisible(true, ConstToolType.SMART_CARTOGRAPHY_PICKER, {
+    this.setVisible(true, ConstToolType.STYLE_TRANSFER_PICKER, {
       containerType: 'picker',
       isFullScreen: false,
       height: ConstToolType.TOOLBAR_HEIGHT_2[3],
@@ -6081,7 +6081,7 @@ export default class ToolBar extends React.PureComponent {
       } else {
         list = legendMenuInfo(this.props.language)
       }
-    } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+    } else if (this.state.type === ConstToolType.STYLE_TRANSFER) {
       list = smartCartography(this.props.language)
     }
     if (!list) {
@@ -6495,12 +6495,12 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapTools/icon_save.png')
           action = this.animationSave
           break
-        case ToolbarBtnType.SMART_CARTOGRAPHY:
+        case ToolbarBtnType.STYLE_TRANSFER:
           // 智能配图
           image = getPublicAssets().common.icon_album
           action = MapToolData.matchPictureStyle
           break
-        case ToolbarBtnType.SMART_CARTOGRAPHY_PICKER:
+        case ToolbarBtnType.STYLE_TRANSFER_PICKER:
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.showPicker
@@ -6615,8 +6615,8 @@ export default class ToolBar extends React.PureComponent {
             isTouchProgress: true,
             buttons: [
               ToolbarBtnType.CANCEL,
-              ToolbarBtnType.SMART_CARTOGRAPHY,
-              ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+              ToolbarBtnType.STYLE_TRANSFER,
+              ToolbarBtnType.STYLE_TRANSFER_PICKER,
               ToolbarBtnType.MENU_COMMIT,
             ],
           },
@@ -6637,8 +6637,8 @@ export default class ToolBar extends React.PureComponent {
             isTouchProgress: false,
             buttons: [
               ToolbarBtnType.CANCEL,
-              ToolbarBtnType.SMART_CARTOGRAPHY,
-              ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+              ToolbarBtnType.STYLE_TRANSFER,
+              ToolbarBtnType.STYLE_TRANSFER_PICKER,
               ToolbarBtnType.MENU_COMMIT,
             ],
           },
@@ -6680,7 +6680,7 @@ export default class ToolBar extends React.PureComponent {
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
         {this.state.isFullScreen &&
-          this.state.type !== ConstToolType.SMART_CARTOGRAPHY &&
+          this.state.type !== ConstToolType.STYLE_TRANSFER &&
           !this.state.isTouchProgress &&
           !this.state.showMenuDialog && (
           <TouchableOpacity
@@ -6697,7 +6697,7 @@ export default class ToolBar extends React.PureComponent {
             selectName={this.state.selectName}
             showMenu={() => {
               // 智能配图选择器，唤起选择器菜单
-              if (this.state.type === ConstToolType.SMART_CARTOGRAPHY_PICKER) {
+              if (this.state.type === ConstToolType.STYLE_TRANSFER_PICKER) {
                 this.showPicker()
                 return
               } else {

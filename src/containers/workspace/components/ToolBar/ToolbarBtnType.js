@@ -56,6 +56,6 @@ export default {
   MENU_FLEX: 'menu_flex',
 
   MEASURE_CLEAR: 'measure_clear',
-  SMART_CARTOGRAPHY: 'smart_cartography',
-  SMART_CARTOGRAPHY_PICKER: 'smart_cartography_picker',
+  STYLE_TRANSFER: 'style_transfer',
+  STYLE_TRANSFER_PICKER: 'style_transfer_picker',
 }

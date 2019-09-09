@@ -332,7 +332,7 @@ function getMapTool(type, params) {
         },
         {
           key: 'matchPictureStyle',
-          title: getLanguage(global.language).Map_Main_Menu.SMART_CARTOGRAPHY,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_TRANSFER,
           action: matchPictureStyle,
           size: 'large',
           image: getThemeAssets().mapTools.rightbar_tool_style,
@@ -1139,7 +1139,7 @@ function matchPictureStyle() {
           }
         })
         _params.showFullMap && _params.showFullMap(true)
-        GLOBAL.ToolBar.setVisible(true, ConstToolType.SMART_CARTOGRAPHY, {
+        GLOBAL.ToolBar.setVisible(true, ConstToolType.STYLE_TRANSFER, {
           isFullScreen: false,
           height: 0,
         })
