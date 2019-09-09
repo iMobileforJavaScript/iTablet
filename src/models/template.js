@@ -263,12 +263,14 @@ export const getPlotLibs = async (path, dispatch) => {
 
     if (plotLibPaths && plotLibPaths.length > 0) {
       plotLibPaths.forEach(item => {
-        let name = item.name
-        item.title = name
-        item.name = name
-        item.path = item.path
-        // item.image = require('../../../../assets/mapToolbar/list_type_template_black.png')
-        data.push(item)
+        if (item.isDirectory) {
+          let name = item.name
+          item.title = name
+          item.name = name
+          item.path = item.path
+          // item.image = require('../../../../assets/mapToolbar/list_type_template_black.png')
+          data.push(item)
+        }
       })
     }
 
