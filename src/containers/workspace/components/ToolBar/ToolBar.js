@@ -109,6 +109,7 @@ const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
 const createPlotAnimation = 'createPlotAnimation'
 const animationNode = 'animationNode'
+const picker = 'picker'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -252,41 +253,41 @@ export default class ToolBar extends React.PureComponent {
       },
     })
     // 智能配图用到的选择器
-    ToolbarPicker.init({
-      onPickerConfirm: item => {
-        this.setState(
-          {
-            selectKey: item,
-            selectName: item,
-            isFullScreen: true,
-            showMenuDialog: false,
-            isTouchProgress: true,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.SMART_CARTOGRAPHY,
-              ToolbarBtnType.MENU,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
-          },
-          () => {
-            this.updateOverlayerView()
-          },
-        )
-      },
-      onPickerCancel: () => {
-        this.setState({
-          isFullScreen: false,
-          showMenuDialog: false,
-          isTouchProgress: false,
-          buttons: [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.SMART_CARTOGRAPHY,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.MENU_COMMIT,
-          ],
-        })
-      },
-    })
+    // ToolbarPicker.init({
+    //   onPickerConfirm: item => {
+    //     this.setState(
+    //       {
+    //         selectKey: item,
+    //         selectName: item,
+    //         isFullScreen: true,
+    //         showMenuDialog: false,
+    //         isTouchProgress: true,
+    //         buttons: [
+    //           ToolbarBtnType.CANCEL,
+    //           ToolbarBtnType.SMART_CARTOGRAPHY,
+    //           ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+    //           ToolbarBtnType.MENU_COMMIT,
+    //         ],
+    //       },
+    //       () => {
+    //         this.updateOverlayerView()
+    //       },
+    //     )
+    //   },
+    //   onPickerCancel: () => {
+    //     this.setState({
+    //       isFullScreen: false,
+    //       showMenuDialog: false,
+    //       isTouchProgress: false,
+    //       buttons: [
+    //         ToolbarBtnType.CANCEL,
+    //         ToolbarBtnType.SMART_CARTOGRAPHY,
+    //         ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+    //         ToolbarBtnType.MENU_COMMIT,
+    //       ],
+    //     })
+    //   },
+    // })
   }
 
   componentDidUpdate(prevProps) {
@@ -304,9 +305,9 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
-      if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
-        ToolbarPicker.updateView()
-      }
+      // if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      //   ToolbarPicker.updateView()
+      // }
       if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
         return
       }
@@ -3091,7 +3092,7 @@ export default class ToolBar extends React.PureComponent {
 
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
       if (type === ConstToolType.SMART_CARTOGRAPHY) {
-        ToolbarPicker.hide()
+        // ToolbarPicker.hide()
         await SMap.resetMapFixColorsModeValue(true)
       }
 
@@ -3358,9 +3359,10 @@ export default class ToolBar extends React.PureComponent {
   menu = () => {
     let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
-      if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
-        ToolbarPicker.toggle()
-      } else if (
+      // if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
+      //   ToolbarPicker.toggle()
+      // } else
+      if (
         GLOBAL.Type === constants.MAP_EDIT ||
         this.state.type === ConstToolType.GRID_STYLE ||
         this.state.type === ConstToolType.MAP_STYLE ||
@@ -3396,8 +3398,7 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
         this.state.type === ConstToolType.LEGEND ||
-        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
-        this.state.type === ConstToolType.SMART_CARTOGRAPHY
+        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
@@ -3428,13 +3429,6 @@ export default class ToolBar extends React.PureComponent {
               ToolbarBtnType.MENU_COMMIT,
             ]
           }
-        } else if (this.state.type === ConstToolType.SMART_CARTOGRAPHY) {
-          buttons = [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.SMART_CARTOGRAPHY,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.MENU_COMMIT,
-          ]
         } else {
           buttons = [
             ToolbarBtnType.CANCEL,
@@ -3479,16 +3473,6 @@ export default class ToolBar extends React.PureComponent {
       showMenuDialog = !this.state.showMenuDialog
       isTouchProgress = this.state.showMenuDialog
       setData()
-    } else if (
-      (this.state.selectKey === '' || this.state.selectKey instanceof Array) &&
-      this.state.type === ConstToolType.SMART_CARTOGRAPHY
-    ) {
-      // 智能配图
-      isTouchProgress = false
-      isFullScreen = false
-      showMenuDialog = false
-      setData()
-      showBox()
     } else {
       (isFullScreen = !this.state.showMenuDialog),
       (showMenuDialog = !this.state.showMenuDialog),
@@ -3973,6 +3957,16 @@ export default class ToolBar extends React.PureComponent {
           ? ConstToolType.HEIGHT[3]
           : ConstToolType.THEME_HEIGHT[4],
       cb: () => SCollector.stopCollect(),
+    })
+  }
+
+  showPicker = () => {
+    this.props.showFullMap && this.props.showFullMap(true)
+    this.setVisible(true, ConstToolType.SMART_CARTOGRAPHY_PICKER, {
+      containerType: 'picker',
+      isFullScreen: false,
+      height: ConstToolType.TOOLBAR_HEIGHT_2[3],
+      // cb: () => SCollector.stopCollect(),
     })
   }
 
@@ -6176,6 +6170,9 @@ export default class ToolBar extends React.PureComponent {
       case animationNode:
         box = this.renderAnimationNodeList()
         break
+      case picker:
+        box = this.renderPicker()
+        break
       case table:
       default:
         box = this.renderTable()
@@ -6461,7 +6458,6 @@ export default class ToolBar extends React.PureComponent {
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.menuCommit
-          // action = this.close
           break
         case ToolbarBtnType.THEME_ADD_BACK:
           //返回上一级
@@ -6503,6 +6499,11 @@ export default class ToolBar extends React.PureComponent {
           // 智能配图
           image = getPublicAssets().common.icon_album
           action = MapToolData.matchPictureStyle
+          break
+        case ToolbarBtnType.SMART_CARTOGRAPHY_PICKER:
+          //菜单框-提交
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+          action = this.showPicker
           break
       }
 
@@ -6600,6 +6601,57 @@ export default class ToolBar extends React.PureComponent {
       // GLOBAL.showFlex = true
       this.setState({ selectKey: '' })
     }
+  }
+
+  renderPicker = () => {
+    return ToolbarPicker.initPicker({
+      confirm: item => {
+        this.setState(
+          {
+            selectKey: item,
+            selectName: item,
+            isFullScreen: true,
+            showMenuDialog: false,
+            isTouchProgress: true,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.SMART_CARTOGRAPHY,
+              ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          },
+          () => {
+            Animated.timing(this.state.boxHeight, {
+              toValue: -this.height,
+              duration: Const.ANIMATED_DURATION,
+            }).start()
+            this.updateOverlayerView()
+          },
+        )
+      },
+      cancel: () => {
+        this.setState(
+          {
+            isFullScreen: false,
+            showMenuDialog: false,
+            isTouchProgress: false,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.SMART_CARTOGRAPHY,
+              ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          },
+          () => {
+            Animated.timing(this.state.boxHeight, {
+              toValue: -this.height,
+              duration: Const.ANIMATED_DURATION,
+            }).start()
+            this.updateOverlayerView()
+          },
+        )
+      },
+    })
   }
 
   render() {
