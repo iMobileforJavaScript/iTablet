@@ -14,6 +14,7 @@ const baseMapsOrigin = [
   'CycleMap@OpenStreetMaps',
   'TransportMap@OpenStreetMaps',
   'quanguo@SuperMapCloud',
+  'roadmap_cn@bingMap',
   'baseMap',
 ]
 let baseMaps = [...baseMapsOrigin]

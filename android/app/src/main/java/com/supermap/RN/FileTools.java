@@ -880,6 +880,10 @@ public class FileTools extends ReactContextBaseJavaModule {
                 zipFile(file, zipout, rootpath);
             }
         } else {
+            //有.nomedia文件不导出
+            if(resFile.getName().equals(".nomedia")){
+                return;
+            }
             byte buffer[] = new byte[BUFF_SIZE];
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(resFile),
                     BUFF_SIZE);
