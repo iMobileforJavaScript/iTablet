@@ -1,106 +1,78 @@
-import { Platform } from 'react-native'
-import Picker from 'react-native-picker'
+import * as React from 'react'
 import { getLanguage } from '../../../../language'
-import { size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
 
-let isShow = false
-let _params
-function init(params = {}) {
-  isShow = false
-  _params = params
-  const options = [
-    getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST,
-    getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS,
-    getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION,
+import { Picker as LinkPicker } from '../../../../components'
+
+function getData() {
+  let option = [
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_CONTRAST,
+    },
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BRIGHTNESS,
+    },
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION,
+    },
   ]
-
   let pickerData = [
     {
-      [getLanguage(GLOBAL.language).Map_Main_Menu.FILL]: options,
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.FILL,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.FILL,
+      children: option,
     },
     {
-      [getLanguage(GLOBAL.language).Map_Main_Menu.BORDER]: options,
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.BORDER,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.BORDER,
+      children: option,
     },
     {
-      [getLanguage(GLOBAL.language).Map_Main_Menu.LINE]: options,
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.LINE,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.LINE,
+      children: option,
     },
     {
-      [getLanguage(GLOBAL.language).Map_Main_Menu.MARK]: options,
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.MARK,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.MARK,
+      children: option,
     },
   ]
-  let selectedValue = ['a', 2]
-  Picker.init({
-    pickerTitleText: '',
-    pickerConfirmBtnText: getLanguage(GLOBAL.language).Map_Settings.CONFIRM,
-    pickerCancelBtnText: getLanguage(GLOBAL.language).Map_Settings.CANCEL,
-    pickerCancelBtnColor: [48, 48, 48, 1],
-    pickerConfirmBtnColor: [48, 48, 48, 1],
-    pickerTitleColor: [48, 48, 48, 1],
-    pickerToolBarBg: [251, 251, 251, 1],
-    pickerBg: [251, 251, 251, 1],
-    pickerFontSize: size.fontSize.fontSizeLg,
-    pickerToolBarFontSize: size.fontSize.fontSizeLg,
-    pickerRowHeight: scaleSize(40),
-    pickerData: pickerData,
-    selectedValue: selectedValue,
-    onPickerConfirm: data => {
-      params.onPickerConfirm && params.onPickerConfirm(data)
-      isShow = false
-    },
-    onPickerCancel: data => {
-      params.onPickerCancel && params.onPickerCancel(data)
-      isShow = false
-    },
-    onPickerSelect: data => {
-      params.onPickerSelect && params.onPickerSelect(data)
-    },
-  })
+  return pickerData
 }
 
-function show() {
-  _params && init(_params)
-  Picker.show()
-  isShow = true
-}
-
-function hide() {
-  Picker.hide()
-  isShow = false
+function initPicker(params = {}) {
+  return (
+    <LinkPicker
+      ref={ref => (this.picker = ref)}
+      language={GLOBAL.language}
+      confirm={item => {
+        if (params.confirm && typeof params.confirm === 'function') {
+          params.confirm(
+            item instanceof Array ? [item[0].key, item[1].key] : item,
+          )
+        }
+      }}
+      cancel={() => {
+        if (params.cancel && typeof params.cancel === 'function') {
+          params.cancel()
+        }
+      }}
+      popData={getData()}
+      viewableItems={3}
+    />
+  )
 }
 
 function toggle() {
-  _params && init(_params)
-  Picker.toggle()
-  isShow = !isShow
-}
-
-/**
- * Example: ['selected']
- */
-function select(item) {
-  Picker.select(item)
-}
-
-function isPickerShow() {
-  // return Picker.isPickerShow()
-  return isShow
-}
-
-function updateView() {
-  if (isShow) {
-    Platform.OS === 'ios' && show()
-  } else {
-    hide()
-  }
+  this.picker.setVisible()
 }
 
 export default {
-  init,
-  show,
-  hide,
   toggle,
-  select,
-  isPickerShow,
-  updateView,
+
+  initPicker,
+  getData,
 }

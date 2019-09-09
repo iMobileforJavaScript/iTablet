@@ -388,7 +388,7 @@ function getSmartCartography() {
     buttons = [
       ToolbarBtnType.CANCEL,
       ToolbarBtnType.SMART_CARTOGRAPHY,
-      ToolbarBtnType.MENU,
+      ToolbarBtnType.SMART_CARTOGRAPHY_PICKER,
       ToolbarBtnType.MENU_COMMIT,
     ]
   return { data, buttons }

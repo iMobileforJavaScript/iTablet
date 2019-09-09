@@ -57,4 +57,5 @@ export default {
 
   MEASURE_CLEAR: 'measure_clear',
   SMART_CARTOGRAPHY: 'smart_cartography',
+  SMART_CARTOGRAPHY_PICKER: 'smart_cartography_picker',
 }

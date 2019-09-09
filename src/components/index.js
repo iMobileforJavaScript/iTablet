@@ -55,6 +55,7 @@ import ImagePicker from './ImagePicker'
 import PopView from './PopView'
 import BubblePane from './Bubble'
 import NumberCounter from './NumberCounter'
+import Picker from './Picker'
 export {
   Container,
   BtnOne,
@@ -118,4 +119,5 @@ export {
   PopView,
   BubblePane,
   NumberCounter,
+  Picker,
 }
