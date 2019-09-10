@@ -177,7 +177,7 @@ export default class Cell extends Component {
   }
 
   _setEditable = () => {
-    if (!this.props.editable) return
+    if (!this.props.editable || GLOBAL.Type === 'MAP_3D') return
     !this.state.editable &&
       this.setState(
         {

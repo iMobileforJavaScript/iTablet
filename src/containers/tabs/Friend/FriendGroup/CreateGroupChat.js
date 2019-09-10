@@ -76,7 +76,7 @@ class CreateGroupChat extends Component {
   // }
 
   getContacts = () => {
-    let results = FriendListFileHandle.getContactsLocal()
+    let results = FriendListFileHandle.getFriendList()
     if (results && results.userInfo.length !== 0) {
       let result = results.userInfo
       try {

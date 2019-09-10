@@ -139,13 +139,13 @@ export default class RenderModuleListItem extends Component {
       }
       let result = downloadFile(downloadOptions)
       result.promise
-        .then(async result => {
-          if (result.statusCode === 200) {
-            await FileTools.unZipFile(fileCachePath, cachePath)
-            FileTools.deleteFile(fileDirPath + '.zip')
-            await this.props.importWorkspace(fileDirPath, item, false)
-            this.setState({ isShowProgressView: false, disabled: false })
-          }
+        .then(async () => {
+          // .then(async result => {
+          // if (result.statusCode === 200)
+          await FileTools.unZipFile(fileCachePath, cachePath)
+          FileTools.deleteFile(fileDirPath + '.zip')
+          await this.props.importWorkspace(fileDirPath, item, false)
+          this.setState({ isShowProgressView: false, disabled: false })
         })
         .catch(() => {
           Toast.show('下载失败')

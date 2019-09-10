@@ -18,8 +18,6 @@ import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 // import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
-import ConstPath from '../../../../constants/ConstPath'
-import { FileTools } from '../../../../native'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 // import { styles } from './../Styles'
@@ -50,73 +48,45 @@ class FriendGroup extends Component {
     this.getContacts()
   }
 
-  shouldComponentUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language !== this.props.language
-    ) {
-      return true
-    }
-    return false
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat)
-    ) {
-      this.getContacts()
-    }
-  }
-
-  upload = () => {
-    FriendListFileHandle.upload()
-  }
-  download = () => {
-    FriendListFileHandle.download(this.props.user)
-    this.setState({ isRefresh: false })
-  }
   refresh = () => {
     this.getContacts()
     this.setState({ isRefresh: false })
   }
 
+  download = () => {
+    FriendListFileHandle.syncOnlineFriendList()
+    this.setState({ isRefresh: false })
+  }
+
   getContacts = async () => {
-    let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + this.props.user.userName + '/Data/Temp',
-    )
+    let results = FriendListFileHandle.getFriendList()
+    if (results) {
+      let result = results.groupInfo
+      try {
+        // let data =  API.app.contactlist();     //获取联系人列表
+        // const {list} = data;
 
-    FriendListFileHandle.getContacts(userPath, 'friend.list', results => {
-      if (results) {
-        let result = results.groupInfo
-        try {
-          // let data =  API.app.contactlist();     //获取联系人列表
-          // const {list} = data;
-
-          let srcFriendData = []
-          for (let key in result) {
-            if (result[key].id && result[key].groupName) {
-              let frend = {}
-              frend['id'] = result[key].id
-              frend['groupName'] = result[key].groupName
-              frend['members'] = result[key].members
-              frend['masterID'] = result[key].masterID
-              srcFriendData.push(frend)
-            }
+        let srcFriendData = []
+        for (let key in result) {
+          if (result[key].id && result[key].groupName) {
+            let frend = {}
+            frend['id'] = result[key].id
+            frend['groupName'] = result[key].groupName
+            frend['members'] = result[key].members
+            frend['masterID'] = result[key].masterID
+            srcFriendData.push(frend)
           }
-
-          this.setState({
-            data: srcFriendData,
-          })
-          // eslint-disable-next-line
-        } catch (err) {
-          //console.log('err', err)
-          Toast.show(err.message)
         }
+
+        this.setState({
+          data: srcFriendData,
+        })
+        // eslint-disable-next-line
+      } catch (err) {
+        //console.log('err', err)
+        Toast.show(err.message)
       }
-    })
+    }
   }
 
   _onSectionselect = key => {
@@ -193,6 +163,7 @@ class FriendGroup extends Component {
         if (i > 4) break
         texts.push(
           <Text
+            key={i}
             style={{ fontSize: scaleSize(18), color: 'white', top: 2, left: 1 }}
           >
             {item['members'][i].name[0].toUpperCase() + ' '}

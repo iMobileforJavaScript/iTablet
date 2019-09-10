@@ -1523,8 +1523,8 @@ const smartCartography = param => [
           selectKey: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
           buttons: [
             ToolbarBtnType.CANCEL,
-            ToolbarBtnType.SMART_CARTOGRAPHY,
-            ToolbarBtnType.MENU,
+            ToolbarBtnType.STYLE_TRANSFER,
+            ToolbarBtnType.STYLE_TRANSFER_PICKER,
             ToolbarBtnType.MENU_COMMIT,
           ],
         })
@@ -1542,8 +1542,8 @@ const smartCartography = param => [
           selectKey: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
           buttons: [
             ToolbarBtnType.CANCEL,
-            ToolbarBtnType.SMART_CARTOGRAPHY,
-            ToolbarBtnType.MENU,
+            ToolbarBtnType.STYLE_TRANSFER,
+            ToolbarBtnType.STYLE_TRANSFER_PICKER,
             ToolbarBtnType.MENU_COMMIT,
           ],
         })
@@ -1561,8 +1561,8 @@ const smartCartography = param => [
           selectKey: getLanguage(param).Map_Main_Menu.SATURATION,
           buttons: [
             ToolbarBtnType.CANCEL,
-            ToolbarBtnType.SMART_CARTOGRAPHY,
-            ToolbarBtnType.MENU,
+            ToolbarBtnType.STYLE_TRANSFER,
+            ToolbarBtnType.STYLE_TRANSFER_PICKER,
             ToolbarBtnType.MENU_COMMIT,
           ],
         })

@@ -14,7 +14,6 @@ import {
 import { Container, Dialog } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-// import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
 import {
   SScene,
@@ -27,7 +26,7 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 import UserType from '../../../constants/UserType'
-import { getLanguage } from '../../../language/index'
+import { getLanguage } from '../../../language'
 import { getThemeAssets } from '../../../assets'
 import color from '../../../styles/color'
 import { scaleSize } from '../../../utils'

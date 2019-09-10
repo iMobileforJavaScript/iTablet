@@ -599,6 +599,7 @@ export default class LayerManager_tolbar extends React.Component {
         headerTitle: getLanguage(global.language).Map_Layer.LAYERS_LAYER_NAME,
         //'图层名称',
         value: this.state.layerData ? this.state.layerData.caption : '',
+        type: 'name',
         cb: async value => {
           if (value !== '') {
             (async function() {

@@ -18,8 +18,6 @@ import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
-import ConstPath from '../../../../constants/ConstPath'
-import { FileTools } from '../../../../native'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 import { getLanguage } from '../../../../language/index'
@@ -46,103 +44,79 @@ class FriendList extends Component {
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
   }
 
-  refresh = () => {
-    this.getContacts()
-    this.setState({ isRefresh: false })
-  }
   componentDidMount() {
     this.getContacts()
   }
 
-  shouldComponentUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language !== this.props.language
-    ) {
-      return true
-    }
-    return false
+  refresh = () => {
+    this.getContacts()
+    this.setState({ isRefresh: false })
   }
 
-  componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
-      this.getContacts()
-    }
-  }
-
-  upload = () => {
-    FriendListFileHandle.upload()
-  }
   download = () => {
-    FriendListFileHandle.download(this.props.user)
+    FriendListFileHandle.syncOnlineFriendList()
     this.setState({ isRefresh: false })
   }
 
   getContacts = async () => {
-    let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + this.props.user.userName + '/Data/Temp',
-    )
+    let results = FriendListFileHandle.getFriendList()
+    if (results) {
+      let result = results.userInfo
+      try {
+        // let data =  API.app.contactlist();     //获取联系人列表
+        // const {list} = data;
 
-    FriendListFileHandle.getContacts(userPath, 'friend.list', results => {
-      if (results) {
-        let result = results.userInfo
-        try {
-          // let data =  API.app.contactlist();     //获取联系人列表
-          // const {list} = data;
-
-          let srcFriendData = []
-          for (let key in result) {
-            if (result[key].id && result[key].name) {
-              let frend = {}
-              frend['id'] = result[key].id
-              frend['markName'] = result[key].markName
-              frend['name'] = result[key].name
-              frend['info'] = result[key].info
-              if (frend['info'].isFriend !== 2) {
-                srcFriendData.push(frend)
-              }
+        let srcFriendData = []
+        for (let key in result) {
+          if (result[key].id && result[key].name) {
+            let frend = {}
+            frend['id'] = result[key].id
+            frend['markName'] = result[key].markName
+            frend['name'] = result[key].name
+            frend['info'] = result[key].info
+            if (frend['info'].isFriend !== 2) {
+              srcFriendData.push(frend)
             }
           }
-
-          let sections = [],
-            letterArr = []
-
-          for (var i in srcFriendData) {
-            let person = srcFriendData[i]
-            let name = person['markName']
-            let firstChar = getPinYinFirstCharacter(name, '-', true)
-            let ch = firstChar[0]
-            if (letterArr.indexOf(ch) === -1) {
-              letterArr.push(ch)
-            }
-          }
-
-          letterArr.sort()
-
-          // eslint-disable-next-line
-          letterArr.map((item, index) => {
-            const module = srcFriendData.filter(it => {
-              //遍历获取每一个首字母对应联系人
-              let firstChar = getPinYinFirstCharacter(it['markName'], '-', true)
-              let ch = firstChar[0]
-              return ch === item
-            })
-
-            sections.push({ key: item, title: item, data: module })
-          })
-
-          this.setState({
-            letterArr,
-            sections,
-          })
-          // eslint-disable-next-line
-        } catch (err) {
-          //console.log('err', err)
-          Toast.show(err.message)
         }
+
+        let sections = [],
+          letterArr = []
+
+        for (var i in srcFriendData) {
+          let person = srcFriendData[i]
+          let name = person['markName']
+          let firstChar = getPinYinFirstCharacter(name, '-', true)
+          let ch = firstChar[0]
+          if (letterArr.indexOf(ch) === -1) {
+            letterArr.push(ch)
+          }
+        }
+
+        letterArr.sort()
+
+        // eslint-disable-next-line
+        letterArr.map((item, index) => {
+          const module = srcFriendData.filter(it => {
+            //遍历获取每一个首字母对应联系人
+            let firstChar = getPinYinFirstCharacter(it['markName'], '-', true)
+            let ch = firstChar[0]
+            return ch === item
+          })
+
+          sections.push({ key: item, title: item, data: module })
+        })
+
+        this.setState({
+          letterArr,
+          sections,
+        })
+        // eslint-disable-next-line
+      } catch (err) {
+        //console.log('err', err)
+        Toast.show(err.message)
       }
-    })
+    }
   }
 
   _onFriendSelect = key => {

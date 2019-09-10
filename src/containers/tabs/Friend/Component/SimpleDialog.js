@@ -9,7 +9,10 @@ export default class SimpleDialog extends PureComponent {
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
+    renderExtra: () => {},
+    style: Object,
     text: String,
+    disableBackTouch: boolean,
   }
 
   constructor(props) {
@@ -19,6 +22,7 @@ export default class SimpleDialog extends PureComponent {
       confirmAction: this.confirm,
       cancelAction: this.cancel,
       text: this.props.text,
+      renderExtra: props.renderExtra,
     }
   }
 
@@ -52,6 +56,10 @@ export default class SimpleDialog extends PureComponent {
     this.setState({ text: text })
   }
 
+  setExtra = renderExtra => {
+    this.setState({ renderExtra: renderExtra })
+  }
+
   confirm = () => {
     this.props.confirmAction && this.props.confirmAction()
     this.setVisible(false)
@@ -73,7 +81,8 @@ export default class SimpleDialog extends PureComponent {
         cancelAction={this.state.cancelAction}
         opacity={1}
         opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
+        style={[styles.dialogBackground, this.props.style]}
+        disableBackTouch={this.props.disableBackTouch}
       >
         <View style={styles.dialogHeaderView}>
           <Image
@@ -81,6 +90,7 @@ export default class SimpleDialog extends PureComponent {
             style={styles.dialogHeaderImg}
           />
           <Text style={styles.promptTtile}>{this.state.text}</Text>
+          {this.state.renderExtra}
         </View>
       </Dialog>
     )

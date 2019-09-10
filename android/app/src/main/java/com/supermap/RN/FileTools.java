@@ -999,13 +999,36 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Color");
         createDirectory(dataPath + "Map");
         createDirectory(dataPath + "Media");
-        createDirectory(dataPath + "Plotting");
+        boolean dataPlot=createDirectory(dataPath + "Plotting");
         createDirectory(dataPath + "Animation");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
-        createDirectory(plottingExtDataPath);
+        boolean plotExt=createDirectory(plottingExtDataPath);
         createDirectory(collectionExtDataPath);
 //        createDirectory(externalDataPath+"Lable");
+
+        if(plotExt)
+        {
+            //添加一个.nomedis文件，系统不能访问里面的图片
+            String noMediaPath=".nomedia";
+            File mediaFile=new File(plottingExtDataPath,noMediaPath);
+            try {
+                mediaFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(dataPlot){
+            //添加一个.nomedis文件，系统不能访问里面的图片
+            String noMediaPath=".nomedia";
+            File mediaFile=new File(dataPath + "Plotting",noMediaPath);
+            try {
+                mediaFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
@@ -1022,24 +1045,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         String srclic = "publicMap.txt";
         if (!Utils.fileIsExit(commonCachePath + srclic)) {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
-        }
-
-        String lableUDB=dataPath+"Datasource/Label_"+userName+"#.udb";
-        File file=new File(lableUDB);
-        if(!file.exists()){
-            Workspace workspace=new Workspace();
-            DatasourceConnectionInfo info=new DatasourceConnectionInfo();
-            info.setAlias("Label");
-            info.setEngineType(EngineType.UDB);
-            info.setServer(lableUDB);
-            Datasources datasources=workspace.getDatasources();
-            Datasource datasource=datasources.create(info);
-            if(datasource!=null){
-                System.out.println("数据源创建成功");
-            }else {
-                System.out.println("数据源创建失败");
-            }
-            workspace.dispose();
         }
 
         Boolean isUnZip,isUnZipPlot;

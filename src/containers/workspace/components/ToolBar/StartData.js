@@ -866,6 +866,7 @@ function create() {
         //'新建地图',
         value: newName,
         placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
+        type: 'name',
         cb: async value => {
           GLOBAL.Loading &&
             GLOBAL.Loading.setLoading(
@@ -1161,6 +1162,7 @@ function saveMapAs() {
       headerTitle: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
       //'地图另存',
       placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
+      type: 'name',
       cb: async value => {
         let addition = {}
         let prefix = `@Label_${_params.user.currentUser.userName}#`

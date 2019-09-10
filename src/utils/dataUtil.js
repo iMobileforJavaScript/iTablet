@@ -272,6 +272,23 @@ function isLegalName(text = '', language = 'CN') {
   }
 }
 
+function isLegalURL(URL, language = 'CN') {
+  let str = URL
+  let Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/
+  let objExp = new RegExp(Expression)
+
+  if (!objExp.test(str)) {
+    return {
+      result: false,
+      error: getLanguage(language).Prompt.ERROR_INFO_INVALID_URL,
+    }
+  }
+
+  return {
+    result: true,
+  }
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -289,5 +306,7 @@ export default {
   getFileNameWithOutExt,
   checkIpPort,
   getLegalName,
+
   isLegalName,
+  isLegalURL,
 }

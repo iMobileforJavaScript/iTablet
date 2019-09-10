@@ -47,6 +47,10 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: color.themeText2,
   },
+  childrenContainer: {
+    flex: 1,
+    marginBottom: scaleSize(50),
+  },
   btns: {
     position: 'absolute',
     width: '100%',
