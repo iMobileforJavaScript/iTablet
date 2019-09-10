@@ -20,6 +20,8 @@ import NavigationPoiView from './NavigationPoiView'
 import Map2Dto3D from './Map2Dto3D'
 import FloorListView from './FloorListView'
 import IncrementRoadView from './IncrementRoadView'
+import MapSelectPoint from './MapSelectPoint'
+import MapSelectPointButton from './MapSelectPointButton'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -56,4 +58,6 @@ export {
   PoiInfoContainer,
   PoiTopSearchBar,
   IncrementRoadView,
+  MapSelectPoint,
+  MapSelectPointButton,
 }

@@ -196,7 +196,6 @@ export default class PointAnalyst extends Component {
           // this.props.setNavigationChangeAR(true)
           this.props.setMapNavigation({
             isShow: true,
-            isPointShow: false,
             name: pointName,
           })
         }

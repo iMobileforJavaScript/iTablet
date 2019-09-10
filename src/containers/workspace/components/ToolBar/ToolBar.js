@@ -2758,11 +2758,7 @@ export default class ToolBar extends React.PureComponent {
           // if (!showViewFirst) {
           this.height = newHeight
           this.showToolbarAndBox(isShow, type)
-          !GLOBAL.BEGINNAVI &&
-            !isShow &&
-            this.props.existFullMap &&
-            this.props.existFullMap()
-          GLOBAL.BEGINNAVI = false
+          !isShow && this.props.existFullMap && this.props.existFullMap()
           // }
           if (params.cb) {
             setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
@@ -4834,10 +4830,6 @@ export default class ToolBar extends React.PureComponent {
             data,
           })
         }.bind(this)())
-      } else if (item.name === '开始导航') {
-        this.props.setMapNavigationShow(true)
-        GLOBAL.BEGINNAVI = true
-        this.setVisible(false)
       }
     } else if (this.state.type === ConstToolType.NETWORK) {
       (async function() {
@@ -4890,6 +4882,7 @@ export default class ToolBar extends React.PureComponent {
       this.props.setMap2Dto3D(true)
       this.setVisible(false)
       this.props.existFullMap()
+      NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
       (async function() {
         await SMap.buildNetwork(item.name)
