@@ -7,6 +7,7 @@ import {
   Image,
   NativeModules,
   RefreshControl,
+  ScrollView,
 } from 'react-native'
 import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
@@ -25,10 +26,11 @@ import {
   EngineType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
-import { MsgConstant } from '../../Friend'
+import { MsgConstant, SimpleDialog } from '../../Friend'
 import { MineItem, BatchHeadBar } from '../component'
 import { getThemeAssets } from '../../../../assets'
 import styles from './styles'
+import RNFS from 'react-native-fs'
 const appUtilsModule = NativeModules.AppUtils
 
 export default class MyLocalData extends Component {
@@ -191,6 +193,95 @@ export default class MyLocalData extends Component {
     }
   }
 
+  /**
+   * 获取地图信息
+   */
+  getMapsInfo = async () => {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let userPath =
+      homePath +
+      (this.props.user.currentUser.userType === UserType.PROBATION_USER
+        ? ConstPath.CustomerPath
+        : ConstPath.UserPath + this.props.user.currentUser.userName + '/')
+
+    let mapPath = userPath + ConstPath.RelativePath.Map
+    let filter = {
+      extension: 'exp',
+      type: 'file',
+    }
+    let maps = await FileTools.getPathListByFilter(mapPath, filter)
+    return maps
+  }
+
+  /**
+   * 数据是否在地图中，返回地图名
+   */
+  getRelatedMapName = async (itemInfo, maps) => {
+    let mapName = undefined
+    let itemPath = itemInfo.item.path
+    let homePath = await FileTools.appendingHomeDirectory()
+
+    for (let i in maps) {
+      let value = await RNFS.readFile(homePath + maps[i].path)
+      let jsonObj = JSON.parse(value)
+      if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
+        for (let n in jsonObj.Datasources) {
+          if (itemPath === ConstPath.UserPath + jsonObj.Datasources[n].Server) {
+            mapName = maps[i].name
+            break
+          }
+        }
+      } else if (
+        this.state.title === getLanguage(this.props.language).Profile.SYMBOL
+      ) {
+        if (
+          itemPath.substr(0, itemPath.lastIndexOf('.')) ===
+          ConstPath.UserPath + jsonObj.Resources
+        ) {
+          mapName = maps[i].name
+          break
+        }
+      }
+    }
+    return mapName ? mapName.substr(0, mapName.lastIndexOf('.')) : undefined
+  }
+
+  /**
+   * 获取数据关联的地图
+   */
+  getRelatedMap = async itemInfo => {
+    let mapName = undefined
+    if (
+      this.state.title !== getLanguage(this.props.language).Profile.DATA &&
+      this.state.title !== getLanguage(this.props.language).Profile.SYMBOL
+    ) {
+      return mapName
+    }
+
+    let maps = await this.getMapsInfo()
+    return await this.getRelatedMapName(itemInfo, maps)
+  }
+
+  /**
+   * 批量获取关联地图
+   */
+  getRelatedMaps = async itemInfos => {
+    let mapNames = []
+    if (
+      this.state.title !== getLanguage(this.props.language).Profile.DATA &&
+      this.state.title !== getLanguage(this.props.language).Profile.SYMBOL
+    ) {
+      return mapNames
+    }
+
+    let maps = await this.getMapsInfo()
+    for (let i in itemInfos) {
+      let mapName = await this.getRelatedMapName({ item: itemInfos[i] }, maps)
+      mapName && mapNames.push(mapName)
+    }
+    return Array.from(new Set(mapNames))
+  }
+
   createDatasource = async (
     datasourcePath,
     datasourceName,
@@ -217,11 +308,24 @@ export default class MyLocalData extends Component {
     })
   }
 
-  _batchDelete = async () => {
+  _batchDelete = async (forceDelete = false) => {
     try {
       let deleteArr = this._getSelectedList()
       if (deleteArr.length === 0) {
         Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+        return
+      }
+      let relatedMaps = []
+      if (!forceDelete) {
+        relatedMaps = await this.getRelatedMaps(deleteArr)
+      }
+      if (relatedMaps.length !== 0) {
+        this.relatedMap = relatedMaps
+        this.SimpleDialog.setConfirm(() => {
+          this._batchDelete(true)
+        })
+        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMaps))
+        this.SimpleDialog.setVisible(true)
         return
       }
       let deleteItem
@@ -821,9 +925,22 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _onDeleteData = async () => {
+  _onDeleteData = async (forceDelete = false) => {
     try {
       this._closeModal()
+      let relatedMap = undefined
+      if (!forceDelete) {
+        relatedMap = await this.getRelatedMap(this.itemInfo)
+      }
+      if (relatedMap) {
+        this.relatedMap = relatedMap
+        this.SimpleDialog.setConfirm(() => {
+          this._onDeleteData(true)
+        })
+        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMap))
+        this.SimpleDialog.setVisible(true)
+        return
+      }
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         this.setLoading(
           true,
@@ -1288,7 +1405,7 @@ export default class MyLocalData extends Component {
       <View style={styles.bottomStyle}>
         <TouchableOpacity
           style={styles.bottomItemStyle}
-          onPress={this._batchDelete}
+          onPress={() => this._batchDelete()}
         >
           <Image
             style={{
@@ -1302,6 +1419,44 @@ export default class MyLocalData extends Component {
             {getLanguage(global.language).Profile.BATCH_DELETE}
           </Text>
         </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderSimpleDialog = () => {
+    return (
+      <SimpleDialog
+        ref={ref => (this.SimpleDialog = ref)}
+        style={{ height: scaleSize(370) }}
+        text={'删除数据将影响以下地图\n是否继续删除？'}
+        disableBackTouch={true}
+      />
+    )
+  }
+
+  renderRelatedMap = relatedMap => {
+    return (
+      <View
+        style={{
+          marginTop: scaleSize(10),
+          marginBottom: scaleSize(45),
+          height: scaleSize(150),
+          width: '80%',
+        }}
+      >
+        {relatedMap instanceof Array ? (
+          <ScrollView showsVerticalScrollIndicator={true}>
+            {relatedMap.map((item, index) => {
+              return (
+                <Text key={index} style={{ fontSize: scaleSize(24) }}>
+                  {item}
+                </Text>
+              )
+            })}
+          </ScrollView>
+        ) : (
+          <Text style={{ fontSize: scaleSize(24) }}>{relatedMap}</Text>
+        )}
       </View>
     )
   }
@@ -1378,6 +1533,7 @@ export default class MyLocalData extends Component {
         {this._showMyDataPopupModal()}
         {this._showDataPopupModal()}
         {this.state.batchMode && this._renderBottom()}
+        {this.renderSimpleDialog()}
         <ModalBtns
           ref={ref => {
             this.ModalBtns = ref
