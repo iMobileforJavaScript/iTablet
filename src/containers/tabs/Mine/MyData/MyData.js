@@ -1158,6 +1158,7 @@ export default class MyLocalData extends Component {
                 .ENTER_DATASOURCE_NAME,
               headerTitle: getLanguage(global.language).Profile
                 .SET_DATASOURCE_NAME,
+              type: 'name',
               cb: async name => {
                 let datasourcePath
                 let homePath = await FileTools.appendingHomeDirectory()

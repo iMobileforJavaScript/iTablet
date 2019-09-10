@@ -686,6 +686,7 @@ export default class MT_layerManager extends React.Component {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
       placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+      type: 'name',
       cb: async value => {
         if (value !== '') {
           (async function() {
