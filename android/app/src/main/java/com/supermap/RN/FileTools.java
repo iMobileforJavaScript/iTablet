@@ -1024,24 +1024,6 @@ public class FileTools extends ReactContextBaseJavaModule {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonCachePath, srclic);
         }
 
-        String lableUDB=dataPath+"Datasource/Label_"+userName+"#.udb";
-        File file=new File(lableUDB);
-        if(!file.exists()){
-            Workspace workspace=new Workspace();
-            DatasourceConnectionInfo info=new DatasourceConnectionInfo();
-            info.setAlias("Label");
-            info.setEngineType(EngineType.UDB);
-            info.setServer(lableUDB);
-            Datasources datasources=workspace.getDatasources();
-            Datasource datasource=datasources.create(info);
-            if(datasource!=null){
-                System.out.println("数据源创建成功");
-            }else {
-                System.out.println("数据源创建失败");
-            }
-            workspace.dispose();
-        }
-
         Boolean isUnZip,isUnZipPlot;
         if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
             if (Utils.fileIsExit(commonZipPath)) {
