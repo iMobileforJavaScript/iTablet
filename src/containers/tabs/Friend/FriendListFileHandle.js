@@ -94,6 +94,7 @@ export default class FriendListFileHandle {
 
     FriendListFileHandle.checkFriendList()
     FriendListFileHandle.refreshCallback()
+    FriendListFileHandle.refreshMessageCallback()
     return FriendListFileHandle.friends
   }
 
@@ -119,6 +120,7 @@ export default class FriendListFileHandle {
               FriendListFileHandle.friends = onlineVersion
               await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
               FriendListFileHandle.refreshCallback()
+              FriendListFileHandle.refreshMessageCallback()
             } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
               //本地版本较新，将本地文件更新到online
               await FriendListFileHandle.upload()
@@ -316,10 +318,7 @@ export default class FriendListFileHandle {
 
         FriendListFileHandle.friends['rev'] += 1
         let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-        FriendListFileHandle.saveHelper(
-          friendsStr,
-          FriendListFileHandle.refreshMessageCallback,
-        )
+        FriendListFileHandle.saveHelper(friendsStr)
         break
       }
     }
@@ -341,10 +340,7 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(
-      friendsStr,
-      FriendListFileHandle.refreshMessageCallback,
-    )
+    FriendListFileHandle.saveHelper(friendsStr)
   }
 
   // eslint-disable-next-line
@@ -519,10 +515,7 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(
-      friendsStr,
-      FriendListFileHandle.refreshMessageCallback,
-    )
+    FriendListFileHandle.saveHelper(friendsStr)
   }
 
   static addGroupMember(groupId, members) {

@@ -129,7 +129,7 @@ const Map_Main_Menu = {
   TOUR: 'Tour',
   TOUR_NAME: 'Tour Name',
 
-  SMART_CARTOGRAPHY: 'Smart Cartography',
+  STYLE_TRANSFER: 'Style Transfer',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',

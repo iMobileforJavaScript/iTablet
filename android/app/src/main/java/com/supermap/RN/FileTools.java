@@ -999,13 +999,36 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Color");
         createDirectory(dataPath + "Map");
         createDirectory(dataPath + "Media");
-        createDirectory(dataPath + "Plotting");
+        boolean dataPlot=createDirectory(dataPath + "Plotting");
         createDirectory(dataPath + "Animation");
 //        createDirectory(CachePath);
         createDirectory(externalDataPath);
-        createDirectory(plottingExtDataPath);
+        boolean plotExt=createDirectory(plottingExtDataPath);
         createDirectory(collectionExtDataPath);
 //        createDirectory(externalDataPath+"Lable");
+
+        if(plotExt)
+        {
+            //添加一个.nomedis文件，系统不能访问里面的图片
+            String noMediaPath=".nomedia";
+            File mediaFile=new File(plottingExtDataPath,noMediaPath);
+            try {
+                mediaFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(dataPlot){
+            //添加一个.nomedis文件，系统不能访问里面的图片
+            String noMediaPath=".nomedia";
+            File mediaFile=new File(dataPath + "Plotting",noMediaPath);
+            try {
+                mediaFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";

@@ -272,6 +272,14 @@ function isLegalName(text = '', language = 'CN') {
   }
 }
 
+function isLegalURL(URL) {
+  let str = URL
+  let Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- ./?%&=]*)?/
+  let objExp = new RegExp(Expression)
+
+  return objExp.test(str)
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -290,4 +298,5 @@ export default {
   checkIpPort,
   getLegalName,
   isLegalName,
+  isLegalURL,
 }
