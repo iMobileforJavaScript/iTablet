@@ -135,6 +135,7 @@ export default class AnimationNodeListView extends React.Component {
       value: item.name,
       placeholder: getLanguage(global.language).Prompt
         .ENTER_ANIMATION_NODE_NAME,
+      type: 'name',
       cb: async value => {
         GLOBAL.Loading &&
           GLOBAL.Loading.setLoading(

@@ -357,6 +357,7 @@ export default class MediaEdit extends React.Component {
               NavigationService.navigate('InputPage', {
                 value: this.state.mediaName,
                 headerTitle: getLanguage(global.language).Map_Label.NAME,
+                type: 'name',
                 cb: async value => {
                   this.setState({
                     mediaName: value,
@@ -385,6 +386,7 @@ export default class MediaEdit extends React.Component {
                 value: this.state.httpAddress,
                 headerTitle: getLanguage(global.language).Map_Main_Menu
                   .TOOLS_HTTP,
+                type: 'http',
                 cb: async value => {
                   this.setState({
                     httpAddress: value,

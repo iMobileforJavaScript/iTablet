@@ -177,6 +177,7 @@ class ManageFriend extends Component {
               placeholder: FriendListFileHandle.getFriend(this.targetUser.id)
                 .markName,
               headerTitle: getLanguage(this.language).Friends.SET_MARKNAME,
+              type: 'name',
               cb: value => {
                 let len = 0
                 for (var i = 0; i < value.length; i++) {

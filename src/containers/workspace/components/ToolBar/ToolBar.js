@@ -3571,6 +3571,7 @@ export default class ToolBar extends React.PureComponent {
       //'保存推演动画',
       value: defaultAnimationName,
       placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      type: 'name',
       cb: async value => {
         GLOBAL.Loading &&
           GLOBAL.Loading.setLoading(
@@ -5020,6 +5021,7 @@ export default class ToolBar extends React.PureComponent {
           //'新建地图',
           value: newName,
           placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
+          type: 'name',
           cb: async value => {
             GLOBAL.Loading &&
               GLOBAL.Loading.setLoading(
@@ -5142,6 +5144,7 @@ export default class ToolBar extends React.PureComponent {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
       //'新建地图',
       placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
+      type: 'name',
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&

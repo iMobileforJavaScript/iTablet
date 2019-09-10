@@ -478,8 +478,9 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.ROTATION_ANGLE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          keyboardType: 'numeric',
+          // keyboardType: 'numeric',
           placeholder: data[index].value.replace('°', ''),
+          type: 'number',
           cb: async value => {
             let isSetSuccess = false
             if (value !== '' && value >= -360 && value <= 360) {
@@ -520,8 +521,9 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          keyboardType: 'numeric',
+          // keyboardType: 'numeric',
           placeholder: data[index].value.replace('1:', ''),
+          type: 'number',
           cb: async newValue => {
             let isSuccess = false
             let regExp = /^\d+(\.\d+)?$/
@@ -602,8 +604,9 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings.TOP:
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          keyboardType: 'numeric',
+          // keyboardType: 'numeric',
           placeholder: data[index].value,
+          type: 'number',
           cb: async newValue => {
             let isSuccess = false
             let regExp = /^\d+(\.\d+)?$/
@@ -653,7 +656,8 @@ export default class SecondMapSettings extends Component {
       case 'Z':
         this.props.navigation.navigate('InputPage', {
           headerTitle: title,
-          keyboardType: 'numeric',
+          // keyboardType: 'numeric',
+          type: 'number',
           placeholder: data[item.pos].value[index].value + '',
           cb: async newValue => {
             let isSuccess = false

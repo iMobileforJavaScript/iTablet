@@ -34,6 +34,7 @@ export default class MapCutDS extends React.Component {
     let homeDir = await FileTools.getHomeDirectory()
     NavigationService.navigate('InputPage', {
       headerTitle: getLanguage(GLOBAL.language).Map_Main_Menu.NEW_DATASOURCE,
+      type: 'name',
       cb: async value => {
         let params = {
           alias: value,

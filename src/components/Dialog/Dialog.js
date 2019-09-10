@@ -40,6 +40,7 @@ export default class Dialog extends PureComponent {
     confirmTitleStyle?: StyleSheet,
     cancelTitleStyle?: StyleSheet,
     showBtns?: boolean,
+    defaultVisible?: boolean,
     header?: any,
     opacity: any,
     opacityStyle: Object,
@@ -58,16 +59,27 @@ export default class Dialog extends PureComponent {
     confirmBtnDisable: false,
     cancelBtnDisable: false,
     onlyOneBtn: false,
+    defaultVisible: false,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      visible: false,
+      visible: this.props.defaultVisible || false,
       confirmPress: false,
       cancelPress: false,
     }
   }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   if (
+  //     JSON.stringify(nextProps) !== JSON.stringify(this.props) ||
+  //     JSON.stringify(nextState) !== JSON.stringify(this.state)
+  //   ) {
+  //     return true
+  //   }
+  //   return false
+  // }
 
   //控制Modal框是否可以展示
   setDialogVisible(visible) {
@@ -212,7 +224,7 @@ export default class Dialog extends PureComponent {
                 {this.props.info}
               </Text>
             )}
-            {this.props.children}
+            <View style={styles.childrenContainer}>{this.props.children}</View>
             {this.renderBtns()}
           </KeyboardAvoidingView>
         </TouchableOpacity>
@@ -244,7 +256,7 @@ export default class Dialog extends PureComponent {
                 {this.props.info}
               </Text>
             )}
-            {this.props.children}
+            <View style={styles.childrenContainer}>{this.props.children}</View>
             {this.renderBtns()}
           </KeyboardAvoidingView>
         </View>

@@ -5,14 +5,7 @@
 */
 
 import * as React from 'react'
-import {
-  TouchableOpacity,
-  Text,
-  SectionList,
-  View,
-  Image,
-  InteractionManager,
-} from 'react-native'
+import { TouchableOpacity, Text, SectionList, View, Image } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
@@ -106,9 +99,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
-      this.getData(true)
-    })
+    this.getData(true)
   }
 
   setRefreshing = refreshing => {
@@ -686,6 +677,7 @@ export default class MT_layerManager extends React.Component {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.TOOLS_NAME,
       value: newName,
       placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+      type: 'name',
       cb: async value => {
         if (value !== '') {
           (async function() {

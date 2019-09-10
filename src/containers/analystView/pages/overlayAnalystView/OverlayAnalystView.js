@@ -529,6 +529,7 @@ export default class OverlayAnalystView extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .RESULT_DATASET_NAME,
               placeholder: '',
+              type: 'name',
               cb: async value => {
                 NavigationService.goBack()
                 this.setState({
