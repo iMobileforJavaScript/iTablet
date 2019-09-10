@@ -121,12 +121,12 @@ export default StyleSheet.create({
     height: scaleSize(70),
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: color.contentColorWhite2,
+    backgroundColor: 'rgba(245,245,245,0.5)',
   },
   wrapper: {
     width: '100%',
     height: scaleSize(440),
-    backgroundColor: color.background,
+    backgroundColor: 'rgba(245,245,245,0.5)',
     paddingHorizontal: scaleSize(20),
   },
   searchIconWrap: {
