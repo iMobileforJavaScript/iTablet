@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
+import { setAgreeToProtocol } from './src/models/setting'
 import {
   setEditLayer,
   setSelection,
@@ -36,10 +37,10 @@ import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
-//import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
 import { getLanguage } from './src/language/index'
 import FetchUtils from './src/utils/FetchUtils'
+import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
 
 
@@ -101,6 +102,8 @@ class AppRoot extends Component {
     map: PropTypes.object,
     collection: PropTypes.object,
     layers: PropTypes.array,
+    isAgreeToProtocol: PropTypes.bool,
+
     setNav: PropTypes.func,
     setUser: PropTypes.func,
     openWorkspace: PropTypes.func,
@@ -118,6 +121,7 @@ class AppRoot extends Component {
     setCurrentAttribute: PropTypes.func,
     setAttributes: PropTypes.func,
     setAnalystParams: PropTypes.func,
+    setAgreeToProtocol: PropTypes.func,
   }
 
   constructor (props) {
@@ -196,6 +200,7 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
+    this.protocolDialog && this.protocolDialog.setVisible(true)
     this.login()
     this.reCircleLogin()
     // this.initSpeechManager()
@@ -618,6 +623,19 @@ class AppRoot extends Component {
     )
   }
 
+  _renderProtocolDialog = () => {
+    return (
+      <ProtocolDialog
+        ref={ref => (this.protocolDialog = ref)}
+        language={this.props.language}
+        confirm={isAgree => {
+          this.props.setAgreeToProtocol && this.props.setAgreeToProtocol(isAgree)
+          this.protocolDialog.setVisible(false)
+        }}
+      />
+    )
+  }
+
   renderImportDialogChildren = () => {
     return (
       <View style={styles.dialogHeaderView}>
@@ -655,6 +673,7 @@ class AppRoot extends Component {
         />
         {this.renderDialog()}
         {this.renderImportDialog()}
+        {!this.props.isAgreeToProtocol && this._renderProtocolDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )
@@ -672,6 +691,7 @@ const mapStateToProps = state => {
     collection: state.collection.toJS(),
     layers: state.layers.toJS().layers,
     backActions: state.backActions.toJS(),
+    isAgreeToProtocol: state.setting.toJS().isAgreeToProtocol,
   }
 }
 
@@ -690,6 +710,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setMapSetting,
   setAnalystParams,
   saveMap,
+  setAgreeToProtocol,
 })(AppRoot)
 
 const App = () =>
