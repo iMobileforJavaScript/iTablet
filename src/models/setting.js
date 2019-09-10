@@ -23,6 +23,7 @@ export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 export const MAP_INDOORNAViGATION = 'MAP_INDOORNAViGATION'
 export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
 export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
+export const AGREE_TO_PROTOCOL = 'AGREE_TO_PROTOCOL'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -163,6 +164,13 @@ export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
   }
 }
 
+export const setAgreeToProtocol = (params = {}) => async dispatch => {
+  await dispatch({
+    type: AGREE_TO_PROTOCOL,
+    payload: params || false,
+  })
+}
+
 const initialState = fromJS({
   buffer: {
     endType: 1,
@@ -200,6 +208,7 @@ const initialState = fromJS({
   mapIndoorNavigation: false,
   navigationChangeAR: false,
   navigationPoiView: false,
+  isAgreeToProtocol: false,
 })
 
 export default handleActions(
@@ -344,6 +353,10 @@ export default handleActions(
         data = true
       }
       return state.setIn(['navigationPoiView'], fromJS(data))
+    },
+    [`${AGREE_TO_PROTOCOL}`]: (state, { payload }) => {
+      let data = payload || false
+      return state.setIn(['isAgreeToProtocol'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
       // if (payload && payload.setting) {

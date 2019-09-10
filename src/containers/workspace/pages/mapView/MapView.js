@@ -1906,6 +1906,7 @@ export default class MapView extends React.Component {
             headerTitle: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_NAME,
             placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            type: 'name',
             cb: async value => {
               GLOBAL.INCREMENTDATASETNAME = value
               if (value !== '') {
@@ -1929,6 +1930,7 @@ export default class MapView extends React.Component {
             headerTitle: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_NAME,
             placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            type: 'name',
             cb: async value => {
               GLOBAL.INCREMENTDATASETNAME = value
               if (value !== '') {

@@ -93,7 +93,9 @@ export default class Input extends PureComponent {
   }
 
   renderClearBtn = () => {
-    if (this.state.value === '') return null
+    if (this.state.value === '') {
+      return <View style={styles.clearBtn} />
+    }
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -131,7 +133,7 @@ export default class Input extends PureComponent {
               this.props.keyboardType === 'numeric'
             ) {
               if (isNaN(text) && text !== '' && text !== '-') {
-                text = this.state.inputValue
+                text = this.state.value || ''
               }
             }
             this.props.onChangeText && this.props.onChangeText(text)

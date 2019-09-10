@@ -164,6 +164,7 @@ class ManageGroup extends Component {
               placeholder: FriendListFileHandle.getGroup(this.targetUser.id)
                 .groupName,
               headerTitle: getLanguage(this.language).Friends.SET_GROUPNAME,
+              type: 'name',
               cb: value => {
                 let len = 0
                 for (var i = 0; i < value.length; i++) {

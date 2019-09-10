@@ -441,7 +441,8 @@ export default class BufferAnalystViewTab extends Component {
                 placeholder:
                   getLanguage(this.props.language).Analyst_Prompt.PLEASE_ENTER +
                   getLanguage(this.props.language).Analyst_Labels.BUFFER_RADIUS,
-                keyboardType: 'numeric',
+                // keyboardType: 'numeric',
+                type: 'number',
                 cb: async value => {
                   NavigationService.goBack()
                   this.setState({
@@ -629,6 +630,7 @@ export default class BufferAnalystViewTab extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .RESULT_DATASET_NAME,
               placeholder: '',
+              type: 'name',
               cb: async value => {
                 NavigationService.goBack()
                 this.setState({

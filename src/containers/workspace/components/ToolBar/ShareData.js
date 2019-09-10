@@ -159,6 +159,7 @@ function showSaveDialog(type) {
     //'分享',
     value: _params.map.currentMap.name,
     placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
+    type: 'name',
     cb: async value => {
       let list = [_params.map.currentMap.name]
       shareMap(type, list, value)
@@ -212,6 +213,7 @@ function show3DSaveDialog(type) {
     //'分享',
     value: _params.map.currentMap.name,
     placeholder: getLanguage(global.language).Prompt.ENTER_MAP_NAME,
+    type: 'name',
     cb: async value => {
       let list = await SScene.getMapList()
       let data = [list[0].name]

@@ -6,6 +6,7 @@ import BtnbarLoad from './Btnbar_load'
 import ExampleMapList from './ExampleMapList'
 import OffLineList from './OffLineList'
 import ModuleList from './ModuleList'
+import ProtocolDialog from './ProtocolDialog'
 
 export {
   BtnbarHome,
@@ -16,4 +17,5 @@ export {
   ExampleMapList,
   OffLineList,
   ModuleList,
+  ProtocolDialog,
 }

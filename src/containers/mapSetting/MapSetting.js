@@ -3,14 +3,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import {
-  View,
-  InteractionManager,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  Image,
-} from 'react-native'
+import { View, FlatList, Text, TouchableOpacity, Image } from 'react-native'
 import styles from './styles'
 import {
   getlegendSetting,
@@ -49,9 +42,7 @@ export default class MapSetting extends Component {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
-      this.getData()
-    })
+    this.getData()
   }
 
   componentDidUpdate(prevProps) {
