@@ -110,6 +110,7 @@ const Prompt = {
   PUBLISH_FAILED: '发布失败',
 
   SELECT_AT_LEAST_ONE: '请至少选择一个数据',
+  DELETE_MAP_RELATE_DATA: '删除数据将影响以下地图\n是否继续删除？',
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',

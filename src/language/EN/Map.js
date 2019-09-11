@@ -346,6 +346,15 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_WAY_SET: 'Animation Way Set',
   PLOTTING_ANIMATION_SAVE: 'Save',
   PLOTTING_ANIMATION_BACK: 'Back',
+
+  ANIMATION_ATTRIBUTE_STR: 'Animation Attribute',
+  ANIMATION_WAY: 'Animation Way',
+  ANIMATION_BLINK: 'Animation Blink',
+  ANIMATION_ATTRIBUTE: 'Animation Attribute',
+  ANIMATION_SHOW: 'Animation Show',
+  ANIMATION_ROTATE: 'Animation Rotate',
+  ANIMATION_SCALE: 'Animation Scale',
+  ANIMATION_GROW: 'Animation Grow',
 }
 
 //图层

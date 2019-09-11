@@ -129,6 +129,7 @@ export default class AnimationNodeListView extends React.Component {
 
   modifyAnimationNodeName = async item => {
     NavigationService.navigate('InputPage', {
+      // NavigationService.navigate('AnimationNodeEditView', {
       headerTitle: getLanguage(global.language).Map_Main_Menu
         .ANIMATION_NODE_NAME,
       //'修改动画节点名称',

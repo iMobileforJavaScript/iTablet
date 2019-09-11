@@ -320,7 +320,13 @@ export default class MyLocalData extends Component {
         relatedMaps = await this.getRelatedMaps(deleteArr)
       }
       if (relatedMaps.length !== 0) {
-        this.relatedMap = relatedMaps
+        let dialogHeight
+        if (relatedMaps.length < 5) {
+          dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(30)
+        } else {
+          dialogHeight = scaleSize(370)
+        }
+        this.SimpleDialog.setDialogHeight(dialogHeight)
         this.SimpleDialog.setConfirm(() => {
           this._batchDelete(true)
         })
@@ -933,7 +939,7 @@ export default class MyLocalData extends Component {
         relatedMap = await this.getRelatedMap(this.itemInfo)
       }
       if (relatedMap) {
-        this.relatedMap = relatedMap
+        this.SimpleDialog.setDialogHeight(scaleSize(270))
         this.SimpleDialog.setConfirm(() => {
           this._onDeleteData(true)
         })
@@ -1428,8 +1434,7 @@ export default class MyLocalData extends Component {
     return (
       <SimpleDialog
         ref={ref => (this.SimpleDialog = ref)}
-        style={{ height: scaleSize(370) }}
-        text={'删除数据将影响以下地图\n是否继续删除？'}
+        text={getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA}
         disableBackTouch={true}
       />
     )

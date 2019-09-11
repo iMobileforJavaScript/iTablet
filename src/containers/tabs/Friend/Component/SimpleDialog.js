@@ -23,6 +23,7 @@ export default class SimpleDialog extends PureComponent {
       cancelAction: this.cancel,
       text: this.props.text,
       renderExtra: props.renderExtra,
+      dialogHeight: undefined,
     }
   }
 
@@ -60,6 +61,10 @@ export default class SimpleDialog extends PureComponent {
     this.setState({ renderExtra: renderExtra })
   }
 
+  setDialogHeight = height => {
+    this.setState({ dialogHeight: height })
+  }
+
   confirm = () => {
     this.props.confirmAction && this.props.confirmAction()
     this.setVisible(false)
@@ -81,7 +86,11 @@ export default class SimpleDialog extends PureComponent {
         cancelAction={this.state.cancelAction}
         opacity={1}
         opacityStyle={styles.opacityView}
-        style={[styles.dialogBackground, this.props.style]}
+        style={[
+          styles.dialogBackground,
+          this.props.style,
+          this.state.dialogHeight && { height: this.state.dialogHeight },
+        ]}
         disableBackTouch={this.props.disableBackTouch}
       >
         <View style={styles.dialogHeaderView}>
