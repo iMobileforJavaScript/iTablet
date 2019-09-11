@@ -77,6 +77,7 @@ import {
 } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
+import AnimationNodeEditView from './workspace/components/AnimationNodeEditView'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
@@ -348,6 +349,12 @@ const AppNavigator = createStackNavigator(
     },
     InputPage: {
       screen: InputPage,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    AnimationNodeEditView: {
+      screen: AnimationNodeEditView,
       navigationOptions: {
         header: null,
       },

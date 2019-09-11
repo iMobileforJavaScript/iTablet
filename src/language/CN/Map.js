@@ -364,6 +364,15 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_WAY_SET: '路径设置',
   PLOTTING_ANIMATION_SAVE: '保存',
   PLOTTING_ANIMATION_BACK: '返回',
+
+  ANIMATION_ATTRIBUTE_STR: '动画属性',
+  ANIMATION_WAY: '路径动画',
+  ANIMATION_BLINK: '闪烁动画',
+  ANIMATION_ATTRIBUTE: '属性动画',
+  ANIMATION_SHOW: '显隐动画',
+  ANIMATION_ROTATE: '旋转动画',
+  ANIMATION_SCALE: '比例动画',
+  ANIMATION_GROW: '生长动画',
 }
 
 //图层
