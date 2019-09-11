@@ -376,6 +376,9 @@ export default class MenuList extends Component {
                   })
                 }
               }}
+              onBlur={() => {
+                this.onInputBlur(item)
+              }}
               keyboardType={'number-pad'}
             />
             <TouchableOpacity
