@@ -114,6 +114,7 @@ const Prompt = {
   PUBLISH_FAILED: 'Failed to Publish',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
+  DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
