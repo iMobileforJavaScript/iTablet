@@ -100,8 +100,8 @@ export default class ProtocolDialog extends Component {
         ref={ref => (this.dialog = ref)}
         title={getLanguage(this.props.language).Protocol.PROTOCOL}
         style={{
-          height: scaleSize(750),
-          width: scaleSize(400),
+          height: scaleSize(700),
+          width: scaleSize(500),
           maxHeight: height,
           maxWidth: width,
         }}
