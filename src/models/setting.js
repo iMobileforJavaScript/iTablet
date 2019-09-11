@@ -23,6 +23,7 @@ export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 export const MAP_INDOORNAViGATION = 'MAP_INDOORNAViGATION'
 export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
 export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
+export const MAP_SELECT_POINT = 'MAP_SELECT_POINT'
 export const AGREE_TO_PROTOCOL = 'AGREE_TO_PROTOCOL'
 // Actions
 // --------------------------------------------------
@@ -129,6 +130,12 @@ export const setNavigationPoiView = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
+export const setMapSelectPoint = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_SELECT_POINT,
+    payload: params || false,
+  })
+}
 export const setMapScaleView = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_SCALEVIEW,
@@ -208,6 +215,10 @@ const initialState = fromJS({
   mapIndoorNavigation: false,
   navigationChangeAR: false,
   navigationPoiView: false,
+  mapSelectPoint: {
+    firstPoint: '选择起点',
+    secondPoint: '选择终点',
+  },
   isAgreeToProtocol: false,
 })
 
@@ -353,6 +364,18 @@ export default handleActions(
         data = true
       }
       return state.setIn(['navigationPoiView'], fromJS(data))
+    },
+    [`${MAP_SELECT_POINT}`]: (state, { payload }) => {
+      let data = state.toJS().mapSelectPoint
+      if (payload) {
+        data = payload
+      } else {
+        data = {
+          firstPoint: '选择起点',
+          secondPoint: '选择终点',
+        }
+      }
+      return state.setIn(['mapSelectPoint'], fromJS(data))
     },
     [`${AGREE_TO_PROTOCOL}`]: (state, { payload }) => {
       let data = payload || false

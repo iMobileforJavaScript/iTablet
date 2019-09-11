@@ -112,6 +112,7 @@ export default class MyBaseMap extends Component {
           initialNumToRender={20}
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
+          keyExtractor={(item, index) => index.toString()}
           data={this.curUserBaseMaps}
           ItemSeparatorComponent={() => (
             <View

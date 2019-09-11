@@ -144,6 +144,7 @@ export default class CollectSceneFormView extends React.Component {
       value: '',
       placeholder: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
+      type: 'name',
       cb: async value => {
         NavigationService.goBack()
         await SCollectSceneFormView.saveData(value)

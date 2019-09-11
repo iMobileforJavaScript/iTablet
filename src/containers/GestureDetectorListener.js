@@ -78,6 +78,7 @@ async function touchCallback(event) {
     case TouchType.MAP_TOOL_TAGGING:
       NavigationService.navigate('InputPage', {
         headerTitle: getLanguage(global.language).Map_Main_Menu.TOOLS_NAME,
+        type: 'name',
         cb: async value => {
           if (value !== '') {
             let datasourceName = GLOBAL.currentLayer.datasourceAlias

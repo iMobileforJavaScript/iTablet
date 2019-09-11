@@ -75,6 +75,8 @@ import { Analyst_Types } from '../../../analystView/AnalystType'
 import FloorListView from '../../components/FloorListView'
 import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
 import Orientation from 'react-native-orientation'
+import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
+import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -268,6 +270,13 @@ export default class MapView extends React.Component {
       if (this.toolBox) {
         GLOBAL.toolBox = this.toolBox
       }
+    })
+
+    SMap.setIndustryNavigationListener({
+      callback: () => {
+        this.showFullMap(false)
+        this.props.setMapNavigation({ isShow: false, name: '' })
+      },
     })
   }
 
@@ -1884,7 +1893,7 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/navi_icon_white.png')}
+          image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={async () => {
             this.indoorNavi()
           }}
@@ -1906,6 +1915,7 @@ export default class MapView extends React.Component {
             headerTitle: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_NAME,
             placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            type: 'name',
             cb: async value => {
               GLOBAL.INCREMENTDATASETNAME = value
               if (value !== '') {
@@ -1929,6 +1939,7 @@ export default class MapView extends React.Component {
             headerTitle: getLanguage(this.props.language).Map_Main_Menu
               .TOOLS_NAME,
             placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
+            type: 'name',
             cb: async value => {
               GLOBAL.INCREMENTDATASETNAME = value
               if (value !== '') {
@@ -1965,11 +1976,6 @@ export default class MapView extends React.Component {
               title: '室内数据',
               name: '室内数据',
               image: require('../../../../assets/Navigation/indoor_datasource.png'),
-            },
-            {
-              title: '开始导航',
-              name: '开始导航',
-              image: require('../../../../assets/Navigation/navi_icon.png'),
             },
           ],
         })
@@ -2049,6 +2055,30 @@ export default class MapView extends React.Component {
     }
   }
 
+  _renderMapSelectPoint = () => {
+    return (
+      <MapSelectPoint
+        ref={ref => (GLOBAL.MAPSELECTPOINT = ref)}
+        headerProps={{
+          title: '地图选点',
+          navigation: this.props.navigation,
+          type: 'fix',
+          backAction: () => {
+            GLOBAL.MAPSELECTPOINT.setVisible(false)
+            GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+            NavigationService.navigate('NavigationView')
+          },
+        }}
+      />
+    )
+  }
+
+  _renderMapSelectPointButton = () => {
+    return (
+      <MapSelectPointButton ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)} />
+    )
+  }
+
   _renderNavigationPoiView = () => {
     return (
       <NavigationPoiView
@@ -2118,6 +2148,8 @@ export default class MapView extends React.Component {
         {/*this.props.mapNavigation.isPointShow &&*/}
         {/*this._renderNavigationView()}*/}
         {this._renderIncrementRoad()}
+        {this._renderMapSelectPoint()}
+        {this._renderMapSelectPointButton()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.navigationPoiView &&

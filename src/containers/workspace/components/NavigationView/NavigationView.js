@@ -1,117 +1,218 @@
 import * as React from 'react'
-import {
-  View,
-  Image,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Text,
-} from 'react-native'
-import { getLanguage } from '../../../../language/index'
+import { View, Image, TouchableOpacity, Text } from 'react-native'
+import { scaleSize, setSpText } from '../../../../utils'
+// import { getLanguage } from '../../../../language/index'
+import NavigationService from '../../../../containers/NavigationService'
+import { MTBtn } from '../../../../components'
+import { TouchType } from '../../../../constants'
 import styles from './styles'
+import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
-import { SScene, SMap } from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
+import { Toast } from '../../../../utils'
 
 export default class NavigationView extends React.Component {
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
+    mapSelectPoint: PropTypes.object,
+    setMapSelectPoint: PropTypes.func,
   }
 
   constructor(props) {
     super(props)
     this.PointType = null
-    this.state = {
-      searchValue: null,
-      searchData: [],
-      analystData: [],
-      firstPoint: null,
-      secondPoint: null,
-    }
+  }
+
+  componentDidMount() {
+    SMap.setStartPointNameListener({
+      callback: result => {
+        this.props.setMapSelectPoint({
+          firstPoint: result,
+          secondPoint: this.props.mapSelectPoint.secondPoint,
+        })
+      },
+    })
+    SMap.setEndPointNameListener({
+      callback: result => {
+        this.props.setMapSelectPoint({
+          firstPoint: this.props.mapSelectPoint.firstPoint,
+          secondPoint: result,
+        })
+      },
+    })
   }
 
   close = () => {
-    this.props.setMapNavigation({ isPointShow: false, isShow: false, name: '' })
-    SMap.clearTarckingLayer()
+    this.props.setMapNavigation({ isShow: false, name: '' })
+    GLOBAL.MAPSELECTPOINT.setVisible(false)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+    NavigationService.goBack()
   }
 
   _renderSearchView = () => {
     return (
-      <View>
-        <View style={styles.pointAnalystView}>
+      <View style={{ flex: 1, backgroundColor: color.background }}>
+        <View
+          style={{
+            height: scaleSize(165),
+            width: '100%',
+            backgroundColor: 'black',
+            flexDirection: 'row',
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
               this.close()
             }}
+            style={{ marginLeft: scaleSize(40) }}
           >
             <Image
               resizeMode={'contain'}
-              source={require('../../../../assets/public/icon-back-black.png')}
+              source={require('../../../../assets/public/icon-back-white.png')}
               style={styles.analyst1}
             />
           </TouchableOpacity>
-          <View style={{ flexDirection: 'column' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                resizeMode={'contain'}
-                source={require('../../../../assets/mapToolbar/icon_scene_tool_start.png')}
-                style={styles.startPoint}
-              />
-              <TextInput
-                onChangeText={text => {
-                  if (text === null || text === '') {
-                    this.setState({ firstPoint: text, analystData: [] })
-                    return
-                  }
-                  SScene.pointSearch(text)
-                  this.PointType = 'firstPoint'
-                  this.setState({ firstPoint: text })
+          <View style={styles.pointAnalystView}>
+            <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
                 }}
-                value={this.state.firstPoint}
-                style={styles.onInput}
-                placeholder={
-                  getLanguage(global.language).Prompt.CHOOSE_STARTING_POINT
-                }
-                //{'请输入起点'}
-              />
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image
-                resizeMode={'contain'}
-                source={require('../../../../assets/mapToolbar/icon_scene_tool_end.png')}
-                style={styles.endPoint}
-              />
-              <TextInput
-                onChangeText={text => {
-                  if (text === null || text === '') {
-                    this.setState({ secondPoint: text, analystData: [] })
-                    return
-                  }
-                  SScene.pointSearch(text)
-                  this.PointType = 'secondPoint'
-                  this.setState({ secondPoint: text })
+              >
+                <Image
+                  resizeMode={'contain'}
+                  source={require('../../../../assets/Navigation/icon_tool_start.png')}
+                  style={styles.startPoint}
+                />
+                <TouchableOpacity
+                  style={styles.onInput}
+                  onPress={async () => {
+                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
+                    GLOBAL.MAPSELECTPOINT.setVisible(true)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
+                      button: '设为起点',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    NavigationService.goBack()
+                  }}
+                >
+                  <Text style={{ fontSize: setSpText(20) }}>
+                    {this.props.mapSelectPoint.firstPoint}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
                 }}
-                value={this.state.secondPoint}
-                style={styles.secondInput}
-                placeholder={
-                  getLanguage(global.language).Prompt.CHOOSE_DESTINATION
-                }
-                // {'请输入终点'}
-              />
+              >
+                <Image
+                  resizeMode={'contain'}
+                  source={require('../../../../assets/Navigation/icon_tool_end.png')}
+                  style={styles.endPoint}
+                />
+                <TouchableOpacity
+                  style={styles.secondInput}
+                  onPress={async () => {
+                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
+                    GLOBAL.MAPSELECTPOINT.setVisible(true)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
+                      button: '设为终点',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    NavigationService.goBack()
+                  }}
+                >
+                  <Text style={{ fontSize: setSpText(20) }}>
+                    {this.props.mapSelectPoint.secondPoint}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
+
+            <MTBtn
+              style={styles.btn}
+              size={MTBtn.Size.NORMAL}
+              image={require('../../../../assets/Navigation/navi_icon.png')}
+              onPress={() => {
+                GLOBAL.TouchType = TouchType.NORMAL
+                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                  if (GLOBAL.STARTX !== undefined) {
+                    SMap.beginNavigation(
+                      GLOBAL.STARTX,
+                      GLOBAL.STARTY,
+                      GLOBAL.ENDX,
+                      GLOBAL.ENDY,
+                    )
+                    GLOBAL.MAPSELECTPOINT.setVisible(false)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                      button: '',
+                    })
+                    NavigationService.goBack()
+                  } else {
+                    Toast.show('请先设置起终点')
+                  }
+                }
+                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                  if (GLOBAL.STARTX !== undefined) {
+                    SMap.beginIndoorNavigation(
+                      GLOBAL.STARTX,
+                      GLOBAL.STARTY,
+                      GLOBAL.ENDX,
+                      GLOBAL.ENDY,
+                    )
+                    GLOBAL.MAPSELECTPOINT.setVisible(false)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                      button: '',
+                    })
+                    NavigationService.goBack()
+                  } else {
+                    Toast.show('请先设置起终点')
+                  }
+                }
+              }}
+            />
+            <MTBtn
+              style={styles.btn}
+              size={MTBtn.Size.NORMAL}
+              image={require('../../../../assets/Navigation/clean_route.png')}
+              onPress={async () => {
+                GLOBAL.TouchType = TouchType.NORMAL
+                this.props.setMapSelectPoint({
+                  firstPoint: '选择起点',
+                  secondPoint: '选择终点',
+                })
+                SMap.clearPoint()
+              }}
+            />
+
+            {/*<Image*/}
+            {/*resizeMode={'contain'}*/}
+            {/*source={require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png')}*/}
+            {/*style={styles.analyst}*/}
+            {/*/>*/}
           </View>
-          {/*<Image*/}
-          {/*resizeMode={'contain'}*/}
-          {/*source={require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png')}*/}
-          {/*style={styles.analyst}*/}
-          {/*/>*/}
         </View>
-        <View>
-          <FlatList
-            data={this.state.analystData}
-            renderItem={this.renderItem}
-          />
-        </View>
+
+        {/*<View>*/}
+        {/*<FlatList*/}
+        {/*data={this.state.analystData}*/}
+        {/*renderItem={this.renderItem}*/}
+        {/*/>*/}
+        {/*</View>*/}
       </View>
     )
   }

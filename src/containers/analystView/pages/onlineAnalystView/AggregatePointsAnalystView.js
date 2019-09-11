@@ -204,7 +204,8 @@ export default class AggregatePointsAnalystView extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .MESH_SIZE,
               placeholder: '',
-              keyboardType: 'numeric',
+              // keyboardType: 'numeric',
+              type: 'number',
               cb: async value => {
                 NavigationService.goBack()
                 this.setState({
@@ -265,7 +266,8 @@ export default class AggregatePointsAnalystView extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .NUMERIC_PRECISION,
               placeholder: '',
-              keyboardType: 'numeric',
+              // keyboardType: 'numeric',
+              type: 'number',
               cb: async value => {
                 NavigationService.goBack()
                 this.setState({
@@ -296,7 +298,8 @@ export default class AggregatePointsAnalystView extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .NUMBER_OF_SEGMENTS,
               placeholder: '',
-              keyboardType: 'numeric',
+              // keyboardType: 'numeric',
+              type: 'number',
               cb: async value => {
                 NavigationService.goBack()
                 this.setState({

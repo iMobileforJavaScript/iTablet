@@ -112,6 +112,7 @@ import ClassifySettingsView from './ClassifySettingsView'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
+import NavigationView from './workspace/components/NavigationView'
 
 const AppNavigator = createStackNavigator(
   {
@@ -828,6 +829,12 @@ const AppNavigator = createStackNavigator(
     },
     Map2Dto3D: {
       screen: Map2Dto3D,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    NavigationView: {
+      screen: NavigationView,
       navigationOptions: {
         header: null,
       },

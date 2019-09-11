@@ -45,6 +45,7 @@ export default class Dialog extends PureComponent {
     opacity: any,
     opacityStyle: Object,
     onlyOneBtn: boolean,
+    disableBackTouch: boolean,
   }
 
   static defaultProps = {
@@ -188,6 +189,11 @@ export default class Dialog extends PureComponent {
         }}
       >
         <TouchableOpacity
+          disabled={
+            this.props.disableBackTouch === undefined
+              ? false
+              : this.props.disableBackTouch
+          }
           onPress={this.cancel}
           style={[styles.container, this.props.backgroundStyle]}
         >

@@ -121,6 +121,8 @@ export default class OnlineDataItem extends Component {
               {this.props.item.fileName}
             </Text>
             <Text
+              ellipsizeMode={'middle'}
+              numberOfLines={1}
               style={{
                 marginTop: scaleSize(5),
                 color: color.fontColorGray,

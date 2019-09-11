@@ -659,6 +659,7 @@ export default class ReferenceAnalystView extends Component {
               headerTitle: getLanguage(this.props.language).Analyst_Labels
                 .RESULT_DATASET_NAME,
               placeholder: '',
+              type: 'name',
               cb: async value => {
                 NavigationService.goBack('InputPage')
                 this.setState({

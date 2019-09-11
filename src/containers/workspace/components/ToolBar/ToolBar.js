@@ -2759,11 +2759,7 @@ export default class ToolBar extends React.PureComponent {
           // if (!showViewFirst) {
           this.height = newHeight
           this.showToolbarAndBox(isShow, type)
-          !GLOBAL.BEGINNAVI &&
-            !isShow &&
-            this.props.existFullMap &&
-            this.props.existFullMap()
-          GLOBAL.BEGINNAVI = false
+          !isShow && this.props.existFullMap && this.props.existFullMap()
           // }
           if (params.cb) {
             setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
@@ -3571,6 +3567,7 @@ export default class ToolBar extends React.PureComponent {
       //'保存推演动画',
       value: defaultAnimationName,
       placeholder: getLanguage(global.language).Prompt.ENTER_ANIMATION_NAME,
+      type: 'name',
       cb: async value => {
         GLOBAL.Loading &&
           GLOBAL.Loading.setLoading(
@@ -4828,10 +4825,6 @@ export default class ToolBar extends React.PureComponent {
             data,
           })
         }.bind(this)())
-      } else if (item.name === '开始导航') {
-        this.props.setMapNavigationShow(true)
-        GLOBAL.BEGINNAVI = true
-        this.setVisible(false)
       }
     } else if (this.state.type === ConstToolType.NETWORK) {
       (async function() {
@@ -4884,6 +4877,7 @@ export default class ToolBar extends React.PureComponent {
       this.props.setMap2Dto3D(true)
       this.setVisible(false)
       this.props.existFullMap()
+      NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
       (async function() {
         await SMap.buildNetwork(item.name)
@@ -5020,6 +5014,7 @@ export default class ToolBar extends React.PureComponent {
           //'新建地图',
           value: newName,
           placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
+          type: 'name',
           cb: async value => {
             GLOBAL.Loading &&
               GLOBAL.Loading.setLoading(
@@ -5142,6 +5137,7 @@ export default class ToolBar extends React.PureComponent {
       headerTitle: getLanguage(this.props.language).Map_Main_Menu.START_NEW_MAP,
       //'新建地图',
       placeholder: getLanguage(this.props.language).Prompt.ENTER_MAP_NAME,
+      type: 'name',
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&
