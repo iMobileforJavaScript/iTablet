@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
-import { scaleSize, setSpText } from '../../../../utils'
+import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
 import { MTBtn } from '../../../../components'
@@ -9,7 +9,6 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 
 export default class NavigationView extends React.Component {
   static propTypes = {
