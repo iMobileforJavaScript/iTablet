@@ -59,7 +59,7 @@ import java.util.zip.ZipException;
 import org.apache.tools.zip.ZipOutputStream;
 import org.json.JSONObject;
 
-import static com.supermap.interfaces.mapping.SMap.importPlotLibDataMethod;
+import static com.supermap.interfaces.mapping.SPlot.importPlotLibDataMethod;
 import static com.supermap.interfaces.utils.SMFileUtil.copyFiles;
 
 public class FileTools extends ReactContextBaseJavaModule {
