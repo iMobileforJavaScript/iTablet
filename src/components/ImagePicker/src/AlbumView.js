@@ -114,7 +114,14 @@ export default class extends React.PureComponent {
         <View style={{ padding: 1 }}>
           <Image
             key={index}
-            source={{ uri: item.uri }}
+            source={{
+              uri:
+                (Platform.OS === 'android' &&
+                item.uri.indexOf('file://') === -1 &&
+                item.uri.indexOf('content://') === -1
+                  ? 'file://'
+                  : '') + item.uri,
+            }}
             style={{ width: edge, height: edge, overflow: 'hidden' }}
             resizeMode="cover"
           />

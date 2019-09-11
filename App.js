@@ -524,7 +524,7 @@ class AppRoot extends Component {
   renderDialog = () => {
     return (<Dialog
       ref={ref => (this.exit = ref)}
-      type={'modal'}
+      type={Dialog.Type.NON_MODAL}
       confirmAction={async () => {
         this.exit.setDialogVisible(false)
         GLOBAL.Loading.setLoading(
