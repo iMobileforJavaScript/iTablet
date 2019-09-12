@@ -152,7 +152,7 @@ export default class SecondMapSettings extends Component {
         data = getPOISettings()
         data[0].value = await SAIDetectView.isProjectionModeEnable()
         data[1].value = await SAIDetectView.isPOIOverlapEnable()
-        data[2].value = await SAIDetectView.isPolymerize()
+        // data[2].value = await SAIDetectView.isPolymerize()
         break
       case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE:
         data = await this.getDetectTypesSettings()

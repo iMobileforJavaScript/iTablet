@@ -603,11 +603,11 @@ export default class FunctionToolbar extends React.Component {
   }
 
   openTraffic = async () => {
-    if (!GLOBAL.NAVIGATIONMAPOPEN) {
-      await SMap.openDatasource(ConstOnline.TrafficMap.DSParams, 0, true)
-    } else {
-      Toast.show('请使用在线导航功能')
-    }
+    // if (!GLOBAL.NAVIGATIONMAPOPEN) {
+    await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+    // } else {
+    //   Toast.show('请使用在线导航功能')
+    // }
   }
 
   mapStyle = () => {

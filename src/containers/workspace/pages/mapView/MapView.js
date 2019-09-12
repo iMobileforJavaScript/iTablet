@@ -1011,6 +1011,7 @@ export default class MapView extends React.Component {
     // this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.NAVIGATIONMAPOPEN = false
+    GLOBAL.HASCHOSE = false
     // 优先处理其他界面跳转到MapView传来的返回事件
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
@@ -1961,30 +1962,34 @@ export default class MapView extends React.Component {
           })
         }
       } else {
-        this.showFullMap(true)
-        let data = []
-        data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-          //'路网',
-          image: require('../../../../assets/Navigation/network_white.png'),
-          data: [
-            {
-              title: '室外数据',
-              name: '室外数据',
-              image: require('../../../../assets/Navigation/snm_model.png'),
-            },
-            {
-              title: '室内数据',
-              name: '室内数据',
-              image: require('../../../../assets/Navigation/indoor_datasource.png'),
-            },
-          ],
-        })
-        this.toolBox.setVisible(true, ConstToolType.NETDATA, {
-          containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[3],
-          data,
-        })
+        if (GLOBAL.HASCHOSE) {
+          NavigationService.navigate('NavigationView')
+        } else {
+          this.showFullMap(true)
+          let data = []
+          data.push({
+            title: getLanguage(global.language).Map_Main_Menu.NETDATA,
+            //'路网',
+            image: require('../../../../assets/Navigation/network_white.png'),
+            data: [
+              {
+                title: '室外数据',
+                name: '室外数据',
+                image: require('../../../../assets/Navigation/snm_model.png'),
+              },
+              {
+                title: '室内数据',
+                name: '室内数据',
+                image: require('../../../../assets/Navigation/indoor_datasource.png'),
+              },
+            ],
+          })
+          this.toolBox.setVisible(true, ConstToolType.NETDATA, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[3],
+            data,
+          })
+        }
       }
     }
   }
