@@ -50,6 +50,10 @@ const Prompt = {
   NON_SELECTED_OBJ: 'No object selected',
   CHANGE_BASE_MAP: 'Empty base map, please change first',
 
+  SET_ALL_MAP_VISIBLE: 'All visible',
+  SET_ALL_MAP_INVISIBLE: 'All invisible',
+  LONG_PRESS_TO_SORT: '(Long press to sort)',
+
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
   SUPERMAP_KNOW: 'SuperMap Know',

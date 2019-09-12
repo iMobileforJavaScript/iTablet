@@ -25,6 +25,7 @@ export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
 export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
 export const MAP_SELECT_POINT = 'MAP_SELECT_POINT'
 export const AGREE_TO_PROTOCOL = 'AGREE_TO_PROTOCOL'
+export const NAVIGATION_HISTORY = 'NAVIGATION_HISTORY'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -137,6 +138,16 @@ export const setMapSelectPoint = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
+export const setNavigationHistory = (
+  data = [],
+  cb = () => {},
+) => async dispatch => {
+  await dispatch({
+    type: NAVIGATION_HISTORY,
+    payload: data,
+  })
+  cb && cb()
+}
 export const setMapScaleView = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_SCALEVIEW,
@@ -221,6 +232,7 @@ const initialState = fromJS({
     secondPoint: '选择终点',
   },
   isAgreeToProtocol: false,
+  navigationhistory: [],
 })
 
 export default handleActions(
@@ -377,6 +389,15 @@ export default handleActions(
         }
       }
       return state.setIn(['mapSelectPoint'], fromJS(data))
+    },
+    [`${NAVIGATION_HISTORY}`]: (state, { payload }) => {
+      let data = state.toJS().navigationhistory
+      if (payload) {
+        data = payload
+      } else {
+        data = []
+      }
+      return state.setIn(['navigationhistory'], fromJS(data))
     },
     [`${AGREE_TO_PROTOCOL}`]: (state, { payload }) => {
       let data = payload || false
