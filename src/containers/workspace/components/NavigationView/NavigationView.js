@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text } from 'react-native'
+import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
@@ -16,6 +16,8 @@ export default class NavigationView extends React.Component {
     setMapNavigation: PropTypes.func,
     mapSelectPoint: PropTypes.object,
     setMapSelectPoint: PropTypes.func,
+    setNavigationHistory: PropTypes.func,
+    navigationhistory: PropTypes.array,
   }
 
   constructor(props) {
@@ -56,7 +58,7 @@ export default class NavigationView extends React.Component {
           style={{
             height: scaleSize(165),
             width: '100%',
-            backgroundColor: 'black',
+            backgroundColor: '#303030',
             flexDirection: 'row',
           }}
         >
@@ -64,12 +66,16 @@ export default class NavigationView extends React.Component {
             onPress={() => {
               this.close()
             }}
-            style={{ marginLeft: scaleSize(40) }}
+            style={{
+              width: 60,
+              padding: 5,
+              marginLeft: scaleSize(20),
+            }}
           >
             <Image
               resizeMode={'contain'}
-              source={require('../../../../assets/public/icon-back-white.png')}
-              style={styles.analyst1}
+              source={require('../../../../assets/public/Frenchgrey/icon-back-white.png')}
+              style={styles.backbtn}
             />
           </TouchableOpacity>
           <View style={styles.pointAnalystView}>
@@ -107,6 +113,14 @@ export default class NavigationView extends React.Component {
                   </Text>
                 </TouchableOpacity>
               </View>
+              <View
+                style={{
+                  marginLeft: scaleSize(20),
+                  width: scaleSize(300),
+                  height: 2,
+                  backgroundColor: color.gray,
+                }}
+              />
               <View
                 style={{
                   flexDirection: 'row',
@@ -160,6 +174,23 @@ export default class NavigationView extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
                       button: '',
                     })
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
                     NavigationService.goBack()
                   } else {
                     Toast.show('请先设置起终点')
@@ -177,6 +208,25 @@ export default class NavigationView extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
                       button: '',
                     })
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                      start: this.props.mapSelectPoint.firstPoint,
+                      end: this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
                     NavigationService.goBack()
                   } else {
                     Toast.show('请先设置起终点')
@@ -190,6 +240,7 @@ export default class NavigationView extends React.Component {
               image={require('../../../../assets/Navigation/clean_route.png')}
               onPress={async () => {
                 GLOBAL.TouchType = TouchType.NORMAL
+                GLOBAL.STARTX = undefined
                 this.props.setMapSelectPoint({
                   firstPoint: '选择起点',
                   secondPoint: '选择终点',
@@ -197,41 +248,79 @@ export default class NavigationView extends React.Component {
                 SMap.clearPoint()
               }}
             />
-
-            {/*<Image*/}
-            {/*resizeMode={'contain'}*/}
-            {/*source={require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png')}*/}
-            {/*style={styles.analyst}*/}
-            {/*/>*/}
           </View>
         </View>
 
-        {/*<View>*/}
-        {/*<FlatList*/}
-        {/*data={this.state.analystData}*/}
-        {/*renderItem={this.renderItem}*/}
-        {/*/>*/}
-        {/*</View>*/}
+        <View>
+          <FlatList
+            data={this.props.navigationhistory}
+            renderItem={this.renderItem}
+          />
+          {this.props.navigationhistory.length > 0 && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: color.background,
+                width: '100%',
+                height: scaleSize(70),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                this.props.setNavigationHistory &&
+                  this.props.setNavigationHistory([])
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: setSpText(20),
+                }}
+              >
+                清除记录
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     )
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
       <View>
         <TouchableOpacity
           style={styles.itemView}
-          onPress={() => {
-            this.toLocationPoint(item.pointName, index)
+          onPress={async () => {
+            this.props.setMapSelectPoint({
+              firstPoint: item.start,
+              secondPoint: item.end,
+            })
+            GLOBAL.STARTX = item.sx
+            GLOBAL.STARTY = item.sy
+            GLOBAL.ENDX = item.ex
+            GLOBAL.ENDY = item.ey
+
+            let result = await SMap.isIndoorPoint(item.sx, item.sy)
+            SMap.getStartPoint(item.sx, item.sy, result.isindoor)
+            if (result.isindoor) {
+              GLOBAL.INDOORSTART = true
+            } else {
+              GLOBAL.INDOORSTART = false
+            }
+
+            let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
+            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor)
+            if (endresult.isindoor) {
+              GLOBAL.INDOOREND = true
+            } else {
+              GLOBAL.INDOOREND = false
+            }
           }}
         >
           <Image
             style={styles.pointImg}
-            source={require('../../../../assets/mapToolbar/icon_scene_position.png')}
+            source={require('../../../../assets/Navigation/naviagtion-road.png')}
           />
-          {item.pointName && (
-            <Text style={styles.itemText}>{item.pointName}</Text>
-          )}
+          {item.address && <Text style={styles.itemText}>{item.address}</Text>}
         </TouchableOpacity>
         <View style={styles.itemSeparator} />
       </View>

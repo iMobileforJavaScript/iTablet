@@ -269,6 +269,10 @@ function getToorbarHeight(orientation, type) {
       height = ConstToolType.HEIGHT[0]
       column = orientation === 'PORTRAIT' ? 4 : 5
       break
+    case ConstToolType.MAP_EDIT_CAD:
+      height = ConstToolType.HEIGHT[0]
+      column = 5
+      break
     case ConstToolType.MAP_EDIT_LINE:
     case ConstToolType.MAP_EDIT_REGION:
       height = ConstToolType.HEIGHT[2]
