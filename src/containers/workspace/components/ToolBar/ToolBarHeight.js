@@ -215,7 +215,7 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
       } else {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       }
       break
@@ -224,7 +224,7 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
       } else {
-        height = ConstToolType.HEIGHT[1]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       }
       break
