@@ -549,6 +549,7 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
+                  result = result > 0 ? result.toFixed(6) : 0
                   this.props.measureShow &&
                     this.props.measureShow(true, result + '㎡')
                 },
