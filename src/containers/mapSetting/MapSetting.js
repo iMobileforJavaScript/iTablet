@@ -61,10 +61,11 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let newData = getThematicMapSettings()
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    let newData = getThematicMapSettings().concat(getlegendSetting())
+    /*if (GLOBAL.Type === constants.MAP_THEME) {
       newData = newData.concat(getlegendSetting())
-    } else if (GLOBAL.Type === constants.MAP_AR) {
+    } else */
+    if (GLOBAL.Type === constants.MAP_AR) {
       newData = newData.concat(getMapARSettings())
     }
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
