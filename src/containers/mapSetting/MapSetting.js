@@ -69,7 +69,7 @@ export default class MapSetting extends Component {
       newData = newData.concat(getMapARSettings())
     }
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      newData = getnavigationSetting()
+      newData = newData.concat(getnavigationSetting())
     }
     this.setState({
       data: newData,
