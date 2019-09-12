@@ -59,7 +59,7 @@ import java.util.zip.ZipException;
 import org.apache.tools.zip.ZipOutputStream;
 import org.json.JSONObject;
 
-import static com.supermap.interfaces.mapping.SMap.importPlotLibDataMethod;
+import static com.supermap.interfaces.mapping.SPlot.importPlotLibDataMethod;
 import static com.supermap.interfaces.utils.SMFileUtil.copyFiles;
 
 public class FileTools extends ReactContextBaseJavaModule {
@@ -1032,6 +1032,7 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
+        String commonImagePath = SDCARD + "/iTablet/Common/Images";
         String commonCachePath = SDCARD + "/iTablet/Cache/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
@@ -1041,6 +1042,15 @@ public class FileTools extends ReactContextBaseJavaModule {
         String plotFilePath = plotPath+"PlotLibData";
         String commonPlotZipPath = commonPath + "PlotLibData.zip";
         String plotZipData = "PlotLibData.zip";
+
+        // 拷贝默认图片，并解压
+        if (!Utils.fileIsExit(commonImagePath + ".zip")) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, "Images.zip", "Images.zip");
+
+            boolean isUnZip = FileTools.unZipFile(commonImagePath + ".zip", commonImagePath);
+            if (isUnZip) FileTools.deleteFile(commonPath + "Images.zip");
+            System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
+        }
 
         String srclic = "publicMap.txt";
         if (!Utils.fileIsExit(commonCachePath + srclic)) {

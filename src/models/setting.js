@@ -81,6 +81,7 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
     type: SETTING_LANGUAGE,
     payload: params,
   })
+  global.language = params
   cb && cb()
 }
 export const setMapLegend = (params = {}) => async dispatch => {

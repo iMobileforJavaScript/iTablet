@@ -175,15 +175,13 @@ function getToorbarHeight(orientation, type) {
       height = ConstToolType.HEIGHT[0]
       break
     case ConstToolType.MAP_STYLE:
-      // if (orientation === 'PORTRAIT') {
-      //   height = ConstToolType.THEME_HEIGHT[3]
-      //   column = 4
-      // } else {
-      //   height = ConstToolType.HEIGHT[1]
-      //   column = 8
-      // }
-      height = ConstToolType.THEME_HEIGHT[3]
-      column = 8
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.THEME_HEIGHT[3]
+        column = 4
+      } else {
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
+        column = 8
+      }
       break
     case ConstToolType.LEGEND:
       if (orientation === 'PORTRAIT') {

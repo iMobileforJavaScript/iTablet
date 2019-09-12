@@ -131,6 +131,8 @@ export default StyleSheet.create({
     backgroundColor: color.contentColorWhite2,
   },
   btn: {
+    paddingHorizontal: scaleSize(5),
+    paddingBottom: scaleSize(10),
     marginLeft: scaleSize(15),
     borderRadius: scaleSize(4),
   },

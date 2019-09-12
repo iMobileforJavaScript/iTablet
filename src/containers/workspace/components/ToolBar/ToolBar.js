@@ -4870,6 +4870,7 @@ export default class ToolBar extends React.PureComponent {
       SMap.startNavigation(GLOBAL.navidataset, path)
       this.setVisible(false)
       this.props.existFullMap()
+      GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
       GLOBAL.NAVIGATIONMAPOPEN = true
@@ -4879,6 +4880,7 @@ export default class ToolBar extends React.PureComponent {
       this.props.setMap2Dto3D(true)
       this.setVisible(false)
       this.props.existFullMap()
+      GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
       (async function() {

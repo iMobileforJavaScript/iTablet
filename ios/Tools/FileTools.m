@@ -613,6 +613,7 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", plottingExtDataPath]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath]];
+//  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Images"]];
   
   // 初始化模板数据
   NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
@@ -624,6 +625,11 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   NSString* commonPlotZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"PlotLibData.zip"];
   NSString* originPlotPath = [[NSBundle mainBundle] pathForResource:@"PlotLibData" ofType:@"zip"];
   NSString* plotZipData = @"PlotLibData.zip";
+  
+  // 拷贝默认图片并解压
+  NSString* imageZipPath = [[NSBundle mainBundle] pathForResource:@"Images" ofType:@"zip"];
+  NSString* imagePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Images"];
+  [FileTools unZipFile:imageZipPath targetPath:imagePath];
   
   BOOL isUnZip = NO,isUnZipPlot = NO;
   if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {

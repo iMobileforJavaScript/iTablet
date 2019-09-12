@@ -1,15 +1,6 @@
 import React, { Component } from 'react'
-import {
-  WebView,
-  View,
-  Dimensions,
-  Platform,
-  UIManager,
-  LayoutAnimation,
-  StyleSheet,
-  Text,
-} from 'react-native'
-import { Dialog, CheckBox } from '../../../../components'
+import { WebView, View, StyleSheet, Text } from 'react-native'
+import { Dialog, CheckBox, MTBtn } from '../../../../components'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getLanguage } from '../../../../language'
@@ -17,77 +8,16 @@ import { getLanguage } from '../../../../language'
 export default class ProtocolDialog extends Component {
   props: {
     language: string,
+    device: Object,
     confirm: () => {},
+    setLanguage: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      progressWidth: Dimensions.get('window').width * 0.4,
       confirmBtnDisable: true,
     }
-    if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental &&
-        UIManager.setLayoutAnimationEnabledExperimental(true)
-    }
-  }
-
-  _renderLoading = () => {
-    return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          ref={ref => (this.progressViewRef = ref)}
-          style={{
-            height: 2,
-            width: this.state.progressWidth,
-            backgroundColor: '#1c84c0',
-          }}
-        />
-      </View>
-    )
-  }
-
-  _onLoadStart = () => {
-    LayoutAnimation.configureNext({
-      duration: 150,
-      create: {
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.scaleX,
-      },
-      update: {
-        type: LayoutAnimation.Types.linear,
-      },
-    })
-    this.progressViewWidth = this.state.progressWidth
-    let screenWidth = Dimensions.get('window').width
-    this.objProgressWidth = setInterval(() => {
-      if (this.progressViewRef) {
-        let prevProgressWidth = this.progressViewWidth
-        let currentPorWidth
-        if (prevProgressWidth >= screenWidth - 250) {
-          currentPorWidth = prevProgressWidth + 1
-          if (currentPorWidth >= screenWidth - 50) {
-            currentPorWidth = screenWidth - 50
-            this.progressViewWidth = currentPorWidth
-            return
-          }
-        } else {
-          currentPorWidth = prevProgressWidth * 1.01
-        }
-        this.progressViewWidth = currentPorWidth
-        this.progressViewRef.setNativeProps({
-          style: {
-            height: 2,
-            width: currentPorWidth,
-            backgroundColor: '#1c84c0',
-            borderBottomRightRadius: 1,
-            borderTopRightRadius: 1,
-            borderBottomLeftRadius: 0,
-            borderTopLeftRadius: 0,
-          },
-        })
-      }
-    }, 150)
   }
 
   setVisible = visible => {
@@ -100,54 +30,40 @@ export default class ProtocolDialog extends Component {
     }
   }
 
-  render() {
+  renderWebView = () => {
     return (
-      <Dialog
-        ref={ref => (this.dialog = ref)}
-        title={getLanguage(this.props.language).Protocol.PROTOCOL}
-        style={{ height: scaleSize(500) }}
-        opacityStyle={{ height: scaleSize(240) }}
-        confirmAction={this.confirm}
-        confirmBtnTitle={getLanguage(this.props.language).Protocol.AGREE}
-        cancelBtnVisible={false}
-        defaultVisible={true}
-        confirmBtnDisable={this.state.confirmBtnDisable}
-        type={Dialog.Type.NON_MODAL}
-      >
-        <WebView
-          ref={ref => (this.webView = ref)}
-          style={{ flex: 1, paddingVertical: 0 }}
-          source={{
-            uri:
-              global.language === 'CN'
-                ? 'http://111.202.121.144:8088/iTablet/home/help/protocol.html'
-                : 'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
-          }}
-          /** 保证release版本时，可加载到html*/
-          originWhitelist={['*']}
-          automaticallyAdjustContentInsets={true}
-          scalesPageToFit={true}
-          startInLoadingState={true}
-          renderLoading={this._renderLoading}
-          /**ios*/
-          contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
-          /**android*/
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          mixedContentMode={'always'}
-          thirdPartyCookiesEnabled={true}
-          allowFileAccess={true}
-          allowUniversalAccessFromFileURLs={true}
-          onError={() => {
-            Toast.show('加载失败')
-          }}
-          onLoadStart={this._onLoadStart}
-          onLoadEnd={() => {
-            if (this.objProgressWidth !== undefined) {
-              clearInterval(this.objProgressWidth)
-            }
-          }}
-        />
+      <WebView
+        ref={ref => (this.webView = ref)}
+        style={{ flex: 1, paddingVertical: 0, backgroundColor: 'transparent' }}
+        source={{
+          uri:
+            this.props.language === 'CN'
+              ? 'http://111.202.121.144:8088/iTablet/home/help/protocol.html'
+              : 'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
+        }}
+        /** 保证release版本时，可加载到html*/
+        originWhitelist={['*']}
+        automaticallyAdjustContentInsets={true}
+        scalesPageToFit={true}
+        /**ios*/
+        contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
+        /**android*/
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        mixedContentMode={'always'}
+        thirdPartyCookiesEnabled={true}
+        allowFileAccess={true}
+        allowUniversalAccessFromFileURLs={true}
+        onError={() => {
+          Toast.show(getLanguage(this.props.language).Prompt.NETWORK_ERROR)
+        }}
+      />
+    )
+  }
+
+  renderOption = () => {
+    return (
+      <View style={styles.optionView}>
         <View style={styles.checkView}>
           <CheckBox
             style={styles.checkBox}
@@ -157,8 +73,48 @@ export default class ProtocolDialog extends Component {
               })
             }}
           />
-          <Text style={styles.tip}>我已阅读并同意上述条款</Text>
+          <Text style={styles.tip}>
+            {getLanguage(this.props.language).Protocol.READ_AND_AGREE}
+          </Text>
         </View>
+        <MTBtn
+          title={this.props.language === 'EN' ? '中文' : 'EN'}
+          textStyle={{ color: color.blue1 }}
+          onPress={() => {
+            if (this.props.language === 'EN') {
+              this.props.setLanguage('CN')
+            } else {
+              this.props.setLanguage('EN')
+            }
+          }}
+        />
+      </View>
+    )
+  }
+
+  render() {
+    let height = this.props.device.height - scaleSize(120)
+    let width = this.props.device.width - scaleSize(60)
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        title={getLanguage(this.props.language).Protocol.PROTOCOL}
+        style={{
+          height: scaleSize(700),
+          width: scaleSize(500),
+          maxHeight: height,
+          maxWidth: width,
+        }}
+        opacityStyle={{ height: scaleSize(240) }}
+        confirmAction={this.confirm}
+        confirmBtnTitle={getLanguage(this.props.language).Protocol.AGREE}
+        cancelBtnVisible={false}
+        defaultVisible={true}
+        confirmBtnDisable={this.state.confirmBtnDisable}
+        type={Dialog.Type.NON_MODAL}
+      >
+        {this.renderWebView()}
+        {this.renderOption()}
       </Dialog>
     )
   }
@@ -173,6 +129,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
+  },
+  optionView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: scaleSize(10),
+    backgroundColor: color.bgW,
   },
   checkView: {
     flexDirection: 'row',

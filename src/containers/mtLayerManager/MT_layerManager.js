@@ -282,6 +282,7 @@ export default class MT_layerManager extends React.Component {
 
   /**地图制图修改风格 */
   mapEdit = data => {
+    let orientation = this.props.device.orientation
     SMap.setLayerEditable(data.path, true)
     if (data.type === 83) {
       GLOBAL.toolBox &&
@@ -297,8 +298,11 @@ export default class MT_layerManager extends React.Component {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
-          column: 4,
-          height: ConstToolType.THEME_HEIGHT[3],
+          column: orientation === 'PORTRAIT' ? 4 : 8,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
