@@ -36,10 +36,12 @@ export default class FloorListView extends React.Component {
 const styles = StyleSheet.create({
   table: {
     position: 'absolute',
-    height: scaleSize(250),
-    width: scaleSize(80),
+    height: 250,
+    width: 80,
     left: 10,
     top: scaleSize(300),
     backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

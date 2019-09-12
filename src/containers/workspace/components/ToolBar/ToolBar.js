@@ -4869,6 +4869,8 @@ export default class ToolBar extends React.PureComponent {
       let path = GLOBAL.homePath + item.path
       SMap.startNavigation(GLOBAL.navidataset, path)
       this.setVisible(false)
+      this.props.existFullMap()
+      NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
       GLOBAL.NAVIGATIONMAPOPEN = true
       let name = item.name

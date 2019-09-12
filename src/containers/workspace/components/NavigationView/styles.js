@@ -45,7 +45,7 @@ export default StyleSheet.create({
   },
   itemText: {
     flex: 1,
-    fontSize: scaleSize(24),
+    fontSize: scaleSize(20),
     marginLeft: scaleSize(15),
   },
   pointAnalystView: {
@@ -70,9 +70,8 @@ export default StyleSheet.create({
     // textAlign:"center",
     // lineHeight: scaleSize(55),
     color: color.fontColorGray,
-    backgroundColor: 'white',
     borderWidth: scaleSize(2),
-    borderColor: '#E0E0E0',
+    borderColor: color.background,
     borderRadius: scaleSize(5),
     justifyContent: 'center',
   },
@@ -84,9 +83,8 @@ export default StyleSheet.create({
     // textAlign:"center",
     // lineHeight: scaleSize(55),
     color: color.fontColorGray,
-    backgroundColor: 'white',
     borderWidth: scaleSize(2),
-    borderColor: '#E0E0E0',
+    borderColor: color.background,
     borderRadius: scaleSize(5),
     marginTop: scaleSize(10),
     justifyContent: 'center',
@@ -106,10 +104,11 @@ export default StyleSheet.create({
     height: scaleSize(80),
     marginLeft: scaleSize(20),
   },
-  analyst1: {
-    width: scaleSize(50),
-    height: scaleSize(50),
-    marginBottom: scaleSize(30),
+  backbtn: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    backgroundColor: '#rgba(255, 255, 255, 0)',
+    marginBottom: scaleSize(40),
   },
   SearchInput: {
     width: scaleSize(350),
