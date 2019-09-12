@@ -63,6 +63,14 @@ export default class MediaEdit extends React.Component {
     }.bind(this)())
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    let shouldUpdate =
+      JSON.stringify(nextProps.user) !== JSON.stringify(this.props.user) ||
+      nextProps.language !== this.props.language ||
+      JSON.stringify(nextState) !== JSON.stringify(this.state)
+    return shouldUpdate
+  }
+
   dealData = async (mediaPaths = []) => {
     let paths = []
     for (let item of mediaPaths) {
