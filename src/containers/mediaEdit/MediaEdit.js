@@ -36,6 +36,7 @@ export default class MediaEdit extends React.Component {
     super(props)
     const { params } = this.props.navigation.state || {}
     this.info = (params && params.info) || {}
+    this.cb = (params && params.cb) || {}
     let paths = []
 
     this.showInfo = {
@@ -137,6 +138,9 @@ export default class MediaEdit extends React.Component {
         //     filter: `SmID=${this.info.geoID}`,
         //   },
         // )
+        if (result && Object.keys(modifiedData).length > 0) {
+          this.cb && this.cb(modifiedData)
+        }
         Toast.show(
           result
             ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY

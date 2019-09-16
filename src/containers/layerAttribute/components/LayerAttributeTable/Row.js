@@ -202,6 +202,7 @@ export default class Row extends Component {
             buttonAction({
               data: this.props.data,
               index: this.props.index,
+              columnIndex: index,
             })
           }
         >
