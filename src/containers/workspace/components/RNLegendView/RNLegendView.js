@@ -214,6 +214,42 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
+    let frontStyle =
+      this.props.language === 'CN'
+        ? {
+          position: 'absolute',
+          top: 0,
+          left: '46%',
+          letterSpacing: scaleSize(2),
+          fontSize: setSpText(18),
+        }
+        : {
+          position: 'absolute',
+          top: 0,
+          left: '35%',
+          letterSpacing: scaleSize(2),
+          fontSize: setSpText(18),
+        }
+    let backStyle =
+      this.props.language === 'CN'
+        ? {
+          left: '46%',
+          position: 'absolute',
+          top: 0,
+          fontSize: setSpText(18),
+          letterSpacing: scaleSize(2),
+          color: color.white,
+          fontWeight: '900',
+        }
+        : {
+          left: '35%',
+          position: 'absolute',
+          top: 0,
+          fontSize: setSpText(18),
+          letterSpacing: scaleSize(1.1),
+          color: color.white,
+          fontWeight: '900',
+        }
     return (
       <View
         style={{
@@ -243,30 +279,8 @@ export default class RNLegendView extends React.Component {
             zIndex: 999,
           }}
         >
-          <Text
-            style={{
-              left: '46%',
-              position: 'absolute',
-              top: 0,
-              fontSize: setSpText(18),
-              letterSpacing: scaleSize(2),
-              color: color.white,
-              fontWeight: '900',
-            }}
-          >
-            {this.state.title}
-          </Text>
-          <Text
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: '46%',
-              letterSpacing: scaleSize(2),
-              fontSize: setSpText(18),
-            }}
-          >
-            {this.state.title}
-          </Text>
+          <Text style={backStyle}>{this.state.title}</Text>
+          <Text style={frontStyle}>{this.state.title}</Text>
         </View>
         <FlatList
           style={{
