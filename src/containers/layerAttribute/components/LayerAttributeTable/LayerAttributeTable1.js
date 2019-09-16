@@ -368,10 +368,10 @@ export default class LayerAttributeTable extends React.Component {
             if (typeof action === 'function') {
               if (item && item instanceof Array) {
                 action({
-                  rowData: item,
+                  rowData: row.data,
                   rowIndex: index,
-                  cellData: row.data,
-                  cellIndex: row.index,
+                  cellData: row.data[row.columnIndex],
+                  cellIndex: row.columnIndex,
                 })
               } else {
                 action({

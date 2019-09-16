@@ -926,6 +926,36 @@ export default class LayerAttribute extends React.Component {
         let info = await SMediaCollector.getMediaInfo(layerName, geoID)
         NavigationService.navigate('MediaEdit', {
           info,
+          cb: mData => {
+            let _data = this.state.attributes.data[data.rowIndex]
+            for (let j = 0; j < mData.length; j++) {
+              if (mData[j].name !== 'mediaName') continue
+              for (let i = 0; i < _data.length; i++) {
+                if (_data[i].name !== 'MediaName') continue
+                if (_data[i].value === mData[j].value) break
+                let isSingle = this.state.attributes.data.length === 1
+                let params = {}
+                if (isSingle) {
+                  params = {
+                    cellData: _data[i].value,
+                    columnIndex: 1,
+                    rowData: data.rowData[i],
+                    index: i,
+                    value: mData[j].value,
+                  }
+                } else {
+                  params = {
+                    cellData: _data[i],
+                    columnIndex: i + 1,
+                    rowData: data.rowData,
+                    index: data.rowIndex,
+                    value: mData[j].value,
+                  }
+                }
+                this.changeAction(params)
+              }
+            }
+          },
         })
       },
     ]
