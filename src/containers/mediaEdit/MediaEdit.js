@@ -125,21 +125,18 @@ export default class MediaEdit extends React.Component {
             ConstPath.RelativeFilePath.Media,
         )
         let result = await SMediaCollector.saveMediaByDataset(
-          // this.info.layerName,
           GLOBAL.TaggingDatasetName || this.info.layerName,
           this.info.geoID,
           targetPath,
           modifiedData,
+          this.info.addToMap !== undefined ? this.info.addToMap : true,
         )
-        // await SMap.setLayerFieldInfo(
-        //   this.info.layerName,
-        //   modifiedData,
-        //   {
-        //     filter: `SmID=${this.info.geoID}`,
-        //   },
-        // )
-        if (result && Object.keys(modifiedData).length > 0) {
-          this.cb && this.cb(modifiedData)
+        if (
+          result &&
+          Object.keys(modifiedData).length > 0 &&
+          typeof this.cb === 'function'
+        ) {
+          this.cb(modifiedData)
         }
         Toast.show(
           result
