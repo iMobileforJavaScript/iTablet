@@ -70,6 +70,7 @@ export default class FunctionToolbar extends React.Component {
 
     incrementRoad: () => {},
     setMapIndoorNavigation: () => {},
+    setMap2Dto3D: () => {},
   }
 
   static defaultProps = {
@@ -113,6 +114,7 @@ export default class FunctionToolbar extends React.Component {
 
   isMapIndoorNavigation = () => {
     this.props.setMapIndoorNavigation(false)
+    this.props.setMap2Dto3D(false)
   }
 
   start = type => {
@@ -604,7 +606,12 @@ export default class FunctionToolbar extends React.Component {
 
   openTraffic = async () => {
     // if (!GLOBAL.NAVIGATIONMAPOPEN) {
-    await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+    let isadd = await SMap.isOpenTrafficMap()
+    if (isadd) {
+      await SMap.removeTrafficMap('tencent@TrafficMap')
+    } else {
+      await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+    }
     // } else {
     //   Toast.show('请使用在线导航功能')
     // }

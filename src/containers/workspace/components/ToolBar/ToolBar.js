@@ -4636,6 +4636,7 @@ export default class ToolBar extends React.PureComponent {
       this.openTemplate(item)
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
+      this.props.setMap2Dto3D(false)
       this.changeMap(item)
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
@@ -4877,7 +4878,6 @@ export default class ToolBar extends React.PureComponent {
       let name = item.name
       SMap.getIndoorNavigationData(name)
       SMap.startIndoorNavigation()
-      this.props.setMap2Dto3D(true)
       this.setVisible(false)
       this.props.existFullMap()
       GLOBAL.HASCHOSE = true
@@ -5426,6 +5426,7 @@ export default class ToolBar extends React.PureComponent {
 
         this.props.setContainerLoading(false)
         this.setVisible(false)
+        this.props.setMap2Dto3D(true)
       } else {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])

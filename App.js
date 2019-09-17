@@ -147,6 +147,8 @@ class AppRoot extends Component {
     GLOBAL.loginTimer = undefined
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
+    GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.HASCHOSE = false
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''

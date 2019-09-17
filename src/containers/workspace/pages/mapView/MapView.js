@@ -42,7 +42,13 @@ import {
   Progress,
   BubblePane,
 } from '../../../../components'
-import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
+import {
+  Toast,
+  jsonUtil,
+  scaleSize,
+  StyleUtils,
+  setSpText,
+} from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
@@ -1237,7 +1243,13 @@ export default class MapView extends React.Component {
             this.showMarker.latitude,
             markerTag,
           )
-        SMap.setIsMagnifierEnabled(true)
+        if (
+          GLOBAL.Type === constants.MAP_COLLECTION ||
+          GLOBAL.Type === constants.MAP_PLOTTING
+        )
+          SMap.setIsMagnifierEnabled(true)
+        this.props.setMap2Dto3D(true)
+        this.props.setMapNavigation({ isShow: false, name: '' })
       } catch (e) {
         this.setLoading(false)
         this.mapLoaded = true
@@ -1484,6 +1496,7 @@ export default class MapView extends React.Component {
           this.setState({ showIncrement: true })
         }}
         setMapIndoorNavigation={this.props.setMapIndoorNavigation}
+        setMap2Dto3D={this.props.setMap2Dto3D}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}
@@ -1894,6 +1907,9 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
+          title={'导航'}
+          textColor={'black'}
+          textStyle={{ fontSize: setSpText(12) }}
           image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={async () => {
             this.indoorNavi()
