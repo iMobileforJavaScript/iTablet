@@ -17,6 +17,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  rightWrap: {
+    flex: 1,
+  },
+  rightWrapText: {
+    minWidth: scaleSize(100),
+    color: '#777',
+    fontSize: setSpText(22),
+    textAlign: 'right',
+  },
   rightText: {
     flex: 1,
     color: '#777',

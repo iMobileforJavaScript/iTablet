@@ -8,6 +8,8 @@ import { Container, PopView } from '../../../components'
 import { ColorTable, SelectList, FilterList } from './components'
 import LinkageList from '../../../components/LinkageList'
 import {
+  KeyboardAvoidingView,
+  ScrollView,
   View,
   FlatList,
   SectionList,
@@ -54,6 +56,7 @@ export default class SecondMapSettings extends Component {
     navigation: Object,
     title: string,
     mapScaleView: Boolean,
+    device: Object,
     setMapScaleView: () => {},
     renderItem?: () => {},
   }
@@ -62,7 +65,6 @@ export default class SecondMapSettings extends Component {
     let { params } = this.props.navigation.state
     this.state = {
       data: [],
-      device: params.device,
       title: params.title,
       rightBtn: params.rightBtn || '',
       cb: params.cb || '',
@@ -518,29 +520,6 @@ export default class SecondMapSettings extends Component {
           )
         }
         break
-      case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
-        this.props.navigation.navigate('InputPage', {
-          headerTitle: title,
-          // keyboardType: 'numeric',
-          placeholder: data[index].value.replace('1:', ''),
-          type: 'number',
-          cb: async newValue => {
-            let isSuccess = false
-            let regExp = /^\d+(\.\d+)?$/
-            let data = this.state.data.concat()
-            if (newValue !== '' && newValue.match(regExp)) {
-              isSuccess = await SMap.setMapScale(1 / newValue)
-              data[index].value = `1:${this.formatNumberToString(newValue)}`
-            } else {
-              Toast.show(getLanguage(GLOBAL.language).Prompt.MAP_SCALE_ERROR)
-            }
-            isSuccess &&
-              this.setState({ data }, () => {
-                this.backAction()
-              })
-          },
-        })
-        break
       case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
         this.props.navigation.navigate('SecondMapSettings1', {
           title,
@@ -597,46 +576,6 @@ export default class SecondMapSettings extends Component {
           cb: this.setTransferMethod,
         })
         break
-      //四至范围点击 跳InputPage
-      case getLanguage(GLOBAL.language).Map_Settings.LEFT:
-      case getLanguage(GLOBAL.language).Map_Settings.BOTTOM:
-      case getLanguage(GLOBAL.language).Map_Settings.RIGHT:
-      case getLanguage(GLOBAL.language).Map_Settings.TOP:
-        this.props.navigation.navigate('InputPage', {
-          headerTitle: title,
-          // keyboardType: 'numeric',
-          placeholder: data[index].value,
-          type: 'number',
-          cb: async newValue => {
-            let isSuccess = false
-            let regExp = /^\d+(\.\d+)?$/
-            let data = this.state.data.concat()
-            if (newValue !== '' && newValue.match(regExp)) {
-              data[index].value = this.formatNumberToString(newValue)
-              let left = this.formatStringToNumber(data[0].value)
-              let bottom = this.formatStringToNumber(data[1].value)
-              let right = this.formatStringToNumber(data[2].value)
-              let top = this.formatStringToNumber(data[3].value)
-              isSuccess = await SMap.setMapViewBounds({
-                left,
-                bottom,
-                right,
-                top,
-              })
-              isSuccess &&
-                this.setState({ data }, () => {
-                  this.backAction()
-                })
-              !isSuccess &&
-                Toast.show(
-                  getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_RANGE_ERROR,
-                )
-            } else {
-              Toast.show(getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_ERROR)
-            }
-          },
-        })
-        break
       case 'Geocentric Transalation(3-para)':
       case 'Molodensky(7-para)':
       case 'Abridged Molodensky(7-para)':
@@ -649,36 +588,84 @@ export default class SecondMapSettings extends Component {
           cb: this.state.cb,
         })
         break
+    }
+  }
+
+  onInputEnding = async (item, index, evt) => {
+    let newValue = evt.nativeEvent.text
+    let isSuccess = false
+    let regExp = /^\d+(\.\d+)?$/
+    let data = this.state.data.concat()
+    let tips = ''
+    switch (item.title) {
+      case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
+        if (newValue !== '' && newValue.match(regExp)) {
+          isSuccess = await SMap.setMapScale(1 / newValue)
+          data[index].value = `1:${this.formatNumberToString(
+            Number.parseFloat(newValue).toFixed(6),
+          )}`
+          data[index].state = false
+        } else {
+          tips = getLanguage(GLOBAL.language).Prompt.MAP_SCALE_ERROR
+        }
+        break
+      //四至范围点击 跳InputPage
+      case getLanguage(GLOBAL.language).Map_Settings.LEFT:
+      case getLanguage(GLOBAL.language).Map_Settings.BOTTOM:
+      case getLanguage(GLOBAL.language).Map_Settings.RIGHT:
+      case getLanguage(GLOBAL.language).Map_Settings.TOP:
+        if (newValue !== '' && newValue.match(regExp)) {
+          data[index].value = this.formatNumberToString(
+            Number.parseFloat(newValue).toFixed(6),
+          )
+          data[index].state = false
+          let left = this.formatStringToNumber(data[0].value)
+          let bottom = this.formatStringToNumber(data[1].value)
+          let right = this.formatStringToNumber(data[2].value)
+          let top = this.formatStringToNumber(data[3].value)
+          isSuccess = await SMap.setMapViewBounds({
+            left,
+            bottom,
+            right,
+            top,
+          })
+          !isSuccess &&
+            (tips = getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_RANGE_ERROR)
+        } else {
+          tips = getLanguage(GLOBAL.language).Prompt.VIEW_BOUNDS_ERROR
+        }
+        break
       //转换参数设置点击
-      case '比例差':
+      case getLanguage(global.language).Map_Settings.PROPORTIONAL_DIFFERENCE:
       case 'X':
       case 'Y':
       case 'Z':
-        this.props.navigation.navigate('InputPage', {
-          headerTitle: title,
-          // keyboardType: 'numeric',
-          type: 'number',
-          placeholder: data[item.pos].value[index].value + '',
-          cb: async newValue => {
-            let isSuccess = false
-            let regExp = /^\d+(\.\d+)?$/
-            let data = this.state.data.concat()
-            if (newValue !== '' && newValue.match(regExp)) {
-              data[item.pos].value[index].value = this.formatNumberToString(
-                newValue,
-              )
-              isSuccess = true
-            } else {
-              Toast.show(getLanguage(GLOBAL.language).Prompt.TRANSFER_PARAMS)
-            }
-            isSuccess &&
-              this.setState({ data }, () => {
-                this.backAction()
-              })
-          },
-        })
+        if (newValue !== '' && newValue.match(regExp)) {
+          data[item.pos].value[index].value = this.formatNumberToString(
+            newValue,
+          )
+          data[item.pos].value[index].state = false
+          isSuccess = true
+        } else {
+          tips = getLanguage(GLOBAL.language).Prompt.TRANSFER_PARAMS
+        }
+        break
+      case getLanguage(global.language).Map_Settings.MAP_CENTER:
+        data[index].value = `${this.formatNumberToString(
+          this.inputvalue,
+        )}/${this.formatNumberToString(Number.parseFloat(newValue).toFixed(6))}`
+        data[index].state = false
+        this.inputvalue = null
+        isSuccess = true
         break
     }
+    this.clickedIndex = 0
+    this.itemPos = 0
+    isSuccess &&
+      this.setState({
+        data,
+      })
+    tips !== '' && Toast.show(tips)
   }
 
   //修改值判定 不适用于跳转InputPage的
@@ -893,6 +880,161 @@ export default class SecondMapSettings extends Component {
       </View>
     )
   }
+  renderInputItem = (item, index) => {
+    if (item.state) {
+      let value = item.value + ''
+      return (
+        <View>
+          <View>
+            <View style={styles.row}>
+              <Text style={styles.itemName}>{item.title}</Text>
+              {item.title ===
+                getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE && (
+                <Text style={styles.rightText}>1:</Text>
+              )}
+              <TextInput
+                ref={ref => (this.input = ref)}
+                onEndEditing={evt => this.onInputEnding(item, index, evt)}
+                style={styles.rightWrapText}
+                keyboardType={'numeric'}
+                returnKeyType={'done'}
+                defaultValue={
+                  this.formatStringToNumber(value.replace('1:', '')) + ''
+                }
+              />
+            </View>
+          </View>
+          {this.renderLine()}
+        </View>
+      )
+    }
+    return (
+      <View>
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.itemName}>{item.title}</Text>
+            <TouchableOpacity
+              onLongPress={() => {
+                let data = this.state.data.concat()
+                switch (item.title) {
+                  case getLanguage(GLOBAL.language).Map_Settings.MAP_SCALE:
+                  case getLanguage(GLOBAL.language).Map_Settings.LEFT:
+                  case getLanguage(GLOBAL.language).Map_Settings.BOTTOM:
+                  case getLanguage(GLOBAL.language).Map_Settings.RIGHT:
+                  case getLanguage(GLOBAL.language).Map_Settings.TOP:
+                    data[index].state = true
+                    break
+                  case 'X':
+                  case 'Y':
+                  case 'Z':
+                  case getLanguage(global.language).Map_Settings
+                    .PROPORTIONAL_DIFFERENCE:
+                    data[item.pos].value[index].state = true
+                    break
+                }
+                //用于计算KeyboarAvoidingView的Offset
+                this.clickedIndex = index
+                this.itemPos = item.pos
+                this.setState(
+                  {
+                    data,
+                  },
+                  () => {
+                    setTimeout(() => {
+                      this.input && this.input.focus()
+                    })
+                  },
+                )
+              }}
+            >
+              <Text style={styles.rightWrapText}>{item.value}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {this.renderLine()}
+      </View>
+    )
+  }
+
+  renderDoubleInputItem = (item, index) => {
+    if (item.state) {
+      let keys = []
+      let values = []
+      switch (item.title) {
+        case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
+          keys = ['x:', 'y:']
+          values = item.value
+            .split('/')
+            .map(val => this.formatStringToNumber(val))
+          break
+      }
+      return (
+        <View>
+          <View>
+            <View style={styles.row}>
+              <Text style={styles.itemName}>{item.title}</Text>
+              <Text style={styles.rightText}>{keys[0]}</Text>
+              <TextInput
+                ref={ref => (this.input = ref)}
+                onEndEditing={evt => {
+                  this.inputvalue = Number.parseFloat(
+                    evt.nativeEvent.text,
+                  ).toFixed(6)
+                  this.input2.focus()
+                }}
+                style={styles.rightWrapText}
+                keyboardType={'numeric'}
+                returnKeyType={'done'}
+                defaultValue={values[0] + ''}
+              />
+              <Text style={styles.rightText}>{keys[1]}</Text>
+              <TextInput
+                ref={ref => (this.input2 = ref)}
+                onEndEditing={evt => this.onInputEnding(item, index, evt)}
+                style={styles.rightWrapText}
+                keyboardType={'numeric'}
+                returnKeyType={'done'}
+                defaultValue={values[1] + ''}
+              />
+            </View>
+          </View>
+          {this.renderLine()}
+        </View>
+      )
+    }
+    return (
+      <View>
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.itemName}>{item.title}</Text>
+            <TouchableOpacity
+              onLongPress={() => {
+                let data = this.state.data.concat()
+                switch (item.title) {
+                  case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
+                    data[index].state = true
+                    break
+                }
+                this.setState(
+                  {
+                    data,
+                  },
+                  () => {
+                    setTimeout(() => {
+                      this.input && this.input.focus()
+                    })
+                  },
+                )
+              }}
+            >
+              <Text style={styles.rightWrapText}>{item.value}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {this.renderLine()}
+      </View>
+    )
+  }
 
   renderItem = ({ item, index }) => {
     if (this.props.renderItem) {
@@ -905,6 +1047,10 @@ export default class SecondMapSettings extends Component {
         return this.renderArrowItem(item, index)
       case 'text':
         return this.renderTextItem(item)
+      case 'input':
+        return this.renderInputItem(item, index)
+      case 'doubleInput':
+        return this.renderDoubleInputItem(item, index)
     }
   }
 
@@ -1050,7 +1196,7 @@ export default class SecondMapSettings extends Component {
             language={this.props.language}
             data={this.state.colorModeData}
             height={scaleSize(400)}
-            device={this.state.device}
+            device={this.props.device}
             callback={this.setMapColorMode}
           />
         )
@@ -1059,7 +1205,7 @@ export default class SecondMapSettings extends Component {
           <ColorTable
             language={this.props.language}
             data={this.state.colorData}
-            device={this.state.device}
+            device={this.props.device}
             setColorBlock={this.setColorBlock}
           />
         )
@@ -1165,6 +1311,22 @@ export default class SecondMapSettings extends Component {
       )
     }
     if (/^[\w\s-]+(\(\d{1,2}-para\))$/.test(this.state.title)) {
+      let keyboardVerticalOffset
+      if (this.props.device.orientation === 'LANDSCAPE') {
+        if (Platform.OS === 'ios') {
+          keyboardVerticalOffset =
+            (this.itemPos - 3) * 120 + this.clickedIndex * 40
+        } else {
+          keyboardVerticalOffset =
+            (this.itemPos - 3) * 120 - this.clickedIndex * 40
+        }
+      } else {
+        if (Platform.OS === 'ios') {
+          keyboardVerticalOffset = this.itemPos * 100 + this.clickedIndex * 20
+        } else {
+          keyboardVerticalOffset = 0
+        }
+      }
       return (
         <Container
           headerProps={{
@@ -1182,19 +1344,27 @@ export default class SecondMapSettings extends Component {
             ],
           }}
         >
-          {this.state.data.map((item, index) => {
-            return (
-              <View key={item + index}>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <FlatList
-                  renderItem={this.renderItem}
-                  data={item.value}
-                  extraData={this.state.data}
-                  keyExtractor={(item, index) => item + index}
-                />
-              </View>
-            )
-          })}
+          <ScrollView>
+            <KeyboardAvoidingView
+              enabled={this.itemPos > 0}
+              behavior={'position'}
+              keyboardVerticalOffset={keyboardVerticalOffset}
+            >
+              {this.state.data.map((item, index) => {
+                return (
+                  <View key={item + index}>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <FlatList
+                      renderItem={this.renderItem}
+                      data={item.value}
+                      extraData={this.state.data}
+                      keyExtractor={(item, index) => item + index}
+                    />
+                  </View>
+                )
+              })}
+            </KeyboardAvoidingView>
+          </ScrollView>
         </Container>
       )
     }
