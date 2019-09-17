@@ -3,7 +3,6 @@
  Author: Yang Shanglong
  E-mail: yangshanglong@supermap.com
  */
-/* eslint-disable */
 import * as React from 'react'
 import {
   StyleSheet,
@@ -15,7 +14,8 @@ import {
   Image,
 } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
-import { size, color } from '../../styles'
+import { color } from '../../styles'
+import { getPublicAssets } from '../../assets'
 
 const ROW_HEIGHT = scaleSize(40)
 export default class TreeListItem extends React.Component {
@@ -53,11 +53,47 @@ export default class TreeListItem extends React.Component {
     }
   }
 
+  renderIcon = () => {
+    const arrowImg = require('../../assets/mapEdit/icon-arrow-down.png')
+    if (this.props.data.childGroups && this.props.data.childGroups.length > 0) {
+      return (
+        <TouchableOpacity
+          style={[styles.btn]}
+          onPress={() => this.showChild(!this.state.isVisible)}
+        >
+          <Animated.Image
+            resizeMode={'contain'}
+            style={[
+              styles.arrowImg,
+              {
+                transform: [
+                  {
+                    rotate: this.state.imgRotate.interpolate({
+                      inputRange: [-1, 1],
+                      outputRange: ['-180deg', '180deg'],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            source={arrowImg}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <Image
+          style={styles.circleImg}
+          source={getPublicAssets().common.icon_circle_dot}
+        />
+      )
+    }
+  }
+
   renderContent = () => {
     if (this.props.children) {
       return this.props.children
     }
-    const arrowImg = require('../../assets/mapEdit/icon-arrow-down.png')
     let icon
     if (this.props.data.$ && this.props.data.$.type) {
       switch (this.props.data.$.type) {
@@ -83,36 +119,7 @@ export default class TreeListItem extends React.Component {
           })
         }
       >
-        {this.props.data.childGroups &&
-        this.props.data.childGroups.length > 0 ? (
-          // || (this.props.data.feature && this.props.data.feature.length > 0)
-          <TouchableOpacity
-            style={[styles.btn]}
-            onPress={() => this.showChild(!this.state.isVisible)}
-          >
-            <Animated.Image
-              resizeMode={'contain'}
-              style={[
-                styles.arrowImg,
-                {
-                  transform: [
-                    // scale, scaleX, scaleY, translateX, translateY, rotate, rotateX, rotateY, rotateZ
-                    {
-                      rotate: this.state.imgRotate.interpolate({
-                        // 旋转，使用插值函数做值映射
-                        inputRange: [-1, 1],
-                        outputRange: ['-180deg', '180deg'],
-                      }),
-                    },
-                  ],
-                },
-              ]}
-              source={arrowImg}
-            />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.btn} />
-        )}
+        {this.renderIcon()}
         {icon && (
           <Image
             resizeMode={'contain'}
@@ -239,6 +246,11 @@ const styles = StyleSheet.create({
     marginRight: scaleSize(20),
     height: scaleSize(20),
     width: scaleSize(20),
+  },
+  circleImg: {
+    marginRight: scaleSize(24),
+    height: scaleSize(12),
+    width: scaleSize(12),
   },
   icon: {
     height: scaleSize(40),
