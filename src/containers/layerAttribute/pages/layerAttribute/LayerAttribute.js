@@ -924,6 +924,7 @@ export default class LayerAttribute extends React.Component {
         let layerName = this.props.currentLayer.name,
           geoID = data.rowData[0].value
         let info = await SMediaCollector.getMediaInfo(layerName, geoID)
+        Object.assign(info, { addToMap: this.props.currentLayer.isVisible })
         NavigationService.navigate('MediaEdit', {
           info,
           cb: mData => {

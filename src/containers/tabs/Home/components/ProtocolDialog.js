@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { WebView, View, StyleSheet, Text } from 'react-native'
+import { WebView, View, StyleSheet, Text, Platform } from 'react-native'
 import { Dialog, CheckBox, MTBtn } from '../../../../components'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 import { color } from '../../../../styles'
@@ -31,16 +31,33 @@ export default class ProtocolDialog extends Component {
   }
 
   renderWebView = () => {
+    let source
+    if (Platform.OS === 'android') {
+      source =
+        this.props.language === 'CN'
+          ? {
+            uri: 'file:///android_asset/SuperMapUserServiceAgreement_CN.html',
+          }
+          : {
+            uri: 'file:///android_asset/SuperMapUserServiceAgreement_EN.html',
+          }
+    } else {
+      source =
+        this.props.language === 'CN'
+          ? require('../../../../assets/Protocol/SuperMapUserServiceAgreement_CN.html')
+          : require('../../../../assets/Protocol/SuperMapUserServiceAgreement_EN.html')
+    }
     return (
       <WebView
         ref={ref => (this.webView = ref)}
         style={{ flex: 1, paddingVertical: 0, backgroundColor: 'transparent' }}
-        source={{
-          uri:
-            this.props.language === 'CN'
-              ? 'http://111.202.121.144:8088/iTablet/home/help/protocol.html'
-              : 'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
-        }}
+        source={source}
+        // source={{
+        //   uri:
+        //     this.props.language === 'CN'
+        //       ? 'http://111.202.121.144:8088/iTablet/home/help/protocol.html'
+        //       : 'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
+        // }}
         /** 保证release版本时，可加载到html*/
         originWhitelist={['*']}
         automaticallyAdjustContentInsets={true}

@@ -449,7 +449,12 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   @try {
     UIImage *shotImage;
     //视频路径URL
-    NSURL *fileURL = [NSURL fileURLWithPath:filepath];
+    NSURL *fileURL;
+    if ([filepath hasPrefix:@"assets-library"]) {
+      fileURL = [NSURL URLWithString:filepath];
+    } else {
+      fileURL = [NSURL fileURLWithPath:filepath];
+    }
     
     AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:fileURL options:nil];
     

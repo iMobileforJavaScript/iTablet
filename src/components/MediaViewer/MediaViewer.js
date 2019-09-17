@@ -269,7 +269,7 @@ export default class MediaViewer extends React.Component {
   }
 
   renderContent = () => {
-    let extension = this.state.uri.substr(this.state.uri.lastIndexOf('.') + 1)
+    const type = checkType.getMediaTypeByPath(this.state.uri)
     return (
       <TouchableOpacity
         onLayout={this.handleLayout}
@@ -279,9 +279,7 @@ export default class MediaViewer extends React.Component {
           this.setVisible(false)
         }}
       >
-        {extension === 'mp4' || extension === 'mov'
-          ? this.renderVideoViewer()
-          : this.renderImageViewer()}
+        {type === 'video' ? this.renderVideoViewer() : this.renderImageViewer()}
       </TouchableOpacity>
     )
   }
