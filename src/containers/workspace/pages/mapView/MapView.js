@@ -165,6 +165,7 @@ export default class MapView extends React.Component {
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
     this.isExample = (params && params.isExample) || false
+    this.noLegend = (params && params.noLegend) || false
     this.wsData = params && params.wsData
     this.operationType = params && params.operationType
     this.showMarker = params && params.showMarker
@@ -2116,7 +2117,7 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend.isShow && (
+        {this.props.mapLegend.isShow && !this.noLegend && (
           <RNLegendView
             setMapLegend={this.props.setMapLegend}
             legendSettings={this.props.mapLegend}
