@@ -29,7 +29,7 @@ export const downloadFile = (params = {}) => async (dispatch, getState) => {
       const element = downloads[index]
       if (element.id === params.key) {
         isExist = true
-        shouldUpdate = value !== downloads[index].progress
+        shouldUpdate = value > downloads[index].progress
         break
       }
     }
