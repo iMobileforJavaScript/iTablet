@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { WebView, View, StyleSheet, Text, Platform } from 'react-native'
+import {
+  WebView,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from 'react-native'
 import { Dialog, CheckBox, MTBtn } from '../../../../components'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 import { color } from '../../../../styles'
@@ -83,6 +90,7 @@ export default class ProtocolDialog extends Component {
       <View style={styles.optionView}>
         <View style={styles.checkView}>
           <CheckBox
+            ref={ref => (this.checkBox = ref)}
             style={styles.checkBox}
             onChange={checked => {
               this.setState({
@@ -90,9 +98,15 @@ export default class ProtocolDialog extends Component {
               })
             }}
           />
-          <Text style={styles.tip}>
-            {getLanguage(this.props.language).Protocol.READ_AND_AGREE}
-          </Text>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.tipBtn}
+            onPress={() => this.checkBox._btnPress()}
+          >
+            <Text style={styles.tip}>
+              {getLanguage(this.props.language).Protocol.READ_AND_AGREE}
+            </Text>
+          </TouchableOpacity>
         </View>
         <MTBtn
           title={this.props.language === 'EN' ? '中文' : 'EN'}
@@ -158,12 +172,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: scaleSize(10),
+    // paddingVertical: scaleSize(10),
+    height: scaleSize(40),
     backgroundColor: color.bgW,
   },
   checkBox: {
-    height: scaleSize(15),
+    height: scaleSize(40),
     width: scaleSize(40),
+  },
+  tipBtn: {
+    height: scaleSize(40),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tip: {
     fontSize: setSpText(16),
