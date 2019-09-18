@@ -78,6 +78,7 @@ import {
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import AnimationNodeEditView from './workspace/components/AnimationNodeEditView'
+import AnimationNodeEditRotateView from './workspace/components/AnimationNodeEditRotateView'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
@@ -356,6 +357,12 @@ const AppNavigator = createStackNavigator(
     },
     AnimationNodeEditView: {
       screen: AnimationNodeEditView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    AnimationNodeEditRotateView: {
+      screen: AnimationNodeEditRotateView,
       navigationOptions: {
         header: null,
       },

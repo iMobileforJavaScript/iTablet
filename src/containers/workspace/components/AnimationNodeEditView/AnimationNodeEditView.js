@@ -1,29 +1,4 @@
-// import * as React from 'react'
-// import { View, Text } from 'react-native'
-
-// export default class AnimationNodeEditView extends React.Component {
-//   props: {
-//     navigation: Object,
-//     nav: Object,
-//     language: string,
-//   }
-
-//   constructor(props) {
-//     super(props)
-//   }
-
-//   render() {
-//     return (
-//       <View></View>
-//     )
-//   }
-// }
-
 import * as React from 'react'
-// import { View, Text,StyleSheet, View,
-//     TouchableOpacity,
-//     TextInput,
-//     Image,} from 'react-native'
 import {
   View,
   StyleSheet,
@@ -31,11 +6,15 @@ import {
   TextInput,
   Image,
   Text,
+  Switch,
+  ScrollView,
 } from 'react-native'
 import { Container, TextBtn } from '../../../../components'
 import { color, size } from '../../../../styles'
 import { getLanguage } from '../../../../language'
 import { scaleSize, setSpText } from '../../../../utils'
+import { SMap } from 'imobile_for_reactnative'
+import NavigationService from '../../../../containers/NavigationService'
 
 export default class AnimationNodeEditView extends React.Component {
   props: {
@@ -49,34 +28,54 @@ export default class AnimationNodeEditView extends React.Component {
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
     this.backcb = params && params.backcb
-    let defaultValue = params && params.value !== undefined ? params.value : ''
+    // let defaultValue = params && params.value !== undefined ? params.value : ''
+    // this.state = {
+    //   value: defaultValue,
+    //   placeholder:
+    //     params && params.placeholder !== undefined ? params.placeholder : '',
+    //   headerTitle:
+    //     params && params.headerTitle !== undefined ? params.headerTitle : '',
+    //   btnTitle:
+    //     params && params.btnTitle
+    //       ? params.btnTitle
+    //       : getLanguage(global.language).Prompt.CONFIRM, //'确定',
+    //   keyboardType:
+    //     params && params.keyboardType ? params.keyboardType : 'default',
+    //   isLegalName: !!defaultValue,
+    //   errorInfo: '',
+    // }
+    this.clickAble = true // 防止重复点击
+
+    let index = params && params.index
     this.state = {
-      value: defaultValue,
-      placeholder:
-        params && params.placeholder !== undefined ? params.placeholder : '',
-      headerTitle:
-        params && params.headerTitle !== undefined ? params.headerTitle : '',
+      index: index,
+      animationType: -1,
+      data: {},
+
       btnTitle:
         params && params.btnTitle
           ? params.btnTitle
           : getLanguage(global.language).Prompt.CONFIRM, //'确定',
-      keyboardType:
-        params && params.keyboardType ? params.keyboardType : 'default',
-      isLegalName: !!defaultValue,
-      errorInfo: '',
+      headerTitle:
+        params && params.headerTitle !== undefined ? params.headerTitle : '',
     }
-    this.clickAble = true // 防止重复点击
   }
 
-  confirm = () => {
-    if (this.clickAble && this.state.isLegalName) {
-      this.clickAble = false
-      this.input && this.input.blur()
-      this.cb && this.cb(this.state.value)
-      setTimeout(() => {
-        this.clickAble = true
-      }, 1500)
-    }
+  componentDidMount() {
+    this.getAnimationGoInfo()
+  }
+
+  getAnimationGoInfo = async () => {
+    let animationGoInfo = await SMap.getAnimationGoInfo(this.state.index)
+    this.setState({
+      data: animationGoInfo,
+      animationType: animationGoInfo.animationType,
+    })
+  }
+
+  confirm = async () => {
+    await SMap.modifyAnimationNode(this.state.index, this.state.data)
+    this.cb && this.cb()
   }
 
   back = () => {
@@ -87,9 +86,83 @@ export default class AnimationNodeEditView extends React.Component {
     }
   }
 
-  renderBlinkView() {
+  setBlinkStyle = blinkStyle => {
+    let tempData = this.state.data
+    tempData.blinkStyle = blinkStyle
+    this.setState({
+      data: tempData,
+    })
+  }
+
+  setRotateDirection = rotateDirection => {
+    let tempData = this.state.data
+    tempData.rotateDirection = rotateDirection
+    this.setState({
+      data: tempData,
+    })
+  }
+
+  modifyNubmer = (oldNum, offset) => {
+    let tempNum = Number(oldNum) + offset
+    if (tempNum < 0) {
+      tempNum = 0
+    }
+    return tempNum + ''
+  }
+
+  modifyRotateStartAngle = () => {
+    NavigationService.navigate('AnimationNodeEditRotateView', {
+      headerTitle: getLanguage(global.language).Map_Plotting
+        .ANIMATION_ROTATE_START_ANGLE,
+      //'开始旋转角度',
+      data: this.state.data.startAngle,
+      cb: async data => {
+        NavigationService.goBack()
+        let tempData = this.state.data
+        tempData.startAngle = data
+        this.setState({
+          data: tempData,
+        })
+      },
+    })
+  }
+
+  modifyRotateEndAngle = () => {
+    NavigationService.navigate('AnimationNodeEditRotateView', {
+      headerTitle: getLanguage(global.language).Map_Plotting
+        .ANIMATION_ROTATE_END_ANGLE,
+      //'结束旋转角度',
+      data: this.state.data.endAngle,
+      cb: async data => {
+        NavigationService.goBack()
+        let tempData = this.state.data
+        tempData.endAngle = data
+        this.setState({
+          data: tempData,
+        })
+      },
+    })
+  }
+
+  clearNoNum = value => {
+    value = value.replace(/[^\d.]/g, '') //清除“数字”和“.”以外的字符
+    value = value.replace(/\.{2,}/g, '.') //只保留第一个. 清除多余的
+    value = value
+      .replace('.', '$#$')
+      .replace(/\./g, '')
+      .replace('$#$', '.')
+    // value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+    if (value.indexOf('.') < 0 && value != '') {
+      //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+      value = parseFloat(value)
+    }
+    return value + ''
+  }
+
+  //属性动画
+  renderAttributeView() {
     return (
-      <View style={styles.container}>
+      <View style={styles.subContainer}>
         <View style={styles.titleView}>
           <Text style={styles.textTitle}>
             {getLanguage(global.language).Map_Plotting.ANIMATION_ATTRIBUTE}
@@ -99,13 +172,47 @@ export default class AnimationNodeEditView extends React.Component {
           <Text style={styles.startTimeText}>
             {
               getLanguage(global.language).Map_Plotting
-                .PLOTTING_ANIMATION_START_TIME
+                .ANIMATION_ATTRIBUTE_LINE_WIDTH
+            }
+          </Text>
+          <View style={styles.startTimeView}>
+            <Switch
+              trackColor={{ false: color.bgG, true: color.switch }}
+              thumbColor={color.bgW}
+              ios_backgroundColor={color.bgG}
+              value={this.state.data.lineWidthAttr}
+              onValueChange={value => {
+                let tempData = this.state.data
+                tempData.lineWidthAttr = value
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            />
+          </View>
+        </View>
+
+        <View style={styles.startTime}>
+          <View style={{ marginLeft: scaleSize(50) }} />
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_ATTRIBUTE_LINE_WIDTH_START
             }
           </Text>
           <View style={styles.startTimeView}>
             <TouchableOpacity
               style={styles.modifyTime}
-              // onPress={this.subStartTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startLineWidth = this.modifyNubmer(
+                  this.state.data.startLineWidth,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
             >
               <Image
                 source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
@@ -114,17 +221,28 @@ export default class AnimationNodeEditView extends React.Component {
             </TouchableOpacity>
             <TextInput
               style={styles.inputTime}
-              // onChangeText={text => {
-              // this.setState({
-              //     startTime: Number(text.replace(/[^0-9.]*/g, '')),
-              // })
-              // }}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.startLineWidth = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
               keyboardType="numeric"
-              value={this.state.startTime + ''}
+              value={this.state.data.startLineWidth + ''}
             />
             <TouchableOpacity
               style={styles.modifyTime}
-              // onPress={this.addStartTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startLineWidth = this.modifyNubmer(
+                  this.state.data.startLineWidth,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
             >
               <Image
                 source={require('../../../../assets/publicTheme/plot/plot_add.png')}
@@ -133,20 +251,474 @@ export default class AnimationNodeEditView extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+
+        <View style={styles.startTime}>
+          <View style={{ marginLeft: scaleSize(50) }} />
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_ATTRIBUTE_LINE_WIDTH_END
+            }
+          </Text>
+
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.endLineWidth = this.modifyNubmer(
+                  this.state.data.endLineWidth,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.endLineWidth = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.endLineWidth + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.endLineWidth = this.modifyNubmer(
+                  this.state.data.endLineWidth,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.lineStyle} />
         {
           <View style={styles.startTime}>
             <Text style={styles.startTimeText}>
               {
                 getLanguage(global.language).Map_Plotting
-                  .PLOTTING_ANIMATION_DURATION
+                  .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH
               }
             </Text>
 
             <View style={styles.startTimeView}>
+              <Switch
+                trackColor={{ false: color.bgG, true: color.switch }}
+                thumbColor={color.bgW}
+                ios_backgroundColor={color.bgG}
+                value={this.state.data.surroundLineWidthAttr}
+                onValueChange={value => {
+                  let tempData = this.state.data
+                  tempData.surroundLineWidthAttr = value
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              />
+            </View>
+          </View>
+        }
+        <View style={styles.startTime}>
+          <View style={{ marginLeft: scaleSize(50) }} />
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_START
+            }
+          </Text>
+
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startSurroundLineWidth = this.modifyNubmer(
+                  this.state.data.startSurroundLineWidth,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.startSurroundLineWidth = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.startSurroundLineWidth + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startSurroundLineWidth = this.modifyNubmer(
+                  this.state.data.startSurroundLineWidth,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.startTime}>
+          <View style={{ marginLeft: scaleSize(50) }} />
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_END
+            }
+          </Text>
+
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.endSurroundLineWidth = this.modifyNubmer(
+                  this.state.data.endSurroundLineWidth,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.endSurroundLineWidth = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.endSurroundLineWidth + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.endSurroundLineWidth = this.modifyNubmer(
+                  this.state.data.endSurroundLineWidth,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  //旋转动画
+  renderRotateView() {
+    return (
+      <View style={styles.subContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.textTitle}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_ROTATE}
+          </Text>
+        </View>
+        <View style={styles.startTime}>
+          <View style={styles.itemView}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_ROTATE_DIRECTION
+              }
+            </Text>
+          </View>
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.subImg}
+              onPress={() => this.setRotateDirection(0)}
+            >
+              <Image
+                source={
+                  this.state.data.rotateDirection == 0
+                    ? require('../../../../assets/public/radio_select.png')
+                    : require('../../../../assets/public/radio_select_no.png')
+                }
+                style={styles.subImg}
+              />
+            </TouchableOpacity>
+            <View style={{ marginLeft: scaleSize(5) }} />
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_ROTATE_CLOCKWISE
+              }
+            </Text>
+            <View style={{ marginLeft: scaleSize(30) }} />
+            <TouchableOpacity
+              style={styles.subImg}
+              onPress={() => this.setRotateDirection(1)}
+            >
+              <Image
+                source={
+                  this.state.data.rotateDirection == 1
+                    ? require('../../../../assets/public/radio_select.png')
+                    : require('../../../../assets/public/radio_select_no.png')
+                }
+                style={styles.subImg}
+              />
+            </TouchableOpacity>
+            <View style={{ marginLeft: scaleSize(5) }} />
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_ROTATE_ANTICLOCKWISE
+              }
+            </Text>
+          </View>
+        </View>
+        <View style={styles.lineStyle} />
+
+        <View style={styles.startTime}>
+          <View style={styles.itemView}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_ROTATE_START_ANGLE
+              }
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.startTimeView}
+            onPress={() => {
+              this.modifyRotateStartAngle()
+            }}
+          >
+            <Text style={styles.rotateAngleText}>
+              {this.state.data.startAngle.x +
+                '.' +
+                this.state.data.startAngle.y}
+            </Text>
+            <Image
+              source={require('../../../../assets/Mine/mine_my_arrow.png')}
+              style={styles.rotateAngleImg}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.lineStyle} />
+        <View style={styles.startTime}>
+          <View style={styles.itemView}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_ROTATE_END_ANGLE
+              }
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.startTimeView}
+            onPress={() => {
+              this.modifyRotateEndAngle()
+            }}
+          >
+            <Text style={styles.rotateAngleText}>
+              {this.state.data.endAngle.x + '.' + this.state.data.endAngle.y}
+            </Text>
+            <Image
+              source={require('../../../../assets/Mine/mine_my_arrow.png')}
+              style={styles.rotateAngleImg}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  //闪烁动画
+  renderBlinkView() {
+    return (
+      <View style={styles.subContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.textTitle}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_BLINK}
+          </Text>
+        </View>
+        <View style={styles.startTime}>
+          <View style={styles.itemView}>
+            <TouchableOpacity
+              style={styles.subImg}
+              onPress={() => this.setBlinkStyle(0)}
+            >
+              <Image
+                source={
+                  this.state.data.blinkStyle == 0
+                    ? require('../../../../assets/public/radio_select.png')
+                    : require('../../../../assets/public/radio_select_no.png')
+                }
+                style={styles.subImg}
+              />
+            </TouchableOpacity>
+            <View style={{ marginLeft: scaleSize(15) }} />
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_BLINK_INTERVAL
+              }
+            </Text>
+          </View>
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let blinkinterval = this.modifyNubmer(
+                  this.state.data.blinkinterval,
+                  -1,
+                )
+                let tempData = this.state.data
+                tempData.blinkinterval = blinkinterval
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let blinkinterval = this.clearNoNum(text)
+                let tempData = this.state.data
+                tempData.blinkinterval = blinkinterval
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.blinkinterval + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let blinkinterval = this.modifyNubmer(
+                  this.state.data.blinkinterval,
+                  1,
+                )
+                let tempData = this.state.data
+                tempData.blinkinterval = blinkinterval
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* <View style={styles.lineStyle} /> */}
+        {
+          <View style={styles.startTime}>
+            {/* <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_BLINK_NUMBER
+              }
+            </Text> */}
+
+            <View style={styles.itemView}>
+              <TouchableOpacity
+                style={styles.subImg}
+                onPress={() => this.setBlinkStyle(1)}
+              >
+                <Image
+                  source={
+                    this.state.data.blinkStyle == 1
+                      ? require('../../../../assets/public/radio_select.png')
+                      : require('../../../../assets/public/radio_select_no.png')
+                  }
+                  style={styles.subImg}
+                />
+              </TouchableOpacity>
+              <View style={{ marginLeft: scaleSize(15) }} />
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .ANIMATION_BLINK_NUMBER
+                }
+              </Text>
+            </View>
+
+            <View style={styles.startTimeView}>
               <TouchableOpacity
                 style={styles.modifyTime}
-                // onPress={this.subDurationTime}
+                onPress={() => {
+                  let blinkNumber = this.modifyNubmer(
+                    this.state.data.blinkNumber,
+                    -1,
+                  )
+                  let tempData = this.state.data
+                  tempData.blinkNumber = blinkNumber
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
               >
                 <Image
                   source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
@@ -156,16 +728,29 @@ export default class AnimationNodeEditView extends React.Component {
               <TextInput
                 style={styles.inputTime}
                 keyboardType="numeric"
-                // onChangeText={text => {
-                //   // this.setState({
-                //   //     durationTime: Number(text.replace(/[^0-9.]*/g, '')),
-                //   // })
-                // }}
-                value={this.state.durationTime + ''}
+                onChangeText={text => {
+                  let blinkNumber = Number(text.replace(/[^0-9]*/g, '')) + ''
+                  let tempData = this.state.data
+                  tempData.blinkNumber = blinkNumber
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+                value={this.state.data.blinkNumber + ''}
               />
               <TouchableOpacity
                 style={styles.modifyTime}
-                // onPress={this.addDurationTime}
+                onPress={() => {
+                  let blinkNumber = this.modifyNubmer(
+                    this.state.data.blinkNumber,
+                    1,
+                  )
+                  let tempData = this.state.data
+                  tempData.blinkNumber = blinkNumber
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
               >
                 <Image
                   source={require('../../../../assets/publicTheme/plot/plot_add.png')}
@@ -179,106 +764,362 @@ export default class AnimationNodeEditView extends React.Component {
     )
   }
 
-  //   renderContentView() {
-  //     return (
-  //       <View style={styles.container}>
-  //         <View style={styles.titleView}>
-  //           <Text style={styles.textTitle}>
-  //             {getLanguage(global.language).Map_Plotting.ANIMATION_ATTRIBUTE}
-  //           </Text>
-  //         </View>
-  //         <View style={styles.startTime}>
-  //           <Text style={styles.startTimeText}>
-  //             {
-  //               getLanguage(global.language).Map_Plotting
-  //                 .PLOTTING_ANIMATION_START_TIME
-  //             }
-  //           </Text>
-  //           <View style={styles.startTimeView}>
-  //             <TouchableOpacity
-  //               style={styles.modifyTime}
-  //               // onPress={this.subStartTime}
-  //             >
-  //               <Image
-  //                 source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-  //                 style={styles.tableItemImg}
-  //               />
-  //             </TouchableOpacity>
-  //             <TextInput
-  //               style={styles.inputTime}
-  //               // onChangeText={text => {
-  //               // this.setState({
-  //               //     startTime: Number(text.replace(/[^0-9.]*/g, '')),
-  //               // })
-  //               // }}
-  //               keyboardType="numeric"
-  //               value={this.state.startTime + ''}
-  //             />
-  //             <TouchableOpacity
-  //               style={styles.modifyTime}
-  //               // onPress={this.addStartTime}
-  //             >
-  //               <Image
-  //                 source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-  //                 style={styles.tableItemImg}
-  //               />
-  //             </TouchableOpacity>
-  //           </View>
-  //         </View>
-  //         <View style={styles.lineStyle} />
-  //         {
-  //           <View style={styles.startTime}>
-  //             <Text style={styles.startTimeText}>
-  //               {
-  //                 getLanguage(global.language).Map_Plotting
-  //                   .PLOTTING_ANIMATION_DURATION
-  //               }
-  //             </Text>
-
-  //             <View style={styles.startTimeView}>
-  //               <TouchableOpacity
-  //                 style={styles.modifyTime}
-  //                 // onPress={this.subDurationTime}
-  //               >
-  //                 <Image
-  //                   source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-  //                   style={styles.tableItemImg}
-  //                 />
-  //               </TouchableOpacity>
-  //               <TextInput
-  //                 style={styles.inputTime}
-  //                 keyboardType="numeric"
-  //                 // onChangeText={text => {
-  //                 //   // this.setState({
-  //                 //   //     durationTime: Number(text.replace(/[^0-9.]*/g, '')),
-  //                 //   // })
-  //                 // }}
-  //                 value={this.state.durationTime + ''}
-  //               />
-  //               <TouchableOpacity
-  //                 style={styles.modifyTime}
-  //                 // onPress={this.addDurationTime}
-  //               >
-  //                 <Image
-  //                   source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-  //                   style={styles.tableItemImg}
-  //                 />
-  //               </TouchableOpacity>
-  //             </View>
-  //           </View>
-  //         }
-  //       </View>
-  //     )
-  //   }
-
-  renderContentView() {
+  //比例动画
+  renderScaleView() {
     return (
-      <View style={styles.container}>
+      <View style={styles.subContainer}>
         <View style={styles.titleView}>
           <Text style={styles.textTitle}>
-            {getLanguage(global.language).Map_Plotting.ANIMATION_ATTRIBUTE}
+            {getLanguage(global.language).Map_Plotting.ANIMATION_SCALE}
           </Text>
         </View>
+        <View style={styles.startTime}>
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_SCALE_START_SCALE
+            }
+          </Text>
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startScale = this.modifyNubmer(
+                  this.state.data.startScale,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.startScale = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.startScale + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startScale = this.modifyNubmer(
+                  this.state.data.startScale,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.lineStyle} />
+        {
+          <View style={styles.startTime}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_SCALE_END_SCALE
+              }
+            </Text>
+
+            <View style={styles.startTimeView}>
+              <TouchableOpacity
+                style={styles.modifyTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.endScale = this.modifyNubmer(
+                    this.state.data.endScale,
+                    -1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              >
+                <Image
+                  source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                  style={styles.tableItemImg}
+                />
+              </TouchableOpacity>
+              <TextInput
+                style={styles.inputTime}
+                keyboardType="numeric"
+                onChangeText={text => {
+                  let tempData = this.state.data
+                  tempData.endScale = this.clearNoNum(text)
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+                value={this.state.data.endScale + ''}
+              />
+              <TouchableOpacity
+                style={styles.modifyTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.endScale = this.modifyNubmer(
+                    this.state.data.endScale,
+                    1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              >
+                <Image
+                  source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                  style={styles.tableItemImg}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+
+  //生长动画
+  renderGrowView() {
+    return (
+      <View style={styles.subContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.textTitle}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_GROW}
+          </Text>
+        </View>
+        <View style={styles.startTime}>
+          <Text style={styles.startTimeText}>
+            {
+              getLanguage(global.language).Map_Plotting
+                .ANIMATION_SCALE_START_SCALE
+            }
+          </Text>
+          <View style={styles.startTimeView}>
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startLocation = this.modifyNubmer(
+                  this.state.data.startLocation,
+                  -1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.inputTime}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.startLocation = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              keyboardType="numeric"
+              value={this.state.data.startLocation + ''}
+            />
+            <TouchableOpacity
+              style={styles.modifyTime}
+              onPress={() => {
+                let tempData = this.state.data
+                tempData.startLocation = this.modifyNubmer(
+                  this.state.data.startLocation,
+                  1,
+                )
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            >
+              <Image
+                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                style={styles.tableItemImg}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.lineStyle} />
+        {
+          <View style={styles.startTime}>
+            <Text style={styles.startTimeText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .ANIMATION_SCALE_END_SCALE
+              }
+            </Text>
+
+            <View style={styles.startTimeView}>
+              <TouchableOpacity
+                style={styles.modifyTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.endLocation = this.modifyNubmer(
+                    this.state.data.endLocation,
+                    -1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              >
+                <Image
+                  source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                  style={styles.tableItemImg}
+                />
+              </TouchableOpacity>
+              <TextInput
+                style={styles.inputTime}
+                keyboardType="numeric"
+                onChangeText={text => {
+                  let tempData = this.state.data
+                  tempData.endLocation = this.clearNoNum(text)
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+                value={this.state.data.endLocation + ''}
+              />
+              <TouchableOpacity
+                style={styles.modifyTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.endLocation = this.modifyNubmer(
+                    this.state.data.endLocation,
+                    1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              >
+                <Image
+                  source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                  style={styles.tableItemImg}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+
+  //显隐动画
+  renderShowView() {
+    return (
+      <View style={styles.subContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.textTitle}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_SHOW}
+          </Text>
+        </View>
+        <View style={styles.startTime}>
+          <Text style={styles.startTimeText}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_SHOW_STATE}
+          </Text>
+          <View style={styles.startTimeView}>
+            <Switch
+              // style={styles.switch}
+              trackColor={{ false: color.bgG, true: color.switch }}
+              // thumbColor={item.value ? color.bgW : color.bgW}
+              thumbColor={color.bgW}
+              // ios_backgroundColor={item.value ? color.switch : color.bgG}
+              ios_backgroundColor={color.bgG}
+              value={this.state.data.showState}
+              onValueChange={value => {
+                let tempData = this.state.data
+                tempData.showState = value
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.lineStyle} />
+        {
+          <View style={styles.startTime}>
+            <Text style={styles.startTimeText}>
+              {getLanguage(global.language).Map_Plotting.ANIMATION_SHOW_EFFECT}
+            </Text>
+
+            <View style={styles.startTimeView}>
+              <Switch
+                // style={styles.switch}
+                trackColor={{ false: color.bgG, true: color.switch }}
+                // thumbColor={item.value ? color.bgW : color.bgW}
+                thumbColor={color.bgW}
+                // ios_backgroundColor={item.value ? color.switch : color.bgG}
+                ios_backgroundColor={color.bgG}
+                value={this.state.data.showEffect}
+                onValueChange={value => {
+                  let tempData = this.state.data
+                  tempData.showEffect = value
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+              />
+            </View>
+          </View>
+        }
+      </View>
+    )
+  }
+
+  renderCommonView() {
+    return (
+      <View style={styles.subContainer}>
+        <View style={styles.titleView}>
+          <Text style={styles.textTitle}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_ATTRIBUTE_STR}
+          </Text>
+        </View>
+        <View style={styles.startTime}>
+          <Text style={styles.startTimeText}>
+            {getLanguage(global.language).Map_Main_Menu.ANIMATION_NODE_NAME}
+          </Text>
+          <View style={styles.startTimeView}>
+            <TextInput
+              style={styles.inputName}
+              onChangeText={text => {
+                let tempData = this.state.data
+                tempData.name = text
+                this.setState({
+                  data: tempData,
+                })
+              }}
+              value={this.state.data.name + ''}
+            />
+          </View>
+        </View>
+        <View style={styles.lineStyle} />
         <View style={styles.startTime}>
           <Text style={styles.startTimeText}>
             {
@@ -289,7 +1130,14 @@ export default class AnimationNodeEditView extends React.Component {
           <View style={styles.startTimeView}>
             <TouchableOpacity
               style={styles.modifyTime}
-              // onPress={this.subStartTime}
+              onPress={() => {
+                let tempData = this.state.data
+                let startTime = this.modifyNubmer(this.state.data.startTime, -1)
+                tempData.startTime = startTime
+                this.setState({
+                  data: tempData,
+                })
+              }}
             >
               <Image
                 source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
@@ -298,17 +1146,27 @@ export default class AnimationNodeEditView extends React.Component {
             </TouchableOpacity>
             <TextInput
               style={styles.inputTime}
-              // onChangeText={text => {
-              // this.setState({
-              //     startTime: Number(text.replace(/[^0-9.]*/g, '')),
-              // })
-              // }}
+              onChangeText={text => {
+                // this.state.data.startTime=Number(text.replace(/[^0-9.]*/g, ''))+''
+                let tempData = this.state.data
+                tempData.startTime = this.clearNoNum(text)
+                this.setState({
+                  data: tempData,
+                })
+              }}
               keyboardType="numeric"
-              value={this.state.startTime + ''}
+              value={this.state.data.startTime + ''}
             />
             <TouchableOpacity
               style={styles.modifyTime}
-              // onPress={this.addStartTime}
+              onPress={() => {
+                let tempData = this.state.data
+                let startTime = this.modifyNubmer(this.state.data.startTime, 1)
+                tempData.startTime = startTime
+                this.setState({
+                  data: tempData,
+                })
+              }}
             >
               <Image
                 source={require('../../../../assets/publicTheme/plot/plot_add.png')}
@@ -330,7 +1188,16 @@ export default class AnimationNodeEditView extends React.Component {
             <View style={styles.startTimeView}>
               <TouchableOpacity
                 style={styles.modifyTime}
-                // onPress={this.subDurationTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.durationTime = this.modifyNubmer(
+                    this.state.data.durationTime,
+                    -1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
               >
                 <Image
                   source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
@@ -340,16 +1207,28 @@ export default class AnimationNodeEditView extends React.Component {
               <TextInput
                 style={styles.inputTime}
                 keyboardType="numeric"
-                // onChangeText={text => {
-                //   // this.setState({
-                //   //     durationTime: Number(text.replace(/[^0-9.]*/g, '')),
-                //   // })
-                // }}
-                value={this.state.durationTime + ''}
+                onChangeText={text => {
+                  // this.state.data.durationTime=Number(text.replace(/[^0-9.]*/g, ''))+''
+                  let tempData = this.state.data
+                  tempData.durationTime = this.clearNoNum(text)
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
+                value={this.state.data.durationTime + ''}
               />
               <TouchableOpacity
                 style={styles.modifyTime}
-                // onPress={this.addDurationTime}
+                onPress={() => {
+                  let tempData = this.state.data
+                  tempData.durationTime = this.modifyNubmer(
+                    this.state.data.durationTime,
+                    1,
+                  )
+                  this.setState({
+                    data: tempData,
+                  })
+                }}
               >
                 <Image
                   source={require('../../../../assets/publicTheme/plot/plot_add.png')}
@@ -359,6 +1238,35 @@ export default class AnimationNodeEditView extends React.Component {
             </View>
           </View>
         }
+      </View>
+    )
+  }
+
+  // 路径、闪烁、属性、显隐、旋转、比例、生长
+  renderContentView() {
+    // let view=[]
+    // view.push(this.renderBlinkView())
+    return this.state.animationType == -1 ? (
+      <View />
+    ) : (
+      <View style={styles.container}>
+        {this.renderCommonView()}
+        {// this.state.animationType==0?this.renderBlinkView():
+          this.state.animationType == 1 ? (
+            this.renderBlinkView()
+          ) : this.state.animationType == 2 ? (
+            this.renderAttributeView()
+          ) : this.state.animationType == 3 ? (
+            this.renderShowView()
+          ) : this.state.animationType == 4 ? (
+            this.renderRotateView()
+          ) : this.state.animationType == 5 ? (
+            this.renderScaleView()
+          ) : this.state.animationType == 6 ? (
+            this.renderGrowView()
+          ) : (
+            <View />
+          )}
       </View>
     )
   }
@@ -376,66 +1284,22 @@ export default class AnimationNodeEditView extends React.Component {
             <TextBtn
               btnText={this.state.btnTitle}
               textStyle={
-                this.state.isLegalName
-                  ? styles.headerBtnTitle
-                  : styles.headerBtnTitleDisable
+                // this.state.isLegalName
+                //   ? styles.headerBtnTitle
+                //   : styles.headerBtnTitleDisable
+                styles.headerBtnTitle
               }
               btnClick={this.confirm}
             />
           ),
         }}
       >
-        {this.renderContentView()}
-
-        {/* <View style={styles.subContainer}>
-          <Input
-            ref={ref => (this.input = ref)}
-            accessible={true}
-            accessibilityLabel={'输入框'}
-            inputStyle={styles.input}
-            placeholder={this.state.placeholder}
-            placeholderTextColor={color.themePlaceHolder}
-            value={this.state.value + ''}
-            onChangeText={text => {
-              if (this.state.keyboardType === 'numeric') {
-                this.setState({
-                  value: text,
-                  isLegalName:
-                    text !== '' && !isNaN(text) && text !== undefined,
-                })
-              } else {
-                let { result, error } = dataUtil.isLegalName(
-                  text,
-                  this.props.language,
-                )
-                this.setState({
-                  isLegalName: result,
-                  errorInfo: error,
-                  value: text,
-                })
-              }
-            }}
-            onClear={() => {
-              let { result, error } = dataUtil.isLegalName(
-                '',
-                this.props.language,
-              )
-              this.setState({
-                isLegalName: result,
-                errorInfo: error,
-                value: '',
-              })
-            }}
-            returnKeyType={'done'}
-            keyboardType={this.state.keyboardType}
-            showClear
-          />
-          {!this.state.isLegalName && !!this.state.errorInfo && (
-            <View style={styles.errorView}>
-              <Text style={styles.errorInfo}>{this.state.errorInfo}</Text>
-            </View>
-          )}
-        </View> */}
+        <ScrollView
+          style={styles.container}
+          ref={ref => (this.scrollView = ref)}
+        >
+          {this.renderContentView()}
+        </ScrollView>
       </Container>
     )
   }
@@ -448,8 +1312,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.contentColorWhite,
   },
   subContainer: {
-    flex: 1,
-    marginTop: scaleSize(45),
+    // flex: 1,
+    // marginTop: scaleSize(45),
     backgroundColor: color.contentColorWhite,
   },
   headerBtnTitle: {
@@ -534,5 +1398,33 @@ const styles = StyleSheet.create({
   tableItemImg: {
     height: scaleSize(60),
     width: scaleSize(60),
+  },
+  subImg: {
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  itemView: {
+    flexDirection: 'row',
+    height: scaleSize(80),
+    // padding: scaleSize(40),
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  rotateAngleText: {
+    fontSize: setSpText(20),
+    height: scaleSize(30),
+    color: color.themePlaceHolder,
+    textAlign: 'center',
+    padding: scaleSize(3),
+  },
+  rotateAngleImg: {
+    height: scaleSize(30),
+    width: scaleSize(30),
+  },
+  inputName: {
+    height: scaleSize(80),
+    width: scaleSize(160),
+    fontSize: setSpText(20),
+    textAlign: 'right',
   },
 })
