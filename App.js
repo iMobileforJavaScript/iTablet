@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
-import { setAgreeToProtocol } from './src/models/setting'
+import { setAgreeToProtocol, setLanguage, setMapSetting } from './src/models/setting'
 import {
   setEditLayer,
   setSelection,
@@ -22,7 +22,6 @@ import {
   setTemplate,
 } from './src/models/template'
 import { Dialog, Loading } from './src/components'
-import { setMapSetting } from './src/models/setting'
 import { setAnalystParams } from './src/models/analyst'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
@@ -103,6 +102,7 @@ class AppRoot extends Component {
     collection: PropTypes.object,
     layers: PropTypes.array,
     isAgreeToProtocol: PropTypes.bool,
+    device: PropTypes.object,
 
     setNav: PropTypes.func,
     setUser: PropTypes.func,
@@ -122,6 +122,7 @@ class AppRoot extends Component {
     setAttributes: PropTypes.func,
     setAnalystParams: PropTypes.func,
     setAgreeToProtocol: PropTypes.func,
+    setLanguage: PropTypes.func,
   }
 
   constructor (props) {
@@ -146,6 +147,8 @@ class AppRoot extends Component {
     GLOBAL.loginTimer = undefined
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
+    GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.HASCHOSE = false
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
@@ -202,7 +205,6 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
-    this.protocolDialog && this.protocolDialog.setVisible(true)
     this.login()
     this.reCircleLogin()
     // this.initSpeechManager()
@@ -524,7 +526,7 @@ class AppRoot extends Component {
   renderDialog = () => {
     return (<Dialog
       ref={ref => (this.exit = ref)}
-      type={'modal'}
+      type={Dialog.Type.NON_MODAL}
       confirmAction={async () => {
         this.exit.setDialogVisible(false)
         GLOBAL.Loading.setLoading(
@@ -630,6 +632,8 @@ class AppRoot extends Component {
       <ProtocolDialog
         ref={ref => (this.protocolDialog = ref)}
         language={this.props.language}
+        device={this.props.device}
+        setLanguage={this.props.setLanguage}
         confirm={isAgree => {
           this.props.setAgreeToProtocol && this.props.setAgreeToProtocol(isAgree)
           this.protocolDialog.setVisible(false)
@@ -713,6 +717,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setAnalystParams,
   saveMap,
   setAgreeToProtocol,
+  setLanguage,
 })(AppRoot)
 
 const App = () =>

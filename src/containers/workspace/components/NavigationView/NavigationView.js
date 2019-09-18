@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text } from 'react-native'
-import { scaleSize, setSpText } from '../../../../utils'
+import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native'
+import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
 import { MTBtn } from '../../../../components'
@@ -9,7 +9,6 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 
 export default class NavigationView extends React.Component {
   static propTypes = {
@@ -17,6 +16,8 @@ export default class NavigationView extends React.Component {
     setMapNavigation: PropTypes.func,
     mapSelectPoint: PropTypes.object,
     setMapSelectPoint: PropTypes.func,
+    setNavigationHistory: PropTypes.func,
+    navigationhistory: PropTypes.array,
   }
 
   constructor(props) {
@@ -57,7 +58,7 @@ export default class NavigationView extends React.Component {
           style={{
             height: scaleSize(165),
             width: '100%',
-            backgroundColor: 'black',
+            backgroundColor: '#303030',
             flexDirection: 'row',
           }}
         >
@@ -65,12 +66,16 @@ export default class NavigationView extends React.Component {
             onPress={() => {
               this.close()
             }}
-            style={{ marginLeft: scaleSize(40) }}
+            style={{
+              width: 60,
+              padding: 5,
+              marginLeft: scaleSize(20),
+            }}
           >
             <Image
               resizeMode={'contain'}
-              source={require('../../../../assets/public/icon-back-white.png')}
-              style={styles.analyst1}
+              source={require('../../../../assets/public/Frenchgrey/icon-back-white.png')}
+              style={styles.backbtn}
             />
           </TouchableOpacity>
           <View style={styles.pointAnalystView}>
@@ -110,6 +115,14 @@ export default class NavigationView extends React.Component {
               </View>
               <View
                 style={{
+                  marginLeft: scaleSize(20),
+                  width: scaleSize(300),
+                  height: 2,
+                  backgroundColor: color.gray,
+                }}
+              />
+              <View
+                style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
@@ -146,41 +159,116 @@ export default class NavigationView extends React.Component {
             <MTBtn
               style={styles.btn}
               size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/Navigation/navi_icon.png')}
-              onPress={() => {
-                GLOBAL.TouchType = TouchType.NORMAL
+              image={require('../../../../assets/Navigation/naviagtion-road.png')}
+              onPress={async () => {
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  if (GLOBAL.STARTX !== undefined) {
-                    SMap.beginNavigation(
+                  if (
+                    GLOBAL.STARTX !== undefined &&
+                    GLOBAL.ENDX !== undefined
+                  ) {
+                    let result = await SMap.beginNavigation(
                       GLOBAL.STARTX,
                       GLOBAL.STARTY,
                       GLOBAL.ENDX,
                       GLOBAL.ENDY,
                     )
-                    GLOBAL.MAPSELECTPOINT.setVisible(false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                      button: '',
-                    })
-                    NavigationService.goBack()
+                    if (result) {
+                      GLOBAL.ROUTEANALYST = true
+                    } else {
+                      Toast.show('路径分析失败请重新选择起终点')
+                    }
                   } else {
                     Toast.show('请先设置起终点')
                   }
                 }
+
                 if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  if (GLOBAL.STARTX !== undefined) {
-                    SMap.beginIndoorNavigation(
+                  if (
+                    GLOBAL.STARTX !== undefined &&
+                    GLOBAL.ENDX !== undefined
+                  ) {
+                    let result = await SMap.beginIndoorNavigation(
                       GLOBAL.STARTX,
                       GLOBAL.STARTY,
                       GLOBAL.ENDX,
                       GLOBAL.ENDY,
                     )
+                    if (result) {
+                      GLOBAL.ROUTEANALYST = true
+                    } else {
+                      Toast.show('路径分析失败请重新选择起终点')
+                    }
+                  } else {
+                    Toast.show('请先设置起终点')
+                  }
+                }
+              }}
+            />
+
+            <MTBtn
+              style={styles.btn}
+              size={MTBtn.Size.NORMAL}
+              image={require('../../../../assets/Navigation/navi_icon.png')}
+              onPress={() => {
+                GLOBAL.TouchType = TouchType.NORMAL
+                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                  if (GLOBAL.ROUTEANALYST !== undefined) {
+                    SMap.outdoorNavigation()
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
                       button: '',
                     })
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
                     NavigationService.goBack()
                   } else {
-                    Toast.show('请先设置起终点')
+                    Toast.show('请先进行路径分析')
+                  }
+                }
+                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                  if (GLOBAL.ROUTEANALYST !== undefined) {
+                    SMap.indoorNavigation()
+                    GLOBAL.MAPSELECTPOINT.setVisible(false)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                      button: '',
+                    })
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                      start: this.props.mapSelectPoint.firstPoint,
+                      end: this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
+                    NavigationService.goBack()
+                  } else {
+                    Toast.show('请先进行路径分析')
                   }
                 }
               }}
@@ -191,6 +279,9 @@ export default class NavigationView extends React.Component {
               image={require('../../../../assets/Navigation/clean_route.png')}
               onPress={async () => {
                 GLOBAL.TouchType = TouchType.NORMAL
+                GLOBAL.STARTX = undefined
+                GLOBAL.ENDX = undefined
+                GLOBAL.ROUTEANALYST = undefined
                 this.props.setMapSelectPoint({
                   firstPoint: '选择起点',
                   secondPoint: '选择终点',
@@ -198,41 +289,81 @@ export default class NavigationView extends React.Component {
                 SMap.clearPoint()
               }}
             />
-
-            {/*<Image*/}
-            {/*resizeMode={'contain'}*/}
-            {/*source={require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png')}*/}
-            {/*style={styles.analyst}*/}
-            {/*/>*/}
           </View>
         </View>
 
-        {/*<View>*/}
-        {/*<FlatList*/}
-        {/*data={this.state.analystData}*/}
-        {/*renderItem={this.renderItem}*/}
-        {/*/>*/}
-        {/*</View>*/}
+        <View>
+          <FlatList
+            data={this.props.navigationhistory}
+            renderItem={this.renderItem}
+          />
+          {this.props.navigationhistory.length > 0 && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: color.background,
+                width: '100%',
+                height: scaleSize(70),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                this.props.setNavigationHistory &&
+                  this.props.setNavigationHistory([])
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: setSpText(20),
+                }}
+              >
+                清除记录
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     )
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
       <View>
         <TouchableOpacity
           style={styles.itemView}
-          onPress={() => {
-            this.toLocationPoint(item.pointName, index)
+          onPress={async () => {
+            this.props.setMapSelectPoint({
+              firstPoint: item.start,
+              secondPoint: item.end,
+            })
+            GLOBAL.STARTX = item.sx
+            GLOBAL.STARTY = item.sy
+            GLOBAL.ENDX = item.ex
+            GLOBAL.ENDY = item.ey
+
+            let result = await SMap.isIndoorPoint(item.sx, item.sy)
+            SMap.getStartPoint(item.sx, item.sy, result.isindoor)
+            if (result.isindoor) {
+              GLOBAL.INDOORSTART = true
+            } else {
+              GLOBAL.INDOORSTART = false
+            }
+
+            let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
+            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor)
+            if (endresult.isindoor) {
+              GLOBAL.INDOOREND = true
+            } else {
+              GLOBAL.INDOOREND = false
+            }
+
+            GLOBAL.ROUTEANALYST = undefined
           }}
         >
           <Image
             style={styles.pointImg}
-            source={require('../../../../assets/mapToolbar/icon_scene_position.png')}
+            source={require('../../../../assets/Navigation/naviagtion-road.png')}
           />
-          {item.pointName && (
-            <Text style={styles.itemText}>{item.pointName}</Text>
-          )}
+          {item.address && <Text style={styles.itemText}>{item.address}</Text>}
         </TouchableOpacity>
         <View style={styles.itemSeparator} />
       </View>

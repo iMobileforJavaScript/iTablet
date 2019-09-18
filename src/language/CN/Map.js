@@ -619,6 +619,12 @@ const Map_Settings = {
   FROM_DATASET: '从数据集',
   FROM_FILE: '从文件',
 
+  //四级菜单 转换方法参数设置
+  BASIC_PARAMS: '基本参数',
+  OFFSET: '偏移量',
+  PROPORTIONAL_DIFFERENCE: '比例差',
+  ROTATION_ANGLE_SECONDS: '旋转角度(秒)',
+
   //四级菜单 和复制提示
   DATASOURCES: '数据源',
   DATASETS: '数据集',

@@ -70,6 +70,7 @@ export default class FunctionToolbar extends React.Component {
 
     incrementRoad: () => {},
     setMapIndoorNavigation: () => {},
+    setMap2Dto3D: () => {},
   }
 
   static defaultProps = {
@@ -113,6 +114,7 @@ export default class FunctionToolbar extends React.Component {
 
   isMapIndoorNavigation = () => {
     this.props.setMapIndoorNavigation(false)
+    this.props.setMap2Dto3D(false)
   }
 
   start = type => {
@@ -603,11 +605,16 @@ export default class FunctionToolbar extends React.Component {
   }
 
   openTraffic = async () => {
-    if (!GLOBAL.NAVIGATIONMAPOPEN) {
-      await SMap.openDatasource(ConstOnline.TrafficMap.DSParams, 0, true)
+    // if (!GLOBAL.NAVIGATIONMAPOPEN) {
+    let isadd = await SMap.isOpenTrafficMap()
+    if (isadd) {
+      await SMap.removeTrafficMap('tencent@TrafficMap')
     } else {
-      Toast.show('请使用在线导航功能')
+      await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
     }
+    // } else {
+    //   Toast.show('请使用在线导航功能')
+    // }
   }
 
   mapStyle = () => {
@@ -789,7 +796,7 @@ export default class FunctionToolbar extends React.Component {
 
     let userUDBPath, userUDBs
     //过滤掉标注和标绘匹配正则
-    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
+    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
     if (
       this.props.user &&
       this.props.user.currentUser.userName &&

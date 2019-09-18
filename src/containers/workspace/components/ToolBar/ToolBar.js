@@ -549,6 +549,7 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
+                  result = result > 0 ? result.toFixed(6) : 0
                   this.props.measureShow &&
                     this.props.measureShow(true, result + '㎡')
                 },
@@ -4636,6 +4637,7 @@ export default class ToolBar extends React.PureComponent {
       this.openTemplate(item)
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
+      this.props.setMap2Dto3D(false)
       this.changeMap(item)
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
@@ -4869,14 +4871,17 @@ export default class ToolBar extends React.PureComponent {
       let path = GLOBAL.homePath + item.path
       SMap.startNavigation(GLOBAL.navidataset, path)
       this.setVisible(false)
+      this.props.existFullMap()
+      GLOBAL.HASCHOSE = true
+      NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
       GLOBAL.NAVIGATIONMAPOPEN = true
       let name = item.name
       SMap.getIndoorNavigationData(name)
       SMap.startIndoorNavigation()
-      this.props.setMap2Dto3D(true)
       this.setVisible(false)
       this.props.existFullMap()
+      GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
       (async function() {
@@ -5077,8 +5082,13 @@ export default class ToolBar extends React.PureComponent {
 
             GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
             NavigationService.goBack()
-            setTimeout(() => {
+            setTimeout(async () => {
               this.setVisible(false)
+              if (GLOBAL.legend) {
+                await SMap.addLegendListener({
+                  legendContentChange: GLOBAL.legend._contentChange,
+                })
+              }
               Toast.show(
                 getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
               )
@@ -5278,8 +5288,13 @@ export default class ToolBar extends React.PureComponent {
             this.props.setContainerLoading(false)
         }
         NavigationService.goBack()
-        setTimeout(() => {
+        setTimeout(async () => {
           this.setVisible(false)
+          if (GLOBAL.legend) {
+            await SMap.addLegendListener({
+              legendContentChange: GLOBAL.legend._contentChange,
+            })
+          }
           Toast.show(
             getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
           )
@@ -5352,7 +5367,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if (GLOBAL.legend && GLOBAL.Type === constants.MAP_THEME) {
+        if (GLOBAL.legend) {
           await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
@@ -5422,6 +5437,7 @@ export default class ToolBar extends React.PureComponent {
 
         this.props.setContainerLoading(false)
         this.setVisible(false)
+        this.props.setMap2Dto3D(true)
       } else {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])

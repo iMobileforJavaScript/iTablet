@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
-import { scaleSize, setSpText } from '../../../../utils'
+import { scaleSize, setSpText, Toast } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../../containers/NavigationService'
-import { Toast } from '../../../../utils'
 
 export default class MapSelectPointButton extends React.Component {
   props: {

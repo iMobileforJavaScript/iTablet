@@ -53,6 +53,7 @@ const RelativeFilePath = {
   AR: Data + 'AR/',
   Animation: Data + 'Animation/',
   NaviWorkspace: Data + 'Workspace/',
+  Image: Data + 'Workspace/',
 }
 
 // 默认创建的目录
@@ -70,6 +71,7 @@ export default {
   UserPath: AppPath + 'User/', // 存放用户数据
   UserPath2: AppPath + 'User', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据
+  Images: AppPath + 'Common/Images', // 公共图片
   Common_AIDetectModel: AppPath + 'Common/AI/DetectModel/', // 公共数据:检测模型
   Common_AIClassifyModel: AppPath + 'Common/AI/ClassifyModel/', // 公共数据:分类模型
   Import: AppPath + 'Import', //导入外部数据文件夹

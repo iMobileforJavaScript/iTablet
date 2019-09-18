@@ -23,6 +23,8 @@ const icon_delete = require('./icon_delete.png')
 const icon_delete_black = require('./icon_delete_black.png')
 const icon_plus = require('./icon_plus.png')
 const icon_take_camera = require('./icon_take_camera.png')
+const icon_plus_gray = require('./icon_plus_gray.png')
+const icon_circle_dot = require('./icon_circle_dot.png')
 
 export default {
   icon_undo,
@@ -49,5 +51,7 @@ export default {
   icon_delete,
   icon_delete_black,
   icon_plus,
+  icon_plus_gray,
   icon_take_camera,
+  icon_circle_dot,
 }

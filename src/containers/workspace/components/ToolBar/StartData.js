@@ -936,6 +936,11 @@ function create() {
           GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
 
           NavigationService.goBack()
+          if (GLOBAL.legend) {
+            await SMap.addLegendListener({
+              legendContentChange: GLOBAL.legend._contentChange,
+            })
+          }
           _params.setToolbarVisible && _params.setToolbarVisible(false)
         },
       })

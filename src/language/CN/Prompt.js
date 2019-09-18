@@ -51,6 +51,10 @@ const Prompt = {
   NON_SELECTED_OBJ: '没有选择对象',
   CHANGE_BASE_MAP: '当前底图为空，请先切换底图',
 
+  SET_ALL_MAP_VISIBLE: '全部显示',
+  SET_ALL_MAP_INVISIBLE: '全部隐藏',
+  LONG_PRESS_TO_SORT: '（长按排序）',
+
   PUBLIC_MAP: '公共地图',
   SUPERMAP_FORUM: '超图论坛',
   SUPERMAP_KNOW: '超图知道',
@@ -110,6 +114,7 @@ const Prompt = {
   PUBLISH_FAILED: '发布失败',
 
   SELECT_AT_LEAST_ONE: '请至少选择一个数据',
+  DELETE_MAP_RELATE_DATA: '删除数据将影响以下地图\n是否继续删除？',
 
   LOG_IN: '登录中',
   ENTER_MAP_NAME: '请输入地图名字',

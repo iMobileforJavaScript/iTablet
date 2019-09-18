@@ -16,6 +16,8 @@ import { InputDialog } from '../../Dialog'
 import { getLanguage } from '../../../language'
 import { scaleSize } from '../../../utils'
 import { size } from '../../../styles'
+import { FileTools } from '../../../native'
+import { ConstPath } from '../../../constants'
 
 export default class extends React.PureComponent {
   props: {
@@ -55,6 +57,19 @@ export default class extends React.PureComponent {
       if (this.props.showDialog && this.dialog)
         this.dialog.setDialogVisible(this.props.showDialog)
       let data
+
+      let homePath = await FileTools.appendingHomeDirectory()
+      let imgPath = homePath + ConstPath.Images
+      let images = await FileTools.getPathListByFilterDeep(
+        imgPath,
+        'png, jpg, jpeg',
+      )
+      images.map(item => {
+        item.filename = item.name
+        item.uri = item.path
+        delete item.name
+        delete item.path
+      })
       if (Platform.OS === 'android' && this.props.assetType === 'All') {
         let photots = await this.getPhotos('Photos')
         let videos = await this.getPhotos('Videos')
@@ -77,6 +92,10 @@ export default class extends React.PureComponent {
       } else {
         data = await this.getPhotos(this.props.assetType)
       }
+      data.unshift({
+        name: 'iTablet MapRender',
+        value: images,
+      })
       this.setState({ data })
     }.bind(this)())
   }
@@ -152,13 +171,19 @@ export default class extends React.PureComponent {
       itemUris.has(i.uri),
     )
     const selectedCount = selectedItems.length
+    let uri =
+      (Platform.OS === 'android' &&
+      item.value[0].uri.indexOf('file://') === -1 &&
+      item.value[0].uri.indexOf('content://') === -1
+        ? 'file://'
+        : '') + item.value[0].uri
     return (
       <TouchableOpacity onPress={this._clickRow.bind(this, item)}>
         <View style={styles.cell}>
           <View style={styles.left}>
             <Image
               style={styles.image}
-              source={{ uri: item.value[0].uri }}
+              source={{ uri: uri }}
               resizeMode="cover"
             />
             <Text style={styles.text}>

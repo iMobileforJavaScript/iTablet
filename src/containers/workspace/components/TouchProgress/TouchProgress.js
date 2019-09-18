@@ -643,6 +643,12 @@ export default class TouchProgress extends Component {
       ) {
         newValue = value * 200
       }
+    } else if (
+      this.props.selectName === '列数' ||
+      this.props.selectName === '宽度' ||
+      this.props.selectName === '高度'
+    ) {
+      newValue = value * 100
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -696,14 +702,6 @@ export default class TouchProgress extends Component {
           }
           break
       }
-    } else {
-      if (this.props.selectName === '列数') {
-        newValue = value * 100
-      } else if (this.props.selectName === '宽度') {
-        newValue = value * 100
-      } else if (this.props.selectName === '高度') {
-        newValue = value * 100
-      }
     }
 
     return newValue
@@ -743,6 +741,50 @@ export default class TouchProgress extends Component {
       if (mode !== undefined) {
         await SMap.updateMapFixColorsMode(mode, value)
       }
+    } else if (this.props.selectName === '列数') {
+      let legendSettings = this.props.mapLegend
+      let columns
+      if (value <= 25) {
+        columns = 1
+      } else if (value <= 50) {
+        columns = 2
+      } else if (value <= 75) {
+        columns = 3
+      } else {
+        columns = 4
+      }
+      legendSettings.column = columns
+      this._setMapLegend(legendSettings)
+      tips =
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
+        '     ' +
+        parseInt(columns)
+    } else if (this.props.selectName === '宽度') {
+      let legendSettings = this.props.mapLegend
+      if (value > 100) {
+        value = 100
+      } else if (value <= 20) {
+        value = 20
+      }
+      legendSettings.widthPercent = value
+      this._setMapLegend(legendSettings)
+      tips =
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
+        '     ' +
+        parseInt(value)
+    } else if (this.props.selectName === '高度') {
+      let legendSettings = this.props.mapLegend
+      if (value > 100) {
+        value = 100
+      } else if (value <= 20) {
+        value = 20
+      }
+      legendSettings.heightPercent = value
+      this._setMapLegend(legendSettings)
+      tips =
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+        '     ' +
+        parseInt(value)
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -1005,51 +1047,6 @@ export default class TouchProgress extends Component {
           }
           break
         }
-      }
-      if (this.props.selectName === '列数') {
-        let legendSettings = this.props.mapLegend
-        let columns
-        if (value <= 25) {
-          columns = 1
-        } else if (value <= 50) {
-          columns = 2
-        } else if (value <= 75) {
-          columns = 3
-        } else {
-          columns = 4
-        }
-        legendSettings.column = columns
-        this._setMapLegend(legendSettings)
-        tips =
-          getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
-          '     ' +
-          parseInt(columns)
-      } else if (this.props.selectName === '宽度') {
-        let legendSettings = this.props.mapLegend
-        if (value > 100) {
-          value = 100
-        } else if (value <= 20) {
-          value = 20
-        }
-        legendSettings.widthPercent = value
-        this._setMapLegend(legendSettings)
-        tips =
-          getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
-          '     ' +
-          parseInt(value)
-      } else if (this.props.selectName === '高度') {
-        let legendSettings = this.props.mapLegend
-        if (value > 100) {
-          value = 100
-        } else if (value <= 20) {
-          value = 20
-        }
-        legendSettings.heightPercent = value
-        this._setMapLegend(legendSettings)
-        tips =
-          getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
-          '     ' +
-          parseInt(value)
       }
     }
 

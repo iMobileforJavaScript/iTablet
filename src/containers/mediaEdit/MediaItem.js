@@ -92,7 +92,7 @@ export default class MediaItem extends React.Component {
   render = () => {
     let image
     if (this.props.data === '+') {
-      image = require('../../assets/public/icon-plus.png')
+      image = getPublicAssets().common.icon_plus_gray
     } else {
       let imgPath = this.props.data.path || this.props.data.uri
       if (
@@ -101,9 +101,6 @@ export default class MediaItem extends React.Component {
       ) {
         imgPath = 'file://' + imgPath
       }
-      // imgPath =
-      //   (Platform.OS === 'android' ? 'file://' : '') +
-      //   (this.props.data.path || this.props.data.uri)
       image = { uri: imgPath }
     }
 

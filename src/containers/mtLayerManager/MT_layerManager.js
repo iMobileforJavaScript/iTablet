@@ -77,6 +77,7 @@ export default class MT_layerManager extends React.Component {
       data: [],
       selectLayer: this.props.currentLayer.caption,
       type: (params && params.type) || GLOBAL.Type, // 底部Tabbar类型
+      allLayersVisible: false,
     }
     this.itemRefs = {} // 记录列表items
     this.currentItemRef = {} // 当前被选中的item
@@ -184,6 +185,7 @@ export default class MT_layerManager extends React.Component {
         ],
         selectLayer: this.props.currentLayer.name,
         refreshing: false,
+        allLayersVisible: this.isAllLayersVisible(layers),
       })
       // let mapName = await this.map.getName()
     } catch (e) {
@@ -282,6 +284,7 @@ export default class MT_layerManager extends React.Component {
 
   /**地图制图修改风格 */
   mapEdit = data => {
+    let orientation = this.props.device.orientation
     SMap.setLayerEditable(data.path, true)
     if (data.type === 83) {
       GLOBAL.toolBox &&
@@ -297,8 +300,11 @@ export default class MT_layerManager extends React.Component {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
-          column: 4,
-          height: ConstToolType.THEME_HEIGHT[3],
+          column: orientation === 'PORTRAIT' ? 4 : 8,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
@@ -364,6 +370,7 @@ export default class MT_layerManager extends React.Component {
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+      let orientation = this.props.device.orientation
       GLOBAL.toolBox.setVisible(
         true,
         curThemeType === constants.THEME_GRAPH_STYLE
@@ -372,6 +379,11 @@ export default class MT_layerManager extends React.Component {
         {
           containerType: 'list',
           isFullScreen: true,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
+          column: orientation === 'PORTRAIT' ? 8 : 4,
           themeType: curThemeType,
           isTouchProgress: false,
           showMenuDialog: true,
@@ -643,6 +655,43 @@ export default class MT_layerManager extends React.Component {
     return result
   }
 
+  setAllLayersVisible = async () => {
+    this.setLoading(true)
+    let data = JSON.parse(JSON.stringify(this.state.data))
+    let layers = data[1].data
+    let visibles = this.isAllLayersVisible(layers)
+    if (visibles) {
+      for (let i in layers) {
+        await SMap.setLayerVisible(layers[i].path, false)
+        layers[i].isVisible = false
+        SMediaCollector.hideMedia(layers[i].name)
+      }
+    } else {
+      for (let i in layers) {
+        if (layers[i].isVisible === false) {
+          await SMap.setLayerVisible(layers[i].path, true)
+          layers[i].isVisible = true
+          SMediaCollector.showMedia(layers[i].name)
+        }
+      }
+    }
+    this.setState({ data, allLayersVisible: !visibles })
+    this.setLoading(false)
+  }
+
+  isAllLayersVisible = layers => {
+    if (layers.length > 0) {
+      for (let i in layers) {
+        if (layers[i].isVisible === false) {
+          return false
+        }
+      }
+    } else {
+      return false
+    }
+    return true
+  }
+
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
   }
@@ -901,6 +950,44 @@ export default class MT_layerManager extends React.Component {
           >
             {section.title}
           </Text>
+          {section.title ===
+            getLanguage(this.props.language).Map_Layer.LAYERS && (
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                color: '#A0A0A0',
+              }}
+            >
+              {getLanguage(global.language).Prompt.LONG_PRESS_TO_SORT}
+            </Text>
+          )}
+          {section.title ===
+            getLanguage(this.props.language).Map_Layer.LAYERS && (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  height: scaleSize(80),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: scaleSize(10),
+                }}
+                onPress={this.setAllLayersVisible}
+              >
+                <Text style={{ fontSize: scaleSize(24), color: '#A0A0A0' }}>
+                  {this.state.allLayersVisible
+                    ? getLanguage(global.language).Prompt.SET_ALL_MAP_INVISIBLE
+                    : getLanguage(global.language).Prompt.SET_ALL_MAP_VISIBLE}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </TouchableOpacity>
       )
     }

@@ -50,6 +50,10 @@ const Prompt = {
   NON_SELECTED_OBJ: 'No object selected',
   CHANGE_BASE_MAP: 'Empty base map, please change first',
 
+  SET_ALL_MAP_VISIBLE: 'All visible',
+  SET_ALL_MAP_INVISIBLE: 'All invisible',
+  LONG_PRESS_TO_SORT: '(Long press to sort)',
+
   PUBLIC_MAP: 'Public Map',
   SUPERMAP_FORUM: 'SuperMap Forum',
   SUPERMAP_KNOW: 'SuperMap Know',
@@ -114,6 +118,7 @@ const Prompt = {
   PUBLISH_FAILED: 'Failed to Publish',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
+  DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',
 
   LOG_IN: 'Loading',
   ENTER_MAP_NAME: 'Please enter the map name',
