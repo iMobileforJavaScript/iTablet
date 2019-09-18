@@ -66,7 +66,7 @@ import {
   Platform,
   View,
   Text,
-  InteractionManager,
+  // InteractionManager,
   Image,
   TouchableOpacity,
 } from 'react-native'
@@ -171,6 +171,7 @@ export default class MapView extends React.Component {
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
     this.isExample = (params && params.isExample) || false
+    this.noLegend = (params && params.noLegend) || false
     this.wsData = params && params.wsData
     this.operationType = params && params.operationType
     this.showMarker = params && params.showMarker
@@ -249,34 +250,35 @@ export default class MapView extends React.Component {
         getLanguage(this.props.language).Prompt.LOADING,
         //'地图加载中'
       )
-    InteractionManager.runAfterInteractions(() => {
-      GLOBAL.SaveMapView &&
-        GLOBAL.SaveMapView.setTitle(
-          getLanguage(this.props.language).Prompt.SAVE_TITLE,
-          getLanguage(this.props.language).Prompt.SAVE_YES,
-          getLanguage(this.props.language).Prompt.SAVE_NO,
-          getLanguage(this.props.language).Prompt.CANCEL,
-        )
+    // 动画导致有时不会进入InteractionManager
+    // InteractionManager.runAfterInteractions(() => {
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setTitle(
+        getLanguage(this.props.language).Prompt.SAVE_TITLE,
+        getLanguage(this.props.language).Prompt.SAVE_YES,
+        getLanguage(this.props.language).Prompt.SAVE_NO,
+        getLanguage(this.props.language).Prompt.CANCEL,
+      )
 
-      this.setState({
-        showMap: true,
-      })
-
-      this.props.setBackAction({
-        action: () => this.back(),
-      })
-
-      SMediaCollector.setCalloutTapListener(info => {
-        NavigationService.navigate('MediaEdit', {
-          info,
-        })
-      })
-
-      this.clearData()
-      if (this.toolBox) {
-        GLOBAL.toolBox = this.toolBox
-      }
+    this.setState({
+      showMap: true,
     })
+
+    this.props.setBackAction({
+      action: () => this.back(),
+    })
+
+    SMediaCollector.setCalloutTapListener(info => {
+      NavigationService.navigate('MediaEdit', {
+        info,
+      })
+    })
+
+    this.clearData()
+    if (this.toolBox) {
+      GLOBAL.toolBox = this.toolBox
+    }
+    // })
 
     SMap.setIndustryNavigationListener({
       callback: () => {
@@ -606,7 +608,7 @@ export default class MapView extends React.Component {
           event.layerInfo.name,
           event.id,
         )
-        if (type == -1) {
+        if (type === -1) {
           Toast.show(
             getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
           )
@@ -2131,7 +2133,7 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend.isShow && GLOBAL.Type === constants.MAP_THEME && (
+        {this.props.mapLegend.isShow && !this.noLegend && (
           <RNLegendView
             setMapLegend={this.props.setMapLegend}
             legendSettings={this.props.mapLegend}

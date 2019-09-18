@@ -215,7 +215,7 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
       } else {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       }
       break
@@ -224,7 +224,7 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
       } else {
-        height = ConstToolType.HEIGHT[1]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       }
       break
@@ -268,6 +268,10 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_EDIT_POINT:
       height = ConstToolType.HEIGHT[0]
       column = orientation === 'PORTRAIT' ? 4 : 5
+      break
+    case ConstToolType.MAP_EDIT_CAD:
+      height = ConstToolType.HEIGHT[0]
+      column = 5
       break
     case ConstToolType.MAP_EDIT_LINE:
     case ConstToolType.MAP_EDIT_REGION:

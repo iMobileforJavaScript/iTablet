@@ -187,12 +187,12 @@ const getPOISettings = () => [
     value: false,
     iconType: 'switch',
   },
-  {
-    title: getLanguage(global.language).Map_Settings
-      .POI_SETTING_POLYMERIZE_MODE,
-    value: false,
-    iconType: 'switch',
-  },
+  // {
+  //   title: getLanguage(global.language).Map_Settings
+  //     .POI_SETTING_POLYMERIZE_MODE,
+  //   value: false,
+  //   iconType: 'switch',
+  // },
 ]
 // 检测类型设置
 const getDetectTypesSettings = () => [
@@ -428,12 +428,17 @@ const rangeSettings = () => [
   {
     title: getLanguage(global.language).Map_Settings.MAP_CENTER,
     value: '',
-    iconType: 'arrow',
+    //当前是文字显示状态还是Input输入框状态
+    state: false,
+    //两个输入框
+    iconType: 'doubleInput',
   },
   {
     title: getLanguage(global.language).Map_Settings.MAP_SCALE,
     value: '',
-    iconType: 'arrow',
+    //当前是文字显示状态还是Input输入框状态
+    state: false,
+    iconType: 'input',
   },
   {
     title: getLanguage(global.language).Map_Settings.FIX_SCALE_LEVEL,
@@ -452,22 +457,26 @@ const fourRanges = () => [
   {
     title: getLanguage(global.language).Map_Settings.LEFT,
     value: '',
-    iconType: 'arrow',
+    state: false,
+    iconType: 'input',
   },
   {
     title: getLanguage(global.language).Map_Settings.BOTTOM,
     value: '',
-    iconType: 'arrow',
+    state: false,
+    iconType: 'input',
   },
   {
     title: getLanguage(global.language).Map_Settings.RIGHT,
     value: '',
-    iconType: 'arrow',
+    state: false,
+    iconType: 'input',
   },
   {
     title: getLanguage(global.language).Map_Settings.TOP,
     value: '',
-    iconType: 'arrow',
+    state: false,
+    iconType: 'input',
   },
 ]
 //坐标系设置
@@ -609,7 +618,7 @@ const transferData = () => [
 //转换方法3参数设置
 const transfer3ParamsSetting = () => [
   {
-    title: '基本参数',
+    title: getLanguage(global.language).Map_Settings.BASIC_PARAMS,
     value: [
       {
         title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
@@ -619,23 +628,26 @@ const transfer3ParamsSetting = () => [
     ],
   },
   {
-    title: '偏移量',
+    title: getLanguage(global.language).Map_Settings.OFFSET,
     value: [
       {
         title: 'X',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
       {
         title: 'Y',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
       {
         title: 'Z',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
@@ -646,7 +658,7 @@ const transfer3ParamsSetting = () => [
 //转换方法7参数设置
 const transfer7ParamsSetting = () => [
   {
-    title: '基本参数',
+    title: getLanguage(global.language).Map_Settings.BASIC_PARAMS,
     value: [
       {
         title: getLanguage(global.language).Map_Settings.TRANSFER_METHOD,
@@ -654,54 +666,62 @@ const transfer7ParamsSetting = () => [
         value: '',
       },
       {
-        title: '比例差',
-        iconType: 'arrow',
+        title: getLanguage(global.language).Map_Settings
+          .PROPORTIONAL_DIFFERENCE,
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 0,
       },
     ],
   },
   {
-    title: '旋转角度(秒)',
+    title: getLanguage(global.language).Map_Settings.ROTATION_ANGLE_SECONDS,
     value: [
       {
         title: 'X',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
       {
         title: 'Y',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
       {
         title: 'Z',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 1,
       },
     ],
   },
   {
-    title: '偏移量',
+    title: getLanguage(global.language).Map_Settings.OFFSET,
     value: [
       {
         title: 'X',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 2,
       },
       {
         title: 'Y',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 2,
       },
       {
         title: 'Z',
-        iconType: 'arrow',
+        state: false,
+        iconType: 'input',
         value: 0,
         pos: 2,
       },

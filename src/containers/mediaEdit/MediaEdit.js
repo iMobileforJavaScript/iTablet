@@ -36,6 +36,7 @@ export default class MediaEdit extends React.Component {
     super(props)
     const { params } = this.props.navigation.state || {}
     this.info = (params && params.info) || {}
+    this.cb = (params && params.cb) || {}
     let paths = []
 
     this.showInfo = {
@@ -61,6 +62,14 @@ export default class MediaEdit extends React.Component {
         paths,
       })
     }.bind(this)())
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    let shouldUpdate =
+      JSON.stringify(nextProps.user) !== JSON.stringify(this.props.user) ||
+      nextProps.language !== this.props.language ||
+      JSON.stringify(nextState) !== JSON.stringify(this.state)
+    return shouldUpdate
   }
 
   dealData = async (mediaPaths = []) => {
@@ -116,19 +125,19 @@ export default class MediaEdit extends React.Component {
             ConstPath.RelativeFilePath.Media,
         )
         let result = await SMediaCollector.saveMediaByDataset(
-          // this.info.layerName,
           GLOBAL.TaggingDatasetName || this.info.layerName,
           this.info.geoID,
           targetPath,
           modifiedData,
+          this.info.addToMap !== undefined ? this.info.addToMap : true,
         )
-        // await SMap.setLayerFieldInfo(
-        //   this.info.layerName,
-        //   modifiedData,
-        //   {
-        //     filter: `SmID=${this.info.geoID}`,
-        //   },
-        // )
+        if (
+          result &&
+          Object.keys(modifiedData).length > 0 &&
+          typeof this.cb === 'function'
+        ) {
+          this.cb(modifiedData)
+        }
         Toast.show(
           result
             ? getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
@@ -297,7 +306,7 @@ export default class MediaEdit extends React.Component {
           onPress={() => {
             this.popModal &&
               this.popModal.setVisible(false, () => {
-                setTimeout(() => this.openAlbum(), 1000)
+                this.openAlbum()
               })
           }}
         >

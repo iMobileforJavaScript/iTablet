@@ -142,6 +142,7 @@ public class MainActivity extends ReactActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.KILL_BACKGROUND_PROCESSES,
+                        Manifest.permission.RECORD_AUDIO,
                         Manifest.permission.CAMERA)
                 .subscribe(new Consumer<Permission>() {
                     @Override

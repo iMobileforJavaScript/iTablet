@@ -569,6 +569,12 @@ const Map_Settings = {
   FROM_DATASET: 'From Dataset',
   FROM_FILE: 'From File',
 
+  //四级菜单 转换方法参数设置
+  BASIC_PARAMS: 'Basic Params',
+  OFFSET: 'Offset',
+  PROPORTIONAL_DIFFERENCE: 'Proportional Difference',
+  ROTATION_ANGLE_SECONDS: 'Rotation Angle(Seconds)',
+
   //四级菜单 和复制提示
   TYPE: 'Type',
   FORMAT: 'Format',

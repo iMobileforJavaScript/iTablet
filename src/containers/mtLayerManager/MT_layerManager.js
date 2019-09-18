@@ -370,6 +370,7 @@ export default class MT_layerManager extends React.Component {
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+      let orientation = this.props.device.orientation
       GLOBAL.toolBox.setVisible(
         true,
         curThemeType === constants.THEME_GRAPH_STYLE
@@ -378,6 +379,11 @@ export default class MT_layerManager extends React.Component {
         {
           containerType: 'list',
           isFullScreen: true,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
+          column: orientation === 'PORTRAIT' ? 8 : 4,
           themeType: curThemeType,
           isTouchProgress: false,
           showMenuDialog: true,

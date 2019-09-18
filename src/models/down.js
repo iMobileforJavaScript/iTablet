@@ -20,9 +20,8 @@ export const setDownInformation = (
 }
 
 export const downloadFile = (params = {}) => async (dispatch, getState) => {
-  params.progress = async res => {
-    let value = res.progress >= 0 ? ~~res.progress.toFixed(0) : 0
-
+  let value = 0
+  let timer = setInterval(async () => {
     let shouldUpdate = false,
       isExist = false
     let downloads = getState().down.toJS().downloads
@@ -38,7 +37,25 @@ export const downloadFile = (params = {}) => async (dispatch, getState) => {
       shouldUpdate = true
     }
 
-    if (shouldUpdate) {
+    if (shouldUpdate && value !== 100) {
+      const data = {
+        id: params.key,
+        progress: value,
+        params: params,
+      }
+      await dispatch({
+        type: DOWNLOADING_FILE,
+        payload: data,
+      })
+    }
+    if (value === 100) {
+      clearInterval(timer)
+      timer = null
+    }
+  }, 3000)
+  params.progress = async res => {
+    value = res.progress >= 0 ? ~~res.progress.toFixed(0) : 0
+    if (value === 100) {
       const data = {
         id: params.key,
         progress: value,

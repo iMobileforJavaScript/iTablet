@@ -74,7 +74,7 @@ function aiClassify() {
 function aiDetect() {
   (async function() {
     await SAIDetectView.setProjectionModeEnable(true)
-    await SAIDetectView.setDrawTileEnable(false)
+    // await SAIDetectView.setDrawTileEnable(false)
     await SAIDetectView.setIsPolymerize(false)
     ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
     ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
@@ -85,8 +85,8 @@ function aiDetect() {
 //态势采集(聚合模式)
 function polymerizeCollect() {
   (async function() {
-    await SAIDetectView.setProjectionModeEnable(true)
-    await SAIDetectView.setDrawTileEnable(false)
+    // await SAIDetectView.setProjectionModeEnable(true)
+    // await SAIDetectView.setDrawTileEnable(false)
     await SAIDetectView.setIsPolymerize(true)
     ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
     ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()

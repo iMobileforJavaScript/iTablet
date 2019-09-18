@@ -549,6 +549,7 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
+                  result = result > 0 ? result.toFixed(6) : 0
                   this.props.measureShow &&
                     this.props.measureShow(true, result + '㎡')
                 },
@@ -5081,8 +5082,13 @@ export default class ToolBar extends React.PureComponent {
 
             GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
             NavigationService.goBack()
-            setTimeout(() => {
+            setTimeout(async () => {
               this.setVisible(false)
+              if (GLOBAL.legend) {
+                await SMap.addLegendListener({
+                  legendContentChange: GLOBAL.legend._contentChange,
+                })
+              }
               Toast.show(
                 getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
               )
@@ -5282,8 +5288,13 @@ export default class ToolBar extends React.PureComponent {
             this.props.setContainerLoading(false)
         }
         NavigationService.goBack()
-        setTimeout(() => {
+        setTimeout(async () => {
           this.setVisible(false)
+          if (GLOBAL.legend) {
+            await SMap.addLegendListener({
+              legendContentChange: GLOBAL.legend._contentChange,
+            })
+          }
           Toast.show(
             getLanguage(this.props.language).Prompt.CREATE_SUCCESSFULLY,
           )
@@ -5356,7 +5367,7 @@ export default class ToolBar extends React.PureComponent {
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
         //切换地图后重新添加图例事件
-        if (GLOBAL.legend && GLOBAL.Type === constants.MAP_THEME) {
+        if (GLOBAL.legend) {
           await SMap.addLegendListener({
             legendContentChange: GLOBAL.legend._contentChange,
           })
