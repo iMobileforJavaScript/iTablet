@@ -265,6 +265,7 @@ export default class MapView extends React.Component {
     })
 
     this.props.setBackAction({
+      key: 'MapView',
       action: () => this.back(),
     })
 
