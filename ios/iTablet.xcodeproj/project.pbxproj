@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		001E832822C995B90084A0B2 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 001E832722C995B90084A0B2 /* Trial_License.slm */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -589,7 +588,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		001E832722C995B90084A0B2 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -915,7 +913,6 @@
 			children = (
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
-				001E832722C995B90084A0B2 /* Trial_License.slm */,
 				0AA134932267432500606012 /* publicMap.txt */,
 				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
@@ -1964,7 +1961,6 @@
 				0AEFC201231762DA006FEDD8 /* PIL in Resources */,
 				2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */,
 				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
-				001E832822C995B90084A0B2 /* Trial_License.slm in Resources */,
 				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
 				0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */,
 				0AECCF782328E034004F84A4 /* Images.zip in Resources */,
@@ -1988,7 +1984,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1996,7 +1992,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};

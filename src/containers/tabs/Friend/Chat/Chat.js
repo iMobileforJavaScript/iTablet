@@ -585,6 +585,7 @@ class Chat extends React.Component {
       NavigationService.navigate('MapViewSingle', {
         wsData,
         isExample: true,
+        noLegend: true,
         mapName: message.originMsg.message.message.message,
         showMarker: {
           longitude: message.originMsg.message.message.longitude,

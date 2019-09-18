@@ -347,7 +347,7 @@ export default handleActions(
       if (payload !== undefined) {
         data = payload
       } else {
-        data = true
+        data = false
       }
       return state.setIn(['mapNavigationShow'], fromJS(data))
     },

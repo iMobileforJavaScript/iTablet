@@ -42,7 +42,13 @@ import {
   Progress,
   BubblePane,
 } from '../../../../components'
-import { Toast, jsonUtil, scaleSize, StyleUtils } from '../../../../utils'
+import {
+  Toast,
+  jsonUtil,
+  scaleSize,
+  StyleUtils,
+  setSpText,
+} from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
@@ -165,6 +171,7 @@ export default class MapView extends React.Component {
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
     this.isExample = (params && params.isExample) || false
+    this.noLegend = (params && params.noLegend) || false
     this.wsData = params && params.wsData
     this.operationType = params && params.operationType
     this.showMarker = params && params.showMarker
@@ -1238,7 +1245,13 @@ export default class MapView extends React.Component {
             this.showMarker.latitude,
             markerTag,
           )
-        SMap.setIsMagnifierEnabled(true)
+        if (
+          GLOBAL.Type === constants.MAP_COLLECTION ||
+          GLOBAL.Type === constants.MAP_PLOTTING
+        )
+          SMap.setIsMagnifierEnabled(true)
+        this.props.setMap2Dto3D(true)
+        this.props.setMapNavigation({ isShow: false, name: '' })
       } catch (e) {
         this.setLoading(false)
         this.mapLoaded = true
@@ -1485,6 +1498,7 @@ export default class MapView extends React.Component {
           this.setState({ showIncrement: true })
         }}
         setMapIndoorNavigation={this.props.setMapIndoorNavigation}
+        setMap2Dto3D={this.props.setMap2Dto3D}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}
@@ -1895,6 +1909,9 @@ export default class MapView extends React.Component {
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
+          title={'导航'}
+          textColor={'black'}
+          textStyle={{ fontSize: setSpText(12) }}
           image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={async () => {
             this.indoorNavi()
@@ -2116,7 +2133,7 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend.isShow && (
+        {this.props.mapLegend.isShow && !this.noLegend && (
           <RNLegendView
             setMapLegend={this.props.setMapLegend}
             legendSettings={this.props.mapLegend}
@@ -2139,7 +2156,9 @@ export default class MapView extends React.Component {
         {/*openWorkspace={this.props.openWorkspace}*/}
         {/*/>*/}
         {/*)}*/}
-        {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && this.props.map2Dto3D && (
+          <FloorListView device={this.props.device} />
+        )}
         {this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}

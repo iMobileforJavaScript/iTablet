@@ -62,6 +62,7 @@ export default class MapToolbar extends React.Component {
       case constants.COLLECTION:
       case constants.MAP_THEME:
       case constants.MAP_ANALYST:
+      case constants.MAP_NAVIGATION:
       case constants.MAP_AR:
         list = [
           {
@@ -207,59 +208,59 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
-      case constants.MAP_NAVIGATION:
-        list = [
-          {
-            key: 'MapView',
-            title:
-              type === constants.MAP_AR
-                ? getLanguage(global.language).Map_Label.ARMAP
-                : getLanguage(global.language).Map_Label.MAP,
-            //'地图',
-            image: getThemeAssets().tabBar.tab_map,
-            selectedImage: getThemeAssets().tabBar.tab_map,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('MapView', { type })
-            },
-          },
-          {
-            key: 'LayerManager',
-            title: getLanguage(global.language).Map_Label.LAYER,
-            //'图层',
-            image: getThemeAssets().tabBar.tab_layer,
-            selectedImage: getThemeAssets().tabBar.tab_layer_selected,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerManager', { type })
-            },
-          },
-          {
-            key: 'LayerAttribute',
-            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
-            //'属性',
-            image: getThemeAssets().tabBar.tab_attribute,
-            selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute', { type })
-            },
-          },
-          {
-            key: 'MapSetting',
-            title: getLanguage(global.language).Map_Label.SETTING,
-            //'设置',
-            image: getThemeAssets().tabBar.tab_setting,
-            selectedImage: getThemeAssets().tabBar.tab_setting_selected,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('MapSetting', {
-                  type,
-                })
-            },
-          },
-        ]
-        break
+      // case constants.MAP_NAVIGATION:
+      //   list = [
+      //     {
+      //       key: 'MapView',
+      //       title:
+      //         type === constants.MAP_AR
+      //           ? getLanguage(global.language).Map_Label.ARMAP
+      //           : getLanguage(global.language).Map_Label.MAP,
+      //       //'地图',
+      //       image: getThemeAssets().tabBar.tab_map,
+      //       selectedImage: getThemeAssets().tabBar.tab_map,
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('MapView', { type })
+      //       },
+      //     },
+      //     {
+      //       key: 'LayerManager',
+      //       title: getLanguage(global.language).Map_Label.LAYER,
+      //       //'图层',
+      //       image: getThemeAssets().tabBar.tab_layer,
+      //       selectedImage: getThemeAssets().tabBar.tab_layer_selected,
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('LayerManager', { type })
+      //       },
+      //     },
+      //     {
+      //       key: 'LayerAttribute',
+      //       title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+      //       //'属性',
+      //       image: getThemeAssets().tabBar.tab_attribute,
+      //       selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('LayerAttribute', { type })
+      //       },
+      //     },
+      //     {
+      //       key: 'MapSetting',
+      //       title: getLanguage(global.language).Map_Label.SETTING,
+      //       //'设置',
+      //       image: getThemeAssets().tabBar.tab_setting,
+      //       selectedImage: getThemeAssets().tabBar.tab_setting_selected,
+      //       btnClick: () => {
+      //         this.props.navigation &&
+      //           this.props.navigation.navigate('MapSetting', {
+      //             type,
+      //           })
+      //       },
+      //     },
+      //   ]
+      //   break
     }
     return list
   }

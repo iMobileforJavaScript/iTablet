@@ -333,7 +333,7 @@ const Map_Plotting = {
   PLOTTING_ANIMATION_WAY: 'Way',
   PLOTTING_ANIMATION_BLINK: 'Blink',
   PLOTTING_ANIMATION_ATTRIBUTE: 'Attribute',
-  PLOTTING_ANIMATION_SHOW: 'Shou',
+  PLOTTING_ANIMATION_SHOW: 'Show',
   PLOTTING_ANIMATION_ROTATE: 'Rotate',
   PLOTTING_ANIMATION_SCALE: 'Scale',
   PLOTTING_ANIMATION_GROW: 'Grow',
@@ -356,6 +356,36 @@ const Map_Plotting = {
   ANIMATION_ROTATE: 'Animation Rotate',
   ANIMATION_SCALE: 'Animation Scale',
   ANIMATION_GROW: 'Animation Grow',
+
+  ANIMATION_SCALE_START_SCALE: 'Start Scale',
+  ANIMATION_SCALE_END_SCALE: 'End Scale',
+
+  ANIMATION_SHOW_STATE: 'Show State',
+  ANIMATION_SHOW_EFFECT: 'Show Effect',
+
+  ANIMATION_BLINK_INTERVAL: 'Blink Interval',
+  ANIMATION_BLINK_NUMBER: 'Blink Number',
+
+  ANIMATION_ROTATE_DIRECTION: 'Rotate Direction',
+  ANIMATION_ROTATE_CLOCKWISE: 'Clockwise',
+  ANIMATION_ROTATE_ANTICLOCKWISE: 'Anticlockwish',
+  ANIMATION_ROTATE_START_ANGLE: 'Start Angle',
+  ANIMATION_ROTATE_END_ANGLE: 'End Angle',
+
+  ANIMATION_ATTRIBUTE_LINE_WIDTH: 'Line Width',
+  ANIMATION_ATTRIBUTE_LINE_WIDTH_START: 'Line Width Start',
+  ANIMATION_ATTRIBUTE_LINE_WIDTH_END: 'Line Width End',
+  ANIMATION_ATTRIBUTE_LINE_COLOT: 'Line Color',
+  ANIMATION_ATTRIBUTE_LINE_COLOT_START: 'Line Color Start',
+  ANIMATION_ATTRIBUTE_LINE_COLOT_END: 'Line Color End',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH: 'Surround Line Width',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_START: 'Surround Line Width Start',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_END: 'Surround Line Width End',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR: 'Surround Line Color',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR_START: 'Surround Line Color Start',
+  ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR_END: 'Surround Line Color End',
+
+  ANIMATION_NODE_EDIT: 'Animation Edit',
 }
 
 //图层
@@ -569,6 +599,12 @@ const Map_Settings = {
   FROM_DATASOURCE: 'From Datasource',
   FROM_DATASET: 'From Dataset',
   FROM_FILE: 'From File',
+
+  //四级菜单 转换方法参数设置
+  BASIC_PARAMS: 'Basic Params',
+  OFFSET: 'Offset',
+  PROPORTIONAL_DIFFERENCE: 'Proportional Difference',
+  ROTATION_ANGLE_SECONDS: 'Rotation Angle(Seconds)',
 
   //四级菜单 和复制提示
   TYPE: 'Type',

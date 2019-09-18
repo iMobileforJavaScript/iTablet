@@ -88,6 +88,7 @@ export default class BaseMapItem extends Component {
       wsData: this.props.item,
       isExample: true,
       mapName: this.props.item.mapName,
+      noLegend: true,
     }
     NavigationService.navigate('MapView', params)
   }

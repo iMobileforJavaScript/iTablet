@@ -306,7 +306,7 @@ export default class MediaEdit extends React.Component {
           onPress={() => {
             this.popModal &&
               this.popModal.setVisible(false, () => {
-                setTimeout(() => this.openAlbum(), 1000)
+                this.openAlbum()
               })
           }}
         >
