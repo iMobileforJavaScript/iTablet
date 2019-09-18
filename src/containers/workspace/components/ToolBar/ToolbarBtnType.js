@@ -34,6 +34,7 @@ export default {
   CLOSE_CIRCLE: 'closeCircle',
   SHARE: 'SHARE',
   END_ANIMATION: 'endAnimation',
+  UNDO: 'undo', //二三维量算撤销功能
 
   //推演动画
   PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list', //推演动画的xml列表

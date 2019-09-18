@@ -235,7 +235,9 @@ export default class ToolBar extends React.PureComponent {
       listExpressions: {},
       themeSymbolType: '',
       hasSoftMenuBottom: false,
+      canUndo: false, //距离、面积量算是否可以撤销
     }
+    this.pointArr = [] //距离、面积、角度量算点击数组
     this.isShow = false
     this.isBoxShow = true
   }
@@ -522,6 +524,16 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
+                  this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    this.pointArr.push(JSON.stringify(result))
+                  if (
+                    this.pointArr.length > 0 &&
+                    this.state.canUndo === false
+                  ) {
+                    this.setState({
+                      canUndo: true,
+                    })
+                  }
                   this.Map3DToolBar &&
                     this.Map3DToolBar.setAnalystResult(result)
                   this.props.measureShow &&
@@ -549,6 +561,12 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
+                  this.clickTime++
+                  if (this.clickTime > 0 && this.state.canUndo === false) {
+                    this.setState({
+                      canUndo: true,
+                    })
+                  }
                   result = result > 0 ? result.toFixed(6) : 0
                   this.props.measureShow &&
                     this.props.measureShow(true, result + '㎡')
@@ -2424,6 +2442,7 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
+        //buttons: [ToolbarBtnType.CLOSE_ANALYST,ToolbarBtnType.UNDO, ToolbarBtnType.CLEAR],
         buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
@@ -2599,6 +2618,21 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //二三维量算功能 撤销事件
+  undo = () => {
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      SMap.undo()
+    } else {
+      //三维撤销事件
+    }
+    if (this.pointArr.length > 0) {
+      this.pointArr.pop()
+      this.pointArr.length === 0 &&
+        this.setState({
+          canUndo: false,
+        })
+    }
+  }
   /** 推演动画播放事件*/
   showPlotAnimationTool = async type => {
     if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
@@ -3100,6 +3134,10 @@ export default class ToolBar extends React.PureComponent {
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听
         SMap.removeMeasureListener()
+        this.pointArr = []
+        this.setState({
+          canUndo: false,
+        })
       }
       if (GLOBAL.Type !== constants.MAP_3D) {
         this.props.showMeasureResult(false)
@@ -3992,6 +4030,8 @@ export default class ToolBar extends React.PureComponent {
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+    this.setState({ canUndo: false })
+    this.clickTime = 0
   }
 
   clear = () => {
@@ -3999,10 +4039,18 @@ export default class ToolBar extends React.PureComponent {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
         SScene.clearSquareAnalyst()
         this.props.measureShow(true, '0㎡')
+        this.clickTime = 0
+        this.setState({
+          canUndo: false,
+        })
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
         SScene.clearLineAnalyst()
         this.props.measureShow(true, '0m')
+        this.clickTime = 0
+        this.setState({
+          canUndo: false,
+        })
         break
       case ConstToolType.MAP3D_BOX_CLIP:
       case ConstToolType.MAP3D_CROSS_CLIP:
@@ -6516,6 +6564,16 @@ export default class ToolBar extends React.PureComponent {
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.showPicker
+          break
+        case ToolbarBtnType.UNDO:
+          //二三维 量算功能 撤销按钮
+          if (this.state.canUndo) {
+            image = getPublicAssets().attribute.icon_undo_disable
+            action = this.undo
+          } else {
+            image = getThemeAssets().publicAssets.icon_undo
+            action = () => {}
+          }
           break
       }
 
