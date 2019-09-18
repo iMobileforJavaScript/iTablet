@@ -61,14 +61,15 @@ const styles = StyleSheet.create({
     height: 1,
   },
   dialogHeaderView: {
+    paddingTop:scaleSize(40),
     flex: 1,
     //  backgroundColor:"pink",
     flexDirection: 'column',
     alignItems: 'center',
   },
   dialogHeaderImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
     opacity: 1,
     // marginLeft:scaleSize(145),
     // marginTop:scaleSize(21),
@@ -82,12 +83,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dialogBackground: {
-    width: scaleSize(350),
-    height: scaleSize(220),
+    height: scaleSize(300),
   },
   opacityView: {
-    width: scaleSize(350),
-    height: scaleSize(220),
+    height: scaleSize(300),
   },
 })
 
