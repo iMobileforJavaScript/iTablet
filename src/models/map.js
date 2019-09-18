@@ -9,8 +9,6 @@ import fs from 'react-native-fs'
 import UserType from '../constants/UserType'
 import ConstOnline from '../constants/ConstOnline'
 import { getLanguage } from '../language'
-// import xml2js from 'react-native-xml2js'
-// let parser = new xml2js.Parser()
 // Constants
 // --------------------------------------------------
 export const OPEN_WORKSPACE = 'OPEN_WORKSPACE'
@@ -18,12 +16,7 @@ export const GET_MAPS = 'GET_MAPS'
 export const SET_LATEST_MAP = 'SET_LATEST_MAP'
 export const SET_MAP_VIEW = 'SET_MAP_VIEW'
 export const SET_CURRENT_MAP = 'SET_CURRENT_MAP'
-export const OPEN_TEMPLATE = 'OPEN_TEMPLATE'
-export const SET_TEMPLATE = 'SET_TEMPLATE'
-export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
-export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 export const SET_BASEMAP = 'SET_BASEMAP'
-// const Fs = require('react-native-fs')
 let isExporting = false
 
 // Actions

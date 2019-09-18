@@ -159,17 +159,61 @@ export default class NavigationView extends React.Component {
             <MTBtn
               style={styles.btn}
               size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/Navigation/navi_icon.png')}
-              onPress={() => {
-                GLOBAL.TouchType = TouchType.NORMAL
+              image={require('../../../../assets/Navigation/naviagtion-road.png')}
+              onPress={async () => {
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  if (GLOBAL.STARTX !== undefined) {
-                    SMap.beginNavigation(
+                  if (
+                    GLOBAL.STARTX !== undefined &&
+                    GLOBAL.ENDX !== undefined
+                  ) {
+                    let result = await SMap.beginNavigation(
                       GLOBAL.STARTX,
                       GLOBAL.STARTY,
                       GLOBAL.ENDX,
                       GLOBAL.ENDY,
                     )
+                    if (result) {
+                      GLOBAL.ROUTEANALYST = true
+                    } else {
+                      Toast.show('路径分析失败请重新选择起终点')
+                    }
+                  } else {
+                    Toast.show('请先设置起终点')
+                  }
+                }
+
+                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                  if (
+                    GLOBAL.STARTX !== undefined &&
+                    GLOBAL.ENDX !== undefined
+                  ) {
+                    let result = await SMap.beginIndoorNavigation(
+                      GLOBAL.STARTX,
+                      GLOBAL.STARTY,
+                      GLOBAL.ENDX,
+                      GLOBAL.ENDY,
+                    )
+                    if (result) {
+                      GLOBAL.ROUTEANALYST = true
+                    } else {
+                      Toast.show('路径分析失败请重新选择起终点')
+                    }
+                  } else {
+                    Toast.show('请先设置起终点')
+                  }
+                }
+              }}
+            />
+
+            <MTBtn
+              style={styles.btn}
+              size={MTBtn.Size.NORMAL}
+              image={require('../../../../assets/Navigation/navi_icon.png')}
+              onPress={() => {
+                GLOBAL.TouchType = TouchType.NORMAL
+                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                  if (GLOBAL.ROUTEANALYST !== undefined) {
+                    SMap.outdoorNavigation()
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
                       button: '',
@@ -193,17 +237,12 @@ export default class NavigationView extends React.Component {
                     this.props.setNavigationHistory(history)
                     NavigationService.goBack()
                   } else {
-                    Toast.show('请先设置起终点')
+                    Toast.show('请先进行路径分析')
                   }
                 }
                 if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  if (GLOBAL.STARTX !== undefined) {
-                    SMap.beginIndoorNavigation(
-                      GLOBAL.STARTX,
-                      GLOBAL.STARTY,
-                      GLOBAL.ENDX,
-                      GLOBAL.ENDY,
-                    )
+                  if (GLOBAL.ROUTEANALYST !== undefined) {
+                    SMap.indoorNavigation()
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
                       button: '',
@@ -229,7 +268,7 @@ export default class NavigationView extends React.Component {
                     this.props.setNavigationHistory(history)
                     NavigationService.goBack()
                   } else {
-                    Toast.show('请先设置起终点')
+                    Toast.show('请先进行路径分析')
                   }
                 }
               }}
@@ -241,6 +280,8 @@ export default class NavigationView extends React.Component {
               onPress={async () => {
                 GLOBAL.TouchType = TouchType.NORMAL
                 GLOBAL.STARTX = undefined
+                GLOBAL.ENDX = undefined
+                GLOBAL.ROUTEANALYST = undefined
                 this.props.setMapSelectPoint({
                   firstPoint: '选择起点',
                   secondPoint: '选择终点',
@@ -314,6 +355,8 @@ export default class NavigationView extends React.Component {
             } else {
               GLOBAL.INDOOREND = false
             }
+
+            GLOBAL.ROUTEANALYST = undefined
           }}
         >
           <Image

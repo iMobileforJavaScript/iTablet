@@ -49,19 +49,6 @@ export default class AnimationNodeListView extends React.Component {
 
   renderListItem = ({ item }) => {
     return (
-      // <TouchableOpacity
-      //   onPress={() => {
-      //     // this.props.setAnimation(item.path)
-      //   }}
-      //   style={styles.sceneItem}
-      // >
-      //   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      //     <View style={styles.sceneItemcontent}>
-      //       <Text style={[styles.workspaceItem]}>{item.name}</Text>
-      //     </View>
-      //   </View>
-      //   {this.renderItemSeparatorComponent()}
-      // </TouchableOpacity>
       <View style={styles.sceneItem}>
         <View style={styles.itemView}>
           <Text style={styles.subTitle}>{item.name}</Text>
@@ -128,34 +115,22 @@ export default class AnimationNodeListView extends React.Component {
   }
 
   modifyAnimationNodeName = async item => {
-    NavigationService.navigate('InputPage', {
-      // NavigationService.navigate('AnimationNodeEditView', {
-      headerTitle: getLanguage(global.language).Map_Main_Menu
-        .ANIMATION_NODE_NAME,
+    // NavigationService.navigate('InputPage', {
+    NavigationService.navigate('AnimationNodeEditView', {
+      headerTitle: getLanguage(global.language).Map_Plotting
+        .ANIMATION_NODE_EDIT,
       //'修改动画节点名称',
       value: item.name,
-      placeholder: getLanguage(global.language).Prompt
-        .ENTER_ANIMATION_NODE_NAME,
+      placeholder: getLanguage(global.language).Map_Plotting
+        .ANIMATION_NODE_EDIT,
       type: 'name',
-      cb: async value => {
-        GLOBAL.Loading &&
-          GLOBAL.Loading.setLoading(
-            true,
-            getLanguage(global.language).Prompt.SAVEING,
-          )
-
-        GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+      index: item.index,
+      cb: async () => {
         NavigationService.goBack()
-
-        SMap.modifyAnimationNodeName(item.index, value)
         this.getAnimationNodeList()
-
         Toast.show(getLanguage(global.language).Prompt.SAVE_SUCCESSFULLY)
       },
     })
-
-    // let resut=SMap.modifyAnimationNodeName(item.index,item.name)
-    // this.getAnimationNodeList()
   }
 
   renderItemSeparatorComponent = () => {
@@ -190,11 +165,8 @@ export default class AnimationNodeListView extends React.Component {
     return (
       <SectionList
         sections={this.state.data}
-        //   sections={this.props.data.data}
-        // ItemSeparatorComponent={this.renderItemSeparatorComponent}
         renderItem={this.renderListItem}
         renderSectionHeader={this.renderListSectionHeader}
-        //   SectionSeparatorComponent={this.renderItemSeparatorComponent}
         keyExtractor={(item, index) => index}
       />
     )
