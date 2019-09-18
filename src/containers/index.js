@@ -78,6 +78,7 @@ import {
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import AnimationNodeEditView from './workspace/components/AnimationNodeEditView'
+import AnimationNodeEditRotateView from './workspace/components/AnimationNodeEditRotateView'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
@@ -109,6 +110,7 @@ import ModelChoseView from './arModelChoseView'
 import ClassifyResultEditView from './aiClassifyResultEdit'
 import CollectSceneFormView from './arCollectSceneFormView'
 import ClassifySettingsView from './ClassifySettingsView'
+import IllegallyParkView from './aiIllegallyPark'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
@@ -356,6 +358,12 @@ const AppNavigator = createStackNavigator(
     },
     AnimationNodeEditView: {
       screen: AnimationNodeEditView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    AnimationNodeEditRotateView: {
+      screen: AnimationNodeEditRotateView,
       navigationOptions: {
         header: null,
       },
@@ -669,6 +677,13 @@ const AppNavigator = createStackNavigator(
     },
     ClassifySettingsView: {
       screen: ClassifySettingsView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    IllegallyParkView: {
+      screen: IllegallyParkView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

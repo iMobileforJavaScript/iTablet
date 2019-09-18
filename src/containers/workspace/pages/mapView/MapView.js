@@ -2156,7 +2156,9 @@ export default class MapView extends React.Component {
         {/*openWorkspace={this.props.openWorkspace}*/}
         {/*/>*/}
         {/*)}*/}
-        {this.props.map2Dto3D && <FloorListView device={this.props.device} />}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && this.props.map2Dto3D && (
+          <FloorListView device={this.props.device} />
+        )}
         {this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}

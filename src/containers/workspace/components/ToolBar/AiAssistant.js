@@ -17,6 +17,35 @@ function setParams(params) {
   _params = params
 }
 
+//违章采集
+function illegallyParkCollect() {
+  (async function() {
+    let isSupportedARCore = await SMeasureView.isSupportedARCore()
+    if (!isSupportedARCore) {
+      Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
+      return
+    }
+    let currentLayer = GLOBAL.currentLayer
+    // let reg = /^Label_(.*)#$/
+    let isTaggingLayer = false
+    if (currentLayer) {
+      isTaggingLayer = currentLayer.type === DatasetType.CAD
+      // && currentLayer.datasourceAlias.match(reg)
+    }
+    if (isTaggingLayer) {
+      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+      const datasetName = currentLayer.datasetName // 标注图层名称
+      NavigationService.navigate('IllegallyParkView', {
+        datasourceAlias,
+        datasetName,
+      })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+  }.bind(this)())
+}
+
 //户型图采集
 function arMeasureCollect() {
   (async function() {
@@ -145,16 +174,16 @@ function getAiAssistantData(type, params) {
       image: getThemeAssets().ar.functiontoolbar
         .rightbar_ai_aggregate_collect_light,
     },
-    // {
-    //   //违章采集
-    //   key: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-    //   title: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-    //   // action:openMap,
-    //   size: 'large',
-    //   image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
-    // },
+    {
+      //违章采集
+      key: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
+      title: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
+      action: illegallyParkCollect,
+      size: 'large',
+      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
+    },
     // {
     //   //路面采集
     //   key: getLanguage(global.language).Map_Main_Menu
