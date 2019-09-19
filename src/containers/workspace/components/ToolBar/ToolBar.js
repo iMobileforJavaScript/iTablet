@@ -236,8 +236,10 @@ export default class ToolBar extends React.PureComponent {
       themeSymbolType: '',
       hasSoftMenuBottom: false,
       canUndo: false, //距离、面积量算是否可以撤销
+      canRedo: false, //距离、面积量算是否可以回退
     }
     this.pointArr = [] //距离、面积、角度量算点击数组
+    this.redoArr = [] //距离、面积、角度量算回退数组
     this.isShow = false
     this.isBoxShow = true
   }
@@ -2621,15 +2623,61 @@ export default class ToolBar extends React.PureComponent {
   //二三维量算功能 撤销事件
   undo = () => {
     if (GLOBAL.Type !== constants.MAP_3D) {
-      SMap.undo()
+      if (
+        GLOBAL.currentToolbarType === ConstToolType.MAP_TOOL_MEASURE_ANGLE &&
+        this.pointArr.length <= 2
+      ) {
+        this.props.showMeasureResult && this.props.showMeasureResult(true, '0°')
+        SMap.undo()
+        if (this.pointArr.length === 1) {
+          SMap.setAction(Action.MEASUREANGLE)
+          this.pointArr = []
+          this.redoArr = []
+          this.setState({
+            canRedo: false,
+            canUndo: false,
+          })
+        }
+      } else {
+        SMap.undo()
+      }
     } else {
       //三维撤销事件
     }
     if (this.pointArr.length > 0) {
-      this.pointArr.pop()
-      this.pointArr.length === 0 &&
+      this.redoArr.push(this.pointArr.pop())
+      this.redoArr.length > 0 &&
+        this.state.canRedo === false &&
+        this.setState({
+          canRedo: true,
+        })
+      if (this.pointArr.length === 0 && this.state.canUndo === true) {
+        this.pointArr = []
+        this.redoArr = []
         this.setState({
           canUndo: false,
+          canRedo: false,
+        })
+      }
+    }
+  }
+  redo = () => {
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      SMap.redo()
+    } else {
+      //三维撤销事件
+    }
+    if (this.redoArr.length > 0) {
+      this.pointArr.push(this.redoArr.pop())
+      this.redoArr.length === 0 &&
+        this.state.canRedo === true &&
+        this.setState({
+          canRedo: false,
+        })
+      this.pointArr.length > 0 &&
+        this.state.canUndo === false &&
+        this.setState({
+          canUndo: true,
         })
     }
   }
@@ -3135,8 +3183,10 @@ export default class ToolBar extends React.PureComponent {
         // 去掉量算监听
         SMap.removeMeasureListener()
         this.pointArr = []
+        this.redoArr = []
         this.setState({
           canUndo: false,
+          canRedo: false,
         })
       }
       if (GLOBAL.Type !== constants.MAP_3D) {
@@ -6568,11 +6618,21 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.UNDO:
           //二三维 量算功能 撤销按钮
           if (this.state.canUndo) {
-            image = getPublicAssets().attribute.icon_undo_disable
             action = this.undo
+            image = getThemeAssets().publicAssets.icon_undo_dark
           } else {
-            image = getThemeAssets().publicAssets.icon_undo
+            image = getThemeAssets().publicAssets.icon_undo_disable
             action = () => {}
+          }
+          break
+        case ToolbarBtnType.REDO:
+          //二三维 量算功能 撤销按钮
+          if (this.state.canRedo) {
+            image = getThemeAssets().publicAssets.icon_redo_dark
+            action = this.redo
+          } else {
+            action = () => {}
+            image = getThemeAssets().publicAssets.icon_redo_disable
           }
           break
       }
