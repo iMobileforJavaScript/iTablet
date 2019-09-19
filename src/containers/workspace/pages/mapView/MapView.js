@@ -2134,7 +2134,7 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {this.props.mapLegend.isShow && !this.noLegend && (
+        {this.props.mapLegend[GLOBAL.Type].isShow && !this.noLegend && (
           <RNLegendView
             setMapLegend={this.props.setMapLegend}
             legendSettings={this.props.mapLegend}

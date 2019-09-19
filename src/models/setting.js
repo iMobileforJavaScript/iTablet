@@ -4,6 +4,7 @@ import { handleActions } from 'redux-actions'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
+import constants from '../containers/workspace/constants'
 
 // Constants
 // --------------------------------------------------
@@ -210,11 +211,55 @@ const initialState = fromJS({
   mapSetting: [],
   language: 'CN',
   mapLegend: {
-    isShow: false,
-    backgroundColor: 'white',
-    column: 2,
-    widthPercent: 80,
-    heightPercent: 80,
+    [constants.MAP_EDIT]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_THEME]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_PLOTTING]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_NAVIGATION]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_ANALYST]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.COLLECTION]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_AR]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
   },
   mapNavigation: {
     isShow: false,
@@ -303,11 +348,55 @@ export default handleActions(
         data = payload
       } else {
         data = {
-          isShow: false,
-          backgroundColor: 'white',
-          column: 2,
-          widthPercent: 80,
-          heightPercent: 80,
+          [constants.MAP_EDIT]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_THEME]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_PLOTTING]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_NAVIGATION]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_ANALYST]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.COLLECTION]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_AR]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
         }
       }
       return state.setIn(['mapLegend'], fromJS(data))

@@ -3497,7 +3497,7 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (this.props.mapLegend.isShow) {
+          if (this.props.mapLegend[GLOBAL.Type].isShow) {
             buttons = [
               ToolbarBtnType.CANCEL,
               ToolbarBtnType.NOT_VISIBLE,
@@ -3976,7 +3976,7 @@ export default class ToolBar extends React.PureComponent {
   //改变图例组件的显隐
   changeLegendVisible = () => {
     let legendData = this.props.mapLegend
-    let type = legendData.isShow
+    let type = legendData[GLOBAL.Type].isShow
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3985,7 +3985,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    legendData.isShow = type === ConstToolType.LEGEND
+    legendData[GLOBAL.Type].isShow = type === ConstToolType.LEGEND
     this.props.setMapLegend && this.props.setMapLegend(legendData)
   }
 
@@ -6186,7 +6186,7 @@ export default class ToolBar extends React.PureComponent {
         list = heatmapMenuInfo(this.props.language)
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      if (this.props.mapLegend.isShow) {
+      if (this.props.mapLegend[GLOBAL.Type].isShow) {
         list = legendMenuInfoNotVisible(this.props.language)
       } else {
         list = legendMenuInfo(this.props.language)
