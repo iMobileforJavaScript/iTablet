@@ -18,13 +18,14 @@ function isVectorDataset(type) {
 
 function getMediaTypeByPath(uri = '') {
   let type = ''
-  if (!uri || uri.lastIndexOf('.') < 0) return type
+  if (!uri) return type
   uri = uri.toLowerCase()
   if (
     uri.endsWith('mp4') ||
     uri.endsWith('mov') ||
     uri.endsWith('avi') ||
-    uri.endsWith('wmv')
+    uri.endsWith('wmv') ||
+    uri.indexOf('/video/') > 0
   ) {
     type = 'video'
   } else if (
@@ -32,7 +33,8 @@ function getMediaTypeByPath(uri = '') {
     uri.endsWith('jpeg') ||
     uri.endsWith('png') ||
     uri.endsWith('gif') ||
-    uri.endsWith('bmp')
+    uri.endsWith('bmp') ||
+    uri.indexOf('/images/') > 0
   ) {
     type = 'photo'
   }

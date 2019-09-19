@@ -2228,7 +2228,7 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
-        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} />
+        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} maxSize={1} />
         <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
         </PopView>

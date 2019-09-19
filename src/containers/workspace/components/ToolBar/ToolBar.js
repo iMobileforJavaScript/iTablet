@@ -3131,6 +3131,10 @@ export default class ToolBar extends React.PureComponent {
         await this.closeSubAction(type, actionType)
       }
 
+      if (type === ConstToolType.MAP3D_TOOL_FLY) {
+        this.endFly()
+      }
+
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听
         SMap.removeMeasureListener()
@@ -3276,7 +3280,7 @@ export default class ToolBar extends React.PureComponent {
             },
           })
           // NavigationService.goBack()
-        } else {
+        } else if (GLOBAL.Type !== constants.MAP_3D) {
           SMap.setAction(actionType)
         }
       }
