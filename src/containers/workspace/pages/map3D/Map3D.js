@@ -287,6 +287,22 @@ export default class Map3D extends React.Component {
     // GLOBAL.sceneName = ''
     if (!this.mapLoaded) return
     try {
+      if (Platform.OS === 'android') {
+        if (this.toolBox && this.toolBox.getState().isShow) {
+          this.toolBox.close()
+          return true
+        } else if (this.SaveDialog && this.SaveDialog.getState().visible) {
+          this.SaveDialog.setDialogVisible(false)
+          return true
+        } else if (
+          GLOBAL.removeObjectDialog &&
+          GLOBAL.removeObjectDialog.getState().visible
+        ) {
+          GLOBAL.removeObjectDialog.setDialogVisible(false)
+          return true
+        }
+      }
+
       this.container &&
         this.container.setLoading(
           true,
