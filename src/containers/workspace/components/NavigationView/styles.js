@@ -53,7 +53,7 @@ export default StyleSheet.create({
     backgroundColor: color.background,
     // width: '100%',
     marginLeft: scaleSize(30),
-    marginRight: scaleSize(10),
+    marginRight: scaleSize(50),
     height: scaleSize(150),
     flexDirection: 'row',
     alignItems: 'center',

@@ -83,6 +83,7 @@ import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadV
 import Orientation from 'react-native-orientation'
 import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
 import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
+import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -108,6 +109,7 @@ export default class MapView extends React.Component {
     mapIndoorNavigation: PropTypes.bool,
     navigationChangeAR: PropTypes.bool,
     navigationPoiView: PropTypes.bool,
+    openOnlineMap: PropTypes.bool,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -163,6 +165,8 @@ export default class MapView extends React.Component {
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
     setMapSearchHistory: PropTypes.func,
+    setMapSelectPoint: PropTypes.func,
+    setOpenOnlineMap: PropTypes.func,
   }
 
   constructor(props) {
@@ -284,6 +288,14 @@ export default class MapView extends React.Component {
       callback: () => {
         this.showFullMap(false)
         this.props.setMapNavigation({ isShow: false, name: '' })
+        GLOBAL.STARTX = undefined
+        GLOBAL.ENDX = undefined
+        GLOBAL.ROUTEANALYST = undefined
+        this.props.setMapSelectPoint({
+          firstPoint: '选择起点',
+          secondPoint: '选择终点',
+        })
+        SMap.clearPoint()
       },
     })
   }
@@ -1015,10 +1027,18 @@ export default class MapView extends React.Component {
 
   back = () => {
     if (!this.mapLoaded) return
-    // this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.NAVIGATIONMAPOPEN = false
     GLOBAL.HASCHOSE = false
+    GLOBAL.STARTX = undefined
+    GLOBAL.ENDX = undefined
+    GLOBAL.ROUTEANALYST = undefined
+    this.props.setMapSelectPoint({
+      firstPoint: '选择起点',
+      secondPoint: '选择终点',
+    })
+    SMap.clearPoint()
+    // this.props.setMapIndoorNavigation(false)
     // 优先处理其他界面跳转到MapView传来的返回事件
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
@@ -1252,6 +1272,12 @@ export default class MapView extends React.Component {
           SMap.setIsMagnifierEnabled(true)
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
+        if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          SMap.moveToCurrent().then(result => {
+            !result &&
+              Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
+          })
+        }
       } catch (e) {
         this.setLoading(false)
         this.mapLoaded = true
@@ -1989,11 +2015,11 @@ export default class MapView extends React.Component {
             //'路网',
             image: require('../../../../assets/Navigation/network_white.png'),
             data: [
-              {
-                title: '室外数据',
-                name: '室外数据',
-                image: require('../../../../assets/Navigation/snm_model.png'),
-              },
+              // {
+              //   title: '室外数据',
+              //   name: '室外数据',
+              //   image: require('../../../../assets/Navigation/snm_model.png'),
+              // },
               {
                 title: '室内数据',
                 name: '室内数据',
@@ -2096,6 +2122,14 @@ export default class MapView extends React.Component {
     )
   }
 
+  _renderNavigationStartButton = () => {
+    return (
+      <NavigationStartButton
+        ref={ref => (GLOBAL.NAVIGATIONSTARTBUTTON = ref)}
+      />
+    )
+  }
+
   _renderMapSelectPointButton = () => {
     return (
       <MapSelectPointButton ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)} />
@@ -2174,6 +2208,7 @@ export default class MapView extends React.Component {
         {/*this._renderNavigationView()}*/}
         {this._renderIncrementRoad()}
         {this._renderMapSelectPoint()}
+        {this._renderNavigationStartButton()}
         {this._renderMapSelectPointButton()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
@@ -2188,6 +2223,7 @@ export default class MapView extends React.Component {
           !this.props.mapNavigationShow &&
           !this.props.mapNavigation.isShow &&
           this.state.incrementShow &&
+          this.props.openOnlineMap &&
           this._renderNavigationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&

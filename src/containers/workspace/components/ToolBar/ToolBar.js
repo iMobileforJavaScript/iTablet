@@ -185,6 +185,7 @@ export default class ToolBar extends React.PureComponent {
     setMap2Dto3D: () => {},
     cancelincrement: () => {},
     switchAr: () => {},
+    setOpenOnlineMap: () => {},
   }
 
   static defaultProps = {
@@ -4638,6 +4639,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
       this.props.setMap2Dto3D(false)
+      this.props.setOpenOnlineMap(true)
       this.changeMap(item)
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
