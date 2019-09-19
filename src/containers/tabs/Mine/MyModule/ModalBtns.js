@@ -5,6 +5,7 @@ import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
 import { getThemeAssets } from '../../../../assets'
+import { SimpleDialog } from '../../Friend'
 
 export default class ModalBtns extends Component {
   props: {
@@ -67,7 +68,13 @@ export default class ModalBtns extends Component {
               image={getThemeAssets().share.wechat}
               imageStyle={styles.headerBtn}
               onPress={() => {
-                this.props.actionOfWechat && this.props.actionOfWechat()
+                this.SimpleDialog.setConfirm(() => {
+                  this.props.actionOfWechat && this.props.actionOfWechat()
+                })
+                this.SimpleDialog.setText(
+                  getLanguage(global.language).Prompt.OPEN_THRID_PARTY,
+                )
+                this.SimpleDialog.setVisible(true)
               }}
             />
           )}
@@ -102,6 +109,7 @@ export default class ModalBtns extends Component {
             />
           )}
           {!this.showCancel && <View style={styles.button} />}
+          <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
         </View>
       )
     } else {

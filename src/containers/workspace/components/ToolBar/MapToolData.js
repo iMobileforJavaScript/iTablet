@@ -505,7 +505,7 @@ function getMapTool(type, params) {
     case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
       buttons = [
         ToolbarBtnType.CANCEL,
-        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.UNDO,
         ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
@@ -756,6 +756,18 @@ function measureLength() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureLength(obj => {
+      if (GLOBAL.ToolBar) {
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
       _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
     })
   })
@@ -778,6 +790,18 @@ function measureArea() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureArea(obj => {
+      if (GLOBAL.ToolBar) {
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
       _params.showMeasureResult(true, obj.curResult.toFixed(6) + '㎡')
     })
   })
@@ -799,7 +823,23 @@ function measureAngle() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureAngle(obj => {
-      _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
+      if (GLOBAL.ToolBar) {
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
+      if (GLOBAL.ToolBar.pointArr.length === 2) {
+        _params.showMeasureResult(true, dataUtil.angleTransfer(0, 6))
+      } else {
+        _params.showMeasureResult(true, '0°')
+      }
     })
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_ANGLE
@@ -828,6 +868,12 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
         _params.showMeasureResult && _params.showMeasureResult(true, '0°')
         SMap.setAction(Action.MEASUREANGLE)
         break
+    }
+    if (GLOBAL.ToolBar) {
+      GLOBAL.ToolBar.pointArr = []
+      GLOBAL.ToolBar.setState({
+        canUndo: false,
+      })
     }
   }
 }

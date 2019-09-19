@@ -226,6 +226,8 @@ const Prompt = {
   OPEN_LOCATION: 'Please open Location Service in System Setting',
   REQUEST_LOCATION: 'iTablet need location permission to complete the action',
   LOCATION_ERROR: 'Location request failed, please try agagin later',
+
+  OPEN_THRID_PARTY: "You're going to open a thirty-party app, continue?",
 }
 
 export { Prompt }

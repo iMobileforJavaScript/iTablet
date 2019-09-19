@@ -432,12 +432,10 @@ export default class Map3D extends React.Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         style={{
-          width: scaleSize(420),
-          height: scaleSize(250),
+          height: scaleSize(220),
         }}
         opacityStyle={{
-          width: scaleSize(420),
-          height: scaleSize(250),
+          height: scaleSize(220),
         }}
         type={'modal'}
         confirmAction={this.confirm}

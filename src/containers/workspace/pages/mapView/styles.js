@@ -192,7 +192,6 @@ export default StyleSheet.create({
     backgroundColor: color.contentWhite,
   },
   dialogStyle: {
-    width: scaleSize(350),
     height: scaleSize(160),
   },
 })
