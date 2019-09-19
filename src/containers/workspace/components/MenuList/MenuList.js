@@ -19,7 +19,7 @@ import { scaleSize, setSpText } from '../../../../utils'
 import color from '../../../../styles/color'
 import ConstToolType from '../../../../constants/ConstToolType'
 import { getLanguage } from '../../../../language'
-import { getThemeAssets } from '../../../../assets'
+import { getThemeAssets, getPublicAssets } from '../../../../assets'
 
 export default class MenuList extends Component {
   props: {
@@ -503,6 +503,9 @@ export default class MenuList extends Component {
   renderTitle = () => {
     let backImage = require('../../../../assets/public/icon_map3d_back.png')
     let forwardImage = require('../../../../assets/public/icon_map3d_forward.png')
+    let icon = this.state.hiddenPart
+      ? getPublicAssets().mapTools.icon_arrow_up
+      : getPublicAssets().mapTools.icon_arrow_down
     return (
       <View
         style={{
@@ -521,15 +524,12 @@ export default class MenuList extends Component {
             this.changeHeight()
           }}
         >
-          <View
+          <Image
             style={{
-              marginVertical: scaleSize(8),
-              borderColor: color.gray,
-              borderTopWidth: scaleSize(2),
-              borderBottomWidth: scaleSize(2),
-              height: scaleSize(10),
-              width: scaleSize(40),
+              height: scaleSize(40),
             }}
+            source={icon}
+            resizeMode={'contain'}
           />
         </TouchableOpacity>
         <View

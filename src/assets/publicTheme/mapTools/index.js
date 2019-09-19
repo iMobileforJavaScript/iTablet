@@ -13,6 +13,8 @@ const tools_layer_info = require('./layer_info.png')
 const tools_layer_copy = require('./layer_copy.png')
 const tools_layer_paste = require('./layer_paste.png')
 const tools_layer_delete = require('./layer_delete.png')
+const icon_arrow_up = require('./icon_arrow_up.png')
+const icon_arrow_down = require('./icon_arrow_down.png')
 export default {
   tools_rectangle_cut,
   /*多媒体采集*/
@@ -40,4 +42,7 @@ export default {
   tools_layer_paste,
   /*移除图层*/
   tools_layer_delete,
+  //三维box裁剪专用箭头
+  icon_arrow_up,
+  icon_arrow_down,
 }
