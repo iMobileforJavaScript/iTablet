@@ -248,12 +248,10 @@ export default class SelectFriend extends Component {
 
 const styles = StyleSheet.create({
   dialogBackground: {
-    width: scaleSize(500),
     height: scaleSize(350),
     backgroundColor: color.content_white,
   },
   opacityView: {
-    width: scaleSize(500),
     height: scaleSize(350),
     backgroundColor: color.content_white,
   },

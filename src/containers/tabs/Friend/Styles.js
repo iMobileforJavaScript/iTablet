@@ -118,14 +118,15 @@ const styles = StyleSheet.create({
 
 const dialogStyles = StyleSheet.create({
   dialogHeaderViewX: {
+    paddingTop: scaleSize(10),
     flex: 1,
     //  backgroundColor:"pink",
     flexDirection: 'column',
     alignItems: 'center',
   },
   dialogHeaderImgX: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
     opacity: 1,
     // marginLeft:scaleSize(145),
     // marginTop:scaleSize(21),
@@ -134,12 +135,10 @@ const dialogStyles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: '#303030',
     marginTop: scaleSize(5),
-    marginLeft: scaleSize(10),
-    marginRight: scaleSize(10),
+    marginLeft: scaleSize(20),
     textAlign: 'center',
   },
   dialogBackgroundX: {
-    width: scaleSize(350),
     height: scaleSize(240),
     // borderRadius: scaleSize(4),
     // backgroundColor: 'white',

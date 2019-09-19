@@ -49,7 +49,7 @@ export default class RNLegendView extends React.Component {
 
   setMapLegend = ({ backgroundColor }) => {
     let settings = this.props.legendSettings
-    settings.backgroundColor = backgroundColor
+    settings[GLOBAL.Type].backgroundColor = backgroundColor
     this.props.setMapLegend && this.props.setMapLegend(settings)
   }
 
@@ -78,7 +78,10 @@ export default class RNLegendView extends React.Component {
   // }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.legendSettings.column !== this.props.legendSettings.column) {
+    if (
+      nextProps.legendSettings[GLOBAL.Type].column !==
+      this.props.legendSettings[GLOBAL.Type].column
+    ) {
       let flatListKey = this.state.flatListKey + 1
       this.setState({
         flatListKey,
@@ -161,7 +164,8 @@ export default class RNLegendView extends React.Component {
     return (
       <TouchableOpacity
         style={{
-          width: (1 / this.props.legendSettings.column) * 100 + '%',
+          width:
+            (1 / this.props.legendSettings[GLOBAL.Type].column) * 100 + '%',
           height: scaleSize(80),
           justifyContent: 'center',
           alignItems: 'center',
@@ -255,15 +259,20 @@ export default class RNLegendView extends React.Component {
         style={{
           position: 'absolute',
           width: scaleSize(
-            (this.state.width * this.props.legendSettings.widthPercent) / 100,
+            (this.state.width *
+              this.props.legendSettings[GLOBAL.Type].widthPercent) /
+              100,
           ),
           height: scaleSize(
-            (this.state.height * this.props.legendSettings.heightPercent) / 100,
+            (this.state.height *
+              this.props.legendSettings[GLOBAL.Type].heightPercent) /
+              100,
           ),
           borderColor: 'black',
           borderWidth: scaleSize(3),
           paddingRight: scaleSize(5),
-          backgroundColor: this.props.legendSettings.backgroundColor,
+          backgroundColor: this.props.legendSettings[GLOBAL.Type]
+            .backgroundColor,
           zIndex: 1,
           ...this.state[this.state.currentPosition],
         }}
@@ -275,7 +284,8 @@ export default class RNLegendView extends React.Component {
             top: 0,
             width: '100%',
             height: scaleSize(30),
-            backgroundColor: this.props.legendSettings.backgroundColor,
+            backgroundColor: this.props.legendSettings[GLOBAL.Type]
+              .backgroundColor,
             zIndex: 999,
           }}
         >
@@ -289,7 +299,7 @@ export default class RNLegendView extends React.Component {
           renderItem={this.renderLegendItem}
           data={this.state.legendSource}
           keyExtractor={(item, index) => item.title + index}
-          numColumns={this.props.legendSettings.column}
+          numColumns={this.props.legendSettings[GLOBAL.Type].column}
           key={this.state.flatListKey}
         />
       </View>

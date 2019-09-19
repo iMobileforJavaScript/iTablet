@@ -505,7 +505,8 @@ function getMapTool(type, params) {
     case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
       buttons = [
         ToolbarBtnType.CANCEL,
-        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.UNDO,
+        ToolbarBtnType.REDO,
         ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
@@ -756,7 +757,20 @@ function measureLength() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureLength(obj => {
-      _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
+      if (GLOBAL.ToolBar) {
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
+      let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
+      _params.showMeasureResult(true, rel + 'm')
     })
   })
 
@@ -778,7 +792,20 @@ function measureArea() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureArea(obj => {
-      _params.showMeasureResult(true, obj.curResult.toFixed(6) + '㎡')
+      if (GLOBAL.ToolBar) {
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
+      let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
+      _params.showMeasureResult(true, rel + '㎡')
     })
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
@@ -799,7 +826,26 @@ function measureAngle() {
   _params.showMeasureResult(true, 0)
   StyleUtils.setDefaultMapControlStyle().then(() => {
     SMap.measureAngle(obj => {
-      _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
+      if (GLOBAL.ToolBar) {
+        //角度量算前两次打点不会触发回调，第三次打点添加一个标识，最后一次撤销直接清除当前所有点
+        GLOBAL.ToolBar.pointArr.indexOf('startLine') === -1 &&
+          GLOBAL.ToolBar.pointArr.push('startLine')
+        GLOBAL.ToolBar.pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+          GLOBAL.ToolBar.pointArr.push(JSON.stringify(obj.curPoint))
+        if (
+          GLOBAL.ToolBar.pointArr.length > 0 &&
+          GLOBAL.ToolBar.state.canUndo === false
+        ) {
+          GLOBAL.ToolBar.setState({
+            canUndo: true,
+          })
+        }
+      }
+      if (GLOBAL.ToolBar.pointArr.length >= 2) {
+        _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
+      } else {
+        _params.showMeasureResult(true, '0°')
+      }
     })
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_ANGLE
@@ -828,6 +874,14 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
         _params.showMeasureResult && _params.showMeasureResult(true, '0°')
         SMap.setAction(Action.MEASUREANGLE)
         break
+    }
+    if (GLOBAL.ToolBar) {
+      GLOBAL.ToolBar.pointArr = []
+      GLOBAL.ToolBar.redoArr = []
+      GLOBAL.ToolBar.setState({
+        canUndo: false,
+        canRedo: false,
+      })
     }
   }
 }

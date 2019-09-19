@@ -4,6 +4,7 @@ import NavigationService from '../../containers/NavigationService'
 import Orientation from 'react-native-orientation'
 // import styles from './styles'
 import { Container } from '../../components'
+//eslint-disable-next-line
 import { SMIllegallyParkView } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language'
 

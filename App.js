@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform, Image, Text, BackHandler } from 'react-native'
+import { View, AppState, StyleSheet, Platform, Image, Text, BackHandler, NativeModules } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -41,6 +41,7 @@ import { getLanguage } from './src/language/index'
 import FetchUtils from './src/utils/FetchUtils'
 import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
+let AppUtils = NativeModules.AppUtils
 
 
 const {persistor, store} = ConfigStore()
@@ -61,14 +62,15 @@ const styles = StyleSheet.create({
     height: 1,
   },
   dialogHeaderView: {
+    paddingTop:scaleSize(40),
     flex: 1,
     //  backgroundColor:"pink",
     flexDirection: 'column',
     alignItems: 'center',
   },
   dialogHeaderImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
     opacity: 1,
     // marginLeft:scaleSize(145),
     // marginTop:scaleSize(21),
@@ -82,12 +84,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dialogBackground: {
-    width: scaleSize(350),
-    height: scaleSize(220),
+    height: scaleSize(300),
   },
   opacityView: {
-    width: scaleSize(350),
-    height: scaleSize(220),
+    height: scaleSize(300),
   },
 })
 
@@ -156,6 +156,17 @@ class AppRoot extends Component {
     //地图比例尺
     GLOBAL.scaleView = null
     GLOBAL.SelectedSelectionAttribute = null // 框选-属性-关联对象 {layerInfo, index, data}
+    this.setIsPad()
+  }
+
+  setIsPad = async () => {
+    let isPad
+    if(Platform.OS === 'ios') {
+      isPad = Platform.isPad
+    } else {
+      isPad = await AppUtils.isPad()
+    }
+    GLOBAL.isPad = isPad
   }
 
   async login(){

@@ -137,6 +137,7 @@ export default class LocalAnalystView extends Component {
             },
           })
           await AnalystTools.clear(this.type)
+          await this.props.getLayers()
           this.setLoading(false)
           await SMap.setLayerFullView(res.layerInfo.path)
           NavigationService.goBack()

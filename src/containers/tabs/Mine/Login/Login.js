@@ -133,7 +133,11 @@ class Login extends React.Component {
           true,
           getLanguage(this.props.language).Prompt.LOG_IN,
         )
-        result = await SOnlineService.login(userName, password)
+        if (isEmail) {
+          result = await SOnlineService.login(userName, password)
+        } else {
+          result = await SOnlineService.loginWithPhoneNumber(userName, password)
+        }
       } else {
         Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
         return

@@ -236,7 +236,11 @@ export default class ToolBar extends React.PureComponent {
       listExpressions: {},
       themeSymbolType: '',
       hasSoftMenuBottom: false,
+      canUndo: false, //距离、面积量算是否可以撤销
+      canRedo: false, //距离、面积量算是否可以回退
     }
+    this.pointArr = [] //距离、面积、角度量算点击数组
+    this.redoArr = [] //距离、面积、角度量算回退数组
     this.isShow = false
     this.isBoxShow = true
   }
@@ -523,6 +527,16 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
+                  this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    this.pointArr.push(JSON.stringify(result))
+                  if (
+                    this.pointArr.length > 0 &&
+                    this.state.canUndo === false
+                  ) {
+                    this.setState({
+                      canUndo: true,
+                    })
+                  }
                   this.Map3DToolBar &&
                     this.Map3DToolBar.setAnalystResult(result)
                   this.props.measureShow &&
@@ -550,6 +564,12 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
+                  this.clickTime++
+                  if (this.clickTime > 0 && this.state.canUndo === false) {
+                    this.setState({
+                      canUndo: true,
+                    })
+                  }
                   result = result > 0 ? result.toFixed(6) : 0
                   this.props.measureShow &&
                     this.props.measureShow(true, result + '㎡')
@@ -2425,6 +2445,7 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
+        //buttons: [ToolbarBtnType.CLOSE_ANALYST,ToolbarBtnType.UNDO, ToolbarBtnType.CLEAR],
         buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
@@ -2600,6 +2621,67 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //二三维量算功能 撤销事件
+  undo = () => {
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      if (
+        GLOBAL.currentToolbarType === ConstToolType.MAP_TOOL_MEASURE_ANGLE &&
+        this.pointArr.length <= 2
+      ) {
+        this.props.showMeasureResult && this.props.showMeasureResult(true, '0°')
+        SMap.undo()
+        if (this.pointArr.length === 1) {
+          SMap.setAction(Action.MEASUREANGLE)
+          this.pointArr = []
+          this.redoArr = []
+          this.setState({
+            canRedo: false,
+            canUndo: false,
+          })
+        }
+      } else {
+        SMap.undo()
+      }
+    } else {
+      //三维撤销事件
+    }
+    if (this.pointArr.length > 0) {
+      this.redoArr.push(this.pointArr.pop())
+      this.redoArr.length > 0 &&
+        this.state.canRedo === false &&
+        this.setState({
+          canRedo: true,
+        })
+      if (this.pointArr.length === 0 && this.state.canUndo === true) {
+        this.pointArr = []
+        this.redoArr = []
+        this.setState({
+          canUndo: false,
+          canRedo: false,
+        })
+      }
+    }
+  }
+  redo = () => {
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      SMap.redo()
+    } else {
+      //三维撤销事件
+    }
+    if (this.redoArr.length > 0) {
+      this.pointArr.push(this.redoArr.pop())
+      this.redoArr.length === 0 &&
+        this.state.canRedo === true &&
+        this.setState({
+          canRedo: false,
+        })
+      this.pointArr.length > 0 &&
+        this.state.canUndo === false &&
+        this.setState({
+          canUndo: true,
+        })
+    }
+  }
   /** 推演动画播放事件*/
   showPlotAnimationTool = async type => {
     if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
@@ -3098,9 +3180,19 @@ export default class ToolBar extends React.PureComponent {
         await this.closeSubAction(type, actionType)
       }
 
+      if (type === ConstToolType.MAP3D_TOOL_FLY) {
+        this.endFly()
+      }
+
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听
         SMap.removeMeasureListener()
+        this.pointArr = []
+        this.redoArr = []
+        this.setState({
+          canUndo: false,
+          canRedo: false,
+        })
       }
       if (GLOBAL.Type !== constants.MAP_3D) {
         this.props.showMeasureResult(false)
@@ -3239,7 +3331,7 @@ export default class ToolBar extends React.PureComponent {
             },
           })
           // NavigationService.goBack()
-        } else {
+        } else if (GLOBAL.Type !== constants.MAP_3D) {
           SMap.setAction(actionType)
         }
       }
@@ -3410,7 +3502,7 @@ export default class ToolBar extends React.PureComponent {
             ToolbarBtnType.MENU_COMMIT,
           ]
         } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (this.props.mapLegend.isShow) {
+          if (this.props.mapLegend[GLOBAL.Type].isShow) {
             buttons = [
               ToolbarBtnType.CANCEL,
               ToolbarBtnType.NOT_VISIBLE,
@@ -3889,7 +3981,7 @@ export default class ToolBar extends React.PureComponent {
   //改变图例组件的显隐
   changeLegendVisible = () => {
     let legendData = this.props.mapLegend
-    let type = legendData.isShow
+    let type = legendData[GLOBAL.Type].isShow
       ? ConstToolType.LEGEND_NOT_VISIBLE
       : ConstToolType.LEGEND
     let { data, buttons } = this.getData(type)
@@ -3898,7 +3990,7 @@ export default class ToolBar extends React.PureComponent {
       data: data,
       buttons: buttons,
     })
-    legendData.isShow = type === ConstToolType.LEGEND
+    legendData[GLOBAL.Type].isShow = type === ConstToolType.LEGEND
     this.props.setMapLegend && this.props.setMapLegend(legendData)
   }
 
@@ -3993,6 +4085,8 @@ export default class ToolBar extends React.PureComponent {
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+    this.setState({ canUndo: false })
+    this.clickTime = 0
   }
 
   clear = () => {
@@ -4000,10 +4094,18 @@ export default class ToolBar extends React.PureComponent {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
         SScene.clearSquareAnalyst()
         this.props.measureShow(true, '0㎡')
+        this.clickTime = 0
+        this.setState({
+          canUndo: false,
+        })
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
         SScene.clearLineAnalyst()
         this.props.measureShow(true, '0m')
+        this.clickTime = 0
+        this.setState({
+          canUndo: false,
+        })
         break
       case ConstToolType.MAP3D_BOX_CLIP:
       case ConstToolType.MAP3D_CROSS_CLIP:
@@ -6090,7 +6192,7 @@ export default class ToolBar extends React.PureComponent {
         list = heatmapMenuInfo(this.props.language)
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
-      if (this.props.mapLegend.isShow) {
+      if (this.props.mapLegend[GLOBAL.Type].isShow) {
         list = legendMenuInfoNotVisible(this.props.language)
       } else {
         list = legendMenuInfo(this.props.language)
@@ -6518,6 +6620,26 @@ export default class ToolBar extends React.PureComponent {
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.showPicker
+          break
+        case ToolbarBtnType.UNDO:
+          //二三维 量算功能 撤销按钮
+          if (this.state.canUndo) {
+            action = this.undo
+            image = getThemeAssets().publicAssets.icon_undo_dark
+          } else {
+            image = getThemeAssets().publicAssets.icon_undo_disable
+            action = () => {}
+          }
+          break
+        case ToolbarBtnType.REDO:
+          //二三维 量算功能 撤销按钮
+          if (this.state.canRedo) {
+            image = getThemeAssets().publicAssets.icon_redo_dark
+            action = this.redo
+          } else {
+            action = () => {}
+            image = getThemeAssets().publicAssets.icon_redo_disable
+          }
           break
       }
 

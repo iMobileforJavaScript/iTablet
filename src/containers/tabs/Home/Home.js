@@ -392,11 +392,9 @@ export default class Home extends Component {
         cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         //{'取消'}
         // backgroundStyle={styles.dialogBackground}
-        opacity={0.85}
-        opacityStyle={styles.opacityView}
-        style={styles.dialogBackground}
-        confirmTitleStyle={styles.btnTitle}
-        cancelTitleStyle={styles.btnTitle}
+        opacity={1}
+        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
+        style={[styles.dialogBackground, { height: scaleSize(340) }]}
         cancelAction={this.cancel}
       >
         {this.renderDialogChildren()}
@@ -413,8 +411,8 @@ export default class Home extends Component {
         cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         confirmAction={this.exitConfirm}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
       >
         {this.renderExitDialogChildren()}
       </Dialog>

@@ -188,13 +188,13 @@ export default class Dialog extends PureComponent {
           }
         }}
       >
-        <TouchableOpacity
+        <View
           disabled={
             this.props.disableBackTouch === undefined
               ? false
               : this.props.disableBackTouch
           }
-          onPress={this.cancel}
+          //onPress={this.cancel}
           style={[styles.container, this.props.backgroundStyle]}
         >
           {this.props.header}
@@ -227,7 +227,7 @@ export default class Dialog extends PureComponent {
             <View style={styles.childrenContainer}>{this.props.children}</View>
             {this.renderBtns()}
           </KeyboardAvoidingView>
-        </TouchableOpacity>
+        </View>
       </Modal>
     )
   }

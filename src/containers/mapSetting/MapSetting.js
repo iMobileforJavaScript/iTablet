@@ -185,23 +185,24 @@ export default class MapSetting extends Component {
       title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
     ) {
       let mapLegend = this.props.mapLegend
-      if (mapLegend.isShow) {
-        this.props.setMapLegend({
+      if (mapLegend[GLOBAL.Type].isShow) {
+        mapLegend[GLOBAL.Type] = {
           isShow: true,
-          backgroundColor: mapLegend.backgroundColor,
-          column: mapLegend.column,
-          widthPercent: mapLegend.widthPercent,
-          heightPercent: mapLegend.heightPercent,
-        })
+          backgroundColor: mapLegend[GLOBAL.Type].backgroundColor,
+          column: mapLegend[GLOBAL.Type].column,
+          widthPercent: mapLegend[GLOBAL.Type].widthPercent,
+          heightPercent: mapLegend[GLOBAL.Type].heightPercent,
+        }
       } else {
-        this.props.setMapLegend({
+        mapLegend[GLOBAL.Type] = {
           isShow: true,
           backgroundColor: 'white',
           column: 2,
           widthPercent: 80,
           heightPercent: 80,
-        })
+        }
       }
+      this.props.setMapLegend(mapLegend)
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
           containerType: 'colortable',

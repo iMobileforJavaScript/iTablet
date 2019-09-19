@@ -48,7 +48,7 @@ import SurfaceView from './SurfaceView'
 import FingerMenu from './FingerMenu'
 import { ListItem } from './ListItem'
 import ImageViewer from './ImageViewer'
-import MediaViewer from './MediaViewer'
+import { MediaViewer, MediaPager } from './MediaViewer'
 import LinkageList from './LinkageList'
 import TouchableItem from './TouchableItem'
 import ImagePicker from './ImagePicker'
@@ -113,6 +113,7 @@ export {
   ListItem,
   ImageViewer,
   MediaViewer,
+  MediaPager,
   LinkageList,
   TouchableItem,
   ImagePicker,
