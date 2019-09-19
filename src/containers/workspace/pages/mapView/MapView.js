@@ -427,7 +427,7 @@ export default class MapView extends React.Component {
 
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
-      Orientation.unlockAllOrientations()
+      global.isPad && Orientation.unlockAllOrientations()
     }
     if (Platform.OS === 'android') {
       this.props.removeBackAction({

@@ -221,7 +221,7 @@ function SetMap(param) {
           data,
         ]
 
-        await Orientation.lockToPortrait()
+        global.isPad && Orientation.lockToPortrait()
         NavigationService.navigate('MapView', {
           operationType: constants.MAP_AR,
           wsData,
