@@ -1,3 +1,4 @@
 import MediaViewer from './MediaViewer'
+import MediaPager from './MediaPager'
 
-export default MediaViewer
+export { MediaViewer, MediaPager }
