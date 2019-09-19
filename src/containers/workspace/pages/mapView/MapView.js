@@ -427,7 +427,7 @@ export default class MapView extends React.Component {
 
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
-      Orientation.unlockAllOrientations()
+      global.isPad && Orientation.unlockAllOrientations()
     }
     if (Platform.OS === 'android') {
       this.props.removeBackAction({
@@ -2228,7 +2228,7 @@ export default class MapView extends React.Component {
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
-        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} />
+        <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} maxSize={1} />
         <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
         </PopView>
