@@ -13,7 +13,8 @@ import {
 import styles from './styles'
 import settingData from './settingData'
 import { color } from '../../styles'
-import { getLanguage } from '../../language/index'
+import { getLanguage } from '../../language'
+import { scaleSize } from '../../utils'
 export default class setting extends Component {
   props: {
     language: string,
@@ -192,6 +193,10 @@ export default class setting extends Component {
         ref={ref => (this.container = ref)}
         headerProps={{
           title: getLanguage(this.props.language).Map_Module.MAP_3D,
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           navigation: this.props.navigation,
           withoutBack: true,
         }}
