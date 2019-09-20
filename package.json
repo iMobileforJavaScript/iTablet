@@ -40,6 +40,7 @@
     "react-native-camera": "^2.10.0",
     "react-native-camera-roll-picker": "^1.2.3",
     "react-native-color-picker": "^0.4.0",
+    "react-native-color-wheel": "^0.1.7",
     "react-native-contacts": "^4.0.2",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fs": "^2.13.3",
