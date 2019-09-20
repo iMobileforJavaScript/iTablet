@@ -41,6 +41,8 @@ import {
   setMapIndoorNavigation,
   setNavigationChangeAR,
   setNavigationPoiView,
+  setMapSelectPoint,
+  setOpenOnlineMap,
 } from '../../../../models/setting'
 import { setMapSearchHistory } from '../../../../models/histories'
 import { setSharing } from '../../../../models/online'
@@ -79,6 +81,7 @@ const mapStateToProps = state => ({
   analyst: state.analyst.toJS(),
   downloads: state.down.toJS().downloads,
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
+  openOnlineMap: state.setting.toJS().openOnlineMap,
 })
 
 const mapDispatchToProps = {
@@ -123,6 +126,8 @@ const mapDispatchToProps = {
   setNavigationChangeAR,
   setNavigationPoiView,
   setMapSearchHistory,
+  setMapSelectPoint,
+  setOpenOnlineMap,
 }
 
 export default connect(

@@ -4,6 +4,7 @@ import { handleActions } from 'redux-actions'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
+import constants from '../containers/workspace/constants'
 
 // Constants
 // --------------------------------------------------
@@ -26,6 +27,7 @@ export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
 export const MAP_SELECT_POINT = 'MAP_SELECT_POINT'
 export const AGREE_TO_PROTOCOL = 'AGREE_TO_PROTOCOL'
 export const NAVIGATION_HISTORY = 'NAVIGATION_HISTORY'
+export const ONLINEMAP = 'ONLINEMAP'
 // Actions
 // --------------------------------------------------
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
@@ -132,6 +134,12 @@ export const setNavigationPoiView = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
+export const setOpenOnlineMap = (params = {}) => async dispatch => {
+  await dispatch({
+    type: ONLINEMAP,
+    payload: params || false,
+  })
+}
 export const setMapSelectPoint = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_SELECT_POINT,
@@ -210,11 +218,55 @@ const initialState = fromJS({
   mapSetting: [],
   language: 'CN',
   mapLegend: {
-    isShow: false,
-    backgroundColor: 'white',
-    column: 2,
-    widthPercent: 80,
-    heightPercent: 80,
+    [constants.MAP_EDIT]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_THEME]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_PLOTTING]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_NAVIGATION]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_ANALYST]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.COLLECTION]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
+    [constants.MAP_AR]: {
+      isShow: false,
+      backgroundColor: 'white',
+      column: 2,
+      widthPercent: 80,
+      heightPercent: 80,
+    },
   },
   mapNavigation: {
     isShow: false,
@@ -227,6 +279,7 @@ const initialState = fromJS({
   mapIndoorNavigation: false,
   navigationChangeAR: false,
   navigationPoiView: false,
+  openOnlineMap: false,
   mapSelectPoint: {
     firstPoint: '选择起点',
     secondPoint: '选择终点',
@@ -303,11 +356,55 @@ export default handleActions(
         data = payload
       } else {
         data = {
-          isShow: false,
-          backgroundColor: 'white',
-          column: 2,
-          widthPercent: 80,
-          heightPercent: 80,
+          [constants.MAP_EDIT]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_THEME]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_PLOTTING]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_NAVIGATION]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_ANALYST]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.COLLECTION]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
+          [constants.MAP_AR]: {
+            isShow: false,
+            backgroundColor: 'white',
+            column: 2,
+            widthPercent: 80,
+            heightPercent: 80,
+          },
         }
       }
       return state.setIn(['mapLegend'], fromJS(data))
@@ -377,6 +474,15 @@ export default handleActions(
         data = true
       }
       return state.setIn(['navigationPoiView'], fromJS(data))
+    },
+    [`${ONLINEMAP}`]: (state, { payload }) => {
+      let data = state.toJS().openOnlineMap
+      if (payload !== undefined) {
+        data = payload
+      } else {
+        data = false
+      }
+      return state.setIn(['openOnlineMap'], fromJS(data))
     },
     [`${MAP_SELECT_POINT}`]: (state, { payload }) => {
       let data = state.toJS().mapSelectPoint

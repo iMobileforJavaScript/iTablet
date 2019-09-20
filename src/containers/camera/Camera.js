@@ -64,7 +64,7 @@ export default class Camera extends React.Component {
 
   // eslint-disable-next-line
   componentWillMount() {
-    Orientation.lockToPortrait()
+    global.isPad && Orientation.lockToPortrait()
   }
 
   componentWillUnmount() {
@@ -72,7 +72,7 @@ export default class Camera extends React.Component {
       clearInterval(this.recordTimer)
       this.recordTimer = null
     }
-    Orientation.unlockAllOrientations()
+    global.isPad && Orientation.unlockAllOrientations()
   }
 
   componentDidMount() {

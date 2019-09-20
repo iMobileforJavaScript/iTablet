@@ -43,10 +43,16 @@ function getFlatType(language) {
   ]
 }
 
-const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
-  value: k + 1,
-  key: k + 1,
-}))
+// const SemicircleArcData = Array.from({ length: 100 }, (v, k) => ({
+//   value: k + 1,
+//   key: k + 1,
+// }))
+const SemicircleArcData = new Array(197).fill('').map((item, index) => {
+  return {
+    value: index + 4,
+    key: index + 4,
+  }
+})
 
 const defaultState = {
   dataSource: null,
@@ -194,10 +200,10 @@ export default class BufferAnalystViewTab extends Component {
         switch (this.state.flatType.value) {
           case getLanguage(this.props.language).Analyst_Params.BUFFER_LEFT:
             bufferParameter.leftDistance = this.state.bufferRadius
-            bufferParameter.rightDistance = 0
+            // bufferParameter.rightDistance = 0
             break
           case getLanguage(this.props.language).Analyst_Params.BUFFER_RIGHT:
-            bufferParameter.leftDistance = 0
+            // bufferParameter.leftDistance = 0
             bufferParameter.rightDistance = this.state.bufferRadius
             break
           case getLanguage(this.props.language).Analyst_Params

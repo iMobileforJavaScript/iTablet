@@ -53,6 +53,7 @@ export default StyleSheet.create({
     width: '100%',
     height: '43%',
     alignItems: 'center',
+    paddingTop: scaleSize(30),
   },
   //Myprofile
   MyProfileStyle: {

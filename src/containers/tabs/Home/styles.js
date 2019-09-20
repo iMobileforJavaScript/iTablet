@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, setSpText } from '../../../utils'
 import { color } from '../../../styles'
+import size from '../../../styles/size'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
@@ -60,8 +61,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   dialogBackground: {
-    width: scaleSize(350),
-    height: scaleSize(260),
+    height: scaleSize(300),
     backgroundColor: color.content_white,
   },
   dialogHeaderView: {
@@ -69,6 +69,7 @@ export default StyleSheet.create({
     //  backgroundColor:"pink",
     flexDirection: 'column',
     alignItems: 'center',
+    paddingTop: scaleSize(30),
   },
   // exitChildrenView:{
   //   flex: 1,
@@ -77,14 +78,14 @@ export default StyleSheet.create({
   //   alignItems: 'center',
   // },
   dialogHeaderImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(80),
+    height: scaleSize(80),
     opacity: 1,
     // marginLeft:scaleSize(145),
     // marginTop:scaleSize(21),
   },
   promptTtile: {
-    fontSize: scaleSize(24),
+    fontSize: size.fontSize.fontSizeXXl,
     color: color.theme_white,
     marginTop: scaleSize(5),
     marginLeft: scaleSize(10),
@@ -93,13 +94,12 @@ export default StyleSheet.create({
   },
   depict: {
     textAlign: 'center',
-    fontSize: setSpText(18),
+    fontSize: size.fontSize.fontSizeLg,
     color: color.theme_white,
     marginTop: scaleSize(2),
   },
   opacityView: {
-    width: scaleSize(350),
-    height: scaleSize(260),
+    height: scaleSize(300),
     backgroundColor: color.content_white,
   },
   btnTitle: {
@@ -109,24 +109,24 @@ export default StyleSheet.create({
     // borderColor:color.bgG,
   },
   checkView: {
-    position: 'absolute',
+    //position: 'absolute',
     flex: 1,
     flexDirection: 'row',
-    // justifyContent:"center",
     alignItems: 'center',
+    paddingBottom: scaleSize(20),
     //  backgroundColor:"red",
     // marginTop:scaleSize(60),
     // bottom:scaleSize(120),
-    top: scaleSize(140),
-    left: scaleSize(0),
-    paddingLeft: scaleSize(40),
+    //top: scaleSize(140),
+    //left: scaleSize(0),
+    //paddingLeft: scaleSize(40),
   },
   checkImg: {
-    width: scaleSize(40),
-    height: scaleSize(40),
+    width: scaleSize(60),
+    height: scaleSize(60),
   },
   dialogCheck: {
-    fontSize: setSpText(18),
+    fontSize: size.fontSize.fontSizeMd,
     color: color.theme_white,
   },
 })

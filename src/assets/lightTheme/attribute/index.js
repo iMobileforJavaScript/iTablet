@@ -13,6 +13,8 @@ const icon_min = require('./icon_attribute_min.png')
 const icon_count = require('./icon_attribute_count.png')
 const icon_std = require('./icon_attribute_Std.png')
 const icon_variance = require('./icon_attribute_variance.png')
+const icon_attribute_show = require('./icon_attribute_show.png')
+const icon_attribute_hide = require('./icon_attribute_hide.png')
 export default {
   attribute_statistics,
   attribute_location,
@@ -40,4 +42,7 @@ export default {
   icon_variance,
   //统计-标准差
   icon_std,
+  // 属性-显示/隐藏
+  icon_attribute_show,
+  icon_attribute_hide,
 }

@@ -157,4 +157,26 @@ export default StyleSheet.create({
     right: 0,
     backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
+
+  // Pager
+  dot: {
+    backgroundColor: 'white',
+    width: 5,
+    height: 5,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  activeDot: {
+    backgroundColor: 'white',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
 })

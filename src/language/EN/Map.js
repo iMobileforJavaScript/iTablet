@@ -279,9 +279,9 @@ const Map_Main_Menu = {
   SHARE_FRIENDS: 'Friends',
   SHARE_EXPLORE: 'Explore',
 
-  MAO_ROAD_DISTRIBUTION: 'Road Distribution',
+  MAO_ROAD_DISTRIBUTION: 'Road\nNetwork',
 
-  MAP_AR_AI_ASSISTANT: 'AI Assitant',
+  MAP_AR_AI_ASSISTANT: 'AI\nAssitant',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
   MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT: 'Violation Collect',

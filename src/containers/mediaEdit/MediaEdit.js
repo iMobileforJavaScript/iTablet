@@ -8,7 +8,7 @@ import {
   TextBtn,
   ListItem,
   TableList,
-  MediaViewer,
+  MediaPager,
   PopView,
   ImagePicker,
 } from '../../components'
@@ -232,8 +232,8 @@ export default class MediaEdit extends React.Component {
         }}
         data={item}
         index={rowIndex * COLUMNS + cellIndex}
-        onPress={() => {
-          if (item === '+') {
+        onPress={({ data, index }) => {
+          if (data === '+') {
             // this.openAlbum()
             this.popModal && this.popModal.setVisible(true)
           } else {
@@ -247,7 +247,8 @@ export default class MediaEdit extends React.Component {
             ) {
               imgPath = 'file://' + imgPath
             }
-            this.mediaViewer && this.mediaViewer.setVisible(true, imgPath)
+            // this.mediaViewer && this.mediaViewer.setVisible(true, imgPath)
+            this.mediaViewer && this.mediaViewer.setVisible(true, index)
             // this.mediaViewer.setVisible(true, this.state.mediaFilePaths[rowIndex * COLUMNS + cellIndex])
           }
         }}
@@ -426,8 +427,14 @@ export default class MediaEdit extends React.Component {
           {this.renderAlbum()}
         </ScrollView>
         {this.renderPopView()}
-        <MediaViewer
+        {/*<MediaViewer*/}
+        {/*ref={ref => (this.mediaViewer = ref)}*/}
+        {/*withBackBtn*/}
+        {/*isModal*/}
+        {/*/>*/}
+        <MediaPager
           ref={ref => (this.mediaViewer = ref)}
+          data={this.state.paths}
           withBackBtn
           isModal
         />

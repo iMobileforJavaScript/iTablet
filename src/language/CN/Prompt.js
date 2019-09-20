@@ -219,6 +219,8 @@ const Prompt = {
   OPEN_LOCATION: '请在系统设置中开启定位服务',
   REQUEST_LOCATION: 'iTablet需要获取定位权限',
   LOCATION_ERROR: '位置获取异常，请稍后尝试',
+
+  OPEN_THRID_PARTY: '即将跳转到第三方应用，是否继续？',
 }
 
 export { Prompt }

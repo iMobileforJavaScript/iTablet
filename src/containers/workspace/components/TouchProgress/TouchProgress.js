@@ -516,7 +516,7 @@ export default class TouchProgress extends Component {
         }
       }
       if (this.props.selectName === '列数') {
-        let columnnumber = this.props.mapLegend.column
+        let columnnumber = this.props.mapLegend[GLOBAL.Type].column
         this._panBtnStyles.style.left =
           (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
         this._previousLeft = (columnnumber * 10 * progressWidth) / 40
@@ -526,7 +526,7 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(columnnumber)
       } else if (this.props.selectName === '宽度') {
-        let width = this.props.mapLegend.widthPercent
+        let width = this.props.mapLegend[GLOBAL.Type].widthPercent
         this._panBtnStyles.style.left =
           (width * progressWidth) / 100 + panBtnDevLeft
         this._previousLeft = (width * progressWidth) / 100
@@ -536,7 +536,7 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(width)
       } else if (this.props.selectName === '高度') {
-        let height = this.props.mapLegend.heightPercent
+        let height = this.props.mapLegend[GLOBAL.Type].heightPercent
         this._panBtnStyles.style.left =
           (height * progressWidth) / 100 + panBtnDevLeft
         this._previousLeft = (height * progressWidth) / 100
@@ -753,7 +753,7 @@ export default class TouchProgress extends Component {
       } else {
         columns = 4
       }
-      legendSettings.column = columns
+      legendSettings[GLOBAL.Type].column = columns
       this._setMapLegend(legendSettings)
       tips =
         getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
@@ -766,7 +766,7 @@ export default class TouchProgress extends Component {
       } else if (value <= 20) {
         value = 20
       }
-      legendSettings.widthPercent = value
+      legendSettings[GLOBAL.Type].widthPercent = value
       this._setMapLegend(legendSettings)
       tips =
         getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
@@ -779,7 +779,7 @@ export default class TouchProgress extends Component {
       } else if (value <= 20) {
         value = 20
       }
-      legendSettings.heightPercent = value
+      legendSettings[GLOBAL.Type].heightPercent = value
       this._setMapLegend(legendSettings)
       tips =
         getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
@@ -1326,7 +1326,7 @@ export default class TouchProgress extends Component {
         }
       }
       if (this.props.selectName === '列数') {
-        let columns = this.props.mapLegend.columns
+        let columns = this.props.mapLegend[GLOBAL.Type].columns
         if (value <= 25) {
           columns = 1
         } else if (value <= 50) {

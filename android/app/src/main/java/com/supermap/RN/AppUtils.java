@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.provider.Settings;
 
@@ -39,6 +40,16 @@ public class AppUtils extends ReactContextBaseJavaModule {
         appManager.getAppManager().AppExit(getReactApplicationContext());
 
     }
+
+    @ReactMethod
+    public void isPad(Promise promise) {
+        try {
+            Boolean res =  (mReactContext.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+            promise.resolve(res);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+       }
 
     @ReactMethod
     public void  sendFileOfWechat(ReadableMap map, Promise promise){
