@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
-import { MTBtn } from '../../../../components'
+// import { MTBtn } from '../../../../components'
 import { TouchType } from '../../../../constants'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -40,6 +40,7 @@ export default class NavigationView extends React.Component {
           firstPoint: this.props.mapSelectPoint.firstPoint,
           secondPoint: result,
         })
+        GLOBAL.ENDPOINT = result
       },
     })
   }
@@ -156,139 +157,31 @@ export default class NavigationView extends React.Component {
               </View>
             </View>
 
-            <MTBtn
-              style={styles.btn}
-              size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/Navigation/naviagtion-road.png')}
-              onPress={async () => {
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  if (
-                    GLOBAL.STARTX !== undefined &&
-                    GLOBAL.ENDX !== undefined
-                  ) {
-                    let result = await SMap.beginNavigation(
-                      GLOBAL.STARTX,
-                      GLOBAL.STARTY,
-                      GLOBAL.ENDX,
-                      GLOBAL.ENDY,
-                    )
-                    if (result) {
-                      GLOBAL.ROUTEANALYST = true
-                    } else {
-                      Toast.show('路径分析失败请重新选择起终点')
-                    }
-                  } else {
-                    Toast.show('请先设置起终点')
-                  }
-                }
+            {/*<MTBtn*/}
+            {/*style={styles.btn}*/}
+            {/*size={MTBtn.Size.NORMAL}*/}
+            {/*image={require('../../../../assets/Navigation/naviagtion-road.png')}*/}
+            {/*onPress={async () => {*/}
 
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  if (
-                    GLOBAL.STARTX !== undefined &&
-                    GLOBAL.ENDX !== undefined
-                  ) {
-                    let result = await SMap.beginIndoorNavigation(
-                      GLOBAL.STARTX,
-                      GLOBAL.STARTY,
-                      GLOBAL.ENDX,
-                      GLOBAL.ENDY,
-                    )
-                    if (result) {
-                      GLOBAL.ROUTEANALYST = true
-                    } else {
-                      Toast.show('路径分析失败请重新选择起终点')
-                    }
-                  } else {
-                    Toast.show('请先设置起终点')
-                  }
-                }
-              }}
-            />
+            {/*}}*/}
+            {/*/>*/}
 
-            <MTBtn
-              style={styles.btn}
-              size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/Navigation/navi_icon.png')}
-              onPress={() => {
-                GLOBAL.TouchType = TouchType.NORMAL
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  if (GLOBAL.ROUTEANALYST !== undefined) {
-                    SMap.outdoorNavigation()
-                    GLOBAL.MAPSELECTPOINT.setVisible(false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                      button: '',
-                    })
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    let history = this.props.navigationhistory
-                    history.push({
-                      sx: GLOBAL.STARTX,
-                      sy: GLOBAL.STARTY,
-                      ex: GLOBAL.ENDX,
-                      ey: GLOBAL.ENDY,
-                      address:
-                        this.props.mapSelectPoint.firstPoint +
-                        '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                    })
-                    this.props.setNavigationHistory(history)
-                    NavigationService.goBack()
-                  } else {
-                    Toast.show('请先进行路径分析')
-                  }
-                }
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  if (GLOBAL.ROUTEANALYST !== undefined) {
-                    SMap.indoorNavigation()
-                    GLOBAL.MAPSELECTPOINT.setVisible(false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                      button: '',
-                    })
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    let history = this.props.navigationhistory
-                    history.push({
-                      sx: GLOBAL.STARTX,
-                      sy: GLOBAL.STARTY,
-                      ex: GLOBAL.ENDX,
-                      ey: GLOBAL.ENDY,
-                      address:
-                        this.props.mapSelectPoint.firstPoint +
-                        '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                      start: this.props.mapSelectPoint.firstPoint,
-                      end: this.props.mapSelectPoint.secondPoint,
-                    })
-                    this.props.setNavigationHistory(history)
-                    NavigationService.goBack()
-                  } else {
-                    Toast.show('请先进行路径分析')
-                  }
-                }
-              }}
-            />
-            <MTBtn
-              style={styles.btn}
-              size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/Navigation/clean_route.png')}
-              onPress={async () => {
-                GLOBAL.TouchType = TouchType.NORMAL
-                GLOBAL.STARTX = undefined
-                GLOBAL.ENDX = undefined
-                GLOBAL.ROUTEANALYST = undefined
-                this.props.setMapSelectPoint({
-                  firstPoint: '选择起点',
-                  secondPoint: '选择终点',
-                })
-                SMap.clearPoint()
-              }}
-            />
+            {/*<MTBtn*/}
+            {/*style={styles.btn}*/}
+            {/*size={MTBtn.Size.NORMAL}*/}
+            {/*image={require('../../../../assets/Navigation/clean_route.png')}*/}
+            {/*onPress={async () => {*/}
+            {/*GLOBAL.TouchType = TouchType.NORMAL*/}
+            {/*GLOBAL.STARTX = undefined*/}
+            {/*GLOBAL.ENDX = undefined*/}
+            {/*GLOBAL.ROUTEANALYST = undefined*/}
+            {/*this.props.setMapSelectPoint({*/}
+            {/*firstPoint: '选择起点',*/}
+            {/*secondPoint: '选择终点',*/}
+            {/*})*/}
+            {/*SMap.clearPoint()*/}
+            {/*}}*/}
+            {/*/>*/}
           </View>
         </View>
 
@@ -320,6 +213,129 @@ export default class NavigationView extends React.Component {
               </Text>
             </TouchableOpacity>
           )}
+        </View>
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: scaleSize(30),
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={{
+              width: '80%',
+              height: scaleSize(60),
+              borderRadius: 50,
+              backgroundColor: color.blue1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={async () => {
+              GLOBAL.TouchType = TouchType.NORMAL
+              if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
+                  let result = await SMap.beginNavigation(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                  if (result) {
+                    GLOBAL.PATHLENGTH = await SMap.getOutdoorPathLength()
+                    GLOBAL.PATH = await SMap.getOutdoorPath()
+                    GLOBAL.ROUTEANALYST = true
+                    GLOBAL.MAPSELECTPOINT.setVisible(false)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                      button: '',
+                    })
+                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                      start: this.props.mapSelectPoint.firstPoint,
+                      end: this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
+                    NavigationService.goBack()
+                  } else {
+                    Toast.show('路径分析失败请重新选择起终点')
+                  }
+                } else {
+                  Toast.show('请先设置起终点')
+                }
+              }
+
+              if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
+                  let result = await SMap.beginIndoorNavigation(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                  if (result) {
+                    GLOBAL.PATHLENGTH = await SMap.getIndoorPathLength()
+                    GLOBAL.PATH = await SMap.getIndoorPath()
+                    GLOBAL.ROUTEANALYST = true
+                    GLOBAL.MAPSELECTPOINT.setVisible(false)
+                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                      button: '',
+                    })
+                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
+                    this.props.setMapNavigation({
+                      isShow: true,
+                      name: '',
+                    })
+                    GLOBAL.toolBox.showFullMap(true)
+                    let history = this.props.navigationhistory
+                    history.push({
+                      sx: GLOBAL.STARTX,
+                      sy: GLOBAL.STARTY,
+                      ex: GLOBAL.ENDX,
+                      ey: GLOBAL.ENDY,
+                      address:
+                        this.props.mapSelectPoint.firstPoint +
+                        '---' +
+                        this.props.mapSelectPoint.secondPoint,
+                      start: this.props.mapSelectPoint.firstPoint,
+                      end: this.props.mapSelectPoint.secondPoint,
+                    })
+                    this.props.setNavigationHistory(history)
+                    NavigationService.goBack()
+                  } else {
+                    Toast.show('路径分析失败请重新选择起终点')
+                  }
+                } else {
+                  Toast.show('请先设置起终点')
+                }
+              }
+            }}
+          >
+            <Text
+              style={{
+                fontSize: setSpText(20),
+                color: color.white,
+              }}
+            >
+              下一步
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
