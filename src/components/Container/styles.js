@@ -14,7 +14,7 @@ export default StyleSheet.create({
     backgroundColor: color.USUAL_BLUE,
   },
   iOSPadding: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     height: scaleSize(20),
     backgroundColor: color.theme,
