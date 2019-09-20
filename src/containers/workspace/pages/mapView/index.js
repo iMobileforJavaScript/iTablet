@@ -82,6 +82,7 @@ const mapStateToProps = state => ({
   downloads: state.down.toJS().downloads,
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
   openOnlineMap: state.setting.toJS().openOnlineMap,
+  mapSelectPoint: state.setting.toJS().mapSelectPoint,
 })
 
 const mapDispatchToProps = {

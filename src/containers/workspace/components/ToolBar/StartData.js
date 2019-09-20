@@ -852,7 +852,6 @@ function create() {
   ) {
     (async function() {
       GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
-      GLOBAL.toolBox.props.setOpenOnlineMap(false)
       let userPath =
         _params.user.currentUser.userName &&
         _params.user.currentUser.userType !== UserType.PROBATION_USER
