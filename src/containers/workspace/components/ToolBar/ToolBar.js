@@ -4740,8 +4740,6 @@ export default class ToolBar extends React.PureComponent {
       this.openTemplate(item)
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
-      this.props.setMap2Dto3D(false)
-      this.props.setOpenOnlineMap(true)
       this.changeMap(item)
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
@@ -5449,7 +5447,10 @@ export default class ToolBar extends React.PureComponent {
         //ConstInfo.MAP_ALREADY_OPENED)
         return
       }
+      this.props.setMap2Dto3D(false)
+      this.props.setOpenOnlineMap(true)
       this.props.setMapIndoorNavigation(true)
+      GLOBAL.HASCHOSE = false
       this.props.setContainerLoading(
         true,
         getLanguage(this.props.language).Prompt.SWITCHING,

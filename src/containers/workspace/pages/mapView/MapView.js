@@ -1521,6 +1521,7 @@ export default class MapView extends React.Component {
         }}
         setMapIndoorNavigation={this.props.setMapIndoorNavigation}
         setMap2Dto3D={this.props.setMap2Dto3D}
+        openOnlineMap={this.props.openOnlineMap}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

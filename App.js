@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
-import { setAgreeToProtocol, setLanguage, setMapSetting } from './src/models/setting'
+import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './src/models/setting'
 import {
   setEditLayer,
   setSelection,
@@ -123,6 +123,7 @@ class AppRoot extends Component {
     setAnalystParams: PropTypes.func,
     setAgreeToProtocol: PropTypes.func,
     setLanguage: PropTypes.func,
+    setMap2Dto3D: PropTypes.func,
   }
 
   constructor (props) {
@@ -149,6 +150,7 @@ class AppRoot extends Component {
     GLOBAL.ENDX = undefined  //离线导航终点
     GLOBAL.ROUTEANALYST = undefined  //离线导航分析
     GLOBAL.HASCHOSE = false  //离线数据选择
+    this.props.setMap2Dto3D(false)
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''
@@ -729,6 +731,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   saveMap,
   setAgreeToProtocol,
   setLanguage,
+  setMap2Dto3D,
 })(AppRoot)
 
 const App = () =>

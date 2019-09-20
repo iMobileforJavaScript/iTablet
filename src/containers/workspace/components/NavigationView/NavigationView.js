@@ -23,6 +23,7 @@ export default class NavigationView extends React.Component {
   constructor(props) {
     super(props)
     this.PointType = null
+    this.clickable = true
   }
 
   componentDidMount() {
@@ -273,7 +274,10 @@ export default class NavigationView extends React.Component {
                       end: this.props.mapSelectPoint.secondPoint,
                     })
                     this.props.setNavigationHistory(history)
-                    NavigationService.goBack()
+                    if (this.clickable) {
+                      this.clickable = false
+                      NavigationService.goBack()
+                    }
                   } else {
                     Toast.show('路径分析失败请重新选择起终点')
                   }
@@ -319,7 +323,10 @@ export default class NavigationView extends React.Component {
                       end: this.props.mapSelectPoint.secondPoint,
                     })
                     this.props.setNavigationHistory(history)
-                    NavigationService.goBack()
+                    if (this.clickable) {
+                      this.clickable = false
+                      NavigationService.goBack()
+                    }
                   } else {
                     Toast.show('路径分析失败请重新选择起终点')
                   }
