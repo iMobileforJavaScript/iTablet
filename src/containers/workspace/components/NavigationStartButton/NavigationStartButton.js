@@ -179,6 +179,7 @@ export default class NavigationStartButton extends React.Component {
               }}
               onPress={() => {
                 this.setVisible(false)
+                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
                   SMap.outdoorNavigation(true)
                 }
@@ -210,6 +211,7 @@ export default class NavigationStartButton extends React.Component {
               }}
               onPress={() => {
                 this.setVisible(false)
+                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
                   SMap.outdoorNavigation(false)
                 }

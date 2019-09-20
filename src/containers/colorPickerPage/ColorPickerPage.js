@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { Dimensions, View, Text, TextInput } from 'react-native'
 import { Container, Button } from '../../components'
-import { dataUtil } from '../../utils'
+import { dataUtil, scaleSize } from '../../utils'
 import { color } from '../../styles'
 import NavigationService from '../NavigationService'
 import styles from './styles'
@@ -15,7 +15,6 @@ import ColorShortcut from './ColorShortcut'
 
 import { ColorWheel } from 'react-native-color-wheel'
 import colorsys from 'colorsys'
-import { scaleSize } from '../../utils'
 
 export default class ColorPickerPage extends React.Component {
   props: {

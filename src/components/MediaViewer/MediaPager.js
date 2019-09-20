@@ -2,8 +2,9 @@
  * 多媒体预览界面
  */
 import * as React from 'react'
-import { View, Modal, Platform } from 'react-native'
+import { View, Modal, Platform, Image } from 'react-native'
 import { checkType } from '../../utils'
+import { getPublicAssets } from '../../assets'
 import Swiper from 'react-native-swiper' // eslint-disable-line
 import styles from './styles'
 import VideoViewer from './VideoViewer'
@@ -118,6 +119,22 @@ export default class MediaPager extends React.Component {
         index={this.state.defaultIndex}
         loop
         showsButtons={this.props.data.length > 1}
+        prevButton={
+          <View style={styles.arrowView}>
+            <Image
+              style={styles.arrowImg}
+              source={getPublicAssets().common.icon_back}
+            />
+          </View>
+        }
+        nextButton={
+          <View style={styles.arrowView}>
+            <Image
+              style={styles.arrowImg}
+              source={getPublicAssets().common.icon_next}
+            />
+          </View>
+        }
       >
         {this.getData()}
       </Swiper>

@@ -1158,6 +1158,10 @@ export default class LayerAttribute extends React.Component {
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           withoutBack: true,
           headerRight,
         }}

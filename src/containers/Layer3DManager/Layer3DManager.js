@@ -204,6 +204,10 @@ export default class Layer3DManager extends Component {
         headerProps={{
           title: getLanguage(this.props.language).Map_Module.MAP_3D,
           //MAP_MODULE.MAP_3D,
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           navigation: this.props.navigation,
           withoutBack: true,
         }}

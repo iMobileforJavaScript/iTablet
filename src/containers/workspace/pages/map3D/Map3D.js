@@ -535,6 +535,10 @@ export default class Map3D extends React.Component {
           //'三维场景',
           navigation: this.props.navigation,
           backAction: this.back,
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           headerRight: (
             <TouchableOpacity
               onPress={() => {

@@ -628,6 +628,10 @@ export default class LayerAttributeTabs extends React.Component {
           title: getLanguage(this.props.language).Map_Label.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           headerRight: [
             <MTBtn
               key={'undo'}
