@@ -2158,6 +2158,10 @@ export default class MapView extends React.Component {
           title: this.state.mapTitle,
           navigation: this.props.navigation,
           // headerRight: this.renderHeaderBtns(),
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           backAction: this.back,
           type: 'fix',
           headerCenter: this.renderSearchBar(),
