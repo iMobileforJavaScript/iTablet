@@ -84,6 +84,7 @@ import Orientation from 'react-native-orientation'
 import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
 import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
 import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
+import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -110,6 +111,7 @@ export default class MapView extends React.Component {
     navigationChangeAR: PropTypes.bool,
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
+    mapSelectPoint: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -1028,17 +1030,6 @@ export default class MapView extends React.Component {
 
   back = () => {
     if (!this.mapLoaded) return
-    this.props.setMap2Dto3D(false)
-    GLOBAL.NAVIGATIONMAPOPEN = false
-    GLOBAL.HASCHOSE = false
-    GLOBAL.STARTX = undefined
-    GLOBAL.ENDX = undefined
-    GLOBAL.ROUTEANALYST = undefined
-    this.props.setMapSelectPoint({
-      firstPoint: '选择起点',
-      secondPoint: '选择终点',
-    })
-    SMap.clearPoint()
     // this.props.setMapIndoorNavigation(false)
     // 优先处理其他界面跳转到MapView传来的返回事件
     if (this.backAction && typeof this.backAction === 'function') {
@@ -1047,6 +1038,10 @@ export default class MapView extends React.Component {
       this.mapController && this.mapController.reset()
       return
     }
+
+    this.props.setMap2Dto3D(false)
+    GLOBAL.NAVIGATIONMAPOPEN = false
+    GLOBAL.HASCHOSE = false
 
     if (Platform.OS === 'android') {
       if (this.toolBox && this.toolBox.getState().isShow) {
@@ -2131,6 +2126,17 @@ export default class MapView extends React.Component {
     )
   }
 
+  _renderNavigationStartHead = () => {
+    return (
+      <NavigationStartHead
+        ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
+        setMapSelectPoint={this.props.setMapSelectPoint}
+        mapSelectPoint={this.props.mapSelectPoint}
+        setMapNavigation={this.props.setMapNavigation}
+      />
+    )
+  }
+
   _renderMapSelectPointButton = () => {
     return (
       <MapSelectPointButton ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)} />
@@ -2210,6 +2216,7 @@ export default class MapView extends React.Component {
         {this._renderIncrementRoad()}
         {this._renderMapSelectPoint()}
         {this._renderNavigationStartButton()}
+        {this._renderNavigationStartHead()}
         {this._renderMapSelectPointButton()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&

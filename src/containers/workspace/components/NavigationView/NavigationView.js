@@ -253,6 +253,7 @@ export default class NavigationView extends React.Component {
                       button: '',
                     })
                     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
                     this.props.setMapNavigation({
                       isShow: true,
                       name: '',
@@ -298,6 +299,7 @@ export default class NavigationView extends React.Component {
                       button: '',
                     })
                     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
                     this.props.setMapNavigation({
                       isShow: true,
                       name: '',

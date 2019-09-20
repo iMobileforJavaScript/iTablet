@@ -145,10 +145,10 @@ class AppRoot extends Component {
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
     GLOBAL.loginTimer = undefined
-    GLOBAL.STARTX = undefined
-    GLOBAL.ENDX = undefined
-    GLOBAL.ROUTEANALYST = undefined
-    GLOBAL.HASCHOSE = false
+    GLOBAL.STARTX = undefined  //离线导航起点
+    GLOBAL.ENDX = undefined  //离线导航终点
+    GLOBAL.ROUTEANALYST = undefined  //离线导航分析
+    GLOBAL.HASCHOSE = false  //离线数据选择
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''

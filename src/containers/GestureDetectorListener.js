@@ -31,7 +31,11 @@ async function longtouchCallback(event) {
           event.mapPoint.x,
           event.mapPoint.y,
         )
-        SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, result.isindoor)
+        await SMap.getStartPoint(
+          event.mapPoint.x,
+          event.mapPoint.y,
+          result.isindoor,
+        )
         if (result.isindoor) {
           GLOBAL.INDOORSTART = true
         } else {
@@ -47,7 +51,11 @@ async function longtouchCallback(event) {
           event.mapPoint.x,
           event.mapPoint.y,
         )
-        SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, endresult.isindoor)
+        await SMap.getEndPoint(
+          event.mapPoint.x,
+          event.mapPoint.y,
+          endresult.isindoor,
+        )
         if (endresult.isindoor) {
           GLOBAL.INDOOREND = true
         } else {
