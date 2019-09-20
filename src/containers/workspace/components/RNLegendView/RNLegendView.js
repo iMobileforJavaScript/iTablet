@@ -218,7 +218,8 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    let frontStyle =
+    if(this.props.legendSettings[GLOBAL.Type]){
+      let frontStyle =
       this.props.language === 'CN'
         ? {
           position: 'absolute',
@@ -234,7 +235,7 @@ export default class RNLegendView extends React.Component {
           letterSpacing: scaleSize(2),
           fontSize: setSpText(18),
         }
-    let backStyle =
+      let backStyle =
       this.props.language === 'CN'
         ? {
           left: '46%',
@@ -254,55 +255,57 @@ export default class RNLegendView extends React.Component {
           color: color.white,
           fontWeight: '900',
         }
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          width: scaleSize(
-            (this.state.width *
-              this.props.legendSettings[GLOBAL.Type].widthPercent) /
-              100,
-          ),
-          height: scaleSize(
-            (this.state.height *
-              this.props.legendSettings[GLOBAL.Type].heightPercent) /
-              100,
-          ),
-          borderColor: 'black',
-          borderWidth: scaleSize(3),
-          paddingRight: scaleSize(5),
-          backgroundColor: this.props.legendSettings[GLOBAL.Type]
-            .backgroundColor,
-          zIndex: 1,
-          ...this.state[this.state.currentPosition],
-        }}
-      >
+      return (
         <View
           style={{
             position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: scaleSize(30),
+            width: scaleSize(
+              (this.state.width *
+              this.props.legendSettings[GLOBAL.Type].widthPercent) /
+              100,
+            ),
+            height: scaleSize(
+              (this.state.height *
+              this.props.legendSettings[GLOBAL.Type].heightPercent) /
+              100,
+            ),
+            borderColor: 'black',
+            borderWidth: scaleSize(3),
+            paddingRight: scaleSize(5),
             backgroundColor: this.props.legendSettings[GLOBAL.Type]
               .backgroundColor,
-            zIndex: 999,
+            zIndex: 1,
+            ...this.state[this.state.currentPosition],
           }}
         >
-          <Text style={backStyle}>{this.state.title}</Text>
-          <Text style={frontStyle}>{this.state.title}</Text>
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: scaleSize(30),
+              backgroundColor: this.props.legendSettings[GLOBAL.Type]
+                .backgroundColor,
+              zIndex: 999,
+            }}
+          >
+            <Text style={backStyle}>{this.state.title}</Text>
+            <Text style={frontStyle}>{this.state.title}</Text>
+          </View>
+          <FlatList
+            style={{
+              flex: 1,
+            }}
+            renderItem={this.renderLegendItem}
+            data={this.state.legendSource}
+            keyExtractor={(item, index) => item.title + index}
+            numColumns={this.props.legendSettings[GLOBAL.Type].column}
+            key={this.state.flatListKey}
+          />
         </View>
-        <FlatList
-          style={{
-            flex: 1,
-          }}
-          renderItem={this.renderLegendItem}
-          data={this.state.legendSource}
-          keyExtractor={(item, index) => item.title + index}
-          numColumns={this.props.legendSettings[GLOBAL.Type].column}
-          key={this.state.flatListKey}
-        />
-      </View>
-    )
+      )
+    }
+    return null
   }
 }

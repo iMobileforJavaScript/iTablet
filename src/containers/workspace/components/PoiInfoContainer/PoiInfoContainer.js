@@ -286,10 +286,14 @@ export default class PoiInfoContainer extends React.PureComponent {
           }}
         >
           <View>
-            <Text style={styles.title}>{this.state.destination}</Text>
+            <Text style={styles.title} numberOfLines={1} ellipsizeMode={'tail'}>
+              {this.state.destination}
+            </Text>
           </View>
           <View>
-            <Text style={styles.info}>{this.state.address}</Text>
+            <Text style={styles.info} numberOfLines={1} ellipsizeMode={'tail'}>
+              {this.state.address}
+            </Text>
           </View>
           <TouchableOpacity
             activeOpacity={0.5}
