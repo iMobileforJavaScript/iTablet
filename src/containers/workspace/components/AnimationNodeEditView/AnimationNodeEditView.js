@@ -168,6 +168,7 @@ export default class AnimationNodeEditView extends React.Component {
             {getLanguage(global.language).Map_Plotting.ANIMATION_ATTRIBUTE}
           </Text>
         </View>
+
         <View style={styles.startTime}>
           <Text style={styles.startTimeText}>
             {
@@ -191,127 +192,258 @@ export default class AnimationNodeEditView extends React.Component {
             />
           </View>
         </View>
+        {!this.state.data.lineWidthAttr ? (
+          <View />
+        ) : (
+          <View style={styles.container}>
+            <View style={styles.startTime}>
+              <View style={{ marginLeft: scaleSize(50) }} />
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .ANIMATION_ATTRIBUTE_LINE_WIDTH_START
+                }
+              </Text>
+              <View style={styles.startTimeView}>
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.startLineWidth = this.modifyNubmer(
+                      this.state.data.startLineWidth,
+                      -1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.inputTime}
+                  onChangeText={text => {
+                    let tempData = this.state.data
+                    tempData.startLineWidth = this.clearNoNum(text)
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                  keyboardType="numeric"
+                  value={this.state.data.startLineWidth + ''}
+                />
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.startLineWidth = this.modifyNubmer(
+                      this.state.data.startLineWidth,
+                      1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
 
+            <View style={styles.startTime}>
+              <View style={{ marginLeft: scaleSize(50) }} />
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .ANIMATION_ATTRIBUTE_LINE_WIDTH_END
+                }
+              </Text>
+
+              <View style={styles.startTimeView}>
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.endLineWidth = this.modifyNubmer(
+                      this.state.data.endLineWidth,
+                      -1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.inputTime}
+                  onChangeText={text => {
+                    let tempData = this.state.data
+                    tempData.endLineWidth = this.clearNoNum(text)
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                  keyboardType="numeric"
+                  value={this.state.data.endLineWidth + ''}
+                />
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.endLineWidth = this.modifyNubmer(
+                      this.state.data.endLineWidth,
+                      1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+        <View style={styles.lineStyle} />
         <View style={styles.startTime}>
-          <View style={{ marginLeft: scaleSize(50) }} />
           <Text style={styles.startTimeText}>
             {
               getLanguage(global.language).Map_Plotting
-                .ANIMATION_ATTRIBUTE_LINE_WIDTH_START
+                .ANIMATION_ATTRIBUTE_LINE_COLOR
             }
           </Text>
           <View style={styles.startTimeView}>
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
+            <Switch
+              trackColor={{ false: color.bgG, true: color.switch }}
+              thumbColor={color.bgW}
+              ios_backgroundColor={color.bgG}
+              value={this.state.data.lineColorAttr}
+              onValueChange={value => {
                 let tempData = this.state.data
-                tempData.startLineWidth = this.modifyNubmer(
-                  this.state.data.startLineWidth,
-                  -1,
-                )
+                tempData.lineColorAttr = value
                 this.setState({
                   data: tempData,
                 })
               }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.inputTime}
-              onChangeText={text => {
-                let tempData = this.state.data
-                tempData.startLineWidth = this.clearNoNum(text)
-                this.setState({
-                  data: tempData,
-                })
-              }}
-              keyboardType="numeric"
-              value={this.state.data.startLineWidth + ''}
             />
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.startLineWidth = this.modifyNubmer(
-                  this.state.data.startLineWidth,
-                  1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
           </View>
         </View>
+        {this.state.data.lineColorAttr ? (
+          <View style={styles.container}>
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_BLINK_START_COLOR
+                  }
+                </Text>
+              </View>
 
-        <View style={styles.startTime}>
-          <View style={{ marginLeft: scaleSize(50) }} />
-          <Text style={styles.startTimeText}>
-            {
-              getLanguage(global.language).Map_Plotting
-                .ANIMATION_ATTRIBUTE_LINE_WIDTH_END
-            }
-          </Text>
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  // let color='#'+this.state.data.blinkAnimationStartColor.toString(16).slice(1)
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(this.state.data.startLineColor),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let startLineColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.startLineColor = startLineColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.startLineColor,
+                    ),
+                  }}
+                />
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.startTimeView}>
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.endLineWidth = this.modifyNubmer(
-                  this.state.data.endLineWidth,
-                  -1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.inputTime}
-              onChangeText={text => {
-                let tempData = this.state.data
-                tempData.endLineWidth = this.clearNoNum(text)
-                this.setState({
-                  data: tempData,
-                })
-              }}
-              keyboardType="numeric"
-              value={this.state.data.endLineWidth + ''}
-            />
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.endLineWidth = this.modifyNubmer(
-                  this.state.data.endLineWidth,
-                  1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_ATTRIBUTE_LINE_COLOR_END
+                  }
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(this.state.data.endLineColor),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let endLineColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.endLineColor = endLineColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.endLineColor,
+                    ),
+                  }}
+                />
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View />
+        )}
 
         <View style={styles.lineStyle} />
         {
@@ -340,127 +472,263 @@ export default class AnimationNodeEditView extends React.Component {
             </View>
           </View>
         }
+        {!this.state.data.surroundLineWidthAttr ? (
+          <View />
+        ) : (
+          <View style={styles.container}>
+            <View style={styles.startTime}>
+              <View style={{ marginLeft: scaleSize(50) }} />
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_START
+                }
+              </Text>
+
+              <View style={styles.startTimeView}>
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.startSurroundLineWidth = this.modifyNubmer(
+                      this.state.data.startSurroundLineWidth,
+                      -1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.inputTime}
+                  onChangeText={text => {
+                    let tempData = this.state.data
+                    tempData.startSurroundLineWidth = this.clearNoNum(text)
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                  keyboardType="numeric"
+                  value={this.state.data.startSurroundLineWidth + ''}
+                />
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.startSurroundLineWidth = this.modifyNubmer(
+                      this.state.data.startSurroundLineWidth,
+                      1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.startTime}>
+              <View style={{ marginLeft: scaleSize(50) }} />
+              <Text style={styles.startTimeText}>
+                {
+                  getLanguage(global.language).Map_Plotting
+                    .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_END
+                }
+              </Text>
+
+              <View style={styles.startTimeView}>
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.endSurroundLineWidth = this.modifyNubmer(
+                      this.state.data.endSurroundLineWidth,
+                      -1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.inputTime}
+                  onChangeText={text => {
+                    let tempData = this.state.data
+                    tempData.endSurroundLineWidth = this.clearNoNum(text)
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                  keyboardType="numeric"
+                  value={this.state.data.endSurroundLineWidth + ''}
+                />
+                <TouchableOpacity
+                  style={styles.modifyTime}
+                  onPress={() => {
+                    let tempData = this.state.data
+                    tempData.endSurroundLineWidth = this.modifyNubmer(
+                      this.state.data.endSurroundLineWidth,
+                      1,
+                    )
+                    this.setState({
+                      data: tempData,
+                    })
+                  }}
+                >
+                  <Image
+                    source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+                    style={styles.tableItemImg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+        <View style={styles.lineStyle} />
         <View style={styles.startTime}>
-          <View style={{ marginLeft: scaleSize(50) }} />
           <Text style={styles.startTimeText}>
             {
               getLanguage(global.language).Map_Plotting
-                .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_START
+                .ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR
             }
           </Text>
-
           <View style={styles.startTimeView}>
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
+            <Switch
+              trackColor={{ false: color.bgG, true: color.switch }}
+              thumbColor={color.bgW}
+              ios_backgroundColor={color.bgG}
+              value={this.state.data.surroundLineColorAttr}
+              onValueChange={value => {
                 let tempData = this.state.data
-                tempData.startSurroundLineWidth = this.modifyNubmer(
-                  this.state.data.startSurroundLineWidth,
-                  -1,
-                )
+                tempData.surroundLineColorAttr = value
                 this.setState({
                   data: tempData,
                 })
               }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.inputTime}
-              onChangeText={text => {
-                let tempData = this.state.data
-                tempData.startSurroundLineWidth = this.clearNoNum(text)
-                this.setState({
-                  data: tempData,
-                })
-              }}
-              keyboardType="numeric"
-              value={this.state.data.startSurroundLineWidth + ''}
             />
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.startSurroundLineWidth = this.modifyNubmer(
-                  this.state.data.startSurroundLineWidth,
-                  1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
           </View>
         </View>
+        {this.state.data.surroundLineColorAttr ? (
+          <View style={styles.container}>
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR_START
+                  }
+                </Text>
+              </View>
 
-        <View style={styles.startTime}>
-          <View style={{ marginLeft: scaleSize(50) }} />
-          <Text style={styles.startTimeText}>
-            {
-              getLanguage(global.language).Map_Plotting
-                .ANIMATION_ATTRIBUTE_SURROUND_LINE_WIDTH_END
-            }
-          </Text>
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  // let color='#'+this.state.data.blinkAnimationStartColor.toString(16).slice(1)
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(
+                      this.state.data.startSurroundLineColor,
+                    ),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let startSurroundLineColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.startSurroundLineColor = startSurroundLineColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.startSurroundLineColor,
+                    ),
+                  }}
+                />
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.startTimeView}>
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.endSurroundLineWidth = this.modifyNubmer(
-                  this.state.data.endSurroundLineWidth,
-                  -1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_reduce.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.inputTime}
-              onChangeText={text => {
-                let tempData = this.state.data
-                tempData.endSurroundLineWidth = this.clearNoNum(text)
-                this.setState({
-                  data: tempData,
-                })
-              }}
-              keyboardType="numeric"
-              value={this.state.data.endSurroundLineWidth + ''}
-            />
-            <TouchableOpacity
-              style={styles.modifyTime}
-              onPress={() => {
-                let tempData = this.state.data
-                tempData.endSurroundLineWidth = this.modifyNubmer(
-                  this.state.data.endSurroundLineWidth,
-                  1,
-                )
-                this.setState({
-                  data: tempData,
-                })
-              }}
-            >
-              <Image
-                source={require('../../../../assets/publicTheme/plot/plot_add.png')}
-                style={styles.tableItemImg}
-              />
-            </TouchableOpacity>
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_ATTRIBUTE_SURROUND_LINE_COLOR_END
+                  }
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(
+                      this.state.data.endSurroundLineColor,
+                    ),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let endSurroundLineColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.endSurroundLineColor = endSurroundLineColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.endSurroundLineColor,
+                    ),
+                  }}
+                />
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View />
+        )}
       </View>
     )
   }
@@ -732,6 +1000,7 @@ export default class AnimationNodeEditView extends React.Component {
                   let blinkNumber = Number(text.replace(/[^0-9]*/g, '')) + ''
                   let tempData = this.state.data
                   tempData.blinkNumber = blinkNumber
+
                   this.setState({
                     data: tempData,
                   })
@@ -760,7 +1029,166 @@ export default class AnimationNodeEditView extends React.Component {
             </View>
           </View>
         }
+
+        <View style={styles.lineStyle} />
+        <View style={styles.startTime}>
+          <Text style={styles.startTimeText}>
+            {getLanguage(global.language).Map_Plotting.ANIMATION_BLINK_REPLACE}
+          </Text>
+          <View style={styles.startTimeView}>
+            <Switch
+              trackColor={{ false: color.bgG, true: color.switch }}
+              thumbColor={color.bgW}
+              ios_backgroundColor={color.bgG}
+              value={this.state.data.blinkAnimationReplaceStyle ? true : false}
+              onValueChange={value => {
+                let tempData = this.state.data
+                tempData.blinkAnimationReplaceStyle = value
+                this.setState({
+                  data: tempData,
+                })
+              }}
+            />
+          </View>
+        </View>
+        {this.state.data.blinkAnimationReplaceStyle ? (
+          <View style={styles.container}>
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_BLINK_START_COLOR
+                  }
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  // let color='#'+this.state.data.blinkAnimationStartColor.toString(16).slice(1)
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(
+                      this.state.data.blinkAnimationStartColor,
+                    ),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let blinkAnimationStartColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.blinkAnimationStartColor = blinkAnimationStartColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.blinkAnimationStartColor,
+                    ),
+                  }}
+                >
+                  {this.rgbToHex(this.state.data.blinkAnimationStartColor) +
+                    'xxx' +
+                    this.state.data.blinkAnimationStartColor}
+                </Text>
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.startTime}>
+              <View style={styles.itemView}>
+                <View style={styles.marginLiftMax} />
+                <Text style={styles.startTimeText}>
+                  {
+                    getLanguage(global.language).Map_Plotting
+                      .ANIMATION_BLINK_REPLACE_COLOR
+                  }
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.startTimeView}
+                onPress={() => {
+                  // let color='#'+this.state.data.blinkAnimationStartColor.toString(16).slice(1)
+                  NavigationService.navigate('ColorPickerPage', {
+                    defaultColor: this.rgbToHex(
+                      this.state.data.blinkAnimationReplaceColor,
+                    ),
+                    colorViewType: 'ColorWheel',
+                    cb: color => {
+                      let blinkAnimationReplaceColor = this.hexToRgb(color)
+                      let tempData = this.state.data
+                      tempData.blinkAnimationReplaceColor = blinkAnimationReplaceColor
+                      this.setState({
+                        data: tempData,
+                      })
+                    },
+                  })
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: setSpText(20),
+                    height: scaleSize(30),
+                    width: scaleSize(60),
+                    color: color.themePlaceHolder,
+                    textAlign: 'center',
+                    padding: scaleSize(3),
+                    backgroundColor: this.rgbToHex(
+                      this.state.data.blinkAnimationReplaceColor,
+                    ),
+                  }}
+                >
+                  {this.rgbToHex(this.state.data.blinkAnimationReplaceColor) +
+                    'xxx' +
+                    this.state.data.blinkAnimationReplaceColor}
+                </Text>
+                <Image
+                  source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                  style={styles.rotateAngleImg}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View />
+        )}
       </View>
+    )
+  }
+
+  rgbToHex = rgb => {
+    if (rgb < 0) {
+      rgb = -rgb
+    }
+    let str = rgb.toString(16) + ''
+    if (str.length < 6) {
+      for (let i = str.length; i < 6; i++) {
+        str = '0' + str
+      }
+    }
+    return '#' + str
+  }
+
+  hexToRgb = hex => {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    return (
+      parseInt(result[1], 16) * 65536 +
+      parseInt(result[2], 16) * 256 +
+      parseInt(result[3], 16)
     )
   }
 
@@ -920,7 +1348,7 @@ export default class AnimationNodeEditView extends React.Component {
                 let tempData = this.state.data
                 tempData.startLocation = this.modifyNubmer(
                   this.state.data.startLocation,
-                  -1,
+                  -0.1,
                 )
                 this.setState({
                   data: tempData,
@@ -950,7 +1378,7 @@ export default class AnimationNodeEditView extends React.Component {
                 let tempData = this.state.data
                 tempData.startLocation = this.modifyNubmer(
                   this.state.data.startLocation,
-                  1,
+                  0.1,
                 )
                 this.setState({
                   data: tempData,
@@ -981,7 +1409,7 @@ export default class AnimationNodeEditView extends React.Component {
                   let tempData = this.state.data
                   tempData.endLocation = this.modifyNubmer(
                     this.state.data.endLocation,
-                    -1,
+                    -0.1,
                   )
                   this.setState({
                     data: tempData,
@@ -1011,7 +1439,7 @@ export default class AnimationNodeEditView extends React.Component {
                   let tempData = this.state.data
                   tempData.endLocation = this.modifyNubmer(
                     this.state.data.endLocation,
-                    1,
+                    0.1,
                   )
                   this.setState({
                     data: tempData,
@@ -1426,5 +1854,8 @@ const styles = StyleSheet.create({
     width: scaleSize(160),
     fontSize: setSpText(20),
     textAlign: 'right',
+  },
+  marginLiftMax: {
+    marginLeft: scaleSize(50),
   },
 })

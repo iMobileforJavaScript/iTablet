@@ -83,12 +83,14 @@ export default class Row extends Component {
     onPress?: () => {},
     separatorColor?: string,
     onChangeEnd?: () => {},
+    isShowSystemFields?: boolean,
   }
 
   static defaultProps = {
     separatorColor: color.separateColorGray,
     indexColumn: -1,
     hasInputText: true,
+    isShowSystemFields: true,
     selected: false,
     buttonIndexes: [],
     buttonActions: [],
@@ -96,10 +98,14 @@ export default class Row extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return (
+    if (
+      this.props.isShowSystemFields !== nextProps.isShowSystemFields ||
       JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data) ||
       this.props.selected !== nextProps.selected
-    )
+    ) {
+      return true
+    }
+    return false
   }
 
   _action = () => {
@@ -154,15 +160,17 @@ export default class Row extends Component {
     //   ? index === 1
     //   : this.props.data.length - 1 === index
     let isSingleData =
-      typeof item !== 'object' || item === undefined || item === null
-    let value = isSingleData ? item : item.value
+      // typeof item !== 'object' ||
+      item.fieldInfo === undefined || item === undefined || item === null
+    // let value = isSingleData ? item : item.value
+    let value = item instanceof Object ? item.value : item
     let editable, isRequired, defaultValue
     if (isSingleData) {
       // 单个属性，第一列为名称
       if (index === 0) {
         editable = false
       } else {
-        let isHead = typeof this.props.data[index] === 'string'
+        let isHead = this.props.data.fieldInfo === undefined
         editable = !isHead && !this.props.data.fieldInfo.isSystemField
         isRequired = !isHead && this.props.data.fieldInfo.isRequired
         defaultValue = !isHead && this.props.data.fieldInfo.defaultValue
@@ -291,11 +299,25 @@ export default class Row extends Component {
     let cells = []
     if (this.props.data instanceof Array) {
       this.props.data.forEach((item, index) => {
-        cells.push(this._renderCell(item, index))
+        if (
+          this.props.isShowSystemFields ||
+          typeof item === 'string' ||
+          typeof item === 'number' ||
+          (item.fieldInfo &&
+            !(item.fieldInfo && item.fieldInfo.isSystemField)) ||
+          (item.isSystemField !== undefined && !item.isSystemField)
+        ) {
+          cells.push(this._renderCell(item, index))
+        }
       })
     } else if (this.props.data instanceof Object) {
-      cells.push(this._renderCell(this.props.data['name'], 0))
-      cells.push(this._renderCell(this.props.data['value'], 1))
+      if (
+        this.props.isShowSystemFields ||
+        !this.props.data.fieldInfo.isSystemField
+      ) {
+        cells.push(this._renderCell(this.props.data['name'], 0))
+        cells.push(this._renderCell(this.props.data['value'], 1))
+      }
     }
     return cells
   }

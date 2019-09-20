@@ -31,6 +31,7 @@ export default class LayerSelectionAttribute extends React.Component {
     setAttributeHistory: () => {},
     onGetAttribute?: () => {},
     onGetToolVisible?: () => {},
+    isShowSystemFields: boolean,
   }
 
   constructor(props) {
@@ -71,7 +72,8 @@ export default class LayerSelectionAttribute extends React.Component {
       JSON.stringify(nextProps.layerSelection) !==
         JSON.stringify(this.props.layerSelection) ||
       JSON.stringify(nextProps.attributesHistory) !==
-        JSON.stringify(nextProps.attributesHistory)
+        JSON.stringify(nextProps.attributesHistory) ||
+      this.props.isShowSystemFields !== nextProps.isShowSystemFields
     ) {
       return true
     }
@@ -703,6 +705,14 @@ export default class LayerSelectionAttribute extends React.Component {
     ) {
       // 单个对象属性和多个对象属性数据有区别
       let isSingleData = typeof data.cellData !== 'object'
+      // 单个对象属性 在 隐藏系统字段下，要重新计算index
+      if (isSingleData && !this.state.isShowSystemFields) {
+        for (let index in this.state.attributes.data[0]) {
+          if (this.state.attributes.data[0][index].name === data.rowData.name) {
+            data.index = index
+          }
+        }
+      }
       this.props
         .setLayerAttributes([
           {
@@ -931,6 +941,7 @@ export default class LayerSelectionAttribute extends React.Component {
         buttonNameFilter={buttonNameFilter}
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
+        isShowSystemFields={this.props.isShowSystemFields}
       />
     )
   }

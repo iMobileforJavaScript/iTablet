@@ -49,6 +49,7 @@ export default class LayerAttributeTable extends React.Component {
     data: Array,
     hasIndex?: boolean,
     startIndex?: number,
+    isShowSystemFields?: boolean,
   }
 
   static defaultProps = {
@@ -110,6 +111,7 @@ export default class LayerAttributeTable extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     if (
       JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      nextProps.isShowSystemFields !== this.props.isShowSystemFields ||
       JSON.stringify(nextProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data) ||
@@ -122,17 +124,29 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const isMultiData =
+      this.props.data instanceof Array &&
+      this.props.data.length > 1 &&
+      this.props.data[0] instanceof Array
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
-      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data) ||
+      (!isMultiData &&
+        this.props.isShowSystemFields !== prevProps.isShowSystemFields)
     ) {
-      const titles = this.getTitle(this.props.data)
+      let data = []
+      const titles = this.getTitle(data)
 
-      const isMultiData =
-        this.props.data instanceof Array &&
-        this.props.data.length > 1 &&
-        this.props.data[0] instanceof Array
+      if (!isMultiData && !this.props.isShowSystemFields) {
+        this.props.data.forEach(item => {
+          if (item.fieldInfo && !item.fieldInfo.isSystemField) {
+            data.push(item)
+          }
+        })
+      } else {
+        data = this.props.data
+      }
 
       this.setState({
         colHeight: COL_HEIGHT,
@@ -140,7 +154,7 @@ export default class LayerAttributeTable extends React.Component {
         tableData: [
           {
             title: titles,
-            data: this.props.data,
+            data,
           },
         ],
         tableHead: this.props.tableHead,
@@ -190,15 +204,15 @@ export default class LayerAttributeTable extends React.Component {
     })
   }
 
-  getTitle = data => {
-    let titleList = []
-    if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {
-      data[0].forEach(item => {
-        titleList.push(item.name)
-      })
-    } else {
-      titleList = this.props.tableHead
-    }
+  getTitle = () => {
+    // let titleList = []
+    // if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {
+    //   data[0].forEach(item => {
+    //     titleList.push(item.name)
+    //   })
+    // } else {
+    let titleList = this.props.tableHead
+    // }
 
     return titleList
   }
@@ -318,6 +332,7 @@ export default class LayerAttributeTable extends React.Component {
         index={index}
         onPress={() => this.onPressRow({ item, index })}
         onChangeEnd={this.onChangeEnd}
+        isShowSystemFields={this.props.isShowSystemFields}
       />
     )
   }
@@ -438,6 +453,7 @@ export default class LayerAttributeTable extends React.Component {
         buttonIndexes={buttonIndexes}
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
+        isShowSystemFields={this.props.isShowSystemFields}
       />
     )
   }
@@ -454,9 +470,13 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       titles.length > 0 &&
-      titles[0] !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
+      titles[0].value !==
+        getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
-      titles.unshift(getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO)
+      titles.unshift({
+        isSystemField: false,
+        value: getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
+      })
     }
     return (
       <Row
@@ -465,6 +485,7 @@ export default class LayerAttributeTable extends React.Component {
         data={titles}
         hasInputText={false}
         onPress={() => {}}
+        isShowSystemFields={this.props.isShowSystemFields}
       />
     )
   }
