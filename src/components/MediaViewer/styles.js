@@ -179,4 +179,18 @@ export default StyleSheet.create({
     marginTop: 3,
     marginBottom: 3,
   },
+  arrowView: {
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  arrowImg: {
+    width: 40,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
 })
