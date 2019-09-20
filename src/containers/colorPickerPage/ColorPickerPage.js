@@ -4,7 +4,7 @@
   E-mail: yangshanglong@supermap.com
 */
 import * as React from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { Dimensions, View, Text, TextInput } from 'react-native'
 import { Container, Button } from '../../components'
 import { dataUtil } from '../../utils'
 import { color } from '../../styles'
@@ -13,8 +13,11 @@ import styles from './styles'
 import { TriangleColorPicker, fromHsv } from 'react-native-color-picker'
 import ColorShortcut from './ColorShortcut'
 
-export default class ColorPickerPage extends React.Component {
+import { ColorWheel } from 'react-native-color-wheel'
+import colorsys from 'colorsys'
+import { scaleSize } from '../../utils'
 
+export default class ColorPickerPage extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
@@ -24,9 +27,14 @@ export default class ColorPickerPage extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
-    this.defaultColor = params && params.defaultColor || '#000000'
-    let colorHex = params && params.defaultColor && dataUtil.colorRgba(this.defaultColor) || {}
+    this.defaultColor = (params && params.defaultColor) || '#000000'
+    let colorHex =
+      (params &&
+        params.defaultColor &&
+        dataUtil.colorRgba(this.defaultColor)) ||
+      {}
     this.lastValidColor = this.defaultColor // 记录上一次正确格式的十六进制颜色
+    this.colorViewType = params && params.colorViewType
     this.state = {
       InputText: '',
       color: this.defaultColor,
@@ -43,7 +51,7 @@ export default class ColorPickerPage extends React.Component {
   }
 
   renderColorAttrRow = (key, value) => {
-    let isRgb = key === 'r' || key === 'g' || key === 'b' ||  key === 'a'
+    let isRgb = key === 'r' || key === 'g' || key === 'b' || key === 'a'
     return (
       <View style={styles.row} key={key}>
         <Text style={styles.text}>{key.toUpperCase()}</Text>
@@ -59,7 +67,10 @@ export default class ColorPickerPage extends React.Component {
             if (!isRgb) {
               if (dataUtil.checkColor(text)) this.lastValidColor = text
               let reg = /^([0-9a-fA-F])$/
-              if (text.length !== 1 && !reg.test(text.charAt(text.length - 1))) {
+              if (
+                text.length !== 1 &&
+                !reg.test(text.charAt(text.length - 1))
+              ) {
                 return
               }
 
@@ -79,15 +90,16 @@ export default class ColorPickerPage extends React.Component {
               return
             }
             let newColor = this.state.colorHex
-            Object.assign(newColor, {[key]: val})
+            Object.assign(newColor, { [key]: val })
             this.setState({
               colorHex: newColor,
               color: dataUtil.colorHex(newColor),
             })
           }}
           style={styles.input}
-          underlineColorAndroid='transparent'
-          placeholderTextColor={color.USUAL_SEPARATORCOLOR} />
+          underlineColorAndroid="transparent"
+          placeholderTextColor={color.USUAL_SEPARATORCOLOR}
+        />
       </View>
     )
   }
@@ -95,15 +107,19 @@ export default class ColorPickerPage extends React.Component {
   renderColorAttr = () => {
     let rows = []
     let keys = Object.keys(this.state.colorHex)
-    for (let i = 0; i < keys.length; i++ ) {
-      rows.push(this.renderColorAttrRow(keys[i].toString(), this.state.colorHex[keys[i]]))
+    for (let i = 0; i < keys.length; i++) {
+      if (this.colorViewType == 'ColorWheel' && keys[i] == 'a') {
+        continue
+      }
+      rows.push(
+        this.renderColorAttrRow(
+          keys[i].toString(),
+          this.state.colorHex[keys[i]],
+        ),
+      )
     }
     rows.push(this.renderColorAttrRow('16进制', this.state.color))
-    return (
-      <View style={styles.rows}>
-        {rows}
-      </View>
-    )
+    return <View style={styles.rows}>{rows}</View>
   }
 
   confirm = () => {
@@ -121,8 +137,8 @@ export default class ColorPickerPage extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }
@@ -134,21 +150,49 @@ export default class ColorPickerPage extends React.Component {
         headerProps={{
           title: '颜色选择',
           navigation: this.props.navigation,
-        }}>
-        <ColorShortcut onPress={color => {
-          this.setState({
-            color: color,
-            colorHex: dataUtil.colorRgba(color),
-          })
-        }} />
-        <TriangleColorPicker
-          oldColor={this.defaultColor}
-          color={dataUtil.checkColor(this.state.color) ? this.state.color : this.lastValidColor}
-          onColorChange={this.onColorChange}
-          // onColorSelected={color => alert(`Color selected: ${color}`)}
-          onOldColorSelected={this.onColorChange}
-          style={styles.colorPicker}
+        }}
+      >
+        <ColorShortcut
+          onPress={color => {
+            this.setState({
+              color: color,
+              colorHex: dataUtil.colorRgba(color),
+            })
+          }}
         />
+        {this.colorViewType === 'ColorWheel' ? (
+          <View style={{ flex: 1 }}>
+            <ColorWheel
+              initialColor={this.defaultColor}
+              onColorChange={color => {
+                this.setState({
+                  color: colorsys.hsv2Hex(color),
+                  colorHex: dataUtil.colorRgba(colorsys.hsv2Hex(color)),
+                })
+              }}
+              // style={{ marginLeft: 20, padding: 40, height: 200, width: 200 }}
+              style={{
+                width: Dimensions.get('window').width,
+                height: scaleSize(400),
+                alignSelf: 'center',
+              }}
+              thumbStyle={{ height: 30, width: 30, borderRadius: 30 }}
+            />
+          </View>
+        ) : (
+          <TriangleColorPicker
+            oldColor={this.defaultColor}
+            color={
+              dataUtil.checkColor(this.state.color)
+                ? this.state.color
+                : this.lastValidColor
+            }
+            onColorChange={this.onColorChange}
+            // onColorSelected={color => alert(`Color selected: ${color}`)}
+            onOldColorSelected={this.onColorChange}
+            style={styles.colorPicker}
+          />
+        )}
         {this.renderColorAttr()}
         {this.renderBtns()}
       </Container>
