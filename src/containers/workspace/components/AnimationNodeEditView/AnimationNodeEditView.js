@@ -1067,7 +1067,6 @@ export default class AnimationNodeEditView extends React.Component {
               <TouchableOpacity
                 style={styles.startTimeView}
                 onPress={() => {
-                  // let color='#'+this.state.data.blinkAnimationStartColor.toString(16).slice(1)
                   NavigationService.navigate('ColorPickerPage', {
                     defaultColor: this.rgbToHex(
                       this.state.data.blinkAnimationStartColor,
@@ -1097,9 +1096,7 @@ export default class AnimationNodeEditView extends React.Component {
                     ),
                   }}
                 >
-                  {this.rgbToHex(this.state.data.blinkAnimationStartColor) +
-                    'xxx' +
-                    this.state.data.blinkAnimationStartColor}
+                  {/* {this.rgbToHex(this.state.data.blinkAnimationStartColor)} */}
                 </Text>
                 <Image
                   source={require('../../../../assets/Mine/mine_my_arrow.png')}
@@ -1152,9 +1149,7 @@ export default class AnimationNodeEditView extends React.Component {
                     ),
                   }}
                 >
-                  {this.rgbToHex(this.state.data.blinkAnimationReplaceColor) +
-                    'xxx' +
-                    this.state.data.blinkAnimationReplaceColor}
+                  {/* {this.rgbToHex(this.state.data.blinkAnimationReplaceColor)} */}
                 </Text>
                 <Image
                   source={require('../../../../assets/Mine/mine_my_arrow.png')}
@@ -1172,7 +1167,8 @@ export default class AnimationNodeEditView extends React.Component {
 
   rgbToHex = rgb => {
     if (rgb < 0) {
-      rgb = -rgb
+      rgb =
+        ((rgb >> 16) & 0xff) * 65536 + ((rgb >> 8) & 0xff) * 256 + (rgb & 0xff)
     }
     let str = rgb.toString(16) + ''
     if (str.length < 6) {
