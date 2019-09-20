@@ -801,12 +801,13 @@ export default class Mine extends Component {
     return (
       <Container
         ref={ref => (this.container = ref)}
-        headerProps={{
-          title: getLanguage(this.props.language).Navigator_Label.PROFILE,
-          withoutBack: true,
-          navigation: this.props.navigation,
-          headerRight: this.renderHeaderRight(),
-        }}
+        // headerProps={{
+        //   title: getLanguage(this.props.language).Navigator_Label.PROFILE,
+        //   withoutBack: true,
+        //   navigation: this.props.navigation,
+        //   headerRight: this.renderHeaderRight(),
+        // }}
+        withoutHeader
       >
         {/* {this._selectionRender()} */}
         {this._renderMineContainer()}

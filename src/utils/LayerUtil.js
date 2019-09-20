@@ -87,9 +87,15 @@ function dealData(attributes, result = {}, page, type) {
     result.data[0].forEach(item => {
       item.selected = false
       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-        tableHead.unshift(item.fieldInfo.caption)
+        tableHead.unshift({
+          value: item.fieldInfo.caption,
+          isSystemField: item.fieldInfo.isSystemField,
+        })
       } else {
-        tableHead.push(item.fieldInfo.caption)
+        tableHead.push({
+          value: item.fieldInfo.caption,
+          isSystemField: item.fieldInfo.isSystemField,
+        })
       }
     })
   }

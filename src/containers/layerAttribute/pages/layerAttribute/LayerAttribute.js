@@ -71,6 +71,8 @@ export default class LayerAttribute extends React.Component {
       canBeUndo: checkData.canBeUndo,
       canBeRedo: checkData.canBeRedo,
       canBeRevert: checkData.canBeRevert,
+
+      isShowSystemFields: true,
     }
 
     this.currentPage = 0
@@ -670,6 +672,14 @@ export default class LayerAttribute extends React.Component {
     ) {
       // 单个对象属性和多个对象属性数据有区别，单个属性cellData是值
       let isSingleData = typeof data.cellData !== 'object'
+      // 单个对象属性 在 隐藏系统字段下，要重新计算index
+      if (isSingleData && !this.state.isShowSystemFields) {
+        for (let index in this.state.attributes.data[0]) {
+          if (this.state.attributes.data[0][index].name === data.rowData.name) {
+            data.index = index
+          }
+        }
+      }
       this.props
         .setLayerAttributes([
           {
@@ -900,6 +910,12 @@ export default class LayerAttribute extends React.Component {
     })
   }
 
+  showSystemFields = () => {
+    this.setState({
+      isShowSystemFields: !this.state.isShowSystemFields,
+    })
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -1000,6 +1016,7 @@ export default class LayerAttribute extends React.Component {
         buttonNameFilter={buttonNameFilter}
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
+        isShowSystemFields={this.state.isShowSystemFields}
       />
     )
   }
@@ -1109,6 +1126,16 @@ export default class LayerAttribute extends React.Component {
     if (this.type !== 'MAP_3D') {
       headerRight = [
         <MTBtn
+          key={'attribute'}
+          image={
+            this.state.isShowSystemFields
+              ? getThemeAssets().attribute.icon_attribute_hide
+              : getThemeAssets().attribute.icon_attribute_show
+          }
+          imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          onPress={this.showSystemFields}
+        />,
+        <MTBtn
           key={'undo'}
           image={getPublicAssets().common.icon_undo}
           imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
@@ -1131,6 +1158,10 @@ export default class LayerAttribute extends React.Component {
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           withoutBack: true,
           headerRight,
         }}

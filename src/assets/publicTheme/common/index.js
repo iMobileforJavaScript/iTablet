@@ -11,6 +11,7 @@ const icon_radio_unselected = require('./icon_radio_unselected.png')
 const icon_radio_unselected_disable = require('./icon_radio_unselected_disable.png')
 const icon_about_itablet_more = require('./icon_aboutitablet_more.png')
 const icon_back = require('./icon-back-white.png')
+const icon_next = require('./icon-next-white.png')
 const icon_close = require('./icon-close.png')
 const icon_album = require('./icon_album.png')
 const icon_rephotograph = require('./icon_rephotograph.png')
@@ -40,6 +41,7 @@ export default {
   icon_radio_unselected_disable,
   icon_about_itablet_more,
   icon_back,
+  icon_next,
   icon_close,
   icon_album,
   icon_rephotograph,

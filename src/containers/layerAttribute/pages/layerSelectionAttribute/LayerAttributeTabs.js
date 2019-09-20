@@ -119,6 +119,8 @@ export default class LayerAttributeTabs extends React.Component {
       canBeUndo: false,
       canBeRedo: false,
       canBeRevert: false,
+
+      isShowSystemFields: true,
     }
 
     // 选择集中当前选中的属性
@@ -424,6 +426,13 @@ export default class LayerAttributeTabs extends React.Component {
     }, 1000)
   }
 
+  // 显示/隐藏属性
+  showSystemFields = () => {
+    this.setState({
+      isShowSystemFields: !this.state.isShowSystemFields,
+    })
+  }
+
   back = () => {
     if (this.locationView && this.locationView.isShow()) {
       this.locationView.show(false)
@@ -554,6 +563,7 @@ export default class LayerAttributeTabs extends React.Component {
         selectAction={this.selectAction}
         onGetAttribute={this.onGetAttribute}
         onGetToolVisible={this.onGetToolVisible}
+        isShowSystemFields={this.state.isShowSystemFields}
       />
     )
   }
@@ -618,7 +628,21 @@ export default class LayerAttributeTabs extends React.Component {
           title: getLanguage(this.props.language).Map_Label.ATTRIBUTE,
           navigation: this.props.navigation,
           backAction: this.back,
+          headerTitleViewStyle: {
+            justifyContent: 'flex-start',
+            marginLeft: scaleSize(80),
+          },
           headerRight: [
+            <MTBtn
+              key={'undo'}
+              image={
+                this.state.isShowSystemFields
+                  ? getThemeAssets().attribute.icon_attribute_hide
+                  : getThemeAssets().attribute.icon_attribute_show
+              }
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+              onPress={this.showSystemFields}
+            />,
             <MTBtn
               key={'undo'}
               image={getPublicAssets().common.icon_undo}

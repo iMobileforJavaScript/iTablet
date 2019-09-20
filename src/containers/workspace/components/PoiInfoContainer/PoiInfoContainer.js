@@ -428,7 +428,13 @@ export default class PoiInfoContainer extends React.PureComponent {
               }}
             >
               {/*<Image style={styles.pointImg} source={img} />*/}
-              <Text style={styles.itemText}>{item.pointName}</Text>
+              <Text
+                style={styles.itemText}
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+              >
+                {item.pointName}
+              </Text>
               <Text style={styles.distance}>{item.distance}</Text>
             </View>
             <Text style={styles.address}>{item.address}</Text>
