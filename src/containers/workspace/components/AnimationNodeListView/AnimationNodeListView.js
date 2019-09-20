@@ -53,7 +53,7 @@ export default class AnimationNodeListView extends React.Component {
         <View style={styles.itemView}>
           <Text style={styles.subTitle}>{item.name}</Text>
           <View style={styles.subView}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.subOnpressView}
               onPress={() => this.downMoveItem(item)}
             >
@@ -71,7 +71,7 @@ export default class AnimationNodeListView extends React.Component {
                 source={require('../../../../assets/publicTheme/plot/plot_add.png')}
                 style={styles.subOnpressView}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.subOnpressView}
