@@ -150,7 +150,7 @@ class AppRoot extends Component {
     GLOBAL.ENDX = undefined  //离线导航终点
     GLOBAL.ROUTEANALYST = undefined  //离线导航分析
     GLOBAL.HASCHOSE = false  //离线数据选择
-    this.props.setMap2Dto3D(false)
+    this.props.setMap2Dto3D(false) //release版没有重置为false
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     GLOBAL.TaggingDatasetName = ''

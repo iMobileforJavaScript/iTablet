@@ -4977,7 +4977,6 @@ export default class ToolBar extends React.PureComponent {
       GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
-      GLOBAL.NAVIGATIONMAPOPEN = true
       let name = item.name
       SMap.getIndoorNavigationData(name)
       SMap.startIndoorNavigation()
@@ -5543,6 +5542,7 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading(false)
         this.setVisible(false)
         this.props.setMap2Dto3D(true)
+        SMap.getIndoorDatasource()
       } else {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])

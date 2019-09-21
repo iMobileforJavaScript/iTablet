@@ -117,7 +117,6 @@ export default class FunctionToolbar extends React.Component {
     this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.toolBox.props.setOpenOnlineMap(false)
-    GLOBAL.NAVIGATIONMAPOPEN = false
   }
 
   start = type => {

@@ -1039,8 +1039,6 @@ export default class MapView extends React.Component {
       return
     }
 
-    this.props.setMap2Dto3D(false)
-    GLOBAL.NAVIGATIONMAPOPEN = false
     GLOBAL.HASCHOSE = false
 
     if (Platform.OS === 'android') {
@@ -1092,6 +1090,7 @@ export default class MapView extends React.Component {
             getLanguage(this.props.language).Prompt.CLOSING,
             //'正在关闭地图'
           )
+          this.props.setMap2Dto3D(false)
           await this.props.closeMap()
           await this._removeGeometrySelectedListener()
           GLOBAL.Type = null
@@ -1268,6 +1267,7 @@ export default class MapView extends React.Component {
           SMap.setIsMagnifierEnabled(true)
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
+        SMap.getIndoorDatasource()
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           SMap.moveToCurrent().then(result => {
             !result &&
@@ -2002,34 +2002,35 @@ export default class MapView extends React.Component {
           })
         }
       } else {
-        if (GLOBAL.HASCHOSE) {
-          NavigationService.navigate('NavigationView')
-        } else {
-          this.showFullMap(true)
-          let data = []
-          data.push({
-            title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-            //'路网',
-            image: require('../../../../assets/Navigation/network_white.png'),
-            data: [
-              // {
-              //   title: '室外数据',
-              //   name: '室外数据',
-              //   image: require('../../../../assets/Navigation/snm_model.png'),
-              // },
-              {
-                title: '室内数据',
-                name: '室内数据',
-                image: require('../../../../assets/Navigation/indoor_datasource.png'),
-              },
-            ],
-          })
-          this.toolBox.setVisible(true, ConstToolType.NETDATA, {
-            containerType: 'list',
-            height: ConstToolType.THEME_HEIGHT[3],
-            data,
-          })
-        }
+        // if (GLOBAL.HASCHOSE) {
+        SMap.startIndoorNavigation()
+        NavigationService.navigate('NavigationView')
+        // } else {
+        //   this.showFullMap(true)
+        //   let data = []
+        //   data.push({
+        //     title: getLanguage(global.language).Map_Main_Menu.NETDATA,
+        //     //'路网',
+        //     image: require('../../../../assets/Navigation/network_white.png'),
+        //     data: [
+        //       // {
+        //       //   title: '室外数据',
+        //       //   name: '室外数据',
+        //       //   image: require('../../../../assets/Navigation/snm_model.png'),
+        //       // },
+        //       {
+        //         title: '室内数据',
+        //         name: '室内数据',
+        //         image: require('../../../../assets/Navigation/indoor_datasource.png'),
+        //       },
+        //     ],
+        //   })
+        //   this.toolBox.setVisible(true, ConstToolType.NETDATA, {
+        //     containerType: 'list',
+        //     height: ConstToolType.THEME_HEIGHT[3],
+        //     data,
+        //   })
+        // }
       }
     }
   }
@@ -2065,6 +2066,14 @@ export default class MapView extends React.Component {
         <NavigationView />
       </View>
     )
+  }
+
+  _renderFloorListView = () => {
+    if (this.props.map2Dto3D) {
+      return <FloorListView device={this.props.device} />
+    } else {
+      return <View />
+    }
   }
 
   _renderIncrementRoad = () => {
@@ -2179,7 +2188,10 @@ export default class MapView extends React.Component {
         }
         bottomProps={{ type: 'fix' }}
       >
-        {GLOBAL.Type && this.props.mapLegend[GLOBAL.Type] && this.props.mapLegend[GLOBAL.Type].isShow && !this.noLegend && (
+        {GLOBAL.Type &&
+          this.props.mapLegend[GLOBAL.Type] &&
+          this.props.mapLegend[GLOBAL.Type].isShow &&
+          !this.noLegend && (
           <RNLegendView
             setMapLegend={this.props.setMapLegend}
             legendSettings={this.props.mapLegend}
@@ -2202,9 +2214,8 @@ export default class MapView extends React.Component {
         {/*openWorkspace={this.props.openWorkspace}*/}
         {/*/>*/}
         {/*)}*/}
-        {GLOBAL.Type === constants.MAP_NAVIGATION && this.props.map2Dto3D && (
-          <FloorListView device={this.props.device} />
-        )}
+        {GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this._renderFloorListView()}
         {this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}

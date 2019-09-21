@@ -24,6 +24,7 @@ export default class NavigationView extends React.Component {
     super(props)
     this.PointType = null
     this.clickable = true
+    this.historyclick = true
   }
 
   componentDidMount() {
@@ -273,7 +274,9 @@ export default class NavigationView extends React.Component {
                       start: this.props.mapSelectPoint.firstPoint,
                       end: this.props.mapSelectPoint.secondPoint,
                     })
-                    this.props.setNavigationHistory(history)
+                    if (this.historyclick) {
+                      this.props.setNavigationHistory(history)
+                    }
                     if (this.clickable) {
                       this.clickable = false
                       NavigationService.goBack()
@@ -322,7 +325,9 @@ export default class NavigationView extends React.Component {
                       start: this.props.mapSelectPoint.firstPoint,
                       end: this.props.mapSelectPoint.secondPoint,
                     })
-                    this.props.setNavigationHistory(history)
+                    if (this.historyclick) {
+                      this.props.setNavigationHistory(history)
+                    }
                     if (this.clickable) {
                       this.clickable = false
                       NavigationService.goBack()
@@ -382,6 +387,8 @@ export default class NavigationView extends React.Component {
             }
 
             GLOBAL.ROUTEANALYST = undefined
+
+            this.historyclick = false
           }}
         >
           <Image
