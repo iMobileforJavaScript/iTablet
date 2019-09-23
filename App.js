@@ -478,10 +478,10 @@ class AppRoot extends Component {
       // }, () => {
       //   this.setSaveMapViewLoading(false)
       // })
-      if (result) {
+      if (result || result === '') {
         this.setSaveMapViewLoading(false)
         Toast.show(
-          result ?
+          result || result === '' ?
             getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
             : ConstInfo.SAVE_MAP_FAILED,
         )
