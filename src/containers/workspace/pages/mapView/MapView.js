@@ -1039,7 +1039,7 @@ export default class MapView extends React.Component {
       return
     }
 
-    GLOBAL.HASCHOSE = false
+    this.props.setMap2Dto3D(false)
 
     if (Platform.OS === 'android') {
       if (this.toolBox && this.toolBox.getState().isShow) {
@@ -1090,7 +1090,7 @@ export default class MapView extends React.Component {
             getLanguage(this.props.language).Prompt.CLOSING,
             //'正在关闭地图'
           )
-          this.props.setMap2Dto3D(false)
+          await SMap.clearPoint()
           await this.props.closeMap()
           await this._removeGeometrySelectedListener()
           GLOBAL.Type = null
@@ -1265,6 +1265,7 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_PLOTTING
         )
           SMap.setIsMagnifierEnabled(true)
+
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         SMap.getIndoorDatasource()
