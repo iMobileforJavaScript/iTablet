@@ -186,6 +186,9 @@ class IPortalLogin extends React.Component {
               this.iportalAddress = text
             }}
           />
+          <Text style={styles.textStyle}>
+            {'Example: http://ip:port/iportal/web'}
+          </Text>
         </View>
         <TouchableOpacity
           accessible={true}

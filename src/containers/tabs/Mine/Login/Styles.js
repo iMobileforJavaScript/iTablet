@@ -78,7 +78,10 @@ let styles = StyleSheet.create({
   },
   inpuViewStyle: {
     width: '75%',
-    alignItems: 'center',
+  },
+  textStyle: {
+    fontSize: scaleSize(24),
+    color: '#A0A0A0',
   },
 })
 export default styles
