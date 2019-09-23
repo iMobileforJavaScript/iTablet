@@ -50,8 +50,8 @@ export default class PlotAnimationView extends React.Component {
     this.state = {
       //   data: props.data,
       animationMode: -1,
-      startTime: 0,
-      durationTime: 5,
+      startTime: 0 + '',
+      durationTime: 5 + '',
       startMode: 1,
       data: [],
       wayPoints: [],
@@ -113,8 +113,8 @@ export default class PlotAnimationView extends React.Component {
   getCreateInfo = () => {
     return {
       animationMode: this.state.animationMode,
-      startTime: this.state.startTime,
-      durationTime: this.state.durationTime,
+      startTime: parseFloat(this.state.startTime),
+      durationTime: parseFloat(this.state.durationTime),
       startMode: this.state.startMode,
       wayPoints: this.state.wayPoints,
     }
@@ -167,6 +167,23 @@ export default class PlotAnimationView extends React.Component {
       animationMode: item.animationMode,
       data: this.state.data.concat(),
     })
+  }
+
+  clearNoNum = value => {
+    value = value.replace(/[^\d.]/g, '') //清除“数字”和“.”以外的字符
+    value = value.replace(/\.{2,}/g, '.') //只保留第一个. 清除多余的
+    value = value
+      .replace('.', '$#$')
+      .replace(/\./g, '')
+      .replace('$#$', '.')
+    // value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+    if (value.indexOf('.') < 0 && value != '') {
+      //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+      value = parseFloat(value)
+    } else if (value == '') {
+      value = 0
+    }
+    return value + ''
   }
 
   _renderItem = ({ item }) => {
@@ -268,7 +285,7 @@ export default class PlotAnimationView extends React.Component {
               style={styles.inputTime}
               onChangeText={text => {
                 this.setState({
-                  startTime: Number(text.replace(/[^0-9.]*/g, '')),
+                  startTime: this.clearNoNum(text),
                 })
               }}
               keyboardType="numeric"
@@ -309,7 +326,7 @@ export default class PlotAnimationView extends React.Component {
               keyboardType="numeric"
               onChangeText={text => {
                 this.setState({
-                  durationTime: Number(text.replace(/[^0-9.]*/g, '')),
+                  durationTime: this.clearNoNum(text),
                 })
               }}
               value={this.state.durationTime + ''}
@@ -459,34 +476,34 @@ export default class PlotAnimationView extends React.Component {
     }
   }
   addDurationTime = () => {
-    let time = Number(this.state.durationTime) + 1
+    let time = (Number(this.state.durationTime) * 1000 + 1 * 1000) / 1000
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
   subDurationTime = () => {
-    let time = Number(this.state.durationTime) - 1
+    let time = (Number(this.state.durationTime) * 1000 - 1 * 1000) / 1000
     time = time < 0 ? 0 : time
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
   modifyDurationTime = ({ offset }) => {
     let time = this.state.durationTime + offset
     time = time > 0 ? time : this.state.durationTime
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
 
   addStartTime = () => {
-    let time = Number(this.state.startTime) + 1
+    let time = (Number(this.state.startTime) * 1000 + 1 * 1000) / 1000
     this.setState({
-      startTime: time,
+      startTime: time + '',
     })
   }
   subStartTime = () => {
-    let time = Number(this.state.startTime) - 1
+    let time = (Number(this.state.startTime) * 1000 - 1 * 1000) / 1000
     time = time < 0 ? 0 : time
     this.setState({
       startTime: time,

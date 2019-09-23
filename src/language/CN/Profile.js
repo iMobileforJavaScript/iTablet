@@ -117,7 +117,8 @@ const Profile = {
   SERVICE_HOTLINE: '技术支持与服务',
   SALES_CONSULTATION: '销售咨询',
   BUSINESS_WEBSITE: '进入官网',
-  PRIVACY_POLICY: '服务协议',
+  SERVICE_AGREEMENT: '服务协议',
+  PRIVACY_POLICY: '隐私政策',
   HELP_MANUAL: '使用帮助',
 
   MAP_ONLINE: '在线地图',

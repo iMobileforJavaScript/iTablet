@@ -41,6 +41,10 @@ export default class ColorPickerPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.colorWheel.onLayout()
+  }
+
   onColorChange = color => {
     let hex = fromHsv(color)
     this.setState({
@@ -136,8 +140,8 @@ export default class ColorPickerPage extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm} />
         <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
+        <Button title={'确定'} onPress={this.confirm} />
       </View>
     )
   }
@@ -160,8 +164,9 @@ export default class ColorPickerPage extends React.Component {
           }}
         />
         {this.colorViewType === 'ColorWheel' ? (
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 2 }}>
             <ColorWheel
+              ref={ref => (this.colorWheel = ref)}
               initialColor={this.defaultColor}
               onColorChange={color => {
                 this.setState({
@@ -169,10 +174,13 @@ export default class ColorPickerPage extends React.Component {
                   colorHex: dataUtil.colorRgba(colorsys.hsv2Hex(color)),
                 })
               }}
+              onColorChangeComplete={() => {
+                this.colorWheel.onLayout()
+              }}
               // style={{ marginLeft: 20, padding: 40, height: 200, width: 200 }}
               style={{
                 width: Dimensions.get('window').width,
-                height: scaleSize(400),
+                height: scaleSize(200),
                 alignSelf: 'center',
               }}
               thumbStyle={{ height: 30, width: 30, borderRadius: 30 }}
