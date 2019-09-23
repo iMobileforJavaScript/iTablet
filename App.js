@@ -30,7 +30,7 @@ import ConfigStore from './src/store'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
 import { color } from './src/styles'
-import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
+import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
@@ -41,6 +41,7 @@ import { getLanguage } from './src/language/index'
 import FetchUtils from './src/utils/FetchUtils'
 import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
+import constants from './src/containers/workspace/constants'
 let AppUtils = NativeModules.AppUtils
 
 
@@ -437,6 +438,11 @@ class AppRoot extends Component {
   }
 
   saveMap = async () => {
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      await SMap.clearPoint()
+      await SMap.stopGuide()
+      this.props.setMap2Dto3D(false)
+    }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
@@ -478,10 +484,10 @@ class AppRoot extends Component {
       // }, () => {
       //   this.setSaveMapViewLoading(false)
       // })
-      if (result) {
+      if (result || result === '') {
         this.setSaveMapViewLoading(false)
         Toast.show(
-          result ?
+          result || result === '' ?
             getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY
             : ConstInfo.SAVE_MAP_FAILED,
         )
@@ -499,6 +505,11 @@ class AppRoot extends Component {
   }
 
   closeMapHandler = async () => {
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      await SMap.clearPoint()
+      await SMap.stopGuide()
+      this.props.setMap2Dto3D(false)
+    }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       return
