@@ -155,6 +155,8 @@ export default class AnimationNodeEditView extends React.Component {
     if (value.indexOf('.') < 0 && value != '') {
       //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
       value = parseFloat(value)
+    } else if (value == '') {
+      value = 0
     }
     return value + ''
   }
