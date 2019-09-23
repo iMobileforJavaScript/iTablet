@@ -129,7 +129,11 @@ class RecommendFriend extends Component {
       let number = this.formatPhoneNumber(val.phoneNumbers[i].number)
       let result = await SOnlineService.getUserInfoBy(number, 0)
       if (result !== false && result !== '获取用户id失败') {
-        if (result[0] && result[0] !== this.user.userId) {
+        if (
+          result[0] &&
+          result[0] !== this.user.userId &&
+          !FriendListFileHandle.isFriend(result[0])
+        ) {
           let array = this.state.contacts
           array.push({
             familyName: val.familyName,
@@ -149,7 +153,11 @@ class RecommendFriend extends Component {
     for (let i = 0; i < val.emails.length; i++) {
       let result = await SOnlineService.getUserInfoBy(val.emails[i].email, 0)
       if (result !== false && result !== '获取用户id失败') {
-        if (result[0] && result[0] !== this.user.userId) {
+        if (
+          result[0] &&
+          result[0] !== this.user.userId &&
+          !FriendListFileHandle.isFriend(result[0])
+        ) {
           let array = this.state.contacts
           array.push({
             familyName: val.familyName,
