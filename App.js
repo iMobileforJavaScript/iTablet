@@ -439,8 +439,8 @@ class AppRoot extends Component {
 
   saveMap = async () => {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      await SMap.clearPoint()
       await SMap.stopGuide()
+      await SMap.clearPoint()
       this.props.setMap2Dto3D(false)
     }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
@@ -506,8 +506,8 @@ class AppRoot extends Component {
 
   closeMapHandler = async () => {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      await SMap.clearPoint()
       await SMap.stopGuide()
+      await SMap.clearPoint()
       this.props.setMap2Dto3D(false)
     }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
@@ -699,6 +699,7 @@ class AppRoot extends Component {
           notSave={this.closeMapHandler}
           cancel={() => {
             // this.backAction = null
+            this.props.setMap2Dto3D(true)
           }}
         />
         {this.renderDialog()}
