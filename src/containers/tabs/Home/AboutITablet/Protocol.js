@@ -113,6 +113,26 @@ export default class protocol extends Component {
               'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
           }
         }
+        title = getLanguage(global.language).Profile.SERVICE_AGREEMENT
+        break
+      case 'Privacy':
+        if (Platform.OS === 'android') {
+          source =
+            global.language === 'CN'
+              ? {
+                uri:
+                    'file:///android_asset/SuperMapUserPrivacyPolicy_CN.html',
+              }
+              : {
+                uri:
+                    'file:///android_asset/SuperMapUserPrivacyPolicy_EN.html',
+              }
+        } else {
+          source =
+            global.language === 'CN'
+              ? require('../../../../assets/Protocol/SuperMapUserPrivacyPolicy_CN.html')
+              : require('../../../../assets/Protocol/SuperMapUserPrivacyPolicy_EN.html')
+        }
         title = getLanguage(global.language).Profile.PRIVACY_POLICY
         break
       case 'superMapForum':

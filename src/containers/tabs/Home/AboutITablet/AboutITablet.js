@@ -26,6 +26,11 @@ export default class AboutITablet extends Component {
   Protocol = () => {
     NavigationService.navigate('Protocol', { type: 'protocol' })
   }
+
+  Privacy = () => {
+    NavigationService.navigate('Protocol', { type: 'Privacy' })
+  }
+
   userHelp = () => {
     NavigationService.navigate('Protocol', { type: 'userHelp' })
   }
@@ -182,8 +187,23 @@ export default class AboutITablet extends Component {
           />
           <TouchableOpacity style={[styles.protocol]} onPress={this.Protocol}>
             <Text style={styles.footerItem}>
-              {getLanguage(this.props.language).Profile.PRIVACY_POLICY}
+              {getLanguage(this.props.language).Profile.SERVICE_AGREEMENT}
               {/* 服务协议 */}
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={[
+              styles.cloumSeparator,
+              {
+                marginLeft: 0.0347 * this.props.device.width,
+                marginRight: 0.0347 * this.props.device.width,
+              },
+            ]}
+          />
+          <TouchableOpacity style={[styles.protocol]} onPress={this.Privacy}>
+            <Text style={styles.footerItem}>
+              {getLanguage(this.props.language).Profile.PRIVACY_POLICY}
+              {/* 隐私政策 */}
             </Text>
           </TouchableOpacity>
         </View>

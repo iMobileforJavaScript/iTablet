@@ -1039,8 +1039,6 @@ export default class MapView extends React.Component {
       return
     }
 
-    GLOBAL.HASCHOSE = false
-
     if (Platform.OS === 'android') {
       if (this.toolBox && this.toolBox.getState().isShow) {
         this.toolBox.close()
@@ -1090,7 +1088,11 @@ export default class MapView extends React.Component {
             getLanguage(this.props.language).Prompt.CLOSING,
             //'正在关闭地图'
           )
-          this.props.setMap2Dto3D(false)
+          if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+            await SMap.clearPoint()
+            await SMap.stopGuide()
+            this.props.setMap2Dto3D(false)
+          }
           await this.props.closeMap()
           await this._removeGeometrySelectedListener()
           GLOBAL.Type = null
@@ -1265,13 +1267,18 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_PLOTTING
         )
           SMap.setIsMagnifierEnabled(true)
+
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
-        SMap.getIndoorDatasource()
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           SMap.moveToCurrent().then(result => {
             !result &&
               Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
+          })
+          SMap.getIndoorDatasource()
+          this.props.setMapSelectPoint({
+            firstPoint: '选择起点',
+            secondPoint: '选择终点',
           })
         }
       } catch (e) {
@@ -2238,10 +2245,10 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.navigationPoiView &&
           this._renderNavigationPoiView()}
-        {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.mapNavigationShow &&
-          this._renderChangeArView()}
+        {/*{!this.isExample &&*/}
+        {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
+        {/*this.props.mapNavigationShow &&*/}
+        {/*this._renderChangeArView()}*/}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           !this.props.mapNavigationShow &&
@@ -2249,10 +2256,10 @@ export default class MapView extends React.Component {
           this.state.incrementShow &&
           this.props.openOnlineMap &&
           this._renderNavigationIcon()}
-        {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.navigationChangeAR &&
-          this._renderARNavigationIcon()}
+        {/*{!this.isExample &&*/}
+        {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
+        {/*this.props.navigationChangeAR &&*/}
+        {/*this._renderARNavigationIcon()}*/}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}

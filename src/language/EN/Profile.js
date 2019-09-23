@@ -72,6 +72,7 @@ const Profile = {
   SERVICE_HOTLINE: 'Service Hotline',
   SALES_CONSULTATION: 'Sales Consultation',
   BUSINESS_WEBSITE: 'Business Website',
+  SERVICE_AGREEMENT: 'Service Agreement',
   PRIVACY_POLICY: 'Privacy Policy',
   HELP_MANUAL: 'Help Manual',
 
