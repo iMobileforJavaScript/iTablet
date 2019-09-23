@@ -103,7 +103,7 @@ export default class AnimationNodeEditView extends React.Component {
   }
 
   modifyNubmer = (oldNum, offset) => {
-    let tempNum = Number(oldNum) + offset
+    let tempNum = (Number(oldNum) * 1000 + offset * 1000) / 1000 //解决0.1+0.2!=0.3的问题
     if (tempNum < 0) {
       tempNum = 0
     }
@@ -1361,6 +1361,12 @@ export default class AnimationNodeEditView extends React.Component {
               onChangeText={text => {
                 let tempData = this.state.data
                 tempData.startLocation = this.clearNoNum(text)
+                if (!isNaN(tempData.startLocation)) {
+                  let number = Number(tempData.startLocation)
+                  if (number > 1) {
+                    tempData.startLocation = 1
+                  }
+                }
                 this.setState({
                   data: tempData,
                 })
@@ -1376,6 +1382,9 @@ export default class AnimationNodeEditView extends React.Component {
                   this.state.data.startLocation,
                   0.1,
                 )
+                if (tempData.startLocation > 1) {
+                  tempData.startLocation = 1
+                }
                 this.setState({
                   data: tempData,
                 })
@@ -1423,6 +1432,12 @@ export default class AnimationNodeEditView extends React.Component {
                 onChangeText={text => {
                   let tempData = this.state.data
                   tempData.endLocation = this.clearNoNum(text)
+                  if (!isNaN(tempData.endLocation)) {
+                    let number = Number(tempData.endLocation)
+                    if (number > 1) {
+                      tempData.endLocation = 1
+                    }
+                  }
                   this.setState({
                     data: tempData,
                   })
@@ -1437,6 +1452,9 @@ export default class AnimationNodeEditView extends React.Component {
                     this.state.data.endLocation,
                     0.1,
                   )
+                  if (tempData.endLocation > 1) {
+                    tempData.endLocation = 1
+                  }
                   this.setState({
                     data: tempData,
                   })
