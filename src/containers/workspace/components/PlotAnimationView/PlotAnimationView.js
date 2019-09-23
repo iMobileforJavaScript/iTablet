@@ -50,8 +50,8 @@ export default class PlotAnimationView extends React.Component {
     this.state = {
       //   data: props.data,
       animationMode: -1,
-      startTime: 0,
-      durationTime: 5,
+      startTime: 0 + '',
+      durationTime: 5 + '',
       startMode: 1,
       data: [],
       wayPoints: [],
@@ -113,8 +113,8 @@ export default class PlotAnimationView extends React.Component {
   getCreateInfo = () => {
     return {
       animationMode: this.state.animationMode,
-      startTime: this.state.startTime,
-      durationTime: this.state.durationTime,
+      startTime: parseFloat(this.state.startTime),
+      durationTime: parseFloat(this.state.durationTime),
       startMode: this.state.startMode,
       wayPoints: this.state.wayPoints,
     }
@@ -478,28 +478,28 @@ export default class PlotAnimationView extends React.Component {
   addDurationTime = () => {
     let time = (Number(this.state.durationTime) * 1000 + 1 * 1000) / 1000
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
   subDurationTime = () => {
     let time = (Number(this.state.durationTime) * 1000 - 1 * 1000) / 1000
     time = time < 0 ? 0 : time
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
   modifyDurationTime = ({ offset }) => {
     let time = this.state.durationTime + offset
     time = time > 0 ? time : this.state.durationTime
     this.setState({
-      durationTime: time,
+      durationTime: time + '',
     })
   }
 
   addStartTime = () => {
     let time = (Number(this.state.startTime) * 1000 + 1 * 1000) / 1000
     this.setState({
-      startTime: time,
+      startTime: time + '',
     })
   }
   subStartTime = () => {
