@@ -3462,10 +3462,12 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.POINTCOLOR_SET ||
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
         this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-        (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow) ||
-        this.state.type === ConstToolType.LEGEND ||
-        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
+        ((this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
+          this.state.type === ConstToolType.LEGEND ||
+          this.state.type === ConstToolType.LEGEND_NOT_VISIBLE) &&
+          this.isBoxShow)
       ) {
+        this.changeHeight(this.props.device.orientation, this.state.type)
         Animated.timing(this.state.boxHeight, {
           toValue: this.state.showMenuDialog ? this.height : 0,
           duration: Const.ANIMATED_DURATION,
