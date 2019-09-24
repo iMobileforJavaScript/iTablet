@@ -22,6 +22,7 @@ import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { SimpleDialog } from '../Component'
 import { Toast } from '../../../../utils'
+// import { ImagePicker } from '../../../../components'
 let AppUtils = NativeModules.AppUtils
 
 // if (Platform.OS === 'android') {
@@ -71,6 +72,26 @@ const ICONS = context => [
       context.handleLocationClick()
     },
   },
+  // {
+  //   name: require('../../../../assets/lightTheme/friend/app_chat_location.png'),
+  //   type: 'material',
+  //   text: '图片',
+  //   onPress: () => {
+  //     context.setModalVisible()
+  //     ImagePicker.AlbumListView.defaultProps.showDialog = false
+  //     ImagePicker.AlbumListView.defaultProps.assetType = 'Photos'
+  //     ImagePicker.AlbumListView.defaultProps.groupTypes = 'All'
+  //     ImagePicker.getAlbum({
+  //       maxSize: 1,
+  //       callback: async data => {
+  //         // console.log(data)
+  //         if(data.length > 0){
+  //           context.props.sendCallBack(2, data[0])
+  //         }
+  //       },
+  //     })
+  //   },
+  // },
 ]
 
 export default class CustomActions extends React.Component {

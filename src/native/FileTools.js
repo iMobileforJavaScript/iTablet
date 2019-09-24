@@ -32,6 +32,15 @@ async function getDirectoryContent(path) {
 }
 
 /**
+ * 获取content url的绝对路径
+ * @param {*} contentUrl
+ */
+async function getContentAbsolutePathAndroid(contentUrl) {
+  if (Platform.OS === 'android') {
+    return await FileTools.getContentAbsolutePath(contentUrl)
+  }
+}
+/**
  * 判断文件是否存在
  * @param path
  * @returns {Promise}
@@ -371,6 +380,7 @@ export default {
   getHomeDirectory,
   appendingHomeDirectory,
   getDirectoryContent,
+  getContentAbsolutePathAndroid,
   fileIsExist,
   fileIsExistInHomeDirectory,
   createDirectory,

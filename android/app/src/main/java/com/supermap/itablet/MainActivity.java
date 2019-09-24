@@ -48,6 +48,8 @@ public class MainActivity extends ReactActivity {
         initDefaultData();
         if (!isTablet(this)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
         appManager.getAppManager().addActivity(this);
         IWXAPI iwxapi=appManager.getAppManager().registerWechat(this);

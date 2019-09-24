@@ -8,6 +8,7 @@ import {
   ViewPropTypes,
   Text,
   View,
+  Platform,
 } from 'react-native'
 // import MapView from 'react-native-maps'
 import { scaleSize } from '../../../../utils/screen'
@@ -32,6 +33,41 @@ export default class CustomView extends React.Component {
      */
     if (type === MSGConstant.MSG_TEXT) {
       return null
+    }
+    /**
+     * 图片
+     */
+    if (type === MSGConstant.MSG_PICTURE) {
+      let uri = this.props.currentMessage.originMsg.message.message.filePath
+      if (uri !== undefined && uri !== '') {
+        uri =
+          (Platform.OS === 'android' &&
+          uri.indexOf('file://') === -1 &&
+          uri.indexOf('content://') === -1
+            ? 'file://'
+            : '') + uri
+      } else {
+        let imgdata = this.props.currentMessage.originMsg.message.message
+          .imgdata
+        if (imgdata !== undefined) {
+          uri = `data:image/png;base64,${imgdata}`
+        }
+      }
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.touchCallback(type, this.props.currentMessage)
+          }}
+        >
+          <Image
+            source={{ uri: uri }}
+            style={{
+              width: scaleSize(300),
+              height: scaleSize(300),
+            }}
+          />
+        </TouchableOpacity>
+      )
     }
     /*
      * 文件下载通知消息，包括图层，数据集等
