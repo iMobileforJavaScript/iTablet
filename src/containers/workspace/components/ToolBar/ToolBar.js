@@ -5766,7 +5766,9 @@ export default class ToolBar extends React.PureComponent {
       createInfo.geoId = this.props.selection[0].ids[0]
       createInfo.layerName = this.props.selection[0].layerInfo.name
     }
-    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    if (createInfo.animationMode != -1) {
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    }
   }
 
   itemaction = async item => {
@@ -6672,7 +6674,9 @@ export default class ToolBar extends React.PureComponent {
       createInfo.geoId = this.props.selection[0].ids[0]
       createInfo.layerName = this.props.selection[0].layerInfo.name
     }
-    SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    if (createInfo.animationMode != -1) {
+      SMap.createAnimationGo(createInfo, GLOBAL.newPlotMapName)
+    }
     GLOBAL.TouchType = TouchType.NULL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
 

@@ -1039,6 +1039,8 @@ export default class MapView extends React.Component {
       return
     }
 
+    this.props.setMap2Dto3D(false)
+
     if (Platform.OS === 'android') {
       if (this.toolBox && this.toolBox.getState().isShow) {
         this.toolBox.close()

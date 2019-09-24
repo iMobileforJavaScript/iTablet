@@ -281,6 +281,7 @@ const Map_Main_Menu = {
 
   MAO_ROAD_DISTRIBUTION: 'Road\nNetwork',
 
+  MAP_AR_DONT_SUPPORT_DEVICE: 'Don not support this device',
   MAP_AR_AI_ASSISTANT: 'AI\nAssitant',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
