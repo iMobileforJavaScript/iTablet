@@ -129,6 +129,10 @@ class ModuleList extends Component {
   }
 
   sureDown = (ref, downloadData, dialogCheck) => {
+    // 判断是否在下载
+    if (this.getCurrentDownloadData(downloadData)) {
+      return
+    }
     this._downloadModuleData(ref, downloadData)
     ref.setNewState({
       disabled: false,

@@ -436,7 +436,7 @@ export default class Friend extends Component {
     return isGroup
   }
 
-  _sendMessage = async (messageStr, talkId, bInform) => {
+  _sendMessage = async (messageStr, talkId, bInform, cb) => {
     let bCon = true
     if (!g_connectService) {
       bCon = await SMessageService.connectService(
@@ -473,6 +473,7 @@ export default class Friend extends Component {
     if (!bInform) {
       //todo
     }
+    cb && cb()
   }
 
   storeMessage = (messageObj, talkId, msgId) => {
@@ -523,6 +524,9 @@ export default class Friend extends Component {
         break
       case MSGConstant.MSG_REJECT:
         text = getLanguage(this.props.language).Friends.SYS_MSG_REJ
+        break
+      case MSGConstant.MSG_PICTURE:
+        text = getLanguage(this.props.language).Friends.SYS_MSG_PIC
         break
       case MSGConstant.MSG_MAP:
         text = getLanguage(this.props.language).Friends.SYS_MSG_MAP
@@ -639,7 +643,7 @@ export default class Friend extends Component {
     return msg
   }
 
-  _sendFile = (messageStr, filepath, talkId, msgId, informMsg) => {
+  _sendFile = (messageStr, filepath, talkId, msgId, informMsg, cb) => {
     let connectInfo = {
       serverIP: MSGConstant.MSG_IP,
       port: MSGConstant.MSG_Port,
@@ -665,10 +669,9 @@ export default class Friend extends Component {
       })
 
       informMsg.message.message.queueName = res.queueName
-      informMsg.message.message.filePath = ''
       // informMsg.message.type=3       要给桌面发文件需要将类型改为3
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
-      Toast.show(getLanguage(this.props.language).Friends.SEND_SUCCESS)
+      cb && cb()
     })
   }
 

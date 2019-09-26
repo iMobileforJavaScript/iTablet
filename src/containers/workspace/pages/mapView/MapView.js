@@ -1123,6 +1123,7 @@ export default class MapView extends React.Component {
         //   return
         // }
 
+        let hasMap = false // 判断是否打开了地图，若打开了地图，加载完成后先保存在MapControl中
         if (this.wsData) {
           if (this.wsData instanceof Array) {
             for (let i = 0; i < this.wsData.length; i++) {
@@ -1140,6 +1141,7 @@ export default class MapView extends React.Component {
                 )
               } else if (item.type === 'Map') {
                 await this._openMap(this.wsData[i])
+                hasMap = true
               }
               // else if (item.type === 'LastMap') {
               //   // 打开最近地图
@@ -1154,6 +1156,7 @@ export default class MapView extends React.Component {
               await this._openDatasource(this.wsData, this.wsData.layerIndex)
             } else if (this.wsData.type === 'Map') {
               await this._openMap(this.wsData)
+              hasMap = true
             }
             // else if (this.wsData.type === 'LastMap') {
             //   // 打开最近地图
@@ -1243,7 +1246,6 @@ export default class MapView extends React.Component {
         this.mapLoaded = true
 
         this._addGeometrySelectedListener()
-        this.setLoading(false)
 
         setGestureDetectorListener({ ...this.props })
         GLOBAL.TouchType = TouchType.NORMAL
@@ -1283,6 +1285,9 @@ export default class MapView extends React.Component {
             secondPoint: '选择终点',
           })
         }
+
+        if (hasMap) await SMap.saveMap('', false, false)
+        this.setLoading(false)
       } catch (e) {
         this.setLoading(false)
         this.mapLoaded = true

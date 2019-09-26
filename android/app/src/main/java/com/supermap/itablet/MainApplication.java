@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.supermap.file.CrashHandler;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.reactnative.photoview.PhotoViewPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -42,6 +43,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new ImageResizerPackage(),
             new PhotoViewPackage(),
             new PickerViewPackage(),
             new RNGestureHandlerPackage(),

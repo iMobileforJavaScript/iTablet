@@ -8,6 +8,8 @@ import { scaleSize } from '../utils'
 import { getLanguage } from '../language/index'
 import { getThemeAssets } from '../assets'
 import Orientation from 'react-native-orientation'
+import { SAIDetectView } from 'imobile_for_reactnative'
+import Toast from '../utils/Toast'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -184,6 +186,22 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async (user, lastMap) => {
+        let isAvailable = await SAIDetectView.checkIfSensorsAvailable()
+        if (!isAvailable) {
+          Toast.show(
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_DONT_SUPPORT_DEVICE,
+          )
+          return
+        }
+        isAvailable = await SAIDetectView.checkIfCameraAvailable()
+        if (!isAvailable) {
+          Toast.show(
+            getLanguage(global.language).Map_Main_Menu.MAP_AR_CAMERA_EXCEPTION,
+          )
+          return
+        }
+
         let data = ConstOnline['Google']
         data.layerIndex = 1
         GLOBAL.Type = constants.MAP_AR

@@ -188,6 +188,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-resizer')
     compile project(':react-native-photo-view')
     compile project(':react-native-picker')
     implementation project(':react-native-gesture-handler')

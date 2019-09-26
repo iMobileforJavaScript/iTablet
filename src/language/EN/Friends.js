@@ -98,6 +98,7 @@ const Friends = {
   ALERT_EXIT_COWORK: 'Do you want to close current cowork map?',
   SHARE_DATASET: 'Share the dataset at the same time',
   //system text
+  SYS_MSG_PIC: '[PICTURE]',
   SYS_MSG_MAP: '[MAP]',
   SYS_MSG_LAYER: '[LAYER]',
   SYS_MSG_DATASET: '[DATASET]',

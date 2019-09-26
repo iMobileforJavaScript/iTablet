@@ -17,6 +17,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.supermap.RNUtils.DataUtil;
 import com.supermap.containts.EventConst;
 import com.supermap.data.Datasource;
 import com.supermap.data.DatasourceConnectionInfo;
@@ -114,6 +115,20 @@ public class FileTools extends ReactContextBaseJavaModule {
             }
 
             promise.resolve(arr);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void getContentAbsolutePath(String contentUrl, Promise promise) {
+        try {
+            String fileAbsolutePath = "";
+            if(contentUrl.indexOf("content://") == 0){
+                Uri uri = Uri.parse(contentUrl);
+                fileAbsolutePath = DataUtil.getMediaPathFromUri(mReactContext, uri);
+            }
+            promise.resolve(fileAbsolutePath);
         } catch (Exception e) {
             promise.reject(e);
         }

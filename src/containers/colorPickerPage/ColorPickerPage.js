@@ -42,7 +42,9 @@ export default class ColorPickerPage extends React.Component {
   }
 
   componentDidMount() {
-    this.colorWheel.onLayout()
+    if (this.colorWheel) {
+      this.colorWheel.resetPanHandler()
+    }
   }
 
   onColorChange = color => {

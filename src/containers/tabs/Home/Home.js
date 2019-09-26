@@ -43,7 +43,6 @@ export default class Home extends Component {
     currentUser: Object,
     setShow: () => {},
     device: Object,
-    downList: any,
     user: Object,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
@@ -501,7 +500,6 @@ export default class Home extends Component {
             currentUser={this.props.currentUser}
             styles={styles.modulelist}
             device={this.props.device}
-            downList={this.props.downList}
             showDialog={this.showDialog}
             getModuleItem={this.getModuleItem}
             latestMap={this.props.latestMap}
