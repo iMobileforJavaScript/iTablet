@@ -20,11 +20,11 @@ function setParams(params) {
 //违章采集
 function illegallyParkCollect() {
   (async function() {
-    let isSupportedARCore = await SMeasureView.isSupportedARCore()
-    if (!isSupportedARCore) {
-      Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
-      return
-    }
+    // let isSupportedARCore = await SMeasureView.isSupportedARCore()
+    // if (!isSupportedARCore) {
+    //   Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
+    //   return
+    // }
     let currentLayer = GLOBAL.currentLayer
     // let reg = /^Label_(.*)#$/
     let isTaggingLayer = false

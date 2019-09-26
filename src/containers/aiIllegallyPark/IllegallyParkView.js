@@ -7,6 +7,10 @@ import { Container } from '../../components'
 //eslint-disable-next-line
 import { SMIllegallyParkView } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language'
+import { SMap, SMediaCollector } from 'imobile_for_reactnative'
+import { ConstPath } from '../../constants'
+import { FileTools } from '../../native'
+import { Toast } from '../../utils'
 
 /*
  * 违章采集界面
@@ -39,6 +43,32 @@ export default class IllegallyParkView extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       // 初始化数据
       (async function() {}.bind(this)())
+    })
+
+    {
+      (async function() {
+        let targetPath = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Media,
+        )
+        SMediaCollector.initMediaCollector(targetPath)
+      }.bind(this)())
+    }
+
+    SMap.setIllegallyParkListener({
+      callback: async result => {
+        let mediaPaths = [result]
+        let add = await SMediaCollector.addMedia({
+          datasourceName: this.datasourceAlias,
+          datasetName: this.datasetName,
+          mediaPaths,
+        })
+        if (add) {
+          Toast.show(getLanguage(this.props.language).Prompt.COLLECT_SUCCESS)
+        }
+      },
     })
   }
 
