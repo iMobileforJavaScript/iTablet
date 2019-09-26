@@ -109,25 +109,25 @@ export default class PointAnalyst extends Component {
         <TouchableOpacity
           style={styles.itemView}
           onPress={() => {
-            if (!this.is3D) {
-              let historyArr = this.props.mapSearchHistory
-              let hasAdded = false
-              historyArr.map(v => {
-                if (v.pointName === item.pointName) hasAdded = true
+            let historyArr = this.props.mapSearchHistory
+            let hasAdded = false
+            historyArr.map(v => {
+              if (v.pointName === item.pointName) hasAdded = true
+            })
+            if (!hasAdded) {
+              historyArr.push({
+                x: item.x,
+                y: item.y,
+                pointName: item.pointName,
+                address: item.address,
               })
-              if (!hasAdded) {
-                historyArr.push({
-                  x: item.x,
-                  y: item.y,
-                  pointName: item.pointName,
-                  address: item.address,
-                })
-              }
-              this.props.setMapSearchHistory(historyArr)
+            }
+            this.props.setMapSearchHistory(historyArr)
+            this.toLocationPoint({ item, pointName: item.pointName, index })
+            if (!this.is3D) {
               GLOBAL.PoiTopSearchBar.setVisible(true)
               GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
             }
-            this.toLocationPoint({ item, pointName: item.pointName, index })
           }}
         >
           <Image
@@ -177,7 +177,7 @@ export default class PointAnalyst extends Component {
           )
           // '位置搜索中')
           this.setState({ searchValue: pointName, searchData: [] })
-          let result = await SScene.toLocationPoint(index)
+          let result = await SScene.toLocationPoint(item)
           if (result) {
             this.container.setLoading(false)
             NavigationService.goBack()
@@ -507,40 +507,48 @@ export default class PointAnalyst extends Component {
     return (
       <TouchableOpacity
         onPress={async () => {
-          let location = await SMap.getMapcenterPosition()
-          this.location = location
-          if (GLOBAL.PoiInfoContainer) {
-            GLOBAL.PoiInfoContainer.setState({
-              showList: true,
-              location: this.location,
-            })
-            GLOBAL.PoiInfoContainer.getSearchResult(
-              {
-                keyWords: item.title,
-                location: JSON.stringify(location),
-                radius: this.radius,
-              },
-              () => {
-                GLOBAL.PoiInfoContainer.setVisible(true)
-                GLOBAL.PoiTopSearchBar.setVisible(true)
-                GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
-                NavigationService.navigate('MapView')
-              },
-            )
-
-            GLOBAL.PoiTopSearchBar.setVisible(true)
-            GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
-
-            if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-              await SMap.clearTarckingLayer()
-              // this.props.setNavigationChangeAR(true)
-              this.props.setMapNavigation({
-                isShow: true,
-                name: item.title,
+          if (!this.is3D) {
+            let location = await SMap.getMapcenterPosition()
+            this.location = location
+            if (GLOBAL.PoiInfoContainer) {
+              GLOBAL.PoiInfoContainer.setState({
+                showList: true,
+                location: this.location,
               })
-            }
+              GLOBAL.PoiInfoContainer.getSearchResult(
+                {
+                  keyWords: item.title,
+                  location: JSON.stringify(location),
+                  radius: this.radius,
+                },
+                () => {
+                  GLOBAL.PoiInfoContainer.setVisible(true)
+                  GLOBAL.PoiTopSearchBar.setVisible(true)
+                  GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+                  NavigationService.navigate('MapView')
+                },
+              )
 
-            NavigationService.navigate('MapView')
+              GLOBAL.PoiTopSearchBar.setVisible(true)
+              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
+
+              if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+                await SMap.clearTarckingLayer()
+                // this.props.setNavigationChangeAR(true)
+                this.props.setMapNavigation({
+                  isShow: true,
+                  name: item.title,
+                })
+              }
+            }
+          } else {
+            let location = await SScene.getSceneCenter()
+            this.location = location
+            this.getSearchResult({
+              keyWords: item.title,
+              location: JSON.stringify(location),
+              radius: this.radius,
+            })
           }
         }}
         style={styles.searchIconWrap}
@@ -569,7 +577,6 @@ export default class PointAnalyst extends Component {
         }}
       >
         {this.type === 'pointSearch' &&
-          !this.is3D &&
           this.state.showList &&
           this.renderIconItem()}
         {this.type === 'pointSearch'

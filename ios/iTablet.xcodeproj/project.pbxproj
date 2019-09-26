@@ -60,7 +60,6 @@
 		0ABCB8C42246056500992994 /* WeiXinUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABCB8C32246056500992994 /* WeiXinUtils.m */; };
 		0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ABCB8C8224605E300992994 /* libWeChatSDK.a */; };
 		0AECCF782328E034004F84A4 /* Images.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0AECCF772328E034004F84A4 /* Images.zip */; };
-		0AEF012F2334721E0094D90B /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF00EC2334721E0094D90B /* Trial_License.slm */; };
 		0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB6A23151595005F89FC /* python2.7.zip */; };
 		0AEFC201231762DA006FEDD8 /* PIL in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB3023151588005F89FC /* PIL */; };
 		0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF433CA224C78E4003FDADE /* SuperMap.framework */; };
@@ -659,7 +658,6 @@
 		0ABCB8C7224605E300992994 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		0ABCB8C8224605E300992994 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		0AECCF772328E034004F84A4 /* Images.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Images.zip; sourceTree = "<group>"; };
-		0AEF00EC2334721E0094D90B /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../android/app/src/main/assets/Trial_License.slm; sourceTree = "<group>"; };
 		0AF433CA224C78E4003FDADE /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		125E67BD15C84118B881A822 /* CoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -943,7 +941,6 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0AEF00EC2334721E0094D90B /* Trial_License.slm */,
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
 				0AA134932267432500606012 /* publicMap.txt */,
@@ -2033,7 +2030,6 @@
 				0AECCF782328E034004F84A4 /* Images.zip in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
-				0AEF012F2334721E0094D90B /* Trial_License.slm in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,
 				0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */,
 			);
@@ -2215,7 +2211,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = "arm64 armv7";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2317,7 +2313,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
+				VALID_ARCHS = "arm64 armv7";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
