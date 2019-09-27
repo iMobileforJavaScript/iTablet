@@ -466,7 +466,6 @@ class AppRoot extends Component {
     }
 
     await this.saveMapName(mapName, '', addition, this.closeMapHandler)
-    GLOBAL.Type = null
   }
 
   // 导出(保存)工作空间中地图到模块
