@@ -411,7 +411,7 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
-  async onSendFile(type, filepath, fileName, extraInfo) {
+  async onSendFile(type, filePath, fileName, extraInfo) {
     let bGroup = 1
     let groupID = this.curUser.userId
     let groupName = ''
@@ -443,7 +443,7 @@ class Chat extends React.Component {
     }
 
     fileName = fileName + '.zip'
-    let statResult = await stat(filepath)
+    let statResult = await stat(filePath)
     //文件接收提醒
     let informMsg = {
       type: bGroup,
@@ -460,7 +460,7 @@ class Chat extends React.Component {
           // message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
-          filePath: filepath,
+          filePath: filePath,
           progress: 0,
         },
       },
@@ -493,7 +493,7 @@ class Chat extends React.Component {
     informMsg.message.message.filePath = ''
     this.friend._sendFile(
       JSON.stringify(message),
-      filepath,
+      filePath,
       this.targetUser.id,
       msgId,
       informMsg,
