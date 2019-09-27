@@ -19,6 +19,7 @@ import {
 } from './src/models/map'
 import {
   setCurrentTemplateInfo,
+  setCurrentTemplateList,
   setTemplate,
 } from './src/models/template'
 import { Dialog, Loading } from './src/components'
@@ -116,6 +117,7 @@ class AppRoot extends Component {
     setSelection: PropTypes.func,
     setCollectionInfo: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
+    setCurrentTemplateList: PropTypes.func,
     setTemplate: PropTypes.func,
     setMapSetting: PropTypes.func,
     saveMap: PropTypes.func,
@@ -260,6 +262,7 @@ class AppRoot extends Component {
       this.props.setAnalystParams(null) // 清空分析中的数据
       this.props.setCollectionInfo() // 清空Collection中的数据
       this.props.setCurrentTemplateInfo() // 清空当前模板
+      this.props.setCurrentTemplateList() // 清空当前模板
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
     }
@@ -737,6 +740,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setSelection,
   setCollectionInfo,
   setCurrentTemplateInfo,
+  setCurrentTemplateList,
   setTemplate,
   setMapSetting,
   setAnalystParams,
