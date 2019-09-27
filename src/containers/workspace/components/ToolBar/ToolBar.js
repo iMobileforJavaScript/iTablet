@@ -6243,6 +6243,7 @@ export default class ToolBar extends React.PureComponent {
     let box
     switch (this.state.containerType) {
       case list:
+        if (this.state.data.length === 0) return <View /> // 若当前无数据，则不显示
         switch (this.state.type) {
           case ConstToolType.MAP3D_BASE:
           case ConstToolType.MAP3D_TOOL_FLYLIST:
