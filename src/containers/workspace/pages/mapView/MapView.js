@@ -1267,10 +1267,14 @@ export default class MapView extends React.Component {
             markerTag,
           )
         if (
-          GLOBAL.Type === constants.MAP_COLLECTION ||
+          GLOBAL.Type === constants.COLLECTION ||
           GLOBAL.Type === constants.MAP_PLOTTING
-        )
+        ){
           SMap.setIsMagnifierEnabled(true)
+        }else{
+          SMap.setIsMagnifierEnabled(false)
+        }
+
 
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
