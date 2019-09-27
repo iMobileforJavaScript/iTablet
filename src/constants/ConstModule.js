@@ -186,7 +186,15 @@ function SetMap(param) {
         bottom: 0,
       },
       action: async (user, lastMap) => {
-        let isAvailable = await SAIDetectView.checkIfSensorsAvailable()
+        let isAvailable = await SAIDetectView.checkIfAvailable()
+        if (!isAvailable) {
+          Toast.show(
+            getLanguage(global.language).Map_Main_Menu
+              .MAP_AR_DONT_SUPPORT_DEVICE,
+          )
+          return
+        }
+        isAvailable = await SAIDetectView.checkIfSensorsAvailable()
         if (!isAvailable) {
           Toast.show(
             getLanguage(global.language).Map_Main_Menu
