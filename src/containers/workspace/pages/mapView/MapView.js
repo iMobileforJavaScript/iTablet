@@ -1267,10 +1267,14 @@ export default class MapView extends React.Component {
             markerTag,
           )
         if (
-          GLOBAL.Type === constants.MAP_COLLECTION ||
+          GLOBAL.Type === constants.COLLECTION ||
           GLOBAL.Type === constants.MAP_PLOTTING
-        )
+        ){
           SMap.setIsMagnifierEnabled(true)
+        }else{
+          SMap.setIsMagnifierEnabled(false)
+        }
+
 
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
@@ -2313,7 +2317,7 @@ export default class MapView extends React.Component {
           info={getLanguage(this.props.language).Prompt.DELETE_OBJECT}
           // {'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
-          style={styles.dialogStyle}
+          // style={styles.dialogStyle}
           opacityStyle={styles.dialogStyle}
           confirmBtnTitle={getLanguage(this.props.language).Prompt.DELETE}
           cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}

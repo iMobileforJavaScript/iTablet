@@ -993,7 +993,7 @@ export default class LayerManager_tolbar extends React.Component {
     let layerAction = {
       name: 'onSendFile',
       type: MsgConstant.MSG_LAYER,
-      filepath: zipPath,
+      filePath: zipPath,
       fileName: layerData.caption,
     }
     let action = [layerAction]
@@ -1024,7 +1024,7 @@ export default class LayerManager_tolbar extends React.Component {
             let datasetAction = {
               name: 'onSendFile',
               type: MsgConstant.MSG_DATASET,
-              filepath: datasetZipPath,
+              filePath: datasetZipPath,
               fileName: layerData.datasetName,
               extraInfo: {
                 datasourceAlias: layerData.datasourceAlias,
