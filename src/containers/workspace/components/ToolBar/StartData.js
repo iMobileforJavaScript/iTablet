@@ -22,6 +22,7 @@ function getStart(type, params) {
   let data = [],
     buttons = []
   switch (type) {
+    case ConstToolType.MAP_ANALYST_START:
     case ConstToolType.MAP_EDIT_START:
       data = [
         // {
@@ -848,7 +849,8 @@ function create() {
     GLOBAL.Type === constants.MAP_EDIT ||
     GLOBAL.Type === constants.MAP_THEME ||
     GLOBAL.Type === constants.MAP_PLOTTING ||
-    GLOBAL.Type === constants.MAP_NAVIGATION
+    GLOBAL.Type === constants.MAP_NAVIGATION ||
+    GLOBAL.Type === constants.MAP_ANALYST
   ) {
     (async function() {
       GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
