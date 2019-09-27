@@ -1,3 +1,4 @@
 import SimpleDialog from './SimpleDialog'
+import ImageViewer from './ImageViewer'
 
-export { SimpleDialog }
+export { SimpleDialog, ImageViewer }

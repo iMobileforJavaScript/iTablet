@@ -110,7 +110,7 @@ export default class ProtocolDialog extends Component {
         </View>
         <MTBtn
           title={this.props.language === 'EN' ? '中文' : 'EN'}
-          textStyle={{ color: color.blue1, paddingBottom: scaleSize(10) }}
+          textStyle={{ color: color.blue1 }}
           onPress={() => {
             if (this.props.language === 'EN') {
               this.props.setLanguage('CN')
@@ -179,7 +179,6 @@ const styles = StyleSheet.create({
   checkBox: {
     height: scaleSize(40),
     width: scaleSize(40),
-    paddingBottom: scaleSize(10),
   },
   tipBtn: {
     height: scaleSize(40),
@@ -190,6 +189,6 @@ const styles = StyleSheet.create({
     fontSize: setSpText(16),
     textAlign: 'center',
     backgroundColor: 'transparent',
-    paddingBottom: scaleSize(10),
+    // paddingBottom: scaleSize(10),
   },
 })

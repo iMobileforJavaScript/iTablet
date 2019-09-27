@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
   sectionSeparateViewStyle: {
     height: 1,
     marginHorizontal: 0,
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.separateColorGray,
   },
   separateViewStyle: {
     flex: 1,
@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
     width: '100%',
     // width: scaleSize(620),
     height: 1,
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.separateColorGray,
   },
   imgItemInfo: {
     width: scaleSize(520),

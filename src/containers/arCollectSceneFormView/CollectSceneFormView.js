@@ -94,7 +94,7 @@ export default class CollectSceneFormView extends React.Component {
     })
   }
 
-  /** 切换 **/
+  /** 切换暂停 **/
   switchStatus = async () => {
     this.isRecording = !this.isRecording
     if (this.isRecording) {
@@ -110,6 +110,11 @@ export default class CollectSceneFormView extends React.Component {
       )
       await SCollectSceneFormView.stopRecording()
     }
+  }
+
+  /** 切换视角 **/
+  switchViewMode = async () => {
+    await SCollectSceneFormView.switchViewMode()
   }
 
   /** 历史 **/
@@ -258,6 +263,16 @@ export default class CollectSceneFormView extends React.Component {
             <Image
               resizeMode={'contain'}
               source={getThemeAssets().ar.toolbar.icon_ar_toolbar_switch}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.switchViewMode()}
+            style={styles.iconView}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.ar_view_mode}
               style={styles.smallIcon}
             />
           </TouchableOpacity>

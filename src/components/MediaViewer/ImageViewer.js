@@ -4,6 +4,7 @@
 import * as React from 'react'
 import { Dimensions, Image, TouchableOpacity, Platform } from 'react-native'
 import ImageZoom from 'react-native-image-pan-zoom'
+// eslint-disable-next-line import/no-unresolved
 import PhotoView from 'react-native-photo-view'
 import styles from './styles'
 

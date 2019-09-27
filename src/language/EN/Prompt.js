@@ -87,6 +87,8 @@ const Prompt = {
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
 
+  COLLECT_SUCCESS: 'Collect Success',
+
   SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
 
   NETWORK_REQUEST_FAILED: 'Network Request Failed',

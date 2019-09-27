@@ -5018,6 +5018,7 @@ export default class ToolBar extends React.PureComponent {
             }
             // 移除地图上所有callout
             SMediaCollector.removeMedias()
+            GLOBAL.clearMapData && GLOBAL.clearMapData()
             // 打开地图
             let mapPath =
               (this.props.user && this.props.user.currentUser.userName
@@ -5285,6 +5286,7 @@ export default class ToolBar extends React.PureComponent {
                 if (this.props.map.currentMap.name) {
                   await this.props.closeMap()
                 }
+                GLOBAL.clearMapData && GLOBAL.clearMapData()
                 // 打开地图
                 let mapPath =
                   (this.props.user && this.props.user.currentUser.userName
@@ -5463,6 +5465,7 @@ export default class ToolBar extends React.PureComponent {
       }
       // 移除地图上所有callout
       SMediaCollector.removeMedias()
+      GLOBAL.clearMapData && GLOBAL.clearMapData()
       // 清除属性历史记录
       await this.props.clearAttributeHistory()
       await this.props.setCurrentSymbols()
@@ -6243,6 +6246,7 @@ export default class ToolBar extends React.PureComponent {
     let box
     switch (this.state.containerType) {
       case list:
+        if (this.state.data.length === 0) return <View /> // 若当前无数据，则不显示
         switch (this.state.type) {
           case ConstToolType.MAP3D_BASE:
           case ConstToolType.MAP3D_TOOL_FLYLIST:

@@ -5,7 +5,6 @@ import { getLanguage } from '../../../../language'
 
 export default class ModuleItem extends Component {
   props: {
-    downloads: Object,
     downloadData: Object,
     item: Object,
     importWorkspace: () => {},

@@ -57,7 +57,7 @@ export default class HomePopupModal extends PureComponent {
       />
     )
   }
-  _renderItem = (label, onClick: () => {}) => {
+  _renderItem = (label, onClick: () => {}, hasSeparator = true) => {
     let fontSize = size.fontSize.fontSizeXl
     let height = scaleSize(80)
     return (
@@ -86,7 +86,7 @@ export default class HomePopupModal extends PureComponent {
             {label}
           </Text>
         </TouchableOpacity>
-        {this._renderSeparatorLine()}
+        {hasSeparator && this._renderSeparatorLine()}
       </View>
     )
   }
@@ -114,6 +114,7 @@ export default class HomePopupModal extends PureComponent {
               //'退出登录'
               getLanguage(this.props.language).Profile.LOG_OUT,
               this.props.onLogout,
+              false,
             )}
           </View>
         )
@@ -135,6 +136,7 @@ export default class HomePopupModal extends PureComponent {
             {this._renderItem(
               getLanguage(this.props.language).Navigator_Label.LEFT_TOP_REG,
               this.props.onRegister,
+              false,
             )}
           </View>
         )
@@ -174,6 +176,7 @@ export default class HomePopupModal extends PureComponent {
           {this._renderItem(
             getLanguage(this.props.language).Navigator_Label.RIGHT_TOP_EXIT,
             this.closeApp,
+            false,
           )}
         </View>
       )

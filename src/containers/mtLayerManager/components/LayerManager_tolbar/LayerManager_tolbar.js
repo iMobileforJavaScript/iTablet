@@ -952,14 +952,14 @@ export default class LayerManager_tolbar extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
+        {/*<View*/}
+        {/*style={{*/}
+        {/*flexDirection: 'column',*/}
+        {/*width: '100%',*/}
+        {/*height: 1,*/}
+        {/*backgroundColor: color.bgG,*/}
+        {/*}}*/}
+        {/*/>*/}
       </View>
     )
   }
@@ -993,7 +993,7 @@ export default class LayerManager_tolbar extends React.Component {
     let layerAction = {
       name: 'onSendFile',
       type: MsgConstant.MSG_LAYER,
-      filepath: zipPath,
+      filePath: zipPath,
       fileName: layerData.caption,
     }
     let action = [layerAction]
@@ -1024,7 +1024,7 @@ export default class LayerManager_tolbar extends React.Component {
             let datasetAction = {
               name: 'onSendFile',
               type: MsgConstant.MSG_DATASET,
-              filepath: datasetZipPath,
+              filePath: datasetZipPath,
               fileName: layerData.datasetName,
               extraInfo: {
                 datasourceAlias: layerData.datasourceAlias,

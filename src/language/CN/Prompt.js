@@ -85,6 +85,8 @@ const Prompt = {
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
 
+  COLLECT_SUCCESS: '采集成功',
+
   SELECT_TWO_MEDIAS_AT_LEAST: '至少选中两个多媒体文件',
 
   NETWORK_REQUEST_FAILED: '网络请求失败',

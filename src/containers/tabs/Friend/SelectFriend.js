@@ -45,7 +45,7 @@ export default class SelectFriend extends Component {
     }
   }
 
-  onSendFile = async ({ type, filepath, fileName, extraInfo }) => {
+  onSendFile = async ({ type, filePath, fileName, extraInfo }) => {
     let currentUser = this.user.currentUser
     let bGroup = 1
     let groupID = currentUser.userId
@@ -78,7 +78,7 @@ export default class SelectFriend extends Component {
     }
 
     fileName = fileName + '.zip'
-    let statResult = await stat(filepath)
+    let statResult = await stat(filePath)
     //文件接收提醒
     let informMsg = {
       type: bGroup,
@@ -95,7 +95,7 @@ export default class SelectFriend extends Component {
           // message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
-          filePath: filepath,
+          filePath: filePath,
           progress: 0,
         },
       },
@@ -109,7 +109,7 @@ export default class SelectFriend extends Component {
     GLOBAL.getFriend().storeMessage(informMsg, this.state.targetUser.id, msgId)
     GLOBAL.getFriend()._sendFile(
       JSON.stringify(message),
-      filepath,
+      filePath,
       this.state.targetUser.id,
       msgId,
       informMsg,

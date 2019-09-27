@@ -542,20 +542,22 @@ export const setCurrentTemplateList = (
 ) => async dispatch => {
   try {
     let list = []
-    if (params.$.datasetName && params.$.type !== 'Unknown') {
-      list = [{ ...params.$, field: params.fields[0].field }]
-    }
-    let getData = function(data) {
-      if (!data.feature || data.feature.length === 0) return
-      for (let i = 0; i < data.feature.length; i++) {
-        let item = data.feature[i]
-        list.push({ ...item.$, field: item.fields[0].field })
-        if (item.feature && item.feature.length > 0) {
-          getData(item)
+    if (params) {
+      if (params.$.datasetName && params.$.type !== 'Unknown') {
+        list = [{ ...params.$, field: params.fields[0].field }]
+      }
+      let getData = function(data) {
+        if (!data.feature || data.feature.length === 0) return
+        for (let i = 0; i < data.feature.length; i++) {
+          let item = data.feature[i]
+          list.push({ ...item.$, field: item.fields[0].field })
+          if (item.feature && item.feature.length > 0) {
+            getData(item)
+          }
         }
       }
+      getData(params)
     }
-    getData(params)
 
     await dispatch({
       type: SET_CURRENT_TEMPLATE_SYMBOL_LIST,
