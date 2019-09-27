@@ -92,6 +92,7 @@ export default class Friend extends Component {
     this.stateChangeCount = 0
     this._receiveMessage = this._receiveMessage.bind(this)
     global.getFriend = this._getFriend
+    this._setHomePath()
   }
 
   _getFriend = () => {
@@ -100,6 +101,10 @@ export default class Friend extends Component {
     } else {
       return undefined
     }
+  }
+
+  _setHomePath = async () => {
+    global.homePath = await FileTools.appendingHomeDirectory()
   }
 
   onUserLoggedin = async () => {

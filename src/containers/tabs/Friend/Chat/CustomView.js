@@ -38,14 +38,18 @@ export default class CustomView extends React.Component {
      * 图片
      */
     if (type === MSGConstant.MSG_PICTURE) {
+      let homePath = global.homePath
       let uri = this.props.currentMessage.originMsg.message.message.filePath
       if (uri !== undefined && uri !== '') {
-        uri =
-          (Platform.OS === 'android' &&
-          uri.indexOf('file://') === -1 &&
-          uri.indexOf('content://') === -1
-            ? 'file://'
-            : '') + uri
+        if (Platform.OS === 'android') {
+          if (uri.indexOf('content://') === -1) {
+            uri = 'file://' + homePath + uri
+          }
+        } else {
+          if (uri.indexOf('assets-library://') === -1) {
+            uri = homePath + uri
+          }
+        }
       } else {
         let imgdata = this.props.currentMessage.originMsg.message.message
           .imgdata

@@ -952,14 +952,14 @@ export default class LayerManager_tolbar extends React.Component {
             </Text>
           </View>
         </TouchableHighlight>
-        <View
-          style={{
-            flexDirection: 'column',
-            width: '100%',
-            height: 1,
-            backgroundColor: color.bgG,
-          }}
-        />
+        {/*<View*/}
+        {/*style={{*/}
+        {/*flexDirection: 'column',*/}
+        {/*width: '100%',*/}
+        {/*height: 1,*/}
+        {/*backgroundColor: color.bgG,*/}
+        {/*}}*/}
+        {/*/>*/}
       </View>
     )
   }
