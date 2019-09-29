@@ -661,7 +661,12 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
       ) {
-        newValue = value * 32
+        newValue = value * 30 + 2
+        if (newValue <= 2) {
+          newValue = 2
+        } else if (newValue > 32) {
+          newValue = 32
+        }
       } else if (
         this.props.selectName === 'fontsize' ||
         this.props.selectName === '字号'
@@ -669,7 +674,7 @@ export default class TouchProgress extends Component {
         newValue = value * 20
         if (newValue <= 1) {
           newValue = 1
-        } else if (value > 20) {
+        } else if (newValue > 20) {
           newValue = 20
         }
       } else if (this.props.selectName === '单点代表值') {
@@ -811,7 +816,7 @@ export default class TouchProgress extends Component {
           parseInt(value)
         let Params = {
           LayerName: this.props.currentLayer.name,
-          RangeParameter: value,
+          RangeParameter: parseInt(value),
         }
         switch (themeType) {
           case ThemeType.RANGE:
@@ -1104,10 +1109,10 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
       ) {
-        if (value <= 0) {
-          value = 1
-        } else if (value > 100) {
-          value = 100
+        if (value <= 2) {
+          value = 2
+        } else if (value > 32) {
+          value = 32
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
