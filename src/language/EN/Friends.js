@@ -68,10 +68,12 @@ const Friends = {
   LOCATION_SHARE_NOTIFY: "Can't open location in sharing",
   WAIT_DOWNLOADING: 'Please wait until download completed',
   DATA_NOT_FOUND: 'Data not fond, would you like to download it again?',
+  LOAD_ORIGIN_PIC: 'Load Origin',
   //CustomActions
   MAP: 'Map',
   TEMPLATE: 'Template',
   LOCATION: 'Lacation',
+  PICTURE: 'Picture',
   LOCATION_FAILED: 'Failed to locate',
   //RecommendFriend
   FIND_NONE: 'Unable to find new frineds from your contacts',
