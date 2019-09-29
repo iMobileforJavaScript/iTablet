@@ -143,7 +143,11 @@ export default class TouchProgress extends Component {
       this._BackLine.style.width = (_value2 * progressWidth) / 200
       tips = TPData.getMatchPictureTip(this.props.selectName, _value)
     }
-    if (tips === '' && GLOBAL.Type === constants.MAP_THEME) {
+    if (
+      tips === '' &&
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
           this.nuclearRadius =
@@ -649,7 +653,10 @@ export default class TouchProgress extends Component {
       this.props.selectName === '高度'
     ) {
       newValue = value * 100
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
@@ -785,7 +792,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
         '     ' +
         parseInt(value)
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
@@ -1081,7 +1091,10 @@ export default class TouchProgress extends Component {
         value -= 100
         tips = TPData.getMatchPictureTip(this.props.selectName, value)
       }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'

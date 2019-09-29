@@ -1106,7 +1106,7 @@ export default class FunctionToolbar extends React.Component {
             //'风格',
             size: 'large',
             selectMode: 'flash',
-            action: this.showMenuAlertDialog,
+            action: this.mapStyle,
             image: require('../../../../assets/function/icon_function_style.png'),
           },
           {

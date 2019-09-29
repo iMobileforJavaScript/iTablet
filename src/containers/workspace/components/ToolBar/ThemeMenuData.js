@@ -151,7 +151,7 @@ async function createThemeGridUniqueMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -180,7 +180,7 @@ async function createThemeGridRangeMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -210,7 +210,7 @@ async function createThemeGridUniqueMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -240,7 +240,7 @@ async function createThemeGridRangeMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -3136,7 +3136,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.FIELD_ILLEGAL)
   }
 }
 
@@ -3282,7 +3282,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.FIELD_ILLEGAL)
   }
 }
 
