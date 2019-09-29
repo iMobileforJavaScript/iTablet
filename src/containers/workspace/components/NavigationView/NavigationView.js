@@ -47,10 +47,18 @@ export default class NavigationView extends React.Component {
     })
   }
 
-  close = () => {
+  close = async () => {
     this.props.setMapNavigation({ isShow: false, name: '' })
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+    this.props.setMapSelectPoint({
+      firstPoint: '选择起点',
+      secondPoint: '选择终点',
+    })
+    GLOBAL.STARTX = undefined
+    GLOBAL.ENDX = undefined
+    GLOBAL.ROUTEANALYST = undefined
+    await SMap.clearPoint()
     NavigationService.goBack()
   }
 

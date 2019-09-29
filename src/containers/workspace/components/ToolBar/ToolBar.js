@@ -4979,16 +4979,60 @@ export default class ToolBar extends React.PureComponent {
       GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
-      let name = item.name
-      SMap.getIndoorNavigationData(name)
-      SMap.startIndoorNavigation()
-      this.setVisible(false)
-      this.props.existFullMap()
-      GLOBAL.HASCHOSE = true
-      NavigationService.navigate('NavigationView')
+      (async function() {
+        GLOBAL.SELECTDATASOURCE = item.name
+        let name = item.name
+        let data = []
+        let maplist = await SMap.getLineDataset(name)
+        if (maplist && maplist.length > 0) {
+          let userList = []
+          maplist.forEach(item => {
+            let name = item.dataset
+            item.title = name
+            item.name = name.split('.')[0]
+            item.image = require('../../../../assets/Navigation/network.png')
+            userList.push(item)
+          })
+        }
+        data.push({
+          title: getLanguage(global.language).Map_Main_Menu.NETDATA,
+          //'选择数据集',
+          image: require('../../../../assets/Navigation/network_white.png'),
+          data: maplist || [],
+        })
+        this.setVisible(true, ConstToolType.LINEDATASET, {
+          containerType: 'list',
+          height: ConstToolType.THEME_HEIGHT[4],
+          data,
+          isFullScreen: false,
+          buttons: [ToolbarBtnType.CANCEL_INCREMENT],
+        })
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.LINEDATASET) {
+      (async function() {
+        if (GLOBAL.NAVIGATIONHEADLEFTCLICK) {
+          this.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+            containerType: 'table',
+            column: 4,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
+          })
+        } else {
+          SMap.setLabelColor()
+          SMap.setAction(Action.DRAWLINE)
+          this.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+            containerType: 'table',
+            column: 4,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
+          })
+        }
+        await SMap.addNetWorkDataset(item.name)
+        GLOBAL.LINEDATASET = item.name
+      }.bind(this)())
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
       (async function() {
-        await SMap.buildNetwork(item.name)
+        await SMap.buildNetwork(GLOBAL.LINEDATASET, item.name)
         this.closeincrement()
       }.bind(this)())
     }
@@ -5451,7 +5495,6 @@ export default class ToolBar extends React.PureComponent {
       this.props.setMap2Dto3D(false)
       this.props.setOpenOnlineMap(true)
       this.props.setMapIndoorNavigation(true)
-      GLOBAL.HASCHOSE = false
       this.props.setContainerLoading(
         true,
         getLanguage(this.props.language).Prompt.SWITCHING,
