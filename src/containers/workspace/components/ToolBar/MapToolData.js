@@ -630,17 +630,15 @@ function stop() {
 }
 
 function submit() {
-  if (GLOBAL.INCREMENTDATASETNAME === '') {
-    Toast.show('请先创建路网数据集')
-    return
-  }
   (async function() {
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
-      await SMap.addGPSRecordset()
+      await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
     }
     await SMap.submit()
+
+    let name = GLOBAL.SELECTDATASOURCE
     let data = []
-    let maplist = await SMap.getNetWorkDataset()
+    let maplist = await SMap.getNetWorkDataset(name)
     if (maplist && maplist.length > 0) {
       let userList = []
       maplist.forEach(item => {
@@ -657,7 +655,7 @@ function submit() {
       image: require('../../../../assets/Navigation/network_white.png'),
       data: maplist || [],
     })
-    _params.setToolbarVisible(true, ConstToolType.NETWORKDATASET, {
+    GLOBAL.ToolBar.setVisible(true, ConstToolType.NETWORKDATASET, {
       containerType: 'list',
       height: ConstToolType.THEME_HEIGHT[4],
       data,

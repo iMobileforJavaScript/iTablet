@@ -28,7 +28,10 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.layerData.themeType > 0
+    ) {
       let params = {
         LayerName: this.props.layerData.name,
         SymbolID: data.id,
@@ -73,12 +76,12 @@ export default class SymbolList extends React.Component {
   }
 
   renderLibrary = () => {
+    let symbols = []
     if (GLOBAL.Type === constants.MAP_THEME) {
       switch (this.props.themeSymbolType) {
         case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
         case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
           SMap.findSymbolsByGroups('point', '').then(result => {
-            let symbols = []
             result.forEach(item => {
               symbols.push(item)
             })
@@ -86,12 +89,11 @@ export default class SymbolList extends React.Component {
           })
           break
       }
-      return
+      if (symbols.length > 0) return
     }
     switch (this.props.layerData.type) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {
-          let symbols = []
           result.forEach(item => {
             symbols.push(item)
           })
@@ -100,7 +102,6 @@ export default class SymbolList extends React.Component {
         break
       case 1:
         SMap.findSymbolsByGroups('point', '').then(result => {
-          let symbols = []
           result.forEach(item => {
             symbols.push(item)
           })
@@ -109,7 +110,6 @@ export default class SymbolList extends React.Component {
         break
       case 5:
         SMap.findSymbolsByGroups('fill', '').then(result => {
-          let symbols = []
           result.forEach(item => {
             symbols.push(item)
           })

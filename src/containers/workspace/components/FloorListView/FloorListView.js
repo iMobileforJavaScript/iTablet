@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   table: {
     position: 'absolute',
     height: 250,
-    width: 80,
+    width: 65,
     left: 10,
     top: scaleSize(300),
     backgroundColor: 'transparent',

@@ -151,7 +151,7 @@ async function createThemeGridUniqueMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -180,7 +180,7 @@ async function createThemeGridRangeMap(params) {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -210,7 +210,7 @@ async function createThemeGridUniqueMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -240,7 +240,7 @@ async function createThemeGridRangeMapByLayer() {
     })
     _toolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_A_RASTER_LAYER)
   }
 }
 
@@ -944,6 +944,10 @@ let _params = {}
 
 function setThemeParams(params) {
   _params = params
+}
+
+function getThemeParams() {
+  return _params
 }
 
 /** 设置分段模式 **/
@@ -3136,7 +3140,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.FIELD_ILLEGAL)
   }
 }
 
@@ -3282,7 +3286,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
     })
     ToolbarParams.setToolbarVisible(false)
   } else {
-    Toast.show(global.language === 'CN' ? '字段不合法' : 'Field illegal')
+    Toast.show(getLanguage(global.language).Prompt.FIELD_ILLEGAL)
   }
 }
 
@@ -3429,6 +3433,7 @@ export default {
   getRangeMode,
   getColorGradientType,
   setThemeParams,
+  getThemeParams,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,

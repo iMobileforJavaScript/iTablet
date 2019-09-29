@@ -150,6 +150,11 @@ function layerThemeSetting(type, isGroup = false) {
         image: getPublicAssets().mapTools.tools_new_thematic_map,
       },
       {
+        title: getLanguage(type).Map_Layer.LAYERS_LAYER_STYLE,
+        //'图层风格',
+        image: require('../../../../assets/function/icon_function_style.png'),
+      },
+      {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,
