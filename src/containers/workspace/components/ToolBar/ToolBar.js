@@ -205,8 +205,8 @@ export default class ToolBar extends React.PureComponent {
       props.containerProps.height >= 0
         ? props.containerProps.height
         : props.containerProps.containerType === list
-        ? ConstToolType.HEIGHT[3]
-        : ConstToolType.HEIGHT[1]
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
     this.lastState = {}
     this.shareTo = ''
@@ -2832,8 +2832,8 @@ export default class ToolBar extends React.PureComponent {
             params && params.containerType
               ? params.containerType
               : type === ConstToolType.MAP_SYMBOL
-              ? tabs
-              : table,
+                ? tabs
+                : table,
           themeType: params && params.themeType ? params.themeType : '',
           selectKey: params && params.selectKey ? params.selectKey : '',
           selectName: params && params.selectName ? params.selectName : '',
@@ -2889,8 +2889,8 @@ export default class ToolBar extends React.PureComponent {
           toValue: isShow
             ? 0
             : -(this.props.device.height >= this.props.device.width
-                ? this.props.device.height
-                : this.props.device.width),
+              ? this.props.device.height
+              : this.props.device.width),
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -2987,7 +2987,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   themeCommit = () => {
-    ;(async function() {
+    (async function() {
       if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
         let resultArr = []
         let datasetNames =
@@ -3168,7 +3168,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   close = (type = this.state.type, actionFirst = false) => {
-    ;(async function() {
+    (async function() {
       let actionType = Action.PAN
 
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
@@ -3567,9 +3567,9 @@ export default class ToolBar extends React.PureComponent {
       isTouchProgress = this.state.showMenuDialog
       setData()
     } else {
-      ;(isFullScreen = !this.state.showMenuDialog),
-        (showMenuDialog = !this.state.showMenuDialog),
-        (isTouchProgress = false)
+      (isFullScreen = !this.state.showMenuDialog),
+      (showMenuDialog = !this.state.showMenuDialog),
+      (isTouchProgress = false)
       if (!this.state.showMenuDialog) {
         // 先滑出box，再显示Menu
         showBox()
@@ -3681,7 +3681,7 @@ export default class ToolBar extends React.PureComponent {
     })
   }
   menuCommit = (type = this.state.type, actionFirst = false) => {
-    ;(async function() {
+    (async function() {
       let actionType = Action.PAN
 
       if (actionFirst) {
@@ -3800,7 +3800,7 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (type === ConstToolType.MAP_TOOL_TAGGING) {
-      ;(async function() {
+      (async function() {
         let currentLayer = this.props.currentLayer
         // let reg = /^Label_(.*)#$/
         let isTaggingLayer = false,
@@ -4171,7 +4171,7 @@ export default class ToolBar extends React.PureComponent {
   listThemeAction = ({ item }) => {
     if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
       //单值专题图表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           UniqueExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4210,7 +4210,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
     ) {
       //分段专题图表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           RangeExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4222,7 +4222,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
     ) {
       //点密度专题图表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           DotExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4235,7 +4235,7 @@ export default class ToolBar extends React.PureComponent {
       ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION
     ) {
       //等级符号专题图表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           GraSymbolExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4299,7 +4299,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
     ) {
       //统一标签表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           LabelExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4311,7 +4311,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION
     ) {
       //单值标签表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           UniqueExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4337,7 +4337,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION
     ) {
       //分段标签表达式
-      ;(async function() {
+      (async function() {
         let Params = {
           RangeExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
@@ -4363,7 +4363,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
       //数据集选择列表(跳转到专题图字段选择列表)
-      ;(async function() {
+      (async function() {
         try {
           //栅格专题图直接由数据集创建，无需选择字段
           if (this.state.themeCreateType === constants.THEME_GRID_UNIQUE) {
@@ -4469,10 +4469,10 @@ export default class ToolBar extends React.PureComponent {
               data: datalist,
               buttons: listSelectable
                 ? [
-                    //ToolbarBtnType.THEME_CANCEL,
-                    ToolbarBtnType.THEME_ADD_BACK,
-                    ToolbarBtnType.THEME_COMMIT,
-                  ]
+                  //ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
+                  ToolbarBtnType.THEME_COMMIT,
+                ]
                 : [ToolbarBtnType.THEME_CANCEL],
               type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
             },
@@ -4497,7 +4497,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
       //点击字段名创建专题图(数据集创建)
-      ;(async function() {
+      (async function() {
         await ThemeMenuData.createThemeByDataset(item, {
           setToolbarVisible: this.setVisible,
           ...this.props,
@@ -4511,7 +4511,7 @@ export default class ToolBar extends React.PureComponent {
       ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
       //点击字段名创建专题图(图层创建)
-      ;(async function() {
+      (async function() {
         await ThemeMenuData.createThemeByLayer(item, {
           setToolbarVisible: this.setVisible,
           ...this.props,
@@ -4554,7 +4554,7 @@ export default class ToolBar extends React.PureComponent {
     if (item.action) {
       item.action && item.action()
     } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
-      ;(async function() {
+      (async function() {
         this.props.setContainerLoading &&
           this.props.setContainerLoading(
             true,
@@ -4587,7 +4587,7 @@ export default class ToolBar extends React.PureComponent {
         })
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
-      ;(async function() {
+      (async function() {
         if (
           section.title ===
           getLanguage(this.props.language).Map_Main_Menu.OPEN_DATASOURCE
@@ -4685,7 +4685,7 @@ export default class ToolBar extends React.PureComponent {
         }
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
-      ;(async function() {
+      (async function() {
         let udbName = this.basename(this.path)
         let udbpath = {
           server: this.path,
@@ -4822,7 +4822,7 @@ export default class ToolBar extends React.PureComponent {
     // }
     else if (this.state.type === ConstToolType.NETDATA) {
       if (item.name === '室外数据') {
-        ;(async function() {
+        (async function() {
           let data = []
           let maplist = await SMap.getNavigationData()
           if (maplist && maplist.length > 0) {
@@ -4849,7 +4849,7 @@ export default class ToolBar extends React.PureComponent {
           })
         }.bind(this)())
       } else if (item.name === '室内数据') {
-        ;(async function() {
+        (async function() {
           let data = []
           let userUDBPath, userUDBs
           //过滤掉标注和标绘匹配正则
@@ -4934,7 +4934,7 @@ export default class ToolBar extends React.PureComponent {
         }.bind(this)())
       }
     } else if (this.state.type === ConstToolType.NETWORK) {
-      ;(async function() {
+      (async function() {
         // await FileTools.appendingHomeDirectory() + ConstPath.CachePath
         GLOBAL.navidataset = item.dataset
         let data = [],
@@ -4980,7 +4980,7 @@ export default class ToolBar extends React.PureComponent {
       GLOBAL.HASCHOSE = true
       NavigationService.navigate('NavigationView')
     } else if (this.state.type === ConstToolType.INDOORDATA) {
-      ;(async function() {
+      (async function() {
         GLOBAL.SELECTDATASOURCE = item.name
         let name = item.name
         let data = []
@@ -5010,7 +5010,7 @@ export default class ToolBar extends React.PureComponent {
         })
       }.bind(this)())
     } else if (this.state.type === ConstToolType.LINEDATASET) {
-      ;(async function() {
+      (async function() {
         if (GLOBAL.NAVIGATIONHEADLEFTCLICK) {
           this.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
             containerType: 'table',
@@ -5032,7 +5032,7 @@ export default class ToolBar extends React.PureComponent {
         GLOBAL.LINEDATASET = item.name
       }.bind(this)())
     } else if (this.state.type === ConstToolType.NETWORKDATASET) {
-      ;(async function() {
+      (async function() {
         await SMap.buildNetwork(GLOBAL.LINEDATASET, item.name)
         this.closeincrement()
       }.bind(this)())
@@ -5137,7 +5137,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   headerAction = ({ section }) => {
-    ;(async function() {
+    (async function() {
       if (
         section.title ===
         getLanguage(this.props.language).Map_Main_Menu.CREATE_WITH_SYMBOLS
@@ -6874,14 +6874,14 @@ export default class ToolBar extends React.PureComponent {
           this.state.type !== ConstToolType.STYLE_TRANSFER &&
           !this.state.isTouchProgress &&
           !this.state.showMenuDialog && (
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => {
-                this.overlayOnPress()
-              }}
-              style={styles.themeoverlay}
-            />
-          )}
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              this.overlayOnPress()
+            }}
+            style={styles.themeoverlay}
+          />
+        )}
         {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
             //language={this.props.language}

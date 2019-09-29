@@ -1106,7 +1106,7 @@ export default class FunctionToolbar extends React.Component {
             //'风格',
             size: 'large',
             selectMode: 'flash',
-            action: this.showMenuAlertDialog,
+            action: this.mapStyle,
             image: require('../../../../assets/function/icon_function_style.png'),
           },
           {
@@ -1537,16 +1537,16 @@ export default class FunctionToolbar extends React.Component {
           this.props.online.share[0] &&
           GLOBAL.Type === this.props.online.share[0].module &&
           this.props.online.share[0].progress !== undefined && (
-            <Bar
-              style={styles.progress}
-              // indeterminate={true}
-              progress={
-                this.props.online.share[this.props.online.share.length - 1]
-                  .progress
-              }
-              width={scaleSize(60)}
-            />
-          )}
+          <Bar
+            style={styles.progress}
+            // indeterminate={true}
+            progress={
+              this.props.online.share[this.props.online.share.length - 1]
+                .progress
+            }
+            width={scaleSize(60)}
+          />
+        )}
         {/*{item.title === '分享' &&*/}
         {/*this.props.online.share[this.props.online.share.length - 1] &&*/}
         {/*GLOBAL.Type === this.props.online.share[this.props.online.share.length - 1].module &&*/}

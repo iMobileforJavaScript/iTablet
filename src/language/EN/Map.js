@@ -80,7 +80,7 @@ const Map_Main_Menu = {
   ROTATE_RIGHT: 'Rotate Right',
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
-  Saturation: 'saturation',
+  SATURATION: 'Saturation',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',

@@ -411,29 +411,47 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
+        // if (
+        //   GLOBAL.Type === constants.MAP_EDIT ||
+        //   GLOBAL.Type === constants.MAP_ANALYST
+        // ) {
+        //   if (data.themeType <= 0) {
+        //     this.mapEdit(data)
+        //   } else {
+        //     Toast.show(
+        //       getLanguage(this.props.language).Prompt
+        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+        //     )
+        //     //'当前图层无法设置风格')
+        //   }
+        // } else if (GLOBAL.Type === constants.MAP_THEME) {
+        //   if (data.themeType <= 0 && !data.isHeatmap) {
+        //     Toast.show(
+        //       getLanguage(this.props.language).Prompt
+        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+        //     )
+        //     //'当前图层无法设置风格')
+        //   } else {
+        //     this.mapTheme(data)
+        //   }
+        // }
         if (
-          GLOBAL.Type === constants.MAP_EDIT ||
-          GLOBAL.Type === constants.MAP_ANALYST
+          GLOBAL.Type !== constants.MAP_EDIT &&
+          GLOBAL.Type !== constants.MAP_THEME &&
+          GLOBAL.Type !== constants.MAP_ANALYST
         ) {
-          if (data.themeType <= 0) {
-            this.mapEdit(data)
-          } else {
-            Toast.show(
-              getLanguage(this.props.language).Prompt
-                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-            )
-            //'当前图层无法设置风格')
-          }
+          return
+        }
+
+        if (data.themeType <= 0) {
+          this.mapEdit(data)
         } else if (GLOBAL.Type === constants.MAP_THEME) {
-          if (data.themeType <= 0 && !data.isHeatmap) {
-            Toast.show(
-              getLanguage(this.props.language).Prompt
-                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-            )
-            //'当前图层无法设置风格')
-          } else {
-            this.mapTheme(data)
-          }
+          this.mapTheme(data)
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Prompt
+              .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+          )
         }
       })
     this.prevItemRef = this.currentItemRef

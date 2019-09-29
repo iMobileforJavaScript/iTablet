@@ -230,6 +230,9 @@ const Prompt = {
   LOCATION_ERROR: 'Location request failed, please try agagin later',
 
   OPEN_THRID_PARTY: "You're going to open a thirty-party app, continue?",
+
+  FIELD_ILLEGAL: 'Field illegal',
+  PLEASE_SELECT_A_RASTER_LAYER: 'Please select a raster layer',
 }
 
 export { Prompt }

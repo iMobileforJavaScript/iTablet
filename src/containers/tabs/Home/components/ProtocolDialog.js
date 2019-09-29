@@ -43,11 +43,11 @@ export default class ProtocolDialog extends Component {
       source =
         this.props.language === 'CN'
           ? {
-              uri: 'file:///android_asset/SuperMapUserServiceAgreement_CN.html',
-            }
+            uri: 'file:///android_asset/SuperMapUserServiceAgreement_CN.html',
+          }
           : {
-              uri: 'file:///android_asset/SuperMapUserServiceAgreement_EN.html',
-            }
+            uri: 'file:///android_asset/SuperMapUserServiceAgreement_EN.html',
+          }
     } else {
       source =
         this.props.language === 'CN'

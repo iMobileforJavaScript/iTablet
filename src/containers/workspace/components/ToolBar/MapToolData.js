@@ -630,7 +630,7 @@ function stop() {
 }
 
 function submit() {
-  ;(async function() {
+  (async function() {
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
       await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
     }
@@ -1071,7 +1071,7 @@ async function freecover() {
 
 //多媒体采集
 function captureImage() {
-  ;(async function() {
+  (async function() {
     let currentLayer = GLOBAL.currentLayer
     // let reg = /^Label_(.*)#$/
     if (currentLayer) {
@@ -1097,7 +1097,7 @@ function captureImage() {
 }
 
 function tour() {
-  ;(async function() {
+  (async function() {
     // let {isTaggingLayer, layerInfo} = await SMap.getCurrentTaggingLayer(
     //   _params.user.currentUser.userName,
     // )
@@ -1128,7 +1128,7 @@ function tour() {
       cb = () => {},
     ) => {
       if (value !== '') {
-        ;(async function() {
+        (async function() {
           await SMap.setLabelColor()
           let tagginData = await SMap.newTaggingDataset(
             value,

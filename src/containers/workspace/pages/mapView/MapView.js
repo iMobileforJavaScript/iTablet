@@ -789,7 +789,7 @@ export default class MapView extends React.Component {
                   break
                 }
               }
-              ;(async function() {
+              (async function() {
                 await jsonUtil.updateMapInfo(config)
               }.bind(this)())
             })
@@ -806,7 +806,7 @@ export default class MapView extends React.Component {
   // 地图保存为xml(fileName, cb)
   saveMapToXMLWithDialog = ({ mapTitle }) => {
     // this.setLoading(true, '正在保存')
-    ;(async function() {
+    (async function() {
       try {
         const filePath =
           (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
@@ -853,7 +853,7 @@ export default class MapView extends React.Component {
           this.saveXMLDialog.setDialogVisible(true)
         } else {
           try {
-            ;(async function() {
+            (async function() {
               let mapTitle = await SMap.getMapName()
               await this.saveMapToXML(mapTitle)
             }.bind(this)())
@@ -868,7 +868,7 @@ export default class MapView extends React.Component {
   // 地图保存为xml 同时 关闭地图
   saveMapToXMLAndClose = () => {
     // this.setLoading(true, '正在保存')
-    ;(async function() {
+    (async function() {
       try {
         let mapTitle = await SMap.getMapName()
         const filePath =
@@ -963,7 +963,7 @@ export default class MapView extends React.Component {
 
   // 删除图层中指定对象
   removeObject = () => {
-    ;(async function() {
+    (async function() {
       try {
         if (!this.props.selection || !this.props.selection.length === 0) return
 
@@ -1117,7 +1117,7 @@ export default class MapView extends React.Component {
   }
 
   _addMap = () => {
-    ;(async function() {
+    (async function() {
       try {
         // if (this.wsData === null || this.wsData === undefined) {
         //   this.setLoading(false)
@@ -1609,7 +1609,7 @@ export default class MapView extends React.Component {
 
   /** 展示撤销Modal **/
   showUndoView = () => {
-    ;(async function() {
+    (async function() {
       this.popModal && this.popModal.setVisible(true)
       let historyCount = await SMap.getMapHistoryCount()
       let currentHistoryCount = await SMap.getMapHistoryCurrentIndex()
@@ -1623,7 +1623,7 @@ export default class MapView extends React.Component {
   //多媒体采集
   captureImage = params => {
     //保存数据->跳转
-    ;(async function() {
+    (async function() {
       let currentLayer = this.props.currentLayer
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
@@ -1735,7 +1735,7 @@ export default class MapView extends React.Component {
   }
 
   confirm = () => {
-    ;(async function() {
+    (async function() {
       let result = await SMap.setDynamicProjection()
       if (result) {
         GLOBAL.dialog.setDialogVisible(false)
@@ -1987,7 +1987,7 @@ export default class MapView extends React.Component {
       })
     } else {
       if (this.state.showIncrement) {
-        ;(async function() {
+        (async function() {
           this.setState({ incrementShow: false })
           let data = []
           let userUDBPath, userUDBs
@@ -2267,14 +2267,14 @@ export default class MapView extends React.Component {
           this.props.mapLegend[GLOBAL.Type] &&
           this.props.mapLegend[GLOBAL.Type].isShow &&
           !this.noLegend && (
-            <RNLegendView
-              setMapLegend={this.props.setMapLegend}
-              legendSettings={this.props.mapLegend}
-              device={this.props.device}
-              language={this.props.language}
-              ref={ref => (GLOBAL.legend = ref)}
-            />
-          )}
+          <RNLegendView
+            setMapLegend={this.props.setMapLegend}
+            legendSettings={this.props.mapLegend}
+            device={this.props.device}
+            language={this.props.language}
+            ref={ref => (GLOBAL.legend = ref)}
+          />
+        )}
         {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
@@ -2356,12 +2356,12 @@ export default class MapView extends React.Component {
         {this.props.mapScaleView &&
           !this.state.showAIDetect &&
           !this.props.mapNavigation.isShow && (
-            <ScaleView
-              device={this.props.device}
-              language={this.props.language}
-              ref={ref => (GLOBAL.scaleView = ref)}
-            />
-          )}
+          <ScaleView
+            device={this.props.device}
+            language={this.props.language}
+            ref={ref => (GLOBAL.scaleView = ref)}
+          />
+        )}
         <BubblePane ref={ref => (GLOBAL.bubblePane = ref)} maxSize={1} />
         <PopView ref={ref => (this.popModal = ref)}>
           {this.renderEditControllerView()}
