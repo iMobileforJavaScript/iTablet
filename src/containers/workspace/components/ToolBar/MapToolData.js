@@ -1080,10 +1080,10 @@ function captureImage() {
       let isTaggingLayer = currentLayer.type === DatasetType.CAD
       // && currentLayer.datasourceAlias.match(reg)
       if (isTaggingLayer) {
-        await SMap.setTaggingGrid(
-          currentLayer.datasetName,
-          _params.user.currentUser.userName,
-        )
+        // await SMap.setTaggingGrid(
+        //   currentLayer.datasetName,
+        //   _params.user.currentUser.userName,
+        // )
         const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
         const datasetName = currentLayer.datasetName // 标注图层名称
         NavigationService.navigate('Camera', {

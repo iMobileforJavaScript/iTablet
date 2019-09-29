@@ -527,6 +527,7 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
+                  result = result > 0 ? result.toFixed(6) : 0
                   this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
                     this.pointArr.push(JSON.stringify(result))
                   if (
