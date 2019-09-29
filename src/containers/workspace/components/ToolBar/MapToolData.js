@@ -630,7 +630,7 @@ function stop() {
 }
 
 function submit() {
-  (async function() {
+  ;(async function() {
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
       await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
     }
@@ -1071,17 +1071,17 @@ async function freecover() {
 
 //多媒体采集
 function captureImage() {
-  (async function() {
+  ;(async function() {
     let currentLayer = GLOBAL.currentLayer
     // let reg = /^Label_(.*)#$/
     if (currentLayer) {
       let isTaggingLayer = currentLayer.type === DatasetType.CAD
       // && currentLayer.datasourceAlias.match(reg)
       if (isTaggingLayer) {
-        await SMap.setTaggingGrid(
-          currentLayer.datasetName,
-          _params.user.currentUser.userName,
-        )
+        // await SMap.setTaggingGrid(
+        //   currentLayer.datasetName,
+        //   _params.user.currentUser.userName,
+        // )
         const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
         const datasetName = currentLayer.datasetName // 标注图层名称
         NavigationService.navigate('Camera', {
@@ -1097,7 +1097,7 @@ function captureImage() {
 }
 
 function tour() {
-  (async function() {
+  ;(async function() {
     // let {isTaggingLayer, layerInfo} = await SMap.getCurrentTaggingLayer(
     //   _params.user.currentUser.userName,
     // )
@@ -1128,7 +1128,7 @@ function tour() {
       cb = () => {},
     ) => {
       if (value !== '') {
-        (async function() {
+        ;(async function() {
           await SMap.setLabelColor()
           let tagginData = await SMap.newTaggingDataset(
             value,

@@ -22,6 +22,7 @@ function getStart(type, params) {
   let data = [],
     buttons = []
   switch (type) {
+    case ConstToolType.MAP_ANALYST_START:
     case ConstToolType.MAP_EDIT_START:
       data = [
         // {
@@ -848,9 +849,10 @@ function create() {
     GLOBAL.Type === constants.MAP_EDIT ||
     GLOBAL.Type === constants.MAP_THEME ||
     GLOBAL.Type === constants.MAP_PLOTTING ||
-    GLOBAL.Type === constants.MAP_NAVIGATION
+    GLOBAL.Type === constants.MAP_NAVIGATION ||
+    GLOBAL.Type === constants.MAP_ANALYST
   ) {
-    (async function() {
+    ;(async function() {
       GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
       let userPath =
         _params.user.currentUser.userName &&
@@ -1084,7 +1086,7 @@ function saveMap() {
   // GLOBAL.isBackHome = false
   // _params.setSaveViewVisible(true)
 
-  (async function() {
+  ;(async function() {
     try {
       if (GLOBAL.Type === constants.MAP_3D) {
         GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
@@ -1147,7 +1149,7 @@ function saveMap() {
 
 /** 另存地图 **/
 function saveMapAs() {
-  (async function() {
+  ;(async function() {
     // if (!_params.setSaveMapDialogVisible) return
     // _params.setSaveMapDialogVisible(true)
     let userPath =

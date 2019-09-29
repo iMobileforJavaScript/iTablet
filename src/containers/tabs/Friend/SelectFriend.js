@@ -9,7 +9,6 @@ import {
   getThemeAssets,
   getThemeIconByType,
 } from '../../../assets'
-import MSGConstant from './MsgConstant'
 import { stat } from 'react-native-fs'
 import color from '../../../styles/color'
 
@@ -45,7 +44,7 @@ export default class SelectFriend extends Component {
     }
   }
 
-  onSendFile = async ({ type, filepath, fileName, extraInfo }) => {
+  onSendFile = async ({ type, filePath, fileName, extraInfo }) => {
     let currentUser = this.user.currentUser
     let bGroup = 1
     let groupID = currentUser.userId
@@ -57,28 +56,9 @@ export default class SelectFriend extends Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
-    //要发送的文件
-    let message = {
-      type: bGroup,
-      user: {
-        name: currentUser.nickname,
-        id: currentUser.userId,
-        groupID: groupID,
-        groupName: groupName,
-      },
-      time: time,
-      message: {
-        type: MSGConstant.MSG_FILE, //文件本体
-        message: {
-          data: '',
-          index: 0,
-          length: 0,
-        },
-      },
-    }
 
     fileName = fileName + '.zip'
-    let statResult = await stat(filepath)
+    let statResult = await stat(filePath)
     //文件接收提醒
     let informMsg = {
       type: bGroup,
@@ -95,7 +75,7 @@ export default class SelectFriend extends Component {
           // message: '[文件]',
           fileName: fileName,
           fileSize: statResult.size,
-          filePath: filepath,
+          filePath: filePath,
           progress: 0,
         },
       },
@@ -107,12 +87,11 @@ export default class SelectFriend extends Component {
     let msgId = GLOBAL.getFriend().getMsgId(this.state.targetUser.id)
     //保存
     GLOBAL.getFriend().storeMessage(informMsg, this.state.targetUser.id, msgId)
-    GLOBAL.getFriend()._sendFile(
-      JSON.stringify(message),
-      filepath,
+    GLOBAL.getFriend().sendFile(
+      informMsg,
+      filePath,
       this.state.targetUser.id,
       msgId,
-      informMsg,
     )
   }
 

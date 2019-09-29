@@ -92,6 +92,7 @@ export default class Friend extends Component {
     this.stateChangeCount = 0
     this._receiveMessage = this._receiveMessage.bind(this)
     global.getFriend = this._getFriend
+    this._setHomePath()
   }
 
   _getFriend = () => {
@@ -100,6 +101,10 @@ export default class Friend extends Component {
     } else {
       return undefined
     }
+  }
+
+  _setHomePath = async () => {
+    global.homePath = await FileTools.appendingHomeDirectory()
   }
 
   onUserLoggedin = async () => {
@@ -642,7 +647,9 @@ export default class Friend extends Component {
     }
     return msg
   }
-
+  /**
+   * 使用rabbitMQ发送
+   */
   _sendFile = (messageStr, filepath, talkId, msgId, informMsg, cb) => {
     let connectInfo = {
       serverIP: MSGConstant.MSG_IP,
@@ -652,7 +659,7 @@ export default class Friend extends Component {
       passwd: MSGConstant.MSG_Password,
       userID: this.props.user.currentUser.userId,
     }
-    SMessageService.sendFile(
+    SMessageService.sendFileWithMQ(
       JSON.stringify(connectInfo),
       messageStr,
       filepath,
@@ -675,26 +682,51 @@ export default class Friend extends Component {
     })
   }
 
+  /**
+   * 发送到第三方服务器
+   */
+  sendFile = async (message, filePath, talkId, msgId, cb) => {
+    let res = await SMessageService.sendFileWithThirdServer(
+      MSGConstant.FILE_UPLOAD_SERVER_URL,
+      filePath,
+      this.props.user.currentUser.userId,
+      talkId,
+      msgId,
+    )
+
+    let msg = this.getMsgByMsgId(talkId, msgId)
+    msg.originMsg.message.message.queueName = res.queueName
+    MessageDataHandle.editMessage({
+      userId: this.props.user.currentUser.userId,
+      talkId: talkId,
+      msgId: msgId,
+      editItem: msg,
+    })
+
+    message.message.message.queueName = res.queueName
+    this._sendMessage(JSON.stringify(message), talkId, false)
+    cb && cb()
+  }
+
+  /**
+   * 接收RabbitMQ上的文件
+   */
   _receiveFile = async (
     fileName,
     queueName,
     receivePath,
     talkId,
     msgId,
-    userId,
-    fileSize,
     cb,
   ) => {
     if (g_connectService) {
       let homePath = await FileTools.appendingHomeDirectory()
-      SMessageService.receiveFile(
+      SMessageService.receiveFileWithMQ(
         fileName,
         queueName,
         homePath + receivePath,
         talkId,
         msgId,
-        userId,
-        fileSize,
       ).then(res => {
         let message = this.props.chat[this.props.user.currentUser.userId][
           talkId
@@ -724,6 +756,42 @@ export default class Friend extends Component {
       if (cb && typeof cb === 'function') {
         cb(false)
       }
+    }
+  }
+
+  /**
+   * 接收第三方服务器的文件
+   */
+  receiveFile = async (chatMessage, receivePath, fileName, talkId, cb) => {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let res = await SMessageService.receiveFileWithThirdServer(
+      MSGConstant.FILE_DOWNLOAD_SERVER_URL,
+      chatMessage.originMsg.user.id,
+      chatMessage.originMsg.message.message.queueName,
+      chatMessage.originMsg.message.message.fileSize,
+      homePath + receivePath,
+      fileName,
+      talkId,
+      chatMessage._id,
+    )
+
+    let message = this.props.chat[this.props.user.currentUser.userId][talkId]
+      .history[chatMessage._id]
+    if (res === true) {
+      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
+      message.originMsg.message.message.filePath = receivePath + '/' + fileName
+      MessageDataHandle.editMessage({
+        userId: this.props.user.currentUser.userId,
+        talkId: talkId,
+        msgId: chatMessage._id,
+        editItem: message,
+      })
+    } else {
+      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_EXPIRE)
+      FileTools.deleteFile(homePath + receivePath + '/' + fileName)
+    }
+    if (cb && typeof cb === 'function') {
+      cb(res)
     }
   }
 

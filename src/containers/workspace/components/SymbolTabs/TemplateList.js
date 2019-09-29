@@ -46,11 +46,12 @@ export default class TemplateList extends React.Component {
         let mList = []
         for (let i = 0; i < list.length; i++) {
           if (list[i].feature && list[i].feature.length > 0) {
-            list[i].id = list[i].code
+            list[i].id = list[i].$.code
             list[i].childGroups = []
-            list[i].childGroups = dealData(list[i].feature)
-            mList.push(list[i])
+            if (list[i].feature && list[i].feature.length > 0)
+              list[i].childGroups = dealData(list[i].feature)
           }
+          mList.push(list[i])
         }
         return mList
       }

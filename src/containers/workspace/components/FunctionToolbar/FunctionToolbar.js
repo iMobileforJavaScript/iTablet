@@ -125,7 +125,8 @@ export default class FunctionToolbar extends React.Component {
     if (
       ConstToolType.MAP_EDIT_START === type ||
       ConstToolType.MAP_COLLECTION_START === type ||
-      ConstToolType.MAP_NAVIGATION_START === type
+      ConstToolType.MAP_NAVIGATION_START === type ||
+      ConstToolType.MAP_ANALYST_START === type
     ) {
       height =
         this.props.device.orientation === 'LANDSCAPE'
@@ -1132,7 +1133,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: getLanguage(this.props.language).Map_Main_Menu.START,
-            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            action: () => this.start(ConstToolType.MAP_ANALYST_START),
             image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
@@ -1536,16 +1537,16 @@ export default class FunctionToolbar extends React.Component {
           this.props.online.share[0] &&
           GLOBAL.Type === this.props.online.share[0].module &&
           this.props.online.share[0].progress !== undefined && (
-          <Bar
-            style={styles.progress}
-            // indeterminate={true}
-            progress={
-              this.props.online.share[this.props.online.share.length - 1]
-                .progress
-            }
-            width={scaleSize(60)}
-          />
-        )}
+            <Bar
+              style={styles.progress}
+              // indeterminate={true}
+              progress={
+                this.props.online.share[this.props.online.share.length - 1]
+                  .progress
+              }
+              width={scaleSize(60)}
+            />
+          )}
         {/*{item.title === '分享' &&*/}
         {/*this.props.online.share[this.props.online.share.length - 1] &&*/}
         {/*GLOBAL.Type === this.props.online.share[this.props.online.share.length - 1].module &&*/}
