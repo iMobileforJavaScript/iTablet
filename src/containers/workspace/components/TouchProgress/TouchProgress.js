@@ -596,7 +596,7 @@ export default class TouchProgress extends Component {
       this._updateBackLine()
 
       let _value = x / progressWidth
-      let value = this.dealData(_value > 1 ? 1 : _value)
+      let value = this.dealData(_value > 1 ? 1 : _value < 0 ? 0 : _value)
       value !== undefined && this.setTips(value)
     }
   }
@@ -610,7 +610,7 @@ export default class TouchProgress extends Component {
     this._previousLeft = x
 
     let _value = x / progressWidth
-    let value = this.dealData(_value > 1 ? 1 : _value)
+    let value = this.dealData(_value > 1 ? 1 : _value < 0 ? 0 : _value)
     value !== undefined && this.setData(value)
   }
 
@@ -667,6 +667,11 @@ export default class TouchProgress extends Component {
         this.props.selectName === '字号'
       ) {
         newValue = value * 20
+        if (newValue <= 1) {
+          newValue = 1
+        } else if (value > 20) {
+          newValue = 20
+        }
       } else if (this.props.selectName === '单点代表值') {
         newValue = value * 100
       } else if (this.props.selectName === '符号大小') {
@@ -1112,7 +1117,7 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'fontsize' ||
         this.props.selectName === '字号'
       ) {
-        if (value <= 0) {
+        if (value <= 1) {
           value = 1
         } else if (value > 20) {
           value = 20

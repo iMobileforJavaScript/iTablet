@@ -28,7 +28,10 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    if (GLOBAL.Type === constants.MAP_THEME) {
+    if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.layerData.themeType > 0
+    ) {
       let params = {
         LayerName: this.props.layerData.name,
         SymbolID: data.id,
