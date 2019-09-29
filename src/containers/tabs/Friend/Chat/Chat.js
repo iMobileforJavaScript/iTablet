@@ -422,25 +422,25 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
-    //要发送的文件
-    let message = {
-      type: bGroup,
-      user: {
-        name: this.curUser.nickname,
-        id: this.curUser.userId,
-        groupID: groupID,
-        groupName: groupName,
-      },
-      time: time,
-      message: {
-        type: MSGConstant.MSG_FILE, //文件本体
-        message: {
-          data: '',
-          index: 0,
-          length: 0,
-        },
-      },
-    }
+    //要发送的文件,发送到rabbitMQ时使用
+    // let message = {
+    //   type: bGroup,
+    //   user: {
+    //     name: this.curUser.nickname,
+    //     id: this.curUser.userId,
+    //     groupID: groupID,
+    //     groupName: groupName,
+    //   },
+    //   time: time,
+    //   message: {
+    //     type: MSGConstant.MSG_FILE, //文件本体
+    //     message: {
+    //       data: '',
+    //       index: 0,
+    //       length: 0,
+    //     },
+    //   },
+    // }
 
     fileName = fileName + '.zip'
     let statResult = await stat(filePath)
@@ -491,16 +491,9 @@ class Chat extends React.Component {
       return
     }
     informMsg.message.message.filePath = ''
-    this.friend._sendFile(
-      JSON.stringify(message),
-      filePath,
-      this.targetUser.id,
-      msgId,
-      informMsg,
-      () => {
-        Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
-      },
-    )
+    this.friend.sendFile(informMsg, filePath, this.targetUser.id, msgId, () => {
+      Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
+    })
   }
 
   /**
@@ -569,25 +562,6 @@ class Chat extends React.Component {
     let ctime = new Date()
     let time = Date.parse(ctime)
 
-    let fileMessage = {
-      type: bGroup,
-      user: {
-        name: this.curUser.nickname,
-        id: this.curUser.userId,
-        groupID: groupID,
-        groupName: groupName,
-      },
-      time: time,
-      message: {
-        type: MSGConstant.MSG_FILE, //文件本体
-        message: {
-          data: '',
-          index: 0,
-          length: 0,
-        },
-      },
-    }
-
     let statResult = await stat(filePath)
     let message = {
       type: bGroup,
@@ -634,12 +608,11 @@ class Chat extends React.Component {
       }
     }
     if (sendToServer) {
-      this.friend._sendFile(
-        JSON.stringify(fileMessage),
+      this.friend.sendFile(
+        message,
         filePath,
         this.targetUser.id,
         msgId,
-        message,
         callback,
       )
     } else {
@@ -677,14 +650,11 @@ class Chat extends React.Component {
 
     message.downloading = true
 
-    this.friend._receiveFile(
-      storeFileName,
-      message.originMsg.message.message.queueName,
+    this.friend.receiveFile(
+      message,
       receivePath,
+      storeFileName,
       this.targetUser.id,
-      message._id,
-      message.user._id,
-      message.originMsg.message.message.fileSize,
       res => {
         if (res === false) {
           message.downloading = false
