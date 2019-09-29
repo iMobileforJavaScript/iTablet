@@ -18,6 +18,7 @@ import {
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { getLanguage } from '../../../../language'
+import ThemeMenuData from '../ToolBar/ThemeMenuData'
 import TPData from './TPData'
 const IMAGE_SIZE = scaleSize(25)
 const MARGIN = scaleSize(30)
@@ -818,6 +819,7 @@ export default class TouchProgress extends Component {
           LayerName: this.props.currentLayer.name,
           RangeParameter: parseInt(value),
         }
+        Object.assign(Params, ThemeMenuData.getThemeParams())
         switch (themeType) {
           case ThemeType.RANGE:
             await SThemeCartography.modifyThemeRangeMap(Params)

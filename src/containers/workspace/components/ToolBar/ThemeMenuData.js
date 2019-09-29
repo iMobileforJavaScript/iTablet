@@ -946,6 +946,10 @@ function setThemeParams(params) {
   _params = params
 }
 
+function getThemeParams() {
+  return _params
+}
+
 /** 设置分段模式 **/
 function setRangeMode() {
   SThemeCartography.modifyThemeRangeMap(_params)
@@ -3429,6 +3433,7 @@ export default {
   getRangeMode,
   getColorGradientType,
   setThemeParams,
+  getThemeParams,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,
