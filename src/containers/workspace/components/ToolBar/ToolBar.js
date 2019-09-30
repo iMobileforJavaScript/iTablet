@@ -527,8 +527,8 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
-                  result = result > 0 ? result.toFixed(6) : 0
                   this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    result.x != 0 &&
                     this.pointArr.push(JSON.stringify(result))
                   if (
                     this.pointArr.length > 0 &&
@@ -538,10 +538,13 @@ export default class ToolBar extends React.PureComponent {
                       canUndo: true,
                     })
                   }
+                  result.length = Number(result.length)
+                  result.length =
+                    result.length > 0 ? result.length.toFixed(6) : 0
                   this.Map3DToolBar &&
-                    this.Map3DToolBar.setAnalystResult(result)
+                    this.Map3DToolBar.setAnalystResult(result.length)
                   this.props.measureShow &&
-                    this.props.measureShow(true, result + 'm')
+                    this.props.measureShow(true, result.length + 'm')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
@@ -565,15 +568,30 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
-                  this.clickTime++
-                  if (this.clickTime > 0 && this.state.canUndo === false) {
+                  // this.clickTime++
+                  // if (this.clickTime > 0 && this.state.canUndo === false) {
+                  //   this.setState({
+                  //     canUndo: true,
+                  //   })
+                  // }
+
+                  this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    result.x != 0 &&
+                    this.pointArr.push(JSON.stringify(result))
+                  if (
+                    this.pointArr.length > 0 &&
+                    this.state.canUndo === false
+                  ) {
                     this.setState({
                       canUndo: true,
                     })
                   }
-                  result = result > 0 ? result.toFixed(6) : 0
+
+                  result.totalArea = Number(result.totalArea)
+                  result.totalArea =
+                    result.totalArea > 0 ? result.totalArea.toFixed(6) : 0
                   this.props.measureShow &&
-                    this.props.measureShow(true, result + '㎡')
+                    this.props.measureShow(true, result.totalArea + '㎡')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
@@ -975,6 +993,9 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
           if (
+            type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
+            type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
+            type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
             ThemeMenuData.isThemeFieldTypeAvailable(
               item.fieldTypeStr,
               this.state.themeCreateType,
@@ -2460,8 +2481,13 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
-        //buttons: [ToolbarBtnType.CLOSE_ANALYST,ToolbarBtnType.UNDO, ToolbarBtnType.CLEAR],
-        buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
+        buttons: [
+          ToolbarBtnType.CLOSE_ANALYST,
+          ToolbarBtnType.UNDO,
+          ToolbarBtnType.REDO,
+          ToolbarBtnType.CLEAR,
+        ],
+        // buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
@@ -2638,6 +2664,22 @@ export default class ToolBar extends React.PureComponent {
 
   //二三维量算功能 撤销事件
   undo = () => {
+    if (this.pointArr.length > 0) {
+      this.redoArr.push(this.pointArr.pop())
+      this.redoArr.length > 0 &&
+        this.state.canRedo === false &&
+        this.setState({
+          canRedo: true,
+        })
+      if (this.pointArr.length === 0 && this.state.canUndo === true) {
+        this.pointArr = []
+        this.redoArr = []
+        this.setState({
+          canUndo: false,
+          canRedo: false,
+        })
+      }
+    }
     if (GLOBAL.Type !== constants.MAP_3D) {
       if (
         GLOBAL.currentToolbarType === ConstToolType.MAP_TOOL_MEASURE_ANGLE &&
@@ -2659,30 +2701,10 @@ export default class ToolBar extends React.PureComponent {
       }
     } else {
       //三维撤销事件
-    }
-    if (this.pointArr.length > 0) {
-      this.redoArr.push(this.pointArr.pop())
-      this.redoArr.length > 0 &&
-        this.state.canRedo === false &&
-        this.setState({
-          canRedo: true,
-        })
-      if (this.pointArr.length === 0 && this.state.canUndo === true) {
-        this.pointArr = []
-        this.redoArr = []
-        this.setState({
-          canUndo: false,
-          canRedo: false,
-        })
-      }
+      SScene.displayDistanceOrArea(this.pointArr)
     }
   }
   redo = () => {
-    if (GLOBAL.Type !== constants.MAP_3D) {
-      SMap.redo()
-    } else {
-      //三维撤销事件
-    }
     if (this.redoArr.length > 0) {
       this.pointArr.push(this.redoArr.pop())
       this.redoArr.length === 0 &&
@@ -2695,6 +2717,12 @@ export default class ToolBar extends React.PureComponent {
         this.setState({
           canUndo: true,
         })
+    }
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      SMap.redo()
+    } else {
+      //三维撤销事件
+      SScene.displayDistanceOrArea(this.pointArr)
     }
   }
   /** 推演动画播放事件*/
@@ -4105,6 +4133,12 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
     this.setState({ canUndo: false })
     this.clickTime = 0
+    this.pointArr = []
+    this.redoArr = []
+    this.setState({
+      canUndo: false,
+      canRedo: false,
+    })
   }
 
   clear = () => {
