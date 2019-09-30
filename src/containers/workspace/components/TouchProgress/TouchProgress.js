@@ -385,7 +385,7 @@ export default class TouchProgress extends Component {
     if (tips === '') {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (this.props.selectName === '符号大小') {
             let pointSize =
               value !== undefined
                 ? value
@@ -696,7 +696,7 @@ export default class TouchProgress extends Component {
     } else if (layerType !== undefined) {
       switch (layerType) {
         case 1:
-          if (this.props.selectName === '大小') {
+          if (this.props.selectName === '符号大小') {
             newValue = value * 100
           } else if (this.props.selectName === '透明度') {
             newValue = value * 100
@@ -928,7 +928,7 @@ export default class TouchProgress extends Component {
     } else {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (this.props.selectName === '符号大小') {
             if (value <= 1) {
               value = 1
             } else if (value >= 100) {
@@ -1215,7 +1215,7 @@ export default class TouchProgress extends Component {
     if (tips === '') {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (this.props.selectName === '符号大小') {
             if (value < 1) {
               value = 1
             } else if (value > 100) {
