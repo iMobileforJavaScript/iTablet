@@ -30,6 +30,8 @@ export default class FriendListFileHandle {
   static refreshMessageCallback = undefined
   static friendListFile = ''
   static friendListFile_ol = ''
+  static uploading = false
+  static waitUploading = false
 
   /**
    * 初始化friendlist路径
@@ -256,54 +258,54 @@ export default class FriendListFileHandle {
   }
 
   static async upload() {
+    if (FriendListFileHandle.uploading) {
+      if (FriendListFileHandle.waitUploading) {
+        return
+      }
+      FriendListFileHandle.waitUploading = true
+      setTimeout(() => {
+        FriendListFileHandle.upload()
+      }, 3000)
+      return
+    }
+    FriendListFileHandle.uploading = true
     //上传
     await SOnlineService.deleteData('friend.list')
     let UploadFileName = 'friend.list.zip'
     if (Platform.OS === 'android') {
       UploadFileName = 'friend.list'
     }
-    SOnlineService.uploadFile(
-      FriendListFileHandle.friendListFile,
-      UploadFileName,
-      {
-        // eslint-disable-next-line
-        onResult: value => {},
-      },
-    )
+    let promise = new Promise(resolve => {
+      SOnlineService.uploadFile(
+        FriendListFileHandle.friendListFile,
+        UploadFileName,
+        {
+          onResult: () => {
+            resolve(true)
+            FriendListFileHandle.uploading = false
+            FriendListFileHandle.waitUploading = false
+          },
+        },
+      )
+    })
+    return promise
   }
 
-  static saveHelper(friendsStr, callback) {
-    FileTools.fileIsExist(FriendListFileHandle.friendListFile).then(value => {
-      if (value) {
-        RNFS.unlink(FriendListFileHandle.friendListFile).then(() => {
-          RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
-            () => {
-              FriendListFileHandle.upload()
-              if (FriendListFileHandle.refreshCallback) {
-                FriendListFileHandle.refreshCallback(true)
-              }
-              if (callback) {
-                callback(true)
-              }
-            },
-          )
-        })
-      } else {
-        RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
-          () => {
-            FriendListFileHandle.upload()
-            if (FriendListFileHandle.refreshCallback) {
-              FriendListFileHandle.refreshCallback(true)
-            }
-            if (callback) {
-              callback(true)
-            }
-          },
-        )
-      }
-    })
+  static async saveHelper(friendsStr, callback) {
+    if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile)) {
+      await RNFS.unlink(FriendListFileHandle.friendListFile)
+    }
+    await RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr)
+    await FriendListFileHandle.upload()
+    if (FriendListFileHandle.refreshCallback) {
+      FriendListFileHandle.refreshCallback(true)
+    }
+    if (callback) {
+      callback(true)
+    }
   }
-  static addToFriendList(obj) {
+
+  static async addToFriendList(obj) {
     let bFound = FriendListFileHandle.findFromFriendList(obj.id)
 
     if (!bFound) {
@@ -317,12 +319,12 @@ export default class FriendListFileHandle {
       }
       FriendListFileHandle.friends.userInfo.push(obj)
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-      FriendListFileHandle.saveHelper(friendsStr)
+      await FriendListFileHandle.saveHelper(friendsStr)
     }
   }
 
   //管理关系
-  static modifyIsFriend(id, isFriend) {
+  static async modifyIsFriend(id, isFriend) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -330,13 +332,13 @@ export default class FriendListFileHandle {
 
         FriendListFileHandle.friends['rev'] += 1
         let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-        FriendListFileHandle.saveHelper(friendsStr)
+        await FriendListFileHandle.saveHelper(friendsStr)
         break
       }
     }
   }
 
-  static modifyFriendList(id, name) {
+  static async modifyFriendList(id, name) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -352,11 +354,11 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    await FriendListFileHandle.saveHelper(friendsStr)
   }
 
   // eslint-disable-next-line
-  static delFromFriendList(id, callback) {
+  static async delFromFriendList(id, callback) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -368,7 +370,7 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    await FriendListFileHandle.saveHelper(friendsStr)
   }
 
   static findFromFriendList(id) {
@@ -478,7 +480,7 @@ export default class FriendListFileHandle {
   }
 
   // 添加群
-  static addToGroupList(obj) {
+  static async addToGroupList(obj) {
     let bFound = FriendListFileHandle.findFromGroupList(obj.id)
 
     if (!bFound) {
@@ -492,11 +494,11 @@ export default class FriendListFileHandle {
       }
       FriendListFileHandle.friends.groupInfo.push(obj)
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-      FriendListFileHandle.saveHelper(friendsStr)
+      await FriendListFileHandle.saveHelper(friendsStr)
     }
   }
   // 删除群
-  static delFromGroupList(id, callback) {
+  static async delFromGroupList(id, callback) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
@@ -508,12 +510,12 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    await FriendListFileHandle.saveHelper(friendsStr)
 
     callback && callback()
   }
   //更改群名
-  static modifyGroupList(id, name) {
+  static async modifyGroupList(id, name) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
@@ -527,10 +529,10 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    await FriendListFileHandle.saveHelper(friendsStr)
   }
 
-  static addGroupMember(groupId, members) {
+  static async addGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
       for (let key in members) {
@@ -540,11 +542,11 @@ export default class FriendListFileHandle {
       }
       FriendListFileHandle.friends['rev'] += 1
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-      FriendListFileHandle.saveHelper(friendsStr)
+      await FriendListFileHandle.saveHelper(friendsStr)
     }
   }
 
-  static removeGroupMember(groupId, members) {
+  static async removeGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
       for (let member in members) {
@@ -557,7 +559,7 @@ export default class FriendListFileHandle {
       }
       FriendListFileHandle.friends['rev'] += 1
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-      FriendListFileHandle.saveHelper(friendsStr)
+      await FriendListFileHandle.saveHelper(friendsStr)
     }
   }
 }
