@@ -95,35 +95,23 @@ export default class Friend extends Component {
     this._setHomePath()
   }
 
-  _getFriend = () => {
-    if (this.props.user.currentUser.userId !== undefined) {
-      return this
-    } else {
-      return undefined
-    }
-  }
-
-  _setHomePath = async () => {
-    global.homePath = await FileTools.appendingHomeDirectory()
-  }
-
-  onUserLoggedin = async () => {
-    this.updateServices()
-  }
-
-  /**
-   * 用户登陆后再更新服务
-   */
-  updateServices = async () => {
-    await FriendListFileHandle.initFriendList(this.props.user.currentUser)
-    this.restartService()
-    JPushService.init(this.props.user.currentUser.userId)
-  }
-
   componentDidMount() {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
       FriendListFileHandle.initLocalFriendList(this.props.user.currentUser)
     }
+  }
+
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language !== this.props.language ||
+      Dimensions.get('window').width !== this.screenWidth
+    ) {
+      return true
+    }
+    return false
   }
 
   componentDidUpdate(prevProps) {
@@ -140,19 +128,78 @@ export default class Friend extends Component {
     AppState.removeEventListener('change', this.handleStateChange)
     NetInfo.removeEventListener('connectionChange', this.handleNetworkState)
   }
-  // eslint-disable-next-line
-  shouldComponentUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
-      prevProps.language !== this.props.language ||
-      Dimensions.get('window').width !== this.screenWidth
-    ) {
-      return true
-    }
-    return false
+
+  refreshMsg = () => {
+    if (this.friendMessage && this.friendMessage.refresh)
+      this.friendMessage.refresh()
   }
+
+  refreshList = () => {
+    if (this.friendList && this.friendList.refresh) this.friendList.refresh()
+    if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
+  }
+
+  _getFriend = () => {
+    if (this.props.user.currentUser.userId !== undefined) {
+      return this
+    } else {
+      return undefined
+    }
+  }
+
+  _setHomePath = async () => {
+    global.homePath = await FileTools.appendingHomeDirectory()
+  }
+
+  setCurChat = chat => {
+    //防止replace chat页面时变量设置错误
+    if (chat !== undefined && this.curChat !== undefined) {
+      setTimeout(() => this.setCurChat(chat), 1000)
+      return
+    }
+    this.curChat = chat
+    if (this.curChat) {
+      MessageDataHandle.readMessage({
+        //清除未读信息
+        userId: this.props.user.currentUser.userId, //当前登录账户的id
+        talkId: this.curChat.targetUser.id, //会话ID
+      })
+    }
+  }
+
+  //设置协作模块
+  setCurMod = async Module => {
+    this.curMod = Module
+  }
+
+  addFileListener = () => {
+    if (Platform.OS === 'iOS') {
+      this.receiveFileListener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.sendFileListener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    } else {
+      this.receiveFileListener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.sendFileListener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    }
+  }
+
+  removeFileListener = () => {
+    this.receiveFileListener && this.receiveFileListener.remove()
+    this.sendFileListener && this.sendFileListener.remove()
+  }
+
+  /************************** 处理状态变更 ***********************************/
 
   handleStateChange = async appState => {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
@@ -218,63 +265,130 @@ export default class Friend extends Component {
     this.interval && clearInterval(this.interval)
   }
 
-  refreshMsg = () => {
-    if (this.friendMessage && this.friendMessage.refresh)
-      this.friendMessage.refresh()
+  /************************** 处理网络连接 ***********************************/
+
+  onUserLoggedin = async () => {
+    this.updateServices()
   }
 
-  refreshList = () => {
-    if (this.friendList && this.friendList.refresh) this.friendList.refresh()
-    if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
+  /**
+   * 用户登陆后再更新服务
+   * 1.用户登陆：加载好友列表，连接服务，开启推送
+   * 2.用户登出：断开连接，重置好友列表，关闭推送
+   * 3.用户切换：断开连接，重置好友列表，加载新的好友列表，新建连接，更新推送
+   */
+  updateServices = async () => {
+    g_connectService && (await this.disconnectService())
+    await FriendListFileHandle.initFriendList(this.props.user.currentUser)
+    this.restartService()
+    JPushService.init(this.props.user.currentUser.userId)
   }
 
-  setCurChat = chat => {
-    //防止replace chat页面时变量设置错误
-    if (chat !== undefined && this.curChat !== undefined) {
-      setTimeout(() => this.setCurChat(chat), 1000)
+  restartService = async () => {
+    //重复调用，退出
+    if (this.restarting) {
       return
     }
-    this.curChat = chat
-    if (this.curChat) {
-      MessageDataHandle.readMessage({
-        //清除未读信息
-        userId: this.props.user.currentUser.userId, //当前登录账户的id
-        talkId: this.curChat.targetUser.id, //会话ID
-      })
-    }
-  }
-
-  //设置协作模块
-  setCurMod = async Module => {
-    this.curMod = Module
-  }
-
-  addFileListener = () => {
-    if (Platform.OS === 'iOS') {
-      this.receiveFileListener = iOSEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-        this.onReceiveProgress,
-      )
-      this.sendFileListener = iOSEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_SEND_FILE,
-        this.onReceiveProgress,
-      )
+    //正在断开连接，等待完成
+    if (this.disconnecting) {
+      setTimeout(this.restartService, 3000)
     } else {
-      this.receiveFileListener = RCTDeviceEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-        this.onReceiveProgress,
-      )
-      this.sendFileListener = RCTDeviceEventEmitter.addListener(
-        EventConst.MESSAGE_SERVICE_SEND_FILE,
-        this.onReceiveProgress,
-      )
+      this.restarting = true
+      g_connectService && (await this.disconnectService(true))
+      await this.connectService()
+      this.restarting = false
     }
   }
 
-  removeFileListener = () => {
-    this.receiveFileListener && this.receiveFileListener.remove()
-    this.sendFileListener && this.sendFileListener.remove()
+  disconnectService = async fromRestarting => {
+    //重复调用，退出
+    if (this.disconnecting) {
+      return
+    }
+    //重启中，等待重启完成
+    if (!fromRestarting && this.restarting) {
+      setTimeout(this.disconnectService, 3000)
+    } else {
+      if (!g_connectService) {
+        return
+      }
+      this.disconnecting = true
+      this.endCheckAvailability()
+      await SMessageService.stopReceiveMessage()
+      await SMessageService.disconnectionService()
+      g_connectService = false
+      this.disconnecting = false
+    }
   }
+
+  connectService = async () => {
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      try {
+        let res = await SMessageService.connectService(
+          MSGConstant.MSG_IP,
+          MSGConstant.MSG_Port,
+          MSGConstant.MSG_HostName,
+          MSGConstant.MSG_UserName,
+          MSGConstant.MSG_Password,
+          this.props.user.currentUser.userId,
+        )
+        if (!res) {
+          Toast.show(
+            getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
+          )
+        } else {
+          //是否有其他连接
+          let connection = await SMessageServiceHTTP.getConnection(
+            this.props.user.currentUser.userId,
+          )
+          //是否是login时调用
+          if (global.isLogging) {
+            if (connection) {
+              this.loginTime = Date.parse(new Date())
+              await this._sendMessage(
+                JSON.stringify({
+                  type: MSGConstant.MSG_LOGOUT,
+                  user: {},
+                  time: this.loginTime,
+                  message: '',
+                }),
+                this.props.user.currentUser.userId,
+              )
+              await SMessageServiceHTTP.closeConnection(connection)
+            }
+            global.isLogging = false
+          } else {
+            if (connection) {
+              //检查是否之前consumer
+              let consumer = await SMessageServiceHTTP.getConsumer(
+                this.props.user.currentUser.userId,
+              )
+              if (this.props.chat.consumer === consumer) {
+                await SMessageServiceHTTP.closeConnection(connection)
+              } else {
+                this._logout()
+                return
+              }
+            }
+          }
+
+          await SMessageService.startReceiveMessage(
+            this.props.user.currentUser.userId,
+            { callback: this._receiveMessage },
+          )
+
+          this.startCheckAvailability()
+
+          g_connectService = true
+        }
+      } catch (error) {
+        Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
+        this.disconnectService()
+      }
+    }
+  }
+
+  /************************** 处理消息 ***********************************/
 
   onReceiveProgress = value => {
     let msg = this.getMsgByMsgId(value.talkId, value.msgId)
@@ -1089,124 +1203,6 @@ export default class Friend extends Component {
       } else {
         JPushService.sendLocalNotification(messageObj)
       }
-    }
-  }
-
-  connectService = async () => {
-    let bHasUserInfo = false
-    if (this.props.user.currentUser.hasOwnProperty('userType') === true) {
-      let usrType = this.props.user.currentUser.userType
-      bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
-      if (bHasUserInfo === true) {
-        if (g_connectService === false) {
-          try {
-            let res = await SMessageService.connectService(
-              MSGConstant.MSG_IP,
-              MSGConstant.MSG_Port,
-              MSGConstant.MSG_HostName,
-              MSGConstant.MSG_UserName,
-              MSGConstant.MSG_Password,
-              this.props.user.currentUser.userId,
-            )
-            if (!res) {
-              Toast.show(
-                getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
-              )
-              this.disconnectService()
-            } else {
-              //是否有其他连接
-              let connection = await SMessageServiceHTTP.getConnection(
-                this.props.user.currentUser.userId,
-              )
-              //是否是login时调用
-              if (global.isLogging) {
-                if (connection) {
-                  this.loginTime = Date.parse(new Date())
-                  await this._sendMessage(
-                    JSON.stringify({
-                      type: MSGConstant.MSG_LOGOUT,
-                      user: {},
-                      time: this.loginTime,
-                      message: '',
-                    }),
-                    this.props.user.currentUser.userId,
-                  )
-                  await SMessageServiceHTTP.closeConnection(connection)
-                }
-                global.isLogging = false
-              } else {
-                if (connection) {
-                  //检查是否之前consumer
-                  let consumer = await SMessageServiceHTTP.getConsumer(
-                    this.props.user.currentUser.userId,
-                  )
-                  if (this.props.chat.consumer === consumer) {
-                    await SMessageServiceHTTP.closeConnection(connection)
-                  } else {
-                    this._logout()
-                    return
-                  }
-                }
-              }
-
-              await SMessageService.startReceiveMessage(
-                this.props.user.currentUser.userId,
-                { callback: this._receiveMessage },
-              )
-
-              this.startCheckAvailability()
-
-              g_connectService = true
-            }
-          } catch (error) {
-            Toast.show(
-              getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED,
-            )
-            this.disconnectService()
-          }
-        }
-      } else {
-        this.disconnectService()
-      }
-    }
-
-    // this.setState({ bHasUserInfo })
-  }
-
-  disconnectService = async fromRestarting => {
-    //重复调用，退出
-    if (this.disconnecting) {
-      return
-    }
-    //重启中，等待重启完成
-    if (!fromRestarting && this.restarting) {
-      setTimeout(this.disconnectService, 3000)
-    } else {
-      if (!g_connectService) {
-        return
-      }
-      this.disconnecting = true
-      this.endCheckAvailability()
-      await SMessageService.stopReceiveMessage()
-      await SMessageService.disconnectionService()
-      g_connectService = false
-      this.disconnecting = false
-    }
-  }
-
-  restartService = async () => {
-    //重复调用，退出
-    if (this.restarting) {
-      return
-    }
-    //正在断开连接，等待完成
-    if (this.disconnecting) {
-      setTimeout(this.restartService, 3000)
-    } else {
-      this.restarting = true
-      g_connectService && (await this.disconnectService(true))
-      await this.connectService()
-      this.restarting = false
     }
   }
 

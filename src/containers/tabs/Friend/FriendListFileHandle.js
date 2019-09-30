@@ -38,6 +38,8 @@ export default class FriendListFileHandle {
   static async init(user) {
     FriendListFileHandle.user = undefined
     FriendListFileHandle.friends = undefined
+    FriendListFileHandle.friendListFile = ''
+    FriendListFileHandle.friendListFile_ol = ''
 
     if (user.userId === undefined) {
       return
@@ -81,15 +83,17 @@ export default class FriendListFileHandle {
    * 读取本地列表，删除online列表
    */
   static async getLocalFriendList() {
-    if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile)) {
-      let value = await RNFS.readFile(FriendListFileHandle.friendListFile)
-      if (isJSON(value) === true) {
-        FriendListFileHandle.friends = JSON.parse(value)
+    if (FriendListFileHandle.friendListFile !== '') {
+      if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile)) {
+        let value = await RNFS.readFile(FriendListFileHandle.friendListFile)
+        if (isJSON(value) === true) {
+          FriendListFileHandle.friends = JSON.parse(value)
+        }
       }
-    }
 
-    if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile_ol)) {
-      await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
+      if (await FileTools.fileIsExist(FriendListFileHandle.friendListFile_ol)) {
+        await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
+      }
     }
 
     FriendListFileHandle.checkFriendList()
@@ -102,37 +106,45 @@ export default class FriendListFileHandle {
    * 保持本地和online的文件一致
    */
   static async syncOnlineFriendList() {
-    SOnlineService.downloadFileWithCallBack(
-      FriendListFileHandle.friendListFile_ol,
-      'friend.list',
-      {
-        onResult: async value => {
-          if (value === true) {
-            let value = await RNFS.readFile(
-              FriendListFileHandle.friendListFile_ol,
-            )
-            let onlineVersion = JSON.parse(value)
-            if (
-              !FriendListFileHandle.friends ||
-              onlineVersion.rev > FriendListFileHandle.friends.rev
-            ) {
-              //没有本地friendlist或online的版本较新，更新本地文件
-              FriendListFileHandle.friends = onlineVersion
-              await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
-              FriendListFileHandle.refreshCallback()
-              FriendListFileHandle.refreshMessageCallback()
-            } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
-              //本地版本较新，将本地文件更新到online
+    if (FriendListFileHandle.friendListFile_ol === '') {
+      return
+    }
+    let promise = new Promise(resolve => {
+      SOnlineService.downloadFileWithCallBack(
+        FriendListFileHandle.friendListFile_ol,
+        'friend.list',
+        {
+          onResult: async value => {
+            if (value === true) {
+              let value = await RNFS.readFile(
+                FriendListFileHandle.friendListFile_ol,
+              )
+              let onlineVersion = JSON.parse(value)
+              if (
+                !FriendListFileHandle.friends ||
+                onlineVersion.rev > FriendListFileHandle.friends.rev
+              ) {
+                //没有本地friendlist或online的版本较新，更新本地文件
+                FriendListFileHandle.friends = onlineVersion
+                await RNFS.writeFile(FriendListFileHandle.friendListFile, value)
+                FriendListFileHandle.checkFriendList()
+                FriendListFileHandle.refreshCallback()
+                FriendListFileHandle.refreshMessageCallback()
+              } else if (onlineVersion.rev < FriendListFileHandle.friends.rev) {
+                //本地版本较新，将本地文件更新到online
+                await FriendListFileHandle.upload()
+              }
+              await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
+            } else if (FriendListFileHandle.friends !== undefined) {
+              //没有获取到online文件，尝试更新本地到online
               await FriendListFileHandle.upload()
             }
-            await RNFS.unlink(FriendListFileHandle.friendListFile_ol)
-          } else if (FriendListFileHandle.friends !== undefined) {
-            //没有获取到online文件，尝试更新本地到online
-            await FriendListFileHandle.upload()
-          }
+            resolve(true)
+          },
         },
-      },
-    )
+      )
+    })
+    return promise
   }
 
   /**

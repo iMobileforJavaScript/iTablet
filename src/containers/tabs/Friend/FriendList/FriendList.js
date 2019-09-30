@@ -116,6 +116,11 @@ class FriendList extends Component {
         //console.log('err', err)
         Toast.show(err.message)
       }
+    } else {
+      this.setState({
+        letterArr: [],
+        sections: [],
+      })
     }
   }
 
