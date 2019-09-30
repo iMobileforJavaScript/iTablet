@@ -35,7 +35,6 @@
 		0A334D23229797C900E4F302 /* QBImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A334D1E229795E600E4F302 /* QBImagePicker.framework */; };
 		0A334D24229797C900E4F302 /* QBImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A334D1E229795E600E4F302 /* QBImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A334D30229798BD00E4F302 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A334D2D229797F800E4F302 /* libSupermap.a */; };
-		0A34A0B2233C47390027EBF7 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A34A0B1233C47390027EBF7 /* Trial_License.slm */; };
 		0A6180A722A604B300E3D69B /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A61803A22A4F76200E3D69B /* libRCTVideo.a */; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
 		0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */; };
@@ -632,7 +631,6 @@
 		0A334C9F2296464E00E4F302 /* FileTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTools.m; sourceTree = "<group>"; };
 		0A334D1E229795E600E4F302 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A334D28229797F800E4F302 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
-		0A34A0B1233C47390027EBF7 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = ../../android/app/src/main/assets/Trial_License.slm; sourceTree = "<group>"; };
 		0A61803D22A51A3500E3D69B /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RSKImageCropper.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/iTablet-fpwwspvlpqkvcrhauagxetirlcrf/Build/Products/Debug-iphoneos/RSKImageCropper.framework"; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
@@ -943,7 +941,6 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0A34A0B1233C47390027EBF7 /* Trial_License.slm */,
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
 				0AA134932267432500606012 /* publicMap.txt */,
@@ -2033,7 +2030,6 @@
 				0AECCF782328E034004F84A4 /* Images.zip in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
-				0A34A0B2233C47390027EBF7 /* Trial_License.slm in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,
 				0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */,
 			);

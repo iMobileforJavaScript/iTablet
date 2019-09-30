@@ -2,12 +2,13 @@ import * as React from 'react'
 import { InteractionManager } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import Orientation from 'react-native-orientation'
-// import styles from './styles'
 import { Container } from '../../components'
-//eslint-disable-next-line
-import { SMIllegallyParkView } from 'imobile_for_reactnative'
 import { getLanguage } from '../../language'
-import { SMap, SMediaCollector } from 'imobile_for_reactnative'
+import {
+  SMap,
+  SMediaCollector,
+  SMIllegallyParkView,
+} from 'imobile_for_reactnative'
 import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
 import { Toast } from '../../utils'
