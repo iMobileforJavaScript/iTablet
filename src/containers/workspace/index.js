@@ -5,20 +5,16 @@
 
 import React from 'react'
 import { MapView, Map3D } from './pages'
-// export { MapView, Map3D }
 
 import { createBottomTabNavigator } from 'react-navigation'
-import { Platform } from 'react-native'
 
 import { color } from '../../styles'
 import LayerManager from '../mtLayerManager'
-// import Map3DLayerManager from '../map3DLayerManager'
 import Layer3DManager from '../Layer3DManager'
 import Setting from '../setting'
 import MapSetting from '../mapSetting'
 import { Chat } from '../tabs'
 import { LayerAttribute } from '../layerAttribute'
-// import { AnalystTools } from '../analystView/pages'
 import TabNavigationService from '../TabNavigationService'
 
 function compose(Component) {
@@ -49,25 +45,18 @@ const options = {
   tabBarOptions: {
     showLabel: false,
     showIcon: false,
-    activeTintColor: color.blue2, // 文字和图片选中颜色
-    inactiveTintColor: '#999', // 文字和图片未选中颜色
     indicatorStyle: {
       height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
     },
     style: {
       backgroundColor: color.theme, // TabBar 背景色
-      // height: Platform.OS === 'android' ? 50 : 49,
-      // height: scaleSize(96),
       height: 0,
-      // borderTopColor: color.border,
-      // borderTopWidth: 1,
     },
-    tabStyle: {
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-    },
-    labelStyle: {
-      fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
+    safeAreaInset: {
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
   },
 }
