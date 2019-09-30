@@ -18,6 +18,7 @@ import {
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { getLanguage } from '../../../../language'
+import ThemeMenuData from '../ToolBar/ThemeMenuData'
 import TPData from './TPData'
 const IMAGE_SIZE = scaleSize(25)
 const MARGIN = scaleSize(30)
@@ -143,7 +144,11 @@ export default class TouchProgress extends Component {
       this._BackLine.style.width = (_value2 * progressWidth) / 200
       tips = TPData.getMatchPictureTip(this.props.selectName, _value)
     }
-    if (tips === '' && GLOBAL.Type === constants.MAP_THEME) {
+    if (
+      tips === '' &&
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
           this.nuclearRadius =
@@ -592,7 +597,7 @@ export default class TouchProgress extends Component {
       this._updateBackLine()
 
       let _value = x / progressWidth
-      let value = this.dealData(_value > 1 ? 1 : _value)
+      let value = this.dealData(_value > 1 ? 1 : _value < 0 ? 0 : _value)
       value !== undefined && this.setTips(value)
     }
   }
@@ -606,7 +611,7 @@ export default class TouchProgress extends Component {
     this._previousLeft = x
 
     let _value = x / progressWidth
-    let value = this.dealData(_value > 1 ? 1 : _value)
+    let value = this.dealData(_value > 1 ? 1 : _value < 0 ? 0 : _value)
     value !== undefined && this.setData(value)
   }
 
@@ -649,17 +654,30 @@ export default class TouchProgress extends Component {
       this.props.selectName === '高度'
     ) {
       newValue = value * 100
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
       ) {
-        newValue = value * 32
+        newValue = value * 30 + 2
+        if (newValue <= 2) {
+          newValue = 2
+        } else if (newValue > 32) {
+          newValue = 32
+        }
       } else if (
         this.props.selectName === 'fontsize' ||
         this.props.selectName === '字号'
       ) {
         newValue = value * 20
+        if (newValue <= 1) {
+          newValue = 1
+        } else if (newValue > 20) {
+          newValue = 20
+        }
       } else if (this.props.selectName === '单点代表值') {
         newValue = value * 100
       } else if (this.props.selectName === '符号大小') {
@@ -785,7 +803,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
         '     ' +
         parseInt(value)
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
@@ -796,8 +817,9 @@ export default class TouchProgress extends Component {
           parseInt(value)
         let Params = {
           LayerName: this.props.currentLayer.name,
-          RangeParameter: value,
+          RangeParameter: parseInt(value),
         }
+        Object.assign(Params, ThemeMenuData.getThemeParams())
         switch (themeType) {
           case ThemeType.RANGE:
             await SThemeCartography.modifyThemeRangeMap(Params)
@@ -1081,15 +1103,18 @@ export default class TouchProgress extends Component {
         value -= 100
         tips = TPData.getMatchPictureTip(this.props.selectName, value)
       }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    } else if (
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0
+    ) {
       if (
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
       ) {
-        if (value <= 0) {
-          value = 1
-        } else if (value > 100) {
-          value = 100
+        if (value <= 2) {
+          value = 2
+        } else if (value > 32) {
+          value = 32
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
@@ -1099,7 +1124,7 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'fontsize' ||
         this.props.selectName === '字号'
       ) {
-        if (value <= 0) {
+        if (value <= 1) {
           value = 1
         } else if (value > 20) {
           value = 20

@@ -58,6 +58,7 @@ import {
   TouchType,
   ConstInfo,
   getHeaderTitle,
+  UserType,
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
@@ -1269,12 +1270,11 @@ export default class MapView extends React.Component {
         if (
           GLOBAL.Type === constants.COLLECTION ||
           GLOBAL.Type === constants.MAP_PLOTTING
-        ){
+        ) {
           SMap.setIsMagnifierEnabled(true)
-        }else{
+        } else {
           SMap.setIsMagnifierEnabled(false)
         }
-
 
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
@@ -1945,12 +1945,18 @@ export default class MapView extends React.Component {
   }
 
   _renderNavigationIcon = () => {
+    let title
+    if (this.state.showIncrement) {
+      title = '绘制'
+    } else {
+      title = '导航'
+    }
     return (
       <View style={styles.navigation}>
         <MTBtn
           style={styles.iconNav}
           size={MTBtn.Size.NORMAL}
-          title={'导航'}
+          title={title}
           textColor={'black'}
           textStyle={{ fontSize: setSpText(12) }}
           image={require('../../../../assets/Navigation/navi_icon.png')}
@@ -1963,6 +1969,17 @@ export default class MapView extends React.Component {
     )
   }
 
+  basename(str) {
+    var idx = str.lastIndexOf('/')
+    idx = idx > -1 ? idx : str.lastIndexOf('\\')
+    if (idx < 0) {
+      return str
+    }
+    let file = str.substring(idx + 1)
+    let arr = file.split('.')
+    return arr[0]
+  }
+
   indoorNavi = () => {
     if (!this.props.mapIndoorNavigation) {
       NavigationService.navigate('PointAnalyst', {
@@ -1970,55 +1987,95 @@ export default class MapView extends React.Component {
       })
     } else {
       if (this.state.showIncrement) {
-        if (this.state.leftClick) {
-          NavigationService.navigate('InputPage', {
-            headerTitle: getLanguage(this.props.language).Map_Main_Menu
-              .TOOLS_NAME,
-            placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
-            type: 'name',
-            cb: async value => {
-              GLOBAL.INCREMENTDATASETNAME = value
-              if (value !== '') {
-                (async function() {
-                  await SMap.newIncrementRoad(value)
-                }.bind(this)())
+        (async function() {
+          this.setState({ incrementShow: false })
+          let data = []
+          let userUDBPath, userUDBs
+          //过滤掉标注和标绘匹配正则
+          let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
+          if (
+            this.props.user &&
+            this.props.user.currentUser.userName &&
+            this.props.user.currentUser.userType !== UserType.PROBATION_USER
+          ) {
+            let userPath =
+              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+              this.props.user.currentUser.userName +
+              '/'
+            userUDBPath = userPath + ConstPath.RelativePath.Datasource
+            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+              extension: 'udb',
+              type: 'file',
+            })
+            //过滤掉标注和标绘
+            let filterUDBs = userUDBs.filter(item => {
+              item.name = this.basename(item.path)
+              return !item.name.match(checkLabelAndPlot)
+            })
+            filterUDBs.map(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
               }
-              NavigationService.goBack()
-            },
-          })
-          this.setState({ incrementShow: false, showIncrement: false })
-          this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
-            containerType: 'table',
-            column: 4,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-        } else if (this.state.rightClick) {
-          SMap.setLabelColor()
-          NavigationService.navigate('InputPage', {
-            headerTitle: getLanguage(this.props.language).Map_Main_Menu
-              .TOOLS_NAME,
-            placeholder: getLanguage(this.props.language).Prompt.ENTER_NAME,
-            type: 'name',
-            cb: async value => {
-              GLOBAL.INCREMENTDATASETNAME = value
-              if (value !== '') {
-                (async function() {
-                  await SMap.newIncrementRoad(value)
-                }.bind(this)())
+            })
+            data = [
+              // {
+              //   title: Const.PUBLIC_DATA_SOURCE,
+              //   data: customerUDBs,
+              // },
+              {
+                title: getLanguage(this.props.language).Map_Main_Menu
+                  .OPEN_DATASOURCE,
+                //Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+                data: filterUDBs,
+              },
+            ]
+          } else {
+            let customerUDBPath = await FileTools.appendingHomeDirectory(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+            )
+            let customerUDBs = await FileTools.getPathListByFilter(
+              customerUDBPath,
+              {
+                extension: 'udb',
+                type: 'file',
+              },
+            )
+            //过滤掉标注和标绘
+            let filterUDBs = customerUDBs.filter(item => {
+              item.name = this.basename(item.path)
+              return !item.name.match(checkLabelAndPlot)
+            })
+            filterUDBs.map(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
               }
-              NavigationService.goBack()
-            },
+            })
+            data = [
+              {
+                title: getLanguage(this.props.language).Map_Main_Menu
+                  .OPEN_DATASOURCE,
+                //Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+                data: filterUDBs,
+              },
+            ]
+          }
+          if (this.state.leftClick) {
+            GLOBAL.NAVIGATIONHEADLEFTCLICK = true
+          } else if (this.state.rightClick) {
+            GLOBAL.NAVIGATIONHEADLEFTCLICK = false
+          }
+          this.toolBox.setVisible(true, ConstToolType.INDOORDATA, {
+            containerType: 'list',
+            height: ConstToolType.THEME_HEIGHT[4],
+            data,
           })
-          SMap.setAction(Action.DRAWLINE)
-          this.setState({ incrementShow: false, showIncrement: false })
-          this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
-            containerType: 'table',
-            column: 4,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-        }
+        }.bind(this)())
       } else {
         // if (GLOBAL.HASCHOSE) {
         SMap.startIndoorNavigation()
@@ -2267,10 +2324,10 @@ export default class MapView extends React.Component {
           this.state.incrementShow &&
           this.props.openOnlineMap &&
           this._renderNavigationIcon()}
-        {/*{!this.isExample &&*/}
-        {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
-        {/*this.props.navigationChangeAR &&*/}
-        {/*this._renderARNavigationIcon()}*/}
+        {!this.isExample &&
+          GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this.props.navigationChangeAR &&
+          this._renderARNavigationIcon()}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}

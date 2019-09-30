@@ -223,6 +223,9 @@ const Prompt = {
   LOCATION_ERROR: '位置获取异常，请稍后尝试',
 
   OPEN_THRID_PARTY: '即将跳转到第三方应用，是否继续？',
+
+  FIELD_ILLEGAL: '字段不合法',
+  PLEASE_SELECT_A_RASTER_LAYER: '请选择栅格图层',
 }
 
 export { Prompt }

@@ -422,25 +422,25 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
-    //要发送的文件
-    let message = {
-      type: bGroup,
-      user: {
-        name: this.curUser.nickname,
-        id: this.curUser.userId,
-        groupID: groupID,
-        groupName: groupName,
-      },
-      time: time,
-      message: {
-        type: MSGConstant.MSG_FILE, //文件本体
-        message: {
-          data: '',
-          index: 0,
-          length: 0,
-        },
-      },
-    }
+    //要发送的文件,发送到rabbitMQ时使用
+    // let message = {
+    //   type: bGroup,
+    //   user: {
+    //     name: this.curUser.nickname,
+    //     id: this.curUser.userId,
+    //     groupID: groupID,
+    //     groupName: groupName,
+    //   },
+    //   time: time,
+    //   message: {
+    //     type: MSGConstant.MSG_FILE, //文件本体
+    //     message: {
+    //       data: '',
+    //       index: 0,
+    //       length: 0,
+    //     },
+    //   },
+    // }
 
     fileName = fileName + '.zip'
     let statResult = await stat(filePath)
@@ -491,16 +491,9 @@ class Chat extends React.Component {
       return
     }
     informMsg.message.message.filePath = ''
-    this.friend._sendFile(
-      JSON.stringify(message),
-      filePath,
-      this.targetUser.id,
-      msgId,
-      informMsg,
-      () => {
-        Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
-      },
-    )
+    this.friend.sendFile(informMsg, filePath, this.targetUser.id, msgId, () => {
+      Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
+    })
   }
 
   /**
@@ -569,25 +562,6 @@ class Chat extends React.Component {
     let ctime = new Date()
     let time = Date.parse(ctime)
 
-    let fileMessage = {
-      type: bGroup,
-      user: {
-        name: this.curUser.nickname,
-        id: this.curUser.userId,
-        groupID: groupID,
-        groupName: groupName,
-      },
-      time: time,
-      message: {
-        type: MSGConstant.MSG_FILE, //文件本体
-        message: {
-          data: '',
-          index: 0,
-          length: 0,
-        },
-      },
-    }
-
     let statResult = await stat(filePath)
     let message = {
       type: bGroup,
@@ -634,12 +608,11 @@ class Chat extends React.Component {
       }
     }
     if (sendToServer) {
-      this.friend._sendFile(
-        JSON.stringify(fileMessage),
+      this.friend.sendFile(
+        message,
         filePath,
         this.targetUser.id,
         msgId,
-        message,
         callback,
       )
     } else {
@@ -672,20 +645,17 @@ class Chat extends React.Component {
       receivePath,
       message.originMsg.message.message.fileName,
     )
-    message.originMsg.message.message.filePath =
-      receivePath + '/' + storeFileName
 
     message.downloading = true
 
-    this.friend._receiveFile(
-      storeFileName,
-      message.originMsg.message.message.queueName,
+    this.friend.receiveFile(
+      message,
       receivePath,
+      storeFileName,
       this.targetUser.id,
-      message._id,
-      message.user._id,
-      message.originMsg.message.message.fileSize,
       res => {
+        message.originMsg.message.message.filePath =
+          receivePath + '/' + storeFileName
         if (res === false) {
           message.downloading = false
         }
@@ -695,15 +665,29 @@ class Chat extends React.Component {
   }
 
   receivePicture = async message => {
+    if (message.download) {
+      Toast.show(getLanguage(global.language).Friends.WAIT_DOWNLOADING)
+      return
+    }
     let homePath = await FileTools.appendingHomeDirectory()
     let userPath = ConstPath.UserPath + this.curUser.userName
     let receivePath = userPath + '/ReceivedFiles'
+    if (Platform.OS === 'android') {
+      homePath = 'file://' + homePath
+    }
 
     this.receiveFile(message, receivePath, res => {
       if (res === true) {
         this.ImageViewer.setImageUri(
           homePath + message.originMsg.message.message.filePath,
         )
+        this.setState({
+          messages: this.state.messages.map(m => {
+            return {
+              ...m,
+            }
+          }),
+        })
       }
     })
   }
@@ -749,8 +733,25 @@ class Chat extends React.Component {
 
   onCustomViewPictureTouch = async message => {
     let homePath = await FileTools.appendingHomeDirectory()
-    if (!message.originMsg.message.message.filePath) {
-      this.SimpleDialog.setText('是否加载原图？')
+    if (message.downloading) {
+      Toast.show(getLanguage(global.language).Friends.WAIT_DOWNLOADING)
+    } else if (!message.originMsg.message.message.filePath) {
+      let fileSize = message.originMsg.message.message.fileSize
+      let fileSizeText = fileSize.toFixed(2) + 'B'
+      if (fileSize > 1024) {
+        fileSize = fileSize / 1024
+        fileSizeText = fileSize.toFixed(2) + 'KB'
+      }
+      if (fileSize > 1024) {
+        fileSize = fileSize / 1024
+        fileSizeText = fileSize.toFixed(2) + 'MB'
+      }
+      this.SimpleDialog.setText(
+        getLanguage(global.language).Friends.LOAD_ORIGIN_PIC +
+          '(' +
+          fileSizeText +
+          ')？',
+      )
       this.SimpleDialog.setConfirm(() => {
         this.receivePicture(message)
       })

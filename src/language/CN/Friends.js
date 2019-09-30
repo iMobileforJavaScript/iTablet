@@ -66,10 +66,12 @@ const Friends = {
   LOCATION_SHARE_NOTIFY: '分享中不能打开位置',
   WAIT_DOWNLOADING: '请等待数据下载完成',
   DATA_NOT_FOUND: '找不到文件，是否重新下载?',
+  LOAD_ORIGIN_PIC: '加载原图',
   //CustomActions
   MAP: '地图',
   TEMPLATE: '模板',
   LOCATION: '位置',
+  PICTURE: '图片',
   LOCATION_FAILED: '获取位置失败',
   //RecommendFriend
   FIND_NONE: '未能从联系人中找到新的online好友',
