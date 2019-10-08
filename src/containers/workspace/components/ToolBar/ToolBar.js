@@ -3497,6 +3497,8 @@ export default class ToolBar extends React.PureComponent {
       // } else
       if (
         GLOBAL.Type === constants.MAP_EDIT ||
+        (this.state.selectKey === '旋转角度' &&
+          GLOBAL.Type === constants.MAP_THEME) ||
         this.state.type === ConstToolType.GRID_STYLE ||
         this.state.type === ConstToolType.MAP_STYLE ||
         this.state.type === ConstToolType.MAP_EDIT_STYLE ||
@@ -3522,6 +3524,8 @@ export default class ToolBar extends React.PureComponent {
     let setData = function() {
       if (
         GLOBAL.Type === constants.MAP_EDIT ||
+        (this.state.selectKey === '旋转角度' &&
+          GLOBAL.Type === constants.MAP_THEME) ||
         this.state.type === ConstToolType.GRID_STYLE ||
         this.state.type === ConstToolType.MAP_STYLE ||
         this.state.type === ConstToolType.MAP_EDIT_STYLE ||
@@ -3588,12 +3592,12 @@ export default class ToolBar extends React.PureComponent {
     if (
       this.state.selectKey === '线宽' ||
       this.state.selectKey === '大小' ||
-      this.state.selectKey === '旋转角度' ||
       this.state.selectKey === '透明度' ||
       this.state.selectKey === '对比度' ||
       this.state.selectKey === '亮度' ||
       this.state.selectKey === '分段个数' ||
-      this.state.selectKey === '旋转角度' ||
+      (this.state.selectKey === '旋转角度' &&
+        GLOBAL.Type === constants.MAP_EDIT) ||
       this.state.selectKey === '字号' ||
       this.state.selectKey === '单点代表值' ||
       this.state.selectKey === '符号大小' ||
