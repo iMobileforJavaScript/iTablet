@@ -86,6 +86,7 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
+    this.messageQueue = []
     AppState.addEventListener('change', this.handleStateChange)
     NetInfo.addEventListener('connectionChange', this.handleNetworkState)
     this.addFileListener()
@@ -374,7 +375,7 @@ export default class Friend extends Component {
 
           await SMessageService.startReceiveMessage(
             this.props.user.currentUser.userId,
-            { callback: this._receiveMessage },
+            { callback: this._enqueueMessage },
           )
 
           this.startCheckAvailability()
@@ -389,6 +390,21 @@ export default class Friend extends Component {
   }
 
   /************************** 处理消息 ***********************************/
+
+  _enqueueMessage = message => {
+    this.messageQueue.push(message)
+    if (!this.consumingMessage) {
+      this._startConsumeMessage()
+    }
+  }
+
+  _startConsumeMessage = async () => {
+    this.consumingMessage = true
+    for (; this.messageQueue.length > 0; ) {
+      await this._receiveMessage(this.messageQueue.shift())
+    }
+    this.consumingMessage = false
+  }
 
   onReceiveProgress = value => {
     let msg = this.getMsgByMsgId(value.talkId, value.msgId)
@@ -1043,7 +1059,7 @@ export default class Friend extends Component {
           bSysStore = true
           messageObj.consumed = false
         } else if (isFriend === 0 || isFriend === 2) {
-          FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
+          await FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
           let message = {
             message: '',
             type: MSGConstant.MSG_ACCEPT_FRIEND,
@@ -1082,12 +1098,12 @@ export default class Friend extends Component {
          */
         bSysStore = true
         bSysShow = true
-        FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
+        await FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 1)
       } else if (messageObj.type === MSGConstant.MSG_DEL_FRIEND) {
         /*
          * 删除好友关系
          */
-        FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 0)
+        await FriendListFileHandle.modifyIsFriend(messageObj.user.groupID, 0)
       } else if (messageObj.type === MSGConstant.MSG_CREATE_GROUP) {
         /*
          * 添加群员
@@ -1100,7 +1116,7 @@ export default class Friend extends Component {
             this.props.user.currentUser.userId,
           )
         ) {
-          FriendListFileHandle.addGroupMember(
+          await FriendListFileHandle.addGroupMember(
             messageObj.user.groupID,
             messageObj.message.newMembers,
           )
@@ -1109,7 +1125,7 @@ export default class Friend extends Component {
           let members = messageObj.message.oldMembers.concat(
             messageObj.message.newMembers,
           )
-          FriendListFileHandle.addToGroupList({
+          await FriendListFileHandle.addToGroupList({
             id: messageObj.user.groupID,
             members: members,
             groupName: messageObj.user.groupName,
@@ -1141,7 +1157,7 @@ export default class Friend extends Component {
         if (inList) {
           bSysStore = false
           bSysShow = false
-          FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
+          await FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
           MessageDataHandle.delMessage({
             userId: this.props.user.currentUser.userId,
             talkId: messageObj.user.groupID,
@@ -1158,7 +1174,7 @@ export default class Friend extends Component {
             )
           }
         } else {
-          FriendListFileHandle.removeGroupMember(
+          await FriendListFileHandle.removeGroupMember(
             messageObj.user.groupID,
             messageObj.message.members,
           )
@@ -1167,7 +1183,7 @@ export default class Friend extends Component {
         /*
          * 解散群
          */
-        FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
+        await FriendListFileHandle.delFromGroupList(messageObj.user.groupID)
         MessageDataHandle.delMessage({
           userId: this.props.user.currentUser.userId,
           talkId: messageObj.user.groupID,
@@ -1178,7 +1194,7 @@ export default class Friend extends Component {
          */
         bSysStore = true
         bSysShow = true
-        FriendListFileHandle.modifyGroupList(
+        await FriendListFileHandle.modifyGroupList(
           messageObj.user.groupID,
           messageObj.message.name,
         )
