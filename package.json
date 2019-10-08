@@ -1,6 +1,6 @@
 {
   "name": "iTablet",
-  "version": 2.1",
+  "version": "2.1",
   "private": true,
   "scripts": {
     "start-rn": "node node_modules/react-native/local-cli/cli.js start",
