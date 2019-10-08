@@ -112,6 +112,7 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION:
     case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION:
     case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION:
+    case ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[5]
         column = 4
@@ -123,6 +124,9 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_RANGE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR:
+    case ConstToolType.MAP_THEME_PARAM_RANGELABEL_COLOR:
+    case ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR:
+    case ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[5]
         column = 4
@@ -162,10 +166,10 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
-        column = 4
+        column = 8
       } else {
         height = ConstToolType.THEME_HEIGHT[7]
-        column = 8
+        column = 12
       }
       break
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION:
@@ -198,7 +202,7 @@ function getToorbarHeight(orientation, type) {
         column = 8
       } else {
         height = ConstToolType.HEIGHT[2]
-        column = 4
+        column = 12
       }
       break
     case ConstToolType.POINTCOLOR_SET:
@@ -207,7 +211,7 @@ function getToorbarHeight(orientation, type) {
         column = 8
       } else {
         height = ConstToolType.HEIGHT[2]
-        column = 4
+        column = 12
       }
       break
     case ConstToolType.REGIONBEFORECOLOR_SET:
@@ -216,7 +220,7 @@ function getToorbarHeight(orientation, type) {
         column = 8
       } else {
         height = ConstToolType.TOOLBAR_HEIGHT_2[3]
-        column = 4
+        column = 12
       }
       break
     case ConstToolType.REGIONAFTERCOLOR_SET:
@@ -225,7 +229,7 @@ function getToorbarHeight(orientation, type) {
         column = 8
       } else {
         height = ConstToolType.TOOLBAR_HEIGHT_2[3]
-        column = 4
+        column = 12
       }
       break
     case ConstToolType.GRID_STYLE:

@@ -11,7 +11,15 @@ import { Toast } from '../../../../utils'
 
 let _toolbarParams = {}
 
-async function showDatasetsList() {
+/**
+ *
+ * @param filter
+ *    {
+ *      typeFilter: ['POINT', 'CAD', 'REGION', 'LINE'], // 空为全部查询
+ *    }
+ * @returns {Promise.<void>}
+ */
+async function showDatasetsList(filter = {}) {
   let isAnyOpenedDS = true //是否有打开的数据源
   isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
   if (!isAnyOpenedDS) {
@@ -25,7 +33,19 @@ async function showDatasetsList() {
     for (let i = 0; i < getdata.length; i++) {
       let datalist = getdata[i]
       if (datalist.datasource.alias.match(checkLabelAndPlot)) continue
+      let list = []
       datalist.list.forEach(item => {
+        let isExist = false
+        if (filter.typeFilter && filter.typeFilter.length > 0) {
+          for (let j = 0; j < filter.typeFilter.length; j++) {
+            if (item.datasetType === filter.typeFilter[j]) {
+              isExist = true
+            }
+          }
+        } else {
+          isExist = true
+        }
+        if (!isExist) return
         if (item.geoCoordSysType && item.prjCoordSysType) {
           item.info = {
             infoType: 'dataset',
@@ -33,11 +53,13 @@ async function showDatasetsList() {
             prjCoordSysType: item.prjCoordSysType,
           }
         }
+        list.push(item)
       })
+      if (list.length === 0) return
       data.push({
         title: datalist.datasource.alias,
         image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-        data: datalist.list,
+        data: list,
       })
     }
     _toolbarParams.setToolbarVisible &&
@@ -741,7 +763,10 @@ function getThemeMapCreate(type, params) {
       title: getLanguage(global.language).Map_Main_Menu.THEME_DOT_DENSITY_MAP,
       // constants.THEME_DOT_DENSITY,
       size: 'large',
-      action: showDatasetsList,
+      action: () =>
+        showDatasetsList({
+          typeFilter: ['REGION'],
+        }),
       image: getThemeAssets().themeType.theme_dot_density,
       selectedImage: getThemeAssets().themeType.theme_dot_density,
     },

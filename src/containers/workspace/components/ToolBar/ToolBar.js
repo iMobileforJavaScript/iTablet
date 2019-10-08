@@ -527,8 +527,8 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
-                  result = result > 0 ? result.toFixed(6) : 0
                   this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    result.x != 0 &&
                     this.pointArr.push(JSON.stringify(result))
                   if (
                     this.pointArr.length > 0 &&
@@ -538,10 +538,13 @@ export default class ToolBar extends React.PureComponent {
                       canUndo: true,
                     })
                   }
+                  result.length = Number(result.length)
+                  result.length =
+                    result.length > 0 ? result.length.toFixed(6) : 0
                   this.Map3DToolBar &&
-                    this.Map3DToolBar.setAnalystResult(result)
+                    this.Map3DToolBar.setAnalystResult(result.length)
                   this.props.measureShow &&
-                    this.props.measureShow(true, result + 'm')
+                    this.props.measureShow(true, result.length + 'm')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
@@ -565,15 +568,30 @@ export default class ToolBar extends React.PureComponent {
               SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
-                  this.clickTime++
-                  if (this.clickTime > 0 && this.state.canUndo === false) {
+                  // this.clickTime++
+                  // if (this.clickTime > 0 && this.state.canUndo === false) {
+                  //   this.setState({
+                  //     canUndo: true,
+                  //   })
+                  // }
+
+                  this.pointArr.indexOf(JSON.stringify(result)) === -1 &&
+                    result.x != 0 &&
+                    this.pointArr.push(JSON.stringify(result))
+                  if (
+                    this.pointArr.length > 0 &&
+                    this.state.canUndo === false
+                  ) {
                     this.setState({
                       canUndo: true,
                     })
                   }
-                  result = result > 0 ? result.toFixed(6) : 0
+
+                  result.totalArea = Number(result.totalArea)
+                  result.totalArea =
+                    result.totalArea > 0 ? result.totalArea.toFixed(6) : 0
                   this.props.measureShow &&
-                    this.props.measureShow(true, result + '㎡')
+                    this.props.measureShow(true, result.totalArea + '㎡')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
@@ -975,6 +993,9 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
           if (
+            type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
+            type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
+            type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
             ThemeMenuData.isThemeFieldTypeAvailable(
               item.fieldTypeStr,
               this.state.themeCreateType,
@@ -1665,13 +1686,17 @@ export default class ToolBar extends React.PureComponent {
   }
 
   getRangeMode = async (type, key = '', name = '') => {
+    let height, column
+    if (this.props.device.orientation === 'PORTRAIT') {
+      height = ConstToolType.THEME_HEIGHT[2]
+      column = 4
+    } else {
+      height = ConstToolType.THEME_HEIGHT[0]
+      column = 8
+    }
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
-        toValue:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
-        duration: Const.ANIMATED_DURATION,
+        toValue: height,
       }).start()
       this.isBoxShow = true
     }.bind(this)
@@ -1684,7 +1709,7 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: false,
           showMenuDialog: false,
           containerType: 'table',
-          column: 4,
+          column,
           tableType: 'normal',
           data: date,
           type: type,
@@ -1969,12 +1994,17 @@ export default class ToolBar extends React.PureComponent {
   }
 
   getLabelBackShape = async (type, key = '', name = '') => {
+    let height, column
+    if (this.props.device.orientation === 'PORTRAIT') {
+      height = ConstToolType.THEME_HEIGHT[2]
+      column = 4
+    } else {
+      height = ConstToolType.THEME_HEIGHT[0]
+      column = 8
+    }
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
-        toValue:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
+        toValue: height,
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = true
@@ -1988,7 +2018,7 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: false,
           showMenuDialog: false,
           containerType: 'table',
-          column: 4,
+          column,
           tableType: 'normal',
           data: date,
           type: type,
@@ -2019,12 +2049,17 @@ export default class ToolBar extends React.PureComponent {
 
   //各种专题图的颜色值选择
   getColorTable = async (type, key = '', name = '') => {
+    let height, column
+    if (this.props.device.orientation === 'PORTRAIT') {
+      height = ConstToolType.THEME_HEIGHT[3]
+      column = 8
+    } else {
+      height = ConstToolType.THEME_HEIGHT[7]
+      column = 12
+    }
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
-        toValue:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[7]
-            : ConstToolType.THEME_HEIGHT[3],
+        toValue: height,
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = true
@@ -2038,7 +2073,7 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: false,
           showMenuDialog: false,
           containerType: 'colortable',
-          column: 8,
+          column,
           tableType: 'scroll',
           data: date,
           type: type,
@@ -2446,8 +2481,13 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
-        //buttons: [ToolbarBtnType.CLOSE_ANALYST,ToolbarBtnType.UNDO, ToolbarBtnType.CLEAR],
-        buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
+        buttons: [
+          ToolbarBtnType.CLOSE_ANALYST,
+          ToolbarBtnType.UNDO,
+          ToolbarBtnType.REDO,
+          ToolbarBtnType.CLEAR,
+        ],
+        // buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
@@ -2624,6 +2664,22 @@ export default class ToolBar extends React.PureComponent {
 
   //二三维量算功能 撤销事件
   undo = () => {
+    if (this.pointArr.length > 0) {
+      this.redoArr.push(this.pointArr.pop())
+      this.redoArr.length > 0 &&
+        this.state.canRedo === false &&
+        this.setState({
+          canRedo: true,
+        })
+      if (this.pointArr.length === 0 && this.state.canUndo === true) {
+        this.pointArr = []
+        this.redoArr = []
+        this.setState({
+          canUndo: false,
+          canRedo: false,
+        })
+      }
+    }
     if (GLOBAL.Type !== constants.MAP_3D) {
       if (
         GLOBAL.currentToolbarType === ConstToolType.MAP_TOOL_MEASURE_ANGLE &&
@@ -2645,30 +2701,10 @@ export default class ToolBar extends React.PureComponent {
       }
     } else {
       //三维撤销事件
-    }
-    if (this.pointArr.length > 0) {
-      this.redoArr.push(this.pointArr.pop())
-      this.redoArr.length > 0 &&
-        this.state.canRedo === false &&
-        this.setState({
-          canRedo: true,
-        })
-      if (this.pointArr.length === 0 && this.state.canUndo === true) {
-        this.pointArr = []
-        this.redoArr = []
-        this.setState({
-          canUndo: false,
-          canRedo: false,
-        })
-      }
+      SScene.displayDistanceOrArea(this.pointArr)
     }
   }
   redo = () => {
-    if (GLOBAL.Type !== constants.MAP_3D) {
-      SMap.redo()
-    } else {
-      //三维撤销事件
-    }
     if (this.redoArr.length > 0) {
       this.pointArr.push(this.redoArr.pop())
       this.redoArr.length === 0 &&
@@ -2681,6 +2717,12 @@ export default class ToolBar extends React.PureComponent {
         this.setState({
           canUndo: true,
         })
+    }
+    if (GLOBAL.Type !== constants.MAP_3D) {
+      SMap.redo()
+    } else {
+      //三维撤销事件
+      SScene.displayDistanceOrArea(this.pointArr)
     }
   }
   /** 推演动画播放事件*/
@@ -3459,16 +3501,15 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.MAP_STYLE ||
         this.state.type === ConstToolType.MAP_EDIT_STYLE ||
         this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
-        this.state.type === ConstToolType.LINECOLOR_SET ||
-        this.state.type === ConstToolType.POINTCOLOR_SET ||
-        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-        ((this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
+        ((this.state.type === ConstToolType.LINECOLOR_SET ||
+          this.state.type === ConstToolType.POINTCOLOR_SET ||
+          this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+          this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+          this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
           this.state.type === ConstToolType.LEGEND ||
           this.state.type === ConstToolType.LEGEND_NOT_VISIBLE) &&
           this.isBoxShow)
       ) {
-        this.changeHeight(this.props.device.orientation, this.state.type)
         Animated.timing(this.state.boxHeight, {
           toValue: this.state.showMenuDialog ? this.height : 0,
           duration: Const.ANIMATED_DURATION,
@@ -3909,7 +3950,8 @@ export default class ToolBar extends React.PureComponent {
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
       if (
-        this.state.selectKey === '线宽' ||
+        this.state.selectKey ===
+          getLanguage(this.props.language).Map_Main_Menu.STYLE_LINE_WIDTH ||
         this.state.selectKey === '大小' ||
         this.state.selectKey === '旋转角度' ||
         this.state.selectKey === '透明度' ||
@@ -3919,7 +3961,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '旋转角度' ||
         this.state.selectKey === '字号' ||
         this.state.selectKey === '单点代表值' ||
-        this.state.selectKey === '符号大小' ||
+        this.state.selectKey ===
+          getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE ||
         this.state.selectKey === '基准值' ||
         this.state.selectKey === '最大显示值' ||
         this.state.selectKey === '列数' ||
@@ -4090,6 +4133,12 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
     this.setState({ canUndo: false })
     this.clickTime = 0
+    this.pointArr = []
+    this.redoArr = []
+    this.setState({
+      canUndo: false,
+      canRedo: false,
+    })
   }
 
   clear = () => {
@@ -6245,9 +6294,15 @@ export default class ToolBar extends React.PureComponent {
       }
     } else if (this.state.type.indexOf('LEGEND') >= 0) {
       if (this.props.mapLegend[GLOBAL.Type].isShow) {
-        list = legendMenuInfoNotVisible(this.props.language)
+        list = legendMenuInfoNotVisible(
+          this.props.language,
+          this.props.device.orientation,
+        )
       } else {
-        list = legendMenuInfo(this.props.language)
+        list = legendMenuInfo(
+          this.props.language,
+          this.props.device.orientation,
+        )
       }
     } else if (this.state.type === ConstToolType.STYLE_TRANSFER) {
       list = smartCartography(this.props.language)
@@ -6255,13 +6310,13 @@ export default class ToolBar extends React.PureComponent {
     if (!list) {
       switch (this.props.currentLayer.type) {
         case 1:
-          list = point(this.props.language)
+          list = point(this.props.language, this.props.device.orientation)
           break
         case 3:
-          list = line(this.props.language)
+          list = line(this.props.language, this.props.device.orientation)
           break
         case 5:
-          list = region(this.props.language)
+          list = region(this.props.language, this.props.device.orientation)
           break
         case 83:
           list = grid(this.props.language)
@@ -6285,7 +6340,6 @@ export default class ToolBar extends React.PureComponent {
       />
     )
   }
-
   renderView = () => {
     let box
     switch (this.state.containerType) {

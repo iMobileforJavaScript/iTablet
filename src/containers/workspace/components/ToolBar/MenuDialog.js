@@ -235,7 +235,7 @@ export default class MenuDialog extends React.PureComponent {
   }
 
   itemAction = ({ item, index }) => {
-    if (index !== this.state.index) {
+    if (index !== this.state.currentIndex) {
       this.setState({
         lastIndex: index,
         data: this.state.data.concat(),

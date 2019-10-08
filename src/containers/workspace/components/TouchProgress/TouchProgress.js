@@ -385,7 +385,10 @@ export default class TouchProgress extends Component {
     if (tips === '') {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+          ) {
             let pointSize =
               value !== undefined
                 ? value
@@ -399,7 +402,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(pointSize) +
               'mm'
-          } else if (this.props.selectName === '透明度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             let pointAlpha =
               value !== undefined
                 ? value
@@ -415,7 +421,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(pointAlpha) +
               '%'
-          } else if (this.props.selectName === '旋转角度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION
+          ) {
             let pointAngle =
               value !== undefined
                 ? value
@@ -696,11 +705,20 @@ export default class TouchProgress extends Component {
     } else if (layerType !== undefined) {
       switch (layerType) {
         case 1:
-          if (this.props.selectName === '大小') {
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+          ) {
             newValue = value * 100
-          } else if (this.props.selectName === '透明度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             newValue = value * 100
-          } else if (this.props.selectName === '旋转角度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION
+          ) {
             newValue = value * 360
           }
           break
@@ -928,7 +946,10 @@ export default class TouchProgress extends Component {
     } else {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+          ) {
             if (value <= 1) {
               value = 1
             } else if (value >= 100) {
@@ -943,7 +964,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               'mm'
-          } else if (this.props.selectName === '透明度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             if (value >= 100) {
               value = 100
             }
@@ -956,7 +980,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               '%'
-          } else if (this.props.selectName === '旋转角度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION
+          ) {
             if (value >= 360) {
               value = 360
             }
@@ -1215,7 +1242,10 @@ export default class TouchProgress extends Component {
     if (tips === '') {
       switch (layerType) {
         case 1: {
-          if (this.props.selectName === '大小') {
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+          ) {
             if (value < 1) {
               value = 1
             } else if (value > 100) {
@@ -1226,7 +1256,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               'mm'
-          } else if (this.props.selectName === '透明度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             if (value < 0) {
               value = 0
             } else if (value > 100) {
@@ -1237,7 +1270,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               '%'
-          } else if (this.props.selectName === '旋转角度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION
+          ) {
             if (value < 0) {
               value = 0
             } else if (value > 360) {
