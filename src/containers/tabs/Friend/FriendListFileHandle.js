@@ -296,10 +296,10 @@ export default class FriendListFileHandle {
       await RNFS.unlink(FriendListFileHandle.friendListFile)
     }
     await RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr)
-    await FriendListFileHandle.upload()
     if (FriendListFileHandle.refreshCallback) {
       FriendListFileHandle.refreshCallback(true)
     }
+    await FriendListFileHandle.upload()
     if (callback) {
       callback(true)
     }
