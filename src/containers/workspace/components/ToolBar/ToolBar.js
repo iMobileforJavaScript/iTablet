@@ -3044,7 +3044,6 @@ export default class ToolBar extends React.PureComponent {
           datasetNames,
           this.state.themeDatasourceAlias,
         )
-
         // 找出有默认样式的数据集，并给对应图层设置
         for (let i = 0; i < resultArr.length; i++) {
           let description =
@@ -3060,6 +3059,7 @@ export default class ToolBar extends React.PureComponent {
         }
 
         if (resultArr && resultArr.length > 0) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.props.getLayers(-1, layers => {
             if (layers.length > 0) {
               this.props.setCurrentLayer(layers[0])
@@ -3120,6 +3120,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
@@ -3153,6 +3154,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
