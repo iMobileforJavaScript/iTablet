@@ -3046,7 +3046,6 @@ export default class ToolBar extends React.PureComponent {
           datasetNames,
           this.state.themeDatasourceAlias,
         )
-
         // 找出有默认样式的数据集，并给对应图层设置
         for (let i = 0; i < resultArr.length; i++) {
           let description =
@@ -3062,6 +3061,7 @@ export default class ToolBar extends React.PureComponent {
         }
 
         if (resultArr && resultArr.length > 0) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.props.getLayers(-1, layers => {
             if (layers.length > 0) {
               this.props.setCurrentLayer(layers[0])
@@ -3122,6 +3122,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
@@ -3155,6 +3156,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
@@ -5551,7 +5553,6 @@ export default class ToolBar extends React.PureComponent {
         return
       }
       this.props.setMap2Dto3D(false)
-      this.props.setOpenOnlineMap(true)
       this.props.setMapIndoorNavigation(true)
       this.props.setContainerLoading(
         true,
@@ -5574,6 +5575,11 @@ export default class ToolBar extends React.PureComponent {
           getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
+        //判断地图是否是室内地图
+        setTimeout(async () => {
+          let isIndoor = await SMap.isIndoorMap()
+          isIndoor && this.props.setOpenOnlineMap(true)
+        }, 2000)
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
           await SMap.addLegendListener({
