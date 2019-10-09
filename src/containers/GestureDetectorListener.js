@@ -65,7 +65,7 @@ async function longtouchCallback(event) {
       break
   }
 }
-
+let isfull = false
 async function touchCallback(event) {
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
@@ -76,12 +76,12 @@ async function touchCallback(event) {
       ) {
         GLOBAL.PoiInfoContainer.hidden()
       }
-      // if (isfull) {
-      //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      // } else {
-      //   GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
-      // }
-      // isfull = !isfull
+      if (isfull) {
+        GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
+      } else {
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      }
+      isfull = !isfull
       break
     case TouchType.MAP_TOOL_TAGGING:
       NavigationService.navigate('InputPage', {

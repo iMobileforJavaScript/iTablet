@@ -361,6 +361,7 @@ export default class MapView extends React.Component {
               ) {
                 this.setState({ mapTitle: this.props.analyst.params.title })
               }
+              GLOBAL.TouchType = TouchType.NULL //进入分析页面，触摸事件默认为空
             },
           })
         this.backAction =
@@ -462,6 +463,9 @@ export default class MapView extends React.Component {
     if (GLOBAL.MapTabNavigator) {
       GLOBAL.MapTabNavigator = null
     }
+
+    //移除手势监听
+    SMap.deleteGestureDetector()
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -1534,6 +1538,7 @@ export default class MapView extends React.Component {
         setMapType={this.setMapType}
         online={this.props.online}
         incrementRoad={() => {
+          GLOBAL.TouchType = TouchType.NULL //进入路网，触摸事件设置为空
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
@@ -2175,6 +2180,7 @@ export default class MapView extends React.Component {
               backAction: () => {
                 this.setState({ showIncrement: false })
                 this.showFullMap(false)
+                GLOBAL.TouchType = TouchType.NORMAL //退出路网，触摸事件设置为normal
               },
             }}
           />
