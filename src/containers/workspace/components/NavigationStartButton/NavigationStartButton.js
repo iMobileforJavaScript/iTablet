@@ -138,7 +138,7 @@ export default class NavigationStartButton extends React.Component {
             style={{
               height: scaleSize(80),
               flexDirection: 'row',
-              marginTop: scaleSize(20),
+              // marginTop: scaleSize(20),
             }}
           >
             <TouchableOpacity
@@ -165,10 +165,10 @@ export default class NavigationStartButton extends React.Component {
                 {this.state.road}
               </Text>
             </TouchableOpacity>
-            <View style={{ width: 20 }} />
             <TouchableOpacity
               activeOpacity={0.5}
               style={{
+                marginLeft: scaleSize(20),
                 height: scaleSize(60),
                 flex: 1,
                 borderRadius: 5,
@@ -197,10 +197,10 @@ export default class NavigationStartButton extends React.Component {
                 第一人称
               </Text>
             </TouchableOpacity>
-            <View style={{ width: 20 }} />
             <TouchableOpacity
               activeOpacity={0.5}
               style={{
+                marginLeft: scaleSize(20),
                 height: scaleSize(60),
                 flex: 1,
                 borderRadius: 5,

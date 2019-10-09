@@ -5549,7 +5549,6 @@ export default class ToolBar extends React.PureComponent {
         return
       }
       this.props.setMap2Dto3D(false)
-      this.props.setOpenOnlineMap(true)
       this.props.setMapIndoorNavigation(true)
       this.props.setContainerLoading(
         true,
@@ -5572,6 +5571,11 @@ export default class ToolBar extends React.PureComponent {
           getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
+        //判断地图是否是室内地图
+        setTimeout(async () => {
+          let isIndoor = await SMap.isIndoorMap()
+          isIndoor && this.props.setOpenOnlineMap(true)
+        }, 2000)
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
           await SMap.addLegendListener({

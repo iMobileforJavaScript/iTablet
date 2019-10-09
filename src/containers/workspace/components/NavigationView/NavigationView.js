@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  Platform,
+} from 'react-native'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
@@ -9,6 +16,8 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
+
+const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 
 export default class NavigationView extends React.Component {
   static propTypes = {
@@ -67,7 +76,8 @@ export default class NavigationView extends React.Component {
       <View style={{ flex: 1, backgroundColor: color.background }}>
         <View
           style={{
-            height: scaleSize(165),
+            paddingTop: TOOLBARHEIGHT,
+            height: scaleSize(165) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -119,7 +129,11 @@ export default class NavigationView extends React.Component {
                     NavigationService.goBack()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.firstPoint}
                   </Text>
                 </TouchableOpacity>
@@ -160,7 +174,11 @@ export default class NavigationView extends React.Component {
                     NavigationService.goBack()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.secondPoint}
                   </Text>
                 </TouchableOpacity>
