@@ -2805,6 +2805,8 @@ export default class ToolBar extends React.PureComponent {
     if (isShow && GLOBAL.TouchType != TouchType.ANIMATION_WAY) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
+    } else if (!isShow) {
+      GLOBAL.TouchType = TouchType.NORMAL
     }
     this.setOverlayViewVisible(isShow)
 
@@ -4183,7 +4185,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
     SMap.endAnimationWayPoint(false)
-    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
