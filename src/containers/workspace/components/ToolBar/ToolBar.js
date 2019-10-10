@@ -727,7 +727,6 @@ export default class ToolBar extends React.PureComponent {
                   //'请打开场景')
                   return
                 }
-                SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
                 SScene.closeAllLabel()
                 this.showToolbar(!this.isShow)
@@ -814,6 +813,7 @@ export default class ToolBar extends React.PureComponent {
               }
               try {
                 // SScene.startDrawLine()
+                GLOBAL.action3d = 'PAN3D_FIX'
                 GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
                 GLOBAL.currentToolbarType = ConstToolType.MAP_BOX_CLIP
                 this.showMap3DTool(ConstToolType.MAP_BOX_CLIP)
@@ -3231,6 +3231,13 @@ export default class ToolBar extends React.PureComponent {
         this.endFly()
       }
 
+      if (
+        type === ConstToolType.MAP_BOX_CLIP ||
+        type === ConstToolType.MAP3D_BOX_CLIP
+      ) {
+        this.end3DBoxClip()
+      }
+
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听
         SMap.removeMeasureListener()
@@ -3404,6 +3411,12 @@ export default class ToolBar extends React.PureComponent {
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+  }
+
+  end3DBoxClip = () => {
+    SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d = 'PAN3D'
+    GLOBAL.action3d && SScene.setAction('PAN3D')
   }
 
   changeCollection = () => {
@@ -4127,6 +4140,7 @@ export default class ToolBar extends React.PureComponent {
   closeCircle = () => {
     SScene.stopCircleFly()
     SScene.clearCirclePoint()
+    GLOBAL.action3d = 'PAN3D'
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
