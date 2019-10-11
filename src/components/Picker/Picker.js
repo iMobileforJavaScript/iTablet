@@ -77,13 +77,15 @@ export default class Picker extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (
       this.props.language !== nextProps.language ||
       JSON.stringify(this.props.popData) !==
         JSON.stringify(nextProps.popData) ||
       JSON.stringify(this.props.currentPopData) !==
-        JSON.stringify(nextProps.currentPopData)
+        JSON.stringify(nextProps.currentPopData) ||
+      JSON.stringify(this.state.secondData) !==
+        JSON.stringify(nextState.secondData)
     )
   }
 
