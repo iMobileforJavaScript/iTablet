@@ -1090,18 +1090,27 @@ export default class LayerManager_tolbar extends React.Component {
         ref={ref => (this.picker = ref)}
         language={GLOBAL.language}
         confirm={async item => {
-          if (item[0].value === '最大可见比例尺') {
-            await SMap.setMaxVisibleScale(
-              this.state.layerData.path,
-              item[1].value,
-            )
+          if (
+            JSON.stringify(item[0]) !== '{}' &&
+            JSON.stringify(item[1]) !== '{}'
+          ) {
+            if (item[0].value === '最大可见比例尺') {
+              await SMap.setMaxVisibleScale(
+                this.state.layerData.path,
+                item[1].value,
+              )
+            } else {
+              await SMap.setMinVisibleScale(
+                this.state.layerData.path,
+                item[1].value,
+              )
+            }
+            this.setVisible(false)
           } else {
-            await SMap.setMinVisibleScale(
-              this.state.layerData.path,
-              item[1].value,
+            Toast.show(
+              getLanguage(global.language).Map_Layer.SELECT_LAYSER_SCALE,
             )
           }
-          this.setVisible(false)
         }}
         cancel={() => {
           this.setVisible(false)
