@@ -164,6 +164,7 @@ export default class OverlayAnalystView extends Component {
             dataset: this.state.overlayDataSet.value,
           },
           resultData = {
+            datasetType:this.state.dataSet.datasetType,
             datasource: this.state.resultDataSource.value,
             server: server + this.state.resultDataSource.value + '.udb',
             dataset: this.state.resultDataSet.value,
