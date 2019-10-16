@@ -14,6 +14,7 @@ export default class ColorTable extends React.Component {
     language: string,
     data: Array,
     device: Object,
+    itemAction?: () => {},
     setColorBlock?: () => {},
   }
 
@@ -37,7 +38,15 @@ export default class ColorTable extends React.Component {
       this.listKeyIndex++
     }
   }
-
+  itemAction = async item => {
+    if (this.props.itemAction) {
+      this.props.itemAction(item)
+    } else {
+      let isSuccess = await item.action()
+      if (isSuccess)
+        this.props.setColorBlock && this.props.setColorBlock(item.key)
+    }
+  }
   renderItem = ({ item }) => {
     if (item.useSpace)
       return (
@@ -55,9 +64,8 @@ export default class ColorTable extends React.Component {
       )
     return (
       <TouchableOpacity
-        onPress={async () => {
-          let isSuccess = await item.action()
-          if (isSuccess) this.props.setColorBlock(item.key)
+        onPress={() => {
+          this.itemAction(item)
         }}
         style={{
           flex: 1,
