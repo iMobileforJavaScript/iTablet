@@ -992,9 +992,6 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
           if (
-            type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
-            type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
-            type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
             ThemeMenuData.isThemeFieldTypeAvailable(
               item.fieldTypeStr,
               this.state.themeCreateType,
