@@ -14,19 +14,45 @@ export default class ColorTable extends React.Component {
     language: string,
     data: Array,
     device: Object,
-    setColorBlock: () => {},
+    setColorBlock?: () => {},
   }
 
   constructor(props) {
     super(props)
+    this.listKeyIndex = 0
     this.height =
       this.props.device.orientation === 'LANDSCAPE'
         ? ConstToolType.THEME_HEIGHT[7]
         : ConstToolType.THEME_HEIGHT[3]
-    this.ColumnNums = this.props.device.orientation === 'LANDSCAPE' ? 16 : 8
+    this.ColumnNums = this.props.device.orientation === 'LANDSCAPE' ? 12 : 8
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.device.orientation !== this.props.device.orientation) {
+      this.height =
+        nextProps.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[7]
+          : ConstToolType.THEME_HEIGHT[3]
+      this.ColumnNums = nextProps.device.orientation === 'LANDSCAPE' ? 12 : 8
+      this.listKeyIndex++
+    }
   }
 
   renderItem = ({ item }) => {
+    if (item.useSpace)
+      return (
+        <View
+          style={{
+            flex: 1,
+            height: this.props.device.width / this.ColumnNums - scaleSize(4),
+            backgroundColor: color.white,
+            borderWidth: scaleSize(2),
+            borderColor: color.white,
+            marginVertical: scaleSize(2),
+            marginHorizontal: scaleSize(2),
+          }}
+        />
+      )
     return (
       <TouchableOpacity
         onPress={async () => {
@@ -34,7 +60,7 @@ export default class ColorTable extends React.Component {
           if (isSuccess) this.props.setColorBlock(item.key)
         }}
         style={{
-          width: this.props.device.width / this.ColumnNums - scaleSize(4),
+          flex: 1,
           height: this.props.device.width / this.ColumnNums - scaleSize(4),
           backgroundColor: item.key,
           borderWidth: scaleSize(2),
@@ -47,16 +73,23 @@ export default class ColorTable extends React.Component {
   }
 
   render() {
+    let data = this.props.data
+    while (data.length % this.ColumnNums !== 0) {
+      data.push({
+        useSpace: true,
+      })
+    }
     return (
       <View
         style={{
           height: this.height,
           width: '100%',
-          justifyContent: 'flex-end',
+          // justifyContent: 'flex-end',
           backgroundColor: color.white,
         }}
       >
         <FlatList
+          key={'listKey' + this.listKeyIndex}
           renderItem={this.renderItem}
           data={this.props.data}
           keyExtractor={(item, index) => item.key + index}
