@@ -5908,6 +5908,9 @@ export default class ToolBar extends React.PureComponent {
     return (
       <ColorTable
         language={this.props.language}
+        itemAction={item => {
+          this.itemaction(item)
+        }}
         data={data}
         device={this.props.device}
       />
