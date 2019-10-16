@@ -34,6 +34,9 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
 
+  NAVIGATION_START: 'Navigate',
+  NETWORK_MODEL: 'Model',
+  NETWORK_MODEL_FILE: 'Network Model Files',
   NAVIGATION_WORKSPACE: 'Navigation Workspace',
   NAVIGATION_MAP: 'NAVIGATION_MAP',
   NETWORK: 'NETWORK',

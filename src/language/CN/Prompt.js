@@ -226,6 +226,13 @@ const Prompt = {
 
   FIELD_ILLEGAL: '字段不合法',
   PLEASE_SELECT_A_RASTER_LAYER: '请选择栅格图层',
+
+  //导航相关
+  NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
+  SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
+  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
+    '请选择网络数据集和网络模型文件',
+  PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
 }
 
 export { Prompt }
