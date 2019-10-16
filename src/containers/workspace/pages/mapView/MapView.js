@@ -28,6 +28,7 @@ import {
   AnalystMapToolbar,
   PoiInfoContainer,
   PoiTopSearchBar,
+  SimpleSelectList,
 } from '../../components'
 import {
   Container,
@@ -1526,6 +1527,7 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.type}
         getToolRef={() => this.toolBox}
+        getNetworkPopView={() => this.selectList}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
@@ -1835,6 +1837,21 @@ export default class MapView extends React.Component {
     )
   }
 
+  //导航地图 模型、路网弹窗 数据在 点击模型按钮/切换地图时获取一次
+  renderNetworkSelectList = () => {
+    return (
+      <SimpleSelectList
+        ref={ref => (GLOBAL.SimpleSelectList = ref)}
+        data={[]}
+        showFullMap={this.showFullMap}
+        language={this.props.language}
+        dataChange={() => {
+          this.selectList.setVisible(false)
+          this.showFullMap(false)
+        }}
+      />
+    )
+  }
   renderSearchBar = () => {
     return null
     // if (!this.props.analyst.params) return null
@@ -2422,6 +2439,14 @@ export default class MapView extends React.Component {
           setNavigationPoiView={this.props.setNavigationPoiView}
           setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <PopView
+            showFullMap={this.showFullMap}
+            ref={ref => (this.selectList = ref)}
+          >
+            {this.renderNetworkSelectList()}
+          </PopView>
+        )}
       </Container>
     )
   }

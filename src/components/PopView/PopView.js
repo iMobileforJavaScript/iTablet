@@ -13,6 +13,7 @@ export default class PopView extends PureComponent {
   props: {
     children: any,
     modalVisible?: boolean,
+    showFullMap?: () => {},
   }
 
   constructor(props) {
@@ -100,7 +101,9 @@ export default class PopView extends PureComponent {
         <TouchableOpacity
           style={styles.themeoverlay}
           onPress={() => {
-            this.setVisible()
+            this.setVisible(false, () => {
+              this.props.showFullMap && this.props.showFullMap(false)
+            })
           }}
         />
         <View style={styles.infoContainer}>{this._renderContent()}</View>

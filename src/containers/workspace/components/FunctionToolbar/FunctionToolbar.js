@@ -70,6 +70,8 @@ export default class FunctionToolbar extends React.Component {
     user: Object,
     map: Object,
 
+    //模型、路网弹窗组件
+    getNetworkPopView?: () => {},
     incrementRoad: () => {},
     setMapIndoorNavigation: () => {},
     setMap2Dto3D: () => {},
@@ -598,6 +600,73 @@ export default class FunctionToolbar extends React.Component {
         //   : ConstToolType.NEWTHEME_HEIGHT[4],
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
+    }
+  }
+
+  //网络数据集和模型文件选择
+  showModelList = async () => {
+    let popView = this.props.getNetworkPopView()
+    let simpleList = GLOBAL.SimpleSelectList
+    if (simpleList.state.data.length === 0) {
+      let path =
+        (await FileTools.appendingHomeDirectory(
+          this.props.user && this.props.user.currentUser.userName
+            ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+            : ConstPath.CustomerPath,
+        )) + ConstPath.RelativePath.Datasource
+      let datasources = await SMap.getNetworkDatasource()
+      let models = await FileTools.getNetModel(path)
+      models = models.map(item => {
+        item.checked = false
+        return item
+      })
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+          visible: true,
+          image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+          data: datasources || [],
+        },
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu
+            .NETWORK_MODEL_FILE,
+          visible: true,
+          image: getThemeAssets().functionBar.rightbar_network_model,
+          data: models || [],
+        },
+      ]
+      simpleList.setState({
+        data,
+      })
+    }
+    this.props.showFullMap(true)
+    popView.setVisible(true)
+  }
+
+  startNavigation = async () => {
+    let rel = await SMap.hasNetworkDataset()
+    if (rel) {
+      let simpleList = GLOBAL.SimpleSelectList
+      let isIndoorMap = await SMap.isIndoorMap()
+      if (isIndoorMap) {
+        //室内导航
+        SMap.startIndoorNavigation()
+        NavigationService.navigate('NavigationView')
+      } else {
+        //行业导航
+        let { networkModel, networkDataset } = simpleList.state
+        if (networkModel && networkDataset) {
+          SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+          NavigationService.navigate('NavigationView')
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Prompt
+              .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
+          )
+        }
+      }
+    } else {
+      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
     }
   }
 
@@ -1309,6 +1378,23 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: '导航',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NAVIGATION_START,
+            //constants.ADD,
+            size: 'large',
+            action: this.startNavigation,
+            image: require('../../../../assets/Navigation/navi_icon.png'),
+          },
+          {
+            key: '模型',
+            title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
+            //constants.ADD,
+            size: 'large',
+            action: this.showModelList,
+            image: getThemeAssets().functionBar.rightbar_network_model,
           },
           {
             key: constants.TRAFFIC,

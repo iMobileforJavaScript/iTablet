@@ -22,6 +22,7 @@ import FloorListView from './FloorListView'
 import IncrementRoadView from './IncrementRoadView'
 import MapSelectPoint from './MapSelectPoint'
 import MapSelectPointButton from './MapSelectPointButton'
+import SimpleSelectList from './SimpleSelectList'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -30,6 +31,7 @@ import {
 import MenuList from './MenuList'
 import { PoiInfoContainer, PoiTopSearchBar } from './PoiInfoContainer'
 export {
+  SimpleSelectList,
   PopList,
   NetworkAnalystToolBar,
   CollectionToolbar,
