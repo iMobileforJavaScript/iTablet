@@ -435,6 +435,7 @@ const Map_Layer = {
   LAYERS_MIN_OBJECT_SIZE: 'Min Object Size',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: 'Filter Overlapping Small Objects',
   LAYERS_SHARE: 'Share',
+  SELECT_LAYSER_SCALE: 'Please select a scale',
 
   LAYERS_CREATE_THEMATIC_MAP: 'Create Thematic Map',
   LAYERS_MODIFY_THEMATIC_MAP: 'Modify Thematic Map',

@@ -25,6 +25,7 @@ import {
   layerSettingCanNotSelect,
   layerSettingCanNotSnap,
   layerSettingCanNotEdit,
+  getVisibleScalePickerData,
 } from './LayerToolbarData'
 import {
   View,
@@ -44,6 +45,7 @@ import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
+import { Picker } from '../../../../components'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -96,6 +98,7 @@ export default class LayerManager_tolbar extends React.Component {
       layerData: props.layerData || '',
       index: 0,
       // layerName: '',
+      layerVisibleScaleData: [],
     }
     this.isShow = false
     this.isBoxShow = true
@@ -154,6 +157,8 @@ export default class LayerManager_tolbar extends React.Component {
           }
           break
         case ConstToolType.MAP_SCALE:
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT_2[3]
+          break
         case ConstToolType.MAP_EDIT_STYLE:
           boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
           break
@@ -491,10 +496,12 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {
       //'可见比例尺范围'
-      this.setVisible(true, ConstToolType.MAP_SCALE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[1],
-        layerData: this.state.layerData,
-      })
+      (async function() {
+        await this.setVisibleScalePickerData()
+        this.setVisible(true, ConstToolType.MAP_SCALE, {
+          layerData: this.state.layerData,
+        })
+      }.bind(this)())
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM
     ) {
@@ -1053,6 +1060,8 @@ export default class LayerManager_tolbar extends React.Component {
       case list:
         switch (this.state.type) {
           case ConstToolType.MAP_SCALE:
+            box = this.renderPiker()
+            break
           case ConstToolType.MAP_MAX_SCALE:
           case ConstToolType.MAP_MIN_SCALE:
           case ConstToolType.MAP_EDIT_TAGGING:
@@ -1065,9 +1074,6 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()
             break
-          case 'Share':
-            box = this.renderShare()
-            break
         }
         break
     }
@@ -1076,6 +1082,50 @@ export default class LayerManager_tolbar extends React.Component {
         {box}
       </Animated.View>
     )
+  }
+
+  renderPiker = () => {
+    return (
+      <Picker
+        ref={ref => (this.picker = ref)}
+        language={GLOBAL.language}
+        confirm={async item => {
+          if (
+            JSON.stringify(item[0]) !== '{}' &&
+            JSON.stringify(item[1]) !== '{}'
+          ) {
+            if (item[0].value === '最大可见比例尺') {
+              await SMap.setMaxVisibleScale(
+                this.state.layerData.path,
+                item[1].value,
+              )
+            } else {
+              await SMap.setMinVisibleScale(
+                this.state.layerData.path,
+                item[1].value,
+              )
+            }
+            this.setVisible(false)
+          } else {
+            Toast.show(
+              getLanguage(global.language).Map_Layer.SELECT_LAYSER_SCALE,
+            )
+          }
+        }}
+        cancel={() => {
+          this.setVisible(false)
+        }}
+        popData={this.state.layerVisibleScaleData}
+        viewableItems={3}
+      />
+    )
+  }
+
+  setVisibleScalePickerData = async () => {
+    let min = await SMap.getMinVisibleScale(this.state.layerData.path)
+    let max = await SMap.getMaxVisibleScale(this.state.layerData.path)
+    let pickerData = await getVisibleScalePickerData(min, max)
+    this.setState({ layerVisibleScaleData: pickerData })
   }
 
   // confirm = () => {
