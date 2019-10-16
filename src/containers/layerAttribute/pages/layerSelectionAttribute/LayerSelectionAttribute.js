@@ -752,23 +752,25 @@ export default class LayerSelectionAttribute extends React.Component {
           },
         ])
         .then(result => {
+          // 成功修改属性后，更新数据
+          let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+          // 如果有序号，column.index要 -1
+          // let column = this.state.attributes.data.length > 1 ? (data.columnIndex - 1) : data.columnIndex
           if (result) {
-            // 成功修改属性后，更新数据
-            let attributes = JSON.parse(JSON.stringify(this.state.attributes))
-            // 如果有序号，column.index要 -1
-            // let column = this.state.attributes.data.length > 1 ? (data.columnIndex - 1) : data.columnIndex
             if (this.state.attributes.data.length > 1) {
               attributes.data[data.index][data.columnIndex - 1].value =
                 data.value
             } else {
               attributes.data[0][data.index].value = data.value
             }
-
-            this.checkToolIsViable()
-            this.setState({
-              attributes,
-            })
+          }else{
+            Toast.show(global.language==="CN"?"数据类型不合法,设置失败":"Invalid data type. Failed to set")
           }
+
+          this.checkToolIsViable()
+          this.setState({
+            attributes,
+          })
         })
     }
   }
