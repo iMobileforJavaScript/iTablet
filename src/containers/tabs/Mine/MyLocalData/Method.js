@@ -371,8 +371,7 @@ async function downFileAction(
                       getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
                     )
                   }
-                } else {
-                  let result = await importWorkspace({ path: filePath })
+                  result = await importWorkspace({ path: filePath })
                   if (result.msg !== undefined) {
                     Toast.show(
                       getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
@@ -383,6 +382,18 @@ async function downFileAction(
                     )
                   }
                 }
+                //  else {
+                //   let result = await importWorkspace({ path: filePath })
+                //   if (result.msg !== undefined) {
+                //     Toast.show(
+                //       getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+                //     )
+                //   } else {
+                //     Toast.show(
+                //       getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                //     )
+                //   }
+                // }
               } else if (newData[i].fileType === 'datasource') {
                 await SMap.importDatasourceFile(newData[i].filePath).then(
                   result => {
