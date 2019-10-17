@@ -118,16 +118,18 @@ export default class Home extends Component {
             )
           }
         }
-        // else {
-        //   let result = await SMap.importWorkspaceInfo({
-        //     server: filePath,
-        //     type: 9,
-        //   })
+        else {
+          let result = await SMap.importWorkspaceInfo({
+            server: filePath,
+            type: 9,
+          })
 
-        //   if (result.length === 0) {
-        //     Toast.show('导入失败')
-        //   }
-        // }
+          if (result.length === 0) {
+            Toast.show(
+              getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+            )
+          }
+        }
       }
     } catch (e) {
       Toast.show('导入失败')
