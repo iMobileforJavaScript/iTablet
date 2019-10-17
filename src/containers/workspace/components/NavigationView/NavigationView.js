@@ -273,8 +273,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.ENDY,
                   )
                   if (result) {
-                    GLOBAL.PATHLENGTH = await SMap.getOutdoorPathLength()
-                    GLOBAL.PATH = await SMap.getOutdoorPath()
+                    GLOBAL.PATHLENGTH = await SMap.getNavPathLength(false)
+                    GLOBAL.PATH = await SMap.getPathInfos(false)
                     GLOBAL.ROUTEANALYST = true
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
@@ -324,8 +324,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.ENDY,
                   )
                   if (result) {
-                    GLOBAL.PATHLENGTH = await SMap.getIndoorPathLength()
-                    GLOBAL.PATH = await SMap.getIndoorPath()
+                    GLOBAL.PATHLENGTH = await SMap.getNavPathLength(true)
+                    GLOBAL.PATH = await SMap.getPathInfos(true)
                     GLOBAL.ROUTEANALYST = true
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {

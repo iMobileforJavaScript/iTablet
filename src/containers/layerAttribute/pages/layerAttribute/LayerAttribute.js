@@ -738,6 +738,8 @@ export default class LayerAttribute extends React.Component {
               attributes,
               ...checkData,
             })
+          }else{
+            Toast.show(global.language==="CN"?"数据类型不合法,设置失败":"Invalid data type. Failed to set")
           }
         })
     }

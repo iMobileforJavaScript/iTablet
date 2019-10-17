@@ -39,6 +39,9 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  NAVIGATION_START: '导航',
+  NETWORK_MODEL: '模型',
+  NETWORK_MODEL_FILE: '网络模型文件',
   NAVIGATION_WORKSPACE: '导航工作空间',
   NAVIGATION_MAP: '导航地图',
   NETWORK: '路网',

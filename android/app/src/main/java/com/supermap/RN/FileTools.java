@@ -393,8 +393,9 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    //获取nsm（网络模型）文件
     @ReactMethod
-    public void getNetModel(String path, ReadableMap filter, Promise promise) {
+    public void getNetModel(String path, Promise promise) {
         try {
             File file = new File(path);
 
@@ -402,28 +403,10 @@ public class FileTools extends ReactContextBaseJavaModule {
             WritableArray array = Arguments.createArray();
             if (files != null) {
                 for (int i = 0; i < files.length; i++) {
-                    String p = files[i].getAbsolutePath().replace(SDCARD, "");
+                    String p = files[i].getAbsolutePath();
                     String n = files[i].getName();
-                    String mtime = getLastModifiedTime(files[i]);
-                    int lastDot = n.lastIndexOf(".");
-                    String name, extension = "";
-                    if (lastDot > 0) {
-                        name = n.substring(0, lastDot).toLowerCase();
-                        extension = n.substring(lastDot + 1).toLowerCase();
-                    } else {
-                        name = n;
-                    }
                     boolean isDirectory = files[i].isDirectory();
-
-                    if (filter != null && filter.toHashMap().containsKey("name") && !filter.getString("name").equals("")) {
-                        String filterName = filter.getString("name").toLowerCase().trim();
-                        // 判断文件名
-                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
-                            continue;
-                        }
-                    }
-                    String filterType = "snm";
-                    if (!isDirectory && extension.contains(filterType)) {
+                    if (!isDirectory && n.endsWith(".snm")) {
                         WritableMap map = Arguments.createMap();
                         map.putString("path", p);
                         map.putString("name", n);
