@@ -164,10 +164,11 @@ export const setLayerAttributes = (
   params = [],
   cb = () => {},
 ) => async dispatch => {
+  let bRes = false
   try {
     if (params && params.length > 0) {
       for (let i = 0; i < params.length; i++) {
-        await SMap.setLayerFieldInfo(
+        bRes = await SMap.setLayerFieldInfo(
           params[i].layerPath,
           params[i].fieldInfo,
           params[i].params,
@@ -179,8 +180,8 @@ export const setLayerAttributes = (
       type: ADD_ATTRIBUTE_HISTORY,
       payload: params || [],
     })
-    cb && cb(true)
-    return true
+    cb && cb(bRes)
+    return bRes
   } catch (e) {
     return false
   }

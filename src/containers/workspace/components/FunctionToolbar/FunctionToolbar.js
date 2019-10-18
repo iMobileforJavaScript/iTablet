@@ -36,6 +36,7 @@ export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
 import { getThemeAssets } from '../../../../assets'
+import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 const BottomHeight = scaleSize(100)
@@ -53,6 +54,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     layers: PropTypes.object,
+    getLayers?: () => {},
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
@@ -68,6 +70,8 @@ export default class FunctionToolbar extends React.Component {
     user: Object,
     map: Object,
 
+    //模型、路网弹窗组件
+    getNetworkPopView?: () => {},
     incrementRoad: () => {},
     setMapIndoorNavigation: () => {},
     setMap2Dto3D: () => {},
@@ -599,16 +603,92 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  incrementRoad = () => {
-    if (this.props.openOnlineMap) {
-      this.props.incrementRoad()
+  //网络数据集和模型文件选择
+  showModelList = async () => {
+    let popView = this.props.getNetworkPopView()
+    let simpleList = GLOBAL.SimpleSelectList
+    if (simpleList.state.data.length === 0) {
+      let path =
+        (await FileTools.appendingHomeDirectory(
+          this.props.user && this.props.user.currentUser.userName
+            ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+            : ConstPath.CustomerPath,
+        )) + ConstPath.RelativePath.Datasource
+      let datasources = await SMap.getNetworkDatasource()
+      let models = await FileTools.getNetModel(path)
+      models = models.map(item => {
+        item.checked = false
+        return item
+      })
+      let data = [
+        {
+          title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+          visible: true,
+          image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+          data: datasources || [],
+        },
+        {
+          title: getLanguage(this.props.language).Map_Main_Menu
+            .NETWORK_MODEL_FILE,
+          visible: true,
+          image: getThemeAssets().functionBar.rightbar_network_model,
+          data: models || [],
+        },
+      ]
+      simpleList.setState({
+        data,
+      })
+    }
+    this.props.showFullMap(true)
+    popView.setVisible(true)
+  }
+
+  startNavigation = async () => {
+    let rel = await SMap.hasNetworkDataset()
+    if (rel) {
+      let simpleList = GLOBAL.SimpleSelectList
+      let isIndoorMap = await SMap.isIndoorMap()
+      if (isIndoorMap) {
+        //室内导航
+        SMap.startIndoorNavigation()
+        NavigationService.navigate('NavigationView')
+      } else {
+        //行业导航
+        let { networkModel, networkDataset } = simpleList.state
+        if (networkModel && networkDataset) {
+          SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+          NavigationService.navigate('NavigationView')
+        } else {
+          Toast.show(
+            getLanguage(this.props.language).Prompt
+              .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
+          )
+        }
+      }
     } else {
-      Toast.show('请先打开室内数据')
+      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
     }
   }
 
+  incrementRoad = async () => {
+    //增加路网功能 室内外只要包含路网数据集的地图都能使用 室外走不同逻辑
+    // let isIndoorMap = await SMap.isIndoorMap()
+    // if(isIndoorMap){
+    this.props.incrementRoad()
+    // } else {
+    //   Toast.show('请先打开室内数据')
+    // }
+  }
+
   openTraffic = async () => {
-    if (!this.props.openOnlineMap) {
+    // 有底图并且底图可见 就能使用路况
+    let hasBaseMap = false
+    let layers = this.props.getLayers && (await this.props.getLayers())
+    let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
+    if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+      hasBaseMap = true
+    }
+    if (hasBaseMap) {
       let isadd = await SMap.isOpenTrafficMap()
       if (isadd) {
         await SMap.removeTrafficMap('tencent@TrafficMap')
@@ -616,7 +696,7 @@ export default class FunctionToolbar extends React.Component {
         await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
       }
     } else {
-      Toast.show('请使用在线导航功能')
+      Toast.show('请设置底图可见')
     }
   }
 
@@ -1300,6 +1380,23 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
+            key: '导航',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NAVIGATION_START,
+            //constants.ADD,
+            size: 'large',
+            action: this.startNavigation,
+            image: require('../../../../assets/Navigation/navi_icon.png'),
+          },
+          {
+            key: '模型',
+            title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
+            //constants.ADD,
+            size: 'large',
+            action: this.showModelList,
+            image: getThemeAssets().functionBar.rightbar_network_model,
+          },
+          {
             key: constants.TRAFFIC,
             title: getLanguage(this.props.language).Map_Main_Menu.Traffic,
             //路况
@@ -1307,15 +1404,15 @@ export default class FunctionToolbar extends React.Component {
             action: this.openTraffic,
             image: require('../../../../assets/Navigation/road.png'),
           },
-          {
-            key: '风格',
-            title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
-            //'风格',
-            action: this.mapStyle,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_style.png'),
-            selectMode: 'flash',
-          },
+          // {
+          //   key: '风格',
+          //   title: getLanguage(this.props.language).Map_Main_Menu.STYLE,
+          //   //'风格',
+          //   action: this.mapStyle,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_style.png'),
+          //   selectMode: 'flash',
+          // },
           {
             key: '路网',
             title: getLanguage(this.props.language).Map_Main_Menu

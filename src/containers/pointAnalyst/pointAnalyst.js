@@ -570,7 +570,11 @@ export default class PointAnalyst extends Component {
         initWithLoading={false}
         headerProps={{
           title: this.type === 'pointSearch' ? '位置搜索' : '路径分析',
-          navigation: this.props.navigation,
+          // navigation: this.props.navigation,
+          backAction: () => {
+            this.props.navigation.goBack()
+            GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+          },
           headerCenter:
             this.type === 'pointSearch' ? this.renderSearchBar() : <View />,
         }}

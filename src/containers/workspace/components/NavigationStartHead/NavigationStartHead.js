@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text } from 'react-native'
+import { View, Image, TouchableOpacity, Text, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import styles from './styles'
 import { TouchType } from '../../../../constants'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
 // import NavigationService from '../../../../containers/NavigationService'
-
+const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
     mapSelectPoint: Object,
@@ -48,7 +48,8 @@ export default class NavigationStartHead extends React.Component {
       return (
         <View
           style={{
-            height: scaleSize(165),
+            paddingTop: TOOLBARHEIGHT,
+            height: scaleSize(165) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -103,7 +104,11 @@ export default class NavigationStartHead extends React.Component {
                     await SMap.clearPoint()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.firstPoint}
                   </Text>
                 </TouchableOpacity>
@@ -145,7 +150,11 @@ export default class NavigationStartHead extends React.Component {
                     await SMap.clearPoint()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.secondPoint}
                   </Text>
                 </TouchableOpacity>

@@ -10,8 +10,6 @@ import {
   Row,
   MTBtn,
   TableList,
-  ColorTableList,
-  ColorBtn,
   HorizontalTableList,
 } from '../../../../components'
 import {
@@ -99,6 +97,7 @@ import { getLanguage } from '../../../../language/index'
 import MenuList from '../MenuList'
 import { BoxClipData, PlaneClipData, CrossClipData } from './Map3DClipMenuData'
 import AnimationNodeListView from '../AnimationNodeListView'
+import { ColorTable } from '../../../mapSetting/secondMapSettings/components'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -727,7 +726,6 @@ export default class ToolBar extends React.PureComponent {
                   //'请打开场景')
                   return
                 }
-                SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
                 SScene.closeAllLabel()
                 this.showToolbar(!this.isShow)
@@ -814,6 +812,7 @@ export default class ToolBar extends React.PureComponent {
               }
               try {
                 // SScene.startDrawLine()
+                GLOBAL.action3d = 'PAN3D_FIX'
                 GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
                 GLOBAL.currentToolbarType = ConstToolType.MAP_BOX_CLIP
                 this.showMap3DTool(ConstToolType.MAP_BOX_CLIP)
@@ -993,9 +992,6 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < this.expressionData.list.length; i++) {
           let item = this.expressionData.list[i]
           if (
-            type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
-            type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
-            type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
             ThemeMenuData.isThemeFieldTypeAvailable(
               item.fieldTypeStr,
               this.state.themeCreateType,
@@ -2805,6 +2801,8 @@ export default class ToolBar extends React.PureComponent {
     if (isShow && GLOBAL.TouchType != TouchType.ANIMATION_WAY) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
+    } else if (!isShow) {
+      GLOBAL.TouchType = TouchType.NORMAL
     }
     this.setOverlayViewVisible(isShow)
 
@@ -3044,7 +3042,6 @@ export default class ToolBar extends React.PureComponent {
           datasetNames,
           this.state.themeDatasourceAlias,
         )
-
         // 找出有默认样式的数据集，并给对应图层设置
         for (let i = 0; i < resultArr.length; i++) {
           let description =
@@ -3060,6 +3057,7 @@ export default class ToolBar extends React.PureComponent {
         }
 
         if (resultArr && resultArr.length > 0) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.props.getLayers(-1, layers => {
             if (layers.length > 0) {
               this.props.setCurrentLayer(layers[0])
@@ -3120,6 +3118,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
@@ -3153,6 +3152,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
         if (result) {
+          this.toolBarSectionList && this.toolBarSectionList.updateSelectList()
           this.setVisible(false)
           GLOBAL.dialog.setDialogVisible(true)
           Toast.show(
@@ -3225,6 +3225,13 @@ export default class ToolBar extends React.PureComponent {
 
       if (type === ConstToolType.MAP3D_TOOL_FLY) {
         this.endFly()
+      }
+
+      if (
+        type === ConstToolType.MAP_BOX_CLIP ||
+        type === ConstToolType.MAP3D_BOX_CLIP
+      ) {
+        this.end3DBoxClip()
       }
 
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
@@ -3400,6 +3407,12 @@ export default class ToolBar extends React.PureComponent {
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
+  }
+
+  end3DBoxClip = () => {
+    SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d = 'PAN3D'
+    GLOBAL.action3d && SScene.setAction('PAN3D')
   }
 
   changeCollection = () => {
@@ -4123,6 +4136,7 @@ export default class ToolBar extends React.PureComponent {
   closeCircle = () => {
     SScene.stopCircleFly()
     SScene.clearCirclePoint()
+    GLOBAL.action3d = 'PAN3D'
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -4181,7 +4195,7 @@ export default class ToolBar extends React.PureComponent {
     SMap.animationClose()
     SMap.setAction(Action.PAN)
     SMap.endAnimationWayPoint(false)
-    GLOBAL.TouchType = TouchType.NULL
+    GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -5549,7 +5563,6 @@ export default class ToolBar extends React.PureComponent {
         return
       }
       this.props.setMap2Dto3D(false)
-      this.props.setOpenOnlineMap(true)
       this.props.setMapIndoorNavigation(true)
       this.props.setContainerLoading(
         true,
@@ -5572,6 +5585,43 @@ export default class ToolBar extends React.PureComponent {
           getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
           //ConstInfo.CHANGE_MAP_TO + mapInfo.name
         )
+        //重新获取导航弹窗的数据
+        if (GLOBAL.SimpleSelectList) {
+          setTimeout(async () => {
+            let path =
+              (await FileTools.appendingHomeDirectory(
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                      this.props.user.currentUser.userName +
+                      '/'
+                  : ConstPath.CustomerPath,
+              )) + ConstPath.RelativePath.Datasource
+            let models = await FileTools.getNetModel(path)
+            models = models.map(item => {
+              item.checked = false
+              return item
+            })
+            let datasources = await SMap.getNetworkDatasource()
+            let data = [
+              {
+                title: getLanguage(this.props.language).Map_Settings
+                  .DATASOURCES,
+                visible: true,
+                data: datasources || [],
+              },
+              {
+                title: getLanguage(this.props.language).Map_Main_Menu
+                  .NETWORK_MODEL_FILE,
+                visible: true,
+                data: models || [],
+              },
+            ]
+            GLOBAL.SimpleSelectList.setState({
+              data,
+            })
+          }, 2000)
+        }
+
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
           await SMap.addLegendListener({
@@ -5848,12 +5898,20 @@ export default class ToolBar extends React.PureComponent {
   }
 
   renderColorTable = () => {
+    //flex布局尾部填充空格
+    let data = this.state.data
+    while (data.length % this.state.column !== 0) {
+      data.push({
+        useSpace: true,
+      })
+    }
     return (
-      <ColorTableList
-        data={this.state.data}
-        type={this.state.tableType}
-        numColumns={this.state.column}
-        renderCell={this._renderColorItem}
+      <ColorTable
+        language={this.props.language}
+        itemAction={item => {
+          this.itemaction(item)
+        }}
+        data={data}
         device={this.props.device}
       />
     )
@@ -6159,19 +6217,19 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
-  _renderColorItem = ({ item, rowIndex, cellIndex }) => {
-    return (
-      <ColorBtn
-        key={rowIndex + '-' + cellIndex}
-        background={item.background}
-        onPress={() => {
-          this.itemaction(item)
-        }}
-        device={this.props.device}
-        numColumns={this.state.column}
-      />
-    )
-  }
+  // _renderColorItem = ({ item, rowIndex, cellIndex }) => {
+  //   return (
+  //     <ColorBtn
+  //       key={rowIndex + '-' + cellIndex}
+  //       background={item.background}
+  //       onPress={() => {
+  //         this.itemaction(item)
+  //       }}
+  //       device={this.props.device}
+  //       numColumns={this.state.column}
+  //     />
+  //   )
+  // }
   getClipData = type => {
     let clipData
     let layerList = JSON.parse(JSON.stringify(this.props.layerList))

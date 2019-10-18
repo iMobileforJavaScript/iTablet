@@ -233,6 +233,13 @@ const Prompt = {
 
   FIELD_ILLEGAL: 'Field illegal',
   PLEASE_SELECT_A_RASTER_LAYER: 'Please select a raster layer',
+
+  //导航相关
+  NO_NETWORK_DATASETS: "Current workspace does'nt contain network dataset",
+  SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
+  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
+    'Select a network dataset and a network model first',
+  PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
 }
 
 export { Prompt }

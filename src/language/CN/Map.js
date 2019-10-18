@@ -39,6 +39,9 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  NAVIGATION_START: '导航',
+  NETWORK_MODEL: '模型',
+  NETWORK_MODEL_FILE: '网络模型文件',
   NAVIGATION_WORKSPACE: '导航工作空间',
   NAVIGATION_MAP: '导航地图',
   NETWORK: '路网',
@@ -449,6 +452,7 @@ const Map_Layer = {
   LAYERS_MIN_OBJECT_SIZE: '对象最小尺寸',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
   LAYERS_SHARE: '分享',
+  SELECT_LAYSER_SCALE: '请选择比例尺',
 
   VISIBLE: '设置图层可见',
   NOT_VISIBLE: '设置图层不可见',
