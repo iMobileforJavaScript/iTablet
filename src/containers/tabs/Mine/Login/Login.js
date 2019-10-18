@@ -221,7 +221,7 @@ class Login extends React.Component {
         if (bGetUserInfo !== false) {
           global.isLogging = true
           // Toast.show('登录成功')
-          this.container.setLoading(false)
+          this.container && this.container.setLoading(false)
           this.props.setUser({
             userName: userName,
             password: password,
@@ -235,7 +235,7 @@ class Login extends React.Component {
           })
         } else {
           // Toast.show('登录成功')
-          this.container.setLoading(false)
+          this.container && this.container.setLoading(false)
           this.props.setUser({
             userName: userName,
             password: password,
@@ -270,11 +270,11 @@ class Login extends React.Component {
           Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
         } else Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
         //'登录失败')
-        this.container.setLoading(false)
+        this.container && this.container.setLoading(false)
       }
     } catch (e) {
       //console.warn(e)
-      this.container.setLoading(false)
+      this.container && this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
       //'登录异常')
     }

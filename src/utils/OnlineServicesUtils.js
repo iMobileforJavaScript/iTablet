@@ -2,7 +2,9 @@ import { request } from './index'
 import cheerio from 'react-native-cheerio'
 import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { Platform } from 'react-native'
-const axios = require('axios').default
+import axios from 'axios'
+// eslint-disable-next-line import/default
+import CookieManager from 'react-native-cookies'
 
 export default class OnlineServicesUtils {
   constructor(type) {
@@ -164,6 +166,7 @@ export default class OnlineServicesUtils {
         let url =
           'https://sso.supermap.com/login?service=https://www.supermapol.com/shiro-cas'
 
+        await CookieManager.clearAll()
         //请求登陆页面
         let response = await axios.get(url)
         let $ = cheerio.load(response.data)
