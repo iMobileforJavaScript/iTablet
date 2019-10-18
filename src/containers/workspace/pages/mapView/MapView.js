@@ -1256,7 +1256,7 @@ export default class MapView extends React.Component {
         setGestureDetectorListener({ ...this.props })
         GLOBAL.TouchType = TouchType.NORMAL
 
-        SMap.openTaggingDataset(this.props.user.currentUser.userName)
+        await SMap.openTaggingDataset(this.props.user.currentUser.userName)
 
         GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
           this.props.user.currentUser.userName,
