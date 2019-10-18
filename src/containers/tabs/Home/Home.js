@@ -178,7 +178,9 @@ export default class Home extends Component {
   _onSetting = () => {
     this._closeModal()
     // StatusBar.setHidden(true,'slide')
-    NavigationService.navigate('Setting')
+    NavigationService.navigate('Setting', {
+      user: this.props.user,
+    })
   }
 
   _onAbout = () => {
