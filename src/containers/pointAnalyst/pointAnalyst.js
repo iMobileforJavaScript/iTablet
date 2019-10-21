@@ -495,7 +495,7 @@ export default class PointAnalyst extends Component {
                 fontSize: setSpText(20),
               }}
             >
-              清除搜索记录
+              {getLanguage(global.language).Prompt.CLEAR_HISTORY}
             </Text>
           </TouchableOpacity>
         )}
