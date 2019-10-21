@@ -256,6 +256,18 @@ export default class Friend extends Component {
           )
           if (!consumer || consumer !== this.props.chat.consumer) {
             this.restartService()
+          } else {
+            //每分钟发送心跳消息
+            this._sendMessage(
+              JSON.stringify({
+                type: 0,
+                user: {
+                  id: this.props.user.currentUser.userId,
+                },
+              }),
+              this.props.user.currentUser.userId,
+              true,
+            )
           }
         }
       }, 60000)
@@ -571,19 +583,8 @@ export default class Friend extends Component {
     return isGroup
   }
 
-  _sendMessage = async (messageStr, talkId, bInform, cb) => {
-    let bCon = true
-    if (!g_connectService) {
-      bCon = await SMessageService.connectService(
-        MSGConstant.MSG_IP,
-        MSGConstant.MSG_Port,
-        MSGConstant.MSG_HostName,
-        MSGConstant.MSG_UserName,
-        MSGConstant.MSG_Password,
-        this.props.user.currentUser.userId,
-      )
-    }
-    if (bCon) {
+  _sendMessage = async (messageStr, talkId, bSilent = false, cb) => {
+    try {
       let talkIds = []
       if (this.isGroupMsg(messageStr)) {
         let members = FriendListFileHandle.readGroupMemberList(talkId)
@@ -600,15 +601,21 @@ export default class Friend extends Component {
         messageObj.message = Buffer.from(messageObj.message).toString('base64')
       }
       let generalMsg = JSON.stringify(messageObj)
-      await SMessageService.sendMessage(generalMsg, talkId)
+      let result = await SMessageService.sendMessage(generalMsg, talkId)
       JPushService.push(messageStr, talkIds)
-    } else {
-      Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
+
+      if (!bSilent && !result) {
+        Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
+      }
+
+      cb && cb(result)
+      return result
+    } catch (e) {
+      if (!bSilent) {
+        Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
+      }
+      return false
     }
-    if (!bInform) {
-      //todo
-    }
-    cb && cb()
   }
 
   storeMessage = (messageObj, talkId, msgId) => {

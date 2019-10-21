@@ -184,4 +184,7 @@ export default {
   DISCOVERY: '发现',
   SAVE_AS_IMAGE: '保存为图片',
   SUPERMAP_IPORTAL: 'SuperMap iPortal',
+
+  //==================许可==============
+  LICENSE_OFFICIAL_STORAGE_KEY: 'LICENSE_OFFICIAL_STORAGE_KEY',
 }

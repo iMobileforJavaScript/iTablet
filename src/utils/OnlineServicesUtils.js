@@ -1,6 +1,10 @@
 import { request } from './index'
+import cheerio from 'react-native-cheerio'
 import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { Platform } from 'react-native'
+import axios from 'axios'
+// eslint-disable-next-line import/default
+import CookieManager from 'react-native-cookies'
 
 export default class OnlineServicesUtils {
   constructor(type) {
@@ -153,5 +157,61 @@ export default class OnlineServicesUtils {
       },
     })
     return result.succeed
+  }
+
+  /************************ online账号相关 ***********************/
+  async login(userName, password, loginType) {
+    if (this.type === 'online') {
+      try {
+        let url =
+          'https://sso.supermap.com/login?service=https://www.supermapol.com/shiro-cas'
+
+        await CookieManager.clearAll()
+        //请求登陆页面
+        let response = await axios.get(url)
+        let $ = cheerio.load(response.data)
+        let cookie
+        if (response.headers['set-cookie']) {
+          cookie = response.headers['set-cookie'][0]
+          cookie = cookie.substr(0, cookie.indexOf(';'))
+        }
+
+        let paramObj = {
+          loginType: loginType,
+          username: userName,
+          password: password,
+          lt: $('input[name=lt]').attr().value,
+          execution: $('input[name=execution]').attr().value,
+          _eventId: $('input[name=_eventId]').attr().value,
+          // submit: '登录',
+        }
+        let paramStr
+        if (Platform.OS === 'android') {
+          paramStr = JSON.stringify(paramObj)
+        } else {
+          paramStr = this.obj2params(paramObj)
+        }
+        let result = await SOnlineService.loginWithParam(url, cookie, paramStr)
+        this.cookie = await SOnlineService.getCookie()
+
+        return result
+      } catch (e) {
+        return false
+      }
+    }
+  }
+
+  obj2params(obj) {
+    var result = ''
+    var item
+    for (item in obj) {
+      result += '&' + item + '=' + encodeURIComponent(obj[item])
+    }
+
+    if (result) {
+      result = result.slice(1)
+    }
+
+    return result
   }
 }

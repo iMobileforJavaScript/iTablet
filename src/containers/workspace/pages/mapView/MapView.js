@@ -14,10 +14,13 @@ import {
   EngineType,
   SMediaCollector,
   SMAIDetectView,
+  // SMMapSuspension,
+  SAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
   FunctionToolbar,
+  AIFunctionToolbar,
   MapToolbar,
   MapController,
   ToolBar,
@@ -87,6 +90,7 @@ import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
 import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
 import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
 import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
+// import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -1256,7 +1260,7 @@ export default class MapView extends React.Component {
         setGestureDetectorListener({ ...this.props })
         GLOBAL.TouchType = TouchType.NORMAL
 
-        SMap.openTaggingDataset(this.props.user.currentUser.userName)
+        await SMap.openTaggingDataset(this.props.user.currentUser.userName)
 
         GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
           this.props.user.currentUser.userName,
@@ -1518,6 +1522,22 @@ export default class MapView extends React.Component {
     )
   }
 
+  /** 仅限视频地图工具栏（右侧） **/
+  renderAIFunctionToolbar = () => {
+    return (
+      <AIFunctionToolbar
+        ref={ref => (GLOBAL.AIFUNCTIONTOOLBAR = ref)}
+        language={this.props.language}
+        device={this.props.device}
+        user={this.props.user}
+        type={this.type}
+        getToolRef={() => this.toolBox}
+        style={styles.functionToolbar}
+        showFullMap={this.showFullMap}
+      />
+    )
+  }
+
   /** 地图功能工具栏（右侧） **/
   renderFunctionToolbar = () => {
     return (
@@ -1680,6 +1700,9 @@ export default class MapView extends React.Component {
         Info: data.info,
       }
       // Toast.show(data.name + ', ' + data.info + ', ' + data.id)
+      this.showFullMap(false)
+      GLOBAL.toolBox.setVisible(false)
+      GLOBAL.AIDETECTCHANGE.setVisible(false)
       this.captureImage(params)
     }
   }
@@ -1941,6 +1964,8 @@ export default class MapView extends React.Component {
   /** 切换ar和地图浏览 **/
   switchAr = () => {
     if (this.state.showAIDetect) {
+      // SMapSuspension.closeMap()
+      // GLOBAL.SMMapSuspension && GLOBAL.SMMapSuspension.setVisible(false)
       this.setState({
         showAIDetect: false,
       })
@@ -2209,6 +2234,26 @@ export default class MapView extends React.Component {
     }
   }
 
+  _renderAIDetectChange = () => {
+    return (
+      <MapSelectPoint
+        ref={ref => (GLOBAL.AIDETECTCHANGE = ref)}
+        headerProps={{
+          title: '目标检测',
+          navigation: this.props.navigation,
+          type: 'fix',
+          backAction: async () => {
+            await SAIDetectView.setProjectionModeEnable(false)
+            GLOBAL.AIDETECTCHANGE.setVisible(false)
+            this.showFullMap(false)
+            GLOBAL.toolBox.setVisible(false)
+            this.switchAr()
+          },
+        }}
+      />
+    )
+  }
+
   _renderMapSelectPoint = () => {
     return (
       <MapSelectPoint
@@ -2322,6 +2367,14 @@ export default class MapView extends React.Component {
             language={this.props.language}
           />
         )}
+        {this._renderAIDetectChange()}
+        {/*{this.state.showAIDetect && (<AIMapSuspensionDialog ref={ref => (GLOBAL.AIMapSuspensionDialog = ref)}/>)}*/}
+        {/*{this.state.showAIDetect && (<View style={{height: '100%', width: '100%'}}><SMMapSuspension*/}
+        {/*ref={ref => (GLOBAL.SMMapSuspension = ref)}/></View>)}*/}
+        {/*{!this.isExample &&*/}
+        {/*!this.props.analyst.params &&*/}
+        {/*this.state.showAIDetect &&*/}
+        {/*this.renderAIFunctionToolbar()}*/}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {!this.state.showAIDetect && this.renderMapController()}
         {/*{!this.isExample &&*/}

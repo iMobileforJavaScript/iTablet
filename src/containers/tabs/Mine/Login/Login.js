@@ -15,7 +15,7 @@ import {
   Keyboard,
   NetInfo,
 } from 'react-native'
-import { Toast, scaleSize } from '../../../../utils/index'
+import { Toast, scaleSize, OnlineServicesUtils } from '../../../../utils/index'
 import { Container } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -31,6 +31,7 @@ import { getLanguage } from '../../../../language/index'
 import { setUser } from '../../../../models/user'
 import { connect } from 'react-redux'
 
+const JSOnlineService = new OnlineServicesUtils('online')
 class Login extends React.Component {
   props: {
     language: string,
@@ -134,8 +135,10 @@ class Login extends React.Component {
           getLanguage(this.props.language).Prompt.LOG_IN,
         )
         if (isEmail) {
+          result = await JSOnlineService.login(userName, password, 'EMAIL_TYPE')
           result = await SOnlineService.login(userName, password)
         } else {
+          result = await JSOnlineService.login(userName, password, 'PHONE_TYPE')
           result = await SOnlineService.loginWithPhoneNumber(userName, password)
         }
       } else {
@@ -218,7 +221,7 @@ class Login extends React.Component {
         if (bGetUserInfo !== false) {
           global.isLogging = true
           // Toast.show('登录成功')
-          this.container.setLoading(false)
+          this.container && this.container.setLoading(false)
           this.props.setUser({
             userName: userName,
             password: password,
@@ -232,7 +235,7 @@ class Login extends React.Component {
           })
         } else {
           // Toast.show('登录成功')
-          this.container.setLoading(false)
+          this.container && this.container.setLoading(false)
           this.props.setUser({
             userName: userName,
             password: password,
@@ -267,11 +270,11 @@ class Login extends React.Component {
           Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
         } else Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
         //'登录失败')
-        this.container.setLoading(false)
+        this.container && this.container.setLoading(false)
       }
     } catch (e) {
       //console.warn(e)
-      this.container.setLoading(false)
+      this.container && this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
       //'登录异常')
     }

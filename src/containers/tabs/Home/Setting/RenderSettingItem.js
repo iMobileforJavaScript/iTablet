@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Text, View, StatusBar, AsyncStorage } from 'react-native'
 import color from '../../../../styles/color'
+import { scaleSize } from '../../../../utils'
 
 export default class RenderSettingItem extends Component {
   props: {
@@ -30,13 +31,13 @@ export default class RenderSettingItem extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 18, marginLeft: 15 }}>
+          <Text style={{ fontSize: scaleSize(24), marginLeft: 15 }}>
             {this.props.label}
           </Text>
           <Switch
