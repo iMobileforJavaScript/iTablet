@@ -566,6 +566,122 @@ const mscaleData = [
   },
 ]
 
+async function getVisibleScalePickerData(min, max) {
+  let option = [
+    {
+      key: '1 : 2,500',
+      value: 2500,
+    },
+    {
+      key: '1 : 5,000',
+      value: 5000,
+    },
+    {
+      key: '1 : 10,000',
+      value: 10000,
+    },
+    {
+      key: '1 : 20,000',
+      value: 20000,
+    },
+    {
+      key: '1 : 25,000',
+      value: 25000,
+    },
+    {
+      key: '1 : 50,000',
+      value: 50000,
+    },
+    {
+      key: '1 : 100,000',
+      value: 100000,
+    },
+    {
+      key: '1 : 200,000',
+      value: 200000,
+    },
+    {
+      key: '1 : 500,000',
+      value: 500000,
+    },
+    {
+      key: '1 : 1,000,000',
+      value: 1000000,
+    },
+    {
+      key: '1 : 2,000,000',
+      value: 2000000,
+    },
+    {
+      key: '1 : 5,000,000',
+      value: 5000000,
+    },
+    {
+      key: '1 : 10,000,000',
+      value: 10000000,
+    },
+    {
+      key: '1 : 20,000,000',
+      value: 20000000,
+    },
+    {
+      key: '1 : 50,000,000',
+      value: 50000000,
+    },
+    {
+      key: '1 : 100,000,000',
+      value: 100000000,
+    },
+    {
+      key: '1 : 200,000,000',
+      value: 200000000,
+    },
+  ]
+  let minOption = Object.assign([], option)
+  if (max !== 0) {
+    let i = 0
+    for (; i < minOption.length; i++) {
+      if (minOption[i].value > max) {
+        break
+      }
+    }
+    if (i > 0) {
+      minOption = minOption.slice(i)
+    }
+  }
+  let maxOption = Object.assign([], option)
+  if (min !== 0) {
+    let i = 0
+    for (; i < maxOption.length; i++) {
+      if (maxOption[i].value >= min) {
+        break
+      }
+    }
+    if (i > 0) {
+      maxOption = maxOption.slice(0, i)
+    }
+  }
+  let clearOption = {
+    key: getLanguage(global.language).Map_Layer.LAYERS_CLEAR,
+    value: 0,
+  }
+  minOption.push(clearOption)
+  maxOption.push(clearOption)
+  let pickerData = [
+    {
+      key: getLanguage(global.language).Map_Layer.LAYERS_MINIMUM,
+      value: '最小可见比例尺',
+      children: minOption,
+    },
+    {
+      key: getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM,
+      value: '最大可见比例尺',
+      children: maxOption,
+    },
+  ]
+  return pickerData
+}
+
 export {
   layersetting,
   layerThemeSetting,
@@ -589,4 +705,5 @@ export {
   layerSettingCanNotEdit,
   layerSettingCanSnap,
   layerSettingCanNotSnap,
+  getVisibleScalePickerData,
 }

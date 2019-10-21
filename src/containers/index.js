@@ -81,6 +81,9 @@ import AnimationNodeEditView from './workspace/components/AnimationNodeEditView'
 import AnimationNodeEditRotateView from './workspace/components/AnimationNodeEditRotateView'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
+import LicensePage from './tabs/Home/License/LicensePage'
+import LicenseModule from './tabs/Home/License/LicenseModule'
+import LicenseJoin from './tabs/Home/License/LicenseJoin'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import FriendMap from './friendMap'
@@ -551,6 +554,27 @@ const AppNavigator = createStackNavigator(
     /**************************** Home ***************************/
     AboutITablet: {
       screen: AboutITablet,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LicensePage: {
+      screen: LicensePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LicenseModule: {
+      screen: LicenseModule,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LicenseJoin: {
+      screen: LicenseJoin,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

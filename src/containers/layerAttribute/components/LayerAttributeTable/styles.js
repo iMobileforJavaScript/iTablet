@@ -76,7 +76,8 @@ export default StyleSheet.create({
   },
   disableCellStyle: {
     height: ROW_HEIGHT,
-    backgroundColor: color.bgW,
+    // backgroundColor: color.bgW,
+    backgroundColor: 'rgba(230, 230, 230, 0.85)',
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
     justifyContent: 'center',

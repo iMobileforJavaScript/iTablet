@@ -143,16 +143,15 @@ export default class ToolBarSectionList extends React.Component {
     }
   }
 
-  getSelectList = () => {
+  //更新已选list（commit后需要调用）
+  updateSelectList = () => {
     let title = this.state.sections[0].title
-    let commitArr = []
     let copySelectList = JSON.parse(JSON.stringify(this.state.selectList))
     let list = copySelectList[title]
     for (let i = 0, l = list.length; i < l; i++) {
       for (let key in list[i]) {
         if (list[i][key] === false) {
           copySelectList[title][i][key] = true
-          commitArr.push(key)
         }
       }
     }
@@ -165,6 +164,21 @@ export default class ToolBarSectionList extends React.Component {
           this.props.listSelectableAction({ selectList: copySelectList })
       },
     )
+  }
+
+  //获取已选list
+  getSelectList = () => {
+    let title = this.state.sections[0].title
+    let commitArr = []
+    let copySelectList = JSON.parse(JSON.stringify(this.state.selectList))
+    let list = copySelectList[title]
+    for (let i = 0, l = list.length; i < l; i++) {
+      for (let key in list[i]) {
+        if (list[i][key] === false) {
+          commitArr.push(key)
+        }
+      }
+    }
     return commitArr
   }
 

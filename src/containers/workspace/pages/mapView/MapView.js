@@ -31,6 +31,7 @@ import {
   AnalystMapToolbar,
   PoiInfoContainer,
   PoiTopSearchBar,
+  SimpleSelectList,
 } from '../../components'
 import {
   Container,
@@ -365,6 +366,7 @@ export default class MapView extends React.Component {
               ) {
                 this.setState({ mapTitle: this.props.analyst.params.title })
               }
+              GLOBAL.TouchType = TouchType.NULL //进入分析页面，触摸事件默认为空
             },
           })
         this.backAction =
@@ -466,6 +468,9 @@ export default class MapView extends React.Component {
     if (GLOBAL.MapTabNavigator) {
       GLOBAL.MapTabNavigator = null
     }
+
+    //移除手势监听
+    SMap.deleteGestureDetector()
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -1255,7 +1260,7 @@ export default class MapView extends React.Component {
         setGestureDetectorListener({ ...this.props })
         GLOBAL.TouchType = TouchType.NORMAL
 
-        SMap.openTaggingDataset(this.props.user.currentUser.userName)
+        await SMap.openTaggingDataset(this.props.user.currentUser.userName)
 
         GLOBAL.TaggingDatasetName = await SMap.getDefaultTaggingDataset(
           this.props.user.currentUser.userName,
@@ -1542,11 +1547,13 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.type}
         getToolRef={() => this.toolBox}
+        getNetworkPopView={() => this.selectList}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
         map={this.props.map}
         symbol={this.props.symbol}
+        getLayers={this.props.getLayers}
         layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
@@ -1554,6 +1561,7 @@ export default class MapView extends React.Component {
         setMapType={this.setMapType}
         online={this.props.online}
         incrementRoad={() => {
+          GLOBAL.TouchType = TouchType.NULL //进入路网，触摸事件设置为空
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
@@ -1852,6 +1860,21 @@ export default class MapView extends React.Component {
     )
   }
 
+  //导航地图 模型、路网弹窗 数据在 点击模型按钮/切换地图时获取一次
+  renderNetworkSelectList = () => {
+    return (
+      <SimpleSelectList
+        ref={ref => (GLOBAL.SimpleSelectList = ref)}
+        data={[]}
+        showFullMap={this.showFullMap}
+        language={this.props.language}
+        dataChange={() => {
+          this.selectList.setVisible(false)
+          this.showFullMap(false)
+        }}
+      />
+    )
+  }
   renderSearchBar = () => {
     return null
     // if (!this.props.analyst.params) return null
@@ -2200,6 +2223,7 @@ export default class MapView extends React.Component {
               backAction: () => {
                 this.setState({ showIncrement: false })
                 this.showFullMap(false)
+                GLOBAL.TouchType = TouchType.NORMAL //退出路网，触摸事件设置为normal
               },
             }}
           />
@@ -2468,6 +2492,14 @@ export default class MapView extends React.Component {
           setNavigationPoiView={this.props.setNavigationPoiView}
           setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <PopView
+            showFullMap={this.showFullMap}
+            ref={ref => (this.selectList = ref)}
+          >
+            {this.renderNetworkSelectList()}
+          </PopView>
+        )}
       </Container>
     )
   }

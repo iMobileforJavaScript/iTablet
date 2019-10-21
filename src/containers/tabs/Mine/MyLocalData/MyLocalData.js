@@ -356,7 +356,15 @@ export default class MyLocalData extends Component {
               getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT_3D,
             )
           }
-        } else {
+          let index = filePath.lastIndexOf('/')
+          await SMap.copyNaviSnmFile(filePath.substring(0, index))
+          result = await this.props.importWorkspace({ path: filePath })
+          if (result.msg !== undefined) {
+            Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+          } else {
+            Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+          }
+        }else {
           let index = filePath.lastIndexOf('/')
           await SMap.copyNaviSnmFile(filePath.substring(0, index))
           let result = await this.props.importWorkspace({ path: filePath })
