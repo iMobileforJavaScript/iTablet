@@ -56,13 +56,15 @@ export default class Setting extends Component {
           <View
             style={{
               width: '100%',
-              height: 60,
+              height: scaleSize(80),
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 18, marginLeft: 15 }}>{label}</Text>
+            <Text style={{ fontSize: scaleSize(24), marginLeft: 15 }}>
+              {label}
+            </Text>
 
             <View
               style={{ marginRight: 15, alignItems: 'center' }}

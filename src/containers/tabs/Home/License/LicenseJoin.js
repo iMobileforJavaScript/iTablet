@@ -4,8 +4,8 @@ import { Container, Button } from '../../../../components'
 import { color } from '../../../../styles'
 import { getLanguage } from '../../../../language/index'
 import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 import constants from '../../../../../src/containers/workspace/constants'
+import { scaleSize, Toast } from '../../../../utils'
 export default class LicenseJoin extends Component {
   props: {
     navigation: Object,
@@ -113,7 +113,7 @@ export default class LicenseJoin extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(60),
             flexDirection: 'row',
             // justifyContent: 'space-between',
             justifyContent: 'center',
@@ -173,8 +173,12 @@ export default class LicenseJoin extends Component {
         <View style={{ alignItems: 'center' }}>
           <Button
             title={'确定'}
-            style={{ width: '94%', height: 60, marginTop: 60 }}
-            titleStyle={{ fontSize: 18 }}
+            style={{
+              width: '94%',
+              height: scaleSize(60),
+              marginTop: scaleSize(60),
+            }}
+            titleStyle={{ fontSize: scaleSize(18) }}
             onPress={this.activateLicenseSerialNumber}
           />
         </View>
@@ -208,18 +212,18 @@ const styles = StyleSheet.create({
 
   item: {
     width: '100%',
-    height: 60,
+    height: scaleSize(60),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: color.content_white,
   },
   title: {
-    fontSize: 18,
+    fontSize: scaleSize(18),
     marginLeft: 15,
   },
   subTitle: {
-    fontSize: 15,
+    fontSize: scaleSize(15),
     marginLeft: 15,
   },
   separateLine: {
@@ -229,8 +233,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '18%',
-    height: 60,
-    fontSize: 18,
+    height: scaleSize(60),
+    fontSize: scaleSize(18),
     textAlignVertical: 'center',
 
     backgroundColor: color.white,

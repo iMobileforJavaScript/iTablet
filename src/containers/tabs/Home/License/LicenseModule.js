@@ -4,8 +4,8 @@ import { Container, Button } from '../../../../components'
 import { color } from '../../../../styles'
 import { getLanguage } from '../../../../language/index'
 import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 import constants from '../../../../../src/containers/workspace/constants'
+import { scaleSize, Toast } from '../../../../utils'
 
 var LICENSE_MODULE_REGISTER = 'LICENSE_MODULE_REGISTER'
 
@@ -135,26 +135,28 @@ export default class LicenseModule extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
           {havaRegister ? (
             <Button
               title={getLanguage(global.language).Profile.LICENSE_HAVE_REGISTER}
               style={{
-                width: 80,
-                height: 40,
-                fontSize: 15,
+                width: scaleSize(100),
+                height: scaleSize(40),
+                fontSize: scaleSize(17),
                 marginRight: 30,
                 alignItems: 'center',
               }}
               titleStyle={{
-                width: 80,
-                fontSize: 15,
+                width: scaleSize(100),
+                fontSize: scaleSize(17),
               }}
               type={Button.Type.GRAY}
             />
@@ -162,15 +164,15 @@ export default class LicenseModule extends Component {
             <Button
               title={getLanguage(global.language).Profile.LICENSE_REGISTER_BUY}
               style={{
-                width: 80,
-                height: 40,
-                fontSize: 15,
+                width: scaleSize(100),
+                height: scaleSize(40),
+                fontSize: scaleSize(17),
                 marginRight: 15,
                 alignItems: 'center',
               }}
               titleStyle={{
-                width: 80,
-                fontSize: 15,
+                width: scaleSize(100),
+                fontSize: scaleSize(17),
               }}
               onPress={() => {
                 this.registerModule(index)
@@ -190,13 +192,15 @@ export default class LicenseModule extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
         </View>
         <View style={styles.separateLine} />
       </View>
@@ -280,23 +284,23 @@ const styles = StyleSheet.create({
 
   item: {
     width: '100%',
-    height: 60,
+    height: scaleSize(60),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: color.content_white,
   },
   title: {
-    fontSize: 18,
+    fontSize: scaleSize(24),
     marginLeft: 15,
   },
   subTitle: {
-    fontSize: 15,
+    fontSize: scaleSize(20),
     marginLeft: 15,
   },
   separateLine: {
     width: '100%',
-    height: 1,
+    height: scaleSize(1),
     backgroundColor: color.item_separate_white,
   },
 })

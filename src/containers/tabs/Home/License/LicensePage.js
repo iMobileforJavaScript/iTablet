@@ -246,15 +246,23 @@ export default class LicensePage extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
           {isText ? (
-            <Text style={{ fontSize: 15, marginRight: 15, color: color.gray2 }}>
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                marginRight: 15,
+                color: color.gray2,
+              }}
+            >
               {action}
             </Text>
           ) : (
@@ -281,13 +289,15 @@ export default class LicensePage extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
           <View style={{ marginRight: 15, alignItems: 'center' }}>
             <Image
               source={require('../../../../assets/Mine/mine_my_arrow.png')}
@@ -378,7 +388,7 @@ export default class LicensePage extends Component {
           <TouchableOpacity
             style={{
               width: '100%',
-              height: 60,
+              height: scaleSize(80),
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
@@ -386,7 +396,7 @@ export default class LicensePage extends Component {
             }}
             onPress={() => this.getLicenseSerialNumber(this.getLicenseCount)}
           >
-            <Text style={{ fontSize: 15, color: color.red }}>
+            <Text style={{ fontSize: scaleSize(24), color: color.red }}>
               {getLanguage(global.language).Profile.LICENSE_OFFICIAL_CLEAN}
             </Text>
           </TouchableOpacity>
@@ -421,23 +431,23 @@ const styles = StyleSheet.create({
 
   item: {
     width: '100%',
-    height: 60,
+    height: scaleSize(80),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: color.content_white,
   },
   title: {
-    fontSize: 18,
+    fontSize: scaleSize(24),
     marginLeft: 15,
   },
   subTitle: {
-    fontSize: 15,
+    fontSize: scaleSize(20),
     marginLeft: 15,
   },
   separateLine: {
     width: '100%',
-    height: 1,
+    height: scaleSize(1),
     backgroundColor: color.item_separate_white,
   },
   dialogHeaderView: {

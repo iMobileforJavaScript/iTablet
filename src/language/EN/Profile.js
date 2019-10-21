@@ -180,7 +180,7 @@ const Profile = {
   LICENSE_MODULE_REGISTER_SUCCESS: 'Module Register Success',
   LICENSE_EXIT: 'Exit',
   LICENSE_EXIT_FAILED: 'Exit Failed',
-  LICENSE_CURRENT_EXPIRE: 'Current License Expire',
+  LICENSE_CURRENT_EXPIRE: 'Current License Invalid',
   //许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',
