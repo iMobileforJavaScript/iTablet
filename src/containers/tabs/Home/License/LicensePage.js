@@ -224,6 +224,7 @@ export default class LicensePage extends Component {
           false,
           global.language === 'CN' ? '许可申请中...' : 'Applying',
         )
+        this.getLicense()
         Toast.show(global.language === 'CN' ? '试用成功' : 'Successful trial')
       })
     } catch (e) {
@@ -269,6 +270,32 @@ export default class LicensePage extends Component {
           )}
         </View>
       </View>
+    )
+  }
+  renderTouchableItemView(label, action) {
+    return (
+      <TouchableOpacity
+        style={{ width: '100%', backgroundColor: color.content_white }}
+        onPress={action}
+      >
+        <View
+          style={{
+            width: '100%',
+            height: 60,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <View style={{ marginRight: 15, alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/Mine/mine_my_arrow.png')}
+              style={{ height: scaleSize(28), width: scaleSize(28) }}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
     )
   }
 
@@ -320,17 +347,15 @@ export default class LicensePage extends Component {
         {this.state.status.isTrailLicense ? (
           <View />
         ) : (
-          this.renderItemView(
+          this.renderTouchableItemView(
             getLanguage(global.language).Profile.LICENSE_CONTAIN_MODULE,
-            false,
             this.containModule,
           )
         )}
         <View style={{ height: 10 }} />
         {this.state.status.isTrailLicense ? (
-          this.renderItemView(
+          this.renderTouchableItemView(
             getLanguage(global.language).Profile.LICENSE_OFFICIAL_INPUT,
-            false,
             this.inputOfficialLicense,
           )
         ) : (
@@ -341,9 +366,8 @@ export default class LicensePage extends Component {
         ) : (
           <View />
         )}
-        {this.renderItemView(
+        {this.renderTouchableItemView(
           getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
-          false,
           this.applyTrialLicense,
         )}
         <View style={{ height: 10 }} />

@@ -318,18 +318,15 @@ class AppRoot extends Component {
 
   inspectEnvironment = async () => {
 
-    AsyncStorage.getItem(constants.LICENSE_OFFICIAL_STORAGE_KEY)
-    .then( async(serialNumber)=> {
-        // if (serialNumber != null &&serialNumber!=='') {
-        if (!(serialNumber ==="null")) {
-          await SMap.initSerialNumber(serialNumber)
-        }
-        let status = await SMap.getEnvironmentStatus()
+    let serialNumber =await SMap.initSerialNumber(serialNumber)
+    if(serialNumber!==''){
+      AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, serialNumber)
+    }
+
+    let status = await SMap.getEnvironmentStatus()
           if (!status.isLicenseValid) {
             this.exit.setDialogVisible(true)
           }
-    })
-    .catch(() => {})
   }
 
   orientation = o=> {

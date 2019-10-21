@@ -18,7 +18,6 @@ export default class LicenseJoin extends Component {
     this.backAction = params && params.backAction
     this.state = {
       texts: ['', '', '', '', ''],
-      // texts:['69D5F','BB8EA','5C4F8','49BAF','59750']
     }
   }
 
@@ -58,17 +57,26 @@ export default class LicenseJoin extends Component {
         AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, str)
         GLOBAL.Loading.setLoading(
           false,
-          global.language === 'CN' ? '许可申请中...' : 'Applying',
+          global.language === 'CN' ? '许可申请中...' : 'Activate Faild',
         )
         this.cb && this.cb()
       } else {
         Toast.show(
-          getLanguage(global.language).Profile.INPUT_LICENSE_SERIAL_NUMBER,
+          // getLanguage(global.language).Profile.INPUT_LICENSE_SERIAL_NUMBER,
+          global.language === 'CN' ? '激活失败...' : 'Applying',
+        )
+        GLOBAL.Loading.setLoading(
+          false,
+          global.language === 'CN' ? '许可申请中...' : 'Applying',
         )
       }
     } else {
       Toast.show(
         getLanguage(global.language).Profile.PLEASE_INPUT_LICENSE_SERIAL_NUMBER,
+      )
+      GLOBAL.Loading.setLoading(
+        false,
+        global.language === 'CN' ? '许可申请中...' : 'Applying',
       )
     }
   }
@@ -166,6 +174,7 @@ export default class LicenseJoin extends Component {
           <Button
             title={'确定'}
             style={{ width: '94%', height: 60, marginTop: 60 }}
+            titleStyle={{ fontSize: 18 }}
             onPress={this.activateLicenseSerialNumber}
           />
         </View>
