@@ -29,6 +29,8 @@ import {
 } from './AnalystMapOptions'
 import MenuList from './MenuList'
 import { PoiInfoContainer, PoiTopSearchBar } from './PoiInfoContainer'
+import AIFunctionToolbar from './AIFunctionToolbar'
+import AIMapSuspensionDialog from './AIMapSuspensionDialog'
 export {
   PopList,
   NetworkAnalystToolBar,
@@ -60,4 +62,6 @@ export {
   IncrementRoadView,
   MapSelectPoint,
   MapSelectPointButton,
+  AIFunctionToolbar,
+  AIMapSuspensionDialog,
 }

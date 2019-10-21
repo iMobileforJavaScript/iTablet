@@ -80,6 +80,8 @@ import {
   SCartography,
   SMediaCollector,
   DatasetType,
+  SMapSuspension,
+  SAIDetectView,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -4798,6 +4800,15 @@ export default class ToolBar extends React.PureComponent {
       // 切换地图
       this.changeMap(item)
       this.props.getMapSetting()
+    } else if (this.state.type === ConstToolType.MAPSUSPENSION_CHANGE) {
+      // 视频地图AR模式下打开地图
+      // GLOBAL.TouchType = TouchType.AIMAPTOUCH
+      // this.setVisible(false)
+      // GLOBAL.AIMapSuspensionDialog.setVisible(true)
+      // GLOBAL.SMMapSuspension && GLOBAL.SMMapSuspension.setVisible(false)
+      // GLOBAL.AIMAPITEM = item
+      // SMapSuspension.closeMap()
+      // this.changeMapSuspension(item)
     } else if (this.state.type === ConstToolType.PLOT_LIB_CHANGE) {
       // 切换标绘库
       this.changePlotLib(item)
@@ -5649,6 +5660,39 @@ export default class ToolBar extends React.PureComponent {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
+        Toast.show(ConstInfo.CHANGE_MAP_FAILED)
+        this.props.setContainerLoading(false)
+      }
+      // })
+    } catch (e) {
+      Toast.show(ConstInfo.CHANGE_MAP_FAILED)
+      this.props.setContainerLoading(false)
+    }
+  }
+
+  /** 视频地图AR模式下打开地图 **/
+  changeMapSuspension = async item => {
+    try {
+      this.props.setContainerLoading(
+        true,
+        getLanguage(this.props.language).Prompt.SWITCHING,
+        //ConstInfo.MAP_CHANGING
+      )
+      let module = item.module || ''
+      let fileName = item.name || item.title
+      let isCustomerPath = item.path.indexOf(ConstPath.CustomerPath) >= 0
+      let importResult = await SMapSuspension.openMapByName(fileName, {
+        Module: module,
+        IsPrivate: !isCustomerPath,
+      })
+      if (importResult) {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.SWITCHING_SUCCESS,
+          //ConstInfo.CHANGE_MAP_TO + mapInfo.name
+        )
+        this.props.setContainerLoading(false)
+        this.setVisible(false)
+      } else {
         Toast.show(ConstInfo.CHANGE_MAP_FAILED)
         this.props.setContainerLoading(false)
       }
@@ -6752,6 +6796,20 @@ export default class ToolBar extends React.PureComponent {
             image = getThemeAssets().publicAssets.icon_redo_disable
           }
           break
+        case ToolbarBtnType.SETTIING:
+          //设置
+          action = async () => {
+            NavigationService.navigate('AIDetecSettingsView')
+            this.props.showFullMap && this.props.showFullMap(true)
+            await SAIDetectView.setProjectionModeEnable(false)
+          }
+          image = require('../../../../assets/mapTools/ai_setting.png')
+          break
+        case ToolbarBtnType.COLLECTTARGET:
+          //查看采集对象
+          action = () => {}
+          image = require('../../../../assets/mapTools/ai_tab.png')
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -6799,6 +6857,7 @@ export default class ToolBar extends React.PureComponent {
 
   overlayOnPress = () => {
     GLOBAL.TouchType = TouchType.NORMAL
+    GLOBAL.AIFUNCTIONTOOLBAR && GLOBAL.AIFUNCTIONTOOLBAR.setVisible(true)
     if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS ||
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION ||

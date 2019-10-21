@@ -12,18 +12,16 @@ import Toast from '../../utils/Toast'
 import { getLanguage } from '../../language'
 import { ConstPath } from '../../constants'
 import RNFS from 'react-native-fs'
-import { SAIClassifyView } from 'imobile_for_reactnative'
+import { SAIDetectView } from 'imobile_for_reactnative'
 
-const DEFAULT_MODEL = 'mobilenet_quant_224' //默认模型
-const DUSTBIN_MODEL = 'citycase' //垃圾箱模型
-const PLANT_MODEL = 'plant_model' //植物模型
-// let MODEL_PATH = ''//本地模型文件
-// let LABEL_PATH = ''
+const DEFAULT_MODEL = 'detect' //默认模型
+const DUSTBIN_MODEL = 'detect_lajixiang_300' //垃圾箱模型
+const ROAD_MODEL = 'road_crack_detect' //道路模型
 
 /*
  * 分类模型选择界面
  */
-export default class ClassifySettingsView extends React.Component {
+export default class AIDetecSettingsView extends React.Component {
   props: {
     navigation: Object,
     language: String,
@@ -34,9 +32,6 @@ export default class ClassifySettingsView extends React.Component {
 
   constructor(props) {
     super(props)
-    const { params } = this.props.navigation.state || {}
-    this.datasourceAlias = params.datasourceAlias || ''
-    this.datasetName = params.datasetName
 
     this.state = {
       currentModel: DEFAULT_MODEL, //当前使用的模型
@@ -74,9 +69,9 @@ export default class ClassifySettingsView extends React.Component {
         })
       }
       let plantPath =
-        this.homePath + ConstPath.Common_AIClassifyModel + PLANT_MODEL + '/'
-      this.plant_model = plantPath + PLANT_MODEL + '.tflite'
-      this.plant_txt = plantPath + PLANT_MODEL + '.txt'
+        this.homePath + ConstPath.Common_AIClassifyModel + ROAD_MODEL + '/'
+      this.plant_model = plantPath + ROAD_MODEL + '.tflite'
+      this.plant_txt = plantPath + ROAD_MODEL + '.txt'
       let isPlant =
         (await FileTools.fileIsExist(this.plant_model)) &&
         (await FileTools.fileIsExist(this.plant_txt))
@@ -90,7 +85,7 @@ export default class ClassifySettingsView extends React.Component {
         })
       }
       //当前使用的模型文件
-      let currentmodel = await SAIClassifyView.getCurrentModel()
+      let currentmodel = await SAIDetectView.getDetectInfo()
       if (currentmodel.ModelType === 'ASSETS_FILE') {
         this.setState({
           currentModel: DEFAULT_MODEL,
@@ -103,9 +98,9 @@ export default class ClassifySettingsView extends React.Component {
             defaultBtx: '立即使用',
             dustbinBtx: '使用中',
           })
-        } else if (currentmodel.ModelPath.indexOf(PLANT_MODEL) !== -1) {
+        } else if (currentmodel.ModelPath.indexOf(ROAD_MODEL) !== -1) {
           this.setState({
-            currentModel: PLANT_MODEL,
+            currentModel: ROAD_MODEL,
             defaultBtx: '立即使用',
             plantBtx: '使用中',
           })
@@ -120,12 +115,13 @@ export default class ClassifySettingsView extends React.Component {
     //移除监听
   }
 
-  back = () => {
+  back = async () => {
     if (this.clickAble) {
       this.clickAble = false
       setTimeout(() => {
         this.clickAble = true
       }, 1500)
+      await SAIDetectView.setProjectionModeEnable(true)
       NavigationService.goBack()
     }
     return true
@@ -157,7 +153,6 @@ export default class ClassifySettingsView extends React.Component {
       </View>
     )
   }
-
   renderModelItemSecond = () => {
     return (
       <View style={styles.ModelItemView}>
@@ -179,16 +174,15 @@ export default class ClassifySettingsView extends React.Component {
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'城市垃圾模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>{'垃圾箱模型'}</Text>
         <View style={styles.DividingLine} />
       </View>
     )
   }
-
   renderModelItemThird = () => {
     return (
       <View style={styles.ModelItemView}>
-        <Image source={getThemeAssets().ar.classify_plant} style={styles.img} />
+        <Image source={getThemeAssets().ar.classify_road} style={styles.img} />
         <Button
           style={styles.btnSwitchModelsView}
           titleStyle={styles.txtBtnSwitchModelsView}
@@ -198,12 +192,12 @@ export default class ClassifySettingsView extends React.Component {
           onPress={() =>
             this.useOrDownloadModel(
               this.state.plantBtx,
-              'PLANT_MODEL',
-              PLANT_MODEL,
+              'ROAD_MODEL',
+              ROAD_MODEL,
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'植物模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>{'道路模型'}</Text>
         <View style={styles.DividingLine} />
       </View>
     )
@@ -220,7 +214,7 @@ export default class ClassifySettingsView extends React.Component {
         >
           {this.renderModelItemFirst()}
           {this.renderModelItemSecond()}
-          {/*{this.renderModelItemThird()}*/}
+          {this.renderModelItemThird()}
         </ScrollView>
       </View>
     )
@@ -240,12 +234,12 @@ export default class ClassifySettingsView extends React.Component {
         params.ModelType = 'ABSOLUTE_FILE_PATH'
         params.ModelPath = this.dustbin_model
         params.LabelPath = this.dustbin_txt
-      } else if (fileName === PLANT_MODEL) {
+      } else if (fileName === ROAD_MODEL) {
         params.ModelType = 'ABSOLUTE_FILE_PATH'
         params.ModelPath = this.plant_model
         params.LabelPath = this.plant_txt
       }
-      let result = await SAIClassifyView.setModel(params)
+      let result = await SAIDetectView.setDetectInfo(params)
       if (result) {
         Toast.show('切换成功')
         let dustbinBtx = this.state.dustbinBtx === '使用中'
@@ -264,7 +258,7 @@ export default class ClassifySettingsView extends React.Component {
             dustbinBtx: '使用中',
             plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
           })
-        } else if (fileName === PLANT_MODEL) {
+        } else if (fileName === ROAD_MODEL) {
           this.setState({
             currentModel: fileName,
             defaultBtx: '立即使用',
@@ -281,14 +275,14 @@ export default class ClassifySettingsView extends React.Component {
         this.setState({
           dustbinBtx: '下载中',
         })
-      } else if (fileName === PLANT_MODEL) {
+      } else if (fileName === ROAD_MODEL) {
         this.setState({
           plantBtx: '下载中',
         })
       }
       let downloadData = this.getDownloadData(key, fileName)
       this._downloadData(downloadData)
-    } else if (title === '正在使用') {
+    } else if (title === '使用中') {
       Toast.show('正在使用中')
     } else {
       Toast.show('正在下载')
@@ -310,7 +304,7 @@ export default class ClassifySettingsView extends React.Component {
   _downloadData = async downloadData => {
     let keyword = downloadData.fileName
     let dataUrl = await FetchUtils.getFindUserDataUrl(
-      'imobile1234',
+      'xiezhiyan123',
       keyword,
       '.zip',
     )
@@ -333,7 +327,7 @@ export default class ClassifySettingsView extends React.Component {
             this.setState({
               dustbinBtx: progress,
             })
-          } else if (downloadData.fileName === PLANT_MODEL) {
+          } else if (downloadData.fileName === ROAD_MODEL) {
             this.setState({
               plantBtx: progress,
             })
@@ -349,7 +343,7 @@ export default class ClassifySettingsView extends React.Component {
             this.setState({
               dustbinBtx: '立即使用',
             })
-          } else if (downloadData.fileName === PLANT_MODEL) {
+          } else if (downloadData.fileName === ROAD_MODEL) {
             this.setState({
               plantBtx: '立即使用',
             })

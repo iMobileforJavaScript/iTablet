@@ -20,29 +20,13 @@ function setParams(params) {
 //违章采集
 function illegallyParkCollect() {
   (async function() {
+    const type = 'illegallyParkCollect'
+    _params.navigation.navigate('ChooseTaggingLayer', { type })
     // let isSupportedARCore = await SMeasureView.isSupportedARCore()
     // if (!isSupportedARCore) {
     //   Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
     //   return
     // }
-    let currentLayer = GLOBAL.currentLayer
-    // let reg = /^Label_(.*)#$/
-    let isTaggingLayer = false
-    if (currentLayer) {
-      isTaggingLayer = currentLayer.type === DatasetType.CAD
-      // && currentLayer.datasourceAlias.match(reg)
-    }
-    if (isTaggingLayer) {
-      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
-      const datasetName = currentLayer.datasetName // 标注图层名称
-      NavigationService.navigate('IllegallyParkView', {
-        datasourceAlias,
-        datasetName,
-      })
-    } else {
-      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
-      _params.navigation.navigate('LayerManager')
-    }
   }.bind(this)())
 }
 
@@ -78,35 +62,16 @@ function arMeasureCollect() {
 //AI分类
 function aiClassify() {
   (async function() {
-    let currentLayer = GLOBAL.currentLayer
-    // let reg = /^Label_(.*)#$/
-    let isTaggingLayer = false
-    if (currentLayer) {
-      isTaggingLayer = currentLayer.type === DatasetType.CAD
-      // && currentLayer.datasourceAlias.match(reg)
-    }
-    if (isTaggingLayer) {
-      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
-      const datasetName = currentLayer.datasetName // 标注图层名称
-      NavigationService.navigate('ClassifyView', {
-        datasourceAlias,
-        datasetName,
-      })
-    } else {
-      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
-      _params.navigation.navigate('LayerManager')
-    }
+    const type = 'aiClassify'
+    _params.navigation.navigate('ChooseTaggingLayer', { type })
   }.bind(this)())
 }
 
 //目标采集
 function aiDetect() {
   (async function() {
-    await SAIDetectView.setProjectionModeEnable(true)
-    // await SAIDetectView.setDrawTileEnable(false)
-    await SAIDetectView.setIsPolymerize(false)
-    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
-    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    const type = 'aiDetect'
+    _params.navigation.navigate('ChooseTaggingLayer', { type })
     // await SAIDetectView.startCountTrackedObjs(true)
   }.bind(this)())
 }

@@ -444,6 +444,8 @@ class AppRoot extends Component {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       await SMap.stopGuide()
       await SMap.clearPoint()
+      // await SMapSuspension.closeMap()
+      // GLOBAL.SMMapSuspension&&GLOBAL.SMMapSuspension.setVisible(false)
       this.props.setMap2Dto3D(false)
     }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
@@ -510,6 +512,8 @@ class AppRoot extends Component {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       await SMap.stopGuide()
       await SMap.clearPoint()
+      // await SMapSuspension.closeMap()
+      // GLOBAL.SMMapSuspension&&GLOBAL.SMMapSuspension.setVisible(false)
       this.props.setMap2Dto3D(false)
     }
     if (GLOBAL.Type === ConstToolType.MAP_3D) {
