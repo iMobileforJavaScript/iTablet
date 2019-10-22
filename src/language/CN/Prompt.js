@@ -226,7 +226,7 @@ const Prompt = {
 
   FIELD_ILLEGAL: '字段不合法',
   PLEASE_SELECT_A_RASTER_LAYER: '请选择栅格图层',
-
+  CLEAR_HISTORY: '清除搜索记录',
   //导航相关
   NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
   SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
