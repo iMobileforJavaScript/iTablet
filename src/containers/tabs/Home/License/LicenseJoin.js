@@ -55,6 +55,14 @@ export default class LicenseJoin extends Component {
       let result = await SMap.activateLicense(str)
       if (result) {
         AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, str)
+        let modules = await SMap.licenseContainModule(str)
+        let size = modules.length
+        let number = 0
+        for (let i = 0; i < size; i++) {
+          let modultCode = Number(modules[i])
+          number = number + modultCode
+        }
+        GLOBAL.modulesNumber = number
         GLOBAL.Loading.setLoading(
           false,
           global.language === 'CN' ? '许可申请中...' : 'Activate Faild',
@@ -97,7 +105,7 @@ export default class LicenseJoin extends Component {
       <View style={{ flex: 1, backgroundColor: color.background }}>
         <Text
           style={{
-            fontSize: 18,
+            fontSize: scaleSize(24),
             marginLeft: '3%',
             marginTop: 30,
             marginBottom: 10,
@@ -178,7 +186,7 @@ export default class LicenseJoin extends Component {
               height: scaleSize(60),
               marginTop: scaleSize(60),
             }}
-            titleStyle={{ fontSize: scaleSize(18) }}
+            titleStyle={{ fontSize: scaleSize(24) }}
             onPress={this.activateLicenseSerialNumber}
           />
         </View>

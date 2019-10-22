@@ -43,6 +43,9 @@ export default class LicensePage extends Component {
     this.setState({
       status: status,
     })
+    if (status.isTrailLicense) {
+      GLOBAL.modulesNumber = null
+    }
   }
 
   renderLicenseDialogChildren = remindStr => {
@@ -60,10 +63,7 @@ export default class LicensePage extends Component {
             backgroundColor: color.item_separate_white,
           }}
         />
-        <TouchableOpacity
-          style={styles.btnStyle}
-          onPress={this.inputOfficialLicense}
-        >
+        <View style={styles.btnStyle}>
           <Text
             style={{
               fontSize: scaleSize(20),
@@ -73,7 +73,7 @@ export default class LicensePage extends Component {
           >
             {remindStr}
           </Text>
-        </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -132,28 +132,6 @@ export default class LicensePage extends Component {
       .catch(() => {})
   }
 
-  //清除正式许可
-  cleanOfficialLicense = async serialNumber => {
-    GLOBAL.Loading.setLoading(
-      true,
-      global.language === 'CN' ? '许可清除中...' : 'Applying',
-    )
-    // let result=await SMap.recycleLicense(serialNumber)
-    let result = await SMap.clearLocalLicense(serialNumber)
-    if (result) {
-      AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, 'null')
-      this.getLicense()
-      GLOBAL.Loading.setLoading(
-        false,
-        global.language === 'CN' ? '许可清除中...' : 'Applying',
-      )
-    } else {
-      GLOBAL.Loading.setLoading(
-        false,
-        global.language === 'CN' ? '许可清除中失败...' : 'Applying Failed',
-      )
-    }
-  }
   //所含模块
   containModule = () => {
     NavigationService.navigate('LicenseModule', {
