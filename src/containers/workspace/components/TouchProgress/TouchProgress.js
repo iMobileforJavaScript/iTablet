@@ -460,13 +460,18 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
-            let lineWidth = await SCartography.getLineWidth(this.props.currentLayer.name)
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH
+          ) {
+            let lineWidth = await SCartography.getLineWidth(
+              this.props.currentLayer.name,
+            )
             // console.warn('xzy---- '+lineWidth +' '+progressWidth)
-            if(value !== undefined){
+            if (value !== undefined) {
               lineWidth = value
             }
-            // debugger  
+            // debugger
             this._panBtnStyles.style.left =
               (lineWidth * progressWidth) / 100 + panBtnDevLeft
             this._previousLeft = (lineWidth * progressWidth) / 100
@@ -476,13 +481,16 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(lineWidth) +
               'mm'
-          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             let fillOpaque =
-            value !== undefined
-              ? value
-              : await SCartography.getFillOpaqueRate(
-                this.props.currentLayer.name,
-              )
+              value !== undefined
+                ? value
+                : await SCartography.getFillOpaqueRate(
+                  this.props.currentLayer.name,
+                )
             this._panBtnStyles.style.left =
               (fillOpaque * progressWidth) / 100 + panBtnDevLeft
             this._previousLeft = (fillOpaque * progressWidth) / 100
@@ -1030,7 +1038,10 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH
+          ) {
             if (value <= 1) {
               value = 1
             }
@@ -1040,7 +1051,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               'mm'
-          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             await SCartography.setFillOpaqueRate(
               value,
               this.props.currentLayer.name,
@@ -1054,7 +1068,7 @@ export default class TouchProgress extends Component {
               parseInt(value) +
               '%'
           }
-         
+
           break
         }
         case 83: {
@@ -1330,7 +1344,10 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
+          if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH
+          ) {
             if (value <= 1) {
               value = 1
             }
@@ -1339,7 +1356,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               'mm'
-          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+          } else if (
+            this.props.selectName ===
+            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY
+          ) {
             if (value < 0) {
               value = 0
             } else if (value >= 100) {

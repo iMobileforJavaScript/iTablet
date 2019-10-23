@@ -720,7 +720,9 @@ export default class FunctionToolbar extends React.Component {
         await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
       }
     } else {
-      Toast.show('请设置底图可见')
+      Toast.show(
+        getLanguage(this.props.language).Prompt.PLEASE_SET_BASEMAP_VISIBLE,
+      )
     }
   }
 

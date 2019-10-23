@@ -88,6 +88,7 @@ import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
 import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
 import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
 import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
+import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 
 const markerTag = 118081
@@ -1965,9 +1966,24 @@ export default class MapView extends React.Component {
       <TouchableOpacity
         key={'search'}
         onPress={async () => {
-          NavigationService.navigate('PointAnalyst', {
-            type: 'pointSearch',
-          })
+          if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+            let layers = this.props.getLayers && (await this.props.getLayers())
+            let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
+            if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+              NavigationService.navigate('PointAnalyst', {
+                type: 'pointSearch',
+              })
+            } else {
+              Toast.show(
+                getLanguage(this.props.language).Prompt
+                  .PLEASE_SET_BASEMAP_VISIBLE,
+              )
+            }
+          } else {
+            NavigationService.navigate('PointAnalyst', {
+              type: 'pointSearch',
+            })
+          }
         }}
       >
         <Image

@@ -235,6 +235,7 @@ const Prompt = {
   PLEASE_SELECT_A_RASTER_LAYER: 'Please select a raster layer',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
+  PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace does'nt contain network dataset",
   NO_LINE_DATASETS: "Current workspace does'nt contain line dataset",
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',

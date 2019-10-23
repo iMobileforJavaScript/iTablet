@@ -146,7 +146,7 @@ export default class NavigationStartButton extends React.Component {
     } else if (item.turnType === 12) {
       str = `直行${roadLength}`
     } else {
-      str = `${roadLength}后 ${this.directions[item.turnType]}`
+      str = `直行${roadLength} 然后${this.directions[item.turnType]}`
     }
     let icon = this.getIconByType(item.turnType)
     return (
