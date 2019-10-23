@@ -46,6 +46,14 @@ export default class LicensePage extends Component {
     if (status.isTrailLicense) {
       GLOBAL.modulesNumber = null
     }
+    if (!status.isLicenseValid) {
+      GLOBAL.LicenseValidDialog.setDialogVisible(true)
+      GLOBAL.LicenseValidDialog.callback = () => {
+        this.getLicense()
+      }
+    } else {
+      GLOBAL.LicenseValidDialog.callback = null
+    }
   }
 
   renderLicenseDialogChildren = remindStr => {
