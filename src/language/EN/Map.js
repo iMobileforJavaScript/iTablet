@@ -134,7 +134,7 @@ const Map_Main_Menu = {
   TOUR: 'Tour',
   TOUR_NAME: 'Tour Name',
 
-  STYLE_TRANSFER: 'Style Transfer',
+  STYLE_TRANSFER: 'AI Cartography',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
