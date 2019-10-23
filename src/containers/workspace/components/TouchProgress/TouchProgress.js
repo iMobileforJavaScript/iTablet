@@ -461,15 +461,16 @@ export default class TouchProgress extends Component {
         }
         case 5: {
           if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
-            let lineWidth =
-            value !== undefined
-              ? value
-              : await SCartography.getLineWidth(this.props.currentLayer.name)
-            debugger  
+            let lineWidth = await SCartography.getLineWidth(this.props.currentLayer.name)
+            // console.warn('xzy---- '+lineWidth +' '+progressWidth)
+            if(value !== undefined){
+              lineWidth = value
+            }
+            // debugger  
             this._panBtnStyles.style.left =
-              (lineWidth * progressWidth) / 20 + panBtnDevLeft
-            this._previousLeft = (lineWidth * progressWidth) / 20
-            this._BackLine.style.width = (lineWidth * progressWidth) / 20
+              (lineWidth * progressWidth) / 100 + panBtnDevLeft
+            this._previousLeft = (lineWidth * progressWidth) / 100
+            this._BackLine.style.width = (lineWidth * progressWidth) / 100
             tips =
               getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH +
               '     ' +
@@ -1029,7 +1030,6 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          debugger
           if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
             if (value <= 1) {
               value = 1

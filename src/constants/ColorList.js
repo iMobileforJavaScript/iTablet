@@ -4,6 +4,15 @@ const lineColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
+      SCartography.setLineColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#FFFFFF',
+    action: () => {
       SCartography.setLineColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
@@ -1834,6 +1843,15 @@ const regionBeforeColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
+      SCartography.setFillForeColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#FFFFFF',
+    action: () => {
       SCartography.setFillForeColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
@@ -2746,6 +2764,15 @@ const regionBeforeColorSet = [
 ]
 
 const regionBorderColorSet = [
+  {
+    key: '#FFFFFF',
+    action: () => {
+      SCartography.setFillBorderColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
   {
     key: '#FFFFFF',
     action: () => {
