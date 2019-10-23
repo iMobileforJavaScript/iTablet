@@ -10,8 +10,8 @@ import Header from '../../../../components/Header'
 
 import { scaleSize } from '../../../../utils'
 
-export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
-export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
+export const HEADER_HEIGHT = scaleSize(88)
+export const HEADER_MARGINTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default class IncrementRoadView extends React.Component {
   props: {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   table: {
     position: 'absolute',
-    marginTop: HEADER_PADDINGTOP + HEADER_HEIGHT,
+    marginTop: HEADER_MARGINTOP + HEADER_HEIGHT,
     width: '100%',
     height: scaleSize(50),
     backgroundColor: '#EEEEEE',
