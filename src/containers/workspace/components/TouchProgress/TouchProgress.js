@@ -460,21 +460,38 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          let fillOpaque =
+          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
+            let lineWidth =
+            value !== undefined
+              ? value
+              : await SCartography.getLineWidth(this.props.currentLayer.name)
+            debugger  
+            this._panBtnStyles.style.left =
+              (lineWidth * progressWidth) / 20 + panBtnDevLeft
+            this._previousLeft = (lineWidth * progressWidth) / 20
+            this._BackLine.style.width = (lineWidth * progressWidth) / 20
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH +
+              '     ' +
+              parseInt(lineWidth) +
+              'mm'
+          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+            let fillOpaque =
             value !== undefined
               ? value
               : await SCartography.getFillOpaqueRate(
                 this.props.currentLayer.name,
               )
-          this._panBtnStyles.style.left =
-            (fillOpaque * progressWidth) / 100 + panBtnDevLeft
-          this._previousLeft = (fillOpaque * progressWidth) / 100
-          this._BackLine.style.width = (fillOpaque * progressWidth) / 100
-          tips =
-            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
-            '     ' +
-            parseInt(fillOpaque) +
-            '%'
+            this._panBtnStyles.style.left =
+              (fillOpaque * progressWidth) / 100 + panBtnDevLeft
+            this._previousLeft = (fillOpaque * progressWidth) / 100
+            this._BackLine.style.width = (fillOpaque * progressWidth) / 100
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
+              '     ' +
+              parseInt(fillOpaque) +
+              '%'
+          }
           break
         }
         case 83: {
@@ -1012,18 +1029,32 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          await SCartography.setFillOpaqueRate(
-            value,
-            this.props.currentLayer.name,
-          )
-          if (value >= 100) {
-            value = 100
+          debugger
+          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
+            if (value <= 1) {
+              value = 1
+            }
+            await SCartography.setLineWidth(value, this.props.currentLayer.name)
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH +
+              '     ' +
+              parseInt(value) +
+              'mm'
+          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+            await SCartography.setFillOpaqueRate(
+              value,
+              this.props.currentLayer.name,
+            )
+            if (value >= 100) {
+              value = 100
+            }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
+              '     ' +
+              parseInt(value) +
+              '%'
           }
-          tips =
-            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
-            '     ' +
-            parseInt(value) +
-            '%'
+         
           break
         }
         case 83: {
@@ -1299,16 +1330,27 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          if (value < 0) {
-            value = 0
-          } else if (value >= 100) {
-            value = 100
+          if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH){
+            if (value <= 1) {
+              value = 1
+            }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BORDER_WIDTH +
+              '     ' +
+              parseInt(value) +
+              'mm'
+          }else if(this.props.selectName === getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY){
+            if (value < 0) {
+              value = 0
+            } else if (value >= 100) {
+              value = 100
+            }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
+              '     ' +
+              parseInt(value) +
+              '%'
           }
-          tips =
-            getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
-            '     ' +
-            parseInt(value) +
-            '%'
           break
         }
         case 83: {

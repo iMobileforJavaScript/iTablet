@@ -65,6 +65,7 @@ const Map_Main_Menu = {
   STYLE_FOREGROUND: 'Foreground',
   STYLE_BACKFROUNG: 'Background',
   STYLE_BORDER:'Border Color',
+  STYLE_BORDER_WIDTH:'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',

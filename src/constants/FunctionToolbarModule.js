@@ -622,6 +622,27 @@ const region = (param, orientation = 'PORTRAIT') => [
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
   },
   {
+    key: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+        })
+    },
+    //线宽
+    selectName: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+  },
+  {
     key: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
     action: () => {
       GLOBAL.toolBox &&

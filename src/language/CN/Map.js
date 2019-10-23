@@ -71,6 +71,7 @@ const Map_Main_Menu = {
   STYLE_FOREGROUND: '前景色',
   STYLE_BACKFROUNG: '背景色',
   STYLE_BORDER: '轮廓色',
+  STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
   STYLE_FRAME_COLOR: '边框颜色',
   STYLE_FRAME_SYMBOL: '边框符号',

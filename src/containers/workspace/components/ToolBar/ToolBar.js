@@ -3971,6 +3971,8 @@ export default class ToolBar extends React.PureComponent {
       if (
         this.state.selectKey ===
           getLanguage(this.props.language).Map_Main_Menu.STYLE_LINE_WIDTH ||
+        this.state.selectKey ===
+          getLanguage(this.props.language).Map_Main_Menu.STYLE_BORDER_WIDTH ||
         this.state.selectKey === '大小' ||
         this.state.selectKey === '旋转角度' ||
         this.state.selectKey === '透明度' ||
