@@ -136,7 +136,7 @@ export default class NavigationStartButton extends React.Component {
   }
   renderItem = ({ item }) => {
     let roadLength = item.roadLength
-    if (roadLength > 1000) roadLength = (roadLength / 1000).toFixed(2) + '公里'
+    if (roadLength > 1000) roadLength = (roadLength / 1000).toFixed(1) + '公里'
     else roadLength = roadLength + '米'
     let str = ''
     if (item.turnType === 'start' || item.turnType === 'end') {
@@ -183,8 +183,8 @@ export default class NavigationStartButton extends React.Component {
 
   renderMap = () => {
     let length = GLOBAL.PATHLENGTH.length
-    if (length > 1000) length = (length / 1000).toFixed(2) + '公里'
-    else length = length.toFixed(2) + '米'
+    if (length > 1000) length = (length / 1000).toFixed(1) + '公里'
+    else length = length + '米'
     return (
       <View style={{ flex: 1, width: '100%' }}>
         {
