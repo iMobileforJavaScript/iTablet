@@ -437,6 +437,8 @@ const Map_Layer = {
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: 'Filter Overlapping Small Objects',
   LAYERS_SHARE: 'Share',
   SELECT_LAYSER_SCALE: 'Please select a scale',
+  LAYER_SCALE_RANGE_WRONG:
+    'the Maximum Visible Scale must be larger than the Minimum Visible Scale',
 
   LAYERS_CREATE_THEMATIC_MAP: 'Create Thematic Map',
   LAYERS_MODIFY_THEMATIC_MAP: 'Modify Thematic Map',

@@ -45,7 +45,7 @@ import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
-import { Picker } from '../../../../components'
+import { MultiPicker } from '../../../../components'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -1086,31 +1086,36 @@ export default class LayerManager_tolbar extends React.Component {
 
   renderPiker = () => {
     return (
-      <Picker
+      <MultiPicker
         ref={ref => (this.picker = ref)}
         language={GLOBAL.language}
         confirm={async item => {
-          if (
-            JSON.stringify(item[0]) !== '{}' &&
-            JSON.stringify(item[1]) !== '{}'
-          ) {
-            if (item[0].value === '最大可见比例尺') {
-              await SMap.setMaxVisibleScale(
-                this.state.layerData.path,
-                item[1].value,
-              )
-            } else {
-              await SMap.setMinVisibleScale(
-                this.state.layerData.path,
-                item[1].value,
-              )
-            }
-            this.setVisible(false)
-          } else {
+          let min = item[0].selectedItem.value
+          let max = item[1].selectedItem.value
+          if (min !== 0 && max !== 0 && min <= max) {
+            //最大比例尺必须大于最小比例尺
             Toast.show(
-              getLanguage(global.language).Map_Layer.SELECT_LAYSER_SCALE,
+              getLanguage(this.props.language).Map_Layer
+                .LAYER_SCALE_RANGE_WRONG,
             )
+            return
           }
+          for (let i = 0; i < item.length; i++) {
+            if (item[i].selectedItem.key !== item[i].initItem.key) {
+              if (item[i].value === '最大可见比例尺') {
+                await SMap.setMaxVisibleScale(
+                  this.state.layerData.path,
+                  item[i].selectedItem.value,
+                )
+              } else {
+                await SMap.setMinVisibleScale(
+                  this.state.layerData.path,
+                  item[i].selectedItem.value,
+                )
+              }
+            }
+          }
+          this.setVisible(false)
         }}
         cancel={() => {
           this.setVisible(false)
