@@ -4,6 +4,15 @@ const lineColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
+      SCartography.setLineColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#FFFFFF',
+    action: () => {
       SCartography.setLineColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
@@ -1834,6 +1843,15 @@ const regionBeforeColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
+      SCartography.setFillForeColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#FFFFFF',
+    action: () => {
       SCartography.setFillForeColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
@@ -2745,11 +2763,20 @@ const regionBeforeColorSet = [
   },
 ]
 
-const regionAfterColorSet = [
+const regionBorderColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
-      SCartography.setFillBackColor('#FFFFFF', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('NULL', GLOBAL.currentLayer.name)
+    },
+    size: 'large',
+    text:'NULL',
+    background: '#FFFFFF',
+  },
+  {
+    key: '#FFFFFF',
+    action: () => {
+      SCartography.setFillBorderColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFFFF',
@@ -2757,7 +2784,7 @@ const regionAfterColorSet = [
   {
     key: '#000000',
     action: () => {
-      SCartography.setFillBackColor('#000000', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#000000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#000000',
@@ -2765,7 +2792,7 @@ const regionAfterColorSet = [
   {
     key: '#F0EDE1',
     action: () => {
-      SCartography.setFillBackColor('#F0EDE1', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F0EDE1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F0EDE1',
@@ -2773,7 +2800,7 @@ const regionAfterColorSet = [
   {
     key: '#1E477C',
     action: () => {
-      SCartography.setFillBackColor('#1E477C', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#1E477C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1E477C',
@@ -2781,7 +2808,7 @@ const regionAfterColorSet = [
   {
     key: '#4982BC',
     action: () => {
-      SCartography.setFillBackColor('#4982BC', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#4982BC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4982BC',
@@ -2789,7 +2816,7 @@ const regionAfterColorSet = [
   {
     key: '#00A1E9',
     action: () => {
-      SCartography.setFillBackColor('#00A1E9', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#00A1E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#00A1E9',
@@ -2797,7 +2824,7 @@ const regionAfterColorSet = [
   {
     key: '#803000',
     action: () => {
-      SCartography.setFillBackColor('#803000', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#803000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#803000',
@@ -2805,7 +2832,7 @@ const regionAfterColorSet = [
   {
     key: '#BD5747',
     action: () => {
-      SCartography.setFillBackColor('#BD5747', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#BD5747', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BD5747',
@@ -2813,7 +2840,7 @@ const regionAfterColorSet = [
   {
     key: '#36E106',
     action: () => {
-      SCartography.setFillBackColor('#36E106', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#36E106', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#36E106',
@@ -2821,7 +2848,7 @@ const regionAfterColorSet = [
   {
     key: '#9CBB58',
     action: () => {
-      SCartography.setFillBackColor('#9CBB58', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#9CBB58', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9CBB58',
@@ -2829,7 +2856,7 @@ const regionAfterColorSet = [
   {
     key: '#8364A1',
     action: () => {
-      SCartography.setFillBackColor('#8364A1', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#8364A1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8364A1',
@@ -2837,7 +2864,7 @@ const regionAfterColorSet = [
   {
     key: '#4AADC7',
     action: () => {
-      SCartography.setFillBackColor('#4AADC7', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#4AADC7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4AADC7',
@@ -2845,7 +2872,7 @@ const regionAfterColorSet = [
   {
     key: '#F89746',
     action: () => {
-      SCartography.setFillBackColor('#F89746', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F89746', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F89746',
@@ -2853,7 +2880,7 @@ const regionAfterColorSet = [
   {
     key: '#E7A700',
     action: () => {
-      SCartography.setFillBackColor('#E7A700', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E7A700', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E7A700',
@@ -2861,7 +2888,7 @@ const regionAfterColorSet = [
   {
     key: '#E7E300',
     action: () => {
-      SCartography.setFillBackColor('#E7E300', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E7E300', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E7E300',
@@ -2869,7 +2896,7 @@ const regionAfterColorSet = [
   {
     key: '#D33248',
     action: () => {
-      SCartography.setFillBackColor('#D33248', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D33248', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D33248',
@@ -2877,7 +2904,7 @@ const regionAfterColorSet = [
   {
     key: '#F1F1F1',
     action: () => {
-      SCartography.setFillBackColor('#F1F1F1', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F1F1F1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F1F1F1',
@@ -2885,7 +2912,7 @@ const regionAfterColorSet = [
   {
     key: '#7D7D7D',
     action: () => {
-      SCartography.setFillBackColor('#7D7D7D', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#7D7D7D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#7D7D7D',
@@ -2893,7 +2920,7 @@ const regionAfterColorSet = [
   {
     key: '#DDD9C3',
     action: () => {
-      SCartography.setFillBackColor('#DDD9C3', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#DDD9C3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#DDD9C3',
@@ -2901,7 +2928,7 @@ const regionAfterColorSet = [
   {
     key: '#C9DDF0',
     action: () => {
-      SCartography.setFillBackColor('#C9DDF0', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#C9DDF0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#C9DDF0',
@@ -2909,7 +2936,7 @@ const regionAfterColorSet = [
   {
     key: '#DBE4F3',
     action: () => {
-      SCartography.setFillBackColor('#DBE4F3', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#DBE4F3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#DBE4F3',
@@ -2917,7 +2944,7 @@ const regionAfterColorSet = [
   {
     key: '#BCE8FD',
     action: () => {
-      SCartography.setFillBackColor('#BCE8FD', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#BCE8FD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BCE8FD',
@@ -2925,7 +2952,7 @@ const regionAfterColorSet = [
   {
     key: '#E5C495',
     action: () => {
-      SCartography.setFillBackColor('#E5C495', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E5C495', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E5C495',
@@ -2933,7 +2960,7 @@ const regionAfterColorSet = [
   {
     key: '#F4DED9',
     action: () => {
-      SCartography.setFillBackColor('#F4DED9', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F4DED9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F4DED9',
@@ -2941,7 +2968,7 @@ const regionAfterColorSet = [
   {
     key: '#DBE9CE',
     action: () => {
-      SCartography.setFillBackColor('#DBE9CE', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#DBE9CE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#DBE9CE',
@@ -2949,7 +2976,7 @@ const regionAfterColorSet = [
   {
     key: '#EBF4DE',
     action: () => {
-      SCartography.setFillBackColor('#EBF4DE', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#EBF4DE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EBF4DE',
@@ -2957,7 +2984,7 @@ const regionAfterColorSet = [
   {
     key: '#E5E1ED',
     action: () => {
-      SCartography.setFillBackColor('#E5E1ED', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E5E1ED', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E5E1ED',
@@ -2965,7 +2992,7 @@ const regionAfterColorSet = [
   {
     key: '#DDF0F3',
     action: () => {
-      SCartography.setFillBackColor('#DDF0F3', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#DDF0F3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#DDF0F3',
@@ -2973,7 +3000,7 @@ const regionAfterColorSet = [
   {
     key: '#FDECDC',
     action: () => {
-      SCartography.setFillBackColor('#FDECDC', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FDECDC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FDECDC',
@@ -2981,7 +3008,7 @@ const regionAfterColorSet = [
   {
     key: '#FFE7C4',
     action: () => {
-      SCartography.setFillBackColor('#FFE7C4', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FFE7C4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFE7C4',
@@ -2989,7 +3016,7 @@ const regionAfterColorSet = [
   {
     key: '#FDFACA',
     action: () => {
-      SCartography.setFillBackColor('#FDFACA', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FDFACA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FDFACA',
@@ -2997,7 +3024,7 @@ const regionAfterColorSet = [
   {
     key: '#F09CA0',
     action: () => {
-      SCartography.setFillBackColor('#F09CA0', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F09CA0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F09CA0',
@@ -3005,7 +3032,7 @@ const regionAfterColorSet = [
   {
     key: '#D7D7D7',
     action: () => {
-      SCartography.setFillBackColor('#D7D7D7', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D7D7D7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7D7D7',
@@ -3013,7 +3040,7 @@ const regionAfterColorSet = [
   {
     key: '#585858',
     action: () => {
-      SCartography.setFillBackColor('#585858', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#585858', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#585858',
@@ -3021,7 +3048,7 @@ const regionAfterColorSet = [
   {
     key: '#C6B797',
     action: () => {
-      SCartography.setFillBackColor('#C6B797', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#C6B797', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#C6B797',
@@ -3029,7 +3056,7 @@ const regionAfterColorSet = [
   {
     key: '#8CB4EA',
     action: () => {
-      SCartography.setFillBackColor('#8CB4EA', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#8CB4EA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8CB4EA',
@@ -3037,7 +3064,7 @@ const regionAfterColorSet = [
   {
     key: '#C1CCE4',
     action: () => {
-      SCartography.setFillBackColor('#C1CCE4', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#C1CCE4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#C1CCE4',
@@ -3045,7 +3072,7 @@ const regionAfterColorSet = [
   {
     key: '#7ED2F6',
     action: () => {
-      SCartography.setFillBackColor('#7ED2F6', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#7ED2F6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#7ED2F6',
@@ -3053,7 +3080,7 @@ const regionAfterColorSet = [
   {
     key: '#B1894F',
     action: () => {
-      SCartography.setFillBackColor('#B1894F', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#B1894F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#B1894F',
@@ -3061,7 +3088,7 @@ const regionAfterColorSet = [
   {
     key: '#E7B8B8',
     action: () => {
-      SCartography.setFillBackColor('#E7B8B8', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E7B8B8', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E7B8B8',
@@ -3069,7 +3096,7 @@ const regionAfterColorSet = [
   {
     key: '#B0D59A',
     action: () => {
-      SCartography.setFillBackColor('#B0D59A', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#B0D59A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#B0D59A',
@@ -3077,7 +3104,7 @@ const regionAfterColorSet = [
   {
     key: '#D7E3BD',
     action: () => {
-      SCartography.setFillBackColor('#D7E3BD', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D7E3BD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7E3BD',
@@ -3085,7 +3112,7 @@ const regionAfterColorSet = [
   {
     key: '#CDC1D9',
     action: () => {
-      SCartography.setFillBackColor('#CDC1D9', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#CDC1D9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#CDC1D9',
@@ -3093,7 +3120,7 @@ const regionAfterColorSet = [
   {
     key: '#B7DDE9',
     action: () => {
-      SCartography.setFillBackColor('#B7DDE9', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#B7DDE9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#B7DDE9',
@@ -3101,7 +3128,7 @@ const regionAfterColorSet = [
   {
     key: '#FAD6B1',
     action: () => {
-      SCartography.setFillBackColor('#FAD6B1', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FAD6B1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FAD6B1',
@@ -3109,7 +3136,7 @@ const regionAfterColorSet = [
   {
     key: '#F5CE88',
     action: () => {
-      SCartography.setFillBackColor('#F5CE88', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F5CE88', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F5CE88',
@@ -3117,7 +3144,7 @@ const regionAfterColorSet = [
   {
     key: '#FFF55A',
     action: () => {
-      SCartography.setFillBackColor('#FFF55A', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FFF55A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF55A',
@@ -3125,7 +3152,7 @@ const regionAfterColorSet = [
   {
     key: '#EF6C78',
     action: () => {
-      SCartography.setFillBackColor('#EF6C78', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#EF6C78', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EF6C78',
@@ -3133,7 +3160,7 @@ const regionAfterColorSet = [
   {
     key: '#BFBFBF',
     action: () => {
-      SCartography.setFillBackColor('#BFBFBF', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#BFBFBF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BFBFBF',
@@ -3141,7 +3168,7 @@ const regionAfterColorSet = [
   {
     key: '#3E3E3E',
     action: () => {
-      SCartography.setFillBackColor('#3E3E3E', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#3E3E3E', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E3E3E',
@@ -3149,7 +3176,7 @@ const regionAfterColorSet = [
   {
     key: '#938953',
     action: () => {
-      SCartography.setFillBackColor('#938953', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#938953', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#938953',
@@ -3157,7 +3184,7 @@ const regionAfterColorSet = [
   {
     key: '#548ED4',
     action: () => {
-      SCartography.setFillBackColor('#548ED4', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#548ED4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#548ED4',
@@ -3165,7 +3192,7 @@ const regionAfterColorSet = [
   {
     key: '#98B7D5',
     action: () => {
-      SCartography.setFillBackColor('#98B7D5', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#98B7D5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#98B7D5',
@@ -3173,7 +3200,7 @@ const regionAfterColorSet = [
   {
     key: '#00B4F0',
     action: () => {
-      SCartography.setFillBackColor('#00B4F0', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#00B4F0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#00B4F0',
@@ -3181,7 +3208,7 @@ const regionAfterColorSet = [
   {
     key: '#9A6C34',
     action: () => {
-      SCartography.setFillBackColor('#9A6C34', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#9A6C34', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9A6C34',
@@ -3189,7 +3216,7 @@ const regionAfterColorSet = [
   {
     key: '#D79896',
     action: () => {
-      SCartography.setFillBackColor('#D79896', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D79896', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D79896',
@@ -3197,7 +3224,7 @@ const regionAfterColorSet = [
   {
     key: '#7EC368',
     action: () => {
-      SCartography.setFillBackColor('#7EC368', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#7EC368', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#7EC368',
@@ -3205,7 +3232,7 @@ const regionAfterColorSet = [
   {
     key: '#C5DDA5',
     action: () => {
-      SCartography.setFillBackColor('#C5DDA5', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#C5DDA5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#C5DDA5',
@@ -3213,7 +3240,7 @@ const regionAfterColorSet = [
   {
     key: '#B1A5C6',
     action: () => {
-      SCartography.setFillBackColor('#B1A5C6', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#B1A5C6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#B1A5C6',
@@ -3221,7 +3248,7 @@ const regionAfterColorSet = [
   {
     key: '#93CDDD',
     action: () => {
-      SCartography.setFillBackColor('#93CDDD', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#93CDDD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#93CDDD',
@@ -3229,7 +3256,7 @@ const regionAfterColorSet = [
   {
     key: '#F9BD8D',
     action: () => {
-      SCartography.setFillBackColor('#F9BD8D', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F9BD8D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F9BD8D',
@@ -3237,7 +3264,7 @@ const regionAfterColorSet = [
   {
     key: '#F7B550',
     action: () => {
-      SCartography.setFillBackColor('#F7B550', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F7B550', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F7B550',
@@ -3245,7 +3272,7 @@ const regionAfterColorSet = [
   {
     key: '#FFF100',
     action: () => {
-      SCartography.setFillBackColor('#FFF100', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FFF100', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF100',
@@ -3253,7 +3280,7 @@ const regionAfterColorSet = [
   {
     key: '#E80050',
     action: () => {
-      SCartography.setFillBackColor('#E80050', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E80050', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E80050',
@@ -3261,7 +3288,7 @@ const regionAfterColorSet = [
   {
     key: '#A6A6A7',
     action: () => {
-      SCartography.setFillBackColor('#A6A6A7', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#A6A6A7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A6A6A7',
@@ -3269,7 +3296,7 @@ const regionAfterColorSet = [
   {
     key: '#2D2D2B',
     action: () => {
-      SCartography.setFillBackColor('#2D2D2B', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#2D2D2B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#2D2D2B',
@@ -3277,7 +3304,7 @@ const regionAfterColorSet = [
   {
     key: '#494428',
     action: () => {
-      SCartography.setFillBackColor('#494428', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#494428', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#494428',
@@ -3285,7 +3312,7 @@ const regionAfterColorSet = [
   {
     key: '#1D3A5F',
     action: () => {
-      SCartography.setFillBackColor('#1D3A5F', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#1D3A5F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1D3A5F',
@@ -3293,7 +3320,7 @@ const regionAfterColorSet = [
   {
     key: '#376192',
     action: () => {
-      SCartography.setFillBackColor('#376192', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#376192', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#376192',
@@ -3301,7 +3328,7 @@ const regionAfterColorSet = [
   {
     key: '#00A1E9',
     action: () => {
-      SCartography.setFillBackColor('#00A1E9', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#00A1E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#00A1E9',
@@ -3309,7 +3336,7 @@ const regionAfterColorSet = [
   {
     key: '#825320',
     action: () => {
-      SCartography.setFillBackColor('#825320', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#825320', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#825320',
@@ -3317,7 +3344,7 @@ const regionAfterColorSet = [
   {
     key: '#903635',
     action: () => {
-      SCartography.setFillBackColor('#903635', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#903635', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#903635',
@@ -3325,7 +3352,7 @@ const regionAfterColorSet = [
   {
     key: '#13B044',
     action: () => {
-      SCartography.setFillBackColor('#13B044', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#13B044', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#13B044',
@@ -3333,7 +3360,7 @@ const regionAfterColorSet = [
   {
     key: '#76933C',
     action: () => {
-      SCartography.setFillBackColor('#76933C', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#76933C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#76933C',
@@ -3341,7 +3368,7 @@ const regionAfterColorSet = [
   {
     key: '#5E467C',
     action: () => {
-      SCartography.setFillBackColor('#5E467C', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#5E467C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#5E467C',
@@ -3349,7 +3376,7 @@ const regionAfterColorSet = [
   {
     key: '#31859D',
     action: () => {
-      SCartography.setFillBackColor('#31859D', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#31859D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#31859D',
@@ -3357,7 +3384,7 @@ const regionAfterColorSet = [
   {
     key: '#E46C07',
     action: () => {
-      SCartography.setFillBackColor('#E46C07', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#E46C07', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E46C07',
@@ -3365,7 +3392,7 @@ const regionAfterColorSet = [
   {
     key: '#F39900',
     action: () => {
-      SCartography.setFillBackColor('#F39900', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F39900', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F39900',
@@ -3373,7 +3400,7 @@ const regionAfterColorSet = [
   {
     key: '#B7AB00',
     action: () => {
-      SCartography.setFillBackColor('#B7AB00', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#B7AB00', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#B7AB00',
@@ -3381,7 +3408,7 @@ const regionAfterColorSet = [
   {
     key: '#A50036',
     action: () => {
-      SCartography.setFillBackColor('#A50036', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#A50036', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A50036',
@@ -3389,7 +3416,7 @@ const regionAfterColorSet = [
   {
     key: '#979D99',
     action: () => {
-      SCartography.setFillBackColor('#979D99', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#979D99', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#979D99',
@@ -3397,7 +3424,7 @@ const regionAfterColorSet = [
   {
     key: '#0C0C0C',
     action: () => {
-      SCartography.setFillBackColor('#0C0C0C', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#0C0C0C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#0C0C0C',
@@ -3405,7 +3432,7 @@ const regionAfterColorSet = [
   {
     key: '#1C1A10',
     action: () => {
-      SCartography.setFillBackColor('#1C1A10', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#1C1A10', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1C1A10',
@@ -3413,7 +3440,7 @@ const regionAfterColorSet = [
   {
     key: '#0C263D',
     action: () => {
-      SCartography.setFillBackColor('#0C263D', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#0C263D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#0C263D',
@@ -3421,7 +3448,7 @@ const regionAfterColorSet = [
   {
     key: '#1D3A5F',
     action: () => {
-      SCartography.setFillBackColor('#1D3A5F', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#1D3A5F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1D3A5F',
@@ -3429,7 +3456,7 @@ const regionAfterColorSet = [
   {
     key: '#005883',
     action: () => {
-      SCartography.setFillBackColor('#005883', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#005883', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#005883',
@@ -3437,7 +3464,7 @@ const regionAfterColorSet = [
   {
     key: '#693904',
     action: () => {
-      SCartography.setFillBackColor('#693904', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#693904', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#693904',
@@ -3445,7 +3472,7 @@ const regionAfterColorSet = [
   {
     key: '#622727',
     action: () => {
-      SCartography.setFillBackColor('#622727', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#622727', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#622727',
@@ -3453,7 +3480,7 @@ const regionAfterColorSet = [
   {
     key: '#005E14',
     action: () => {
-      SCartography.setFillBackColor('#005E14', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#005E14', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#005E14',
@@ -3461,7 +3488,7 @@ const regionAfterColorSet = [
   {
     key: '#4F6028',
     action: () => {
-      SCartography.setFillBackColor('#4F6028', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#4F6028', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4F6028',
@@ -3469,7 +3496,7 @@ const regionAfterColorSet = [
   {
     key: '#3E3050',
     action: () => {
-      SCartography.setFillBackColor('#3E3050', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#3E3050', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E3050',
@@ -3477,7 +3504,7 @@ const regionAfterColorSet = [
   {
     key: '#245B66',
     action: () => {
-      SCartography.setFillBackColor('#245B66', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#245B66', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#245B66',
@@ -3485,7 +3512,7 @@ const regionAfterColorSet = [
   {
     key: '#974805',
     action: () => {
-      SCartography.setFillBackColor('#974805', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#974805', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#974805',
@@ -3493,7 +3520,7 @@ const regionAfterColorSet = [
   {
     key: '#AD6A00',
     action: () => {
-      SCartography.setFillBackColor('#AD6A00', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#AD6A00', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#AD6A00',
@@ -3501,7 +3528,7 @@ const regionAfterColorSet = [
   {
     key: '#8B8100',
     action: () => {
-      SCartography.setFillBackColor('#8B8100', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#8B8100', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8B8100',
@@ -3509,7 +3536,7 @@ const regionAfterColorSet = [
   {
     key: '#7C0022',
     action: () => {
-      SCartography.setFillBackColor('#7C0022', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#7C0022', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#7C0022',
@@ -3517,7 +3544,7 @@ const regionAfterColorSet = [
   {
     key: '#F0DCBE',
     action: () => {
-      SCartography.setFillBackColor('#F0DCBE', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F0DCBE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F0DCBE',
@@ -3525,7 +3552,7 @@ const regionAfterColorSet = [
   {
     key: '#F2B1CF',
     action: () => {
-      SCartography.setFillBackColor('#F2B1CF', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F2B1CF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F2B1CF',
@@ -3533,7 +3560,7 @@ const regionAfterColorSet = [
   {
     key: '#D3FFBF',
     action: () => {
-      SCartography.setFillBackColor('#D3FFBF', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D3FFBF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D3FFBF',
@@ -3541,7 +3568,7 @@ const regionAfterColorSet = [
   {
     key: '#00165F',
     action: () => {
-      SCartography.setFillBackColor('#00165F', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#00165F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#00165F',
@@ -3549,7 +3576,7 @@ const regionAfterColorSet = [
   {
     key: '#6673CB',
     action: () => {
-      SCartography.setFillBackColor('#6673CB', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#6673CB', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#6673CB',
@@ -3557,7 +3584,7 @@ const regionAfterColorSet = [
   {
     key: '#006EBF',
     action: () => {
-      SCartography.setFillBackColor('#006EBF', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#006EBF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#006EBF',
@@ -3565,7 +3592,7 @@ const regionAfterColorSet = [
   {
     key: '#89CF66',
     action: () => {
-      SCartography.setFillBackColor('#89CF66', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#89CF66', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#89CF66',
@@ -3573,7 +3600,7 @@ const regionAfterColorSet = [
   {
     key: '#70A900',
     action: () => {
-      SCartography.setFillBackColor('#70A900', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#70A900', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#70A900',
@@ -3581,7 +3608,7 @@ const regionAfterColorSet = [
   {
     key: '#13B044',
     action: () => {
-      SCartography.setFillBackColor('#13B044', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#13B044', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#13B044',
@@ -3589,7 +3616,7 @@ const regionAfterColorSet = [
   {
     key: '#93D150',
     action: () => {
-      SCartography.setFillBackColor('#93D150', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#93D150', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#93D150',
@@ -3597,7 +3624,7 @@ const regionAfterColorSet = [
   {
     key: '#70319F',
     action: () => {
-      SCartography.setFillBackColor('#70319F', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#70319F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#70319F',
@@ -3605,7 +3632,7 @@ const regionAfterColorSet = [
   {
     key: '#00B4F0',
     action: () => {
-      SCartography.setFillBackColor('#00B4F0', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#00B4F0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#00B4F0',
@@ -3613,7 +3640,7 @@ const regionAfterColorSet = [
   {
     key: '#D38968',
     action: () => {
-      SCartography.setFillBackColor('#D38968', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#D38968', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D38968',
@@ -3621,7 +3648,7 @@ const regionAfterColorSet = [
   {
     key: '#FFBF00',
     action: () => {
-      SCartography.setFillBackColor('#FFBF00', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FFBF00', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFBF00',
@@ -3629,7 +3656,7 @@ const regionAfterColorSet = [
   {
     key: '#FFFF00',
     action: () => {
-      SCartography.setFillBackColor('#FFFF00', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FFFF00', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFF00',
@@ -3637,7 +3664,7 @@ const regionAfterColorSet = [
   {
     key: '#C10000',
     action: () => {
-      SCartography.setFillBackColor('#C10000', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#C10000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#C10000',
@@ -3645,7 +3672,7 @@ const regionAfterColorSet = [
   {
     key: '#F0F1A6',
     action: () => {
-      SCartography.setFillBackColor('#F0F1A6', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#F0F1A6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F0F1A6',
@@ -3653,7 +3680,7 @@ const regionAfterColorSet = [
   {
     key: '#FF0000',
     action: () => {
-      SCartography.setFillBackColor('#FF0000', GLOBAL.currentLayer.name)
+      SCartography.setFillBorderColor('#FF0000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FF0000',
@@ -5492,7 +5519,7 @@ export {
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   legendColor,
   mapBackGroundColor,
 }

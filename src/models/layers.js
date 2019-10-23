@@ -465,6 +465,18 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
       isShow: true,
     })
   }
+
+  if (basemaplist.length === 0) {
+    basemaplist.push({
+      name: 'cache',
+      visible: true,
+      selectable: false,
+      type: 'IMAGEFILE',
+      basemap: true,
+      isShow: true,
+    })
+  }
+
   let data = [
     {
       title: getLanguage(global.language).Map_Layer.PLOTS,

@@ -27,7 +27,7 @@ import {
   pointColorSet,
   legendColor,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   Map3DBaseMapList,
   ConstInfo,
   Const,
@@ -488,8 +488,8 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU_COMMIT,
         ]
         break
-      case ConstToolType.REGIONAFTERCOLOR_SET:
-        data = regionAfterColorSet
+      case ConstToolType.REGIONBORDERCOLOR_SET:
+        data = regionBorderColorSet
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
@@ -3519,7 +3519,7 @@ export default class ToolBar extends React.PureComponent {
         ((this.state.type === ConstToolType.LINECOLOR_SET ||
           this.state.type === ConstToolType.POINTCOLOR_SET ||
           this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-          this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+          this.state.type === ConstToolType.REGIONBORDERCOLOR_SET ||
           this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
           this.state.type === ConstToolType.LEGEND ||
           this.state.type === ConstToolType.LEGEND_NOT_VISIBLE) &&
@@ -3546,7 +3546,7 @@ export default class ToolBar extends React.PureComponent {
         this.state.type === ConstToolType.LINECOLOR_SET ||
         this.state.type === ConstToolType.POINTCOLOR_SET ||
         this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+        this.state.type === ConstToolType.REGIONBORDERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
         this.state.type === ConstToolType.LEGEND ||
         this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
@@ -3960,7 +3960,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type === ConstToolType.LINECOLOR_SET ||
       this.state.type === ConstToolType.POINTCOLOR_SET ||
       this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-      this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+      this.state.type === ConstToolType.REGIONBORDERCOLOR_SET ||
       this.state.type === ConstToolType.LEGEND ||
       this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
@@ -3969,6 +3969,8 @@ export default class ToolBar extends React.PureComponent {
       if (
         this.state.selectKey ===
           getLanguage(this.props.language).Map_Main_Menu.STYLE_LINE_WIDTH ||
+        this.state.selectKey ===
+          getLanguage(this.props.language).Map_Main_Menu.STYLE_BORDER_WIDTH ||
         this.state.selectKey === '大小' ||
         this.state.selectKey === '旋转角度' ||
         this.state.selectKey === '透明度' ||

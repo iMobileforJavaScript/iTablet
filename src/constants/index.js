@@ -43,7 +43,7 @@ import {
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   legendColor,
   mapBackGroundColor,
 } from './ColorList'
@@ -72,7 +72,7 @@ export {
   lineColorSet,
   pointColorSet,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   legendColor,
   mapBackGroundColor,
   uniqueMenuInfo,

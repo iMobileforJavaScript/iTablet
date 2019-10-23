@@ -362,6 +362,7 @@ async function downFileAction(
                   let result = await importSceneWorkspace({
                     server: filePath,
                   })
+                  debugger
                   if (result === true) {
                     Toast.show(
                       getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
@@ -372,15 +373,15 @@ async function downFileAction(
                     )
                   }
                   result = await importWorkspace({ path: filePath })
-                  if (result.msg !== undefined) {
-                    Toast.show(
-                      getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
-                    )
-                  } else {
-                    Toast.show(
-                      getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
-                    )
-                  }
+                  // if (result.msg !== undefined) {
+                  //   Toast.show(
+                  //     getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+                  //   )
+                  // } else {
+                  //   Toast.show(
+                  //     getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
+                  //   )
+                  // }
                 }else {
                   let result = await importWorkspace({ path: filePath })
                   if (result.msg !== undefined) {

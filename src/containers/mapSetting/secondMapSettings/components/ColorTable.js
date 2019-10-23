@@ -5,7 +5,7 @@
  */
 import React from 'react'
 import { ConstToolType } from '../../../../constants/index'
-import { TouchableOpacity, View, FlatList } from 'react-native'
+import { TouchableOpacity, View, FlatList,Text } from 'react-native'
 import { scaleSize } from '../../../../utils/index'
 import { color } from '../../../tabs/Mine/MyService/Styles'
 
@@ -76,7 +76,21 @@ export default class ColorTable extends React.Component {
           marginVertical: scaleSize(2),
           marginHorizontal: scaleSize(2),
         }}
-      />
+      >
+        <View
+          style={{
+            height:'100%',
+            width:'100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}
+        >
+          {item.text ? <Text style={{fontSize: scaleSize(25),color: 'black',textAlign: 'center'}}>{item.text}</Text> : null}
+        </View>
+      </TouchableOpacity>
+
     )
   }
 

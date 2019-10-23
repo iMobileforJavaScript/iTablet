@@ -112,11 +112,11 @@ export default class Home extends Component {
             type: 9,
           })
 
-          if (result.length === 0) {
-            Toast.show(
-              getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
-            )
-          }
+          // if (result.length === 0) {
+          //   Toast.show(
+          //     getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+          //   )
+          // }
         }
         else {
           let result = await SMap.importWorkspaceInfo({
