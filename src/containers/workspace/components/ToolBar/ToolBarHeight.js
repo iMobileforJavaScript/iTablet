@@ -223,7 +223,7 @@ function getToorbarHeight(orientation, type) {
         column = 12
       }
       break
-    case ConstToolType.REGIONAFTERCOLOR_SET:
+    case ConstToolType.REGIONBORDERCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
