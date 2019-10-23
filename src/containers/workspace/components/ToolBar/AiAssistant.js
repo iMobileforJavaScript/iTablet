@@ -7,6 +7,7 @@ import {
   SMeasureView,
   DatasetType,
   SAIDetectView,
+  SMap,
 } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
@@ -62,16 +63,32 @@ function arMeasureCollect() {
 //AI分类
 function aiClassify() {
   (async function() {
-    const type = 'aiClassify'
-    _params.navigation.navigate('ChooseTaggingLayer', { type })
+    let dataList = await SMap.getTaggingLayers(
+      _params.user.currentUser.userName,
+    )
+    if (dataList.length > 0) {
+      const type = 'aiClassify'
+      _params.navigation.navigate('ChooseTaggingLayer', { type })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
   }.bind(this)())
 }
 
 //目标采集
 function aiDetect() {
   (async function() {
-    const type = 'aiDetect'
-    _params.navigation.navigate('ChooseTaggingLayer', { type })
+    let dataList = await SMap.getTaggingLayers(
+      _params.user.currentUser.userName,
+    )
+    if (dataList.length > 0) {
+      const type = 'aiDetect'
+      _params.navigation.navigate('ChooseTaggingLayer', { type })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
     // await SAIDetectView.startCountTrackedObjs(true)
   }.bind(this)())
 }
