@@ -21,8 +21,17 @@ function setParams(params) {
 //违章采集
 function illegallyParkCollect() {
   (async function() {
-    const type = 'illegallyParkCollect'
-    _params.navigation.navigate('ChooseTaggingLayer', { type })
+    let dataList = await SMap.getTaggingLayers(
+      _params.user.currentUser.userName,
+    )
+    if (dataList.length > 0) {
+      const type = 'illegallyParkCollect'
+      _params.navigation.navigate('ChooseTaggingLayer', { type })
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
+      _params.navigation.navigate('LayerManager')
+    }
+
     // let isSupportedARCore = await SMeasureView.isSupportedARCore()
     // if (!isSupportedARCore) {
     //   Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
