@@ -548,14 +548,18 @@ function getMapTool(type, params) {
         {
           key: constants.UNDO,
           title: getLanguage(global.language).Prompt.UNDO,
-          // action: this.showBox,
+          action: () => {
+            SMap.undo()
+          },
           size: 'large',
           image: require('../../../../assets/lightTheme/public/icon_undo_light.png'),
         },
         {
           key: constants.REDO,
           title: getLanguage(global.language).Prompt.REDO,
-          // action: this.showBox,
+          action: () => {
+            SMap.redo()
+          },
           size: 'large',
           image: require('../../../../assets/lightTheme/public/icon_redo_light.png'),
         },
@@ -563,7 +567,10 @@ function getMapTool(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: () => {
+            params.cancelincrement && params.cancelincrement()
+            GLOBAL.toolBox.close()
+          },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -598,7 +605,10 @@ function getMapTool(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: () => {
+            params.cancelincrement && params.cancelincrement()
+            GLOBAL.toolBox.close()
+          },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -631,37 +641,26 @@ function stop() {
 
 function submit() {
   (async function() {
+    let selectItem = GLOBAL.SimpleSelectList.state.select
+    let currentFloor = GLOBAL.SimpleSelectList.state.currentFloor
+    let needAdd
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
-      await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
+      needAdd = await SMap.addGPSRecordset(
+        selectItem.datasourceName,
+        selectItem.datasetName,
+      )
+      GLOBAL.hasGpsLocationData = false
     }
-    await SMap.submit()
-
-    let name = GLOBAL.SELECTDATASOURCE
-    let data = []
-    let maplist = await SMap.getNetWorkDataset(name)
-    if (maplist && maplist.length > 0) {
-      let userList = []
-      maplist.forEach(item => {
-        let name = item.dataset
-        item.title = name
-        item.name = name.split('.')[0]
-        item.image = require('../../../../assets/Navigation/network.png')
-        userList.push(item)
-      })
+    //已提交 清除需要用到
+    if (needAdd === undefined || needAdd === true) {
+      GLOBAL.SUBMITED = true
+      await SMap.submit()
+      await SMap.buildNetwork(
+        selectItem.datasetName,
+        currentFloor.networkDataset,
+        selectItem.datasourceName,
+      )
     }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-      //'选择数据集',
-      image: require('../../../../assets/Navigation/network_white.png'),
-      data: maplist || [],
-    })
-    GLOBAL.ToolBar.setVisible(true, ConstToolType.NETWORKDATASET, {
-      containerType: 'list',
-      height: ConstToolType.THEME_HEIGHT[4],
-      data,
-      isFullScreen: false,
-      buttons: [ToolbarBtnType.CANCEL_INCREMENT],
-    })
   }.bind(this)())
 }
 

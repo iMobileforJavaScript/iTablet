@@ -71,9 +71,8 @@ export default class FunctionToolbar extends React.Component {
     map: Object,
 
     //模型、路网弹窗组件
-    getNetworkPopView?: () => {},
+    getNavigationPopView?: () => {},
     incrementRoad: () => {},
-    setMapIndoorNavigation: () => {},
     setMap2Dto3D: () => {},
     openOnlineMap: boolean,
   }
@@ -118,7 +117,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   isMapIndoorNavigation = () => {
-    this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.toolBox.props.setOpenOnlineMap(false)
   }
@@ -605,40 +603,48 @@ export default class FunctionToolbar extends React.Component {
 
   //网络数据集和模型文件选择
   showModelList = async () => {
-    let popView = this.props.getNetworkPopView()
+    let popView = this.props.getNavigationPopView()
     let simpleList = GLOBAL.SimpleSelectList
-    if (simpleList.state.data.length === 0) {
-      let path =
-        (await FileTools.appendingHomeDirectory(
-          this.props.user && this.props.user.currentUser.userName
-            ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-            : ConstPath.CustomerPath,
-        )) + ConstPath.RelativePath.Datasource
-      let datasources = await SMap.getNetworkDatasource()
-      let models = await FileTools.getNetModel(path)
-      models = models.map(item => {
-        item.checked = false
-        return item
-      })
-      let data = [
-        {
-          title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
-          visible: true,
-          image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
-          data: datasources || [],
-        },
-        {
-          title: getLanguage(this.props.language).Map_Main_Menu
-            .NETWORK_MODEL_FILE,
-          visible: true,
-          image: getThemeAssets().functionBar.rightbar_network_model,
-          data: models || [],
-        },
-      ]
-      simpleList.setState({
-        data,
-      })
+    if (simpleList.renderType !== 'navigation') {
+      if (simpleList.state.navigationData.length === 0) {
+        let path =
+          (await FileTools.appendingHomeDirectory(
+            this.props.user && this.props.user.currentUser.userName
+              ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+              : ConstPath.CustomerPath,
+          )) + ConstPath.RelativePath.Datasource
+        let datasources = await SMap.getNetworkDatasource()
+        let models = await FileTools.getNetModel(path)
+        models = models.map(item => {
+          item.checked = false
+          return item
+        })
+        let navigationData = [
+          {
+            title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+            visible: true,
+            image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+            data: datasources || [],
+          },
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NETWORK_MODEL_FILE,
+            visible: true,
+            image: getThemeAssets().functionBar.rightbar_network_model,
+            data: models || [],
+          },
+        ]
+        simpleList.setState({
+          navigationData,
+          renderType: 'navigation',
+        })
+      } else {
+        simpleList.setState({
+          renderType: 'navigation',
+        })
+      }
     }
+
     this.props.showFullMap(true)
     popView.setVisible(true)
   }
@@ -671,13 +677,31 @@ export default class FunctionToolbar extends React.Component {
   }
 
   incrementRoad = async () => {
-    //增加路网功能 室内外只要包含路网数据集的地图都能使用 室外走不同逻辑
-    // let isIndoorMap = await SMap.isIndoorMap()
-    // if(isIndoorMap){
-    this.props.incrementRoad()
-    // } else {
-    //   Toast.show('请先打开室内数据')
-    // }
+    let rel = await SMap.hasLineDataset()
+    if (rel) {
+      let simpleList = GLOBAL.SimpleSelectList
+      if (simpleList.renderType != 'incrementRoad') {
+        if (simpleList.state.lineDataset.length === 0) {
+          let floorList = await SMap.getLineDatasetAndFloorList()
+          //构造data测试
+          let lineDataset = floorList.map(item => {
+            item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+            return item
+          })
+          simpleList.setState({
+            lineDataset,
+            renderType: 'incrementRoad',
+          })
+        } else {
+          simpleList.setState({
+            renderType: 'incrementRoad',
+          })
+        }
+      }
+      this.props.incrementRoad()
+    } else {
+      Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
+    }
   }
 
   openTraffic = async () => {
