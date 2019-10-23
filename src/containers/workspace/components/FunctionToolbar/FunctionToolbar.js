@@ -1067,8 +1067,16 @@ export default class FunctionToolbar extends React.Component {
 
   share = () => {}
 
+  //判断当前模块是否有效
+  getLicenseValid = index => {
+    return GLOBAL.modulesNumber
+      ? (GLOBAL.modulesNumber << (index - 1)) % 2 === 1
+      : true
+  }
+
   /** 获取一级数据 **/
   getData = type => {
+    let isLicenseNotValid = false
     let data
     switch (type) {
       case constants.MAP_EDIT:
@@ -1124,12 +1132,14 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case constants.MAP_3D:
+        //三维模块是第6个模块
+        isLicenseNotValid = !this.getLicenseValid(6)
         data = [
           {
             key: '开始',
             title: getLanguage(this.props.language).Map_Main_Menu.START,
             // title: '开始',
-            action: this.map3Dstart,
+            action: isLicenseNotValid ? null : this.map3Dstart,
             size: 'large',
             image: require('../../../../assets/function/icon_function_start.png'),
           },
@@ -1149,30 +1159,34 @@ export default class FunctionToolbar extends React.Component {
             // key: 'fly',
             title: getLanguage(this.props.language).Map_Main_Menu.FLY,
             //'飞行',
-            action: () => {
-              // this.isShow=!this.isShow
-              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
-              //   containerType: 'list',
-              //   isFullScreen:true,
-              this.showMap3DFly(ConstToolType.MAP3D_TOOL_FLYLIST)
-              // })
-              // this.getflylist()
-            },
+            action: isLicenseNotValid
+              ? null
+              : () => {
+                // this.isShow=!this.isShow
+                // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
+                //   containerType: 'list',
+                //   isFullScreen:true,
+                this.showMap3DFly(ConstToolType.MAP3D_TOOL_FLYLIST)
+                // })
+                // this.getflylist()
+              },
             image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
           },
           {
             title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
             //'工具',
-            action: this.showMap3DTool,
+            action: isLicenseNotValid ? null : this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
 
           {
             title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
             //'分享',
-            action: async () => {
-              this.showMap3Dshare()
-            },
+            action: isLicenseNotValid
+              ? null
+              : async () => {
+                this.showMap3Dshare()
+              },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
@@ -1279,6 +1293,7 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case constants.MAP_PLOTTING:
+        isLicenseNotValid = !this.getLicenseValid(8)
         data = [
           {
             key: '开始',
@@ -1298,14 +1313,14 @@ export default class FunctionToolbar extends React.Component {
             //标绘
             key: constants.PLOT,
             title: getLanguage(this.props.language).Map_Main_Menu.PLOT,
-            action: this.showSymbol,
+            action: isLicenseNotValid ? null : this.showSymbol,
             image: require('../../../../assets/function/icon_function_symbol.png'),
           },
           {
             //编辑
             key: constants.EDIT,
             title: getLanguage(this.props.language).Map_Main_Menu.EDIT,
-            action: this.showEdit,
+            action: isLicenseNotValid ? null : this.showEdit,
             image: require('../../../../assets/function/icon_edit.png'),
           },
           {
@@ -1313,7 +1328,7 @@ export default class FunctionToolbar extends React.Component {
             key: constants.PLOTTING_ANIMATION,
             title: getLanguage(this.props.language).Map_Main_Menu
               .PLOTTING_ANIMATION,
-            action: this.showAnimationList,
+            action: isLicenseNotValid ? null : this.showAnimationList,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
@@ -1387,6 +1402,7 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case constants.MAP_NAVIGATION:
+        isLicenseNotValid = !this.getLicenseValid(10)
         data = [
           {
             key: '开始',
@@ -1409,7 +1425,7 @@ export default class FunctionToolbar extends React.Component {
               .NAVIGATION_START,
             //constants.ADD,
             size: 'large',
-            action: this.startNavigation,
+            action: isLicenseNotValid ? null : this.startNavigation,
             image: require('../../../../assets/Navigation/navi_icon.png'),
           },
           {
@@ -1417,7 +1433,7 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
             //constants.ADD,
             size: 'large',
-            action: this.showModelList,
+            action: isLicenseNotValid ? null : this.showModelList,
             image: getThemeAssets().functionBar.rightbar_network_model,
           },
           {
@@ -1425,7 +1441,7 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu.Traffic,
             //路况
             size: 'large',
-            action: this.openTraffic,
+            action: isLicenseNotValid ? null : this.openTraffic,
             image: require('../../../../assets/Navigation/road.png'),
           },
           // {
@@ -1442,7 +1458,7 @@ export default class FunctionToolbar extends React.Component {
             title: getLanguage(this.props.language).Map_Main_Menu
               .MAO_ROAD_DISTRIBUTION,
             //'风格',
-            action: this.incrementRoad,
+            action: isLicenseNotValid ? null : this.incrementRoad,
             size: 'large',
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',
@@ -1509,6 +1525,10 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
+    }
+    if (isLicenseNotValid) {
+      GLOBAL.licenseModuleNotContainDialog &&
+        GLOBAL.licenseModuleNotContainDialog.setDialogVisible(true)
     }
     return data
   }

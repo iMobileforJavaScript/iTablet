@@ -92,14 +92,15 @@ const styles = StyleSheet.create({
     height: scaleSize(300),
   },
   btnStyle: {
-    height: scaleSize(100),
+    height: scaleSize(80),
+    width: '100%',
     flexDirection: 'column',
     justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
   },
   btnTextStyle: {
-    fontSize: scaleSize(20),
+    fontSize: scaleSize(24),
     color: color.blue1,
   },
 })
@@ -327,6 +328,22 @@ class AppRoot extends Component {
           if (!status.isLicenseValid) {
             this.exit.setDialogVisible(true)
           }
+
+    if(serialNumber!==''&&!status.isTrailLicense){
+      let licenseInfo = await SMap.getSerialNumberAndModules()
+      if(licenseInfo!=null&&licenseInfo.modulesArray){
+        let modules=licenseInfo.modulesArray
+        let size = modules.length
+        let number = 0
+        for (let i = 0; i < size; i++) {
+          let modultCode = Number(modules[i])
+          number = number + modultCode
+        }
+        GLOBAL.modulesNumber=number
+      }
+      
+    }
+    
   }
 
   orientation = o=> {
@@ -654,6 +671,7 @@ class AppRoot extends Component {
             false,
             global.language==='CN'?"许可申请中...":"Applying"
           )
+          SMap.initTrailLicensePath()
           Toast.show(global.language==='CN'?"试用成功":'Successful trial')
         })
     }catch (e) {
@@ -678,6 +696,53 @@ class AppRoot extends Component {
     >
       {this.renderLicenseDialogChildren()}
     </Dialog>
+    )
+  }
+  renderLicenseNotModuleChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Text style={styles.promptTtile}>
+          {getLanguage(this.props.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE}
+          {/* 试用许可已过期,请更换许可后重启 */}
+        </Text>
+        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white,}}></View>
+        <View style={{height: scaleSize(200),
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  flex: 1,
+                                  alignItems: 'center',}}
+          onPress={this.inputOfficialLicense}
+        >
+          <Text style={{fontSize: scaleSize(20),marginLeft:scaleSize(30),marginRight:scaleSize(30)}}>
+            {getLanguage(global.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB}
+          </Text>
+        </View>
+        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white,}}></View>
+        <TouchableOpacity style={{height: scaleSize(80),
+                                width: '100%',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',}}
+          onPress={()=>{ GLOBAL.licenseModuleNotContainDialog.setDialogVisible(false)}}
+        >
+          <Text style={styles.btnTextStyle}>
+            {getLanguage(global.language).Prompt.CONFIRM}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+  renderLicenseNotModuleDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (GLOBAL.licenseModuleNotContainDialog = ref)}
+        showBtns={false}
+        opacity={1}
+        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
+        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+      >
+        {this.renderLicenseNotModuleChildren()}
+      </Dialog>
     )
   }
 
@@ -769,6 +834,7 @@ class AppRoot extends Component {
         />
         {this.renderDialog()}
         {this.renderImportDialog()}
+        {this.renderLicenseNotModuleDialog()}
         {!this.props.isAgreeToProtocol && this._renderProtocolDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>

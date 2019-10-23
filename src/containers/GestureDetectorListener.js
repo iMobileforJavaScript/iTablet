@@ -9,15 +9,30 @@ import { TouchType } from '../constants'
 import { Toast } from '../utils'
 //eslint-disable-next-line
 let _params = {}
-
+let isDoubleTouchCome = false
 function setGestureDetectorListener(params) {
   (async function() {
     await SMap.setGestureDetector({
       singleTapHandler: touchCallback,
       longPressHandler: longtouchCallback,
+      doubleTapHandler: doubleTouchCallback,
     })
   }.bind(this)())
   _params = params
+}
+
+async function isDoubleTouchComing() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(isDoubleTouchCome)
+      isDoubleTouchCome = false
+    }, 500)
+  })
+}
+
+// eslint-disable-next-line no-unused-vars
+async function doubleTouchCallback(event) {
+  isDoubleTouchCome = true
 }
 
 async function longtouchCallback(event) {
@@ -89,12 +104,14 @@ async function touchCallback(event) {
       }
       isGuiding = await SMap.isGuiding()
       if (!isGuiding) {
-        if (isfull) {
-          GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
-        } else {
-          GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        if (!(await isDoubleTouchComing())) {
+          if (isfull) {
+            GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
+          } else {
+            GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+          }
+          isfull = !isfull
         }
-        isfull = !isfull
       }
       break
     case TouchType.MAP_TOOL_TAGGING:
