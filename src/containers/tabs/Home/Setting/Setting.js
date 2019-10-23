@@ -52,27 +52,31 @@ export default class Setting extends Component {
   renderItemView(action, label) {
     return (
       <View style={{ width: '100%' }}>
-        <View
-          style={{
-            width: '100%',
-            height: 60,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 18, marginLeft: 15 }}>{label}</Text>
-
-          <TouchableOpacity
-            style={{ marginRight: 15, alignItems: 'center' }}
-            onPress={action}
+        <TouchableOpacity style={{ width: '100%' }} onPress={action}>
+          <View
+            style={{
+              width: '100%',
+              height: scaleSize(80),
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
           >
-            <Image
-              source={require('../../../../assets/Mine/mine_my_arrow.png')}
-              style={{ height: scaleSize(28), width: scaleSize(28) }}
-            />
-          </TouchableOpacity>
-        </View>
+            <Text style={{ fontSize: scaleSize(24), marginLeft: 15 }}>
+              {label}
+            </Text>
+
+            <View
+              style={{ marginRight: 15, alignItems: 'center' }}
+              // onPress={action}
+            >
+              <Image
+                source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                style={{ height: scaleSize(28), width: scaleSize(28) }}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
         <View
           style={{
             width: '100%',

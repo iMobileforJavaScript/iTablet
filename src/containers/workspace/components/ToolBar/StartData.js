@@ -399,6 +399,18 @@ function getStart(type, params) {
         },
       ]
       break
+    case ConstToolType.AIMapSuspension:
+      data = [
+        {
+          key: constants.OPEN,
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
+        },
+      ]
+      break
   }
   return { data, buttons }
 }
@@ -628,14 +640,26 @@ function openMap() {
       image: require('../../../../assets/mapToolbar/list_type_maps.png'),
       data: userFileList || [],
     })
-    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-      containerType: 'list',
-      height:
-        _params.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[4]
-          : ConstToolType.HEIGHT[3],
-      data,
-    })
+    //新增视屏地图ar模式下地图打开
+    if (GLOBAL.AIMAPSUSPENSION) {
+      _params.setToolbarVisible(true, ConstToolType.MAPSUSPENSION_CHANGE, {
+        containerType: 'list',
+        height:
+          _params.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.HEIGHT[3],
+        data,
+      })
+    } else {
+      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+        containerType: 'list',
+        height:
+          _params.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.HEIGHT[3],
+        data,
+      })
+    }
   })()
 }
 

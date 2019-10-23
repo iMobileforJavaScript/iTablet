@@ -43,6 +43,9 @@ export default class LicensePage extends Component {
     this.setState({
       status: status,
     })
+    if (status.isTrailLicense) {
+      GLOBAL.modulesNumber = null
+    }
   }
 
   renderLicenseDialogChildren = remindStr => {
@@ -60,10 +63,7 @@ export default class LicensePage extends Component {
             backgroundColor: color.item_separate_white,
           }}
         />
-        <TouchableOpacity
-          style={styles.btnStyle}
-          onPress={this.inputOfficialLicense}
-        >
+        <View style={styles.btnStyle}>
           <Text
             style={{
               fontSize: scaleSize(20),
@@ -73,7 +73,7 @@ export default class LicensePage extends Component {
           >
             {remindStr}
           </Text>
-        </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -132,28 +132,6 @@ export default class LicensePage extends Component {
       .catch(() => {})
   }
 
-  //清除正式许可
-  cleanOfficialLicense = async serialNumber => {
-    GLOBAL.Loading.setLoading(
-      true,
-      global.language === 'CN' ? '许可清除中...' : 'Applying',
-    )
-    // let result=await SMap.recycleLicense(serialNumber)
-    let result = await SMap.clearLocalLicense(serialNumber)
-    if (result) {
-      AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, 'null')
-      this.getLicense()
-      GLOBAL.Loading.setLoading(
-        false,
-        global.language === 'CN' ? '许可清除中...' : 'Applying',
-      )
-    } else {
-      GLOBAL.Loading.setLoading(
-        false,
-        global.language === 'CN' ? '许可清除中失败...' : 'Applying Failed',
-      )
-    }
-  }
   //所含模块
   containModule = () => {
     NavigationService.navigate('LicenseModule', {
@@ -224,6 +202,7 @@ export default class LicensePage extends Component {
           false,
           global.language === 'CN' ? '许可申请中...' : 'Applying',
         )
+        this.getLicense()
         Toast.show(global.language === 'CN' ? '试用成功' : 'Successful trial')
       })
     } catch (e) {
@@ -245,15 +224,23 @@ export default class LicensePage extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 15, marginLeft: 30 }}>{label}</Text>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
           {isText ? (
-            <Text style={{ fontSize: 15, marginRight: 15, color: color.gray2 }}>
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                marginRight: 15,
+                color: color.gray2,
+              }}
+            >
               {action}
             </Text>
           ) : (
@@ -269,6 +256,34 @@ export default class LicensePage extends Component {
           )}
         </View>
       </View>
+    )
+  }
+  renderTouchableItemView(label, action) {
+    return (
+      <TouchableOpacity
+        style={{ width: '100%', backgroundColor: color.content_white }}
+        onPress={action}
+      >
+        <View
+          style={{
+            width: '100%',
+            height: scaleSize(80),
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
+          <View style={{ marginRight: 15, alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/Mine/mine_my_arrow.png')}
+              style={{ height: scaleSize(28), width: scaleSize(28) }}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
     )
   }
 
@@ -320,17 +335,15 @@ export default class LicensePage extends Component {
         {this.state.status.isTrailLicense ? (
           <View />
         ) : (
-          this.renderItemView(
+          this.renderTouchableItemView(
             getLanguage(global.language).Profile.LICENSE_CONTAIN_MODULE,
-            false,
             this.containModule,
           )
         )}
         <View style={{ height: 10 }} />
         {this.state.status.isTrailLicense ? (
-          this.renderItemView(
+          this.renderTouchableItemView(
             getLanguage(global.language).Profile.LICENSE_OFFICIAL_INPUT,
-            false,
             this.inputOfficialLicense,
           )
         ) : (
@@ -341,9 +354,8 @@ export default class LicensePage extends Component {
         ) : (
           <View />
         )}
-        {this.renderItemView(
+        {this.renderTouchableItemView(
           getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
-          false,
           this.applyTrialLicense,
         )}
         <View style={{ height: 10 }} />
@@ -354,7 +366,7 @@ export default class LicensePage extends Component {
           <TouchableOpacity
             style={{
               width: '100%',
-              height: 60,
+              height: scaleSize(80),
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
@@ -362,7 +374,7 @@ export default class LicensePage extends Component {
             }}
             onPress={() => this.getLicenseSerialNumber(this.getLicenseCount)}
           >
-            <Text style={{ fontSize: 15, color: color.red }}>
+            <Text style={{ fontSize: scaleSize(24), color: color.red }}>
               {getLanguage(global.language).Profile.LICENSE_OFFICIAL_CLEAN}
             </Text>
           </TouchableOpacity>
@@ -397,23 +409,23 @@ const styles = StyleSheet.create({
 
   item: {
     width: '100%',
-    height: 60,
+    height: scaleSize(80),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: color.content_white,
   },
   title: {
-    fontSize: 18,
+    fontSize: scaleSize(24),
     marginLeft: 15,
   },
   subTitle: {
-    fontSize: 15,
+    fontSize: scaleSize(20),
     marginLeft: 15,
   },
   separateLine: {
     width: '100%',
-    height: 1,
+    height: scaleSize(1),
     backgroundColor: color.item_separate_white,
   },
   dialogHeaderView: {

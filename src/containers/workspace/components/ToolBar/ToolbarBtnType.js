@@ -60,4 +60,7 @@ export default {
   MEASURE_CLEAR: 'measure_clear',
   STYLE_TRANSFER: 'style_transfer',
   STYLE_TRANSFER_PICKER: 'style_transfer_picker',
+
+  SETTIING: 'setting',
+  COLLECTTARGET: 'collecttarget',
 }

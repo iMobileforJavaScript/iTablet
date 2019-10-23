@@ -4,8 +4,8 @@ import { Container, Button } from '../../../../components'
 import { color } from '../../../../styles'
 import { getLanguage } from '../../../../language/index'
 import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 import constants from '../../../../../src/containers/workspace/constants'
+import { scaleSize, Toast } from '../../../../utils'
 export default class LicenseJoin extends Component {
   props: {
     navigation: Object,
@@ -18,7 +18,6 @@ export default class LicenseJoin extends Component {
     this.backAction = params && params.backAction
     this.state = {
       texts: ['', '', '', '', ''],
-      // texts:['69D5F','BB8EA','5C4F8','49BAF','59750']
     }
   }
 
@@ -56,19 +55,36 @@ export default class LicenseJoin extends Component {
       let result = await SMap.activateLicense(str)
       if (result) {
         AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, str)
+        let modules = await SMap.licenseContainModule(str)
+        let size = modules.length
+        let number = 0
+        for (let i = 0; i < size; i++) {
+          let modultCode = Number(modules[i])
+          number = number + modultCode
+        }
+        GLOBAL.modulesNumber = number
         GLOBAL.Loading.setLoading(
           false,
-          global.language === 'CN' ? '许可申请中...' : 'Applying',
+          global.language === 'CN' ? '许可申请中...' : 'Activate Faild',
         )
         this.cb && this.cb()
       } else {
         Toast.show(
-          getLanguage(global.language).Profile.INPUT_LICENSE_SERIAL_NUMBER,
+          // getLanguage(global.language).Profile.INPUT_LICENSE_SERIAL_NUMBER,
+          global.language === 'CN' ? '激活失败...' : 'Applying',
+        )
+        GLOBAL.Loading.setLoading(
+          false,
+          global.language === 'CN' ? '许可申请中...' : 'Applying',
         )
       }
     } else {
       Toast.show(
         getLanguage(global.language).Profile.PLEASE_INPUT_LICENSE_SERIAL_NUMBER,
+      )
+      GLOBAL.Loading.setLoading(
+        false,
+        global.language === 'CN' ? '许可申请中...' : 'Applying',
       )
     }
   }
@@ -89,7 +105,7 @@ export default class LicenseJoin extends Component {
       <View style={{ flex: 1, backgroundColor: color.background }}>
         <Text
           style={{
-            fontSize: 18,
+            fontSize: scaleSize(24),
             marginLeft: '3%',
             marginTop: 30,
             marginBottom: 10,
@@ -105,7 +121,7 @@ export default class LicenseJoin extends Component {
         <View
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(60),
             flexDirection: 'row',
             // justifyContent: 'space-between',
             justifyContent: 'center',
@@ -165,7 +181,12 @@ export default class LicenseJoin extends Component {
         <View style={{ alignItems: 'center' }}>
           <Button
             title={'确定'}
-            style={{ width: '94%', height: 60, marginTop: 60 }}
+            style={{
+              width: '94%',
+              height: scaleSize(60),
+              marginTop: scaleSize(60),
+            }}
+            titleStyle={{ fontSize: scaleSize(24) }}
             onPress={this.activateLicenseSerialNumber}
           />
         </View>
@@ -199,18 +220,18 @@ const styles = StyleSheet.create({
 
   item: {
     width: '100%',
-    height: 60,
+    height: scaleSize(60),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: color.content_white,
   },
   title: {
-    fontSize: 18,
+    fontSize: scaleSize(18),
     marginLeft: 15,
   },
   subTitle: {
-    fontSize: 15,
+    fontSize: scaleSize(15),
     marginLeft: 15,
   },
   separateLine: {
@@ -220,8 +241,8 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '18%',
-    height: 60,
-    fontSize: 18,
+    height: scaleSize(60),
+    fontSize: scaleSize(18),
     textAlignVertical: 'center',
 
     backgroundColor: color.white,

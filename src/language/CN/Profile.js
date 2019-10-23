@@ -181,7 +181,10 @@ const Profile = {
   LICENSE_MODULE_REGISTER_FAIL: '模块登记失败',
   LICENSE_EXIT: '退出',
   LICENSE_EXIT_FAILED: '退出失败',
-  LICENSE_CURRENT_EXPIRE: '当前许可已过期',
+  LICENSE_CURRENT_EXPIRE: '当前许可无效',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE: '当前许可不包括该模块',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
+    '当前许可不包括该模块，该模块的部分功能将不可用！！！',
   //许可模块
   Core_Dev: '核心开发模块',
   Core_Runtime: '核心运行模块',

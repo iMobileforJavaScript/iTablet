@@ -159,8 +159,8 @@ const Profile = {
   LICENSE_TRIAL: 'License Trial',
   LICENSE_OFFICIAL: 'License Official',
   LICENSE_STATE: 'License State',
-  LICENSE_SURPLUS: 'License Surplus',
-  LICENSE_DAY: 'Day',
+  LICENSE_SURPLUS: 'License Surplus ',
+  LICENSE_DAY: ' Day',
   LICENSE_CONTAIN_MODULE: 'License Contain Module',
   LICENSE_OFFICIAL_INPUT: 'License Official Input',
   LICENSE_TRIAL_APPLY: 'License Trial Apply',
@@ -180,7 +180,11 @@ const Profile = {
   LICENSE_MODULE_REGISTER_SUCCESS: 'Module Register Success',
   LICENSE_EXIT: 'Exit',
   LICENSE_EXIT_FAILED: 'Exit Failed',
-  LICENSE_CURRENT_EXPIRE: 'Current License Expire',
+  LICENSE_CURRENT_EXPIRE: 'Current License Invalid',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE:
+    'This module is not included under the current license',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
+    'This module is not included under the current license and some of its functions will be unavailable！！！',
   //许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',

@@ -49,7 +49,8 @@ function getTabBarData(type, params = {}) {
     type === ConstToolType.MAP_3D_START ||
     type === ConstToolType.MAP_PLOTTING_START ||
     type === ConstToolType.MAP_NAVIGATION_START ||
-    type === ConstToolType.MAP_ANALYST_START
+    type === ConstToolType.MAP_ANALYST_START ||
+    type === ConstToolType.AIMapSuspension
   ) {
     tabBarData = StartData.getStart(type, params)
   } else if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
