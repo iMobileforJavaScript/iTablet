@@ -180,8 +180,6 @@ export default class ToolBar extends React.PureComponent {
     clearAttributeHistory: () => {},
     layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
-    setMapIndoorNavigation: () => {},
-    setMapNavigationShow: () => {},
     setMapNavigation: () => {},
     setMap2Dto3D: () => {},
     cancelincrement: () => {},
@@ -4891,7 +4889,6 @@ export default class ToolBar extends React.PureComponent {
     //   }.bind(this)())
     // } else if (this.state.type === ConstToolType.OPEN_MAP) {
     //   (async function() {
-    //     this.props.setMapIndoorNavigation(true)
     //     await SMap.openMap(item.name)
     //     this.props.setContainerLoading(false)
     //     this.props.getLayers()
@@ -5087,34 +5084,35 @@ export default class ToolBar extends React.PureComponent {
           buttons: [ToolbarBtnType.CANCEL_INCREMENT],
         })
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.LINEDATASET) {
-      (async function() {
-        if (GLOBAL.NAVIGATIONHEADLEFTCLICK) {
-          this.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
-            containerType: 'table',
-            column: 4,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-        } else {
-          SMap.setLabelColor()
-          SMap.setAction(Action.DRAWLINE)
-          this.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
-            containerType: 'table',
-            column: 4,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-        }
-        await SMap.addNetWorkDataset(item.name)
-        GLOBAL.LINEDATASET = item.name
-      }.bind(this)())
-    } else if (this.state.type === ConstToolType.NETWORKDATASET) {
-      (async function() {
-        await SMap.buildNetwork(GLOBAL.LINEDATASET, item.name)
-        this.closeincrement()
-      }.bind(this)())
     }
+    // } else if (this.state.type === ConstToolType.LINEDATASET) {
+    //   (async function() {
+    //     if (GLOBAL.NAVIGATIONHEADLEFTCLICK) {
+    //       this.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+    //         containerType: 'table',
+    //         column: 4,
+    //         isFullScreen: false,
+    //         height: ConstToolType.HEIGHT[0],
+    //       })
+    //     } else {
+    //       SMap.setLabelColor()
+    //       SMap.setAction(Action.DRAWLINE)
+    //       this.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+    //         containerType: 'table',
+    //         column: 4,
+    //         isFullScreen: false,
+    //         height: ConstToolType.HEIGHT[0],
+    //       })
+    //     }
+    //     await SMap.addNetWorkDataset(item.name)
+    //     GLOBAL.LINEDATASET = item.name
+    //   }.bind(this)())
+    // } else if (this.state.type === ConstToolType.NETWORKDATASET) {
+    //   (async function() {
+    //     await SMap.buildNetwork(GLOBAL.LINEDATASET, item.name)
+    //     this.closeincrement()
+    //   }.bind(this)())
+    // }
   }
 
   /** 导入工作空间 **/
@@ -5574,7 +5572,6 @@ export default class ToolBar extends React.PureComponent {
         return
       }
       this.props.setMap2Dto3D(false)
-      this.props.setMapIndoorNavigation(true)
       this.props.setContainerLoading(
         true,
         getLanguage(this.props.language).Prompt.SWITCHING,
@@ -5618,6 +5615,7 @@ export default class ToolBar extends React.PureComponent {
                 title: getLanguage(this.props.language).Map_Settings
                   .DATASOURCES,
                 visible: true,
+                image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
                 data: datasources || [],
               },
               {
@@ -5629,6 +5627,7 @@ export default class ToolBar extends React.PureComponent {
             ]
             GLOBAL.SimpleSelectList.setState({
               data,
+              autoSelectIndex: false,
             })
           }, 2000)
         }

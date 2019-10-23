@@ -20,7 +20,6 @@ export const MAP_SCALEVIEW = 'MAP_SCALEVIEW'
 export const MAP_NAVIGATION = 'MAP_NAVIGATION'
 export const MAP_2DTO3D = 'MAP_2DTO3D'
 export const MAP_IS3D = 'MAP_IS3D'
-export const MAP_NAVIGATIONSHOW = 'MAP_NAVIGATIONSHOW'
 export const MAP_INDOORNAViGATION = 'MAP_INDOORNAViGATION'
 export const NAVIGATION_CHANGEAR = 'NAVIGATION_CHANGEAR'
 export const NAVIGATION_POIVIEW = 'NAVIGATION_POIVIEW'
@@ -107,18 +106,6 @@ export const setMap2Dto3D = (params = {}) => async dispatch => {
 export const setMapIs3D = (params = {}) => async dispatch => {
   await dispatch({
     type: MAP_IS3D,
-    payload: params || false,
-  })
-}
-export const setMapNavigationShow = (params = {}) => async dispatch => {
-  await dispatch({
-    type: MAP_NAVIGATIONSHOW,
-    payload: params || false,
-  })
-}
-export const setMapIndoorNavigation = (params = {}) => async dispatch => {
-  await dispatch({
-    type: MAP_INDOORNAViGATION,
     payload: params || false,
   })
 }
@@ -274,9 +261,7 @@ const initialState = fromJS({
   },
   map2Dto3D: false,
   mapIs3D: false,
-  mapNavigationShow: false,
   mapScaleView: true,
-  mapIndoorNavigation: false,
   navigationChangeAR: false,
   navigationPoiView: false,
   openOnlineMap: false,
@@ -438,24 +423,6 @@ export default handleActions(
         data = false
       }
       return state.setIn(['mapIs3D'], fromJS(data))
-    },
-    [`${MAP_NAVIGATIONSHOW}`]: (state, { payload }) => {
-      let data = state.toJS().mapNavigationShow
-      if (payload !== undefined) {
-        data = payload
-      } else {
-        data = false
-      }
-      return state.setIn(['mapNavigationShow'], fromJS(data))
-    },
-    [`${MAP_INDOORNAViGATION}`]: (state, { payload }) => {
-      let data = state.toJS().mapIndoorNavigation
-      if (payload !== undefined) {
-        data = payload
-      } else {
-        data = false
-      }
-      return state.setIn(['mapIndoorNavigation'], fromJS(data))
     },
     [`${NAVIGATION_CHANGEAR}`]: (state, { payload }) => {
       let data = state.toJS().navigationChangeAR
