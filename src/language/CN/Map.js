@@ -453,6 +453,7 @@ const Map_Layer = {
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
   LAYERS_SHARE: '分享',
   SELECT_LAYSER_SCALE: '请选择比例尺',
+  LAYER_SCALE_RANGE_WRONG: '最大比例尺必须大于最小比例尺',
 
   VISIBLE: '设置图层可见',
   NOT_VISIBLE: '设置图层不可见',

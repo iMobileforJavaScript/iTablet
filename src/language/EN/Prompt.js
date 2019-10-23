@@ -236,6 +236,7 @@ const Prompt = {
   CLEAR_HISTORY: 'Clear history',
   //导航相关
   NO_NETWORK_DATASETS: "Current workspace does'nt contain network dataset",
+  NO_LINE_DATASETS: "Current workspace does'nt contain line dataset",
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     'Select a network dataset and a network model first',

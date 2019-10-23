@@ -1,5 +1,6 @@
 import { getLanguage } from '../../../../language/index'
 import { getPublicAssets } from '../../../../assets'
+import dataUtil from '../../../../utils/dataUtil'
 
 function getGroupData(type) {
   return [
@@ -638,29 +639,63 @@ async function getVisibleScalePickerData(min, max) {
     },
   ]
   let minOption = Object.assign([], option)
-  if (max !== 0) {
-    let i = 0
-    for (; i < minOption.length; i++) {
-      if (minOption[i].value > max) {
-        break
-      }
-    }
-    if (i > 0) {
-      minOption = minOption.slice(i)
+  let minInitItem =
+    min === 0
+      ? { key: '0', value: 0 }
+      : { key: '1 : ' + dataUtil.NumberWithThousandSep(min), value: min }
+  let n = 0
+  for (; n < minOption.length; n++) {
+    if (minInitItem.value < minOption[n].value) {
+      minOption.splice(n, 0, minInitItem)
+      break
+    } else if (minInitItem.value === minOption[n].value) {
+      minInitItem = minOption[n]
+      break
     }
   }
+  if (n === minOption.length) {
+    minOption.push(minInitItem)
+  }
+  // if (max !== 0) {
+  //   let i = 0
+  //   for (; i < minOption.length; i++) {
+  //     if (minOption[i].value > max) {
+  //       break
+  //     }
+  //   }
+  //   if (i > 0) {
+  //     minOption = minOption.slice(i)
+  //   }
+  // }
   let maxOption = Object.assign([], option)
-  if (min !== 0) {
-    let i = 0
-    for (; i < maxOption.length; i++) {
-      if (maxOption[i].value >= min) {
-        break
-      }
-    }
-    if (i > 0) {
-      maxOption = maxOption.slice(0, i)
+  let maxInitItem =
+    max === 0
+      ? { key: '0', value: 0 }
+      : { key: '1 : ' + dataUtil.NumberWithThousandSep(max), value: max }
+  n = 0
+  for (; n < maxOption.length; n++) {
+    if (maxInitItem.value < maxOption[n].value) {
+      maxOption.splice(n, 0, maxInitItem)
+      break
+    } else if (maxInitItem.value === maxOption[n].value) {
+      maxInitItem = maxOption[n]
+      break
     }
   }
+  if (n === maxOption.length) {
+    maxOption.push(maxInitItem)
+  }
+  // if (min !== 0) {
+  //   let i = 0
+  //   for (; i < maxOption.length; i++) {
+  //     if (maxOption[i].value >= min) {
+  //       break
+  //     }
+  //   }
+  //   if (i > 0) {
+  //     maxOption = maxOption.slice(0, i)
+  //   }
+  // }
   let clearOption = {
     key: getLanguage(global.language).Map_Layer.LAYERS_CLEAR,
     value: 0,
@@ -672,11 +707,15 @@ async function getVisibleScalePickerData(min, max) {
       key: getLanguage(global.language).Map_Layer.LAYERS_MINIMUM,
       value: '最小可见比例尺',
       children: minOption,
+      initItem: minInitItem,
+      selectedItem: minInitItem,
     },
     {
       key: getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM,
       value: '最大可见比例尺',
       children: maxOption,
+      initItem: maxInitItem,
+      selectedItem: maxInitItem,
     },
   ]
   return pickerData

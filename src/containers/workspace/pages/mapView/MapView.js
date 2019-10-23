@@ -62,7 +62,6 @@ import {
   TouchType,
   ConstInfo,
   getHeaderTitle,
-  UserType,
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
@@ -80,7 +79,6 @@ import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
 import NavigationView from '../../components/NavigationView'
 import NavigationPoiView from '../../components/NavigationPoiView'
-import ChangeArView from '../../components/ChangeArView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import FloorListView from '../../components/FloorListView'
@@ -110,10 +108,8 @@ export default class MapView extends React.Component {
     mapLegend: PropTypes.object,
     mapNavigation: PropTypes.object,
     map2Dto3D: PropTypes.bool,
-    mapNavigationShow: PropTypes.bool,
     mapScaleView: PropTypes.bool,
     mapIs3D: PropTypes.bool,
-    mapIndoorNavigation: PropTypes.bool,
     navigationChangeAR: PropTypes.bool,
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
@@ -163,10 +159,8 @@ export default class MapView extends React.Component {
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
     setMapNavigation: PropTypes.func,
-    setMapNavigationShow: PropTypes.func,
     setMap2Dto3D: PropTypes.func,
     setMapIs3D: PropTypes.func,
-    setMapIndoorNavigation: PropTypes.func,
     setNavigationChangeAR: PropTypes.func,
     setNavigationPoiView: PropTypes.func,
     setBackAction: PropTypes.func,
@@ -216,9 +210,7 @@ export default class MapView extends React.Component {
       showRoadView: true,
       showArModeIcon: true,
       showIncrement: false,
-      leftClick: false,
-      rightClick: true,
-      incrementShow: true,
+      isRight: true,
     }
     this.closeInfo = [
       {
@@ -1040,7 +1032,6 @@ export default class MapView extends React.Component {
 
   back = () => {
     if (!this.mapLoaded) return
-    // this.props.setMapIndoorNavigation(false)
     // 优先处理其他界面跳转到MapView传来的返回事件
     if (this.backAction && typeof this.backAction === 'function') {
       this.backAction()
@@ -1547,7 +1538,7 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.type}
         getToolRef={() => this.toolBox}
-        getNetworkPopView={() => this.selectList}
+        getNavigationPopView={() => this.selectList}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
@@ -1565,7 +1556,6 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
-        setMapIndoorNavigation={this.props.setMapIndoorNavigation}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
         save={() => {
@@ -1751,9 +1741,20 @@ export default class MapView extends React.Component {
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
-        cancelincrement={() => {
+        cancelincrement={async () => {
+          let select = this.SimpleSelectList.state.select
+          let currentFloor = this.SimpleSelectList.state.currentFloor
+          let networkDatasetName = GLOBAL.SUBMITED
+            ? currentFloor.networkDataset
+            : null
+          await SMap.removeNetworkDataset(
+            select.datasetName,
+            networkDatasetName,
+            select.datasourceName,
+          )
           SMap.setAction(Action.PAN)
-          this.setState({ incrementShow: true, showIncrement: false })
+          this.setState({ showIncrement: false })
+          GLOBAL.SUBMITED = false
         }}
         switchAr={this.switchAr}
         {...this.props}
@@ -1860,17 +1861,55 @@ export default class MapView extends React.Component {
     )
   }
 
-  //导航地图 模型、路网弹窗 数据在 点击模型按钮/切换地图时获取一次
+  //导航地图 模型、路网弹窗 数据在点击模型按钮时获取一次 切换地图时清空
   renderNetworkSelectList = () => {
     return (
       <SimpleSelectList
-        ref={ref => (GLOBAL.SimpleSelectList = ref)}
-        data={[]}
+        ref={ref => (GLOBAL.SimpleSelectList = this.SimpleSelectList = ref)}
         showFullMap={this.showFullMap}
         language={this.props.language}
-        dataChange={() => {
+        confirmAction={() => {
           this.selectList.setVisible(false)
           this.showFullMap(false)
+          let selectList = GLOBAL.SimpleSelectList
+          if (selectList.state.currentFloor) {
+            (async function() {
+              let selectItem = selectList.state.select
+              if (!this.state.isRight) {
+                this.toolBox.setVisible(
+                  true,
+                  ConstToolType.MAP_TOOL_GPSINCREMENT,
+                  {
+                    containerType: 'table',
+                    column: 4,
+                    isFullScreen: false,
+                    height: ConstToolType.HEIGHT[0],
+                  },
+                )
+              } else {
+                SMap.setLabelColor()
+                SMap.setAction(Action.DRAWLINE)
+                this.toolBox.setVisible(
+                  true,
+                  ConstToolType.MAP_TOOL_INCREMENT,
+                  {
+                    containerType: 'table',
+                    column: 4,
+                    isFullScreen: false,
+                    height: ConstToolType.HEIGHT[0],
+                  },
+                )
+              }
+              await SMap.addNetWorkDataset(
+                selectItem.datasourceName,
+                selectItem.datasetName,
+              )
+              selectList.state.currentFloor.floorID &&
+                (await SMap.setCurrentFloor(
+                  selectList.state.currentFloor.floorID,
+                ))
+            }.bind(this)())
+          }
         }}
       />
     )
@@ -1993,12 +2032,7 @@ export default class MapView extends React.Component {
   }
 
   _renderNavigationIcon = () => {
-    let title
-    if (this.state.showIncrement) {
-      title = '绘制'
-    } else {
-      title = '导航'
-    }
+    let title = '绘制'
     return (
       <View style={styles.navigation}>
         <MTBtn
@@ -2028,133 +2062,10 @@ export default class MapView extends React.Component {
     return arr[0]
   }
 
-  indoorNavi = () => {
-    if (!this.props.mapIndoorNavigation) {
-      NavigationService.navigate('PointAnalyst', {
-        type: 'pointSearch',
-      })
-    } else {
-      if (this.state.showIncrement) {
-        (async function() {
-          this.setState({ incrementShow: false })
-          let data = []
-          let userUDBPath, userUDBs
-          //过滤掉标注和标绘匹配正则
-          let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
-          if (
-            this.props.user &&
-            this.props.user.currentUser.userName &&
-            this.props.user.currentUser.userType !== UserType.PROBATION_USER
-          ) {
-            let userPath =
-              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
-              this.props.user.currentUser.userName +
-              '/'
-            userUDBPath = userPath + ConstPath.RelativePath.Datasource
-            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
-              extension: 'udb',
-              type: 'file',
-            })
-            //过滤掉标注和标绘
-            let filterUDBs = userUDBs.filter(item => {
-              item.name = this.basename(item.path)
-              return !item.name.match(checkLabelAndPlot)
-            })
-            filterUDBs.map(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
-              item.info = {
-                infoType: 'mtime',
-                lastModifiedDate: item.mtime,
-              }
-            })
-            data = [
-              // {
-              //   title: Const.PUBLIC_DATA_SOURCE,
-              //   data: customerUDBs,
-              // },
-              {
-                title: getLanguage(this.props.language).Map_Main_Menu
-                  .OPEN_DATASOURCE,
-                //Const.DATA_SOURCE,
-                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: filterUDBs,
-              },
-            ]
-          } else {
-            let customerUDBPath = await FileTools.appendingHomeDirectory(
-              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-            )
-            let customerUDBs = await FileTools.getPathListByFilter(
-              customerUDBPath,
-              {
-                extension: 'udb',
-                type: 'file',
-              },
-            )
-            //过滤掉标注和标绘
-            let filterUDBs = customerUDBs.filter(item => {
-              item.name = this.basename(item.path)
-              return !item.name.match(checkLabelAndPlot)
-            })
-            filterUDBs.map(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
-              item.info = {
-                infoType: 'mtime',
-                lastModifiedDate: item.mtime,
-              }
-            })
-            data = [
-              {
-                title: getLanguage(this.props.language).Map_Main_Menu
-                  .OPEN_DATASOURCE,
-                //Const.DATA_SOURCE,
-                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: filterUDBs,
-              },
-            ]
-          }
-          if (this.state.leftClick) {
-            GLOBAL.NAVIGATIONHEADLEFTCLICK = true
-          } else if (this.state.rightClick) {
-            GLOBAL.NAVIGATIONHEADLEFTCLICK = false
-          }
-          this.toolBox.setVisible(true, ConstToolType.INDOORDATA, {
-            containerType: 'list',
-            height: ConstToolType.THEME_HEIGHT[4],
-            data,
-          })
-        }.bind(this)())
-      } else {
-        // if (GLOBAL.HASCHOSE) {
-        SMap.startIndoorNavigation()
-        NavigationService.navigate('NavigationView')
-        // } else {
-        //   this.showFullMap(true)
-        //   let data = []
-        //   data.push({
-        //     title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-        //     //'路网',
-        //     image: require('../../../../assets/Navigation/network_white.png'),
-        //     data: [
-        //       // {
-        //       //   title: '室外数据',
-        //       //   name: '室外数据',
-        //       //   image: require('../../../../assets/Navigation/snm_model.png'),
-        //       // },
-        //       {
-        //         title: '室内数据',
-        //         name: '室内数据',
-        //         image: require('../../../../assets/Navigation/indoor_datasource.png'),
-        //       },
-        //     ],
-        //   })
-        //   this.toolBox.setVisible(true, ConstToolType.NETDATA, {
-        //     containerType: 'list',
-        //     height: ConstToolType.THEME_HEIGHT[3],
-        //     data,
-        //   })
-        // }
-      }
+  indoorNavi = async () => {
+    if (this.state.showIncrement) {
+      this.setState({ showIncrement: false })
+      this.selectList.setVisible(true)
     }
   }
 
@@ -2210,12 +2121,12 @@ export default class MapView extends React.Component {
           }}
         >
           <IncrementRoadView
-            leftClick={() => {
-              this.setState({ leftClick: true, rightClick: false })
-            }}
-            rightClick={() => {
-              this.setState({ rightClick: true, leftClick: false })
-            }}
+            isRight={this.state.isRight}
+            onClick={isRight =>
+              this.setState({
+                isRight,
+              })
+            }
             headerProps={{
               title: '增量路网',
               navigation: this.props.navigation,
@@ -2306,10 +2217,6 @@ export default class MapView extends React.Component {
     )
   }
 
-  _renderChangeArView = () => {
-    return <ChangeArView showFullMap={this.showFullMap} />
-  }
-
   renderContainer = () => {
     return (
       <Container
@@ -2392,14 +2299,10 @@ export default class MapView extends React.Component {
           this._renderNavigationPoiView()}
         {/*{!this.isExample &&*/}
         {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
-        {/*this.props.mapNavigationShow &&*/}
-        {/*this._renderChangeArView()}*/}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          !this.props.mapNavigationShow &&
           !this.props.mapNavigation.isShow &&
-          this.state.incrementShow &&
-          this.props.openOnlineMap &&
+          this.state.showIncrement &&
           this._renderNavigationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
