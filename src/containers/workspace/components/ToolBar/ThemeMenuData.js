@@ -1107,8 +1107,8 @@ function getLabelFont() {
       //'空背景',
       action: setLabelFont,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: require('../../../../assets/mapTools/style_font_bold.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_bold.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_ITALIC,
@@ -1116,8 +1116,8 @@ function getLabelFont() {
       //'空背景',
       action: setLabelFont,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: require('../../../../assets/mapTools/style_font_italic.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_italic.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_UNDERLINE,
@@ -1125,8 +1125,8 @@ function getLabelFont() {
       //'空背景',
       action: setLabelFont,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: require('../../../../assets/mapTools/style_font_underline.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_underline.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_STRIKEOUT,
@@ -1134,8 +1134,8 @@ function getLabelFont() {
       //'空背景',
       action: setLabelFont,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: require('../../../../assets/mapTools/style_font_strikeout.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_strikeout.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_SHADOW,
@@ -1143,8 +1143,17 @@ function getLabelFont() {
       //'空背景',
       action: setLabelFont,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: require('../../../../assets/mapTools/style_font_shadow.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_shadow.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_OUTLINE,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_OUTLINE,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_outline.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_outline.png'),
     },
   ]
   return data
