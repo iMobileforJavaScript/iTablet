@@ -91,8 +91,7 @@ import NavigationStartButton from '../../components/NavigationStartButton/Naviga
 import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
 import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
-const SPEECHTIP =
-  '使用语音‘放大’，‘缩小’，’定位‘或’关闭‘来控制地图。点击右边语音图标开始使用。'
+const SPEECHTIP = '您可以说:\n"放大"，"缩小"，"定位"或"关闭"'
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
@@ -255,7 +254,7 @@ export default class MapView extends React.Component {
   startListening = async () => {
     await GLOBAL.SpeechManager.startListening({
       onBeginOfSpeech: () => {
-        this.setState({ recording: true })
+        this.setState({ speechContent: '', recording: true })
       },
       onEndOfSpeech: () => {
         this.setState({ recording: false })
@@ -265,7 +264,7 @@ export default class MapView extends React.Component {
         if (e.indexOf('没有说话') !== -1) {
           error = '您好像没有说话哦.'
         }
-        this.setState({ speechContent: error, recording: false })
+        this.setState({ speechContent: error })
       },
       onResult: ({ info }) => {
         this.setState({ speechContent: info }, () => {
@@ -1999,6 +1998,7 @@ export default class MapView extends React.Component {
           <TouchableOpacity
             key={'audio'}
             onPress={() => {
+              this.startListening()
               this.AudioDialog.setVisible(true)
             }}
           >
