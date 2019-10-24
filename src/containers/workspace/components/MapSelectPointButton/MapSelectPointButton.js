@@ -7,7 +7,8 @@ import NavigationService from '../../../../containers/NavigationService'
 
 export default class MapSelectPointButton extends React.Component {
   props: {
-    headerProps: Object,
+    changeNavPathInfo: () => {},
+    headerProps?: Object,
   }
 
   constructor(props) {
@@ -24,24 +25,46 @@ export default class MapSelectPointButton extends React.Component {
   }
 
   setButton = async () => {
+    let pathLength, path
     if (this.state.button === '设为起点') {
       if (GLOBAL.STARTX !== undefined) {
         await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
         if (this.state.firstpage) {
-          NavigationService.navigate('NavigationView')
+          GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+          NavigationService.navigate('NavigationView', {
+            changeNavPathInfo: this.props.changeNavPathInfo,
+          })
         } else {
           GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
           GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
           this.setVisible(false)
           GLOBAL.MAPSELECTPOINT.setVisible(false)
           if (GLOBAL.ENDX !== undefined) {
-            await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, GLOBAL.INDOOREND)
-            let result = await SMap.beginIndoorNavigation(
-              GLOBAL.STARTX,
-              GLOBAL.STARTY,
+            await SMap.getEndPoint(
               GLOBAL.ENDX,
               GLOBAL.ENDY,
+              GLOBAL.INDOORSTART,
+              GLOBAL.ENDPOINTFLOOR,
             )
+            let result
+            if (GLOBAL.INDOOREND) {
+              result = await SMap.beginIndoorNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            } else {
+              result = await SMap.beginNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            }
+            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
               Toast.show('路径分析失败请重新选择起终点')
             }
@@ -54,24 +77,41 @@ export default class MapSelectPointButton extends React.Component {
       if (GLOBAL.ENDX !== undefined) {
         await SMap.getPointName(GLOBAL.ENDX, GLOBAL.ENDY, false)
         if (this.state.firstpage) {
-          NavigationService.navigate('NavigationView')
+          GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
+          NavigationService.navigate('NavigationView', {
+            changeNavPathInfo: this.props.changeNavPathInfo,
+          })
         } else {
           GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
           GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
           this.setVisible(false)
           GLOBAL.MAPSELECTPOINT.setVisible(false)
           if (GLOBAL.STARTX !== undefined) {
-            await SMap.getStartPoint(
-              GLOBAL.STARTX,
-              GLOBAL.STARTY,
-              GLOBAL.INDOORSTART,
-            )
-            let result = await SMap.beginIndoorNavigation(
-              GLOBAL.STARTX,
-              GLOBAL.STARTY,
-              GLOBAL.ENDX,
-              GLOBAL.ENDY,
-            )
+            let result
+            if (GLOBAL.INDOOREND) {
+              await SMap.getStartPoint(
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+                GLOBAL.INDOOREND,
+                GLOBAL.STARTPOINTFLOOR,
+              )
+              result = await SMap.beginIndoorNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            } else {
+              result = await SMap.beginNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.ENDX,
+                GLOBAL.ENDY,
+              )
+            }
+            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
               Toast.show('路径分析失败请重新选择起终点')
             }
@@ -80,6 +120,10 @@ export default class MapSelectPointButton extends React.Component {
       } else {
         Toast.show('请长按添加终点')
       }
+    }
+    if (path && pathLength) {
+      this.props.changeNavPathInfo &&
+        this.props.changeNavPathInfo({ path, pathLength })
     }
   }
 
