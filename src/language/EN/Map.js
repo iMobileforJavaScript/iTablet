@@ -64,8 +64,8 @@ const Map_Main_Menu = {
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
   STYLE_BACKFROUNG: 'Background',
-  STYLE_BORDER:'Border Color',
-  STYLE_BORDER_WIDTH:'Border Width',
+  STYLE_BORDER: 'Border Color',
+  STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',
@@ -551,6 +551,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: 'Same Color',
   DETECT_STYLE_SAME_COLOR: 'Same Color Value',
   DETECT_STYLE_STROKE_WIDTH: 'Stroke Width',
+  COUNTRACKED: 'Count Track ',
 
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',
