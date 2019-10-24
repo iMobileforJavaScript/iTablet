@@ -45,6 +45,7 @@ import {
   // SearchBar,
   Progress,
   BubblePane,
+  AudioTopDialog,
 } from '../../../../components'
 import {
   Toast,
@@ -91,7 +92,8 @@ import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelec
 import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
 import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
-
+const SPEECHTIP =
+  '使用语音‘放大’，‘缩小’，’定位‘或’关闭‘来控制地图。点击右边语音图标开始使用。'
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
@@ -219,6 +221,8 @@ export default class MapView extends React.Component {
       leftClick: false,
       rightClick: true,
       incrementShow: true,
+      speechContent: '',
+      recording: false,
     }
     this.closeInfo = [
       {
@@ -253,6 +257,39 @@ export default class MapView extends React.Component {
     this.fullMap = false
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
+  }
+
+  startListening = async () => {
+    await GLOBAL.SpeechManager.startListening({
+      onBeginOfSpeech: () => {
+        this.setState({ recording: true })
+      },
+      onEndOfSpeech: () => {
+        this.setState({ recording: false })
+      },
+      onError: e => {
+        let error = '出错了'
+        if (e.indexOf('没有说话') !== -1) {
+          error = '您好像没有说话哦.'
+        }
+        this.setState({ speechContent: error, recording: false })
+      },
+      onResult: ({ info }) => {
+        this.setState({ speechContent: info }, () => {
+          setTimeout(() => {
+            if (info.indexOf('关闭') !== -1) {
+              this.back()
+            } else if (info.indexOf('定位') !== -1) {
+              this.mapController.location()
+            } else if (info.indexOf('放大') !== -1) {
+              this.mapController.plus()
+            } else if (info.indexOf('缩小') !== -1) {
+              this.mapController.minus()
+            }
+          }, 1000)
+        })
+      },
+    })
   }
 
   componentDidMount() {
@@ -1916,28 +1953,47 @@ export default class MapView extends React.Component {
     //     />,
     //   ]
     // }
-    return [
-      <MTBtn
-        key={'undo'}
-        image={getPublicAssets().common.icon_undo}
-        imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-        onPress={this.showUndoView}
-      />,
-      <TouchableOpacity
-        key={'search'}
-        onPress={async () => {
-          NavigationService.navigate('PointAnalyst', {
-            type: 'pointSearch',
-          })
-        }}
-      >
-        <Image
-          resizeMode={'contain'}
-          source={require('../../../../assets/header/icon_search.png')}
-          style={styles.search}
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {Platform.OS === 'android' && (
+          <TouchableOpacity
+            key={'audio'}
+            onPress={() => {
+              this.AudioDialog.setVisible(true)
+            }}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={require('../../../../assets/header/icon_audio.png')}
+              style={[
+                { width: scaleSize(50), height: scaleSize(50) },
+                { marginRight: scaleSize(15) },
+              ]}
+            />
+          </TouchableOpacity>
+        )}
+        <MTBtn
+          key={'undo'}
+          image={getPublicAssets().common.icon_undo}
+          imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          onPress={this.showUndoView}
         />
-      </TouchableOpacity>,
-    ]
+        <TouchableOpacity
+          key={'search'}
+          onPress={async () => {
+            NavigationService.navigate('PointAnalyst', {
+              type: 'pointSearch',
+            })
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/header/icon_search.png')}
+            style={styles.search}
+          />
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   renderProgress = () => {
@@ -2500,6 +2556,13 @@ export default class MapView extends React.Component {
             {this.renderNetworkSelectList()}
           </PopView>
         )}
+        <AudioTopDialog
+          ref={ref => (this.AudioDialog = ref)}
+          startRecording={this.startListening}
+          content={this.state.speechContent}
+          recording={this.state.recording}
+          defaultText={SPEECHTIP}
+        />
       </Container>
     )
   }
