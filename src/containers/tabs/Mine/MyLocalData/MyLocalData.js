@@ -364,7 +364,7 @@ export default class MyLocalData extends Component {
           // } else {
           //   Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
           // }
-        }else {
+        } else {
           let index = filePath.lastIndexOf('/')
           await SMap.copyNaviSnmFile(filePath.substring(0, index))
           let result = await this.props.importWorkspace({ path: filePath })

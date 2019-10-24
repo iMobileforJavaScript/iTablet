@@ -64,8 +64,8 @@ const Map_Main_Menu = {
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
   STYLE_BACKFROUNG: 'Background',
-  STYLE_BORDER:'Border Color',
-  STYLE_BORDER_WIDTH:'Border Width',
+  STYLE_BORDER: 'Border Color',
+  STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',
@@ -307,6 +307,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_VIEW_DISTANCE: 'View Distence:',
 
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH: 'Total Length:',
+  MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOLASTLENGTH: 'ToLast Length:',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_HISTORY: 'Collect History',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME: 'Fill in the name',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY: 'No Collect History',

@@ -2043,6 +2043,60 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  getLabelFont = async (type, key = '', name = '') => {
+    let height, column
+    if (this.props.device.orientation === 'PORTRAIT') {
+      height = ConstToolType.THEME_HEIGHT[2]
+      column = 4
+    } else {
+      height = ConstToolType.THEME_HEIGHT[0]
+      column = 8
+    }
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: height,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelFont()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   //各种专题图的颜色值选择
   getColorTable = async (type, key = '', name = '') => {
     let height, column

@@ -7,7 +7,7 @@ const lineColorSet = [
       SCartography.setLineColor('NULL', GLOBAL.currentLayer.name)
     },
     size: 'large',
-    text:'NULL',
+    text: 'NULL',
     background: '#FFFFFF',
   },
   {
@@ -1846,7 +1846,7 @@ const regionBeforeColorSet = [
       SCartography.setFillForeColor('NULL', GLOBAL.currentLayer.name)
     },
     size: 'large',
-    text:'NULL',
+    text: 'NULL',
     background: '#FFFFFF',
   },
   {
@@ -2770,7 +2770,7 @@ const regionBorderColorSet = [
       SCartography.setFillBorderColor('NULL', GLOBAL.currentLayer.name)
     },
     size: 'large',
-    text:'NULL',
+    text: 'NULL',
     background: '#FFFFFF',
   },
   {
