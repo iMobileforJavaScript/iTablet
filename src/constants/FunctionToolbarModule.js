@@ -863,21 +863,18 @@ const labelMenuInfo = param => [
         )
     },
   },
-  // {
-  //   key: '字体',
-  //   btntitle: '字体',
-  //   action: () => {
-  //     this.setSelectedMenu('字体')
-  //     this.setDialogVisible(false)
-
-  //     const toolRef = this.props.getToolBarRef()
-  //     if (toolRef) {
-  //       toolRef.getLabelFontName(
-  //         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
-  //       )
-  //     }
-  //   },
-  // },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey:getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFont(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+          '字形',
+        )
+    },
+  },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,

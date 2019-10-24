@@ -1094,11 +1094,66 @@ function getGridRangeMode() {
   return data
 }
 
+
+/**设置统一标签背景形状 */
+function setLabelFont() {
+  return SThemeCartography.setUniformLabelFontName(_params)
+}
+function getLabelFont() {
+  let data = [
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_BOLD,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_BOLD,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_ITALIC,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_ITALIC,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_UNDERLINE,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_UNDERLINE,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_STRIKEOUT,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_STRIKEOUT,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_SHADOW,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_SHADOW,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+    },
+  ]
+  return data
+}
+
 /**设置统一标签背景形状 */
 function setLabelBackShape() {
   return SThemeCartography.setUniformLabelBackShape(_params)
 }
-
 function getLabelBackShape() {
   let data = [
     {
@@ -3459,6 +3514,7 @@ export default {
   getColorGradientType,
   setThemeParams,
   getThemeParams,
+  getLabelFont,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,
