@@ -22,8 +22,6 @@ export default class NavigationPoiView extends React.Component {
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
-    mapNavigationShow: PropTypes.bool,
-    setMapNavigationShow: PropTypes.func,
   }
 
   constructor(props) {

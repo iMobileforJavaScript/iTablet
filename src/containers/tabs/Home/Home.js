@@ -103,31 +103,26 @@ export default class Home extends Component {
           if (result === true) {
             // Toast.show('导入3D成功')
           } else {
-            Toast.show(
-              getLanguage(global.language).Prompt.IMPORTED_SUCCESS,
-            )
+            Toast.show(getLanguage(global.language).Prompt.IMPORTED_SUCCESS)
           }
           result = await SMap.importWorkspaceInfo({
             server: filePath,
             type: 9,
           })
 
-          if (result.length === 0) {
-            Toast.show(
-              getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
-            )
-          }
-        }
-        else {
+          // if (result.length === 0) {
+          //   Toast.show(
+          //     getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+          //   )
+          // }
+        } else {
           let result = await SMap.importWorkspaceInfo({
             server: filePath,
             type: 9,
           })
 
           if (result.length === 0) {
-            Toast.show(
-              getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
-            )
+            Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT)
           }
         }
       }

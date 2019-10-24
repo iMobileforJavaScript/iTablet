@@ -93,7 +93,7 @@ export default class extends React.PureComponent {
         data = await this.getPhotos(this.props.assetType)
       }
       data.unshift({
-        name: 'iTablet MapRender',
+        name: 'iTablet',
         value: images,
       })
       this.setState({ data })

@@ -70,6 +70,8 @@ const Map_Main_Menu = {
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
   STYLE_BACKFROUNG: '背景色',
+  STYLE_BORDER: '轮廓色',
+  STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
   STYLE_FRAME_COLOR: '边框颜色',
   STYLE_FRAME_SYMBOL: '边框符号',
@@ -139,7 +141,7 @@ const Map_Main_Menu = {
   TOUR: '旅行轨迹',
   TOUR_NAME: '旅行轨迹名称',
 
-  STYLE_TRANSFER: '智能配图',
+  STYLE_TRANSFER: 'AI配图',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',

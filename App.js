@@ -328,7 +328,7 @@ class AppRoot extends Component {
 
     let status = await SMap.getEnvironmentStatus()
           if (!status.isLicenseValid) {
-            this.exit.setDialogVisible(true)
+            GLOBAL.LicenseValidDialog.setDialogVisible(true)
           }
 
     if(serialNumber!==''&&!status.isTrailLicense){
@@ -616,22 +616,23 @@ class AppRoot extends Component {
   }
   //接入正式许可
   inputOfficialLicense=async () =>{
-    this.exit.setDialogVisible(false)
+    GLOBAL.LicenseValidDialog.setDialogVisible(false)
     NavigationService.navigate('LicenseJoin',{
       cb: async () => {
         NavigationService.goBack()
-        this.exit.setDialogVisible(false)
+        GLOBAL.LicenseValidDialog.setDialogVisible(false)
         Toast.show(getLanguage(global.language).Profile.LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS)
+        GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
       },
       backAction:()=>{
         NavigationService.goBack()
-        this.exit.setDialogVisible(true)
+        GLOBAL.LicenseValidDialog.setDialogVisible(true)
       },
     })
   }
   //申请试用许可
   applyTrialLicense =async () => {
-    this.exit.setDialogVisible(false)
+    GLOBAL.LicenseValidDialog.setDialogVisible(false)
     GLOBAL.Loading.setLoading(
       true,
       global.language==='CN'?"许可申请中...":"Applying"
@@ -675,6 +676,7 @@ class AppRoot extends Component {
           )
           SMap.initTrailLicensePath()
           Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+          GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
         })
     }catch (e) {
       GLOBAL.Loading.setLoading(
@@ -682,12 +684,13 @@ class AppRoot extends Component {
         global.language==='CN'?"许可申请中...":"Applying"
       )
       Toast.show(global.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
+      GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
     }
     // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
   }
   renderDialog = () => {
     return (<Dialog
-      ref={ref => (this.exit = ref)}
+      ref={ref => (GLOBAL.LicenseValidDialog = ref)}
       showBtns={false}
       type={Dialog.Type.NON_MODAL}
       opacity={1}

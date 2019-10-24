@@ -1,34 +1,39 @@
 import * as React from 'react'
-import { StyleSheet, Platform , View, TouchableOpacity, Text } from 'react-native'
+import {
+  StyleSheet,
+  Platform,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native'
 import Header from '../../../../components/Header'
 
 import { scaleSize } from '../../../../utils'
 
-export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
-export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
+export const HEADER_HEIGHT = scaleSize(88)
+export const HEADER_MARGINTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default class IncrementRoadView extends React.Component {
   props: {
     headerProps: Object,
-    leftClick: () => {},
-    rightClick: () => {},
+    isRight: Boolean,
+    onClick: () => {},
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      leftclick: false,
-      rightclick: true,
-    }
   }
 
   render() {
-    let leftclickStyle = this.state.leftclick
-      ? styles.clickleft
-      : styles.nclickleft
-    let rightlickStyle = this.state.rightclick
-      ? styles.clickright
-      : styles.nclickright
+    let right
+    let left
+    if (this.props.isRight) {
+      right = styles.focus
+      left = styles.normal
+    } else {
+      left = styles.focus
+      right = styles.normal
+    }
     return (
       <View
         style={{
@@ -38,29 +43,24 @@ export default class IncrementRoadView extends React.Component {
           height: '100%',
         }}
       >
-        <Header
-          ref={ref => (this.containerHeader = ref)}
-          {...this.props.headerProps}
-        />
+        <Header {...this.props.headerProps} />
         <View style={styles.table}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              this.setState({ leftclick: true, rightclick: false })
-              this.props.leftClick()
+              this.props.onClick(false)
             }}
           >
-            <Text style={leftclickStyle}>轨迹</Text>
+            <Text style={left}>轨迹</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              this.setState({ leftclick: false, rightclick: true })
-              this.props.rightClick()
+              this.props.onClick(true)
             }}
           >
-            <Text style={rightlickStyle}>手绘</Text>
+            <Text style={right}>手绘</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   table: {
     position: 'absolute',
-    marginTop: HEADER_PADDINGTOP + HEADER_HEIGHT,
+    marginTop: HEADER_MARGINTOP + HEADER_HEIGHT,
     width: '100%',
     height: scaleSize(50),
     backgroundColor: '#EEEEEE',
@@ -90,19 +90,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  clickleft: {
+  focus: {
     fontSize: scaleSize(25),
     color: '#4680df',
   },
-  nclickleft: {
-    fontSize: scaleSize(25),
-    color: 'black',
-  },
-  clickright: {
-    fontSize: scaleSize(25),
-    color: '#4680df',
-  },
-  nclickright: {
+  mormal: {
     fontSize: scaleSize(25),
     color: 'black',
   },

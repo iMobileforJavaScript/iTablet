@@ -2,7 +2,7 @@
 const Map_Module = {
   MAP_EDIT: 'Cartography',
   MAP_3D: 'Scene',
-  MAP_AR: 'Video Map',
+  MAP_AR: 'AR Map',
   MAP_NAVIGATION: 'Navigation',
   MAP_THEME: 'Thematic Map',
   MAP_COLLECTION: 'Surveying',

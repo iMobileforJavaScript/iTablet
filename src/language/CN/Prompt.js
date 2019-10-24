@@ -228,7 +228,9 @@ const Prompt = {
   PLEASE_SELECT_A_RASTER_LAYER: '请选择栅格图层',
   CLEAR_HISTORY: '清除搜索记录',
   //导航相关
+  PLEASE_SET_BASEMAP_VISIBLE: '请设置底图可见',
   NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
+  NO_LINE_DATASETS: '当前工作空间无线数据集',
   SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     '请选择网络数据集和网络模型文件',

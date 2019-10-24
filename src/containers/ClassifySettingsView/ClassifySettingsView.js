@@ -11,7 +11,6 @@ import { FileTools } from '../../native'
 import Toast from '../../utils/Toast'
 import { getLanguage } from '../../language'
 import { ConstPath } from '../../constants'
-import RNFS from 'react-native-fs'
 import { SAIClassifyView } from 'imobile_for_reactnative'
 
 const DEFAULT_MODEL = 'mobilenet_quant_224' //默认模型
@@ -30,6 +29,7 @@ export default class ClassifySettingsView extends React.Component {
     user: Object,
     nav: Object,
     downloads: Array,
+    downloadFile: () => {},
   }
 
   constructor(props) {
@@ -340,8 +340,10 @@ export default class ClassifySettingsView extends React.Component {
           }
         },
       }
-      const ret = RNFS.downloadFile(downloadOptions)
-      ret.promise
+      // const ret = RNFS.downloadFile(downloadOptions)
+      // ret.promise
+      this.props
+        .downloadFile(downloadOptions)
         .then(async () => {
           await FileTools.unZipFile(fileCachePath, fileDirPath)
           await FileTools.deleteFile(fileCachePath)

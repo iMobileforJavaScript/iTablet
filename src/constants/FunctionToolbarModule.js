@@ -592,7 +592,7 @@ const region = (param, orientation = 'PORTRAIT') => [
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FOREGROUND,
   },
   {
-    key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    key: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
       let height, column
@@ -604,7 +604,7 @@ const region = (param, orientation = 'PORTRAIT') => [
         column = 12
       }
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
+        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBORDERCOLOR_SET, {
           containerType: 'colortable',
           column,
           tableType: 'scroll',
@@ -616,10 +616,31 @@ const region = (param, orientation = 'PORTRAIT') => [
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.MENU_COMMIT,
           ],
-          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
         })
     },
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+        })
+    },
+    //线宽
+    selectName: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
