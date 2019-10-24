@@ -39,6 +39,7 @@ export default class MeasureView extends React.Component {
     this.state = {
       currentLength: 0,
       totalLength: 0,
+      tolastLength: 0,
       showModelViews: false,
       SearchingSurfacesSucceed: false,
     }
@@ -67,6 +68,10 @@ export default class MeasureView extends React.Component {
           this.onTotalLengthChanged,
         )
         DeviceEventEmitter.addListener(
+          'onCurrentToLastPntDstChanged',
+          this.onCurrentToLastPntDstChanged,
+        )
+        DeviceEventEmitter.addListener(
           'onSearchingSurfaces',
           this.onSearchingSurfaces,
         )
@@ -90,6 +95,10 @@ export default class MeasureView extends React.Component {
       this.onTotalLengthChanged,
     )
     DeviceEventEmitter.removeListener(
+      'onCurrentToLastPntDstChanged',
+      this.onCurrentToLastPntDstChanged,
+    )
+    DeviceEventEmitter.removeListener(
       'onSearchingSurfaces',
       this.onSearchingSurfaces,
     )
@@ -108,6 +117,12 @@ export default class MeasureView extends React.Component {
   onTotalLengthChanged = params => {
     this.setState({
       totalLength: params.total,
+    })
+  }
+
+  onCurrentToLastPntDstChanged = params => {
+    this.setState({
+      tolastLength: params.tolast,
     })
   }
 
@@ -355,9 +370,9 @@ export default class MeasureView extends React.Component {
     )
   }
 
-  renderLengthChangeView() {
+  renderTotalLengthChangeView() {
     return (
-      <View style={styles.lengthChangeView}>
+      <View style={styles.totallengthChangeView}>
         <Text style={styles.titleTotal}>
           {getLanguage(global.language).Map_Main_Menu
             .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH +
@@ -370,11 +385,24 @@ export default class MeasureView extends React.Component {
 
   renderCurrentLengthChangeView() {
     return (
-      <View style={styles.currentLengthChangeView}>
-        <Text style={styles.title}>
+      <View style={styles.tolastlengthChangeView}>
+        <Text style={styles.titleTotal}>
           {getLanguage(global.language).Map_Main_Menu
             .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_VIEW_DISTANCE +
             this.state.currentLength +
+            'm'}
+        </Text>
+      </View>
+    )
+  }
+
+  renderToLastLengthChangeView() {
+    return (
+      <View style={styles.currentLengthChangeView}>
+        <Text style={styles.title}>
+          {getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOLASTLENGTH +
+            this.state.tolastLength +
             'm'}
         </Text>
       </View>
@@ -412,9 +440,12 @@ export default class MeasureView extends React.Component {
         {/*{this.renderCenterBtn()}*/}
         {/*{this.renderTopBtns()}*/}
         {this.state.showModelViews && this.renderSwitchModels()}
-        {this.state.SearchingSurfacesSucceed && this.renderLengthChangeView()}
+        {this.state.SearchingSurfacesSucceed &&
+          this.renderTotalLengthChangeView()}
         {this.state.SearchingSurfacesSucceed &&
           this.renderCurrentLengthChangeView()}
+        {this.state.SearchingSurfacesSucceed &&
+          this.renderToLastLengthChangeView()}
         {!this.state.SearchingSurfacesSucceed && this.renderSearchingView()}
       </Container>
     )

@@ -1094,11 +1094,75 @@ function getGridRangeMode() {
   return data
 }
 
+
+/**设置统一标签背景形状 */
+function setLabelFont() {
+  return SThemeCartography.setUniformLabelFontName(_params)
+}
+function getLabelFont() {
+  let data = [
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_BOLD,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_BOLD,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_bold.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_bold.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_ITALIC,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_ITALIC,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_italic.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_italic.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_UNDERLINE,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_UNDERLINE,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_underline.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_underline.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_STRIKEOUT,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_STRIKEOUT,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_strikeout.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_strikeout.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_SHADOW,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_SHADOW,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_shadow.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_shadow.png'),
+    },
+    {
+      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_OUTLINE,
+      title: getLanguage(global.language).Map_Main_Menu.STYLE_OUTLINE,
+      //'空背景',
+      action: setLabelFont,
+      size: 'large',
+      image: require('../../../../assets/mapTools/style_font_outline.png'),
+      selectedImage: require('../../../../assets/mapTools/style_font_outline.png'),
+    },
+  ]
+  return data
+}
+
 /**设置统一标签背景形状 */
 function setLabelBackShape() {
   return SThemeCartography.setUniformLabelBackShape(_params)
 }
-
 function getLabelBackShape() {
   let data = [
     {
@@ -3459,6 +3523,7 @@ export default {
   getColorGradientType,
   setThemeParams,
   getThemeParams,
+  getLabelFont,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,

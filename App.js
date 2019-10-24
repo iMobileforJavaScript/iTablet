@@ -235,7 +235,9 @@ class AppRoot extends Component {
   componentDidMount () {
     this.login()
     this.reCircleLogin()
-    // this.initSpeechManager()
+    if(Platform.OS === 'android') {
+      this.initSpeechManager()
+    }
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
