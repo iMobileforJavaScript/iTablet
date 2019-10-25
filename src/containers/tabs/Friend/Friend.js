@@ -233,45 +233,43 @@ export default class Friend extends Component {
     }
   }
 
-  startCheckAvailability = () => {
-    NetInfo.isConnected.fetch().done(async isConnected => {
-      global.network = isConnected
-      //记录本次连接的consumer
-      let consumer = await SMessageServiceHTTP.getConsumer(
-        this.props.user.currentUser.userId,
-      )
-      //服务器还没来得及生成，等待
-      if (!consumer) {
-        setTimeout(this.startCheckAvailability, 2000)
-        return
-      }
-      this.props.setConsumer(consumer)
-      this.endCheckAvailability()
-      //每隔一分钟查询连接到服务器的consumer
-      this.interval = setInterval(async () => {
-        let isConnected = await NetInfo.isConnected.fetch()
-        if (isConnected) {
-          let consumer = await SMessageServiceHTTP.getConsumer(
+  startCheckAvailability = async () => {
+    //记录本次连接的consumer
+    let consumer = await SMessageServiceHTTP.getConsumer(
+      this.props.user.currentUser.userId,
+    )
+    //服务器还没来得及生成，等待
+    if (!consumer) {
+      setTimeout(this.startCheckAvailability, 2000)
+      return
+    }
+    this.props.setConsumer(consumer)
+    this.endCheckAvailability()
+    //每隔一分钟查询连接到服务器的consumer
+    this.interval = setInterval(async () => {
+      try {
+        let consumer = await SMessageServiceHTTP.getConsumer(
+          this.props.user.currentUser.userId,
+        )
+        if (!consumer || consumer !== this.props.chat.consumer) {
+          this.restartService()
+        } else {
+          //每分钟发送心跳消息
+          this._sendMessage(
+            JSON.stringify({
+              type: 0,
+              user: {
+                id: this.props.user.currentUser.userId,
+              },
+            }),
             this.props.user.currentUser.userId,
+            true,
           )
-          if (!consumer || consumer !== this.props.chat.consumer) {
-            this.restartService()
-          } else {
-            //每分钟发送心跳消息
-            this._sendMessage(
-              JSON.stringify({
-                type: 0,
-                user: {
-                  id: this.props.user.currentUser.userId,
-                },
-              }),
-              this.props.user.currentUser.userId,
-              true,
-            )
-          }
         }
-      }, 60000)
-    })
+      } catch (e) {
+        // console.log(e)
+      }
+    }, 60000)
   }
 
   endCheckAvailability = () => {
