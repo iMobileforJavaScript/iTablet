@@ -189,7 +189,7 @@ export default class OnlineServicesUtils {
         if (Platform.OS === 'android') {
           paramStr = JSON.stringify(paramObj)
         } else {
-          paramStr = this.obj2params(paramObj)
+          paramStr = this._obj2params(paramObj)
         }
         let result = await SOnlineService.loginWithParam(url, cookie, paramStr)
         this.cookie = await SOnlineService.getCookie()
@@ -201,7 +201,7 @@ export default class OnlineServicesUtils {
     }
   }
 
-  obj2params(obj) {
+  _obj2params(obj) {
     var result = ''
     var item
     for (item in obj) {
@@ -213,5 +213,45 @@ export default class OnlineServicesUtils {
     }
 
     return result
+  }
+
+  /**
+   * 获取用户信息，未登陆时获取nickname和id
+   * 登陆后还可获取相应账号的phone和email
+   * @param userName 可以是id，nickname，phone或email
+   */
+  getUserInfo = async userName => {
+    try {
+      let url =
+        'https://www.supermapol.com/web/users/online.json?nickname=' + userName
+      let headers = {}
+      let cookie = await this.getCookie()
+      if (cookie) {
+        headers = {
+          cookie: cookie,
+        }
+      }
+
+      let response = await fetch(url, {
+        headers: headers,
+      })
+      if (response.status === 200) {
+        let result = await response.json()
+
+        return {
+          userId: result.name,
+          nickname: result.nickname,
+          phoneNumber: result.phoneNumber,
+          email:
+            (result.email && result.email.indexOf('@isupermap.com')) === -1
+              ? result.email
+              : null,
+        }
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
   }
 }
