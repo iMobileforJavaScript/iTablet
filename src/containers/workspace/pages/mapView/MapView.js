@@ -1794,6 +1794,7 @@ export default class MapView extends React.Component {
           )
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
+          SMap.setIsMagnifierEnabled(false)
           GLOBAL.SUBMITED = false
         }}
         switchAr={this.switchAr}
@@ -1929,6 +1930,7 @@ export default class MapView extends React.Component {
               } else {
                 SMap.setLabelColor()
                 SMap.setAction(Action.DRAWLINE)
+                SMap.setIsMagnifierEnabled(true)
                 this.toolBox.setVisible(
                   true,
                   ConstToolType.MAP_TOOL_INCREMENT,

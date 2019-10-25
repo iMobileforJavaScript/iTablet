@@ -443,7 +443,7 @@ export default class MT_layerManager extends React.Component {
           return
         }
 
-        if (data.themeType <= 0) {
+        if (data.themeType <= 0 && !data.isHeatmap) {
           this.mapEdit(data)
         } else if (GLOBAL.Type === constants.MAP_THEME) {
           this.mapTheme(data)

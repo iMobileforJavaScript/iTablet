@@ -79,7 +79,7 @@ const Map_Main_Menu = {
   STYLE_FONT_SIZE: '字号',
   STYLE_ALIGNMENT: '位置',
   STYLE_FONT_STYLE: '风格',
-  STYLE_CONTRAST: '对比度',
+  STYLE_CONTRAST: '色相',
   STYLE_BRIGHTNESS: '亮度',
   STYLE_BOLD: '加粗',
   STYLE_ITALIC: '倾斜',
