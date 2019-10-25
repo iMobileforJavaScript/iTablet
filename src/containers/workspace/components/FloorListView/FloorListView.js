@@ -27,11 +27,7 @@ export default class FloorListView extends React.Component {
   render() {
     return (
       <View style={styles.table}>
-        <SMFloorListView
-          style={{
-            flex: 1,
-          }}
-        />
+        <SMFloorListView />
       </View>
     )
   }
@@ -40,8 +36,8 @@ export default class FloorListView extends React.Component {
 const styles = StyleSheet.create({
   table: {
     position: 'absolute',
-    height: scaleSize(300),
-    width: scaleSize(100),
+    height: scaleSize(320),
+    width: scaleSize(86),
     left: scaleSize(10),
     top: scaleSize(300),
     backgroundColor: 'transparent',
