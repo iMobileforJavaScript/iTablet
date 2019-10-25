@@ -1391,20 +1391,20 @@ export default class FunctionToolbar extends React.Component {
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',
           },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-            //'工具',
-            action: this.showTool,
-            image: require('../../../../assets/function/icon_function_tool.png'),
-          },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
-            //'分享',
-            action: () => {
-              this.showMore(ConstToolType.MAP_SHARE)
-            },
-            image: require('../../../../assets/function/icon_function_share.png'),
-          },
+          // {
+          //   title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+          //   //'工具',
+          //   action: this.showTool,
+          //   image: require('../../../../assets/function/icon_function_tool.png'),
+          // },
+          // {
+          //   title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
+          //   //'分享',
+          //   action: () => {
+          //     this.showMore(ConstToolType.MAP_SHARE)
+          //   },
+          //   image: require('../../../../assets/function/icon_function_share.png'),
+          // },
         ]
         break
       case constants.MAP_NAVIGATION:
