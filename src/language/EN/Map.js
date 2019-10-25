@@ -552,6 +552,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: 'Same Color',
   DETECT_STYLE_SAME_COLOR: 'Same Color Value',
   DETECT_STYLE_STROKE_WIDTH: 'Stroke Width',
+  COUNTRACKED: 'Count Track ',
 
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',

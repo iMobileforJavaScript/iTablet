@@ -15,7 +15,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  SAIDetectView,
+  // SAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -32,6 +32,14 @@ import {
   PoiInfoContainer,
   PoiTopSearchBar,
   SimpleSelectList,
+  RNLegendView,
+  ScaleView,
+  FloorListView,
+  IncrementRoadView,
+  MapSelectPoint,
+  NavigationStartButton,
+  NavigationStartHead,
+  MapSelectPointButton,
 } from '../../components'
 import {
   Container,
@@ -77,18 +85,10 @@ import {
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import RNLegendView from '../../components/RNLegendView'
 // import NavigationView from '../../components/NavigationView'
 import NavigationPoiView from '../../components/NavigationPoiView'
-import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
-import FloorListView from '../../components/FloorListView'
-import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
 import Orientation from 'react-native-orientation'
-import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
-import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
-import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
-import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
 import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 const SPEECHTIP = '您可以说:\n"放大"，"缩小"，"定位"或"关闭"'
@@ -116,6 +116,7 @@ export default class MapView extends React.Component {
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
     mapSelectPoint: PropTypes.object,
+    navigationhistory: PropTypes.array,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -170,6 +171,7 @@ export default class MapView extends React.Component {
     setAnalystParams: PropTypes.func,
     setMapSearchHistory: PropTypes.func,
     setMapSelectPoint: PropTypes.func,
+    setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
   }
 
@@ -2228,11 +2230,30 @@ export default class MapView extends React.Component {
           navigation: this.props.navigation,
           type: 'fix',
           backAction: async () => {
-            await SAIDetectView.setProjectionModeEnable(false)
+            // await SAIDetectView.setProjectionModeEnable(false)
             GLOBAL.AIDETECTCHANGE.setVisible(false)
             this.showFullMap(false)
             GLOBAL.toolBox.setVisible(false)
+            const type = 'aiDetect'
+            this.props.navigation.navigate('ChooseTaggingLayer', { type })
             this.switchAr()
+          },
+        }}
+      />
+    )
+  }
+
+  _renderCheckAIDetec = () => {
+    return (
+      <MapSelectPoint
+        ref={ref => (GLOBAL.CHECKAIDETEC = ref)}
+        headerProps={{
+          title: '查看',
+          navigation: this.props.navigation,
+          type: 'fix',
+          backAction: async () => {
+            GLOBAL.CHECKAIDETEC.setVisible(false)
+            this.showFullMap(false)
           },
         }}
       />
@@ -2290,6 +2311,10 @@ export default class MapView extends React.Component {
   _renderMapSelectPointButton = () => {
     return (
       <MapSelectPointButton
+        navigationhistory={this.props.navigationhistory}
+        setNavigationHistory={this.props.setNavigationHistory}
+        mapSelectPoint={this.props.mapSelectPoint}
+        setMapSelectPoint={this.props.setMapSelectPoint}
         changeNavPathInfo={this.changeNavPathInfo}
         ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
       />
@@ -2363,6 +2388,7 @@ export default class MapView extends React.Component {
           />
         )}
         {this._renderAIDetectChange()}
+        {/*{this._renderCheckAIDetec()}*/}
         {/*{this.state.showAIDetect && (<AIMapSuspensionDialog ref={ref => (GLOBAL.AIMapSuspensionDialog = ref)}/>)}*/}
         {/*{this.state.showAIDetect && (<View style={{height: '100%', width: '100%'}}><SMMapSuspension*/}
         {/*ref={ref => (GLOBAL.SMMapSuspension = ref)}/></View>)}*/}
@@ -2402,7 +2428,6 @@ export default class MapView extends React.Component {
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
           !this.props.analyst.params &&
-          !this.state.showAIDetect &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&

@@ -9,6 +9,10 @@ export default class MapSelectPointButton extends React.Component {
   props: {
     changeNavPathInfo: () => {},
     headerProps?: Object,
+    mapSelectPoint: Object,
+    setMapSelectPoint: () => {},
+    setNavigationHistory: () => {},
+    navigationhistory: Array,
   }
 
   constructor(props) {
@@ -90,9 +94,9 @@ export default class MapSelectPointButton extends React.Component {
             let result
             if (GLOBAL.INDOOREND) {
               await SMap.getStartPoint(
-                GLOBAL.ENDX,
-                GLOBAL.ENDY,
-                GLOBAL.INDOOREND,
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                GLOBAL.INDOORSTART,
                 GLOBAL.STARTPOINTFLOOR,
               )
               result = await SMap.beginIndoorNavigation(
@@ -124,6 +128,22 @@ export default class MapSelectPointButton extends React.Component {
     if (path && pathLength) {
       this.props.changeNavPathInfo &&
         this.props.changeNavPathInfo({ path, pathLength })
+
+      let mapSelectPoint = this.props.mapSelectPoint
+
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: mapSelectPoint.firstPoint + '---' + mapSelectPoint.secondPoint,
+        start: mapSelectPoint.firstPoint,
+        end: mapSelectPoint.secondPoint,
+      })
+      this.props.setNavigationHistory(history)
     }
   }
 

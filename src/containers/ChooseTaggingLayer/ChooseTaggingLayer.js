@@ -57,7 +57,8 @@ export default class ChooseTaggingLayer extends React.Component {
       // await SAIDetectView.setDrawTileEnable(false)
       await SAIDetectView.setIsPolymerize(false)
       let buttons = [
-        ToolbarBtnType.COLLECTTARGET,
+        // ToolbarBtnType.COLLECTTARGET,
+        ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.SETTIING,
       ]
@@ -183,6 +184,10 @@ export default class ChooseTaggingLayer extends React.Component {
       setTimeout(() => {
         this.clickAble = true
       }, 1500)
+      if (GLOBAL.isswitch) {
+        GLOBAL.isswitch = false
+        GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+      }
       NavigationService.goBack()
     }
   }

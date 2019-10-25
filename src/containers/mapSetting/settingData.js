@@ -336,6 +336,11 @@ const getDetectStyleSettings = () => [
     value: false,
     iconType: 'switch',
   },
+  {
+    title: getLanguage(global.language).Map_Settings.COUNTRACKED,
+    value: false,
+    iconType: 'switch',
+  },
   // {
   //   title: getLanguage(global.language).Map_Settings.DETECT_STYLE_IS_SAME_COLOR,
   //   value: false,

@@ -570,6 +570,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: '统一颜色',
   DETECT_STYLE_SAME_COLOR: '统一颜色值',
   DETECT_STYLE_STROKE_WIDTH: '检测目标绘制框线宽',
+  COUNTRACKED: '跟踪计数',
 
   //二级菜单 基本设置
   MAP_NAME: '地图名称',

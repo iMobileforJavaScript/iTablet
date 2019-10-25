@@ -25,6 +25,10 @@ function illegallyParkCollect() {
       _params.user.currentUser.userName,
     )
     if (dataList.length > 0) {
+      if (GLOBAL.showAIDetect) {
+        GLOBAL.isswitch = true
+        ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+      }
       const type = 'illegallyParkCollect'
       _params.navigation.navigate('ChooseTaggingLayer', { type })
     } else {
@@ -76,6 +80,10 @@ function aiClassify() {
       _params.user.currentUser.userName,
     )
     if (dataList.length > 0) {
+      if (GLOBAL.showAIDetect) {
+        GLOBAL.isswitch = true
+        ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+      }
       const type = 'aiClassify'
       _params.navigation.navigate('ChooseTaggingLayer', { type })
     } else {
@@ -92,6 +100,10 @@ function aiDetect() {
       _params.user.currentUser.userName,
     )
     if (dataList.length > 0) {
+      if (GLOBAL.showAIDetect) {
+        GLOBAL.isswitch = true
+        ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+      }
       const type = 'aiDetect'
       _params.navigation.navigate('ChooseTaggingLayer', { type })
     } else {
@@ -109,7 +121,10 @@ function polymerizeCollect() {
     // await SAIDetectView.setDrawTileEnable(false)
     await SAIDetectView.setIsPolymerize(true)
     ;(await GLOBAL.toolBox) && GLOBAL.toolBox.setVisible(false)
-    ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    if (!GLOBAL.showAIDetect) {
+      (await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    }
+    // ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
     // await SAIDetectView.startCountTrackedObjs(true)
   }.bind(this)())
 }
