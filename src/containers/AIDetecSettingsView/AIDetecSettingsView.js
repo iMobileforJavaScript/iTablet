@@ -14,11 +14,11 @@ import { ConstPath } from '../../constants'
 import { SAIDetectView } from 'imobile_for_reactnative'
 
 const DEFAULT_MODEL = 'detect' //默认模型
-const DUSTBIN_MODEL = 'detect_lajixiang_300' //垃圾箱模型
+const DETECT_DUSTBIN_MODEL = 'detect_lajixiang_300' //垃圾箱模型
 const ROAD_MODEL = 'road_crack_detect' //道路模型
 
 /*
- * 分类模型选择界面
+ * 目标采集模型选择界面
  */
 export default class AIDetecSettingsView extends React.Component {
   props: {
@@ -48,14 +48,37 @@ export default class AIDetecSettingsView extends React.Component {
     Orientation.lockToPortrait()
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.downloads) !==
+      JSON.stringify(this.props.downloads)
+    ) {
+      for (let index = 0; index < this.props.downloads.length; index++) {
+        const element = this.props.downloads[index]
+        if (element.id === 'DETECT_DUSTBIN_MODEL') {
+          this.setState({
+            dustbinBtx: element.progress + '%',
+          })
+        } else if (element.id === 'ROAD_MODEL') {
+          this.setState({
+            plantBtx: element.progress + '%',
+          })
+        }
+      }
+    }
+  }
+
   componentDidMount() {
     // 初始化数据
     (async function() {
       this.homePath = await FileTools.appendingHomeDirectory()
       let dustbinPath =
-        this.homePath + ConstPath.Common_AIClassifyModel + DUSTBIN_MODEL + '/'
-      this.dustbin_model = dustbinPath + DUSTBIN_MODEL + '.tflite'
-      this.dustbin_txt = dustbinPath + DUSTBIN_MODEL + '.txt'
+        this.homePath +
+        ConstPath.Common_AIClassifyModel +
+        DETECT_DUSTBIN_MODEL +
+        '/'
+      this.dustbin_model = dustbinPath + DETECT_DUSTBIN_MODEL + '.tflite'
+      this.dustbin_txt = dustbinPath + DETECT_DUSTBIN_MODEL + '.txt'
       let isDustbin =
         (await FileTools.fileIsExist(this.dustbin_model)) &&
         (await FileTools.fileIsExist(this.dustbin_txt))
@@ -92,9 +115,9 @@ export default class AIDetecSettingsView extends React.Component {
           defaultBtx: '使用中',
         })
       } else if (currentmodel.ModelType === 'ABSOLUTE_FILE_PATH') {
-        if (currentmodel.ModelPath.indexOf(DUSTBIN_MODEL) !== -1) {
+        if (currentmodel.ModelPath.indexOf(DETECT_DUSTBIN_MODEL) !== -1) {
           this.setState({
-            currentModel: DUSTBIN_MODEL,
+            currentModel: DETECT_DUSTBIN_MODEL,
             defaultBtx: '立即使用',
             dustbinBtx: '使用中',
           })
@@ -169,8 +192,8 @@ export default class AIDetecSettingsView extends React.Component {
           onPress={() =>
             this.useOrDownloadModel(
               this.state.dustbinBtx,
-              'DUSTBIN_MODEL',
-              DUSTBIN_MODEL,
+              'DETECT_DUSTBIN_MODEL',
+              DETECT_DUSTBIN_MODEL,
             )
           }
         />
@@ -230,7 +253,7 @@ export default class AIDetecSettingsView extends React.Component {
       this.Loading.setLoading(true, '切换中...')
       if (fileName === DEFAULT_MODEL) {
         params.ModelType = 'ASSETS_FILE'
-      } else if (fileName === DUSTBIN_MODEL) {
+      } else if (fileName === DETECT_DUSTBIN_MODEL) {
         params.ModelType = 'ABSOLUTE_FILE_PATH'
         params.ModelPath = this.dustbin_model
         params.LabelPath = this.dustbin_txt
@@ -251,7 +274,7 @@ export default class AIDetecSettingsView extends React.Component {
             dustbinBtx: dustbinBtx ? '立即使用' : this.state.dustbinBtx,
             plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
           })
-        } else if (fileName === DUSTBIN_MODEL) {
+        } else if (fileName === DETECT_DUSTBIN_MODEL) {
           this.setState({
             currentModel: fileName,
             defaultBtx: '立即使用',
@@ -271,7 +294,7 @@ export default class AIDetecSettingsView extends React.Component {
       }
       this.Loading.setLoading(false)
     } else if (title === '下载') {
-      if (fileName === DUSTBIN_MODEL) {
+      if (fileName === DETECT_DUSTBIN_MODEL) {
         this.setState({
           dustbinBtx: '下载中',
         })
@@ -320,19 +343,19 @@ export default class AIDetecSettingsView extends React.Component {
         fileName: downloadData.fileName,
         progressDivider: 1,
         key: downloadData.key,
-        progress: res => {
-          let value = ~~res.progress.toFixed(0)
-          let progress = value + '%'
-          if (downloadData.fileName === DUSTBIN_MODEL) {
-            this.setState({
-              dustbinBtx: progress,
-            })
-          } else if (downloadData.fileName === ROAD_MODEL) {
-            this.setState({
-              plantBtx: progress,
-            })
-          }
-        },
+        // progress: res => {
+        //   let value = ~~res.progress.toFixed(0)
+        //   let progress = value + '%'
+        //   if (downloadData.fileName === DUSTBIN_MODEL) {
+        //     this.setState({
+        //       dustbinBtx: progress,
+        //     })
+        //   } else if (downloadData.fileName === ROAD_MODEL) {
+        //     this.setState({
+        //       plantBtx: progress,
+        //     })
+        //   }
+        // },
       }
 
       // const ret = RNFS.downloadFile(downloadOptions)
@@ -342,7 +365,7 @@ export default class AIDetecSettingsView extends React.Component {
         .then(async () => {
           await FileTools.unZipFile(fileCachePath, fileDirPath)
           await FileTools.deleteFile(fileCachePath)
-          if (downloadData.fileName === DUSTBIN_MODEL) {
+          if (downloadData.fileName === DETECT_DUSTBIN_MODEL) {
             this.setState({
               dustbinBtx: '立即使用',
             })
