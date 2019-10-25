@@ -299,6 +299,8 @@ export default class NavigationView extends React.Component {
                       sy: GLOBAL.STARTY,
                       ex: GLOBAL.ENDX,
                       ey: GLOBAL.ENDY,
+                      sFloor: GLOBAL.STARTPOINTFLOOR,
+                      eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
                         this.props.mapSelectPoint.firstPoint +
                         '---' +
@@ -351,6 +353,8 @@ export default class NavigationView extends React.Component {
                       sy: GLOBAL.STARTY,
                       ex: GLOBAL.ENDX,
                       ey: GLOBAL.ENDY,
+                      sFloor: GLOBAL.STARTPOINTFLOOR,
+                      eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
                         this.props.mapSelectPoint.firstPoint +
                         '---' +
@@ -388,9 +392,9 @@ export default class NavigationView extends React.Component {
     )
   }
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item, index }) => {
     return (
-      <View>
+      <View key={item.toString() + index}>
         <TouchableOpacity
           style={styles.itemView}
           onPress={async () => {
@@ -398,13 +402,16 @@ export default class NavigationView extends React.Component {
               firstPoint: item.start,
               secondPoint: item.end,
             })
+
             GLOBAL.STARTX = item.sx
             GLOBAL.STARTY = item.sy
             GLOBAL.ENDX = item.ex
             GLOBAL.ENDY = item.ey
+            GLOBAL.STARTPOINTFLOOR = item.sFloor
+            GLOBAL.ENDPOINTFLOOR = item.eFloor
 
             let result = await SMap.isIndoorPoint(item.sx, item.sy)
-            SMap.getStartPoint(item.sx, item.sy, result.isindoor)
+            SMap.getStartPoint(item.sx, item.sy, result.isindoor, item.sFloor)
             if (result.isindoor) {
               GLOBAL.INDOORSTART = true
             } else {
@@ -412,7 +419,7 @@ export default class NavigationView extends React.Component {
             }
 
             let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
-            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor)
+            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor, item.eFloor)
             if (endresult.isindoor) {
               GLOBAL.INDOOREND = true
             } else {

@@ -15,12 +15,12 @@ import MenuAlertDialog from './MenuAlertDialog'
 import SaveView from './SaveView'
 import OverlayView from './OverlayView'
 import NavigationView from './NavigationView'
-import NavigationPoiView from './NavigationPoiView'
 import Map2Dto3D from './Map2Dto3D'
 import FloorListView from './FloorListView'
 import IncrementRoadView from './IncrementRoadView'
 import MapSelectPoint from './MapSelectPoint'
-import MapSelectPointButton from './MapSelectPointButton'
+import NavigationStartButton from './NavigationStartButton'
+import NavigationStartHead from './NavigationStartHead'
 import SimpleSelectList from './SimpleSelectList'
 import {
   AnalystMapButtons,
@@ -31,7 +31,12 @@ import MenuList from './MenuList'
 import { PoiInfoContainer, PoiTopSearchBar } from './PoiInfoContainer'
 import AIFunctionToolbar from './AIFunctionToolbar'
 import AIMapSuspensionDialog from './AIMapSuspensionDialog'
+import RNLegendView from './RNLegendView'
+import ScaleView from './ScaleView'
+import MapSelectPointButton from './MapSelectPointButton'
 export {
+  ScaleView,
+  RNLegendView,
   SimpleSelectList,
   PopList,
   NetworkAnalystToolBar,
@@ -54,14 +59,15 @@ export {
   AnalystMapToolbar,
   MenuList,
   NavigationView,
-  NavigationPoiView,
+  NavigationStartButton,
+  NavigationStartHead,
+  MapSelectPointButton,
   Map2Dto3D,
   FloorListView,
   PoiInfoContainer,
   PoiTopSearchBar,
   IncrementRoadView,
   MapSelectPoint,
-  MapSelectPointButton,
   AIFunctionToolbar,
   AIMapSuspensionDialog,
 }
