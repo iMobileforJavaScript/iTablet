@@ -61,13 +61,17 @@ export default class ClassifySettingsView extends React.Component {
       for (let index = 0; index < this.props.downloads.length; index++) {
         const element = this.props.downloads[index]
         if (element.id === 'DUSTBIN_MODEL') {
-          this.setState({
-            dustbinBtx: element.progress + '%',
-          })
+          if (element.progress < 100) {
+            this.setState({
+              dustbinBtx: element.progress + '%',
+            })
+          }
         } else if (element.id === 'PLANT_MODEL') {
-          this.setState({
-            plantBtx: element.progress + '%',
-          })
+          if (element.progress < 100) {
+            this.setState({
+              plantBtx: element.progress + '%',
+            })
+          }
         }
       }
     }
