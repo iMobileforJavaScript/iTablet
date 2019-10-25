@@ -163,6 +163,7 @@ export default class SecondMapSettings extends Component {
         data = getDetectStyleSettings()
         data[0].value = await SAIDetectView.isDrawTileEnable()
         data[1].value = await SAIDetectView.isDrawConfidenceEnable()
+        data[2].value = await SAIDetectView.getIsCountTrackedMode()
         break
       case 'Geocentric Transalation(3-para)':
         data = transfer3ParamsSetting()
@@ -397,6 +398,13 @@ export default class SecondMapSettings extends Component {
       case getLanguage(GLOBAL.language).Map_Settings
         .DETECT_STYLE_IS_DRAW_CONFIDENCE:
         await SAIDetectView.setDrawConfidenceEnable(value)
+        break
+      case getLanguage(GLOBAL.language).Map_Settings.COUNTRACKED:
+        if (value) {
+          await SAIDetectView.startCountTrackedObjs()
+        } else {
+          await SAIDetectView.stopCountTrackedObjs()
+        }
         break
       case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_PERSON:
       case getLanguage(GLOBAL.language).Map_Settings.DETECT_TYPE_BICYCLE:

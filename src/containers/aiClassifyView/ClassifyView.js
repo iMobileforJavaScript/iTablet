@@ -369,12 +369,21 @@ export default class ClassifyView extends React.Component {
             </TouchableOpacity>
           )}
           {!this.state.isClassifyInfoVisible && (
-            <TouchableOpacity onPress={() => {}} style={styles.iconView}>
-              <Image
-                resizeMode={'contain'}
-                source={getThemeAssets().ar.toolbar.ai_tab}
-                style={styles.smallIcon}
-              />
+            <TouchableOpacity
+              //   onPress={
+              //   async () => {
+              //   await NavigationService.navigate('MapView')
+              //   await GLOBAL.CHECKAIDETEC.setVisible(true)
+              //   await GLOBAL.toolBox.showFullMap(true)
+              //   await GLOBAL.toolBox.setVisible(false)}
+              // }
+              style={styles.iconView}
+            >
+              {/*<Image*/}
+              {/*resizeMode={'contain'}*/}
+              {/*source={getThemeAssets().ar.toolbar.ai_tab}*/}
+              {/*style={styles.smallIcon}*/}
+              {/*/>*/}
             </TouchableOpacity>
           )}
           {!this.state.isClassifyInfoVisible && (

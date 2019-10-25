@@ -15,7 +15,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  SAIDetectView,
+  // SAIDetectView,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -2232,11 +2232,30 @@ export default class MapView extends React.Component {
           navigation: this.props.navigation,
           type: 'fix',
           backAction: async () => {
-            await SAIDetectView.setProjectionModeEnable(false)
+            // await SAIDetectView.setProjectionModeEnable(false)
             GLOBAL.AIDETECTCHANGE.setVisible(false)
             this.showFullMap(false)
             GLOBAL.toolBox.setVisible(false)
+            const type = 'aiDetect'
+            this.props.navigation.navigate('ChooseTaggingLayer', { type })
             this.switchAr()
+          },
+        }}
+      />
+    )
+  }
+
+  _renderCheckAIDetec = () => {
+    return (
+      <MapSelectPoint
+        ref={ref => (GLOBAL.CHECKAIDETEC = ref)}
+        headerProps={{
+          title: '查看',
+          navigation: this.props.navigation,
+          type: 'fix',
+          backAction: async () => {
+            GLOBAL.CHECKAIDETEC.setVisible(false)
+            this.showFullMap(false)
           },
         }}
       />
@@ -2371,6 +2390,7 @@ export default class MapView extends React.Component {
           />
         )}
         {this._renderAIDetectChange()}
+        {/*{this._renderCheckAIDetec()}*/}
         {/*{this.state.showAIDetect && (<AIMapSuspensionDialog ref={ref => (GLOBAL.AIMapSuspensionDialog = ref)}/>)}*/}
         {/*{this.state.showAIDetect && (<View style={{height: '100%', width: '100%'}}><SMMapSuspension*/}
         {/*ref={ref => (GLOBAL.SMMapSuspension = ref)}/></View>)}*/}
@@ -2410,7 +2430,6 @@ export default class MapView extends React.Component {
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
           !this.props.analyst.params &&
-          !this.state.showAIDetect &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
