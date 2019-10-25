@@ -78,7 +78,7 @@ import {
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
 import RNLegendView from '../../components/RNLegendView'
-import NavigationView from '../../components/NavigationView'
+// import NavigationView from '../../components/NavigationView'
 import NavigationPoiView from '../../components/NavigationPoiView'
 import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
@@ -1593,6 +1593,7 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
+        changeNavPathInfo={this.changeNavPathInfo}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
         save={() => {
@@ -2161,19 +2162,19 @@ export default class MapView extends React.Component {
     NavigationService.navigate('ArView')
   }
 
-  _renderNavigationView = () => {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          width: '100%',
-        }}
-      >
-        <NavigationView />
-      </View>
-    )
-  }
+  // _renderNavigationView = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         position: 'absolute',
+  //         top: 0,
+  //         width: '100%',
+  //       }}
+  //     >
+  //       <NavigationView />
+  //     </View>
+  //   )
+  // }
 
   _renderFloorListView = () => {
     if (this.props.map2Dto3D) {
@@ -2268,16 +2269,27 @@ export default class MapView extends React.Component {
           backAction: () => {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
-            NavigationService.navigate('NavigationView')
+            NavigationService.navigate('NavigationView', {
+              changeNavPathInfo: this.changeNavPathInfo,
+            })
           },
         }}
       />
     )
   }
 
+  changeNavPathInfo = ({ path, pathLength }) => {
+    this.setState({
+      path,
+      pathLength,
+    })
+  }
+
   _renderNavigationStartButton = () => {
     return (
       <NavigationStartButton
+        path={this.state.path}
+        pathLength={this.state.pathLength}
         ref={ref => (GLOBAL.NAVIGATIONSTARTBUTTON = ref)}
       />
     )
@@ -2296,7 +2308,10 @@ export default class MapView extends React.Component {
 
   _renderMapSelectPointButton = () => {
     return (
-      <MapSelectPointButton ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)} />
+      <MapSelectPointButton
+        changeNavPathInfo={this.changeNavPathInfo}
+        ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
+      />
     )
   }
 

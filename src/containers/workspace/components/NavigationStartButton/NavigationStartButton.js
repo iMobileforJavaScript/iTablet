@@ -13,7 +13,14 @@ import { SMap } from 'imobile_for_reactnative'
 import { getPublicAssets } from '../../../../assets'
 
 export default class NavigationStartButton extends React.Component {
-  props: {}
+  props: {
+    pathLength: Object,
+    path: Array,
+  }
+  static defaultProps = {
+    pathLength: { length: 0 },
+    path: [],
+  }
 
   constructor(props) {
     super(props)
@@ -82,6 +89,7 @@ export default class NavigationStartButton extends React.Component {
     }
   }
 
+  //todo 各种方向相关的符号没图
   getIconByType = type => {
     let icon
     switch (type) {
@@ -137,7 +145,7 @@ export default class NavigationStartButton extends React.Component {
   renderItem = ({ item }) => {
     let roadLength = item.roadLength
     if (roadLength > 1000) roadLength = (roadLength / 1000).toFixed(1) + '公里'
-    else roadLength = roadLength + '米'
+    else roadLength = (roadLength || 1) + '米'
     let str = ''
     if (item.turnType === 'start' || item.turnType === 'end') {
       str = item.text
@@ -182,7 +190,7 @@ export default class NavigationStartButton extends React.Component {
   }
 
   renderMap = () => {
-    let length = GLOBAL.PATHLENGTH.length
+    let length = this.props.pathLength.length
     if (length > 1000) length = (length / 1000).toFixed(1) + '公里'
     else length = length + '米'
     return (
@@ -200,7 +208,7 @@ export default class NavigationStartButton extends React.Component {
   renderRoad = () => {
     let data = [
       { text: '从起点出发', turnType: 'start' },
-      ...GLOBAL.PATH,
+      ...this.props.path,
       { text: '到达目的地', turnType: 'end' },
     ]
     return (

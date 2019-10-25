@@ -69,11 +69,11 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     user: Object,
     map: Object,
-
     //模型、路网弹窗组件
     getNavigationPopView?: () => {},
-    incrementRoad: () => {},
+    incrementRoad?: () => {},
     setMap2Dto3D: () => {},
+    changeNavPathInfo?: () => {},
     openOnlineMap: boolean,
   }
 
@@ -657,13 +657,17 @@ export default class FunctionToolbar extends React.Component {
       if (isIndoorMap) {
         //室内导航
         SMap.startIndoorNavigation()
-        NavigationService.navigate('NavigationView')
+        NavigationService.navigate('NavigationView', {
+          changeNavPathInfo: this.props.changeNavPathInfo,
+        })
       } else {
         //行业导航
         let { networkModel, networkDataset } = simpleList.state
         if (networkModel && networkDataset) {
           SMap.startNavigation(networkDataset.datasetName, networkModel.path)
-          NavigationService.navigate('NavigationView')
+          NavigationService.navigate('NavigationView', {
+            changeNavPathInfo: this.props.changeNavPathInfo,
+          })
         } else {
           Toast.show(
             getLanguage(this.props.language).Prompt
