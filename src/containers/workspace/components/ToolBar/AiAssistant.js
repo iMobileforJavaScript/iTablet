@@ -146,6 +146,23 @@ function collectSceneForm() {
   }.bind(this)())
 }
 
+//AR投放
+// function arCastModelOperate() {
+//   (async function() {
+//     let isSupportedARCore = await SMeasureView.isSupportedARCore()
+//     if (!isSupportedARCore) {
+//       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
+//       return
+//     }
+//     const datasourceAlias = 'AR投放'
+//     const datasetName = 'CastModelOperate'
+//     NavigationService.navigate('CastModelOperateView', {
+//       datasourceAlias,
+//       datasetName,
+//     })
+//   }.bind(this)())
+// }
+
 function getAiAssistantData(type, params) {
   _params = params
   let buttons = []
@@ -219,6 +236,15 @@ function getAiAssistantData(type, params) {
       size: 'large',
       image: getThemeAssets().ar.functiontoolbar.rightbar_ai_layout_light,
     },
+    // {
+    //   //AR投放
+    //   key: 'arCastModelOperate',
+    //   title: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE,
+    //   action: arCastModelOperate,
+    //   size: 'large',
+    //   image: getThemeAssets().ar.functiontoolbar.ar_cast,
+    // },
   ]
   return { data, buttons }
 }

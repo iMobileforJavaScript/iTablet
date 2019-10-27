@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactFragmentActivity;
 import com.rnfs.RNFSManager;
 import com.supermap.RN.FileTools;
 import com.supermap.RN.appManager;
@@ -27,7 +28,7 @@ import io.reactivex.functions.Consumer;
 
 import org.devio.rn.splashscreen.SplashScreen;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends ReactFragmentActivity {
     public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
     public static boolean isActive;
     /**
