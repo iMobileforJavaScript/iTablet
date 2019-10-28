@@ -44,6 +44,7 @@ export default class Register extends React.Component {
       behavior: 'padding',
     }
     this._renderEmail = this._renderEmail.bind(this)
+    JSOnlineService.loadPhoneRegisterPage()
   }
 
   _goMine = () => {
@@ -87,18 +88,18 @@ export default class Register extends React.Component {
           return
         }
         if (!this.txtPhoneNumberRealName) {
-          //请输入手机号
-          Toast.show('请输入真实姓名')
+          //请输入真实姓名
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_REALNAME)
           return
         }
         if (!this.txtPhoneNumberCompany) {
-          //请输入手机号
-          Toast.show('请输入工作机构')
+          //请输入工作机构
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_COMPANY)
           return
         }
         if (!this.txtPhoneNumberEmail) {
-          //请输入手机号
-          Toast.show('请输入个人邮箱')
+          //请输入个人邮箱
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
           return
         }
         if (!this.txtPhoneNumberPassword) {
@@ -147,40 +148,49 @@ export default class Register extends React.Component {
         this._goMine()
         return
       } else {
-        let index = result.indexOf('，')
-        if (index !== -1) {
-          result = result.substring(0, index)
-        }
-        switch (result) {
-          case '手机号已注册':
-            info = getLanguage(this.props.language).Prompt
-              .PHIONE_HAS_BEEN_REGISTERED
-            break
-          case '昵称已存在':
-            info = getLanguage(this.props.language).Prompt.NICKNAME_IS_EXISTS
-            break
-          case '短信验证码错误':
-            info = getLanguage(this.props.language).Prompt
-              .VERIFICATION_CODE_ERROR
-            break
-          case '邮箱已注册':
-            info = getLanguage(this.props.language).Prompt
-              .EMAIL_HAS_BEEN_REGISTERED
-            break
-          case '注册失败':
+        if (isEmail) {
+          let index = result.indexOf('，')
+          if (index !== -1) {
+            result = result.substring(0, index)
+          }
+          switch (result) {
+            case '手机号已注册':
+              info = getLanguage(this.props.language).Prompt
+                .PHIONE_HAS_BEEN_REGISTERED
+              break
+            case '昵称已存在':
+              info = getLanguage(this.props.language).Prompt.NICKNAME_IS_EXISTS
+              break
+            case '短信验证码错误':
+              info = getLanguage(this.props.language).Prompt
+                .VERIFICATION_CODE_ERROR
+              break
+            case '邮箱已注册':
+              info = getLanguage(this.props.language).Prompt
+                .EMAIL_HAS_BEEN_REGISTERED
+              break
+            case '注册失败':
+              info = getLanguage(this.props.language).Prompt.REGIST_FAILED
+              break
+            case '请输入正确的手机号':
+            case '手机格式不正确':
+              info = getLanguage(this.props.language).Prompt
+                .ENTER_CORRECT_MOBILE
+              break
+            case '请输入正确的邮箱号':
+            case '邮箱格式不正确':
+              info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
+              break
+            default:
+              info = getLanguage(this.props.language).Prompt.REGIST_FAILED
+              break
+          }
+        } else {
+          if (typeof result === 'string') {
+            info = result
+          } else {
             info = getLanguage(this.props.language).Prompt.REGIST_FAILED
-            break
-          case '请输入正确的手机号':
-          case '手机格式不正确':
-            info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_MOBILE
-            break
-          case '请输入正确的邮箱号':
-          case '邮箱格式不正确':
-            info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
-            break
-          default:
-            info = getLanguage(this.props.language).Prompt.REGIST_FAILED
-            break
+          }
         }
         Toast.show(info)
       }
@@ -247,8 +257,8 @@ export default class Register extends React.Component {
         />
         <TextInput
           keyboardType={'email-address'}
-          //'请输入昵称'
-          placeholder={'请输入真实姓名'}
+          //'请输入真实姓名'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_REALNAME}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberRealName}
@@ -258,8 +268,8 @@ export default class Register extends React.Component {
         />
         <TextInput
           keyboardType={'email-address'}
-          //'请输入昵称'
-          placeholder={'请输入工作机构'}
+          //'请输入工作机构'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_COMPANY}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberCompany}
@@ -350,7 +360,6 @@ export default class Register extends React.Component {
     }
   }
   _onPhonePress = async () => {
-    await JSOnlineService.loadPhoneRegisterPage()
     if (!this.state.onPhoneTitleFocus) {
       this.setState({
         onEmailTitleFocus: false,
@@ -390,7 +399,6 @@ export default class Register extends React.Component {
             style={{ flex: 1 }}
             contentContainerStyle={{
               alignItems: 'center',
-              height: 500,
               width: '100%',
             }}
             keyboardDismissMode={'on-drag'}
@@ -460,7 +468,6 @@ export default class Register extends React.Component {
                   {getLanguage(this.props.language).Profile.REGISTER}
                 </Text>
               </TouchableOpacity>
-              <View style={{ flex: 1, height: 200 }} />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

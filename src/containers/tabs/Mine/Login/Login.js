@@ -412,7 +412,7 @@ class Login extends React.Component {
                     NavigationService.navigate('GetBack')
                   }}
                 >
-                  忘记密码
+                  {getLanguage(global.language).Profile.FORGET_PASSWORD}
                 </Text>
               </View>
 

@@ -1,4 +1,4 @@
-import { request, Toast } from './index'
+import { request } from './index'
 import cheerio from 'react-native-cheerio'
 import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { Platform } from 'react-native'
@@ -331,11 +331,18 @@ export default class OnlineServicesUtils {
           ).attr().value,
         }
         let paramStr = this._obj2params(paramObj)
+        let AcceptLanguage
+        if (global.language === 'CN') {
+          AcceptLanguage = 'zh-CN,zh;q=0.9,ja;q=0.8,en;q=0.7'
+        } else {
+          AcceptLanguage = 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7'
+        }
         let registerResponse = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
             Cookie: this.registerCookie,
+            'Accept-Language': AcceptLanguage,
           },
           body: paramStr,
         })
@@ -343,9 +350,7 @@ export default class OnlineServicesUtils {
         let page = cheerio.load(responsedata)
         this.registerPage = page
         try {
-          let info = page('.sso_tip_block').text()
-          Toast.show(info)
-          return info
+          return page('.sso_tip_block').text()
         } catch (e) {
           return true
         }

@@ -26,6 +26,8 @@ const Profile = {
   ENTER_MOBILE: 'Please enter your mobile number',
   ENTER_PASSWORD: 'Please enter your password',
   REGISTER: 'Register',
+  FORGET_PASSWORD: 'Forgot password?',
+  RESET_PASSWORD: 'Reset Password',
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
   ENTER_USERNAME: 'Please enter your username',
@@ -35,6 +37,8 @@ const Profile = {
   ENTER_EMAIL: 'Please enter your email',
   ENTER_SERVER_ADDRESS: 'Please enter server address',
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
+  ENTER_REALNAME: 'Please enter your real name',
+  ENTER_COMPANY: 'Please enter your company',
   CONNECTING: 'Connecting',
   CONNECT_SERVER_FAIL:
     'Failed to connect to the server, please check the network or server address',

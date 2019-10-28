@@ -9,6 +9,7 @@ import { StyleSheet, WebView } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import { Container } from '../../components'
+import { getLanguage } from '../../language/index'
 
 const BGCOLOR = constUtil.USUAL_GREEN
 const DEFAULTWIDTH = 300
@@ -31,7 +32,7 @@ export default class GetBack extends React.Component {
       <Container
         style={styles.container}
         headerProps={{
-          title: 'iTablet找回密码',
+          title: getLanguage(global.language).Profile.RESET_PASSWORD,
           navigation: this.props.navigation,
         }}
       >
