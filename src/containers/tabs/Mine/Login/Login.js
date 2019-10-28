@@ -391,27 +391,29 @@ class Login extends React.Component {
                   }}
                   onPress={() => {
                     NavigationService.navigate('Register')
+                    // NavigationService.navigate('Protocol', {
+                    //   type: 'Register',
+                    // })
                   }}
                 >
                   {/* 注册 */}
                   {getLanguage(this.props.language).Profile.REGISTER}
                 </Text>
-                {this.state.isFirstLogin ? (
-                  <Text
-                    style={{
-                      paddingRight: 5,
-                      width: 100,
-                      lineHeight: 40,
-                      textAlign: 'right',
-                      color: color.font_color_white,
-                    }}
-                    onPress={() => {
-                      NavigationService.navigate('GetBack')
-                    }}
-                  >
-                    忘记密码
-                  </Text>
-                ) : null}
+                <Text
+                  style={{
+                    paddingRight: 5,
+                    width: 100,
+                    lineHeight: 40,
+                    textAlign: 'right',
+                    color: color.font_color_white,
+                    fontSize: scaleSize(20),
+                  }}
+                  onPress={() => {
+                    NavigationService.navigate('GetBack')
+                  }}
+                >
+                  忘记密码
+                </Text>
               </View>
 
               {/* 登录 */}

@@ -1,4 +1,4 @@
-import { request } from './index'
+import { request, Toast } from './index'
 import cheerio from 'react-native-cheerio'
 import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { Platform } from 'react-native'
@@ -249,6 +249,106 @@ export default class OnlineServicesUtils {
         }
       } else {
         return false
+      }
+    } catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 手机注册
+   */
+  loadPhoneRegisterPage = async () => {
+    try {
+      if (!this.registerPage) {
+        let url =
+          'https://sso.supermap.com/phoneregister?service=http://www.supermapol.com'
+        await CookieManager.clearAll()
+        let response = await axios.get(url)
+        let registerPage = cheerio.load(response.data)
+        let cookie
+        if (Platform.OS === 'android' && response.headers['set-cookie']) {
+          cookie = response.headers['set-cookie'][0]
+          cookie = cookie.substr(0, cookie.indexOf(';'))
+        }
+        this.registerPage = registerPage
+        this.registerCookie = cookie
+      }
+    } catch (e) {
+      return
+    }
+  }
+
+  sendSMSVerifyCode = async phoneNumber => {
+    try {
+      let url =
+        'https://sso.supermap.com/phoneregister?service=http://www.supermapol.com'
+      let paramObj = {
+        phoneNumber: phoneNumber,
+        execution: this.registerPage('input[name=execution]').attr().value,
+        _eventId_send: this.registerPage('input[name=_eventId_send]').attr()
+          .value,
+      }
+      let paramStr = this._obj2params(paramObj)
+      let registerResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          Cookie: this.registerCookie,
+        },
+        body: paramStr,
+      })
+      let responsedata = await registerResponse.text()
+      let page = cheerio.load(responsedata)
+      this.registerPage = page
+      try {
+        return page('.sso_tip_block').text()
+      } catch (e) {
+        return true
+      }
+    } catch (e) {
+      return false
+    }
+  }
+
+  register = async (type, param) => {
+    try {
+      let url
+      if (type === 'phone') {
+        url =
+          'https://sso.supermap.com/phoneregister?service=http://www.supermapol.com'
+        let paramObj = {
+          nickname: param.nickname,
+          realName: param.realName,
+          company: param.company,
+          email: param.email,
+          password: param.password,
+          phoneNumber: param.phoneNumber,
+          SMSVerifyCode: param.SMSVerifyCode,
+          execution: this.registerPage('input[name=execution]').attr().value,
+          _eventId_register: this.registerPage(
+            'input[name=_eventId_register]',
+          ).attr().value,
+        }
+        let paramStr = this._obj2params(paramObj)
+        let registerResponse = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            Cookie: this.registerCookie,
+          },
+          body: paramStr,
+        })
+        let responsedata = await registerResponse.text()
+        let page = cheerio.load(responsedata)
+        this.registerPage = page
+        try {
+          let info = page('.sso_tip_block').text()
+          Toast.show(info)
+          return info
+        } catch (e) {
+          return true
+        }
       }
     } catch (e) {
       return false

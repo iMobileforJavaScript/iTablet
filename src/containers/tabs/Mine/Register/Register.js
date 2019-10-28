@@ -14,7 +14,7 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize, OnlineServicesUtils } from '../../../../utils'
 
 import { Container } from '../../../../components'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -27,6 +27,7 @@ import styles, {
 import color from '../../../../styles/color'
 import { getLanguage } from '../../../../language/index'
 
+let JSOnlineService = new OnlineServicesUtils('online')
 export default class Register extends React.Component {
   props: {
     language: string,
@@ -80,19 +81,24 @@ export default class Register extends React.Component {
           this.txtEmailPassword,
         )
       } else {
-        if (!this.txtPhoneNumber) {
-          //请输入手机号
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
-          return
-        }
         if (!this.txtPhoneNumberNickname) {
           //请输入昵称
           Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
           return
         }
-        if (!this.txtVerifyCode) {
-          //请输入验证码
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_CODE)
+        if (!this.txtPhoneNumberRealName) {
+          //请输入手机号
+          Toast.show('请输入真实姓名')
+          return
+        }
+        if (!this.txtPhoneNumberCompany) {
+          //请输入手机号
+          Toast.show('请输入工作机构')
+          return
+        }
+        if (!this.txtPhoneNumberEmail) {
+          //请输入手机号
+          Toast.show('请输入个人邮箱')
           return
         }
         if (!this.txtPhoneNumberPassword) {
@@ -100,17 +106,30 @@ export default class Register extends React.Component {
           Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
+        if (!this.txtPhoneNumber) {
+          //请输入手机号
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
+          return
+        }
+        if (!this.txtVerifyCode) {
+          //请输入验证码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_CODE)
+          return
+        }
         this.container.setLoading(
           true,
           getLanguage(this.props.language).Prompt.REGISTERING,
         )
         //'注册中...')
-        result = await SOnlineService.registerWithPhone(
-          this.txtPhoneNumber,
-          this.txtVerifyCode,
-          this.txtPhoneNumberNickname,
-          this.txtPhoneNumberPassword,
-        )
+        result = await JSOnlineService.register('phone', {
+          nickname: this.txtPhoneNumberNickname,
+          realName: this.txtPhoneNumberRealName,
+          company: this.txtPhoneNumberCompany,
+          email: this.txtPhoneNumberEmail,
+          password: this.txtPhoneNumberPassword,
+          phoneNumber: this.txtPhoneNumber,
+          SMSVerifyCode: this.txtVerifyCode,
+        })
       }
 
       let info
@@ -216,17 +235,6 @@ export default class Register extends React.Component {
     return (
       <View key={'phone'} style={{ width: '70%' }}>
         <TextInput
-          keyboardType={'phone-pad'}
-          //'请输入手机号'
-          placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
-          style={styles.textInputStyle}
-          clearButtonMode={'while-editing'}
-          defaultValue={this.txtPhoneNumber}
-          onChangeText={text => {
-            this.txtPhoneNumber = text
-          }}
-        />
-        <TextInput
           keyboardType={'email-address'}
           //'请输入昵称'
           placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
@@ -235,6 +243,61 @@ export default class Register extends React.Component {
           defaultValue={this.txtPhoneNumberNickname}
           onChangeText={text => {
             this.txtPhoneNumberNickname = text
+          }}
+        />
+        <TextInput
+          keyboardType={'email-address'}
+          //'请输入昵称'
+          placeholder={'请输入真实姓名'}
+          clearButtonMode={'while-editing'}
+          style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberRealName}
+          onChangeText={text => {
+            this.txtPhoneNumberRealName = text
+          }}
+        />
+        <TextInput
+          keyboardType={'email-address'}
+          //'请输入昵称'
+          placeholder={'请输入工作机构'}
+          clearButtonMode={'while-editing'}
+          style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberCompany}
+          onChangeText={text => {
+            this.txtPhoneNumberCompany = text
+          }}
+        />
+        <TextInput
+          keyboardType={'email-address'}
+          clearButtonMode={'while-editing'}
+          //'请输入邮箱'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL}
+          style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberEmail}
+          onChangeText={text => {
+            this.txtPhoneNumberEmail = text
+          }}
+        />
+        <TextInput
+          secureTextEntry={true}
+          clearButtonMode={'while-editing'}
+          //'请输入密码'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
+          style={styles.textInputStyle}
+          defaultValue={this.txtPhoneNumberPassword}
+          onChangeText={text => {
+            this.txtPhoneNumberPassword = text
+          }}
+        />
+        <TextInput
+          keyboardType={'phone-pad'}
+          //'请输入手机号'
+          placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
+          style={styles.textInputStyle}
+          clearButtonMode={'while-editing'}
+          defaultValue={this.txtPhoneNumber}
+          onChangeText={text => {
+            this.txtPhoneNumber = text
           }}
         />
         <View style={styles.verifyCodeViewStyle}>
@@ -262,7 +325,8 @@ export default class Register extends React.Component {
                 getLanguage(this.props.language).Prompt.VERIFICATION_CODE_SENT,
               )
               //'验证码已发送')
-              SOnlineService.sendSMSVerifyCode(this.txtPhoneNumber)
+              // SOnlineService.sendSMSVerifyCode(this.txtPhoneNumber)
+              JSOnlineService.sendSMSVerifyCode(this.txtPhoneNumber)
             }}
           >
             <Text style={styles.verifyCodeRTextStyle}>
@@ -271,17 +335,6 @@ export default class Register extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <TextInput
-          secureTextEntry={true}
-          clearButtonMode={'while-editing'}
-          //'请输入密码'
-          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
-          style={styles.textInputStyle}
-          defaultValue={this.txtPhoneNumberPassword}
-          onChangeText={text => {
-            this.txtPhoneNumberPassword = text
-          }}
-        />
       </View>
     )
   }
@@ -296,7 +349,8 @@ export default class Register extends React.Component {
       })
     }
   }
-  _onPhonePress = () => {
+  _onPhonePress = async () => {
+    await JSOnlineService.loadPhoneRegisterPage()
     if (!this.state.onPhoneTitleFocus) {
       this.setState({
         onEmailTitleFocus: false,
