@@ -27,7 +27,7 @@ import styles, {
 import color from '../../../../styles/color'
 import { getLanguage } from '../../../../language/index'
 
-let JSOnlineService = new OnlineServicesUtils('online')
+let JSOnlineService = undefined
 export default class Register extends React.Component {
   props: {
     language: string,
@@ -44,6 +44,7 @@ export default class Register extends React.Component {
       behavior: 'padding',
     }
     this._renderEmail = this._renderEmail.bind(this)
+    JSOnlineService = new OnlineServicesUtils('online')
     JSOnlineService.loadPhoneRegisterPage()
   }
 
@@ -359,7 +360,7 @@ export default class Register extends React.Component {
       })
     }
   }
-  _onPhonePress = async () => {
+  _onPhonePress = () => {
     if (!this.state.onPhoneTitleFocus) {
       this.setState({
         onEmailTitleFocus: false,

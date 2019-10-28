@@ -260,20 +260,18 @@ export default class OnlineServicesUtils {
    */
   loadPhoneRegisterPage = async () => {
     try {
-      if (!this.registerPage) {
-        let url =
-          'https://sso.supermap.com/phoneregister?service=http://www.supermapol.com'
-        await CookieManager.clearAll()
-        let response = await axios.get(url)
-        let registerPage = cheerio.load(response.data)
-        let cookie
-        if (Platform.OS === 'android' && response.headers['set-cookie']) {
-          cookie = response.headers['set-cookie'][0]
-          cookie = cookie.substr(0, cookie.indexOf(';'))
-        }
-        this.registerPage = registerPage
-        this.registerCookie = cookie
+      let url =
+        'https://sso.supermap.com/phoneregister?service=http://www.supermapol.com'
+      await CookieManager.clearAll()
+      let response = await axios.get(url)
+      let registerPage = cheerio.load(response.data)
+      let cookie
+      if (Platform.OS === 'android' && response.headers['set-cookie']) {
+        cookie = response.headers['set-cookie'][0]
+        cookie = cookie.substr(0, cookie.indexOf(';'))
       }
+      this.registerPage = registerPage
+      this.registerCookie = cookie
     } catch (e) {
       return
     }
