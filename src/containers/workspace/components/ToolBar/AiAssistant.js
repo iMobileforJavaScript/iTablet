@@ -5,7 +5,7 @@ import { getThemeAssets } from '../../../../assets'
 import { getLanguage } from '../../../../language'
 import {
   SMeasureView,
-  DatasetType,
+  // DatasetType,
   SAIDetectView,
   SMap,
 } from 'imobile_for_reactnative'
@@ -52,22 +52,19 @@ function arMeasureCollect() {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
       return
     }
-    let currentLayer = GLOBAL.currentLayer
-    // let reg = /^Label_(.*)#$/
-    let isTaggingLayer = false
-    if (currentLayer) {
-      isTaggingLayer = currentLayer.type === DatasetType.CAD
-      // && currentLayer.datasourceAlias.match(reg)
-    }
-    if (isTaggingLayer) {
-      const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
-      const datasetName = currentLayer.datasetName // 标注图层名称
-      NavigationService.navigate('MeasureView', {
-        datasourceAlias,
-        datasetName,
-      })
+
+    let dataList = await SMap.getTaggingLayers(
+      _params.user.currentUser.userName,
+    )
+    if (dataList.length > 0) {
+      if (GLOBAL.showAIDetect) {
+        GLOBAL.isswitch = true
+        ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+      }
+      const type = 'arMeasureCollect'
+      _params.navigation.navigate('ChooseTaggingLayer', { type })
     } else {
-      Toast.show(getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
       _params.navigation.navigate('LayerManager')
     }
   }.bind(this)())
@@ -136,6 +133,10 @@ function collectSceneForm() {
     if (!isSupportedARCore) {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
       return
+    }
+    if (GLOBAL.showAIDetect) {
+      GLOBAL.isswitch = true
+      ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
     }
     const datasourceAlias = 'AR高精度采集'
     const datasetName = 'CollectSceneForm'

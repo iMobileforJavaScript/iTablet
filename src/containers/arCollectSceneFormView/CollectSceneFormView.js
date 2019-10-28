@@ -158,6 +158,10 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   back = () => {
+    if (GLOBAL.isswitch) {
+      GLOBAL.isswitch = false
+      GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+    }
     NavigationService.goBack()
     return true
   }
