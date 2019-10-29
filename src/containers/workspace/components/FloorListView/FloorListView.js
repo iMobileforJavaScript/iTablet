@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Platform } from 'react-native'
 import { SMFloorListView } from 'imobile_for_reactnative'
 
 import { scaleSize } from '../../../../utils'
 
+const FLOORLIST_WIDTH = Platform.OS === 'ios' ? scaleSize(60) : scaleSize(86)
 export default class FloorListView extends React.Component {
   props: {
     device: Object,
@@ -37,11 +38,12 @@ const styles = StyleSheet.create({
   table: {
     position: 'absolute',
     height: scaleSize(320),
-    width: scaleSize(86),
+    width: FLOORLIST_WIDTH,
     left: scaleSize(10),
     top: scaleSize(300),
-    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: scaleSize(4),
   },
 })

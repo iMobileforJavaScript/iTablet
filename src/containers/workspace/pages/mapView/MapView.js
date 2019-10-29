@@ -40,6 +40,7 @@ import {
   NavigationStartButton,
   NavigationStartHead,
   MapSelectPointButton,
+  TrafficView,
 } from '../../components'
 import {
   Container,
@@ -1643,6 +1644,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    this.TrafficView && this.TrafficView.setVisible(full)
     GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.setState({ showArModeIcon: full })
     this.fullMap = !full
@@ -2188,6 +2190,16 @@ export default class MapView extends React.Component {
     }
   }
 
+  _renderTrafficView = () => {
+    return (
+      <TrafficView
+        ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
+        getLayers={this.props.getLayers}
+        device={this.props.device}
+      />
+    )
+  }
+
   _renderIncrementRoad = () => {
     if (this.state.showIncrement) {
       return (
@@ -2380,6 +2392,7 @@ export default class MapView extends React.Component {
         {/*openWorkspace={this.props.openWorkspace}*/}
         {/*/>*/}
         {/*)}*/}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderTrafficView()}
         {GLOBAL.Type === constants.MAP_NAVIGATION &&
           this._renderFloorListView()}
         {this.state.showAIDetect && (
