@@ -161,7 +161,7 @@ export default class Row extends Component {
     //   : this.props.data.length - 1 === index
     let isSingleData =
       // typeof item !== 'object' ||
-      item.fieldInfo === undefined || item === undefined || item === null
+      item === null || item === undefined || item.fieldInfo === undefined
     // let value = isSingleData ? item : item.value
     let value = item instanceof Object ? item.value : item
     let editable, isRequired, defaultValue
