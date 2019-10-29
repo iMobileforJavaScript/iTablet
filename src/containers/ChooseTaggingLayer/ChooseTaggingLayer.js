@@ -113,6 +113,27 @@ export default class ChooseTaggingLayer extends React.Component {
         )
         NavigationService.navigate('LayerManager')
       }
+    } else if (this.type === 'arMeasureCollect') {
+      let currentLayer = item
+      // let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        // && currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
+        NavigationService.navigate('MeasureView', {
+          datasourceAlias,
+          datasetName,
+        })
+      } else {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+        )
+        NavigationService.navigate('LayerManager')
+      }
     }
   }
 

@@ -53,6 +53,30 @@ export default class ClassifySettingsView extends React.Component {
     Orientation.lockToPortrait()
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.downloads) !==
+      JSON.stringify(this.props.downloads)
+    ) {
+      for (let index = 0; index < this.props.downloads.length; index++) {
+        const element = this.props.downloads[index]
+        if (element.id === 'DUSTBIN_MODEL') {
+          if (element.progress < 100) {
+            this.setState({
+              dustbinBtx: element.progress + '%',
+            })
+          }
+        } else if (element.id === 'PLANT_MODEL') {
+          if (element.progress < 100) {
+            this.setState({
+              plantBtx: element.progress + '%',
+            })
+          }
+        }
+      }
+    }
+  }
+
   componentDidMount() {
     // 初始化数据
     (async function() {
@@ -326,19 +350,19 @@ export default class ClassifySettingsView extends React.Component {
         fileName: downloadData.fileName,
         progressDivider: 1,
         key: downloadData.key,
-        progress: res => {
-          let value = ~~res.progress.toFixed(0)
-          let progress = value + '%'
-          if (downloadData.fileName === DUSTBIN_MODEL) {
-            this.setState({
-              dustbinBtx: progress,
-            })
-          } else if (downloadData.fileName === PLANT_MODEL) {
-            this.setState({
-              plantBtx: progress,
-            })
-          }
-        },
+        // progress: res => {
+        //   let value = ~~res.progress.toFixed(0)
+        //   let progress = value + '%'
+        //   if (downloadData.fileName === DUSTBIN_MODEL) {
+        //     this.setState({
+        //       dustbinBtx: progress,
+        //     })
+        //   } else if (downloadData.fileName === PLANT_MODEL) {
+        //     this.setState({
+        //       plantBtx: progress,
+        //     })
+        //   }
+        // },
       }
       // const ret = RNFS.downloadFile(downloadOptions)
       // ret.promise

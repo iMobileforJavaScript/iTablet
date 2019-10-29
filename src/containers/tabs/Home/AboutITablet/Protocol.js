@@ -187,6 +187,12 @@ export default class protocol extends Component {
         title = getLanguage(global.language).Prompt.APPLY_LICENSE
         //'申请许可'
         break
+      case 'Register':
+        source = {
+          uri: `https://sso.supermap.com/register?service=http://www.supermapol.com`,
+        }
+        title = '注册'
+        break
       default:
         break
     }

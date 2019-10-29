@@ -52,7 +52,7 @@ export const downloadFile = (params = {}) => async (dispatch, getState) => {
       clearInterval(timer)
       timer = null
     }
-  }, 3000)
+  }, 2000)
   params.progress = async res => {
     value = res.progress >= 0 ? ~~res.progress.toFixed(0) : 0
     if (value === 100) {
