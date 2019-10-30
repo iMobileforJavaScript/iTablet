@@ -1796,6 +1796,9 @@ export default class MapView extends React.Component {
           )
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
+          this.SimpleSelectList.setState({
+            currentFloor: '',
+          })
           SMap.setIsMagnifierEnabled(false)
           GLOBAL.SUBMITED = false
         }}
