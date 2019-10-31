@@ -57,7 +57,8 @@ export default class ChooseTaggingLayer extends React.Component {
       // await SAIDetectView.setDrawTileEnable(false)
       await SAIDetectView.setIsPolymerize(false)
       let buttons = [
-        ToolbarBtnType.COLLECTTARGET,
+        // ToolbarBtnType.COLLECTTARGET,
+        ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.SETTIING,
       ]
@@ -103,6 +104,27 @@ export default class ChooseTaggingLayer extends React.Component {
         const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
         const datasetName = currentLayer.datasetName // 标注图层名称
         NavigationService.navigate('IllegallyParkView', {
+          datasourceAlias,
+          datasetName,
+        })
+      } else {
+        Toast.show(
+          getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
+        )
+        NavigationService.navigate('LayerManager')
+      }
+    } else if (this.type === 'arMeasureCollect') {
+      let currentLayer = item
+      // let reg = /^Label_(.*)#$/
+      let isTaggingLayer = false
+      if (currentLayer) {
+        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        // && currentLayer.datasourceAlias.match(reg)
+      }
+      if (isTaggingLayer) {
+        const datasourceAlias = currentLayer.datasourceAlias // 标注数据源名称
+        const datasetName = currentLayer.datasetName // 标注图层名称
+        NavigationService.navigate('MeasureView', {
           datasourceAlias,
           datasetName,
         })
@@ -183,6 +205,10 @@ export default class ChooseTaggingLayer extends React.Component {
       setTimeout(() => {
         this.clickAble = true
       }, 1500)
+      if (GLOBAL.isswitch) {
+        GLOBAL.isswitch = false
+        GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+      }
       NavigationService.goBack()
     }
   }

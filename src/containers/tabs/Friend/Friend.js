@@ -233,45 +233,43 @@ export default class Friend extends Component {
     }
   }
 
-  startCheckAvailability = () => {
-    NetInfo.isConnected.fetch().done(async isConnected => {
-      global.network = isConnected
-      //记录本次连接的consumer
-      let consumer = await SMessageServiceHTTP.getConsumer(
-        this.props.user.currentUser.userId,
-      )
-      //服务器还没来得及生成，等待
-      if (!consumer) {
-        setTimeout(this.startCheckAvailability, 2000)
-        return
-      }
-      this.props.setConsumer(consumer)
-      this.endCheckAvailability()
-      //每隔一分钟查询连接到服务器的consumer
-      this.interval = setInterval(async () => {
-        let isConnected = await NetInfo.isConnected.fetch()
-        if (isConnected) {
-          let consumer = await SMessageServiceHTTP.getConsumer(
+  startCheckAvailability = async () => {
+    //记录本次连接的consumer
+    let consumer = await SMessageServiceHTTP.getConsumer(
+      this.props.user.currentUser.userId,
+    )
+    //服务器还没来得及生成，等待
+    if (!consumer) {
+      setTimeout(this.startCheckAvailability, 2000)
+      return
+    }
+    this.props.setConsumer(consumer)
+    this.endCheckAvailability()
+    //每隔一分钟查询连接到服务器的consumer
+    this.interval = setInterval(async () => {
+      try {
+        let consumer = await SMessageServiceHTTP.getConsumer(
+          this.props.user.currentUser.userId,
+        )
+        if (!consumer || consumer !== this.props.chat.consumer) {
+          this.restartService()
+        } else {
+          //每分钟发送心跳消息
+          this._sendMessage(
+            JSON.stringify({
+              type: 0,
+              user: {
+                id: this.props.user.currentUser.userId,
+              },
+            }),
             this.props.user.currentUser.userId,
+            true,
           )
-          if (!consumer || consumer !== this.props.chat.consumer) {
-            this.restartService()
-          } else {
-            //每分钟发送心跳消息
-            this._sendMessage(
-              JSON.stringify({
-                type: 0,
-                user: {
-                  id: this.props.user.currentUser.userId,
-                },
-              }),
-              this.props.user.currentUser.userId,
-              true,
-            )
-          }
         }
-      }, 60000)
-    })
+      } catch (e) {
+        // console.log(e)
+      }
+    }, 60000)
   }
 
   endCheckAvailability = () => {
@@ -978,13 +976,6 @@ export default class Friend extends Component {
       messageObj.message = Buffer.from(messageObj.message, 'base64').toString()
     }
 
-    // if (!FriendListFileHandle.friends) {
-    //   setTimeout(() => {
-    //     this._receiveMessage(message)
-    //   }, 500)
-    //   return
-    // }
-
     let bSystem = false
     let bUnReadMsg = false
     let msgId = 0
@@ -1012,47 +1003,49 @@ export default class Friend extends Component {
     if (!bSystem) {
       //普通消息
       if (messageObj.type === 2) {
+        //处理群组消息
         let obj = FriendListFileHandle.findFromGroupList(
           messageObj.user.groupID,
         )
         if (!obj) {
           return
         }
-      }
+      } else {
+        //处理单人消息
+        let isFriend = FriendListFileHandle.getIsFriend(messageObj.user.id)
+        if (isFriend === undefined || isFriend === 0) {
+          //非好友,正常情况下不应该收到非好友的消息，收到后让对方删除
+          let delMessage = {
+            message: '',
+            type: MSGConstant.MSG_DEL_FRIEND,
+            user: {
+              name: this.props.user.currentUser.userName,
+              id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
+            },
+            time: Date.parse(new Date()),
+          }
+          SMessageService.sendMessage(
+            JSON.stringify(delMessage),
+            messageObj.user.id,
+          )
 
-      let isFriend = FriendListFileHandle.getIsFriend(messageObj.user.id)
-      if (isFriend === undefined || isFriend === 0) {
-        //非好友,正常情况下不应该收到非好友的消息，收到后让对方删除
-        let delMessage = {
-          message: '',
-          type: MSGConstant.MSG_DEL_FRIEND,
-          user: {
-            name: this.props.user.currentUser.userName,
-            id: this.props.user.currentUser.userId,
-            groupID: this.props.user.currentUser.userId,
-          },
-          time: Date.parse(new Date()),
+          let rejMessage = {
+            message: '',
+            type: MSGConstant.MSG_REJECT,
+            user: {
+              name: this.props.user.currentUser.userName,
+              id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
+            },
+            time: Date.parse(new Date()),
+          }
+          SMessageService.sendMessage(
+            JSON.stringify(rejMessage),
+            messageObj.user.id,
+          )
+          return
         }
-        SMessageService.sendMessage(
-          JSON.stringify(delMessage),
-          messageObj.user.id,
-        )
-
-        let rejMessage = {
-          message: '',
-          type: MSGConstant.MSG_REJECT,
-          user: {
-            name: this.props.user.currentUser.userName,
-            id: this.props.user.currentUser.userId,
-            groupID: this.props.user.currentUser.userId,
-          },
-          time: Date.parse(new Date()),
-        }
-        SMessageService.sendMessage(
-          JSON.stringify(rejMessage),
-          messageObj.user.id,
-        )
-        return
       }
     } else {
       //系统消息，做处理机制

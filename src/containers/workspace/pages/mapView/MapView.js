@@ -15,7 +15,8 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  SAIDetectView,
+  // SAIDetectView,
+  SSpeechRecognizer,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -32,6 +33,15 @@ import {
   PoiInfoContainer,
   PoiTopSearchBar,
   SimpleSelectList,
+  RNLegendView,
+  ScaleView,
+  FloorListView,
+  IncrementRoadView,
+  MapSelectPoint,
+  NavigationStartButton,
+  NavigationStartHead,
+  MapSelectPointButton,
+  TrafficView,
 } from '../../components'
 import {
   Container,
@@ -77,21 +87,13 @@ import {
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import RNLegendView from '../../components/RNLegendView'
-import NavigationView from '../../components/NavigationView'
+// import NavigationView from '../../components/NavigationView'
 import NavigationPoiView from '../../components/NavigationPoiView'
-import ScaleView from '../../components/ScaleView/ScaleView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
-import FloorListView from '../../components/FloorListView'
-import IncrementRoadView from '../../components/IncrementRoadView/IncrementRoadView'
 import Orientation from 'react-native-orientation'
-import MapSelectPoint from '../../components/MapSelectPoint/MapSelectPoint'
-import MapSelectPointButton from '../../components/MapSelectPointButton/MapSelectPointButton'
-import NavigationStartButton from '../../components/NavigationStartButton/NavigationStartButton'
-import NavigationStartHead from '../../components/NavigationStartHead/NavigationStartHead'
 import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
-const SPEECHTIP = '您可以说:\n"放大"，"缩小"，"定位"或"关闭"'
+
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const FOOTER_HEIGHT = scaleSize(88)
@@ -116,6 +118,7 @@ export default class MapView extends React.Component {
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
     mapSelectPoint: PropTypes.object,
+    navigationhistory: PropTypes.array,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -170,6 +173,7 @@ export default class MapView extends React.Component {
     setAnalystParams: PropTypes.func,
     setMapSearchHistory: PropTypes.func,
     setMapSelectPoint: PropTypes.func,
+    setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
   }
 
@@ -251,39 +255,6 @@ export default class MapView extends React.Component {
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
   }
 
-  startListening = async () => {
-    await GLOBAL.SpeechManager.startListening({
-      onBeginOfSpeech: () => {
-        this.setState({ speechContent: '', recording: true })
-      },
-      onEndOfSpeech: () => {
-        this.setState({ recording: false })
-      },
-      onError: e => {
-        let error = '出错了'
-        if (e.indexOf('没有说话') !== -1) {
-          error = '您好像没有说话哦.'
-        }
-        this.setState({ speechContent: error })
-      },
-      onResult: ({ info }) => {
-        this.setState({ speechContent: info }, () => {
-          setTimeout(() => {
-            if (info.indexOf('关闭') !== -1) {
-              this.back()
-            } else if (info.indexOf('定位') !== -1) {
-              this.mapController.location()
-            } else if (info.indexOf('放大') !== -1) {
-              this.mapController.plus()
-            } else if (info.indexOf('缩小') !== -1) {
-              this.mapController.minus()
-            }
-          }, 1000)
-        })
-      },
-    })
-  }
-
   componentDidMount() {
     this.container &&
       this.container.setLoading(
@@ -336,6 +307,13 @@ export default class MapView extends React.Component {
         SMap.clearPoint()
       },
     })
+
+    this.addSpeechRecognizeListener()
+    if (GLOBAL.language === 'CN') {
+      SSpeechRecognizer.setParameter('language', 'zh_cn')
+    } else {
+      SSpeechRecognizer.setParameter('language', 'en_us ')
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -500,6 +478,50 @@ export default class MapView extends React.Component {
 
     //移除手势监听
     SMap.deleteGestureDetector()
+  }
+
+  addSpeechRecognizeListener = () => {
+    SSpeechRecognizer.addListenser({
+      onBeginOfSpeech: () => {
+        this.setState({ speechContent: '', recording: true })
+      },
+      onEndOfSpeech: () => {
+        this.setState({ recording: false })
+      },
+      onError: e => {
+        let error = getLanguage(global.language).Prompt.SPEECH_ERROR
+        if (e.indexOf('没有说话') !== -1) {
+          error = getLanguage(global.language).Prompt.SPEECH_NONE
+        }
+        this.setState({ speechContent: error })
+      },
+      onResult: ({ info }) => {
+        this.setState({ speechContent: info }, () => {
+          setTimeout(() => {
+            info = info.toLowerCase()
+            if (info.indexOf('关闭') !== -1 || info.indexOf('close') !== -1) {
+              this.back()
+            } else if (
+              info.indexOf('定位') !== -1 ||
+              info.indexOf('locate') !== -1 ||
+              info.indexOf('location') !== -1
+            ) {
+              this.mapController.location()
+            } else if (
+              info.indexOf('放大') !== -1 ||
+              info.indexOf('zoom in') !== -1
+            ) {
+              this.mapController.plus()
+            } else if (
+              info.indexOf('缩小') !== -1 ||
+              info.indexOf('zoom out') !== -1
+            ) {
+              this.mapController.minus()
+            }
+          }, 1000)
+        })
+      },
+    })
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -1593,6 +1615,7 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
+        changeNavPathInfo={this.changeNavPathInfo}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
         save={() => {
@@ -1640,6 +1663,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
+    this.TrafficView && this.TrafficView.setVisible(full)
     GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
     this.setState({ showArModeIcon: full })
     this.fullMap = !full
@@ -1791,6 +1815,10 @@ export default class MapView extends React.Component {
           )
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
+          this.SimpleSelectList.setState({
+            currentFloor: '',
+          })
+          SMap.setIsMagnifierEnabled(false)
           GLOBAL.SUBMITED = false
         }}
         switchAr={this.switchAr}
@@ -1926,6 +1954,7 @@ export default class MapView extends React.Component {
               } else {
                 SMap.setLabelColor()
                 SMap.setAction(Action.DRAWLINE)
+                SMap.setIsMagnifierEnabled(true)
                 this.toolBox.setVisible(
                   true,
                   ConstToolType.MAP_TOOL_INCREMENT,
@@ -1994,24 +2023,22 @@ export default class MapView extends React.Component {
     // }
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {Platform.OS === 'android' && (
-          <TouchableOpacity
-            key={'audio'}
-            onPress={() => {
-              this.startListening()
-              this.AudioDialog.setVisible(true)
-            }}
-          >
-            <Image
-              resizeMode={'contain'}
-              source={require('../../../../assets/header/icon_audio.png')}
-              style={[
-                { width: scaleSize(50), height: scaleSize(50) },
-                { marginRight: scaleSize(15) },
-              ]}
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          key={'audio'}
+          onPress={() => {
+            SSpeechRecognizer.start()
+            this.AudioDialog.setVisible(true)
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/header/icon_audio.png')}
+            style={[
+              { width: scaleSize(50), height: scaleSize(50) },
+              { marginRight: scaleSize(15) },
+            ]}
+          />
+        </TouchableOpacity>
         <MTBtn
           key={'undo'}
           image={getPublicAssets().common.icon_undo}
@@ -2161,19 +2188,19 @@ export default class MapView extends React.Component {
     NavigationService.navigate('ArView')
   }
 
-  _renderNavigationView = () => {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          width: '100%',
-        }}
-      >
-        <NavigationView />
-      </View>
-    )
-  }
+  // _renderNavigationView = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         position: 'absolute',
+  //         top: 0,
+  //         width: '100%',
+  //       }}
+  //     >
+  //       <NavigationView />
+  //     </View>
+  //   )
+  // }
 
   _renderFloorListView = () => {
     if (this.props.map2Dto3D) {
@@ -2181,6 +2208,16 @@ export default class MapView extends React.Component {
     } else {
       return <View />
     }
+  }
+
+  _renderTrafficView = () => {
+    return (
+      <TrafficView
+        ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
+        getLayers={this.props.getLayers}
+        device={this.props.device}
+      />
+    )
   }
 
   _renderIncrementRoad = () => {
@@ -2227,11 +2264,30 @@ export default class MapView extends React.Component {
           navigation: this.props.navigation,
           type: 'fix',
           backAction: async () => {
-            await SAIDetectView.setProjectionModeEnable(false)
+            // await SAIDetectView.setProjectionModeEnable(false)
             GLOBAL.AIDETECTCHANGE.setVisible(false)
             this.showFullMap(false)
             GLOBAL.toolBox.setVisible(false)
+            const type = 'aiDetect'
+            this.props.navigation.navigate('ChooseTaggingLayer', { type })
             this.switchAr()
+          },
+        }}
+      />
+    )
+  }
+
+  _renderCheckAIDetec = () => {
+    return (
+      <MapSelectPoint
+        ref={ref => (GLOBAL.CHECKAIDETEC = ref)}
+        headerProps={{
+          title: '查看',
+          navigation: this.props.navigation,
+          type: 'fix',
+          backAction: async () => {
+            GLOBAL.CHECKAIDETEC.setVisible(false)
+            this.showFullMap(false)
           },
         }}
       />
@@ -2249,16 +2305,27 @@ export default class MapView extends React.Component {
           backAction: () => {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
-            NavigationService.navigate('NavigationView')
+            NavigationService.navigate('NavigationView', {
+              changeNavPathInfo: this.changeNavPathInfo,
+            })
           },
         }}
       />
     )
   }
 
+  changeNavPathInfo = ({ path, pathLength }) => {
+    this.setState({
+      path,
+      pathLength,
+    })
+  }
+
   _renderNavigationStartButton = () => {
     return (
       <NavigationStartButton
+        path={this.state.path}
+        pathLength={this.state.pathLength}
         ref={ref => (GLOBAL.NAVIGATIONSTARTBUTTON = ref)}
       />
     )
@@ -2277,7 +2344,14 @@ export default class MapView extends React.Component {
 
   _renderMapSelectPointButton = () => {
     return (
-      <MapSelectPointButton ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)} />
+      <MapSelectPointButton
+        navigationhistory={this.props.navigationhistory}
+        setNavigationHistory={this.props.setNavigationHistory}
+        mapSelectPoint={this.props.mapSelectPoint}
+        setMapSelectPoint={this.props.setMapSelectPoint}
+        changeNavPathInfo={this.changeNavPathInfo}
+        ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
+      />
     )
   }
 
@@ -2338,6 +2412,7 @@ export default class MapView extends React.Component {
         {/*openWorkspace={this.props.openWorkspace}*/}
         {/*/>*/}
         {/*)}*/}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderTrafficView()}
         {GLOBAL.Type === constants.MAP_NAVIGATION &&
           this._renderFloorListView()}
         {this.state.showAIDetect && (
@@ -2348,6 +2423,7 @@ export default class MapView extends React.Component {
           />
         )}
         {this._renderAIDetectChange()}
+        {/*{this._renderCheckAIDetec()}*/}
         {/*{this.state.showAIDetect && (<AIMapSuspensionDialog ref={ref => (GLOBAL.AIMapSuspensionDialog = ref)}/>)}*/}
         {/*{this.state.showAIDetect && (<View style={{height: '100%', width: '100%'}}><SMMapSuspension*/}
         {/*ref={ref => (GLOBAL.SMMapSuspension = ref)}/></View>)}*/}
@@ -2387,7 +2463,6 @@ export default class MapView extends React.Component {
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
         {!this.isExample &&
           !this.props.analyst.params &&
-          !this.state.showAIDetect &&
           this.renderFunctionToolbar()}
         {!this.isExample &&
           !this.props.analyst.params &&
@@ -2478,10 +2553,10 @@ export default class MapView extends React.Component {
         )}
         <AudioTopDialog
           ref={ref => (this.AudioDialog = ref)}
-          startRecording={this.startListening}
+          startRecording={() => SSpeechRecognizer.start()}
           content={this.state.speechContent}
           recording={this.state.recording}
-          defaultText={SPEECHTIP}
+          defaultText={getLanguage(global.language).Prompt.SPEECH_TIP}
         />
       </Container>
     )

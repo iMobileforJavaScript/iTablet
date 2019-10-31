@@ -21,7 +21,6 @@ import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
 import { Bar } from 'react-native-progress'
-import ConstOnline from '../../../../constants/ConstOnline'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -36,7 +35,6 @@ export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
 import { getThemeAssets } from '../../../../assets'
-import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 const BottomHeight = scaleSize(100)
@@ -69,11 +67,11 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     user: Object,
     map: Object,
-
     //模型、路网弹窗组件
     getNavigationPopView?: () => {},
-    incrementRoad: () => {},
+    incrementRoad?: () => {},
     setMap2Dto3D: () => {},
+    changeNavPathInfo?: () => {},
     openOnlineMap: boolean,
   }
 
@@ -657,13 +655,17 @@ export default class FunctionToolbar extends React.Component {
       if (isIndoorMap) {
         //室内导航
         SMap.startIndoorNavigation()
-        NavigationService.navigate('NavigationView')
+        NavigationService.navigate('NavigationView', {
+          changeNavPathInfo: this.props.changeNavPathInfo,
+        })
       } else {
         //行业导航
         let { networkModel, networkDataset } = simpleList.state
         if (networkModel && networkDataset) {
           SMap.startNavigation(networkDataset.datasetName, networkModel.path)
-          NavigationService.navigate('NavigationView')
+          NavigationService.navigate('NavigationView', {
+            changeNavPathInfo: this.props.changeNavPathInfo,
+          })
         } else {
           Toast.show(
             getLanguage(this.props.language).Prompt
@@ -701,28 +703,6 @@ export default class FunctionToolbar extends React.Component {
       this.props.incrementRoad()
     } else {
       Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
-    }
-  }
-
-  openTraffic = async () => {
-    // 有底图并且底图可见 就能使用路况
-    let hasBaseMap = false
-    let layers = this.props.getLayers && (await this.props.getLayers())
-    let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
-    if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
-      hasBaseMap = true
-    }
-    if (hasBaseMap) {
-      let isadd = await SMap.isOpenTrafficMap()
-      if (isadd) {
-        await SMap.removeTrafficMap('tencent@TrafficMap')
-      } else {
-        await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
-      }
-    } else {
-      Toast.show(
-        getLanguage(this.props.language).Prompt.PLEASE_SET_BASEMAP_VISIBLE,
-      )
     }
   }
 
@@ -1387,20 +1367,20 @@ export default class FunctionToolbar extends React.Component {
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',
           },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-            //'工具',
-            action: this.showTool,
-            image: require('../../../../assets/function/icon_function_tool.png'),
-          },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
-            //'分享',
-            action: () => {
-              this.showMore(ConstToolType.MAP_SHARE)
-            },
-            image: require('../../../../assets/function/icon_function_share.png'),
-          },
+          // {
+          //   title: getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+          //   //'工具',
+          //   action: this.showTool,
+          //   image: require('../../../../assets/function/icon_function_tool.png'),
+          // },
+          // {
+          //   title: getLanguage(this.props.language).Map_Main_Menu.SHARE,
+          //   //'分享',
+          //   action: () => {
+          //     this.showMore(ConstToolType.MAP_SHARE)
+          //   },
+          //   image: require('../../../../assets/function/icon_function_share.png'),
+          // },
         ]
         break
       case constants.MAP_NAVIGATION:
@@ -1437,14 +1417,6 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             action: isLicenseNotValid ? null : this.showModelList,
             image: getThemeAssets().functionBar.rightbar_network_model,
-          },
-          {
-            key: constants.TRAFFIC,
-            title: getLanguage(this.props.language).Map_Main_Menu.Traffic,
-            //路况
-            size: 'large',
-            action: isLicenseNotValid ? null : this.openTraffic,
-            image: require('../../../../assets/Navigation/road.png'),
           },
           // {
           //   key: '风格',

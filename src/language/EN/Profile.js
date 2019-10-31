@@ -19,12 +19,15 @@ const Profile = {
 
   //我的——登录
   LOGIN: 'Login',
+  LOGIN_CURRENT: 'Current user is already logged in',
   MOBILE_LOGIN: 'Mobile Login',
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
   ENTER_MOBILE: 'Please enter your mobile number',
   ENTER_PASSWORD: 'Please enter your password',
   REGISTER: 'Register',
+  FORGET_PASSWORD: 'Forgot password?',
+  RESET_PASSWORD: 'Reset Password',
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
   ENTER_USERNAME: 'Please enter your username',
@@ -34,6 +37,8 @@ const Profile = {
   ENTER_EMAIL: 'Please enter your email',
   ENTER_SERVER_ADDRESS: 'Please enter server address',
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
+  ENTER_REALNAME: 'Please enter your real name',
+  ENTER_COMPANY: 'Please enter your company',
   CONNECTING: 'Connecting',
   CONNECT_SERVER_FAIL:
     'Failed to connect to the server, please check the network or server address',

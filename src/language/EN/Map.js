@@ -73,7 +73,7 @@ const Map_Main_Menu = {
   STYLE_FONT_SIZE: 'Font Size',
   STYLE_ALIGNMENT: 'Alignment',
   STYLE_FONT_STYLE: 'Font style',
-  STYLE_CONTRAST: 'Contrast',
+  STYLE_CONTRAST: 'Hue',
   STYLE_BRIGHTNESS: 'Brightness',
   STYLE_BOLD: 'Bold',
   STYLE_ITALIC: 'Italic',
@@ -89,7 +89,7 @@ const Map_Main_Menu = {
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',
-  TOOLS_AREA_MEASUREMENT: 'Area Measurement',
+  TOOLS_AREA_MEASUREMENT: 'Area\n Measurement',
   TOOLS_AZIMUTH_MEASUREMENT: 'Azimuth Measurement',
   TOOLS_SELECT: 'Select',
   TOOLS_RECTANGLE_SELECT: 'Rectangle select',
@@ -301,6 +301,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: 'Target Collect',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: 'High-Precision Collect',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: 'Illegally-Park Collect',
+  MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: 'Cast Model',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: 'Choose Model',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: 'Searching Surface',
@@ -553,6 +554,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: 'Same Color',
   DETECT_STYLE_SAME_COLOR: 'Same Color Value',
   DETECT_STYLE_STROKE_WIDTH: 'Stroke Width',
+  COUNTRACKED: 'Count Track ',
 
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',

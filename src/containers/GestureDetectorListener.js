@@ -26,7 +26,7 @@ async function isDoubleTouchComing() {
     setTimeout(() => {
       resolve(isDoubleTouchCome)
       isDoubleTouchCome = false
-    }, 500)
+    }, 200)
   })
 }
 
