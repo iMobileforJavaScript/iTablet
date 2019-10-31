@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Container, MTBtn, PopView } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { scaleSize, StyleUtils } from '../../../../utils'
+import { Toast, scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
@@ -318,6 +318,39 @@ export default class LayerAttributeTabs extends React.Component {
           this.locationView && this.locationView.show(false)
         },
       )
+  }
+
+  /** 添加属性字段 **/
+  addAttributeField = async fieldInfo => {
+    if (this.state.attributes.data.length > 1) {
+      if (
+        this.state.currentTabIndex >= this.currentTabRefs.length &&
+        !this.currentTabRefs[this.state.currentTabIndex]
+      )
+        return
+      let layerPath = this.currentTabRefs[this.state.currentTabIndex].props
+        .layerSelection.layerInfo.path
+      let result = await SMap.addAttributeFieldInfo(layerPath, true, fieldInfo)
+      if (result) {
+        Toast.show(
+          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+        )
+        this.currentTabRefs[0].getAttribute(
+          {
+            type: 'reset',
+            currentPage: this.currentTabRefs[0].currentPage,
+            startIndex: 0,
+            relativeIndex: 0,
+            currentIndex: 0,
+          },
+          () => {},
+        )
+      } else {
+        Toast.show(
+          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+        )
+      }
+    }
   }
 
   /** 关联事件 **/
@@ -666,6 +699,8 @@ export default class LayerAttributeTabs extends React.Component {
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
           locateAction={this.showLocationView}
+          canAddField={this.state.attributes.data.length > 1}
+          addFieldAction={this.addAttributeField}
         />
         {this.state.isShowView && (
           <View
