@@ -242,6 +242,10 @@ const Prompt = {
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     'Select a network dataset and a network model first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
+
+  SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
+  SPEECH_ERROR: 'Recognize error, please try again later',
+  SPEECH_NONE: "You didn't seem to speak anything",
 }
 
 export { Prompt }

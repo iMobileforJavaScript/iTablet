@@ -235,6 +235,10 @@ const Prompt = {
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     '请选择网络数据集和网络模型文件',
   PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
+
+  SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
+  SPEECH_ERROR: '识别出错，请稍后再试',
+  SPEECH_NONE: '您好像没有说话哦',
 }
 
 export { Prompt }
