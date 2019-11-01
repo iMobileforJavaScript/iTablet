@@ -235,6 +235,12 @@ const Prompt = {
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     '请选择网络数据集和网络模型文件',
   PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
+  PATH_ANALYSIS_FAILED: '路径分析失败请重新选择起终点',
+  SET_START_AND_END_POINTS: '请先设置起点和终点',
+  SELECT_LAYER_NEED_INCREMENTED: '请选择需要增量的图层',
+  SELECT_THE_FLOOR: '请选择图层所在楼层',
+  LONG_PRESS_ADD_START: '请长按添加起点',
+  LONG_PRESS_ADD_END: '请长按添加终点',
 }
 
 export { Prompt }

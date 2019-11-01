@@ -378,7 +378,10 @@ export default class SimpleSelectList extends React.Component {
               maxHeight: scaleSize(500),
             }}
           >
-            {this.renderheaderComponent('请选择需要增量的图层')}
+            {this.renderheaderComponent(
+              getLanguage(this.props.language).Prompt
+                .SELECT_LAYER_NEED_INCREMENTED,
+            )}
             <FlatList
               keyExtractor={(item, index) => item.title + index}
               data={this.state.lineDataset}
@@ -405,7 +408,9 @@ export default class SimpleSelectList extends React.Component {
         {this.state.renderType === 'incrementRoad' &&
           this.state.floorList.length > 0 && (
           <View>
-            {this.renderheaderComponent('请选择图层所在楼层')}
+            {this.renderheaderComponent(
+              getLanguage(this.props.language).Prompt.SELECT_THE_FLOOR,
+            )}
             <FlatList
               style={{
                 height: scaleSize(80),

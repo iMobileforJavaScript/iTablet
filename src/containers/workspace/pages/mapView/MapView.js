@@ -333,8 +333,10 @@ export default class MapView extends React.Component {
         GLOBAL.ENDX = undefined
         GLOBAL.ROUTEANALYST = undefined
         this.props.setMapSelectPoint({
-          firstPoint: '选择起点',
-          secondPoint: '选择终点',
+          firstPoint: getLanguage(this.props.language).Map_Main_Menu
+            .SELECT_START_POINT,
+          secondPoint: getLanguage(this.props.language).Map_Main_Menu
+            .SELECT_DESTINATION,
         })
         SMap.clearPoint()
       },
@@ -1325,8 +1327,10 @@ export default class MapView extends React.Component {
           })
           SMap.getIndoorDatasource()
           this.props.setMapSelectPoint({
-            firstPoint: '选择起点',
-            secondPoint: '选择终点',
+            firstPoint: getLanguage(this.props.language).Map_Main_Menu
+              .SELECT_START_POINT,
+            secondPoint: getLanguage(this.props.language).Map_Main_Menu
+              .SELECT_DESTINATION,
           })
         }
 
@@ -2115,7 +2119,7 @@ export default class MapView extends React.Component {
   }
 
   _renderNavigationIcon = () => {
-    let title = '绘制'
+    let title = getLanguage(this.props.language).Map_Main_Menu.DRAW
     return (
       <View style={styles.navigation}>
         <MTBtn
@@ -2221,7 +2225,8 @@ export default class MapView extends React.Component {
               })
             }
             headerProps={{
-              title: '增量路网',
+              title: getLanguage(this.props.language).Map_Main_Menu
+                .INCREMENT_ROAD,
               navigation: this.props.navigation,
               type: 'fix',
               backAction: () => {
@@ -2282,7 +2287,7 @@ export default class MapView extends React.Component {
       <MapSelectPoint
         ref={ref => (GLOBAL.MAPSELECTPOINT = ref)}
         headerProps={{
-          title: '地图选点',
+          title: getLanguage(this.props.language).Map_Main_Menu.SELECT_POINTS,
           navigation: this.props.navigation,
           type: 'fix',
           backAction: () => {

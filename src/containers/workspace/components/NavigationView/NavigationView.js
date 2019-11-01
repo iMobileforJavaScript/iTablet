@@ -16,6 +16,7 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 
@@ -66,8 +67,9 @@ export default class NavigationView extends React.Component {
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
     this.props.setMapSelectPoint({
-      firstPoint: '选择起点',
-      secondPoint: '选择终点',
+      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+        .SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -124,7 +126,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: '设为起点',
+                      button: getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SET_AS_START_POINT,
                     })
                     GLOBAL.toolBox.showFullMap(true)
                     this.props.setMapNavigation({
@@ -139,7 +142,10 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(20) }}
                   >
-                    {this.props.mapSelectPoint.firstPoint}
+                    {this.props.mapSelectPoint.firstPoint !== ''
+                      ? this.props.mapSelectPoint.firstPoint
+                      : getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SELECT_START_POINT}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -169,7 +175,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: '设为终点',
+                      button: getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SET_AS_DESTINATION,
                     })
                     GLOBAL.toolBox.showFullMap(true)
                     this.props.setMapNavigation({
@@ -184,7 +191,10 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(20) }}
                   >
-                    {this.props.mapSelectPoint.secondPoint}
+                    {this.props.mapSelectPoint.secondPoint !== ''
+                      ? this.props.mapSelectPoint.secondPoint
+                      : getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SELECT_DESTINATION}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -242,7 +252,7 @@ export default class NavigationView extends React.Component {
                   fontSize: setSpText(20),
                 }}
               >
-                清除记录
+                {getLanguage(GLOBAL.language).Map_Main_Menu.CLEAR_NAV_HISTORY}
               </Text>
             </TouchableOpacity>
           )}
@@ -316,10 +326,15 @@ export default class NavigationView extends React.Component {
                       NavigationService.goBack()
                     }
                   } else {
-                    Toast.show('路径分析失败请重新选择起终点')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
                   }
                 } else {
-                  Toast.show('请先设置起终点')
+                  Toast.show(
+                    getLanguage(GLOBAL.language).Prompt
+                      .SET_START_AND_END_POINTS,
+                  )
                 }
               }
 
@@ -370,10 +385,15 @@ export default class NavigationView extends React.Component {
                       NavigationService.goBack()
                     }
                   } else {
-                    Toast.show('路径分析失败请重新选择起终点')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
                   }
                 } else {
-                  Toast.show('请先设置起终点')
+                  Toast.show(
+                    getLanguage(GLOBAL.language).Prompt
+                      .SET_START_AND_END_POINTS,
+                  )
                 }
               }
             }}
@@ -384,7 +404,7 @@ export default class NavigationView extends React.Component {
                 color: color.white,
               }}
             >
-              下一步
+              {getLanguage(GLOBAL.language).Map_Main_Menu.NEXT}
             </Text>
           </TouchableOpacity>
         </View>

@@ -9,6 +9,7 @@ import {
 import Header from '../../../../components/Header'
 
 import { scaleSize } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 
 export const HEADER_HEIGHT = scaleSize(88)
 export const HEADER_MARGINTOP = Platform.OS === 'ios' ? 20 : 0
@@ -51,7 +52,9 @@ export default class IncrementRoadView extends React.Component {
               this.props.onClick(false)
             }}
           >
-            <Text style={left}>轨迹</Text>
+            <Text style={left}>
+              {getLanguage(GLOBAL.language).Map_Main_Menu.TRACK}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -60,7 +63,9 @@ export default class IncrementRoadView extends React.Component {
               this.props.onClick(true)
             }}
           >
-            <Text style={right}>手绘</Text>
+            <Text style={right}>
+              {getLanguage(GLOBAL.language).Map_Main_Menu.HAND_PAINTED}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
