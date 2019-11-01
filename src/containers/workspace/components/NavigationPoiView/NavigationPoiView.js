@@ -11,6 +11,7 @@ import styles from './styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils'
+import { getLanguage } from '../../../../language'
 // import { color } from '../../../../styles'
 
 export default class NavigationPoiView extends React.Component {
@@ -34,7 +35,7 @@ export default class NavigationPoiView extends React.Component {
       firstPoint: null,
       secondPoint: null,
       height: new Animated.Value(scaleSize(200)),
-      road: '路线详情',
+      road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
       isroad: true,
     }
   }
@@ -66,7 +67,15 @@ export default class NavigationPoiView extends React.Component {
         <TouchableOpacity style={styles.itemView1}>
           {item.roadName && item.roadName !== 'null' && (
             <Text style={styles.info}>
-              {'途经路线：' + item.roadName + '行驶' + item.roadLength + '米'}
+              {GLOBAL.language === 'CN'
+                ? '途经路线：沿' +
+                  item.roadName +
+                  '直行' +
+                  item.roadLength +
+                  '米'
+                : `Go straight along the ${item.roadName} for ${
+                  item.roadLength
+                } meters`}
             </Text>
           )}
         </TouchableOpacity>
@@ -100,7 +109,9 @@ export default class NavigationPoiView extends React.Component {
       <View style={{ flex: 1, width: '100%' }}>
         {this.state.searchValue.Length && (
           <Text style={styles.info}>
-            {'距离您:' + this.state.searchValue.Length + '米'}
+            {getLanguage(GLOBAL.language).Map_Main_Menu.DISTANCE +
+              this.state.searchValue.Length +
+              getLanguage(GLOBAL.language).Map_Main_Menu.METERS}
           </Text>
         )}
         {this.renderRoad()}
@@ -122,7 +133,7 @@ export default class NavigationPoiView extends React.Component {
     if (this.state.isroad) {
       this.setState(
         {
-          road: '显示地图',
+          road: getLanguage(GLOBAL.language).Map_Main_Menu.DISPLAY_MAP,
           isroad: false,
         },
         () => {
@@ -135,7 +146,7 @@ export default class NavigationPoiView extends React.Component {
     } else {
       this.setState(
         {
-          road: '路线详情',
+          road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
           isroad: true,
         },
         () => {

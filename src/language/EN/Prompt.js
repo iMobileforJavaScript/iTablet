@@ -242,6 +242,14 @@ const Prompt = {
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     'Select a network dataset and a network model first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
+  PATH_ANALYSIS_FAILED:
+    'Path analysis failed! Please re-select the start and end points',
+  SET_START_AND_END_POINTS: 'Please set the start and end points first',
+  SELECT_LAYER_NEED_INCREMENTED:
+    'Please select the layer need to be incremented',
+  SELECT_THE_FLOOR: 'Please select the floor which the layer is located',
+  LONG_PRESS_ADD_START: 'Please long press to add starting point',
+  LONG_PRESS_ADD_END: 'Please long press to add destination',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

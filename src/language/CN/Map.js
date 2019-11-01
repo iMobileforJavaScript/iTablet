@@ -349,6 +349,30 @@ const Map_Main_Menu = {
   BORDER: '轮廓',
   LINE: '线',
   MARK: '标注',
+
+  //地图导航
+  DRAW: '绘制',
+  ROAD_DETAILS: '路线详情',
+  ROUTE_THROUGH: '途经路线：',
+  DISTANCE: '距离：',
+  METERS: '米',
+  KILOMETERS: '千米',
+  DISPLAY_MAP: '显示地图',
+  START_FROM_START_POINT: '从起点出发',
+  ARRIVE_AT_THE_DESTINATION: '到达终点',
+  FIRST_PERSON_PERSPECTIVE: '第一人称',
+  THIRD_PERSON_PERSPECTIVE: '第三人称',
+  GO_STRAIGHT: '直行',
+  SELECT_START_POINT: '选择起点',
+  SELECT_DESTINATION: '选择终点',
+  SET_AS_START_POINT: '设为起点',
+  SET_AS_DESTINATION: '设为终点',
+  CLEAR_NAV_HISTORY: '清除历史',
+  NEXT: '下一步',
+  SELECT_POINTS: '地图选点',
+  INCREMENT_ROAD: '增量路网',
+  TRACK: '轨迹',
+  HAND_PAINTED: '手绘',
 }
 
 //推演动画

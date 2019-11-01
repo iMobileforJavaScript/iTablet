@@ -11,6 +11,7 @@ import { scaleSize, setSpText } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import { getPublicAssets } from '../../../../assets'
+import { getLanguage } from '../../../../language'
 
 export default class NavigationStartButton extends React.Component {
   props: {
@@ -27,7 +28,7 @@ export default class NavigationStartButton extends React.Component {
     this.state = {
       show: false,
       isroad: true,
-      road: '路线详情',
+      road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
       height: new Animated.Value(scaleSize(200)),
       length: '',
     }
@@ -63,7 +64,7 @@ export default class NavigationStartButton extends React.Component {
     if (this.state.isroad) {
       this.setState(
         {
-          road: '显示地图',
+          road: getLanguage(GLOBAL.language).Map_Main_Menu.DISPLAY_MAP,
           isroad: false,
         },
         () => {
@@ -76,7 +77,7 @@ export default class NavigationStartButton extends React.Component {
     } else {
       this.setState(
         {
-          road: '路线详情',
+          road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
           isroad: true,
         },
         () => {
@@ -144,17 +145,27 @@ export default class NavigationStartButton extends React.Component {
   }
   renderItem = ({ item }) => {
     let roadLength = item.roadLength
-    if (roadLength > 1000) roadLength = (roadLength / 1000).toFixed(1) + '公里'
-    else roadLength = (roadLength || 1) + '米'
+    if (roadLength > 1000)
+      roadLength =
+        (roadLength / 1000).toFixed(1) +
+        getLanguage(GLOBAL.language).Map_Main_Menu.KILOMETERS
+    else
+      roadLength =
+        (roadLength || 1) + getLanguage(GLOBAL.language).Map_Main_Menu.METERS
     let str = ''
+    let thenInfo = GLOBAL.language === 'CN' ? '然后' : 'then'
     if (item.turnType === 'start' || item.turnType === 'end') {
       str = item.text
     } else if (item.turnType === 0) {
       str = `${this.directions[item.turnType]} ${roadLength}`
     } else if (item.turnType === 12) {
-      str = `直行${roadLength}`
+      str = `${
+        getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
+      }${roadLength}`
     } else {
-      str = `直行${roadLength} 然后${this.directions[item.turnType]}`
+      str = `${
+        getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
+      }${roadLength} ${thenInfo}${this.directions[item.turnType]}`
     }
     let icon = this.getIconByType(item.turnType)
     return (
@@ -191,13 +202,16 @@ export default class NavigationStartButton extends React.Component {
 
   renderMap = () => {
     let length = this.props.pathLength.length
-    if (length > 1000) length = (length / 1000).toFixed(1) + '公里'
-    else length = length + '米'
+    if (length > 1000)
+      length =
+        (length / 1000).toFixed(1) +
+        getLanguage(GLOBAL.language).Map_Main_Menu.KILOMETERS
+    else length = length + getLanguage(GLOBAL.language).Map_Main_Menu.METERS
     return (
       <View style={{ flex: 1, width: '100%' }}>
         {
           <Text style={{ paddingTop: scaleSize(20), fontSize: setSpText(20) }}>
-            {'距离:' + length}
+            {getLanguage(GLOBAL.language).Map_Main_Menu.DISTANCE + length}
           </Text>
         }
         {this.renderRoad()}
@@ -207,9 +221,16 @@ export default class NavigationStartButton extends React.Component {
 
   renderRoad = () => {
     let data = [
-      { text: '从起点出发', turnType: 'start' },
+      {
+        text: getLanguage(GLOBAL.language).Map_Main_Menu.START_FROM_START_POINT,
+        turnType: 'start',
+      },
       ...this.props.path,
-      { text: '到达目的地', turnType: 'end' },
+      {
+        text: getLanguage(GLOBAL.language).Map_Main_Menu
+          .ARRIVE_AT_THE_DESTINATION,
+        turnType: 'end',
+      },
     ]
     return (
       <View>
@@ -315,7 +336,10 @@ export default class NavigationStartButton extends React.Component {
                   color: color.white,
                 }}
               >
-                第一人称
+                {
+                  getLanguage(GLOBAL.language).Map_Main_Menu
+                    .FIRST_PERSON_PERSPECTIVE
+                }
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -347,7 +371,10 @@ export default class NavigationStartButton extends React.Component {
                   color: color.white,
                 }}
               >
-                第三人称
+                {
+                  getLanguage(GLOBAL.language).Map_Main_Menu
+                    .THIRD_PERSON_PERSPECTIVE
+                }
               </Text>
             </TouchableOpacity>
           </View>
