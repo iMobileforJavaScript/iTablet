@@ -322,7 +322,7 @@ export default class LayerAttributeTabs extends React.Component {
 
   /** 添加属性字段 **/
   addAttributeField = async fieldInfo => {
-    if (this.state.attributes.data.length > 1) {
+    if (this.state.attributes.data.length > 0) {
       if (
         this.state.currentTabIndex >= this.currentTabRefs.length &&
         !this.currentTabRefs[this.state.currentTabIndex]
@@ -699,7 +699,7 @@ export default class LayerAttributeTabs extends React.Component {
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
           locateAction={this.showLocationView}
-          canAddField={this.state.attributes.data.length > 1}
+          canAddField={this.state.attributes.data.length > 0}
           addFieldAction={this.addAttributeField}
         />
         {this.state.isShowView && (

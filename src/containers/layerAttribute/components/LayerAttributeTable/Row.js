@@ -255,7 +255,7 @@ export default class Row extends Component {
           onPress={this._action}
         >
           <Text style={[textStyle, width && { width: width - 4 }]}>
-            {value}
+            {value + ''}
           </Text>
         </TouchableOpacity>
       )
