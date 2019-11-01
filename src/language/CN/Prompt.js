@@ -241,6 +241,10 @@ const Prompt = {
   SELECT_THE_FLOOR: '请选择图层所在楼层',
   LONG_PRESS_ADD_START: '请长按添加起点',
   LONG_PRESS_ADD_END: '请长按添加终点',
+
+  SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
+  SPEECH_ERROR: '识别出错，请稍后再试',
+  SPEECH_NONE: '您好像没有说话哦',
 }
 
 export { Prompt }

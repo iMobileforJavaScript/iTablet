@@ -517,6 +517,7 @@ const Map_Attribute = {
   ATTRIBUTE_UNDO: '撤销',
   ATTRIBUTE_REDO: '恢复',
   ATTRIBUTE_REVERT: '还原',
+  ATTRIBUTE_FIELD_ADD: '添加',
 }
 
 //地图设置

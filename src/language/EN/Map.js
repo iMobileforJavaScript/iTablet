@@ -500,6 +500,7 @@ const Map_Attribute = {
   ATTRIBUTE_UNDO: 'Undo',
   ATTRIBUTE_REDO: 'Redo',
   ATTRIBUTE_REVERT: 'Revert',
+  ATTRIBUTE_FIELD_ADD: 'Add',
 }
 
 const Map_Setting = {
