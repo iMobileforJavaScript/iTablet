@@ -301,10 +301,8 @@ export default class MapView extends React.Component {
         GLOBAL.ENDX = undefined
         GLOBAL.ROUTEANALYST = undefined
         this.props.setMapSelectPoint({
-          firstPoint: getLanguage(this.props.language).Map_Main_Menu
-            .SELECT_START_POINT,
-          secondPoint: getLanguage(this.props.language).Map_Main_Menu
-            .SELECT_DESTINATION,
+          firstPoint: '',
+          secondPoint: '',
         })
         SMap.clearPoint()
       },
@@ -1346,10 +1344,8 @@ export default class MapView extends React.Component {
           })
           SMap.getIndoorDatasource()
           this.props.setMapSelectPoint({
-            firstPoint: getLanguage(this.props.language).Map_Main_Menu
-              .SELECT_START_POINT,
-            secondPoint: getLanguage(this.props.language).Map_Main_Menu
-              .SELECT_DESTINATION,
+            firstPoint: '',
+            secondPoint: '',
           })
         }
 
