@@ -56,6 +56,10 @@ export default class LayerAttributeAdd extends React.Component {
       // 弹出框数据
       popData: [],
       currentPopData: null,
+      // currentPopData: {
+      //   key: global.language === 'CN' ? typeStr[2][0] : typeStr[2][1],
+      //   value: typeStr[2][2],
+      // },
     }
   }
 
@@ -259,6 +263,7 @@ export default class LayerAttributeAdd extends React.Component {
       <PopModalList
         ref={ref => (this.popModal = ref)}
         language={global.language}
+        type={'finger'}
         popData={this.getDataType()}
         currentPopData={this.state.currentPopData}
         confirm={data => {

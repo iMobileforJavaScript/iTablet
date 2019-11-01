@@ -3,10 +3,10 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'white',
     // padding: scaleSize(20),
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     // alignItems: 'center',
   },
   headerBtnTitle: {

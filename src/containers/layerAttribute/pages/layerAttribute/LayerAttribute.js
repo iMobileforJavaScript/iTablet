@@ -595,7 +595,7 @@ export default class LayerAttribute extends React.Component {
 
   /** 添加属性字段 **/
   addAttributeField = fieldInfo => {
-    if (this.state.attributes.data.length > 1) {
+    if (this.state.attributes.data.length > 0) {
       let path = this.props.currentLayer.path
       let result = SMap.addAttributeFieldInfo(path, false, fieldInfo)
       if (result) {
@@ -1196,7 +1196,7 @@ export default class LayerAttribute extends React.Component {
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={this.state.attributes.data.length > 1}
+            canAddField={this.state.attributes.data.length > 0}
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
