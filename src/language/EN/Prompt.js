@@ -236,12 +236,24 @@ const Prompt = {
   CLEAR_HISTORY: 'Clear history',
   //导航相关
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
-  NO_NETWORK_DATASETS: "Current workspace does'nt contain network dataset",
-  NO_LINE_DATASETS: "Current workspace does'nt contain line dataset",
+  NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
+  NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
   PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
     'Select a network dataset and a network model first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
+  PATH_ANALYSIS_FAILED:
+    'Path analysis failed! Please re-select the start and end points',
+  SET_START_AND_END_POINTS: 'Please set the start and end points first',
+  SELECT_LAYER_NEED_INCREMENTED:
+    'Please select the layer need to be incremented',
+  SELECT_THE_FLOOR: 'Please select the floor which the layer is located',
+  LONG_PRESS_ADD_START: 'Please long press to add starting point',
+  LONG_PRESS_ADD_END: 'Please long press to add destination',
+
+  SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
+  SPEECH_ERROR: 'Recognize error, please try again later',
+  SPEECH_NONE: "You didn't seem to speak anything",
 }
 
 export { Prompt }

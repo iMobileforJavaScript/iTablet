@@ -34,6 +34,7 @@ import AIMapSuspensionDialog from './AIMapSuspensionDialog'
 import RNLegendView from './RNLegendView'
 import ScaleView from './ScaleView'
 import MapSelectPointButton from './MapSelectPointButton'
+import TrafficView from './TrafficView'
 export {
   ScaleView,
   RNLegendView,
@@ -64,6 +65,7 @@ export {
   MapSelectPointButton,
   Map2Dto3D,
   FloorListView,
+  TrafficView,
   PoiInfoContainer,
   PoiTopSearchBar,
   IncrementRoadView,

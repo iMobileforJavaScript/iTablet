@@ -5,6 +5,7 @@ import styles from './styles'
 import { TouchType } from '../../../../constants'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 // import NavigationService from '../../../../containers/NavigationService'
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
@@ -35,8 +36,9 @@ export default class NavigationStartHead extends React.Component {
       name: '',
     })
     this.props.setMapSelectPoint({
-      firstPoint: '选择起点',
-      secondPoint: '选择终点',
+      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+        .SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -95,7 +97,8 @@ export default class NavigationStartHead extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
                       true,
                       {
-                        button: '设为起点',
+                        button: getLanguage(GLOBAL.language).Map_Main_Menu
+                          .SET_AS_START_POINT,
                       },
                       false,
                     )
@@ -141,7 +144,8 @@ export default class NavigationStartHead extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
                       true,
                       {
-                        button: '设为终点',
+                        button: getLanguage(GLOBAL.language).Map_Main_Menu
+                          .SET_AS_DESTINATION,
                       },
                       false,
                     )

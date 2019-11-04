@@ -4,6 +4,7 @@ import { scaleSize, setSpText, Toast } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../../containers/NavigationService'
+import { getLanguage } from '../../../../language'
 
 export default class MapSelectPointButton extends React.Component {
   props: {
@@ -30,7 +31,10 @@ export default class MapSelectPointButton extends React.Component {
 
   setButton = async () => {
     let pathLength, path
-    if (this.state.button === '设为起点') {
+    if (
+      this.state.button ===
+      getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
+    ) {
       if (GLOBAL.STARTX !== undefined) {
         await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
         if (this.state.firstpage) {
@@ -70,12 +74,14 @@ export default class MapSelectPointButton extends React.Component {
             pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
             GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
-              Toast.show('路径分析失败请重新选择起终点')
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+              )
             }
           }
         }
       } else {
-        Toast.show('请长按添加起点')
+        Toast.show(getLanguage(GLOBAL.language).Prompt.LONG_PRESS_ADD_START)
       }
     } else {
       if (GLOBAL.ENDX !== undefined) {
@@ -117,12 +123,14 @@ export default class MapSelectPointButton extends React.Component {
             pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
             GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
-              Toast.show('路径分析失败请重新选择起终点')
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+              )
             }
           }
         }
       } else {
-        Toast.show('请长按添加终点')
+        Toast.show(getLanguage(GLOBAL.language).Prompt.LONG_PRESS_ADD_END)
       }
     }
     if (path && pathLength) {

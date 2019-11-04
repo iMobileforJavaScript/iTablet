@@ -35,7 +35,7 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager} from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager, SSpeechRecognizer} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 import UserType from './src/constants/UserType'
 import { getLanguage } from './src/language/index'
@@ -236,7 +236,10 @@ class AppRoot extends Component {
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
-      this.initSpeechManager()
+    //  this.initSpeechManager()
+      SSpeechRecognizer.init('5a45b65c')
+    } else {
+      // SSpeechRecognizer.init('5b63b509')
     }
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {

@@ -266,8 +266,8 @@ const initialState = fromJS({
   navigationPoiView: false,
   openOnlineMap: false,
   mapSelectPoint: {
-    firstPoint: '选择起点',
-    secondPoint: '选择终点',
+    firstPoint: '',
+    secondPoint: '',
   },
   isAgreeToProtocol: false,
   navigationhistory: [],
