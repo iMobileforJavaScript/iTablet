@@ -341,6 +341,13 @@ export default class MapView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // if (
+    //   prevProps.navigation !==
+    //   this.props.navigation
+    // ) {
+    //     this.showFullMap(true)
+    // }
+
     if (
       JSON.stringify(prevProps.mapNavigation) !==
       JSON.stringify(this.props.mapNavigation)
