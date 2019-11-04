@@ -244,7 +244,7 @@ export default class Cell extends Component {
           />
         ) : (
           <Text style={[styles.cellText, this.props.cellTextStyle]}>
-            {this.state.value}
+            {this.state.value + ''}
           </Text>
         )}
         {/*</View>*/}

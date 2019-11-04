@@ -5,13 +5,29 @@
  */
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, TouchableOpacity, Text, Image, Keyboard } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, Row, Button } from '../../../../components'
 import { Toast, scaleSize } from '../../../../utils'
-import { FieldType } from 'imobile_for_reactnative'
+import { PopModalList } from '../../../analystView/components'
+import { getLanguage } from '../../../../language'
 
 import styles from './styles'
+import { color } from '../../../../styles'
+let typeStr = [
+  ['布尔型', 'BOOLEAN', 1],
+  ['字节型', 'BYTE', 2],
+  ['16位整型', 'INT16', 3],
+  ['32位整型', 'INT32', 4],
+  ['64位整型', 'INT64', 16],
+  ['单精度', 'SINGLE', 6],
+  ['双精度', 'DOUBLE', 7],
+  ['日期型', 'DATETIME', 23],
+  ['二进制型', 'LONGBINARY', 11],
+  ['文本型', 'TEXT', 10],
+  ['字符型', 'CHAR', 118],
+  ['宽字符型', 'WTEXT', 127],
+]
 
 export default class LayerAttributeAdd extends React.Component {
   props: {
@@ -37,6 +53,13 @@ export default class LayerAttributeAdd extends React.Component {
         params.data && typeof params.data.isRequired === 'boolean'
           ? params.data.isRequired
           : '',
+      // 弹出框数据
+      popData: [],
+      currentPopData: null,
+      // currentPopData: {
+      //   key: global.language === 'CN' ? typeStr[2][0] : typeStr[2][1],
+      //   value: typeStr[2][2],
+      // },
     }
   }
 
@@ -58,18 +81,39 @@ export default class LayerAttributeAdd extends React.Component {
       !isConfrim && Toast.show('还未修改数据')
     } else {
       if (!this.state.name) {
-        Toast.show('请输入名称')
+        Toast.show(
+          global.language === 'CN' ? '请输入名称' : 'Please input name',
+        )
       } else if (!this.state.caption) {
-        Toast.show('请输入别名')
+        Toast.show(
+          global.language === 'CN' ? '请输入别名' : 'Please input caption',
+        )
       } else if (!this.state.type) {
-        Toast.show('请选择类型')
+        Toast.show(
+          global.language === 'CN' ? '请选择类型' : 'Please choice type',
+        )
       } else if (!this.state.maxLength) {
-        Toast.show('请输入长度')
+        Toast.show(
+          global.language === 'CN' ? '请输入长度' : 'Please input max length',
+        )
+      } else if (
+        this.state.defaultValue &&
+        !this.checkDefaultValue(this.state.defaultValue)
+      ) {
+        Toast.show(
+          global.language === 'CN'
+            ? '缺省值输入错误'
+            : 'Default value input error',
+        )
       } else if (
         this.state.isRequired === '' ||
         this.state.isRequired === undefined
       ) {
-        Toast.show('请选择是否必选')
+        Toast.show(
+          global.language === 'CN'
+            ? '请选择是否必选'
+            : 'Please select required',
+        )
       } else {
         isConfrim = true
       }
@@ -78,43 +122,23 @@ export default class LayerAttributeAdd extends React.Component {
     return isConfrim
   }
 
-  confirm = () => {
-    if (!this.confirmValidate()) return
-    ;(async function() {
-      try {
-        this.container.setLoading(true)
-        let datasetVector = await this.state.dataset.toDatasetVector()
-        let index
-        if (this.state.isEdit) {
-          const { params } = this.props.navigation.state
-          const name = params.data.name
-          index = await datasetVector.editFieldInfo(name, {
-            caption: this.state.caption,
-          })
-        } else {
-          index = await datasetVector.addFieldInfo({
-            caption: this.state.caption,
-            name: this.state.name,
-            type: this.state.type,
-            maxLength: this.state.maxLength,
-            defaultValue: this.state.defaultValue,
-            isRequired: this.state.isRequired,
-          })
-        }
-        if (index === 0 || index) {
-          Toast.show('添加成功')
-          this.state.callBack && this.state.callBack()
-          NavigationService.goBack()
-        } else {
-          Toast.show('添加失败')
-        }
-
-        this.container.setLoading(false)
-      } catch (e) {
-        Toast.show('添加失败')
-        this.container.setLoading(false)
-      }
-    }.bind(this)())
+  //确认
+  confirm = isContinue => {
+    if (!this.confirmValidate()) {
+      return
+    }
+    this.state.callBack &&
+      this.state.callBack({
+        caption: this.state.caption,
+        name: this.state.name,
+        type: this.state.type,
+        maxLength: this.state.maxLength,
+        defaultValue: this.state.defaultValue,
+        required: this.state.isRequired,
+      })
+    if (!isContinue) {
+      NavigationService.goBack()
+    }
   }
 
   reset = () => {
@@ -131,6 +155,11 @@ export default class LayerAttributeAdd extends React.Component {
       case '必填':
         this.setState({
           isRequired: value,
+        })
+        break
+      case '缺省值':
+        this.setState({
+          defaultValue: value,
         })
     }
   }
@@ -167,9 +196,85 @@ export default class LayerAttributeAdd extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm} />
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
+        <Button
+          title={global.language === 'CN' ? '确认' : 'Sure'}
+          style={{
+            width: '94%',
+            height: scaleSize(60),
+          }}
+          titleStyle={{ fontSize: scaleSize(24) }}
+          onPress={() => this.confirm(false)}
+        />
+        <TouchableOpacity onPress={() => this.confirm(true)}>
+          <View style={styles.saveAndContinueView2}>
+            <Image
+              source={require('../../../../assets/publicTheme/plot/plot_add.png')}
+              style={styles.saveAndContinueImage}
+            />
+            <Text style={styles.saveAndContinueText}>
+              {
+                getLanguage(global.language).Map_Plotting
+                  .PLOTTING_ANIMATION_CONTINUE
+              }
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
+    )
+  }
+
+  checkDefaultValue(text) {
+    let checkFlag = true
+    switch (this.state.type) {
+      case 3:
+      case 4:
+      case 16:
+        {
+          let r = /^\+?[1-9][0-9]*$/ //正整数
+          checkFlag = r.test(text)
+        }
+
+        break
+      case 6:
+      case 7:
+        {
+          let r2 = /^\\d+(\\.\\d+)?$/ //小数
+          checkFlag = r2.test(text)
+        }
+        break
+    }
+    return checkFlag
+  }
+
+  getDataType() {
+    let data = []
+    let length = typeStr.length
+    for (let i = 0; i < length; i++) {
+      data.push({
+        key: global.language === 'CN' ? typeStr[i][0] : typeStr[i][1],
+        value: typeStr[i][2],
+      })
+    }
+    return data
+  }
+
+  renderPopList = () => {
+    return (
+      <PopModalList
+        ref={ref => (this.popModal = ref)}
+        language={global.language}
+        type={'finger'}
+        popData={this.getDataType()}
+        currentPopData={this.state.currentPopData}
+        confirm={data => {
+          this.setState({
+            currentPopData: data,
+            type: data.value,
+            defaultValue: undefined,
+          })
+          this.popModal.setVisible(false)
+        }}
+      />
     )
   }
 
@@ -178,6 +283,7 @@ export default class LayerAttributeAdd extends React.Component {
       <View style={styles.rows}>
         <Row
           style={{ marginTop: scaleSize(30) }}
+          customRightStyle={{ height: scaleSize(35) }}
           key={'名称'}
           disable={this.state.isEdit}
           defaultValue={this.state.name}
@@ -186,7 +292,8 @@ export default class LayerAttributeAdd extends React.Component {
           getValue={this.getInputValue}
         />
         <Row
-          style={{ marginTop: scaleSize(30) }}
+          style={{ marginTop: scaleSize(15) }}
+          customRightStyle={{ height: scaleSize(35) }}
           key={'别名'}
           defaultValue={this.state.caption}
           type={Row.Type.INPUT}
@@ -200,44 +307,82 @@ export default class LayerAttributeAdd extends React.Component {
           title={'类型'}
           defaultValue={this.state.type}
           disable={this.state.isEdit}
-          radioArr={[
-            { title: '文本', value: FieldType.TEXT },
-            { title: '数值', value: FieldType.DOUBLE },
-            { title: '布尔', value: FieldType.BOOLEAN },
-            { title: '日期', value: FieldType.DATETIME },
-          ]}
-          radioColumn={2}
-          getValue={this.getType}
+          customRgihtView={
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                Keyboard.dismiss()
+                this.popModal && this.popModal.setVisible(true)
+              }}
+            >
+              <Text style={{ fontSize: scaleSize(24), color: color.gray }}>
+                {this.state.currentPopData
+                  ? this.state.currentPopData.key
+                  : null}
+              </Text>
+              <Image
+                source={require('../../../../assets/Mine/mine_my_arrow.png')}
+                style={{ height: scaleSize(28), width: scaleSize(28) }}
+              />
+            </TouchableOpacity>
+          }
         />
         <Row
-          style={{ marginTop: scaleSize(30) }}
+          style={{ marginTop: scaleSize(15) }}
+          customRightStyle={{ height: scaleSize(35) }}
           key={'长度'}
           type={Row.Type.INPUT}
           title={'长度'}
           disable={this.state.isEdit}
           defaultValue={this.state.maxLength}
+          value={this.state.maxLength}
           getValue={this.getInputValue}
           inputType={Row.InputType.NUMERIC}
         />
+        {this.state.type === 1 ? (
+          <Row
+            style={{ marginTop: scaleSize(15) }}
+            customRightStyle={{ height: scaleSize(35) }}
+            key={'缺省值'}
+            type={Row.Type.RADIO_GROUP}
+            title={'缺省值'}
+            disable={this.state.isEdit}
+            defaultValue={this.state.defaultValue}
+            radioArr={[
+              { title: global.language === 'CN' ? '是' : 'YES', value: true },
+              { title: global.language === 'CN' ? '否' : 'NO', value: false },
+            ]}
+            radioColumn={2}
+            getValue={this.getType}
+          />
+        ) : (
+          <Row
+            style={{ marginTop: scaleSize(15) }}
+            customRightStyle={{ height: scaleSize(35) }}
+            key={'缺省值'}
+            type={Row.Type.INPUT}
+            title={'缺省值'}
+            disable={this.state.isEdit}
+            defaultValue={this.state.defaultValue}
+            value={this.state.defaultValue}
+            getValue={this.getInputValue}
+          />
+        )}
+
         <Row
-          style={{ marginTop: scaleSize(30) }}
-          key={'缺省值'}
-          type={Row.Type.INPUT}
-          title={'缺省值'}
-          disable={this.state.isEdit}
-          defaultValue={this.state.defaultValue}
-          getValue={this.getInputValue}
-        />
-        <Row
-          style={{ marginTop: scaleSize(30) }}
+          style={{ marginTop: scaleSize(15) }}
           key={'必填'}
           type={Row.Type.RADIO_GROUP}
           title={'必填'}
           disable={this.state.isEdit}
           defaultValue={this.state.isRequired}
           radioArr={[
-            { title: '是', value: true },
-            { title: '否', value: false },
+            { title: global.language === 'CN' ? '是' : 'YES', value: true },
+            { title: global.language === 'CN' ? '否' : 'NO', value: false },
           ]}
           radioColumn={2}
           getValue={this.getType}
@@ -253,12 +398,13 @@ export default class LayerAttributeAdd extends React.Component {
         style={styles.container}
         // scrollable
         headerProps={{
-          title: '属性信息',
+          title: global.language === 'CN' ? '添加属性' : 'Add Attribute',
           navigation: this.props.navigation,
         }}
       >
         {this.renderRows()}
         {this.renderBtns()}
+        {this.renderPopList()}
       </Container>
     )
   }

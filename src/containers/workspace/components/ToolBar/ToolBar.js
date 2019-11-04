@@ -5422,7 +5422,26 @@ export default class ToolBar extends React.PureComponent {
             })
           }, 2000)
         }
-
+        //重新判定是否显示trafficView（切换地图不触发boundsChanged，手动获取）
+        if (GLOBAL.TrafficView) {
+          let isIndoor = await SMap.isIndoorMap()
+          let showIcon
+          if (!isIndoor) {
+            let layers = this.props.getLayers && (await this.props.getLayers())
+            let baseMap = layers.filter(layer =>
+              LayerUtils.isBaseLayer(layer.name),
+            )[0]
+            if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+              showIcon = true
+            }
+          } else {
+            showIcon = false
+          }
+          GLOBAL.TrafficView.isIndoor = isIndoor
+          GLOBAL.TrafficView.setState({
+            showIcon,
+          })
+        }
         //切换地图后重新添加图例事件
         if (GLOBAL.legend) {
           await SMap.addLegendListener({

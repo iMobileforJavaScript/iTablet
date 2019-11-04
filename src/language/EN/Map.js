@@ -332,6 +332,30 @@ const Map_Main_Menu = {
   BORDER: 'Border',
   LINE: 'Line',
   MARK: 'Mark',
+
+  //地图导航
+  DRAW: 'Draw',
+  ROAD_DETAILS: 'Road Details',
+  ROUTE_THROUGH: 'Route Through：',
+  DISTANCE: 'Distance:',
+  METERS: 'm',
+  KILOMETERS: 'Km',
+  DISPLAY_MAP: 'Display Map',
+  START_FROM_START_POINT: 'Starting from the initial point',
+  ARRIVE_AT_THE_DESTINATION: 'Arriving at the destination',
+  FIRST_PERSON_PERSPECTIVE: '1st Perspective',
+  THIRD_PERSON_PERSPECTIVE: '3nd Perspective',
+  GO_STRAIGHT: 'Going straight',
+  SELECT_START_POINT: 'Select Start',
+  SELECT_DESTINATION: 'Select Destination',
+  SET_AS_START_POINT: 'Set As Start',
+  SET_AS_DESTINATION: 'Set As Destination',
+  CLEAR_NAV_HISTORY: 'Clear History',
+  NEXT: 'Next',
+  SELECT_POINTS: 'Select Points',
+  INCREMENT_ROAD: 'Increment Road',
+  TRACK: 'By Track',
+  HAND_PAINTED: 'By Hand',
 }
 
 //推演动画
@@ -476,6 +500,7 @@ const Map_Attribute = {
   ATTRIBUTE_UNDO: 'Undo',
   ATTRIBUTE_REDO: 'Redo',
   ATTRIBUTE_REVERT: 'Revert',
+  ATTRIBUTE_FIELD_ADD: 'Add',
 }
 
 const Map_Setting = {

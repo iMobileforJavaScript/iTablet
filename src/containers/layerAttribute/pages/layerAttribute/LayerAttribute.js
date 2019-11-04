@@ -593,6 +593,24 @@ export default class LayerAttribute extends React.Component {
     }
   }
 
+  /** 添加属性字段 **/
+  addAttributeField = fieldInfo => {
+    if (this.state.attributes.data.length > 0) {
+      let path = this.props.currentLayer.path
+      let result = SMap.addAttributeFieldInfo(path, false, fieldInfo)
+      if (result) {
+        Toast.show(
+          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+        )
+        this.refresh()
+      } else {
+        Toast.show(
+          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+        )
+      }
+    }
+  }
+
   /** 关联事件 **/
   relateAction = () => {
     if (this.state.currentFieldInfo.length === 0) return
@@ -738,8 +756,12 @@ export default class LayerAttribute extends React.Component {
               attributes,
               ...checkData,
             })
-          }else{
-            Toast.show(global.language==="CN"?"数据类型不合法,设置失败":"Invalid data type. Failed to set")
+          } else {
+            Toast.show(
+              global.language === 'CN'
+                ? '数据类型不合法,设置失败'
+                : 'Invalid data type. Failed to set',
+            )
           }
         })
     }
@@ -1174,8 +1196,10 @@ export default class LayerAttribute extends React.Component {
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
+            canAddField={this.state.attributes.data.length > 0}
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
+            addFieldAction={this.addAttributeField}
           />
         )}
         <View
