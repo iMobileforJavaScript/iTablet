@@ -32,28 +32,53 @@ export default class NavigationStartButton extends React.Component {
       height: new Animated.Value(scaleSize(200)),
       length: '',
     }
-    this.directions = [
-      '直行',
-      '左前转弯',
-      '右前转弯',
-      '左转弯',
-      '右转弯',
-      '左后转弯',
-      '右后转弯',
-      '调头',
-      '右转弯绕行至左',
-      '直角斜边右转弯',
-      '进入环岛',
-      '出环岛',
-      '到达目的地',
-      '电梯上行',
-      '电梯下行',
-      '扶梯上行',
-      '扶梯下行',
-      '楼梯上行',
-      '楼梯下行',
-      '到达途径点',
-    ]
+
+    this.directions =
+      GLOBAL.language === 'CN'
+        ? [
+          '直行',
+          '左前转弯',
+          '右前转弯',
+          '左转弯',
+          '右转弯',
+          '左后转弯',
+          '右后转弯',
+          '调头',
+          '右转弯绕行至左',
+          '直角斜边右转弯',
+          '进入环岛',
+          '出环岛',
+          '到达目的地',
+          '电梯上行',
+          '电梯下行',
+          '扶梯上行',
+          '扶梯下行',
+          '楼梯上行',
+          '楼梯下行',
+          '到达途径点',
+        ]
+        : [
+          'go straight',
+          'front-left turn',
+          'front-right turn',
+          'turn left',
+          'turn right',
+          'back-left turn',
+          'back-right turn',
+          'U-turn',
+          'turn right and turn around to the left',
+          'right angle bevel right turn',
+          'enter the roundabout',
+          'going out the roundabout',
+          'arrive at the destination',
+          'take the elevator up',
+          'take the elevator down',
+          'take the escalator up',
+          'take the escalator down',
+          'take the stairs up',
+          'take the stairs down',
+          'arrival route point',
+        ]
   }
 
   setVisible = iShow => {
@@ -153,7 +178,7 @@ export default class NavigationStartButton extends React.Component {
       roadLength =
         (roadLength || 1) + getLanguage(GLOBAL.language).Map_Main_Menu.METERS
     let str = ''
-    let thenInfo = GLOBAL.language === 'CN' ? '然后' : 'then'
+    let thenInfo = GLOBAL.language === 'CN' ? '然后' : 'and then'
     if (item.turnType === 'start' || item.turnType === 'end') {
       str = item.text
     } else if (item.turnType === 0) {
@@ -165,7 +190,7 @@ export default class NavigationStartButton extends React.Component {
     } else {
       str = `${
         getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
-      }${roadLength} ${thenInfo}${this.directions[item.turnType]}`
+      } ${roadLength} ${thenInfo} ${this.directions[item.turnType]}`
     }
     let icon = this.getIconByType(item.turnType)
     return (
