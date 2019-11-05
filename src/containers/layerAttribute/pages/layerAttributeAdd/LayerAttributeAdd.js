@@ -123,8 +123,8 @@ export default class LayerAttributeAdd extends React.Component {
     }
     this.state.callBack &&
       this.state.callBack({
-        caption: this.state.caption,
-        name: this.state.name,
+        caption: this.getTrimSmStr(this.state.caption),
+        name: this.getTrimSmStr(this.state.name),
         type: this.state.type,
         maxLength: this.state.maxLength,
         defaultValue: this.state.defaultValue,
@@ -144,6 +144,23 @@ export default class LayerAttributeAdd extends React.Component {
 
   reset = () => {
     Toast.show('待做')
+  }
+
+  getTrimSmStr = text => {
+    if (text.length < 2) {
+      return text
+    }
+    let tempStr = text.toLowerCase()
+    if (tempStr.substring(0, 2) == 'sm') {
+      let endStr = text.substring(2, text.length)
+      if (endStr.length < 2) {
+        return endStr
+      } else {
+        return this.getTrimSmStr(endStr)
+      }
+    } else {
+      return text
+    }
   }
 
   getType = ({ labelTitle, value }) => {
@@ -268,7 +285,7 @@ export default class LayerAttributeAdd extends React.Component {
   getDefaultMaxLength(type) {
     for (let i = 0; i < typeStr.length; i++) {
       if (type === typeStr[i][2]) {
-        return typeStr[i][3] + ''
+        return typeStr[i][3]
       }
     }
     return 0
@@ -379,10 +396,10 @@ export default class LayerAttributeAdd extends React.Component {
             >
               <TextInput
                 style={{ fontSize: scaleSize(20), color: color.black }}
-                value={this.state.maxLength ? this.state.maxLength : null}
+                value={this.state.maxLength ? this.state.maxLength + '' : null}
                 editable={maxLengthCanEdit}
                 onChangeText={text => {
-                  let length = Number(text.replace(/[^0-9]*/g, '')) + ''
+                  let length = Number(text.replace(/[^0-9]*/g, ''))
                   this.setState({
                     maxLength: length,
                   })
