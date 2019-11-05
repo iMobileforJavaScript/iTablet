@@ -594,10 +594,10 @@ export default class LayerAttribute extends React.Component {
   }
 
   /** 添加属性字段 **/
-  addAttributeField = fieldInfo => {
+  addAttributeField = async fieldInfo => {
     if (this.state.attributes.data.length > 0) {
       let path = this.props.currentLayer.path
-      let result = SMap.addAttributeFieldInfo(path, false, fieldInfo)
+      let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
       if (result) {
         Toast.show(
           global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
@@ -1200,6 +1200,7 @@ export default class LayerAttribute extends React.Component {
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
+            attributesData={this.state.attributes.data}
           />
         )}
         <View
