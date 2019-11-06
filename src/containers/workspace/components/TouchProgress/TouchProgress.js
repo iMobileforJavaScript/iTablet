@@ -149,6 +149,7 @@ export default class TouchProgress extends Component {
       GLOBAL.Type === constants.MAP_THEME &&
       this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
     ) {
+      debugger
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
           this.nuclearRadius =
@@ -202,6 +203,7 @@ export default class TouchProgress extends Component {
             '%'
         }
       } else {
+        debugger
         switch (themeType) {
           case ThemeType.UNIQUE: // 单值专题图
             break
@@ -331,8 +333,10 @@ export default class TouchProgress extends Component {
               }
             }
             break
+          case 107:
           case ThemeType.LABEL: // 标签专题图
             {
+              debugger
               //避免切换地图后 图例设置走这个case
               if (
                 this.props.selectName === '字号' ||
