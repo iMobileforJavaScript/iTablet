@@ -47,6 +47,7 @@ export default class LayerAttributeAdd extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     params.data =
+      params.defaultParams &&
       params.defaultParams[params.defaultParams.length - 1].fieldInfo
     if (params.data && params.data.type == 1) {
       params.data.defaultValue = params.data.defaultValue === '1'

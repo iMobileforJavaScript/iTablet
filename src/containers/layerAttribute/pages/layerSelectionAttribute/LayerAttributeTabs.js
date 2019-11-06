@@ -699,7 +699,7 @@ export default class LayerAttributeTabs extends React.Component {
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
           locateAction={this.showLocationView}
-          canAddField={this.state.attributes.data.length > 0}
+          canAddField={true}
           addFieldAction={this.addAttributeField}
           attributesData={this.state.attributes.data}
         />

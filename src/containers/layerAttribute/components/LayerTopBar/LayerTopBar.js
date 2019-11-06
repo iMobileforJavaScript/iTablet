@@ -171,9 +171,11 @@ export default class LayerTopBar extends React.Component {
             //'添加',
             action: () => {
               NavigationService.navigate('LayerAttributeAdd', {
-                defaultParams: this.props.attributesData[
-                  this.props.attributesData.length - 1
-                ],
+                defaultParams:
+                  this.props.attributesData.length > 1 &&
+                  this.props.attributesData[
+                    this.props.attributesData.length - 1
+                  ],
                 callBack: this.addAttributeFieldAction,
               })
             },
