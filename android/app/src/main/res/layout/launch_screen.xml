@@ -22,7 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="203dp"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logofc" />
 
     <TextView
         android:id="@+id/copyright"

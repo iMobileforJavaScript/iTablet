@@ -582,6 +582,7 @@ export default class Mine extends Component {
   _renderProfile = () => {
     return (
       <View style={styles.profileContainer}>
+        {this._renderLogo()}
         {this._renderMyProfile()}
         {this._renderSearch()}
         {this._renderSideItem()}
@@ -589,14 +590,36 @@ export default class Mine extends Component {
     )
   }
 
+  _renderLogo = () => {
+    let logo1 = require('../../../assets/home/partner_logo1.png')
+    let logo2 = require('../../../assets/home/partner_logo2.png')
+    let logo3 = require('../../../assets/home/partner_logo3.png')
+    return (
+      <View style={styles.logoView}>
+        <Image
+          style={[
+            styles.logoImagStyle,
+            { width: scaleSize(190), height: scaleSize(70) },
+          ]}
+          source={logo1}
+        />
+        <Image style={styles.logoImagStyle} source={logo2} />
+        <Image
+          style={[styles.logoImagStyle, { width: scaleSize(190) }]}
+          source={logo3}
+        />
+      </View>
+    )
+  }
+
   _renderMyProfile = () => {
     let isPro = !UserType.isProbationUser(this.props.user.currentUser)
-    let headerImage = isPro
-      ? {
-        uri:
-            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-      }
-      : require('../../../assets/home/system_default_header_image.png')
+    // let headerImage = isPro
+    //   ? {
+    //     uri:
+    //         'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+    //   }
+    //   : require('../../../assets/home/system_default_header_image.png')
     let headerTitle = isPro
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
@@ -613,14 +636,14 @@ export default class Mine extends Component {
     return (
       <View style={styles.MyProfileStyle}>
         <View style={styles.profileHeadStyle}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             disabled={!isPro}
             activeOpacity={0.7}
             onPress={this._onPressAvater}
             style={styles.porfileAvaterStyle}
           >
             <Image style={styles.headImgStyle} source={headerImage} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={this._onPressMore}
@@ -634,9 +657,9 @@ export default class Mine extends Component {
         <View
           style={[
             styles.profileTextStyle,
-            this.props.device.orientation === 'LANDSCAPE'
-              ? styles.profileTextLandscapeStyle
-              : null,
+            // this.props.device.orientation === 'LANDSCAPE'
+            //   ? styles.profileTextLandscapeStyle
+            //   : null,
           ]}
         >
           <Text numberOfLines={1} style={styles.userNameStyle}>

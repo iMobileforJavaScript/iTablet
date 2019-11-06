@@ -133,11 +133,11 @@ export default class HomePopupModal extends PureComponent {
               getLanguage(this.props.language).Navigator_Label.LEFT_TOP_LOG,
               this.props.onLogin,
             )}
-            {this._renderItem(
+            {/* {this._renderItem(
               getLanguage(this.props.language).Navigator_Label.LEFT_TOP_REG,
               this.props.onRegister,
               false,
-            )}
+            )} */}
           </View>
         )
       }

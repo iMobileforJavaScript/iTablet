@@ -39,22 +39,22 @@ class Tabbar extends React.Component {
             this.props.navigation && this.props.navigation.navigate('Home')
           },
         },
-        {
-          key: 'Friend',
-          image: getThemeAssets().tabBar.tab_friend,
-          selectedImage: getThemeAssets().tabBar.tab_friend_selected,
-          btnClick: () => {
-            this.props.navigation && this.props.navigation.navigate('Friend')
-          },
-        },
-        {
-          key: 'Find',
-          image: getThemeAssets().tabBar.tab_discover,
-          selectedImage: getThemeAssets().tabBar.tab_discover_selected,
-          btnClick: () => {
-            this.props.navigation && this.props.navigation.navigate('Find')
-          },
-        },
+        // {
+        //   key: 'Friend',
+        //   image: getThemeAssets().tabBar.tab_friend,
+        //   selectedImage: getThemeAssets().tabBar.tab_friend_selected,
+        //   btnClick: () => {
+        //     this.props.navigation && this.props.navigation.navigate('Friend')
+        //   },
+        // },
+        // {
+        //   key: 'Find',
+        //   image: getThemeAssets().tabBar.tab_discover,
+        //   selectedImage: getThemeAssets().tabBar.tab_discover_selected,
+        //   btnClick: () => {
+        //     this.props.navigation && this.props.navigation.navigate('Find')
+        //   },
+        // },
         {
           key: 'Mine',
           image: getThemeAssets().tabBar.tab_mine,
@@ -74,14 +74,14 @@ class Tabbar extends React.Component {
             this.props.navigation && this.props.navigation.navigate('Home')
           },
         },
-        {
-          key: 'Find',
-          image: getThemeAssets().tabBar.tab_discover,
-          selectedImage: getThemeAssets().tabBar.tab_discover_selected,
-          btnClick: () => {
-            this.props.navigation && this.props.navigation.navigate('Find')
-          },
-        },
+        // {
+        //   key: 'Find',
+        //   image: getThemeAssets().tabBar.tab_discover,
+        //   selectedImage: getThemeAssets().tabBar.tab_discover_selected,
+        //   btnClick: () => {
+        //     this.props.navigation && this.props.navigation.navigate('Find')
+        //   },
+        // },
         {
           key: 'Mine',
           image: getThemeAssets().tabBar.tab_mine,

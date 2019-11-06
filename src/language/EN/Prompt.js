@@ -33,7 +33,7 @@ const Prompt = {
   CONFIRM: 'Confirm',
   COMPLETE: 'Complete',
 
-  QUIT: 'Quit SuperMap iTablet?',
+  QUIT: 'Quit Forclime MobileGIS?',
   MAP_LOADING: 'Loading',
   LOADING: 'Loading',
   THE_MAP_IS_OPENED: 'The map is opened',

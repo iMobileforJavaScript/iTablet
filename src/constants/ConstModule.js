@@ -7,9 +7,9 @@ import { ConstPath } from '../constants'
 import { scaleSize } from '../utils'
 import { getLanguage } from '../language/index'
 import { getThemeAssets } from '../assets'
-import Orientation from 'react-native-orientation'
-import { SAIDetectView } from 'imobile_for_reactnative'
-import Toast from '../utils/Toast'
+// import Orientation from 'react-native-orientation'
+// import { SAIDetectView } from 'imobile_for_reactnative'
+// import Toast from '../utils/Toast'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -124,197 +124,197 @@ function SetMap(param) {
         })
       },
     },
-    {
-      key: constants.MAP_3D,
-      title: getLanguage(param).Map_Module.MAP_3D,
-      baseImage:
-        param === 'CN'
-          ? require('../assets/home/Frenchgrey/right_bottom_free.png')
-          : require('../assets/home/Frenchgrey/free_bottom_right.png'),
+    // {
+    //   key: constants.MAP_3D,
+    //   title: getLanguage(param).Map_Module.MAP_3D,
+    //   baseImage:
+    //     param === 'CN'
+    //       ? require('../assets/home/Frenchgrey/right_bottom_free.png')
+    //       : require('../assets/home/Frenchgrey/free_bottom_right.png'),
 
-      moduleImage: getThemeAssets().nav.icon_map_3d,
-      moduleImageTouch: getThemeAssets().nav.icon_map_3d_touch,
-      moduleImageLight: require('../assets/home/Light/icon_map3D.png'),
-      style: {
-        width: scaleSize(60),
-        height: scaleSize(60),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async () => {
-        GLOBAL.Type = constants.MAP_3D
-        // if (user && user.userName) {
-        //   let path = await FileTools.appendingHomeDirectory(
-        //     ConstPath.UserPath + user.userName,
-        //   )
-        //   await SScene.setCustomerDirectory(path)
-        // }
-        let fileName = ''
-        if (Platform.OS === 'android') {
-          fileName = 'OlympicGreen_android'
-        } else {
-          fileName = 'OlympicGreen_ios'
-        }
-        let homePath = await FileTools.appendingHomeDirectory()
-        let cachePath = homePath + ConstPath.CachePath
-        let fileDirPath = cachePath + fileName
-        let arrFile = await FileTools.getFilterFiles(fileDirPath)
-        if (arrFile.length === 0) {
-          NavigationService.navigate('Map3D', {})
-        } else {
-          let name =
-            Platform.OS === 'android'
-              ? 'OlympicGreen_android'
-              : 'OlympicGreen_ios'
-          NavigationService.navigate('Map3D', { name: name })
-        }
-      },
-    },
-    {
-      key: constants.MAP_AR,
-      title: getLanguage(param).Map_Module.MAP_AR,
-      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-      moduleImage: getThemeAssets().nav.icon_map_vedio,
-      moduleImageTouch: getThemeAssets().nav.icon_map_vedio_touch,
-      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async (user, lastMap) => {
-        let isAvailable = await SAIDetectView.checkIfAvailable()
-        if (!isAvailable) {
-          Toast.show(
-            getLanguage(global.language).Map_Main_Menu
-              .MAP_AR_DONT_SUPPORT_DEVICE,
-          )
-          return
-        }
-        isAvailable = await SAIDetectView.checkIfSensorsAvailable()
-        if (!isAvailable) {
-          Toast.show(
-            getLanguage(global.language).Map_Main_Menu
-              .MAP_AR_DONT_SUPPORT_DEVICE,
-          )
-          return
-        }
-        isAvailable = await SAIDetectView.checkIfCameraAvailable()
-        if (!isAvailable) {
-          Toast.show(
-            getLanguage(global.language).Map_Main_Menu.MAP_AR_CAMERA_EXCEPTION,
-          )
-          return
-        }
+    //   moduleImage: getThemeAssets().nav.icon_map_3d,
+    //   moduleImageTouch: getThemeAssets().nav.icon_map_3d_touch,
+    //   moduleImageLight: require('../assets/home/Light/icon_map3D.png'),
+    //   style: {
+    //     width: scaleSize(60),
+    //     height: scaleSize(60),
+    //     position: 'absolute',
+    //     right: 0,
+    //     bottom: 0,
+    //   },
+    //   action: async () => {
+    //     GLOBAL.Type = constants.MAP_3D
+    //     // if (user && user.userName) {
+    //     //   let path = await FileTools.appendingHomeDirectory(
+    //     //     ConstPath.UserPath + user.userName,
+    //     //   )
+    //     //   await SScene.setCustomerDirectory(path)
+    //     // }
+    //     let fileName = ''
+    //     if (Platform.OS === 'android') {
+    //       fileName = 'OlympicGreen_android'
+    //     } else {
+    //       fileName = 'OlympicGreen_ios'
+    //     }
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     let cachePath = homePath + ConstPath.CachePath
+    //     let fileDirPath = cachePath + fileName
+    //     let arrFile = await FileTools.getFilterFiles(fileDirPath)
+    //     if (arrFile.length === 0) {
+    //       NavigationService.navigate('Map3D', {})
+    //     } else {
+    //       let name =
+    //         Platform.OS === 'android'
+    //           ? 'OlympicGreen_android'
+    //           : 'OlympicGreen_ios'
+    //       NavigationService.navigate('Map3D', { name: name })
+    //     }
+    //   },
+    // },
+    // {
+    //   key: constants.MAP_AR,
+    //   title: getLanguage(param).Map_Module.MAP_AR,
+    //   baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+    //   moduleImage: getThemeAssets().nav.icon_map_vedio,
+    //   moduleImageTouch: getThemeAssets().nav.icon_map_vedio_touch,
+    //   moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+    //   style: {
+    //     width: scaleSize(70),
+    //     height: scaleSize(67),
+    //     position: 'absolute',
+    //     right: 0,
+    //     bottom: 0,
+    //   },
+    //   action: async (user, lastMap) => {
+    //     let isAvailable = await SAIDetectView.checkIfAvailable()
+    //     if (!isAvailable) {
+    //       Toast.show(
+    //         getLanguage(global.language).Map_Main_Menu
+    //           .MAP_AR_DONT_SUPPORT_DEVICE,
+    //       )
+    //       return
+    //     }
+    //     isAvailable = await SAIDetectView.checkIfSensorsAvailable()
+    //     if (!isAvailable) {
+    //       Toast.show(
+    //         getLanguage(global.language).Map_Main_Menu
+    //           .MAP_AR_DONT_SUPPORT_DEVICE,
+    //       )
+    //       return
+    //     }
+    //     isAvailable = await SAIDetectView.checkIfCameraAvailable()
+    //     if (!isAvailable) {
+    //       Toast.show(
+    //         getLanguage(global.language).Map_Main_Menu.MAP_AR_CAMERA_EXCEPTION,
+    //       )
+    //       return
+    //     }
 
-        let data = ConstOnline['Google']
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_AR
-        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-        GLOBAL.showMenu = true
-        // GLOBAL.showFlex = true
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+    //     let data = ConstOnline['Google']
+    //     data.layerIndex = 1
+    //     GLOBAL.Type = constants.MAP_AR
+    //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+    //     GLOBAL.showMenu = true
+    //     // GLOBAL.showFlex = true
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     let userPath = ConstPath.CustomerPath
+    //     if (user && user.userName) {
+    //       userPath = ConstPath.UserPath + user.userName + '/'
+    //     }
+    //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
 
-        let wsData,
-          isOpenLastMap = false
+    //     let wsData,
+    //       isOpenLastMap = false
 
-        if (lastMap) {
-          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
-            lastMap.path,
-          )
-        }
+    //     if (lastMap) {
+    //       isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+    //         lastMap.path,
+    //       )
+    //     }
 
-        if (isOpenLastMap) {
-          data = {
-            type: 'Map',
-            ...lastMap,
-          }
-        }
+    //     if (isOpenLastMap) {
+    //       data = {
+    //         type: 'Map',
+    //         ...lastMap,
+    //       }
+    //     }
 
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
-          data,
-        ]
+    //     wsData = [
+    //       {
+    //         DSParams: { server: wsPath },
+    //         type: 'Workspace',
+    //       },
+    //       data,
+    //     ]
 
-        global.isPad && Orientation.lockToPortrait()
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_AR,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_AR,
-          isExample: false,
-        })
-      },
-    },
-    {
-      key: constants.MAP_NAVIGATION,
-      title: getLanguage(param).Map_Module.MAP_NAVIGATION,
-      baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
-      moduleImage: getThemeAssets().nav.icon_map_navigation,
-      moduleImageTouch: getThemeAssets().nav.icon_map_navigation_touch,
-      moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async (user, lastMap) => {
-        GLOBAL.INCREMENTDATASETNAME = ''
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_NAVIGATION
+    //     global.isPad && Orientation.lockToPortrait()
+    //     NavigationService.navigate('MapView', {
+    //       operationType: constants.MAP_AR,
+    //       wsData,
+    //       mapName: getLanguage(param).Map_Module.MAP_AR,
+    //       isExample: false,
+    //     })
+    //   },
+    // },
+    // {
+    //   key: constants.MAP_NAVIGATION,
+    //   title: getLanguage(param).Map_Module.MAP_NAVIGATION,
+    //   baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
+    //   moduleImage: getThemeAssets().nav.icon_map_navigation,
+    //   moduleImageTouch: getThemeAssets().nav.icon_map_navigation_touch,
+    //   moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+    //   style: {
+    //     width: scaleSize(70),
+    //     height: scaleSize(67),
+    //     position: 'absolute',
+    //     right: 0,
+    //     bottom: 0,
+    //   },
+    //   action: async (user, lastMap) => {
+    //     GLOBAL.INCREMENTDATASETNAME = ''
+    //     let data = Object.assign({}, ConstOnline['Google'])
+    //     data.layerIndex = 1
+    //     GLOBAL.Type = constants.MAP_NAVIGATION
 
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     let userPath = ConstPath.CustomerPath
+    //     if (user && user.userName) {
+    //       userPath = ConstPath.UserPath + user.userName + '/'
+    //     }
+    //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
 
-        let wsData,
-          isOpenLastMap = false
+    //     let wsData,
+    //       isOpenLastMap = false
 
-        if (lastMap) {
-          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
-            lastMap.path,
-          )
-        }
+    //     if (lastMap) {
+    //       isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+    //         lastMap.path,
+    //       )
+    //     }
 
-        if (isOpenLastMap) {
-          data = {
-            type: 'Map',
-            ...lastMap,
-          }
-        }
+    //     if (isOpenLastMap) {
+    //       data = {
+    //         type: 'Map',
+    //         ...lastMap,
+    //       }
+    //     }
 
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_NAVIGATION,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_NAVIGATION,
-          isExample: false,
-        })
-      },
-    },
+    //     wsData = [
+    //       {
+    //         DSParams: { server: wsPath },
+    //         // layerIndex: 0,
+    //         type: 'Workspace',
+    //       },
+    //       data,
+    //     ]
+    //     NavigationService.navigate('MapView', {
+    //       operationType: constants.MAP_NAVIGATION,
+    //       wsData,
+    //       mapName: getLanguage(param).Map_Module.MAP_NAVIGATION,
+    //       isExample: false,
+    //     })
+    //   },
+    // },
     // {
     //   key: '导航地图',
     //   title: '导航地图',
@@ -470,80 +470,80 @@ function SetMap(param) {
         })
       },
     },
-    {
-      key: constants.MAP_PLOTTING,
-      title: getLanguage(param).Map_Module.MAP_PLOTTING,
-      baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
-      moduleImage: getThemeAssets().nav.icon_map_plot,
-      moduleImageTouch: getThemeAssets().nav.icon_map_plot_touch,
-      moduleImageLight: require('../assets/home/Light/icon_plot.png'),
-      style: {
-        width: scaleSize(70),
-        height: scaleSize(67),
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-      },
-      action: async (user, lastMap) => {
-        let data = Object.assign({}, ConstOnline['Google'])
-        data.layerIndex = 1
-        GLOBAL.Type = constants.MAP_PLOTTING
-        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+    // {
+    //   key: constants.MAP_PLOTTING,
+    //   title: getLanguage(param).Map_Module.MAP_PLOTTING,
+    //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
+    //   moduleImage: getThemeAssets().nav.icon_map_plot,
+    //   moduleImageTouch: getThemeAssets().nav.icon_map_plot_touch,
+    //   moduleImageLight: require('../assets/home/Light/icon_plot.png'),
+    //   style: {
+    //     width: scaleSize(70),
+    //     height: scaleSize(67),
+    //     position: 'absolute',
+    //     right: 0,
+    //     bottom: 0,
+    //   },
+    //   action: async (user, lastMap) => {
+    //     let data = Object.assign({}, ConstOnline['Google'])
+    //     data.layerIndex = 1
+    //     GLOBAL.Type = constants.MAP_PLOTTING
+    //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
 
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+    //     let homePath = await FileTools.appendingHomeDirectory()
+    //     let userPath = ConstPath.CustomerPath
+    //     if (user && user.userName) {
+    //       userPath = ConstPath.UserPath + user.userName + '/'
+    //     }
+    //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
 
-        let wsData,
-          isOpenLastMap = false
+    //     let wsData,
+    //       isOpenLastMap = false
 
-        if (lastMap) {
-          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
-            lastMap.path,
-          )
-        }
+    //     if (lastMap) {
+    //       isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+    //         lastMap.path,
+    //       )
+    //     }
 
-        if (isOpenLastMap) {
-          data = {
-            type: 'Map',
-            ...lastMap,
-          }
-        } else {
-          // let moduleMapName = '福建'
-          let moduleMapName = 'TourLine'
-          let moduleMapFullName = moduleMapName + '.xml'
-          // 地图用相对路径
-          let moduleMapPath =
-            userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-          if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
-            data = {
-              type: 'Map',
-              path: moduleMapPath,
-              name: moduleMapName,
-            }
-          }
-        }
+    //     if (isOpenLastMap) {
+    //       data = {
+    //         type: 'Map',
+    //         ...lastMap,
+    //       }
+    //     } else {
+    //       // let moduleMapName = '福建'
+    //       let moduleMapName = 'TourLine'
+    //       let moduleMapFullName = moduleMapName + '.xml'
+    //       // 地图用相对路径
+    //       let moduleMapPath =
+    //         userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+    //       if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+    //         data = {
+    //           type: 'Map',
+    //           path: moduleMapPath,
+    //           name: moduleMapName,
+    //         }
+    //       }
+    //     }
 
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
+    //     wsData = [
+    //       {
+    //         DSParams: { server: wsPath },
+    //         // layerIndex: 0,
+    //         type: 'Workspace',
+    //       },
+    //       data,
+    //     ]
 
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_PLOTTING,
-          wsData,
-          mapName: getLanguage(param).Map_Module.MAP_PLOTTING,
-          isExample: false,
-        })
-      },
-    },
+    //     NavigationService.navigate('MapView', {
+    //       operationType: constants.MAP_PLOTTING,
+    //       wsData,
+    //       mapName: getLanguage(param).Map_Module.MAP_PLOTTING,
+    //       isExample: false,
+    //     })
+    //   },
+    // },
     {
       key: constants.MAP_ANALYST,
       title: getLanguage(param).Map_Module.MAP_ANALYST,

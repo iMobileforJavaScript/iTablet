@@ -471,7 +471,7 @@ export default class Home extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: 'SuperMap iTablet',
+          title: 'Forclime MobileGIS',
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}

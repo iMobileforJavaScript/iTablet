@@ -34,7 +34,7 @@ const Prompt = {
 
   OPENING: '正在打开',
 
-  QUIT: '确认退出SuperMap iTablet?',
+  QUIT: '确认退出Forclime MobileGIS?',
   MAP_LOADING: '地图加载中',
   LOADING: '加载中',
   THE_MAP_IS_OPENED: '该地图已打开',

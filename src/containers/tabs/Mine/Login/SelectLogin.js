@@ -50,7 +50,7 @@ export default class SelectLogin extends React.Component {
         }}
       >
         <View style={styles.containerView}>
-          {this.renderBlock('online')}
+          {/* {this.renderBlock('online')} */}
           {this.renderBlock('iportal')}
         </View>
       </Container>

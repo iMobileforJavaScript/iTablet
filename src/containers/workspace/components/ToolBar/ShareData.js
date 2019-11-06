@@ -86,16 +86,16 @@ function getShareData(type, params) {
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_point_line.png'),
         // },
-        {
-          key: constants.SUPERMAP_ONLINE,
-          title: constants.SUPERMAP_ONLINE,
-          action: () => {
-            // showMapList(constants.SUPERMAP_ONLINE)
-            showSaveDialog(constants.SUPERMAP_ONLINE)
-          },
-          size: 'large',
-          image: getThemeAssets().share.online,
-        },
+        // {
+        //   key: constants.SUPERMAP_ONLINE,
+        //   title: constants.SUPERMAP_ONLINE,
+        //   action: () => {
+        //     // showMapList(constants.SUPERMAP_ONLINE)
+        //     showSaveDialog(constants.SUPERMAP_ONLINE)
+        //   },
+        //   size: 'large',
+        //   image: getThemeAssets().share.online,
+        // },
         {
           key: constants.SUPERMAP_IPORTAL,
           title: constants.SUPERMAP_IPORTAL,

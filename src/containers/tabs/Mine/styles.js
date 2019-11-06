@@ -49,7 +49,7 @@ export default StyleSheet.create({
   },
   //profile
   profileContainer: {
-    backgroundColor: '#303030',
+    backgroundColor: '#404040',
     width: '100%',
     height: '43%',
     alignItems: 'center',
@@ -143,7 +143,7 @@ export default StyleSheet.create({
   sideItemStyle: {
     position: 'absolute',
     right: 0,
-    top: scaleSize(20),
+    top: scaleSize(150),
     backgroundColor: '#ED372E',
     paddingVertical: scaleSize(10),
     paddingHorizontal: scaleSize(20),
@@ -183,5 +183,17 @@ export default StyleSheet.create({
   },
   itemText: {
     fontSize: scaleSize(24),
+  },
+
+  logoView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  logoImagStyle: {
+    width: scaleSize(100),
+    height: scaleSize(100),
+    marginBottom: scaleSize(30),
+    marginHorizontal: scaleSize(10),
   },
 })

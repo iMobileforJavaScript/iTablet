@@ -72,11 +72,11 @@ function layersetting(type, isGroup = false) {
       //   title: '插入复制的图层',
       //   data: [],
       // },
-      {
-        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-        //'分享图层',
-        image: require('../../../../assets/function/icon_function_share.png'),
-      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+      //   //'分享图层',
+      //   image: require('../../../../assets/function/icon_function_share.png'),
+      // },
       {
         title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
         //'移除',
@@ -160,11 +160,11 @@ function layerThemeSetting(type, isGroup = false) {
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,
       },
-      {
-        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-        //'分享图层',
-        image: require('../../../../assets/function/icon_function_share.png'),
-      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+      //   //'分享图层',
+      //   image: require('../../../../assets/function/icon_function_share.png'),
+      // },
       {
         title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
         //'移除',
@@ -210,11 +210,11 @@ function layerThemeSettings(type, isGroup = false) {
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,
       },
-      {
-        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-        //'分享图层',
-        image: require('../../../../assets/function/icon_function_share.png'),
-      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+      //   //'分享图层',
+      //   image: require('../../../../assets/function/icon_function_share.png'),
+      // },
       {
         title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
         //'移除',
@@ -457,11 +457,11 @@ function layerPlottingSetting(type, isGroup = false) {
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,
       },
-      {
-        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-        //'分享图层',
-        image: require('../../../../assets/function/icon_function_share.png'),
-      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+      //   //'分享图层',
+      //   image: require('../../../../assets/function/icon_function_share.png'),
+      // },
     ]
   }
   return [
@@ -497,11 +497,11 @@ function layerCollectionSetting(type, isGroup = false) {
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,
       },
-      {
-        title: getLanguage(type).Map_Layer.LAYERS_SHARE,
-        //'分享图层',
-        image: require('../../../../assets/function/icon_function_share.png'),
-      },
+      // {
+      //   title: getLanguage(type).Map_Layer.LAYERS_SHARE,
+      //   //'分享图层',
+      //   image: require('../../../../assets/function/icon_function_share.png'),
+      // },
       {
         title: getLanguage(type).Map_Layer.LAYERS_REMOVE,
         //'移除',
