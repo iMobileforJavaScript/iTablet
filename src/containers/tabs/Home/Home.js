@@ -232,8 +232,8 @@ export default class Home extends Component {
     }
   }
 
-  showDialog = value => {
-    this.dialog.setDialogVisible(value)
+  showDialog = () => {
+    // this.dialog.setDialogVisible(value)
   }
 
   getModuleItem = (
