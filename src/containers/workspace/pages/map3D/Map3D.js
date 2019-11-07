@@ -33,8 +33,9 @@ import { color } from '../../../../styles'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 import SurfaceView from '../../../../components/SurfaceView'
+import { tool3DModule } from '../../components/ToolBar/modules'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
@@ -68,8 +69,8 @@ export default class Map3D extends React.Component {
     this.state = {
       title: '',
       popShow: false,
-      inputText: '',
-      placeholder: false,
+      // inputText: '',
+      showErrorInfo: false,
       measureShow: false,
       measureResult: '',
     }
@@ -86,14 +87,7 @@ export default class Map3D extends React.Component {
     InteractionManager.runAfterInteractions(() => {
       if (Platform.OS === 'android') {
         this.props.setBackAction({
-          action: async () => {
-            if (GLOBAL.isCircleFlying) {
-              await SScene.stopCircleFly()
-              await SScene.clearCirclePoint()
-            }
-            //GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
-            this.back()
-          },
+          action: this.back,
         })
       }
       GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
@@ -179,7 +173,8 @@ export default class Map3D extends React.Component {
   addCircleFlyListen = async () => {
     this.circleFlyListen = await SScene.addCircleFlyListen({
       callback: () => {
-        this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
+        tool3DModule().actions.circleFly()
+        // this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
       },
     })
   }
@@ -287,6 +282,10 @@ export default class Map3D extends React.Component {
     // GLOBAL.sceneName = ''
     if (!this.mapLoaded) return
     try {
+      if (GLOBAL.isCircleFlying) {
+        await SScene.stopCircleFly()
+        await SScene.clearCirclePoint()
+      }
       if (Platform.OS === 'android') {
         if (this.toolBox && this.toolBox.getState().isShow) {
           this.toolBox.close()
@@ -369,38 +368,45 @@ export default class Map3D extends React.Component {
   confirm = async () => {
     // eslint-disable-next-line
     const content = /[@#\$%\^&\*]+/g
-    let result = content.test(this.state.inputText)
+    // let result = content.test(this.state.inputText)
+    let result = content.test(this.inputText)
     if (
       result ||
-      this.state.inputText === '' ||
-      this.state.inputText === null
+      this.inputText === '' ||
+      this.inputText === null
+      // this.state.inputText === '' ||
+      // this.state.inputText === null
     ) {
+      this.inputText = null
       this.setState({
-        inputText: null,
-        placeholder: true,
+        // inputText: null,
+        showErrorInfo: true,
       })
       return
     }
-    let point = this.toolBox.getPoint()
+    // let point = this.toolBox.getPoint()
+    let point = this.toolBox.getToolbarModule().getData().point
     SScene.addGeoText(
       point.pointX,
       point.pointY,
       point.pointZ,
-      this.state.inputText,
+      this.inputText,
+      // this.state.inputText,
     ).then(() => {
-      this.setState({
-        inputText: '',
-      })
+      this.inputText = ''
+      // this.setState({
+      //   inputText: '',
+      // })
     })
-    this.toolBox.showToolbar()
+    // this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
 
   cancel = async () => {
     this.setState({
-      placeholder: false,
+      showErrorInfo: false,
     })
-    this.toolBox.showToolbar()
+    // this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
 
@@ -466,11 +472,12 @@ export default class Map3D extends React.Component {
             accessible={true}
             accessibilityLabel={'文本内容'}
             onChangeText={text => {
-              this.setState({
-                inputText: text,
-              })
+              // this.setState({
+              //   inputText: text,
+              // })
+              this.inputText = text
             }}
-            value={this.state.inputText}
+            // value={this.state.inputText}
             placeholder={
               getLanguage(this.props.language).Prompt.PLEASE_ENTER_TEXT
             }
@@ -478,8 +485,10 @@ export default class Map3D extends React.Component {
             style={styles.textInputStyle}
           />
         </View>
-        {this.state.placeholder && (
-          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
+        {this.state.showErrorInfo && (
+          <Text style={styles.placeholder}>
+            {getLanguage(this.props.language).Friends.INPUT_INVALID}
+          </Text>
         )}
       </Dialog>
     )

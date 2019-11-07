@@ -16,7 +16,7 @@ import {
   // TextInput,
   TouchableHighlight,
 } from 'react-native'
-import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
+import ToolBarSectionList from '../../../workspace/components/ToolBar/components/ToolBarSectionList'
 import styles from './styles'
 import { SScene } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
@@ -72,7 +72,6 @@ export default class LayerManager_tolbar extends React.Component {
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
       showMenuDialog: false,
-      listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       layerdata: props.layerdata || '',
       index: 0,

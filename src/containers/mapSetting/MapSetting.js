@@ -137,7 +137,7 @@ export default class MapSetting extends Component {
   //       if (value) {
   //         GLOBAL.toolBox &&
   //           GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
-  //             containerType: 'colortable',
+  //             containerType: 'colorTable',
   //             column: 8,
   //             tableType: 'scroll',
   //             isFullScreen: false,
@@ -205,9 +205,8 @@ export default class MapSetting extends Component {
       this.props.setMapLegend(mapLegend)
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
-          containerType: 'colortable',
+          containerType: 'colorTable',
           column: this.props.device.orientation === 'LANDSCAPE' ? 16 : 8,
-          tableType: 'scroll',
           isFullScreen: false,
           height:
             this.props.device.orientation === 'LANDSCAPE'

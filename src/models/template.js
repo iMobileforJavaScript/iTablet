@@ -367,7 +367,7 @@ export const getSymbolPlots = (params, cb = () => {}) => async (
               libIndex < plotlibIdAndNameArr.length;
               libIndex++
             ) {
-              if (name == plotlibIdAndNameArr[libIndex][0]) {
+              if (name === plotlibIdAndNameArr[libIndex][0]) {
                 id = plotlibIdAndNameArr[libIndex][1]
               }
             }

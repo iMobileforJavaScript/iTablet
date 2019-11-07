@@ -412,7 +412,7 @@ class SymbolTabs extends React.Component {
   }
 
   render() {
-    if (GLOBAL.Type == constants.MAP_PLOTTING) {
+    if (GLOBAL.Type === constants.MAP_PLOTTING) {
       return this.renderPlotTab()
     }
 

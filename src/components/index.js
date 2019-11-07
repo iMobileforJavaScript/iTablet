@@ -56,6 +56,7 @@ import PopView from './PopView'
 import BubblePane from './Bubble'
 import NumberCounter from './NumberCounter'
 import Picker from './Picker'
+import MenuDialog from './MenuDialog'
 export {
   Container,
   BtnOne,
@@ -121,4 +122,5 @@ export {
   BubblePane,
   NumberCounter,
   Picker,
+  MenuDialog,
 }

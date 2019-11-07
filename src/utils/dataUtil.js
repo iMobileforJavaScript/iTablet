@@ -289,6 +289,17 @@ function isLegalURL(URL, language = 'CN') {
   }
 }
 
+function getNameByURL(str) {
+  var idx = str.lastIndexOf('/')
+  idx = idx > -1 ? idx : str.lastIndexOf('\\')
+  if (idx < 0) {
+    return str
+  }
+  let file = str.substring(idx + 1)
+  let arr = file.split('.')
+  return arr[0]
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -309,4 +320,6 @@ export default {
 
   isLegalName,
   isLegalURL,
+
+  getNameByURL,
 }

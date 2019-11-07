@@ -27,6 +27,7 @@ import {
   getThemeIconByType,
 } from '../../assets'
 import { FileTools } from '../../native'
+import { themeModule } from '../workspace/components/ToolBar/modules'
 import NavigationService from '../../containers/NavigationService'
 import { getLanguage } from '../../language'
 
@@ -325,22 +326,13 @@ export default class MT_layerManager extends React.Component {
     } else {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
           curThemeType = constants.THEME_UNIQUE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
           curThemeType = constants.THEME_RANGE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
           curThemeType = constants.THEME_UNIFY_LABEL
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         case ThemeType.LABELUNIQUE:
           curThemeType = constants.THEME_UNIQUE_LABEL
@@ -411,30 +403,6 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
-        // if (
-        //   GLOBAL.Type === constants.MAP_EDIT ||
-        //   GLOBAL.Type === constants.MAP_ANALYST
-        // ) {
-        //   if (data.themeType <= 0) {
-        //     this.mapEdit(data)
-        //   } else {
-        //     Toast.show(
-        //       getLanguage(this.props.language).Prompt
-        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        //     )
-        //     //'当前图层无法设置风格')
-        //   }
-        // } else if (GLOBAL.Type === constants.MAP_THEME) {
-        //   if (data.themeType <= 0 && !data.isHeatmap) {
-        //     Toast.show(
-        //       getLanguage(this.props.language).Prompt
-        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        //     )
-        //     //'当前图层无法设置风格')
-        //   } else {
-        //     this.mapTheme(data)
-        //   }
-        // }
         if (
           GLOBAL.Type !== constants.MAP_EDIT &&
           GLOBAL.Type !== constants.MAP_THEME &&
@@ -446,7 +414,9 @@ export default class MT_layerManager extends React.Component {
         if (data.themeType <= 0) {
           this.mapEdit(data)
         } else if (GLOBAL.Type === constants.MAP_THEME) {
-          this.mapTheme(data)
+          // this.mapTheme(data)
+          themeModule().actions.layerListAction &&
+            themeModule().actions.layerListAction(data)
         } else {
           Toast.show(
             getLanguage(this.props.language).Prompt

@@ -35,15 +35,17 @@ import {
   // TextInput,
   TouchableHighlight,
 } from 'react-native'
-import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
+import ToolBarSectionList from '../../../workspace/components/ToolBar/components/ToolBarSectionList'
 import styles from './styles'
 import { SMap, DatasetType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
+import ToolbarModule from '../../../workspace/components/ToolBar/modules/ToolbarModule'
+import { themeModule } from '../../../workspace/components/ToolBar/modules'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -758,6 +760,12 @@ export default class LayerManager_tolbar extends React.Component {
             },
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        ToolbarModule.setData({
+          type: ConstToolType.MAP_THEME_CREATE_BY_LAYER,
+          getData: themeModule().getData,
+          actions: themeModule().actions,
+          currentLayer: this.state.layerData,
+        })
         this.props.navigation.navigate('MapView')
       } else {
         Toast.show(

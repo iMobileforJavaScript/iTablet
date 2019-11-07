@@ -1,918 +1,120 @@
 import { SCartography, SMap } from 'imobile_for_reactnative'
-
-const lineColorSet = [
-  {
-    key: '#FFFFFF',
-    action: () => {
-      SCartography.setLineColor('#FFFFFF', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFFFFF',
-  },
-  {
-    key: '#000000',
-    action: () => {
-      SCartography.setLineColor('#000000', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#000000',
-  },
-  {
-    key: '#F0EDE1',
-    action: () => {
-      SCartography.setLineColor('#F0EDE1', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F0EDE1',
-  },
-  {
-    key: '#1E477C',
-    action: () => {
-      SCartography.setLineColor('#1E477C', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#1E477C',
-  },
-  {
-    key: '#4982BC',
-    action: () => {
-      SCartography.setLineColor('#4982BC', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#4982BC',
-  },
-  {
-    key: '#00A1E9',
-    action: () => {
-      SCartography.setLineColor('#00A1E9', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#00A1E9',
-  },
-  {
-    key: '#803000',
-    action: () => {
-      SCartography.setLineColor('#803000', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#803000',
-  },
-  {
-    key: '#BD5747',
-    action: () => {
-      SCartography.setLineColor('#BD5747', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#BD5747',
-  },
-  {
-    key: '#36E106',
-    action: () => {
-      SCartography.setLineColor('#36E106', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#36E106',
-  },
-  {
-    key: '#9CBB58',
-    action: () => {
-      SCartography.setLineColor('#9CBB58', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#9CBB58',
-  },
-  {
-    key: '#8364A1',
-    action: () => {
-      SCartography.setLineColor('#8364A1', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#8364A1',
-  },
-  {
-    key: '#4AADC7',
-    action: () => {
-      SCartography.setLineColor('#4AADC7', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#4AADC7',
-  },
-  {
-    key: '#F89746',
-    action: () => {
-      SCartography.setLineColor('#F89746', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F89746',
-  },
-  {
-    key: '#E7A700',
-    action: () => {
-      SCartography.setLineColor('#E7A700', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E7A700',
-  },
-  {
-    key: '#E7E300',
-    action: () => {
-      SCartography.setLineColor('#E7E300', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E7E300',
-  },
-  {
-    key: '#D33248',
-    action: () => {
-      SCartography.setLineColor('#D33248', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D33248',
-  },
-  {
-    key: '#F1F1F1',
-    action: () => {
-      SCartography.setLineColor('#F1F1F1', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F1F1F1',
-  },
-  {
-    key: '#7D7D7D',
-    action: () => {
-      SCartography.setLineColor('#7D7D7D', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#7D7D7D',
-  },
-  {
-    key: '#DDD9C3',
-    action: () => {
-      SCartography.setLineColor('#DDD9C3', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#DDD9C3',
-  },
-  {
-    key: '#C9DDF0',
-    action: () => {
-      SCartography.setLineColor('#C9DDF0', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#C9DDF0',
-  },
-  {
-    key: '#DBE4F3',
-    action: () => {
-      SCartography.setLineColor('#DBE4F3', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#DBE4F3',
-  },
-  {
-    key: '#BCE8FD',
-    action: () => {
-      SCartography.setLineColor('#BCE8FD', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#BCE8FD',
-  },
-  {
-    key: '#E5C495',
-    action: () => {
-      SCartography.setLineColor('#E5C495', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E5C495',
-  },
-  {
-    key: '#F4DED9',
-    action: () => {
-      SCartography.setLineColor('#F4DED9', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F4DED9',
-  },
-  {
-    key: '#DBE9CE',
-    action: () => {
-      SCartography.setLineColor('#DBE9CE', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#DBE9CE',
-  },
-  {
-    key: '#EBF4DE',
-    action: () => {
-      SCartography.setLineColor('#EBF4DE', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#EBF4DE',
-  },
-  {
-    key: '#E5E1ED',
-    action: () => {
-      SCartography.setLineColor('#E5E1ED', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E5E1ED',
-  },
-  {
-    key: '#DDF0F3',
-    action: () => {
-      SCartography.setLineColor('#DDF0F3', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#DDF0F3',
-  },
-  {
-    key: '#FDECDC',
-    action: () => {
-      SCartography.setLineColor('#FDECDC', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FDECDC',
-  },
-  {
-    key: '#FFE7C4',
-    action: () => {
-      SCartography.setLineColor('#FFE7C4', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFE7C4',
-  },
-  {
-    key: '#FDFACA',
-    action: () => {
-      SCartography.setLineColor('#FDFACA', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FDFACA',
-  },
-  {
-    key: '#F09CA0',
-    action: () => {
-      SCartography.setLineColor('#F09CA0', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F09CA0',
-  },
-  {
-    key: '#D7D7D7',
-    action: () => {
-      SCartography.setLineColor('#D7D7D7', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D7D7D7',
-  },
-  {
-    key: '#585858',
-    action: () => {
-      SCartography.setLineColor('#585858', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#585858',
-  },
-  {
-    key: '#C6B797',
-    action: () => {
-      SCartography.setLineColor('#C6B797', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#C6B797',
-  },
-  {
-    key: '#8CB4EA',
-    action: () => {
-      SCartography.setLineColor('#8CB4EA', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#8CB4EA',
-  },
-  {
-    key: '#C1CCE4',
-    action: () => {
-      SCartography.setLineColor('#C1CCE4', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#C1CCE4',
-  },
-  {
-    key: '#7ED2F6',
-    action: () => {
-      SCartography.setLineColor('#7ED2F6', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#7ED2F6',
-  },
-  {
-    key: '#B1894F',
-    action: () => {
-      SCartography.setLineColor('#B1894F', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#B1894F',
-  },
-  {
-    key: '#E7B8B8',
-    action: () => {
-      SCartography.setLineColor('#E7B8B8', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E7B8B8',
-  },
-  {
-    key: '#B0D59A',
-    action: () => {
-      SCartography.setLineColor('#B0D59A', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#B0D59A',
-  },
-  {
-    key: '#D7E3BD',
-    action: () => {
-      SCartography.setLineColor('#D7E3BD', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D7E3BD',
-  },
-  {
-    key: '#CDC1D9',
-    action: () => {
-      SCartography.setLineColor('#CDC1D9', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#CDC1D9',
-  },
-  {
-    key: '#B7DDE9',
-    action: () => {
-      SCartography.setLineColor('#B7DDE9', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#B7DDE9',
-  },
-  {
-    key: '#FAD6B1',
-    action: () => {
-      SCartography.setLineColor('#FAD6B1', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FAD6B1',
-  },
-  {
-    key: '#F5CE88',
-    action: () => {
-      SCartography.setLineColor('#F5CE88', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F5CE88',
-  },
-  {
-    key: '#FFF55A',
-    action: () => {
-      SCartography.setLineColor('#FFF55A', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFF55A',
-  },
-  {
-    key: '#EF6C78',
-    action: () => {
-      SCartography.setLineColor('#EF6C78', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#EF6C78',
-  },
-  {
-    key: '#BFBFBF',
-    action: () => {
-      SCartography.setLineColor('#BFBFBF', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#BFBFBF',
-  },
-  {
-    key: '#3E3E3E',
-    action: () => {
-      SCartography.setLineColor('#3E3E3E', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#3E3E3E',
-  },
-  {
-    key: '#938953',
-    action: () => {
-      SCartography.setLineColor('#938953', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#938953',
-  },
-  {
-    key: '#548ED4',
-    action: () => {
-      SCartography.setLineColor('#548ED4', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#548ED4',
-  },
-  {
-    key: '#98B7D5',
-    action: () => {
-      SCartography.setLineColor('#98B7D5', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#98B7D5',
-  },
-  {
-    key: '#00B4F0',
-    action: () => {
-      SCartography.setLineColor('#00B4F0', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#00B4F0',
-  },
-  {
-    key: '#9A6C34',
-    action: () => {
-      SCartography.setLineColor('#9A6C34', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#9A6C34',
-  },
-  {
-    key: '#D79896',
-    action: () => {
-      SCartography.setLineColor('#D79896', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D79896',
-  },
-  {
-    key: '#7EC368',
-    action: () => {
-      SCartography.setLineColor('#7EC368', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#7EC368',
-  },
-  {
-    key: '#C5DDA5',
-    action: () => {
-      SCartography.setLineColor('#C5DDA5', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#C5DDA5',
-  },
-  {
-    key: '#B1A5C6',
-    action: () => {
-      SCartography.setLineColor('#B1A5C6', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#B1A5C6',
-  },
-  {
-    key: '#93CDDD',
-    action: () => {
-      SCartography.setLineColor('#93CDDD', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#93CDDD',
-  },
-  {
-    key: '#F9BD8D',
-    action: () => {
-      SCartography.setLineColor('#F9BD8D', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F9BD8D',
-  },
-  {
-    key: '#F7B550',
-    action: () => {
-      SCartography.setLineColor('#F7B550', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F7B550',
-  },
-  {
-    key: '#FFF100',
-    action: () => {
-      SCartography.setLineColor('#FFF100', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFF100',
-  },
-  {
-    key: '#E80050',
-    action: () => {
-      SCartography.setLineColor('#E80050', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E80050',
-  },
-  {
-    key: '#A6A6A7',
-    action: () => {
-      SCartography.setLineColor('#A6A6A7', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#A6A6A7',
-  },
-  {
-    key: '#2D2D2B',
-    action: () => {
-      SCartography.setLineColor('#2D2D2B', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#2D2D2B',
-  },
-  {
-    key: '#494428',
-    action: () => {
-      SCartography.setLineColor('#494428', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#494428',
-  },
-  {
-    key: '#1D3A5F',
-    action: () => {
-      SCartography.setLineColor('#1D3A5F', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#1D3A5F',
-  },
-  {
-    key: '#376192',
-    action: () => {
-      SCartography.setLineColor('#376192', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#376192',
-  },
-  {
-    key: '#00A1E9',
-    action: () => {
-      SCartography.setLineColor('#00A1E9', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#00A1E9',
-  },
-  {
-    key: '#825320',
-    action: () => {
-      SCartography.setLineColor('#825320', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#825320',
-  },
-  {
-    key: '#903635',
-    action: () => {
-      SCartography.setLineColor('#903635', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#903635',
-  },
-  {
-    key: '#13B044',
-    action: () => {
-      SCartography.setLineColor('#13B044', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#13B044',
-  },
-  {
-    key: '#76933C',
-    action: () => {
-      SCartography.setLineColor('#76933C', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#76933C',
-  },
-  {
-    key: '#5E467C',
-    action: () => {
-      SCartography.setLineColor('#5E467C', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#5E467C',
-  },
-  {
-    key: '#31859D',
-    action: () => {
-      SCartography.setLineColor('#31859D', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#31859D',
-  },
-  {
-    key: '#E46C07',
-    action: () => {
-      SCartography.setLineColor('#E46C07', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#E46C07',
-  },
-  {
-    key: '#F39900',
-    action: () => {
-      SCartography.setLineColor('#F39900', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F39900',
-  },
-  {
-    key: '#B7AB00',
-    action: () => {
-      SCartography.setLineColor('#B7AB00', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#B7AB00',
-  },
-  {
-    key: '#A50036',
-    action: () => {
-      SCartography.setLineColor('#A50036', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#A50036',
-  },
-  {
-    key: '#979D99',
-    action: () => {
-      SCartography.setLineColor('#979D99', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#979D99',
-  },
-  {
-    key: '#0C0C0C',
-    action: () => {
-      SCartography.setLineColor('#0C0C0C', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#0C0C0C',
-  },
-  {
-    key: '#1C1A10',
-    action: () => {
-      SCartography.setLineColor('#1C1A10', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#1C1A10',
-  },
-  {
-    key: '#0C263D',
-    action: () => {
-      SCartography.setLineColor('#0C263D', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#0C263D',
-  },
-  {
-    key: '#1D3A5F',
-    action: () => {
-      SCartography.setLineColor('#1D3A5F', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#1D3A5F',
-  },
-  {
-    key: '#005883',
-    action: () => {
-      SCartography.setLineColor('#005883', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#005883',
-  },
-  {
-    key: '#693904',
-    action: () => {
-      SCartography.setLineColor('#693904', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#693904',
-  },
-  {
-    key: '#622727',
-    action: () => {
-      SCartography.setLineColor('#622727', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#622727',
-  },
-  {
-    key: '#005E14',
-    action: () => {
-      SCartography.setLineColor('#005E14', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#005E14',
-  },
-  {
-    key: '#4F6028',
-    action: () => {
-      SCartography.setLineColor('#4F6028', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#4F6028',
-  },
-  {
-    key: '#3E3050',
-    action: () => {
-      SCartography.setLineColor('#3E3050', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#3E3050',
-  },
-  {
-    key: '#245B66',
-    action: () => {
-      SCartography.setLineColor('#245B66', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#245B66',
-  },
-  {
-    key: '#974805',
-    action: () => {
-      SCartography.setLineColor('#974805', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#974805',
-  },
-  {
-    key: '#AD6A00',
-    action: () => {
-      SCartography.setLineColor('#AD6A00', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#AD6A00',
-  },
-  {
-    key: '#8B8100',
-    action: () => {
-      SCartography.setLineColor('#8B8100', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#8B8100',
-  },
-  {
-    key: '#7C0022',
-    action: () => {
-      SCartography.setLineColor('#7C0022', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#7C0022',
-  },
-  {
-    key: '#F0DCBE',
-    action: () => {
-      SCartography.setLineColor('#F0DCBE', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F0DCBE',
-  },
-  {
-    key: '#F2B1CF',
-    action: () => {
-      SCartography.setLineColor('#F2B1CF', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F2B1CF',
-  },
-  {
-    key: '#D3FFBF',
-    action: () => {
-      SCartography.setLineColor('#D3FFBF', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D3FFBF',
-  },
-  {
-    key: '#00165F',
-    action: () => {
-      SCartography.setLineColor('#00165F', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#00165F',
-  },
-  {
-    key: '#6673CB',
-    action: () => {
-      SCartography.setLineColor('#6673CB', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#6673CB',
-  },
-  {
-    key: '#006EBF',
-    action: () => {
-      SCartography.setLineColor('#006EBF', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#006EBF',
-  },
-  {
-    key: '#89CF66',
-    action: () => {
-      SCartography.setLineColor('#89CF66', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#89CF66',
-  },
-  {
-    key: '#70A900',
-    action: () => {
-      SCartography.setLineColor('#70A900', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#70A900',
-  },
-  {
-    key: '#13B044',
-    action: () => {
-      SCartography.setLineColor('#13B044', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#13B044',
-  },
-  {
-    key: '#93D150',
-    action: () => {
-      SCartography.setLineColor('#93D150', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#93D150',
-  },
-  {
-    key: '#70319F',
-    action: () => {
-      SCartography.setLineColor('#70319F', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#70319F',
-  },
-  {
-    key: '#00B4F0',
-    action: () => {
-      SCartography.setLineColor('#00B4F0', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#00B4F0',
-  },
-  {
-    key: '#D38968',
-    action: () => {
-      SCartography.setLineColor('#D38968', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#D38968',
-  },
-  {
-    key: '#FFBF00',
-    action: () => {
-      SCartography.setLineColor('#FFBF00', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFBF00',
-  },
-  {
-    key: '#FFFF00',
-    action: () => {
-      SCartography.setLineColor('#FFFF00', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FFFF00',
-  },
-  {
-    key: '#C10000',
-    action: () => {
-      SCartography.setLineColor('#C10000', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#C10000',
-  },
-  {
-    key: '#F0F1A6',
-    action: () => {
-      SCartography.setLineColor('#F0F1A6', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#F0F1A6',
-  },
-  {
-    key: '#FF0000',
-    action: () => {
-      SCartography.setLineColor('#FF0000', GLOBAL.currentLayer.name)
-    },
-    size: 'large',
-    background: '#FF0000',
-  },
+// TODO 把颜色对象数组 简化为 字符串数组
+const colors = [
+  '#FFFFFF',
+  '#000000',
+  '#F0EDE1',
+  '#1E477C',
+  '#4982BC',
+  '#00A1E9',
+  '#803000',
+  '#BD5747',
+  '#36E106',
+  '#9CBB58',
+  '#8364A1',
+  '#4AADC7',
+  '#F89746',
+  '#E7A700',
+  '#E7E300',
+  '#D33248',
+  '#F1F1F1',
+  '#7D7D7D',
+  '#DDD9C3',
+  '#C9DDF0',
+  '#DBE4F3',
+  '#BCE8FD',
+  '#E5C495',
+  '#F4DED9',
+  '#DBE9CE',
+  '#EBF4DE',
+  '#E5E1ED',
+  '#DDF0F3',
+  '#FDECDC',
+  '#FFE7C4',
+  '#FDFACA',
+  '#F09CA0',
+  '#D7D7D7',
+  '#585858',
+  '#C6B797',
+  '#8CB4EA',
+  '#C1CCE4',
+  '#7ED2F6',
+  '#B1894F',
+  '#E7B8B8',
+  '#B0D59A',
+  '#D7E3BD',
+  '#CDC1D9',
+  '#B7DDE9',
+  '#FAD6B1',
+  '#F5CE88',
+  '#FFF55A',
+  '#EF6C78',
+  '#BFBFBF',
+  '#3E3E3E',
+  '#938953',
+  '#548ED4',
+  '#98B7D5',
+  '#00B4F0',
+  '#9A6C34',
+  '#D79896',
+  '#7EC368',
+  '#C5DDA5',
+  '#B1A5C6',
+  '#93CDDD',
+  '#F9BD8D',
+  '#F7B550',
+  '#FFF100',
+  '#E80050',
+  '#A6A6A7',
+  '#2D2D2B',
+  '#494428',
+  '#1D3A5F',
+  '#376192',
+  '#00A1E9',
+  '#825320',
+  '#903635',
+  '#13B044',
+  '#76933C',
+  '#5E467C',
+  '#31859D',
+  '#E46C07',
+  '#F39900',
+  '#B7AB00',
+  '#A50036',
+  '#979D99',
+  '#0C0C0C',
+  '#1C1A10',
+  '#0C263D',
+  '#1D3A5F',
+  '#005883',
+  '#693904',
+  '#622727',
+  '#005E14',
+  '#4F6028',
+  '#3E3050',
+  '#245B66',
+  '#974805',
+  '#AD6A00',
+  '#8B8100',
+  '#7C0022',
+  '#F0DCBE',
+  '#F2B1CF',
+  '#D3FFBF',
+  '#00165F',
+  '#6673CB',
+  '#006EBF',
+  '#89CF66',
+  '#70A900',
+  '#13B044',
+  '#93D150',
+  '#70319F',
+  '#00B4F0',
+  '#D38968',
+  '#FFBF00',
+  '#FFFF00',
+  '#C10000',
+  '#F0F1A6',
+  '#FF0000',
 ]
 
 const pointColorSet = [
@@ -5489,7 +4691,7 @@ const legendColor = [
   },
 ]
 export {
-  lineColorSet,
+  colors,
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,

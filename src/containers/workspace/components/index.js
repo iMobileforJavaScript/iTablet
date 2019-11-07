@@ -27,7 +27,7 @@ import {
   AnalystMapRecommend,
   AnalystMapToolbar,
 } from './AnalystMapOptions'
-import MenuList from './MenuList'
+// import MenuList from './ToolBar/modules/tool3DModule/CustomViews/MenuList'
 import { PoiInfoContainer, PoiTopSearchBar } from './PoiInfoContainer'
 export {
   PopList,
@@ -49,7 +49,7 @@ export {
   AnalystMapButtons,
   AnalystMapRecommend,
   AnalystMapToolbar,
-  MenuList,
+  // MenuList,
   ChangeArView,
   NavigationView,
   NavigationPoiView,

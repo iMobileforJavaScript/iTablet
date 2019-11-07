@@ -29,6 +29,7 @@ import {
   PoiInfoContainer,
   PoiTopSearchBar,
 } from '../../components'
+import { ToolbarModule } from '../../components/ToolBar/modules'
 import {
   Container,
   MTBtn,
@@ -48,6 +49,7 @@ import {
   scaleSize,
   StyleUtils,
   setSpText,
+  dataUtil,
 } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -217,7 +219,7 @@ export default class MapView extends React.Component {
     }
     this.closeInfo = [
       {
-        btntitle: '是',
+        btnTitle: '是',
         action: () => {
           this.saveMap(NavigationService.goBack(this.props.nav.routes[1].key))
           //this.saveMapAndClose()
@@ -226,7 +228,7 @@ export default class MapView extends React.Component {
         },
       },
       {
-        btntitle: '否',
+        btnTitle: '否',
         action: () => {
           this.closeWorkspace(() =>
             NavigationService.goBack(this.props.nav.routes[1].key),
@@ -237,7 +239,7 @@ export default class MapView extends React.Component {
         },
       },
       {
-        btntitle: '取消',
+        btnTitle: '取消',
         action: () => {
           this.AlertDialog.setDialogVisible(false)
         },
@@ -570,75 +572,18 @@ export default class MapView extends React.Component {
           ids: [event.id],
         },
       ])
-    switch (GLOBAL.currentToolbarType) {
-      // case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
-      // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      // case ConstToolType.MAP_TOOL_POINT_SELECT:
-      //   break
+    let currentToolbarType = ToolbarModule.getData().type
+    if (
+      ToolbarModule.getData().actions &&
+      ToolbarModule.getData().actions.geometrySelected
+    ) {
+      ToolbarModule.getData().actions.geometrySelected(event)
+      return
+    }
+    switch (currentToolbarType) {
       case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
       case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
         break
-      case ConstToolType.MAP_EDIT_POINT:
-      case ConstToolType.MAP_EDIT_LINE:
-      case ConstToolType.MAP_EDIT_REGION:
-      case ConstToolType.MAP_EDIT_DEFAULT: {
-        if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
-          let column = 4,
-            height = ConstToolType.HEIGHT[3],
-            tableType = 'normal',
-            type = ''
-          switch (event.layerInfo.type) {
-            case DatasetType.POINT:
-              type = ConstToolType.MAP_EDIT_POINT
-              height = ConstToolType.HEIGHT[0]
-              break
-            case DatasetType.LINE:
-              type = ConstToolType.MAP_EDIT_LINE
-              height = ConstToolType.HEIGHT[2]
-              break
-            case DatasetType.REGION:
-              type = ConstToolType.MAP_EDIT_REGION
-              height = ConstToolType.HEIGHT[2]
-              tableType = 'scroll'
-              break
-            case DatasetType.CAD:
-              type = ConstToolType.MAP_EDIT_CAD
-              height = ConstToolType.HEIGHT[0]
-              column = 5
-              break
-          }
-          this.toolBox &&
-            this.toolBox.setVisible(true, type, {
-              isFullScreen: false,
-              column,
-              height,
-              tableType,
-              cb: () =>
-                SMap.appointEditGeometry(event.id, event.layerInfo.path),
-            })
-        }
-        break
-      }
-      case ConstToolType.PLOT_ANIMATION_START: {
-        let type = await SMap.getGeometryTypeById(
-          event.layerInfo.name,
-          event.id,
-        )
-        if (type === -1) {
-          Toast.show(
-            getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
-          )
-        } else {
-          let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
-          this.toolBox.setVisible(true, type, {
-            isFullScreen: true,
-            height: ConstToolType.TOOLBAR_HEIGHT[5],
-            containerType: 'createPlotAnimation',
-            cb: () => {},
-          })
-        }
-        break
-      }
       default:
         // 除了编辑状态，其余点选对象所在图层全设置为选择状态
         if (event.layerInfo.editable) {
@@ -666,7 +611,8 @@ export default class MapView extends React.Component {
     }
     this.props.setSelection && this.props.setSelection(data)
 
-    switch (GLOBAL.currentToolbarType) {
+    let currentToolbarType = ToolbarModule.getData().type
+    switch (currentToolbarType) {
       case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
         SMap.setAction(Action.PAN)
         break
@@ -1504,7 +1450,6 @@ export default class MapView extends React.Component {
             isFullScreen: true,
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
             height: ConstToolType.TOOLBAR_HEIGHT[2],
-            tableType: 'normal',
           })
         }}
         setAnalystParams={this.props.setAnalystParams}
@@ -1969,17 +1914,6 @@ export default class MapView extends React.Component {
     )
   }
 
-  basename(str) {
-    var idx = str.lastIndexOf('/')
-    idx = idx > -1 ? idx : str.lastIndexOf('\\')
-    if (idx < 0) {
-      return str
-    }
-    let file = str.substring(idx + 1)
-    let arr = file.split('.')
-    return arr[0]
-  }
-
   indoorNavi = () => {
     if (!this.props.mapIndoorNavigation) {
       NavigationService.navigate('PointAnalyst', {
@@ -2009,7 +1943,7 @@ export default class MapView extends React.Component {
             })
             //过滤掉标注和标绘
             let filterUDBs = userUDBs.filter(item => {
-              item.name = this.basename(item.path)
+              item.name = dataUtil.getNameByURL(item.path)
               return !item.name.match(checkLabelAndPlot)
             })
             filterUDBs.map(item => {
@@ -2045,7 +1979,7 @@ export default class MapView extends React.Component {
             )
             //过滤掉标注和标绘
             let filterUDBs = customerUDBs.filter(item => {
-              item.name = this.basename(item.path)
+              item.name = dataUtil.getNameByURL(item.path)
               return !item.name.match(checkLabelAndPlot)
             })
             filterUDBs.map(item => {

@@ -40,7 +40,7 @@ export default {
   //推演动画
   PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list', //推演动画的xml列表
   PLOT_ANIMATION_PLAY: 'plot_animation_play', //播放推演动画
-  PLOT_ANIMATIONGO_OBJECT_LIST: 'plot_animationgo_object_list', //推演动画的节点对象列表
+  PLOT_ANIMATION_GO_OBJECT_LIST: 'plot_animation_go_object_list', //推演动画的节点对象列表
   PLOT_ANIMATION_SAVE: 'plot_animation_save', //保存推演动画成xml文件
 
   //专题制图
@@ -48,7 +48,6 @@ export default {
   THEME_MENU: 'theme_menu',
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
-  THEME_ADD_BACK: 'theme_add_back', //添加->返回上一级
   THEME_GRAPH_TYPE: 'theme_graph_type',
   MAP3DSHARE: 'map3dshare',
 
@@ -60,4 +59,11 @@ export default {
   MEASURE_CLEAR: 'measure_clear',
   STYLE_TRANSFER: 'style_transfer',
   STYLE_TRANSFER_PICKER: 'style_transfer_picker',
+
+  TOOLBAR_BACK: 'toolbar_back', //工具栏 添加->返回上一级
+  TOOLBAR_COMMIT: 'toolbar_commit', //工具栏 提交
+
+  SHOW_LIST: 'SHOW_LIST',
+  SHOW_NODE_LIST: 'SHOW_NODE_LIST',
+  PLAY: 'PLAY',
 }

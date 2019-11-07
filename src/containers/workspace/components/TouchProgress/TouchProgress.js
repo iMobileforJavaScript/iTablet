@@ -18,7 +18,7 @@ import {
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { getLanguage } from '../../../../language'
-import ThemeMenuData from '../ToolBar/ThemeMenuData'
+import ThemeMenuData from '../ToolBar/modules/themeModule/data'
 import TPData from './TPData'
 const IMAGE_SIZE = scaleSize(25)
 const MARGIN = scaleSize(30)
