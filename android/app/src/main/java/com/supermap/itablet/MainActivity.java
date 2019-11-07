@@ -28,7 +28,7 @@ import io.reactivex.functions.Consumer;
 
 import org.devio.rn.splashscreen.SplashScreen;
 
-public class MainActivity extends ReactFragmentActivity {
+public class MainActivity extends ReactActivity {
     public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
     public static boolean isActive;
     /**

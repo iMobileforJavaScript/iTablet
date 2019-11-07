@@ -493,6 +493,11 @@ function layerCollectionSetting(type, isGroup = false) {
         image: getPublicAssets().mapTools.tools_visible_scale_range,
       },
       {
+        title: getLanguage(type).Map_Layer.LAYERS_COLLECT,
+        //'当前图层采集',
+        image: require('../../../../assets/layerToolbar/icon_function_symbol.png'),
+      },
+      {
         title: getLanguage(type).Map_Layer.LAYERS_RENAME,
         //'重命名',
         image: getPublicAssets().mapTools.tools_layer_rename,

@@ -594,21 +594,30 @@ export default class LayerAttribute extends React.Component {
   }
 
   /** 添加属性字段 **/
-  addAttributeField = fieldInfo => {
-    if (this.state.attributes.data.length > 0) {
-      let path = this.props.currentLayer.path
-      let result = SMap.addAttributeFieldInfo(path, false, fieldInfo)
-      if (result) {
-        Toast.show(
-          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
-        )
-        this.refresh()
-      } else {
-        Toast.show(
-          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
-        )
-      }
+  addAttributeField = async fieldInfo => {
+    // if (this.state.attributes.data.length > 0) {
+    let path = this.props.currentLayer.path
+    let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
+    if (result) {
+      Toast.show(
+        global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+      )
+      // this.refresh()
+      this.getAttribute(
+        {
+          type: 'refresh',
+          currentPage: 0,
+          startIndex: 0,
+        },
+        () => {},
+        false,
+      )
+    } else {
+      Toast.show(
+        global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+      )
     }
+    // }
   }
 
   /** 关联事件 **/
@@ -951,11 +960,11 @@ export default class LayerAttribute extends React.Component {
   }
 
   renderMapLayerAttribute = () => {
-    if (
-      !this.state.attributes ||
-      (!this.state.attributes.data && this.state.attributes.data.length === 0)
-    )
-      return null
+    // if (
+    //   !this.state.attributes ||
+    //   (!this.state.attributes.data && this.state.attributes.data.length === 0)
+    // )
+    //   return null
 
     let buttonNameFilter = ['MediaFilePaths'], // 属性表cell显示 查看 按钮
       buttonTitles = [getLanguage(global.language).Map_Tools.VIEW]
@@ -1004,25 +1013,25 @@ export default class LayerAttribute extends React.Component {
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
         data={
-          this.state.attributes.data.length > 1
-            ? this.state.attributes.data
-            : this.state.attributes.data[0]
+          this.state.attributes.data.length === 1
+            ? this.state.attributes.data[0]
+            : this.state.attributes.data
         }
         tableHead={
-          this.state.attributes.data.length > 1
-            ? this.state.attributes.head
-            : [
+          this.state.attributes.data.length === 1
+            ? [
               getLanguage(this.props.language).Map_Label.NAME,
               getLanguage(this.props.language).Map_Label.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]
+            : this.state.attributes.head
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
-          this.state.attributes.data.length > 1
-            ? LayerAttributeTable.Type.MULTI_DATA
-            : LayerAttributeTable.Type.SINGLE_DATA
+          this.state.attributes.data.length === 1
+            ? LayerAttributeTable.Type.SINGLE_DATA
+            : LayerAttributeTable.Type.MULTI_DATA
         }
         // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
         indexColumn={0}
@@ -1192,14 +1201,16 @@ export default class LayerAttribute extends React.Component {
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {showContent && this.type !== 'MAP_3D' && (
+        {/* {showContent && this.type !== 'MAP_3D' && ( */}
+        {this.type !== 'MAP_3D' && (
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={this.state.attributes.data.length > 0}
+            canAddField={true}
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
+            attributesData={this.state.attributes.data}
           />
         )}
         <View
