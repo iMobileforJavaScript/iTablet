@@ -159,6 +159,7 @@ const Profile = {
   STATUSBAR_HIDE: '隐藏状态栏',
   SETTING_LICENSE: '许可',
   SETTING_ABOUT_ITABLET: '关于iTablet',
+  SETTING_CHECK_VERSION: '检查版本',
 
   //许可
   LICENSE_CURRENT: '当前许可',
