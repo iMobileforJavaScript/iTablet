@@ -183,12 +183,6 @@ export default class Mine extends Component {
                 this.goToMyData(getLanguage(this.props.language).Profile.MAP),
             })}
             {this._renderItem({
-              title: getLanguage(this.props.language).Profile.SCENE,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-              onClick: () =>
-                this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
-            })}
-            {this._renderItem({
               title: getLanguage(this.props.language).Profile.BASEMAP,
               //Const.BASEMAP,
               leftImagePath: require('../../../assets/Mine/my_basemap.png'),
@@ -273,13 +267,6 @@ export default class Mine extends Component {
             onClick: () =>
               this.goToMyData(getLanguage(this.props.language).Profile.MAP),
             //Const.MAP),
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.SCENE,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-            onClick: () =>
-              this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
-            //Const.SCENE),
           })}
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.BASEMAP,
@@ -541,12 +528,6 @@ export default class Mine extends Component {
         leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
         onClick: () =>
           this.goToMyData(getLanguage(this.props.language).Profile.MAP),
-      },
-      {
-        title: getLanguage(this.props.language).Profile.SCENE,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-        onClick: () =>
-          this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
       },
       {
         title: getLanguage(this.props.language).Profile.BASEMAP,
