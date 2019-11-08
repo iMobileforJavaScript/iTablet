@@ -38,7 +38,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap, DatasetType,SMCollectorType } from 'imobile_for_reactnative'
+import { SMap, DatasetType, SMCollectorType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
@@ -494,8 +494,7 @@ export default class LayerManager_tolbar extends React.Component {
       // '图层风格'
       this.mapStyle()
       this.setVisible(false)
-    } 
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {
@@ -506,7 +505,7 @@ export default class LayerManager_tolbar extends React.Component {
           layerData: this.state.layerData,
         })
       }.bind(this)())
-    }else if (
+    } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_COLLECT
     ) {
       let type = ''
@@ -521,11 +520,11 @@ export default class LayerManager_tolbar extends React.Component {
           type = SMCollectorType.REGION_HAND_POINT
           break
       }
-      CollectionData.showCollection(type,this.state.layerData.name)
+      CollectionData.showCollection(type, this.state.layerData.name)
       this.setVisible(false)
       this.props.navigation.navigate('MapView')
       // NavigationService.navigate('')
-    }else if (
+    } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
     ) {
       //'重命名') {
@@ -547,8 +546,7 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    }
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {

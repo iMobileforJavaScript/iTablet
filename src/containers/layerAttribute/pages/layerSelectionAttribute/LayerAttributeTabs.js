@@ -335,10 +335,11 @@ export default class LayerAttributeTabs extends React.Component {
         Toast.show(
           global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
         )
-        this.currentTabRefs[0].getAttribute(
+        this.currentTabRefs[this.state.currentTabIndex].getAttribute(
           {
             type: 'reset',
-            currentPage: this.currentTabRefs[0].currentPage,
+            currentPage: this.currentTabRefs[this.state.currentTabIndex]
+              .currentPage,
             startIndex: 0,
             relativeIndex: 0,
             currentIndex: 0,
@@ -701,7 +702,7 @@ export default class LayerAttributeTabs extends React.Component {
           locateAction={this.showLocationView}
           canAddField={true}
           addFieldAction={this.addAttributeField}
-          attributesData={this.state.attributes.data}
+          attributesData={this.state.attributes.head}
         />
         {this.state.isShowView && (
           <View

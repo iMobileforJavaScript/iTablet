@@ -145,11 +145,11 @@ export default class TouchProgress extends Component {
       tips = TPData.getMatchPictureTip(this.props.selectName, _value)
     }
     if (
-      tips === '' &&
-      GLOBAL.Type === constants.MAP_THEME &&
-      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
+      (tips === '' &&
+        GLOBAL.Type === constants.MAP_THEME &&
+        this.props.currentLayer.themeType > 0) ||
+      this.props.currentLayer.isHeatmap
     ) {
-      debugger
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
           this.nuclearRadius =
@@ -203,7 +203,6 @@ export default class TouchProgress extends Component {
             '%'
         }
       } else {
-        debugger
         switch (themeType) {
           case ThemeType.UNIQUE: // 单值专题图
             break
@@ -336,7 +335,6 @@ export default class TouchProgress extends Component {
           case 107:
           case ThemeType.LABEL: // 标签专题图
             {
-              debugger
               //避免切换地图后 图例设置走这个case
               if (
                 this.props.selectName === '字号' ||
@@ -694,8 +692,9 @@ export default class TouchProgress extends Component {
     ) {
       newValue = value * 100
     } else if (
-      GLOBAL.Type === constants.MAP_THEME &&
-      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
+      (GLOBAL.Type === constants.MAP_THEME &&
+        this.props.currentLayer.themeType > 0) ||
+      this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -852,8 +851,9 @@ export default class TouchProgress extends Component {
         '     ' +
         parseInt(value)
     } else if (
-      GLOBAL.Type === constants.MAP_THEME &&
-      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
+      (GLOBAL.Type === constants.MAP_THEME &&
+        this.props.currentLayer.themeType > 0) ||
+      this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -1180,8 +1180,9 @@ export default class TouchProgress extends Component {
         tips = TPData.getMatchPictureTip(this.props.selectName, value)
       }
     } else if (
-      GLOBAL.Type === constants.MAP_THEME &&
-      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
+      (GLOBAL.Type === constants.MAP_THEME &&
+        this.props.currentLayer.themeType > 0) ||
+      this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||

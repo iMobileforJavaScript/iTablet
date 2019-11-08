@@ -27,6 +27,8 @@ import {
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
 import constants from '../../../workspace/constants'
+//eslint-disable-next-line
+import { ActionPopover } from 'teaset'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
@@ -593,6 +595,48 @@ export default class LayerAttribute extends React.Component {
     }
   }
 
+  //显示详情和删除的弹框
+  _showPopover = (pressView, index, fieldInfo) => {
+    let items = []
+
+    items = [
+      {
+        title: getLanguage(global.language).Profile.DELETE,
+        onPress: () => {
+          (async function() {}.bind(this)())
+        },
+      },
+      {
+        title: global.language === 'CN' ? '详情' : 'Detail',
+        onPress: () => {
+          (async function() {
+            NavigationService.navigate('LayerAttributeAdd', {
+              defaultParams: { fieldInfo: { fieldInfo } },
+              isDetail: true,
+            })
+          }.bind(this)())
+        },
+      },
+    ]
+    if (pressView) {
+      pressView.measure((ox, oy, width, height, px, py) => {
+        ActionPopover.show(
+          {
+            x: px,
+            y: py,
+            width,
+            height,
+          },
+          items,
+        )
+      })
+    }
+  }
+  /** 点击属性字段回调 **/
+  onPressHeader = ({ fieldInfo, index, pressView }) => {
+    this._showPopover(pressView, index, fieldInfo)
+  }
+
   /** 添加属性字段 **/
   addAttributeField = async fieldInfo => {
     // if (this.state.attributes.data.length > 0) {
@@ -602,16 +646,16 @@ export default class LayerAttribute extends React.Component {
       Toast.show(
         global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
       )
-      // this.refresh()
-      this.getAttribute(
-        {
-          type: 'refresh',
-          currentPage: 0,
-          startIndex: 0,
-        },
-        () => {},
-        false,
-      )
+      this.refresh()
+      // this.getAttribute(
+      //   {
+      //     type: 'refresh',
+      //     currentPage: 0,
+      //     startIndex: 0,
+      //   },
+      //   () => {},
+      //   false,
+      // )
     } else {
       Toast.show(
         global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
@@ -1050,6 +1094,7 @@ export default class LayerAttribute extends React.Component {
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
         isShowSystemFields={this.state.isShowSystemFields}
+        onPressHeader={this.onPressHeader}
       />
     )
   }
@@ -1210,7 +1255,7 @@ export default class LayerAttribute extends React.Component {
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
-            attributesData={this.state.attributes.data}
+            attributesData={this.state.attributes.head}
           />
         )}
         <View

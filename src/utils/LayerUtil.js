@@ -90,11 +90,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
+          fieldInfo: item,
         })
       } else {
         tableHead.push({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
+          fieldInfo: item,
         })
       }
     })
@@ -104,6 +106,7 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.caption,
           isSystemField: item.isSystemField,
+          fieldInfo: item,
         })
       } else {
         tableHead.push({

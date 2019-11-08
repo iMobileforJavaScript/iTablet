@@ -52,6 +52,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     layers: PropTypes.object,
+    navigation: Object,
     getLayers?: () => {},
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
