@@ -448,7 +448,6 @@ const Map_Layer = {
   LAYERS_PASTE: 'Paste',
   LAYERS_LAYER_PROPERTIES: 'Layer Properties',
   LAYERS_REMOVE: 'Remove',
-  LAYERS_COLLECT: 'Collect on the current layer' ,
   LAYERS_MAXIMUM: 'Maximum Visible Scale',
   LAYERS_MINIMUM: 'Minimum Visible Scale',
   LAYERS_UER_DEFINE: 'User Define',

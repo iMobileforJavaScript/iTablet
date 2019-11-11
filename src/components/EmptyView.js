@@ -8,7 +8,6 @@ import { View, Text, StyleSheet } from 'react-native'
 import { size } from '../styles'
 
 export default class EmptyView extends PureComponent {
-
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
@@ -21,19 +20,19 @@ export default class EmptyView extends PureComponent {
   }
 
   renderEmptyInfo = () => {
-    return (
-      <Text></Text>
-    )
+    return <Text />
   }
 
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        {
+        {this.props.children ? (
           this.props.children
-            ? this.props.children
-            : <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
-        }
+        ) : (
+          <Text style={[styles.title, this.props.titleStyle]}>
+            {this.props.title}
+          </Text>
+        )}
       </View>
     )
   }

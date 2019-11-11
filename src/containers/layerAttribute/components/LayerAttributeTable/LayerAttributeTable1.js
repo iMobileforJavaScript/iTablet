@@ -75,9 +75,8 @@ export default class LayerAttributeTable extends React.Component {
 
     const isMultiData =
       props.data instanceof Array &&
-      // props.data.length > 1 &&
-      // props.data[0] instanceof Array
-      this.props.data.length != 1
+      props.data.length > 1 &&
+      props.data[0] instanceof Array
 
     this.state = {
       colHeight: COL_HEIGHT,
@@ -116,8 +115,6 @@ export default class LayerAttributeTable extends React.Component {
       JSON.stringify(nextProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data) ||
-      JSON.stringify(nextProps.tableHead) !==
-        JSON.stringify(this.props.tableHead) ||
       JSON.stringify([...this.state.selected]) !==
         JSON.stringify([...nextState.selected])
     ) {
@@ -129,16 +126,14 @@ export default class LayerAttributeTable extends React.Component {
   componentDidUpdate(prevProps) {
     const isMultiData =
       this.props.data instanceof Array &&
-      // this.props.data.length > 1 &&
-      // this.props.data[0] instanceof Array
-      this.props.data.length != 1
+      this.props.data.length > 1 &&
+      this.props.data[0] instanceof Array
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data) ||
       (!isMultiData &&
-        this.props.isShowSystemFields !== prevProps.isShowSystemFields) ||
-      this.state.tableHead !== this.props.tableHead
+        this.props.isShowSystemFields !== prevProps.isShowSystemFields)
     ) {
       let data = []
       const titles = this.getTitle(data)
@@ -581,12 +576,12 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   render() {
-    // if (
-    //   !this.state.isMultiData &&
-    //   Object.keys(this.state.tableData[0].data).length === 0
-    // ) {
-    //   return null
-    // }
+    if (
+      !this.state.isMultiData &&
+      Object.keys(this.state.tableData[0].data).length === 0
+    ) {
+      return null
+    }
     return (
       <KeyboardAvoidingView
         // behavior={this.state.behavior}

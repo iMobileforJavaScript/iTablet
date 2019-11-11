@@ -139,8 +139,7 @@ export default class DataSetListItem extends React.Component {
             </View>
             <Text style={styles.title}>{this.props.data.name}</Text>
           </View>
-          {this.props.subTitle &&
-            this.props.data.isAdd && (
+          {this.props.subTitle && this.props.data.isAdd && (
             <Text style={[styles.title, styles.textMarginRight]}>
               {this.props.subTitle}
             </Text>
