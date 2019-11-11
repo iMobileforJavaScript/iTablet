@@ -90,11 +90,44 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
+          fieldInfo: item,
         })
       } else {
         tableHead.push({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
+          fieldInfo: item,
+        })
+      }
+    })
+  } else if (result.head && result.head.length > 0) {
+    result.head.forEach(item => {
+      if (item.caption.toString().toLowerCase() === 'smid') {
+        tableHead.unshift({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+          fieldInfo: { fieldInfo: item },
+        })
+      } else {
+        tableHead.push({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+          fieldInfo: { fieldInfo: item },
+        })
+      }
+    })
+  } else if (result.head && result.head.length > 0) {
+    result.head.forEach(item => {
+      if (item.caption.toString().toLowerCase() === 'smid') {
+        tableHead.unshift({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+        })
+      } else {
+        tableHead.push({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+          fieldInfo: item,
         })
       }
     })

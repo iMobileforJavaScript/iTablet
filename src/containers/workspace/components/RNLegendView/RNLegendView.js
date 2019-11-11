@@ -218,56 +218,56 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    if (this.props.legendSettings[GLOBAL.Type]) {
+    if(this.props.legendSettings[GLOBAL.Type]){
       let frontStyle =
-        this.props.language === 'CN'
-          ? {
-            position: 'absolute',
-            top: 0,
-            left: '46%',
-            letterSpacing: scaleSize(2),
-            fontSize: setSpText(18),
-          }
-          : {
-            position: 'absolute',
-            top: 0,
-            left: '35%',
-            letterSpacing: scaleSize(2),
-            fontSize: setSpText(18),
-          }
+      this.props.language === 'CN'
+        ? {
+          position: 'absolute',
+          top: 0,
+          left: '46%',
+          letterSpacing: scaleSize(2),
+          fontSize: setSpText(18),
+        }
+        : {
+          position: 'absolute',
+          top: 0,
+          left: '35%',
+          letterSpacing: scaleSize(2),
+          fontSize: setSpText(18),
+        }
       let backStyle =
-        this.props.language === 'CN'
-          ? {
-            left: '46%',
-            position: 'absolute',
-            top: 0,
-            fontSize: setSpText(18),
-            letterSpacing: scaleSize(2),
-            color: color.white,
-            fontWeight: '900',
-          }
-          : {
-            left: '35%',
-            position: 'absolute',
-            top: 0,
-            fontSize: setSpText(18),
-            letterSpacing: scaleSize(1.1),
-            color: color.white,
-            fontWeight: '900',
-          }
+      this.props.language === 'CN'
+        ? {
+          left: '46%',
+          position: 'absolute',
+          top: 0,
+          fontSize: setSpText(18),
+          letterSpacing: scaleSize(2),
+          color: color.white,
+          fontWeight: '900',
+        }
+        : {
+          left: '35%',
+          position: 'absolute',
+          top: 0,
+          fontSize: setSpText(18),
+          letterSpacing: scaleSize(1.1),
+          color: color.white,
+          fontWeight: '900',
+        }
       return (
         <View
           style={{
             position: 'absolute',
             width: scaleSize(
               (this.state.width *
-                this.props.legendSettings[GLOBAL.Type].widthPercent) /
-                100,
+              this.props.legendSettings[GLOBAL.Type].widthPercent) /
+              100,
             ),
             height: scaleSize(
               (this.state.height *
-                this.props.legendSettings[GLOBAL.Type].heightPercent) /
-                100,
+              this.props.legendSettings[GLOBAL.Type].heightPercent) /
+              100,
             ),
             borderColor: 'black',
             borderWidth: scaleSize(3),

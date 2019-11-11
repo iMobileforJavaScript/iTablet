@@ -6,6 +6,8 @@ import { color } from '../../../../styles'
 import RenderSettingItem from './RenderSettingItem'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
+import Toast from 'react-native-root-toast'
+
 export default class Setting extends Component {
   props: {
     navigation: Object,
@@ -32,7 +34,10 @@ export default class Setting extends Component {
       user: this.user,
     })
   }
-
+  //检查更新
+  onCheckUpdate = () => {
+    Toast.show(global.APP_VERSION)
+  }
   renderItems() {
     return (
       <View style={{ flex: 1, backgroundColor: color.content_white }}>
@@ -44,6 +49,10 @@ export default class Setting extends Component {
         {this.renderItemView(
           this.onAbout,
           getLanguage(global.language).Profile.SETTING_ABOUT_ITABLET,
+        )}
+        {this.renderItemCheckVersion(
+          this.onCheckUpdate,
+          getLanguage(global.language).Profile.SETTING_CHECK_VERSION,
         )}
       </View>
     )
@@ -87,6 +96,42 @@ export default class Setting extends Component {
       </View>
     )
   }
+
+  renderItemCheckVersion(action, label) {
+    return (
+      <View style={{ width: '100%' }}>
+        <TouchableOpacity style={{ width: '100%' }} onPress={action}>
+          <View
+            style={{
+              width: '100%',
+              height: scaleSize(80),
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ fontSize: scaleSize(24), marginLeft: 15 }}>
+              {label}
+            </Text>
+
+            <View style={{ marginRight: 20, alignItems: 'center' }}>
+              <Text style={{ fontSize: scaleSize(24), marginLeft: 15 }}>
+                {global.APP_VERSION}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View
+          style={{
+            width: '100%',
+            height: 1,
+            backgroundColor: color.item_separate_white,
+          }}
+        />
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container

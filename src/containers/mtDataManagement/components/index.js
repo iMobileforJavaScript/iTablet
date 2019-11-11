@@ -1,3 +1,5 @@
 import DataManagerTab from './DataManagerTab'
 
-export { DataManagerTab }
+export {
+  DataManagerTab,
+}

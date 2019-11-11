@@ -28,6 +28,7 @@ export default class LayerAttributeTable extends React.Component {
     loadMore?: () => {},
     selectRow?: () => {},
     changeAction?: () => {}, // 修改表格中的值的回调
+    onPressHeader?: () => {}, // 点击属性字段的回调
     onViewableItemsChanged?: () => {},
     buttonNameFilter?: Array, // Cell 为button的列的filter
     buttonActions?: Array, // Cell 为button的列的点击事件
@@ -75,8 +76,9 @@ export default class LayerAttributeTable extends React.Component {
 
     const isMultiData =
       props.data instanceof Array &&
-      props.data.length > 1 &&
-      props.data[0] instanceof Array
+      // props.data.length > 1 &&
+      // props.data[0] instanceof Array
+      this.props.data.length != 1
 
     this.state = {
       colHeight: COL_HEIGHT,
@@ -115,6 +117,8 @@ export default class LayerAttributeTable extends React.Component {
       JSON.stringify(nextProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data) ||
+      JSON.stringify(nextProps.tableHead) !==
+        JSON.stringify(this.props.tableHead) ||
       JSON.stringify([...this.state.selected]) !==
         JSON.stringify([...nextState.selected])
     ) {
@@ -126,14 +130,16 @@ export default class LayerAttributeTable extends React.Component {
   componentDidUpdate(prevProps) {
     const isMultiData =
       this.props.data instanceof Array &&
-      this.props.data.length > 1 &&
-      this.props.data[0] instanceof Array
+      // this.props.data.length > 1 &&
+      // this.props.data[0] instanceof Array
+      this.props.data.length != 1
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data) ||
       (!isMultiData &&
-        this.props.isShowSystemFields !== prevProps.isShowSystemFields)
+        this.props.isShowSystemFields !== prevProps.isShowSystemFields) ||
+      this.state.tableHead !== this.props.tableHead
     ) {
       let data = []
       const titles = this.getTitle(data)
@@ -309,10 +315,38 @@ export default class LayerAttributeTable extends React.Component {
         selected.set(item.data[0].value, !target) // toggle
         return { selected }
       })
+    } else {
+      if (
+        this.props.onPressHeader &&
+        typeof this.props.onPressHeader === 'function'
+      ) {
+        // this.props.onPressHeader({fieldInfo:item.data.fieldInfo,index:item.index,pressView:item.iTemView})
+        this.props.onPressHeader({
+          fieldInfo: item.data.fieldInfo,
+          index: item.columnIndex,
+          pressView: item.pressView,
+        })
+      }
     }
 
     if (this.props.selectRow && typeof this.props.selectRow === 'function') {
       this.props.selectRow(item)
+    }
+  }
+
+  onPressHeader = item => {
+    if (
+      this.props.onPressHeader &&
+      typeof this.props.onPressHeader === 'function' &&
+      item.columnIndex !== 0 &&
+      item.data &&
+      item.data[0] !== getLanguage(global.language).Map_Label.NAME
+    ) {
+      this.props.onPressHeader({
+        fieldInfo: item.data[item.columnIndex].fieldInfo.fieldInfo,
+        index: item.columnIndex,
+        pressView: item.pressView,
+      })
     }
   }
 
@@ -330,7 +364,7 @@ export default class LayerAttributeTable extends React.Component {
       <Row
         data={item}
         index={index}
-        onPress={() => this.onPressRow({ item, index })}
+        onPress={this.onPressRow}
         onChangeEnd={this.onChangeEnd}
         isShowSystemFields={this.props.isShowSystemFields}
       />
@@ -448,7 +482,8 @@ export default class LayerAttributeTable extends React.Component {
         indexColumn={this.props.indexColumn}
         indexCellStyle={[indexCellStyle, this.props.indexCellStyle]}
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
-        onPress={() => this.onPressRow({ data: item, index })}
+        // onPress={() => this.onPressRow({ data: item, index })}
+        onPress={this.onPressRow}
         onChangeEnd={this.onChangeEnd}
         buttonIndexes={buttonIndexes}
         buttonActions={buttonActions}
@@ -484,7 +519,7 @@ export default class LayerAttributeTable extends React.Component {
         cellTextStyle={{ color: color.fontColorWhite }}
         data={titles}
         hasInputText={false}
-        onPress={() => {}}
+        onPress={this.onPressHeader}
         isShowSystemFields={this.props.isShowSystemFields}
       />
     )
@@ -576,12 +611,12 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   render() {
-    if (
-      !this.state.isMultiData &&
-      Object.keys(this.state.tableData[0].data).length === 0
-    ) {
-      return null
-    }
+    // if (
+    //   !this.state.isMultiData &&
+    //   Object.keys(this.state.tableData[0].data).length === 0
+    // ) {
+    //   return null
+    // }
     return (
       <KeyboardAvoidingView
         // behavior={this.state.behavior}
