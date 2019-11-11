@@ -314,6 +314,8 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY: 'No Collect History',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_START: 'Start Recording',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP: 'Stop Recording',
+  MAP_AR_AI_ASSISTANT_SAVE_LINE: 'Line',
+  MAP_AR_AI_ASSISTANT_SAVE_POINT: 'Point',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',
@@ -448,6 +450,7 @@ const Map_Layer = {
   LAYERS_PASTE: 'Paste',
   LAYERS_LAYER_PROPERTIES: 'Layer Properties',
   LAYERS_REMOVE: 'Remove',
+  LAYERS_COLLECT: 'Collect on the current layer',
   LAYERS_MAXIMUM: 'Maximum Visible Scale',
   LAYERS_MINIMUM: 'Minimum Visible Scale',
   LAYERS_UER_DEFINE: 'User Define',
