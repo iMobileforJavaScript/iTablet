@@ -2036,7 +2036,7 @@ export default class MapView extends React.Component {
                 networkModel.path,
               )
               NavigationService.navigate('NavigationView', {
-                changeNavPathInfo: this.props.changeNavPathInfo,
+                changeNavPathInfo: this.changeNavPathInfo,
                 showLocationView: true,
               })
             }
