@@ -19,7 +19,6 @@ export default class LayerTopBar extends React.Component {
     relateAction: () => {},
     addFieldAction: () => {},
     tabsAction?: () => {}, // 显示侧滑栏
-    attributesData: Array,
     canTabs?: boolean, // 是否可点击切换标签
     canLocated?: boolean, // 是否可点击定位
     canUndo?: boolean, // 是否可点击撤销
@@ -171,11 +170,6 @@ export default class LayerTopBar extends React.Component {
             //'添加',
             action: () => {
               NavigationService.navigate('LayerAttributeAdd', {
-                defaultParams:
-                  this.props.attributesData.length > 1 &&
-                  this.props.attributesData[
-                    this.props.attributesData.length - 1
-                  ],
                 callBack: this.addAttributeFieldAction,
               })
             },

@@ -7,14 +7,14 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: constUtil.USUAL_GREEN,
-    paddingTop:10,
+    paddingTop: 10,
   },
   row: {
     paddingVertical: scaleSize(15),
     paddingHorizontal: scaleSize(30),
     backgroundColor: 'white',
   },
-  rowTitle:{
+  rowTitle: {
     fontSize: size.fontSize.fontSizeLg,
   },
 })

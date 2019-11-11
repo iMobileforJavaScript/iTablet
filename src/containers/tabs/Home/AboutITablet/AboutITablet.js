@@ -80,9 +80,9 @@ export default class AboutITablet extends Component {
               { marginTop: 0.0231 * this.props.device.height },
             ]}
           >
-            SuperMap iTablet 10i
+            SuperMap iTablet
           </Text>
-          <Text style={styles.version}>V3.0.4</Text>
+          <Text style={styles.version}>10i</Text>
         </View>
         <View
           style={[

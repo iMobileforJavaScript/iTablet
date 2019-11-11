@@ -277,7 +277,13 @@ export default class NavigationStartButton extends React.Component {
   renderHeader = () => {
     return (
       <View>
-        <Text style={{ fontSize: setSpText(24) }}>{GLOBAL.ENDPOINT}</Text>
+        <Text
+          style={{ fontSize: setSpText(24) }}
+          numberOfLines={1}
+          ellipsizeMode={'tail'}
+        >
+          {GLOBAL.ENDPOINT}
+        </Text>
       </View>
     )
   }

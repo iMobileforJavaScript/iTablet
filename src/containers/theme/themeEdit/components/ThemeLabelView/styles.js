@@ -19,7 +19,7 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     backgroundColor: 'white',
   },
-  rowTitle:{
+  rowTitle: {
     fontSize: size.fontSize.fontSizeLg,
   },
   rowMarginTop: {

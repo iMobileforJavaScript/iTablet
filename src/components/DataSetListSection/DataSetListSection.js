@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import styles from './styles'
 
 export default class DataSetListSection extends React.Component {
-
   static propTypes = {
     onPress: PropTypes.func,
     data: PropTypes.object,
@@ -25,10 +24,10 @@ export default class DataSetListSection extends React.Component {
     this.props.onPress && this.props.onPress(this.props.data)
   }
 
-  _pop_row=()=>{
-    this.setState(oldstate=>{
+  _pop_row = () => {
+    this.setState(oldstate => {
       let oldshow = oldstate.rowShow
-      return({rowShow:!oldshow})
+      return { rowShow: !oldshow }
     })
   }
 
@@ -49,9 +48,7 @@ export default class DataSetListSection extends React.Component {
 
   _renderAdditionView = () => {
     let options = this.props.data.option || this.props.options
-    return (
-      <PopBtnList data={options} />
-    )
+    return <PopBtnList data={options} />
   }
 
   render() {
@@ -59,13 +56,18 @@ export default class DataSetListSection extends React.Component {
       <View style={styles.container}>
         <TouchableOpacity
           activeOpacity={0.8}
-          style={[styles.topContainer, this.props.height && {height: this.props.height}]}
+          style={[
+            styles.topContainer,
+            this.props.height && { height: this.props.height },
+          ]}
           onPress={this._pop_row}
         >
           {this.renderArrow()}
           <Text style={styles.title}>{this.props.data.key}</Text>
         </TouchableOpacity>
-        {(this.props.data.option || this.props.options) && this.state.rowShow && this._renderAdditionView()}
+        {(this.props.data.option || this.props.options) &&
+          this.state.rowShow &&
+          this._renderAdditionView()}
       </View>
     )
   }
