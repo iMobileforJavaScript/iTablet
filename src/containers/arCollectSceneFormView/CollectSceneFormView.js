@@ -42,6 +42,7 @@ export default class CollectSceneFormView extends React.Component {
     this.datasetPointName = params.datasetPointName
     this.SceneViewVisible = true
     this.isRecording = true
+
     this.state = {
       totalLength: 0,
       showHistory: false,
@@ -55,7 +56,6 @@ export default class CollectSceneFormView extends React.Component {
         color: 'black',
       },
     }
-    this.clickAble = true // 防止重复点击
   }
 
   // eslint-disable-next-line
@@ -221,29 +221,12 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   back = () => {
-    if (this.clickAble) {
-      this.clickAble = false
-      setTimeout(() => {
-        this.clickAble = true
-      }, 1500)
-      if (GLOBAL.isswitch) {
-        GLOBAL.isswitch = false
-        GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
-      }
-      GLOBAL.mapView.setState({
-        map: {
-          flex: 1,
-          alignSelf: 'stretch',
-          backgroundColor: '#ffbcbc',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          flexDirection: 'column',
-        },
-      })
-      NavigationService.goBack()
-      return true
+    if (GLOBAL.isswitch) {
+      GLOBAL.isswitch = false
+      GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
     }
+    NavigationService.goBack()
+    return true
   }
 
   _renderItemSeparatorComponent = () => {

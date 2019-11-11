@@ -22,6 +22,7 @@ import MapSelectPoint from './MapSelectPoint'
 import NavigationStartButton from './NavigationStartButton'
 import NavigationStartHead from './NavigationStartHead'
 import SimpleSelectList from './SimpleSelectList'
+import LocationView from './LocationView'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -66,6 +67,7 @@ export {
   Map2Dto3D,
   FloorListView,
   TrafficView,
+  LocationView,
   PoiInfoContainer,
   PoiTopSearchBar,
   IncrementRoadView,
