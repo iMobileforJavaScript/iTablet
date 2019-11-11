@@ -494,7 +494,8 @@ export default class LayerManager_tolbar extends React.Component {
       // '图层风格'
       this.mapStyle()
       this.setVisible(false)
-    } else if (
+    } 
+    else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {

@@ -14,7 +14,4 @@ const mapDispatchToProps = {
   setMapView,
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(NewDSource)
+export default connect(mapStateToProps, mapDispatchToProps)(NewDSource)

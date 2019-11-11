@@ -380,6 +380,7 @@ async function createCollector(type, layerName) {
     }
   }
 
+  
   SCollector.setDataset(params).then(async () => {
     //设置绘制风格
     await SCollector.setStyle(collectorStyle)

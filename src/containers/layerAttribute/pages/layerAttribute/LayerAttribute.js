@@ -672,6 +672,7 @@ export default class LayerAttribute extends React.Component {
         global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
       )
     }
+    // }
   }
 
   /** 关联事件 **/

@@ -5,9 +5,7 @@ const mapStateToProps = state => ({
   nav: state.nav.toJS(),
 })
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+}
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ThemeStyle)
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeStyle)
