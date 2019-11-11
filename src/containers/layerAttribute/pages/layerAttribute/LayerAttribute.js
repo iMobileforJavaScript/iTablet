@@ -1035,15 +1035,15 @@ export default class LayerAttribute extends React.Component {
         confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
         cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
-        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
+        style={[styles.dialogBackground, { height: scaleSize(200) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
       >
         <View
           style={{
-            paddingTop: scaleSize(130),
+            paddingTop: scaleSize(30),
             flex: 1,
             flexDirection: 'column',
             alignItems: 'center',
@@ -1051,7 +1051,7 @@ export default class LayerAttribute extends React.Component {
         >
           <Text
             style={{
-              fontSize: scaleSize(24),
+              fontSize: scaleSize(32),
               color: color.theme_white,
               marginTop: scaleSize(5),
               marginLeft: scaleSize(10),
