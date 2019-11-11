@@ -3,7 +3,7 @@ import { constUtil } from '../../../../utils'
 
 export default StyleSheet.create({
   container: {
-    height: 0.14*constUtil.WIDTH,
+    height: 0.14 * constUtil.WIDTH,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: 'white',

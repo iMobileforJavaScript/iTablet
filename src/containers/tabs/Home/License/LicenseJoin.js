@@ -180,7 +180,7 @@ export default class LicenseJoin extends Component {
 
         <View style={{ alignItems: 'center' }}>
           <Button
-            title={'确定'}
+            title={global.language === 'CN' ? '确定' : 'Confirm'}
             style={{
               width: '94%',
               height: scaleSize(60),
