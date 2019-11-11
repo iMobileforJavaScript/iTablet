@@ -66,7 +66,7 @@ export default class LayerAttributeAdd extends React.Component {
           : this.getTrimSmStr(params.data.name) + '_1') || '',
       caption:
         (params.data && isDetial
-          ? params.data.name
+          ? params.data.caption
           : this.getTrimSmStr(params.data.caption) + '_1') || '',
       type: (params.data && params.data.type) || '',
       // maxLength: (params.data && params.data.maxLength) || '',
@@ -408,7 +408,11 @@ export default class LayerAttributeAdd extends React.Component {
               }}
             >
               <TextInput
-                style={{ fontSize: scaleSize(20), color: color.black }}
+                style={{
+                  fontSize: scaleSize(20),
+                  color: color.black,
+                  width: scaleSize(150),
+                }}
                 value={this.state.maxLength ? this.state.maxLength + '' : null}
                 editable={maxLengthCanEdit && !this.state.isEdit}
                 onChangeText={text => {
