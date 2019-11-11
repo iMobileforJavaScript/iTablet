@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.supermap.itablet"
     android:versionCode="1"
-    android:versionName="3.0.3">
+    android:versionName="3.0.4">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />

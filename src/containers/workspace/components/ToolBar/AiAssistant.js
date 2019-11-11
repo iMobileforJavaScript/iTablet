@@ -141,20 +141,26 @@ function collectSceneForm() {
     GLOBAL.mapView.setState({ map: { height: 0 } })
     const datasourceAlias = 'AR高精度采集'
     const datasetName = 'CollectSceneForm'
+    const datasetPointName = 'CollectPointSceneForm'
     NavigationService.navigate('CollectSceneFormView', {
       datasourceAlias,
       datasetName,
+      datasetPointName,
     })
   }.bind(this)())
 }
 
-//AR投放
+// //AR投放
 // function arCastModelOperate() {
 //   (async function() {
 //     let isSupportedARCore = await SMeasureView.isSupportedARCore()
 //     if (!isSupportedARCore) {
 //       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
 //       return
+//     }
+//     if (GLOBAL.showAIDetect) {
+//       GLOBAL.isswitch = true
+//       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
 //     }
 //     const datasourceAlias = 'AR投放'
 //     const datasetName = 'CastModelOperate'

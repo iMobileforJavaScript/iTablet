@@ -239,7 +239,7 @@ class AppRoot extends Component {
     //  this.initSpeechManager()
       SSpeechRecognizer.init('5a45b65c')
     } else {
-      // SSpeechRecognizer.init('5b63b509')
+      SSpeechRecognizer.init('5b63b509')
     }
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
