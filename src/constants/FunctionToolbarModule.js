@@ -865,7 +865,7 @@ const labelMenuInfo = param => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey:getLanguage(param).Map_Main_Menu.STYLE_FONT,
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     action: () => {
       GLOBAL.toolBox &&
@@ -950,6 +950,42 @@ const uniqueLabelMenuInfo = param => [
         GLOBAL.toolBox.getUniqueColorScheme(
           ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR,
           '颜色方案',
+        )
+    },
+  },
+    {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey:getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFont(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+          '字形',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontSize(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+          '字号',
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontRotation(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+          '旋转角度',
         )
     },
   },

@@ -37,7 +37,6 @@ export default class NavigationView extends React.Component {
     super(props)
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
-    this.showLocationView = params.showLocationView || false
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
@@ -126,9 +125,6 @@ export default class NavigationView extends React.Component {
                   onPress={async () => {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    this.showLocationView &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, true)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
                       button: getLanguage(GLOBAL.language).Map_Main_Menu
                         .SET_AS_START_POINT,
@@ -178,9 +174,6 @@ export default class NavigationView extends React.Component {
                   onPress={async () => {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    this.showLocationView &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
                       button: getLanguage(GLOBAL.language).Map_Main_Menu
                         .SET_AS_DESTINATION,
@@ -330,8 +323,6 @@ export default class NavigationView extends React.Component {
                     }
                     if (this.clickable) {
                       this.clickable = false
-                      GLOBAL.LocationView &&
-                        GLOBAL.LocationView.setVisible(false)
                       NavigationService.goBack()
                     }
                   } else {

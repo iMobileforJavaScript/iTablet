@@ -31,7 +31,6 @@ export default class SimpleSelectList extends React.Component {
       renderType: '',
       autoSelectIndex: false,
       select: {
-        //增量路网选中
         datasourceName: '',
         datasetName: '',
       },
@@ -430,7 +429,8 @@ export default class SimpleSelectList extends React.Component {
         <TouchableOpacity
           style={styles.confirm}
           onPress={() => {
-            this.props.confirmAction && this.props.confirmAction()
+            this.props.confirmAction &&
+              this.props.confirmAction(this.state.data)
           }}
         >
           <Text style={styles.confirmText}>
