@@ -340,10 +340,10 @@ export default class LayerAttributeTable extends React.Component {
       typeof this.props.onPressHeader === 'function' &&
       item.columnIndex !== 0 &&
       item.data &&
-      item.data[0].value !== getLanguage(global.language).Map_Label.NAME
+      item.data[0] !== getLanguage(global.language).Map_Label.NAME
     ) {
       this.props.onPressHeader({
-        data: item.data[item.columnIndex],
+        fieldInfo: item.data[item.columnIndex].fieldInfo.fieldInfo,
         index: item.columnIndex,
         pressView: item.pressView,
       })

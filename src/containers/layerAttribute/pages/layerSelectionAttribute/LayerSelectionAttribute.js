@@ -33,6 +33,7 @@ export default class LayerSelectionAttribute extends React.Component {
     setAttributeHistory: () => {},
     onGetAttribute?: () => {},
     onGetToolVisible?: () => {},
+    onAttributeFeildDelete?: () => {},
     isShowSystemFields: boolean,
   }
 
@@ -638,12 +639,6 @@ export default class LayerSelectionAttribute extends React.Component {
 
     items = [
       {
-        title: getLanguage(global.language).Profile.DELETE,
-        onPress: () => {
-          (async function() {}.bind(this)())
-        },
-      },
-      {
         title: global.language === 'CN' ? '详情' : 'Detail',
         onPress: () => {
           (async function() {
@@ -655,6 +650,22 @@ export default class LayerSelectionAttribute extends React.Component {
         },
       },
     ]
+    if (
+      !fieldInfo.isSystemField &&
+      !fieldInfo.caption.toLowerCase().substring(0, 2) === 'sm'
+    ) {
+      items.push({
+        title: getLanguage(global.language).Profile.DELETE,
+        onPress: () => {
+          if (
+            this.props.onAttributeFeildDelete &&
+            typeof this.props.onAttributeFeildDelete === 'function'
+          ) {
+            this.props.onAttributeFeildDelete(fieldInfo)
+          }
+        },
+      })
+    }
     if (pressView) {
       pressView.measure((ox, oy, width, height, px, py) => {
         ActionPopover.show(

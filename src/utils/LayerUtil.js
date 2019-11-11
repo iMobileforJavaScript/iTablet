@@ -106,13 +106,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: item,
+          fieldInfo: { fieldInfo: item },
         })
       } else {
         tableHead.push({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: item,
+          fieldInfo: { fieldInfo: item },
         })
       }
     })

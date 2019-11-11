@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { Container, MTBtn, PopView } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { Toast, scaleSize, StyleUtils } from '../../../../utils'
@@ -18,6 +18,7 @@ import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
+import { Dialog } from '../../../../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -320,6 +321,14 @@ export default class LayerAttributeTabs extends React.Component {
       )
   }
 
+  /** 删除属性字段 **/
+  onAttributeFeildDelete = async fieldInfo => {
+    if (!fieldInfo) {
+      return
+    }
+    this.deleteFieldData = fieldInfo
+    this.deleteFieldDialog.setDialogVisible(true)
+  }
   /** 添加属性字段 **/
   addAttributeField = async fieldInfo => {
     if (this.state.attributes.data.length > 0) {
@@ -511,6 +520,83 @@ export default class LayerAttributeTabs extends React.Component {
       this.currentTabRefs[this.state.currentTabIndex].setAttributeHistory(type)
   }
 
+  //提示是否删除属性字段
+  renderDeleteFieldDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.deleteFieldDialog = ref)}
+        type={'modal'}
+        confirmAction={async () => {
+          this.deleteFieldDialog.setDialogVisible(false)
+          let layerPath = this.currentTabRefs[this.state.currentTabIndex].props
+            .layerSelection.layerInfo.path
+          let result = await SMap.removeRecordsetFieldInfo(
+            layerPath,
+            false,
+            this.deleteFieldData.name,
+          )
+          if (result) {
+            Toast.show(
+              global.language === 'CN'
+                ? '属性字段删除成功'
+                : 'Attribute Feild Delete Succeed',
+            )
+            this.currentTabRefs[this.state.currentTabIndex].getAttribute(
+              {
+                type: 'reset',
+                currentPage: this.currentTabRefs[this.state.currentTabIndex]
+                  .currentPage,
+                startIndex: 0,
+                relativeIndex: 0,
+                currentIndex: 0,
+              },
+              () => {},
+            )
+          } else {
+            Toast.show(
+              global.language === 'CN'
+                ? '属性字段删除失败'
+                : 'Attribute Feild Delete Faild',
+            )
+          }
+        }}
+        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
+        //{'申请试用许可'}
+        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        opacity={1}
+        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
+        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+        cancelAction={() => {
+          this.deleteFieldDialog.setDialogVisible(false)
+        }}
+      >
+        <View
+          style={{
+            paddingTop: scaleSize(130),
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: scaleSize(24),
+              color: color.theme_white,
+              marginTop: scaleSize(5),
+              marginLeft: scaleSize(10),
+              marginRight: scaleSize(10),
+              textAlign: 'center',
+            }}
+          >
+            {global.language === 'CN'
+              ? '确定删除所选字段？'
+              : 'Sure Delete this Attribute Field?'}
+          </Text>
+        </View>
+      </Dialog>
+    )
+  }
+
   renderTabs = () => {
     let children = []
     for (let i = 0; i < this.props.selection.length; i++) {
@@ -597,6 +683,7 @@ export default class LayerAttributeTabs extends React.Component {
         selectAction={this.selectAction}
         onGetAttribute={this.onGetAttribute}
         onGetToolVisible={this.onGetToolVisible}
+        onAttributeFeildDelete={this.onAttributeFeildDelete}
         isShowSystemFields={this.state.isShowSystemFields}
       />
     )
@@ -757,6 +844,7 @@ export default class LayerAttributeTabs extends React.Component {
           index={this.state.currentTabIndex}
           onChange={this.drawerOnChange}
         />
+        {this.renderDeleteFieldDialog()}
       </Container>
     )
   }

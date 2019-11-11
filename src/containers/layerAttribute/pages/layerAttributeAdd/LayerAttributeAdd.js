@@ -51,16 +51,23 @@ export default class LayerAttributeAdd extends React.Component {
     if (params.data && params.data.type == 1) {
       params.data.defaultValue = params.data.defaultValue === '1'
     }
+    let isDetial = params.isDetail === true ? true : false
     this.state = {
       // isDetail: params.isDetail,
       // isEdit: params.data && Object.keys(params.data).length > 0,
-      isEdit: params.isDetail === true ? true : false,
+      isEdit: isDetial,
       callBack: params.callBack,
       defaultParams: params.defaultParams,
       data: params.data,
       dataset: params.dataset,
-      name: (params.data && params.data.name + '_1') || '',
-      caption: (params.data && params.data.caption + '_1') || '',
+      name:
+        (params.data && isDetial
+          ? params.data.name
+          : this.getTrimSmStr(params.data.name) + '_1') || '',
+      caption:
+        (params.data && isDetial
+          ? params.data.name
+          : this.getTrimSmStr(params.data.caption) + '_1') || '',
       type: (params.data && params.data.type) || '',
       // maxLength: (params.data && params.data.maxLength) || '',
       maxLength: this.getDefaultMaxLength(params.data.type),

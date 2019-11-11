@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, InteractionManager } from 'react-native'
+import { View, InteractionManager, Text } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopView, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
@@ -29,11 +29,14 @@ import { color } from '../../../../styles'
 import constants from '../../../workspace/constants'
 //eslint-disable-next-line
 import { ActionPopover } from 'teaset'
+import { Dialog } from '../../../../components'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
 const ROWS_LIMIT = 120
 const COL_HEIGHT = scaleSize(80)
+
+let deleteFieldData //删除属性字段
 
 export default class LayerAttribute extends React.Component {
   props: {
@@ -601,12 +604,6 @@ export default class LayerAttribute extends React.Component {
 
     items = [
       {
-        title: getLanguage(global.language).Profile.DELETE,
-        onPress: () => {
-          (async function() {}.bind(this)())
-        },
-      },
-      {
         title: global.language === 'CN' ? '详情' : 'Detail',
         onPress: () => {
           (async function() {
@@ -618,6 +615,21 @@ export default class LayerAttribute extends React.Component {
         },
       },
     ]
+    if (
+      !fieldInfo.isSystemField &&
+      !fieldInfo.caption.toLowerCase().substring(0, 2) === 'sm'
+    ) {
+      items.push({
+        title: getLanguage(global.language).Profile.DELETE,
+        onPress: () => {
+          if (!fieldInfo) {
+            return
+          }
+          deleteFieldData = fieldInfo
+          this.deleteFieldDialog.setDialogVisible(true)
+        },
+      })
+    }
     if (pressView) {
       pressView.measure((ox, oy, width, height, px, py) => {
         ActionPopover.show(
@@ -993,6 +1005,71 @@ export default class LayerAttribute extends React.Component {
     })
   }
 
+  //提示是否删除属性字段
+  renderDeleteFieldDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.deleteFieldDialog = ref)}
+        type={'modal'}
+        confirmAction={async () => {
+          this.deleteFieldDialog.setDialogVisible(false)
+          let layerPath = this.props.currentLayer.path
+          let result = await SMap.removeRecordsetFieldInfo(
+            layerPath,
+            false,
+            deleteFieldData.name,
+          )
+          if (result) {
+            Toast.show(
+              global.language === 'CN'
+                ? '属性字段删除成功'
+                : 'Attribute Feild Delete Succeed',
+            )
+            this.refresh()
+          } else {
+            Toast.show(
+              global.language === 'CN'
+                ? '属性字段删除失败'
+                : 'Attribute Feild Delete Faild',
+            )
+          }
+        }}
+        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
+        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        opacity={1}
+        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
+        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+        cancelAction={() => {
+          this.deleteFieldDialog.setDialogVisible(false)
+        }}
+      >
+        <View
+          style={{
+            paddingTop: scaleSize(130),
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: scaleSize(24),
+              color: color.theme_white,
+              marginTop: scaleSize(5),
+              marginLeft: scaleSize(10),
+              marginRight: scaleSize(10),
+              textAlign: 'center',
+            }}
+          >
+            {global.language === 'CN'
+              ? '确定删除所选字段？'
+              : 'Sure Delete this Attribute Field?'}
+          </Text>
+        </View>
+      </Dialog>
+    )
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -1288,6 +1365,7 @@ export default class LayerAttribute extends React.Component {
         >
           {this.renderEditControllerView()}
         </PopView>
+        {this.renderDeleteFieldDialog()}
       </Container>
     )
   }
