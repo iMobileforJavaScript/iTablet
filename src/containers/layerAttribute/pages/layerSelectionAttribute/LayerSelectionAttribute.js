@@ -650,10 +650,9 @@ export default class LayerSelectionAttribute extends React.Component {
         },
       },
     ]
-    if (
-      !fieldInfo.isSystemField &&
-      !fieldInfo.caption.toLowerCase().substring(0, 2) === 'sm'
-    ) {
+    let tempStr = fieldInfo.caption.toLowerCase()
+    let isSystemField = tempStr.substring(0, 2) == 'sm'
+    if (!fieldInfo.isSystemField && !isSystemField) {
       items.push({
         title: getLanguage(global.language).Profile.DELETE,
         onPress: () => {
