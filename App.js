@@ -680,6 +680,7 @@ class AppRoot extends Component {
           SMap.initTrailLicensePath()
           Toast.show(global.language==='CN'?"试用成功":'Successful trial')
           GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
+          GLOBAL.modulesNumber = undefined
         })
     }catch (e) {
       GLOBAL.Loading.setLoading(
