@@ -332,7 +332,6 @@ export default class TouchProgress extends Component {
               }
             }
             break
-          case 107:
           case ThemeType.LABEL: // 标签专题图
             {
               //避免切换地图后 图例设置走这个case

@@ -8,7 +8,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingTop:10,
+    paddingTop: 10,
   },
   input: {
     width: 0.75 * constUtil.WIDTH,
@@ -22,10 +22,10 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: scaleSize(10),
   },
-  textContainer:{
+  textContainer: {
     marginTop: scaleSize(30),
     height: scaleSize(40),
-    width:0.75* constUtil.WIDTH,
+    width: 0.75 * constUtil.WIDTH,
   },
   text: {
     fontSize: size.fontSize.fontSizeMd,
