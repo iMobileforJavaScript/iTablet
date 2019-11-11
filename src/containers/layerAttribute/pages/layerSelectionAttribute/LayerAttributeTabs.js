@@ -755,7 +755,7 @@ export default class LayerAttributeTabs extends React.Component {
           },
           headerRight: [
             <MTBtn
-              key={'undo'}
+              key={'hide'}
               image={
                 this.state.isShowSystemFields
                   ? getThemeAssets().attribute.icon_attribute_hide
