@@ -5,7 +5,14 @@
  */
 
 import * as React from 'react'
-import { View, TouchableOpacity, Text, Image, Keyboard } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Keyboard,
+  TextInput,
+} from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, Row, Button } from '../../../../components'
 import { Toast, scaleSize } from '../../../../utils'
@@ -15,18 +22,18 @@ import { getLanguage } from '../../../../language'
 import styles from './styles'
 import { color } from '../../../../styles'
 let typeStr = [
-  ['布尔型', 'BOOLEAN', 1],
-  ['字节型', 'BYTE', 2],
-  ['16位整型', 'INT16', 3],
-  ['32位整型', 'INT32', 4],
-  ['64位整型', 'INT64', 16],
-  ['单精度', 'SINGLE', 6],
-  ['双精度', 'DOUBLE', 7],
-  ['日期型', 'DATETIME', 23],
-  ['二进制型', 'LONGBINARY', 11],
-  ['文本型', 'TEXT', 10],
-  ['字符型', 'CHAR', 118],
-  ['宽字符型', 'WTEXT', 127],
+  ['布尔型', 'BOOLEAN', 1, 1],
+  // ['字节型', 'BYTE', 2,1],
+  ['16位整型', 'INT16', 3, 2],
+  ['32位整型', 'INT32', 4, 4],
+  ['64位整型', 'INT64', 16, 8],
+  ['单精度', 'SINGLE', 6, 4],
+  ['双精度', 'DOUBLE', 7, 8],
+  // ['日期型', 'DATETIME', 23,8],
+  // ['二进制型', 'LONGBINARY', 11,0],
+  ['文本型', 'TEXT', 10, 255],
+  // ['字符型', 'CHAR', 118,1],
+  // ['宽字符型', 'WTEXT', 127,255],
 ]
 
 export default class LayerAttributeAdd extends React.Component {
@@ -39,15 +46,31 @@ export default class LayerAttributeAdd extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
+    params.data = params.defaultParams.fieldInfo.fieldInfo //&&
+    //params.defaultParams[params.defaultParams.length - 1].fieldInfo
+    if (params.data && params.data.type == 1) {
+      params.data.defaultValue = params.data.defaultValue === '1'
+    }
+    let isDetial = params.isDetail === true ? true : false
     this.state = {
-      isEdit: params.data && Object.keys(params.data).length > 0,
+      // isDetail: params.isDetail,
+      // isEdit: params.data && Object.keys(params.data).length > 0,
+      isEdit: isDetial,
       callBack: params.callBack,
+      defaultParams: params.defaultParams,
       data: params.data,
       dataset: params.dataset,
-      name: (params.data && params.data.name) || '',
-      caption: (params.data && params.data.caption) || '',
+      name:
+        (params.data && isDetial
+          ? params.data.name
+          : this.getTrimSmStr(params.data.name) + '_1') || '',
+      caption:
+        (params.data && isDetial
+          ? params.data.name
+          : this.getTrimSmStr(params.data.caption) + '_1') || '',
       type: (params.data && params.data.type) || '',
-      maxLength: (params.data && params.data.maxLength) || '',
+      // maxLength: (params.data && params.data.maxLength) || '',
+      maxLength: this.getDefaultMaxLength(params.data.type),
       defaultValue: (params.data && params.data.defaultValue) || '',
       isRequired:
         params.data && typeof params.data.isRequired === 'boolean'
@@ -55,11 +78,7 @@ export default class LayerAttributeAdd extends React.Component {
           : '',
       // 弹出框数据
       popData: [],
-      currentPopData: null,
-      // currentPopData: {
-      //   key: global.language === 'CN' ? typeStr[2][0] : typeStr[2][1],
-      //   value: typeStr[2][2],
-      // },
+      currentPopData: this.getTypeDataByType(params.data.type),
     }
   }
 
@@ -67,58 +86,37 @@ export default class LayerAttributeAdd extends React.Component {
 
   confirmValidate = () => {
     let isConfrim = false
-
-    if (this.state.isEdit) {
-      const { data } = this.props.navigation.state.params
-      let keys = Object.keys(data)
-      for (let i = 0; i < keys.length; i++) {
-        let key = keys[i]
-        if (this.state[key] !== data[key] && key !== 'isSystemField') {
-          isConfrim = true
-          break
-        }
-      }
-      !isConfrim && Toast.show('还未修改数据')
+    if (!this.state.name) {
+      Toast.show(global.language === 'CN' ? '请输入名称' : 'Please input name')
+    } else if (!this.state.caption) {
+      Toast.show(
+        global.language === 'CN' ? '请输入别名' : 'Please input caption',
+      )
+    } else if (!this.state.type) {
+      Toast.show(global.language === 'CN' ? '请选择类型' : 'Please choice type')
+    } else if (!this.state.maxLength) {
+      Toast.show(
+        global.language === 'CN' ? '请输入长度' : 'Please input max length',
+      )
+    } else if (
+      this.state.defaultValue &&
+      !this.checkDefaultValue(this.state.defaultValue)
+    ) {
+      Toast.show(
+        global.language === 'CN'
+          ? '缺省值输入错误'
+          : 'Default value input error',
+      )
+    } else if (
+      this.state.isRequired === '' ||
+      this.state.isRequired === undefined
+    ) {
+      Toast.show(
+        global.language === 'CN' ? '请选择是否必选' : 'Please select required',
+      )
     } else {
-      if (!this.state.name) {
-        Toast.show(
-          global.language === 'CN' ? '请输入名称' : 'Please input name',
-        )
-      } else if (!this.state.caption) {
-        Toast.show(
-          global.language === 'CN' ? '请输入别名' : 'Please input caption',
-        )
-      } else if (!this.state.type) {
-        Toast.show(
-          global.language === 'CN' ? '请选择类型' : 'Please choice type',
-        )
-      } else if (!this.state.maxLength) {
-        Toast.show(
-          global.language === 'CN' ? '请输入长度' : 'Please input max length',
-        )
-      } else if (
-        this.state.defaultValue &&
-        !this.checkDefaultValue(this.state.defaultValue)
-      ) {
-        Toast.show(
-          global.language === 'CN'
-            ? '缺省值输入错误'
-            : 'Default value input error',
-        )
-      } else if (
-        this.state.isRequired === '' ||
-        this.state.isRequired === undefined
-      ) {
-        Toast.show(
-          global.language === 'CN'
-            ? '请选择是否必选'
-            : 'Please select required',
-        )
-      } else {
-        isConfrim = true
-      }
+      isConfrim = true
     }
-
     return isConfrim
   }
 
@@ -129,14 +127,21 @@ export default class LayerAttributeAdd extends React.Component {
     }
     this.state.callBack &&
       this.state.callBack({
-        caption: this.state.caption,
-        name: this.state.name,
+        caption: this.getTrimSmStr(this.state.caption),
+        name: this.getTrimSmStr(this.state.name),
         type: this.state.type,
         maxLength: this.state.maxLength,
         defaultValue: this.state.defaultValue,
         required: this.state.isRequired,
       })
-    if (!isContinue) {
+    if (isContinue) {
+      let tempName = this.state.name + '_1'
+      let tempCaption = this.state.caption + '_1'
+      this.setState({
+        name: tempName,
+        caption: tempCaption,
+      })
+    } else {
       NavigationService.goBack()
     }
   }
@@ -145,19 +150,36 @@ export default class LayerAttributeAdd extends React.Component {
     Toast.show('待做')
   }
 
+  getTrimSmStr = text => {
+    if (text.length < 2) {
+      return text
+    }
+    let tempStr = text.toLowerCase()
+    if (tempStr.substring(0, 2) == 'sm') {
+      let endStr = text.substring(2, text.length)
+      if (endStr.length < 2) {
+        return endStr
+      } else {
+        return this.getTrimSmStr(endStr)
+      }
+    } else {
+      return text
+    }
+  }
+
   getType = ({ labelTitle, value }) => {
     switch (labelTitle) {
-      case '类型':
+      case global.language === 'CN' ? '类型' : 'Type':
         this.setState({
           type: value,
         })
         break
-      case '必填':
+      case global.language === 'CN' ? '必填' : 'Required':
         this.setState({
           isRequired: value,
         })
         break
-      case '缺省值':
+      case global.language === 'CN' ? '缺省值' : 'Default Value':
         this.setState({
           defaultValue: value,
         })
@@ -166,22 +188,22 @@ export default class LayerAttributeAdd extends React.Component {
 
   getInputValue = ({ title, text }) => {
     switch (title) {
-      case '名称':
+      case global.language === 'CN' ? '名称' : 'Name':
         this.setState({
           name: text,
         })
         break
-      case '别名':
+      case global.language === 'CN' ? '别名' : 'Caption':
         this.setState({
           caption: text,
         })
         break
-      case '长度':
+      case global.language === 'CN' ? '必填' : 'Required':
         this.setState({
           maxLength: parseInt(text),
         })
         break
-      case '缺省值':
+      case global.language === 'CN' ? '缺省值' : 'Default Value':
         this.setState({
           defaultValue: text,
         })
@@ -194,6 +216,9 @@ export default class LayerAttributeAdd extends React.Component {
   }
 
   renderBtns = () => {
+    if (this.state.isEdit) {
+      return null
+    }
     return (
       <View style={styles.btns}>
         <Button
@@ -225,22 +250,18 @@ export default class LayerAttributeAdd extends React.Component {
 
   checkDefaultValue(text) {
     let checkFlag = true
+    let r
     switch (this.state.type) {
       case 3:
       case 4:
       case 16:
-        {
-          let r = /^\+?[1-9][0-9]*$/ //正整数
-          checkFlag = r.test(text)
-        }
-
+        r = /^(0|\+?[1-9][0-9]*)$/ //正整数和0
+        checkFlag = r.test(text)
         break
       case 6:
       case 7:
-        {
-          let r2 = /^\\d+(\\.\\d+)?$/ //小数
-          checkFlag = r2.test(text)
-        }
+        r = /^\d+(\.\d+)?$/ //小数
+        checkFlag = r.test(text)
         break
     }
     return checkFlag
@@ -257,6 +278,37 @@ export default class LayerAttributeAdd extends React.Component {
     }
     return data
   }
+  //长度是否能编辑
+  maxLengthCanEdit() {
+    let canEdit = false
+    switch (this.state.type) {
+      case 10:
+      case 127:
+        canEdit = true
+    }
+    return canEdit
+  }
+  //获取默认长度
+  getDefaultMaxLength(type) {
+    for (let i = 0; i < typeStr.length; i++) {
+      if (type === typeStr[i][2]) {
+        return typeStr[i][3]
+      }
+    }
+    return 0
+  }
+  //根据类型获取popData数据
+  getTypeDataByType(type) {
+    for (let i = 0; i < typeStr.length; i++) {
+      if (type === typeStr[i][2]) {
+        return {
+          key: global.language === 'CN' ? typeStr[i][0] : typeStr[i][1],
+          value: typeStr[i][2],
+        }
+      }
+    }
+    return null
+  }
 
   renderPopList = () => {
     return (
@@ -267,10 +319,12 @@ export default class LayerAttributeAdd extends React.Component {
         popData={this.getDataType()}
         currentPopData={this.state.currentPopData}
         confirm={data => {
+          let tempLength = this.getDefaultMaxLength(data.value)
           this.setState({
             currentPopData: data,
             type: data.value,
-            defaultValue: undefined,
+            // defaultValue: undefined,
+            maxLength: tempLength,
           })
           this.popModal.setVisible(false)
         }}
@@ -279,32 +333,34 @@ export default class LayerAttributeAdd extends React.Component {
   }
 
   renderRows = () => {
+    let maxLengthCanEdit = this.maxLengthCanEdit()
     return (
       <View style={styles.rows}>
         <Row
           style={{ marginTop: scaleSize(30) }}
-          customRightStyle={{ height: scaleSize(35) }}
+          customRightStyle={{ height: scaleSize(50) }}
           key={'名称'}
           disable={this.state.isEdit}
           defaultValue={this.state.name}
           type={Row.Type.INPUT}
-          title={'名称'}
+          title={global.language === 'CN' ? '名称' : 'Name'}
           getValue={this.getInputValue}
         />
         <Row
           style={{ marginTop: scaleSize(15) }}
-          customRightStyle={{ height: scaleSize(35) }}
+          customRightStyle={{ height: scaleSize(50) }}
           key={'别名'}
+          disable={this.state.isEdit}
           defaultValue={this.state.caption}
           type={Row.Type.INPUT}
-          title={'别名'}
+          title={global.language === 'CN' ? '别名' : 'Caption'}
           getValue={this.getInputValue}
         />
         <Row
           style={{ marginTop: scaleSize(30) }}
           key={'类型'}
           type={Row.Type.RADIO_GROUP}
-          title={'类型'}
+          title={global.language === 'CN' ? '类型' : 'Type'}
           defaultValue={this.state.type}
           disable={this.state.isEdit}
           customRgihtView={
@@ -314,10 +370,14 @@ export default class LayerAttributeAdd extends React.Component {
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}
-              onPress={() => {
-                Keyboard.dismiss()
-                this.popModal && this.popModal.setVisible(true)
-              }}
+              onPress={
+                this.state.isEdit
+                  ? null
+                  : () => {
+                    Keyboard.dismiss()
+                    this.popModal && this.popModal.setVisible(true)
+                  }
+              }
             >
               <Text style={{ fontSize: scaleSize(24), color: color.gray }}>
                 {this.state.currentPopData
@@ -333,23 +393,42 @@ export default class LayerAttributeAdd extends React.Component {
         />
         <Row
           style={{ marginTop: scaleSize(15) }}
-          customRightStyle={{ height: scaleSize(35) }}
+          customRightStyle={{ height: scaleSize(50) }}
           key={'长度'}
-          type={Row.Type.INPUT}
-          title={'长度'}
-          disable={this.state.isEdit}
-          defaultValue={this.state.maxLength}
-          value={this.state.maxLength}
-          getValue={this.getInputValue}
-          inputType={Row.InputType.NUMERIC}
+          type={Row.Type.TEXT_BTN}
+          title={global.language === 'CN' ? '长度' : 'Length'}
+          customRgihtView={
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 2,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginLeft: scaleSize(20),
+              }}
+            >
+              <TextInput
+                style={{ fontSize: scaleSize(20), color: color.black }}
+                value={this.state.maxLength ? this.state.maxLength + '' : null}
+                editable={maxLengthCanEdit && !this.state.isEdit}
+                onChangeText={text => {
+                  let length = Number(text.replace(/[^0-9]*/g, ''))
+                  this.setState({
+                    maxLength: length,
+                  })
+                }}
+                keyboardType="numeric"
+              />
+            </View>
+          }
         />
         {this.state.type === 1 ? (
           <Row
             style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(35) }}
+            customRightStyle={{ height: scaleSize(50) }}
             key={'缺省值'}
             type={Row.Type.RADIO_GROUP}
-            title={'缺省值'}
+            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
             disable={this.state.isEdit}
             defaultValue={this.state.defaultValue}
             radioArr={[
@@ -362,10 +441,10 @@ export default class LayerAttributeAdd extends React.Component {
         ) : (
           <Row
             style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(35) }}
+            customRightStyle={{ height: scaleSize(50) }}
             key={'缺省值'}
             type={Row.Type.INPUT}
-            title={'缺省值'}
+            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
             disable={this.state.isEdit}
             defaultValue={this.state.defaultValue}
             value={this.state.defaultValue}
@@ -377,7 +456,7 @@ export default class LayerAttributeAdd extends React.Component {
           style={{ marginTop: scaleSize(15) }}
           key={'必填'}
           type={Row.Type.RADIO_GROUP}
-          title={'必填'}
+          title={global.language === 'CN' ? '必填' : 'Required'}
           disable={this.state.isEdit}
           defaultValue={this.state.isRequired}
           radioArr={[
@@ -398,7 +477,13 @@ export default class LayerAttributeAdd extends React.Component {
         style={styles.container}
         // scrollable
         headerProps={{
-          title: global.language === 'CN' ? '添加属性' : 'Add Attribute',
+          title: this.state.isEdit
+            ? global.language === 'CN'
+              ? '属性详情'
+              : 'Attribute Detail'
+            : global.language === 'CN'
+              ? '添加属性'
+              : 'Add Attribute',
           navigation: this.props.navigation,
         }}
       >

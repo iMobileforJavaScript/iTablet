@@ -19,6 +19,7 @@ export default class LayerTopBar extends React.Component {
     relateAction: () => {},
     addFieldAction: () => {},
     tabsAction?: () => {}, // 显示侧滑栏
+    attributesData: Array,
     canTabs?: boolean, // 是否可点击切换标签
     canLocated?: boolean, // 是否可点击定位
     canUndo?: boolean, // 是否可点击撤销
@@ -130,6 +131,26 @@ export default class LayerTopBar extends React.Component {
           })}
         <ScrollView horizontal style={styles.rightList}>
           {this.renderBtn({
+            icon: this.props.canAddField
+              ? getPublicAssets().common.icon_plus
+              : getPublicAssets().common.icon_plus_gray,
+            key: '添加',
+            title: getLanguage(global.language).Map_Attribute
+              .ATTRIBUTE_FIELD_ADD,
+            //'添加',
+            action: () => {
+              NavigationService.navigate('LayerAttributeAdd', {
+                defaultParams:
+                  this.props.attributesData.length > 1 &&
+                  this.props.attributesData[
+                    this.props.attributesData.length - 1
+                  ],
+                callBack: this.addAttributeFieldAction,
+              })
+            },
+            enabled: this.props.canAddField,
+          })}
+          {this.renderBtn({
             icon: this.props.canLocated
               ? getThemeAssets().attribute.attribute_location
               : getThemeAssets().attribute.attribute_location,
@@ -159,21 +180,6 @@ export default class LayerTopBar extends React.Component {
             //'关联',
             action: this.relateAction,
             enabled: this.props.canRelated,
-          })}
-          {this.renderBtn({
-            icon: this.props.canAddField
-              ? getPublicAssets().common.icon_plus
-              : getPublicAssets().common.icon_plus_gray,
-            key: '添加',
-            title: getLanguage(global.language).Map_Attribute
-              .ATTRIBUTE_FIELD_ADD,
-            //'添加',
-            action: () => {
-              NavigationService.navigate('LayerAttributeAdd', {
-                callBack: this.addAttributeFieldAction,
-              })
-            },
-            enabled: this.props.canAddField,
           })}
         </ScrollView>
       </View>
