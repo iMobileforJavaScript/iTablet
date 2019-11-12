@@ -94,7 +94,7 @@ function getLayerNameCreateTheme() {
   return _createThemeByLayer
 }
 
-function showExpressionList(type, themeType) {
+function showExpressionList(type,themeType) {
   let listSelectable = false
   if (type === 'ThemeGraph') {
     listSelectable = true
@@ -108,7 +108,7 @@ function showExpressionList(type, themeType) {
     let dataset = getdata.dataset
     let allExpressions = []
     getdata.list.forEach(item => {
-      if (isThemeFieldTypeAvailable(item.fieldTypeStr, themeType)) {
+      if (isThemeFieldTypeAvailable(item.fieldTypeStr,themeType)) {
         item.info = {
           infoType: 'fieldType',
           fieldType: item.fieldType,
@@ -331,7 +331,7 @@ function getThemeMapCreateByLayer(type, params) {
       title: getLanguage(global.language).Map_Main_Menu.THEME_UNIFORM_LABLE,
       // constants.THEME_UNIFY_LABEL,
       size: 'large',
-      action: () => showExpressionList('Theme', constants.THEME_UNIFY_LABEL),
+      action: () => showExpressionList('Theme',constants.THEME_UNIFY_LABEL),
       image: getThemeAssets().themeType.theme_create_unify_label,
       selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
@@ -342,7 +342,7 @@ function getThemeMapCreateByLayer(type, params) {
         .THEME_UNIQUE_VALUE_LABLE_MAP,
       // constants.THEME_UNIQUE_LABEL,
       size: 'large',
-      action: () => showExpressionList('Theme', constants.THEME_UNIQUE_LABEL),
+      action: () => showExpressionList('Theme',constants.THEME_UNIQUE_LABEL),
       image: getThemeAssets().themeType.theme_create_unique_label,
       selectedImage: getThemeAssets().themeType.theme_create_unique_label,
     },
@@ -352,7 +352,7 @@ function getThemeMapCreateByLayer(type, params) {
       title: getLanguage(global.language).Map_Main_Menu.THEME_RANGES_LABLE_MAP,
       // constants.THEME_RANGE_LABEL,
       size: 'large',
-      action: () => showExpressionList('Theme', constants.THEME_RANGE_LABEL),
+      action: () => showExpressionList('Theme',constants.THEME_RANGE_LABEL),
       image: getThemeAssets().themeType.theme_create_range_label,
       selectedImage: getThemeAssets().themeType.theme_create_range_label,
     },
@@ -1093,6 +1093,7 @@ function getGridRangeMode() {
   ]
   return data
 }
+
 
 /**设置统一标签背景形状 */
 function setLabelFont() {

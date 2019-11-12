@@ -252,7 +252,7 @@ function getCollectionData(type, params) {
 }
 
 /** 采集分类点击事件 **/
-function showCollection(type) {
+function showCollection(type, layerName) {
   let { data, buttons } = getCollectionData(type, _params)
   if (!_params.setToolbarVisible) return
   // _params.setLastState()
@@ -276,13 +276,13 @@ function showCollection(type) {
     column,
     cb: () => {
       _params.setLastState()
-      createCollector(type)
+      createCollector(type, layerName)
     },
   })
 }
 
 /** 创建采集 **/
-async function createCollector(type) {
+async function createCollector(type, layerName) {
   // 风格
   let geoStyle = new GeoStyle()
   let collectorStyle = new GeoStyle()
@@ -340,6 +340,8 @@ async function createCollector(type) {
   let params = {}
   if (_params.template.currentTemplateInfo.layerPath) {
     params = { layerPath: _params.template.currentTemplateInfo.layerPath }
+  } else if (layerName !== undefined) {
+    params = { layerPath: layerName }
   } else {
     let datasetName = _params.symbol.currentSymbol.type
       ? _params.symbol.currentSymbol.type +
@@ -378,6 +380,7 @@ async function createCollector(type) {
     }
   }
 
+  
   SCollector.setDataset(params).then(async () => {
     //设置绘制风格
     await SCollector.setStyle(collectorStyle)

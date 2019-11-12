@@ -5,7 +5,6 @@ import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../../containers/NavigationService'
 import { getLanguage } from '../../../../language'
-import { TouchType } from '../../../../constants'
 
 export default class MapSelectPointButton extends React.Component {
   props: {
@@ -135,8 +134,6 @@ export default class MapSelectPointButton extends React.Component {
       }
     }
     if (path && pathLength) {
-      GLOBAL.TouchType = TouchType.NORMAL
-      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
       this.props.changeNavPathInfo &&
         this.props.changeNavPathInfo({ path, pathLength })
 
