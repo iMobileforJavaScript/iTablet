@@ -138,6 +138,7 @@ function collectSceneForm() {
       GLOBAL.isswitch = true
       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
     }
+    GLOBAL.mapView.setState({ map: { height: 0 } })
     const datasourceAlias = 'AR高精度采集'
     const datasetName = 'CollectSceneForm'
     const datasetPointName = 'CollectPointSceneForm'

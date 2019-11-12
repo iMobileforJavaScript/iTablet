@@ -99,13 +99,13 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.MAPSELECTPOINT.setVisible(false)
           if (GLOBAL.STARTX !== undefined) {
             let result
+            await SMap.getStartPoint(
+              GLOBAL.STARTX,
+              GLOBAL.STARTY,
+              GLOBAL.INDOORSTART,
+              GLOBAL.STARTPOINTFLOOR,
+            )
             if (GLOBAL.INDOOREND) {
-              await SMap.getStartPoint(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.INDOORSTART,
-                GLOBAL.STARTPOINTFLOOR,
-              )
               result = await SMap.beginIndoorNavigation(
                 GLOBAL.STARTX,
                 GLOBAL.STARTY,

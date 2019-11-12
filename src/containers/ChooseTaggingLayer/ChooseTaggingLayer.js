@@ -3,10 +3,11 @@ import { View, FlatList, TouchableOpacity, Text, Image } from 'react-native'
 import { scaleSize, setSpText, Toast } from '../../utils'
 import { color } from '../../styles'
 import NavigationService from '../NavigationService'
-import { SMap, SAIDetectView, DatasetType } from 'imobile_for_reactnative'
+import { SMap, SAIDetectView } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import { Container } from '../../components'
 
+import * as LayerUtils from '../../containers/mtLayerManager/LayerUtils'
 import { ConstToolType } from '../../constants'
 import ToolbarBtnType from '../../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { getLanguage } from '../../language'
@@ -76,7 +77,8 @@ export default class ChooseTaggingLayer extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {
@@ -97,7 +99,9 @@ export default class ChooseTaggingLayer extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
+        // isTaggingLayer = currentLayer.type === DatasetType.CAD
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {
@@ -118,7 +122,9 @@ export default class ChooseTaggingLayer extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
+        // isTaggingLayer = currentLayer.type === DatasetType.CAD
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {

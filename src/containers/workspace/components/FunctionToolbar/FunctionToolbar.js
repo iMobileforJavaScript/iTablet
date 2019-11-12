@@ -52,13 +52,12 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     layers: PropTypes.object,
-    navigation: Object,
     getLayers?: () => {},
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
     setMapType: () => {},
-
+    navigation: Object,
     save: () => {},
     saveAs: () => {},
     closeOneMap: () => {},
@@ -662,49 +661,136 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  mapStyle = () => {
-    const toolRef = this.props.getToolRef()
-    if (this.props.layers.themeType <= 0) {
-      if (
-        this.props.layers.type === 1 ||
-        this.props.layers.type === 3 ||
-        this.props.layers.type === 5 ||
-        this.props.layers.type === 83
-      ) {
-        if (toolRef) {
-          if (this.props.layers.type === 83) {
-            this.props.showFullMap && this.props.showFullMap(true)
-            toolRef.setVisible(true, ConstToolType.MAP_NULL, {
-              containerType: 'symbol',
-              isFullScreen: false,
-              column: 4,
-              height: ConstToolType.HEIGHT[4],
-            })
-          } else {
-            this.props.showFullMap && this.props.showFullMap(true)
-            toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
-              containerType: 'symbol',
-              isFullScreen: false,
-              column: 4,
-              height: ConstToolType.THEME_HEIGHT[3],
-            })
-          }
-        }
-      } else {
-        NavigationService.navigate('LayerManager')
-        Toast.show(
-          getLanguage(this.props.language).Prompt
-            .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        )
-        //'当前图层无法设置风格,请重新选择图层')
-      }
+  /**地图制图修改风格 */
+  mapEdit = data => {
+    let orientation = this.props.device.orientation
+    SMap.setLayerEditable(data.path, true)
+    if (data.type === 83) {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+          containerType: 'list',
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[4],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+    } else if (data.type === 1 || data.type === 3 || data.type === 5) {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: orientation === 'PORTRAIT' ? 4 : 8,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      NavigationService.navigate('MapView')
+      // this.props.navigation.navigate('MapView')
     } else {
-      NavigationService.navigate('LayerManager')
       Toast.show(
         getLanguage(this.props.language).Prompt
           .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
       )
-      //'当前图层无法设置风格,请重新选择图层')
+      //'当前图层无法设置风格')
+    }
+  }
+
+  /**修改专题图 */
+  mapTheme = data => {
+    let curThemeType
+    if (data.isHeatmap) {
+      curThemeType = constants.THEME_HEATMAP
+    } else {
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIQUE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          break
+        case ThemeType.RANGE:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_RANGE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          break
+        case ThemeType.LABEL:
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIFY_LABEL
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          break
+        case ThemeType.LABELUNIQUE:
+          curThemeType = constants.THEME_UNIQUE_LABEL
+          break
+        case ThemeType.LABELRANGE:
+          curThemeType = constants.THEME_RANGE_LABEL
+          break
+        case ThemeType.DOTDENSITY:
+          curThemeType = constants.THEME_DOT_DENSITY
+          break
+        case ThemeType.GRADUATEDSYMBOL:
+          curThemeType = constants.THEME_GRADUATED_SYMBOL
+          break
+        case ThemeType.GRAPH:
+          curThemeType = constants.THEME_GRAPH_STYLE
+          break
+        case ThemeType.GRIDRANGE:
+          curThemeType = constants.THEME_GRID_RANGE
+          break
+        case ThemeType.GRIDUNIQUE:
+          curThemeType = constants.THEME_GRID_UNIQUE
+          break
+        default:
+          Toast.show('提示:当前图层暂不支持修改')
+          break
+      }
+    }
+    if (curThemeType) {
+      // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+      let orientation = this.props.device.orientation
+      GLOBAL.toolBox.setVisible(
+        true,
+        curThemeType === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          height:
+            orientation === 'PORTRAIT'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.TOOLBAR_HEIGHT_2[3],
+          column: orientation === 'PORTRAIT' ? 8 : 4,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        },
+      )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      NavigationService.navigate('MapView')
+      Toast.show(
+        //'当前图层为:'
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER +
+          '  ' +
+          data.name,
+      )
+    }
+  }
+
+  mapStyle = () => {
+    let data = this.props.layers
+    if (data.themeType <= 0 && !data.isHeatmap) {
+      this.mapEdit(data)
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
+      this.mapTheme(data)
+    } else {
+      Toast.show(
+        getLanguage(this.props.language).Prompt
+          .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+      )
     }
   }
 

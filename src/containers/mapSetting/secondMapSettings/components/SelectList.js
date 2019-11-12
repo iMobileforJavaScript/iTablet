@@ -16,7 +16,7 @@ export default class SelectList extends React.Component {
     height: string,
     device: Object,
     modal: Object,
-    callback: () => {},
+    callback?: () => {},
   }
 
   constructor(props) {
@@ -43,7 +43,7 @@ export default class SelectList extends React.Component {
           onPress={async () => {
             let isSuccess = await item.action()
             if (isSuccess) {
-              this.props.callback(item.value)
+              this.props.callback && this.props.callback(item.value)
               this.props.modal.setVisible(false)
             }
           }}

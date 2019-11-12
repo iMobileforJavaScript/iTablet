@@ -3921,7 +3921,9 @@ export default class ToolBar extends React.PureComponent {
           isRegionLayer = false,
           isTextLayer = false
         if (currentLayer && !currentLayer.themeType) {
-          isTaggingLayer = currentLayer.type === DatasetType.CAD
+          let layerType = LayerUtils.getLayerType(currentLayer)
+          isTaggingLayer = layerType === 'TAGGINGLAYER'
+          // isTaggingLayer = currentLayer.type === DatasetType.CAD
           // && currentLayer.datasourceAlias.match(reg)
           isPointLayer = currentLayer.type === DatasetType.POINT
           isLineLayer = currentLayer.type === DatasetType.LINE

@@ -31,7 +31,6 @@ export default class SimpleSelectList extends React.Component {
       renderType: '',
       autoSelectIndex: false,
       select: {
-        //增量路网选中
         datasourceName: '',
         datasetName: '',
       },

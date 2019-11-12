@@ -9,6 +9,7 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native'
 import styles from './styles'
 
 export default class LabelBtn extends PureComponent {
+
   props: {
     style?: StyleSheet,
     valueStyle?: StyleSheet,
