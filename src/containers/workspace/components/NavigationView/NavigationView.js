@@ -237,6 +237,7 @@ export default class NavigationView extends React.Component {
 
         <View>
           <FlatList
+            style={{ maxHeight: scaleSize(650) }}
             data={this.props.navigationhistory}
             renderItem={this.renderItem}
           />
