@@ -666,6 +666,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 String text = null;
                 while((text = bufferedReader.readLine()) != null){
                     sb.append(text);
+                    sb.append("\n");
                 }
                 promise.resolve(sb.toString());
 

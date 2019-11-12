@@ -922,6 +922,14 @@ class Chat extends React.Component {
       for (let i = 0; i < fileList.length; i++) {
         if (fileList[i].path.indexOf('.json') !== -1) {
           let jstr = await FileTools.readFile(homePath + fileList[i].path)
+          let properties
+          try {
+            let firstLine = jstr.substring(0, jstr.indexOf('\n'))
+            let firstRecord = JSON.parse(firstLine)
+            properties = firstRecord.properties
+          } catch (error) {
+            // console.log(error)
+          }
           let type = 1
           if (jstr.indexOf('Polygon') != -1) {
             type = DatasetType.REGION
@@ -935,6 +943,7 @@ class Chat extends React.Component {
             fileList[i].name.substr(0, fileList[i].name.lastIndexOf('.')),
             homePath + fileList[i].path,
             type,
+            properties,
           )
         }
       }
