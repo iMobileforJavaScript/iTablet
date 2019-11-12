@@ -46,21 +46,28 @@ export default class LayerAttributeAdd extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    params.data =
-      params.defaultParams &&
-      params.defaultParams[params.defaultParams.length - 1].fieldInfo
+    params.data = params.defaultParams.fieldInfo.fieldInfo //&&
+    //params.defaultParams[params.defaultParams.length - 1].fieldInfo
     if (params.data && params.data.type == 1) {
       params.data.defaultValue = params.data.defaultValue === '1'
     }
+    let isDetial = params.isDetail === true ? true : false
     this.state = {
+      // isDetail: params.isDetail,
       // isEdit: params.data && Object.keys(params.data).length > 0,
-      isEdit: false,
+      isEdit: isDetial,
       callBack: params.callBack,
       defaultParams: params.defaultParams,
       data: params.data,
       dataset: params.dataset,
-      name: (params.data && params.data.name + '_1') || '',
-      caption: (params.data && params.data.caption + '_1') || '',
+      name:
+        (params.data && isDetial
+          ? params.data.name
+          : this.getTrimSmStr(params.data.name) + '_1') || '',
+      caption:
+        (params.data && isDetial
+          ? params.data.caption
+          : this.getTrimSmStr(params.data.caption) + '_1') || '',
       type: (params.data && params.data.type) || '',
       // maxLength: (params.data && params.data.maxLength) || '',
       maxLength: this.getDefaultMaxLength(params.data.type),
@@ -72,10 +79,6 @@ export default class LayerAttributeAdd extends React.Component {
       // 弹出框数据
       popData: [],
       currentPopData: this.getTypeDataByType(params.data.type),
-      // currentPopData: {
-      //   key: global.language === 'CN' ? typeStr[2][0] : typeStr[2][1],
-      //   value: typeStr[2][2],
-      // },
     }
   }
 
@@ -213,6 +216,9 @@ export default class LayerAttributeAdd extends React.Component {
   }
 
   renderBtns = () => {
+    if (this.state.isEdit) {
+      return null
+    }
     return (
       <View style={styles.btns}>
         <Button
@@ -249,7 +255,7 @@ export default class LayerAttributeAdd extends React.Component {
       case 3:
       case 4:
       case 16:
-        r = /^\+?[1-9][0-9]*$/ //正整数
+        r = /^(0|\+?[1-9][0-9]*)$/ //正整数和0
         checkFlag = r.test(text)
         break
       case 6:
@@ -317,7 +323,7 @@ export default class LayerAttributeAdd extends React.Component {
           this.setState({
             currentPopData: data,
             type: data.value,
-            defaultValue: undefined,
+            // defaultValue: undefined,
             maxLength: tempLength,
           })
           this.popModal.setVisible(false)
@@ -344,6 +350,7 @@ export default class LayerAttributeAdd extends React.Component {
           style={{ marginTop: scaleSize(15) }}
           customRightStyle={{ height: scaleSize(50) }}
           key={'别名'}
+          disable={this.state.isEdit}
           defaultValue={this.state.caption}
           type={Row.Type.INPUT}
           title={global.language === 'CN' ? '别名' : 'Caption'}
@@ -363,10 +370,14 @@ export default class LayerAttributeAdd extends React.Component {
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}
-              onPress={() => {
-                Keyboard.dismiss()
-                this.popModal && this.popModal.setVisible(true)
-              }}
+              onPress={
+                this.state.isEdit
+                  ? null
+                  : () => {
+                    Keyboard.dismiss()
+                    this.popModal && this.popModal.setVisible(true)
+                  }
+              }
             >
               <Text style={{ fontSize: scaleSize(24), color: color.gray }}>
                 {this.state.currentPopData
@@ -393,12 +404,17 @@ export default class LayerAttributeAdd extends React.Component {
                 flex: 2,
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginLeft: scaleSize(20),
               }}
             >
               <TextInput
-                style={{ fontSize: scaleSize(20), color: color.black }}
+                style={{
+                  fontSize: scaleSize(20),
+                  color: color.black,
+                  width: scaleSize(150),
+                }}
                 value={this.state.maxLength ? this.state.maxLength + '' : null}
-                editable={maxLengthCanEdit}
+                editable={maxLengthCanEdit && !this.state.isEdit}
                 onChangeText={text => {
                   let length = Number(text.replace(/[^0-9]*/g, ''))
                   this.setState({
@@ -465,7 +481,13 @@ export default class LayerAttributeAdd extends React.Component {
         style={styles.container}
         // scrollable
         headerProps={{
-          title: global.language === 'CN' ? '添加属性' : 'Add Attribute',
+          title: this.state.isEdit
+            ? global.language === 'CN'
+              ? '属性详情'
+              : 'Attribute Detail'
+            : global.language === 'CN'
+              ? '添加属性'
+              : 'Add Attribute',
           navigation: this.props.navigation,
         }}
       >

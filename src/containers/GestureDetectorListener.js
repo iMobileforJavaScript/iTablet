@@ -54,8 +54,7 @@ async function longtouchCallback(event) {
             await SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, true)
           } else {
             Toast.show(
-              getLanguage(this.props.language).Prompt
-                .PLEASE_SELECT_A_POINT_INDOOR,
+              getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
             )
           }
         } else {
@@ -72,16 +71,24 @@ async function longtouchCallback(event) {
       (async function() {
         GLOBAL.ENDX = event.mapPoint.x
         GLOBAL.ENDY = event.mapPoint.y
-        let endresult = await SMap.isIndoorPoint(
+        let result = await SMap.isIndoorPoint(
           event.mapPoint.x,
           event.mapPoint.y,
         )
-        await SMap.getEndPoint(
-          event.mapPoint.x,
-          event.mapPoint.y,
-          endresult.isindoor,
-        )
-        if (endresult.isindoor) {
+        let isIndoorMap = await SMap.isIndoorMap()
+        //室内地图只允许在室内标注点
+        if (isIndoorMap) {
+          if (result.isindoor) {
+            await SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, true)
+          } else {
+            Toast.show(
+              getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
+            )
+          }
+        } else {
+          await SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, false)
+        }
+        if (result.isindoor) {
           GLOBAL.INDOOREND = true
         } else {
           GLOBAL.INDOOREND = false

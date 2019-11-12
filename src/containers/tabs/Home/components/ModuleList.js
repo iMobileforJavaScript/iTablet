@@ -346,7 +346,9 @@ class ModuleList extends Component {
 
   render() {
     let data = ConstModule(this.props.language)
-    let height = (scaleSize(220) * data.length) / 2
+    //模块个数为单数时高度处理
+    let heightNum = data.length % 2 === 0 ? data.length : data.length + 1
+    let height = (scaleSize(220) * heightNum) / 2
     let dOffset = 20
     if (Platform.OS === 'android') {
       dOffset = scaleSize(80)

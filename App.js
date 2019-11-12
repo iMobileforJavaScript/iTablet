@@ -330,9 +330,9 @@ class AppRoot extends Component {
     }
 
     let status = await SMap.getEnvironmentStatus()
-          if (!status.isLicenseValid) {
-            GLOBAL.LicenseValidDialog.setDialogVisible(true)
-          }
+    if (!status.isLicenseValid) {
+      GLOBAL.LicenseValidDialog.setDialogVisible(true)
+    }
 
     if(serialNumber!==''&&!status.isTrailLicense){
       let licenseInfo = await SMap.getSerialNumberAndModules()
@@ -346,9 +346,9 @@ class AppRoot extends Component {
         }
         GLOBAL.modulesNumber=number
       }
-      
+
     }
-    
+
   }
 
   orientation = o=> {

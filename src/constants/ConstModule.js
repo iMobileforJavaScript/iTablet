@@ -590,7 +590,7 @@ function SetMap(param) {
   ]
 
   if (Platform.OS === 'ios') {
-    moduleDatas.splice(2, 2)
+    moduleDatas.splice(2, 1)
   }
 
   return moduleDatas

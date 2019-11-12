@@ -953,9 +953,9 @@ const uniqueLabelMenuInfo = param => [
         )
     },
   },
-    {
+  {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    selectKey:getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     action: () => {
       GLOBAL.toolBox &&

@@ -38,7 +38,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap, DatasetType,SMCollectorType } from 'imobile_for_reactnative'
+import { SMap, DatasetType, SMCollectorType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
@@ -494,8 +494,7 @@ export default class LayerManager_tolbar extends React.Component {
       // '图层风格'
       this.mapStyle()
       this.setVisible(false)
-    } 
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {
@@ -506,26 +505,37 @@ export default class LayerManager_tolbar extends React.Component {
           layerData: this.state.layerData,
         })
       }.bind(this)())
-    }else if (
+    } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_COLLECT
     ) {
-      let type = ''
-      switch (this.state.layerData.type) {
-        case 1:
-          type = SMCollectorType.POINT_HAND
-          break
-        case 3:
-          type = SMCollectorType.LINE_HAND_POINT
-          break
-        case 5:
-          type = SMCollectorType.REGION_HAND_POINT
-          break
+      if (
+        this.state.layerData.themeType > 0 ||
+        this.state.layerData.isHeatmap
+      ) {
+        Toast.show(
+          global.language === 'CN'
+            ? '专题图层不能采集'
+            : 'Cannot collect in Thematic layers',
+        )
+      } else {
+        let type = ''
+        switch (this.state.layerData.type) {
+          case 1:
+            type = SMCollectorType.POINT_HAND
+            break
+          case 3:
+            type = SMCollectorType.LINE_HAND_POINT
+            break
+          case 5:
+            type = SMCollectorType.REGION_HAND_POINT
+            break
+        }
+        CollectionData.showCollection(type, this.state.layerData.name)
+        this.setVisible(false)
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        this.props.navigation.navigate('MapView')
       }
-      CollectionData.showCollection(type,this.state.layerData.name)
-      this.setVisible(false)
-      this.props.navigation.navigate('MapView')
-      // NavigationService.navigate('')
-    }else if (
+    } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
     ) {
       //'重命名') {
@@ -547,8 +557,7 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    }
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
