@@ -38,7 +38,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap, DatasetType, SMCollectorType } from 'imobile_for_reactnative'
+import { SMap, DatasetType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
@@ -46,9 +46,6 @@ import { getLanguage } from '../../../../language/index'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
 import { MultiPicker } from '../../../../components'
-
-import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
-
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -494,8 +491,7 @@ export default class LayerManager_tolbar extends React.Component {
       // '图层风格'
       this.mapStyle()
       this.setVisible(false)
-    } 
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {
@@ -507,34 +503,101 @@ export default class LayerManager_tolbar extends React.Component {
         })
       }.bind(this)())
     } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_COLLECT
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM
     ) {
-      if (
-        this.state.layerData.themeType > 0 ||
-        this.state.layerData.isHeatmap
-      ) {
-        Toast.show(
-          global.language === 'CN'
-            ? '专题图层不能采集'
-            : 'Cannot collect in Thematic layers',
-        )
-      } else {
-        let type = ''
-        switch (this.state.layerData.type) {
-          case 1:
-            type = SMCollectorType.POINT_HAND
-            break
-          case 3:
-            type = SMCollectorType.LINE_HAND_POINT
-            break
-          case 5:
-            type = SMCollectorType.REGION_HAND_POINT
-            break
+      //'最大可见比例尺') {
+      this.setVisible(true, ConstToolType.MAP_MAX_SCALE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        layerData: this.state.layerData,
+      })
+    } else if (
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_MINIMUM
+    ) {
+      //'最小可见比例尺') {
+      this.setVisible(true, ConstToolType.MAP_MIN_SCALE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        layerData: this.state.layerData,
+      })
+    } else if (section.title === '1:5,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 5000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 5000)
+          this.setVisible(false)
         }
-        CollectionData.showCollection(type, this.state.layerData.name)
-        this.setVisible(false)
-        this.props.navigation.navigate('MapView')
-      }
+      }.bind(this)())
+    } else if (section.title === '1:10,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 10000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 10000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:25,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 25000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 25000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:50,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 50000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 50000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:100,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 100000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 100000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:250,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 250000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 250000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:500,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 500000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 500000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:1,000,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerData.path, 1000000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerData.path, 1000000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
     ) {
@@ -557,7 +620,84 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    } else if (
+    }
+    // else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
+    // ) {
+    //   //''上移') {
+    //   (async function() {
+    //     await SMap.moveUpLayer(this.state.layerData.name)
+    //     await this.props.getLayers()
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN
+    // ) {
+    //   //''下移') {
+    //   (async function() {
+    //     await SMap.moveDownLayer(this.state.layerData.name)
+    //     await this.props.getLayers()
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_TOP
+    // ) {
+    //   //''置顶') {
+    //   (async function() {
+    //     await SMap.moveToTop(this.state.layerData.name)
+    //     let count = await SMap.getTaggingLayerCount(
+    //       this.props.user.currentUser.userName,
+    //     )
+    //     for (let i = 0; i < count; i++) {
+    //       await SMap.moveDownLayer(this.state.layerData.name)
+    //     }
+    //     await this.props.getLayers()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // } else if (
+    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
+    // ) {
+    //   //''置底') {
+    //   (async function() {
+    //     await SMap.moveToBottom(this.state.layerData.name)
+    //   }.bind(this)())
+    //   SMap.moveUpLayer(this.state.layerData.name)
+    //   if (
+    //     this.props.layers[this.props.layers.length - 1].name.indexOf(
+    //       'vec@TD',
+    //     ) >= 0
+    //   ) {
+    //     SMap.moveUpLayer(this.state.layerData.name)
+    //   }
+    //   this.props.getLayers()
+    //   this.setVisible(false)
+    // }
+    // else if (
+    //   section.title ===
+    //   getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
+    // ) {
+    //   //'设置为当前标注'
+    //   (async function() {
+    //     GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
+    //       this.state.layerData.path,
+    //     )
+    //     this.updateTagging()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // }
+    // if (
+    //   section.title ===
+    //   getLanguage(global.language).Map_Layer.PLOTS_DELETE
+    // ) {
+    //   //'设置为当前标注'
+    //   (async function() {
+    //     GLOBAL.TaggingDatasetName = await SMap.removeTaggingDataset(
+    //       this.state.layerData.datasetName,
+    //       this.props.user.currentUser.userName,
+    //     )
+    //     this.updateTagging()
+    //     this.setVisible(false)
+    //   }.bind(this)())
+    // }
+    else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {

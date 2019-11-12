@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingTop:10,
+    paddingTop: 10,
   },
   input: {
     width: 0.75 * constUtil.WIDTH,

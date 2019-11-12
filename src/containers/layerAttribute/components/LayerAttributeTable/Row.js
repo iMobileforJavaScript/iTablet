@@ -108,13 +108,11 @@ export default class Row extends Component {
     return false
   }
 
-  _action = (iTemView, columnIndex) => {
+  _action = () => {
     if (this.props.onPress && typeof this.props.onPress === 'function') {
       return this.props.onPress({
         data: this.props.data,
         index: this.props.index,
-        columnIndex: columnIndex,
-        pressView: iTemView,
       })
     }
   }
@@ -239,10 +237,9 @@ export default class Row extends Component {
           textStyle = [styles.cellText, this.props.indexCellTextStyle]
         }
       }
-      let iTemView
+
       return (
         <TouchableOpacity
-          ref={ref => (iTemView = ref)}
           activeOpacity={1}
           key={index}
           style={[
@@ -255,7 +252,7 @@ export default class Row extends Component {
             },
             // { width },
           ]}
-          onPress={() => this._action(iTemView, index)}
+          onPress={this._action}
         >
           <Text style={[textStyle, width && { width: width - 4 }]}>
             {value + ''}
@@ -291,7 +288,7 @@ export default class Row extends Component {
           defaultValue={defaultValue}
           keyboardType={typeof value === 'number' ? 'decimal-pad' : 'default'}
           changeEnd={this.changeEnd}
-          onPress={() => this._action(null, index)}
+          onPress={this._action}
         />
       )
     }

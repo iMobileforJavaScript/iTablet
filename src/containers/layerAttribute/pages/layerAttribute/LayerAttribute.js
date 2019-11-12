@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, InteractionManager, Text } from 'react-native'
+import { View, InteractionManager } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopView, InfoView } from '../../../../components'
 import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
@@ -27,16 +27,11 @@ import {
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
 import constants from '../../../workspace/constants'
-//eslint-disable-next-line
-import { ActionPopover } from 'teaset'
-import { Dialog } from '../../../../components'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
 const ROWS_LIMIT = 120
 const COL_HEIGHT = scaleSize(80)
-
-let deleteFieldData //删除属性字段
 
 export default class LayerAttribute extends React.Component {
   props: {
@@ -598,81 +593,22 @@ export default class LayerAttribute extends React.Component {
     }
   }
 
-  //显示详情和删除的弹框
-  _showPopover = (pressView, index, fieldInfo) => {
-    let items = []
-
-    items = [
-      {
-        title: global.language === 'CN' ? '详情' : 'Detail',
-        onPress: () => {
-          (async function() {
-            NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
-              isDetail: true,
-            })
-          }.bind(this)())
-        },
-      },
-    ]
-    let tempStr = fieldInfo.caption.toLowerCase()
-    let isSystemField = tempStr.substring(0, 2) == 'sm'
-    if (!fieldInfo.isSystemField && !isSystemField) {
-      items.push({
-        title: getLanguage(global.language).Profile.DELETE,
-        onPress: () => {
-          if (!fieldInfo) {
-            return
-          }
-          deleteFieldData = fieldInfo
-          this.deleteFieldDialog.setDialogVisible(true)
-        },
-      })
-    }
-    if (pressView) {
-      pressView.measure((ox, oy, width, height, px, py) => {
-        ActionPopover.show(
-          {
-            x: px,
-            y: py,
-            width,
-            height,
-          },
-          items,
-        )
-      })
-    }
-  }
-  /** 点击属性字段回调 **/
-  onPressHeader = ({ fieldInfo, index, pressView }) => {
-    this._showPopover(pressView, index, fieldInfo)
-  }
-
   /** 添加属性字段 **/
-  addAttributeField = async fieldInfo => {
-    // if (this.state.attributes.data.length > 0) {
-    let path = this.props.currentLayer.path
-    let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
-    if (result) {
-      Toast.show(
-        global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
-      )
-      this.refresh()
-      // this.getAttribute(
-      //   {
-      //     type: 'refresh',
-      //     currentPage: 0,
-      //     startIndex: 0,
-      //   },
-      //   () => {},
-      //   false,
-      // )
-    } else {
-      Toast.show(
-        global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
-      )
+  addAttributeField = fieldInfo => {
+    if (this.state.attributes.data.length > 0) {
+      let path = this.props.currentLayer.path
+      let result = SMap.addAttributeFieldInfo(path, false, fieldInfo)
+      if (result) {
+        Toast.show(
+          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+        )
+        this.refresh()
+      } else {
+        Toast.show(
+          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+        )
+      }
     }
-    // }
   }
 
   /** 关联事件 **/
@@ -1004,71 +940,6 @@ export default class LayerAttribute extends React.Component {
     })
   }
 
-  //提示是否删除属性字段
-  renderDeleteFieldDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.deleteFieldDialog = ref)}
-        type={'modal'}
-        confirmAction={async () => {
-          this.deleteFieldDialog.setDialogVisible(false)
-          let layerPath = this.props.currentLayer.path
-          let result = await SMap.removeRecordsetFieldInfo(
-            layerPath,
-            false,
-            deleteFieldData.name,
-          )
-          if (result) {
-            Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除成功'
-                : 'Attribute Feild Delete Succeed',
-            )
-            this.refresh()
-          } else {
-            Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除失败'
-                : 'Attribute Feild Delete Faild',
-            )
-          }
-        }}
-        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
-        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
-        opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
-        cancelAction={() => {
-          this.deleteFieldDialog.setDialogVisible(false)
-        }}
-      >
-        <View
-          style={{
-            paddingTop: scaleSize(30),
-            flex: 1,
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: scaleSize(32),
-              color: color.theme_white,
-              marginTop: scaleSize(5),
-              marginLeft: scaleSize(10),
-              marginRight: scaleSize(10),
-              textAlign: 'center',
-            }}
-          >
-            {global.language === 'CN'
-              ? '确定删除所选字段？'
-              : 'Sure Delete this Attribute Field?'}
-          </Text>
-        </View>
-      </Dialog>
-    )
-  }
-
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -1080,11 +951,11 @@ export default class LayerAttribute extends React.Component {
   }
 
   renderMapLayerAttribute = () => {
-    // if (
-    //   !this.state.attributes ||
-    //   (!this.state.attributes.data && this.state.attributes.data.length === 0)
-    // )
-    //   return null
+    if (
+      !this.state.attributes ||
+      (!this.state.attributes.data && this.state.attributes.data.length === 0)
+    )
+      return null
 
     let buttonNameFilter = ['MediaFilePaths'], // 属性表cell显示 查看 按钮
       buttonTitles = [getLanguage(global.language).Map_Tools.VIEW]
@@ -1133,25 +1004,25 @@ export default class LayerAttribute extends React.Component {
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
         data={
-          this.state.attributes.data.length === 1
-            ? this.state.attributes.data[0]
-            : this.state.attributes.data
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.data
+            : this.state.attributes.data[0]
         }
         tableHead={
-          this.state.attributes.data.length === 1
-            ? [
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.head
+            : [
               getLanguage(this.props.language).Map_Label.NAME,
               getLanguage(this.props.language).Map_Label.ATTRIBUTE,
               //'名称'
               //'属性值'
             ]
-            : this.state.attributes.head
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
-          this.state.attributes.data.length === 1
-            ? LayerAttributeTable.Type.SINGLE_DATA
-            : LayerAttributeTable.Type.MULTI_DATA
+          this.state.attributes.data.length > 1
+            ? LayerAttributeTable.Type.MULTI_DATA
+            : LayerAttributeTable.Type.SINGLE_DATA
         }
         // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
         indexColumn={0}
@@ -1170,7 +1041,6 @@ export default class LayerAttribute extends React.Component {
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
         isShowSystemFields={this.state.isShowSystemFields}
-        onPressHeader={this.onPressHeader}
       />
     )
   }
@@ -1322,16 +1192,14 @@ export default class LayerAttribute extends React.Component {
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {/* {showContent && this.type !== 'MAP_3D' && ( */}
-        {this.type !== 'MAP_3D' && (
+        {showContent && this.type !== 'MAP_3D' && (
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={true}
+            canAddField={this.state.attributes.data.length > 0}
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
-            attributesData={this.state.attributes.head}
           />
         )}
         <View
@@ -1364,7 +1232,6 @@ export default class LayerAttribute extends React.Component {
         >
           {this.renderEditControllerView()}
         </PopView>
-        {this.renderDeleteFieldDialog()}
       </Container>
     )
   }

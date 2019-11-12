@@ -10,7 +10,6 @@ import {
   SScene,
   SIPortalService,
 } from 'imobile_for_reactnative'
-import DataHandler from '../DataHandler'
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -150,7 +149,15 @@ async function _constructUserSectionData(userName) {
     '/' +
     ConstPath.RelativeFilePath.ExternalData
   let newData = []
-  newData = await DataHandler.getExternalData(path)
+  await _setFilterDatas(
+    path,
+    {
+      smwu: 'smwu',
+      sxwu: 'sxwu',
+    },
+    newData,
+    false,
+  )
   return newData
 }
 /** 构造游客数据*/
@@ -287,7 +294,9 @@ async function downFileAction(
       let filePath = await FileTools.appendingHomeDirectory(path + '.zip')
       let toPath = await FileTools.appendingHomeDirectory(path)
       // await SOnlineService.downloadFileWithDataId(filePath, this.itemInfo.id+"")
-      let dataUrl = `https://www.supermapol.com/web/datas/${itemInfo.id}/download`
+      let dataUrl = `https://www.supermapol.com/web/datas/${
+        itemInfo.id
+      }/download`
       if (UserType.isIPortalUser(currentUser)) {
         let url = currentUser.serverUrl
         if (url.indexOf('http') !== 0) {

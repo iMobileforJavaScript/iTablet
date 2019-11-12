@@ -118,16 +118,12 @@ export default class Cell extends Component {
   }
 
   _onPress = () => {
-    if (this.props.index === 0) {
-      if (this.props.onPress && typeof this.props.onPress === 'function') {
-        this.props.onPress({
-          data: this.props.data,
-          value: this.state.value,
-          index: this.props.index,
-        })
-      }
-    } else {
-      this._setEditable()
+    if (this.props.onPress && typeof this.props.onPress === 'function') {
+      this.props.onPress({
+        data: this.props.data,
+        value: this.state.value,
+        index: this.props.index,
+      })
     }
   }
 
@@ -223,7 +219,7 @@ export default class Cell extends Component {
 
         activeOpacity={1}
         // style={styles.cellOverlay}
-        // onLongPress={this._setEditable}
+        onLongPress={this._setEditable}
         delayLongPress={this.props.delayLongPress}
         onPress={this._onPress}
       >

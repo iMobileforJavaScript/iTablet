@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
 })
 
 export default class ColorShortcut extends React.Component {
-
   props: {
     onPress: () => {},
   }
@@ -39,8 +38,12 @@ export default class ColorShortcut extends React.Component {
     super(props)
     this.state = {
       colors: [
-        color.white, color.red, color.yellow,
-        color.grassGreen, color.cyan, color.black,
+        color.white,
+        color.red,
+        color.yellow,
+        color.grassGreen,
+        color.cyan,
+        color.black,
       ],
     }
   }
@@ -54,7 +57,7 @@ export default class ColorShortcut extends React.Component {
       <TouchableOpacity
         key={color}
         activeOpacity={0.8}
-        style={[styles.item, {backgroundColor: color}]}
+        style={[styles.item, { backgroundColor: color }]}
         onPress={() => this.action(color)}
       />
     )
@@ -69,10 +72,6 @@ export default class ColorShortcut extends React.Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        {this.renderItems()}
-      </View>
-    )
+    return <View style={styles.container}>{this.renderItems()}</View>
   }
 }

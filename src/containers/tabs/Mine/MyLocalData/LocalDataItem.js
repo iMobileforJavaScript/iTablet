@@ -15,10 +15,6 @@ export default class LocalDataItem extends Component {
   }
   render() {
     let txtInfo = this.props.info.item.fileName
-    let txtindex = txtInfo.lastIndexOf('.')
-    if (txtindex > 0) {
-      txtInfo = txtInfo.substring(0, txtindex)
-    }
     let homePath = _getHomePath()
     let path = this.props.info.item.directory.substring(homePath.length)
     let index = path.indexOf('iTablet')

@@ -65,7 +65,6 @@ export default class CastModelOperateView extends React.Component {
   }
 
   back = () => {
-    // SCastModelOperateView.onDestroy()
     NavigationService.goBack()
     return true
   }

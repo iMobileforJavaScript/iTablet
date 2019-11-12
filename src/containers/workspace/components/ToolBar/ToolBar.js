@@ -5514,7 +5514,6 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading(false)
         this.setVisible(false)
         this.props.setMap2Dto3D(true)
-        SMap.getIndoorDatasource()
       } else {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])

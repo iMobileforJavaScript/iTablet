@@ -157,7 +157,7 @@ const Profile = {
   STATUSBAR_HIDE: 'StatusBar Hide',
   SETTING_LICENSE: 'License',
   SETTING_ABOUT_ITABLET: 'About iTablet',
-  SETTING_CHECK_VERSION: 'Check Version',
+
   //许可
   LICENSE_CURRENT: 'License Current',
   LICENSE_TYPE: 'License Type',
