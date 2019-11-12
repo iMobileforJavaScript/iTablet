@@ -9,6 +9,7 @@ import {
 } from 'imobile_for_reactnative'
 import { ConstToolType, TouchType, ConstPath } from '../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../utils'
+import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import { ImagePicker } from '../../../../components'
@@ -19,34 +20,39 @@ import { getLanguage } from '../../../../language'
 
 let _params = {}
 
-/**
- * 判断当前图层类型 控制标注相关功能是否可用
- * @returns {string}
- */
-function getCurrentLayerType() {
-  let currentLayer = GLOBAL.currentLayer
-  let layerType = ''
-  if (currentLayer && !currentLayer.themeType) {
-    switch (currentLayer.type) {
-      case DatasetType.CAD:
-        layerType = 'TAGGINGLAYER'
-        break
-      case DatasetType.POINT:
-        layerType = 'POINTLAYER'
-        break
-      case DatasetType.LINE:
-        layerType = 'LINELAYER'
-        break
-      case DatasetType.REGION:
-        layerType = 'REGIONLAYER'
-        break
-      case DatasetType.TEXT:
-        layerType = 'TEXTLAYER'
-        break
-    }
-  }
-  return layerType
-}
+// /**
+//  * 判断当前图层类型 控制标注相关功能是否可用
+//  * @returns {string}
+//  */
+// function getCurrentLayerType() {
+//   let currentLayer = GLOBAL.currentLayer
+//   let layerType = ''
+//   if (currentLayer && !currentLayer.themeType) {
+//     switch (currentLayer.type) {
+//       case DatasetType.CAD:{
+//         if(currentLayer.name.indexOf("@Lable_") != -1){
+//           layerType = 'TAGGINGLAYER'
+//         }else{
+//           layerType = 'CADLAYER'
+//         }
+//       }
+//         break
+//       case DatasetType.POINT:
+//         layerType = 'POINTLAYER'
+//         break
+//       case DatasetType.LINE:
+//         layerType = 'LINELAYER'
+//         break
+//       case DatasetType.REGION:
+//         layerType = 'REGIONLAYER'
+//         break
+//       case DatasetType.TEXT:
+//         layerType = 'TEXTLAYER'
+//         break
+//     }
+//   }
+//   return layerType
+// }
 /**
  * 获取工具操作
  * @param type
@@ -106,7 +112,7 @@ function getMapTool(type, params) {
       break
     case ConstToolType.MAP_TOOLS:
     case ConstToolType.MAP_TOOL:
-      layerType = getCurrentLayerType()
+      layerType = LayerUtils.getLayerType(GLOBAL.currentLayer)
       data = [
         {
           key: 'distanceComput',
@@ -167,10 +173,10 @@ function getMapTool(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
           //constants.POINT,
           action: point,
-          disable: layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           size: 'large',
           image:
-            layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_point_disable
               : require('../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
@@ -181,9 +187,9 @@ function getMapTool(type, params) {
           //constants.WORDS,
           size: 'large',
           action: words,
-          disable: layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_text_disable
               : require('../../../../assets/mapTools/icon_words_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
@@ -194,9 +200,9 @@ function getMapTool(type, params) {
           //constants.POINTLINE,
           size: 'large',
           action: pointline,
-          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_point_line_disable
               : require('../../../../assets/mapTools/icon_point_line_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
@@ -207,9 +213,9 @@ function getMapTool(type, params) {
           //constants.FREELINE,
           size: 'large',
           action: freeline,
-          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_free_line_disable
               : require('../../../../assets/mapTools/icon_free_line_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
@@ -220,9 +226,9 @@ function getMapTool(type, params) {
           //constants.POINTCOVER,
           size: 'large',
           action: pointcover,
-          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_region_disable
               : require('../../../../assets/mapTools/icon_point_cover_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
@@ -233,9 +239,9 @@ function getMapTool(type, params) {
           //constants.FREECOVER,
           size: 'large',
           action: freecover,
-          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_free_region_disable
               : require('../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
@@ -891,7 +897,8 @@ async function point() {
   let isTaggingLayer = false,
     isPointLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
     // && currentLayer.datasourceAlias.match(reg)
     isPointLayer = currentLayer.type === DatasetType.POINT
   }
@@ -912,7 +919,9 @@ async function words() {
   let isTaggingLayer = false,
     isTextLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isTextLayer = currentLayer.type === DatasetType.TEXT
   }
@@ -933,7 +942,9 @@ async function pointline() {
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
@@ -954,7 +965,9 @@ async function freeline() {
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
@@ -975,7 +988,9 @@ async function pointcover() {
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
@@ -996,7 +1011,9 @@ async function freecover() {
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
@@ -1074,7 +1091,9 @@ function captureImage() {
     let currentLayer = GLOBAL.currentLayer
     // let reg = /^Label_(.*)#$/
     if (currentLayer) {
-      let isTaggingLayer = currentLayer.type === DatasetType.CAD
+      let isTaggingLayer
+      let layerType = LayerUtils.getLayerType(currentLayer)
+      isTaggingLayer = layerType === 'TAGGINGLAYER'
       // && currentLayer.datasourceAlias.match(reg)
       if (isTaggingLayer) {
         // await SMap.setTaggingGrid(
