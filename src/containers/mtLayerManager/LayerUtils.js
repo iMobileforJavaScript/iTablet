@@ -1,5 +1,5 @@
 import { ConstOnline } from '../../constants'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap,DatasetType } from 'imobile_for_reactnative'
 
 const baseMapsOrigin = [
   'roadmap@GoogleMaps',
@@ -107,4 +107,38 @@ async function addBaseMap(
   }
 }
 
-export { isBaseLayer, addBaseMap, setBaseMap }
+/**
+ * 判断当前图层类型 控制标注相关功能是否可用
+ * @returns {string}
+ */
+function getLayerType(currentLayer) {
+  // let currentLayer = GLOBAL.currentLayer
+  let layerType = ''
+  if (currentLayer && !currentLayer.themeType) {
+    switch (currentLayer.type) {
+      case DatasetType.CAD:{
+        if(currentLayer.name.indexOf("@Label_") != -1){
+          layerType = 'TAGGINGLAYER'
+        }else{
+          layerType = 'CADLAYER'
+        }
+      }
+        break
+      case DatasetType.POINT:
+        layerType = 'POINTLAYER'
+        break
+      case DatasetType.LINE:
+        layerType = 'LINELAYER'
+        break
+      case DatasetType.REGION:
+        layerType = 'REGIONLAYER'
+        break
+      case DatasetType.TEXT:
+        layerType = 'TEXTLAYER'
+        break
+    }
+  }
+  return layerType
+}
+
+export { isBaseLayer, addBaseMap, setBaseMap,getLayerType }

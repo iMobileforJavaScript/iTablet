@@ -532,6 +532,7 @@ export default class LayerManager_tolbar extends React.Component {
         }
         CollectionData.showCollection(type, this.state.layerData.name)
         this.setVisible(false)
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
         this.props.navigation.navigate('MapView')
       }
     } else if (

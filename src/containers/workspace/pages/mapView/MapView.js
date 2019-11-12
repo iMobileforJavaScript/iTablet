@@ -92,7 +92,8 @@ import styles from './styles'
 import NavigationPoiView from '../../components/NavigationPoiView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import Orientation from 'react-native-orientation'
-import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
+// import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
+import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 
 const markerTag = 118081
@@ -1714,7 +1715,9 @@ export default class MapView extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
+        // isTaggingLayer = currentLayer.type === DatasetType.CAD
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {
@@ -2123,7 +2126,7 @@ export default class MapView extends React.Component {
             if (GLOBAL.Type === constants.MAP_NAVIGATION) {
               let layers =
                 this.props.getLayers && (await this.props.getLayers())
-              let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
+              let baseMap = layers.filter(layer => LayerUtils.isBaseLayer(layer.name))[0]
               if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
                 NavigationService.navigate('PointAnalyst', {
                   type: 'pointSearch',
