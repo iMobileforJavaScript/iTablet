@@ -74,6 +74,7 @@ import {
   TouchType,
   ConstInfo,
   getHeaderTitle,
+  mapBackGroundColor,
 } from '../../../../constants'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
@@ -93,6 +94,11 @@ import NavigationPoiView from '../../components/NavigationPoiView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import Orientation from 'react-native-orientation'
 import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
+import {
+  ColorTable,
+  SelectList,
+} from '../../../mapSetting/secondMapSettings/components'
+import { colorMode } from '../../../mapSetting/settingData'
 // import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 
 const markerTag = 118081
@@ -189,6 +195,8 @@ export default class MapView extends React.Component {
     this.operationType = params && params.operationType
     this.showMarker = params && params.showMarker
     this.mapTitle = ''
+    this.colorData = mapBackGroundColor
+    this.colorModeData = colorMode()
     if (params && params.mapTitle) {
       this.mapTitle = params.mapTitle
     } else if (GLOBAL.Type) {
@@ -220,6 +228,7 @@ export default class MapView extends React.Component {
       speechContent: '',
       recording: false,
       isRight: true,
+      alertModal: '', //地图设置菜单弹窗控制
     }
     this.closeInfo = [
       {
@@ -315,6 +324,17 @@ export default class MapView extends React.Component {
     } else {
       SSpeechRecognizer.setParameter('language', 'en_us ')
     }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let { params } = nextProps.navigation.state
+    let alertModal = params.title || ''
+    if (prevState.alertModal !== alertModal) {
+      return {
+        alertModal,
+      }
+    }
+    return null
   }
 
   componentDidUpdate(prevProps) {
@@ -2043,7 +2063,7 @@ export default class MapView extends React.Component {
                 networkModel.path,
               )
               NavigationService.navigate('NavigationView', {
-                changeNavPathInfo: this.props.changeNavPathInfo,
+                changeNavPathInfo: this.changeNavPathInfo,
                 showLocationView: true,
               })
             }
@@ -2150,7 +2170,42 @@ export default class MapView extends React.Component {
       </View>
     )
   }
-
+  renderPopView = () => {
+    let renderPopItem = () => {
+      let modal = this.state.alertModal
+      switch (modal) {
+        case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
+          return (
+            <SelectList
+              modal={this.popModal}
+              language={this.props.language}
+              data={this.colorModeData}
+              height={scaleSize(400)}
+              device={this.props.device}
+            />
+          )
+        case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
+          return (
+            <ColorTable
+              language={this.props.language}
+              data={this.colorData}
+              device={this.props.device}
+            />
+          )
+        default:
+          return <View />
+      }
+    }
+    return (
+      <PopView
+        ref={ref => (GLOBAL.popModal = ref)}
+        showFullMap={this.showFullMap}
+        overLayerStyle={{ backgroundColor: 'transparent' }}
+      >
+        {renderPopItem()}
+      </PopView>
+    )
+  }
   renderProgress = () => {
     let data
     if (this.props.downloads.length > 0) {
@@ -2646,6 +2701,7 @@ export default class MapView extends React.Component {
       <View style={{ flex: 1 }}>
         {this.renderContainer()}
         {this.renderProgress()}
+        {this.renderPopView()}
       </View>
     )
   }

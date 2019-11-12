@@ -13,6 +13,7 @@ export default class PopView extends PureComponent {
   props: {
     children: any,
     modalVisible?: boolean,
+    overLayerStyle?: Object,
     showFullMap?: () => {},
   }
 
@@ -88,6 +89,7 @@ export default class PopView extends PureComponent {
   }
 
   render() {
+    let overLayer = this.props.overLayerStyle || {}
     return (
       <Animated.View
         style={[
@@ -99,7 +101,7 @@ export default class PopView extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={styles.themeoverlay}
+          style={[styles.themeoverlay, overLayer]}
           onPress={() => {
             this.setVisible(false, () => {
               this.props.showFullMap && this.props.showFullMap(false)
