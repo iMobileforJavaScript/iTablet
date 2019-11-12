@@ -465,7 +465,6 @@ const Map_Layer = {
   LAYERS_PASTE: '插入复制的图层',
   LAYERS_LAYER_PROPERTIES: '图层属性',
   LAYERS_REMOVE: '移除',
-  LAYERS_COLLECT: '在当前图层采集' ,
   LAYERS_MAXIMUM: '最大可见比例尺',
   LAYERS_MINIMUM: '最小可见比例尺',
   LAYERS_UER_DEFINE: '自定义',
