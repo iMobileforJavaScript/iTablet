@@ -57,7 +57,7 @@ export default class FunctionToolbar extends React.Component {
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
     setMapType: () => {},
-
+    navigation: Object,
     save: () => {},
     saveAs: () => {},
     closeOneMap: () => {},
@@ -1452,14 +1452,14 @@ export default class FunctionToolbar extends React.Component {
             action: isLicenseNotValid ? null : this.startNavigation,
             image: require('../../../../assets/Navigation/navi_icon.png'),
           },
-          {
-            key: '模型',
-            title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
-            //constants.ADD,
-            size: 'large',
-            action: isLicenseNotValid ? null : this.showModelList,
-            image: getThemeAssets().functionBar.rightbar_network_model,
-          },
+          // {
+          //   key: '模型',
+          //   title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
+          //   //constants.ADD,
+          //   size: 'large',
+          //   action: isLicenseNotValid ? null : this.showModelList,
+          //   image: getThemeAssets().functionBar.rightbar_network_model,
+          // },
           // {
           //   key: '风格',
           //   title: getLanguage(this.props.language).Map_Main_Menu.STYLE,

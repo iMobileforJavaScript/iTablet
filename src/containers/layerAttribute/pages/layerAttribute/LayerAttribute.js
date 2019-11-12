@@ -7,7 +7,13 @@
 import * as React from 'react'
 import { View, InteractionManager, Text } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, MTBtn, PopView, InfoView } from '../../../../components'
+import {
+  Container,
+  MTBtn,
+  PopView,
+  InfoView,
+  Dialog,
+} from '../../../../components'
 import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
@@ -29,7 +35,6 @@ import { color } from '../../../../styles'
 import constants from '../../../workspace/constants'
 //eslint-disable-next-line
 import { ActionPopover } from 'teaset'
-import { Dialog } from '../../../../components'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
