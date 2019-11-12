@@ -103,6 +103,9 @@ export default class NavigationStartHead extends React.Component {
                       false,
                     )
                     this.setVisible(false)
+                    !GLOBAL.INDOORSTART &&
+                      GLOBAL.LocationView &&
+                      GLOBAL.LocationView.setVisible(true, true)
                     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
                     await SMap.clearPoint()
                   }}
@@ -151,6 +154,9 @@ export default class NavigationStartHead extends React.Component {
                     )
                     this.setVisible(false)
                     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
+                    !GLOBAL.INDOOREND &&
+                      GLOBAL.LocationView &&
+                      GLOBAL.LocationView.setVisible(true, false)
                     await SMap.clearPoint()
                   }}
                 >

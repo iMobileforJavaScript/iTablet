@@ -429,8 +429,7 @@ export default class SimpleSelectList extends React.Component {
         <TouchableOpacity
           style={styles.confirm}
           onPress={() => {
-            this.props.confirmAction &&
-              this.props.confirmAction(this.state.data)
+            this.props.confirmAction && this.props.confirmAction()
           }}
         >
           <Text style={styles.confirmText}>

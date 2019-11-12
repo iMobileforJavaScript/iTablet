@@ -42,6 +42,7 @@ import {
   NavigationStartHead,
   MapSelectPointButton,
   TrafficView,
+  LocationView,
 } from '../../components'
 import {
   Container,
@@ -1349,7 +1350,6 @@ export default class MapView extends React.Component {
             !result &&
               Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
           })
-          SMap.getIndoorDatasource()
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',
@@ -1604,7 +1604,6 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.type}
         getToolRef={() => this.toolBox}
-        getNavigationPopView={() => this.selectList}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
@@ -1615,6 +1614,7 @@ export default class MapView extends React.Component {
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
+        showModelList={this.showModelList}
         setMapType={this.setMapType}
         online={this.props.online}
         incrementRoad={() => {
@@ -1933,6 +1933,59 @@ export default class MapView extends React.Component {
     )
   }
 
+  //网络数据集和模型文件选择
+  showModelList = async () => {
+    let hasNetworkDataset = await SMap.hasNetworkDataset()
+    if (!hasNetworkDataset) {
+      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
+      return
+    }
+    let popView = this.selectList
+    let simpleList = GLOBAL.SimpleSelectList
+    if (simpleList.renderType !== 'navigation') {
+      if (simpleList.state.navigationData.length === 0) {
+        let path =
+          (await FileTools.appendingHomeDirectory(
+            this.props.user && this.props.user.currentUser.userName
+              ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+              : ConstPath.CustomerPath,
+          )) + ConstPath.RelativePath.Datasource
+        let datasources = await SMap.getNetworkDatasource()
+        let models = await FileTools.getNetModel(path)
+        models = models.map(item => {
+          item.checked = false
+          return item
+        })
+        let navigationData = [
+          {
+            title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+            visible: true,
+            image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+            data: datasources || [],
+          },
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NETWORK_MODEL_FILE,
+            visible: true,
+            image: getThemeAssets().functionBar.rightbar_network_model,
+            data: models || [],
+          },
+        ]
+        simpleList.setState({
+          navigationData,
+          renderType: 'navigation',
+        })
+      } else {
+        simpleList.setState({
+          renderType: 'navigation',
+        })
+      }
+    }
+
+    this.showFullMap(true)
+    popView.setVisible(true)
+  }
+
   //导航地图 模型、路网弹窗 数据在点击模型按钮时获取一次 切换地图时清空
   renderNetworkSelectList = () => {
     return (
@@ -1944,7 +1997,7 @@ export default class MapView extends React.Component {
           this.selectList.setVisible(false)
           this.showFullMap(false)
           let selectList = GLOBAL.SimpleSelectList
-          if (selectList.state.currentFloor) {
+          if (selectList.state.renderType === 'incrementRoad') {
             (async function() {
               let selectItem = selectList.state.select
               if (!this.state.isRight) {
@@ -1982,6 +2035,18 @@ export default class MapView extends React.Component {
                   selectList.state.currentFloor.floorID,
                 ))
             }.bind(this)())
+          } else {
+            let { networkModel, networkDataset } = selectList.state
+            if (networkModel && networkDataset) {
+              SMap.startNavigation(
+                networkDataset.datasetName,
+                networkModel.path,
+              )
+              NavigationService.navigate('NavigationView', {
+                changeNavPathInfo: this.props.changeNavPathInfo,
+                showLocationView: true,
+              })
+            }
           }
         }}
       />
@@ -2138,6 +2203,10 @@ export default class MapView extends React.Component {
     )
   }
 
+  _renderLocationIcon = () => {
+    return <LocationView ref={ref => (GLOBAL.LocationView = ref)} />
+  }
+
   _renderNavigationIcon = () => {
     let title = getLanguage(this.props.language).Map_Main_Menu.DRAW
     return (
@@ -2223,6 +2292,7 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
         getLayers={this.props.getLayers}
         device={this.props.device}
+        showModelList={this.showModelList}
       />
     )
   }
@@ -2461,6 +2531,7 @@ export default class MapView extends React.Component {
           !this.props.mapNavigation.isShow &&
           this.state.showIncrement &&
           this._renderNavigationIcon()}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderLocationIcon()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.navigationChangeAR &&
