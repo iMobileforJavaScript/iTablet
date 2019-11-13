@@ -378,6 +378,10 @@ export default class MyLocalData extends Component {
   _onImportWorkspace3D = async () => {
     try {
       this._closeModal()
+      this.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+      )
       await DataHandler.importWorkspace3D(
         this.props.user.currentUser,
         this.itemInfo.item,
@@ -393,6 +397,10 @@ export default class MyLocalData extends Component {
   _onImportDatasource = async () => {
     try {
       this._closeModal()
+      this.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+      )
       await DataHandler.importDatasource(
         this.props.user.currentUser,
         this.itemInfo.item,
