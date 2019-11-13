@@ -239,7 +239,7 @@ class AppRoot extends Component {
     //  this.initSpeechManager()
       SSpeechRecognizer.init('5a45b65c')
     } else {
-      SSpeechRecognizer.init('5b63b509')
+      // SSpeechRecognizer.init('5b63b509')
     }
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
@@ -330,9 +330,9 @@ class AppRoot extends Component {
     }
 
     let status = await SMap.getEnvironmentStatus()
-          if (!status.isLicenseValid) {
-            GLOBAL.LicenseValidDialog.setDialogVisible(true)
-          }
+    if (!status.isLicenseValid) {
+      GLOBAL.LicenseValidDialog.setDialogVisible(true)
+    }
 
     if(serialNumber!==''&&!status.isTrailLicense){
       let licenseInfo = await SMap.getSerialNumberAndModules()
@@ -346,9 +346,9 @@ class AppRoot extends Component {
         }
         GLOBAL.modulesNumber=number
       }
-      
+
     }
-    
+
   }
 
   orientation = o=> {

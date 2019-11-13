@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
-import { Container, MTBtn, PopView } from '../../../../components'
+import { Container, MTBtn, PopView, Dialog } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { Toast, scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -18,7 +18,6 @@ import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
-import { Dialog } from '../../../../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -564,15 +563,15 @@ export default class LayerAttributeTabs extends React.Component {
         //{'申请试用许可'}
         cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
-        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
+        style={[styles.dialogBackground, { height: scaleSize(200) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
       >
         <View
           style={{
-            paddingTop: scaleSize(130),
+            paddingTop: scaleSize(30),
             flex: 1,
             flexDirection: 'column',
             alignItems: 'center',
@@ -580,7 +579,7 @@ export default class LayerAttributeTabs extends React.Component {
         >
           <Text
             style={{
-              fontSize: scaleSize(24),
+              fontSize: scaleSize(32),
               color: color.theme_white,
               marginTop: scaleSize(5),
               marginLeft: scaleSize(10),
@@ -755,7 +754,7 @@ export default class LayerAttributeTabs extends React.Component {
           },
           headerRight: [
             <MTBtn
-              key={'undo'}
+              key={'hide'}
               image={
                 this.state.isShowSystemFields
                   ? getThemeAssets().attribute.icon_attribute_hide

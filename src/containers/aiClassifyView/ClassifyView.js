@@ -10,11 +10,8 @@ import {
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
-import {
-  SAIClassifyView,
-  SMediaCollector,
-  DatasetType,
-} from 'imobile_for_reactnative'
+import { SAIClassifyView, SMediaCollector } from 'imobile_for_reactnative'
+import * as LayerUtils from '../../containers/mtLayerManager/LayerUtils'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 import { Container, ImagePicker, Loading, MTBtn } from '../../components'
@@ -202,7 +199,8 @@ export default class ClassifyView extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {

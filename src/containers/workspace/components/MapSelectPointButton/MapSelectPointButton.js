@@ -5,6 +5,7 @@ import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../../containers/NavigationService'
 import { getLanguage } from '../../../../language'
+import { TouchType } from '../../../../constants'
 
 export default class MapSelectPointButton extends React.Component {
   props: {
@@ -98,13 +99,13 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.MAPSELECTPOINT.setVisible(false)
           if (GLOBAL.STARTX !== undefined) {
             let result
+            await SMap.getStartPoint(
+              GLOBAL.STARTX,
+              GLOBAL.STARTY,
+              GLOBAL.INDOORSTART,
+              GLOBAL.STARTPOINTFLOOR,
+            )
             if (GLOBAL.INDOOREND) {
-              await SMap.getStartPoint(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.INDOORSTART,
-                GLOBAL.STARTPOINTFLOOR,
-              )
               result = await SMap.beginIndoorNavigation(
                 GLOBAL.STARTX,
                 GLOBAL.STARTY,
@@ -134,6 +135,8 @@ export default class MapSelectPointButton extends React.Component {
       }
     }
     if (path && pathLength) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
       this.props.changeNavPathInfo &&
         this.props.changeNavPathInfo({ path, pathLength })
 

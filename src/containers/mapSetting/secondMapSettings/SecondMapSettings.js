@@ -4,8 +4,8 @@
  * https://github.com/AsortKeven
  */
 import React, { Component } from 'react'
-import { Container, PopView } from '../../../components'
-import { ColorTable, SelectList, FilterList } from './components'
+import { Container } from '../../../components'
+import { FilterList } from './components'
 import LinkageList from '../../../components/LinkageList'
 import {
   KeyboardAvoidingView,
@@ -31,7 +31,6 @@ import {
   transfer7ParamsSetting,
   // advancedSettings,
   fourRanges,
-  colorMode,
   transferData,
   coordMenuData,
   coordMenuTitle,
@@ -45,7 +44,6 @@ import color from '../../../styles/color'
 import styles from './styles'
 import Toast from '../../../utils/Toast'
 import NavigationService from '../../NavigationService'
-import { mapBackGroundColor } from '../../../constants'
 import { getThemeAssets } from '../../../assets'
 import { getLanguage } from '../../../language'
 import FileTools from '../../../native/FileTools'
@@ -95,14 +93,10 @@ export default class SecondMapSettings extends Component {
   getData = async () => {
     let data = [],
       dataSourceAndSets,
-      colorData = null,
-      colorModeData = null,
       homeDirectory
     switch (this.state.title) {
       case getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING:
         data = await this.getBasicData()
-        colorData = mapBackGroundColor
-        colorModeData = colorMode()
         break
       case getLanguage(GLOBAL.language).Map_Settings.RANGE_SETTING:
         data = await this.getRangeData()
@@ -180,8 +174,6 @@ export default class SecondMapSettings extends Component {
     }
     this.setState({
       data,
-      colorData,
-      colorModeData,
       dataSourceAndSets,
     })
   }
@@ -517,16 +509,24 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
       case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
-        if (this.popModal) {
-          this.setState(
-            {
-              currentClick: title,
-            },
-            () => {
-              this.popModal.setVisible(true)
-            },
-          )
-        }
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        this.props.navigation.navigate('MapView', {
+          title,
+          needShowFullMap: true,
+        })
+        setTimeout(() => {
+          GLOBAL.popModal && GLOBAL.popModal.setVisible(true)
+        })
+        // if (this.popModal) {
+        //   this.setState(
+        //     {
+        //       currentClick: title,
+        //     },
+        //     () => {
+        //       this.popModal.setVisible(true)
+        //     },
+        //   )
+        // }
         break
       case getLanguage(GLOBAL.language).Map_Settings.MAP_CENTER:
         this.props.navigation.navigate('SecondMapSettings1', {
@@ -703,24 +703,6 @@ export default class SecondMapSettings extends Component {
       this.setState({ data }, () => {
         this.backAction()
       })
-  }
-
-  //设置地图背景色回调
-  setColorBlock = color => {
-    let data = this.state.data.concat()
-    data[6].value = color
-    this.setState({
-      data,
-    })
-  }
-
-  //设置地图颜色模式回调
-  setMapColorMode = value => {
-    let data = this.state.data.concat()
-    data[5].value = value
-    this.setState({
-      data,
-    })
   }
 
   //设置地图坐标系回调
@@ -1194,33 +1176,6 @@ export default class SecondMapSettings extends Component {
     )
   }
 
-  renderPopItem = () => {
-    let modal = this.state.currentClick
-    switch (modal) {
-      case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
-        return (
-          <SelectList
-            modal={this.popModal}
-            language={this.props.language}
-            data={this.state.colorModeData}
-            height={scaleSize(400)}
-            device={this.props.device}
-            callback={this.setMapColorMode}
-          />
-        )
-      case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
-        return (
-          <ColorTable
-            language={this.props.language}
-            data={this.state.colorData}
-            device={this.props.device}
-            setColorBlock={this.setColorBlock}
-          />
-        )
-      default:
-        return <View />
-    }
-  }
   render() {
     if (
       this.state.data.constructor === Object &&
@@ -1398,12 +1353,6 @@ export default class SecondMapSettings extends Component {
           data={this.state.data}
           keyExtractor={(item, index) => item + index}
         />
-        {this.state.title ===
-          getLanguage(GLOBAL.language).Map_Settings.BASIC_SETTING && (
-          <PopView ref={ref => (this.popModal = ref)}>
-            {this.renderPopItem()}
-          </PopView>
-        )}
       </Container>
     )
   }

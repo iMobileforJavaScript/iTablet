@@ -145,10 +145,9 @@ export default class TouchProgress extends Component {
       tips = TPData.getMatchPictureTip(this.props.selectName, _value)
     }
     if (
-      (tips === '' &&
-        GLOBAL.Type === constants.MAP_THEME &&
-        this.props.currentLayer.themeType > 0) ||
-      this.props.currentLayer.isHeatmap
+      tips === '' &&
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
     ) {
       if (isHeatmap) {
         if (this.props.selectName === '核半径') {
@@ -692,9 +691,8 @@ export default class TouchProgress extends Component {
     ) {
       newValue = value * 100
     } else if (
-      (GLOBAL.Type === constants.MAP_THEME &&
-        this.props.currentLayer.themeType > 0) ||
-      this.props.currentLayer.isHeatmap
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -851,9 +849,8 @@ export default class TouchProgress extends Component {
         '     ' +
         parseInt(value)
     } else if (
-      (GLOBAL.Type === constants.MAP_THEME &&
-        this.props.currentLayer.themeType > 0) ||
-      this.props.currentLayer.isHeatmap
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
@@ -1180,9 +1177,8 @@ export default class TouchProgress extends Component {
         tips = TPData.getMatchPictureTip(this.props.selectName, value)
       }
     } else if (
-      (GLOBAL.Type === constants.MAP_THEME &&
-        this.props.currentLayer.themeType > 0) ||
-      this.props.currentLayer.isHeatmap
+      GLOBAL.Type === constants.MAP_THEME &&
+      this.props.currentLayer.themeType > 0 || this.props.currentLayer.isHeatmap
     ) {
       if (
         this.props.selectName === 'range_parameter' ||

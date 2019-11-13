@@ -116,6 +116,21 @@ function dealData(attributes, result = {}, page, type) {
         })
       }
     })
+  } else if (result.head && result.head.length > 0) {
+    result.head.forEach(item => {
+      if (item.caption.toString().toLowerCase() === 'smid') {
+        tableHead.unshift({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+        })
+      } else {
+        tableHead.push({
+          value: item.caption,
+          isSystemField: item.isSystemField,
+          fieldInfo: item,
+        })
+      }
+    })
   }
   attributes.head =
     tableHead.length === 0 && page > 0 ? attributes.head : tableHead

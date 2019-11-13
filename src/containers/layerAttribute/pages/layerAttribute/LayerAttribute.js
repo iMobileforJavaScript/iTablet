@@ -7,7 +7,13 @@
 import * as React from 'react'
 import { View, InteractionManager, Text } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, MTBtn, PopView, InfoView } from '../../../../components'
+import {
+  Container,
+  MTBtn,
+  PopView,
+  InfoView,
+  Dialog,
+} from '../../../../components'
 import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
@@ -29,7 +35,6 @@ import { color } from '../../../../styles'
 import constants from '../../../workspace/constants'
 //eslint-disable-next-line
 import { ActionPopover } from 'teaset'
-import { Dialog } from '../../../../components'
 
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 const PAGE_SIZE = 30
@@ -1036,15 +1041,15 @@ export default class LayerAttribute extends React.Component {
         confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
         cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
-        style={[styles.dialogBackground, { height: scaleSize(340) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
+        style={[styles.dialogBackground, { height: scaleSize(200) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
       >
         <View
           style={{
-            paddingTop: scaleSize(130),
+            paddingTop: scaleSize(30),
             flex: 1,
             flexDirection: 'column',
             alignItems: 'center',
@@ -1052,7 +1057,7 @@ export default class LayerAttribute extends React.Component {
         >
           <Text
             style={{
-              fontSize: scaleSize(24),
+              fontSize: scaleSize(32),
               color: color.theme_white,
               marginTop: scaleSize(5),
               marginLeft: scaleSize(10),

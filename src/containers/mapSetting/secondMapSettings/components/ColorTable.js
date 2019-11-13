@@ -15,7 +15,7 @@ export default class ColorTable extends React.Component {
     data: Array,
     device: Object,
     itemAction?: () => {},
-    setColorBlock?: () => {},
+    callback?: () => {},
   }
 
   constructor(props) {
@@ -43,8 +43,7 @@ export default class ColorTable extends React.Component {
       this.props.itemAction(item)
     } else {
       let isSuccess = await item.action()
-      if (isSuccess)
-        this.props.setColorBlock && this.props.setColorBlock(item.key)
+      if (isSuccess) this.props.callback && this.props.callback(item.key)
     }
   }
   renderItem = ({ item }) => {
