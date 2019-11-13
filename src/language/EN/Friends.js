@@ -63,7 +63,7 @@ const Friends = {
   IMPORT_FAIL: 'Import failed',
   IMPORT_CONFIRM: 'Do you want to import the data?',
   RECEIVE_CONFIRM: 'Do you want to download the data',
-  OPENCOWORKFIRST: 'Please open cowork map first',
+  OPENCOWORKFIRST: 'Please open cowork map first before import the data',
   LOCATION_COWORK_NOTIFY: "Can't open location in cowork mode",
   LOCATION_SHARE_NOTIFY: "Can't open location in sharing",
   WAIT_DOWNLOADING: 'Please wait until download completed',
