@@ -335,13 +335,12 @@ async function getNavigationWorkspace(path = '', filter = {}) {
 /**
  * 获取指定路径下的网络模型
  * @param path
- * @param filter
  * @returns {Promise.<*>}
  */
-async function getNetModel(path = '', filter = {}) {
+async function getNetModel(path = '') {
   try {
     if (!path) return []
-    return await FileTools.getNetModel(path, filter)
+    return await FileTools.getNetModel(path)
   } catch (e) {
     return e
   }

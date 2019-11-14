@@ -75,7 +75,7 @@ export default StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  lengthChangeView: {
+  totallengthChangeView: {
     position: 'absolute',
     flexDirection: 'column',
     height: scaleSize(45),
@@ -84,6 +84,17 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     top: scaleSize(100),
+    left: scaleSize(20),
+  },
+  tolastlengthChangeView: {
+    position: 'absolute',
+    flexDirection: 'column',
+    height: scaleSize(45),
+    minWidth: scaleSize(180),
+    backgroundColor: 'transparent',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    top: scaleSize(150),
     left: scaleSize(20),
   },
   titleTotal: {

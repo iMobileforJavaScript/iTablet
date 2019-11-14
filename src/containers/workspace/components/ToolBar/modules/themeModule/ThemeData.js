@@ -40,6 +40,11 @@ function getData(type, params) {
       data = temp.data
       buttons = temp.buttons
       break
+    default:
+      if (type.indexOf(ConstToolType.MAP_THEME_PARAM_GRAPH + '_') > 0) {
+        buttons = ThemeMenuData.getThemeFiveMenu()
+      }
+      break
   }
   return { data, buttons }
 }

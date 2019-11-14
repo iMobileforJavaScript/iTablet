@@ -240,7 +240,7 @@ function getToolbarHeight(type) {
         column = 12
       }
       break
-    case ConstToolType.REGIONAFTERCOLOR_SET:
+    case ConstToolType.REGIONBORDERCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
@@ -306,6 +306,7 @@ function getToolbarHeight(type) {
       column = orientation === 'PORTRAIT' ? 4 : 5
       break
     case ConstToolType.MAP_SHARE:
+    case ConstToolType.MAP_SHARE_MAP3D:
     case ConstToolType.MAP_MORE:
       height = ConstToolType.HEIGHT[0]
       column = 4
@@ -404,6 +405,14 @@ function getToolbarHeight(type) {
       break
     case ConstToolType.STYLE_TRANSFER_PICKER:
       height = ConstToolType.TOOLBAR_HEIGHT_2[3]
+      break
+    case ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE:
+      height = ConstToolType.THEME_HEIGHT[8]
+      column = 4
+      break
+    case ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE:
+      height = ConstToolType.HEIGHT[0]
+      column = 3
       break
     default:
       height = 0

@@ -25,6 +25,7 @@ import {
   layerSettingCanNotSelect,
   layerSettingCanNotSnap,
   layerSettingCanNotEdit,
+  getVisibleScalePickerData,
 } from './LayerToolbarData'
 import {
   View,
@@ -37,7 +38,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/components/ToolBarSectionList'
 import styles from './styles'
-import { SMap, DatasetType } from 'imobile_for_reactnative'
+import { SMap, DatasetType, SMCollectorType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
@@ -46,6 +47,9 @@ import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
 import ToolbarModule from '../../../workspace/components/ToolBar/modules/ToolbarModule'
 import { themeModule } from '../../../workspace/components/ToolBar/modules'
+import { MultiPicker } from '../../../../components'
+
+import collectionModule from '../../../../containers/workspace/components/ToolBar/modules/collectionModule'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -98,6 +102,7 @@ export default class LayerManager_tolbar extends React.Component {
       layerData: props.layerData || '',
       index: 0,
       // layerName: '',
+      layerVisibleScaleData: [],
     }
     this.isShow = false
     this.isBoxShow = true
@@ -156,6 +161,8 @@ export default class LayerManager_tolbar extends React.Component {
           }
           break
         case ConstToolType.MAP_SCALE:
+          boxHeight = ConstToolType.TOOLBAR_HEIGHT_2[3]
+          break
         case ConstToolType.MAP_EDIT_STYLE:
           boxHeight = ConstToolType.TOOLBAR_HEIGHT[1]
           break
@@ -361,7 +368,7 @@ export default class LayerManager_tolbar extends React.Component {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
         // this.updateMenuState()
-        this.updateOverlayerView()
+        this.updateOverlayView()
       },
     )
   }
@@ -408,7 +415,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   //更新遮盖层状态
-  updateOverlayerView = () => {
+  updateOverlayView = () => {
     this.setOverlayViewVisible(this.isShow)
   }
 
@@ -493,106 +500,31 @@ export default class LayerManager_tolbar extends React.Component {
       getLanguage(global.language).Map_Layer.LAYERS_SET_VISIBLE_SCALE
     ) {
       //'可见比例尺范围'
-      this.setVisible(true, ConstToolType.MAP_SCALE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[1],
-        layerData: this.state.layerData,
-      })
+      (async function() {
+        await this.setVisibleScalePickerData()
+        this.setVisible(true, ConstToolType.MAP_SCALE, {
+          layerData: this.state.layerData,
+        })
+      }.bind(this)())
     } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_MAXIMUM
+      section.title === getLanguage(global.language).Map_Layer.LAYERS_COLLECT
     ) {
-      //'最大可见比例尺') {
-      this.setVisible(true, ConstToolType.MAP_MAX_SCALE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
-        layerData: this.state.layerData,
-      })
-    } else if (
-      section.title === getLanguage(global.language).Map_Layer.LAYERS_MINIMUM
-    ) {
-      //'最小可见比例尺') {
-      this.setVisible(true, ConstToolType.MAP_MIN_SCALE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[6],
-        layerData: this.state.layerData,
-      })
-    } else if (section.title === '1:5,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 5000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 5000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:10,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 10000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 10000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:25,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 25000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 25000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:50,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 50000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 50000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:100,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 100000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 100000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:250,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 250000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 250000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:500,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 500000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 500000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
-    } else if (section.title === '1:1,000,000') {
-      (async function() {
-        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
-          await SMap.setMinVisibleScale(this.state.layerData.path, 1000000)
-          this.setVisible(false)
-        } else {
-          await SMap.setMaxVisibleScale(this.state.layerData.path, 1000000)
-          this.setVisible(false)
-        }
-      }.bind(this)())
+      let type = ''
+      switch (this.state.layerData.type) {
+        case 1:
+          type = SMCollectorType.POINT_HAND
+          break
+        case 3:
+          type = SMCollectorType.LINE_HAND_POINT
+          break
+        case 5:
+          type = SMCollectorType.REGION_HAND_POINT
+          break
+      }
+      collectionModule().actions.showCollection(type, this.state.layerData.name)
+      this.setVisible(false)
+      this.props.navigation.navigate('MapView')
+      // NavigationService.navigate('')
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
     ) {
@@ -615,84 +547,7 @@ export default class LayerManager_tolbar extends React.Component {
         },
       })
       // this.dialog.setDialogVisible(true)
-    }
-    // else if (
-    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_UP
-    // ) {
-    //   //''上移') {
-    //   (async function() {
-    //     await SMap.moveUpLayer(this.state.layerData.name)
-    //     await this.props.getLayers()
-    //   }.bind(this)())
-    // } else if (
-    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_MOVE_DOWN
-    // ) {
-    //   //''下移') {
-    //   (async function() {
-    //     await SMap.moveDownLayer(this.state.layerData.name)
-    //     await this.props.getLayers()
-    //   }.bind(this)())
-    // } else if (
-    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_TOP
-    // ) {
-    //   //''置顶') {
-    //   (async function() {
-    //     await SMap.moveToTop(this.state.layerData.name)
-    //     let count = await SMap.getTaggingLayerCount(
-    //       this.props.user.currentUser.userName,
-    //     )
-    //     for (let i = 0; i < count; i++) {
-    //       await SMap.moveDownLayer(this.state.layerData.name)
-    //     }
-    //     await this.props.getLayers()
-    //     this.setVisible(false)
-    //   }.bind(this)())
-    // } else if (
-    //   section.title === getLanguage(global.language).Map_Layer.LAYERS_BOTTOM
-    // ) {
-    //   //''置底') {
-    //   (async function() {
-    //     await SMap.moveToBottom(this.state.layerData.name)
-    //   }.bind(this)())
-    //   SMap.moveUpLayer(this.state.layerData.name)
-    //   if (
-    //     this.props.layers[this.props.layers.length - 1].name.indexOf(
-    //       'vec@TD',
-    //     ) >= 0
-    //   ) {
-    //     SMap.moveUpLayer(this.state.layerData.name)
-    //   }
-    //   this.props.getLayers()
-    //   this.setVisible(false)
-    // }
-    // else if (
-    //   section.title ===
-    //   getLanguage(global.language).Map_Layer.PLOTS_SET_AS_CURRENT
-    // ) {
-    //   //'设置为当前标注'
-    //   (async function() {
-    //     GLOBAL.TaggingDatasetName = await SMap.getCurrentTaggingDataset(
-    //       this.state.layerData.path,
-    //     )
-    //     this.updateTagging()
-    //     this.setVisible(false)
-    //   }.bind(this)())
-    // }
-    // if (
-    //   section.title ===
-    //   getLanguage(global.language).Map_Layer.PLOTS_DELETE
-    // ) {
-    //   //'设置为当前标注'
-    //   (async function() {
-    //     GLOBAL.TaggingDatasetName = await SMap.removeTaggingDataset(
-    //       this.state.layerData.datasetName,
-    //       this.props.user.currentUser.userName,
-    //     )
-    //     this.updateTagging()
-    //     this.setVisible(false)
-    //   }.bind(this)())
-    // }
-    else if (
+    } else if (
       section.title ===
       getLanguage(global.language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER
     ) {
@@ -1061,6 +916,8 @@ export default class LayerManager_tolbar extends React.Component {
       case list:
         switch (this.state.type) {
           case ConstToolType.MAP_SCALE:
+            box = this.renderPiker()
+            break
           case ConstToolType.MAP_MAX_SCALE:
           case ConstToolType.MAP_MIN_SCALE:
           case ConstToolType.MAP_EDIT_TAGGING:
@@ -1073,9 +930,6 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()
             break
-          case 'Share':
-            box = this.renderShare()
-            break
         }
         break
     }
@@ -1084,6 +938,55 @@ export default class LayerManager_tolbar extends React.Component {
         {box}
       </Animated.View>
     )
+  }
+
+  renderPiker = () => {
+    return (
+      <MultiPicker
+        ref={ref => (this.picker = ref)}
+        language={GLOBAL.language}
+        confirm={async item => {
+          let min = item[0].selectedItem.value
+          let max = item[1].selectedItem.value
+          if (min !== 0 && max !== 0 && min <= max) {
+            //最大比例尺必须大于最小比例尺
+            Toast.show(
+              getLanguage(this.props.language).Map_Layer
+                .LAYER_SCALE_RANGE_WRONG,
+            )
+            return
+          }
+          for (let i = 0; i < item.length; i++) {
+            if (item[i].selectedItem.key !== item[i].initItem.key) {
+              if (item[i].value === '最大可见比例尺') {
+                await SMap.setMaxVisibleScale(
+                  this.state.layerData.path,
+                  item[i].selectedItem.value,
+                )
+              } else {
+                await SMap.setMinVisibleScale(
+                  this.state.layerData.path,
+                  item[i].selectedItem.value,
+                )
+              }
+            }
+          }
+          this.setVisible(false)
+        }}
+        cancel={() => {
+          this.setVisible(false)
+        }}
+        popData={this.state.layerVisibleScaleData}
+        viewableItems={3}
+      />
+    )
+  }
+
+  setVisibleScalePickerData = async () => {
+    let min = await SMap.getMinVisibleScale(this.state.layerData.path)
+    let max = await SMap.getMaxVisibleScale(this.state.layerData.path)
+    let pickerData = await getVisibleScalePickerData(min, max)
+    this.setState({ layerVisibleScaleData: pickerData })
   }
 
   // confirm = () => {

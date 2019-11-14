@@ -7,14 +7,15 @@ import {
   TouchType,
 } from '../../../../../../constants'
 import { color } from '../../../../../../styles'
+import { setSpText } from '../../../../../../utils'
 import { getLanguage } from '../../../../../../language'
 import { ColorTable } from '../../../../../mapSetting/secondMapSettings/components'
-import { Row, HorizontalTableList } from '../../../../../../components'
+import { Row, HorizontalTableList, MTBtn } from '../../../../../../components'
 import SymbolTabs from '../../../SymbolTabs'
 import SymbolList from '../../../SymbolList'
 import AnimationNodeListView from '../../../AnimationNodeListView'
 import PlotAnimationView from '../../../PlotAnimationView'
-import ToolbarPicker from '../../ToolbarPicker'
+import ToolbarPicker from '../ToolbarPicker'
 import ToolList from '../ToolList'
 import ToolbarTableList from '../ToolbarTableList'
 import ToolbarHeight from '../../modules/ToolBarHeight'
@@ -89,9 +90,14 @@ export default class ToolbarContentView extends React.Component {
     }
   }
 
+  // TODO 每次更改高度和列数的方式可能会两次次setState，需要优化
   onChangeHeight = async (orientation, type) => {
     let data = ToolbarHeight.getToolbarHeight(type)
-    if (this.height !== data.height || this.state.column !== data.column) {
+    if (
+      data.column !== undefined &&
+      data.height !== undefined &&
+      (this.height !== data.height || this.state.column !== data.column)
+    ) {
       this.height = data.height
       this.setState(
         {
@@ -309,7 +315,33 @@ export default class ToolbarContentView extends React.Component {
       <HorizontalTableList
         data={this.props.data}
         numColumns={this.state.column}
-        renderCell={this._renderItem}
+        renderCell={({ item, rowIndex, cellIndex }) => {
+          let column = this.state.column
+          return (
+            <MTBtn
+              style={[styles.cell, { width: this.props.device.width / column }]}
+              key={rowIndex + '-' + cellIndex}
+              title={item.title}
+              textColor={item.disable ? '#A0A0A0' : color.font_color_white}
+              textStyle={{ fontSize: setSpText(20) }}
+              // size={MTBtn.Size.NORMAL}
+              image={item.image}
+              background={item.background}
+              onPress={() => {
+                if (item.disable) return
+                if (
+                  ToolbarModule.getData().actions &&
+                  ToolbarModule.getData().actions.tableAction
+                ) {
+                  ToolbarModule.getData().actions.tableAction(item)
+                }
+                if (item.action) {
+                  item.action(item)
+                }
+              }}
+            />
+          )
+        }}
         Heighttype={this.props.type}
         device={this.props.device}
       />

@@ -11,11 +11,10 @@ import { FileTools } from '../../native'
 import Toast from '../../utils/Toast'
 import { getLanguage } from '../../language'
 import { ConstPath } from '../../constants'
-import RNFS from 'react-native-fs'
 import { SAIClassifyView } from 'imobile_for_reactnative'
 
 const DEFAULT_MODEL = 'mobilenet_quant_224' //默认模型
-const DUSTBIN_MODEL = 'detect_lajixiang_300' //垃圾箱模型
+const DUSTBIN_MODEL = 'citycase' //垃圾箱模型
 const PLANT_MODEL = 'plant_model' //植物模型
 // let MODEL_PATH = ''//本地模型文件
 // let LABEL_PATH = ''
@@ -30,6 +29,7 @@ export default class ClassifySettingsView extends React.Component {
     user: Object,
     nav: Object,
     downloads: Array,
+    downloadFile: () => {},
   }
 
   constructor(props) {
@@ -44,11 +44,37 @@ export default class ClassifySettingsView extends React.Component {
       dustbinBtx: '',
       plantBtx: '',
     }
+
+    this.clickAble = true // 防止重复点击
   }
 
   // eslint-disable-next-line
   componentWillMount() {
     Orientation.lockToPortrait()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.downloads) !==
+      JSON.stringify(this.props.downloads)
+    ) {
+      for (let index = 0; index < this.props.downloads.length; index++) {
+        const element = this.props.downloads[index]
+        if (element.id === 'DUSTBIN_MODEL') {
+          if (element.progress < 100) {
+            this.setState({
+              dustbinBtx: element.progress + '%',
+            })
+          }
+        } else if (element.id === 'PLANT_MODEL') {
+          if (element.progress < 100) {
+            this.setState({
+              plantBtx: element.progress + '%',
+            })
+          }
+        }
+      }
+    }
   }
 
   componentDidMount() {
@@ -92,20 +118,20 @@ export default class ClassifySettingsView extends React.Component {
       if (currentmodel.ModelType === 'ASSETS_FILE') {
         this.setState({
           currentModel: DEFAULT_MODEL,
-          defaultBtx: '正在使用',
+          defaultBtx: '使用中',
         })
       } else if (currentmodel.ModelType === 'ABSOLUTE_FILE_PATH') {
         if (currentmodel.ModelPath.indexOf(DUSTBIN_MODEL) !== -1) {
           this.setState({
             currentModel: DUSTBIN_MODEL,
             defaultBtx: '立即使用',
-            dustbinBtx: '正在使用',
+            dustbinBtx: '使用中',
           })
         } else if (currentmodel.ModelPath.indexOf(PLANT_MODEL) !== -1) {
           this.setState({
             currentModel: PLANT_MODEL,
             defaultBtx: '立即使用',
-            plantBtx: '正在使用',
+            plantBtx: '使用中',
           })
         }
       }
@@ -119,7 +145,13 @@ export default class ClassifySettingsView extends React.Component {
   }
 
   back = () => {
-    NavigationService.goBack()
+    if (this.clickAble) {
+      this.clickAble = false
+      setTimeout(() => {
+        this.clickAble = true
+      }, 1500)
+      NavigationService.goBack()
+    }
     return true
   }
 
@@ -149,6 +181,7 @@ export default class ClassifySettingsView extends React.Component {
       </View>
     )
   }
+
   renderModelItemSecond = () => {
     return (
       <View style={styles.ModelItemView}>
@@ -170,11 +203,12 @@ export default class ClassifySettingsView extends React.Component {
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'垃圾箱模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>{'城市垃圾模型'}</Text>
         <View style={styles.DividingLine} />
       </View>
     )
   }
+
   renderModelItemThird = () => {
     return (
       <View style={styles.ModelItemView}>
@@ -209,7 +243,7 @@ export default class ClassifySettingsView extends React.Component {
           showsVerticalScrollIndicator={false}
         >
           {this.renderModelItemFirst()}
-          {/*{this.renderModelItemSecond()}*/}
+          {this.renderModelItemSecond()}
           {/*{this.renderModelItemThird()}*/}
         </ScrollView>
       </View>
@@ -238,12 +272,12 @@ export default class ClassifySettingsView extends React.Component {
       let result = await SAIClassifyView.setModel(params)
       if (result) {
         Toast.show('切换成功')
-        let dustbinBtx = this.state.dustbinBtx === '正在使用'
-        let plantBtx = this.state.plantBtx === '正在使用'
+        let dustbinBtx = this.state.dustbinBtx === '使用中'
+        let plantBtx = this.state.plantBtx === '使用中'
         if (fileName === DEFAULT_MODEL) {
           this.setState({
             currentModel: fileName,
-            defaultBtx: '正在使用',
+            defaultBtx: '使用中',
             dustbinBtx: dustbinBtx ? '立即使用' : this.state.dustbinBtx,
             plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
           })
@@ -251,7 +285,7 @@ export default class ClassifySettingsView extends React.Component {
           this.setState({
             currentModel: fileName,
             defaultBtx: '立即使用',
-            dustbinBtx: '正在使用',
+            dustbinBtx: '使用中',
             plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
           })
         } else if (fileName === PLANT_MODEL) {
@@ -259,7 +293,7 @@ export default class ClassifySettingsView extends React.Component {
             currentModel: fileName,
             defaultBtx: '立即使用',
             dustbinBtx: dustbinBtx ? '立即使用' : this.state.dustbinBtx,
-            plantBtx: '正在使用',
+            plantBtx: '使用中',
           })
         }
       } else {
@@ -300,7 +334,7 @@ export default class ClassifySettingsView extends React.Component {
   _downloadData = async downloadData => {
     let keyword = downloadData.fileName
     let dataUrl = await FetchUtils.getFindUserDataUrl(
-      'xiezhiyan123',
+      'imobile1234',
       keyword,
       '.zip',
     )
@@ -316,22 +350,24 @@ export default class ClassifySettingsView extends React.Component {
         fileName: downloadData.fileName,
         progressDivider: 1,
         key: downloadData.key,
-        progress: res => {
-          let value = ~~res.progress.toFixed(0)
-          let progress = value + '%'
-          if (downloadData.fileName === DUSTBIN_MODEL) {
-            this.setState({
-              dustbinBtx: progress,
-            })
-          } else if (downloadData.fileName === PLANT_MODEL) {
-            this.setState({
-              plantBtx: progress,
-            })
-          }
-        },
+        // progress: res => {
+        //   let value = ~~res.progress.toFixed(0)
+        //   let progress = value + '%'
+        //   if (downloadData.fileName === DUSTBIN_MODEL) {
+        //     this.setState({
+        //       dustbinBtx: progress,
+        //     })
+        //   } else if (downloadData.fileName === PLANT_MODEL) {
+        //     this.setState({
+        //       plantBtx: progress,
+        //     })
+        //   }
+        // },
       }
-      const ret = RNFS.downloadFile(downloadOptions)
-      ret.promise
+      // const ret = RNFS.downloadFile(downloadOptions)
+      // ret.promise
+      this.props
+        .downloadFile(downloadOptions)
         .then(async () => {
           await FileTools.unZipFile(fileCachePath, fileDirPath)
           await FileTools.deleteFile(fileCachePath)

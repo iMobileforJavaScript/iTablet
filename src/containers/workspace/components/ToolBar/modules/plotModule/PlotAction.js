@@ -325,8 +325,8 @@ function close() {
     params.setToolbarVisible(false)
   } else {
     params.setToolbarVisible(false)
-    ToolbarModule.setData() // 关闭Toolbar清除临时数据
   }
+  ToolbarModule.setData() // 关闭Toolbar清除临时数据
 }
 
 const actions = {

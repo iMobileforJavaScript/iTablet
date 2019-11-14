@@ -34,6 +34,31 @@ function commit(type) {
   })
 }
 
+function close(type) {
+  const params = ToolbarModule.getParams()
+  let actionType = Action.PAN
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_EDIT_') >= 0 &&
+    type !== ConstToolType.MAP_EDIT_DEFAULT
+  ) {
+    SMap.cancel()
+    actionType = Action.SELECT
+    GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
+    // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+    params.setToolbarVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+      isFullScreen: false,
+      height: 0,
+    })
+  } else {
+    params.existFullMap && params.existFullMap()
+    // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+    params.setToolbarVisible(false)
+    ToolbarModule.setData() // 关闭Toolbar清除临时数据
+  }
+  SMap.setAction(actionType)
+}
+
 async function geometrySelected(event) {
   const params = ToolbarModule.getParams()
   params.setSelection &&
@@ -174,6 +199,7 @@ function patchHollowRegion() {
 
 const actions = {
   commit,
+  close,
   geometrySelected,
 
   move,

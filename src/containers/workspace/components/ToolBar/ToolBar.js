@@ -18,12 +18,12 @@ import { SMap, SScene, Action, SCollector } from 'imobile_for_reactnative'
 import ToolbarBtnType from './ToolbarBtnType'
 import constants from '../../constants'
 import styles from './styles'
-import { getLanguage } from '../../../../language'
 import {
   ToolbarMenuDialog,
   ToolbarContentView,
   ToolbarBottomButtons,
 } from './components'
+import Utils from './utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -111,7 +111,6 @@ export default class ToolBar extends React.PureComponent {
       data: [],
       containerType: table,
       themeType: '',
-      // height: HEIGHT[1],
       isFullScreen: DEFAULT_FULL_SCREEN,
       column: DEFAULT_COLUMN, // 只有table可以设置
     },
@@ -139,26 +138,15 @@ export default class ToolBar extends React.PureComponent {
       buttons: [],
       bottom: new Animated.Value(-props.device.height),
       showMenuDialog: false,
-      // listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       isTouchProgress: false,
-      // themeDatasourceAlias: '',
-      // themeDatasetName: '',
-      // themeColor: '',
-      // themeCreateType: '',
       selectName: '',
       selectKey: '',
-      // listExpressions: {},
       themeSymbolType: '',
       hasSoftMenuBottom: false,
-      // canUndo: false, //距离、面积量算是否可以撤销
-      // canRedo: false, //距离、面积量算是否可以回退
     }
-    // this.pointArr = [] //距离、面积、角度量算点击数组
-    // this.redoArr = [] //距离、面积、角度量算回退数组
     this.isShow = false
     this.isBoxShow = true
-    this.lastUdbList = this.state.data //保存上次的数据源数据
     this.lastState = {}
 
     this.setToolbarParams()
@@ -188,7 +176,7 @@ export default class ToolBar extends React.PureComponent {
     //         ],
     //       },
     //       () => {
-    //         this.updateOverlayerView()
+    //         this.updateOverlayView()
     //       },
     //     )
     //   },
@@ -241,8 +229,11 @@ export default class ToolBar extends React.PureComponent {
       setToolbarVisible: this.setVisible,
       setLastState: this.setLastState,
       scrollListToLocation: this.scrollListToLocation,
+      showMenuBox: this.showMenuBox,
+      mapMoveToCurrent: this.mapMoveToCurrent,
       contentView: this.contentView, // ToolbarContentView ref
       buttonView: this.buttonView, // ToolbarBottomButtons ref
+      mapLegend: this.props.mapLegend,
       ...this.props,
     })
   }
@@ -286,6 +277,12 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  getBoxShow = () => this.isBoxShow
+
+  setBoxShow = isBoxShow => {
+    this.isBoxShow = isBoxShow
+  }
+
   getData = async type => {
     let toolbarModule = await ToolbarModule.getTabBarData(type, {
       setToolbarVisible: this.setVisible,
@@ -316,7 +313,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   //更新遮盖层状态
-  updateOverlayerView = () => {
+  updateOverlayView = () => {
     if (this.isShow) {
       if (this.state.isTouchProgress || this.state.showMenuDialog) {
         this.setOverlayViewVisible(false)
@@ -362,7 +359,7 @@ export default class ToolBar extends React.PureComponent {
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column ||
+      // params.column !== this.state.column ||
       params.buttons !== this.state.buttons ||
       params.selectKey !== this.state.selectKey ||
       params.isTouchProgress !== this.state.isTouchProgress
@@ -372,14 +369,14 @@ export default class ToolBar extends React.PureComponent {
         let data = params.data
         let buttons = params.buttons
         let customView = params.customView
-        if (data === undefined && buttons === undefined) {
+        if (data === undefined || buttons === undefined) {
           let _data = await this.getData(type)
           data = _data.data
           buttons = _data.buttons
           customView = _data.customView
         }
         this.originType = type
-        let newHeight = 0
+        let newHeight = this.height
         if (params && typeof params.height === 'number')
           newHeight = params.height
         this.shareTo = params.shareTo || ''
@@ -397,10 +394,10 @@ export default class ToolBar extends React.PureComponent {
               params && params.isFullScreen !== undefined
                 ? params.isFullScreen
                 : DEFAULT_FULL_SCREEN,
-            column:
-              params && typeof params.column === 'number'
-                ? params.column
-                : DEFAULT_COLUMN,
+            // column:
+            //   params && typeof params.column === 'number'
+            //     ? params.column
+            //     : DEFAULT_COLUMN,
             containerType:
               params && params.containerType
                 ? params.containerType
@@ -427,7 +424,7 @@ export default class ToolBar extends React.PureComponent {
             if (params.cb) {
               setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
             }
-            this.updateOverlayerView()
+            this.updateOverlayView()
           },
         )
       }.bind(this)())
@@ -437,7 +434,7 @@ export default class ToolBar extends React.PureComponent {
         setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
       }
       !isShow && this.props.existFullMap && this.props.existFullMap()
-      this.updateOverlayerView()
+      this.updateOverlayView()
     }
   }
 
@@ -555,7 +552,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   close = (type = this.state.type, actionFirst = false) => {
-    // TODO 待去掉
+    // TODO 待去掉，下列方法分别放到各个Module下面
     (async function() {
       let actionType = Action.PAN
 
@@ -647,7 +644,7 @@ export default class ToolBar extends React.PureComponent {
           this.setState(
             { isTouchProgress: false, showMenuDialog: false },
             () => {
-              this.updateOverlayerView()
+              this.updateOverlayView()
             },
           )
         }
@@ -666,7 +663,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      this.updateOverlayerView()
+      this.updateOverlayView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
   }
@@ -727,162 +724,185 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  getPoint = () => {
-    return this.point
-  }
-
   getToolbarModule = () => {
     return ToolbarModule
   }
 
   menu = () => {
     // TODO 此方法待改，分拆到各个module下
-    let isFullScreen, showMenuDialog, isTouchProgress
-    let showBox = function() {
-      // if (this.state.type === ConstToolType.STYLE_TRANSFER) {
-      //   ToolbarPicker.toggle()
-      // } else
-      if (
-        GLOBAL.Type === constants.MAP_EDIT ||
-        this.state.type === ConstToolType.GRID_STYLE ||
-        this.state.type === ConstToolType.MAP_STYLE ||
-        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
-        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
-        this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
-        ((this.state.type === ConstToolType.LINECOLOR_SET ||
-          this.state.type === ConstToolType.POINTCOLOR_SET ||
-          this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-          this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-          this.state.type === ConstToolType.LEGEND ||
-          this.state.type === ConstToolType.LEGEND_NOT_VISIBLE) &&
-          this.isBoxShow)
-      ) {
-        this.contentView &&
-          this.contentView.changeHeight(
-            this.state.showMenuDialog ? this.height : 0,
-          )
-
-        // this.isBoxShow = !this.isBoxShow
-        this.isBoxShow = this.state.showMenuDialog
-      }
-    }.bind(this)
-
-    let setData = function() {
-      if (
-        GLOBAL.Type === constants.MAP_EDIT ||
-        this.state.type === ConstToolType.GRID_STYLE ||
-        this.state.type === ConstToolType.MAP_STYLE ||
-        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
-        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
-        this.state.type === ConstToolType.LINECOLOR_SET ||
-        this.state.type === ConstToolType.POINTCOLOR_SET ||
-        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-        this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
-        this.state.type === ConstToolType.LEGEND ||
-        this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
-      ) {
-        // GLOBAL.showFlex =  !GLOBAL.showFlex
-        this.isBoxShow = !this.isBoxShow
-        let buttons
-        if (this.state.type.indexOf('MAP_THEME_PARAM_GRAPH') >= 0) {
-          buttons = [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.MENU_FLEX,
-            ToolbarBtnType.THEME_GRAPH_TYPE,
-            ToolbarBtnType.TOOLBAR_COMMIT,
-          ]
-        } else if (this.state.type.indexOf('LEGEND') >= 0) {
-          if (this.props.mapLegend[GLOBAL.Type].isShow) {
-            buttons = [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.NOT_VISIBLE,
-              ToolbarBtnType.MENU,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.TOOLBAR_COMMIT,
-            ]
-          } else {
-            buttons = [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.VISIBLE,
-              ToolbarBtnType.MENU,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.TOOLBAR_COMMIT,
-            ]
-          }
-        } else {
-          buttons = [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.MENU_FLEX,
-            ToolbarBtnType.TOOLBAR_COMMIT,
-          ]
-        }
-        this.setState(
-          {
-            isFullScreen,
-            showMenuDialog,
-            isTouchProgress,
-            buttons: buttons,
-          },
-          () => {
-            this.updateOverlayerView()
-          },
-        )
-      }
-    }.bind(this)
-
     if (
-      this.state.selectKey === '线宽' ||
-      this.state.selectKey === '大小' ||
-      this.state.selectKey === '旋转角度' ||
-      this.state.selectKey === '透明度' ||
-      this.state.selectKey === '对比度' ||
-      this.state.selectKey === '亮度' ||
-      this.state.selectKey === '分段个数' ||
-      this.state.selectKey === '旋转角度' ||
-      this.state.selectKey === '字号' ||
-      this.state.selectKey === '单点代表值' ||
-      this.state.selectKey === '符号大小' ||
-      this.state.selectKey === '基准值' ||
-      this.state.selectKey === '最大显示值' ||
-      this.state.selectKey === '列数' ||
-      this.state.selectKey === '宽度' ||
-      this.state.selectKey === '高度'
+      ToolbarModule.getData().actions &&
+      ToolbarModule.getData().actions.menu
     ) {
-      isFullScreen = true
-      showMenuDialog = !this.state.showMenuDialog
-      isTouchProgress = this.state.showMenuDialog
-      setData()
-    } else {
-      isFullScreen = !this.state.showMenuDialog
-      showMenuDialog = !this.state.showMenuDialog
-      isTouchProgress = false
-      if (!this.state.showMenuDialog) {
-        // 先滑出box，再显示Menu
-        showBox()
-        setTimeout(setData, Const.ANIMATED_DURATION_2)
-      } else {
-        // 先隐藏Menu，再滑进box
-        setData()
-        showBox()
-      }
+      ToolbarModule.getData().actions.menu(
+        this.state.type,
+        this.state.selectKey,
+        {
+          showBox: height => {
+            if (height !== undefined) this.height = height
+            this.contentView &&
+              this.contentView.changeHeight(
+                this.state.showMenuDialog ? this.height : 0,
+              )
+            // this.isBoxShow = this.state.showMenuDialog
+            this.isBoxShow = false
+          },
+          setData: params => {
+            // this.isBoxShow = !this.isBoxShow
+            // this.isBoxShow = false
+            this.setState(params, () => {
+              this.updateOverlayView()
+            })
+          },
+        },
+      )
     }
+    // let isFullScreen, showMenuDialog, isTouchProgress
+    // let showBox = function() {
+    //   // if (this.state.type === ConstToolType.STYLE_TRANSFER) {
+    //   //   ToolbarPicker.toggle()
+    //   // } else
+    //   if (
+    //     GLOBAL.Type === constants.MAP_EDIT ||
+    //     this.state.type === ConstToolType.GRID_STYLE ||
+    //     this.state.type === ConstToolType.MAP_STYLE ||
+    //     this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+    //     this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+    //     this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
+    //     ((this.state.type === ConstToolType.LINECOLOR_SET ||
+    //       this.state.type === ConstToolType.POINTCOLOR_SET ||
+    //       this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+    //       this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+    //       this.state.type === ConstToolType.LEGEND ||
+    //       this.state.type === ConstToolType.LEGEND_NOT_VISIBLE) &&
+    //       this.isBoxShow)
+    //   ) {
+    //     this.contentView &&
+    //       this.contentView.changeHeight(
+    //         this.state.showMenuDialog ? this.height : 0,
+    //       )
+    //
+    //     // this.isBoxShow = !this.isBoxShow
+    //     this.isBoxShow = this.state.showMenuDialog
+    //   }
+    // }.bind(this)
+    //
+    // let setData = function() {
+    //   if (
+    //     GLOBAL.Type === constants.MAP_EDIT ||
+    //     this.state.type === ConstToolType.GRID_STYLE ||
+    //     this.state.type === ConstToolType.MAP_STYLE ||
+    //     this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+    //     this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+    //     this.state.type === ConstToolType.LINECOLOR_SET ||
+    //     this.state.type === ConstToolType.POINTCOLOR_SET ||
+    //     this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+    //     this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
+    //     this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ||
+    //     this.state.type === ConstToolType.LEGEND ||
+    //     this.state.type === ConstToolType.LEGEND_NOT_VISIBLE
+    //   ) {
+    //     // GLOBAL.showFlex =  !GLOBAL.showFlex
+    //     this.isBoxShow = !this.isBoxShow
+    //     let buttons
+    //     if (this.state.type.indexOf('MAP_THEME_PARAM_GRAPH') >= 0) {
+    //       buttons = [
+    //         ToolbarBtnType.CANCEL,
+    //         ToolbarBtnType.MENU,
+    //         ToolbarBtnType.MENU_FLEX,
+    //         ToolbarBtnType.THEME_GRAPH_TYPE,
+    //         ToolbarBtnType.TOOLBAR_COMMIT,
+    //       ]
+    //     } else if (this.state.type.indexOf('LEGEND') >= 0) {
+    //       if (this.props.mapLegend[GLOBAL.Type].isShow) {
+    //         buttons = [
+    //           ToolbarBtnType.CANCEL,
+    //           ToolbarBtnType.NOT_VISIBLE,
+    //           ToolbarBtnType.MENU,
+    //           ToolbarBtnType.MENU_FLEX,
+    //           ToolbarBtnType.TOOLBAR_COMMIT,
+    //         ]
+    //       } else {
+    //         buttons = [
+    //           ToolbarBtnType.CANCEL,
+    //           ToolbarBtnType.VISIBLE,
+    //           ToolbarBtnType.MENU,
+    //           ToolbarBtnType.MENU_FLEX,
+    //           ToolbarBtnType.TOOLBAR_COMMIT,
+    //         ]
+    //       }
+    //     } else {
+    //       buttons = [
+    //         ToolbarBtnType.CANCEL,
+    //         ToolbarBtnType.MENU,
+    //         ToolbarBtnType.MENU_FLEX,
+    //         ToolbarBtnType.TOOLBAR_COMMIT,
+    //       ]
+    //     }
+    //     this.setState(
+    //       {
+    //         isFullScreen,
+    //         showMenuDialog,
+    //         isTouchProgress,
+    //         buttons: buttons,
+    //       },
+    //       () => {
+    //         this.updateOverlayView()
+    //       },
+    //     )
+    //   }
+    // }.bind(this)
+    //
+    // if (
+    //   this.state.selectKey === '线宽' ||
+    //   this.state.selectKey === '大小' ||
+    //   this.state.selectKey === '旋转角度' ||
+    //   this.state.selectKey === '透明度' ||
+    //   this.state.selectKey === '对比度' ||
+    //   this.state.selectKey === '亮度' ||
+    //   this.state.selectKey === '分段个数' ||
+    //   this.state.selectKey === '旋转角度' ||
+    //   this.state.selectKey === '字号' ||
+    //   this.state.selectKey === '单点代表值' ||
+    //   this.state.selectKey === '符号大小' ||
+    //   this.state.selectKey === '基准值' ||
+    //   this.state.selectKey === '最大显示值' ||
+    //   this.state.selectKey === '列数' ||
+    //   this.state.selectKey === '宽度' ||
+    //   this.state.selectKey === '高度'
+    // ) {
+    //   isFullScreen = true
+    //   showMenuDialog = !this.state.showMenuDialog
+    //   isTouchProgress = this.state.showMenuDialog
+    //   setData()
+    // } else {
+    //   isFullScreen = !this.state.showMenuDialog
+    //   showMenuDialog = !this.state.showMenuDialog
+    //   isTouchProgress = false
+    //   if (!this.state.showMenuDialog) {
+    //     // 先滑出box，再显示Menu
+    //     showBox()
+    //     setTimeout(setData, Const.ANIMATED_DURATION_2)
+    //   } else {
+    //     // 先隐藏Menu，再滑进box
+    //     setData()
+    //     showBox()
+    //   }
+    // }
   }
 
   menus = () => {
     if (this.state.showMenuDialog === false) {
       this.setState({ showMenuDialog: true }, () => {
-        this.updateOverlayerView()
+        this.updateOverlayView()
       })
     } else {
       this.setState({ showMenuDialog: false }, () => {
-        this.updateOverlayerView()
+        this.updateOverlayView()
       })
     }
     this.setState({ isTouchProgress: false }, () => {
-      this.updateOverlayerView()
+      this.updateOverlayView()
     })
   }
 
@@ -955,7 +975,7 @@ export default class ToolBar extends React.PureComponent {
           this.setState(
             { isTouchProgress: false, showMenuDialog: false },
             () => {
-              this.updateOverlayerView()
+              this.updateOverlayView()
             },
           )
         }
@@ -974,99 +994,80 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      this.updateOverlayerView()
+      this.updateOverlayView()
       GLOBAL.TouchType = TouchType.NORMAL
     }.bind(this)())
   }
 
   showMenuBox = () => {
-    // TODO 此方法待改，分拆到各个module下
     if (
-      GLOBAL.Type === constants.MAP_EDIT ||
-      this.state.type === ConstToolType.GRID_STYLE ||
-      this.state.type === ConstToolType.MAP_STYLE ||
-      this.state.type === ConstToolType.MAP_EDIT_STYLE ||
-      this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
-      this.state.type === ConstToolType.LINECOLOR_SET ||
-      this.state.type === ConstToolType.POINTCOLOR_SET ||
-      this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
-      this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
-      this.state.type === ConstToolType.LEGEND ||
-      this.state.type === ConstToolType.LEGEND_NOT_VISIBLE ||
-      this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+      ToolbarModule.getData().actions &&
+      ToolbarModule.getData().actions.showMenuBox
     ) {
-      // GLOBAL.showFlex = !GLOBAL.showFlex
-      if (
-        this.state.selectKey ===
-          getLanguage(this.props.language).Map_Main_Menu.STYLE_LINE_WIDTH ||
-        this.state.selectKey === '大小' ||
-        this.state.selectKey === '旋转角度' ||
-        this.state.selectKey === '透明度' ||
-        this.state.selectKey === '对比度' ||
-        this.state.selectKey === '亮度' ||
-        this.state.selectKey === '分段个数' ||
-        this.state.selectKey === '旋转角度' ||
-        this.state.selectKey === '字号' ||
-        this.state.selectKey === '单点代表值' ||
-        this.state.selectKey ===
-          getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE ||
-        this.state.selectKey === '基准值' ||
-        this.state.selectKey === '最大显示值' ||
-        this.state.selectKey === '列数' ||
-        this.state.selectKey === '高度' ||
-        this.state.selectKey === '宽度'
-      ) {
-        // 显示指滑进度条
-        this.setState(
-          {
-            isTouchProgress: !this.state.isTouchProgress,
-            showMenuDialog: false,
-            isFullScreen: !this.state.isTouchProgress,
-          },
-          () => {
-            this.updateOverlayerView()
-          },
-        )
-        this.isBoxShow = false
-      } else {
-        if (this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
-          switch (this.state.selectKey) {
-            case '表达式':
-              this.getGraphThemeExpressions(
-                ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION,
-                '表达式',
-              )
-              break
-            case '计算方法':
-              this.getGraphThemeGradutedMode(
-                ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE,
-                '计算方法',
-              )
-              break
-            case '颜色方案':
-              this.getGraphThemeColorScheme(
-                ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
-                '颜色方案',
-              )
-              break
-          }
-        } else {
-          this.isBoxShow = !this.isBoxShow
+      ToolbarModule.getData().actions.showMenuBox(
+        this.state.type,
+        this.state.selectKey,
+        {
+          showBox: (params = {}) => {
+            this.isBoxShow = !this.isBoxShow
 
-          this.contentView &&
-            this.contentView.changeHeight(this.isBoxShow ? this.height : 0)
+            let height = this.height
+            if (params.height !== undefined) {
+              height = params.height
+              delete params.height
+            }
 
-          this.setState(
-            {
-              showMenuDialog: false,
-              isFullScreen: false,
-            },
-            () => {
-              this.updateOverlayerView()
-            },
-          )
-        }
-      }
+            this.contentView &&
+              this.contentView.changeHeight(this.isBoxShow ? height : 0)
+
+            if (Object.keys(params).length > 0) {
+              this.setState(params, () => {
+                this.updateOverlayView()
+              })
+            } else {
+              this.updateOverlayView()
+            }
+          },
+          setData: (params = {}) => {
+            if (Object.keys(params).length > 0) {
+              this.setState(params, () => {
+                this.updateOverlayView()
+              })
+            }
+          },
+        },
+      )
+      return
+    }
+
+    if (Utils.isTouchProgress(this.state.selectKey)) {
+      // 显示指滑进度条
+      this.setState(
+        {
+          isTouchProgress: !this.state.isTouchProgress,
+          showMenuDialog: false,
+          isFullScreen: !this.state.isTouchProgress,
+        },
+        () => {
+          this.updateOverlayView()
+        },
+      )
+      this.isBoxShow = false
+    } else {
+      this.isBoxShow = !this.isBoxShow
+
+      this.contentView &&
+        this.contentView.changeHeight(this.isBoxShow ? this.height : 0)
+
+      this.setState(
+        {
+          showMenuDialog: false,
+          isFullScreen: false,
+        },
+        () => {
+          this.updateOverlayView()
+        },
+      )
     }
   }
 
@@ -1080,7 +1081,7 @@ export default class ToolBar extends React.PureComponent {
           this.contentView &&
             this.contentView.changeHeight(this.isBoxShow ? 0 : this.height)
           this.isBoxShow = !this.isBoxShow
-          this.updateOverlayerView()
+          this.updateOverlayView()
         },
       )
     } else {
@@ -1146,7 +1147,7 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
         },
         () => {
-          this.updateOverlayerView()
+          this.updateOverlayView()
         },
       )
     } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {

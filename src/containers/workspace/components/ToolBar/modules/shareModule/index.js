@@ -2,13 +2,12 @@ import ShareData from './ShareData'
 import ShareAction from './ShareAction'
 import ToolbarModule from '../ToolbarModule'
 import ToolBarHeight from '../ToolBarHeight'
-import { ConstToolType } from '../../../../../../constants'
 
 function action(type) {
   const data = ToolBarHeight.getToolbarHeight(type)
   const params = ToolbarModule.getParams()
   params.showFullMap && params.showFullMap(true)
-  params.setToolbarVisible(true, ConstToolType.MAP_SHARE, {
+  params.setToolbarVisible(true, type, {
     containerType: 'table',
     isFullScreen: true,
     column: data.column,

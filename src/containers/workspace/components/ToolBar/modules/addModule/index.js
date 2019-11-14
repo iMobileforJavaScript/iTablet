@@ -1,14 +1,14 @@
 import AddData from './AddData'
 import AddAction from './AddAction'
 import ToolbarModule from '../ToolbarModule'
-import { ConstToolType } from '../../../../../../constants'
+import { ConstToolType, ToolbarType } from '../../../../../../constants'
 
 export async function action(type) {
   const _data = await AddData.getData(type)
   const params = ToolbarModule.getParams()
   params.showFullMap && params.showFullMap(true)
   params.setToolbarVisible(true, type, {
-    containerType: 'list',
+    containerType: ToolbarType.list,
     isFullScreen: true,
     isTouchProgress: false,
     showMenuDialog: false,

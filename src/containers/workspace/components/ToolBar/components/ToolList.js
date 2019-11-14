@@ -45,7 +45,7 @@ export default class ToolList extends React.Component {
     super(props)
     this.state = {
       data: this.props.data || [],
-      listExpressions: [],
+      // listExpressions: [],
     }
   }
 
@@ -60,8 +60,11 @@ export default class ToolList extends React.Component {
     return false
   }
 
-  componentDidUpdate() {
-    if (JSON.stringify(this.props.data) !== JSON.stringify(this.state.data)) {
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.data) !== JSON.stringify(prevProps.data) &&
+      JSON.stringify(this.props.data) !== JSON.stringify(this.state.data)
+    ) {
       this.setState({
         data: this.props.data,
       })
@@ -81,8 +84,8 @@ export default class ToolList extends React.Component {
     }
     let datalist = [
       {
-        title: this.state.data.datasetName,
-        datasetType: this.state.data.datasetType,
+        title: this.state.data[0].title || this.state.data[0].datasetName,
+        datasetType: this.state.data[0].datasetType,
         expressionType: true,
         data: data,
       },
@@ -241,59 +244,7 @@ export default class ToolList extends React.Component {
     if (item.action) {
       item.action && item.action()
     }
-    // else if (this.props.type === ConstToolType.MAP_ADD_LAYER) {
-    //   (async function() {
-    //     this.props.setContainerLoading &&
-    //       this.props.setContainerLoading(
-    //         true,
-    //         getLanguage(this.props.language).Prompt.READING_DATA,
-    //       )
-    //     this.path = await FileTools.appendingHomeDirectory(item.path)
-    //     SMap.getUDBName(this.path).then(list => {
-    //       let dataList = [
-    //         {
-    //           title: '数据集',
-    //           data: list,
-    //         },
-    //       ]
-    //       this.setState(
-    //         {
-    //           data: dataList,
-    //           type: ConstToolType.MAP_ADD_DATASET,
-    //         },
-    //         () => {
-    //           this.scrollListToLocation()
-    //           this.props.setContainerLoading &&
-    //             this.props.setContainerLoading(false)
-    //         },
-    //         () => {
-    //           this.props.setContainerLoading &&
-    //             this.props.setContainerLoading(false)
-    //         },
-    //       )
-    //       // this.setLastState()
-    //     })
-    //   }.bind(this)())
-    // } else if (this.props.type === ConstToolType.MAP_ADD_DATASET) {
-    //   (async function() {
-    //     let udbName = dataUtil.getNameByURL(this.path)
-    //     let udbpath = {
-    //       server: this.path,
-    //       alias: udbName,
-    //       engineType: 219,
-    //     }
-    //     let result = await SMap.openDatasource(udbpath, index)
-    //     Toast.show(
-    //       result === true
-    //         ? getLanguage(this.props.language).Prompt.ADD_SUCCESS
-    //         : ConstInfo.ADD_FAILED,
-    //     )
-    //   }.bind(this)())
-    // } else if (this.props.type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
-    //   // 选择某一个推演动画xml加载
-    //   // this.getAnimationList(item)
-    // } else if (this.props.type === ConstToolType.MAP_THEME_ADD_DATASET) {
-    // }
+    // TODO 功能分配到各自模块下
     else if (this.props.type === ConstToolType.NETDATA) {
       if (item.name === '室外数据') {
         (async function() {
@@ -526,7 +477,6 @@ export default class ToolList extends React.Component {
         itemAction={({ item, index, section, ...params }) => {
           this.listAction({ item, index, section, ...params })
         }}
-        selectList={this.state.listExpressions}
         listSelectableAction={({ selectList }) => {
           if (
             ToolbarModule.getData().actions &&
@@ -534,9 +484,6 @@ export default class ToolList extends React.Component {
           ) {
             ToolbarModule.getData().actions.listSelectableAction({ selectList })
           }
-          this.setState({
-            listExpressions: selectList,
-          })
         }}
         headerAction={this.headerAction}
         underlayColor={color.item_separate_white}

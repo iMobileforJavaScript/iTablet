@@ -81,6 +81,9 @@ import AnimationNodeEditView from './workspace/components/AnimationNodeEditView'
 import AnimationNodeEditRotateView from './workspace/components/AnimationNodeEditRotateView'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
+import LicensePage from './tabs/Home/License/LicensePage'
+import LicenseModule from './tabs/Home/License/LicenseModule'
+import LicenseJoin from './tabs/Home/License/LicenseJoin'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import FriendMap from './friendMap'
@@ -111,10 +114,13 @@ import ClassifyResultEditView from './aiClassifyResultEdit'
 import CollectSceneFormView from './arCollectSceneFormView'
 import ClassifySettingsView from './ClassifySettingsView'
 import IllegallyParkView from './aiIllegallyPark'
+import AIDetecSettingsView from './AIDetecSettingsView'
+import CastModelOperateView from './arCastModelOperateView'
 
 import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
 import NavigationView from './workspace/components/NavigationView'
+import ChooseTaggingLayer from './ChooseTaggingLayer'
 
 const AppNavigator = createStackNavigator(
   {
@@ -554,6 +560,27 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    LicensePage: {
+      screen: LicensePage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LicenseModule: {
+      screen: LicenseModule,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LicenseJoin: {
+      screen: LicenseJoin,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     Setting: {
       screen: Setting,
       navigationOptions: {
@@ -682,8 +709,29 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    AIDetecSettingsView: {
+      screen: AIDetecSettingsView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     IllegallyParkView: {
       screen: IllegallyParkView,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ChooseTaggingLayer: {
+      screen: ChooseTaggingLayer,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    CastModelOperateView: {
+      screen: CastModelOperateView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

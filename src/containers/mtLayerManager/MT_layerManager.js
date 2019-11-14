@@ -8,7 +8,7 @@ import * as React from 'react'
 import { TouchableOpacity, Text, SectionList, View, Image } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, LayerUtils } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, SMediaCollector } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
@@ -20,14 +20,16 @@ import {
   UserType,
 } from '../../constants'
 import { color, size } from '../../styles'
-import * as LayerUtils from './LayerUtils'
 import {
   getThemeAssets,
   getLayerIconByType,
   getThemeIconByType,
 } from '../../assets'
 import { FileTools } from '../../native'
-import { themeModule } from '../workspace/components/ToolBar/modules'
+import {
+  themeModule,
+  styleModule,
+} from '../workspace/components/ToolBar/modules'
 import NavigationService from '../../containers/NavigationService'
 import { getLanguage } from '../../language'
 
@@ -411,8 +413,10 @@ export default class MT_layerManager extends React.Component {
           return
         }
 
-        if (data.themeType <= 0) {
-          this.mapEdit(data)
+        if (data.themeType <= 0 && !data.isHeatmap) {
+          // this.mapEdit(data)
+          styleModule().actions.layerListAction &&
+            styleModule().actions.layerListAction(data)
         } else if (GLOBAL.Type === constants.MAP_THEME) {
           // this.mapTheme(data)
           themeModule().actions.layerListAction &&

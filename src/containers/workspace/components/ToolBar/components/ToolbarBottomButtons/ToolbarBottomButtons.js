@@ -5,7 +5,7 @@ import { getThemeAssets, getPublicAssets } from '../../../../../../assets'
 import NavigationService from '../../../../../NavigationService'
 import { scaleSize } from '../../../../../../utils'
 import { color } from '../../../../../../styles'
-import { Const } from '../../../../../../constants'
+import { Const, TouchType } from '../../../../../../constants'
 import ToolbarModule from '../../modules/ToolbarModule'
 
 export default class ToolbarBottomButtons extends React.Component {
@@ -92,31 +92,20 @@ export default class ToolbarBottomButtons extends React.Component {
     if (isFinished === false) {
       this.props.close && this.props.close(this.props.type)
     }
-    ToolbarModule.setData() // 关闭Toolbar清除临时数据
+    GLOBAL.TouchType = TouchType.NORMAL
+    // ToolbarModule.setData() // 关闭Toolbar清除临时数据
   }
 
   /** 菜单 **/
   menu = () => {
-    if (
-      ToolbarModule.getData().actions &&
-      ToolbarModule.getData().actions.menu
-    ) {
-      ToolbarModule.getData().actions.menu(this.props.type)
-    } else {
-      this.props.menu && this.props.menu(this.props.type)
-    }
+    // 关系到上层组件state变化，交给上层处理
+    this.props.menu && this.props.menu(this.props.type)
   }
 
   /** 菜单和Box切换显示 **/
   showMenuBox = () => {
-    if (
-      ToolbarModule.getData().actions &&
-      ToolbarModule.getData().actions.showMenuBox
-    ) {
-      ToolbarModule.getData().actions.showMenuBox(this.props.type)
-    } else {
-      this.props.showMenuBox && this.props.showMenuBox(this.props.type)
-    }
+    // 关系到上层组件state变化，交给上层处理
+    this.props.showMenuBox && this.props.showMenuBox(this.props.type)
   }
 
   /** 显示属性 **/
@@ -264,11 +253,6 @@ export default class ToolbarBottomButtons extends React.Component {
           //返回上一级
           image = require('../../../../../../assets/public/Frenchgrey/icon-back-white.png')
           action = this.props.back
-          break
-        case ToolbarBtnType.THEME_GRAPH_TYPE:
-          //统计专题图类型
-          image = getThemeAssets().themeType.theme_graphmap_selected
-          action = this.changeGraphType
           break
       }
 

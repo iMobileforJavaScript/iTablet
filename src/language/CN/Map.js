@@ -39,6 +39,9 @@ const Map_Main_Menu = {
   OPEN_MAP: '地图',
   OPEN_BACK: '上一步',
 
+  NAVIGATION_START: '导航',
+  NETWORK_MODEL: '模型',
+  NETWORK_MODEL_FILE: '网络模型文件',
   NAVIGATION_WORKSPACE: '导航工作空间',
   NAVIGATION_MAP: '导航地图',
   NETWORK: '路网',
@@ -60,6 +63,7 @@ const Map_Main_Menu = {
   //地图制图及公共 风格
   STYLE: '风格',
   STYLE_SYMBOL: '符号',
+  STYLE_SIZE: '大小',
   STYLE_SYMBOL_SIZE: '符号大小',
   STYLE_COLOR: '颜色',
   STYLE_ROTATION: '旋转角度',
@@ -67,14 +71,16 @@ const Map_Main_Menu = {
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
   STYLE_BACKFROUNG: '背景色',
+  STYLE_BORDER: '轮廓颜色',
+  STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
   STYLE_FRAME_COLOR: '边框颜色',
   STYLE_FRAME_SYMBOL: '边框符号',
-  STYLE_FONT: '字体',
+  STYLE_FONT: '字形',
   STYLE_FONT_SIZE: '字号',
   STYLE_ALIGNMENT: '位置',
   STYLE_FONT_STYLE: '风格',
-  STYLE_CONTRAST: '对比度',
+  STYLE_CONTRAST: '色相',
   STYLE_BRIGHTNESS: '亮度',
   STYLE_BOLD: '加粗',
   STYLE_ITALIC: '倾斜',
@@ -83,6 +89,7 @@ const Map_Main_Menu = {
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
   SATURATION: '饱和度',
+  CONTRAST: '对比度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
@@ -136,7 +143,7 @@ const Map_Main_Menu = {
   TOUR: '旅行轨迹',
   TOUR_NAME: '旅行轨迹名称',
 
-  STYLE_TRANSFER: '智能配图',
+  STYLE_TRANSFER: 'AI配图',
 
   TOOLS_MAGNIFIER: '放大镜',
   TOOLS_SELECT_ALL: '全选',
@@ -313,12 +320,14 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: '目标采集',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: '高精采集',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: '违章采集',
+  MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: '模型投放',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: '请选择你的模型',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: '正在寻找平面',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_VIEW_DISTANCE: '视点距离:',
 
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH: '总长度:',
+  MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOLASTLENGTH: '当前长度:',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_HISTORY: '历史记录:',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME: '请输入采集名称:',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY: '没有历史数据',
@@ -342,6 +351,30 @@ const Map_Main_Menu = {
   BORDER: '轮廓',
   LINE: '线',
   MARK: '标注',
+
+  //地图导航
+  DRAW: '绘制',
+  ROAD_DETAILS: '路线详情',
+  ROUTE_THROUGH: '途经路线：',
+  DISTANCE: '距离：',
+  METERS: '米',
+  KILOMETERS: '千米',
+  DISPLAY_MAP: '显示地图',
+  START_FROM_START_POINT: '从起点出发',
+  ARRIVE_AT_THE_DESTINATION: '到达终点',
+  FIRST_PERSON_PERSPECTIVE: '第一人称',
+  THIRD_PERSON_PERSPECTIVE: '第三人称',
+  GO_STRAIGHT: '直行',
+  SELECT_START_POINT: '选择起点',
+  SELECT_DESTINATION: '选择终点',
+  SET_AS_START_POINT: '设为起点',
+  SET_AS_DESTINATION: '设为终点',
+  CLEAR_NAV_HISTORY: '清除历史',
+  NEXT: '下一步',
+  SELECT_POINTS: '地图选点',
+  INCREMENT_ROAD: '增量路网',
+  TRACK: '轨迹',
+  HAND_PAINTED: '手绘',
 }
 
 //推演动画
@@ -434,6 +467,7 @@ const Map_Layer = {
   LAYERS_PASTE: '插入复制的图层',
   LAYERS_LAYER_PROPERTIES: '图层属性',
   LAYERS_REMOVE: '移除',
+  LAYERS_COLLECT: '在当前图层采集',
   LAYERS_MAXIMUM: '最大可见比例尺',
   LAYERS_MINIMUM: '最小可见比例尺',
   LAYERS_UER_DEFINE: '自定义',
@@ -449,6 +483,8 @@ const Map_Layer = {
   LAYERS_MIN_OBJECT_SIZE: '对象最小尺寸',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: '抽稀显示',
   LAYERS_SHARE: '分享',
+  SELECT_LAYSER_SCALE: '请选择比例尺',
+  LAYER_SCALE_RANGE_WRONG: '最大比例尺必须大于最小比例尺',
 
   VISIBLE: '设置图层可见',
   NOT_VISIBLE: '设置图层不可见',
@@ -484,6 +520,7 @@ const Map_Attribute = {
   ATTRIBUTE_UNDO: '撤销',
   ATTRIBUTE_REDO: '恢复',
   ATTRIBUTE_REVERT: '还原',
+  ATTRIBUTE_FIELD_ADD: '添加',
 }
 
 //地图设置
@@ -562,6 +599,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: '统一颜色',
   DETECT_STYLE_SAME_COLOR: '统一颜色值',
   DETECT_STYLE_STROKE_WIDTH: '检测目标绘制框线宽',
+  COUNTRACKED: '跟踪计数',
 
   //二级菜单 基本设置
   MAP_NAME: '地图名称',

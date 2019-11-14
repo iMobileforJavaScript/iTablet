@@ -3,8 +3,7 @@ import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType, ToolbarType } from '../constants'
 import { getLanguage } from '../language/index'
-import { Toast } from '../utils'
-import * as LayerUtils from '../containers/mtLayerManager/LayerUtils'
+import { Toast, LayerUtils } from '../utils'
 
 async function OpenData(data, index) {
   let layers = await SMap.getLayersByType()
@@ -336,8 +335,8 @@ const legendMenuInfo = (param, orientation) => [
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
           ],
-          selectName: '填充色',
-          selectKey: '填充色',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
@@ -345,14 +344,13 @@ const legendMenuInfo = (param, orientation) => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '列数',
-          selectKey: '列数',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.VISIBLE,
@@ -363,20 +361,17 @@ const legendMenuInfo = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '宽度',
-          selectKey: '宽度',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.VISIBLE,
@@ -387,20 +382,17 @@ const legendMenuInfo = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '高度',
-          selectKey: '高度',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.VISIBLE,
@@ -411,9 +403,7 @@ const legendMenuInfo = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
   },
 ]
 
@@ -444,8 +434,8 @@ const legendMenuInfoNotVisible = (param, orientation) => [
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
           ],
-          selectName: '填充色',
-          selectKey: '填充色',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLOR,
@@ -453,14 +443,13 @@ const legendMenuInfoNotVisible = (param, orientation) => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '列数',
-          selectKey: '列数',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.NOT_VISIBLE,
@@ -471,20 +460,17 @@ const legendMenuInfoNotVisible = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_COLUMN,
-    //'列数',
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '宽度',
-          selectKey: '宽度',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.NOT_VISIBLE,
@@ -495,20 +481,17 @@ const legendMenuInfoNotVisible = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_WIDTH,
-    //'宽度',
   },
   {
     key: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '高度',
-          selectKey: '高度',
+          selectName: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
+          selectKey: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
           buttons: [
             ToolbarBtnType.CANCEL,
             ToolbarBtnType.NOT_VISIBLE,
@@ -519,9 +502,7 @@ const legendMenuInfoNotVisible = (param, orientation) => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
     selectKey: getLanguage(param).Map_Main_Menu.LEGEND_HEIGHT,
-    //'高度',
   },
 ]
 

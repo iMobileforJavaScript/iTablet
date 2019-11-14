@@ -124,7 +124,6 @@ const point = (param, orientation = 'PORTRAIT') => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
-    //'大小',
     action: () => {
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setState({
@@ -142,9 +141,7 @@ const point = (param, orientation = 'PORTRAIT') => [
         })
     },
     selectName: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
-    //'大小',
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
-    //'大小',
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
@@ -353,7 +350,7 @@ const grid = param => [
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '透明度',
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
           selectKey: '栅格透明度',
           buttons: [
             ToolbarBtnType.CANCEL,

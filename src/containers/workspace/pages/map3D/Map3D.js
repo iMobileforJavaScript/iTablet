@@ -150,6 +150,8 @@ export default class Map3D extends React.Component {
   addAttributeListener = async () => {
     this.attributeListener = await SScene.addAttributeListener({
       callback: result => {
+        GLOBAL.action3d === 'PAN3D' && this.showFullMap(!this.fullMap)
+
         let list = []
         let arr = []
         Object.keys(result).forEach(key => {
@@ -174,7 +176,6 @@ export default class Map3D extends React.Component {
     this.circleFlyListen = await SScene.addCircleFlyListen({
       callback: () => {
         tool3DModule().actions.circleFly()
-        // this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
       },
     })
   }

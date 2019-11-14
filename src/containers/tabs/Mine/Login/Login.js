@@ -15,7 +15,7 @@ import {
   Keyboard,
   NetInfo,
 } from 'react-native'
-import { Toast, scaleSize } from '../../../../utils/index'
+import { Toast, scaleSize, OnlineServicesUtils } from '../../../../utils/index'
 import { Container } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -31,6 +31,7 @@ import { getLanguage } from '../../../../language/index'
 import { setUser } from '../../../../models/user'
 import { connect } from 'react-redux'
 
+const JSOnlineService = new OnlineServicesUtils('online')
 class Login extends React.Component {
   props: {
     language: string,
@@ -127,15 +128,26 @@ class Login extends React.Component {
         password = this.txtPhoneNumberPassword
       }
 
+      let userInfo
       let isConnected = await NetInfo.isConnected.fetch()
       if (isConnected) {
         this.container.setLoading(
           true,
           getLanguage(this.props.language).Prompt.LOG_IN,
         )
+        userInfo = await JSOnlineService.getUserInfo(userName)
+        if (
+          userInfo !== false &&
+          userInfo.userId === this.props.user.currentUser.userId
+        ) {
+          Toast.show(getLanguage(global.language).Profile.LOGIN_CURRENT)
+          return
+        }
         if (isEmail) {
+          result = await JSOnlineService.login(userName, password, 'EMAIL_TYPE')
           result = await SOnlineService.login(userName, password)
         } else {
+          result = await JSOnlineService.login(userName, password, 'PHONE_TYPE')
           result = await SOnlineService.loginWithPhoneNumber(userName, password)
         }
       } else {
@@ -143,112 +155,24 @@ class Login extends React.Component {
         return
       }
 
-      // debugger
-      if (typeof result === 'boolean' && result) {
-        // debugger
-        // let isAccountExist
-        // for (let i = 0; i < this.props.user.users.length; i++) {
-        //   isAccountExist =
-        //     this.props.user.users[i].userName === userName &&
-        //     this.props.user.users[i].password === password
-        //   if (isAccountExist) {
-        //     break
-        //   }
-        // }
-        // debugger
-        //if (!isAccountExist)
-        {
-          await this.initUserDirectories(userName)
-        }
+      userInfo = await JSOnlineService.getUserInfo(userName)
 
-        let bGetUserInfo = false
-        let userInfo = {}
-        userInfo = await SOnlineService.getUserInfo()
+      if (typeof result === 'boolean' && result && userInfo !== false) {
+        await this.initUserDirectories(userName)
 
-        if (userInfo !== false) {
-          let userID = await SOnlineService.getUserInfoBy(userInfo.nickname, 0)
-          if (userID === false) {
-            //有的online账号拿不到ID
-            userInfo['userId'] = userInfo.nickname //
-          } else {
-            userInfo['userId'] = userID[0]
-          }
-          bGetUserInfo = true
-        }
-        //下载好友列表
-        // if (bGetUserInfo !== false) {
-        //连接消息服务时判断是否正在登陆
-        //优先加载在线的
-        // let userPath = await FileTools.appendingHomeDirectory(
-        //   ConstPath.UserPath + userName + '/Data/Temp',
-        // )
-        // userPath = userPath + '/ol_fl'
-        // SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
-        //   onResult: value => {
-        //     // console.warn("-------------")
-        //     if (value === true) {
-        //       this.props.setUser({
-        //         userName: userName,
-        //         password: password,
-        //         nickname: userInfo.nickname,
-        //         email: userInfo.email,
-        //         phoneNumber: userInfo.phoneNumber,
-        //         userId: userInfo.userId,
-        //         isEmail: isEmail,
-        //         userType: UserType.COMMON_USER,
-        //         hasUpdateFriend: true,
-        //       })
-        //     } else {
-        //       this.props.setUser({
-        //         userName: userName,
-        //         password: password,
-        //         nickname: userInfo.nickname,
-        //         email: userInfo.email,
-        //         phoneNumber: userInfo.phoneNumber,
-        //         userId: userInfo.userId,
-        //         isEmail: isEmail,
-        //         userType: UserType.COMMON_USER,
-        //         hasUpdateFriend: false,
-        //       })
-        //     }
-        //   },
-        // })
-        // }
+        global.isLogging = true
 
-        if (bGetUserInfo !== false) {
-          global.isLogging = true
-          // Toast.show('登录成功')
-          this.container.setLoading(false)
-          this.props.setUser({
-            userName: userName,
-            password: password,
-            nickname: userInfo.nickname,
-            email: userInfo.email,
-            phoneNumber: userInfo.phoneNumber,
-            userId: userInfo.userId,
-            isEmail: isEmail,
-            userType: UserType.COMMON_USER,
-            // hasUpdateFriend: undefined,
-          })
-        } else {
-          // Toast.show('登录成功')
-          this.container.setLoading(false)
-          this.props.setUser({
-            userName: userName,
-            password: password,
-            isEmail: isEmail,
-            userId: 0,
-            userType: UserType.COMMON_USER,
-          })
-        }
-        // this.container.setLoading(false)
-        // this.props.setUser({
-        //   userName: userName,
-        //   password: password,
-        //   isEmail: isEmail,
-        //   userId: userName,
-        //   userType: UserType.COMMON_USER,
-        // })
+        this.props.setUser({
+          userName: userName,
+          password: password,
+          nickname: userInfo.nickname,
+          email: userInfo.email,
+          phoneNumber: userInfo.phoneNumber,
+          userId: userInfo.userId,
+          isEmail: isEmail,
+          userType: UserType.COMMON_USER,
+        })
+
         if (!this.state.isFirstLogin) {
           NavigationService.popToTop('Tabs')
         }
@@ -267,13 +191,13 @@ class Login extends React.Component {
           Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
         } else Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
         //'登录失败')
-        this.container.setLoading(false)
       }
     } catch (e) {
       //console.warn(e)
-      this.container.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
       //'登录异常')
+    } finally {
+      this.container && this.container.setLoading(false)
     }
   }
   _renderEmail = () => {
@@ -467,27 +391,29 @@ class Login extends React.Component {
                   }}
                   onPress={() => {
                     NavigationService.navigate('Register')
+                    // NavigationService.navigate('Protocol', {
+                    //   type: 'Register',
+                    // })
                   }}
                 >
                   {/* 注册 */}
                   {getLanguage(this.props.language).Profile.REGISTER}
                 </Text>
-                {this.state.isFirstLogin ? (
-                  <Text
-                    style={{
-                      paddingRight: 5,
-                      width: 100,
-                      lineHeight: 40,
-                      textAlign: 'right',
-                      color: color.font_color_white,
-                    }}
-                    onPress={() => {
-                      NavigationService.navigate('GetBack')
-                    }}
-                  >
-                    忘记密码
-                  </Text>
-                ) : null}
+                <Text
+                  style={{
+                    paddingRight: 5,
+                    width: 100,
+                    lineHeight: 40,
+                    textAlign: 'right',
+                    color: color.font_color_white,
+                    fontSize: scaleSize(20),
+                  }}
+                  onPress={() => {
+                    NavigationService.navigate('GetBack')
+                  }}
+                >
+                  {getLanguage(global.language).Profile.FORGET_PASSWORD}
+                </Text>
               </View>
 
               {/* 登录 */}

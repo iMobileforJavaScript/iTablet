@@ -37,7 +37,7 @@ import TableList from './TableList'
 import TreeList from './TreeList'
 import SaveDialog from './SaveDialog'
 import SaveMapNameDialog from './SaveMapNameDialog'
-import ColorTableList from './ColorTableList'
+// import ColorTableList from './ColorTableList'
 import Input from './Input'
 import SearchBar from './SearchBar'
 import PopModal from './PopModal'
@@ -57,6 +57,7 @@ import BubblePane from './Bubble'
 import NumberCounter from './NumberCounter'
 import Picker from './Picker'
 import MenuDialog from './MenuDialog'
+import MultiPicker from './MultiPicker'
 export {
   Container,
   BtnOne,
@@ -101,7 +102,7 @@ export {
   TreeList,
   SaveDialog,
   SaveMapNameDialog,
-  ColorTableList,
+  // ColorTableList,
   ColorBtn,
   Input,
   SearchBar,
@@ -123,4 +124,5 @@ export {
   NumberCounter,
   Picker,
   MenuDialog,
+  MultiPicker,
 }

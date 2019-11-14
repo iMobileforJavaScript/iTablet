@@ -17,6 +17,7 @@ const radio_button_on = require('./radio_button_on.png')
 const classify_dustbin = require('./classify_dustbin.png')
 const classify_plant = require('./classify_plant.png')
 const classify_normal = require('./classify_normal.png')
+const classify_road = require('./classify_road.png')
 const navi_model_pin_bowling = require('./navi_model_pin_bowling.png')
 const navi_model_red_flag = require('./navi_model_red_flag.png')
 const icon_ar_camera_circle_bg = require('./icon_ar_camera_circle_bg.png')
@@ -41,6 +42,7 @@ export default {
   classify_dustbin,
   classify_plant,
   classify_normal,
+  classify_road,
   navi_model_pin_bowling,
   navi_model_red_flag,
   icon_ar_camera_circle_bg,

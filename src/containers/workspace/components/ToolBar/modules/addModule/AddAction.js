@@ -26,11 +26,16 @@ async function listAction(type, params = {}) {
         params.item,
       )
 
+      const height =
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[5]
       let data = {
         type: type,
         getData: AddData.getData,
         lastData: ToolbarModule.getData().data,
-        actions: actions,
+        actions,
+        height,
       }
       let selectList = ToolbarModule.getData().selectList
       if (
@@ -52,14 +57,11 @@ async function listAction(type, params = {}) {
         isFullScreen: true,
         isTouchProgress: false,
         showMenuDialog: false,
-        height:
-          _params.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[5],
+        height,
         data: _data.data,
         buttons: _data.buttons,
       })
-      ToolbarModule.setData(data)
+      ToolbarModule.addData(data)
     } else if (
       params.section &&
       params.section.title ===
@@ -90,12 +92,16 @@ async function listAction(type, params = {}) {
     // 数据集列表点击事件
     let data = ToolbarModule.getData()
     if (data && data.selectList) {
-      Object.assign(data.selectList, params.selectList)
+      data = Object.assign(data.selectList, params.selectList)
     } else {
-      Object.assign(data, { selectList: params.selectList })
+      data = Object.assign(data, { selectList: params.selectList })
     }
-    ToolbarModule.setData(data)
+    ToolbarModule.addData(data)
   }
+}
+
+async function listSelectableAction({ selectList }) {
+  ToolbarModule.addData({ selectList })
 }
 
 /**
@@ -104,8 +110,9 @@ async function listAction(type, params = {}) {
 function toolbarBack() {
   const _params = ToolbarModule.getParams()
   if (!_params) return
-  let lastData = ToolbarModule.getData().lastData || {}
-  let selectList = ToolbarModule.getData().selectList
+  const _data = ToolbarModule.getData()
+  const lastData = _data.lastData || {}
+  let selectList = _data.selectList
   _params.setToolbarVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
     isFullScreen: true,
     isTouchProgress: false,
@@ -113,6 +120,7 @@ function toolbarBack() {
     containerType: ToolbarType.list,
     data: lastData.data,
     buttons: lastData.buttons,
+    height: _data.height,
   })
 
   ToolbarModule.setData({
@@ -171,6 +179,7 @@ async function commit() {
 
 const actions = {
   listAction,
+  listSelectableAction,
   toolbarBack,
   commit,
 }

@@ -9,29 +9,25 @@ import NavigationService from '../../../../../NavigationService'
 function action(type) {
   const params = ToolbarModule.getParams()
   if (params.currentLayer.themeType <= 0) {
-    if (
+    if (params.currentLayer.type === 83) {
+      params.showFullMap && params.showFullMap(true)
+      params.setToolbarVisible(true, ConstToolType.GRID_STYLE, {
+        containerType: ToolbarType.list,
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[4],
+      })
+    } else if (
       params.currentLayer.type === 1 ||
       params.currentLayer.type === 3 ||
-      params.currentLayer.type === 5 ||
-      params.currentLayer.type === 83
+      params.currentLayer.type === 5
     ) {
-      if (params.currentLayer.type === 83) {
-        params.showFullMap && params.showFullMap(true)
-        params.setToolbarVisible(true, ConstToolType.MAP_NULL, {
-          containerType: ToolbarType.symbol,
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[4],
-        })
-      } else {
-        params.showFullMap && params.showFullMap(true)
-        params.setToolbarVisible(true, ConstToolType.MAP_STYLE, {
-          containerType: ToolbarType.symbol,
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.THEME_HEIGHT[3],
-        })
-      }
+      params.showFullMap && params.showFullMap(true)
+      params.setToolbarVisible(true, ConstToolType.MAP_STYLE, {
+        containerType: ToolbarType.symbol,
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.THEME_HEIGHT[3],
+      })
     } else {
       NavigationService.navigate('LayerManager')
       Toast.show(

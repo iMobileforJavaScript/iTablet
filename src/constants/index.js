@@ -27,7 +27,7 @@ import {
 import {
   pointColorSet,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   legendColor,
   mapBackGroundColor,
 } from './ColorList'
@@ -51,7 +51,7 @@ export {
   OpenData,
   pointColorSet,
   regionBeforeColorSet,
-  regionAfterColorSet,
+  regionBorderColorSet,
   legendColor,
   mapBackGroundColor,
   UserType,

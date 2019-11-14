@@ -450,7 +450,6 @@ function close(type) {
     _params.setToolbarVisible(false)
     // this.clickTime = 0
     if (_params.buttonView) {
-      ToolbarModule.setData()
       _params.buttonView.setState({
         canUndo: false,
         canRedo: false,
@@ -482,13 +481,16 @@ function close(type) {
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
   } else {
+    ToolbarModule.setData()
     return false
   }
+  ToolbarModule.setData()
 }
 
 function circleFly() {
   const _params = ToolbarModule.getParams()
   _params.showFullMap && _params.showFullMap(true)
+  GLOBAL.action3d = 'PAN3D_FIX'
   _params.setToolbarVisible(true, ConstToolType.MAP3D_CIRCLEFLY, {
     containerType: ToolbarType.table,
     isFullScreen: false,

@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text, FlatList } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  Platform,
+} from 'react-native'
 import { scaleSize, setSpText, Toast } from '../../../../utils'
 // import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../../containers/NavigationService'
@@ -9,8 +16,14 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
+
+const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 
 export default class NavigationView extends React.Component {
+  props: {
+    navigation: Object,
+  }
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
@@ -22,7 +35,9 @@ export default class NavigationView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.PointType = null
+    let { params } = this.props.navigation.state
+    this.changeNavPathInfo = params.changeNavPathInfo
+    // this.PointType = null
     this.clickable = true
     this.historyclick = true
   }
@@ -52,8 +67,9 @@ export default class NavigationView extends React.Component {
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
     this.props.setMapSelectPoint({
-      firstPoint: '选择起点',
-      secondPoint: '选择终点',
+      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+        .SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -67,7 +83,8 @@ export default class NavigationView extends React.Component {
       <View style={{ flex: 1, backgroundColor: color.background }}>
         <View
           style={{
-            height: scaleSize(165),
+            paddingTop: TOOLBARHEIGHT,
+            height: scaleSize(165) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -109,7 +126,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: '设为起点',
+                      button: getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SET_AS_START_POINT,
                     })
                     GLOBAL.toolBox.showFullMap(true)
                     this.props.setMapNavigation({
@@ -119,8 +137,15 @@ export default class NavigationView extends React.Component {
                     NavigationService.goBack()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
-                    {this.props.mapSelectPoint.firstPoint}
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
+                    {this.props.mapSelectPoint.firstPoint !== ''
+                      ? this.props.mapSelectPoint.firstPoint
+                      : getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SELECT_START_POINT}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -150,7 +175,8 @@ export default class NavigationView extends React.Component {
                     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
                     GLOBAL.MAPSELECTPOINT.setVisible(true)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: '设为终点',
+                      button: getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SET_AS_DESTINATION,
                     })
                     GLOBAL.toolBox.showFullMap(true)
                     this.props.setMapNavigation({
@@ -160,8 +186,15 @@ export default class NavigationView extends React.Component {
                     NavigationService.goBack()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
-                    {this.props.mapSelectPoint.secondPoint}
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
+                    {this.props.mapSelectPoint.secondPoint !== ''
+                      ? this.props.mapSelectPoint.secondPoint
+                      : getLanguage(GLOBAL.language).Map_Main_Menu
+                        .SELECT_DESTINATION}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -219,7 +252,7 @@ export default class NavigationView extends React.Component {
                   fontSize: setSpText(20),
                 }}
               >
-                清除记录
+                {getLanguage(GLOBAL.language).Map_Main_Menu.CLEAR_NAV_HISTORY}
               </Text>
             </TouchableOpacity>
           )}
@@ -255,8 +288,9 @@ export default class NavigationView extends React.Component {
                     GLOBAL.ENDY,
                   )
                   if (result) {
-                    GLOBAL.PATHLENGTH = await SMap.getOutdoorPathLength()
-                    GLOBAL.PATH = await SMap.getOutdoorPath()
+                    let pathLength = await SMap.getNavPathLength(false)
+                    let path = await SMap.getPathInfos(false)
+                    this.changeNavPathInfo({ path, pathLength })
                     GLOBAL.ROUTEANALYST = true
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
@@ -275,6 +309,8 @@ export default class NavigationView extends React.Component {
                       sy: GLOBAL.STARTY,
                       ex: GLOBAL.ENDX,
                       ey: GLOBAL.ENDY,
+                      sFloor: GLOBAL.STARTPOINTFLOOR,
+                      eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
                         this.props.mapSelectPoint.firstPoint +
                         '---' +
@@ -290,10 +326,15 @@ export default class NavigationView extends React.Component {
                       NavigationService.goBack()
                     }
                   } else {
-                    Toast.show('路径分析失败请重新选择起终点')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
                   }
                 } else {
-                  Toast.show('请先设置起终点')
+                  Toast.show(
+                    getLanguage(GLOBAL.language).Prompt
+                      .SET_START_AND_END_POINTS,
+                  )
                 }
               }
 
@@ -306,8 +347,9 @@ export default class NavigationView extends React.Component {
                     GLOBAL.ENDY,
                   )
                   if (result) {
-                    GLOBAL.PATHLENGTH = await SMap.getIndoorPathLength()
-                    GLOBAL.PATH = await SMap.getIndoorPath()
+                    let pathLength = await SMap.getNavPathLength(true)
+                    let path = await SMap.getPathInfos(true)
+                    this.changeNavPathInfo({ path, pathLength })
                     GLOBAL.ROUTEANALYST = true
                     GLOBAL.MAPSELECTPOINT.setVisible(false)
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
@@ -326,6 +368,8 @@ export default class NavigationView extends React.Component {
                       sy: GLOBAL.STARTY,
                       ex: GLOBAL.ENDX,
                       ey: GLOBAL.ENDY,
+                      sFloor: GLOBAL.STARTPOINTFLOOR,
+                      eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
                         this.props.mapSelectPoint.firstPoint +
                         '---' +
@@ -341,10 +385,15 @@ export default class NavigationView extends React.Component {
                       NavigationService.goBack()
                     }
                   } else {
-                    Toast.show('路径分析失败请重新选择起终点')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
                   }
                 } else {
-                  Toast.show('请先设置起终点')
+                  Toast.show(
+                    getLanguage(GLOBAL.language).Prompt
+                      .SET_START_AND_END_POINTS,
+                  )
                 }
               }
             }}
@@ -355,7 +404,7 @@ export default class NavigationView extends React.Component {
                 color: color.white,
               }}
             >
-              下一步
+              {getLanguage(GLOBAL.language).Map_Main_Menu.NEXT}
             </Text>
           </TouchableOpacity>
         </View>
@@ -363,9 +412,9 @@ export default class NavigationView extends React.Component {
     )
   }
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item, index }) => {
     return (
-      <View>
+      <View key={item.toString() + index}>
         <TouchableOpacity
           style={styles.itemView}
           onPress={async () => {
@@ -373,13 +422,16 @@ export default class NavigationView extends React.Component {
               firstPoint: item.start,
               secondPoint: item.end,
             })
+
             GLOBAL.STARTX = item.sx
             GLOBAL.STARTY = item.sy
             GLOBAL.ENDX = item.ex
             GLOBAL.ENDY = item.ey
+            GLOBAL.STARTPOINTFLOOR = item.sFloor
+            GLOBAL.ENDPOINTFLOOR = item.eFloor
 
             let result = await SMap.isIndoorPoint(item.sx, item.sy)
-            SMap.getStartPoint(item.sx, item.sy, result.isindoor)
+            SMap.getStartPoint(item.sx, item.sy, result.isindoor, item.sFloor)
             if (result.isindoor) {
               GLOBAL.INDOORSTART = true
             } else {
@@ -387,7 +439,7 @@ export default class NavigationView extends React.Component {
             }
 
             let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
-            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor)
+            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor, item.eFloor)
             if (endresult.isindoor) {
               GLOBAL.INDOOREND = true
             } else {

@@ -103,8 +103,18 @@ export default class Home extends Component {
           if (result === true) {
             // Toast.show('导入3D成功')
           } else {
-            Toast.show('导入3D失败')
+            Toast.show(getLanguage(global.language).Prompt.IMPORTED_SUCCESS)
           }
+          result = await SMap.importWorkspaceInfo({
+            server: filePath,
+            type: 9,
+          })
+
+          // if (result.length === 0) {
+          //   Toast.show(
+          //     getLanguage(global.language).Prompt.FAILED_TO_IMPORT,
+          //   )
+          // }
         } else {
           let result = await SMap.importWorkspaceInfo({
             server: filePath,
@@ -112,7 +122,7 @@ export default class Home extends Component {
           })
 
           if (result.length === 0) {
-            Toast.show('导入失败')
+            Toast.show(getLanguage(global.language).Prompt.FAILED_TO_IMPORT)
           }
         }
       }
@@ -163,7 +173,9 @@ export default class Home extends Component {
   _onSetting = () => {
     this._closeModal()
     // StatusBar.setHidden(true,'slide')
-    NavigationService.navigate('Setting')
+    NavigationService.navigate('Setting', {
+      user: this.props.user,
+    })
   }
 
   _onAbout = () => {

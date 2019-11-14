@@ -144,10 +144,33 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
   resolve(array);
 }
 
+#pragma mark 获取nsm（网络模型）文件
+RCT_REMAP_METHOD(getNetModel, getNetModelWithPath:(NSString *)path resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *fileList = [fileManager contentsOfDirectoryAtPath:path error:nil];
+    for(NSString *file in fileList){
+      BOOL isDir = NO;
+      NSString *fileName = [[NSString alloc]initWithFormat:@"%@%@%@",path,@"/",file];
+      [fileManager fileExistsAtPath:fileName isDirectory:&isDir];
+      if([file hasSuffix:@".snm"] && !isDir){
+        NSDictionary *dic = @{
+                              @"path":fileName,
+                              @"name":file,
+                              };
+        [array addObject:dic];
+      }
+    }
+    resolve(array);
+  }@catch(NSException *exception){
+    reject(@"getNetModel", exception.reason, nil);
+  }
+}
+
 #pragma mark 深度遍历指定目录下的指定后缀的文件
-
 NSMutableArray *array;
-
 RCT_REMAP_METHOD(getPathListByFilterDeep, getPathListByFilterDeepWithPath:(NSString *)path surffix:(NSString *) surffix resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try{
     array = [[NSMutableArray alloc]init];

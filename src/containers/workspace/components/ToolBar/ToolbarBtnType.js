@@ -66,4 +66,6 @@ export default {
   SHOW_LIST: 'SHOW_LIST',
   SHOW_NODE_LIST: 'SHOW_NODE_LIST',
   PLAY: 'PLAY',
+  SETTIING: 'setting',
+  COLLECTTARGET: 'collecttarget',
 }

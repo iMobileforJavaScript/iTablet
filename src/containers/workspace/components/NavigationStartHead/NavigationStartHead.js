@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text } from 'react-native'
+import { View, Image, TouchableOpacity, Text, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import styles from './styles'
 import { TouchType } from '../../../../constants'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 // import NavigationService from '../../../../containers/NavigationService'
-
+const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
     mapSelectPoint: Object,
@@ -35,8 +36,9 @@ export default class NavigationStartHead extends React.Component {
       name: '',
     })
     this.props.setMapSelectPoint({
-      firstPoint: '选择起点',
-      secondPoint: '选择终点',
+      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+        .SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -48,7 +50,8 @@ export default class NavigationStartHead extends React.Component {
       return (
         <View
           style={{
-            height: scaleSize(165),
+            paddingTop: TOOLBARHEIGHT,
+            height: scaleSize(165) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -94,7 +97,8 @@ export default class NavigationStartHead extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
                       true,
                       {
-                        button: '设为起点',
+                        button: getLanguage(GLOBAL.language).Map_Main_Menu
+                          .SET_AS_START_POINT,
                       },
                       false,
                     )
@@ -103,7 +107,11 @@ export default class NavigationStartHead extends React.Component {
                     await SMap.clearPoint()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.firstPoint}
                   </Text>
                 </TouchableOpacity>
@@ -136,7 +144,8 @@ export default class NavigationStartHead extends React.Component {
                     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
                       true,
                       {
-                        button: '设为终点',
+                        button: getLanguage(GLOBAL.language).Map_Main_Menu
+                          .SET_AS_DESTINATION,
                       },
                       false,
                     )
@@ -145,7 +154,11 @@ export default class NavigationStartHead extends React.Component {
                     await SMap.clearPoint()
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(20) }}>
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode={'tail'}
+                    style={{ fontSize: setSpText(20) }}
+                  >
                     {this.props.mapSelectPoint.secondPoint}
                   </Text>
                 </TouchableOpacity>

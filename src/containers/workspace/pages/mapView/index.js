@@ -36,13 +36,12 @@ import {
   setMapLegend,
   setMapNavigation,
   setMap2Dto3D,
-  setMapNavigationShow,
   setMapIs3D,
-  setMapIndoorNavigation,
   setNavigationChangeAR,
   setNavigationPoiView,
   setMapSelectPoint,
   setOpenOnlineMap,
+  setNavigationHistory,
 } from '../../../../models/setting'
 import { setMapSearchHistory } from '../../../../models/histories'
 import { setSharing } from '../../../../models/online'
@@ -72,9 +71,7 @@ const mapStateToProps = state => ({
   mapLegend: state.setting.toJS().mapLegend,
   mapNavigation: state.setting.toJS().mapNavigation,
   map2Dto3D: state.setting.toJS().map2Dto3D,
-  mapNavigationShow: state.setting.toJS().mapNavigationShow,
   mapIs3D: state.setting.toJS().mapIs3D,
-  mapIndoorNavigation: state.setting.toJS().mapIndoorNavigation,
   navigationChangeAR: state.setting.toJS().navigationChangeAR,
   navigationPoiView: state.setting.toJS().navigationPoiView,
   mapScaleView: state.setting.toJS().mapScaleView,
@@ -83,6 +80,7 @@ const mapStateToProps = state => ({
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
   openOnlineMap: state.setting.toJS().openOnlineMap,
   mapSelectPoint: state.setting.toJS().mapSelectPoint,
+  navigationhistory: state.setting.toJS().navigationhistory,
 })
 
 const mapDispatchToProps = {
@@ -121,13 +119,12 @@ const mapDispatchToProps = {
   setAnalystParams,
   setMapNavigation,
   setMap2Dto3D,
-  setMapNavigationShow,
   setMapIs3D,
-  setMapIndoorNavigation,
   setNavigationChangeAR,
   setNavigationPoiView,
   setMapSearchHistory,
   setMapSelectPoint,
+  setNavigationHistory,
   setOpenOnlineMap,
 }
 

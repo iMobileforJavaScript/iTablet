@@ -5,7 +5,7 @@
  */
 import React from 'react'
 import { ConstToolType } from '../../../../constants/index'
-import { TouchableOpacity, View, FlatList } from 'react-native'
+import { TouchableOpacity, View, FlatList, Text } from 'react-native'
 import { scaleSize } from '../../../../utils/index'
 import { color } from '../../../tabs/Mine/MyService/Styles'
 
@@ -15,11 +15,11 @@ export default class ColorTable extends React.Component {
     data: Array,
     device: Object,
     itemAction?: () => {},
+    setColorBlock?: () => {},
   }
 
   constructor(props) {
     super(props)
-    this.listKeyIndex = 0
     this.height =
       this.props.device.orientation === 'LANDSCAPE'
         ? ConstToolType.THEME_HEIGHT[7]
@@ -49,7 +49,6 @@ export default class ColorTable extends React.Component {
           ? ConstToolType.THEME_HEIGHT[7]
           : ConstToolType.THEME_HEIGHT[3]
       this.ColumnNums = prevProps.device.orientation === 'LANDSCAPE' ? 12 : 8
-      this.listKeyIndex++
     }
     if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
       this.setState({
@@ -74,6 +73,24 @@ export default class ColorTable extends React.Component {
     }
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.device.orientation !== this.props.device.orientation) {
+      this.height =
+        nextProps.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[7]
+          : ConstToolType.THEME_HEIGHT[3]
+      this.ColumnNums = nextProps.device.orientation === 'LANDSCAPE' ? 12 : 8
+    }
+  }
+  itemAction = async item => {
+    if (this.props.itemAction) {
+      this.props.itemAction(item)
+    } else {
+      let isSuccess = await item.action()
+      if (isSuccess)
+        this.props.setColorBlock && this.props.setColorBlock(item.key)
+    }
+  }
   renderItem = ({ item }) => {
     if (typeof item === 'object' && item.useSpace)
       return (
@@ -103,11 +120,40 @@ export default class ColorTable extends React.Component {
           marginVertical: scaleSize(2),
           marginHorizontal: scaleSize(2),
         }}
-      />
+      >
+        <View
+          style={{
+            height: '100%',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}
+        >
+          {typeof item === 'object' && item.text ? (
+            <Text
+              style={{
+                fontSize: scaleSize(25),
+                color: 'black',
+                textAlign: 'center',
+              }}
+            >
+              {item.text}
+            </Text>
+          ) : null}
+        </View>
+      </TouchableOpacity>
     )
   }
 
   render() {
+    // let data = this.props.data
+    // while (data.length % this.ColumnNums !== 0) {
+    //   data.push({
+    //     useSpace: true,
+    //   })
+    // }
     return (
       <View
         style={{
@@ -118,7 +164,6 @@ export default class ColorTable extends React.Component {
         }}
       >
         <FlatList
-          key={'listKey' + this.listKeyIndex}
           renderItem={this.renderItem}
           data={this.state.data}
           keyExtractor={(item, index) =>

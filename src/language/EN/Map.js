@@ -34,6 +34,9 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Map',
   OPEN_BACK: 'Back',
 
+  NAVIGATION_START: 'Navigate',
+  NETWORK_MODEL: 'Model',
+  NETWORK_MODEL_FILE: 'Network Model Files',
   NAVIGATION_WORKSPACE: 'Navigation Workspace',
   NAVIGATION_MAP: 'NAVIGATION_MAP',
   NETWORK: 'NETWORK',
@@ -61,14 +64,17 @@ const Map_Main_Menu = {
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
   STYLE_BACKFROUNG: 'Background',
+  STYLE_BORDER: 'Border Color',
+  STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',
   STYLE_FONT: 'Font',
+  STYLE_SIZE: 'Size',
   STYLE_FONT_SIZE: 'Font Size',
   STYLE_ALIGNMENT: 'Alignment',
   STYLE_FONT_STYLE: 'Font style',
-  STYLE_CONTRAST: 'Contrast',
+  STYLE_CONTRAST: 'Hue',
   STYLE_BRIGHTNESS: 'Brightness',
   STYLE_BOLD: 'Bold',
   STYLE_ITALIC: 'Italic',
@@ -81,10 +87,11 @@ const Map_Main_Menu = {
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
   SATURATION: 'Saturation',
+  CONTRAST: 'Contrast',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',
-  TOOLS_AREA_MEASUREMENT: 'Area Measurement',
+  TOOLS_AREA_MEASUREMENT: 'Area\n Measurement',
   TOOLS_AZIMUTH_MEASUREMENT: 'Azimuth Measurement',
   TOOLS_SELECT: 'Select',
   TOOLS_RECTANGLE_SELECT: 'Rectangle select',
@@ -129,7 +136,7 @@ const Map_Main_Menu = {
   TOUR: 'Tour',
   TOUR_NAME: 'Tour Name',
 
-  STYLE_TRANSFER: 'Style Transfer',
+  STYLE_TRANSFER: 'AI Cartography',
 
   TOOLS_SCENE_SELECT: 'Select',
   TOOLS_PATH_ANALYSIS: 'Path Analysis',
@@ -164,11 +171,11 @@ const Map_Main_Menu = {
   CUT_FIRST: 'Please clip map first',
   THEME: 'Create',
   THEME_UNIFORM_MAP: 'Uniform Map',
-  THEME_UNIQUE_VALUES_MAP: 'Unique Values Map',
+  THEME_UNIQUE_VALUES_MAP: 'Unique Values\n Map',
   THEME_RANGES_MAP: 'Ranges Map',
   THEME_UNIFORM_LABLE: 'Uniform Label',
-  THEME_UNIQUE_VALUE_LABLE_MAP: 'Unique Value Label Map',
-  THEME_RANGES_LABLE_MAP: 'Ranges Label Map',
+  THEME_UNIQUE_VALUE_LABLE_MAP: 'Unique Value\n Label Map',
+  THEME_RANGES_LABLE_MAP: 'Ranges\n Label Map',
   THEME_AREA: 'Area',
   THEME_STEP: 'Step',
   THEME_LINE: 'Line',
@@ -182,8 +189,8 @@ const Map_Main_Menu = {
   THEME_STACKED_BAR: 'Stacked Bar',
   THEME_3D_STACKED_BAR: '3D stacked Bar',
   THEME_RING: 'Ring',
-  THEME_DOT_DENSITY_MAP: 'Dot Density Map',
-  THEME_GRADUATED_SYMBOLS_MAP: 'Graduated Symbols Map',
+  THEME_DOT_DENSITY_MAP: 'Dot Density\n Map',
+  THEME_GRADUATED_SYMBOLS_MAP: 'Graduated\n Symbols Map',
   THEME_HEATMAP: 'HeatMap',
 
   THEME_ALL_SELECTED: 'All selected',
@@ -199,7 +206,7 @@ const Map_Main_Menu = {
 
   THEME_METHOD: 'Method',
   THEME_EQUAL_INTERVAL: 'Equal Interval',
-  THEME_SQURE_ROOT_INTERVAL: 'Squre Root Interval',
+  THEME_SQURE_ROOT_INTERVAL: 'Squre Root\n Interval',
   THEME_STANDARD_DEVIATION_INTERVAL: 'Standard Deviation Interval',
   THEME_LOGARITHMIC_INTERVAL: 'Logarithmic Interval',
   THEME_QUANTILE_INTERVAL: 'Quantile Interval',
@@ -296,12 +303,14 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: 'Target Collect',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: 'High-Precision Collect',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: 'Illegally-Park Collect',
+  MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: 'Cast Model',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: 'Choose Model',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: 'Searching Surface',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_VIEW_DISTANCE: 'View Distence:',
 
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOTALLENGTH: 'Total Length:',
+  MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_TOLASTLENGTH: 'ToLast Length:',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_HISTORY: 'Collect History',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME: 'Fill in the name',
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY: 'No Collect History',
@@ -325,6 +334,30 @@ const Map_Main_Menu = {
   BORDER: 'Border',
   LINE: 'Line',
   MARK: 'Mark',
+
+  //地图导航
+  DRAW: 'Draw',
+  ROAD_DETAILS: 'Road Details',
+  ROUTE_THROUGH: 'Route Through：',
+  DISTANCE: 'Distance:',
+  METERS: 'm',
+  KILOMETERS: 'Km',
+  DISPLAY_MAP: 'Display Map',
+  START_FROM_START_POINT: 'Starting from the initial point',
+  ARRIVE_AT_THE_DESTINATION: 'Arriving at the destination',
+  FIRST_PERSON_PERSPECTIVE: '1st Perspective',
+  THIRD_PERSON_PERSPECTIVE: '3nd Perspective',
+  GO_STRAIGHT: 'Going straight',
+  SELECT_START_POINT: 'Select Start',
+  SELECT_DESTINATION: 'Select Destination',
+  SET_AS_START_POINT: 'Set As Start',
+  SET_AS_DESTINATION: 'Set As Destination',
+  CLEAR_NAV_HISTORY: 'Clear History',
+  NEXT: 'Next',
+  SELECT_POINTS: 'Select Points',
+  INCREMENT_ROAD: 'Increment Road',
+  TRACK: 'By Track',
+  HAND_PAINTED: 'By Hand',
 }
 
 //推演动画
@@ -417,6 +450,7 @@ const Map_Layer = {
   LAYERS_PASTE: 'Paste',
   LAYERS_LAYER_PROPERTIES: 'Layer Properties',
   LAYERS_REMOVE: 'Remove',
+  LAYERS_COLLECT: 'Collect on the current layer',
   LAYERS_MAXIMUM: 'Maximum Visible Scale',
   LAYERS_MINIMUM: 'Minimum Visible Scale',
   LAYERS_UER_DEFINE: 'User Define',
@@ -432,6 +466,9 @@ const Map_Layer = {
   LAYERS_MIN_OBJECT_SIZE: 'Min Object Size',
   LAYERS_FILTER_OVERLAPPING_SMALL_OBJECTS: 'Filter Overlapping Small Objects',
   LAYERS_SHARE: 'Share',
+  SELECT_LAYSER_SCALE: 'Please select a scale',
+  LAYER_SCALE_RANGE_WRONG:
+    'the Maximum Visible Scale must be larger than the Minimum Visible Scale',
 
   LAYERS_CREATE_THEMATIC_MAP: 'Create Thematic Map',
   LAYERS_MODIFY_THEMATIC_MAP: 'Modify Thematic Map',
@@ -466,6 +503,7 @@ const Map_Attribute = {
   ATTRIBUTE_UNDO: 'Undo',
   ATTRIBUTE_REDO: 'Redo',
   ATTRIBUTE_REVERT: 'Revert',
+  ATTRIBUTE_FIELD_ADD: 'Add',
 }
 
 const Map_Setting = {
@@ -543,6 +581,7 @@ const Map_Settings = {
   DETECT_STYLE_IS_SAME_COLOR: 'Same Color',
   DETECT_STYLE_SAME_COLOR: 'Same Color Value',
   DETECT_STYLE_STROKE_WIDTH: 'Stroke Width',
+  COUNTRACKED: 'Count Track ',
 
   //二级菜单 基本设置
   MAP_NAME: 'Map Name',

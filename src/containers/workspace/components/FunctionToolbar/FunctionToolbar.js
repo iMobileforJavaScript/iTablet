@@ -6,14 +6,14 @@
 import * as React from 'react'
 import { View, Animated, FlatList, Platform } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const } from '../../../../constants'
+import { ConstToolType, Const, ConstPath } from '../../../../constants'
 import { scaleSize, Toast, setSpText } from '../../../../utils'
+import { FileTools } from '../../../../native'
 import styles from './styles'
-import { SMap, ThemeType } from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import constants from '../../constants'
 import { Bar } from 'react-native-progress'
-import ConstOnline from '../../../../constants/ConstOnline'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -46,6 +46,7 @@ const BottomHeight = scaleSize(100)
 
 export default class FunctionToolbar extends React.Component {
   props: {
+    navigation: Object,
     language: string,
     style?: any,
     hide?: boolean,
@@ -57,6 +58,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     layers: PropTypes.object,
+    getLayers?: () => {},
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
@@ -71,10 +73,11 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     user: Object,
     map: Object,
-
-    incrementRoad: () => {},
-    setMapIndoorNavigation: () => {},
+    //模型、路网弹窗组件
+    getNavigationPopView?: () => {},
+    incrementRoad?: () => {},
     setMap2Dto3D: () => {},
+    changeNavPathInfo?: () => {},
     openOnlineMap: boolean,
   }
 
@@ -118,7 +121,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   isMapIndoorNavigation = () => {
-    this.props.setMapIndoorNavigation(false)
     this.props.setMap2Dto3D(false)
     GLOBAL.toolBox.props.setOpenOnlineMap(false)
   }
@@ -140,176 +142,205 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  showMenuAlertDialog = () => {
-    if (
-      !GLOBAL.currentLayer ||
-      (GLOBAL.currentLayer.themeType <= 0 && !GLOBAL.currentLayer.isHeatmap)
-    ) {
-      Toast.show(
-        getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER,
-      )
-      //'提示: 请先选择专题图层。')
-      NavigationService.navigate('LayerManager')
-      return
+  // showMenuAlertDialog = () => {
+  //   if (
+  //     !GLOBAL.currentLayer ||
+  //     (GLOBAL.currentLayer.themeType <= 0 && !GLOBAL.currentLayer.isHeatmap)
+  //   ) {
+  //     Toast.show(
+  //       getLanguage(this.props.language).Prompt.PLEASE_SELECT_THEMATIC_LAYER,
+  //     )
+  //     //'提示: 请先选择专题图层。')
+  //     NavigationService.navigate('LayerManager')
+  //     return
+  //   }
+  //   let type = ''
+  //   if (GLOBAL.currentLayer.isHeatmap) {
+  //     type = constants.THEME_HEATMAP
+  //   } else {
+  //     switch (GLOBAL.currentLayer.themeType) {
+  //       case ThemeType.UNIQUE:
+  //         type = constants.THEME_UNIQUE_STYLE
+  //         break
+  //       case ThemeType.RANGE:
+  //         type = constants.THEME_RANGE_STYLE
+  //         break
+  //       case ThemeType.LABEL:
+  //         type = constants.THEME_UNIFY_LABEL
+  //         break
+  //       case ThemeType.LABELUNIQUE:
+  //         type = constants.THEME_UNIQUE_LABEL
+  //         break
+  //       case ThemeType.LABELRANGE:
+  //         type = constants.THEME_RANGE_LABEL
+  //         break
+  //       case ThemeType.GRAPH:
+  //         type = constants.THEME_GRAPH_STYLE
+  //         break
+  //       case ThemeType.DOTDENSITY:
+  //         type = constants.THEME_DOT_DENSITY
+  //         break
+  //       case ThemeType.GRADUATEDSYMBOL:
+  //         type = constants.THEME_GRADUATED_SYMBOL
+  //         break
+  //       case ThemeType.GRIDRANGE:
+  //         type = constants.THEME_GRID_RANGE
+  //         break
+  //       case ThemeType.GRIDUNIQUE:
+  //         type = constants.THEME_GRID_UNIQUE
+  //         break
+  //       case ThemeType.CUSTOM:
+  //         Toast.show('提示: 暂不支持编辑的专题图层。')
+  //         return
+  //       default:
+  //         Toast.show(
+  //           getLanguage(this.props.language).Prompt
+  //             .PLEASE_SELECT_THEMATIC_LAYER,
+  //         )
+  //         //''提示: 请先选择专题图层。')
+  //         NavigationService.navigate('LayerManager')
+  //         return
+  //     }
+  //   }
+  //
+  //   if (GLOBAL.toolBox) {
+  //     GLOBAL.toolBox.setVisible(
+  //       true,
+  //       type === constants.THEME_GRAPH_STYLE
+  //         ? ConstToolType.MAP_THEME_PARAM_GRAPH
+  //         : ConstToolType.MAP_THEME_PARAM,
+  //       {
+  //         containerType: 'list',
+  //         isFullScreen: true,
+  //         isTouchProgress: false,
+  //         themeType: type,
+  //         showMenuDialog: true,
+  //       },
+  //     )
+  //     GLOBAL.toolBox.showFullMap()
+  //   }
+  //
+  //   // const menuRef = this.props.getMenuAlertDialogRef()
+  //   // if (menuRef) {
+  //   //   this.props.showFullMap && this.props.showFullMap(true)
+  //   //   menuRef.setMenuType(type)
+  //   //   menuRef.showMenuDialog()
+  //   // }
+  //   //
+  //   // const toolRef = this.props.getToolRef()
+  //   // if (toolRef) {
+  //   //   toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+  //   //     isFullScreen: false,
+  //   //     containerType: 'list',
+  //   //     height: ConstToolType.THEME_HEIGHT[1],
+  //   //   })
+  //   // }
+  // }
+
+  //网络数据集和模型文件选择
+  showModelList = async () => {
+    let popView = this.props.getNavigationPopView()
+    let simpleList = GLOBAL.SimpleSelectList
+    if (simpleList.renderType !== 'navigation') {
+      if (simpleList.state.navigationData.length === 0) {
+        let path =
+          (await FileTools.appendingHomeDirectory(
+            this.props.user && this.props.user.currentUser.userName
+              ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+              : ConstPath.CustomerPath,
+          )) + ConstPath.RelativePath.Datasource
+        let datasources = await SMap.getNetworkDatasource()
+        let models = await FileTools.getNetModel(path)
+        models = models.map(item => {
+          item.checked = false
+          return item
+        })
+        let navigationData = [
+          {
+            title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+            visible: true,
+            image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+            data: datasources || [],
+          },
+          {
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NETWORK_MODEL_FILE,
+            visible: true,
+            image: getThemeAssets().functionBar.rightbar_network_model,
+            data: models || [],
+          },
+        ]
+        simpleList.setState({
+          navigationData,
+          renderType: 'navigation',
+        })
+      } else {
+        simpleList.setState({
+          renderType: 'navigation',
+        })
+      }
     }
-    let type = ''
-    if (GLOBAL.currentLayer.isHeatmap) {
-      type = constants.THEME_HEATMAP
-    } else {
-      switch (GLOBAL.currentLayer.themeType) {
-        case ThemeType.UNIQUE:
-          type = constants.THEME_UNIQUE_STYLE
-          break
-        case ThemeType.RANGE:
-          type = constants.THEME_RANGE_STYLE
-          break
-        case ThemeType.LABEL:
-          type = constants.THEME_UNIFY_LABEL
-          break
-        case ThemeType.LABELUNIQUE:
-          type = constants.THEME_UNIQUE_LABEL
-          break
-        case ThemeType.LABELRANGE:
-          type = constants.THEME_RANGE_LABEL
-          break
-        case ThemeType.GRAPH:
-          type = constants.THEME_GRAPH_STYLE
-          break
-        case ThemeType.DOTDENSITY:
-          type = constants.THEME_DOT_DENSITY
-          break
-        case ThemeType.GRADUATEDSYMBOL:
-          type = constants.THEME_GRADUATED_SYMBOL
-          break
-        case ThemeType.GRIDRANGE:
-          type = constants.THEME_GRID_RANGE
-          break
-        case ThemeType.GRIDUNIQUE:
-          type = constants.THEME_GRID_UNIQUE
-          break
-        case ThemeType.CUSTOM:
-          Toast.show('提示: 暂不支持编辑的专题图层。')
-          return
-        default:
+
+    this.props.showFullMap(true)
+    popView.setVisible(true)
+  }
+
+  startNavigation = async () => {
+    let rel = await SMap.hasNetworkDataset()
+    if (rel) {
+      let simpleList = GLOBAL.SimpleSelectList
+      let isIndoorMap = await SMap.isIndoorMap()
+      if (isIndoorMap) {
+        //室内导航
+        SMap.startIndoorNavigation()
+        NavigationService.navigate('NavigationView', {
+          changeNavPathInfo: this.props.changeNavPathInfo,
+        })
+      } else {
+        //行业导航
+        let { networkModel, networkDataset } = simpleList.state
+        if (networkModel && networkDataset) {
+          SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+          NavigationService.navigate('NavigationView', {
+            changeNavPathInfo: this.props.changeNavPathInfo,
+          })
+        } else {
           Toast.show(
             getLanguage(this.props.language).Prompt
-              .PLEASE_SELECT_THEMATIC_LAYER,
+              .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
           )
-          //''提示: 请先选择专题图层。')
-          NavigationService.navigate('LayerManager')
-          return
+        }
       }
-    }
-
-    if (GLOBAL.toolBox) {
-      GLOBAL.toolBox.setVisible(
-        true,
-        type === constants.THEME_GRAPH_STYLE
-          ? ConstToolType.MAP_THEME_PARAM_GRAPH
-          : ConstToolType.MAP_THEME_PARAM,
-        {
-          containerType: 'list',
-          isFullScreen: true,
-          isTouchProgress: false,
-          themeType: type,
-          showMenuDialog: true,
-        },
-      )
-      GLOBAL.toolBox.showFullMap()
-    }
-
-    // const menuRef = this.props.getMenuAlertDialogRef()
-    // if (menuRef) {
-    //   this.props.showFullMap && this.props.showFullMap(true)
-    //   menuRef.setMenuType(type)
-    //   menuRef.showMenuDialog()
-    // }
-    //
-    // const toolRef = this.props.getToolRef()
-    // if (toolRef) {
-    //   toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-    //     isFullScreen: false,
-    //     containerType: 'list',
-    //     height: ConstToolType.THEME_HEIGHT[1],
-    //   })
-    // }
-  }
-
-  hideThemeMenuDialog = () => {
-    if (this.props.getMenuAlertDialogRef) {
-      const menutoolRef = this.props.getMenuAlertDialogRef()
-      if (menutoolRef) {
-        menutoolRef.setDialogVisible(false)
-      }
+    } else {
+      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
     }
   }
 
-  changeBaseLayer = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      switch (this.props.type) {
-        case 'MAP_3D':
-          toolRef.setVisible(true, ConstToolType.MAP3D_BASE, {
-            containerType: 'list',
+  incrementRoad = async () => {
+    let rel = await SMap.hasLineDataset()
+    if (rel) {
+      let simpleList = GLOBAL.SimpleSelectList
+      if (simpleList.renderType !== 'incrementRoad') {
+        if (simpleList.state.lineDataset.length === 0) {
+          let floorList = await SMap.getLineDatasetAndFloorList()
+          //构造data测试
+          let lineDataset = floorList.map(item => {
+            item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+            return item
           })
-          break
-        default:
-          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
-            containerType: 'list',
-            height: ConstToolType.HEIGHT[3],
+          simpleList.setState({
+            lineDataset,
+            renderType: 'incrementRoad',
           })
-          break
+        } else {
+          simpleList.setState({
+            renderType: 'incrementRoad',
+          })
+        }
       }
-    }
-  }
-
-  showMore = async type => {
-    this.hideThemeMenuDialog()
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, type, {
-        containerType: 'table',
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
-      })
-    }
-  }
-
-  showMap3Dshare = async () => {
-    this.hideThemeMenuDialog()
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_SHARE_MAP3D, {
-        containerType: 'table',
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
-      })
-    }
-  }
-
-  incrementRoad = () => {
-    if (this.props.openOnlineMap) {
       this.props.incrementRoad()
     } else {
-      Toast.show('请先打开室内数据')
-    }
-  }
-
-  openTraffic = async () => {
-    if (!this.props.openOnlineMap) {
-      let isadd = await SMap.isOpenTrafficMap()
-      if (isadd) {
-        await SMap.removeTrafficMap('tencent@TrafficMap')
-      } else {
-        await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
-      }
-    } else {
-      Toast.show('请使用在线导航功能')
+      Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
     }
   }
 
@@ -329,8 +360,17 @@ export default class FunctionToolbar extends React.Component {
 
   share = () => {}
 
+  //判断当前模块是否有效
+  getLicenseValid = index => {
+    return GLOBAL.modulesNumber
+      ? (GLOBAL.modulesNumber << (index - 1)) % 2 === 1
+      : true
+  }
+
   /** 获取一级数据 **/
   getData = type => {
+    // TODO 带添加读取配置文件，添加指定模块功能
+    let isLicenseNotValid = false
     let data
     switch (type) {
       case constants.MAP_EDIT:
@@ -348,7 +388,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.STYLE,
           ),
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -358,6 +398,8 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case constants.MAP_3D:
+        //三维模块是第6个模块
+        isLicenseNotValid = !this.getLicenseValid(6)
         data = [
           startModule(
             ConstToolType.MAP_3D_START,
@@ -392,7 +434,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.STYLE,
           ),
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -420,7 +462,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.STYLE,
           ),
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -430,6 +472,7 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case constants.MAP_PLOTTING:
+        isLicenseNotValid = !this.getLicenseValid(8)
         data = [
           startModule(
             ConstToolType.MAP_PLOTTING_START,
@@ -452,7 +495,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.PLOTTING_ANIMATION,
           ),
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -485,17 +528,10 @@ export default class FunctionToolbar extends React.Component {
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',
           },
-          toolModule(
-            ConstToolType.TOOL,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
         ]
         break
       case constants.MAP_NAVIGATION:
+        isLicenseNotValid = !this.getLicenseValid(10)
         data = [
           startModule(
             ConstToolType.MAP_NAVIGATION_START,
@@ -506,29 +542,34 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           {
-            key: constants.TRAFFIC,
-            title: getLanguage(this.props.language).Map_Main_Menu.Traffic,
-            //路况
+            key: '导航',
+            title: getLanguage(this.props.language).Map_Main_Menu
+              .NAVIGATION_START,
+            //constants.ADD,
             size: 'large',
-            action: this.openTraffic,
-            image: require('../../../../assets/Navigation/road.png'),
+            action: isLicenseNotValid ? null : this.startNavigation,
+            image: require('../../../../assets/Navigation/navi_icon.png'),
           },
-          styleModule(
-            ConstToolType.MAP_STYLE,
-            getLanguage(this.props.language).Map_Main_Menu.STYLE,
-          ),
+          {
+            key: '模型',
+            title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
+            //constants.ADD,
+            size: 'large',
+            action: isLicenseNotValid ? null : this.showModelList,
+            image: getThemeAssets().functionBar.rightbar_network_model,
+          },
           {
             key: '路网',
             title: getLanguage(this.props.language).Map_Main_Menu
               .MAO_ROAD_DISTRIBUTION,
             //'风格',
-            action: this.incrementRoad,
+            action: isLicenseNotValid ? null : this.incrementRoad,
             size: 'large',
             image: getThemeAssets().ar.icon_ai_assistant,
             selectMode: 'flash',
           },
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -557,7 +598,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.EDIT,
           ),
           toolModule(
-            ConstToolType.TOOL,
+            ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,
           ),
           shareModule(
@@ -566,6 +607,10 @@ export default class FunctionToolbar extends React.Component {
           ),
         ]
         break
+    }
+    if (isLicenseNotValid) {
+      GLOBAL.licenseModuleNotContainDialog &&
+        GLOBAL.licenseModuleNotContainDialog.setDialogVisible(true)
     }
     return data
   }

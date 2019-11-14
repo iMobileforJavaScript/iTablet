@@ -19,12 +19,15 @@ const Profile = {
 
   //我的——登录
   LOGIN: 'Login',
+  LOGIN_CURRENT: 'Current user is already logged in',
   MOBILE_LOGIN: 'Mobile Login',
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
   ENTER_MOBILE: 'Please enter your mobile number',
   ENTER_PASSWORD: 'Please enter your password',
   REGISTER: 'Register',
+  FORGET_PASSWORD: 'Forgot password?',
+  RESET_PASSWORD: 'Reset Password',
   MOBILE_REGISTER: 'Mobile Register',
   EMAIL_REGISTER: 'Email Register',
   ENTER_USERNAME: 'Please enter your username',
@@ -34,6 +37,8 @@ const Profile = {
   ENTER_EMAIL: 'Please enter your email',
   ENTER_SERVER_ADDRESS: 'Please enter server address',
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
+  ENTER_REALNAME: 'Please enter your real name',
+  ENTER_COMPANY: 'Please enter your company',
   CONNECTING: 'Connecting',
   CONNECT_SERVER_FAIL:
     'Failed to connect to the server, please check the network or server address',
@@ -147,5 +152,62 @@ const Profile = {
   //搜索
   SEARCH: 'Search',
   NO_SEARCH_RESULT: 'No search result',
+
+  //设置
+  STATUSBAR_HIDE: 'StatusBar Hide',
+  SETTING_LICENSE: 'License',
+  SETTING_ABOUT_ITABLET: 'About iTablet',
+  SETTING_CHECK_VERSION: 'Check Version',
+  //许可
+  LICENSE_CURRENT: 'License Current',
+  LICENSE_TYPE: 'License Type',
+  LICENSE_TRIAL: 'License Trial',
+  LICENSE_OFFICIAL: 'License Official',
+  LICENSE_STATE: 'License State',
+  LICENSE_SURPLUS: 'License Surplus ',
+  LICENSE_DAY: ' Day',
+  LICENSE_CONTAIN_MODULE: 'License Contain Module',
+  LICENSE_OFFICIAL_INPUT: 'License Official Input',
+  LICENSE_TRIAL_APPLY: 'License Trial Apply',
+  LICENSE_OFFICIAL_CLEAN: 'License Official Clean',
+  LICENSE_CLEAN_CANCLE: 'Clean Cancle',
+  LICENSE_CLEAN_CONTINUE: 'Clean Continue',
+  LICENSE_CLEAN_ALERT:
+    'The number of licenses will be deducted from the next activation after clearing the license. The current remaining license number:',
+  INPUT_LICENSE_SERIAL_NUMBER: 'Input License Serial Number',
+  PLEASE_INPUT_LICENSE_SERIAL_NUMBER: 'Please Input License Serial Number',
+  PLEASE_INPUT_LICENSE_SERIAL_NUMBER_NOT_CORRECT:
+    'The input license serial number is not correct',
+  LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS: 'Serial Number Activat Success',
+  LICENSE_REGISTER_BUY: 'Register Buy',
+  LICENSE_HAVE_REGISTER: 'Have Registerd',
+  LICENSE_NOT_CONTAIN_MODULE: 'Not Contain Module',
+  LICENSE_MODULE_REGISTER_SUCCESS: 'Module Register Success',
+  LICENSE_EXIT: 'Exit',
+  LICENSE_EXIT_FAILED: 'Exit Failed',
+  LICENSE_CURRENT_EXPIRE: 'Current License Invalid',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE:
+    'This module is not included under the current license',
+  LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
+    'This module is not included under the current license and some of its functions will be unavailable！！！',
+  //许可模块
+  Core_Dev: 'Core Dev',
+  Core_Runtime: 'Core Runtime',
+  Navigation_Dev: 'Navigation Dev',
+  Navigation_Runtime: 'Navigation Runtime',
+  Realspace_Dev: 'Realspace Dev',
+  Realspace_Runtime: 'Realspace Runtime',
+  Plot_Dev: 'Plot Dev',
+  Plot_Runtime: 'Plot Runtime',
+  Industry_Navigation_Dev: 'Industry Navigation Dev',
+  Industry_Navigation_Runtime: 'Industry Navigation Runtime',
+  Indoor_Navigation_Dev: 'Indoor Navigation Dev',
+  Indoor_Navigation_Runtime: 'Indoor Navigation Runtime',
+  Plot3D_Dev: 'Plot3D Dev',
+  Plot3D_Runtime: 'Plot3D Runtime',
+  Realspace_Analyst_Dev: 'Realspace Analyst Dev',
+  Realspace_Analyst_Runtime: 'Realspace Analyst Runtime',
+  Realspace_Effect_Dev: 'Realspace Effect Dev',
+  Realspace_Effect_Runtime: 'Realspace Effect Runtime',
 }
 export { Profile }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactFragmentActivity;
 import com.rnfs.RNFSManager;
 import com.supermap.RN.FileTools;
 import com.supermap.RN.appManager;

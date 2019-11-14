@@ -239,6 +239,25 @@ const Prompt = {
   FAILED_TO_CREATE_TEXT: '添加文字失败',
   FAILED_TO_CREATE_LINE: '点绘线失败',
   FAILED_TO_CREATE_REGION: '点绘面失败',
+  CLEAR_HISTORY: '清除搜索记录',
+  //导航相关
+  PLEASE_SET_BASEMAP_VISIBLE: '请设置底图可见',
+  NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
+  NO_LINE_DATASETS: '当前工作空间无线数据集',
+  SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
+  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
+    '请选择网络数据集和网络模型文件',
+  PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
+  PATH_ANALYSIS_FAILED: '路径分析失败请重新选择起终点',
+  SET_START_AND_END_POINTS: '请先设置起点和终点',
+  SELECT_LAYER_NEED_INCREMENTED: '请选择需要增量的图层',
+  SELECT_THE_FLOOR: '请选择图层所在楼层',
+  LONG_PRESS_ADD_START: '请长按添加起点',
+  LONG_PRESS_ADD_END: '请长按添加终点',
+
+  SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
+  SPEECH_ERROR: '识别出错，请稍后再试',
+  SPEECH_NONE: '您好像没有说话哦',
 }
 
 export { Prompt }

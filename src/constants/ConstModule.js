@@ -18,7 +18,7 @@ const MAP_MODULE = {
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
   MAP_ANALYST: '数据分析',
-  MAP_AR: '视频地图',
+  MAP_AR: 'AR地图',
   MAP_NAVIGATION: '导航地图',
 }
 

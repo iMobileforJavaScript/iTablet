@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
-import { getPublicAssets, getThemeAssets } from '../../assets'
+import { getThemeAssets } from '../../assets'
 import {
   SAIClassifyView,
   SMediaCollector,
@@ -17,12 +17,7 @@ import {
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
-import {
-  Container,
-  ImagePicker,
-  Loading,
-  // MTBtn,
-} from '../../components'
+import { Container, ImagePicker, Loading, MTBtn } from '../../components'
 import styles from './styles'
 import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
@@ -374,16 +369,31 @@ export default class ClassifyView extends React.Component {
             </TouchableOpacity>
           )}
           {!this.state.isClassifyInfoVisible && (
-            <TouchableOpacity style={styles.iconView} />
+            <TouchableOpacity
+              //   onPress={
+              //   async () => {
+              //   await NavigationService.navigate('MapView')
+              //   await GLOBAL.CHECKAIDETEC.setVisible(true)
+              //   await GLOBAL.toolBox.showFullMap(true)
+              //   await GLOBAL.toolBox.setVisible(false)}
+              // }
+              style={styles.iconView}
+            >
+              {/*<Image*/}
+              {/*resizeMode={'contain'}*/}
+              {/*source={getThemeAssets().ar.toolbar.ai_tab}*/}
+              {/*style={styles.smallIcon}*/}
+              {/*/>*/}
+            </TouchableOpacity>
           )}
           {!this.state.isClassifyInfoVisible && (
             <TouchableOpacity
-              onPress={() => this.openAlbum()}
+              onPress={this.showClassifySettingsView}
               style={styles.iconView}
             >
               <Image
                 resizeMode={'contain'}
-                source={getPublicAssets().common.icon_album}
+                source={getThemeAssets().ar.toolbar.ai_setting}
                 style={styles.smallIcon}
               />
             </TouchableOpacity>
@@ -658,14 +668,14 @@ export default class ClassifyView extends React.Component {
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
-          // headerRight: [
-          //   <MTBtn
-          //     key={'settings'}
-          //     image={getThemeAssets().ar.toolbar.icon_classify_settings}
-          //     imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-          //     onPress={this.showClassifySettingsView}
-          //   />,
-          // ],
+          headerRight: [
+            <MTBtn
+              key={'settings'}
+              image={getThemeAssets().ar.toolbar.icon_classify_settings}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+              onPress={() => this.openAlbum()}
+            />,
+          ],
         }}
         // bottomBar={this.renderBottomBtns()}
         bottomProps={{ type: 'fix' }}

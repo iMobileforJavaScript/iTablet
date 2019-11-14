@@ -87,8 +87,10 @@ async function close(type) {
     params.existFullMap && params.existFullMap()
     params.setToolbarVisible(false)
   } else {
+    ToolbarModule.setData()
     return false
   }
+  ToolbarModule.setData()
 }
 
 function newFly() {

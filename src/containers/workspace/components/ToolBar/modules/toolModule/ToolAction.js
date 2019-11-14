@@ -202,8 +202,10 @@ function measureArea() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
         if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
@@ -239,8 +241,10 @@ function measureAngle() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         //角度量算前两次打点不会触发回调，第三次打点添加一个标识，最后一次撤销直接清除当前所有点
         pointArr.indexOf('startLine') === -1 && pointArr.push('startLine')
         pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
@@ -253,7 +257,6 @@ function measureAngle() {
           _params.buttonView.setState(newState)
         ToolbarModule.setData({ pointArr, redoArr })
       }
-      ToolbarModule.addData({ pointArr, redoArr })
       if (pointArr.length >= 2) {
         _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
       } else {

@@ -9,7 +9,7 @@ export async function action(type) {
   const params = ToolbarModule.getParams()
   params.showFullMap && params.showFullMap(true)
   params.setToolbarVisible(true, ConstToolType.MAP_ANALYSIS, {
-    isFullScreen: false,
+    isFullScreen: true,
     height:
       params.device.orientation === 'LANDSCAPE'
         ? ConstToolType.TOOLBAR_HEIGHT[2]

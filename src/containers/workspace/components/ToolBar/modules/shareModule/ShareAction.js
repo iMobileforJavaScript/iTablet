@@ -5,12 +5,11 @@ import {
   SIPortalService,
 } from 'imobile_for_reactnative'
 import { ConstToolType, ConstInfo, UserType } from '../../../../../../constants'
-import { Toast, OnlineServicesUtils } from '../../../../../../utils'
+import { Toast, OnlineServicesUtils, LayerUtils } from '../../../../../../utils'
 import constants from '../../../../constants'
 import { FileTools } from '../../../../../../native'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
-import * as LayerUtils from '../../../../../mtLayerManager/LayerUtils'
 import ToolbarModule from '../ToolbarModule'
 
 /**

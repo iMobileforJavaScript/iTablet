@@ -6,17 +6,33 @@ import {
 import NavigationService from './NavigationService'
 import { getLanguage } from '../language'
 import { TouchType } from '../constants'
+import { Toast } from '../utils'
 //eslint-disable-next-line
 let _params = {}
-
+let isDoubleTouchCome = false
 function setGestureDetectorListener(params) {
   (async function() {
     await SMap.setGestureDetector({
       singleTapHandler: touchCallback,
       longPressHandler: longtouchCallback,
+      doubleTapHandler: doubleTouchCallback,
     })
   }.bind(this)())
   _params = params
+}
+
+async function isDoubleTouchComing() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(isDoubleTouchCome)
+      isDoubleTouchCome = false
+    }, 200)
+  })
+}
+
+// eslint-disable-next-line no-unused-vars
+async function doubleTouchCallback(event) {
+  isDoubleTouchCome = true
 }
 
 async function longtouchCallback(event) {
@@ -31,11 +47,20 @@ async function longtouchCallback(event) {
           event.mapPoint.x,
           event.mapPoint.y,
         )
-        await SMap.getStartPoint(
-          event.mapPoint.x,
-          event.mapPoint.y,
-          result.isindoor,
-        )
+        let isIndoorMap = await SMap.isIndoorMap()
+        //室内地图只允许在室内标注点
+        if (isIndoorMap) {
+          if (result.isindoor) {
+            await SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, true)
+          } else {
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .PLEASE_SELECT_A_POINT_INDOOR,
+            )
+          }
+        } else {
+          await SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, false)
+        }
         if (result.isindoor) {
           GLOBAL.INDOORSTART = true
         } else {
@@ -65,8 +90,9 @@ async function longtouchCallback(event) {
       break
   }
 }
-
+let isfull = false
 async function touchCallback(event) {
+  let isGuiding = false
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
       if (
@@ -76,12 +102,17 @@ async function touchCallback(event) {
       ) {
         GLOBAL.PoiInfoContainer.hidden()
       }
-      // if (isfull) {
-      //   GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      // } else {
-      //   GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
-      // }
-      // isfull = !isfull
+      isGuiding = await SMap.isGuiding()
+      if (!isGuiding) {
+        if (!(await isDoubleTouchComing())) {
+          if (isfull) {
+            GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
+          } else {
+            GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+          }
+          isfull = !isfull
+        }
+      }
       break
     case TouchType.MAP_TOOL_TAGGING:
       NavigationService.navigate('InputPage', {

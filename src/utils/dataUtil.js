@@ -161,6 +161,36 @@ function ChineseToNumber(chnStr) {
   return rtn + section
 }
 
+//数字加上千分位符号
+function NumberWithThousandSep(nummber, fix = 2, ellipsisZero = true) {
+  let num = (nummber || 0).toString()
+  if (fix >= 0 && num.indexOf('.') !== -1) {
+    nummber = nummber.toFixed(fix)
+    num = (nummber || 0).toString()
+  }
+  let int = num
+  let decimal = ''
+  if (num.indexOf('.') !== -1) {
+    int = num.substr(0, num.indexOf('.'))
+    decimal = num.substr(num.indexOf('.') + 1)
+    if (ellipsisZero && parseInt(decimal) === 0) {
+      decimal = ''
+    }
+  }
+  let result = ''
+  while (int.length > 3) {
+    result = ',' + int.slice(-3) + result
+    int = int.slice(0, int.length - 3)
+  }
+  if (int) {
+    result = int + result
+  }
+  if (fix !== 0 && decimal !== '') {
+    result = result + '.' + decimal
+  }
+  return result
+}
+
 function angleTransfer(value = 0, decimals = -1) {
   let degrees,
     minutes,
@@ -310,6 +340,7 @@ export default {
   colorRgba,
   colorHex,
   ChineseToNumber,
+  NumberWithThousandSep,
   checkColor,
   angleTransfer,
   swapArray,

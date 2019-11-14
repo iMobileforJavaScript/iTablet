@@ -49,7 +49,7 @@ function changeCollection() {
 }
 
 /** 采集分类点击事件 **/
-function showCollection(type) {
+function showCollection(type, layerName) {
   let { data, buttons } = CollectionData.getData(type)
   if (!ToolbarModule.getParams().setToolbarVisible) return
   let column = 4
@@ -74,7 +74,7 @@ function showCollection(type) {
       ToolbarModule.addData({
         lastType: type,
       })
-      createCollector(type)
+      createCollector(type, layerName)
     },
   })
 }
@@ -93,7 +93,7 @@ function showSymbol() {
 }
 
 /** 创建采集 **/
-async function createCollector(type) {
+async function createCollector(type, layerName) {
   // 风格
   let geoStyle = new GeoStyle()
   let collectorStyle = new GeoStyle()
@@ -159,6 +159,8 @@ async function createCollector(type) {
       layerPath: ToolbarModule.getParams().template.currentTemplateInfo
         .layerPath,
     }
+  } else if (layerName !== undefined) {
+    params = { layerPath: layerName }
   } else {
     let datasetName = ToolbarModule.getParams().symbol.currentSymbol.type
       ? ToolbarModule.getParams().symbol.currentSymbol.type +

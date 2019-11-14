@@ -164,10 +164,11 @@ export const setLayerAttributes = (
   params = [],
   cb = () => {},
 ) => async dispatch => {
+  let bRes = false
   try {
     if (params && params.length > 0) {
       for (let i = 0; i < params.length; i++) {
-        await SMap.setLayerFieldInfo(
+        bRes = await SMap.setLayerFieldInfo(
           params[i].layerPath,
           params[i].fieldInfo,
           params[i].params,
@@ -179,8 +180,8 @@ export const setLayerAttributes = (
       type: ADD_ATTRIBUTE_HISTORY,
       payload: params || [],
     })
-    cb && cb(true)
-    return true
+    cb && cb(bRes)
+    return bRes
   } catch (e) {
     return false
   }
@@ -464,6 +465,18 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
       isShow: true,
     })
   }
+
+  if (basemaplist.length === 0) {
+    basemaplist.push({
+      name: 'cache',
+      visible: true,
+      selectable: false,
+      type: 'IMAGEFILE',
+      basemap: true,
+      isShow: true,
+    })
+  }
+
   let data = [
     {
       title: getLanguage(global.language).Map_Layer.PLOTS,

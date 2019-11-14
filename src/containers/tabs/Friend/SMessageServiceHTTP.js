@@ -32,31 +32,35 @@ export default class SMessageServiceHTTP {
     return bCon
   }
   static async getConsumer(userId) {
-    let auth = Buffer.from(
-      MsgConstant.MSG_UserName + ':' + MsgConstant.MSG_Password,
-    ).toString('base64')
-    let url =
-      'http://' +
-      MsgConstant.MSG_IP +
-      ':15672/api/queues/%2F/Message_' +
-      userId +
-      '?columns=consumer_details'
-    let extraData = {
-      headers: {
-        Authorization: 'Basic ' + auth,
-      },
+    try {
+      let auth = Buffer.from(
+        MsgConstant.MSG_UserName + ':' + MsgConstant.MSG_Password,
+      ).toString('base64')
+      let url =
+        'http://' +
+        MsgConstant.MSG_IP +
+        ':15672/api/queues/%2F/Message_' +
+        userId +
+        '?columns=consumer_details'
+      let extraData = {
+        headers: {
+          Authorization: 'Basic ' + auth,
+        },
+      }
+      let comsumer = await fetch(url, extraData)
+        .then(data => {
+          return data.json()
+        })
+        .then(data => {
+          return data.consumer_details[0].consumer_tag
+        })
+        .catch(() => {
+          return false
+        })
+      return comsumer
+    } catch (e) {
+      return false
     }
-    let comsumer = await fetch(url, extraData)
-      .then(data => {
-        return data.json()
-      })
-      .then(data => {
-        return data.consumer_details[0].consumer_tag
-      })
-      .catch(() => {
-        return false
-      })
-    return comsumer
   }
 
   static async getConnection(userId) {
