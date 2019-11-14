@@ -185,6 +185,7 @@ function getToolbarHeight(type) {
       break
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION:
       height = ConstToolType.THEME_HEIGHT[0]
+      column = 4
       break
     case ConstToolType.MAP3D_SYMBOL_SELECT:
     case ConstToolType.MAP3D_TOOL_NEWFLY:

@@ -1342,6 +1342,7 @@ function layerListAction(data) {
 }
 
 function menu(type, selectKey, params = {}) {
+  const _params = ToolbarModule.getParams()
   let isFullScreen, showMenuDialog, isTouchProgress
   let isBoxShow = GLOBAL.ToolBar && GLOBAL.ToolBar.getBoxShow()
   let showBox = function() {
@@ -1366,7 +1367,7 @@ function menu(type, selectKey, params = {}) {
       })
   }.bind(this)
 
-  if (Utils.isTouchProgress(this.props.language)) {
+  if (Utils.isTouchProgress(_params.language)) {
     isFullScreen = true
     showMenuDialog = !GLOBAL.ToolBar.state.showMenuDialog
     isTouchProgress = GLOBAL.ToolBar.state.showMenuDialog
