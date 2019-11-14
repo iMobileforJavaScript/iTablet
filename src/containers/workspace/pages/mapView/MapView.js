@@ -1363,7 +1363,7 @@ export default class MapView extends React.Component {
         } else {
           SMap.setIsMagnifierEnabled(false)
         }
-
+        SMap.setPOIOptimized(true)
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
