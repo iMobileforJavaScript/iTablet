@@ -158,10 +158,10 @@ function getData(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
           //constants.POINT,
           action: ToolAction.point,
-          disable: layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           size: 'large',
           image:
-            layerType !== 'POINTLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_point_disable
               : require('../../../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_black.png'),
@@ -172,9 +172,9 @@ function getData(type, params) {
           //constants.WORDS,
           size: 'large',
           action: ToolAction.words,
-          disable: layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'TEXTLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_text_disable
               : require('../../../../../../assets/mapTools/icon_words_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_words_black.png'),
@@ -185,9 +185,9 @@ function getData(type, params) {
           //constants.POINTLINE,
           size: 'large',
           action: ToolAction.pointline,
-          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_point_line_disable
               : require('../../../../../../assets/mapTools/icon_point_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_line_black.png'),
@@ -198,9 +198,9 @@ function getData(type, params) {
           //constants.FREELINE,
           size: 'large',
           action: ToolAction.freeline,
-          disable: layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'LINELAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_free_line_disable
               : require('../../../../../../assets/mapTools/icon_free_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_line_black.png'),
@@ -211,9 +211,9 @@ function getData(type, params) {
           //constants.POINTCOVER,
           size: 'large',
           action: ToolAction.pointcover,
-          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_region_disable
               : require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
@@ -224,9 +224,9 @@ function getData(type, params) {
           //constants.FREECOVER,
           size: 'large',
           action: ToolAction.freecover,
-          disable: layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER',
+          disable: layerType !== 'TAGGINGLAYER',
           image:
-            layerType !== 'REGIONLAYER' && layerType !== 'TAGGINGLAYER'
+            layerType !== 'TAGGINGLAYER'
               ? getThemeAssets().mapTools.icon_free_region_disable
               : require('../../../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_cover_black.png'),

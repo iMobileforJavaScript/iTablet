@@ -509,22 +509,35 @@ export default class LayerManager_tolbar extends React.Component {
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_COLLECT
     ) {
-      let type = ''
-      switch (this.state.layerData.type) {
-        case 1:
-          type = SMCollectorType.POINT_HAND
-          break
-        case 3:
-          type = SMCollectorType.LINE_HAND_POINT
-          break
-        case 5:
-          type = SMCollectorType.REGION_HAND_POINT
-          break
+      if (
+        this.state.layerData.themeType > 0 ||
+        this.state.layerData.isHeatmap
+      ) {
+        Toast.show(
+          global.language === 'CN'
+            ? '专题图层不能采集'
+            : 'Cannot collect in Thematic layers',
+        )
+      } else {
+        let type = ''
+        switch (this.state.layerData.type) {
+          case 1:
+            type = SMCollectorType.POINT_HAND
+            break
+          case 3:
+            type = SMCollectorType.LINE_HAND_POINT
+            break
+          case 5:
+            type = SMCollectorType.REGION_HAND_POINT
+            break
+        }
+        collectionModule().actions.showCollection(
+          type,
+          this.state.layerData.name,
+        )
+        this.setVisible(false)
+        this.props.navigation.navigate('MapView')
       }
-      collectionModule().actions.showCollection(type, this.state.layerData.name)
-      this.setVisible(false)
-      this.props.navigation.navigate('MapView')
-      // NavigationService.navigate('')
     } else if (
       section.title === getLanguage(global.language).Map_Layer.LAYERS_RENAME
     ) {

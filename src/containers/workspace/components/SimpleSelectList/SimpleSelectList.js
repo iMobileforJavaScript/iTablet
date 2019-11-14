@@ -10,13 +10,12 @@ import {
   SectionList,
   View,
   Text,
-  FlatList,
   StyleSheet,
 } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import color from '../../../../styles/color'
 import { getLanguage } from '../../../../language'
-import { getPublicAssets, getThemeAssets } from '../../../../assets'
+import { getThemeAssets } from '../../../../assets'
 
 export default class SimpleSelectList extends React.Component {
   props: {
@@ -28,26 +27,14 @@ export default class SimpleSelectList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      renderType: '',
       autoSelectIndex: false,
       select: {
         datasourceName: '',
         datasetName: '',
       },
-      currentFloor: '',
-      floorList: [],
       navigationData: [],
-      lineDataset: [],
-      networkDataset: null,
-      networkModel: null,
     }
   }
-
-  // componentDidMount(): void {
-  //   if(this.state.data.length === 0){
-  //     //getDatas
-  //   }
-  // }
 
   headerAction = ({ section }) => {
     let data = [...this.state.navigationData]
@@ -228,209 +215,28 @@ export default class SimpleSelectList extends React.Component {
       </View>
     )
   }
-  changeVisible = index => {
-    let data = [...this.state.lineDataset]
-    data[index].visible = !data[index].visible
-    this.setState({
-      lineDataset: data,
-    })
-  }
 
-  setSelect = (datasourceName, datasetName, floorList) => {
-    let select = this.state.select
-    if (
-      datasourceName === select.datasourceName &&
-      datasetName === select.datasetName
-    ) {
-      datasetName = ''
-      datasourceName = ''
-    }
-    let currentFloor = this.state.currentFloor
-    if (JSON.stringify(floorList) !== JSON.stringify(this.state.floorList)) {
-      currentFloor = ''
-    }
-    this.setState({
-      select: {
-        datasourceName,
-        datasetName,
-      },
-      floorList,
-      currentFloor,
-    })
-  }
-
-  renderIncreament = ({ item, index }) => {
-    let datasetLine = require('../../../../assets/map/icon-shallow-line_black.png')
-    let checkImg = getPublicAssets().navigation.icon_checked
-    let select = this.state.select
-    let hasCheck
-    return (
-      <View>
-        <View style={styles.wrapper}>
-          <TouchableOpacity
-            onPress={() => {
-              this.changeVisible(index)
-            }}
-            style={styles.row}
-          >
-            {item.image && (
-              <Image
-                style={styles.icon}
-                source={item.image}
-                resizeMode={'contain'}
-              />
-            )}
-            <Text style={styles.itemName}>{item.title}</Text>
-          </TouchableOpacity>
-        </View>
-        {this.renderLine()}
-        {item.visible &&
-          item.data.map((value, key) => {
-            hasCheck =
-              select.datasourceName === item.title &&
-              select.datasetName === value.name
-            return (
-              <View
-                key={value.name + key}
-                style={[styles.wrapper, { marginLeft: scaleSize(15) }]}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setSelect(item.title, value.name, item.floorList)
-                  }}
-                  style={styles.row}
-                >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Image
-                      style={styles.icon}
-                      source={datasetLine}
-                      resizeMode={'contain'}
-                    />
-                    <Text style={styles.itemName}>{value.name}</Text>
-                  </View>
-                  {hasCheck && (
-                    <Image
-                      style={[
-                        styles.icon,
-                        { flex: 1, position: 'absolute', right: scaleSize(20) },
-                      ]}
-                      source={checkImg}
-                      resizeMode={'contain'}
-                    />
-                  )}
-                </TouchableOpacity>
-                {this.renderLine()}
-              </View>
-            )
-          })}
-      </View>
-    )
-  }
-  renderFloorList = ({ item }) => {
-    let isSelect = item === this.state.currentFloor
-    let backgroundStyle = {}
-    let textStyle = {}
-    if (isSelect) {
-      backgroundStyle = {
-        backgroundColor: color.item_selected_bg,
-      }
-      textStyle = {
-        color: color.white,
-      }
-    }
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          let currentFloor = this.state.currentFloor
-          let selectFloor = item
-          if (currentFloor.floorID === selectFloor.floorID) selectFloor = {}
-          this.setState({ currentFloor: selectFloor })
-        }}
-        style={{
-          width: scaleSize(50),
-          height: scaleSize(50),
-          borderRadius: scaleSize(4),
-          marginLeft: scaleSize(50),
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#F0F0F0',
-          ...backgroundStyle,
-        }}
-      >
-        <Text style={[styles.itemName, textStyle, { marginLeft: 0 }]}>
-          {item.floorName}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
   render() {
     return (
       <View style={styles.container}>
-        {this.state.renderType === 'incrementRoad' ? (
-          <View
-            style={{
-              maxHeight: scaleSize(500),
-            }}
-          >
-            {this.renderheaderComponent(
-              getLanguage(this.props.language).Prompt
-                .SELECT_LAYER_NEED_INCREMENTED,
-            )}
-            <FlatList
-              keyExtractor={(item, index) => item.title + index}
-              data={this.state.lineDataset}
-              renderItem={this.renderIncreament}
-              extraData={this.state.select}
-            />
-          </View>
-        ) : (
-          <SectionList
-            style={{
-              maxHeight: scaleSize(600),
-            }}
-            keyExtractor={(item, index) => item.toString() + index}
-            sections={this.state.navigationData}
-            renderItem={this.renderItem}
-            renderSectionHeader={this.renderHeader}
-            ListHeaderComponent={() => {
-              let title = getLanguage(this.props.language).Prompt
-                .SELECT_DATASOURCE_FOR_NAVIGATION
-              return this.renderheaderComponent(title)
-            }}
-          />
-        )}
-        {this.state.renderType === 'incrementRoad' &&
-          this.state.floorList.length > 0 && (
-          <View>
-            {this.renderheaderComponent(
-              getLanguage(this.props.language).Prompt.SELECT_THE_FLOOR,
-            )}
-            <FlatList
-              style={{
-                height: scaleSize(80),
-              }}
-              contentContainerStyle={{
-                alignItems: 'center',
-              }}
-              keyExtractor={(item, index) => item.toString() + index}
-              data={this.state.floorList}
-              renderItem={this.renderFloorList}
-              extraData={this.state.currentFloor}
-              horizontal={true}
-            />
-          </View>
-        )}
+        <SectionList
+          style={{
+            maxHeight: scaleSize(600),
+          }}
+          keyExtractor={(item, index) => item.toString() + index}
+          sections={this.state.navigationData}
+          renderItem={this.renderItem}
+          renderSectionHeader={this.renderHeader}
+          ListHeaderComponent={() => {
+            let title = getLanguage(this.props.language).Prompt
+              .SELECT_DATASOURCE_FOR_NAVIGATION
+            return this.renderheaderComponent(title)
+          }}
+        />
         <TouchableOpacity
           style={styles.confirm}
           onPress={() => {
-            this.props.confirmAction &&
-              this.props.confirmAction(this.state.data)
+            this.props.confirmAction && this.props.confirmAction()
           }}
         >
           <Text style={styles.confirmText}>

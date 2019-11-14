@@ -1,19 +1,23 @@
-const icon_ar_toolbar_close = require('./icon_ar_toolbar_close.png')
+const icon_ar_toolbar_close = require('./ai_clean.png')
 const icon_ar_toolbar_undo = require('./icon_ar_toolbar_undo.png')
-const icon_ar_toolbar_switch = require('./icon_ar_toolbar_switch.png')
-const icon_ar_toolbar_save = require('./icon_ar_toolbar_save.png')
+const icon_ar_toolbar_switch = require('./ai_new.png')
+const icon_ar_toolbar_save = require('./ai_save_line.png')
 const icon_save = require('./icon_save.png')
 const icon_delete = require('./icon_delete.png')
 const icon_classify_settings = require('./icon_classify_settings.png')
 const icon_ar_history = require('./icon_ar_history.png')
-const ar_view_mode = require('./ar_view_mode.png')
+const ar_view_mode = require('./ar_view_mode_black.png')
 const ai_setting = require('./ai_setting.png')
 const ai_tab = require('./ai_tab.png')
+const icon_ar_toolbar_save_point = require('./ai_save_point.png')
+const icon_cancel = require('./icon_function_cancel.png')
+const icon_flex = require('./icon_function_theme_param_style.png')
 export default {
   icon_ar_toolbar_close,
   icon_ar_toolbar_undo,
   icon_ar_toolbar_switch,
   icon_ar_toolbar_save,
+  icon_ar_toolbar_save_point,
   icon_save,
   icon_delete,
   icon_classify_settings,
@@ -21,4 +25,6 @@ export default {
   ar_view_mode,
   ai_setting,
   ai_tab,
+  icon_cancel,
+  icon_flex,
 }

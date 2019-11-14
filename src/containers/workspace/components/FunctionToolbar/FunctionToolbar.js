@@ -6,9 +6,8 @@
 import * as React from 'react'
 import { View, Animated, FlatList, Platform } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const, ConstPath } from '../../../../constants'
+import { ConstToolType, Const } from '../../../../constants'
 import { scaleSize, Toast, setSpText } from '../../../../utils'
-import { FileTools } from '../../../../native'
 import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -63,7 +62,7 @@ export default class FunctionToolbar extends React.Component {
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
     setMapType: () => {},
-
+    navigation: Object,
     save: () => {},
     saveAs: () => {},
     closeOneMap: () => {},
@@ -73,8 +72,8 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     user: Object,
     map: Object,
-    //模型、路网弹窗组件
-    getNavigationPopView?: () => {},
+    //弹出模型、路网弹窗
+    showModelList?: () => {},
     incrementRoad?: () => {},
     setMap2Dto3D: () => {},
     changeNavPathInfo?: () => {},
@@ -237,54 +236,6 @@ export default class FunctionToolbar extends React.Component {
   //   // }
   // }
 
-  //网络数据集和模型文件选择
-  showModelList = async () => {
-    let popView = this.props.getNavigationPopView()
-    let simpleList = GLOBAL.SimpleSelectList
-    if (simpleList.renderType !== 'navigation') {
-      if (simpleList.state.navigationData.length === 0) {
-        let path =
-          (await FileTools.appendingHomeDirectory(
-            this.props.user && this.props.user.currentUser.userName
-              ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-              : ConstPath.CustomerPath,
-          )) + ConstPath.RelativePath.Datasource
-        let datasources = await SMap.getNetworkDatasource()
-        let models = await FileTools.getNetModel(path)
-        models = models.map(item => {
-          item.checked = false
-          return item
-        })
-        let navigationData = [
-          {
-            title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
-            visible: true,
-            image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
-            data: datasources || [],
-          },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu
-              .NETWORK_MODEL_FILE,
-            visible: true,
-            image: getThemeAssets().functionBar.rightbar_network_model,
-            data: models || [],
-          },
-        ]
-        simpleList.setState({
-          navigationData,
-          renderType: 'navigation',
-        })
-      } else {
-        simpleList.setState({
-          renderType: 'navigation',
-        })
-      }
-    }
-
-    this.props.showFullMap(true)
-    popView.setVisible(true)
-  }
-
   startNavigation = async () => {
     let rel = await SMap.hasNetworkDataset()
     if (rel) {
@@ -295,6 +246,7 @@ export default class FunctionToolbar extends React.Component {
         SMap.startIndoorNavigation()
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: this.props.changeNavPathInfo,
+          showLocationView: false,
         })
       } else {
         //行业导航
@@ -303,12 +255,10 @@ export default class FunctionToolbar extends React.Component {
           SMap.startNavigation(networkDataset.datasetName, networkModel.path)
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
+            showLocationView: true,
           })
         } else {
-          Toast.show(
-            getLanguage(this.props.language).Prompt
-              .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
-          )
+          this.props.showModelList()
         }
       }
     } else {
@@ -319,25 +269,6 @@ export default class FunctionToolbar extends React.Component {
   incrementRoad = async () => {
     let rel = await SMap.hasLineDataset()
     if (rel) {
-      let simpleList = GLOBAL.SimpleSelectList
-      if (simpleList.renderType !== 'incrementRoad') {
-        if (simpleList.state.lineDataset.length === 0) {
-          let floorList = await SMap.getLineDatasetAndFloorList()
-          //构造data测试
-          let lineDataset = floorList.map(item => {
-            item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
-            return item
-          })
-          simpleList.setState({
-            lineDataset,
-            renderType: 'incrementRoad',
-          })
-        } else {
-          simpleList.setState({
-            renderType: 'incrementRoad',
-          })
-        }
-      }
       this.props.incrementRoad()
     } else {
       Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
@@ -549,14 +480,6 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             action: isLicenseNotValid ? null : this.startNavigation,
             image: require('../../../../assets/Navigation/navi_icon.png'),
-          },
-          {
-            key: '模型',
-            title: getLanguage(this.props.language).Map_Main_Menu.NETWORK_MODEL,
-            //constants.ADD,
-            size: 'large',
-            action: isLicenseNotValid ? null : this.showModelList,
-            image: getThemeAssets().functionBar.rightbar_network_model,
           },
           {
             key: '路网',

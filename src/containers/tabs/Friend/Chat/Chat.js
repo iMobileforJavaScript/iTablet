@@ -843,24 +843,33 @@ class Chat extends React.Component {
             this.SimpleDialog.setVisible(true)
             break
           case MSGConstant.MSG_LAYER:
-            this.SimpleDialog.setConfirm(() => {
-              this.SimpleDialog.setVisible(false)
-              this.importLayer(message)
-            })
-            this.SimpleDialog.setText(
-              getLanguage(global.language).Friends.IMPORT_CONFIRM,
-            )
-            this.SimpleDialog.setVisible(true)
+            if (!global.coworkMode) {
+              this.showOpenCoworkDialog()
+            } else {
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this.importLayer(message)
+              })
+              this.SimpleDialog.setText(
+                getLanguage(global.language).Friends.IMPORT_CONFIRM,
+              )
+              this.SimpleDialog.setVisible(true)
+            }
             break
           case MSGConstant.MSG_DATASET:
-            this.SimpleDialog.setConfirm(() => {
-              this.SimpleDialog.setVisible(false)
-              this.importDataset(message)
-            })
-            this.SimpleDialog.setText(
-              getLanguage(global.language).Friends.IMPORT_CONFIRM,
-            )
-            this.SimpleDialog.setVisible(true)
+            if (!global.coworkMode) {
+              this.showOpenCoworkDialog()
+            } else {
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this.importDataset(message)
+              })
+              this.SimpleDialog.setText(
+                getLanguage(global.language).Friends.IMPORT_CONFIRM,
+              )
+              this.SimpleDialog.setVisible(true)
+            }
+
             break
           default:
             break
@@ -922,6 +931,14 @@ class Chat extends React.Component {
       for (let i = 0; i < fileList.length; i++) {
         if (fileList[i].path.indexOf('.json') !== -1) {
           let jstr = await FileTools.readFile(homePath + fileList[i].path)
+          let properties
+          try {
+            let firstLine = jstr.substring(0, jstr.indexOf('\n'))
+            let firstRecord = JSON.parse(firstLine)
+            properties = firstRecord.properties
+          } catch (error) {
+            // console.log(error)
+          }
           let type = 1
           if (jstr.indexOf('Polygon') != -1) {
             type = DatasetType.REGION
@@ -935,6 +952,7 @@ class Chat extends React.Component {
             fileList[i].name.substr(0, fileList[i].name.lastIndexOf('.')),
             homePath + fileList[i].path,
             type,
+            properties,
           )
         }
       }
@@ -999,6 +1017,16 @@ class Chat extends React.Component {
         Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
       },
     )
+  }
+
+  showOpenCoworkDialog = () => {
+    this.SimpleDialog.setConfirm(() => {
+      NavigationService.navigate('SelectModule')
+    })
+    this.SimpleDialog.setText(
+      getLanguage(global.language).Friends.OPENCOWORKFIRST,
+    )
+    this.SimpleDialog.setVisible(true)
   }
 
   render() {

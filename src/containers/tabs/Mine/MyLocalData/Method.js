@@ -10,6 +10,7 @@ import {
   SScene,
   SIPortalService,
 } from 'imobile_for_reactnative'
+import DataHandler from '../DataHandler'
 async function _setFilterDatas(fullFileDir, fileType, arrFilterFile) {
   try {
     let isRecordFile = false
@@ -149,15 +150,7 @@ async function _constructUserSectionData(userName) {
     '/' +
     ConstPath.RelativeFilePath.ExternalData
   let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
+  newData = await DataHandler.getExternalData(path)
   return newData
 }
 /** 构造游客数据*/

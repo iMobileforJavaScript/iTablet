@@ -262,6 +262,7 @@ const Prompt = {
   SELECT_THE_FLOOR: 'Please select the floor which the layer is located',
   LONG_PRESS_ADD_START: 'Please long press to add starting point',
   LONG_PRESS_ADD_END: 'Please long press to add destination',
+  CURRENT_POSITION_OUT_OF_RANGE: 'The current location is out of range',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

@@ -29,7 +29,7 @@ import {
 //   Map3DData.setParams(params)
 // }
 
-let _params = {} // 外部数据和方法
+let _params = {} // 外部数据和方法 Toolbar props
 let _data = {} // 临时数据
 
 function setParams(params = {}) {

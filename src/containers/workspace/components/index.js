@@ -22,6 +22,7 @@ import MapSelectPoint from './MapSelectPoint'
 import NavigationStartButton from './NavigationStartButton'
 import NavigationStartHead from './NavigationStartHead'
 import SimpleSelectList from './SimpleSelectList'
+import LocationView from './LocationView'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -35,6 +36,7 @@ import RNLegendView from './RNLegendView'
 import ScaleView from './ScaleView'
 import MapSelectPointButton from './MapSelectPointButton'
 import TrafficView from './TrafficView'
+import NavigationPoiView from './NavigationPoiView'
 export {
   ScaleView,
   RNLegendView,
@@ -65,10 +67,12 @@ export {
   Map2Dto3D,
   FloorListView,
   TrafficView,
+  LocationView,
   PoiInfoContainer,
   PoiTopSearchBar,
   IncrementRoadView,
   MapSelectPoint,
   AIFunctionToolbar,
   AIMapSuspensionDialog,
+  NavigationPoiView,
 }

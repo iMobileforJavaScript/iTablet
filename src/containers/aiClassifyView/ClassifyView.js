@@ -10,11 +10,7 @@ import {
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
-import {
-  SAIClassifyView,
-  SMediaCollector,
-  DatasetType,
-} from 'imobile_for_reactnative'
+import { SAIClassifyView, SMediaCollector } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 import { Container, ImagePicker, Loading, MTBtn } from '../../components'
@@ -23,7 +19,7 @@ import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import RadioButton from './RadioButton'
-import { scaleSize, Toast } from '../../utils'
+import { scaleSize, Toast, LayerUtils } from '../../utils'
 import { RNCamera } from 'react-native-camera'
 
 /*
@@ -202,7 +198,8 @@ export default class ClassifyView extends React.Component {
       // let reg = /^Label_(.*)#$/
       let isTaggingLayer = false
       if (currentLayer) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
         // && currentLayer.datasourceAlias.match(reg)
       }
       if (isTaggingLayer) {

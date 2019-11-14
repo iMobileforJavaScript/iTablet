@@ -11,6 +11,8 @@ import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
 import NavigationService from '../../../NavigationService'
 import { SMediaCollector } from 'imobile_for_reactnative'
+//eslint-disable-next-line
+import { ActionPopover } from 'teaset'
 
 const PAGE_SIZE = 30
 const ROWS_LIMIT = 120
@@ -31,6 +33,7 @@ export default class LayerSelectionAttribute extends React.Component {
     setAttributeHistory: () => {},
     onGetAttribute?: () => {},
     onGetToolVisible?: () => {},
+    onAttributeFeildDelete?: () => {},
     isShowSystemFields: boolean,
   }
 
@@ -630,6 +633,57 @@ export default class LayerSelectionAttribute extends React.Component {
     }
   }
 
+  //显示详情和删除的弹框
+  _showPopover = (pressView, index, fieldInfo) => {
+    let items = []
+
+    items = [
+      {
+        title: global.language === 'CN' ? '详情' : 'Detail',
+        onPress: () => {
+          (async function() {
+            NavigationService.navigate('LayerAttributeAdd', {
+              defaultParams: { fieldInfo: { fieldInfo } },
+              isDetail: true,
+            })
+          }.bind(this)())
+        },
+      },
+    ]
+    let tempStr = fieldInfo.caption.toLowerCase()
+    let isSystemField = tempStr.substring(0, 2) == 'sm'
+    if (!fieldInfo.isSystemField && !isSystemField) {
+      items.push({
+        title: getLanguage(global.language).Profile.DELETE,
+        onPress: () => {
+          if (
+            this.props.onAttributeFeildDelete &&
+            typeof this.props.onAttributeFeildDelete === 'function'
+          ) {
+            this.props.onAttributeFeildDelete(fieldInfo)
+          }
+        },
+      })
+    }
+    if (pressView) {
+      pressView.measure((ox, oy, width, height, px, py) => {
+        ActionPopover.show(
+          {
+            x: px,
+            y: py,
+            width,
+            height,
+          },
+          items,
+        )
+      })
+    }
+  }
+  /** 点击属性字段回调 **/
+  onPressHeader = ({ fieldInfo, index, pressView }) => {
+    this._showPopover(pressView, index, fieldInfo)
+  }
+
   /** 清除表格选中状态 **/
   clearSelection = () => {
     if (this.table) {
@@ -948,6 +1002,7 @@ export default class LayerSelectionAttribute extends React.Component {
         buttonActions={buttonActions}
         buttonTitles={buttonTitles}
         isShowSystemFields={this.props.isShowSystemFields}
+        onPressHeader={this.onPressHeader}
       />
     )
   }

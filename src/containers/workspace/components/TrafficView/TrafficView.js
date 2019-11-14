@@ -11,24 +11,26 @@ import {
   Image,
   Animated,
   Platform,
+  Text,
 } from 'react-native'
 
 import { constUtil, scaleSize, LayerUtils } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Const, ConstOnline } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
-import { getPublicAssets } from '../../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 
 export default class TrafficView extends React.Component {
   props: {
     device: Object,
     getLayers: () => {},
+    showModelList: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      left: new Animated.Value(scaleSize(20)),
+      left: new Animated.Value(scaleSize(25)),
       hasAdded: false,
       showIcon: false,
     }
@@ -61,7 +63,7 @@ export default class TrafficView extends React.Component {
   setVisible = (visible, immediately = false) => {
     if (visible) {
       Animated.timing(this.state.left, {
-        toValue: scaleSize(20),
+        toValue: scaleSize(25),
         duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
     } else {
@@ -77,6 +79,7 @@ export default class TrafficView extends React.Component {
     let trafficImg = this.state.hasAdded
       ? getPublicAssets().navigation.icon_traffic_on
       : getPublicAssets().navigation.icon_traffic_off
+    let modelImg = getThemeAssets().functionBar.rightbar_network_model
     return (
       <Animated.View style={[styles.container, { left: this.state.left }]}>
         <TouchableOpacity
@@ -97,7 +100,17 @@ export default class TrafficView extends React.Component {
           }}
         >
           <Image source={trafficImg} style={styles.icon} />
-          {/*  <Text style={styles.text}>路况</Text>*/}
+          <Text style={styles.text}>路况</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          underlayColor={constUtil.UNDERLAYCOLOR_TINT}
+          style={{
+            flex: 1,
+          }}
+          onPress={this.props.showModelList}
+        >
+          <Image source={modelImg} style={styles.icon} />
+          <Text style={styles.text}>模型</Text>
         </TouchableOpacity>
       </Animated.View>
     )
@@ -115,14 +128,16 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 2,
+    paddingBottom: scaleSize(5),
+    paddingHorizontal: scaleSize(5),
   },
   icon: {
     width: scaleSize(60),
     height: scaleSize(60),
   },
-  // text:{
-  //   fontSize: scaleSize(20),
-  //   backgroundColor: 'transparent',
-  //   textAlign: 'center',
-  // },
+  text: {
+    fontSize: scaleSize(20),
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
 })

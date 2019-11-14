@@ -878,10 +878,9 @@ function commit(type) {
   }
 }
 
-async function showAttribute(selection) {
+async function showAttribute() {
   const _params = ToolbarModule.getParams()
-  let _selection =
-    selection && selection.length > 0 ? selection : _params.selection
+  let _selection = _params.selection
   if (_selection.length === 0) {
     Toast.show(getLanguage(GLOBAL.language).Prompt.NON_SELECTED_OBJ)
     return

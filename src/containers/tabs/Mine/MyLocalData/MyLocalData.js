@@ -25,7 +25,6 @@ import LocalDataItem from './LocalDataItem'
 import {
   _constructCacheSectionData,
   _constructUserSectionData,
-  _constructCustomerSectionData,
   getOnlineData,
   downFileAction,
 } from './Method'
@@ -33,6 +32,7 @@ import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 
 import { scaleSize, FetchUtils, OnlineServicesUtils } from '../../../../utils'
+import DataHandler from '../DataHandler'
 let JSIPortalService
 
 export default class MyLocalData extends Component {
@@ -89,16 +89,8 @@ export default class MyLocalData extends Component {
       let cacheSectionData = await _constructCacheSectionData(
         this.props.language,
       )
-      let userData
-      if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-        userData = []
-      } else {
-        userData = await _constructUserSectionData(this.state.userName)
-      }
-      // this.setState({ sectionData: userSectionData })
-      let customerSectionData = await _constructCustomerSectionData()
-
-      let newData = userData.concat(customerSectionData)
+      let userData = await _constructUserSectionData(this.state.userName)
+      let newData = userData
       let newSectionData = cacheSectionData.concat([
         {
           //'外部数据'
@@ -383,6 +375,44 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onImportWorkspace3D = async () => {
+    try {
+      this._closeModal()
+      this.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+      )
+      await DataHandler.importWorkspace3D(
+        this.props.user.currentUser,
+        this.itemInfo.item,
+      )
+      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
+  _onImportDatasource = async () => {
+    try {
+      this._closeModal()
+      this.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+      )
+      await DataHandler.importDatasource(
+        this.props.user.currentUser,
+        this.itemInfo.item,
+      )
+      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
   importData = async () => {
     this._closeModal()
     if (this.itemInfo && this.itemInfo.id) {
@@ -401,7 +431,19 @@ export default class MyLocalData extends Component {
         this.itemInfo.item.fileType === 'plotting'
       ) {
         this._onImportPlotLib()
-      } else this._onImportWorkspace()
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'workspace3d'
+      ) {
+        this._onImportWorkspace3D()
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'datasource'
+      ) {
+        this._onImportDatasource()
+      } else {
+        this._onImportWorkspace()
+      }
     }
   }
 

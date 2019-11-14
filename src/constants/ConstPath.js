@@ -50,7 +50,7 @@ const RelativeFilePath = {
   MapEdit: Data + 'Map/' + MapEdit + '/',
   MapTheme: Data + 'Map/' + MapTheme + '/',
   Media: Data + 'Media/',
-  AR: Data + 'AR/',
+  AR: Data + 'Datasource/',
   Animation: Data + 'Animation/',
   NaviWorkspace: Data + 'Workspace/',
   Image: Data + 'Workspace/',
