@@ -648,7 +648,6 @@ function stop() {
 function submit() {
   (async function() {
     let selectItem = GLOBAL.SimpleSelectList.state.select
-    let currentFloor = GLOBAL.SimpleSelectList.state.currentFloor
     let needAdd
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
       needAdd = await SMap.addGPSRecordset(
@@ -661,11 +660,7 @@ function submit() {
     if (needAdd === undefined || needAdd === true) {
       GLOBAL.SUBMITED = true
       await SMap.submit()
-      await SMap.buildNetwork(
-        selectItem.datasetName,
-        currentFloor.networkDataset,
-        selectItem.datasourceName,
-      )
+      await SMap.buildNetwork()
     }
   }.bind(this)())
 }

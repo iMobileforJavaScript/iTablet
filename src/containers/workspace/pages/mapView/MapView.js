@@ -1833,16 +1833,7 @@ export default class MapView extends React.Component {
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
         cancelincrement={async () => {
-          let select = this.SimpleSelectList.state.select
-          let currentFloor = this.SimpleSelectList.state.currentFloor
-          let networkDatasetName = GLOBAL.SUBMITED
-            ? currentFloor.networkDataset
-            : null
-          await SMap.removeNetworkDataset(
-            select.datasetName,
-            networkDatasetName,
-            select.datasourceName,
-          )
+          await SMap.removeNetworkDataset()
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
           this.SimpleSelectList.setState({
@@ -2020,56 +2011,13 @@ export default class MapView extends React.Component {
           this.selectList.setVisible(false)
           this.showFullMap(false)
           let selectList = GLOBAL.SimpleSelectList
-          if (selectList.state.renderType === 'incrementRoad') {
-            (async function() {
-              let selectItem = selectList.state.select
-              if (!this.state.isRight) {
-                this.toolBox.setVisible(
-                  true,
-                  ConstToolType.MAP_TOOL_GPSINCREMENT,
-                  {
-                    containerType: 'table',
-                    column: 4,
-                    isFullScreen: false,
-                    height: ConstToolType.HEIGHT[0],
-                  },
-                )
-              } else {
-                SMap.setLabelColor()
-                SMap.setAction(Action.DRAWLINE)
-                SMap.setIsMagnifierEnabled(true)
-                this.toolBox.setVisible(
-                  true,
-                  ConstToolType.MAP_TOOL_INCREMENT,
-                  {
-                    containerType: 'table',
-                    column: 4,
-                    isFullScreen: false,
-                    height: ConstToolType.HEIGHT[0],
-                  },
-                )
-              }
-              await SMap.addNetWorkDataset(
-                selectItem.datasourceName,
-                selectItem.datasetName,
-              )
-              selectList.state.currentFloor.floorID &&
-                (await SMap.setCurrentFloor(
-                  selectList.state.currentFloor.floorID,
-                ))
-            }.bind(this)())
-          } else {
-            let { networkModel, networkDataset } = selectList.state
-            if (networkModel && networkDataset) {
-              SMap.startNavigation(
-                networkDataset.datasetName,
-                networkModel.path,
-              )
-              NavigationService.navigate('NavigationView', {
-                changeNavPathInfo: this.changeNavPathInfo,
-                showLocationView: true,
-              })
-            }
+          let { networkModel, networkDataset } = selectList.state
+          if (networkModel && networkDataset) {
+            SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+            NavigationService.navigate('NavigationView', {
+              changeNavPathInfo: this.changeNavPathInfo,
+              showLocationView: true,
+            })
           }
         }}
       />
@@ -2279,7 +2227,7 @@ export default class MapView extends React.Component {
           textStyle={{ fontSize: setSpText(12) }}
           image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={async () => {
-            this.indoorNavi()
+            this._incrementRoad()
           }}
           activeOpacity={0.5}
         />
@@ -2298,11 +2246,29 @@ export default class MapView extends React.Component {
     return arr[0]
   }
 
-  indoorNavi = async () => {
+  _incrementRoad = async () => {
     if (this.state.showIncrement) {
       this.setState({ showIncrement: false })
-      this.selectList.setVisible(true)
     }
+    if (!this.state.isRight) {
+      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+        containerType: 'table',
+        column: 4,
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[0],
+      })
+    } else {
+      SMap.setLabelColor()
+      SMap.setAction(Action.DRAWLINE)
+      SMap.setIsMagnifierEnabled(true)
+      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+        containerType: 'table',
+        column: 4,
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
+    await SMap.addNetWorkDataset()
   }
 
   _renderARNavigationIcon = () => {
