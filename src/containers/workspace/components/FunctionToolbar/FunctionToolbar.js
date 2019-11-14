@@ -622,10 +622,6 @@ export default class FunctionToolbar extends React.Component {
           })
         } else {
           this.props.showModelList()
-          // Toast.show(
-          //   getLanguage(this.props.language).Prompt
-          //     .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
-          // )
         }
       }
     } else {
@@ -636,25 +632,6 @@ export default class FunctionToolbar extends React.Component {
   incrementRoad = async () => {
     let rel = await SMap.hasLineDataset()
     if (rel) {
-      let simpleList = GLOBAL.SimpleSelectList
-      if (simpleList.renderType != 'incrementRoad') {
-        if (simpleList.state.lineDataset.length === 0) {
-          let floorList = await SMap.getLineDatasetAndFloorList()
-          //构造data测试
-          let lineDataset = floorList.map(item => {
-            item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
-            return item
-          })
-          simpleList.setState({
-            lineDataset,
-            renderType: 'incrementRoad',
-          })
-        } else {
-          simpleList.setState({
-            renderType: 'incrementRoad',
-          })
-        }
-      }
       this.props.incrementRoad()
     } else {
       Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
