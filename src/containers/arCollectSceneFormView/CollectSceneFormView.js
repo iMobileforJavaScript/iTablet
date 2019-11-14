@@ -119,11 +119,6 @@ export default class CollectSceneFormView extends React.Component {
     //     getLanguage(global.language).Map_Main_Menu
     //       .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP,
     //   )
-    await SCollectSceneFormView.stopRecording()
-    await SCollectSceneFormView.clearData()
-    this.setState({
-      totalLength: 0,
-    })
     await SCollectSceneFormView.startRecording()
     // }
   }
@@ -190,6 +185,7 @@ export default class CollectSceneFormView extends React.Component {
 
   /** 保存 **/
   save = async () => {
+    await SCollectSceneFormView.stopRecording()
     NavigationService.navigate('InputPage', {
       headerTitle: getLanguage(global.language).Map_Main_Menu
         .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
@@ -206,18 +202,22 @@ export default class CollectSceneFormView extends React.Component {
 
   /** 保存点 **/
   savepoint = async () => {
-    NavigationService.navigate('InputPage', {
-      headerTitle: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-      value: '',
-      placeholder: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
-      type: 'name',
-      cb: async value => {
-        NavigationService.goBack()
-        await SCollectSceneFormView.saveGPSData(value)
-      },
-    })
+    await SCollectSceneFormView.stopRecording()
+    // NavigationService.navigate('InputPage', {
+    //   headerTitle: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
+    //   value: '',
+    //   placeholder: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
+    //   type: 'name',
+    //   cb: async value => {
+    //     NavigationService.goBack()
+    await SCollectSceneFormView.saveGPSData('point')
+    Toast.show(
+      getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_SAVE_SUCCESS,
+    )
+    //   },
+    // })
   }
 
   back = () => {
@@ -271,9 +271,14 @@ export default class CollectSceneFormView extends React.Component {
             this.onHistoryItemPress(item)
           }}
         >
-          <Text style={styles.historyItemText}>
-            {item.name + '     ' + item.time}
-          </Text>
+          {this.state.isLine && (
+            <Text style={styles.historyItemText}>
+              {item.name + '     ' + item.time}
+            </Text>
+          )}
+          {!this.state.isLine && (
+            <Text style={styles.historyItemText}>{item.name}</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.deleteHistory(item)}

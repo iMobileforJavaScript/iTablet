@@ -843,24 +843,33 @@ class Chat extends React.Component {
             this.SimpleDialog.setVisible(true)
             break
           case MSGConstant.MSG_LAYER:
-            this.SimpleDialog.setConfirm(() => {
-              this.SimpleDialog.setVisible(false)
-              this.importLayer(message)
-            })
-            this.SimpleDialog.setText(
-              getLanguage(global.language).Friends.IMPORT_CONFIRM,
-            )
-            this.SimpleDialog.setVisible(true)
+            if (!global.coworkMode) {
+              this.showOpenCoworkDialog()
+            } else {
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this.importLayer(message)
+              })
+              this.SimpleDialog.setText(
+                getLanguage(global.language).Friends.IMPORT_CONFIRM,
+              )
+              this.SimpleDialog.setVisible(true)
+            }
             break
           case MSGConstant.MSG_DATASET:
-            this.SimpleDialog.setConfirm(() => {
-              this.SimpleDialog.setVisible(false)
-              this.importDataset(message)
-            })
-            this.SimpleDialog.setText(
-              getLanguage(global.language).Friends.IMPORT_CONFIRM,
-            )
-            this.SimpleDialog.setVisible(true)
+            if (!global.coworkMode) {
+              this.showOpenCoworkDialog()
+            } else {
+              this.SimpleDialog.setConfirm(() => {
+                this.SimpleDialog.setVisible(false)
+                this.importDataset(message)
+              })
+              this.SimpleDialog.setText(
+                getLanguage(global.language).Friends.IMPORT_CONFIRM,
+              )
+              this.SimpleDialog.setVisible(true)
+            }
+
             break
           default:
             break
@@ -1008,6 +1017,16 @@ class Chat extends React.Component {
         Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
       },
     )
+  }
+
+  showOpenCoworkDialog = () => {
+    this.SimpleDialog.setConfirm(() => {
+      NavigationService.navigate('SelectModule')
+    })
+    this.SimpleDialog.setText(
+      getLanguage(global.language).Friends.OPENCOWORKFIRST,
+    )
+    this.SimpleDialog.setVisible(true)
   }
 
   render() {

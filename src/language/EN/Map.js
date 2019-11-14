@@ -316,6 +316,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP: 'Stop Recording',
   MAP_AR_AI_ASSISTANT_SAVE_LINE: 'Line',
   MAP_AR_AI_ASSISTANT_SAVE_POINT: 'Point',
+  MAP_AR_AI_SAVE_SUCCESS: 'Save Success',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',
