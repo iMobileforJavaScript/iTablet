@@ -10,6 +10,7 @@ import styles from './styles'
 
 export default class TableList extends React.PureComponent {
   props: {
+    type: string,
     data: Array,
     numColumns?: number,
     lineSeparator?: number,
@@ -82,7 +83,7 @@ export default class TableList extends React.PureComponent {
   }
 
   render() {
-    if (this.props.type === 'scroll') {
+    if (this.props.type === 'scrollTable') {
       return (
         <ScrollView style={[styles.scrollContainer, this.props.style]}>
           {this.renderRows()}

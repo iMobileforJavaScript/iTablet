@@ -151,13 +151,9 @@ export const setMapScaleView = (params = {}) => async dispatch => {
 }
 export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
   try {
-    let isAntialias = true
-    let isOverlapDisplayed = false
-    let isVisibleScalesEnabled = false
-
-    isAntialias = await SMap.isAntialias()
-    isOverlapDisplayed = await SMap.isOverlapDisplayed()
-    isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+    let isAntialias = await SMap.isAntialias()
+    let isOverlapDisplayed = await SMap.isOverlapDisplayed()
+    let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
     newData[0].data[0].value = isAntialias

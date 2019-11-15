@@ -14,7 +14,7 @@ import {
   InfoView,
   Dialog,
 } from '../../../../components'
-import { Toast, scaleSize, LayerUtil, StyleUtils } from '../../../../utils'
+import { Toast, scaleSize, LayerUtils, StyleUtils } from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import {
@@ -241,7 +241,7 @@ export default class LayerAttribute extends React.Component {
       attributes = {}
     ;(async function() {
       try {
-        result = await LayerUtil.getLayerAttribute(
+        result = await LayerUtils.getLayerAttribute(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
           currentPage,
@@ -856,9 +856,9 @@ export default class LayerAttribute extends React.Component {
     }
 
     return {
-      canBeUndo: LayerUtil.canBeUndo(historyObj),
-      canBeRedo: LayerUtil.canBeRedo(historyObj),
-      canBeRevert: LayerUtil.canBeRevert(historyObj),
+      canBeUndo: LayerUtils.canBeUndo(historyObj),
+      canBeRedo: LayerUtils.canBeRedo(historyObj),
+      canBeRevert: LayerUtils.canBeRevert(historyObj),
     }
   }
 
@@ -1327,7 +1327,6 @@ export default class LayerAttribute extends React.Component {
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {/* {showContent && this.type !== 'MAP_3D' && ( */}
         {this.type !== 'MAP_3D' && (
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}

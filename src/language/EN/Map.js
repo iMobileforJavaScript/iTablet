@@ -70,6 +70,7 @@ const Map_Main_Menu = {
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',
   STYLE_FONT: 'Font',
+  STYLE_SIZE: 'Size',
   STYLE_FONT_SIZE: 'Font Size',
   STYLE_ALIGNMENT: 'Alignment',
   STYLE_FONT_STYLE: 'Font style',
@@ -86,6 +87,7 @@ const Map_Main_Menu = {
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
   SATURATION: 'Saturation',
+  CONTRAST: 'Contrast',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',

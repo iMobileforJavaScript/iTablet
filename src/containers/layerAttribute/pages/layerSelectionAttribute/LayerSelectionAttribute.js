@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { ConstInfo } from '../../../../constants'
-import { Toast, LayerUtil, scaleSize } from '../../../../utils'
+import { Toast, LayerUtils, scaleSize } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
 import NavigationService from '../../../NavigationService'
@@ -131,7 +131,7 @@ export default class LayerSelectionAttribute extends React.Component {
     let { currentPage, pageSize, type, ...others } = params
     ;(async function() {
       try {
-        let result = await LayerUtil.getSelectionAttributeByLayer(
+        let result = await LayerUtils.getSelectionAttributeByLayer(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.layerSelection.layerInfo.path,
           currentPage,
@@ -727,9 +727,9 @@ export default class LayerSelectionAttribute extends React.Component {
       }
     }
 
-    this.canBeUndo = LayerUtil.canBeUndo(historyObj)
-    this.canBeRedo = LayerUtil.canBeRedo(historyObj)
-    this.canBeRevert = LayerUtil.canBeRevert(historyObj)
+    this.canBeUndo = LayerUtils.canBeUndo(historyObj)
+    this.canBeRedo = LayerUtils.canBeRedo(historyObj)
+    this.canBeRevert = LayerUtils.canBeRevert(historyObj)
 
     if (
       this.props.onGetToolVisible &&
@@ -817,8 +817,12 @@ export default class LayerSelectionAttribute extends React.Component {
             } else {
               attributes.data[0][data.index].value = data.value
             }
-          }else{
-            Toast.show(global.language==="CN"?"数据类型不合法,设置失败":"Invalid data type. Failed to set")
+          } else {
+            Toast.show(
+              global.language === 'CN'
+                ? '数据类型不合法,设置失败'
+                : 'Invalid data type. Failed to set',
+            )
           }
 
           this.checkToolIsViable()

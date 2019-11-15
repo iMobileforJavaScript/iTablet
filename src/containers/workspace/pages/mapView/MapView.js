@@ -8,7 +8,6 @@ import * as React from 'react'
 import {
   SMMapView,
   Action,
-  DatasetType,
   SMap,
   SCollector,
   EngineType,
@@ -43,7 +42,9 @@ import {
   MapSelectPointButton,
   TrafficView,
   LocationView,
+  NavigationPoiView,
 } from '../../components'
+import { ToolbarModule } from '../../components/ToolBar/modules'
 import {
   Container,
   MTBtn,
@@ -64,6 +65,7 @@ import {
   scaleSize,
   StyleUtils,
   setSpText,
+  LayerUtils,
 } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -89,8 +91,6 @@ import {
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-// import NavigationView from '../../components/NavigationView'
-import NavigationPoiView from '../../components/NavigationPoiView'
 import { Analyst_Types } from '../../../analystView/AnalystType'
 import Orientation from 'react-native-orientation'
 import {
@@ -98,9 +98,6 @@ import {
   SelectList,
 } from '../../../mapSetting/secondMapSettings/components'
 import { colorMode } from '../../../mapSetting/settingData'
-// import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
-import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
-// import AIMapSuspensionDialog from '../../components/AIMapSuspensionDialog/AIMapSuspensionDialog'
 
 const markerTag = 118081
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -233,7 +230,7 @@ export default class MapView extends React.Component {
     }
     this.closeInfo = [
       {
-        btntitle: '是',
+        btnTitle: '是',
         action: () => {
           this.saveMap(NavigationService.goBack(this.props.nav.routes[1].key))
           //this.saveMapAndClose()
@@ -242,7 +239,7 @@ export default class MapView extends React.Component {
         },
       },
       {
-        btntitle: '否',
+        btnTitle: '否',
         action: () => {
           this.closeWorkspace(() =>
             NavigationService.goBack(this.props.nav.routes[1].key),
@@ -253,7 +250,7 @@ export default class MapView extends React.Component {
         },
       },
       {
-        btntitle: '取消',
+        btnTitle: '取消',
         action: () => {
           this.AlertDialog.setDialogVisible(false)
         },
@@ -659,75 +656,18 @@ export default class MapView extends React.Component {
           ids: [event.id],
         },
       ])
-    switch (GLOBAL.currentToolbarType) {
-      // case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
-      // case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      // case ConstToolType.MAP_TOOL_POINT_SELECT:
-      //   break
+    let currentToolbarType = ToolbarModule.getData().type
+    if (
+      ToolbarModule.getData().actions &&
+      ToolbarModule.getData().actions.geometrySelected
+    ) {
+      ToolbarModule.getData().actions.geometrySelected(event)
+      return
+    }
+    switch (currentToolbarType) {
       case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
       case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
         break
-      case ConstToolType.MAP_EDIT_POINT:
-      case ConstToolType.MAP_EDIT_LINE:
-      case ConstToolType.MAP_EDIT_REGION:
-      case ConstToolType.MAP_EDIT_DEFAULT: {
-        if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
-          let column = 4,
-            height = ConstToolType.HEIGHT[3],
-            tableType = 'normal',
-            type = ''
-          switch (event.layerInfo.type) {
-            case DatasetType.POINT:
-              type = ConstToolType.MAP_EDIT_POINT
-              height = ConstToolType.HEIGHT[0]
-              break
-            case DatasetType.LINE:
-              type = ConstToolType.MAP_EDIT_LINE
-              height = ConstToolType.HEIGHT[2]
-              break
-            case DatasetType.REGION:
-              type = ConstToolType.MAP_EDIT_REGION
-              height = ConstToolType.HEIGHT[2]
-              tableType = 'scroll'
-              break
-            case DatasetType.CAD:
-              type = ConstToolType.MAP_EDIT_CAD
-              height = ConstToolType.HEIGHT[0]
-              column = 5
-              break
-          }
-          this.toolBox &&
-            this.toolBox.setVisible(true, type, {
-              isFullScreen: false,
-              column,
-              height,
-              tableType,
-              cb: () =>
-                SMap.appointEditGeometry(event.id, event.layerInfo.path),
-            })
-        }
-        break
-      }
-      case ConstToolType.PLOT_ANIMATION_START: {
-        let type = await SMap.getGeometryTypeById(
-          event.layerInfo.name,
-          event.id,
-        )
-        if (type === -1) {
-          Toast.show(
-            getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
-          )
-        } else {
-          let type = ConstToolType.PLOT_ANIMATION_NODE_CREATE
-          this.toolBox.setVisible(true, type, {
-            isFullScreen: true,
-            height: ConstToolType.TOOLBAR_HEIGHT[5],
-            containerType: 'createPlotAnimation',
-            cb: () => {},
-          })
-        }
-        break
-      }
       default:
         // 除了编辑状态，其余点选对象所在图层全设置为选择状态
         if (event.layerInfo.editable) {
@@ -755,7 +695,8 @@ export default class MapView extends React.Component {
     }
     this.props.setSelection && this.props.setSelection(data)
 
-    switch (GLOBAL.currentToolbarType) {
+    let currentToolbarType = ToolbarModule.getData().type
+    switch (currentToolbarType) {
       case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
         SMap.setAction(Action.PAN)
         break
@@ -1363,7 +1304,7 @@ export default class MapView extends React.Component {
         } else {
           SMap.setIsMagnifierEnabled(false)
         }
-
+        SMap.setPOIOptimized(true)
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
@@ -1591,7 +1532,6 @@ export default class MapView extends React.Component {
             isFullScreen: true,
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
             height: ConstToolType.TOOLBAR_HEIGHT[2],
-            tableType: 'normal',
           })
         }}
         setAnalystParams={this.props.setAnalystParams}
@@ -1833,16 +1773,7 @@ export default class MapView extends React.Component {
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
         cancelincrement={async () => {
-          let select = this.SimpleSelectList.state.select
-          let currentFloor = this.SimpleSelectList.state.currentFloor
-          let networkDatasetName = GLOBAL.SUBMITED
-            ? currentFloor.networkDataset
-            : null
-          await SMap.removeNetworkDataset(
-            select.datasetName,
-            networkDatasetName,
-            select.datasourceName,
-          )
+          await SMap.removeNetworkDataset()
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
           this.SimpleSelectList.setState({
@@ -2020,56 +1951,13 @@ export default class MapView extends React.Component {
           this.selectList.setVisible(false)
           this.showFullMap(false)
           let selectList = GLOBAL.SimpleSelectList
-          if (selectList.state.renderType === 'incrementRoad') {
-            (async function() {
-              let selectItem = selectList.state.select
-              if (!this.state.isRight) {
-                this.toolBox.setVisible(
-                  true,
-                  ConstToolType.MAP_TOOL_GPSINCREMENT,
-                  {
-                    containerType: 'table',
-                    column: 4,
-                    isFullScreen: false,
-                    height: ConstToolType.HEIGHT[0],
-                  },
-                )
-              } else {
-                SMap.setLabelColor()
-                SMap.setAction(Action.DRAWLINE)
-                SMap.setIsMagnifierEnabled(true)
-                this.toolBox.setVisible(
-                  true,
-                  ConstToolType.MAP_TOOL_INCREMENT,
-                  {
-                    containerType: 'table',
-                    column: 4,
-                    isFullScreen: false,
-                    height: ConstToolType.HEIGHT[0],
-                  },
-                )
-              }
-              await SMap.addNetWorkDataset(
-                selectItem.datasourceName,
-                selectItem.datasetName,
-              )
-              selectList.state.currentFloor.floorID &&
-                (await SMap.setCurrentFloor(
-                  selectList.state.currentFloor.floorID,
-                ))
-            }.bind(this)())
-          } else {
-            let { networkModel, networkDataset } = selectList.state
-            if (networkModel && networkDataset) {
-              SMap.startNavigation(
-                networkDataset.datasetName,
-                networkModel.path,
-              )
-              NavigationService.navigate('NavigationView', {
-                changeNavPathInfo: this.changeNavPathInfo,
-                showLocationView: true,
-              })
-            }
+          let { networkModel, networkDataset } = selectList.state
+          if (networkModel && networkDataset) {
+            SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+            NavigationService.navigate('NavigationView', {
+              changeNavPathInfo: this.changeNavPathInfo,
+              showLocationView: true,
+            })
           }
         }}
       />
@@ -2248,6 +2136,7 @@ export default class MapView extends React.Component {
       GLOBAL.showAIDetect = true
     }
   }
+
   _renderArModeIcon = () => {
     return (
       <View style={styles.btnView} ref={ref => (GLOBAL.ArModeIcon = ref)}>
@@ -2279,7 +2168,7 @@ export default class MapView extends React.Component {
           textStyle={{ fontSize: setSpText(12) }}
           image={require('../../../../assets/Navigation/navi_icon.png')}
           onPress={async () => {
-            this.indoorNavi()
+            this._incrementRoad()
           }}
           activeOpacity={0.5}
         />
@@ -2287,22 +2176,29 @@ export default class MapView extends React.Component {
     )
   }
 
-  basename(str) {
-    var idx = str.lastIndexOf('/')
-    idx = idx > -1 ? idx : str.lastIndexOf('\\')
-    if (idx < 0) {
-      return str
-    }
-    let file = str.substring(idx + 1)
-    let arr = file.split('.')
-    return arr[0]
-  }
-
-  indoorNavi = async () => {
+  _incrementRoad = async () => {
     if (this.state.showIncrement) {
       this.setState({ showIncrement: false })
-      this.selectList.setVisible(true)
     }
+    if (!this.state.isRight) {
+      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+        containerType: 'table',
+        column: 4,
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[0],
+      })
+    } else {
+      SMap.setLabelColor()
+      SMap.setAction(Action.DRAWLINE)
+      SMap.setIsMagnifierEnabled(true)
+      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+        containerType: 'table',
+        column: 4,
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
+    await SMap.addNetWorkDataset()
   }
 
   _renderARNavigationIcon = () => {
@@ -2584,8 +2480,6 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           this.props.navigationPoiView &&
           this._renderNavigationPoiView()}
-        {/*{!this.isExample &&*/}
-        {/*GLOBAL.Type === constants.MAP_NAVIGATION &&*/}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
           !this.props.mapNavigation.isShow &&

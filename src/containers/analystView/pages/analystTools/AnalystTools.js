@@ -7,6 +7,7 @@ import styles from './styles'
 import analystData from './analystData'
 import { setSpText } from '../../../../utils'
 import { getLanguage } from '../../../../language'
+import { ToolbarType } from '../../../../constants'
 import { color } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import { SMediaCollector } from 'imobile_for_reactnative'
@@ -132,7 +133,7 @@ export default class AnalystTools extends Component {
       >
         <TableList
           data={this.state.data}
-          type={'scroll'}
+          type={ToolbarType.scrollTable}
           numColumns={this.props.device.orientation ? 4 : 8}
           renderCell={this._renderItem}
           device={this.props.device}

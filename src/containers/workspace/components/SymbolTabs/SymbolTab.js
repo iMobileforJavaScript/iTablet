@@ -4,7 +4,7 @@ import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
 // import { ConstToolType } from '../../../../constants'
 import { SMSymbolTable, SMCollectorType } from 'imobile_for_reactnative'
-import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
+import { collectionModule } from '../ToolBar/modules'
 
 export default class SymbolTab extends React.Component {
   props: {
@@ -40,7 +40,7 @@ export default class SymbolTab extends React.Component {
   }
 
   showToolbar = data => {
-    if (!this.props.showToolbar) return
+    // if (!this.props.showToolbar) return
     let type = ''
     switch (data.type) {
       case 'marker':
@@ -56,7 +56,8 @@ export default class SymbolTab extends React.Component {
         type = SMCollectorType.REGION_HAND_POINT
         break
     }
-    CollectionData.showCollection(type)
+    // CollectionData.showCollection(type)
+    collectionModule().actions.showCollection(type)
     // this.props.showToolbar(true, type, {
     //   isFullScreen: false,
     //   height: ConstToolType.HEIGHT[0],

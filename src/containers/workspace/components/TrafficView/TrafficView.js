@@ -14,12 +14,11 @@ import {
   Text,
 } from 'react-native'
 
-import { constUtil, scaleSize } from '../../../../utils'
+import { constUtil, scaleSize, LayerUtils } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Const, ConstOnline } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
-import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
 
 export default class TrafficView extends React.Component {
   props: {
@@ -44,7 +43,9 @@ export default class TrafficView extends React.Component {
         this.isIndoor = result.isIndoor
         if (!this.isIndoor) {
           let layers = this.props.getLayers && (await this.props.getLayers())
-          let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
+          let baseMap = layers.filter(layer =>
+            LayerUtils.isBaseLayer(layer.name),
+          )[0]
           if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
             this.setState({
               showIcon: true,

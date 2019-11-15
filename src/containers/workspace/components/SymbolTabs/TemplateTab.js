@@ -3,10 +3,11 @@ import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color, size } from '../../../../styles'
 import { TableList } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
-import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
+import { ToolbarType } from '../../../../constants'
 import { ThemeType, SMCollectorType } from 'imobile_for_reactnative'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
+import { collectionModule } from '../ToolBar/modules'
+
 export default class TemplateTab extends React.Component {
   props: {
     data: Array,
@@ -65,7 +66,8 @@ export default class TemplateTab extends React.Component {
       }
       let tempSymbol = Object.assign({}, item, { layerPath: layer.path })
       this.props.setCurrentTemplateInfo(tempSymbol)
-      CollectionData.showCollection(toolbarType)
+      // CollectionData.showCollection(toolbarType)
+      collectionModule().actions.showCollection(toolbarType)
       // this.props.showToolbar(true, toolbarType, {
       //   isFullScreen: false,
       //   height: ConstToolType.HEIGHT[0],
@@ -124,7 +126,7 @@ export default class TemplateTab extends React.Component {
       <TableList
         style={styles.container}
         data={this.props.data}
-        type={'scroll'}
+        type={ToolbarType.scrollTable}
         numColumns={3}
         renderCell={this._renderItem}
         device={this.props.device}

@@ -63,6 +63,7 @@ const Map_Main_Menu = {
   //地图制图及公共 风格
   STYLE: '风格',
   STYLE_SYMBOL: '符号',
+  STYLE_SIZE: '大小',
   STYLE_SYMBOL_SIZE: '符号大小',
   STYLE_COLOR: '颜色',
   STYLE_ROTATION: '旋转角度',
@@ -88,6 +89,7 @@ const Map_Main_Menu = {
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
   SATURATION: '饱和度',
+  CONTRAST: '对比度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
