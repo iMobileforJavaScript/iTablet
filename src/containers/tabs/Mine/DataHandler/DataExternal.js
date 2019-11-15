@@ -471,11 +471,12 @@ function _checkUncheckedFile(path, contentList, uncheckedChildFileList) {
 
 function _checkTempFile(contentList) {
   for (let i = 0; i < contentList.length; i++) {
-    if (contentList[i].type === 'file') {
-      if (contentList[i].name.indexOf('~[') === 0) {
-        contentList[i].check = true
-      }
-    } else {
+    if (contentList[i].name.indexOf('~[') === 0) {
+      contentList[i].check = true
+    } else if (
+      contentList[i].name.indexOf('~[') !== 0 &&
+      contentList[i].type === 'directory'
+    ) {
       _checkTempFile(contentList[i].contentList)
     }
   }
