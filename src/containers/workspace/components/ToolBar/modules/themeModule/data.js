@@ -3773,7 +3773,7 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getLabelFontRotation(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
-        getLanguage(this.props.language).Map_Main_Menu.STYLE_ROTATION,
+        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
       )
     },
   },
