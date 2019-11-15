@@ -643,7 +643,7 @@ async function getVisibleScalePickerData(min, max) {
       value: 200000000,
     },
   ]
-  let minOption = Object.assign([], option)
+  let minOption = option.clone()
   let minInitItem =
     min === 0
       ? { key: '0', value: 0 }
@@ -672,7 +672,7 @@ async function getVisibleScalePickerData(min, max) {
   //     minOption = minOption.slice(i)
   //   }
   // }
-  let maxOption = Object.assign([], option)
+  let maxOption = option.clone()
   let maxInitItem =
     max === 0
       ? { key: '0', value: 0 }
