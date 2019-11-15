@@ -11,7 +11,6 @@ import {
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
 import { SAIClassifyView, SMediaCollector } from 'imobile_for_reactnative'
-import * as LayerUtils from '../../containers/mtLayerManager/LayerUtils'
 import Orientation from 'react-native-orientation'
 import { getLanguage } from '../../language'
 import { Container, ImagePicker, Loading, MTBtn } from '../../components'
@@ -20,7 +19,7 @@ import ImageButton from '../../components/ImageButton'
 import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
 import RadioButton from './RadioButton'
-import { scaleSize, Toast } from '../../utils'
+import { scaleSize, Toast, LayerUtils } from '../../utils'
 import { RNCamera } from 'react-native-camera'
 
 /*

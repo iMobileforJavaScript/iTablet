@@ -45,6 +45,8 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  CREATE_THEME_FAILED: 'Failed to Create Theme',
+  PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
   SWITCHING_PLOT_LIB: 'Switching',
   NON_SELECTED_OBJ: 'No object selected',
@@ -65,6 +67,7 @@ const Prompt = {
   SEARCHING: 'Searching',
   READING_DATA: 'Reading Data',
   CREATE_SUCCESSFULLY: 'Created Successfully',
+  NO_SCENE_LIST: 'No data',
   SAVE_SUCCESSFULLY: 'Saved Successfully',
   NO_NEED_TO_SAVE: 'No need to save',
   SAVE_FAILED: 'Failed to Save',
@@ -233,6 +236,15 @@ const Prompt = {
 
   FIELD_ILLEGAL: 'Field illegal',
   PLEASE_SELECT_A_RASTER_LAYER: 'Please select a raster layer',
+
+  PLEASE_ADD_DATASOURCE_BY_UNIFORM: 'Please add the Datasource by Uniform',
+  CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION:
+    'The current layer does not support modification',
+
+  FAILED_TO_CREATE_POINT: 'Failed to create point',
+  FAILED_TO_CREATE_TEXT: 'Failed to create text',
+  FAILED_TO_CREATE_LINE: 'Failed to create line',
+  FAILED_TO_CREATE_REGION: 'Failed to create region',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',

@@ -36,19 +36,20 @@ import {
   // TextInput,
   TouchableHighlight,
 } from 'react-native'
-import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
+import ToolBarSectionList from '../../../workspace/components/ToolBar/components/ToolBarSectionList'
 import styles from './styles'
 import { SMap, DatasetType, SMCollectorType } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 import { FileTools } from '../../../../../src/native'
 import { MsgConstant } from '../../../../containers/tabs/Friend'
+import ToolbarModule from '../../../workspace/components/ToolBar/modules/ToolbarModule'
+import { themeModule } from '../../../workspace/components/ToolBar/modules'
 import { MultiPicker } from '../../../../components'
 
-import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
-
+import collectionModule from '../../../../containers/workspace/components/ToolBar/modules/collectionModule'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -367,7 +368,7 @@ export default class LayerManager_tolbar extends React.Component {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
         // this.updateMenuState()
-        this.updateOverlayerView()
+        this.updateOverlayView()
       },
     )
   }
@@ -414,7 +415,7 @@ export default class LayerManager_tolbar extends React.Component {
   }
 
   //更新遮盖层状态
-  updateOverlayerView = () => {
+  updateOverlayView = () => {
     this.setOverlayViewVisible(this.isShow)
   }
 
@@ -530,9 +531,11 @@ export default class LayerManager_tolbar extends React.Component {
             type = SMCollectorType.REGION_HAND_POINT
             break
         }
-        CollectionData.showCollection(type, this.state.layerData.name)
+        collectionModule().actions.showCollection(
+          type,
+          this.state.layerData.name,
+        )
         this.setVisible(false)
-        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
         this.props.navigation.navigate('MapView')
       }
     } else if (
@@ -625,6 +628,12 @@ export default class LayerManager_tolbar extends React.Component {
             },
           )
         GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+        ToolbarModule.setData({
+          type: ConstToolType.MAP_THEME_CREATE_BY_LAYER,
+          getData: themeModule().getData,
+          actions: themeModule().actions,
+          currentLayer: this.state.layerData,
+        })
         this.props.navigation.navigate('MapView')
       } else {
         Toast.show(

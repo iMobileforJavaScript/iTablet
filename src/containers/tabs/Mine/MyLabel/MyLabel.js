@@ -137,7 +137,7 @@ export default class MyLabel extends Component {
   }
 
   _selectAll = () => {
-    let datasets = Object.assign([], this.state.data)
+    let datasets = this.state.data.clone()
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = true
     }
@@ -145,7 +145,7 @@ export default class MyLabel extends Component {
   }
 
   _deselectAll = () => {
-    let datasets = Object.assign([], this.state.data)
+    let datasets = this.state.data.clone()
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
     }

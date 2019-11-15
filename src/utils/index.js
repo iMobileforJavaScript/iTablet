@@ -6,7 +6,7 @@ import AudioAnalyst from './AudioAnalyst'
 import checkType from './checkType'
 import jsonUtil from './jsonUtil'
 import FetchUtils from './FetchUtils'
-import LayerUtil from './LayerUtil'
+import LayerUtils from './LayerUtils'
 import ModelUtils from './ModelUtils'
 import request from './request'
 import AnalystTools from './AnalystTools'
@@ -25,7 +25,7 @@ export {
   setSpText,
   request,
   /** 地图公共方法 **/
-  LayerUtil,
+  LayerUtils,
   ModelUtils,
   /** 分析公共方法 **/
   AnalystTools,

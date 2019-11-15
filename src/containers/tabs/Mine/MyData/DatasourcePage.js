@@ -188,7 +188,7 @@ class DatasourcePage extends Component {
   }
 
   _selectAll = () => {
-    let datasets = Object.assign([], this.state.datasets)
+    let datasets = this.state.datasets.clone()
     let i = 0
     for (i; i < datasets.length; i++) {
       datasets[i].checked = true
@@ -197,7 +197,7 @@ class DatasourcePage extends Component {
   }
 
   _deselectAll = () => {
-    let datasets = Object.assign([], this.state.datasets)
+    let datasets = this.state.datasets.clone()
     for (let i = 0; i < datasets.length; i++) {
       datasets[i].checked = false
     }
