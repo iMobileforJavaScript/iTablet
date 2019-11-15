@@ -134,18 +134,38 @@ function collectSceneForm() {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
       return
     }
+
     if (GLOBAL.showAIDetect) {
       GLOBAL.isswitch = true
       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
     }
-    GLOBAL.mapView.setState({ map: { height: 0 } })
-    const datasourceAlias = 'AR高精度采集'
-    const datasetName = 'CollectSceneForm'
-    const datasetPointName = 'CollectPointSceneForm'
-    NavigationService.navigate('CollectSceneFormView', {
-      datasourceAlias,
-      datasetName,
-      datasetPointName,
+
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_NEWDATA,
+      value: '',
+      placeholder: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME,
+      type: 'name',
+      cb: async value => {
+        NavigationService.goBack()
+        GLOBAL.mapView.setState({ map: { height: 0 } })
+        const datasourceAlias = value
+        const datasetName = 'CollectSceneForm'
+        const datasetPointName = 'CollectPointSceneForm'
+        NavigationService.navigate('CollectSceneFormView', {
+          datasourceAlias,
+          datasetName,
+          datasetPointName,
+        })
+      },
+      backcb: () => {
+        NavigationService.goBack()
+        if (GLOBAL.isswitch) {
+          GLOBAL.isswitch = false
+          GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+        }
+      },
     })
   }.bind(this)())
 }

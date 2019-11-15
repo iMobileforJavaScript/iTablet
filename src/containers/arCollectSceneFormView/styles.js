@@ -30,6 +30,15 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  buttonname: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    fontSize: setSpText(20),
+    color: 'black',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
   historyDataView: {
     position: 'absolute',
     flexDirection: 'row',
