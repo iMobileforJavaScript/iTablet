@@ -378,7 +378,7 @@ export default class MyLocalData extends Component {
   }
 
   _selectAll = () => {
-    let section = Object.assign([], this.state.sectionData)
+    let section = this.state.sectionData.clone()
     let j = 0
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
@@ -390,7 +390,7 @@ export default class MyLocalData extends Component {
   }
 
   _deselectAll = () => {
-    let section = Object.assign([], this.state.sectionData)
+    let section = this.state.sectionData.clone()
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {
         section[i].data[n].checked = false
@@ -400,7 +400,7 @@ export default class MyLocalData extends Component {
   }
 
   _getTotalItemNumber = () => {
-    let section = Object.assign([], this.state.sectionData)
+    let section = this.state.sectionData
     let j = 0
     for (let i = 0; i < section.length; i++) {
       for (let n = 0; n < section[i].data.length; n++) {

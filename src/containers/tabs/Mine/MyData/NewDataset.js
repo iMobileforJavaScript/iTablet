@@ -52,7 +52,7 @@ class NewDataset extends Component {
       datasetName: undefined,
       datasetType: undefined,
     }
-    let datasets = Object.assign([], this.state.datasets)
+    let datasets = this.state.datasets.clone()
     datasets.push(data)
     this.setState({ datasets }, () => {
       setTimeout(() => {
@@ -284,7 +284,7 @@ class NewDataset extends Component {
           ]}
           onPress={() => {
             item.datasetType = type
-            let datasets = Object.assign([], this.state.datasets)
+            let datasets = this.state.datasets.clone()
             this.setState({ datasets })
           }}
         >
