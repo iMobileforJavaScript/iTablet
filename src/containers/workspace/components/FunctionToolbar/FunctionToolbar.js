@@ -26,6 +26,7 @@ import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
 import { getThemeAssets } from '../../../../assets'
 import {
+  ToolbarModule,
   startModule,
   addModule,
   styleModule,
@@ -56,7 +57,7 @@ export default class FunctionToolbar extends React.Component {
     device: Object,
     type: string,
     data?: Array,
-    layers: PropTypes.object,
+    currentLayer: PropTypes.object,
     getLayers?: () => {},
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
@@ -350,7 +351,22 @@ export default class FunctionToolbar extends React.Component {
           ),
         ]
         break
-      case constants.MAP_THEME:
+      case constants.MAP_THEME: {
+        // TODO 模块化待优化
+        let styleAction = () => {
+          ToolbarModule.getParams()
+          let currentLayer = this.props.currentLayer
+          if (currentLayer.themeType <= 0 && !currentLayer.isHeatmap) {
+            styleModule().action(ConstToolType.MAP_STYLE)
+          } else if (GLOBAL.Type === constants.MAP_THEME) {
+            themeModule().actions.layerListAction(this.props.currentLayer)
+          } else {
+            Toast.show(
+              getLanguage(this.props.language).Prompt
+                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+            )
+          }
+        }
         data = [
           startModule(
             ConstToolType.MAP_THEME_START,
@@ -363,6 +379,7 @@ export default class FunctionToolbar extends React.Component {
           styleModule(
             ConstToolType.MAP_STYLE,
             getLanguage(this.props.language).Map_Main_Menu.STYLE,
+            styleAction,
           ),
           toolModule(
             ConstToolType.MAP_TOOLS,
@@ -374,6 +391,7 @@ export default class FunctionToolbar extends React.Component {
           ),
         ]
         break
+      }
       case constants.MAP_ANALYST:
         data = [
           startModule(

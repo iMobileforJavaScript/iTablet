@@ -277,8 +277,37 @@ const region = (param, orientation = 'PORTRAIT') => [
     },
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FOREGROUND,
   },
+  // {
+  //   key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  //   action: () => {
+  //     GLOBAL.toolBox && GLOBAL.toolBox.menu()
+  //     let height, column
+  //     if (orientation === 'PORTRAIT') {
+  //       height = ConstToolType.THEME_HEIGHT[3]
+  //       column = 8
+  //     } else {
+  //       height = ConstToolType.TOOLBAR_HEIGHT_2[3]
+  //       column = 12
+  //     }
+  //     GLOBAL.toolBox &&
+  //       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
+  //         containerType: ToolbarType.colorTable,
+  //         column,
+  //         isFullScreen: false,
+  //         height,
+  //         buttons: [
+  //           ToolbarBtnType.CANCEL,
+  //           ToolbarBtnType.MENU,
+  //           ToolbarBtnType.MENU_FLEX,
+  //           ToolbarBtnType.TOOLBAR_COMMIT,
+  //         ],
+  //         selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  //       })
+  //   },
+  //   selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  // },
   {
-    key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    key: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
       let height, column
@@ -290,7 +319,7 @@ const region = (param, orientation = 'PORTRAIT') => [
         column = 12
       }
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
+        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBORDERCOLOR_SET, {
           containerType: ToolbarType.colorTable,
           column,
           isFullScreen: false,
@@ -301,10 +330,30 @@ const region = (param, orientation = 'PORTRAIT') => [
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
           ],
-          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
         })
     },
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER,
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.TOOLBAR_COMMIT,
+          ],
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
+        })
+    },
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BORDER_WIDTH,
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
@@ -406,6 +455,10 @@ const grid = param => [
 ]
 
 const colors = [
+  {
+    key: 'NULL',
+    text: 'NULL',
+  },
   '#FFFFFF',
   '#000000',
   '#F0EDE1',

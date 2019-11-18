@@ -612,6 +612,28 @@ async function getLabelFontRotation(type, key = '', name = '') {
   })
 }
 
+async function getLabelFont(type, key = '', name = '') {
+  let getData = async function() {
+    return await ThemeMenuData.getLabelFont()
+  }
+
+  dealData({
+    heights: [ConstToolType.THEME_HEIGHT[0], ConstToolType.THEME_HEIGHT[2]],
+    getData: getData,
+    state: {
+      isFullScreen: false,
+      isTouchProgress: false,
+      showMenuDialog: false,
+      containerType: ToolbarType.table,
+      column: 4,
+      type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
+      selectName: name || key,
+      selectKey: key,
+    },
+  })
+}
+
 async function getLabelFontSize(type, key = '', name = '') {
   dealData({
     heights: [0],
@@ -1333,6 +1355,7 @@ function layerListAction(data) {
       type: _type,
       getData: ThemeData.getData,
       actions: actions,
+      currentThemeData: data,
     })
     _params.navigation.navigate('MapView')
     Toast.show(
@@ -1521,5 +1544,6 @@ const actions = {
   getLabelFontName,
   getLabelFontRotation,
   getLabelFontSize,
+  getLabelFont,
 }
 export default actions

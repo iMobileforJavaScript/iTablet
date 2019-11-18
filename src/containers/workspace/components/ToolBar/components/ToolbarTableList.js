@@ -22,8 +22,7 @@ export default class ToolbarTableList extends React.Component {
       ToolbarModule.getData().actions.tableAction
     ) {
       ToolbarModule.getData().actions.tableAction(item)
-    }
-    if (item.action) {
+    } else if (item.action) {
       item.action(item)
     }
   }

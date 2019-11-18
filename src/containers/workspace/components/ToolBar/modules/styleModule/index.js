@@ -47,11 +47,13 @@ function action(type) {
   })
 }
 
-export default function(type, title) {
+export default function(type, title, customAction) {
   return {
     key: title,
     title: title,
-    action: () => action(type),
+    action: () => {
+      customAction ? customAction(type) : action(type)
+    },
     size: 'large',
     image: require('../../../../../../assets/function/icon_function_style.png'),
     getData: StyleData.getData,

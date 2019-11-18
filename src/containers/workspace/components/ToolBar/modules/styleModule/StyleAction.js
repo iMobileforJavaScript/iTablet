@@ -61,6 +61,9 @@ async function listAction(type, params = {}) {
     case ConstToolType.REGIONAFTERCOLOR_SET:
       SCartography.setFillBackColor(params.key, params.layerName)
       break
+    case ConstToolType.REGIONBORDERCOLOR_SET:
+      SCartography.setFillBorderColor(params.key, params.layerName)
+      break
   }
 }
 
@@ -111,6 +114,7 @@ function menu(type, selectKey, params = {}) {
         type === ConstToolType.POINTCOLOR_SET ||
         type === ConstToolType.REGIONBEFORECOLOR_SET ||
         type === ConstToolType.REGIONAFTERCOLOR_SET ||
+        type === ConstToolType.REGIONBORDERCOLOR_SET ||
         type === ConstToolType.LEGEND ||
         type === ConstToolType.LEGEND_NOT_VISIBLE) &&
         isBoxShow)
@@ -131,6 +135,7 @@ function menu(type, selectKey, params = {}) {
       type === ConstToolType.POINTCOLOR_SET ||
       type === ConstToolType.REGIONBEFORECOLOR_SET ||
       type === ConstToolType.REGIONAFTERCOLOR_SET ||
+      type === ConstToolType.REGIONBORDERCOLOR_SET ||
       type === ConstToolType.LEGEND ||
       type === ConstToolType.LEGEND_NOT_VISIBLE
     ) {
