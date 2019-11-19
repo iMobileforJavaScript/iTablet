@@ -704,7 +704,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     marginLeft: scaleSize(60),
     fontSize: size.fontSize.fontSizeMd,
-    height: scaleSize(50),
+    height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.font_color_white,
     textAlignVertical: 'center',
@@ -712,7 +712,7 @@ const styles = StyleSheet.create({
   imageItemTitle: {
     marginLeft: scaleSize(30),
     fontSize: size.fontSize.fontSizeMd,
-    height: scaleSize(50),
+    height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.font_color_white,
     textAlignVertical: 'center',

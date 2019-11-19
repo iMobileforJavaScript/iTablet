@@ -1571,7 +1571,7 @@ export default class MapView extends React.Component {
         map={this.props.map}
         symbol={this.props.symbol}
         getLayers={this.props.getLayers}
-        layers={this.props.currentLayer}
+        currentLayer={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
@@ -2180,25 +2180,31 @@ export default class MapView extends React.Component {
     if (this.state.showIncrement) {
       this.setState({ showIncrement: false })
     }
-    if (!this.state.isRight) {
-      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
-        containerType: 'table',
-        column: 4,
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[0],
-      })
+    let rel = await SMap.addNetWorkDataset()
+    if (rel) {
+      if (!this.state.isRight) {
+        this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
+          containerType: 'table',
+          column: 4,
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[0],
+        })
+      } else {
+        SMap.setLabelColor()
+        SMap.setAction(Action.DRAWLINE)
+        SMap.setIsMagnifierEnabled(true)
+        this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
+          containerType: 'table',
+          column: 4,
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[0],
+        })
+      }
     } else {
-      SMap.setLabelColor()
-      SMap.setAction(Action.DRAWLINE)
-      SMap.setIsMagnifierEnabled(true)
-      this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
-        containerType: 'table',
-        column: 4,
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[0],
-      })
+      GLOBAL.TouchType = TouchType.NORMAL
+      this.showFullMap(false)
+      Toast.show('数据非法')
     }
-    await SMap.addNetWorkDataset()
   }
 
   _renderARNavigationIcon = () => {

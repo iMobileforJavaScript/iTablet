@@ -8,6 +8,7 @@ import {
   ConstToolType,
   TouchType,
   ConstPath,
+  ToolbarType,
 } from '../../../../../../constants'
 import { dataUtil, Toast, StyleUtils } from '../../../../../../utils'
 import { FileTools } from '../../../../../../native'
@@ -914,7 +915,7 @@ async function showAttribute() {
 function showMenuBox() {
   const _params = ToolbarModule.getParams()
   _params.setToolbarVisible(true, ConstToolType.STYLE_TRANSFER_PICKER, {
-    containerType: 'picker',
+    containerType: ToolbarType.picker,
     isFullScreen: false,
     height: ConstToolType.TOOLBAR_HEIGHT_2[3],
     // cb: () => SCollector.stopCollect(),

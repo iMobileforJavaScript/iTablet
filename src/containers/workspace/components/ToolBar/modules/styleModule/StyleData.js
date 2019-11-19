@@ -27,6 +27,7 @@ function getData(type, params) {
     case ConstToolType.POINTCOLOR_SET:
     case ConstToolType.REGIONBEFORECOLOR_SET:
     case ConstToolType.REGIONAFTERCOLOR_SET:
+    case ConstToolType.REGIONBORDERCOLOR_SET:
       data = colors
       break
   }

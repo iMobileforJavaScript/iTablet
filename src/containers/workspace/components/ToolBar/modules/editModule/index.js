@@ -27,11 +27,13 @@ export async function action(type) {
   ToolbarModule.setData(data)
 }
 
-export default function(type, title) {
+export default function(type, title, customAction) {
   return {
     key: title,
     title: title,
-    action: () => action(type),
+    action: () => {
+      customAction ? customAction(type) : action(type)
+    },
     size: 'large',
     image: require('../../../../../../assets/function/icon_edit.png'),
     getData: EditData.getData,
