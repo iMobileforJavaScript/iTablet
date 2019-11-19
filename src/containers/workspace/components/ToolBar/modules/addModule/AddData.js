@@ -5,9 +5,10 @@ import { ConstToolType, ConstPath, UserType } from '../../../../../../constants'
 import { FileTools } from '../../../../../../native'
 import { dataUtil } from '../../../../../../utils'
 import { getLanguage } from '../../../../../../language'
-import { SThemeCartography } from 'imobile_for_reactnative'
+import { SThemeCartography, SMap } from 'imobile_for_reactnative'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import ToolbarModule from '../ToolbarModule'
+import { getThemeAssets } from '../../../../../../assets'
 
 /**
  * 获取数据源和地图菜单
@@ -177,7 +178,6 @@ async function getDatasets(type, params = {}) {
         title: alias,
         image: require('../../../../../../assets/mapToolbar/list_type_udb.png'),
         data: list,
-        allSelectType: true,
       },
     ]
 
@@ -186,11 +186,67 @@ async function getDatasets(type, params = {}) {
   return { data, buttons }
 }
 
+//获取导航的addModule数据
+async function getAllDatas() {
+  const params = ToolbarModule.getParams()
+  let { data, buttons } = await getUDBsAndMaps()
+  let isIndoorMap = await SMap.isIndoorMap()
+  if (!isIndoorMap) {
+    let list = await SMap.getNetworkDataset()
+    if (list.length > 0) {
+      list.forEach(
+        item =>
+          (item.image = require('../../../../../../assets/Navigation/network.png')),
+      )
+      let networkData = [
+        {
+          title: getLanguage(params.language).Map_Main_Menu.NETWORK_DATASET,
+          image: require('../../../../../../assets/mapToolbar/dataset_type_network.png'),
+          data: list,
+        },
+      ]
+      data = data.concat(networkData)
+    }
+  }
+  return { data, buttons }
+}
+
+//获取网络模型文件
+async function getNetModels() {
+  let params = ToolbarModule.getParams()
+  let path =
+    (await FileTools.appendingHomeDirectory(
+      params.user && params.user.currentUser.userName
+        ? ConstPath.UserPath + params.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath,
+    )) + ConstPath.RelativePath.Datasource
+  let data = [
+    {
+      title: getLanguage(params.language).Map_Main_Menu.MODEL_FILE,
+      image: getThemeAssets().functionBar.rightbar_network_model_white,
+      data: [],
+    },
+  ]
+  let _data = await FileTools.getNetModel(path)
+  _data.forEach(item => {
+    item.isSelected = false
+    item.image = getThemeAssets().functionBar.rightbar_network_model
+  })
+  data[0].data = _data
+  let buttons = [ToolbarBtnType.TOOLBAR_BACK, ToolbarBtnType.TOOLBAR_COMMIT]
+  return { data, buttons }
+}
+
 async function getData(type, params = {}) {
-  if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
-    return getDatasets(type, params)
-  } else if (type === ConstToolType.MAP_THEME_ADD_UDB) {
-    return await getUDBsAndMaps()
+  switch (type) {
+    case ConstToolType.MAP_THEME_ADD_DATASET:
+      return getDatasets(type, params)
+    case ConstToolType.MAP_THEME_ADD_UDB:
+      return await getUDBsAndMaps()
+    case ConstToolType.MAP_NAVIGATION_ADD_UDB:
+      return getAllDatas()
+    case ConstToolType.MAP_NAVIGATION_SELECT_MODEL:
+      return getNetModels()
   }
 }
 

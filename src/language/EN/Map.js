@@ -304,6 +304,8 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: 'High-Precision Collect',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: 'Illegally-Park Collect',
   MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: 'Cast Model',
+  MAP_AR_AI_ASSISTANT_NEWDATA: 'New Data',
+  MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME: ' Fill in the name',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: 'Choose Model',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: 'Searching Surface',
@@ -319,6 +321,10 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SAVE_LINE: 'Line',
   MAP_AR_AI_ASSISTANT_SAVE_POINT: 'Point',
   MAP_AR_AI_SAVE_SUCCESS: 'Save Success',
+  MAP_AR_AI_SAVE_POINT: 'Save Point',
+  MAP_AR_AI_SAVE_LINE: 'Save Line',
+  MAP_AR_AI_CHANGE: 'Change',
+  MAP_AR_AI_CLEAR: 'Clear',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',
@@ -361,6 +367,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
+  NETWORK_DATASET: 'Network Datasets',
+  MODEL_FILE: 'Navigation Model Files',
 }
 
 //推演动画
