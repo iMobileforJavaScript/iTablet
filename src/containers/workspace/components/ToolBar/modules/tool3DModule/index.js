@@ -21,7 +21,7 @@ function action(type) {
   })
 }
 
-export default function(type, title) {
+export default function(type, title, customAction) {
   ToolbarModule.setData({
     type: type,
     getData: Tool3DData.getData,
@@ -30,7 +30,9 @@ export default function(type, title) {
   return {
     key: title,
     title: title,
-    action: () => action(type),
+    action: () => {
+      customAction ? customAction(type) : action(type)
+    },
     size: 'large',
     image: require('../../../../../../assets/function/icon_function_tool.png'),
     getData: Tool3DData.getData,

@@ -33,7 +33,7 @@ export async function action(type) {
   })
 }
 
-export default function(type, title) {
+export default function(type, title, customAction) {
   let image
   if (type === ConstToolType.PLOTTING_ANIMATION) {
     image = require('../../../../../../assets/function/icon_function_theme_param.png')
@@ -43,7 +43,9 @@ export default function(type, title) {
   return {
     key: title,
     title: title,
-    action: () => action(type),
+    action: () => {
+      customAction ? customAction(type) : action(type)
+    },
     size: 'large',
     image: image,
     getData: PlotData.getData,

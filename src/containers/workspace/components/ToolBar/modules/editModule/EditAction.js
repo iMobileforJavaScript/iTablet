@@ -1,4 +1,9 @@
-import { SMap, Action, DatasetType } from 'imobile_for_reactnative'
+import {
+  SMap,
+  Action,
+  DatasetType,
+  SMediaCollector,
+} from 'imobile_for_reactnative'
 import { ConstToolType, ToolbarType } from '../../../../../../constants'
 import { StyleUtils } from '../../../../../../utils'
 import ToolbarModule from '../ToolbarModule'
@@ -23,9 +28,27 @@ function commit(type) {
     params.setToolbarVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
       isFullScreen: false,
       height: 0,
-      cb: () => {
-        SMap.submit()
-        SMap.setAction(Action.SELECT)
+      cb: async () => {
+        await SMap.submit()
+        await SMap.setAction(Action.SELECT)
+
+        // 编辑对象含有多媒体文件，在更新对象位置后，需要更新多媒体文件的位置
+        if (ToolbarModule.getData().fieldInfo) {
+          const fieldInfo = ToolbarModule.getData().fieldInfo || []
+          const layerInfo = ToolbarModule.getData().layerInfo || {}
+          let geoID = -1
+          for (let i = 0; i < fieldInfo.length; i++) {
+            if (
+              fieldInfo[i].name === 'MediaFilePaths' &&
+              fieldInfo[i].value !== ''
+            ) {
+              geoID = fieldInfo[0].value
+            }
+          }
+          layerInfo.name !== undefined &&
+            geoID > -1 &&
+            (await SMediaCollector.updateMedia(layerInfo.name, [geoID]))
+        }
       },
     })
   }
@@ -68,6 +91,12 @@ async function geometrySelected(event) {
         ids: [event.id],
       },
     ])
+  if (event.fieldInfo) {
+    ToolbarModule.addData({
+      layerInfo: event.layerInfo,
+      fieldInfo: event.fieldInfo,
+    })
+  }
   const currentToolbarType = ToolbarModule.getData().type
   switch (currentToolbarType) {
     case ConstToolType.MAP_EDIT_POINT:

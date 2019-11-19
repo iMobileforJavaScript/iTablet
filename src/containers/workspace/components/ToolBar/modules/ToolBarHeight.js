@@ -28,6 +28,7 @@ function getToolbarHeight(type) {
     case ConstToolType.MAP_EDIT_START:
     case ConstToolType.MAP_THEME_START:
     case ConstToolType.MAP_COLLECTION_START:
+    case ConstToolType.MAP_PLOTTING_START:
     case ConstToolType.MAP_NAVIGATION_START:
     case ConstToolType.MAP_ANALYST_START:
       if (orientation === 'PORTRAIT') {
@@ -167,16 +168,24 @@ function getToolbarHeight(type) {
         column = 8
       }
       break
+    case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE:
     case ConstToolType.MAP_THEME_PARAM:
     case ConstToolType.MAP_THEME_PARAM_RANGE_PARAM:
-    case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE:
     case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_VALUE:
     case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SIZE:
     case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_SIZE:
       height = 0
       break
-    case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.THEME_HEIGHT[2]
+        column = 4
+      } else {
+        height = ConstToolType.THEME_HEIGHT[0]
+        column = 8
+      }
+      break
+    case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
@@ -218,14 +227,6 @@ function getToolbarHeight(type) {
       }
       break
     case ConstToolType.LINECOLOR_SET:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[3]
-        column = 8
-      } else {
-        height = ConstToolType.HEIGHT[2]
-        column = 12
-      }
-      break
     case ConstToolType.POINTCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
@@ -236,15 +237,8 @@ function getToolbarHeight(type) {
       }
       break
     case ConstToolType.REGIONBEFORECOLOR_SET:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[3]
-        column = 8
-      } else {
-        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
-        column = 12
-      }
-      break
     case ConstToolType.REGIONBORDERCOLOR_SET:
+    case ConstToolType.REGIONAFTERCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
@@ -417,6 +411,10 @@ function getToolbarHeight(type) {
     case ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE:
       height = ConstToolType.HEIGHT[0]
       column = 3
+      break
+    case ConstToolType.MAP_AR_AIASSISTANT:
+      height = ConstToolType.HEIGHT[2]
+      column = 4
       break
     default:
       height = 0

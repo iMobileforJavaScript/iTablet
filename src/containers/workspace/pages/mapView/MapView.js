@@ -1576,7 +1576,7 @@ export default class MapView extends React.Component {
         map={this.props.map}
         symbol={this.props.symbol}
         getLayers={this.props.getLayers}
-        layers={this.props.currentLayer}
+        currentLayer={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}

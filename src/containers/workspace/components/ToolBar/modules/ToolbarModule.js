@@ -82,6 +82,7 @@ async function getTabBarData(type, params = {}) {
     type === ConstToolType.LINECOLOR_SET ||
     type === ConstToolType.POINTCOLOR_SET ||
     type === ConstToolType.REGIONBEFORECOLOR_SET ||
+    type === ConstToolType.REGIONBORDERCOLOR_SET ||
     type === ConstToolType.REGIONAFTERCOLOR_SET
   ) {
     tabBarData = styleModule().getData(type, params)
@@ -148,6 +149,7 @@ function getMenuDialogData(type, ...others) {
     case ConstToolType.POINTCOLOR_SET:
     case ConstToolType.REGIONBEFORECOLOR_SET:
     case ConstToolType.REGIONAFTERCOLOR_SET:
+    case ConstToolType.REGIONBORDERCOLOR_SET:
       data = styleModule().getMenuData(type)
       break
     // case ConstToolType.MAP_THEME_PARAM:

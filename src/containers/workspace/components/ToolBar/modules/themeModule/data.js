@@ -3827,6 +3827,39 @@ const uniqueLabelMenuInfo = param => [
       )
     },
   },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      ThemeAction.getLabelFont(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    action: () => {
+      ThemeAction.getLabelFontSize(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    action: () => {
+      ThemeAction.getLabelFontRotation(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+      )
+    },
+  },
 ]
 
 //分段标签

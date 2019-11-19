@@ -494,7 +494,11 @@ function getData(type, params) {
           action: ToolAction.matchPictureStyle,
           image: getPublicAssets().common.icon_album,
         },
-        ToolbarBtnType.MENU_FLEX,
+        {
+          type: ToolbarBtnType.STYLE_TRANSFER_PICKER,
+          action: ToolAction.showMenuBox,
+          image: require('../../../../../../assets/mapEdit/icon_function_theme_param_menu.png'),
+        },
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
       break
