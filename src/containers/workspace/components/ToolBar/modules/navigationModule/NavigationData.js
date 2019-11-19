@@ -16,10 +16,14 @@ async function getDataset() {
   let data = [],
     buttons = [ToolbarBtnType.THEME_CANCEL]
   if (list.length > 0) {
+    list.forEach(
+      item =>
+        (item.image = require('../../../../../../assets/Navigation/network.png')),
+    )
     data = [
       {
         title: getLanguage(params.language).Map_Main_Menu.NETWORK_DATASET,
-        image: require('../../../../../../assets/mapToolbar/list_type_udb.png'),
+        image: require('../../../../../../assets/mapToolbar/dataset_type_network.png'),
         data: list,
       },
     ]
@@ -43,7 +47,10 @@ async function getModels() {
     },
   ]
   let _data = await FileTools.getNetModel(path)
-  _data.forEach(item => (item.isSelected = false))
+  _data.forEach(item => {
+    item.isSelected = false
+    item.image = getThemeAssets().functionBar.rightbar_network_model
+  })
   data[0].data = _data
   let buttons = [ToolbarBtnType.TOOLBAR_BACK, ToolbarBtnType.TOOLBAR_COMMIT]
   return { data, buttons }
