@@ -15,7 +15,7 @@ export default class JPushService {
       return
     //连接到RabbitMQ则不push
     let audience = []
-    for (let key in talkIds) {
+    for (let key = 0; key < talkIds.length; key++) {
       let bCon = await SMessageServiceHTTP.isConnectService(talkIds[key])
       !bCon && audience.push(talkIds[key])
     }

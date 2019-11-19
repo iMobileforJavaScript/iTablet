@@ -232,7 +232,11 @@ export default class FriendListFileHandle {
           continue
         } else {
           let userErr = false
-          for (let user in fl.groupInfo[group].members) {
+          for (
+            let user = 0;
+            user < fl.groupInfo[group].members.length;
+            user++
+          ) {
             if (
               fl.groupInfo[group].members[user].id === undefined ||
               fl.groupInfo[group].members[user].id === ''
@@ -325,7 +329,11 @@ export default class FriendListFileHandle {
 
   //管理关系
   static async modifyIsFriend(id, isFriend) {
-    for (let key in FriendListFileHandle.friends.userInfo) {
+    for (
+      let key = 0;
+      key < FriendListFileHandle.friends.userInfo.length;
+      key++
+    ) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
         friend.info.isFriend = isFriend
@@ -339,7 +347,11 @@ export default class FriendListFileHandle {
   }
 
   static async modifyFriendList(id, name) {
-    for (let key in FriendListFileHandle.friends.userInfo) {
+    for (
+      let key = 0;
+      key < FriendListFileHandle.friends.userInfo.length;
+      key++
+    ) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
         if (name !== '') {
@@ -359,7 +371,11 @@ export default class FriendListFileHandle {
 
   // eslint-disable-next-line
   static async delFromFriendList(id, callback) {
-    for (let key in FriendListFileHandle.friends.userInfo) {
+    for (
+      let key = 0;
+      key < FriendListFileHandle.friends.userInfo.length;
+      key++
+    ) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
         FriendListFileHandle.friends.userInfo.splice(key, 1)
@@ -376,7 +392,11 @@ export default class FriendListFileHandle {
   static findFromFriendList(id) {
     let bFound
     if (FriendListFileHandle.friends) {
-      for (let key in FriendListFileHandle.friends.userInfo) {
+      for (
+        let key = 0;
+        key < FriendListFileHandle.friends.userInfo.length;
+        key++
+      ) {
         let friend = FriendListFileHandle.friends.userInfo[key]
         if (id === friend.id) {
           bFound = friend
@@ -399,7 +419,11 @@ export default class FriendListFileHandle {
 
   static getFriend(id) {
     if (FriendListFileHandle.friends) {
-      for (let key in FriendListFileHandle.friends.userInfo) {
+      for (
+        let key = 0;
+        key < FriendListFileHandle.friends.userInfo.length;
+        key++
+      ) {
         if (FriendListFileHandle.friends.userInfo[key].id === id) {
           return FriendListFileHandle.friends.userInfo[key]
         }
@@ -418,7 +442,11 @@ export default class FriendListFileHandle {
    */
   static getIsFriend(id) {
     if (FriendListFileHandle.friends) {
-      for (let key in FriendListFileHandle.friends.userInfo) {
+      for (
+        let key = 0;
+        key < FriendListFileHandle.friends.userInfo.length;
+        key++
+      ) {
         if (FriendListFileHandle.friends.userInfo[key].id === id) {
           return FriendListFileHandle.friends.userInfo[key].info.isFriend
         }
@@ -430,7 +458,11 @@ export default class FriendListFileHandle {
   static findFromGroupList(id) {
     let bFound
     if (FriendListFileHandle.friends) {
-      for (let key in FriendListFileHandle.friends.groupInfo) {
+      for (
+        let key = 0;
+        key < FriendListFileHandle.friends.groupInfo.length;
+        key++
+      ) {
         let friend = FriendListFileHandle.friends.groupInfo[key]
         if (id === friend.id) {
           bFound = friend
@@ -443,7 +475,11 @@ export default class FriendListFileHandle {
 
   static getGroup(id) {
     if (FriendListFileHandle.friends) {
-      for (let key in FriendListFileHandle.friends.groupInfo) {
+      for (
+        let key = 0;
+        key < FriendListFileHandle.friends.groupInfo.length;
+        key++
+      ) {
         if (FriendListFileHandle.friends.groupInfo[key].id === id) {
           return FriendListFileHandle.friends.groupInfo[key]
         }
@@ -454,7 +490,7 @@ export default class FriendListFileHandle {
 
   static getGroupMember(groupId, userId) {
     let group = FriendListFileHandle.getGroup(groupId)
-    for (let key in group.members) {
+    for (let key = 0; key < group.members.length; key++) {
       if (group.members[key].id === userId) {
         return group.members[key]
       }
@@ -470,7 +506,7 @@ export default class FriendListFileHandle {
   static isInGroup(groupId, userId) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
-      for (let key in group.members) {
+      for (let key = 0; key < group.members.length; key++) {
         if (group.members[key].id === userId) {
           return true
         }
@@ -499,7 +535,11 @@ export default class FriendListFileHandle {
   }
   // 删除群
   static async delFromGroupList(id, callback) {
-    for (let key in FriendListFileHandle.friends.groupInfo) {
+    for (
+      let key = 0;
+      key < FriendListFileHandle.friends.groupInfo.length;
+      key++
+    ) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
         FriendListFileHandle.friends.groupInfo.splice(key, 1)
@@ -516,7 +556,11 @@ export default class FriendListFileHandle {
   }
   //更改群名
   static async modifyGroupList(id, name) {
-    for (let key in FriendListFileHandle.friends.groupInfo) {
+    for (
+      let key = 0;
+      key < FriendListFileHandle.friends.groupInfo.length;
+      key++
+    ) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
         if (name !== '') {
@@ -535,7 +579,7 @@ export default class FriendListFileHandle {
   static async addGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
-      for (let key in members) {
+      for (let key = 0; key < members.length; key++) {
         if (!FriendListFileHandle.isInGroup(groupId, members[key].id)) {
           group.members.push(members[key])
         }
@@ -549,8 +593,8 @@ export default class FriendListFileHandle {
   static async removeGroupMember(groupId, members) {
     let group = FriendListFileHandle.getGroup(groupId)
     if (group) {
-      for (let member in members) {
-        for (let key in group.members) {
+      for (let member = 0; member < members.length; member++) {
+        for (let key = 0; key < group.members.length; key++) {
           if (group.members[key].id === members[member].id) {
             group.members.splice(key, 1)
             break

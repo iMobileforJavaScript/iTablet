@@ -31,7 +31,7 @@ export default class InformSpot extends Component {
     let currentUser
     if (this.props.chat.hasOwnProperty(this.props.user.currentUser.userId)) {
       currentUser = this.props.chat[this.props.user.currentUser.userId]
-      for (let key in currentUser) {
+      for (let key = 0; key < currentUser.length; key++) {
         bInform = currentUser[key].unReadMsg
         if (bInform) break
       }
