@@ -18,10 +18,12 @@ import Orientation from 'react-native-orientation'
 import styles from './styles'
 import { Container } from '../../components'
 import { FileTools } from '../../native'
-import { ConstPath } from '../../constants'
 import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 import { color } from '../../styles'
+import { dataUtil } from '../../utils'
+import ToolbarModule from '../workspace/components/ToolBar/modules/ToolbarModule'
+import { ConstPath, UserType } from '../../constants'
 
 /*
  * AR高精度采集界面
@@ -54,6 +56,8 @@ export default class CollectSceneFormView extends React.Component {
       rightcolor: {
         color: 'black',
       },
+      collectData: GLOBAL.newcollectData,
+      chooseDataSource: false,
     }
     this.clickAble = true // 防止重复点击
   }
@@ -151,26 +155,38 @@ export default class CollectSceneFormView extends React.Component {
           },
         })
       } else {
-        let datapoint = await SCollectSceneFormView.getHistoryData(false)
-        if (datapoint && datapoint.history.length > 0) {
-          this.setState({
-            showHistory: true,
-            showbuttons: false,
-            historyData: datapoint.history,
-            isLine: false,
-            leftcolor: {
-              color: 'black',
-            },
-            rightcolor: {
-              color: color.blue1,
-            },
-          })
-        } else {
-          Toast.show(
-            getLanguage(global.language).Map_Main_Menu
-              .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
-          )
-        }
+        this.setState({
+          showHistory: true,
+          showbuttons: false,
+          historyData: [],
+          isLine: true,
+          leftcolor: {
+            color: color.blue1,
+          },
+          rightcolor: {
+            color: 'black',
+          },
+        })
+        // let datapoint = await SCollectSceneFormView.getHistoryData(false)
+        // if (datapoint && datapoint.history.length > 0) {
+        //   this.setState({
+        //     showHistory: true,
+        //     showbuttons: false,
+        //     historyData: datapoint.history,
+        //     isLine: false,
+        //     leftcolor: {
+        //       color: 'black',
+        //     },
+        //     rightcolor: {
+        //       color: color.blue1,
+        //     },
+        //   })
+        // } else {
+        //   Toast.show(
+        //     getLanguage(global.language).Map_Main_Menu
+        //       .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
+        //   )
+        // }
       }
     }
   }
@@ -252,8 +268,108 @@ export default class CollectSceneFormView extends React.Component {
 
   _keyExtractor = item => item.name + item.index
 
+  getDatasource = async () => {
+    let userUDBPath, userUDBs
+    //过滤掉标注和标绘匹配正则
+    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
+    if (
+      ToolbarModule.getParams().user &&
+      ToolbarModule.getParams().user.currentUser.userName &&
+      ToolbarModule.getParams().user.currentUser.userType !==
+        UserType.PROBATION_USER
+    ) {
+      let userPath =
+        (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+        ToolbarModule.getParams().user.currentUser.userName +
+        '/'
+      userUDBPath = userPath + ConstPath.RelativePath.Datasource
+      userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+      //过滤掉标注和标绘
+      let filterUDBs = userUDBs.filter(item => {
+        item.name = dataUtil.getNameByURL(item.path)
+        return !item.name.match(checkLabelAndPlot)
+      })
+      filterUDBs.map(item => {
+        item.image = require('../../assets/mapToolbar/list_type_udb_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+      })
+      this.setState({
+        showHistory: true,
+        historyData: filterUDBs,
+        chooseDataSource: true,
+      })
+    } else {
+      let customerUDBPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+      )
+      let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+      //过滤掉标注和标绘
+      let filterUDBs = customerUDBs.filter(item => {
+        item.name = dataUtil.getNameByURL(item.path)
+        return !item.name.match(checkLabelAndPlot)
+      })
+      filterUDBs.map(item => {
+        item.image = require('../../assets/mapToolbar/list_type_udb_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+      })
+      this.setState({
+        showHistory: true,
+        historyData: filterUDBs,
+        chooseDataSource: true,
+      })
+    }
+  }
+
+  onChooseDataSource = async item => {
+    await SCollectSceneFormView.setDataSource(item.name, item.path)
+    let data = await SCollectSceneFormView.getHistoryData(true)
+    if (data && data.history.length > 0) {
+      this.setState({
+        showHistory: true,
+        showbuttons: false,
+        historyData: data.history,
+        isLine: true,
+        collectData: item.name,
+        leftcolor: {
+          color: color.blue1,
+        },
+        rightcolor: {
+          color: 'black',
+        },
+        chooseDataSource: false,
+      })
+    } else {
+      this.setState({
+        showHistory: true,
+        showbuttons: false,
+        historyData: [],
+        isLine: true,
+        collectData: item.name,
+        leftcolor: {
+          color: color.blue1,
+        },
+        rightcolor: {
+          color: 'black',
+        },
+        chooseDataSource: false,
+      })
+    }
+  }
+
   onHistoryItemPress = async item => {
-    await SCollectSceneFormView.clearData()
+    // await SCollectSceneFormView.clearData()
     await SCollectSceneFormView.loadData(item.index, this.state.isLine)
     this.setState({
       showHistory: false,
@@ -262,36 +378,45 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    return (
-      <View style={styles.itemView}>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={styles.historyItem}
-          onPress={() => {
-            this.onHistoryItemPress(item)
-          }}
-        >
-          {this.state.isLine && (
-            <Text style={styles.historyItemText}>
-              {item.name + '     ' + item.time}
-            </Text>
-          )}
-          {!this.state.isLine && (
+    if (this.state.chooseDataSource) {
+      return (
+        <View style={styles.itemView}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.historyItem}
+            onPress={() => {
+              this.onChooseDataSource(item)
+            }}
+          >
             <Text style={styles.historyItemText}>{item.name}</Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.deleteHistory(item)}
-          style={styles.historyDelete}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={getThemeAssets().ar.toolbar.icon_ar_toolbar_close}
-            style={styles.smallIcon}
-          />
-        </TouchableOpacity>
-      </View>
-    )
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.itemView}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.historyItem}
+            onPress={() => {
+              this.onHistoryItemPress(item)
+            }}
+          >
+            <Text style={styles.historyItemText}>{item.name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.deleteHistory(item)}
+            style={styles.historyDelete}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_close}
+              style={styles.smallIcon}
+            />
+          </TouchableOpacity>
+        </View>
+      )
+    }
   }
 
   deleteHistory = async item => {
@@ -320,11 +445,18 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   renderHistoryView = () => {
-    if (!this.state.historyData && this.state.historyData.length === 0) {
-      return
-    }
     return (
       <View style={styles.historyDataView}>
+        <View style={styles.historypoint}>
+          <TouchableOpacity
+            onPress={async () => {
+              this.getDatasource()
+            }}
+            style={styles.historyCloseIcon}
+          >
+            <Text style={[styles.historyTitle]}>{this.state.collectData}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.historypoint}>
           <TouchableOpacity
             onPress={async () => {

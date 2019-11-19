@@ -150,6 +150,7 @@ function collectSceneForm() {
       cb: async value => {
         NavigationService.goBack()
         GLOBAL.mapView.setState({ map: { height: 0 } })
+        GLOBAL.newcollectData = value
         const datasourceAlias = value
         const datasetName = 'CollectSceneForm'
         const datasetPointName = 'CollectPointSceneForm'

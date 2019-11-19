@@ -415,6 +415,10 @@ function getToolbarHeight(type) {
       height = ConstToolType.HEIGHT[0]
       column = 3
       break
+    case ConstToolType.MAP_AR_AIASSISTANT:
+      height = ConstToolType.HEIGHT[2]
+      column = 4
+      break
     default:
       height = 0
   }

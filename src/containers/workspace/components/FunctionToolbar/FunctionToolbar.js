@@ -135,7 +135,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
         containerType: 'table',
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+        column: 4,
         height: height,
       })
     }
