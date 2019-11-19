@@ -30,7 +30,7 @@ export default class ToolBarSectionList extends React.Component {
     device: Object,
     layerManager?: boolean,
     initialNumToRender?: number,
-    selectList: Object,
+    // selectList: Object,
     listSelectableAction?: () => {}, //多选刷新列表时调用
   }
 
@@ -44,7 +44,7 @@ export default class ToolBarSectionList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectList: props.selectList ? props.selectList : {},
+      selectList: this.dealSelectList(props.sections),
       sections: props.sections,
       sectionSelected: true,
     }
@@ -56,9 +56,29 @@ export default class ToolBarSectionList extends React.Component {
     ) {
       this.setState({
         sections: this.props.sections,
-        selectList: this.props.selectList ? this.props.selectList : {},
+        selectList: this.dealSelectList(this.props.sections),
       })
     }
+  }
+
+  dealSelectList = sections => {
+    let selectList = {}
+    for (let i = 0; i < sections.length; i++) {
+      let section = sections[i]
+      if (!selectList[section.title]) selectList[section.title] = []
+      for (let j = 0; j < section.data.length; j++) {
+        let item = section.data[j]
+        let pushName =
+          item.title || item.name || item.expression || item.datasetName
+        if (
+          item.isSelected &&
+          selectList[section.title].indexOf(pushName) < 0
+        ) {
+          selectList[section.title].push(pushName)
+        }
+      }
+    }
+    return selectList
   }
 
   headerAction = ({ section }) => {
@@ -444,20 +464,21 @@ export default class ToolBarSectionList extends React.Component {
 
   /**颜色方案Item */
   getColorSchemeItem = item => {
-    let itemstyle
-    if (this.props.device.orientation === 'LANDSCAPE') {
-      itemstyle = styles.colorScheme_Landscape
-    } else {
-      itemstyle = styles.colorScheme
-    }
     return (
       <View style={styles.item}>
         <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
-        <Image
-          source={item.colorScheme}
-          resizeMode={'stretch'} //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
-          style={itemstyle}
-        />
+        <View style={styles.colorImgView}>
+          <Image
+            source={item.colorScheme}
+            resizeMode={'stretch'} //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
+            style={[
+              styles.colorScheme,
+              {
+                width: this.props.device.width - scaleSize(220) - scaleSize(90),
+              },
+            ]}
+          />
+        </View>
       </View>
     )
   }
@@ -775,14 +796,9 @@ const styles = StyleSheet.create({
     color: color.content_white,
   },
   colorScheme: {
-    width: scaleSize(420),
     height: scaleSize(40),
     marginLeft: scaleSize(20),
-  },
-  colorScheme_Landscape: {
-    width: scaleSize(700),
-    height: scaleSize(40),
-    marginLeft: scaleSize(20),
+    marginRight: scaleSize(30),
   },
   colorSchemeName: {
     width: scaleSize(220),
@@ -800,11 +816,7 @@ const styles = StyleSheet.create({
   separateViewStyle: {
     flex: 1,
     flexDirection: 'row',
-    // marginLeft: scaleSize(30),
-    // marginRight: scaleSize(30),
-    // alignItems: 'center',
     width: '100%',
-    // width: scaleSize(620),
     height: 1,
     backgroundColor: color.separateColorGray,
   },
