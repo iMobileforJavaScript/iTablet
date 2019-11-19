@@ -83,6 +83,7 @@ const Profile = {
   SHARE: '分享',
   PATH: '路径',
 
+  LOCAL: '本地',
   SAMPLEDATA: '样例数据',
   ON_DEVICE: '外部数据',
   EXPORT_DATA: '导出数据',
@@ -95,7 +96,7 @@ const Profile = {
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   DELETE_MAP: '删除地图',
-  UPLOAD_SCENE: '上传场景',
+  UPLOAD_SCENE: '分享场景',
   DELETE_SCENE: '删除场景',
   UPLOAD_SYMBOL: '分享符号',
   DELETE_SYMBOL: '删除符号',

@@ -103,7 +103,7 @@ class SearchMine extends Component {
     }
     let result = []
     for (let i = 0; i < dataLength; i++) {
-      let name = data[i].title
+      let name = data[i].name
       if (this.searchText !== '' && name.indexOf(this.searchText) > -1) {
         result.push({
           title: title,
@@ -244,27 +244,27 @@ class SearchMine extends Component {
     if (item.title) {
       switch (item.title) {
         case 'DATA':
-          NavigationService.navigate('MyData', {
+          NavigationService.navigate('MyDatasource', {
             title: getLanguage(global.language).Profile.DATA,
           })
           break
         case 'MAP':
-          NavigationService.navigate('MyData', {
+          NavigationService.navigate('MyMap', {
             title: getLanguage(global.language).Profile.MAP,
           })
           break
         case 'SCENE':
-          NavigationService.navigate('MyData', {
+          NavigationService.navigate('MyScene', {
             title: getLanguage(global.language).Profile.SCENE,
           })
           break
         case 'SYMBOL':
-          NavigationService.navigate('MyData', {
+          NavigationService.navigate('MySymbol', {
             title: getLanguage(global.language).Profile.SYMBOL,
           })
           break
         case 'COLOR':
-          NavigationService.navigate('MyData', {
+          NavigationService.navigate('MyColor', {
             title: getLanguage(global.language).Profile.COLOR_SCHEME,
           })
           break
@@ -274,7 +274,7 @@ class SearchMine extends Component {
           })
           break
         case 'TEMPLATE':
-          NavigationService.navigate('MyModule', {
+          NavigationService.navigate('MyTemplate', {
             title: getLanguage(global.language).Profile.TEMPLATE,
           })
           break
@@ -315,7 +315,6 @@ class SearchMine extends Component {
       }
     } else if (item.title === 'LABEL') {
       img = DataImg
-      text = item.data.title
     } else if (item.title === 'TEMPLATE') {
       img = MapImg
     } else {

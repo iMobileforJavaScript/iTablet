@@ -1,4 +1,4 @@
-import MyLabel from './MyLabel'
+import MyTemplate from './MyTemplate'
 import { importWorkspace } from '../../../../models/template'
 import { connect } from 'react-redux'
 import { setUser } from '../../../../models/user'
@@ -19,4 +19,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyLabel)
+)(MyTemplate)

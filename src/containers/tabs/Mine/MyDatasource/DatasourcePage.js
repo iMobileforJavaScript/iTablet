@@ -5,10 +5,9 @@ import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import { Toast, scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
-import MyDataPopupModal from './MyDataPopupModal'
-import { MineItem, BatchHeadBar } from '../component'
+import { MineItem, BatchHeadBar, MyDataPopupModal } from '../component'
 import { getThemeAssets } from '../../../../assets'
-import styles from './styles'
+import styles from '../component/styles'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
