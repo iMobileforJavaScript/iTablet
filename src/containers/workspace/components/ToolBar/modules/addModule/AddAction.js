@@ -12,7 +12,10 @@ import AddData from './AddData'
  * @returns {Promise.<void>}
  */
 async function listAction(type, params = {}) {
-  if (type === ConstToolType.MAP_THEME_ADD_UDB) {
+  if (
+    type === ConstToolType.MAP_THEME_ADD_UDB ||
+    type === ConstToolType.MAP_NAVIGATION_ADD_UDB
+  ) {
     // 数据源和地图列表点击事件
     const _params = ToolbarModule.getParams()
     if (
@@ -87,6 +90,41 @@ async function listAction(type, params = {}) {
         }
         _params.setToolbarVisible(false)
       })
+    } else if (
+      params.section &&
+      params.section.title ===
+        getLanguage(_params.language).Map_Main_Menu.NETWORK_DATASET
+    ) {
+      const _data = await AddData.getData(
+        ConstToolType.MAP_NAVIGATION_SELECT_MODEL,
+      )
+      const height =
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[5]
+      let data = {
+        type: ConstToolType.MAP_NAVIGATION_SELECT_MODEL,
+        getData: AddData.getData,
+        lastData: ToolbarModule.getData().data,
+        actions,
+        height,
+        data: _data,
+        selectedDataset: params.item,
+      }
+      _params.setToolbarVisible(
+        true,
+        ConstToolType.MAP_NAVIGATION_SELECT_MODEL,
+        {
+          containerType: ToolbarType.list,
+          isFullScreen: true,
+          height,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          data: _data.data,
+          buttons: _data.buttons,
+        },
+      )
+      ToolbarModule.setData(data)
     }
   } else if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
     // 数据集列表点击事件
@@ -97,6 +135,8 @@ async function listAction(type, params = {}) {
       data = Object.assign(data, { selectList: params.selectList })
     }
     ToolbarModule.addData(data)
+  } else if (type === ConstToolType.MAP_NAVIGATION_SELECT_MODEL) {
+    params.refreshList && (await params.refreshList(params.item))
   }
 }
 
@@ -134,47 +174,84 @@ function toolbarBack() {
 
 async function commit() {
   const _params = ToolbarModule.getParams()
-  const selectList =
-    (ToolbarModule.getData() && ToolbarModule.getData().selectList) || []
-  if (!_params) return
-  if (Object.keys(selectList).length === 0) {
-    Toast.show(getLanguage(_params.language).Prompt.PLEASE_ADD_DATASET)
-    return
-  }
-  let result = {}
-  for (let key of Object.keys(selectList)) {
-    let resultArr = await SMap.addLayers(selectList[key], key)
-
-    // 找出有默认样式的数据集，并给对应图层设置
-    for (let i = 0; i < resultArr.length; i++) {
-      let description =
-        resultArr[i].description &&
-        resultArr[i].description !== 'NULL' &&
-        JSON.parse(resultArr[i].description)
-      if (description && description.geoStyle) {
-        await SMap.setLayerStyle(
-          resultArr[i].layerName,
-          JSON.stringify(description.geoStyle),
-        )
+  if (
+    ToolbarModule.getData().type === ConstToolType.MAP_NAVIGATION_SELECT_MODEL
+  ) {
+    let { selectedModel, selectedDataset } = ToolbarModule.getData()
+    if (selectedModel && selectedDataset) {
+      let selectedData = {
+        selectedDataset: selectedDataset.name,
+        selectedModelFilePath: selectedModel.path,
       }
+      _params.setToolbarVisible(false)
+      _params.setNavigationDatas && _params.setNavigationDatas(selectedData)
+    } else {
+      Toast.show(
+        getLanguage(_params.language).Prompt
+          .PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL,
+      )
     }
-    if (resultArr && resultArr.length > 0) result[key] = resultArr
-  }
-
-  if (Object.keys(result).length > 0) {
-    _params.getLayers(-1, layers => {
-      if (layers.length > 0) {
-        _params.setCurrentLayer(layers[0])
-        SMap.setLayerEditable(layers[0].path, true)
-      }
-    })
-
-    _params.setToolbarVisible(false)
-    GLOBAL.dialog.setDialogVisible(true)
-    Toast.show(getLanguage(_params.language).Prompt.ADD_SUCCESS)
   } else {
-    Toast.show(getLanguage(_params.language).Prompt.ADD_FAILED)
+    const selectList =
+      (ToolbarModule.getData() && ToolbarModule.getData().selectList) || []
+    if (!_params) return
+    if (Object.keys(selectList).length === 0) {
+      Toast.show(getLanguage(_params.language).Prompt.PLEASE_ADD_DATASET)
+      return
+    }
+    let result = {}
+    for (let key of Object.keys(selectList)) {
+      let resultArr = await SMap.addLayers(selectList[key], key)
+
+      // 找出有默认样式的数据集，并给对应图层设置
+      for (let i = 0; i < resultArr.length; i++) {
+        let description =
+          resultArr[i].description &&
+          resultArr[i].description !== 'NULL' &&
+          JSON.parse(resultArr[i].description)
+        if (description && description.geoStyle) {
+          await SMap.setLayerStyle(
+            resultArr[i].layerName,
+            JSON.stringify(description.geoStyle),
+          )
+        }
+      }
+      if (resultArr && resultArr.length > 0) result[key] = resultArr
+    }
+
+    if (Object.keys(result).length > 0) {
+      _params.getLayers(-1, layers => {
+        if (layers.length > 0) {
+          _params.setCurrentLayer(layers[0])
+          SMap.setLayerEditable(layers[0].path, true)
+        }
+      })
+
+      _params.setToolbarVisible(false)
+      GLOBAL.dialog.setDialogVisible(true)
+      Toast.show(getLanguage(_params.language).Prompt.ADD_SUCCESS)
+    } else {
+      Toast.show(getLanguage(_params.language).Prompt.ADD_FAILED)
+    }
   }
+}
+
+function refreshModels(item) {
+  let data = JSON.parse(JSON.stringify(ToolbarModule.getData().data)).data
+  let innerData = data[0].data
+  let selectedModel
+  for (let i = 0; i < innerData.length; i++) {
+    if (
+      innerData[i].isSelected ||
+      JSON.stringify(item) === JSON.stringify(innerData[i])
+    ) {
+      innerData[i].isSelected = !innerData[i].isSelected
+      selectedModel = innerData[i]
+    }
+  }
+  ToolbarModule.addData({ selectedModel })
+  data[0].data = innerData
+  return data
 }
 
 const actions = {
@@ -182,5 +259,6 @@ const actions = {
   listSelectableAction,
   toolbarBack,
   commit,
+  refreshModels,
 }
 export default actions

@@ -1,8 +1,7 @@
 import React from 'react'
 import { color } from '../../../../../styles'
-import { Toast, dataUtil, scaleSize } from '../../../../../utils'
+import { Toast, scaleSize } from '../../../../../utils'
 import {
-  ConstToolType,
   ConstPath,
   ConstOnline,
   UserType,
@@ -13,8 +12,7 @@ import ToolBarSectionList from './ToolBarSectionList'
 
 import { FileTools } from '../../../../../native'
 import NavigationService from '../../../../NavigationService'
-import { SMap, SMediaCollector, Action } from 'imobile_for_reactnative'
-import ToolbarBtnType from '../ToolbarBtnType'
+import { SMap, SMediaCollector } from 'imobile_for_reactnative'
 import ToolbarModule from '../modules/ToolbarModule'
 
 export default class ToolList extends React.Component {
@@ -73,26 +71,34 @@ export default class ToolList extends React.Component {
 
   /**点击item切换专题字段，刷新字段表达式列表 */
   refreshList = item => {
-    let data = JSON.parse(JSON.stringify(this.state.data[0].data))
-    for (let index = 0; index < data.length; index++) {
-      const element = data[index]
-      if (element.expression === item) {
-        element.isSelected = true
-      } else {
-        element.isSelected = false
+    let data
+    if (ToolbarModule.getData().actions.refreshModels) {
+      data = ToolbarModule.getData().actions.refreshModels(item)
+      this.setState({
+        data,
+      })
+    } else {
+      data = JSON.parse(JSON.stringify(this.state.data[0].data))
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index]
+        if (element.expression === item) {
+          element.isSelected = true
+        } else {
+          element.isSelected = false
+        }
       }
+      let datalist = [
+        {
+          title: this.state.data[0].title || this.state.data[0].datasetName,
+          datasetType: this.state.data[0].datasetType,
+          expressionType: true,
+          data: data,
+        },
+      ]
+      this.setState({
+        data: datalist,
+      })
     }
-    let datalist = [
-      {
-        title: this.state.data[0].title || this.state.data[0].datasetName,
-        datasetType: this.state.data[0].datasetType,
-        expressionType: true,
-        data: data,
-      },
-    ]
-    this.setState({
-      data: datalist,
-    })
   }
 
   //滚动到顶部
@@ -243,228 +249,6 @@ export default class ToolList extends React.Component {
     }
     if (item.action) {
       item.action && item.action()
-    }
-    // TODO 功能分配到各自模块下
-    else if (this.props.type === ConstToolType.NETDATA) {
-      if (item.name === '室外数据') {
-        (async function() {
-          let data = []
-          let maplist = await SMap.getNavigationData()
-          if (maplist && maplist.length > 0) {
-            let userList = []
-            maplist.forEach(item => {
-              let name = item.dataset
-              item.title = name
-              item.name = name.split('.')[0]
-              item.image = require('../../../../../assets/Navigation/network.png')
-              userList.push(item)
-            })
-          }
-          data.push({
-            title: getLanguage(global.language).Map_Main_Menu.NETWORK,
-            //'路网',
-            image: require('../../../../../assets/Navigation/network_white.png'),
-            data: maplist || [],
-          })
-
-          this.props.setToolbarVisible(true, ConstToolType.NETWORK, {
-            containerType: 'list',
-            height: ConstToolType.THEME_HEIGHT[4],
-            data,
-          })
-        }.bind(this)())
-      } else if (item.name === '室内数据') {
-        (async function() {
-          let data = []
-          let userUDBPath, userUDBs
-          //过滤掉标注和标绘匹配正则
-          let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)#$/
-          if (
-            this.props.user &&
-            this.props.user.currentUser.userName &&
-            this.props.user.currentUser.userType !== UserType.PROBATION_USER
-          ) {
-            let userPath =
-              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
-              this.props.user.currentUser.userName +
-              '/'
-            userUDBPath = userPath + ConstPath.RelativePath.Datasource
-            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
-              extension: 'udb',
-              type: 'file',
-            })
-            //过滤掉标注和标绘
-            let filterUDBs = userUDBs.filter(item => {
-              item.name = dataUtil.getNameByURL(item.path)
-              return !item.name.match(checkLabelAndPlot)
-            })
-            filterUDBs.map(item => {
-              item.image = require('../../../../../assets/mapToolbar/list_type_udb_black.png')
-              item.info = {
-                infoType: 'mtime',
-                lastModifiedDate: item.mtime,
-              }
-            })
-            data = [
-              // {
-              //   title: Const.PUBLIC_DATA_SOURCE,
-              //   data: customerUDBs,
-              // },
-              {
-                title: getLanguage(this.props.language).Map_Main_Menu
-                  .OPEN_DATASOURCE,
-                //Const.DATA_SOURCE,
-                image: require('../../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: filterUDBs,
-              },
-            ]
-          } else {
-            let customerUDBPath = await FileTools.appendingHomeDirectory(
-              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-            )
-            let customerUDBs = await FileTools.getPathListByFilter(
-              customerUDBPath,
-              {
-                extension: 'udb',
-                type: 'file',
-              },
-            )
-            //过滤掉标注和标绘
-            let filterUDBs = customerUDBs.filter(item => {
-              item.name = dataUtil.getNameByURL(item.path)
-              return !item.name.match(checkLabelAndPlot)
-            })
-            filterUDBs.map(item => {
-              item.image = require('../../../../../assets/mapToolbar/list_type_udb_black.png')
-              item.info = {
-                infoType: 'mtime',
-                lastModifiedDate: item.mtime,
-              }
-            })
-            data = [
-              {
-                title: getLanguage(this.props.language).Map_Main_Menu
-                  .OPEN_DATASOURCE,
-                //Const.DATA_SOURCE,
-                image: require('../../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: filterUDBs,
-              },
-            ]
-          }
-          this.props.setToolbarVisible(true, ConstToolType.INDOORDATA, {
-            containerType: 'list',
-            height: ConstToolType.THEME_HEIGHT[4],
-            data,
-          })
-        }.bind(this)())
-      }
-    } else if (this.props.type === ConstToolType.NETWORK) {
-      (async function() {
-        // await FileTools.appendingHomeDirectory() + ConstPath.CachePath
-        GLOBAL.navidataset = item.dataset
-        let data = [],
-          path =
-            (await FileTools.appendingHomeDirectory(
-              this.props.user && this.props.user.currentUser.userName
-                ? ConstPath.UserPath +
-                    this.props.user.currentUser.userName +
-                    '/'
-                : ConstPath.CustomerPath,
-            )) + ConstPath.RelativePath.Datasource
-        let userFileList
-
-        userFileList = await FileTools.getNetModel(path)
-
-        if (userFileList && userFileList.length > 0) {
-          let userList = []
-          userFileList.forEach(item => {
-            let name = item.name
-            item.title = name
-            item.name = name.split('.')[0]
-            item.image = require('../../../../../assets/Navigation/snm_model.png')
-            userList.push(item)
-          })
-        }
-        data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NETMODEL,
-          //'网络模型',
-          image: require('../../../../../assets/Navigation/network_white.png'),
-          data: userFileList || [],
-        })
-        this.props.setToolbarVisible(true, ConstToolType.NETMODEL, {
-          containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[4],
-          data,
-        })
-      }.bind(this)())
-    } else if (this.props.type === ConstToolType.NETMODEL) {
-      let path = GLOBAL.homePath + item.path
-      SMap.startNavigation(GLOBAL.navidataset, path)
-      this.props.setToolbarVisible(false)
-      this.props.existFullMap()
-      GLOBAL.HASCHOSE = true
-      NavigationService.navigate('NavigationView')
-    } else if (this.props.type === ConstToolType.INDOORDATA) {
-      (async function() {
-        GLOBAL.SELECTDATASOURCE = item.name
-        let name = item.name
-        let data = []
-        let maplist = await SMap.getLineDataset(name)
-        if (maplist && maplist.length > 0) {
-          let userList = []
-          maplist.forEach(item => {
-            let name = item.dataset
-            item.title = name
-            item.name = name.split('.')[0]
-            item.image = require('../../../../../assets/Navigation/network.png')
-            userList.push(item)
-          })
-        }
-        data.push({
-          title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-          //'选择数据集',
-          image: require('../../../../../assets/Navigation/network_white.png'),
-          data: maplist || [],
-        })
-        this.props.setToolbarVisible(true, ConstToolType.LINEDATASET, {
-          containerType: 'list',
-          height: ConstToolType.THEME_HEIGHT[4],
-          data,
-          isFullScreen: false,
-          buttons: [ToolbarBtnType.CANCEL_INCREMENT],
-        })
-      }.bind(this)())
-    } else if (this.props.type === ConstToolType.LINEDATASET) {
-      (async function() {
-        if (GLOBAL.NAVIGATIONHEADLEFTCLICK) {
-          this.props.setToolbarVisible(
-            true,
-            ConstToolType.MAP_TOOL_GPSINCREMENT,
-            {
-              containerType: 'table',
-              column: 4,
-              isFullScreen: false,
-              height: ConstToolType.HEIGHT[0],
-            },
-          )
-        } else {
-          SMap.setLabelColor()
-          SMap.setAction(Action.DRAWLINE)
-          this.props.setToolbarVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
-            containerType: 'table',
-            column: 4,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-        }
-        await SMap.addNetWorkDataset(item.name)
-        GLOBAL.LINEDATASET = item.name
-      }.bind(this)())
-    } else if (this.props.type === ConstToolType.NETWORKDATASET) {
-      (async function() {
-        await SMap.buildNetwork(GLOBAL.LINEDATASET, item.name)
-        this.closeIncrement()
-      }.bind(this)())
     }
   }
 

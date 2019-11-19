@@ -293,6 +293,7 @@ export default class ToolBarSectionList extends React.Component {
     let selectImg = item.isSelected
       ? require('../../../../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
+    let selectedTextStyle = item.isSelected ? { color: 'white' } : {}
     return (
       <TouchableOpacity
         style={[
@@ -330,7 +331,10 @@ export default class ToolBarSectionList extends React.Component {
           {(item.name || item.title) && (
             <View style={styles.itemTitleView}>
               <Text
-                style={item.image ? styles.imageItemTitle : styles.itemTitle}
+                style={[
+                  item.image ? styles.imageItemTitle : styles.itemTitle,
+                  selectedTextStyle,
+                ]}
               >
                 {item.name || item.title}
               </Text>

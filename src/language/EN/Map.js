@@ -361,6 +361,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
+  NETWORK_DATASET: 'Network Datasets',
+  MODEL_FILE: 'Navigation Model Files',
 }
 
 //推演动画

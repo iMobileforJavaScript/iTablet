@@ -22,7 +22,6 @@ const EDIT = 'EDIT'
  * @deprecated 移除当前的类型，使用constants
  */
 export { COLLECTION, NETWORK, EDIT }
-import NavigationService from '../../../NavigationService'
 import { getLanguage } from '../../../../language/index'
 import { getThemeAssets } from '../../../../assets'
 import {
@@ -38,6 +37,7 @@ import {
   plotModule,
   fly3DModule,
   tool3DModule,
+  navigationModule,
 } from '../ToolBar/modules'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -236,35 +236,35 @@ export default class FunctionToolbar extends React.Component {
   //   // }
   // }
 
-  startNavigation = async () => {
-    let rel = await SMap.hasNetworkDataset()
-    if (rel) {
-      let simpleList = GLOBAL.SimpleSelectList
-      let isIndoorMap = await SMap.isIndoorMap()
-      if (isIndoorMap) {
-        //室内导航
-        SMap.startIndoorNavigation()
-        NavigationService.navigate('NavigationView', {
-          changeNavPathInfo: this.props.changeNavPathInfo,
-          showLocationView: false,
-        })
-      } else {
-        //行业导航
-        let { networkModel, networkDataset } = simpleList.state
-        if (networkModel && networkDataset) {
-          SMap.startNavigation(networkDataset.datasetName, networkModel.path)
-          NavigationService.navigate('NavigationView', {
-            changeNavPathInfo: this.props.changeNavPathInfo,
-            showLocationView: true,
-          })
-        } else {
-          this.props.showModelList()
-        }
-      }
-    } else {
-      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
-    }
-  }
+  // startNavigation = async () => {
+  //   let rel = await SMap.hasNetworkDataset()
+  //   if (rel) {
+  //     let simpleList = GLOBAL.SimpleSelectList
+  //     let isIndoorMap = await SMap.isIndoorMap()
+  //     if (isIndoorMap) {
+  //       //室内导航
+  //       SMap.startIndoorNavigation()
+  //       NavigationService.navigate('NavigationView', {
+  //         changeNavPathInfo: this.props.changeNavPathInfo,
+  //         showLocationView: false,
+  //       })
+  //     } else {
+  //       //行业导航
+  //       let { networkModel, networkDataset } = simpleList.state
+  //       if (networkModel && networkDataset) {
+  //         SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+  //         NavigationService.navigate('NavigationView', {
+  //           changeNavPathInfo: this.props.changeNavPathInfo,
+  //           showLocationView: true,
+  //         })
+  //       } else {
+  //         this.props.showModelList()
+  //       }
+  //     }
+  //   } else {
+  //     Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
+  //   }
+  // }
 
   incrementRoad = async () => {
     let rel = await SMap.hasLineDataset()
@@ -469,18 +469,13 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_NAVIGATION_ADD_UDB,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
-          {
-            key: '导航',
-            title: getLanguage(this.props.language).Map_Main_Menu
-              .NAVIGATION_START,
-            //constants.ADD,
-            size: 'large',
-            action: isLicenseNotValid ? null : this.startNavigation,
-            image: require('../../../../assets/Navigation/navi_icon.png'),
-          },
+          navigationModule(
+            ConstToolType.MAP_NAVIGATION_MODULE,
+            getLanguage(this.props.language).Map_Main_Menu.NAVIGATION_START,
+          ),
           {
             key: '路网',
             title: getLanguage(this.props.language).Map_Main_Menu

@@ -378,6 +378,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',
+  NETWORK_DATASET: '路网数据集',
+  MODEL_FILE: '导航模型文件',
 }
 
 //推演动画
