@@ -12,7 +12,11 @@ import {
   MyOnlineMap,
   ScanOnlineMap,
   MyLocalData,
-  MyData,
+  MyMap,
+  MyScene,
+  MyDatasource,
+  MySymbol,
+  MyTemplate,
   Personal,
   ToggleAccount,
   Setting,
@@ -35,7 +39,6 @@ import {
   SelectFriend,
   MyLabel,
   MyBaseMap,
-  MyModule,
   SuperMapKnown,
 } from './tabs'
 
@@ -496,8 +499,36 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
-    MyData: {
-      screen: MyData,
+    MyMap: {
+      screen: MyMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyScene: {
+      screen: MyScene,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyDatasource: {
+      screen: MyDatasource,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MySymbol: {
+      screen: MySymbol,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyTemplate: {
+      screen: MyTemplate,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -632,13 +663,6 @@ const AppNavigator = createStackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyModule: {
-      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

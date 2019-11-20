@@ -82,6 +82,7 @@ export default class ColorTable extends React.Component {
       this.ColumnNums = nextProps.device.orientation === 'LANDSCAPE' ? 12 : 8
     }
   }
+
   itemAction = async item => {
     if (this.props.itemAction) {
       this.props.itemAction(item)
@@ -90,6 +91,7 @@ export default class ColorTable extends React.Component {
       if (isSuccess) this.props.callback && this.props.callback(item.key)
     }
   }
+
   renderItem = ({ item }) => {
     if (typeof item === 'object' && item.useSpace)
       return (

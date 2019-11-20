@@ -58,6 +58,7 @@ export default class CollectSceneFormView extends React.Component {
       },
       collectData: GLOBAL.newcollectData,
       chooseDataSource: false,
+      isnew: false,
     }
     this.clickAble = true // 防止重复点击
   }
@@ -124,6 +125,7 @@ export default class CollectSceneFormView extends React.Component {
     //       .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP,
     //   )
     await SCollectSceneFormView.startRecording()
+    this.setState({ isnew: true })
     // }
   }
 
@@ -212,13 +214,14 @@ export default class CollectSceneFormView extends React.Component {
       cb: async value => {
         NavigationService.goBack()
         await SCollectSceneFormView.saveData(value)
+        this.setState({ isnew: false })
       },
     })
   }
 
   /** 保存点 **/
   savepoint = async () => {
-    await SCollectSceneFormView.stopRecording()
+    // await SCollectSceneFormView.stopRecording()
     // NavigationService.navigate('InputPage', {
     //   headerTitle: getLanguage(global.language).Map_Main_Menu
     //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
@@ -370,11 +373,15 @@ export default class CollectSceneFormView extends React.Component {
 
   onHistoryItemPress = async item => {
     // await SCollectSceneFormView.clearData()
-    await SCollectSceneFormView.loadData(item.index, this.state.isLine)
-    this.setState({
-      showHistory: false,
-      showbuttons: true,
-    })
+    if (this.state.isnew) {
+      await SCollectSceneFormView.loadData(item.index, this.state.isLine)
+      this.setState({
+        showHistory: false,
+        showbuttons: true,
+      })
+    } else {
+      Toast.show(getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_NEW_ROAD)
+    }
   }
 
   renderItem = ({ item }) => {
@@ -455,6 +462,11 @@ export default class CollectSceneFormView extends React.Component {
             style={styles.historyCloseIcon}
           >
             <Text style={[styles.historyTitle]}>{this.state.collectData}</Text>
+            <Image
+              resizeMode={'contain'}
+              source={getThemeAssets().ar.toolbar.icon_down}
+              style={styles.smallIcons}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.historypoint}>

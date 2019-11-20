@@ -342,6 +342,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_SAVE_LINE: '保存线',
   MAP_AR_AI_CHANGE: '切换视角',
   MAP_AR_AI_CLEAR: '清除',
+  MAP_AR_AI_NEW_ROAD: '请新建路线',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: '正在分类中',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: '分类失败,请重试',
@@ -384,6 +385,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',
+  NETWORK_DATASET: '路网数据集',
+  MODEL_FILE: '导航模型文件',
 }
 
 //推演动画

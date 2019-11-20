@@ -89,6 +89,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
+  PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
+  DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
 
   COLLECT_SUCCESS: '采集成功',
 

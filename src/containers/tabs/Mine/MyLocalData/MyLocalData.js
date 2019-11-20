@@ -33,6 +33,7 @@ import OnlineDataItem from './OnlineDataItem'
 
 import { scaleSize, FetchUtils, OnlineServicesUtils } from '../../../../utils'
 import DataHandler from '../DataHandler'
+import NavigationService from '../../../NavigationService'
 let JSIPortalService
 
 export default class MyLocalData extends Component {
@@ -413,6 +414,37 @@ export default class MyLocalData extends Component {
     }
   }
 
+  _onImportTIF = async () => {
+    this._closeModal()
+    NavigationService.navigate('MyDatasource', {
+      title: getLanguage(this.props.language).Profile.DATA,
+      getItemCallback: async ({ item }) => {
+        try {
+          NavigationService.goBack()
+          this.setLoading(
+            true,
+            getLanguage(this.props.language).Prompt.IMPORTING_DATA,
+          )
+          let result = await DataHandler.importTIF(
+            this.itemInfo.item.filePath,
+            item,
+          )
+          result
+            ? Toast.show(
+              getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS,
+            )
+            : Toast.show(
+              getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT,
+            )
+        } catch (error) {
+          Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+        } finally {
+          this.setLoading(false)
+        }
+      },
+    })
+  }
+
   importData = async () => {
     this._closeModal()
     if (this.itemInfo && this.itemInfo.id) {
@@ -441,6 +473,11 @@ export default class MyLocalData extends Component {
         this.itemInfo.item.fileType === 'datasource'
       ) {
         this._onImportDatasource()
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'tif'
+      ) {
+        this._onImportTIF()
       } else {
         this._onImportWorkspace()
       }

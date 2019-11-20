@@ -900,7 +900,7 @@ class Chat extends React.Component {
       let datasourceList = await SMap.getDatasources()
       let isDatasourceOpen = false
       //是否打开了对应的数据源
-      for (let i in datasourceList) {
+      for (let i = 0; i < datasourceList.length; i++) {
         if (
           datasourceList[i].alias ===
           message.originMsg.message.message.datasourceAlias

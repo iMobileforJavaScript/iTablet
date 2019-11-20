@@ -3635,7 +3635,7 @@ const uniqueMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3661,7 +3661,7 @@ const rangeMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3714,7 +3714,7 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3725,7 +3725,7 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getLabelBackShape(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE,
-        '背景形状',
+        getLanguage(param).Map_Main_Menu.THEME_BACK_SHAPE,
       )
     },
   },
@@ -3736,25 +3736,21 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getColorTable(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
-        '背景颜色',
+        getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
       )
     },
   },
-  // {
-  //   key: '字体',
-  //   btnTitle: '字体',
-  //   action: () => {
-  //     this.setSelectedMenu('字体')
-  //     this.setDialogVisible(false)
-
-  //     const toolRef = this.props.getToolBarRef()
-  //     if (toolRef) {
-  //       toolRef.getLabelFontName(
-  //         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
-  //       )
-  //     }
-  //   },
-  // },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      ThemeAction.getLabelFont(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT,
+      )
+    },
+  },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
@@ -3762,7 +3758,7 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getLabelFontSize(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
-        '字号',
+        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
       )
     },
   },
@@ -3784,7 +3780,7 @@ const labelMenuInfo = param => [
     action: () => {
       ThemeAction.getColorTable(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
-        '颜色',
+        getLanguage(param).Map_Main_Menu.STYLE_COLOR,
       )
     },
   },
@@ -3800,7 +3796,7 @@ const uniqueLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3812,7 +3808,7 @@ const uniqueLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION,
-        '单值表达式',
+        getLanguage(param).Map_Main_Menu.THEME_UNIQUE_EXPRESSION,
       )
     },
   },
@@ -3872,7 +3868,7 @@ const rangeLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3884,7 +3880,7 @@ const rangeLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION,
-        '单值表达式',
+        getLanguage(param).Map_Main_Menu.THEME_RANGE_EXPRESSION,
       )
     },
   },
@@ -3899,6 +3895,39 @@ const rangeLabelMenuInfo = param => [
       )
     },
   },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      ThemeAction.getLabelFont(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    action: () => {
+      ThemeAction.getLabelFontSize(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    action: () => {
+      ThemeAction.getLabelFontRotation(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+      )
+    },
+  },
 ]
 
 //统计专题图
@@ -3910,7 +3939,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeExpressions(
         ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3921,7 +3950,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeGradutedMode(
         ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE,
-        '计算方法',
+        getLanguage(param).Map_Main_Menu.THEME_GRANDUATE_BY,
       )
     },
   },
@@ -3943,8 +3972,8 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphMaxValue(
         ConstToolType.MAP_THEME_PARAM_GRAPH_MAXVALUE,
-        '最大显示值',
-        '最大显示值',
+        getLanguage(param).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE,
+        getLanguage(param).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE,
       )
     },
   },
@@ -3955,13 +3984,13 @@ const dotDensityMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     //'',
-    selectKey: '表达式',
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     //getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -3979,12 +4008,12 @@ const dotDensityMenuInfo = param => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
-    selectKey: '点符号',
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     //getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
-      ThemeAction.setVisible(
+      ToolbarModule.getParams().setToolbarVisible(
         true,
         ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS,
         {
@@ -3993,8 +4022,8 @@ const dotDensityMenuInfo = param => [
           column: 4,
           height: ConstToolType.THEME_HEIGHT[3],
           buttons: getThemeFourMenu(),
-          selectName: '点符号',
-          selectKey: '点符号',
+          selectName: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
+          selectKey: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           themeType: constants.THEME_DOT_DENSITY,
           themeSymbolType: ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS,
         },
@@ -4003,14 +4032,14 @@ const dotDensityMenuInfo = param => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
-    selectKey: '符号大小',
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
     //getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
     btnTitle: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
     action: () => {
       ThemeAction.getDotDensityValueAndDotsize(
         ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SIZE,
-        '符号大小',
-        '符号大小',
+        getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
+        getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
       )
     },
   },
@@ -4038,7 +4067,7 @@ const graduatedSymbolMenuInfo = param => [
     action: () => {
       ThemeAction.getThemeExpress(
         ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION,
-        '表达式',
+        getLanguage(param).Map_Main_Menu.THEME_EXPRESSION,
       )
     },
   },
@@ -4066,8 +4095,8 @@ const graduatedSymbolMenuInfo = param => [
     action: () => {
       ThemeAction.getGraduatedSymbolBaseValueAndSymbolSize(
         ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_VALUE,
-        '基准值',
-        '基准值',
+        getLanguage(param).Map_Main_Menu.DATUM_VALUE,
+        getLanguage(param).Map_Main_Menu.DATUM_VALUE,
       )
     },
   },
@@ -4077,7 +4106,7 @@ const graduatedSymbolMenuInfo = param => [
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
     action: () => {
       GLOBAL.toolBox && GLOBAL.toolBox.menu()
-      ThemeAction.setVisible(
+      ToolbarModule.getParams().setToolbarVisible(
         true,
         ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
         {
@@ -4086,8 +4115,8 @@ const graduatedSymbolMenuInfo = param => [
           column: 4,
           height: ConstToolType.THEME_HEIGHT[3],
           buttons: getThemeFourMenu(),
-          selectName: '点符号',
-          selectKey: '点符号',
+          selectName: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
+          selectKey: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           themeType: constants.THEME_GRADUATED_SYMBOL,
           themeSymbolType: ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
         },
@@ -4101,8 +4130,8 @@ const graduatedSymbolMenuInfo = param => [
     action: () => {
       ThemeAction.getGraduatedSymbolBaseValueAndSymbolSize(
         ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_SIZE,
-        '符号大小',
-        '符号大小',
+        getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
+        getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
       )
     },
   },
@@ -4216,8 +4245,8 @@ const heatmapMenuInfo = param => [
     action: () => {
       ThemeAction.getAggregationColorScheme(
         ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param.Map_Main_Menu).THEME_HEATMAP_COLOR,
+        getLanguage(param.Map_Main_Menu).THEME_HEATMAP_COLOR,
       )
     },
   },

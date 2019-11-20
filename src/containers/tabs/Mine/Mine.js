@@ -111,14 +111,34 @@ export default class Mine extends Component {
     })
   }
 
-  goToMyData = title => {
-    NavigationService.navigate('MyData', {
+  goToMyMap = title => {
+    NavigationService.navigate('MyMap', {
       title,
     })
   }
 
-  goToMyModule = title => {
-    NavigationService.navigate('MyModule', { title })
+  goToMyDatasource = title => {
+    NavigationService.navigate('MyDatasource', {
+      title,
+    })
+  }
+
+  goToMyScene = title => {
+    NavigationService.navigate('MyScene', {
+      title,
+    })
+  }
+
+  goToMyTemplate = title => {
+    NavigationService.navigate('MyTemplate', {
+      title,
+    })
+  }
+
+  goToMySymbol = title => {
+    NavigationService.navigate('MySymbol', {
+      title,
+    })
   }
 
   goToMyBaseMap = () => {
@@ -527,7 +547,7 @@ export default class Mine extends Component {
         title: getLanguage(this.props.language).Profile.DATA,
         leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
         onClick: () =>
-          this.goToMyData(getLanguage(this.props.language).Profile.DATA),
+          this.goToMyDatasource(getLanguage(this.props.language).Profile.DATA),
       },
       {
         title: getLanguage(this.props.language).Profile.MARK,
@@ -540,13 +560,13 @@ export default class Mine extends Component {
         title: getLanguage(this.props.language).Profile.MAP,
         leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
         onClick: () =>
-          this.goToMyData(getLanguage(this.props.language).Profile.MAP),
+          this.goToMyMap(getLanguage(this.props.language).Profile.MAP),
       },
       {
         title: getLanguage(this.props.language).Profile.SCENE,
         leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
         onClick: () =>
-          this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
+          this.goToMyScene(getLanguage(this.props.language).Profile.SCENE),
       },
       {
         title: getLanguage(this.props.language).Profile.BASEMAP,
@@ -559,7 +579,7 @@ export default class Mine extends Component {
         title: getLanguage(this.props.language).Profile.SYMBOL,
         leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
         onClick: () =>
-          this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
+          this.goToMySymbol(getLanguage(this.props.language).Profile.SYMBOL),
       },
       // {
       //   title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
@@ -573,7 +593,9 @@ export default class Mine extends Component {
         title: getLanguage(this.props.language).Profile.TEMPLATE,
         leftImagePath: require('../../../assets/function/icon_function_style.png'),
         onClick: () =>
-          this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
+          this.goToMyTemplate(
+            getLanguage(this.props.language).Profile.TEMPLATE,
+          ),
       },
     ]
     return data

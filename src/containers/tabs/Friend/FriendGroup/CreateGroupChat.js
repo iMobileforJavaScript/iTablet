@@ -84,7 +84,7 @@ class CreateGroupChat extends Component {
         // const {list} = data;
 
         let srcFriendData = []
-        for (let key in result) {
+        for (let key = 0; key < result.length; key++) {
           if (result[key].id && result[key].name) {
             let frend = {}
             frend['id'] = result[key].id
@@ -99,7 +99,7 @@ class CreateGroupChat extends Component {
         let sections = [],
           letterArr = []
 
-        for (var i in srcFriendData) {
+        for (let i = 0; i < srcFriendData.length; i++) {
           let person = srcFriendData[i]
           let name = person['markName']
           let firstChar = getPinYinFirstCharacter(name, '-', true)
@@ -220,7 +220,11 @@ class CreateGroupChat extends Component {
                   }
                   let newMembers = []
                   if (this.groupID) {
-                    for (let member in this.state.seletctArr) {
+                    for (
+                      let member = 0;
+                      member < this.state.seletctArr.length;
+                      member++
+                    ) {
                       if (
                         !FriendListFileHandle.isInGroup(
                           this.groupID,
@@ -327,7 +331,7 @@ class CreateGroupChat extends Component {
 
   _renderItem(item) {
     let bShowImage = false
-    for (let i in this.state.seletctArr) {
+    for (let i = 0; i < this.state.seletctArr.length; i++) {
       if (item.id === this.state.seletctArr[i].id) {
         bShowImage = true
         break

@@ -325,6 +325,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_SAVE_LINE: 'Save Line',
   MAP_AR_AI_CHANGE: 'Change',
   MAP_AR_AI_CLEAR: 'Clear',
+  MAP_AR_AI_NEW_ROAD: 'Please Create New Road',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',
@@ -367,6 +368,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
+  NETWORK_DATASET: 'Network Datasets',
+  MODEL_FILE: 'Navigation Model Files',
 }
 
 //推演动画

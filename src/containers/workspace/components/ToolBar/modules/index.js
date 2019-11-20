@@ -12,7 +12,7 @@ import editModule from './editModule'
 import analysisModule from './analysisModule'
 import plotModule from './plotModule'
 import tool3DModule from './tool3DModule'
-
+import navigationModule from './navigationModule'
 export {
   ToolbarModule,
   startModule,
@@ -27,4 +27,5 @@ export {
   analysisModule,
   plotModule,
   tool3DModule,
+  navigationModule,
 }

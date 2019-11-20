@@ -67,7 +67,7 @@ class FriendList extends Component {
         // const {list} = data;
 
         let srcFriendData = []
-        for (let key in result) {
+        for (let key = 0; key < result.length; key++) {
           if (result[key].id && result[key].name) {
             let frend = {}
             frend['id'] = result[key].id
@@ -83,7 +83,7 @@ class FriendList extends Component {
         let sections = [],
           letterArr = []
 
-        for (var i in srcFriendData) {
+        for (let i = 0; i < srcFriendData.length; i++) {
           let person = srcFriendData[i]
           let name = person['markName']
           let firstChar = getPinYinFirstCharacter(name, '-', true)

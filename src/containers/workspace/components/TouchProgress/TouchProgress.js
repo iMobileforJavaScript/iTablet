@@ -301,7 +301,7 @@ export default class TouchProgress extends Component {
             {
               if (
                 this.props.selectName ===
-                getLanguage(this.props.language).Map_Main_Menu.LEGEND_WIDTH
+                getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
               ) {
                 this.baseValue =
                   value !== undefined

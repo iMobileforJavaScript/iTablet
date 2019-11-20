@@ -11,6 +11,9 @@ import {
 } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
+import { FileTools } from '../../../../native'
+import { ConstPath } from '../../../../constants'
+import FetchUtils from '../../../../utils/FetchUtils'
 
 let _params = {}
 
@@ -73,19 +76,97 @@ function arMeasureCollect() {
 //AI分类
 function aiClassify() {
   (async function() {
-    let dataList = await SMap.getTaggingLayers(
-      _params.user.currentUser.userName,
-    )
-    if (dataList.length > 0) {
-      if (GLOBAL.showAIDetect) {
-        GLOBAL.isswitch = true
-        ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+    if (GLOBAL.isDownload) {
+      this.homePath = await FileTools.appendingHomeDirectory()
+      let dustbinPath =
+        this.homePath +
+        ConstPath.Common_AIClassifyModel +
+        'mobilenet_quant_224' +
+        '/'
+      this.dustbin_model = dustbinPath + 'mobilenet_quant_224' + '.tflite'
+      this.dustbin_txt = dustbinPath + 'mobilenet_quant_224' + '.txt'
+      let isDustbin =
+        (await FileTools.fileIsExist(this.dustbin_model)) &&
+        (await FileTools.fileIsExist(this.dustbin_txt))
+      if (isDustbin) {
+        let dataList = await SMap.getTaggingLayers(
+          _params.user.currentUser.userName,
+        )
+        if (dataList.length > 0) {
+          if (GLOBAL.showAIDetect) {
+            GLOBAL.isswitch = true
+            ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
+          }
+          const type = 'aiClassify'
+          _params.navigation.navigate('ChooseTaggingLayer', { type })
+        } else {
+          Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
+          _params.navigation.navigate('LayerManager')
+        }
+      } else {
+        GLOBAL.isDownload = false
+        let downloadData = getDownloadData(
+          'mobilenet_quant_224',
+          'mobilenet_quant_224',
+        )
+        _downloadData(downloadData)
+        Toast.show(getLanguage(_params.language).Prompt.DOWNLOADING_PLEASE_WAIT)
       }
-      const type = 'aiClassify'
-      _params.navigation.navigate('ChooseTaggingLayer', { type })
     } else {
-      Toast.show(getLanguage(_params.language).Prompt.PLEASE_NEW_PLOT_LAYER)
-      _params.navigation.navigate('LayerManager')
+      Toast.show(getLanguage(_params.language).Prompt.DOWNLOADING_PLEASE_WAIT)
+    }
+  }.bind(this)())
+}
+
+function getDownloadData(key, fileName) {
+  let cachePath = this.homePath + ConstPath.CachePath
+  let toPath = this.homePath + ConstPath.Common_AIClassifyModel + fileName
+  return {
+    key: key,
+    fileName: fileName,
+    cachePath: cachePath,
+    copyFilePath: toPath,
+  }
+}
+
+function _downloadData(downloadData) {
+  (async function() {
+    let keyword = downloadData.fileName
+    let dataUrl = await FetchUtils.getFindUserDataUrl(
+      'xiezhiyan123',
+      keyword,
+      '.zip',
+    )
+    let cachePath = downloadData.cachePath
+    let fileDirPath = downloadData.copyFilePath
+    let fileCachePath = cachePath + downloadData.fileName + '.zip'
+    await FileTools.deleteFile(fileCachePath)
+    try {
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: fileCachePath,
+        background: true,
+        fileName: downloadData.fileName,
+        progressDivider: 1,
+        key: downloadData.key,
+      }
+      _params
+        .downloadFile(downloadOptions)
+        .then(async () => {
+          await FileTools.unZipFile(fileCachePath, fileDirPath)
+          await FileTools.deleteFile(fileCachePath)
+          _params.deleteDownloadFile({ id: 'mobilenet_quant_224' })
+          GLOBAL.isDownload = true
+          Toast.show(getLanguage(_params.language).Prompt.DOWNLOAD_SUCCESSFULLY)
+        })
+        .catch(() => {
+          Toast.show(getLanguage(_params.language).Prompt.NETWORK_ERROR)
+          FileTools.deleteFile(fileCachePath)
+        })
+    } catch (e) {
+      Toast.show(getLanguage(_params.language).Prompt.NETWORK_ERROR)
+      //'网络错误，下载失败'
+      FileTools.deleteFile(fileCachePath)
     }
   }.bind(this)())
 }

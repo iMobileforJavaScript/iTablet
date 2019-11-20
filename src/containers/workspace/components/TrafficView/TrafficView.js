@@ -18,13 +18,13 @@ import { constUtil, scaleSize, LayerUtils } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Const, ConstOnline } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
-import { getPublicAssets, getThemeAssets } from '../../../../assets'
+import { getPublicAssets } from '../../../../assets'
 
 export default class TrafficView extends React.Component {
   props: {
     device: Object,
     getLayers: () => {},
-    showModelList: () => {},
+    // showModelList: () => {},
   }
 
   constructor(props) {
@@ -79,7 +79,7 @@ export default class TrafficView extends React.Component {
     let trafficImg = this.state.hasAdded
       ? getPublicAssets().navigation.icon_traffic_on
       : getPublicAssets().navigation.icon_traffic_off
-    let modelImg = getThemeAssets().functionBar.rightbar_network_model
+    // let modelImg = getThemeAssets().functionBar.rightbar_network_model
     return (
       <Animated.View style={[styles.container, { left: this.state.left }]}>
         <TouchableOpacity
@@ -102,16 +102,16 @@ export default class TrafficView extends React.Component {
           <Image source={trafficImg} style={styles.icon} />
           <Text style={styles.text}>路况</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          underlayColor={constUtil.UNDERLAYCOLOR_TINT}
-          style={{
-            flex: 1,
-          }}
-          onPress={this.props.showModelList}
-        >
-          <Image source={modelImg} style={styles.icon} />
-          <Text style={styles.text}>模型</Text>
-        </TouchableOpacity>
+        {/*<TouchableOpacity*/}
+        {/*  underlayColor={constUtil.UNDERLAYCOLOR_TINT}*/}
+        {/*  style={{*/}
+        {/*    flex: 1,*/}
+        {/*  }}*/}
+        {/*  onPress={this.props.showModelList}*/}
+        {/*>*/}
+        {/*  <Image source={modelImg} style={styles.icon} />*/}
+        {/*  <Text style={styles.text}>模型</Text>*/}
+        {/*</TouchableOpacity>*/}
       </Animated.View>
     )
   }

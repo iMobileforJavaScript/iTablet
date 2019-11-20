@@ -1,5 +1,6 @@
 import { FileTools } from '../../../../native'
 import { ConstPath } from '../../../../constants'
+import { SMap, EngineType } from 'imobile_for_reactnative'
 
 /**
  * 1.遍历scenes，获取可用的文件夹名
@@ -70,6 +71,26 @@ async function importDatasource(user, item) {
   await FileTools.copyFile(sourceUdd, userPath + '/' + uddName)
 }
 
+async function importTIF(tifPath, datasourceItem) {
+  try {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let alias = datasourceItem.name
+    let index = alias.lastIndexOf('.')
+    if (index > 0) {
+      alias = alias.substring(0, index)
+    }
+    let result = await SMap.importTIF(tifPath, {
+      server: homePath + datasourceItem.path,
+      alias: alias,
+      engineType: EngineType.UDB,
+    })
+    SMap.closeDatasource(alias)
+    return result
+  } catch (error) {
+    return false
+  }
+}
+
 function _getAvailableName(name, fileList, type, ext = '') {
   let AvailabeName = name
   if (type === 'file' && ext !== '') {
@@ -135,4 +156,5 @@ function _getWorkspaceType(path) {
 export default {
   importWorkspace3D,
   importDatasource,
+  importTIF,
 }

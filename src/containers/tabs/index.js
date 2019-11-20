@@ -3,7 +3,11 @@ import Home, { Setting, AboutITablet } from './Home'
 import Mine, {
   MyService,
   MyLocalData,
-  MyData,
+  MyMap,
+  MyScene,
+  MyDatasource,
+  MySymbol,
+  MyTemplate,
   Register,
   MyOnlineMap,
   ScanOnlineMap,
@@ -14,7 +18,6 @@ import Mine, {
   IPortalLogin,
   MyLabel,
   MyBaseMap,
-  MyModule,
   DatasourcePage,
   NewDataset,
   SearchMine,
@@ -65,7 +68,11 @@ export {
   /**Mine*/
   MyService,
   MyLocalData,
-  MyData,
+  MyMap,
+  MyScene,
+  MyDatasource,
+  MySymbol,
+  MyTemplate,
   Register,
   MyOnlineMap,
   ScanOnlineMap,
@@ -94,6 +101,5 @@ export {
   //-----------
   MyLabel,
   MyBaseMap,
-  MyModule,
   SuperMapKnown,
 }

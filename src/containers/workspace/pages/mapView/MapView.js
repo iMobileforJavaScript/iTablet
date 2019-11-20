@@ -31,7 +31,7 @@ import {
   AnalystMapToolbar,
   PoiInfoContainer,
   PoiTopSearchBar,
-  SimpleSelectList,
+  // SimpleSelectList,
   RNLegendView,
   ScaleView,
   FloorListView,
@@ -180,6 +180,8 @@ export default class MapView extends React.Component {
     setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
+    downloadFile: PropTypes.func,
+    deleteDownloadFile: PropTypes.func,
   }
 
   constructor(props) {
@@ -261,6 +263,11 @@ export default class MapView extends React.Component {
     this.fullMap = false
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
+
+    this.selectedData = {
+      selectedDataset: null,
+      selectedModelFilePath: null,
+    }
   }
 
   componentDidMount() {
@@ -447,6 +454,9 @@ export default class MapView extends React.Component {
       let data
       for (let i = 0; i < this.props.downloads.length; i++) {
         if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
           data = this.props.downloads[i]
         }
       }
@@ -1583,7 +1593,6 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
-        changeNavPathInfo={this.changeNavPathInfo}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
         save={() => {
@@ -1757,11 +1766,23 @@ export default class MapView extends React.Component {
     this.mapType = mapType
   }
 
+  //设置室外导航数据集和模型文件
+  setNavigationDatas = params => {
+    this.selectedData = params
+    Toast.show(getLanguage(GLOBAL.language).Prompt.SETTING_SUCCESS)
+  }
+
+  getNavigationDatas = () => {
+    return this.selectedData
+  }
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
         language={this.props.language}
+        changeNavPathInfo={this.changeNavPathInfo}
+        setNavigationDatas={this.setNavigationDatas}
+        getNavigationDatas={this.getNavigationDatas}
         existFullMap={() => this.showFullMap(false)}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1776,9 +1797,9 @@ export default class MapView extends React.Component {
           await SMap.removeNetworkDataset()
           SMap.setAction(Action.PAN)
           this.setState({ showIncrement: false })
-          this.SimpleSelectList.setState({
-            currentFloor: '',
-          })
+          // this.SimpleSelectList.setState({
+          //   currentFloor: '',
+          // })
           SMap.setIsMagnifierEnabled(false)
           GLOBAL.SUBMITED = false
         }}
@@ -1887,82 +1908,83 @@ export default class MapView extends React.Component {
     )
   }
 
-  //网络数据集和模型文件选择
-  showModelList = async () => {
-    let hasNetworkDataset = await SMap.hasNetworkDataset()
-    if (!hasNetworkDataset) {
-      Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
-      return
-    }
-    let popView = this.selectList
-    let simpleList = GLOBAL.SimpleSelectList
-    if (simpleList.renderType !== 'navigation') {
-      if (simpleList.state.navigationData.length === 0) {
-        let path =
-          (await FileTools.appendingHomeDirectory(
-            this.props.user && this.props.user.currentUser.userName
-              ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-              : ConstPath.CustomerPath,
-          )) + ConstPath.RelativePath.Datasource
-        let datasources = await SMap.getNetworkDatasource()
-        let models = await FileTools.getNetModel(path)
-        models = models.map(item => {
-          item.checked = false
-          return item
-        })
-        let navigationData = [
-          {
-            title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
-            visible: true,
-            image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
-            data: datasources || [],
-          },
-          {
-            title: getLanguage(this.props.language).Map_Main_Menu
-              .NETWORK_MODEL_FILE,
-            visible: true,
-            image: getThemeAssets().functionBar.rightbar_network_model,
-            data: models || [],
-          },
-        ]
-        simpleList.setState({
-          navigationData,
-          renderType: 'navigation',
-        })
-      } else {
-        simpleList.setState({
-          renderType: 'navigation',
-        })
-      }
-    }
-
-    this.showFullMap(true)
-    popView.setVisible(true)
-  }
+  // //网络数据集和模型文件选择
+  // showModelList = async () => {
+  //   // let hasNetworkDataset = await SMap.hasNetworkDataset()
+  //   // if (!hasNetworkDataset) {
+  //   //   Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
+  //   //   return
+  //   // }
+  //   // let popView = this.selectList
+  //   // let simpleList = GLOBAL.SimpleSelectList
+  //   // if (simpleList.renderType !== 'navigation') {
+  //   //   if (simpleList.state.navigationData.length === 0) {
+  //   //     let path =
+  //   //       (await FileTools.appendingHomeDirectory(
+  //   //         this.props.user && this.props.user.currentUser.userName
+  //   //           ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+  //   //           : ConstPath.CustomerPath,
+  //   //       )) + ConstPath.RelativePath.Datasource
+  //   //     let datasources = await SMap.getNetworkDatasource()
+  //   //     let models = await FileTools.getNetModel(path)
+  //   //     models = models.map(item => {
+  //   //       item.checked = false
+  //   //       return item
+  //   //     })
+  //   //     let navigationData = [
+  //   //       {
+  //   //         title: getLanguage(this.props.language).Map_Settings.DATASOURCES,
+  //   //         visible: true,
+  //   //         image: require('../../../../assets/mapToolbar/list_type_udb_black.png'),
+  //   //         data: datasources || [],
+  //   //       },
+  //   //       {
+  //   //         title: getLanguage(this.props.language).Map_Main_Menu
+  //   //           .NETWORK_MODEL_FILE,
+  //   //         visible: true,
+  //   //         image: getThemeAssets().functionBar.rightbar_network_model,
+  //   //         data: models || [],
+  //   //       },
+  //   //     ]
+  //   //     simpleList.setState({
+  //   //       navigationData,
+  //   //       renderType: 'navigation',
+  //   //     })
+  //   //   } else {
+  //   //     simpleList.setState({
+  //   //       renderType: 'navigation',
+  //   //     })
+  //   //   }
+  //   // }
+  //   //
+  //   // this.showFullMap(true)
+  //   // popView.setVisible(true)
+  // }
 
   //导航地图 模型、路网弹窗 数据在点击模型按钮时获取一次 切换地图时清空
-  renderNetworkSelectList = () => {
-    return (
-      <SimpleSelectList
-        ref={ref => (GLOBAL.SimpleSelectList = this.SimpleSelectList = ref)}
-        showFullMap={this.showFullMap}
-        language={this.props.language}
-        confirmAction={() => {
-          this.selectList.setVisible(false)
-          this.showFullMap(false)
-          let selectList = GLOBAL.SimpleSelectList
-          let { networkModel, networkDataset } = selectList.state
-          if (networkModel && networkDataset) {
-            SMap.startNavigation(networkDataset.datasetName, networkModel.path)
-            NavigationService.navigate('NavigationView', {
-              changeNavPathInfo: this.changeNavPathInfo,
-              showLocationView: true,
-            })
-          }
-        }}
-      />
-    )
-  }
+  // renderNetworkSelectList = () => {
+  //   return (
+  //     <SimpleSelectList
+  //       ref={ref => (GLOBAL.SimpleSelectList = this.SimpleSelectList = ref)}
+  //       showFullMap={this.showFullMap}
+  //       language={this.props.language}
+  //       confirmAction={() => {
+  //         this.selectList.setVisible(false)
+  //         this.showFullMap(false)
+  //         let selectList = GLOBAL.SimpleSelectList
+  //         let { networkModel, networkDataset } = selectList.state
+  //         if (networkModel && networkDataset) {
+  //           SMap.startNavigation(networkDataset.datasetName, networkModel.path)
+  //           NavigationService.navigate('NavigationView', {
+  //             changeNavPathInfo: this.changeNavPathInfo,
+  //             showLocationView: true,
+  //           })
+  //         }
+  //       }}
+  //     />
+  //   )
+  // }
+
   renderSearchBar = () => {
     return null
     // if (!this.props.analyst.params) return null
@@ -2104,6 +2126,10 @@ export default class MapView extends React.Component {
     if (this.props.downloads.length > 0) {
       for (let i = 0; i < this.props.downloads.length; i++) {
         if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+          break
+        }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
           data = this.props.downloads[i]
           break
         }
@@ -2254,7 +2280,7 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
         getLayers={this.props.getLayers}
         device={this.props.device}
-        showModelList={this.showModelList}
+        // showModelList={this.showModelList}
       />
     )
   }
@@ -2582,14 +2608,14 @@ export default class MapView extends React.Component {
           setNavigationPoiView={this.props.setNavigationPoiView}
           setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
-        {GLOBAL.Type === constants.MAP_NAVIGATION && (
-          <PopView
-            showFullMap={this.showFullMap}
-            ref={ref => (this.selectList = ref)}
-          >
-            {this.renderNetworkSelectList()}
-          </PopView>
-        )}
+        {/*{GLOBAL.Type === constants.MAP_NAVIGATION && (*/}
+        {/*  <PopView*/}
+        {/*    showFullMap={this.showFullMap}*/}
+        {/*    ref={ref => (this.selectList = ref)}*/}
+        {/*  >*/}
+        {/*    {this.renderNetworkSelectList()}*/}
+        {/*  </PopView>*/}
+        {/*)}*/}
         <AudioTopDialog
           ref={ref => (this.AudioDialog = ref)}
           startRecording={() => SSpeechRecognizer.start()}

@@ -3,6 +3,7 @@ import {
   Action,
   SMediaCollector,
   DatasetType,
+  SAIDetectView,
 } from 'imobile_for_reactnative'
 import {
   ConstToolType,
@@ -488,6 +489,12 @@ async function freecover() {
   } else {
     Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
   }
+}
+
+async function setting() {
+  NavigationService.navigate('AIDetecSettingsView')
+  this.props.showFullMap && this.props.showFullMap(true)
+  await SAIDetectView.setProjectionModeEnable(false)
 }
 
 // function name() {
@@ -985,4 +992,6 @@ export default {
   freecover,
   captureImage,
   tour,
+
+  setting,
 }

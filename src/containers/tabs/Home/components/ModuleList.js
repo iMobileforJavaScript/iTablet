@@ -173,8 +173,11 @@ class ModuleList extends Component {
     } else if (moduleKey === constants.MAP_PLOTTING) {
       fileName = '福建_示范数据'
     } else if (moduleKey === constants.MAP_NAVIGATION) {
-      fileName = 'NavigationData'
+      fileName = 'NavigationData_示范数据'
     }
+    // else if(moduleKey === constants.MAP_AR) {
+    //   fileName = 'AIData'
+    // }
 
     let tmpCurrentUser = this.props.currentUser
 

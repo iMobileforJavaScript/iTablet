@@ -12,6 +12,7 @@ const ai_tab = require('./ai_tab.png')
 const icon_ar_toolbar_save_point = require('./ai_save_point.png')
 const icon_cancel = require('./icon_function_cancel.png')
 const icon_flex = require('./icon_function_theme_param_style.png')
+const icon_down = require('./icon_down.png')
 export default {
   icon_ar_toolbar_close,
   icon_ar_toolbar_undo,
@@ -27,4 +28,5 @@ export default {
   ai_tab,
   icon_cancel,
   icon_flex,
+  icon_down,
 }
