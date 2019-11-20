@@ -68,8 +68,11 @@ function submit() {
   }.bind(this)())
 }
 
-function select() {
-  switch (GLOBAL.currentToolbarType) {
+function select(type) {
+  if (type === undefined) {
+    type = ToolbarModule.getParams().type
+  }
+  switch (type) {
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       SMap.setAction(Action.SELECT)
@@ -101,13 +104,14 @@ function pointSelect() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
+  let type
   if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
+    type = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
   } else {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+    type = ConstToolType.MAP_TOOL_POINT_SELECT
   }
 
-  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_POINT_SELECT, {
+  _params.setToolbarVisible(true, type, {
     containerType: 'table',
     column: 3,
     isFullScreen: false,
@@ -122,14 +126,14 @@ function selectByRectangle() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
+  let type
   if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
-    GLOBAL.currentToolbarType =
-      ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
+    type = ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
   } else {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+    type = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
   }
 
-  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE, {
+  _params.setToolbarVisible(true, type, {
     containerType: 'table',
     column: 3,
     isFullScreen: false,
@@ -145,7 +149,6 @@ function rectangleCut() {
   _params.showFullMap && _params.showFullMap(true)
   // addMapCutListener()
   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
@@ -182,9 +185,7 @@ function measureLength() {
     })
   })
 
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
-
-  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_MEASURE_LENGTH, {
     containerType: 'table',
     column: 4,
     isFullScreen: false,
@@ -221,9 +222,8 @@ function measureArea() {
       _params.showMeasureResult(true, rel + '㎡')
     })
   })
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
 
-  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_MEASURE_AREA, {
     containerType: 'table',
     column: 4,
     isFullScreen: false,
@@ -276,8 +276,9 @@ function measureAngle() {
 }
 
 /** 清除量算结果 **/
-function clearMeasure(type = GLOBAL.currentToolbarType) {
+function clearMeasure(type) {
   const _params = ToolbarModule.getParams()
+  type = _params.type
   if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
     switch (type) {
       case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
@@ -776,7 +777,6 @@ function commit(type) {
       type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
     ) {
       // 编辑完成关闭Toolbar
-      GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
       // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
       _params.setToolbarVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
         isFullScreen: false,
@@ -961,6 +961,15 @@ function pickerCancel() {
   })
 }
 
+/**
+ * Toolbar列表多选框
+ * @param selectList
+ * @returns {Promise.<void>}
+ */
+async function listSelectableAction({ selectList }) {
+  ToolbarModule.addData({ selectList })
+}
+
 export default {
   commit,
   showAttribute,
@@ -974,6 +983,7 @@ export default {
   clearMeasure,
   undo,
   redo,
+  listSelectableAction,
 
   begin,
   stop,

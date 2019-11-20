@@ -23,6 +23,7 @@ import NavigationStartButton from './NavigationStartButton'
 import NavigationStartHead from './NavigationStartHead'
 import SimpleSelectList from './SimpleSelectList'
 import LocationView from './LocationView'
+import RNFloorListView from './RNFLoorListView'
 import {
   AnalystMapButtons,
   AnalystMapRecommend,
@@ -75,4 +76,5 @@ export {
   AIFunctionToolbar,
   AIMapSuspensionDialog,
   NavigationPoiView,
+  RNFloorListView,
 }

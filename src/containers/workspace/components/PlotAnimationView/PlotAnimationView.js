@@ -550,7 +550,6 @@ export default class PlotAnimationView extends React.Component {
     let height = 0
     // this.props.showFullMap && this.props.showFullMap(true)
     let type = ConstToolType.PLOT_ANIMATION_START
-    GLOBAL.currentToolbarType = type
     this.props.showToolbar(true, type, {
       isFullScreen: false,
       height,
@@ -559,7 +558,7 @@ export default class PlotAnimationView extends React.Component {
   }
 
   createAnimationWay = () => {
-    if (this.state.animationMode == 0) {
+    if (this.state.animationMode === 0) {
       GLOBAL.animationWayData = this.getCreateInfo()
       GLOBAL.TouchType = TouchType.ANIMATION_WAY
       this.props.showToolbar(true, ConstToolType.PLOT_ANIMATION_WAY, {

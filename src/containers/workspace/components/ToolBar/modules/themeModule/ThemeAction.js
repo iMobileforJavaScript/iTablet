@@ -663,6 +663,7 @@ async function listSelectableAction({ selectList }) {
     list = list.concat(selectList[key])
   }
 
+  ToolbarModule.addData({ selectList })
   let Params = {
     LayerName: _params.currentLayer.name,
     GraphExpressions: list,

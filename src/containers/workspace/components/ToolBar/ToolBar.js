@@ -112,6 +112,7 @@ export default class ToolBar extends React.PureComponent {
     getNavigationDatas: () => {},
     //更改导航路径
     changeNavPathInfo: () => {},
+    getFloorListView: () => {},
   }
 
   static defaultProps = {
@@ -744,99 +745,6 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  menuCommit = (type = this.state.type, actionFirst = false) => {
-    (async function() {
-      let actionType = Action.PAN
-
-      if (actionFirst) {
-        await this.closeSubAction(type, actionType)
-      }
-
-      // if (type === ConstToolType.STYLE_TRANSFER) {
-      //   ToolbarPicker.hide()
-      // }
-
-      if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
-        // 去掉量算监听
-        SMap.removeMeasureListener()
-      }
-      if (GLOBAL.Type !== constants.MAP_3D) {
-        this.props.showMeasureResult(false)
-      }
-      if (GLOBAL.Type === constants.MAP_EDIT) {
-        GLOBAL.showMenu = true
-        // GLOBAL.showFlex = true
-        this.setState({ selectKey: '' })
-      }
-      if (
-        type === ConstToolType.MAP_ADD_DATASET ||
-        type === ConstToolType.MAP_THEME_ADD_DATASET
-      ) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
-      }
-
-      if (this.currentLayerStyle) {
-        this.currentLayerStyle = undefined
-      }
-      // 当前为采集状态
-      if (typeof type === 'number') {
-        await SCollector.stopCollect()
-      }
-
-      if (
-        typeof type === 'string' &&
-        type.indexOf('MAP_EDIT_') >= 0 &&
-        type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_TOOL_TAGGING &&
-        type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
-      ) {
-        actionType = Action.SELECT
-        GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
-        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-        this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
-          isFullScreen: false,
-          height: 0,
-        })
-      } else {
-        // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
-        if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-          GLOBAL.currentToolbarType = ''
-        }
-
-        this.showToolbar(false)
-        if (
-          this.state.isTouchProgress === true ||
-          this.state.showMenuDialog === true
-        ) {
-          this.setState(
-            { isTouchProgress: false, showMenuDialog: false },
-            () => {
-              this.updateOverlayView()
-            },
-          )
-        }
-        this.props.existFullMap && this.props.existFullMap()
-        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-        this.setState({
-          data: [],
-          // buttons: [],
-        })
-        this.height = 0
-      }
-      if (!actionFirst) {
-        setTimeout(async () => {
-          // 关闭采集, type 为number时为采集类型，若有冲突再更改
-          await this.closeSubAction(type, actionType)
-        }, Const.ANIMATED_DURATION_2)
-      }
-
-      this.updateOverlayView()
-      GLOBAL.TouchType = TouchType.NORMAL
-    }.bind(this)())
-  }
-
   showMenuBox = () => {
     if (
       ToolbarModule.getData().actions &&
@@ -999,7 +907,6 @@ export default class ToolBar extends React.PureComponent {
       let height = 0
       this.props.showFullMap && this.props.showFullMap(true)
       let type = ConstToolType.PLOT_ANIMATION_START
-      GLOBAL.currentToolbarType = type
       this.setVisible(true, type, {
         isFullScreen: false,
         height,

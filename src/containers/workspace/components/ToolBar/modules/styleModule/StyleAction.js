@@ -47,8 +47,8 @@ async function close() {
   })
 }
 
-async function listAction(type, params = {}) {
-  switch (type) {
+async function tableAction(params) {
+  switch (params.type) {
     case ConstToolType.LINECOLOR_SET:
       SCartography.setLineColor(params.key, params.layerName)
       break
@@ -199,7 +199,7 @@ function menu(type, selectKey, params = {}) {
 export default {
   commit,
   close,
-  listAction,
+  tableAction,
   layerListAction,
   menu,
 }

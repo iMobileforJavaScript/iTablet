@@ -3646,7 +3646,7 @@ const uniqueMenuInfo = param => [
     action: () => {
       ThemeAction.getUniqueColorScheme(
         ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -3678,16 +3678,13 @@ const rangeMenuInfo = param => [
   },
   {
     key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-    //getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
     selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-    //getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
     btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-    //getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
     action: () => {
       ThemeAction.getRangeParameter(
         ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
         // ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
-        getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
       )
     },
   },
@@ -3698,7 +3695,7 @@ const rangeMenuInfo = param => [
     action: () => {
       ThemeAction.getRangeColorScheme(
         ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -3819,7 +3816,7 @@ const uniqueLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getUniqueColorScheme(
         ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -3891,7 +3888,40 @@ const rangeLabelMenuInfo = param => [
     action: () => {
       ThemeAction.getRangeColorScheme(
         ConstToolType.MAP_THEME_PARAM_RANGELABEL_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      ThemeAction.getLabelFont(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    action: () => {
+      ThemeAction.getLabelFontSize(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+      )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
+    action: () => {
+      ThemeAction.getLabelFontRotation(
+        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
       )
     },
   },
@@ -3961,7 +3991,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -4155,14 +4185,14 @@ const graduatedSymbolMenuInfo = param => [
 //栅格单值专题图
 const gridUniqueMenuInfo = param => [
   {
-    key: getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
-    selectKey: getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+    key: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     action: () => {
       ThemeAction.getUniqueColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -4197,26 +4227,26 @@ const gridRangeMenuInfo = param => [
   //   },
   // },
   {
-    key: getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
-    selectKey: getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
-    btnTitle: getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
+    key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
     action: () => {
       ThemeAction.getRangeParameter(
         ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
-        getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
-        getLanguage(param.Map_Main_Menu).NUMBER_OF_SEGMENTS,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
       )
     },
   },
   {
-    key: getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
-    selectKey: getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+    key: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     action: () => {
       ThemeAction.getRangeColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
-        getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
@@ -4240,13 +4270,12 @@ const heatmapMenuInfo = param => [
   {
     key: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
-    // btnTitle: getLanguage(param.Map_Main_Menu).THEME_COLOR_SCHEME,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
     action: () => {
       ThemeAction.getAggregationColorScheme(
         ConstToolType.MAP_THEME_PARAM_HEAT_AGGREGATION_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_HEATMAP_COLOR,
-        getLanguage(param.Map_Main_Menu).THEME_HEATMAP_COLOR,
+        getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
+        getLanguage(param).Map_Main_Menu.THEME_HEATMAP_COLOR,
       )
     },
   },
