@@ -5,15 +5,15 @@ import { SMap, EngineType, DatasetType } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import { Toast, scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
-import MyDataPopupModal from './MyDataPopupModal'
-import { MineItem, BatchHeadBar } from '../component'
+import { MineItem, BatchHeadBar, MyDataPopupModal } from '../component'
 import { getThemeAssets } from '../../../../assets'
-import styles from './styles'
+import styles from '../component/styles'
 const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
 const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
 const textImg = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
 const CADImg = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+const IMGImg = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
 
 class DatasourcePage extends Component {
   props: {
@@ -162,6 +162,8 @@ class DatasourcePage extends Component {
       img = textImg
     } else if (type === DatasetType.CAD) {
       img = CADImg
+    } else if (type === DatasetType.IMAGE) {
+      img = IMGImg
     }
     return (
       <MineItem

@@ -2,6 +2,7 @@ import { ConstToolType } from '../../../../../constants'
 import { SMCollectorType } from 'imobile_for_reactnative'
 import ToolbarModule from './ToolbarModule'
 
+// TODO 分拆到各个模块下
 function getToolbarHeight(type) {
   const params = ToolbarModule.getParams()
   const orientation = params.device.orientation
@@ -409,6 +410,7 @@ function getToolbarHeight(type) {
       column = 4
       break
     case ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE:
+    case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_GRADUATEDMODE:
       height = ConstToolType.HEIGHT[0]
       column = 3
       break

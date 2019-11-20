@@ -11,12 +11,15 @@ import MyService from './MyService'
 import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 
 import MyLocalData from './MyLocalData'
-import MyData from './MyData'
+import MyMap from './MyMap'
+import MyScene from './MyScene'
+import MyDatasource from './MyDatasource'
+import MySymbol from './MySymbol'
+import MyTemplate from './MyTemplate'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
-import MyModule from './MyModule'
-import DatasourcePage from './MyData/DatasourcePage'
-import NewDataset from './MyData/NewDataset'
+import DatasourcePage from './MyDatasource/DatasourcePage'
+import NewDataset from './MyDatasource/NewDataset'
 import SearchMine from './Search'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
@@ -40,7 +43,11 @@ export default connect(
 export {
   Register,
   MyLocalData,
-  MyData,
+  MyMap,
+  MyScene,
+  MyDatasource,
+  MySymbol,
+  MyTemplate,
   MyService,
   MyOnlineMap,
   ScanOnlineMap,
@@ -51,7 +58,6 @@ export {
   IPortalLogin,
   MyLabel,
   MyBaseMap,
-  MyModule,
   DatasourcePage,
   NewDataset,
   SearchMine,

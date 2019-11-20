@@ -358,17 +358,14 @@ export default class ToolbarContentView extends React.Component {
         itemAction={async item => {
           if (
             ToolbarModule.getData().actions &&
-            ToolbarModule.getData().actions.listAction
+            ToolbarModule.getData().actions.tableAction
           ) {
             let params = {
               key: typeof item === 'string' ? item : item.key,
               layerName: this.props.currentLayer.name,
             }
-            typeof item === 'object' && Object.assign(params, { ...item })
-            await ToolbarModule.getData().actions.listAction(
-              this.props.type,
-              params,
-            )
+            typeof item === 'object' && Object.assign(params, item)
+            await ToolbarModule.getData().actions.tableAction(params)
           }
         }}
       />

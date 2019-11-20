@@ -347,8 +347,11 @@ export default class ToolBar extends React.PureComponent {
         }
         this.originType = type
         let newHeight = this.height
-        if (params && typeof params.height === 'number')
+        if (!isShow) {
+          newHeight = 0
+        } else if (params && typeof params.height === 'number') {
           newHeight = params.height
+        }
         this.shareTo = params.shareTo || ''
 
         this.setState(
@@ -358,16 +361,11 @@ export default class ToolBar extends React.PureComponent {
             data: params.data || data,
             customView: customView,
             buttons: params.buttons || buttons,
-            // listSelectable: params.listSelectable || false,
             isTouchProgress: params.isTouchProgress || false,
             isFullScreen:
               params && params.isFullScreen !== undefined
                 ? params.isFullScreen
                 : DEFAULT_FULL_SCREEN,
-            // column:
-            //   params && typeof params.column === 'number'
-            //     ? params.column
-            //     : DEFAULT_COLUMN,
             containerType:
               params && params.containerType
                 ? params.containerType

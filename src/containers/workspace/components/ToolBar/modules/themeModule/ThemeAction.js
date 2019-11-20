@@ -196,13 +196,11 @@ async function getGraphThemeGradutedMode(type, key = '', name = '') {
 //等级符号专题图分级方式
 async function getGraduatedSymbolGradutedMode(type, key = '', name = '') {
   let getData = async function() {
-    return {
-      data: await ThemeMenuData.getGraduatedSymbolGradutedMode(),
-    }
+    return await ThemeMenuData.getGraduatedSymbolGradutedMode()
   }
 
   dealData({
-    heights: [ConstToolType.THEME_HEIGHT[0], ConstToolType.THEME_HEIGHT[2]],
+    heights: [ConstToolType.THEME_HEIGHT[0]],
     getData: getData,
     state: {
       type,
@@ -1030,6 +1028,8 @@ async function listAction(type, params = {}) {
       ..._params,
       themeCreateType: themeCreateType,
     })
+  } else if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION) {
+    params.selectList && listSelectableAction({ selectList: params.selectList })
   }
 }
 

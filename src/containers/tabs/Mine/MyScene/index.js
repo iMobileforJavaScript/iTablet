@@ -1,4 +1,4 @@
-import MyLocalData from './MyData'
+import MyScene from './MyScene'
 import { importWorkspace } from '../../../../models/template'
 import { connect } from 'react-redux'
 import { setUser } from '../../../../models/user'
@@ -19,4 +19,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MyLocalData)
+)(MyScene)

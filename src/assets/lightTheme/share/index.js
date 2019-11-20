@@ -3,6 +3,7 @@ const online = require('./online.png')
 const wechat = require('./wechat.png')
 const friend = require('./friend.png')
 const share = require('./share.png')
+const local = require('./local.png')
 
 export default {
   iportal,
@@ -10,4 +11,5 @@ export default {
   wechat,
   friend,
   share,
+  local,
 }

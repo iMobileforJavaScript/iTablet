@@ -9,6 +9,7 @@ import { SimpleDialog } from '../../Friend'
 
 export default class ModalBtns extends Component {
   props: {
+    actionOfLocal: () => {},
     actionOfOnline: () => {},
     actionOfIPortal: () => {},
     cancel: () => {},
@@ -36,6 +37,18 @@ export default class ModalBtns extends Component {
     if (this.props.alwaysShow || this.state.show) {
       return (
         <View style={[styles.bottomBtns, { width: '100%' }, this.props.style]}>
+          {this.props.actionOfLocal && (
+            <MTBtn
+              key={'lcoal'}
+              title={getLanguage(global.language).Profile.LOCAL}
+              style={styles.button}
+              image={getThemeAssets().share.local}
+              imageStyle={styles.headerBtn}
+              onPress={() => {
+                this.props.actionOfLocal && this.props.actionOfLocal()
+              }}
+            />
+          )}
           {this.props.actionOfOnline && (
             <MTBtn
               key={'online'}
