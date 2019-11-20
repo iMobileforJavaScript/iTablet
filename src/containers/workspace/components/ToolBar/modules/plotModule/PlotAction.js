@@ -195,7 +195,6 @@ function reset() {
   ToolbarModule.getParams().showFullMap &&
     ToolbarModule.getParams().showFullMap(true)
   let type = ConstToolType.PLOT_ANIMATION_START
-  // GLOBAL.currentToolbarType = type
   ToolbarModule.getParams().setToolbarVisible(true, type, {
     isFullScreen: false,
     height,
@@ -324,6 +323,7 @@ function close() {
     GLOBAL.animationWayData && (GLOBAL.animationWayData = null)
     params.setToolbarVisible(false)
   } else {
+    SMap.setAction(Action.PAN)
     params.setToolbarVisible(false)
   }
   ToolbarModule.setData() // 关闭Toolbar清除临时数据
