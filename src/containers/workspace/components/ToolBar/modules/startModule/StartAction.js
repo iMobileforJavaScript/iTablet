@@ -784,6 +784,27 @@ async function changeMap(item) {
         getLanguage(params.language).Prompt.SWITCHING_SUCCESS,
         //ConstInfo.CHANGE_MAP_TO + mapInfo.name
       )
+      //切换地图后重新添加楼层控件事件
+      let floorListView = params.getFloorListView()
+      if (floorListView) {
+        let datas = await SMap.getFloorData()
+        if (datas.data && datas.data.length > 0) {
+          let { data, datasource, currentFloorID } = datas
+          floorListView.setState({
+            data,
+            datasource,
+            currentFloorID,
+          })
+          if (floorListView.listener === null) {
+            floorListView.listener = SMap.addFloorHiddenListener(result => {
+              if (result.isHidden !== floorListView.state.isHidden)
+                floorListView.setState({
+                  isHidden: result.isHidden,
+                })
+            })
+          }
+        }
+      }
       //切换地图后重新添加图例事件
       if (GLOBAL.legend) {
         await SMap.addLegendListener({
