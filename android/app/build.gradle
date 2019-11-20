@@ -93,7 +93,10 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+
+
 android {
+
     signingConfigs {
         release_config {
             keyAlias 'supermap'
@@ -109,9 +112,9 @@ android {
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 3
-        versionName "3.0.3"
+        versionName "3.0.4"
         manifestPlaceholders = [
                 JPUSH_APPKEY: "7d2470baad20e273cd6e53cc",
                 APP_CHANNEL : "default"

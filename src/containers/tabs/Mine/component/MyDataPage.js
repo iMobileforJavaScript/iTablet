@@ -58,9 +58,8 @@ export default class MyDataPage extends Component {
       batchMode: false,
       selectedNum: 0,
     }
-    this.formChat = params.formChat || false
-    this.chatCallBack = params.chatCallBack
-    this.callBackMode = params.callBackMode
+    this.getItemCallback = params.getItemCallback || undefined
+    this.chatCallback = params.chatCallback || undefined
   }
 
   componentDidMount() {
@@ -86,11 +85,21 @@ export default class MyDataPage extends Component {
 
   onItemPress = async () => {}
 
+  getRelativeTempFilePath = () => {
+    let userPath =
+      ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+    let relativeTempPath =
+      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+    return relativeTempPath
+  }
+
   getRelativeExportPath = () => {
     let userPath =
       ConstPath.UserPath + this.props.user.currentUser.userName + '/'
     let relativeExportPath =
-      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+      userPath +
+      ConstPath.RelativePath.ExternalData +
+      ConstPath.RelativeFilePath.ExportData
     return relativeExportPath
   }
 
@@ -116,6 +125,24 @@ export default class MyDataPage extends Component {
   /******************************** 接口 end **************************************/
 
   /******************************** 数据相关 *************************************/
+
+  _getAvailableFileName = async (path, name, ext) => {
+    let result = await FileTools.fileIsExist(path)
+    if (!result) {
+      await FileTools.createDirectory(path)
+    }
+    let availableName = name + '.' + ext
+    if (await FileTools.fileIsExist(path + '/' + availableName)) {
+      for (let i = 1; ; i++) {
+        availableName = name + '_' + i + '.' + ext
+        if (!(await FileTools.fileIsExist(path + '/' + availableName))) {
+          return availableName
+        }
+      }
+    } else {
+      return availableName
+    }
+  }
 
   _getSectionData = async () => {
     try {
@@ -236,10 +263,11 @@ export default class MyDataPage extends Component {
       this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
-        fileName = this.itemInfo.item.name.substring(
-          0,
-          this.itemInfo.item.name.lastIndexOf('.'),
-        )
+        fileName = this.itemInfo.item.name
+        let index = fileName.lastIndexOf('.')
+        if (index > 0) {
+          fileName = fileName.substring(0, index)
+        }
       }
       switch (type) {
         case 'local':
@@ -253,6 +281,9 @@ export default class MyDataPage extends Component {
           break
         case 'wechat':
           result = await this.shareToWechat(fileName)
+          break
+        case 'chat':
+          result = await this.shareToChat(fileName)
           break
         case 'friend':
           result = await this.shareToFriend(fileName)
@@ -277,7 +308,7 @@ export default class MyDataPage extends Component {
   shareToWechat = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let result = await appUtilsModule.sendFileOfWechat({
       filePath: path,
       title: fileName + '.zip',
@@ -289,7 +320,7 @@ export default class MyDataPage extends Component {
   shareToOnline = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let result
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       result = await SOnlineService.uploadFile(path, fileName)
@@ -302,7 +333,7 @@ export default class MyDataPage extends Component {
   shareToIPortal = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let uploadResult
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
@@ -319,14 +350,14 @@ export default class MyDataPage extends Component {
   shareToChat = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
-    this.chatCallBack && this.chatCallBack(path, fileName)
+    let path = homePath + this.getRelativeTempFilePath()
+    this.chatCallback && this.chatCallback(path, fileName)
     NavigationService.goBack()
   }
 
   shareToFriend = async fileName => {
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let type
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       type = MsgConstant.MSG_MAP
@@ -552,7 +583,7 @@ export default class MyDataPage extends Component {
 
     let img,
       isShowMore = true
-    if (this.formChat && this.chatCallBack) {
+    if (this.getItemCallback || this.chatCallback) {
       isShowMore = false
     }
     switch (this.state.title) {
@@ -593,7 +624,14 @@ export default class MyDataPage extends Component {
         showRight={isShowMore}
         showCheck={this.state.batchMode}
         onPress={() => {
-          this.onItemPress(info)
+          this.itemInfo = info
+          if (this.chatCallback) {
+            this._onShareData('chat')
+          } else if (this.getItemCallback) {
+            this.getItemCallback(info)
+          } else {
+            this.onItemPress(info)
+          }
         }}
         onPressMore={() => {
           this.itemInfo = info
@@ -644,7 +682,7 @@ export default class MyDataPage extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.formChat) return null
+    if (this.getItemCallback || this.chatCallback) return null
     if (this.state.batchMode) {
       return (
         <TouchableOpacity

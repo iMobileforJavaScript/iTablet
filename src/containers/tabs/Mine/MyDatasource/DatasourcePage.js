@@ -13,6 +13,7 @@ const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.p
 const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
 const textImg = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
 const CADImg = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+const IMGImg = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
 
 class DatasourcePage extends Component {
   props: {
@@ -161,6 +162,8 @@ class DatasourcePage extends Component {
       img = textImg
     } else if (type === DatasetType.CAD) {
       img = CADImg
+    } else if (type === DatasetType.IMAGE) {
+      img = IMGImg
     }
     return (
       <MineItem

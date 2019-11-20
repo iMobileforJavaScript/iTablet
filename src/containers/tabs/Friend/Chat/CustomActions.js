@@ -38,12 +38,9 @@ const ICONS = context => [
     type: 'ionicon',
     text: getLanguage(global.language).Friends.MAP,
     onPress: () => {
-      NavigationService.navigate('MyData', {
+      NavigationService.navigate('MyMap', {
         title: getLanguage(global.language).Profile.MAP,
-        formChat: true,
-        // eslint-disable-next-line
         chatCallBack: (_path, fileName) => {
-          // console.warn(path)
           context.props.sendCallBack(1, _path, fileName)
         },
       })
