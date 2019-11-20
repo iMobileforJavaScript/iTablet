@@ -58,9 +58,8 @@ export default class MyDataPage extends Component {
       batchMode: false,
       selectedNum: 0,
     }
-    this.formChat = params.formChat || false
-    this.chatCallBack = params.chatCallBack
-    this.callBackMode = params.callBackMode
+    this.getItemCallback = params.getItemCallback || undefined
+    this.chatCallback = params.chatCallback || undefined
   }
 
   componentDidMount() {
@@ -283,6 +282,9 @@ export default class MyDataPage extends Component {
         case 'wechat':
           result = await this.shareToWechat(fileName)
           break
+        case 'chat':
+          result = await this.shareToChat(fileName)
+          break
         case 'friend':
           result = await this.shareToFriend(fileName)
           break
@@ -349,7 +351,7 @@ export default class MyDataPage extends Component {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
-    this.chatCallBack && this.chatCallBack(path, fileName)
+    this.chatCallback && this.chatCallback(path, fileName)
     NavigationService.goBack()
   }
 
@@ -581,7 +583,7 @@ export default class MyDataPage extends Component {
 
     let img,
       isShowMore = true
-    if (this.formChat && this.chatCallBack) {
+    if (this.getItemCallback || this.chatCallback) {
       isShowMore = false
     }
     switch (this.state.title) {
@@ -622,7 +624,14 @@ export default class MyDataPage extends Component {
         showRight={isShowMore}
         showCheck={this.state.batchMode}
         onPress={() => {
-          this.onItemPress(info)
+          this.itemInfo = info
+          if (this.chatCallback) {
+            this._onShareData('chat')
+          } else if (this.getItemCallback) {
+            this.getItemCallback(info)
+          } else {
+            this.onItemPress(info)
+          }
         }}
         onPressMore={() => {
           this.itemInfo = info
@@ -673,7 +682,7 @@ export default class MyDataPage extends Component {
   }
 
   _renderHeaderRight = () => {
-    if (this.formChat) return null
+    if (this.getItemCallback || this.chatCallback) return null
     if (this.state.batchMode) {
       return (
         <TouchableOpacity

@@ -22,6 +22,7 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     let WS = []
     let WS3D = []
     let DS = []
+    let TIF = []
 
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
@@ -30,11 +31,13 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     WS = await getWSList(path, contentList, uncheckedChildFileList)
     WS3D = await getWS3DList(path, contentList, uncheckedChildFileList)
     DS = await getDSList(path, contentList, uncheckedChildFileList)
+    TIF = await getTIFList(path, contentList, uncheckedChildFileList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
       .concat(WS3D)
       .concat(DS)
+      .concat(TIF)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -213,6 +216,37 @@ async function getDSList(path, contentList, uncheckedChildFileList) {
   }
 }
 
+async function getTIFList(path, contentList, uncheckedChildFileList) {
+  let TIF = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isTIF(contentList[i].name)) {
+          contentList[i].check = true
+          TIF.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'tif',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        TIF = TIF.concat(
+          await getTIFList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return TIF
+  } catch (error) {
+    return TIF
+  }
+}
+
 /** 标绘模版 */
 async function _getPlottingList(path) {
   let arrFile = []
@@ -374,6 +408,18 @@ function _isDatasource2(name) {
     ext = name.substr(index + 1)
     //todo 添加其他格式
     return ext === 'udb'
+  }
+}
+
+function _isTIF(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'tif'
   }
 }
 
