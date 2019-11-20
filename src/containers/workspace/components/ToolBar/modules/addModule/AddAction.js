@@ -41,6 +41,7 @@ async function listAction(type, params = {}) {
         height,
       }
       let selectList = ToolbarModule.getData().selectList
+      _data.data[0].allSelectType = true
       if (
         selectList &&
         Object.keys(selectList).length > 0 &&

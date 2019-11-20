@@ -1528,12 +1528,11 @@ export default class MapView extends React.Component {
               this.props.analyst.params.backAction) ||
             null
           action && action()
-          GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
           if (this.state.mapTitle !== this.mapTitle) {
             this.setState({ mapTitle: this.mapTitle })
           }
           // TODO 不同类型高度修改
-          this.toolBox.setVisible(true, GLOBAL.currentToolbarType, {
+          this.toolBox.setVisible(true, ConstToolType.MAP_ANALYSIS, {
             isFullScreen: true,
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
             height: ConstToolType.TOOLBAR_HEIGHT[2],

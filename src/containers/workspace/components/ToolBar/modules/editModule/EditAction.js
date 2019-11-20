@@ -67,7 +67,6 @@ function close(type) {
   ) {
     SMap.cancel()
     actionType = Action.SELECT
-    GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
     // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
     params.setToolbarVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
       isFullScreen: false,

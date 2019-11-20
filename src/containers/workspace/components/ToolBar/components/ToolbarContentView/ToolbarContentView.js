@@ -271,7 +271,6 @@ export default class ToolbarContentView extends React.Component {
     let height = 0
     this.props.showFullMap && this.props.showFullMap(true)
     let type = ConstToolType.PLOT_ANIMATION_START
-    GLOBAL.currentToolbarType = type
     this.props.setVisible(true, type, {
       isFullScreen: false,
       height,
@@ -361,6 +360,7 @@ export default class ToolbarContentView extends React.Component {
             ToolbarModule.getData().actions.tableAction
           ) {
             let params = {
+              type: this.props.type,
               key: typeof item === 'string' ? item : item.key,
               layerName: this.props.currentLayer.name,
             }
