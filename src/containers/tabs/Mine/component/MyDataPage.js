@@ -86,11 +86,21 @@ export default class MyDataPage extends Component {
 
   onItemPress = async () => {}
 
+  getRelativeTempFilePath = () => {
+    let userPath =
+      ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+    let relativeTempPath =
+      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+    return relativeTempPath
+  }
+
   getRelativeExportPath = () => {
     let userPath =
       ConstPath.UserPath + this.props.user.currentUser.userName + '/'
     let relativeExportPath =
-      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+      userPath +
+      ConstPath.RelativePath.ExternalData +
+      ConstPath.RelativeFilePath.ExportData
     return relativeExportPath
   }
 
@@ -116,6 +126,24 @@ export default class MyDataPage extends Component {
   /******************************** 接口 end **************************************/
 
   /******************************** 数据相关 *************************************/
+
+  _getAvailableFileName = async (path, name, ext) => {
+    let result = await FileTools.fileIsExist(path)
+    if (!result) {
+      await FileTools.createDirectory(path)
+    }
+    let availableName = name + '.' + ext
+    if (await FileTools.fileIsExist(path + '/' + availableName)) {
+      for (let i = 1; ; i++) {
+        availableName = name + '_' + i + '.' + ext
+        if (!(await FileTools.fileIsExist(path + '/' + availableName))) {
+          return availableName
+        }
+      }
+    } else {
+      return availableName
+    }
+  }
 
   _getSectionData = async () => {
     try {
@@ -236,10 +264,11 @@ export default class MyDataPage extends Component {
       this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
-        fileName = this.itemInfo.item.name.substring(
-          0,
-          this.itemInfo.item.name.lastIndexOf('.'),
-        )
+        fileName = this.itemInfo.item.name
+        let index = fileName.lastIndexOf('.')
+        if (index > 0) {
+          fileName = fileName.substring(0, index)
+        }
       }
       switch (type) {
         case 'local':
@@ -277,7 +306,7 @@ export default class MyDataPage extends Component {
   shareToWechat = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let result = await appUtilsModule.sendFileOfWechat({
       filePath: path,
       title: fileName + '.zip',
@@ -289,7 +318,7 @@ export default class MyDataPage extends Component {
   shareToOnline = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let result
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       result = await SOnlineService.uploadFile(path, fileName)
@@ -302,7 +331,7 @@ export default class MyDataPage extends Component {
   shareToIPortal = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let uploadResult
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
@@ -319,14 +348,14 @@ export default class MyDataPage extends Component {
   shareToChat = async fileName => {
     await this.exportData(fileName)
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     this.chatCallBack && this.chatCallBack(path, fileName)
     NavigationService.goBack()
   }
 
   shareToFriend = async fileName => {
     let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeExportPath()
+    let path = homePath + this.getRelativeTempFilePath()
     let type
     if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
       type = MsgConstant.MSG_MAP

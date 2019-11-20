@@ -59,32 +59,41 @@ class MyLabel extends MyDataPage {
       '#.udb'
 
     let todatasourcePath =
-      userPath +
-      ConstPath.RelativePath.ExternalData +
-      name +
-      '/' +
-      name +
-      '.udb'
+      userPath + ConstPath.RelativePath.Temp + name + '/' + name + '.udb'
+
+    let archivePath, targetPath
+    archivePath = userPath + ConstPath.RelativePath.Temp + name
+    if (await FileTools.fileIsExist(archivePath)) {
+      FileTools.deleteFile(archivePath)
+    }
 
     let result = await DataHandler.creatLabelDatasource(
       this.props.user.currentUser,
       todatasourcePath,
     )
     if (result) {
-      let archivePath, targetPath
-      archivePath = userPath + ConstPath.RelativePath.ExternalData + name
       if (exportToTemp) {
-        //
+        targetPath = homePath + this.getRelativeTempFilePath()
+      } else {
+        let exportPath = homePath + this.getRelativeExportPath()
+        let availableName = await this._getAvailableFileName(
+          exportPath,
+          name,
+          'zip',
+        )
+        targetPath = exportPath + availableName
       }
-      targetPath = homePath + this.getRelativeExportPath()
+
       let uploadList
       if (this.state.batchMode) {
         uploadList = this._getSelectedNames(this._getSelectedList())
       } else {
         uploadList = [this.itemInfo.item.name]
       }
+
       await SMap.copyDataset(datasourcePath, todatasourcePath, uploadList)
       result = await FileTools.zipFile(archivePath, targetPath)
+      FileTools.deleteFile(archivePath)
     }
     return result
   }

@@ -60,7 +60,7 @@ class MyTemplate extends MyDataPage {
     return result
   }
 
-  exportData = async () => {
+  exportData = async (name, exportToTemp = true) => {
     let homePath = await FileTools.appendingHomeDirectory()
     let fromPath
     if (
@@ -78,7 +78,18 @@ class MyTemplate extends MyDataPage {
       fromPath = this.itemInfo.item.path
     }
 
-    let toPath = homePath + this.getRelativeExportPath()
+    let toPath = homePath + this.getRelativeTempFilePath()
+    if (exportToTemp) {
+      toPath = homePath + this.getRelativeTempFilePath()
+    } else {
+      let exportPath = homePath + this.getRelativeExportPath()
+      let availableName = await this._getAvailableFileName(
+        exportPath,
+        name,
+        'zip',
+      )
+      toPath = exportPath + availableName
+    }
     let result = await FileTools.zipFile(fromPath, toPath)
     return result
   }

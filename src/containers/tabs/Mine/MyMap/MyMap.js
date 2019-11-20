@@ -57,9 +57,8 @@ class MyMap extends MyDataPage {
     return result
   }
 
-  exportData = async () => {
-    let name = this.state.sectionData[0].data[this.itemInfo.index].name
-    let mapName = name.substring(0, name.length - 4)
+  exportData = async (name, exportToTemp = true) => {
+    let mapName = name
     let homePath = await FileTools.appendingHomeDirectory()
     let path =
       homePath +
@@ -72,7 +71,18 @@ class MyMap extends MyDataPage {
       '/' +
       mapName +
       '.smwu'
-    let zipPath = homePath + this.getRelativeExportPath()
+    let zipPath
+    if (exportToTemp) {
+      zipPath = homePath + this.getRelativeTempFilePath()
+    } else {
+      let exportPath = homePath + this.getRelativeExportPath()
+      let availableName = await this._getAvailableFileName(
+        exportPath,
+        name,
+        'zip',
+      )
+      zipPath = exportPath + availableName
+    }
 
     let exportResult = false
     await this.props.exportWorkspace(

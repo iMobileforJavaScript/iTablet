@@ -40,9 +40,20 @@ class MySymbol extends MyDataPage {
     return result
   }
 
-  exportData = async () => {
+  exportData = async (name, exportToTemp = true) => {
     let homePath = await FileTools.appendingHomeDirectory()
-    let targetPath = homePath + this.getRelativeExportPath()
+    let targetPath
+    if (exportToTemp) {
+      targetPath = homePath + this.getRelativeTempFilePath()
+    } else {
+      let exportPath = homePath + this.getRelativeExportPath()
+      let availableName = await this._getAvailableFileName(
+        exportPath,
+        name,
+        'zip',
+      )
+      targetPath = exportPath + availableName
+    }
     let archivePaths = []
 
     let symbolPath = homePath + this.itemInfo.item.path
