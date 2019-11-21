@@ -1768,7 +1768,6 @@ export default class MapView extends React.Component {
   //设置室外导航数据集和模型文件
   setNavigationDatas = params => {
     this.selectedData = params
-    Toast.show(getLanguage(GLOBAL.language).Prompt.SETTING_SUCCESS)
   }
 
   getNavigationDatas = () => {

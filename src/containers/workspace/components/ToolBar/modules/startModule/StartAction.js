@@ -797,9 +797,9 @@ async function changeMap(item) {
           })
           if (floorListView.listener === null) {
             floorListView.listener = SMap.addFloorHiddenListener(result => {
-              if (result.isHidden !== floorListView.state.isHidden)
+              if (result.currentFloorID !== floorListView.state.currentFloorID)
                 floorListView.setState({
-                  isHidden: result.isHidden,
+                  currentFloorID: result.currentFloorID,
                 })
             })
           }

@@ -75,6 +75,7 @@ export default class NavigationView extends React.Component {
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.TouchType = TouchType.NORMAL
     await SMap.clearPoint()
     NavigationService.goBack()
   }

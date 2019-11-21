@@ -31,30 +31,11 @@ export default class RNFloorListView extends React.Component {
         props.device.orientation === 'LANDSCAPE'
           ? scaleSize(360)
           : scaleSize(460),
-      currentFloorID: 0,
-      isHidden: false,
+      currentFloorID: '',
+      // isHidden: false,
     }
     this.listener = null
   }
-  // async componentDidMount() {
-  //   if(this.props.mapLoaded){
-  //     let datas = await SMap.getFloorData()
-  //     if(datas.data && datas.data.length > 0){
-  //       let {data,datasource,currentFloorID} = datas
-  //       this.setState({
-  //         data,
-  //         datasource,
-  //         currentFloorID,
-  //       })
-  //       this.listener =  SMap.addFloorHiddenListener(result=>{
-  //         if(result.isHidden !== this.state.isHidden)
-  //           this.setState({
-  //             isHidden:result.isHidden,
-  //           })
-  //       })
-  //     }
-  //   }
-  // }
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.props.device.orientation !== prevProps.device.orientation) {
@@ -85,9 +66,9 @@ export default class RNFloorListView extends React.Component {
         })
         if (!this.listener) {
           this.listener = SMap.addFloorHiddenListener(result => {
-            if (result.isHidden !== this.state.isHidden)
+            if (result.currentFloorID !== this.state.currentFloorID)
               this.setState({
-                isHidden: result.isHidden,
+                isHidden: result.currentFloorID,
               })
           })
         }
@@ -130,7 +111,7 @@ export default class RNFloorListView extends React.Component {
   }
 
   render() {
-    if (this.state.data.length === 0 || this.state.isHidden) return null
+    if (this.state.data.length === 0 || !this.state.currentFloorID) return null
     let floorListStyle = {
       maxHeight: this.state.height,
       left: this.state.left,
