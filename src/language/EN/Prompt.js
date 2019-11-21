@@ -89,6 +89,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
+  PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
+  DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
 
   COLLECT_SUCCESS: 'Collect Success',
 

@@ -22,7 +22,7 @@ function getToolbarHeight(type) {
         height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       } else {
-        height = ConstToolType.TOOLBAR_HEIGHT_2[1]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[2]
         column = 8
       }
       break
@@ -144,10 +144,10 @@ function getToolbarHeight(type) {
     case ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[5]
+        height = ConstToolType.THEME_HEIGHT[3]
         column = 4
       } else {
-        height = ConstToolType.THEME_HEIGHT[3]
+        height = ConstToolType.THEME_HEIGHT[7]
         column = 8
       }
       break

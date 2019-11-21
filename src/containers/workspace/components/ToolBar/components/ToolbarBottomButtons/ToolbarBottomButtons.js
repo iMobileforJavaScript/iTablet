@@ -18,7 +18,6 @@ export default class ToolbarBottomButtons extends React.Component {
     back: () => {}, // 返回上一个Toolbar状态
     showBox: () => {},
     setVisible: () => {},
-    showToolbar: () => {},
     existFullMap: () => {},
     closeIncrement: () => {},
     setCurrentLayer: () => {},

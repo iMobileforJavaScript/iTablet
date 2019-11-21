@@ -3,6 +3,7 @@ import {
   Action,
   SMediaCollector,
   DatasetType,
+  SAIDetectView,
 } from 'imobile_for_reactnative'
 import {
   ConstToolType,
@@ -67,16 +68,20 @@ function submit() {
   }.bind(this)())
 }
 
-function select() {
-  switch (GLOBAL.currentToolbarType) {
-    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
-    case ConstToolType.MAP_TOOL_POINT_SELECT:
-      SMap.setAction(Action.SELECT)
-      break
+function select(type) {
+  if (type === undefined) {
+    type = ToolbarModule.getParams().type
+  }
+  switch (type) {
     case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_POINT_SELECT:
+    default:
+      SMap.setAction(Action.SELECT)
       break
   }
 }
@@ -100,18 +105,19 @@ function pointSelect() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
+  let type
   if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
+    type = ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT
   } else {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
+    type = ConstToolType.MAP_TOOL_POINT_SELECT
   }
 
-  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_POINT_SELECT, {
+  _params.setToolbarVisible(true, type, {
     containerType: 'table',
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -121,19 +127,19 @@ function selectByRectangle() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
+  let type
   if (GLOBAL.MapToolType === ConstToolType.MAP_TOOLS) {
-    GLOBAL.currentToolbarType =
-      ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
+    type = ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE
   } else {
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+    type = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
   }
 
-  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE, {
+  _params.setToolbarVisible(true, type, {
     containerType: 'table',
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -144,18 +150,15 @@ function rectangleCut() {
   _params.showFullMap && _params.showFullMap(true)
   // addMapCutListener()
   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
     height: 0,
-    cb: () => select(),
   })
 }
 
 /** 距离量算 **/
 function measureLength() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -165,8 +168,10 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
         if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
@@ -181,9 +186,7 @@ function measureLength() {
     })
   })
 
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
-
-  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_MEASURE_LENGTH, {
     containerType: 'table',
     column: 4,
     isFullScreen: false,
@@ -193,7 +196,6 @@ function measureLength() {
 
 /**  面积量算  **/
 function measureArea() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -220,9 +222,8 @@ function measureArea() {
       _params.showMeasureResult(true, rel + '㎡')
     })
   })
-  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
 
-  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_MEASURE_AREA, {
     containerType: 'table',
     column: 4,
     isFullScreen: false,
@@ -232,7 +233,6 @@ function measureArea() {
 
 /**  角度量算  **/
 function measureAngle() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -275,8 +275,9 @@ function measureAngle() {
 }
 
 /** 清除量算结果 **/
-function clearMeasure(type = GLOBAL.currentToolbarType) {
+function clearMeasure(type) {
   const _params = ToolbarModule.getParams()
+  type = _params.type
   if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
     switch (type) {
       case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
@@ -488,6 +489,12 @@ async function freecover() {
   } else {
     Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_LAYER)
   }
+}
+
+async function setting() {
+  NavigationService.navigate('AIDetecSettingsView')
+  this.props.showFullMap && this.props.showFullMap(true)
+  await SAIDetectView.setProjectionModeEnable(false)
 }
 
 // function name() {
@@ -769,7 +776,6 @@ function commit(type) {
       type !== ConstToolType.MAP_TOOL_TAGGING_SETTING
     ) {
       // 编辑完成关闭Toolbar
-      GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
       // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
       _params.setToolbarVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
         isFullScreen: false,
@@ -954,6 +960,15 @@ function pickerCancel() {
   })
 }
 
+/**
+ * Toolbar列表多选框
+ * @param selectList
+ * @returns {Promise.<void>}
+ */
+async function listSelectableAction({ selectList }) {
+  ToolbarModule.addData({ selectList })
+}
+
 export default {
   commit,
   showAttribute,
@@ -967,6 +982,7 @@ export default {
   clearMeasure,
   undo,
   redo,
+  listSelectableAction,
 
   begin,
   stop,
@@ -985,4 +1001,6 @@ export default {
   freecover,
   captureImage,
   tour,
+
+  setting,
 }

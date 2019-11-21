@@ -550,7 +550,7 @@ async function getColorTable(type, key = '', name = '') {
   }
 
   dealData({
-    heights: [ConstToolType.THEME_HEIGHT[3], ConstToolType.THEME_HEIGHT[7]],
+    heights: [ConstToolType.THEME_HEIGHT[7], ConstToolType.THEME_HEIGHT[3]],
     getData: getData,
     state: {
       isFullScreen: false,
@@ -663,6 +663,7 @@ async function listSelectableAction({ selectList }) {
     list = list.concat(selectList[key])
   }
 
+  ToolbarModule.addData({ selectList })
   let Params = {
     LayerName: _params.currentLayer.name,
     GraphExpressions: list,
@@ -1326,7 +1327,7 @@ function layerListAction(data) {
         break
       default:
         Toast.show(
-          getLanguage(_params.language)
+          getLanguage(_params.language).Prompt
             .CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION,
         )
         break

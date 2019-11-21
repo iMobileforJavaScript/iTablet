@@ -34,7 +34,6 @@ import {
   // SimpleSelectList,
   RNLegendView,
   ScaleView,
-  FloorListView,
   IncrementRoadView,
   MapSelectPoint,
   NavigationStartButton,
@@ -43,6 +42,7 @@ import {
   TrafficView,
   LocationView,
   NavigationPoiView,
+  RNFloorListView,
 } from '../../components'
 import { ToolbarModule } from '../../components/ToolBar/modules'
 import {
@@ -180,6 +180,8 @@ export default class MapView extends React.Component {
     setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
+    downloadFile: PropTypes.func,
+    deleteDownloadFile: PropTypes.func,
   }
 
   constructor(props) {
@@ -452,6 +454,9 @@ export default class MapView extends React.Component {
       let data
       for (let i = 0; i < this.props.downloads.length; i++) {
         if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
           data = this.props.downloads[i]
         }
       }
@@ -1528,12 +1533,11 @@ export default class MapView extends React.Component {
               this.props.analyst.params.backAction) ||
             null
           action && action()
-          GLOBAL.currentToolbarType = ConstToolType.MAP_ANALYSIS
           if (this.state.mapTitle !== this.mapTitle) {
             this.setState({ mapTitle: this.mapTitle })
           }
           // TODO 不同类型高度修改
-          this.toolBox.setVisible(true, GLOBAL.currentToolbarType, {
+          this.toolBox.setVisible(true, ConstToolType.MAP_ANALYSIS, {
             isFullScreen: true,
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
             height: ConstToolType.TOOLBAR_HEIGHT[2],
@@ -1770,10 +1774,17 @@ export default class MapView extends React.Component {
   getNavigationDatas = () => {
     return this.selectedData
   }
+
+  //楼层控件
+  _getFloorListView = () => {
+    return this.FloorListView || null
+  }
+
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
+        getFloorListView={this._getFloorListView}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
         setNavigationDatas={this.setNavigationDatas}
@@ -2124,6 +2135,10 @@ export default class MapView extends React.Component {
           data = this.props.downloads[i]
           break
         }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
+          data = this.props.downloads[i]
+          break
+        }
       }
     }
     if (!data) return <View />
@@ -2258,11 +2273,13 @@ export default class MapView extends React.Component {
   // }
 
   _renderFloorListView = () => {
-    if (this.props.map2Dto3D) {
-      return <FloorListView device={this.props.device} />
-    } else {
-      return <View />
-    }
+    return (
+      <RNFloorListView
+        device={this.props.device}
+        mapLoaded={this.mapLoaded}
+        ref={ref => (this.FloorListView = ref)}
+      />
+    )
   }
 
   _renderTrafficView = () => {

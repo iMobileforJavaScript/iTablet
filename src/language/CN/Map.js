@@ -70,7 +70,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: '透明度',
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
-  STYLE_BACKFROUNG: '背景色',
+  STYLE_BACKGROUND: '背景色',
   STYLE_BORDER: '轮廓颜色',
   STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
@@ -342,6 +342,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_SAVE_LINE: '保存线',
   MAP_AR_AI_CHANGE: '切换视角',
   MAP_AR_AI_CLEAR: '清除',
+  MAP_AR_AI_NEW_ROAD: '请新建路线',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: '正在分类中',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: '分类失败,请重试',

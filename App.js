@@ -175,6 +175,7 @@ class AppRoot extends Component {
     GLOBAL.scaleView = null
     GLOBAL.SelectedSelectionAttribute = null // 框选-属性-关联对象 {layerInfo, index, data}
     this.setIsPad()
+    GLOBAL.isDownload = true //目标分类默认文件下载判断
   }
 
   setIsPad = async () => {

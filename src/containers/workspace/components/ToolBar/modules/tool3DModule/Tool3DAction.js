@@ -218,7 +218,6 @@ function boxClip() {
     return
   }
   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
-  GLOBAL.currentToolbarType = ConstToolType.MAP3D_BOX_CLIPPING
   params.setToolbarVisible(true, ConstToolType.MAP3D_BOX_CLIPPING, {
     isFullScreen: false,
   })

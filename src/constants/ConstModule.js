@@ -178,6 +178,7 @@ function SetMap(param) {
       moduleImage: getThemeAssets().nav.icon_map_vedio,
       moduleImageTouch: getThemeAssets().nav.icon_map_vedio_touch,
       moduleImageLight: require('../assets/home/Light/icon_videomap.png'),
+
       style: {
         width: scaleSize(70),
         height: scaleSize(67),

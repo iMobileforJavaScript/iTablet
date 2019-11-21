@@ -63,7 +63,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: 'Transparency',
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
-  STYLE_BACKFROUNG: 'Background',
+  STYLE_BACKGROUND: 'Background',
   STYLE_BORDER: 'Border Color',
   STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
@@ -325,6 +325,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_SAVE_LINE: 'Save Line',
   MAP_AR_AI_CHANGE: 'Change',
   MAP_AR_AI_CLEAR: 'Clear',
+  MAP_AR_AI_NEW_ROAD: 'Please Create New Road',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',

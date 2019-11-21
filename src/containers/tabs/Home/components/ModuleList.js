@@ -175,6 +175,9 @@ class ModuleList extends Component {
     } else if (moduleKey === constants.MAP_NAVIGATION) {
       fileName = 'NavigationData_示范数据'
     }
+    // else if(moduleKey === constants.MAP_AR) {
+    //   fileName = 'AIData'
+    // }
 
     let tmpCurrentUser = this.props.currentUser
 

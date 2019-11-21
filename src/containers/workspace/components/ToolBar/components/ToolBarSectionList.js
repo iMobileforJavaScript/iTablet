@@ -162,8 +162,8 @@ export default class ToolBarSectionList extends React.Component {
         selectList,
       },
       () => {
-        // this.props.listSelectableAction &&
-        // this.props.listSelectableAction({ selectList })
+        this.props.listSelectableAction &&
+          this.props.listSelectableAction({ selectList })
       },
     )
   }

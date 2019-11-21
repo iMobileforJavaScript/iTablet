@@ -111,7 +111,7 @@ class MyTemplate extends MyDataPage {
     ]
     return data
   }
-
+  // eslint-disable-next-line
   renderSectionHeader = ({ section }) => {
     let title = section.title
     let imageSource = section.isShowItem

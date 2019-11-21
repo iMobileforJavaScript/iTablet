@@ -117,17 +117,17 @@ export default class MT_layerManager extends React.Component {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      let layers = isInit ? this.props.layers : await this.props.getLayers()
+      let allLayers = isInit ? this.props.layers : await this.props.getLayers()
 
       let baseMap = []
       if (
-        layers.length > 0 ||
-        (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
+        allLayers.length > 0 ||
+        (allLayers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
       ) {
         if (
-          (layers.length > 0 &&
-            !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
-          (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
+          (allLayers.length > 0 &&
+            !LayerUtils.isBaseLayer(allLayers[allLayers.length - 1].name)) ||
+          (allLayers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
         ) {
           baseMap = [
             {
@@ -139,10 +139,11 @@ export default class MT_layerManager extends React.Component {
               type: 81,
             },
           ]
-        } else {
-          baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
+        } else if (allLayers.length > 0) {
+          baseMap = [allLayers[allLayers.length - 1]]
+          allLayers.splice(allLayers.length - 1, 1)
         }
-      } else if (layers.length === 0) {
+      } else if (allLayers.length === 0) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
           GLOBAL.Type === constants.COLLECTION
@@ -151,12 +152,27 @@ export default class MT_layerManager extends React.Component {
           false,
           false, // 分析模块下，显示地图
         )
-        layers = await this.props.getLayers()
-        baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
+        allLayers = await this.props.getLayers()
+        baseMap = allLayers.length > 0 ? [allLayers[allLayers.length - 1]] : []
       }
-      let dataList = await SMap.getTaggingLayers(
-        this.props.user.currentUser.userName,
-      )
+
+      let taggingLayers = [] // 标注图层
+      let layers = [] // 我的图层
+      // 加载标注图层后，标注图层会添加到地图中，getLayers获取的图层包含普通图层和标注图层
+      for (let i = 0; i < allLayers.length; i++) {
+        if (LayerUtils.getLayerType(allLayers[i]) === 'TAGGINGLAYER') {
+          taggingLayers.unshift(allLayers[i])
+        } else {
+          layers.push(allLayers[i])
+        }
+      }
+
+      // 若无标注图层，则去加载
+      if (taggingLayers.length === 0) {
+        taggingLayers = await SMap.getTaggingLayers(
+          this.props.user.currentUser.userName,
+        )
+      }
       if (this.props.currentLayer.name) {
         this.prevItemRef = this.currentItemRef
         this.currentItemRef =
@@ -167,7 +183,7 @@ export default class MT_layerManager extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Layer.PLOTS,
             //'我的标注',
-            data: dataList,
+            data: taggingLayers,
             visible:
               this.state.data.length === 3 ? this.state.data[0].visible : true,
           },
@@ -471,41 +487,56 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = async (data, value, section) => {
-    let layers = this.state.data[1].data
-    let backMaps = this.state.data[2].data
-    let Label = this.state.data[0].data
-    let hasDeal = false
+    let layers = section.data
+    // let layers = this.state.data[1].data
+    // let backMaps = this.state.data[2].data
+    // let Label = this.state.data[0].data
+    // let hasDeal = false
     let name = data.name
     let curData = JSON.parse(JSON.stringify(this.state.data))
+    let sectionIndex = 0
+    for (let i = 0; i < curData.length; i++) {
+      if (section.title === curData[i].title) {
+        sectionIndex = i
+        break
+      }
+    }
     let result = false
     if (data.path !== '') {
       for (let i = 0, l = layers.length; i < l; i++) {
         if (name === layers[i].name) {
-          curData[1].data[i].isVisible = value
-          /*
-           *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
-           *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
-           */
-          //hasDeal = true
+          curData[sectionIndex].data[i].isVisible = value
           break
         }
       }
-      if (!hasDeal)
-        for (let j = 0, l = backMaps.length; j < l; j++) {
-          if (name === backMaps[j].name) {
-            curData[2].data[j].isVisible = value
-            hasDeal = true
-            break
-          }
-        }
-      if (!hasDeal)
-        for (let j = 0, l = Label.length; j < l; j++) {
-          if (name === Label[j].name) {
-            curData[0].data[j].isVisible = value
-            hasDeal = true
-            break
-          }
-        }
+
+      // for (let i = 0, l = layers.length; i < l; i++) {
+      //   if (name === layers[i].name) {
+      //     curData[1].data[i].isVisible = value
+      //     // /*
+      //     //    *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+      //     //  *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+      //     //  */
+      //     // hasDeal = true
+      //     break
+      //   }
+      // }
+      // if (!hasDeal)
+      //   for (let j = 0, l = backMaps.length; j < l; j++) {
+      //     if (name === backMaps[j].name) {
+      //       curData[2].data[j].isVisible = value
+      //       hasDeal = true
+      //       break
+      //     }
+      //   }
+      // if (!hasDeal)
+      //   for (let j = 0, l = Label.length; j < l; j++) {
+      //     if (name === Label[j].name) {
+      //       curData[0].data[j].isVisible = value
+      //       hasDeal = true
+      //       break
+      //     }
+      //   }
       result = await SMap.setLayerVisible(data.path, value)
 
       if (
@@ -538,24 +569,31 @@ export default class MT_layerManager extends React.Component {
     return result
   }
 
-  setAllLayersVisible = async () => {
+  setAllLayersVisible = async section => {
     this.setLoading(true)
-    let data = JSON.parse(JSON.stringify(this.state.data))
-    let layers = data[1].data
+    // let layers = section.data
+    let layers = JSON.parse(JSON.stringify(section.data))
     let visibles = this.isAllLayersVisible(layers)
     if (visibles) {
-      for (let i in layers) {
-        await SMap.setLayerVisible(layers[i].path, false)
-        layers[i].isVisible = false
-        SMediaCollector.hideMedia(layers[i].name)
+      for (let layer of layers) {
+        await SMap.setLayerVisible(layer.path, false)
+        layer.isVisible = false
+        SMediaCollector.hideMedia(layer.name)
       }
     } else {
-      for (let i in layers) {
-        if (layers[i].isVisible === false) {
-          await SMap.setLayerVisible(layers[i].path, true)
-          layers[i].isVisible = true
-          SMediaCollector.showMedia(layers[i].name)
+      for (let layer of layers) {
+        if (layer.isVisible === false) {
+          await SMap.setLayerVisible(layer.path, true)
+          layer.isVisible = true
+          SMediaCollector.showMedia(layer.name)
         }
+      }
+    }
+    let data = JSON.parse(JSON.stringify(this.state.data))
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].title === section.title) {
+        data[i].data = layers
+        break
       }
     }
     this.setState({ data, allLayersVisible: !visibles })
@@ -564,8 +602,8 @@ export default class MT_layerManager extends React.Component {
 
   isAllLayersVisible = layers => {
     if (layers.length > 0) {
-      for (let i in layers) {
-        if (layers[i].isVisible === false) {
+      for (let layer of layers) {
+        if (layer.isVisible === false) {
           return false
         }
       }
@@ -861,7 +899,7 @@ export default class MT_layerManager extends React.Component {
                   alignItems: 'center',
                   marginRight: scaleSize(10),
                 }}
-                onPress={this.setAllLayersVisible}
+                onPress={() => this.setAllLayersVisible(section)}
               >
                 <Text style={{ fontSize: scaleSize(24), color: '#A0A0A0' }}>
                   {this.state.allLayersVisible
