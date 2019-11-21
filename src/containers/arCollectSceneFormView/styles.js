@@ -22,8 +22,6 @@ export default StyleSheet.create({
     marginRight: scaleSize(5),
   },
   historyTitle: {
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
     fontSize: setSpText(30),
     color: 'black',
@@ -87,6 +85,9 @@ export default StyleSheet.create({
   },
   historyCloseIcon: {
     flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   historyDelete: {
     width: scaleSize(60),
@@ -99,6 +100,11 @@ export default StyleSheet.create({
   smallIcon: {
     width: scaleSize(50),
     height: scaleSize(50),
+  },
+  smallIcons: {
+    marginLeft: scaleSize(10),
+    width: scaleSize(30),
+    height: scaleSize(30),
   },
   toolbar: {
     position: 'absolute',

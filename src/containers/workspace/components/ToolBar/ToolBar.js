@@ -105,6 +105,9 @@ export default class ToolBar extends React.PureComponent {
     cancelincrement: () => {},
     switchAr: () => {},
     setOpenOnlineMap: () => {},
+    downloads: Array,
+    downloadFile: () => {},
+    deleteDownloadFile: () => {},
     //设置、获取室外导航数据
     setNavigationDatas: () => {},
     getNavigationDatas: () => {},

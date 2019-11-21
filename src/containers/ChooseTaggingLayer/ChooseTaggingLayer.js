@@ -9,6 +9,7 @@ import { Container } from '../../components'
 
 import { ConstToolType } from '../../constants'
 import ToolbarBtnType from '../../containers/workspace/components/ToolBar/ToolbarBtnType'
+import ToolAction from '../../containers/workspace/components/ToolBar/modules/toolModule/ToolAction'
 import { getLanguage } from '../../language'
 
 export default class ChooseTaggingLayer extends React.Component {
@@ -60,11 +61,14 @@ export default class ChooseTaggingLayer extends React.Component {
         // ToolbarBtnType.COLLECTTARGET,
         ToolbarBtnType.PLACEHOLDER,
         ToolbarBtnType.PLACEHOLDER,
-        ToolbarBtnType.SETTIING,
+        {
+          type: ToolbarBtnType.SETTIING,
+          action: ToolAction.setting,
+          image: require('../../assets/mapTools/ai_setting.png'),
+        },
       ]
       ;(await GLOBAL.toolBox) &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.AIDETECT, {
-          height: ConstToolType.HEIGHT[4],
           buttons: buttons,
           isFullScreen: false,
         })

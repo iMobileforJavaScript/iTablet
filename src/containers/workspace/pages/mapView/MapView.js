@@ -180,6 +180,8 @@ export default class MapView extends React.Component {
     setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
+    downloadFile: PropTypes.func,
+    deleteDownloadFile: PropTypes.func,
   }
 
   constructor(props) {
@@ -452,6 +454,9 @@ export default class MapView extends React.Component {
       let data
       for (let i = 0; i < this.props.downloads.length; i++) {
         if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+        }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
           data = this.props.downloads[i]
         }
       }
@@ -2127,6 +2132,10 @@ export default class MapView extends React.Component {
     if (this.props.downloads.length > 0) {
       for (let i = 0; i < this.props.downloads.length; i++) {
         if (this.props.downloads[i].id === GLOBAL.Type) {
+          data = this.props.downloads[i]
+          break
+        }
+        if (this.props.downloads[i].id === 'mobilenet_quant_224') {
           data = this.props.downloads[i]
           break
         }
