@@ -21,6 +21,7 @@ import com.supermap.containts.EventConst;
 import com.supermap.plugin.LocationManagePlugin;
 import com.supermap.smNative.collector.SMCollector;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class AppUtils extends ReactContextBaseJavaModule {
@@ -49,7 +50,19 @@ public class AppUtils extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             promise.reject(e);
         }
-       }
+    }
+
+     @ReactMethod
+     public void getLocale(Promise promise) {
+        try {
+            Locale locale = Locale.getDefault();
+            String language = locale.getLanguage();
+            String contry = locale.getCountry();
+            promise.resolve(language + '-'+ contry);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+     }
 
     @ReactMethod
     public void  sendFileOfWechat(ReadableMap map, Promise promise){

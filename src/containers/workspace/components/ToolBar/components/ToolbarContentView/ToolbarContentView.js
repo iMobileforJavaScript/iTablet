@@ -99,31 +99,39 @@ export default class ToolbarContentView extends React.Component {
       (this.height !== data.height || this.state.column !== data.column)
     ) {
       this.height = data.height
-      this.setState(
-        {
-          column: data.column,
-        },
-        () => this.changeHeight(this.height),
-      )
+      this.changeHeight(data)
     }
   }
 
   // Box内容框的显示和隐藏
-  changeHeight = (height, wait = false) => {
-    if (
-      !isNaN(height) &&
-      JSON.stringify(this.state.boxHeight) !== height.toString()
-    ) {
-      this.height = height
-      let animate = Animated.timing(this.state.boxHeight, {
-        toValue: this.height,
-        duration: Const.ANIMATED_DURATION,
-      })
-      if (wait) {
-        return animate
+  changeHeight = params => {
+    let change = _params => {
+      if (
+        !isNaN(_params.height) &&
+        JSON.stringify(this.state.boxHeight) !== _params.height.toString()
+      ) {
+        this.height = _params.height
+        let animate = Animated.timing(this.state.boxHeight, {
+          toValue: this.height,
+          duration: Const.ANIMATED_DURATION,
+        })
+        if (_params.wait) {
+          return animate
+        }
+        animate.start()
       }
-      animate.start()
     }
+    if (typeof params === 'number') {
+      return change({ height: params })
+    } else if (
+      params.column !== undefined &&
+      params.column !== this.state.column
+    ) {
+      this.setState({
+        column: params.column,
+      })
+    }
+    return change(params)
   }
 
   getContentHeight = () => {

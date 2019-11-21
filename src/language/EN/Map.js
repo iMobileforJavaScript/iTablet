@@ -63,7 +63,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: 'Transparency',
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
-  STYLE_BACKFROUNG: 'Background',
+  STYLE_BACKGROUND: 'Background',
   STYLE_BORDER: 'Border Color',
   STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',

@@ -43,13 +43,13 @@ export default class ColorTable extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.device.orientation !== this.props.device.orientation) {
-      this.height =
-        prevProps.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[7]
-          : ConstToolType.THEME_HEIGHT[3]
-      this.ColumnNums = prevProps.device.orientation === 'LANDSCAPE' ? 12 : 8
-    }
+    // if (prevProps.device.orientation !== this.props.device.orientation) {
+    //   this.height =
+    //     prevProps.device.orientation === 'LANDSCAPE'
+    //       ? ConstToolType.THEME_HEIGHT[7]
+    //       : ConstToolType.THEME_HEIGHT[3]
+    //   this.ColumnNums = prevProps.device.orientation === 'LANDSCAPE' ? 12 : 8
+    // }
     if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
       this.setState({
         data: this.dealData(this.props.data),
@@ -149,30 +149,22 @@ export default class ColorTable extends React.Component {
   }
 
   render() {
-    // let data = this.props.data
-    // while (data.length % this.ColumnNums !== 0) {
-    //   data.push({
-    //     useSpace: true,
-    //   })
-    // }
     return (
-      <View
+      <FlatList
+        key={'list_' + this.ColumnNums}
         style={{
           height: this.height,
           width: '100%',
           // justifyContent: 'flex-end',
           backgroundColor: color.white,
         }}
-      >
-        <FlatList
-          renderItem={this.renderItem}
-          data={this.state.data}
-          keyExtractor={(item, index) =>
-            (typeof item === 'string' ? item : item.key) + index
-          }
-          numColumns={this.ColumnNums}
-        />
-      </View>
+        renderItem={this.renderItem}
+        data={this.state.data}
+        keyExtractor={(item, index) =>
+          (typeof item === 'string' ? item : item.key) + index
+        }
+        numColumns={this.ColumnNums}
+      />
     )
   }
 }
