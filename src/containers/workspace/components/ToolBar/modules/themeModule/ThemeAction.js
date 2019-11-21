@@ -1327,7 +1327,7 @@ function layerListAction(data) {
         break
       default:
         Toast.show(
-          getLanguage(_params.language)
+          getLanguage(_params.language).Prompt
             .CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION,
         )
         break

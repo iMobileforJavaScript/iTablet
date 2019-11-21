@@ -166,12 +166,15 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     let tempPrev = Object.assign({}, prevProps)
     let tempthis = Object.assign({}, this.props)
     tempPrev.nav && delete tempPrev.nav
     tempthis.nav && delete tempthis.nav
-    if (JSON.stringify(tempPrev) !== JSON.stringify(tempthis)) {
+    if (
+      JSON.stringify(tempPrev) !== JSON.stringify(tempthis) ||
+      this.state.type !== prevState.type
+    ) {
       // 实时更新params
       this.setToolbarParams()
     }
@@ -181,6 +184,7 @@ export default class ToolBar extends React.PureComponent {
 
   setToolbarParams = () => {
     ToolbarModule.setParams({
+      type: this.state.type,
       setToolbarVisible: this.setVisible,
       setLastState: this.setLastState,
       scrollListToLocation: this.scrollListToLocation,

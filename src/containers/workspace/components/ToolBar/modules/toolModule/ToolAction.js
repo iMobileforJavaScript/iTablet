@@ -73,14 +73,15 @@ function select(type) {
     type = ToolbarModule.getParams().type
   }
   switch (type) {
-    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
-    case ConstToolType.MAP_TOOL_POINT_SELECT:
-      SMap.setAction(Action.SELECT)
-      break
     case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_POINT_SELECT:
+    default:
+      SMap.setAction(Action.SELECT)
       break
   }
 }
@@ -116,7 +117,7 @@ function pointSelect() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -138,7 +139,7 @@ function selectByRectangle() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -153,13 +154,11 @@ function rectangleCut() {
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
     height: 0,
-    cb: () => select(),
   })
 }
 
 /** 距离量算 **/
 function measureLength() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -169,8 +168,10 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
         if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
@@ -195,7 +196,6 @@ function measureLength() {
 
 /**  面积量算  **/
 function measureArea() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -233,7 +233,6 @@ function measureArea() {
 
 /**  角度量算  **/
 function measureAngle() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
