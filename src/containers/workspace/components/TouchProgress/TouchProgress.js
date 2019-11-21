@@ -736,7 +736,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         newValue = value * 30 + 2
         if (newValue <= 2) {
@@ -933,7 +934,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
@@ -1295,7 +1297,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         if (value <= 2) {
           value = 2
