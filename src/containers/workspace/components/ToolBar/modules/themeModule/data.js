@@ -3958,7 +3958,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
-        getLanguage(param).Map_Main_Menu.Map_Main_Menu.THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },
