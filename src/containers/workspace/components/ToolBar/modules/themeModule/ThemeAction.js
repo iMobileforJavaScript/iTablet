@@ -550,7 +550,7 @@ async function getColorTable(type, key = '', name = '') {
   }
 
   dealData({
-    heights: [ConstToolType.THEME_HEIGHT[3], ConstToolType.THEME_HEIGHT[7]],
+    heights: [ConstToolType.THEME_HEIGHT[7], ConstToolType.THEME_HEIGHT[3]],
     getData: getData,
     state: {
       isFullScreen: false,

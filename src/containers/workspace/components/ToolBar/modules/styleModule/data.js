@@ -278,7 +278,7 @@ const region = (param, orientation = 'PORTRAIT') => [
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FOREGROUND,
   },
   // {
-  //   key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  //   key: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
   //   action: () => {
   //     GLOBAL.toolBox && GLOBAL.toolBox.menu()
   //     let height, column
@@ -301,10 +301,10 @@ const region = (param, orientation = 'PORTRAIT') => [
   //           ToolbarBtnType.MENU_FLEX,
   //           ToolbarBtnType.TOOLBAR_COMMIT,
   //         ],
-  //         selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  //         selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
   //       })
   //   },
-  //   selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+  //   selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
   // },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_BORDER,

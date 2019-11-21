@@ -1,6 +1,11 @@
 import React from 'react'
 import { screen } from '../../../../utils'
-import { ConstToolType, TouchType, Const } from '../../../../constants'
+import {
+  ConstToolType,
+  TouchType,
+  Const,
+  ToolbarType,
+} from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import NavigationService from '../../../../containers/NavigationService'
 import * as ExtraDimensions from 'react-native-extra-dimensions-android'
@@ -25,10 +30,6 @@ import {
 } from './components'
 import Utils from './utils'
 
-/** 工具栏类型 **/
-const list = 'list'
-const table = 'table'
-const tabs = 'tabs'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -115,7 +116,7 @@ export default class ToolBar extends React.PureComponent {
   static defaultProps = {
     containerProps: {
       data: [],
-      containerType: table,
+      containerType: ToolbarType.table,
       themeType: '',
       isFullScreen: DEFAULT_FULL_SCREEN,
       column: DEFAULT_COLUMN, // 只有table可以设置
@@ -124,12 +125,6 @@ export default class ToolBar extends React.PureComponent {
 
   constructor(props) {
     super(props)
-    this.height =
-      props.containerProps.height >= 0
-        ? props.containerProps.height
-        : props.containerProps.containerType === list
-          ? ConstToolType.HEIGHT[3]
-          : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
     this.shareTo = ''
     this.state = {
@@ -151,8 +146,10 @@ export default class ToolBar extends React.PureComponent {
       themeSymbolType: '',
       hasSoftMenuBottom: false,
     }
+    this.height = 0
     this.isShow = false
-    this.isBoxShow = true
+    this.column = -1
+    this.isBoxShow = false
     this.lastState = {}
 
     this.setToolbarParams()
@@ -174,24 +171,9 @@ export default class ToolBar extends React.PureComponent {
     if (JSON.stringify(tempPrev) !== JSON.stringify(tempthis)) {
       // 实时更新params
       this.setToolbarParams()
-      // setToolbarActionParams({
-      //   setVisible: this.setVisible,
-      //   setLastState: this.setLastState,
-      //   scrollListToLocation: this.scrollListToLocation,
-      //   ...this.props,
-      // })
     }
-    // if (this.props.device.orientation !== prevProps.device.orientation) {
-    //   // if (this.state.type === ConstToolType.STYLE_TRANSFER) {
-    //   //   ToolbarPicker.updateView()
-    //   // }
-    //   if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
-    //     return
-    //   }
-    //   // 点采集，GPS打点类型为0
     this.props.device.orientation !== prevProps.device.orientation &&
       this.changeHeight(this.props.device.orientation, this.state.type)
-    // }
   }
 
   setToolbarParams = () => {
@@ -209,22 +191,15 @@ export default class ToolBar extends React.PureComponent {
   }
 
   changeHeight = async (orientation, type) => {
+    if (this.height === 0) return
     if (!(this.isShow && this.isBoxShow)) {
       this.showToolbar()
       return
     }
     let data = ToolbarHeight.getToolbarHeight(type)
     this.height = data.height
-    data.column !== undefined &&
-      this.setState({
-        column: data.column,
-      })
+    this.column = data.column
     this.showToolbar()
-    // if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
-    //   this.isBoxShow && this.showToolbar()
-    // } else {
-    //   this.isShow && this.showToolbar()
-    // }
   }
 
   getOriginType = () => {
@@ -370,8 +345,8 @@ export default class ToolBar extends React.PureComponent {
               params && params.containerType
                 ? params.containerType
                 : type === ConstToolType.MAP_SYMBOL
-                  ? tabs
-                  : table,
+                  ? ToolbarType.tabs
+                  : ToolbarType.table,
             themeType:
               params && params.themeType
                 ? params.themeType
@@ -386,6 +361,7 @@ export default class ToolBar extends React.PureComponent {
           () => {
             // if (!showViewFirst) {
             if (!isNaN(newHeight)) this.height = newHeight
+            if (!isNaN(params.column)) this.column = params.column
             this.showToolbarAndBox(isShow, type)
             !isShow && this.props.existFullMap && this.props.existFullMap()
             // }
@@ -447,7 +423,11 @@ export default class ToolBar extends React.PureComponent {
       type === ConstToolType.MAP_THEME_PARAM ||
       type === ConstToolType.MAP_THEME_PARAM_GRAPH
     ) {
-      let animated = this.contentView.changeHeight(0, true)
+      let animated = this.contentView.changeHeight({
+        height: 0,
+        column: this.column > -1 ? this.column : undefined,
+        wait: true,
+      })
       animated && animatedList.push(animated)
       this.isBoxShow = false
     } else {
@@ -455,7 +435,11 @@ export default class ToolBar extends React.PureComponent {
         JSON.stringify(this.contentView.getContentHeight()) !==
         this.height.toString()
       ) {
-        let boxAnimated = this.contentView.changeHeight(this.height, true)
+        let boxAnimated = this.contentView.changeHeight({
+          height: this.height,
+          column: this.column > -1 ? this.column : undefined,
+          wait: true,
+        })
         if (boxAnimated) {
           JSON.stringify(this.contentView.getContentHeight()) === '0' &&
           bottom >= 0
@@ -494,8 +478,12 @@ export default class ToolBar extends React.PureComponent {
       JSON.stringify(this.contentView.getContentHeight()) !==
       this.height.toString()
     ) {
-      let boxAnimated = await this.contentView.changeHeight(this.height, true)
-      this.height === 0 && bottom >= 0
+      let boxAnimated = await this.contentView.changeHeight({
+        height: this.height,
+        column: this.column > -1 ? this.column : undefined,
+        wait: true,
+      })
+      boxAnimated && this.height === 0 && bottom >= 0
         ? animatedList.unshift(boxAnimated)
         : animatedList.push(boxAnimated)
     }
@@ -882,7 +870,10 @@ export default class ToolBar extends React.PureComponent {
         ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
       this.setVisible(false)
-    } else if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
+    } else if (
+      typeof this.state.type === 'string' &&
+      this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+    ) {
       this.contentView && this.contentView.changeHeight(0)
       this.isBoxShow = false
       this.setState(
@@ -952,7 +943,6 @@ export default class ToolBar extends React.PureComponent {
         setVisible={this.setVisible}
         buttons={this.state.buttons}
         showBox={this.showBox}
-        showToolbar={this.showToolbar}
         showMenuBox={this.showMenuBox}
         menu={this.menu}
         closeIncrement={this.closeIncrement}

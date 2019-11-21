@@ -70,7 +70,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: '透明度',
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
-  STYLE_BACKFROUNG: '背景色',
+  STYLE_BACKGROUND: '背景色',
   STYLE_BORDER: '轮廓颜色',
   STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
