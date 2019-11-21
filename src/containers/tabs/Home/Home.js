@@ -178,6 +178,11 @@ export default class Home extends Component {
     })
   }
 
+  _onSettingLanguage = () => {
+    this._closeModal()
+    NavigationService.navigate('LanguageSetting')
+  }
+
   _onAbout = () => {
     this._closeModal()
     NavigationService.navigate('AboutITablet')
@@ -444,6 +449,7 @@ export default class Home extends Component {
         onToggleAccount={this._onToggleAccount}
         onLogout={this._logoutConfirm}
         onSetting={this._onSetting}
+        onSettingLanguage={this._onSettingLanguage}
         onAbout={this._onAbout}
         modalVisible={this.state.modalIsVisible}
         onCloseModal={this._closeModal}

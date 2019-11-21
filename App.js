@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 class AppRoot extends Component {
   static propTypes = {
     language: PropTypes.string,
+    autoLanguage: PropTypes.bool,
     nav: PropTypes.object,
     backActions: PropTypes.object,
     user: PropTypes.object,
@@ -233,6 +234,9 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
+    if(this.props.autoLanguage) {
+      this.props.setLanguage('AUTO')
+    }
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
@@ -853,6 +857,7 @@ class AppRoot extends Component {
 const mapStateToProps = state => {
   return {
     language: state.setting.toJS().language,
+    autoLanguage: state.setting.toJS().autoLanguage,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

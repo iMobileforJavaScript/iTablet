@@ -124,6 +124,7 @@ import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
 import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
+import LanguageSetting from './languageSetting'
 
 const AppNavigator = createStackNavigator(
   {
@@ -614,6 +615,13 @@ const AppNavigator = createStackNavigator(
     },
     Setting: {
       screen: Setting,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LanguageSetting: {
+      screen: LanguageSetting,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
