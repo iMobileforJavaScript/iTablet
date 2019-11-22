@@ -181,41 +181,6 @@ export default class MapController extends React.Component {
     }
   }
 
-  renderfloor = () => {
-    if (this.props.type !== 'MAP_NAVIGATION') {
-      return <View />
-    } else {
-      return (
-        <View style={[styles.shadow, styles.separator, styles.btn]}>
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-        </View>
-      )
-    }
-  }
-
   render() {
     return (
       <Animated.View
@@ -226,7 +191,6 @@ export default class MapController extends React.Component {
           { bottom: this.state.bottom },
         ]}
       >
-        {/*{this.renderfloor()}*/}
         {this.renderLocation()}
         {this.renderCompass()}
         <View style={[styles.topView, styles.shadow]}>

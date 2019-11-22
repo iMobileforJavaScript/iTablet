@@ -183,6 +183,8 @@ const Prompt = {
 
   POI: '兴趣点',
 
+  ILLEGAL_DATA: '数据非法!',
+
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',
