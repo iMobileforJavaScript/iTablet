@@ -35,14 +35,14 @@ export default class TrafficView extends React.Component {
       hasAdded: false,
       showIcon: true,
     }
-    this.isIndoor = undefined
+    this.currentFloorID = ''
   }
 
   componentDidMount() {
-    SMap.addIndoorChangeListener(async result => {
-      if (result.isIndoor !== this.isIndoor) {
-        this.isIndoor = result.isIndoor
-        if (!this.isIndoor) {
+    SMap.addFloorHiddenListener(async result => {
+      if (result.currentFloorID !== this.currentFloorID) {
+        this.currentFloorID = result.currentFloorID
+        if (!this.currentFloorID) {
           let layers = this.props.getLayers && (await this.props.getLayers())
           let baseMap = layers.filter(layer =>
             LayerUtils.isBaseLayer(layer.name),

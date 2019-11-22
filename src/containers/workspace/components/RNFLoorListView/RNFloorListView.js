@@ -33,7 +33,6 @@ export default class RNFloorListView extends React.Component {
           ? scaleSize(370)
           : scaleSize(460),
       currentFloorID: '',
-      // isHidden: false,
     }
     this.listener = null
   }
