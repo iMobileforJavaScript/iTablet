@@ -92,7 +92,7 @@ export default class ToolbarContentView extends React.Component {
 
   // TODO 每次更改高度和列数的方式可能会两次次setState，需要优化
   onChangeHeight = async (orientation, type) => {
-    let data = ToolbarHeight.getToolbarHeight(type)
+    let data = ToolbarHeight.getToolbarHeight(type, this.height)
     if (
       data.column !== undefined &&
       data.height !== undefined &&
