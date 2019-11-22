@@ -2228,7 +2228,7 @@ export default class MapView extends React.Component {
     } else {
       GLOBAL.TouchType = TouchType.NORMAL
       this.showFullMap(false)
-      Toast.show('数据非法')
+      Toast.show(getLanguage(this.props.language).Prompt.ILLEGAL_DATA)
     }
   }
 
