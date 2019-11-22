@@ -10,6 +10,7 @@ import {
 import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
+import { Const } from '../../../../constants'
 
 export default class RNFloorListView extends React.Component {
   props: {
@@ -26,10 +27,10 @@ export default class RNFloorListView extends React.Component {
         props.device.orientation === 'LANDSCAPE'
           ? scaleSize(160)
           : scaleSize(240),
-      left: new Animated.Value(scaleSize(34)),
+      left: new Animated.Value(scaleSize(20)),
       bottom:
         props.device.orientation === 'LANDSCAPE'
-          ? scaleSize(360)
+          ? scaleSize(370)
           : scaleSize(460),
       currentFloorID: '',
       // isHidden: false,
@@ -43,7 +44,7 @@ export default class RNFloorListView extends React.Component {
       let bottom = prevState.bottom
       if (this.props.device.orientation === 'LANDSCAPE') {
         height = scaleSize(160)
-        bottom = scaleSize(360)
+        bottom = scaleSize(370)
       } else {
         height = scaleSize(240)
         bottom = scaleSize(460)
@@ -73,6 +74,20 @@ export default class RNFloorListView extends React.Component {
           })
         }
       }
+    }
+  }
+
+  setVisible = (visible, immediately = false) => {
+    if (visible) {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(20),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    } else {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(-200),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
     }
   }
 

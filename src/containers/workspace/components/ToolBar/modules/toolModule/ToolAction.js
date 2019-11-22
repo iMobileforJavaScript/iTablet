@@ -14,7 +14,6 @@ import {
 import { dataUtil, Toast, StyleUtils } from '../../../../../../utils'
 import { FileTools } from '../../../../../../native'
 import { ImagePicker } from '../../../../../../components'
-import ToolbarBtnType from '../../ToolbarBtnType'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
@@ -33,38 +32,10 @@ function stop() {
 
 function submit() {
   (async function() {
-    const _params = ToolbarModule.getParams()
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
-      await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
+      await SMap.addGPSRecordset()
     }
     await SMap.submit()
-
-    let name = GLOBAL.SELECTDATASOURCE
-    let data = []
-    let maplist = await SMap.getNetWorkDataset(name)
-    if (maplist && maplist.length > 0) {
-      let userList = []
-      maplist.forEach(item => {
-        let name = item.dataset
-        item.title = name
-        item.name = name.split('.')[0]
-        item.image = require('../../../../../../assets/Navigation/network.png')
-        userList.push(item)
-      })
-    }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-      //'选择数据集',
-      image: require('../../../../../../assets/Navigation/network_white.png'),
-      data: maplist || [],
-    })
-    _params.setToolbarVisible(true, ConstToolType.NETWORKDATASET, {
-      containerType: 'list',
-      height: ConstToolType.THEME_HEIGHT[4],
-      data,
-      isFullScreen: false,
-      buttons: [ToolbarBtnType.CANCEL_INCREMENT],
-    })
   }.bind(this)())
 }
 

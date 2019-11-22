@@ -1584,14 +1584,8 @@ export default class MapView extends React.Component {
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
-        showModelList={this.showModelList}
         setMapType={this.setMapType}
         online={this.props.online}
-        incrementRoad={() => {
-          GLOBAL.TouchType = TouchType.NULL //进入路网，触摸事件设置为空
-          this.showFullMap(true)
-          this.setState({ showIncrement: true })
-        }}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
         save={() => {
@@ -2221,9 +2215,9 @@ export default class MapView extends React.Component {
           height: ConstToolType.HEIGHT[0],
         })
       } else {
-        SMap.setLabelColor()
-        SMap.setAction(Action.DRAWLINE)
-        SMap.setIsMagnifierEnabled(true)
+        await SMap.setLabelColor()
+        await SMap.setAction(Action.DRAWLINE)
+        await SMap.setIsMagnifierEnabled(true)
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_INCREMENT, {
           containerType: 'table',
           column: 4,
@@ -2287,6 +2281,12 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
         getLayers={this.props.getLayers}
         device={this.props.device}
+        incrementRoad={() => {
+          GLOBAL.TouchType = TouchType.NULL //进入路网，触摸事件设置为空
+          this.showFullMap(true)
+          this.setState({ showIncrement: true })
+        }}
+        language={this.props.language}
         // showModelList={this.showModelList}
       />
     )
