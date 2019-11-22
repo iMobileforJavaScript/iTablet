@@ -965,7 +965,7 @@ export default class TouchProgress extends Component {
           parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
-          FontSize: value,
+          FontSize: parseInt(value),
         }
         await SThemeCartography.setUniformLabelFontSize(_params)
       } else if (
