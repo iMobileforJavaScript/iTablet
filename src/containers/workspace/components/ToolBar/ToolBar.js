@@ -292,6 +292,8 @@ export default class ToolBar extends React.PureComponent {
     if (isShow && GLOBAL.TouchType !== TouchType.ANIMATION_WAY) {
       GLOBAL.TouchType = TouchType.NULL
       GLOBAL.bubblePane && GLOBAL.bubblePane.reset() // 重置气泡提示
+    } else if (!isShow) {
+      GLOBAL.TouchType = TouchType.NORMAL
     }
     this.setOverlayViewVisible(isShow)
 

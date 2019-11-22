@@ -187,6 +187,8 @@ const Prompt = {
 
   POI: 'POI',
 
+  ILLEGAL_DATA: 'Illegal Data!',
+
   SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
   ENTER_DATA_NAME: 'Please enter the data name',
   SHARED_DATA_10M: ' The file over 10MB cannot be shared',

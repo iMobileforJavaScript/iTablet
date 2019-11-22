@@ -85,7 +85,9 @@ class FriendMessage extends Component {
     let currentUser
     if (this.props.chat.hasOwnProperty(this.props.user.userId)) {
       currentUser = this.props.chat[this.props.user.userId]
-      for (let key = 0; key < currentUser.length; key++) {
+      let keys = Object.keys(currentUser)
+      for (let i = 0, key = ''; i < keys.length; i++) {
+        key = keys[i]
         let messageHistory = currentUser[key].history
         let unReadMsg = currentUser[key].unReadMsg
         if (key === '1') {

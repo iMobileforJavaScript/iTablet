@@ -49,10 +49,6 @@ export default class MyDataPage extends Component {
       shareToWechat: false,
       shareToFriend: false,
       sectionData: [],
-      modalIsVisible: false,
-      isFirstLoadingModal: true,
-      textValue: '扫描文件:',
-      textDisplay: 'none',
       title: (params && params.title) || '',
       isRefreshing: false,
       batchMode: false,
@@ -149,11 +145,10 @@ export default class MyDataPage extends Component {
       let sectionData = await this.getData()
       this.setState({
         sectionData: sectionData,
-        textDisplay: 'none',
         selectedNum: 0,
       })
     } catch (e) {
-      this.setState({ textDisplay: 'none' })
+      // console.log(e)
     }
   }
 
@@ -531,23 +526,19 @@ export default class MyDataPage extends Component {
   /******************************* popup ***********************************************/
 
   _closeModal = () => {
-    this.setState({ modalIsVisible: false }, () => {
-      this.ItemPopModal && this.ItemPopModal.setVisible(false)
-      this.PagePopModal && this.PagePopModal.setVisible(false)
-    })
+    this.ItemPopModal && this.ItemPopModal.setVisible(false)
+    this.PagePopModal && this.PagePopModal.setVisible(false)
   }
 
   _renderItemPopup = () => {
-    if (!this.state.isFirstLoadingModal) {
-      let data = this.getItemPopupData()
-      return (
-        <MyDataPopupModal
-          ref={ref => (this.ItemPopModal = ref)}
-          data={data}
-          onCloseModal={this._closeModal}
-        />
-      )
-    }
+    let data = this.getItemPopupData()
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.ItemPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
   }
 
   _renderPagePopup = () => {
@@ -635,21 +626,7 @@ export default class MyDataPage extends Component {
         }}
         onPressMore={() => {
           this.itemInfo = info
-          if (this.state.isFirstLoadingModal) {
-            this.setState(
-              {
-                modalIsVisible: true,
-                isFirstLoadingModal: false,
-              },
-              () => {
-                this.ItemPopModal && this.ItemPopModal.setVisible(true)
-              },
-            )
-          } else {
-            this.setState({ modalIsVisible: true }, () => {
-              this.ItemPopModal && this.ItemPopModal.setVisible(true)
-            })
-          }
+          this.ItemPopModal && this.ItemPopModal.setVisible(true)
         }}
         onPressCheck={item => {
           let selectedNum = this.state.selectedNum
@@ -836,18 +813,6 @@ export default class MyDataPage extends Component {
           headerRight: this._renderHeaderRight(),
         }}
       >
-        <Text
-          numberOfLines={2}
-          ellipsizeMode={'head'}
-          style={{
-            width: '100%',
-            backgroundColor: color.content_white,
-            display: this.state.textDisplay,
-            fontSize: 10,
-          }}
-        >
-          {this.state.textValue}
-        </Text>
         {this.state.batchMode && this._renderBatchHead()}
         <SectionList
           style={{

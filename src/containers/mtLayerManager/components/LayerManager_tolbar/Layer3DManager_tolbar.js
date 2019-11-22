@@ -1,6 +1,6 @@
 import React from 'react'
 import { ConstToolType } from '../../../../constants/index'
-// import NavigationService from '../../../NavigationService'
+import NavigationService from '../../../NavigationService'
 import {
   layere3dImage,
   // layer3dSettingCanNotSelect,
@@ -148,6 +148,7 @@ export default class LayerManager_tolbar extends React.Component {
           header: {
             title: global.language === 'CN' ? '地形' : 'Terrain',
             image: require('../../../../assets/map/Frenchgrey/icon_vectorfile_white.png'),
+            type: 'Terrain',
           },
           data: [],
         }
@@ -172,6 +173,7 @@ export default class LayerManager_tolbar extends React.Component {
           header: {
             title: global.language === 'CN' ? '影像' : 'Image',
             image: require('../../../../assets/map/layers_theme_unique_style.png'),
+            type: 'Image',
           },
           data: [],
         }
@@ -238,8 +240,7 @@ export default class LayerManager_tolbar extends React.Component {
       params && typeof params.height === 'number'
         ? params.height
         : ConstToolType.HEIGHT[1]
-    let data = undefined
-    data = await this.getData(type)
+    let data = await this.getData(type)
     this.setState(
       {
         data: data,
@@ -411,6 +412,7 @@ export default class LayerManager_tolbar extends React.Component {
     if (!section.header) {
       return <View style={{ height: 0 }} />
     }
+    let thisHandle = this
     return (
       <View
         style={{
@@ -446,33 +448,53 @@ export default class LayerManager_tolbar extends React.Component {
             {section.header.title}
           </Text>
         </View>
-        {/* <TouchableOpacity
-          style={{ flex: 1,height: scaleSize(80),flexDirection: 'row',justifyContent: 'flex-end',alignItems: 'center'}}
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            height: scaleSize(80),
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
           onPress={() => {
+            this.props.navigation.navigate('InputPage', {
+              headerTitle:
+                global.language === 'CN' ? '添加在线图层地址' : 'Add Layer Url',
+              value: '',
+              placeholder: 'eg http://ip:port/iserver/services/',
+              cb: async value => {
+                let bRes = false
+                let type = 'AddTerrain_second'
+                if (section.header.type === 'Image') {
+                  bRes = await SScene.setImageCacheName(value)
+                  type = 'AddImage_second'
+                } else if (section.header.type === 'Terrain') {
+                  bRes = await SScene.setTerrainCacheName(value)
+                }
+                NavigationService.goBack()
+                if (bRes) {
+                  thisHandle.setVisible(true, type, {
+                    height: ConstToolType.TOOLBAR_HEIGHT[5],
+                    type: type,
+                  })
+                }
+                // console.warn("add " + value)
+              },
+            })
           }}
         >
           <Image
             source={require('../../../../assets/map/Frenchgrey/scene_addfly_light.png')}
-            style={{ width: scaleSize(55),height: scaleSize(55),marginRight: scaleSize(15)}}
+            style={{
+              width: scaleSize(55),
+              height: scaleSize(55),
+              marginRight: scaleSize(15),
+            }}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     )
   }
-  // renderMap3DList = () => {
-  //   return (
-  //     <Map3DToolBar
-  //       ref={ref => (this.Map3DToolBar = ref)}
-  //       data={this.state.data}
-  //       type={this.state.type}
-  //       setVisible={this.setVisible}
-  //       device={this.props.device}
-  //       getLayer3d={this.getLayer3d}
-  //       getoverlayView={this.getoverlayView}
-  //     />
-  //   )
-  // }
-
   renderItem = ({ item }) => {
     return (
       <View>
