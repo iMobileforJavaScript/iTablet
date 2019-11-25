@@ -176,7 +176,7 @@ export default class LayerManager_tolbar extends React.Component {
     }
     this.height = boxHeight
   }
-  getData = (type, isGroup = false) => {
+  getData = (type, isGroup = false, layerData) => {
     let data = []
     let headerData = layerSettingCanVisit(this.props.language)
     !isGroup && headerData.concat(layerSettingCanSelect(this.props.language))
@@ -207,7 +207,7 @@ export default class LayerManager_tolbar extends React.Component {
         headerData = headerData
           .concat(layerSettingCanEdit(this.props.language))
           .concat(layerSettingCanSnap(this.props.language))
-        data = layerCollectionSetting(this.props.language, isGroup)
+        data = layerCollectionSetting(this.props.language, isGroup, layerData)
         data[0].headers = headerData
         break
       case ConstToolType.MAP_EDIT_STYLE:
@@ -351,7 +351,7 @@ export default class LayerManager_tolbar extends React.Component {
         params.layerData &&
         params.layerData.type &&
         params.layerData.type === 'layerGroup'
-      let data = this.getData(type, isGroup)
+      let data = this.getData(type, isGroup, params.layerData)
       newState = this.updateMenuState(data, params.layerData)
     }
     if (isShow) {

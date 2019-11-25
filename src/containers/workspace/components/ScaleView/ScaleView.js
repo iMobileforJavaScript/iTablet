@@ -14,16 +14,16 @@ export default class ScaleView extends React.Component {
   props: {
     device: Object,
     language: String,
+    isShow: boolean,
   }
 
   constructor(props) {
     super(props)
     this.left = new Animated.Value(scaleSize(120))
     this.state = {
-      width: 0,
+      width: scaleSize(65),
       title: '',
       isAddedListener: false,
-      isShow: false,
       visible: true,
     }
     this.startTime = 0
@@ -41,6 +41,15 @@ export default class ScaleView extends React.Component {
       })
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isShow && !prevProps.isShow) {
+      SMap.getScaleData().then(data => {
+        this.scaleViewChange(data)
+      })
+    }
+  }
+
   componentWillUnmount() {
     if (this.state.isAddedListener) {
       SMap.addScaleChangeDelegate({
@@ -48,6 +57,7 @@ export default class ScaleView extends React.Component {
       })
     }
   }
+
   showFullMap = (visible, immediately = false) => {
     if (this.state.visible === visible) return
     Animated.timing(this.left, {
@@ -62,14 +72,8 @@ export default class ScaleView extends React.Component {
   getInitialData = async () => {
     let data = await SMap.getScaleData()
     await this.scaleViewChange(data)
-    this.changeVisible(true)
   }
 
-  changeVisible = value => {
-    this.setState({
-      isShow: value,
-    })
-  }
   scaleViewChange = data => {
     this.endTime = +new Date()
     if (this.endTime - this.startTime > this.INTERVAL) {
@@ -88,10 +92,11 @@ export default class ScaleView extends React.Component {
       }
     }
   }
+
   render() {
     let textWidth =
       this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
-    if (!this.state.isShow) return <View />
+    if (!this.props.isShow) return <View />
 
     let TextOffset = 0.5
     let textSpacing = 1
