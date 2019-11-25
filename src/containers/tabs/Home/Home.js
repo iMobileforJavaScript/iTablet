@@ -345,7 +345,7 @@ export default class Home extends Component {
           break
         case 'NavigationData_示范数据':
           fileName = 'NavigationData_示范数据'
-          storage = '  6.11MB'
+          storage = '  95.92MB'
           break
       }
     }
