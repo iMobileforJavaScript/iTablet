@@ -1281,7 +1281,8 @@ function toolbarBack() {
     height: _data.height,
   })
   ToolbarModule.addData({
-    type: ConstToolType.MAP_THEME,
+    // type: ConstToolType.MAP_THEME,
+    type: _data.type,
     getData: ThemeData.getData,
     actions: actions,
     selectList,

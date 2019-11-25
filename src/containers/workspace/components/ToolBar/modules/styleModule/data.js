@@ -455,10 +455,6 @@ const grid = param => [
 ]
 
 const colors = [
-  {
-    key: 'NULL',
-    text: 'NULL',
-  },
   '#FFFFFF',
   '#000000',
   '#F0EDE1',
@@ -575,4 +571,11 @@ const colors = [
   '#FF0000',
 ]
 
-export { line, point, region, grid, colors }
+const colorsWithNull = [
+  {
+    key: 'NULL',
+    text: 'NULL',
+  },
+].concat(colors)
+
+export { line, point, region, grid, colors, colorsWithNull }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import ToolbarBtnType from '../../ToolbarBtnType'
-import { getThemeAssets, getPublicAssets } from '../../../../../../assets'
+import { getThemeAssets } from '../../../../../../assets'
 import NavigationService from '../../../../../NavigationService'
 import { scaleSize } from '../../../../../../utils'
 import { color } from '../../../../../../styles'
@@ -233,16 +233,16 @@ export default class ToolbarBottomButtons extends React.Component {
             NavigationService.navigate('LayerAttribute3D', { type: 'MAP_3D' })
           }
           break
-        case ToolbarBtnType.VISIBLE:
-          // 图例的显示与隐藏
-          image = getPublicAssets().mapTools.tools_legend_on
-          action = this.changeLegendVisible
-          break
-        case ToolbarBtnType.NOT_VISIBLE:
-          // 图例的显示与隐藏
-          image = getPublicAssets().mapTools.tools_legend_off
-          action = this.changeLegendVisible
-          break
+        // case ToolbarBtnType.VISIBLE:
+        //   // 图例的显示与隐藏
+        //   image = getPublicAssets().mapTools.tools_legend_on
+        //   action = this.changeLegendVisible
+        //   break
+        // case ToolbarBtnType.NOT_VISIBLE:
+        //   // 图例的显示与隐藏
+        //   image = getPublicAssets().mapTools.tools_legend_off
+        //   action = this.changeLegendVisible
+        //   break
         case ToolbarBtnType.TOOLBAR_BACK:
           //返回上一级
           image = require('../../../../../../assets/public/Frenchgrey/icon-back-white.png')

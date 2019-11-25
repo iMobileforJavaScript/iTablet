@@ -40,7 +40,7 @@ const ICONS = context => [
     onPress: () => {
       NavigationService.navigate('MyMap', {
         title: getLanguage(global.language).Profile.MAP,
-        chatCallBack: (_path, fileName) => {
+        chatCallback: (_path, fileName) => {
           context.props.sendCallBack(1, _path, fileName)
         },
       })

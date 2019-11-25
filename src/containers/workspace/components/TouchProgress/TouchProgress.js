@@ -768,11 +768,6 @@ export default class TouchProgress extends Component {
         newValue = value * 100
       } else if (
         this.props.selectName ===
-        getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
-      ) {
-        newValue = value * 1000
-      } else if (
-        this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
       ) {
         newValue = value * 20
@@ -965,7 +960,7 @@ export default class TouchProgress extends Component {
           parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
-          FontSize: value,
+          FontSize: parseInt(value),
         }
         await SThemeCartography.setUniformLabelFontSize(_params)
       } else if (
@@ -1356,8 +1351,8 @@ export default class TouchProgress extends Component {
       ) {
         if (value <= 0) {
           value = 1
-        } else if (value > 1000) {
-          value = 1000
+        } else if (value > 10000) {
+          value = 10000
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +

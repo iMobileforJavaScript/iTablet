@@ -1,4 +1,4 @@
-import { ConstToolType, legendColor } from '../../../../../constants'
+import { ConstToolType } from '../../../../../constants'
 import ToolbarBtnType from '../ToolbarBtnType'
 
 function getMapData(type) {
@@ -24,28 +24,6 @@ function getMapData(type) {
       buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP_SYMBOL:
-      break
-    case ConstToolType.LEGEND_NOT_VISIBLE:
-      data = legendColor
-      buttons = [
-        ToolbarBtnType.CANCEL,
-        ToolbarBtnType.VISIBLE,
-        ToolbarBtnType.MENU,
-        // ToolbarBtnType.FLEX,
-        ToolbarBtnType.MENU_FLEX,
-        ToolbarBtnType.TOOLBAR_COMMIT,
-      ]
-      break
-    case ConstToolType.LEGEND:
-      data = legendColor
-      buttons = [
-        ToolbarBtnType.CANCEL,
-        ToolbarBtnType.NOT_VISIBLE,
-        ToolbarBtnType.MENU,
-        // ToolbarBtnType.FLEX,
-        ToolbarBtnType.MENU_FLEX,
-        ToolbarBtnType.TOOLBAR_COMMIT,
-      ]
       break
   }
   return { data, buttons }
