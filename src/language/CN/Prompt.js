@@ -109,6 +109,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  DATA_BEING_IMPORT: '数据正在导入',
   IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',

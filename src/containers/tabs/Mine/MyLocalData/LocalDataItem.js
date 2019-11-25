@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { _getHomePath } from './Method'
@@ -7,6 +13,7 @@ import { getLanguage } from '../../../../language'
 export default class LocalDataItem extends Component {
   props: {
     info: Object,
+    isImporting: Boolean,
     itemOnpress: () => {},
   }
   constructor(props) {
@@ -46,18 +53,25 @@ export default class LocalDataItem extends Component {
             flexDirection: 'row',
             alignItems: 'center',
             height: itemHeight,
+            paddingLeft: 20,
+            backgroundColor: 'blue',
           }}
         >
-          <Image
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              marginLeft: 20,
-              tintColor: imageColor,
-            }}
-            resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_my_import_local_light.png')}
-          />
+          <View style={{ width: scaleSize(40) }}>
+            {this.props.isImporting ? (
+              <ActivityIndicator size="small" color="#505050" />
+            ) : (
+              <Image
+                style={{
+                  width: imageWidth,
+                  height: imageHeight,
+                  tintColor: imageColor,
+                }}
+                resizeMode={'contain'}
+                source={require('../../../../assets/Mine/mine_my_import_local_light.png')}
+              />
+            )}
+          </View>
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <Text
               numberOfLines={1}
