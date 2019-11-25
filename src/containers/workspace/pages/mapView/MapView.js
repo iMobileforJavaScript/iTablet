@@ -2553,12 +2553,11 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {this.props.mapScaleView &&
-          !this.state.showAIDetect &&
-          !this.props.mapNavigation.isShow && (
+        {!this.state.showAIDetect && !this.props.mapNavigation.isShow && (
           <ScaleView
             device={this.props.device}
             language={this.props.language}
+            isShow={this.props.mapScaleView}
             ref={ref => (GLOBAL.scaleView = ref)}
           />
         )}
