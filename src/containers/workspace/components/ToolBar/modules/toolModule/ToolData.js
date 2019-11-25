@@ -421,14 +421,18 @@ function getData(type, params) {
         {
           key: constants.UNDO,
           title: getLanguage(global.language).Prompt.UNDO,
-          // action: this.showBox,
+          action: () => {
+            ToolAction.undo(ConstToolType.MAP_TOOL_INCREMENT)
+          },
           size: 'large',
           image: require('../../../../../../assets/lightTheme/public/icon_undo_light.png'),
         },
         {
           key: constants.REDO,
           title: getLanguage(global.language).Prompt.REDO,
-          // action: this.showBox,
+          action: () => {
+            ToolAction.redo(ConstToolType.MAP_TOOL_INCREMENT)
+          },
           size: 'large',
           image: require('../../../../../../assets/lightTheme/public/icon_redo_light.png'),
         },
@@ -436,7 +440,7 @@ function getData(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: ToolAction.close,
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -449,7 +453,7 @@ function getData(type, params) {
           image: require('../../../../../../assets/mapTools/icon_submit_black.png'),
         },
       ]
-      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP_TOOL_GPSINCREMENT:
       data = [
@@ -471,7 +475,7 @@ function getData(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: ToolAction.close,
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -484,7 +488,7 @@ function getData(type, params) {
           image: require('../../../../../../assets/mapTools/icon_submit_black.png'),
         },
       ]
-      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.STYLE_TRANSFER:
       buttons = [

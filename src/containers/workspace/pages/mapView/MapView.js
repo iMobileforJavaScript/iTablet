@@ -1792,16 +1792,6 @@ export default class MapView extends React.Component {
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         showMeasureResult={this.showMeasureResult}
-        cancelincrement={async () => {
-          await SMap.removeNetworkDataset()
-          SMap.setAction(Action.PAN)
-          this.setState({ showIncrement: false })
-          // this.SimpleSelectList.setState({
-          //   currentFloor: '',
-          // })
-          SMap.setIsMagnifierEnabled(false)
-          GLOBAL.SUBMITED = false
-        }}
         switchAr={this.switchAr}
         {...this.props}
       />
@@ -2286,6 +2276,7 @@ export default class MapView extends React.Component {
           this.showFullMap(true)
           this.setState({ showIncrement: true })
         }}
+        mapLoaded={this.mapLoaded}
         language={this.props.language}
         // showModelList={this.showModelList}
       />

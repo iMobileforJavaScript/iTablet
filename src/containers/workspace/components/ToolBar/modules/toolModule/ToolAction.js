@@ -279,6 +279,10 @@ function clearMeasure(type) {
 
 /** 量算功能 撤销事件 **/
 function undo(type) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.undo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -305,7 +309,11 @@ function undo(type) {
 }
 
 /** 量算功能 重做事件 **/
-function redo() {
+function redo(type = null) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.redo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -940,6 +948,14 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
+async function close() {
+  const params = ToolbarModule.getParams()
+  await SMap.removeNetworkDataset()
+  SMap.setAction(Action.PAN)
+  SMap.setIsMagnifierEnabled(false)
+  params.setToolbarVisible(false)
+}
+
 export default {
   commit,
   showAttribute,
@@ -954,6 +970,7 @@ export default {
   undo,
   redo,
   listSelectableAction,
+  close,
 
   begin,
   stop,

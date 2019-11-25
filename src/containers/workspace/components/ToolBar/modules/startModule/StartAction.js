@@ -784,24 +784,61 @@ async function changeMap(item) {
         getLanguage(params.language).Prompt.SWITCHING_SUCCESS,
         //ConstInfo.CHANGE_MAP_TO + mapInfo.name
       )
-      //切换地图后重新添加楼层控件事件
+      //切换地图后重新添加楼层控件/TrafficView控件事件
       let floorListView = params.getFloorListView()
-      if (floorListView) {
+      if (floorListView || GLOBAL.TrafficView) {
         let datas = await SMap.getFloorData()
         if (datas.data && datas.data.length > 0) {
           let { data, datasource, currentFloorID } = datas
-          floorListView.setState({
-            data,
-            datasource,
-            currentFloorID,
-          })
-          if (floorListView.listener === null) {
+          floorListView &&
+            floorListView.setState({
+              data,
+              datasource,
+              currentFloorID,
+            })
+          GLOBAL.TrafficView &&
+            GLOBAL.TrafficView.setState({
+              currentFloorID,
+            })
+          if (!floorListView.listener) {
             floorListView.listener = SMap.addFloorHiddenListener(result => {
               if (result.currentFloorID !== floorListView.state.currentFloorID)
                 floorListView.setState({
                   currentFloorID: result.currentFloorID,
                 })
             })
+          }
+          if (!GLOBAL.TrafficView.listener) {
+            GLOBAL.TrafficView.listener = SMap.addFloorHiddenListener(
+              async result => {
+                let { currentFloorID } = result
+                if (
+                  currentFloorID !== GLOBAL.TrafficView.state.currentFloorID
+                ) {
+                  if (!currentFloorID) {
+                    let layers =
+                      GLOBAL.TrafficView.props.getLayers &&
+                      (await GLOBAL.TrafficView.props.getLayers())
+                    let baseMap = layers.filter(layer =>
+                      LayerUtils.isBaseLayer(layer.name),
+                    )[0]
+                    if (
+                      baseMap &&
+                      baseMap.name !== 'baseMap' &&
+                      baseMap.isVisible
+                    ) {
+                      GLOBAL.TrafficView.setState({
+                        currentFloorID,
+                      })
+                    }
+                  } else {
+                    GLOBAL.TrafficView.setState({
+                      currentFloorID,
+                    })
+                  }
+                }
+              },
+            )
           }
         }
       }

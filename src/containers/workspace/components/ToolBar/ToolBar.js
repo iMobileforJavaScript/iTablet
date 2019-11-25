@@ -102,7 +102,6 @@ export default class ToolBar extends React.PureComponent {
     setMapNavigationShow: () => {},
     setMapNavigation: () => {},
     setMap2Dto3D: () => {},
-    cancelincrement: () => {},
     switchAr: () => {},
     setOpenOnlineMap: () => {},
     downloads: Array,
@@ -865,11 +864,6 @@ export default class ToolBar extends React.PureComponent {
     return <EditControlBar type={this.props.type} />
   }
 
-  closeIncrement = () => {
-    this.props.cancelincrement()
-    this.close()
-  }
-
   overlayOnPress = () => {
     GLOBAL.TouchType = TouchType.NORMAL
     if (
@@ -954,7 +948,6 @@ export default class ToolBar extends React.PureComponent {
         showBox={this.showBox}
         showMenuBox={this.showMenuBox}
         menu={this.menu}
-        closeIncrement={this.closeIncrement}
       />
     )
   }

@@ -350,7 +350,9 @@ export default class MyLocalData extends Component {
             )
           }
           let index = filePath.lastIndexOf('/')
-          await SMap.copyNaviSnmFile(filePath.substring(0, index))
+          let path = filePath.substring(0, index)
+          let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+          await SMap.copyNaviSnmFile(snmFiles)
           result = await this.props.importWorkspace({ path: filePath })
           // if (result.msg !== undefined) {
           //   Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
@@ -359,7 +361,9 @@ export default class MyLocalData extends Component {
           // }
         } else {
           let index = filePath.lastIndexOf('/')
-          await SMap.copyNaviSnmFile(filePath.substring(0, index))
+          let path = filePath.substring(0, index)
+          let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+          await SMap.copyNaviSnmFile(snmFiles)
           let result = await this.props.importWorkspace({ path: filePath })
           if (result.msg !== undefined) {
             Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)

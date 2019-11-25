@@ -68,7 +68,7 @@ export default class RNFloorListView extends React.Component {
           this.listener = SMap.addFloorHiddenListener(result => {
             if (result.currentFloorID !== this.state.currentFloorID)
               this.setState({
-                isHidden: result.currentFloorID,
+                currentFloorID: result.currentFloorID,
               })
           })
         }
