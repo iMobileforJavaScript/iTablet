@@ -16,6 +16,7 @@ export default class RNFloorListView extends React.Component {
   props: {
     device: Object,
     mapLoaded: Boolean,
+    getMapController: () => {},
   }
 
   constructor(props) {
@@ -25,15 +26,12 @@ export default class RNFloorListView extends React.Component {
       data: [],
       height:
         props.device.orientation === 'LANDSCAPE'
-          ? scaleSize(160)
-          : scaleSize(240),
+          ? scaleSize(240)
+          : scaleSize(360),
       left: new Animated.Value(scaleSize(20)),
-      bottom:
-        props.device.orientation === 'LANDSCAPE'
-          ? scaleSize(370)
-          : scaleSize(460),
       currentFloorID: '',
     }
+    this.mapContorller = null
     this.listener = null
   }
 
@@ -42,34 +40,57 @@ export default class RNFloorListView extends React.Component {
       let height = prevState.height
       let bottom = prevState.bottom
       if (this.props.device.orientation === 'LANDSCAPE') {
-        height = scaleSize(160)
-        bottom = scaleSize(370)
-      } else {
         height = scaleSize(240)
-        bottom = scaleSize(460)
+      } else {
+        height = scaleSize(360)
       }
-      this.setState({
-        height,
-        bottom,
-      })
+      this.setState(
+        {
+          height,
+          bottom,
+        },
+        () => {
+          if (height < prevState.height) {
+            this.list.scrollToIndex({ viewPosition: 0.5, index: this.curIndex })
+          }
+        },
+      )
     } else if (
       this.props.mapLoaded &&
       this.props.mapLoaded !== prevProps.mapLoaded
     ) {
       let datas = await SMap.getFloorData()
       if (datas.data && datas.data.length > 0) {
+        if (!this.mapContorller) {
+          this.mapContorller = this.props.getMapController()
+        }
         let { data, datasource, currentFloorID } = datas
-        this.setState({
-          data,
-          datasource,
-          currentFloorID,
-        })
+        this.mapContorller.setState(
+          {
+            isIndoor: !!currentFloorID,
+          },
+          () => {
+            this.setState({
+              data,
+              datasource,
+              currentFloorID,
+            })
+          },
+        )
         if (!this.listener) {
           this.listener = SMap.addFloorHiddenListener(result => {
-            if (result.currentFloorID !== this.state.currentFloorID)
-              this.setState({
-                currentFloorID: result.currentFloorID,
-              })
+            if (result.currentFloorID !== this.state.currentFloorID) {
+              this.mapContorller.setState(
+                {
+                  isIndoor: !!currentFloorID,
+                },
+                () => {
+                  this.setState({
+                    currentFloorID,
+                  })
+                },
+              )
+            }
           })
         }
       }
@@ -98,11 +119,12 @@ export default class RNFloorListView extends React.Component {
     })
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, index }) => {
     let textStyle = {}
     let backgroundStyle = {}
 
     if (item.id === this.state.currentFloorID) {
+      this.curIndex = index
       textStyle = {
         color: color.white,
       }
@@ -129,16 +151,23 @@ export default class RNFloorListView extends React.Component {
     let floorListStyle = {
       maxHeight: this.state.height,
       left: this.state.left,
-      bottom: this.state.bottom,
     }
     return (
       <Animated.View style={[styles.floorListView, floorListStyle]}>
         <FlatList
+          ref={ref => {
+            this.list = ref
+          }}
           style={styles.floorList}
           keyExtractor={(item, index) => item.toString + index}
           data={this.state.data}
           extraData={this.state.currentFloorID}
           renderItem={this._renderItem}
+          getItemLayout={(param, index) => ({
+            length: scaleSize(60),
+            offset: scaleSize(60) * index,
+            index,
+          })}
         />
       </Animated.View>
     )
@@ -149,6 +178,7 @@ const styles = StyleSheet.create({
   floorListView: {
     position: 'absolute',
     width: scaleSize(60),
+    bottom: scaleSize(150),
     backgroundColor: color.white,
     borderRadius: scaleSize(4),
     elevation: 20,

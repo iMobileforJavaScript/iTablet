@@ -2255,12 +2255,16 @@ export default class MapView extends React.Component {
   //   )
   // }
 
+  getMapController = () => {
+    return this.mapController
+  }
   _renderFloorListView = () => {
     return (
       <RNFloorListView
         device={this.props.device}
         mapLoaded={this.mapLoaded}
         ref={ref => (this.FloorListView = ref)}
+        getMapController={this.getMapController}
       />
     )
   }
