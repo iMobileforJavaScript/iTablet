@@ -440,7 +440,7 @@ export default class NavigationView extends React.Component {
                 color: color.white,
               }}
             >
-              {getLanguage(GLOBAL.language).Map_Main_Menu.NEXT}
+              {getLanguage(GLOBAL.language).Map_Main_Menu.ROUTE_ANALYST}
             </Text>
           </TouchableOpacity>
         </View>

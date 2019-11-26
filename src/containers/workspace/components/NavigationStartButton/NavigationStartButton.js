@@ -7,7 +7,7 @@ import {
   FlatList,
   Image,
 } from 'react-native'
-import { scaleSize, setSpText } from '../../../../utils'
+import { scaleSize, setSpText, Toast } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import { getPublicAssets } from '../../../../assets'
@@ -351,14 +351,15 @@ export default class NavigationStartButton extends React.Component {
                 marginTop: scaleSize(20),
               }}
               onPress={() => {
-                this.setVisible(false)
-                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(true)
-                }
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(true)
-                }
+                Toast.show('暂时不可用')
+                // this.setVisible(false)
+                // GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+                // if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                //   SMap.outdoorNavigation(0)
+                // }
+                // if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                //   SMap.indoorNavigation(0)
+                // }
               }}
             >
               <Text
@@ -367,10 +368,7 @@ export default class NavigationStartButton extends React.Component {
                   color: color.white,
                 }}
               >
-                {
-                  getLanguage(GLOBAL.language).Map_Main_Menu
-                    .FIRST_PERSON_PERSPECTIVE
-                }
+                {getLanguage(GLOBAL.language).Map_Main_Menu.REAL_NAVIGATION}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -389,10 +387,10 @@ export default class NavigationStartButton extends React.Component {
                 this.setVisible(false)
                 GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(false)
+                  SMap.outdoorNavigation(1)
                 }
                 if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(false)
+                  SMap.indoorNavigation(1)
                 }
               }}
             >
@@ -404,7 +402,7 @@ export default class NavigationStartButton extends React.Component {
               >
                 {
                   getLanguage(GLOBAL.language).Map_Main_Menu
-                    .THIRD_PERSON_PERSPECTIVE
+                    .SIMULATED_NAVIGATION
                 }
               </Text>
             </TouchableOpacity>
