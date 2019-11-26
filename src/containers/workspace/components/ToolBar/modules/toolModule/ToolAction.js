@@ -948,22 +948,6 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
-function close(type) {
-  if (
-    type === ConstToolType.MAP_TOOL_INCREMENT ||
-    type === ConstToolType.MAP_TOOL_GPSINCREMENT
-  ) {
-    const params = ToolbarModule.getParams()
-    SMap.removeNetworkDataset().then(() => {
-      SMap.setAction(Action.PAN)
-      SMap.setIsMagnifierEnabled(false)
-      params.setToolbarVisible(false)
-    })
-  } else {
-    return false
-  }
-}
-
 export default {
   commit,
   showAttribute,
@@ -978,7 +962,6 @@ export default {
   undo,
   redo,
   listSelectableAction,
-  close,
 
   begin,
   stop,

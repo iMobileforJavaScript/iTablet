@@ -1,7 +1,7 @@
 /**
  * 获取地图工具数据
  */
-import { DatasetType } from 'imobile_for_reactnative'
+import { DatasetType, SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../../../constants'
 import { getPublicAssets, getThemeAssets } from '../../../../../../assets'
 import constants from '../../../../constants'
@@ -9,7 +9,6 @@ import ToolbarBtnType from '../../ToolbarBtnType'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolAction from './ToolAction'
-
 /**
  * 判断当前图层类型 控制标注相关功能是否可用
  * @returns {string}
@@ -440,7 +439,10 @@ function getData(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          action: ToolAction.close,
+          action: () => {
+            SMap.setAction(Action.PAN)
+            SMap.setAction(Action.DRAWLINE)
+          },
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_cancel_1.png'),
         },
