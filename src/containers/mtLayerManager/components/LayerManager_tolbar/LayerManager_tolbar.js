@@ -26,6 +26,7 @@ import {
   layerSettingCanNotSnap,
   layerSettingCanNotEdit,
   getVisibleScalePickerData,
+  layerNavigationSetting,
 } from './LayerToolbarData'
 import {
   View,
@@ -146,6 +147,7 @@ export default class LayerManager_tolbar extends React.Component {
           }
           break
         case ConstToolType.COLLECTION:
+        case ConstToolType.MAP_NAVIGATION:
           if (device.orientation === 'LANDSCAPE') {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
           } else {
@@ -201,7 +203,11 @@ export default class LayerManager_tolbar extends React.Component {
         data = layerPlottingSetting(this.props.language, isGroup)
         data[0].headers = headerData
         break
-
+      case ConstToolType.MAP_NAVIGATION:
+        headerData = headerData.concat(layerSettingCanEdit(this.props.language))
+        data = layerNavigationSetting(this.props.language, isGroup)
+        data[0].headers = headerData
+        break
       case ConstToolType.COLLECTION:
         //collection 单独处理
         headerData = headerData
@@ -941,6 +947,7 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.PLOTTING:
           case ConstToolType.MAP_EDIT_STYLE:
           case ConstToolType.MAP_EDIT_MORE_STYLE:
+          case ConstToolType.MAP_NAVIGATION:
             box = this.renderList()
             break
         }

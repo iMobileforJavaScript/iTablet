@@ -454,6 +454,14 @@ export default class MT_layerManager extends React.Component {
         layerData: data,
         refreshParentList: refreshParentList,
       })
+    } else if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      this.toolBox.setVisible(true, ConstToolType.MAP_NAVIGATION, {
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          : ConstToolType.TOOLBAR_HEIGHT[4],
+        layerData: data,
+        refreshParentList: refreshParentList,
+      })
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: isGroup
