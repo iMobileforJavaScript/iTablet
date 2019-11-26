@@ -102,7 +102,6 @@ export default class ToolBar extends React.PureComponent {
     setMapNavigationShow: () => {},
     setMapNavigation: () => {},
     setMap2Dto3D: () => {},
-    cancelincrement: () => {},
     switchAr: () => {},
     setOpenOnlineMap: () => {},
     downloads: Array,
@@ -520,7 +519,14 @@ export default class ToolBar extends React.PureComponent {
     // TODO 待去掉，下列方法分别放到各个Module下面
     (async function() {
       let actionType = Action.PAN
-
+      if (
+        type === ConstToolType.MAP_TOOL_INCREMENT ||
+        type === ConstToolType.MAP_TOOL_GPSINCREMENT
+      ) {
+        await SMap.removeNetworkDataset()
+        SMap.setAction(Action.PAN)
+        SMap.setIsMagnifierEnabled(false)
+      }
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
       if (type === ConstToolType.STYLE_TRANSFER) {
         // ToolbarPicker.hide()
@@ -861,11 +867,6 @@ export default class ToolBar extends React.PureComponent {
     return <EditControlBar type={this.props.type} />
   }
 
-  closeIncrement = () => {
-    this.props.cancelincrement()
-    this.close()
-  }
-
   overlayOnPress = () => {
     GLOBAL.TouchType = TouchType.NORMAL
     if (
@@ -950,7 +951,6 @@ export default class ToolBar extends React.PureComponent {
         showBox={this.showBox}
         showMenuBox={this.showMenuBox}
         menu={this.menu}
-        closeIncrement={this.closeIncrement}
       />
     )
   }

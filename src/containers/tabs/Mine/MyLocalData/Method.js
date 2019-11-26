@@ -93,36 +93,12 @@ async function _getPlotingLibDataList(fileDir, arrFile) {
   }
 }
 
-/** 构造游客以及当前用户数据*/
-async function _constructAllUserSectionData() {
-  let homePath = await _getHomePath()
-  let path = homePath + ConstPath.UserPath2
-  let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
-  return newData
-}
 /** 构造样例数据数据*/
 async function _constructCacheSectionData(language) {
   let homePath = await _getHomePath()
   let path = homePath + ConstPath.CachePath2
   let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
+  newData = await DataHandler.getExternalData(path)
   //'样例数据'
   let titleWorkspace = getLanguage(language).Profile.SAMPLEDATA
   let sectionData
@@ -151,55 +127,6 @@ async function _constructUserSectionData(userName) {
     ConstPath.RelativeFilePath.ExternalData
   let newData = []
   newData = await DataHandler.getExternalData(path)
-  return newData
-}
-/** 构造游客数据*/
-async function _constructCustomerSectionData() {
-  let homePath = await _getHomePath()
-  let path =
-    homePath + ConstPath.CustomerPath + ConstPath.RelativeFilePath.ExternalData
-  let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
-  return newData
-}
-
-async function _constructTecentOfQQ() {
-  let homePath = await _getHomePath()
-  let path = homePath + '/Tencent/QQfile_recv'
-  let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
-  return newData
-}
-
-async function _constructTecentOfweixin() {
-  let homePath = await _getHomePath()
-  let path = homePath + '/Tencent/MicroMsg/Download'
-  let newData = []
-  await _setFilterDatas(
-    path,
-    {
-      smwu: 'smwu',
-      sxwu: 'sxwu',
-    },
-    newData,
-    false,
-  )
   return newData
 }
 
@@ -427,12 +354,8 @@ async function downFileAction(
 
 export {
   _setFilterDatas,
-  _constructAllUserSectionData,
   _constructCacheSectionData,
   _constructUserSectionData,
-  _constructCustomerSectionData,
-  _constructTecentOfQQ,
-  _constructTecentOfweixin,
   _getHomePath,
   getOnlineData,
   downFileAction,

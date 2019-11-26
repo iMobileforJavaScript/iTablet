@@ -192,6 +192,35 @@ async function getAllDatas() {
   let { data, buttons } = await getUDBsAndMaps()
   let isIndoorMap = await SMap.isIndoorMap()
   if (!isIndoorMap) {
+    // todo 遍历所有数据源，获取所有路网数据集
+    // let userUDBPath,userUDBs
+    // let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
+    // if (
+    //   ToolbarModule.getParams().user &&
+    //     ToolbarModule.getParams().user.currentUser.userName &&
+    //     ToolbarModule.getParams().user.currentUser.userType !==
+    //     UserType.PROBATION_USER
+    // ) {
+    //   let userPath =
+    //       (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+    //       ToolbarModule.getParams().user.currentUser.userName +
+    //       '/'
+    //   userUDBPath = userPath + ConstPath.RelativePath.Datasource
+    //   userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+    //     extension: 'udb',
+    //     type: 'file',
+    //   })
+    //   //过滤掉标注和标绘
+    //   let filterUDBs = userUDBs.filter(item => {
+    //     item.name = dataUtil.getNameByURL(item.path)
+    //     return !item.name.match(checkLabelAndPlot)
+    //   })
+    //   let list = []
+    //   for(let params of filterUDBs){
+    //     await SMap.openDatasource2(params)
+    //     let datas = await SMap.getNetworkDataset(params)
+    //     datas.length > 0 && list.concat(datas)
+    //   }
     let list = await SMap.getNetworkDataset()
     if (list.length > 0) {
       list.forEach(

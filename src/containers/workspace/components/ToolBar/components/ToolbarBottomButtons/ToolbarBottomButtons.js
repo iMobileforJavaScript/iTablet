@@ -19,7 +19,6 @@ export default class ToolbarBottomButtons extends React.Component {
     showBox: () => {},
     setVisible: () => {},
     existFullMap: () => {},
-    closeIncrement: () => {},
     setCurrentLayer: () => {},
     getLayers: () => {},
     showMenuBox: () => {},
@@ -218,10 +217,6 @@ export default class ToolbarBottomButtons extends React.Component {
         case ToolbarBtnType.COMPLETE:
           image = require('../../../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.props.close
-          break
-        case ToolbarBtnType.CANCEL_INCREMENT:
-          image = require('../../../../../../assets/mapEdit/icon_function_cancel.png')
-          action = this.props.closeIncrement
           break
         case ToolbarBtnType.CANCEL_2:
           image = require('../../../../../../assets/mapEdit/icon_function_cancel.png')

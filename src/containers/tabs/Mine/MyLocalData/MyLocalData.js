@@ -3,18 +3,12 @@ import {
   View,
   Text,
   SectionList,
-  AsyncStorage,
   RefreshControl,
   Platform,
   ActivityIndicator,
 } from 'react-native'
 import { Container } from '../../../../components'
-import {
-  SOnlineService,
-  SScene,
-  SIPortalService,
-  SMap,
-} from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService, SMap } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -42,6 +36,8 @@ export default class MyLocalData extends Component {
     user: Object,
     navigation: Object,
     down: Object,
+    importItem: Object,
+    setImportItem: () => {},
     importPlotLib: () => {},
     importWorkspace: () => {},
     importSceneWorkspace: () => {},
@@ -54,10 +50,9 @@ export default class MyLocalData extends Component {
     this.state = {
       sectionData: [],
       userName: this.props.navigation.getParam('userName', ''),
-      modalIsVisible: false,
-      isFirstLoadingModal: true,
       isRefreshing: false,
       activityShow: false,
+      itemInfo: {},
     }
     this.pageSize = 10
     this.dataListTotal = null
@@ -104,8 +99,6 @@ export default class MyLocalData extends Component {
         sectionData: newSectionData,
       })
 
-      // let qqData = await _constructTecentOfQQ()
-      // let weixinData = await _constructTecentOfweixin()
       let online = {
         title: '在线数据',
         data: [],
@@ -167,34 +160,14 @@ export default class MyLocalData extends Component {
 
   itemOnpress = info => {
     this.itemInfo = info
-    if (this.state.isFirstLoadingModal) {
-      this.setState(
-        { modalIsVisible: true, isFirstLoadingModal: false },
-        () => {
-          this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
-        },
-      )
-    } else {
-      this.setState({ modalIsVisible: true }, () => {
-        this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
-      })
-    }
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setData(info)
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
   }
 
   onlineItemOnPress = (item = {}) => {
     this.itemInfo = item
-    if (this.state.isFirstLoadingModal) {
-      this.setState(
-        { modalIsVisible: true, isFirstLoadingModal: false },
-        () => {
-          this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
-        },
-      )
-    } else {
-      this.setState({ modalIsVisible: true }, () => {
-        this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
-      })
-    }
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setData(item)
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(true)
   }
 
   _renderSectionHeader = info => {
@@ -226,7 +199,17 @@ export default class MyLocalData extends Component {
         />
       )
     } else {
-      return <LocalDataItem info={info} itemOnpress={this.itemOnpress} />
+      return (
+        <LocalDataItem
+          info={info}
+          itemOnpress={this.itemOnpress}
+          isImporting={
+            this.props.importItem !== '' &&
+            JSON.stringify(info.item) ===
+              JSON.stringify(this.props.importItem.item)
+          }
+        />
+      )
     }
   }
 
@@ -235,60 +218,54 @@ export default class MyLocalData extends Component {
   }
 
   _closeModal = () => {
-    this.setState({ modalIsVisible: false }, () => {
-      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
-    })
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
   }
 
   _onDeleteData = async () => {
     try {
       this._closeModal()
+      if (
+        this.props.importItem !== '' &&
+        JSON.stringify(this.itemInfo.item) ===
+          JSON.stringify(this.props.importItem.item)
+      ) {
+        Toast.show(getLanguage(global.language).Prompt.DATA_BEING_IMPORT)
+        return
+      }
       this.setLoading(
         true,
         //'删除数据中...'
         getLanguage(this.props.language).Prompt.DELETING_DATA,
       )
-      if (this.itemInfo !== undefined) {
-        let directory = this.itemInfo.item.directory
+      let delDir
+      if (this.itemInfo.item.fileType === 'tif') {
+        delDir = this.itemInfo.item.filePath
+      } else {
+        delDir = this.itemInfo.item.directory
+      }
 
-        let isExist = await FileTools.fileIsExist(directory)
-        let result
-        if (isExist === true) {
-          result = await FileTools.deleteFile(this.itemInfo.item.directory)
-        } else {
-          result = true
-        }
-        if (result === true) {
-          Toast.show(
-            //'删除成功'
-            getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
-          )
-          let sectionData = [...this.state.sectionData]
-          for (let i = 0; i < sectionData.length; i++) {
-            let data = sectionData[i]
-            if (data.title === this.itemInfo.section.title) {
-              data.data.splice(this.itemInfo.index, 1)
-              //'外部数据'
-              if (
-                data.title ===
-                getLanguage(this.props.language).Profile.ON_DEVICE
-              ) {
-                AsyncStorage.setItem(
-                  'ExternalSectionData',
-                  JSON.stringify(data),
-                )
-              }
-              break
-            }
+      let isExist = await FileTools.fileIsExist(delDir)
+      let result
+      if (isExist === true) {
+        result = await FileTools.deleteFile(delDir)
+      } else {
+        result = true
+      }
+      if (result === true) {
+        Toast.show(
+          //'删除成功'
+          getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
+        )
+        let sectionData = [...this.state.sectionData]
+        for (let i = 0; i < sectionData.length; i++) {
+          let data = sectionData[i]
+          if (data.title === this.itemInfo.section.title) {
+            data.data.splice(this.itemInfo.index, 1)
           }
-          this.setState(
-            { sectionData: sectionData, modalIsVisible: false },
-            () => {
-              this.LocalDataPopupModal &&
-                this.LocalDataPopupModal.setVisible(false)
-            },
-          )
         }
+        this.setState({ sectionData: sectionData }, () => {
+          this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
+        })
       }
     } catch (e) {
       Toast.show(
@@ -303,86 +280,46 @@ export default class MyLocalData extends Component {
 
   _onImportPlotLib = async () => {
     try {
-      this._closeModal()
-      if (this.itemInfo !== undefined) {
-        this.setLoading(
-          true,
-          //ConstInfo.DATA_IMPORTING
-          getLanguage(this.props.language).Prompt.IMPORTING_DATA,
-        )
-        let filePath = this.itemInfo.item.filePath
-        let result = await this.props.importPlotLib({ path: filePath })
-        if (result.msg !== undefined) {
-          Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-        } else {
-          Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-        }
-        this.setLoading(false)
+      this.onImportStart()
+      let filePath = this.itemInfo.item.filePath
+      let result = await this.props.importPlotLib({ path: filePath })
+      if (result.msg !== undefined) {
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
       }
-    } catch (e) {
       this.setLoading(false)
+    } catch (e) {
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-      this._closeModal()
+    } finally {
+      this.onImportEnd()
     }
   }
+
   _onImportWorkspace = async () => {
     try {
-      this._closeModal()
-      if (this.itemInfo !== undefined) {
-        this.setLoading(
-          true,
-          //ConstInfo.DATA_IMPORTING
-          getLanguage(this.props.language).Prompt.IMPORTING_DATA,
-        )
-        let filePath = this.itemInfo.item.filePath
-        let is3D = await SScene.is3DWorkspace({ server: filePath })
-        if (is3D === true) {
-          let result = await this.props.importSceneWorkspace({
-            server: filePath,
-          })
-          if (result === true) {
-            Toast.show(
-              getLanguage(this.props.language).Prompt.IMPORTED_3D_SUCCESS,
-            )
-          } else {
-            Toast.show(
-              getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT_3D,
-            )
-          }
-          let index = filePath.lastIndexOf('/')
-          await SMap.copyNaviSnmFile(filePath.substring(0, index))
-          result = await this.props.importWorkspace({ path: filePath })
-          // if (result.msg !== undefined) {
-          //   Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-          // } else {
-          //   Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-          // }
-        } else {
-          let index = filePath.lastIndexOf('/')
-          await SMap.copyNaviSnmFile(filePath.substring(0, index))
-          let result = await this.props.importWorkspace({ path: filePath })
-          if (result.msg !== undefined) {
-            Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-          } else {
-            Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-          }
-        }
-        this.setLoading(false)
+      this.onImportStart()
+      let filePath = this.itemInfo.item.filePath
+      let index = filePath.lastIndexOf('/')
+      let path = filePath.substring(0, index)
+      let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+      await SMap.copyNaviSnmFile(snmFiles)
+      let result = await this.props.importWorkspace({ path: filePath })
+      if (result.msg !== undefined) {
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
       }
     } catch (e) {
-      this.setLoading(false)
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-      this._closeModal()
+    } finally {
+      this.onImportEnd()
     }
   }
 
   _onImportWorkspace3D = async () => {
     try {
-      this._closeModal()
-      this.setLoading(
-        true,
-        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
-      )
+      this.onImportStart()
       await DataHandler.importWorkspace3D(
         this.props.user.currentUser,
         this.itemInfo.item,
@@ -391,17 +328,13 @@ export default class MyLocalData extends Component {
     } catch (error) {
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
     } finally {
-      this.setLoading(false)
+      this.onImportEnd()
     }
   }
 
   _onImportDatasource = async () => {
     try {
-      this._closeModal()
-      this.setLoading(
-        true,
-        getLanguage(this.props.language).Prompt.IMPORTING_DATA,
-      )
+      this.onImportStart()
       await DataHandler.importDatasource(
         this.props.user.currentUser,
         this.itemInfo.item,
@@ -410,21 +343,17 @@ export default class MyLocalData extends Component {
     } catch (error) {
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
     } finally {
-      this.setLoading(false)
+      this.onImportEnd()
     }
   }
 
   _onImportTIF = async () => {
-    this._closeModal()
     NavigationService.navigate('MyDatasource', {
       title: getLanguage(this.props.language).Profile.DATA,
       getItemCallback: async ({ item }) => {
         try {
           NavigationService.goBack()
-          this.setLoading(
-            true,
-            getLanguage(this.props.language).Prompt.IMPORTING_DATA,
-          )
+          this.onImportStart()
           let result = await DataHandler.importTIF(
             this.itemInfo.item.filePath,
             item,
@@ -439,14 +368,26 @@ export default class MyLocalData extends Component {
         } catch (error) {
           Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
         } finally {
-          this.setLoading(false)
+          this.onImportEnd()
         }
       },
     })
   }
 
+  onImportStart = () => {
+    this.props.setImportItem(this.itemInfo)
+  }
+
+  onImportEnd = () => {
+    this.props.setImportItem('')
+  }
+
   importData = async () => {
     this._closeModal()
+    if (this.props.importItem !== '') {
+      Toast.show(getLanguage(global.language).Prompt.IMPORTING_DATA)
+      return
+    }
     if (this.itemInfo && this.itemInfo.id) {
       downFileAction(
         this.props.down,
@@ -478,8 +419,13 @@ export default class MyLocalData extends Component {
         this.itemInfo.item.fileType === 'tif'
       ) {
         this._onImportTIF()
-      } else {
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'workspace'
+      ) {
         this._onImportWorkspace()
+      } else {
+        Toast.show('暂不支持此数据的导入')
       }
     }
   }
@@ -497,9 +443,7 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, '发布服务中...')
     Toast.show(getLanguage(this.props.language).Prompt.PUBLISHING)
     //'发布服务中...')
-    this.setState({ modalIsVisible: false }, () => {
-      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
-    })
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
     try {
       let dataId = this.itemInfo.id + ''
       let result
@@ -548,9 +492,7 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, '删除服务中...')
     Toast.show(getLanguage(this.props.language).Prompt.DELETING_SERVICE)
     //'删除服务中...')
-    this.setState({ modalIsVisible: false }, () => {
-      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
-    })
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
     try {
       let result = await SOnlineService.deleteServiceWithDataName(
         this.itemInfo.fileName,
@@ -589,9 +531,7 @@ export default class MyLocalData extends Component {
     // this.setLoading(true, getLanguage(this.props.language).Prompt.DELETING_DATA)
     //'删除数据中...')
     Toast.show(getLanguage(this.props.language).Prompt.DELETING_DATA)
-    this.setState({ modalIsVisible: false }, () => {
-      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
-    })
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
     this.deleteDataing = true
     try {
       let objContent = this.itemInfo
@@ -627,9 +567,7 @@ export default class MyLocalData extends Component {
   _onChangeDataVisibility = async () => {
     //this.setLoading(true, getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
     //'改变数据可见性中...')
-    this.setState({ modalIsVisible: false }, () => {
-      this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
-    })
+    this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
     try {
       let sectionData = JSON.parse(JSON.stringify(this.state.sectionData))
       let oldOnline = sectionData[sectionData.length - 1]
@@ -685,20 +623,17 @@ export default class MyLocalData extends Component {
   }
 
   _showLocalDataPopupModal = () => {
-    if (!this.state.isFirstLoadingModal) {
-      return (
-        <LocalDataPopupModal
-          ref={ref => (this.LocalDataPopupModal = ref)}
-          data={this.itemInfo}
-          language={this.props.language}
-          onDeleteData={this.deleteData}
-          onPublishService={this._onPublishService}
-          onDeleteService={this._onDeleteService}
-          onImportWorkspace={this.importData}
-          onChangeDataVisibility={this._onChangeDataVisibility}
-        />
-      )
-    }
+    return (
+      <LocalDataPopupModal
+        ref={ref => (this.LocalDataPopupModal = ref)}
+        language={this.props.language}
+        onDeleteData={this.deleteData}
+        onPublishService={this._onPublishService}
+        onDeleteService={this._onDeleteService}
+        onImportWorkspace={this.importData}
+        onChangeDataVisibility={this._onChangeDataVisibility}
+      />
+    )
   }
 
   setLoading = (visible, info) => {

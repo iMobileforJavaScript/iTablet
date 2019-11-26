@@ -112,7 +112,7 @@ android {
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode 3
         versionName "3.0.4"
         manifestPlaceholders = [
