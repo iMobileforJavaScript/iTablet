@@ -516,6 +516,20 @@ const Map_Attribute = {
   ATTRIBUTE_REDO: 'Redo',
   ATTRIBUTE_REVERT: 'Revert',
   ATTRIBUTE_FIELD_ADD: 'Add',
+
+  DETAIL: 'Detail',
+  // 统计模式
+  MAX: 'Max',
+  MIN: 'Min',
+  AVERAGE: 'Average',
+  SUM: 'Sum',
+  VARIANCE: 'Variance',
+  STANDARD_DEVIATION: 'STDEV',
+  COUNT_UNIQUE: 'Count',
+  FIELD_TYPE: 'Field Type',
+  ALIAS: 'Alias',
+  ASCENDING: 'Ascending',
+  DESCENDING: 'Descending',
 }
 
 const Map_Setting = {

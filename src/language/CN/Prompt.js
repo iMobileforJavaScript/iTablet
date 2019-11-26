@@ -263,6 +263,8 @@ const Prompt = {
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',
   SPEECH_NONE: '您好像没有说话哦',
+
+  NOT_SUPPORT_STATISTIC: '该字段不支持统计',
 }
 
 export { Prompt }

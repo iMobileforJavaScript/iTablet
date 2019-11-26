@@ -4,6 +4,7 @@ import LayerAttributeAdd from './layerAttributeAdd'
 import LayerAttributeObj from './layerAttributeObj'
 import LayerSelectionAttribute from './layerSelectionAttribute'
 import LayerAttributeSearch from './layerAttributeSearch'
+import LayerAttributeStatistic from './layerAttributeStatistic'
 
 export {
   LayerAttribute,
@@ -12,4 +13,5 @@ export {
   LayerAttributeObj,
   LayerSelectionAttribute,
   LayerAttributeSearch,
+  LayerAttributeStatistic,
 }
