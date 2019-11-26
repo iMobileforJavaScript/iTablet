@@ -54,7 +54,6 @@ export default class LocalDataItem extends Component {
             alignItems: 'center',
             height: itemHeight,
             paddingLeft: 20,
-            backgroundColor: 'blue',
           }}
         >
           <View style={{ width: scaleSize(40) }}>
