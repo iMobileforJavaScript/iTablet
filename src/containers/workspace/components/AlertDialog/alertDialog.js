@@ -37,7 +37,7 @@ export default class AlertDialog extends React.Component {
         style={styles.btn}
         onPress={item.action}
       >
-        <Text style={styles.btnTitle}>{item.btntitle}</Text>
+        <Text style={styles.btnTitle}>{item.btnTitle}</Text>
       </TouchableOpacity>
     )
   }

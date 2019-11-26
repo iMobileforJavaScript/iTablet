@@ -46,7 +46,8 @@ export default class LayerAttributeAdd extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    params.data = params.defaultParams.fieldInfo.fieldInfo //&&
+    params.data =
+      params.defaultParams && params.defaultParams.fieldInfo.fieldInfo //&&
     //params.defaultParams[params.defaultParams.length - 1].fieldInfo
     if (params.data && params.data.type == 1) {
       params.data.defaultValue = params.data.defaultValue === '1'
@@ -61,13 +62,17 @@ export default class LayerAttributeAdd extends React.Component {
       data: params.data,
       dataset: params.dataset,
       name:
-        (params.data && isDetial
-          ? params.data.name
-          : this.getTrimSmStr(params.data.name) + '_1') || '',
+        (params.data &&
+          (isDetial
+            ? params.data.name
+            : this.getTrimSmStr(params.data.name) + '_1')) ||
+        '',
       caption:
-        (params.data && isDetial
-          ? params.data.caption
-          : this.getTrimSmStr(params.data.caption) + '_1') || '',
+        (params.data &&
+          (isDetial
+            ? params.data.caption
+            : this.getTrimSmStr(params.data.caption) + '_1')) ||
+        '',
       type: (params.data && params.data.type) || '',
       // maxLength: (params.data && params.data.maxLength) || '',
       maxLength: this.getDefaultMaxLength(params.data.type),

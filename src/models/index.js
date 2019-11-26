@@ -14,6 +14,7 @@ import backActions from './backActions'
 import analyst from './analyst'
 import localData from './localData'
 import histories from './histories'
+import externalData from './externalData'
 export {
   nav,
   layers,
@@ -31,4 +32,5 @@ export {
   backActions,
   analyst,
   localData,
+  externalData,
 }

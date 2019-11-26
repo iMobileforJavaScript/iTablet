@@ -8,36 +8,36 @@ var iconv = require('iconv-lite')
 
 /**
  * 判断所有文件类型，优先级：
- * 1.2维工作空间 smwu和关联udb，还存在3维scene时不check
- * 2.3维工作空间 smwu和关联文件夹，符号库
- * 3.其他udb，符号等
- * 4.其他文件夹
- *   1).采集模板
- *   2).标绘类型
- *   3).子文件夹，递归查询
+ * 1.External/Plotting中的标绘模版
+ * 2.2维工作空间 smwu和关联udb，还存在3维scene时不check
+ * 3.3维工作空间 sxwu和关联文件夹，符号库
+ * 4.其他udb，符号等
  */
 async function getExternalData(path, uncheckedChildFileList = []) {
   let resultList = []
   try {
-    let contentList = await FileTools.getDirectoryContent(path)
+    let contentList = await _getDirectoryContentDeep(path)
 
+    let PL = []
     let WS = []
     let WS3D = []
     let DS = []
-    let DR = []
+    let TIF = []
+
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
-    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
 
+    PL = await getPLList(path, contentList)
     WS = await getWSList(path, contentList, uncheckedChildFileList)
     WS3D = await getWS3DList(path, contentList, uncheckedChildFileList)
     DS = await getDSList(path, contentList, uncheckedChildFileList)
-    DR = await getDRContentList(path, contentList, uncheckedChildFileList)
+    TIF = await getTIFList(path, contentList, uncheckedChildFileList)
     resultList = resultList
+      .concat(PL)
       .concat(WS)
       .concat(WS3D)
       .concat(DS)
-      .concat(DR)
+      .concat(TIF)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -45,43 +45,67 @@ async function getExternalData(path, uncheckedChildFileList = []) {
   }
 }
 
+/** 获取标绘模版 */
+async function getPLList(path, contentList) {
+  let PL = []
+  try {
+    for (let i = 0; i < contentList.length; i++) {
+      if (contentList[i].name === 'Plotting') {
+        contentList[i].check = true
+        PL = await _getPlottingList(path + '/' + contentList[i].name)
+      }
+    }
+    return PL
+  } catch (error) {
+    // console.log(error)
+    return PL
+  }
+}
+
 /** 获取二维工作空间 */
 async function getWSList(path, contentList, uncheckedChildFileList) {
   let WS = []
   try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     for (let i = 0; i < contentList.length; i++) {
-      if (
-        !contentList[i].check &&
-        contentList[i].type === 'file' &&
-        _isWorkspace(contentList[i].name)
-      ) {
-        //检查工作空间类型，3维工作空间跳出；同时存在3维scence时不check
-        let wsInfo = await _getLocalWorkspaceInfo(
-          path + '/' + contentList[i].name,
-        )
-        contentList[i].wsInfo = wsInfo
-        if (wsInfo.maps.length === 0 && wsInfo.scenes.length === 0) {
-          contentList[i].check = true
-          continue
-        } else if (wsInfo.maps.length === 0 && wsInfo.scenes.length !== 0) {
-          continue
-        } else if (wsInfo.scenes.length === 0) {
-          contentList[i].check = true
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isWorkspace(contentList[i].name)) {
+          //检查工作空间类型，3维工作空间跳出；同时存在3维scence时不check
+          let wsInfo = await _getLocalWorkspaceInfo(
+            path + '/' + contentList[i].name,
+          )
+          contentList[i].wsInfo = wsInfo
+          if (wsInfo.maps.length === 0 && wsInfo.scenes.length === 0) {
+            contentList[i].check = true
+            continue
+          } else if (wsInfo.maps.length === 0 && wsInfo.scenes.length !== 0) {
+            continue
+          } else if (wsInfo.scenes.length === 0) {
+            contentList[i].check = true
+          }
+          let relatedDatasources = wsInfo.datasources
+          _checkDatasources(
+            relatedDatasources,
+            path,
+            contentList,
+            uncheckedChildFileList,
+          )
+          WS.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'workspace',
+            wsInfo: contentList[i].wsInfo,
+          })
         }
-        let relatedDatasources = wsInfo.datasources
-        _checkDatasources(
-          relatedDatasources,
-          path,
-          contentList,
-          uncheckedChildFileList,
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        WS = WS.concat(
+          await getWSList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
         )
-        WS.push({
-          directory: path,
-          fileName: contentList[i].name,
-          filePath: path + '/' + contentList[i].name,
-          fileType: 'workspace',
-          wsInfo: contentList[i].wsInfo,
-        })
       }
     }
     return WS
@@ -95,53 +119,60 @@ async function getWSList(path, contentList, uncheckedChildFileList) {
 async function getWS3DList(path, contentList, uncheckedChildFileList) {
   let WS3D = []
   try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     let WS3D = []
     let relatedFiles = []
     for (let i = 0; i < contentList.length; i++) {
-      if (
-        !contentList[i].check &&
-        contentList[i].type === 'file' &&
-        _isWorkspace(contentList[i].name)
-      ) {
-        //过滤2维工作空间后，剩下的都是3维工作空间或包含3维的工作空间
-        contentList[i].check = true
-        //过滤udb
-        let relatedDatasources = contentList[i].wsInfo.datasources
-        _checkDatasources(
-          relatedDatasources,
-          path,
-          contentList,
-          uncheckedChildFileList,
-        )
-        //获取3维缓存图层的信息
-        let layerInfo = await _getLayerInfo3D(
-          path + '/' + contentList[i].name,
-          path,
-        )
-        _checkRelated3DLayer(
-          relatedFiles,
-          layerInfo,
-          path,
-          contentList,
-          uncheckedChildFileList,
-        )
-        _checkRelated3DSymbols(
-          relatedFiles,
-          contentList[i].name,
-          path,
-          contentList,
-        )
-        _chekcFlyingFiles(relatedFiles, path, contentList)
-        if (layerInfo.length !== 0) {
-          WS3D.push({
-            directory: path,
-            fileName: contentList[i].name,
-            filePath: path + '/' + contentList[i].name,
-            fileType: 'workspace3d',
-            relatedFiles: relatedFiles,
-            wsInfo: contentList[i].wsInfo,
-          })
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isWorkspace(contentList[i].name)) {
+          //过滤2维工作空间后，剩下的都是3维工作空间或包含3维的工作空间
+          contentList[i].check = true
+          //过滤udb
+          let relatedDatasources = contentList[i].wsInfo.datasources
+          _checkDatasources(
+            relatedDatasources,
+            path,
+            contentList,
+            uncheckedChildFileList,
+          )
+          //获取3维缓存图层的信息
+          let layerInfo = await _getLayerInfo3D(
+            path + '/' + contentList[i].name,
+            path,
+          )
+          _checkRelated3DLayer(
+            relatedFiles,
+            layerInfo,
+            path,
+            contentList,
+            uncheckedChildFileList,
+          )
+          _checkRelated3DSymbols(
+            relatedFiles,
+            contentList[i].name,
+            path,
+            contentList,
+          )
+          _checkFlyingFiles(relatedFiles, path, contentList)
+          if (layerInfo.length !== 0) {
+            WS3D.push({
+              directory: path,
+              fileName: contentList[i].name,
+              filePath: path + '/' + contentList[i].name,
+              fileType: 'workspace3d',
+              relatedFiles: relatedFiles,
+              wsInfo: contentList[i].wsInfo,
+            })
+          }
         }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        WS3D = WS3D.concat(
+          await getWS3DList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
       }
     }
     return WS3D
@@ -152,23 +183,30 @@ async function getWS3DList(path, contentList, uncheckedChildFileList) {
 }
 
 /** 获取数据源 */
-async function getDSList(path, contentList) {
+async function getDSList(path, contentList, uncheckedChildFileList) {
   let DS = []
   try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     for (let i = 0; i < contentList.length; i++) {
-      if (
-        !contentList[i].check &&
-        contentList[i].type === 'file' &&
-        _isDatasource2(contentList[i].name)
-      ) {
-        contentList[i].check = true
-        //忽略同名udd等
-        DS.push({
-          directory: path,
-          fileName: contentList[i].name,
-          filePath: path + '/' + contentList[i].name,
-          fileType: 'datasource',
-        })
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isDatasource2(contentList[i].name)) {
+          contentList[i].check = true
+          //忽略同名udd等
+          DS.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'datasource',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        DS = DS.concat(
+          await getDSList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
       }
     }
     return DS
@@ -178,33 +216,34 @@ async function getDSList(path, contentList) {
   }
 }
 
-/** 获取子文件夹内容 */
-async function getDRContentList(path, contentList, uncheckedChildFileList) {
-  let DR = []
+async function getTIFList(path, contentList, uncheckedChildFileList) {
+  let TIF = []
   try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     for (let i = 0; i < contentList.length; i++) {
-      if (!contentList.check && contentList[i].type === 'directory') {
-        contentList[i].check
-        if (contentList[i].name === 'Plotting') {
-          DR = DR.concat(
-            await _getPlottingList(path + '/' + contentList[i].name),
-          )
-          // } else if(contentList[i].name === 'Collection') { //导入工作空间时对采集模板进行里了处理
-          //   DR = DR.concat(await _getCollectionList(path + '/' + contentList[i].name))
-        } else {
-          DR = DR.concat(
-            await getExternalData(
-              path + '/' + contentList[i].name,
-              uncheckedChildFileList,
-            ),
-          )
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isTIF(contentList[i].name)) {
+          contentList[i].check = true
+          TIF.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'tif',
+          })
         }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        TIF = TIF.concat(
+          await getTIFList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
       }
     }
-    return DR
+    return TIF
   } catch (error) {
-    // console.log(error)
-    return DR
+    return TIF
   }
 }
 
@@ -231,7 +270,7 @@ async function _getPlottingList(path) {
 
 /**
  * 检查同级目录下的相关数据源(UDB)
- * 子文件夹下的文件加入uncheckedChildFileList
+ * 其他文件夹下的文件加入uncheckedChildFileList
  */
 function _checkDatasources(
   relatedDatasources,
@@ -313,7 +352,7 @@ function _checkRelated3DSymbols(relatedFiles, wsName, path, contentList) {
   }
 }
 
-function _chekcFlyingFiles(relatedFiles, path, contentList) {
+function _checkFlyingFiles(relatedFiles, path, contentList) {
   for (let i = 0; i < contentList.length; i++) {
     if (
       !contentList[i].check &&
@@ -369,6 +408,18 @@ function _isDatasource2(name) {
     ext = name.substr(index + 1)
     //todo 添加其他格式
     return ext === 'udb'
+  }
+}
+
+function _isTIF(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'tif'
   }
 }
 
@@ -468,7 +519,31 @@ function _checkTempFile(contentList) {
   for (let i = 0; i < contentList.length; i++) {
     if (contentList[i].name.indexOf('~[') === 0) {
       contentList[i].check = true
+    } else if (
+      contentList[i].name.indexOf('~[') !== 0 &&
+      contentList[i].type === 'directory'
+    ) {
+      _checkTempFile(contentList[i].contentList)
     }
+  }
+}
+
+/** 递归获取所有文件 */
+async function _getDirectoryContentDeep(path) {
+  let contentList = []
+  try {
+    contentList = await FileTools.getDirectoryContent(path)
+    for (let i = 0; i < contentList.length; i++) {
+      if (contentList[i].type === 'directory') {
+        contentList[i].contentList = await _getDirectoryContentDeep(
+          path + '/' + contentList[i].name,
+        )
+      }
+    }
+    return contentList
+  } catch (error) {
+    // console.log(e)
+    return contentList
   }
 }
 

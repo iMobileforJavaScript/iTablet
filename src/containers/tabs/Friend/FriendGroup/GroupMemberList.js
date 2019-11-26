@@ -121,7 +121,7 @@ class GroupMemberList extends Component {
         renderRight={() => {
           if (this.mode === 'select') {
             let bSelected = false
-            for (let i in this.state.selectArr) {
+            for (let i = 0; i < this.state.selectArr.length; i++) {
               if (item.id === this.state.selectArr[i].id) {
                 bSelected = true
                 break

@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { Container, SearchBar, InfoView } from '../../../../components'
-import { Toast, LayerUtil } from '../../../../utils'
+import { Toast, LayerUtils } from '../../../../utils'
 import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import { LayerAttributeTable } from '../../components'
@@ -96,7 +96,7 @@ export default class LayerAttributeSearch extends React.Component {
     ;(async function() {
       try {
         if (this.isSelection) {
-          result = await LayerUtil.searchSelectionAttribute(
+          result = await LayerUtils.searchSelectionAttribute(
             this.state.attributes,
             this.layerPath,
             searchKey,
@@ -105,7 +105,7 @@ export default class LayerAttributeSearch extends React.Component {
             type,
           )
         } else {
-          result = await LayerUtil.searchLayerAttribute(
+          result = await LayerUtils.searchLayerAttribute(
             this.state.attributes,
             this.layerPath,
             {

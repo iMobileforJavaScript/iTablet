@@ -473,9 +473,9 @@ export default class Friend extends Component {
     let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
 
     let groupName = ''
-    for (let i in members) {
+    for (let i = 0; i < members.length; i++) {
       if (i > 3) break
-      if (i === '0') {
+      if (i === 0) {
         groupName += members[i].name
       } else {
         groupName += '、' + members[i].name
@@ -560,7 +560,7 @@ export default class Friend extends Component {
     await this._sendMessage(msgStr, groupId, false)
 
     FriendListFileHandle.removeGroupMember(groupId, members)
-    for (let member in members) {
+    for (let member = 0; member < members.length; member++) {
       SMessageService.exitSession(members[member].id, groupId)
     }
   }
@@ -587,7 +587,7 @@ export default class Friend extends Component {
       if (this.isGroupMsg(messageStr)) {
         let members = FriendListFileHandle.readGroupMemberList(talkId)
         await SMessageService.declareSession(members, talkId)
-        for (let key in members) {
+        for (let key = 0; key < members.length; key++) {
           talkIds.push(members[key].id)
         }
       } else {
@@ -687,7 +687,11 @@ export default class Friend extends Component {
         {
           let memberList = []
           let isInList = false
-          for (let member in msg.originMsg.message.members) {
+          for (
+            let member = 0;
+            member < msg.originMsg.message.members.length;
+            member++
+          ) {
             memberList.push(msg.originMsg.message.members[member].name)
             if (
               msg.originMsg.message.members[member].id ===
@@ -710,7 +714,7 @@ export default class Friend extends Component {
               getLanguage(this.props.language).Friends.SYS_MSG_LEAVE_GROUP
           } else {
             let memberStr = ''
-            for (let key in memberList) {
+            for (let key = 0; key < memberList.length; key++) {
               memberStr += memberList[key] + ' '
               if (key > 5) {
                 memberStr += getLanguage(this.props.language).Friends
@@ -730,7 +734,11 @@ export default class Friend extends Component {
       case MSGConstant.MSG_CREATE_GROUP:
         {
           let memberStr = ''
-          for (let member in msg.originMsg.message.newMembers) {
+          for (
+            let member = 0;
+            member < msg.originMsg.message.newMembers.length;
+            member++
+          ) {
             memberStr += msg.originMsg.message.newMembers[member].name + ' '
             if (member > 5) {
               memberStr += getLanguage(this.props.language).Friends.SYS_MSG_ETC
@@ -1145,7 +1153,11 @@ export default class Friend extends Component {
         bSysStore = true
         bSysShow = true
         let inList = false
-        for (let member in messageObj.message.members) {
+        for (
+          let member = 0;
+          member < messageObj.message.members.length;
+          member++
+        ) {
           if (
             messageObj.message.members[member].id ===
             this.props.user.currentUser.userId

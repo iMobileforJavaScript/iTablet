@@ -8,8 +8,7 @@ import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import UserType from '../../../../constants/UserType'
-import { MineItem } from '../component'
-import MyDataPopupModal from '../MyData/MyDataPopupModal'
+import { MineItem, MyDataPopupModal } from '../component'
 
 export default class ToggleAccount extends Component {
   props: {

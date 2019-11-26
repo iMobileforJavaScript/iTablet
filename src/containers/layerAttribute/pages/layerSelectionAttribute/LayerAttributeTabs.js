@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
-import { Container, MTBtn, PopView } from '../../../../components'
+import { Container, MTBtn, PopView, Dialog } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { Toast, scaleSize, StyleUtils } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -18,7 +18,6 @@ import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { SMap, Action, GeoStyle } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
-import { Dialog } from '../../../../components'
 
 const styles = StyleSheet.create({
   container: {
@@ -489,7 +488,6 @@ export default class LayerAttributeTabs extends React.Component {
     GLOBAL.toolBox &&
       GLOBAL.toolBox.showFullMap &&
       GLOBAL.toolBox.showFullMap(true)
-    // GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
     GLOBAL.toolBox &&
       GLOBAL.toolBox.setVisible(

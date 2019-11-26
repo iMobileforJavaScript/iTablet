@@ -83,6 +83,7 @@ const Profile = {
   SHARE: '分享',
   PATH: '路径',
 
+  LOCAL: '本地',
   SAMPLEDATA: '样例数据',
   ON_DEVICE: '外部数据',
   EXPORT_DATA: '导出数据',
@@ -95,7 +96,7 @@ const Profile = {
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   DELETE_MAP: '删除地图',
-  UPLOAD_SCENE: '上传场景',
+  UPLOAD_SCENE: '分享场景',
   DELETE_SCENE: '删除场景',
   UPLOAD_SYMBOL: '分享符号',
   DELETE_SYMBOL: '删除符号',
@@ -160,6 +161,8 @@ const Profile = {
   SETTING_LICENSE: '许可',
   SETTING_ABOUT_ITABLET: '关于iTablet',
   SETTING_CHECK_VERSION: '检查版本',
+  SETTING_LANGUAGE: '语言',
+  SETTING_LANGUAGE_AUTO: '跟随系统',
 
   //许可
   LICENSE_CURRENT: '当前许可',

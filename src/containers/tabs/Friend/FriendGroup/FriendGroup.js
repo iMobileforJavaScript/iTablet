@@ -67,7 +67,7 @@ class FriendGroup extends Component {
         // const {list} = data;
 
         let srcFriendData = []
-        for (let key in result) {
+        for (let key = 0; key < result.length; key++) {
           if (result[key].id && result[key].groupName) {
             let frend = {}
             frend['id'] = result[key].id
@@ -159,7 +159,7 @@ class FriendGroup extends Component {
   _renderItemHeadView(item) {
     if (item.members.length > 1) {
       let texts = []
-      for (let i in item.members) {
+      for (let i = 0; i < item.members.length; i++) {
         if (i > 4) break
         texts.push(
           <Text

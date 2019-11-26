@@ -13,12 +13,18 @@ export default class LocalDataPopupModal extends PureComponent {
     onPublishService: () => {},
     onDeleteService: () => {},
     onChangeDataVisibility: () => {},
-    data: Object,
   }
 
   constructor(props) {
     super(props)
     this.fontSize = size.fontSize.fontSizeXl
+    this.state = {
+      data: {},
+    }
+  }
+
+  setData = data => {
+    this.setState({ data })
   }
 
   _renderSeparatorLine = () => {
@@ -92,7 +98,7 @@ export default class LocalDataPopupModal extends PureComponent {
   _publishServiceButton = () => {
     let title = getLanguage(global.language).Profile.PUBLISH_SERVICE
     //'发布服务'
-    let objContent = this.props.data
+    let objContent = this.state.data
     if (objContent && objContent.dataItemServices) {
       if (
         objContent.serviceStatus === 'PUBLISHED' ||
@@ -148,9 +154,9 @@ export default class LocalDataPopupModal extends PureComponent {
   }
 
   _dataVisibleButton = () => {
-    if (this.props.data && this.props.data.authorizeSetting) {
+    if (this.state.data && this.state.data.authorizeSetting) {
       let isPublish = false
-      let authorizeSetting = this.props.data.authorizeSetting
+      let authorizeSetting = this.state.data.authorizeSetting
       for (let i = 0; i < authorizeSetting.length; i++) {
         let dataPermissionType = authorizeSetting[i].dataPermissionType
         if (dataPermissionType === 'DOWNLOAD') {

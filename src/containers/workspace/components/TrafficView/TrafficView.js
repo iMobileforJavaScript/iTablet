@@ -11,58 +11,83 @@ import {
   Image,
   Animated,
   Platform,
-  Text,
 } from 'react-native'
 
-import { constUtil, scaleSize } from '../../../../utils'
+import { constUtil, scaleSize, LayerUtils, Toast } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Const, ConstOnline } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
-import { getPublicAssets, getThemeAssets } from '../../../../assets'
-import { isBaseLayer } from '../../../mtLayerManager/LayerUtils'
+import { getPublicAssets } from '../../../../assets'
+import { getLanguage } from '../../../../language'
 
 export default class TrafficView extends React.Component {
   props: {
     device: Object,
+    language: String,
     getLayers: () => {},
-    showModelList: () => {},
+    incrementRoad: () => {},
+    mapLoaded: boolean,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      left: new Animated.Value(scaleSize(25)),
+      left: new Animated.Value(scaleSize(20)),
       hasAdded: false,
-      showIcon: false,
+      showIcon: true,
+      currentFloorID: '',
     }
-    this.isIndoor = undefined
   }
 
-  componentDidMount() {
-    SMap.addIndoorChangeListener(async result => {
-      if (result.isIndoor !== this.isIndoor) {
-        this.isIndoor = result.isIndoor
-        if (!this.isIndoor) {
-          let layers = this.props.getLayers && (await this.props.getLayers())
-          let baseMap = layers.filter(layer => isBaseLayer(layer.name))[0]
-          if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
-            this.setState({
-              showIcon: true,
-            })
-          }
-        } else {
-          this.setState({
-            showIcon: false,
-          })
-        }
+  async componentDidUpdate(prevProps) {
+    if (this.props.mapLoaded && this.props.mapLoaded !== prevProps.mapLoaded) {
+      let datas = await SMap.getFloorData()
+      if (datas.data && datas.data.length > 0) {
+        let { currentFloorID } = datas
+        this.setState({
+          currentFloorID,
+        })
       }
-    })
+
+      if (!this.listener) {
+        this.listener = SMap.addFloorHiddenListener(async result => {
+          let { currentFloorID } = result
+          if (currentFloorID !== this.state.currentFloorID) {
+            if (!currentFloorID) {
+              let layers =
+                this.props.getLayers && (await this.props.getLayers())
+              let baseMap = layers.filter(layer =>
+                LayerUtils.isBaseLayer(layer.name),
+              )[0]
+              if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+                this.setState({
+                  currentFloorID,
+                })
+              }
+            } else {
+              this.setState({
+                currentFloorID,
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+  incrementRoad = async () => {
+    let rel = await SMap.hasLineDataset()
+    if (rel) {
+      this.props.incrementRoad()
+    } else {
+      Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
+    }
   }
 
   setVisible = (visible, immediately = false) => {
     if (visible) {
       Animated.timing(this.state.left, {
-        toValue: scaleSize(25),
+        toValue: scaleSize(20),
         duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
     } else {
@@ -74,43 +99,44 @@ export default class TrafficView extends React.Component {
   }
 
   render() {
-    if (!this.state.showIcon) return null
+    if (!this.props.mapLoaded) return null
     let trafficImg = this.state.hasAdded
       ? getPublicAssets().navigation.icon_traffic_on
       : getPublicAssets().navigation.icon_traffic_off
-    let modelImg = getThemeAssets().functionBar.rightbar_network_model
+    let networkImg = require('../../../../assets/Navigation/network.png')
     return (
       <Animated.View style={[styles.container, { left: this.state.left }]}>
-        <TouchableOpacity
-          underlayColor={constUtil.UNDERLAYCOLOR_TINT}
-          style={{
-            flex: 1,
-          }}
-          onPress={async () => {
-            if (this.state.hasAdded) {
-              await SMap.removeTrafficMap('tencent@TrafficMap')
-            } else {
-              await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
-            }
-            let hasAdded = !this.state.hasAdded
-            this.setState({
-              hasAdded,
-            })
-          }}
-        >
-          <Image source={trafficImg} style={styles.icon} />
-          <Text style={styles.text}>路况</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          underlayColor={constUtil.UNDERLAYCOLOR_TINT}
-          style={{
-            flex: 1,
-          }}
-          onPress={this.props.showModelList}
-        >
-          <Image source={modelImg} style={styles.icon} />
-          <Text style={styles.text}>模型</Text>
-        </TouchableOpacity>
+        {!this.state.currentFloorID ? (
+          <TouchableOpacity
+            underlayColor={constUtil.UNDERLAYCOLOR_TINT}
+            style={{
+              flex: 1,
+            }}
+            onPress={async () => {
+              if (this.state.hasAdded) {
+                await SMap.removeTrafficMap('tencent@TrafficMap')
+              } else {
+                await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+              }
+              let hasAdded = !this.state.hasAdded
+              this.setState({
+                hasAdded,
+              })
+            }}
+          >
+            <Image source={trafficImg} style={styles.icon} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            underlayColor={constUtil.UNDERLAYCOLOR_TINT}
+            style={{
+              flex: 1,
+            }}
+            onPress={this.incrementRoad}
+          >
+            <Image source={networkImg} style={styles.icon} />
+          </TouchableOpacity>
+        )}
       </Animated.View>
     )
   }
@@ -119,6 +145,8 @@ export default class TrafficView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
+    width: scaleSize(60),
+    height: scaleSize(60),
     top: scaleSize(143) + (Platform.OS === 'ios' ? 20 : 0),
     backgroundColor: color.content_white,
     borderRadius: scaleSize(4),
@@ -127,12 +155,13 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 2,
-    paddingBottom: scaleSize(5),
-    paddingHorizontal: scaleSize(5),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   icon: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    flex: 1,
+    width: scaleSize(50),
+    height: scaleSize(50),
   },
   text: {
     fontSize: scaleSize(20),

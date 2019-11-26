@@ -3,8 +3,8 @@ import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color, size } from '../../../../styles'
 import { TableList } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
-import PlotData from '../../../../containers/workspace/components/ToolBar/PlotData'
+import { ToolbarType } from '../../../../constants'
+import { plotModule } from '../ToolBar/modules'
 import { SMCollectorType } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 export default class PlotTab extends React.Component {
@@ -38,7 +38,11 @@ export default class PlotTab extends React.Component {
     let symbolCode = parseInt(item.name)
     let libId = item.code
 
-    PlotData.showCollection(libId, symbolCode, SMCollectorType.POINT_HAND)
+    plotModule().actions.showCollection(
+      libId,
+      symbolCode,
+      SMCollectorType.POINT_HAND,
+    )
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -73,7 +77,7 @@ export default class PlotTab extends React.Component {
         style={styles.container}
         data={this.props.data}
         // data={this.state.data}
-        type={'scroll'}
+        type={ToolbarType.scrollTable}
         numColumns={3}
         renderCell={this._renderItem}
         device={this.props.device}

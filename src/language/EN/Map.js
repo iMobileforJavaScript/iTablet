@@ -63,13 +63,14 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: 'Transparency',
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
-  STYLE_BACKFROUNG: 'Background',
+  STYLE_BACKGROUND: 'Background',
   STYLE_BORDER: 'Border Color',
   STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
   STYLE_FRAME_COLOR: 'Frame Color',
   STYLE_FRAME_SYMBOL: 'Frame Symbol',
   STYLE_FONT: 'Font',
+  STYLE_SIZE: 'Size',
   STYLE_FONT_SIZE: 'Font Size',
   STYLE_ALIGNMENT: 'Alignment',
   STYLE_FONT_STYLE: 'Font style',
@@ -86,6 +87,7 @@ const Map_Main_Menu = {
   VERTICAL_FLIP: 'Vertical Flip',
   HORIZONTAL_FLIP: 'Horizontal Flip',
   SATURATION: 'Saturation',
+  CONTRAST: 'Contrast',
 
   TOOLS: 'Tools',
   TOOLS_DISTANCE_MEASUREMENT: 'Distance Measurement',
@@ -302,6 +304,8 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: 'High-Precision Collect',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: 'Illegally-Park Collect',
   MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: 'Cast Model',
+  MAP_AR_AI_ASSISTANT_NEWDATA: 'New Data',
+  MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME: ' Fill in the name',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: 'Choose Model',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: 'Searching Surface',
@@ -316,6 +320,12 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP: 'Stop Recording',
   MAP_AR_AI_ASSISTANT_SAVE_LINE: 'Line',
   MAP_AR_AI_ASSISTANT_SAVE_POINT: 'Point',
+  MAP_AR_AI_SAVE_SUCCESS: 'Save Success',
+  MAP_AR_AI_SAVE_POINT: 'Save Point',
+  MAP_AR_AI_SAVE_LINE: 'Save Line',
+  MAP_AR_AI_CHANGE: 'Change',
+  MAP_AR_AI_CLEAR: 'Clear',
+  MAP_AR_AI_NEW_ROAD: 'Please Create New Road',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: 'Classify Loading',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: 'Classify failed, try Again',
@@ -358,6 +368,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
+  NETWORK_DATASET: 'Network Datasets',
+  MODEL_FILE: 'Navigation Model Files',
 }
 
 //推演动画

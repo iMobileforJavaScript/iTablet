@@ -49,6 +49,7 @@ import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
 import { setBackAction, removeBackAction } from '../../../../models/backActions'
 import { setAnalystParams } from '../../../../models/analyst'
+import { downloadFile, deleteDownloadFile } from '../../../../models/down'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -126,6 +127,8 @@ const mapDispatchToProps = {
   setMapSelectPoint,
   setNavigationHistory,
   setOpenOnlineMap,
+  downloadFile,
+  deleteDownloadFile,
 }
 
 export default connect(

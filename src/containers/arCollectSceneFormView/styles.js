@@ -22,23 +22,28 @@ export default StyleSheet.create({
     marginRight: scaleSize(5),
   },
   historyTitle: {
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
     fontSize: setSpText(30),
     color: 'black',
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  buttonname: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    fontSize: setSpText(20),
+    color: 'black',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
   historyDataView: {
     position: 'absolute',
-    flexDirection: 'row',
-    height: scaleSize(520),
+    height: scaleSize(570),
     // width: '90%',
     paddingVertical: scaleSize(10),
     // backgroundColor: '#2D2D2F',
     backgroundColor: color.background,
-    justifyContent: 'space-between',
     borderRadius: scaleSize(10),
     left: scaleSize(20),
     right: scaleSize(20),
@@ -80,6 +85,9 @@ export default StyleSheet.create({
   },
   historyCloseIcon: {
     flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   historyDelete: {
     width: scaleSize(60),
@@ -92,6 +100,11 @@ export default StyleSheet.create({
   smallIcon: {
     width: scaleSize(50),
     height: scaleSize(50),
+  },
+  smallIcons: {
+    marginLeft: scaleSize(10),
+    width: scaleSize(30),
+    height: scaleSize(30),
   },
   toolbar: {
     position: 'absolute',

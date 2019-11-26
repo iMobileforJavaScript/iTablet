@@ -1,8 +1,8 @@
 /*
-  Copyright © SuperMap. All rights reserved.
-  Author: Yang Shanglong
-  E-mail: yangshanglong@supermap.com
-*/
+ Copyright © SuperMap. All rights reserved.
+ Author: Yang Shanglong
+ E-mail: yangshanglong@supermap.com
+ */
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'

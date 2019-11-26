@@ -63,13 +63,14 @@ const Map_Main_Menu = {
   //地图制图及公共 风格
   STYLE: '风格',
   STYLE_SYMBOL: '符号',
+  STYLE_SIZE: '大小',
   STYLE_SYMBOL_SIZE: '符号大小',
   STYLE_COLOR: '颜色',
   STYLE_ROTATION: '旋转角度',
   STYLE_TRANSPARENCY: '透明度',
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
-  STYLE_BACKFROUNG: '背景色',
+  STYLE_BACKGROUND: '背景色',
   STYLE_BORDER: '轮廓颜色',
   STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
@@ -88,6 +89,7 @@ const Map_Main_Menu = {
   STYLE_OUTLINE: '轮廓',
   STYLE_SHADOW: '阴影',
   SATURATION: '饱和度',
+  CONTRAST: '对比度',
 
   ROTATE_LEFT: '左旋转90°',
   ROTATE_RIGHT: '右旋转90°',
@@ -319,6 +321,8 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT: '高精采集',
   MAP_AR_AI_ASSISTANT_ILLEGALLY_PARK_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE: '模型投放',
+  MAP_AR_AI_ASSISTANT_NEWDATA: '新建',
+  MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME: '请输入数据源名称',
 
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_CHOOSE_MODEL: '请选择你的模型',
   MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT_SEARCHING: '正在寻找平面',
@@ -333,6 +337,12 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP: '暂停记录',
   MAP_AR_AI_ASSISTANT_SAVE_LINE: '线',
   MAP_AR_AI_ASSISTANT_SAVE_POINT: '点',
+  MAP_AR_AI_SAVE_SUCCESS: '保存成功',
+  MAP_AR_AI_SAVE_POINT: '保存点',
+  MAP_AR_AI_SAVE_LINE: '保存线',
+  MAP_AR_AI_CHANGE: '切换视角',
+  MAP_AR_AI_CLEAR: '清除',
+  MAP_AR_AI_NEW_ROAD: '请新建路线',
 
   MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING: '正在分类中',
   MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED: '分类失败,请重试',
@@ -375,6 +385,8 @@ const Map_Main_Menu = {
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',
+  NETWORK_DATASET: '路网数据集',
+  MODEL_FILE: '导航模型文件',
 }
 
 //推演动画

@@ -7,7 +7,9 @@ export default StyleSheet.create({
     flex: 1,
   },
   map: {
-    flex: 1,
+    height: 500,
+    width: '100%',
+    // flex: 1,
     alignSelf: 'stretch',
     backgroundColor: 'white',
   },

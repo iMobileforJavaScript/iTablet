@@ -8,7 +8,7 @@ import * as React from 'react'
 import { TouchableOpacity, Text, SectionList, View, Image } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, LayerUtils } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, SMediaCollector } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
@@ -20,13 +20,16 @@ import {
   UserType,
 } from '../../constants'
 import { color, size } from '../../styles'
-import * as LayerUtils from './LayerUtils'
 import {
   getThemeAssets,
   getLayerIconByType,
   getThemeIconByType,
 } from '../../assets'
 import { FileTools } from '../../native'
+import {
+  themeModule,
+  styleModule,
+} from '../workspace/components/ToolBar/modules'
 import NavigationService from '../../containers/NavigationService'
 import { getLanguage } from '../../language'
 
@@ -114,17 +117,17 @@ export default class MT_layerManager extends React.Component {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      let layers = isInit ? this.props.layers : await this.props.getLayers()
+      let allLayers = isInit ? this.props.layers : await this.props.getLayers()
 
       let baseMap = []
       if (
-        layers.length > 0 ||
-        (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
+        allLayers.length > 0 ||
+        (allLayers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
       ) {
         if (
-          (layers.length > 0 &&
-            !LayerUtils.isBaseLayer(layers[layers.length - 1].name)) ||
-          (layers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
+          (allLayers.length > 0 &&
+            !LayerUtils.isBaseLayer(allLayers[allLayers.length - 1].name)) ||
+          (allLayers.length === 0 && GLOBAL.Type === constants.MAP_ANALYST)
         ) {
           baseMap = [
             {
@@ -136,10 +139,11 @@ export default class MT_layerManager extends React.Component {
               type: 81,
             },
           ]
-        } else {
-          baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
+        } else if (allLayers.length > 0) {
+          baseMap = [allLayers[allLayers.length - 1]]
+          allLayers.splice(allLayers.length - 1, 1)
         }
-      } else if (layers.length === 0) {
+      } else if (allLayers.length === 0) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
           GLOBAL.Type === constants.COLLECTION
@@ -148,12 +152,27 @@ export default class MT_layerManager extends React.Component {
           false,
           false, // 分析模块下，显示地图
         )
-        layers = await this.props.getLayers()
-        baseMap = layers.length > 0 ? [layers[layers.length - 1]] : []
+        allLayers = await this.props.getLayers()
+        baseMap = allLayers.length > 0 ? [allLayers[allLayers.length - 1]] : []
       }
-      let dataList = await SMap.getTaggingLayers(
-        this.props.user.currentUser.userName,
-      )
+
+      let taggingLayers = [] // 标注图层
+      let layers = [] // 我的图层
+      // 加载标注图层后，标注图层会添加到地图中，getLayers获取的图层包含普通图层和标注图层
+      for (let i = 0; i < allLayers.length; i++) {
+        if (LayerUtils.getLayerType(allLayers[i]) === 'TAGGINGLAYER') {
+          taggingLayers.unshift(allLayers[i])
+        } else {
+          layers.push(allLayers[i])
+        }
+      }
+
+      // 若无标注图层，则去加载
+      if (taggingLayers.length === 0) {
+        taggingLayers = await SMap.getTaggingLayers(
+          this.props.user.currentUser.userName,
+        )
+      }
       if (this.props.currentLayer.name) {
         this.prevItemRef = this.currentItemRef
         this.currentItemRef =
@@ -164,7 +183,7 @@ export default class MT_layerManager extends React.Component {
           {
             title: getLanguage(this.props.language).Map_Layer.PLOTS,
             //'我的标注',
-            data: dataList,
+            data: taggingLayers,
             visible:
               this.state.data.length === 3 ? this.state.data[0].visible : true,
           },
@@ -282,124 +301,6 @@ export default class MT_layerManager extends React.Component {
     // this.getData()
   }
 
-  /**地图制图修改风格 */
-  mapEdit = data => {
-    let orientation = this.props.device.orientation
-    SMap.setLayerEditable(data.path, true)
-    if (data.type === 83) {
-      GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-          containerType: 'list',
-          isFullScreen: false,
-          height: ConstToolType.HEIGHT[4],
-        })
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      this.props.navigation.navigate('MapView')
-    } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-      GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-          containerType: 'symbol',
-          isFullScreen: false,
-          column: orientation === 'PORTRAIT' ? 4 : 8,
-          height:
-            orientation === 'PORTRAIT'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.TOOLBAR_HEIGHT_2[3],
-        })
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      this.props.navigation.navigate('MapView')
-    } else {
-      Toast.show(
-        getLanguage(this.props.language).Prompt
-          .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-      )
-      //'当前图层无法设置风格')
-    }
-  }
-
-  /**修改专题图 */
-  mapTheme = data => {
-    let curThemeType
-    if (data.isHeatmap) {
-      curThemeType = constants.THEME_HEATMAP
-    } else {
-      switch (data.themeType) {
-        case ThemeType.UNIQUE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_UNIQUE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
-          break
-        case ThemeType.RANGE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_RANGE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
-          break
-        case ThemeType.LABEL:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_UNIFY_LABEL
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-          break
-        case ThemeType.LABELUNIQUE:
-          curThemeType = constants.THEME_UNIQUE_LABEL
-          break
-        case ThemeType.LABELRANGE:
-          curThemeType = constants.THEME_RANGE_LABEL
-          break
-        case ThemeType.DOTDENSITY:
-          curThemeType = constants.THEME_DOT_DENSITY
-          break
-        case ThemeType.GRADUATEDSYMBOL:
-          curThemeType = constants.THEME_GRADUATED_SYMBOL
-          break
-        case ThemeType.GRAPH:
-          curThemeType = constants.THEME_GRAPH_STYLE
-          break
-        case ThemeType.GRIDRANGE:
-          curThemeType = constants.THEME_GRID_RANGE
-          break
-        case ThemeType.GRIDUNIQUE:
-          curThemeType = constants.THEME_GRID_UNIQUE
-          break
-        default:
-          Toast.show('提示:当前图层暂不支持修改')
-          break
-      }
-    }
-    if (curThemeType) {
-      // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-      let orientation = this.props.device.orientation
-      GLOBAL.toolBox.setVisible(
-        true,
-        curThemeType === constants.THEME_GRAPH_STYLE
-          ? ConstToolType.MAP_THEME_PARAM_GRAPH
-          : ConstToolType.MAP_THEME_PARAM,
-        {
-          containerType: 'list',
-          isFullScreen: true,
-          height:
-            orientation === 'PORTRAIT'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.TOOLBAR_HEIGHT_2[3],
-          column: orientation === 'PORTRAIT' ? 8 : 4,
-          themeType: curThemeType,
-          isTouchProgress: false,
-          showMenuDialog: true,
-        },
-      )
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      this.props.navigation.navigate('MapView')
-      Toast.show(
-        //'当前图层为:'
-        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER +
-          '  ' +
-          data.name,
-      )
-    }
-  }
-
   onPressRow = async ({ data, parentData, section }) => {
     // this.props.setMapLegend(false)
 
@@ -411,30 +312,6 @@ export default class MT_layerManager extends React.Component {
         ) {
           this.props.clearAttributeHistory && this.props.clearAttributeHistory()
         }
-        // if (
-        //   GLOBAL.Type === constants.MAP_EDIT ||
-        //   GLOBAL.Type === constants.MAP_ANALYST
-        // ) {
-        //   if (data.themeType <= 0) {
-        //     this.mapEdit(data)
-        //   } else {
-        //     Toast.show(
-        //       getLanguage(this.props.language).Prompt
-        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        //     )
-        //     //'当前图层无法设置风格')
-        //   }
-        // } else if (GLOBAL.Type === constants.MAP_THEME) {
-        //   if (data.themeType <= 0 && !data.isHeatmap) {
-        //     Toast.show(
-        //       getLanguage(this.props.language).Prompt
-        //         .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-        //     )
-        //     //'当前图层无法设置风格')
-        //   } else {
-        //     this.mapTheme(data)
-        //   }
-        // }
         if (
           GLOBAL.Type !== constants.MAP_EDIT &&
           GLOBAL.Type !== constants.MAP_THEME &&
@@ -444,9 +321,13 @@ export default class MT_layerManager extends React.Component {
         }
 
         if (data.themeType <= 0 && !data.isHeatmap) {
-          this.mapEdit(data)
+          // this.mapEdit(data)
+          styleModule().actions.layerListAction &&
+            styleModule().actions.layerListAction(data)
         } else if (GLOBAL.Type === constants.MAP_THEME) {
-          this.mapTheme(data)
+          // this.mapTheme(data)
+          themeModule().actions.layerListAction &&
+            themeModule().actions.layerListAction(data)
         } else {
           Toast.show(
             getLanguage(this.props.language).Prompt
@@ -606,41 +487,56 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = async (data, value, section) => {
-    let layers = this.state.data[1].data
-    let backMaps = this.state.data[2].data
-    let Label = this.state.data[0].data
-    let hasDeal = false
+    let layers = section.data
+    // let layers = this.state.data[1].data
+    // let backMaps = this.state.data[2].data
+    // let Label = this.state.data[0].data
+    // let hasDeal = false
     let name = data.name
     let curData = JSON.parse(JSON.stringify(this.state.data))
+    let sectionIndex = 0
+    for (let i = 0; i < curData.length; i++) {
+      if (section.title === curData[i].title) {
+        sectionIndex = i
+        break
+      }
+    }
     let result = false
     if (data.path !== '') {
       for (let i = 0, l = layers.length; i < l; i++) {
         if (name === layers[i].name) {
-          curData[1].data[i].isVisible = value
-          /*
-           *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
-           *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
-           */
-          //hasDeal = true
+          curData[sectionIndex].data[i].isVisible = value
           break
         }
       }
-      if (!hasDeal)
-        for (let j = 0, l = backMaps.length; j < l; j++) {
-          if (name === backMaps[j].name) {
-            curData[2].data[j].isVisible = value
-            hasDeal = true
-            break
-          }
-        }
-      if (!hasDeal)
-        for (let j = 0, l = Label.length; j < l; j++) {
-          if (name === Label[j].name) {
-            curData[0].data[j].isVisible = value
-            hasDeal = true
-            break
-          }
-        }
+
+      // for (let i = 0, l = layers.length; i < l; i++) {
+      //   if (name === layers[i].name) {
+      //     curData[1].data[i].isVisible = value
+      //     // /*
+      //     //    *todo layers中包含了标注和底图，实际标注显示是读取的label中的属性，如果此处hasDeal设置为true
+      //     //  *todo 则会造成标注设置不可见，折叠菜单再打开，不可见的标注又被勾上  是否改变数据结构？
+      //     //  */
+      //     // hasDeal = true
+      //     break
+      //   }
+      // }
+      // if (!hasDeal)
+      //   for (let j = 0, l = backMaps.length; j < l; j++) {
+      //     if (name === backMaps[j].name) {
+      //       curData[2].data[j].isVisible = value
+      //       hasDeal = true
+      //       break
+      //     }
+      //   }
+      // if (!hasDeal)
+      //   for (let j = 0, l = Label.length; j < l; j++) {
+      //     if (name === Label[j].name) {
+      //       curData[0].data[j].isVisible = value
+      //       hasDeal = true
+      //       break
+      //     }
+      //   }
       result = await SMap.setLayerVisible(data.path, value)
 
       if (
@@ -673,24 +569,31 @@ export default class MT_layerManager extends React.Component {
     return result
   }
 
-  setAllLayersVisible = async () => {
+  setAllLayersVisible = async section => {
     this.setLoading(true)
-    let data = JSON.parse(JSON.stringify(this.state.data))
-    let layers = data[1].data
+    // let layers = section.data
+    let layers = JSON.parse(JSON.stringify(section.data))
     let visibles = this.isAllLayersVisible(layers)
     if (visibles) {
-      for (let i in layers) {
-        await SMap.setLayerVisible(layers[i].path, false)
-        layers[i].isVisible = false
-        SMediaCollector.hideMedia(layers[i].name)
+      for (let layer of layers) {
+        await SMap.setLayerVisible(layer.path, false)
+        layer.isVisible = false
+        SMediaCollector.hideMedia(layer.name)
       }
     } else {
-      for (let i in layers) {
-        if (layers[i].isVisible === false) {
-          await SMap.setLayerVisible(layers[i].path, true)
-          layers[i].isVisible = true
-          SMediaCollector.showMedia(layers[i].name)
+      for (let layer of layers) {
+        if (layer.isVisible === false) {
+          await SMap.setLayerVisible(layer.path, true)
+          layer.isVisible = true
+          SMediaCollector.showMedia(layer.name)
         }
+      }
+    }
+    let data = JSON.parse(JSON.stringify(this.state.data))
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].title === section.title) {
+        data[i].data = layers
+        break
       }
     }
     this.setState({ data, allLayersVisible: !visibles })
@@ -699,8 +602,8 @@ export default class MT_layerManager extends React.Component {
 
   isAllLayersVisible = layers => {
     if (layers.length > 0) {
-      for (let i in layers) {
-        if (layers[i].isVisible === false) {
+      for (let layer of layers) {
+        if (layer.isVisible === false) {
           return false
         }
       }
@@ -996,7 +899,7 @@ export default class MT_layerManager extends React.Component {
                   alignItems: 'center',
                   marginRight: scaleSize(10),
                 }}
-                onPress={this.setAllLayersVisible}
+                onPress={() => this.setAllLayersVisible(section)}
               >
                 <Text style={{ fontSize: scaleSize(24), color: '#A0A0A0' }}>
                   {this.state.allLayersVisible

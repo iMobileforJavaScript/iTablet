@@ -12,7 +12,11 @@ import {
   MyOnlineMap,
   ScanOnlineMap,
   MyLocalData,
-  MyData,
+  MyMap,
+  MyScene,
+  MyDatasource,
+  MySymbol,
+  MyTemplate,
   Personal,
   ToggleAccount,
   Setting,
@@ -35,7 +39,6 @@ import {
   SelectFriend,
   MyLabel,
   MyBaseMap,
-  MyModule,
   SuperMapKnown,
 } from './tabs'
 
@@ -121,6 +124,7 @@ import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
 import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
+import LanguageSetting from './languageSetting'
 
 const AppNavigator = createStackNavigator(
   {
@@ -496,8 +500,36 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
-    MyData: {
-      screen: MyData,
+    MyMap: {
+      screen: MyMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyScene: {
+      screen: MyScene,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyDatasource: {
+      screen: MyDatasource,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MySymbol: {
+      screen: MySymbol,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyTemplate: {
+      screen: MyTemplate,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -588,6 +620,13 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
+    LanguageSetting: {
+      screen: LanguageSetting,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     Protocol: {
       screen: protocol,
       navigationOptions: {
@@ -632,13 +671,6 @@ const AppNavigator = createStackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyModule: {
-      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

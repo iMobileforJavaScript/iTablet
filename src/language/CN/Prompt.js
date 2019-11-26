@@ -12,6 +12,7 @@ const Prompt = {
   WECHAT: '微信',
   BEGIN: '开始',
   STOP: '停止',
+  FIELD_TO_PAUSE: '暂停失败',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
@@ -28,6 +29,7 @@ const Prompt = {
 
   DELETE_STOP: '确认删除站点？',
   DELETE_OBJECT: '确定要永久删除该对象吗?',
+  PLEASE_ADD_STOP: '请添加站点',
 
   CONFIRM: '确定',
   COMPLETE: '完成',
@@ -39,6 +41,7 @@ const Prompt = {
   LOADING: '加载中',
   THE_MAP_IS_OPENED: '该地图已打开',
   THE_SCENE_IS_OPENED: '该场景已打开',
+  NO_SCENE_LIST: '无场景列表',
   SWITCHING: '正在切换地图',
   CLOSING: '正在关闭地图',
   CLOSING_3D: '正在关闭地图',
@@ -46,6 +49,8 @@ const Prompt = {
   SWITCHING_SUCCESS: '切换成功',
   ADD_SUCCESS: '添加成功',
   ADD_FAILED: '添加失败',
+  CREATE_THEME_FAILED: '创建专题图失败',
+  PLEASE_ADD_DATASET: '请先选择要添加的数据集',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
   SWITCHING_PLOT_LIB: '正在切换标绘库',
   NON_SELECTED_OBJ: '没有选择对象',
@@ -84,6 +89,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: '请选择或新建标注图层',
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
+  PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
+  DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
 
   COLLECT_SUCCESS: '采集成功',
 
@@ -102,6 +109,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  DATA_BEING_IMPORT: '数据正在导入',
   IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',
@@ -176,6 +184,8 @@ const Prompt = {
 
   POI: '兴趣点',
 
+  ILLEGAL_DATA: '数据非法!',
+
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',
@@ -226,6 +236,14 @@ const Prompt = {
 
   FIELD_ILLEGAL: '字段不合法',
   PLEASE_SELECT_A_RASTER_LAYER: '请选择栅格图层',
+
+  PLEASE_ADD_DATASOURCE_BY_UNIFORM: '请先通过"统一风格"添加数据源',
+  CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION: '提示:当前图层暂不支持修改',
+
+  FAILED_TO_CREATE_POINT: '点绘线失败',
+  FAILED_TO_CREATE_TEXT: '添加文字失败',
+  FAILED_TO_CREATE_LINE: '点绘线失败',
+  FAILED_TO_CREATE_REGION: '点绘面失败',
   CLEAR_HISTORY: '清除搜索记录',
   //导航相关
   PLEASE_SET_BASEMAP_VISIBLE: '请设置底图可见',

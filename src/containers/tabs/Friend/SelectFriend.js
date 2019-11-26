@@ -197,6 +197,8 @@ export default class SelectFriend extends Component {
                 targetUser,
               })
               this.Dialog.setDialogVisible(true)
+            } else {
+              this.callBack && this.callBack(targetId)
             }
           }}
         />

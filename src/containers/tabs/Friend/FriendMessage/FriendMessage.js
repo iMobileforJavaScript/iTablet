@@ -85,14 +85,16 @@ class FriendMessage extends Component {
     let currentUser
     if (this.props.chat.hasOwnProperty(this.props.user.userId)) {
       currentUser = this.props.chat[this.props.user.userId]
-      for (let key in currentUser) {
+      let keys = Object.keys(currentUser)
+      for (let i = 0, key = ''; i < keys.length; i++) {
+        key = keys[i]
         let messageHistory = currentUser[key].history
         let unReadMsg = currentUser[key].unReadMsg
         if (key === '1') {
           this.setState({ hasInformMsg: unReadMsg })
           // this.hasInformMsg = unReadMsg;
           //通知类
-          for (let i in messageHistory) {
+          for (let i = 0; i < messageHistory.length; i++) {
             let messageStruct = messageHistory[i]
             this.inFormData.push(messageStruct)
           }
@@ -442,7 +444,7 @@ class FriendMessage extends Component {
   _renderItemHeadView(item) {
     if (item.users.length > 1) {
       let texts = []
-      for (var i in item['users']) {
+      for (let i = 0; i < item['users'].length; i++) {
         if (i > 4) break
         texts.push(
           <Text

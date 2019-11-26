@@ -4,15 +4,37 @@ import { Container } from '../../../../components'
 import TouchableItemView from '../TouchableItemView'
 import ConstModule from '../../../../constants/ConstModule'
 import { getLanguage } from '../../../../language/index'
+import { connect } from 'react-redux'
 
-export default class SelectModule extends Component {
+class SelectModule extends Component {
   props: {
+    latestMap: Object,
     navigation: Object,
   }
 
   constructor(props) {
     super(props)
     this.callBack = this.props.navigation.getParam('callBack')
+  }
+
+  navigateToModule = async module => {
+    let tmpCurrentUser = global.getFriend().props.user.currentUser
+    let currentUserName = tmpCurrentUser.userName
+      ? tmpCurrentUser.userName
+      : 'Customer'
+
+    let latestMap
+    if (
+      this.props.latestMap[currentUserName] &&
+      this.props.latestMap[currentUserName][module.key] &&
+      this.props.latestMap[currentUserName][module.key].length > 0
+    ) {
+      latestMap = this.props.latestMap[currentUserName][module.key][0]
+    }
+    global.getFriend().setCurMod(module)
+    module.action(tmpCurrentUser, latestMap)
+    global.getFriend().curChat.setCoworkMode(true)
+    global.coworkMode = true
   }
 
   render() {
@@ -40,7 +62,11 @@ export default class SelectModule extends Component {
                   image={item.moduleImage}
                   text={item.title}
                   onPress={() => {
-                    this.callBack && this.callBack(item)
+                    if (this.callBack) {
+                      this.callBack(item)
+                    } else {
+                      this.navigateToModule(item)
+                    }
                   }}
                 />
               )
@@ -51,3 +77,12 @@ export default class SelectModule extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  latestMap: state.map.toJS().latestMap,
+})
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SelectModule)

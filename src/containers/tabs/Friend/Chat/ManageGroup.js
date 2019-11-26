@@ -107,7 +107,7 @@ class ManageGroup extends Component {
       this.targetUser.id,
     )
     let members = FriendListFileHandle.readGroupMemberList(this.targetUser.id)
-    for (let member in members) {
+    for (let member = 0; member < members.length; member++) {
       SMessageService.exitSession(members[member].id, this.targetUser.id)
     }
     MessageDataHandle.delMessage({

@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 class AppRoot extends Component {
   static propTypes = {
     language: PropTypes.string,
+    autoLanguage: PropTypes.bool,
     nav: PropTypes.object,
     backActions: PropTypes.object,
     user: PropTypes.object,
@@ -174,6 +175,7 @@ class AppRoot extends Component {
     GLOBAL.scaleView = null
     GLOBAL.SelectedSelectionAttribute = null // 框选-属性-关联对象 {layerInfo, index, data}
     this.setIsPad()
+    GLOBAL.isDownload = true //目标分类默认文件下载判断
   }
 
   setIsPad = async () => {
@@ -233,13 +235,16 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
+    if(this.props.autoLanguage) {
+      this.props.setLanguage('AUTO')
+    }
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
     //  this.initSpeechManager()
       SSpeechRecognizer.init('5a45b65c')
     } else {
-      // SSpeechRecognizer.init('5b63b509')
+      SSpeechRecognizer.init('5b63b509')
     }
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
@@ -853,6 +858,7 @@ class AppRoot extends Component {
 const mapStateToProps = state => {
   return {
     language: state.setting.toJS().language,
+    autoLanguage: state.setting.toJS().autoLanguage,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

@@ -77,7 +77,7 @@ export default class MenuAlertDialog extends React.Component {
           activeOpacity={0.5}
           onPress={item.action}
         >
-          <Text style={styles.btnTitle}>{item.btntitle}</Text>
+          <Text style={styles.btnTitle}>{item.btnTitle}</Text>
         </TouchableOpacity>
       )
     } else {
@@ -87,7 +87,7 @@ export default class MenuAlertDialog extends React.Component {
           // activeOpacity={0.5}
           onPress={item.action}
         >
-          <Text style={styles.btnTitle}>{item.btntitle}</Text>
+          <Text style={styles.btnTitle}>{item.btnTitle}</Text>
         </TouchableOpacity>
       )
     }

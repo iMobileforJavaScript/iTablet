@@ -45,6 +45,8 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  CREATE_THEME_FAILED: 'Failed to Create Theme',
+  PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
   SWITCHING_PLOT_LIB: 'Switching',
   NON_SELECTED_OBJ: 'No object selected',
@@ -65,6 +67,7 @@ const Prompt = {
   SEARCHING: 'Searching',
   READING_DATA: 'Reading Data',
   CREATE_SUCCESSFULLY: 'Created Successfully',
+  NO_SCENE_LIST: 'No data',
   SAVE_SUCCESSFULLY: 'Saved Successfully',
   NO_NEED_TO_SAVE: 'No need to save',
   SAVE_FAILED: 'Failed to Save',
@@ -86,6 +89,8 @@ const Prompt = {
 
   PLEASE_SELECT_PLOT_LAYER: 'Please Select Plot Layer',
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
+  PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
+  DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
 
   COLLECT_SUCCESS: 'Collect Success',
 
@@ -106,6 +111,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: 'The current selection is ',
 
   IMPORTING_DATA: 'Importing Data',
+  DATA_BEING_IMPORT: 'Data is being import',
   IMPORTING: 'Importing',
   IMPORTED_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT: 'Failed to Import',
@@ -182,6 +188,8 @@ const Prompt = {
 
   POI: 'POI',
 
+  ILLEGAL_DATA: 'Illegal Data!',
+
   SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
   ENTER_DATA_NAME: 'Please enter the data name',
   SHARED_DATA_10M: ' The file over 10MB cannot be shared',
@@ -233,6 +241,15 @@ const Prompt = {
 
   FIELD_ILLEGAL: 'Field illegal',
   PLEASE_SELECT_A_RASTER_LAYER: 'Please select a raster layer',
+
+  PLEASE_ADD_DATASOURCE_BY_UNIFORM: 'Please add the Datasource by Uniform',
+  CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION:
+    'The current layer does not support modification',
+
+  FAILED_TO_CREATE_POINT: 'Failed to create point',
+  FAILED_TO_CREATE_TEXT: 'Failed to create text',
+  FAILED_TO_CREATE_LINE: 'Failed to create line',
+  FAILED_TO_CREATE_REGION: 'Failed to create region',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',

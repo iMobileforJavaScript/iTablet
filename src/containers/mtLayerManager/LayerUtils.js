@@ -1,5 +1,5 @@
 import { ConstOnline } from '../../constants'
-import { SMap,DatasetType } from 'imobile_for_reactnative'
+import { SMap, DatasetType } from 'imobile_for_reactnative'
 
 const baseMapsOrigin = [
   'roadmap@GoogleMaps',
@@ -116,13 +116,14 @@ function getLayerType(currentLayer) {
   let layerType = ''
   if (currentLayer && !currentLayer.themeType) {
     switch (currentLayer.type) {
-      case DatasetType.CAD:{
-        if(currentLayer.name.indexOf("@Label_") != -1){
-          layerType = 'TAGGINGLAYER'
-        }else{
-          layerType = 'CADLAYER'
+      case DatasetType.CAD:
+        {
+          if (currentLayer.name.indexOf('@Label_') != -1) {
+            layerType = 'TAGGINGLAYER'
+          } else {
+            layerType = 'CADLAYER'
+          }
         }
-      }
         break
       case DatasetType.POINT:
         layerType = 'POINTLAYER'
@@ -141,4 +142,4 @@ function getLayerType(currentLayer) {
   return layerType
 }
 
-export { isBaseLayer, addBaseMap, setBaseMap,getLayerType }
+export { isBaseLayer, addBaseMap, setBaseMap, getLayerType }
