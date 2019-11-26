@@ -533,6 +533,20 @@ const Map_Attribute = {
   ATTRIBUTE_REDO: '恢复',
   ATTRIBUTE_REVERT: '还原',
   ATTRIBUTE_FIELD_ADD: '添加',
+
+  DETAIL: '详情',
+  // 统计模式
+  MAX: '最大值',
+  MIN: '最小值',
+  AVERAGE: '平均值',
+  SUM: '总和',
+  VARIANCE: '方差',
+  STANDARD_DEVIATION: '标准差',
+  COUNT_UNIQUE: '单值个数',
+  FIELD_TYPE: '字段类型',
+  ALIAS: '别名',
+  ASCENDING: '升序',
+  DESCENDING: '降序',
 }
 
 //地图设置
