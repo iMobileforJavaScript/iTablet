@@ -1634,7 +1634,15 @@ export default class MapView extends React.Component {
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
     this.TrafficView && this.TrafficView.setVisible(full)
-    GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    if (
+      !(
+        !full &&
+        GLOBAL.Type === constants.MAP_NAVIGATION &&
+        this.FloorListView.state.currentFloorID
+      )
+    ) {
+      GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    }
     this.setState({ showArModeIcon: full })
     this.fullMap = !full
   }
