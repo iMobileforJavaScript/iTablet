@@ -2396,6 +2396,8 @@ export default class MapView extends React.Component {
         ref={ref => (GLOBAL.MAPSELECTPOINT = ref)}
         headerProps={{
           title: getLanguage(this.props.language).Map_Main_Menu.SELECT_POINTS,
+          subTitle: getLanguage(this.props.language).Map_Main_Menu
+            .LONG_PRESS_SELECT_POINTS,
           navigation: this.props.navigation,
           type: 'fix',
           backAction: () => {
