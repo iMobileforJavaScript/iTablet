@@ -908,6 +908,11 @@ export default class ToolBar extends React.PureComponent {
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       this.savePlotAnimationNode()
+    } else if (this.state.type === ConstToolType.MAP3D_TOOL_FLYLIST) {
+      SScene.checkoutListener('startTouchAttribute')
+      SScene.setAction('PAN3D')
+      GLOBAL.action3d = 'PAN3D'
+      this.setVisible(false)
     } else {
       this.setVisible(false)
     }
