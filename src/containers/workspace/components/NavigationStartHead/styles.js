@@ -53,6 +53,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(30),
     marginRight: scaleSize(50),
     height: scaleSize(150),
+    borderRadius: scaleSize(10),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',

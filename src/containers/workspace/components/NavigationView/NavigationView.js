@@ -92,8 +92,8 @@ export default class NavigationView extends React.Component {
       >
         <View
           style={{
-            paddingTop: TOOLBARHEIGHT,
-            height: scaleSize(165) + TOOLBARHEIGHT,
+            paddingTop: TOOLBARHEIGHT + scaleSize(20),
+            height: scaleSize(185) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -104,11 +104,10 @@ export default class NavigationView extends React.Component {
               this.close()
             }}
             style={{
-              width: 60,
-              padding: 5,
-              marginLeft: scaleSize(20),
+              width: scaleSize(60),
               alignItems: 'center',
-              justifyContent: 'center',
+              paddingTop: scaleSize(10),
+              justifyContent: 'flex-start',
             }}
           >
             <Image
@@ -136,9 +135,9 @@ export default class NavigationView extends React.Component {
               >
                 <View
                   style={{
-                    width: scaleSize(8),
-                    height: scaleSize(8),
-                    borderRadius: scaleSize(4),
+                    width: scaleSize(12),
+                    height: scaleSize(12),
+                    borderRadius: scaleSize(6),
                     marginRight: scaleSize(20),
                     backgroundColor: '#0dc66d',
                   }}
@@ -166,7 +165,7 @@ export default class NavigationView extends React.Component {
                   <Text
                     numberOfLines={2}
                     ellipsizeMode={'tail'}
-                    style={{ fontSize: setSpText(20) }}
+                    style={{ fontSize: setSpText(24) }}
                   >
                     {this.props.mapSelectPoint.firstPoint !== ''
                       ? this.props.mapSelectPoint.firstPoint
@@ -192,9 +191,9 @@ export default class NavigationView extends React.Component {
               >
                 <View
                   style={{
-                    width: scaleSize(8),
-                    height: scaleSize(8),
-                    borderRadius: scaleSize(4),
+                    width: scaleSize(12),
+                    height: scaleSize(12),
+                    borderRadius: scaleSize(6),
                     marginRight: scaleSize(20),
                     backgroundColor: '#f14343',
                   }}
@@ -222,7 +221,7 @@ export default class NavigationView extends React.Component {
                   <Text
                     numberOfLines={2}
                     ellipsizeMode={'tail'}
-                    style={{ fontSize: setSpText(20) }}
+                    style={{ fontSize: setSpText(24) }}
                   >
                     {this.props.mapSelectPoint.secondPoint !== ''
                       ? this.props.mapSelectPoint.secondPoint
