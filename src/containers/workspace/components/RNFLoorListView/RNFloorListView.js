@@ -29,6 +29,7 @@ export default class RNFloorListView extends React.Component {
           ? scaleSize(240)
           : scaleSize(360),
       left: new Animated.Value(scaleSize(20)),
+      bottom: new Animated.Value(scaleSize(150)),
       currentFloorID: '',
     }
     this.mapContorller = null
@@ -38,7 +39,6 @@ export default class RNFloorListView extends React.Component {
   async componentDidUpdate(prevProps, prevState) {
     if (this.props.device.orientation !== prevProps.device.orientation) {
       let height = prevState.height
-      let bottom = prevState.bottom
       if (this.props.device.orientation === 'LANDSCAPE') {
         height = scaleSize(240)
       } else {
@@ -47,7 +47,6 @@ export default class RNFloorListView extends React.Component {
       this.setState(
         {
           height,
-          bottom,
         },
         () => {
           if (height < prevState.height) {
@@ -111,6 +110,19 @@ export default class RNFloorListView extends React.Component {
     }
   }
 
+  changeBottom = (isShow, immediately = false) => {
+    if (isShow) {
+      Animated.timing(this.state.bottom, {
+        toValue: scaleSize(280),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    } else {
+      Animated.timing(this.state.bottom, {
+        toValue: scaleSize(150),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    }
+  }
   _onFloorPress = async item => {
     //change floor
     await SMap.setCurrentFloorID(item.id)
@@ -151,6 +163,7 @@ export default class RNFloorListView extends React.Component {
     let floorListStyle = {
       maxHeight: this.state.height,
       left: this.state.left,
+      bottom: this.state.bottom,
     }
     return (
       <Animated.View style={[styles.floorListView, floorListStyle]}>
@@ -178,7 +191,6 @@ const styles = StyleSheet.create({
   floorListView: {
     position: 'absolute',
     width: scaleSize(60),
-    bottom: scaleSize(150),
     backgroundColor: color.white,
     borderRadius: scaleSize(4),
     elevation: 20,

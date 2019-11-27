@@ -419,6 +419,8 @@ export default class NavigationView extends React.Component {
                     if (this.clickable) {
                       this.clickable = false
                       NavigationService.goBack()
+                      GLOBAL.FloorListView &&
+                        GLOBAL.FloorListView.changeBottom(true)
                     }
                   } else {
                     Toast.show(

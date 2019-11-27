@@ -43,6 +43,7 @@ export default class NavigationStartHead extends React.Component {
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
   }
 
   _renderSearchView = () => {
