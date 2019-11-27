@@ -174,7 +174,6 @@ function clearPlotting() {
     //'请打开场景')
     return
   }
-  SScene.checkoutListener('startLabelOperate')
   GLOBAL.Map3DSymbol = true
   SScene.closeAllLabel()
   params.existFullMap && params.existFullMap()
@@ -212,6 +211,7 @@ function select() {
 /** box裁剪 **/
 function boxClip() {
   const params = ToolbarModule.getParams()
+  GLOBAL.action3d = 'PAN3D_FIX'
   if (!GLOBAL.openWorkspace) {
     Toast.show(getLanguage(params.language).Prompt.PLEASE_OPEN_SCENE)
     //'请打开场景')
@@ -443,8 +443,6 @@ function close(type) {
   ) {
     SScene.closeAnalysis()
     _params.measureShow(false, '')
-    SScene.checkoutListener('startTouchAttribute')
-    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
     // this.clickTime = 0
@@ -461,28 +459,29 @@ function close(type) {
     type === ConstToolType.MAP3D_SYMBOL_TEXT
   ) {
     SScene.clearAllLabel()
-    SScene.checkoutListener('startTouchAttribute')
-    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     GLOBAL.Map3DSymbol = false
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
   } else if (type === ConstToolType.MAP3D_SYMBOL_SELECT) {
     SScene.clearSelection()
-    SScene.setAction('PAN3D')
-    GLOBAL.action3d = 'PAN3D'
     _params.setAttributes({})
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
   } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
     SScene.stopCircleFly()
     SScene.clearCirclePoint()
-    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
   } else {
+    SScene.checkoutListener('startTouchAttribute')
+    SScene.setAction('PAN3D')
+    GLOBAL.action3d = 'PAN3D'
     ToolbarModule.setData()
     return false
   }
+  SScene.checkoutListener('startTouchAttribute')
+  SScene.setAction('PAN3D')
+  GLOBAL.action3d = 'PAN3D'
   ToolbarModule.setData()
 }
 
