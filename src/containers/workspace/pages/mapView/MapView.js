@@ -725,6 +725,17 @@ export default class MapView extends React.Component {
     await SMap.removeGeometrySelectedListener()
   }
 
+  _removeNavigationListeners = async () => {
+    let listeners = []
+    if (this.TrafficView && this.TrafficView.listener) {
+      listeners.push(this.TrafficView.listener)
+    }
+    if (this.FloorListView && this.FloorListView.listener) {
+      listeners.push(this.FloorListView.listener)
+    }
+    await SMap.removeFloorHiddenListener(listeners)
+  }
+
   // 导出(保存)工作空间中地图到模块
   saveMapName = (
     mapTitle = '',
@@ -1120,8 +1131,11 @@ export default class MapView extends React.Component {
     // }
     SMap.mapIsModified().then(async result => {
       if (result && !this.isExample) {
-        this.setSaveViewVisible(true, null, () => {
+        this.setSaveViewVisible(true, null, async () => {
           this._removeGeometrySelectedListener()
+          if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+            await this._removeNavigationListeners()
+          }
         })
       } else {
         try {
@@ -1131,6 +1145,7 @@ export default class MapView extends React.Component {
             //'正在关闭地图'
           )
           if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+            await this._removeNavigationListeners()
             await SMap.clearPoint()
             await SMap.stopGuide()
             this.props.setMap2Dto3D(false)
@@ -1318,10 +1333,10 @@ export default class MapView extends React.Component {
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          SMap.moveToCurrent().then(result => {
-            !result &&
-              Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
-          })
+          // SMap.moveToCurrent().then(result => {
+          //   !result &&
+          //     Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
+          // })
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',
@@ -2176,7 +2191,12 @@ export default class MapView extends React.Component {
   }
 
   _renderLocationIcon = () => {
-    return <LocationView ref={ref => (GLOBAL.LocationView = ref)} />
+    return (
+      <LocationView
+        getNavigationDatas={this.getNavigationDatas}
+        ref={ref => (GLOBAL.LocationView = ref)}
+      />
+    )
   }
 
   _renderNavigationIcon = () => {
@@ -2400,6 +2420,7 @@ export default class MapView extends React.Component {
   _renderNavigationStartButton = () => {
     return (
       <NavigationStartButton
+        getNavigationDatas={this.getNavigationDatas}
         path={this.state.path}
         pathLength={this.state.pathLength}
         ref={ref => (GLOBAL.NAVIGATIONSTARTBUTTON = ref)}

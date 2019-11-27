@@ -17,6 +17,7 @@ export default class NavigationStartButton extends React.Component {
   props: {
     pathLength: Object,
     path: Array,
+    getNavigationDatas: () => {},
   }
   static defaultProps = {
     pathLength: { length: 0 },
@@ -350,16 +351,31 @@ export default class NavigationStartButton extends React.Component {
                 alignItems: 'center',
                 marginTop: scaleSize(20),
               }}
-              onPress={() => {
-                Toast.show('暂时不可用')
-                // this.setVisible(false)
-                // GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                // if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                //   SMap.outdoorNavigation(0)
-                // }
-                // if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                //   SMap.indoorNavigation(0)
-                // }
+              onPress={async () => {
+                let position = await SMap.getCurrentPosition()
+                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+                  let rel = await SMap.isIndoorPoint(position.x, position.y)
+                  if (rel.isindoor) {
+                    SMap.indoorNavigation(0)
+                    this.setVisible(false)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+                  } else {
+                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                  }
+                } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                  let naviData = this.props.getNavigationDatas()
+                  let isInBounds = await SMap.isInBounds(
+                    position,
+                    naviData.selectedDataset,
+                  )
+                  if (isInBounds) {
+                    SMap.outdoorNavigation(0)
+                    this.setVisible(false)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+                  } else {
+                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                  }
+                }
               }}
             >
               <Text
