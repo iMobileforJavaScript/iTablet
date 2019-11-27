@@ -2481,6 +2481,8 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        {GLOBAL.Type === constants.MAP_NAVIGATION &&
+          this._renderFloorListView()}
         {/*{this.props.map2Dto3D && (*/}
         {/*<Map2Dto3D*/}
         {/*mapIs3D={this.props.mapIs3D}*/}
@@ -2489,8 +2491,6 @@ export default class MapView extends React.Component {
         {/*/>*/}
         {/*)}*/}
         {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderTrafficView()}
-        {GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this._renderFloorListView()}
         {this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}
