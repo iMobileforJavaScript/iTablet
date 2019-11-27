@@ -2457,7 +2457,6 @@ export default class MapView extends React.Component {
   _renderNavigationPoiView = () => {
     return (
       <NavigationPoiView
-        setNavigationPoiView={this.props.setNavigationPoiView}
         setNavigationChangeAR={this.props.setNavigationChangeAR}
       />
     )
@@ -2543,7 +2542,6 @@ export default class MapView extends React.Component {
         {this._renderMapSelectPointButton()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.navigationPoiView &&
           this._renderNavigationPoiView()}
         {!this.isExample &&
           GLOBAL.Type === constants.MAP_NAVIGATION &&

@@ -11,6 +11,7 @@ export default StyleSheet.create({
   box: {
     position: 'absolute',
     width: '100%',
+    elevation: 100,
   },
   overlayer: {
     flex: 1,
