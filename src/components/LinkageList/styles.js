@@ -25,12 +25,13 @@ export default StyleSheet.create({
     fontSize: size.fontSize.fontSizeLg,
   },
   leftFlatListContainer: {
-    flex: 1,
+    // flex: 1,
+    width: scaleSize(240),
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   rightFlatListContainer: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'column',
     backgroundColor: color.bgW,
     borderLeftWidth: 1,
@@ -88,5 +89,9 @@ export default StyleSheet.create({
     backgroundColor: color.separateColorGray,
     marginLeft: scaleSize(28),
     marginRight: scaleSize(40),
+  },
+  moveSeparator: {
+    width: scaleSize(20),
+    backgroundColor: color.separateColorGray,
   },
 })

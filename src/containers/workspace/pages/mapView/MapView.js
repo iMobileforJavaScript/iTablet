@@ -1554,8 +1554,11 @@ export default class MapView extends React.Component {
           // TODO 不同类型高度修改
           this.toolBox.setVisible(true, ConstToolType.MAP_ANALYSIS, {
             isFullScreen: true,
+            height:
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.TOOLBAR_HEIGHT[2]
+                : ConstToolType.TOOLBAR_HEIGHT[3],
             column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-            height: ConstToolType.TOOLBAR_HEIGHT[2],
           })
         }}
         setAnalystParams={this.props.setAnalystParams}
