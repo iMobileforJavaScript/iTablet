@@ -67,6 +67,8 @@ export default class NavigationStartHead extends React.Component {
               width: 60,
               padding: 5,
               marginLeft: scaleSize(20),
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Image
@@ -76,18 +78,30 @@ export default class NavigationStartHead extends React.Component {
             />
           </TouchableOpacity>
           <View style={styles.pointAnalystView}>
-            <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                flex: 1,
+                marginHorizontal: scaleSize(20),
+              }}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
+                  flex: 1,
                 }}
               >
-                <Image
-                  resizeMode={'contain'}
-                  source={require('../../../../assets/Navigation/icon_tool_start.png')}
-                  style={styles.startPoint}
+                <View
+                  style={{
+                    width: scaleSize(8),
+                    height: scaleSize(8),
+                    borderRadius: scaleSize(4),
+                    marginRight: scaleSize(20),
+                    backgroundColor: '#0dc66d',
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.onInput}
@@ -121,8 +135,7 @@ export default class NavigationStartHead extends React.Component {
               </View>
               <View
                 style={{
-                  marginLeft: scaleSize(20),
-                  width: scaleSize(300),
+                  width: '100%',
                   height: 2,
                   backgroundColor: color.gray,
                 }}
@@ -132,12 +145,17 @@ export default class NavigationStartHead extends React.Component {
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
+                  flex: 1,
                 }}
               >
-                <Image
-                  resizeMode={'contain'}
-                  source={require('../../../../assets/Navigation/icon_tool_end.png')}
-                  style={styles.endPoint}
+                <View
+                  style={{
+                    width: scaleSize(8),
+                    height: scaleSize(8),
+                    borderRadius: scaleSize(4),
+                    marginRight: scaleSize(20),
+                    backgroundColor: '#f14343',
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.secondInput}
