@@ -250,8 +250,7 @@ const Prompt = {
   NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
   NO_LINE_DATASETS: '当前工作空间无线数据集',
   SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
-  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
-    '请选择网络数据集和网络模型文件',
+  PLEASE_SELECT_NETWORKDATASET: '请选择网络数据集',
   PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
   PATH_ANALYSIS_FAILED: '路径分析失败请重新选择起终点',
   SET_START_AND_END_POINTS: '请先设置起点和终点',

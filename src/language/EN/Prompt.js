@@ -256,8 +256,7 @@ const Prompt = {
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
-  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
-    'Select a network dataset and a network model first',
+  PLEASE_SELECT_NETWORKDATASET: 'Select a network dataset first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
   PATH_ANALYSIS_FAILED:
     'Path analysis failed! Please re-select the start and end points',

@@ -8,7 +8,6 @@ import { getLanguage } from '../../../../../../language'
 import { SThemeCartography, SMap } from 'imobile_for_reactnative'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import ToolbarModule from '../ToolbarModule'
-import { getThemeAssets } from '../../../../../../assets'
 
 /**
  * 获取数据源和地图菜单
@@ -240,32 +239,6 @@ async function getAllDatas() {
   return { data, buttons }
 }
 
-//获取网络模型文件
-async function getNetModels() {
-  let params = ToolbarModule.getParams()
-  let path =
-    (await FileTools.appendingHomeDirectory(
-      params.user && params.user.currentUser.userName
-        ? ConstPath.UserPath + params.user.currentUser.userName + '/'
-        : ConstPath.CustomerPath,
-    )) + ConstPath.RelativePath.Datasource
-  let data = [
-    {
-      title: getLanguage(params.language).Map_Main_Menu.MODEL_FILE,
-      image: getThemeAssets().functionBar.rightbar_network_model_white,
-      data: [],
-    },
-  ]
-  let _data = await FileTools.getNetModel(path)
-  _data.forEach(item => {
-    item.isSelected = false
-    item.image = getThemeAssets().functionBar.rightbar_network_model
-  })
-  data[0].data = _data
-  let buttons = [ToolbarBtnType.TOOLBAR_BACK, ToolbarBtnType.TOOLBAR_COMMIT]
-  return { data, buttons }
-}
-
 async function getData(type, params = {}) {
   switch (type) {
     case ConstToolType.MAP_THEME_ADD_DATASET:
@@ -274,8 +247,6 @@ async function getData(type, params = {}) {
       return await getUDBsAndMaps()
     case ConstToolType.MAP_NAVIGATION_ADD_UDB:
       return getAllDatas()
-    case ConstToolType.MAP_NAVIGATION_SELECT_MODEL:
-      return getNetModels()
   }
 }
 

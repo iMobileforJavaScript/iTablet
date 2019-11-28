@@ -264,10 +264,7 @@ export default class MapView extends React.Component {
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
 
-    this.selectedData = {
-      selectedDataset: null,
-      selectedModelFilePath: null,
-    }
+    this.selectedDataset = null
   }
 
   componentDidMount() {
@@ -1787,11 +1784,11 @@ export default class MapView extends React.Component {
 
   //设置室外导航数据集和模型文件
   setNavigationDatas = params => {
-    this.selectedData = params
+    this.selectedDataset = params
   }
 
   getNavigationDatas = () => {
-    return this.selectedData
+    return this.selectedDataset
   }
 
   //楼层控件
