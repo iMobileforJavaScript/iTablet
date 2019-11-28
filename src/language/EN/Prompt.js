@@ -272,6 +272,8 @@ const Prompt = {
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',
   SPEECH_NONE: "You didn't seem to speak anything",
+
+  NOT_SUPPORT_STATISTIC: 'The field not support statistic',
 }
 
 export { Prompt }

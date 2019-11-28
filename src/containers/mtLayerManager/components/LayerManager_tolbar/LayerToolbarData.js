@@ -472,6 +472,51 @@ function layerPlottingSetting(language, isGroup = false) {
     },
   ]
 }
+function layerNavigationSetting(language, isGroup = false) {
+  let data = []
+  if (isGroup) {
+    data = getGroupData(language)
+  } else {
+    data = [
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+        //'全副显示图层',
+        image: require('../../../../assets/layerToolbar/layer_full.png'),
+      },
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+        //'设置为当前图层',
+        image: getPublicAssets().mapTools.tools_set_current_layer,
+      },
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_SET_VISIBLE_SCALE,
+        //'可见比例尺范围',
+        image: getPublicAssets().mapTools.tools_visible_scale_range,
+      },
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_RENAME,
+        //'重命名',
+        image: getPublicAssets().mapTools.tools_layer_rename,
+      },
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_SHARE,
+        //'分享图层',
+        image: require('../../../../assets/function/icon_function_share.png'),
+      },
+      {
+        title: getLanguage(language).Map_Layer.LAYERS_REMOVE,
+        //'移除',
+        image: require('../../../../assets/layerToolbar/layer_remove.png'),
+      },
+    ]
+  }
+  return [
+    {
+      title: '',
+      data: data,
+    },
+  ]
+}
 function layerCollectionSetting(language, isGroup = false, layerData) {
   let data = []
   if (isGroup) {
@@ -745,6 +790,7 @@ export {
   layerThemeSetting,
   layerPlottingSetting,
   layerCollectionSetting,
+  layerNavigationSetting,
   layerThemeSettings,
   layereditsetting,
   //3d

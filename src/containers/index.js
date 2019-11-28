@@ -64,6 +64,7 @@ import {
   LayerAttributeAdd,
   LayerAttributeObj,
   LayerAttributeSearch,
+  LayerAttributeStatistic,
 } from './layerAttribute'
 import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
@@ -277,6 +278,12 @@ const AppNavigator = createStackNavigator(
     },
     LayerAttributeSearch: {
       screen: LayerAttributeSearch,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    LayerAttributeStatistic: {
+      screen: LayerAttributeStatistic,
       navigationOptions: {
         header: null,
       },

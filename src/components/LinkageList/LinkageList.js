@@ -6,8 +6,19 @@
  */
 
 import React from 'react'
-import { TouchableOpacity, View, FlatList, Text } from 'react-native'
+import {
+  TouchableOpacity,
+  View,
+  FlatList,
+  Text,
+  PanResponder,
+  Image,
+} from 'react-native'
+import { scaleSize, screen } from '../../utils'
+import { getPublicAssets } from '../../assets'
 import styles from './styles'
+
+const LEFT_MIN_WIDTH = scaleSize(240)
 export default class LinkageList extends React.Component {
   props: {
     language: String,
@@ -16,6 +27,11 @@ export default class LinkageList extends React.Component {
     onLeftPress?: () => {}, //左侧点击
     onRightPress?: () => {}, //右侧点击
     styles?: Object, //样式
+    adjustmentWidth?: boolean,
+  }
+
+  static defaultProps = {
+    adjustmentWidth: false,
   }
 
   constructor(props) {
@@ -28,6 +44,21 @@ export default class LinkageList extends React.Component {
     this.styles = this.props.styles
       ? Object.assign(styles, this.props.styles)
       : styles
+
+    if (props.adjustmentWidth) {
+      this._panBtnStyles = {
+        style: {
+          width: LEFT_MIN_WIDTH,
+        },
+      }
+      this._panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: this._handleStartShouldSetPanResponder,
+        onMoveShouldSetPanResponder: this._handleMoveShouldSetPanResponder,
+        onPanResponderMove: this._handlePanResponderMove,
+        onPanResponderRelease: this._handlePanResponderEnd,
+        onPanResponderTerminate: this._handlePanResponderEnd,
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -39,6 +70,46 @@ export default class LinkageList extends React.Component {
           [],
       })
     }
+  }
+
+  _handleStartShouldSetPanResponder = () => {
+    // evt, gestureState
+    return true
+  }
+
+  _handleMoveShouldSetPanResponder = () => {
+    // evt, gestureState
+    return true
+  }
+
+  _handlePanResponderMove = (evt, gestureState) => {
+    this._panBtnStyles.style.width = gestureState.moveX
+    if (this._panBtnStyles.style.width < LEFT_MIN_WIDTH) {
+      this._panBtnStyles.style.width = LEFT_MIN_WIDTH
+    } else if (
+      this._panBtnStyles.style.width >
+      screen.getScreenWidth() - LEFT_MIN_WIDTH
+    ) {
+      this._panBtnStyles.style.width = screen.getScreenWidth() - LEFT_MIN_WIDTH
+    }
+    this._updateNativeStyles()
+  }
+
+  _handlePanResponderEnd = (evt, gestureState) => {
+    this._panBtnStyles.style.width = gestureState.moveX
+    if (this._panBtnStyles.style.width < LEFT_MIN_WIDTH) {
+      this._panBtnStyles.style.width = LEFT_MIN_WIDTH
+    } else if (
+      this._panBtnStyles.style.width >
+      screen.getScreenWidth() - LEFT_MIN_WIDTH
+    ) {
+      this._panBtnStyles.style.width = screen.getScreenWidth() - LEFT_MIN_WIDTH
+    }
+    this._updateNativeStyles()
+  }
+
+  _updateNativeStyles = () => {
+    this.leftList && this.leftList.setNativeProps(this._panBtnStyles)
   }
 
   onLeftPress = ({ item, index }) => {
@@ -77,7 +148,9 @@ export default class LinkageList extends React.Component {
         }}
       >
         {this.state.selected === index && <View style={styles.leftSelectTag} />}
-        <Text style={this.styles.leftItem}>{item.title}</Text>
+        <Text style={this.styles.leftItem} numberOfLines={1}>
+          {item.title}
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -90,15 +163,24 @@ export default class LinkageList extends React.Component {
           this.onRightPress({ item, index })
         }}
       >
-        <Text style={this.styles.rightItem}>{item.title}</Text>
+        <Text style={this.styles.rightItem} numberOfLines={1}>
+          {item.title}
+        </Text>
       </TouchableOpacity>
     )
   }
 
   render() {
+    let panHandlers = {}
+    if (this._panResponder && this._panResponder.panHandlers) {
+      panHandlers = this._panResponder.panHandlers
+    }
     return (
       <View style={this.styles.container}>
-        <View style={this.styles.leftFlatListContainer}>
+        <View
+          ref={ref => (this.leftList = ref)}
+          style={this.styles.leftFlatListContainer}
+        >
           <View style={this.styles.headContainer}>
             <Text style={this.styles.menuTitle}>{this.props.titles[0]}</Text>
           </View>
@@ -110,6 +192,15 @@ export default class LinkageList extends React.Component {
             keyExtractor={(item, index) => item + index}
           />
         </View>
+        {this.props.adjustmentWidth && (
+          <View style={styles.moveSeparator} {...panHandlers}>
+            <Image
+              style={styles.dragIcon}
+              source={getPublicAssets().common.icon_drag}
+              resizeMode={'contain'}
+            />
+          </View>
+        )}
         <View style={this.styles.rightFlatListContainer}>
           <View style={this.styles.headContainer}>
             <View style={styles.shortLine1} />

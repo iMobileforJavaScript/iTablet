@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
-import { zIndexLevel } from '../../styles'
+import { color, zIndexLevel } from '../../styles'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
@@ -123,6 +123,12 @@ export default StyleSheet.create({
     // color: '#222222',
     color: 'white',
     fontSize: setSpText(36),
+    // fontWeight: 'bold',
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+  },
+  subTitle: {
+    color: color.gray,
+    fontSize: setSpText(20),
     // fontWeight: 'bold',
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },

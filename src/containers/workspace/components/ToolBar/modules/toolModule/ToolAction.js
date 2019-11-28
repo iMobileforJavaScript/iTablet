@@ -948,14 +948,6 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
-async function close() {
-  const params = ToolbarModule.getParams()
-  await SMap.removeNetworkDataset()
-  SMap.setAction(Action.PAN)
-  SMap.setIsMagnifierEnabled(false)
-  params.setToolbarVisible(false)
-}
-
 export default {
   commit,
   showAttribute,
@@ -970,7 +962,6 @@ export default {
   undo,
   redo,
   listSelectableAction,
-  close,
 
   begin,
   stop,

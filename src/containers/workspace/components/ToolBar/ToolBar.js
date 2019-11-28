@@ -519,7 +519,14 @@ export default class ToolBar extends React.PureComponent {
     // TODO 待去掉，下列方法分别放到各个Module下面
     (async function() {
       let actionType = Action.PAN
-
+      if (
+        type === ConstToolType.MAP_TOOL_INCREMENT ||
+        type === ConstToolType.MAP_TOOL_GPSINCREMENT
+      ) {
+        await SMap.removeNetworkDataset()
+        SMap.setAction(Action.PAN)
+        SMap.setIsMagnifierEnabled(false)
+      }
       // 取消智能配图配图后 亮度/饱和度/对比度 的调整
       if (type === ConstToolType.STYLE_TRANSFER) {
         // ToolbarPicker.hide()
@@ -901,6 +908,11 @@ export default class ToolBar extends React.PureComponent {
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
       this.savePlotAnimationNode()
+    } else if (this.state.type === ConstToolType.MAP3D_TOOL_FLYLIST) {
+      SScene.checkoutListener('startTouchAttribute')
+      SScene.setAction('PAN3D')
+      GLOBAL.action3d = 'PAN3D'
+      this.setVisible(false)
     } else {
       this.setVisible(false)
     }
