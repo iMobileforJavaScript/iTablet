@@ -624,7 +624,9 @@ export default class LayerAttribute extends React.Component {
           }.bind(this)())
         },
       },
-      {
+    ]
+    if (this.state.attributes.data.length > 1) {
+      items.push({
         title: getLanguage(global.language).Map_Attribute.ASCENDING,
         onPress: () => {
           this.canBeRefresh = true
@@ -635,8 +637,8 @@ export default class LayerAttribute extends React.Component {
             startIndex: 0,
           })
         },
-      },
-      {
+      })
+      items.push({
         title: getLanguage(global.language).Map_Attribute.DESCENDING,
         onPress: () => {
           this.canBeRefresh = true
@@ -647,8 +649,8 @@ export default class LayerAttribute extends React.Component {
             startIndex: 0,
           })
         },
-      },
-    ]
+      })
+    }
     let tempStr = fieldInfo.caption.toLowerCase()
     let isSystemField = tempStr.substring(0, 2) === 'sm'
     if (!fieldInfo.isSystemField && !isSystemField) {
@@ -664,11 +666,12 @@ export default class LayerAttribute extends React.Component {
       })
     }
     if (
-      fieldInfo.type === FieldType.INT16 ||
-      fieldInfo.type === FieldType.INT32 ||
-      fieldInfo.type === FieldType.INT64 ||
-      fieldInfo.type === FieldType.SINGLE ||
-      fieldInfo.type === FieldType.DOUBLE
+      this.state.attributes.data.length > 1 &&
+      (fieldInfo.type === FieldType.INT16 ||
+        fieldInfo.type === FieldType.INT32 ||
+        fieldInfo.type === FieldType.INT64 ||
+        fieldInfo.type === FieldType.SINGLE ||
+        fieldInfo.type === FieldType.DOUBLE)
     ) {
       items.push({
         title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_STATISTIC,

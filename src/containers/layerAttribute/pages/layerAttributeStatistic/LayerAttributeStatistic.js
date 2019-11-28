@@ -123,6 +123,7 @@ export default class LayerAttributeStatistic extends React.Component {
         () => {
           this.setState({
             currentMethod: item,
+            result: '0.0',
           })
           Toast.show(
             getLanguage(this.props.language).Prompt.NOT_SUPPORT_STATISTIC,

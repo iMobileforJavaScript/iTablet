@@ -948,6 +948,22 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
+function close(type) {
+  const _params = ToolbarModule.getParams()
+  if (
+    type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT ||
+    type === ConstToolType.MAP_TOOL_POINT_SELECT
+  ) {
+    SMap.setAction(Action.PAN)
+    SMap.clearSelection()
+    _params.setToolbarVisible(false)
+  } else {
+    return false
+  }
+}
+
 export default {
   commit,
   showAttribute,
@@ -962,6 +978,7 @@ export default {
   undo,
   redo,
   listSelectableAction,
+  close,
 
   begin,
   stop,

@@ -12,8 +12,10 @@ import {
   FlatList,
   Text,
   PanResponder,
+  Image,
 } from 'react-native'
 import { scaleSize, screen } from '../../utils'
+import { getPublicAssets } from '../../assets'
 import styles from './styles'
 
 const LEFT_MIN_WIDTH = scaleSize(240)
@@ -67,6 +69,10 @@ export default class LinkageList extends React.Component {
             this.props.data[this.state.selected].data) ||
           [],
       })
+    }
+    if (this._panBtnStyles.style.width > screen.getScreenWidth()) {
+      this._panBtnStyles.style.width = screen.getScreenWidth() - LEFT_MIN_WIDTH
+      this._updateNativeStyles()
     }
   }
 
@@ -191,7 +197,13 @@ export default class LinkageList extends React.Component {
           />
         </View>
         {this.props.adjustmentWidth && (
-          <View style={styles.moveSeparator} {...panHandlers} />
+          <View style={styles.moveSeparator} {...panHandlers}>
+            <Image
+              style={styles.dragIcon}
+              source={getPublicAssets().common.icon_drag}
+              resizeMode={'contain'}
+            />
+          </View>
         )}
         <View style={this.styles.rightFlatListContainer}>
           <View style={this.styles.headContainer}>
