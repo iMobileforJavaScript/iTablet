@@ -93,5 +93,11 @@ export default StyleSheet.create({
   moveSeparator: {
     width: scaleSize(20),
     backgroundColor: color.separateColorGray,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dragIcon: {
+    height: scaleSize(60),
+    width: scaleSize(12),
   },
 })
