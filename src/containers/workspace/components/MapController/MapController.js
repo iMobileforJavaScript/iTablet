@@ -30,7 +30,6 @@ export default class MapController extends React.Component {
       left: new Animated.Value(scaleSize(34)),
       bottom: new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),
-      isIndoor: false,
     }
   }
 

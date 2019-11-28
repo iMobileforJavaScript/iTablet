@@ -16,7 +16,7 @@ export default class RNFloorListView extends React.Component {
   props: {
     device: Object,
     mapLoaded: Boolean,
-    getMapController: () => {},
+    currentFloorID: String,
   }
 
   constructor(props) {
@@ -30,12 +30,18 @@ export default class RNFloorListView extends React.Component {
           : scaleSize(360),
       left: new Animated.Value(scaleSize(20)),
       bottom: new Animated.Value(scaleSize(150)),
-      currentFloorID: '',
+      currentFloorID: props.currentFloorID,
     }
-    this.mapContorller = null
     this.listener = null
   }
-
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentFloorID !== prevState.currentFloorID) {
+      return {
+        currentFloorID: nextProps.currentFloorID,
+      }
+    }
+    return null
+  }
   async componentDidUpdate(prevProps, prevState) {
     if (this.props.device.orientation !== prevProps.device.orientation) {
       let height = prevState.height
@@ -60,38 +66,12 @@ export default class RNFloorListView extends React.Component {
     ) {
       let datas = await SMap.getFloorData()
       if (datas.data && datas.data.length > 0) {
-        if (!this.mapContorller) {
-          this.mapContorller = this.props.getMapController()
-        }
         let { data, datasource, currentFloorID } = datas
-        this.mapContorller.setState(
-          {
-            isIndoor: !!currentFloorID,
-          },
-          () => {
-            this.setState({
-              data,
-              datasource,
-              currentFloorID,
-            })
-          },
-        )
-        if (!this.listener) {
-          this.listener = SMap.addFloorHiddenListener(result => {
-            if (result.currentFloorID !== this.state.currentFloorID) {
-              this.mapContorller.setState(
-                {
-                  isIndoor: !!currentFloorID,
-                },
-                () => {
-                  this.setState({
-                    currentFloorID,
-                  })
-                },
-              )
-            }
-          })
-        }
+        this.setState({
+          data,
+          datasource,
+          currentFloorID,
+        })
       }
     }
   }

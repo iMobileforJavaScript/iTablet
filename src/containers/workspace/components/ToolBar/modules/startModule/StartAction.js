@@ -785,46 +785,15 @@ async function changeMap(item) {
         //ConstInfo.CHANGE_MAP_TO + mapInfo.name
       )
       if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-        //切换地图后重新添加楼层控件
         let floorListView = params.getFloorListView()
         let datas = await SMap.getFloorData()
         if (datas.data && datas.data.length > 0) {
-          if (!floorListView.mapContorller) {
-            floorListView.mapContorller = floorListView.props.getMapController()
-          }
           let { data, datasource, currentFloorID } = datas
-          floorListView.mapContorller.setState(
-            {
-              isIndoor: !!currentFloorID,
-            },
-            () => {
-              floorListView.setState({
-                data,
-                datasource,
-                currentFloorID,
-              })
-              GLOBAL.TrafficView.setState({
-                currentFloorID,
-              })
-            },
-          )
-          if (!floorListView.listener) {
-            floorListView.listener = SMap.addFloorHiddenListener(result => {
-              let { currentFloorID } = result
-              if (currentFloorID !== floorListView.state.currentFloorID) {
-                floorListView.mapContorller.setState(
-                  {
-                    isIndoor: !!currentFloorID,
-                  },
-                  () => {
-                    floorListView.setState({
-                      currentFloorID,
-                    })
-                  },
-                )
-              }
-            })
-          }
+          floorListView.setState({
+            data,
+            datasource,
+            currentFloorID,
+          })
         }
       }
 
