@@ -30,6 +30,7 @@ export default class MapController extends React.Component {
       left: new Animated.Value(scaleSize(34)),
       bottom: new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),
+      isIndoor: false,
     }
   }
 
@@ -181,42 +182,8 @@ export default class MapController extends React.Component {
     }
   }
 
-  renderfloor = () => {
-    if (this.props.type !== 'MAP_NAVIGATION') {
-      return <View />
-    } else {
-      return (
-        <View style={[styles.shadow, styles.separator, styles.btn]}>
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-          <MTBtn
-            style={[styles.btn]}
-            key={'controller_location'}
-            textColor={'black'}
-            size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
-            onPress={this.location}
-          />
-        </View>
-      )
-    }
-  }
-
   render() {
+    if (this.state.isIndoor) return null
     return (
       <Animated.View
         style={[
@@ -226,7 +193,6 @@ export default class MapController extends React.Component {
           { bottom: this.state.bottom },
         ]}
       >
-        {/*{this.renderfloor()}*/}
         {this.renderLocation()}
         {this.renderCompass()}
         <View style={[styles.topView, styles.shadow]}>

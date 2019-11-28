@@ -161,6 +161,8 @@ const Profile = {
   SETTING_LICENSE: '许可',
   SETTING_ABOUT_ITABLET: '关于iTablet',
   SETTING_CHECK_VERSION: '检查版本',
+  SETTING_LANGUAGE: '语言',
+  SETTING_LANGUAGE_AUTO: '跟随系统',
 
   //许可
   LICENSE_CURRENT: '当前许可',

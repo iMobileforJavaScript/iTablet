@@ -1,7 +1,7 @@
 /**
  * 获取地图工具数据
  */
-import { DatasetType } from 'imobile_for_reactnative'
+import { DatasetType, SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../../../constants'
 import { getPublicAssets, getThemeAssets } from '../../../../../../assets'
 import constants from '../../../../constants'
@@ -9,7 +9,6 @@ import ToolbarBtnType from '../../ToolbarBtnType'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolAction from './ToolAction'
-
 /**
  * 判断当前图层类型 控制标注相关功能是否可用
  * @returns {string}
@@ -421,14 +420,18 @@ function getData(type, params) {
         {
           key: constants.UNDO,
           title: getLanguage(global.language).Prompt.UNDO,
-          // action: this.showBox,
+          action: () => {
+            ToolAction.undo(ConstToolType.MAP_TOOL_INCREMENT)
+          },
           size: 'large',
           image: require('../../../../../../assets/lightTheme/public/icon_undo_light.png'),
         },
         {
           key: constants.REDO,
           title: getLanguage(global.language).Prompt.REDO,
-          // action: this.showBox,
+          action: () => {
+            ToolAction.redo(ConstToolType.MAP_TOOL_INCREMENT)
+          },
           size: 'large',
           image: require('../../../../../../assets/lightTheme/public/icon_redo_light.png'),
         },
@@ -436,7 +439,10 @@ function getData(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: () => {
+            SMap.setAction(Action.PAN)
+            SMap.setAction(Action.DRAWLINE)
+          },
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -449,7 +455,7 @@ function getData(type, params) {
           image: require('../../../../../../assets/mapTools/icon_submit_black.png'),
         },
       ]
-      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP_TOOL_GPSINCREMENT:
       data = [
@@ -471,7 +477,7 @@ function getData(type, params) {
           key: constants.CANCEL,
           title: getLanguage(global.language).Prompt.CANCEL,
           //constants.CANCEL_SELECT,
-          // action: cancelSelect,
+          action: ToolAction.close,
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -484,7 +490,7 @@ function getData(type, params) {
           image: require('../../../../../../assets/mapTools/icon_submit_black.png'),
         },
       ]
-      buttons = [ToolbarBtnType.CANCEL_INCREMENT]
+      buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.STYLE_TRANSFER:
       buttons = [

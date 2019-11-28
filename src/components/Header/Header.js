@@ -15,6 +15,8 @@ class NavigationHeader extends Component {
     backBtnType?: string, // 返回按钮类型（white, gray）
     backAction?: any, // 返回事件
     title?: string, // 标题
+    subTitle?: string, //副标题
+    subTitleStyle?: StyleSheet, //副标题样式
     headerViewStyle?: StyleSheet, // Header Style
     headerLeftStyle?: StyleSheet, //
     headerRightStyle?: StyleSheet, //
@@ -46,6 +48,7 @@ class NavigationHeader extends Component {
     headerLeftStyle: styles.headerLeftView,
     headerTitleViewStyle: styles.headerTitleView,
     headerTitleStyle: styles.headerTitle,
+    subTitleStyle: styles.subTitle,
     count: 0,
     darkBackBtn: false,
     headerCenter: null,
@@ -83,6 +86,7 @@ class NavigationHeader extends Component {
   renderDefaultHeader = () => {
     const {
       title,
+      subTitle,
       headerLeft,
       darkBackBtn,
       headerRight,
@@ -93,6 +97,7 @@ class NavigationHeader extends Component {
       headerLeftStyle,
       headerTitleViewStyle,
       headerTitleStyle,
+      subTitleStyle,
       headerRightStyle,
       navigation,
       count,
@@ -130,13 +135,18 @@ class NavigationHeader extends Component {
           {headerCenter ? (
             headerCenter
           ) : (
-            <Text
-              style={headerTitleStyle}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-            >
-              {title}
-            </Text>
+            <View>
+              <Text
+                style={headerTitleStyle}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+              >
+                {title}
+                {subTitle ? (
+                  <Text style={subTitleStyle}>{subTitle}</Text>
+                ) : null}
+              </Text>
+            </View>
           )}
         </View>
       )

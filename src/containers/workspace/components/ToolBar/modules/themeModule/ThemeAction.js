@@ -550,7 +550,7 @@ async function getColorTable(type, key = '', name = '') {
   }
 
   dealData({
-    heights: [ConstToolType.THEME_HEIGHT[3], ConstToolType.THEME_HEIGHT[7]],
+    heights: [ConstToolType.THEME_HEIGHT[7], ConstToolType.THEME_HEIGHT[3]],
     getData: getData,
     state: {
       isFullScreen: false,
@@ -1281,7 +1281,8 @@ function toolbarBack() {
     height: _data.height,
   })
   ToolbarModule.addData({
-    type: ConstToolType.MAP_THEME,
+    // type: ConstToolType.MAP_THEME,
+    type: _data.type,
     getData: ThemeData.getData,
     actions: actions,
     selectList,
@@ -1327,7 +1328,7 @@ function layerListAction(data) {
         break
       default:
         Toast.show(
-          getLanguage(_params.language)
+          getLanguage(_params.language).Prompt
             .CURRENT_LAYER_DOSE_NOT_SUPPORT_MODIFICATION,
         )
         break

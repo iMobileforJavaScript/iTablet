@@ -5,6 +5,7 @@ import {
   LayerAttributeObj,
   LayerSelectionAttribute,
   LayerAttributeSearch,
+  LayerAttributeStatistic,
 } from './pages'
 
 export {
@@ -14,4 +15,5 @@ export {
   LayerAttributeObj,
   LayerSelectionAttribute,
   LayerAttributeSearch,
+  LayerAttributeStatistic,
 }

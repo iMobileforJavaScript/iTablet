@@ -64,6 +64,8 @@ export default class NavigationView extends React.Component {
   }
 
   close = async () => {
+    if (this.backClicked) return
+    this.backClicked = true
     this.props.setMapNavigation({ isShow: false, name: '' })
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
@@ -75,17 +77,23 @@ export default class NavigationView extends React.Component {
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.TouchType = TouchType.NORMAL
     await SMap.clearPoint()
     NavigationService.goBack()
   }
 
   _renderSearchView = () => {
     return (
-      <View style={{ flex: 1, backgroundColor: color.background }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: color.background,
+        }}
+      >
         <View
           style={{
-            paddingTop: TOOLBARHEIGHT,
-            height: scaleSize(165) + TOOLBARHEIGHT,
+            paddingTop: TOOLBARHEIGHT + scaleSize(20),
+            height: scaleSize(185) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -96,9 +104,10 @@ export default class NavigationView extends React.Component {
               this.close()
             }}
             style={{
-              width: 60,
-              padding: 5,
-              marginLeft: scaleSize(20),
+              width: scaleSize(60),
+              alignItems: 'center',
+              paddingTop: scaleSize(10),
+              justifyContent: 'flex-start',
             }}
           >
             <Image
@@ -108,18 +117,30 @@ export default class NavigationView extends React.Component {
             />
           </TouchableOpacity>
           <View style={styles.pointAnalystView}>
-            <View style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                flex: 1,
+                marginHorizontal: scaleSize(20),
+              }}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
+                  flex: 1,
                 }}
               >
-                <Image
-                  resizeMode={'contain'}
-                  source={require('../../../../assets/Navigation/icon_tool_start.png')}
-                  style={styles.startPoint}
+                <View
+                  style={{
+                    width: scaleSize(12),
+                    height: scaleSize(12),
+                    borderRadius: scaleSize(6),
+                    marginRight: scaleSize(20),
+                    backgroundColor: '#0dc66d',
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.onInput}
@@ -144,7 +165,7 @@ export default class NavigationView extends React.Component {
                   <Text
                     numberOfLines={2}
                     ellipsizeMode={'tail'}
-                    style={{ fontSize: setSpText(20) }}
+                    style={{ fontSize: setSpText(24) }}
                   >
                     {this.props.mapSelectPoint.firstPoint !== ''
                       ? this.props.mapSelectPoint.firstPoint
@@ -155,8 +176,7 @@ export default class NavigationView extends React.Component {
               </View>
               <View
                 style={{
-                  marginLeft: scaleSize(20),
-                  width: scaleSize(300),
+                  width: '100%',
                   height: 2,
                   backgroundColor: color.gray,
                 }}
@@ -166,12 +186,17 @@ export default class NavigationView extends React.Component {
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   alignItems: 'center',
+                  flex: 1,
                 }}
               >
-                <Image
-                  resizeMode={'contain'}
-                  source={require('../../../../assets/Navigation/icon_tool_end.png')}
-                  style={styles.endPoint}
+                <View
+                  style={{
+                    width: scaleSize(12),
+                    height: scaleSize(12),
+                    borderRadius: scaleSize(6),
+                    marginRight: scaleSize(20),
+                    backgroundColor: '#f14343',
+                  }}
                 />
                 <TouchableOpacity
                   style={styles.secondInput}
@@ -196,7 +221,7 @@ export default class NavigationView extends React.Component {
                   <Text
                     numberOfLines={2}
                     ellipsizeMode={'tail'}
-                    style={{ fontSize: setSpText(20) }}
+                    style={{ fontSize: setSpText(24) }}
                   >
                     {this.props.mapSelectPoint.secondPoint !== ''
                       ? this.props.mapSelectPoint.secondPoint
@@ -393,6 +418,8 @@ export default class NavigationView extends React.Component {
                     if (this.clickable) {
                       this.clickable = false
                       NavigationService.goBack()
+                      GLOBAL.FloorListView &&
+                        GLOBAL.FloorListView.changeBottom(true)
                     }
                   } else {
                     Toast.show(
@@ -414,7 +441,7 @@ export default class NavigationView extends React.Component {
                 color: color.white,
               }}
             >
-              {getLanguage(GLOBAL.language).Map_Main_Menu.NEXT}
+              {getLanguage(GLOBAL.language).Map_Main_Menu.ROUTE_ANALYST}
             </Text>
           </TouchableOpacity>
         </View>

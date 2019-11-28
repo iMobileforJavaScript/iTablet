@@ -111,6 +111,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: 'The current selection is ',
 
   IMPORTING_DATA: 'Importing Data',
+  DATA_BEING_IMPORT: 'Data is being import',
   IMPORTING: 'Importing',
   IMPORTED_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT: 'Failed to Import',
@@ -186,6 +187,8 @@ const Prompt = {
   OUT_OF_MAP_BOUNDS: 'Out of map bounds',
 
   POI: 'POI',
+
+  ILLEGAL_DATA: 'Illegal Data!',
 
   SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
   ENTER_DATA_NAME: 'Please enter the data name',
@@ -269,6 +272,8 @@ const Prompt = {
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',
   SPEECH_NONE: "You didn't seem to speak anything",
+
+  NOT_SUPPORT_STATISTIC: 'The field not support statistic',
 }
 
 export { Prompt }

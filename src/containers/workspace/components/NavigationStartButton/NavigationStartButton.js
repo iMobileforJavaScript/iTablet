@@ -7,7 +7,7 @@ import {
   FlatList,
   Image,
 } from 'react-native'
-import { scaleSize, setSpText } from '../../../../utils'
+import { scaleSize, setSpText, Toast } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import { getPublicAssets } from '../../../../assets'
@@ -17,6 +17,7 @@ export default class NavigationStartButton extends React.Component {
   props: {
     pathLength: Object,
     path: Array,
+    getNavigationDatas: () => {},
   }
   static defaultProps = {
     pathLength: { length: 0 },
@@ -350,14 +351,30 @@ export default class NavigationStartButton extends React.Component {
                 alignItems: 'center',
                 marginTop: scaleSize(20),
               }}
-              onPress={() => {
-                this.setVisible(false)
-                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(true)
-                }
+              onPress={async () => {
+                let position = await SMap.getCurrentPosition()
                 if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(true)
+                  let rel = await SMap.isIndoorPoint(position.x, position.y)
+                  if (rel.isindoor) {
+                    SMap.indoorNavigation(0)
+                    this.setVisible(false)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+                  } else {
+                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                  }
+                } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+                  let naviData = this.props.getNavigationDatas()
+                  let isInBounds = await SMap.isInBounds(
+                    position,
+                    naviData.selectedDataset,
+                  )
+                  if (isInBounds) {
+                    SMap.outdoorNavigation(0)
+                    this.setVisible(false)
+                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+                  } else {
+                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                  }
                 }
               }}
             >
@@ -367,10 +384,7 @@ export default class NavigationStartButton extends React.Component {
                   color: color.white,
                 }}
               >
-                {
-                  getLanguage(GLOBAL.language).Map_Main_Menu
-                    .FIRST_PERSON_PERSPECTIVE
-                }
+                {getLanguage(GLOBAL.language).Map_Main_Menu.REAL_NAVIGATION}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -389,10 +403,10 @@ export default class NavigationStartButton extends React.Component {
                 this.setVisible(false)
                 GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                 if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(false)
+                  SMap.outdoorNavigation(1)
                 }
                 if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(false)
+                  SMap.indoorNavigation(1)
                 }
               }}
             >
@@ -404,7 +418,7 @@ export default class NavigationStartButton extends React.Component {
               >
                 {
                   getLanguage(GLOBAL.language).Map_Main_Menu
-                    .THIRD_PERSON_PERSPECTIVE
+                    .SIMULATED_NAVIGATION
                 }
               </Text>
             </TouchableOpacity>

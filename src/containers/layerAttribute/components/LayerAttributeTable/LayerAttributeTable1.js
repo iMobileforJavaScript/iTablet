@@ -132,14 +132,15 @@ export default class LayerAttributeTable extends React.Component {
       this.props.data instanceof Array &&
       // this.props.data.length > 1 &&
       // this.props.data[0] instanceof Array
-      this.props.data.length != 1
+      this.props.data.length !== 1
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data) ||
       (!isMultiData &&
         this.props.isShowSystemFields !== prevProps.isShowSystemFields) ||
-      this.state.tableHead !== this.props.tableHead
+      JSON.stringify(this.state.tableHead) !==
+        JSON.stringify(this.props.tableHead)
     ) {
       let data = []
       const titles = this.getTitle(data)

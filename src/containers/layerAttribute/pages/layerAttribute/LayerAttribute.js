@@ -29,6 +29,7 @@ import {
   Action,
   GeoStyle,
   SMediaCollector,
+  FieldType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
@@ -90,6 +91,7 @@ export default class LayerAttribute extends React.Component {
     this.canBeRefresh = true // 是否可以刷新
     this.noMore = false // 是否可以加载更多
     this.isLoading = false // 防止同时重复加载多次
+    this.filter = '' // 属性查询过滤
   }
 
   componentDidMount() {
@@ -246,6 +248,9 @@ export default class LayerAttribute extends React.Component {
           this.props.currentLayer.path,
           currentPage,
           pageSize !== undefined ? pageSize : PAGE_SIZE,
+          {
+            filter: this.filter,
+          },
           type,
         )
 
@@ -609,7 +614,7 @@ export default class LayerAttribute extends React.Component {
 
     items = [
       {
-        title: global.language === 'CN' ? '详情' : 'Detail',
+        title: getLanguage(global.language).Map_Attribute.DETAIL,
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
@@ -620,8 +625,34 @@ export default class LayerAttribute extends React.Component {
         },
       },
     ]
+    if (this.state.attributes.data.length > 1) {
+      items.push({
+        title: getLanguage(global.language).Map_Attribute.ASCENDING,
+        onPress: () => {
+          this.canBeRefresh = true
+          this.filter = fieldInfo.name + ' ASC'
+          this.getAttribute({
+            type: 'reset',
+            currentPage: 0,
+            startIndex: 0,
+          })
+        },
+      })
+      items.push({
+        title: getLanguage(global.language).Map_Attribute.DESCENDING,
+        onPress: () => {
+          this.canBeRefresh = true
+          this.filter = fieldInfo.name + ' DESC'
+          this.getAttribute({
+            type: 'reset',
+            currentPage: 0,
+            startIndex: 0,
+          })
+        },
+      })
+    }
     let tempStr = fieldInfo.caption.toLowerCase()
-    let isSystemField = tempStr.substring(0, 2) == 'sm'
+    let isSystemField = tempStr.substring(0, 2) === 'sm'
     if (!fieldInfo.isSystemField && !isSystemField) {
       items.push({
         title: getLanguage(global.language).Profile.DELETE,
@@ -631,6 +662,24 @@ export default class LayerAttribute extends React.Component {
           }
           deleteFieldData = fieldInfo
           this.deleteFieldDialog.setDialogVisible(true)
+        },
+      })
+    }
+    if (
+      this.state.attributes.data.length > 1 &&
+      (fieldInfo.type === FieldType.INT16 ||
+        fieldInfo.type === FieldType.INT32 ||
+        fieldInfo.type === FieldType.INT64 ||
+        fieldInfo.type === FieldType.SINGLE ||
+        fieldInfo.type === FieldType.DOUBLE)
+    ) {
+      items.push({
+        title: getLanguage(global.language).Map_Attribute.ATTRIBUTE_STATISTIC,
+        onPress: () => {
+          NavigationService.navigate('LayerAttributeStatistic', {
+            fieldInfo,
+            layer: this.props.currentLayer,
+          })
         },
       })
     }

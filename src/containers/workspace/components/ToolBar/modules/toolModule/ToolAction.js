@@ -14,7 +14,6 @@ import {
 import { dataUtil, Toast, StyleUtils } from '../../../../../../utils'
 import { FileTools } from '../../../../../../native'
 import { ImagePicker } from '../../../../../../components'
-import ToolbarBtnType from '../../ToolbarBtnType'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
@@ -33,38 +32,10 @@ function stop() {
 
 function submit() {
   (async function() {
-    const _params = ToolbarModule.getParams()
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
-      await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
+      await SMap.addGPSRecordset()
     }
     await SMap.submit()
-
-    let name = GLOBAL.SELECTDATASOURCE
-    let data = []
-    let maplist = await SMap.getNetWorkDataset(name)
-    if (maplist && maplist.length > 0) {
-      let userList = []
-      maplist.forEach(item => {
-        let name = item.dataset
-        item.title = name
-        item.name = name.split('.')[0]
-        item.image = require('../../../../../../assets/Navigation/network.png')
-        userList.push(item)
-      })
-    }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-      //'选择数据集',
-      image: require('../../../../../../assets/Navigation/network_white.png'),
-      data: maplist || [],
-    })
-    _params.setToolbarVisible(true, ConstToolType.NETWORKDATASET, {
-      containerType: 'list',
-      height: ConstToolType.THEME_HEIGHT[4],
-      data,
-      isFullScreen: false,
-      buttons: [ToolbarBtnType.CANCEL_INCREMENT],
-    })
   }.bind(this)())
 }
 
@@ -73,14 +44,15 @@ function select(type) {
     type = ToolbarModule.getParams().type
   }
   switch (type) {
-    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
-    case ConstToolType.MAP_TOOL_POINT_SELECT:
-      SMap.setAction(Action.SELECT)
-      break
     case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_POINT_SELECT:
+    default:
+      SMap.setAction(Action.SELECT)
       break
   }
 }
@@ -116,7 +88,7 @@ function pointSelect() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -138,7 +110,7 @@ function selectByRectangle() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -153,13 +125,11 @@ function rectangleCut() {
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
     height: 0,
-    cb: () => select(),
   })
 }
 
 /** 距离量算 **/
 function measureLength() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -169,8 +139,10 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
         if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
@@ -195,7 +167,6 @@ function measureLength() {
 
 /**  面积量算  **/
 function measureArea() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -233,7 +204,6 @@ function measureArea() {
 
 /**  角度量算  **/
 function measureAngle() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -309,6 +279,10 @@ function clearMeasure(type) {
 
 /** 量算功能 撤销事件 **/
 function undo(type) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.undo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -335,7 +309,11 @@ function undo(type) {
 }
 
 /** 量算功能 重做事件 **/
-function redo() {
+function redo(type = null) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.redo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -970,6 +948,22 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
+function close(type) {
+  const _params = ToolbarModule.getParams()
+  if (
+    type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT ||
+    type === ConstToolType.MAP_TOOL_POINT_SELECT
+  ) {
+    SMap.setAction(Action.PAN)
+    SMap.clearSelection()
+    _params.setToolbarVisible(false)
+  } else {
+    return false
+  }
+}
+
 export default {
   commit,
   showAttribute,
@@ -984,6 +978,7 @@ export default {
   undo,
   redo,
   listSelectableAction,
+  close,
 
   begin,
   stop,

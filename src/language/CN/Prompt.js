@@ -109,6 +109,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  DATA_BEING_IMPORT: '数据正在导入',
   IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',
@@ -182,6 +183,8 @@ const Prompt = {
   OUT_OF_MAP_BOUNDS: '不在地图范围内',
 
   POI: '兴趣点',
+
+  ILLEGAL_DATA: '数据非法!',
 
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
@@ -261,6 +264,8 @@ const Prompt = {
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',
   SPEECH_NONE: '您好像没有说话哦',
+
+  NOT_SUPPORT_STATISTIC: '该字段不支持统计',
 }
 
 export { Prompt }

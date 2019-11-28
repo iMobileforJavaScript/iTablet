@@ -3727,13 +3727,13 @@ const labelMenuInfo = param => [
     },
   },
   {
-    key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
-    btnTitle: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    key: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
+    btnTitle: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
     action: () => {
       ThemeAction.getColorTable(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
-        getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+        getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
       )
     },
   },
@@ -3991,7 +3991,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
-        getLanguage(param).Map_Main_Menu.Map_Main_Menu.THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },

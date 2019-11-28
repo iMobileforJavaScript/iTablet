@@ -41,24 +41,21 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_BEGIN:
       (async function() {
-        GLOBAL.STARTX = event.mapPoint.x
-        GLOBAL.STARTY = event.mapPoint.y
-        let result = await SMap.isIndoorPoint(
-          event.mapPoint.x,
-          event.mapPoint.y,
-        )
+        GLOBAL.STARTX = event.LLPoint.x
+        GLOBAL.STARTY = event.LLPoint.y
+        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
         let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
         if (isIndoorMap) {
           if (result.isindoor) {
-            await SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, true)
+            await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
               getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
             )
           }
         } else {
-          await SMap.getStartPoint(event.mapPoint.x, event.mapPoint.y, false)
+          await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
         if (result.isindoor) {
           GLOBAL.INDOORSTART = true
@@ -69,24 +66,21 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
-        GLOBAL.ENDX = event.mapPoint.x
-        GLOBAL.ENDY = event.mapPoint.y
-        let result = await SMap.isIndoorPoint(
-          event.mapPoint.x,
-          event.mapPoint.y,
-        )
+        GLOBAL.ENDX = event.LLPoint.x
+        GLOBAL.ENDY = event.LLPoint.y
+        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
         let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
         if (isIndoorMap) {
           if (result.isindoor) {
-            await SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, true)
+            await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
               getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
             )
           }
         } else {
-          await SMap.getEndPoint(event.mapPoint.x, event.mapPoint.y, false)
+          await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
         if (result.isindoor) {
           GLOBAL.INDOOREND = true

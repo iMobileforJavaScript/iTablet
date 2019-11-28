@@ -258,6 +258,7 @@ export default class LocalAnalystView extends Component {
         <LinkageList
           language={this.props.language}
           // data={this.state.dataSourceAndSets}
+          adjustmentWidth={true}
           data={this.props.userUdbAndDs}
           titles={[
             getLanguage(this.props.language).Analyst_Labels.DATA_SOURCE,
