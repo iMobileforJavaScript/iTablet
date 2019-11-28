@@ -35,8 +35,9 @@ export default class TrafficView extends React.Component {
       left: new Animated.Value(scaleSize(20)),
       hasAdded: false,
       showIcon: true,
-      currentFloorID: '',
     }
+    this.lastID = '' //上次传回的楼层id
+    this.listener = null
   }
 
   async componentDidUpdate(prevProps) {
@@ -52,7 +53,8 @@ export default class TrafficView extends React.Component {
       if (!this.listener) {
         this.listener = SMap.addFloorHiddenListener(async result => {
           let { currentFloorID } = result
-          if (currentFloorID !== this.state.currentFloorID) {
+          if (currentFloorID !== this.lastID) {
+            this.lastID = currentFloorID
             if (!currentFloorID) {
               let layers =
                 this.props.getLayers && (await this.props.getLayers())

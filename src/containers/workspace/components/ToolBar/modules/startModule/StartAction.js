@@ -785,7 +785,7 @@ async function changeMap(item) {
         //ConstInfo.CHANGE_MAP_TO + mapInfo.name
       )
       if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-        //切换地图后重新添加楼层控件/TrafficView控件事件
+        //切换地图后重新添加楼层控件
         let floorListView = params.getFloorListView()
         let datas = await SMap.getFloorData()
         if (datas.data && datas.data.length > 0) {
@@ -824,38 +824,6 @@ async function changeMap(item) {
                 )
               }
             })
-          }
-          if (!GLOBAL.TrafficView.listener) {
-            GLOBAL.TrafficView.listener = SMap.addFloorHiddenListener(
-              async result => {
-                let { currentFloorID } = result
-                if (
-                  currentFloorID !== GLOBAL.TrafficView.state.currentFloorID
-                ) {
-                  if (!currentFloorID) {
-                    let layers =
-                      GLOBAL.TrafficView.props.getLayers &&
-                      (await GLOBAL.TrafficView.props.getLayers())
-                    let baseMap = layers.filter(layer =>
-                      LayerUtils.isBaseLayer(layer.name),
-                    )[0]
-                    if (
-                      baseMap &&
-                      baseMap.name !== 'baseMap' &&
-                      baseMap.isVisible
-                    ) {
-                      GLOBAL.TrafficView.setState({
-                        currentFloorID,
-                      })
-                    }
-                  } else {
-                    GLOBAL.TrafficView.setState({
-                      currentFloorID,
-                    })
-                  }
-                }
-              },
-            )
           }
         }
       }
