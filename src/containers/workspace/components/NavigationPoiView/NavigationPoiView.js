@@ -34,6 +34,7 @@ export default class NavigationPoiView extends React.Component {
       analystData: [],
       firstPoint: null,
       secondPoint: null,
+      bottom: new Animated.Value(-scaleSize(200)),
       height: new Animated.Value(scaleSize(200)),
       road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
       isroad: true,
@@ -45,7 +46,12 @@ export default class NavigationPoiView extends React.Component {
   componentDidMount() {
     this.naviPathListener = SMap.setOnlineNavigationListener({
       callback: result => {
-        this.setState({ searchData: result })
+        this.setState({ searchData: result }, () => {
+          Animated.timing(this.state.bottom, {
+            toValue: scaleSize(0),
+            duration: 300,
+          }).start()
+        })
       },
     })
     this.naviLengthListener = SMap.setOnlineNavigation2Listener({
@@ -207,7 +213,12 @@ export default class NavigationPoiView extends React.Component {
     if (!this.props.navigationPoiView) return null
     let closeIcon = require('../../../../assets/mapTools/icon_close_black.png')
     return (
-      <Animated.View style={[styles.nameView, { height: this.state.height }]}>
+      <Animated.View
+        style={[
+          styles.nameView,
+          { bottom: this.state.bottom, height: this.state.height },
+        ]}
+      >
         {this.renderHeader()}
         <TouchableOpacity
           onPress={() => {
