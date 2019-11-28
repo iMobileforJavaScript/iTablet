@@ -218,8 +218,10 @@ export default class ReferenceAnalystView extends Component {
             ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
             : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
         )
-        if (result) {
+        SMap.setAction(Action.SELECT).then(() => {
           SMap.setAction(Action.PAN)
+        })
+        if (result) {
           let layers = await this.props.getLayers()
           layers.length > 0 && (await SMap.setLayerFullView(layers[0].path))
 
@@ -230,9 +232,12 @@ export default class ReferenceAnalystView extends Component {
           }
         }
       } catch (e) {
+        SMap.setAction(Action.SELECT).then(() => {
+          SMap.setAction(Action.PAN)
+        })
         this.setLoading(false)
         Toast.show(
-          getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+          getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
         )
       }
     })
