@@ -216,7 +216,7 @@ export default class ReferenceAnalystView extends Component {
         Toast.show(
           result
             ? getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS
-            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_SUCCESS,
+            : getLanguage(this.props.language).Analyst_Prompt.ANALYSIS_FAIL,
         )
         if (result) {
           SMap.setAction(Action.PAN)
