@@ -1314,7 +1314,8 @@ export default class MapView extends React.Component {
         )
 
         this.mapLoaded = true
-
+        let currentFloorID = await SMap.getCurrentFloorID()
+        this.changeFloorID(currentFloorID)
         this._addGeometrySelectedListener()
 
         setGestureDetectorListener({ ...this.props })
@@ -1822,6 +1823,7 @@ export default class MapView extends React.Component {
         getFloorListView={this._getFloorListView}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
+        changeFloorID={this.changeFloorID}
         setNavigationDatas={this.setNavigationDatas}
         getNavigationDatas={this.getNavigationDatas}
         existFullMap={() => this.showFullMap(false)}
@@ -2301,7 +2303,13 @@ export default class MapView extends React.Component {
   //     </View>
   //   )
   // }
-
+  changeFloorID = currentFloorID => {
+    if (currentFloorID !== this.state.currentFloorID) {
+      this.setState({
+        currentFloorID,
+      })
+    }
+  }
   _renderFloorListView = () => {
     return (
       <RNFloorListView

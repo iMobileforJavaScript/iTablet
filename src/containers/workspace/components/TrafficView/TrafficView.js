@@ -38,6 +38,7 @@ export default class TrafficView extends React.Component {
       showIcon: true,
       isIndoor: false,
       layers: [],
+      currentFloorID: props.currentFloorID,
     }
   }
 
@@ -45,10 +46,12 @@ export default class TrafficView extends React.Component {
     if (nextProps.currentFloorID !== prevState.currentFloorID) {
       if (nextProps.currentFloorID) {
         return {
+          currentFloorID: nextProps.currentFloorID,
           isIndoor: true,
         }
       } else {
         return {
+          currentFloorID: nextProps.currentFloorID,
           isIndoor: false,
         }
       }

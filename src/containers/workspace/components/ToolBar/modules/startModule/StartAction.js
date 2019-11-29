@@ -789,11 +789,15 @@ async function changeMap(item) {
         let datas = await SMap.getFloorData()
         if (datas.data && datas.data.length > 0) {
           let { data, datasource, currentFloorID } = datas
-          floorListView.setState({
-            data,
-            datasource,
-            currentFloorID,
-          })
+          floorListView.setState(
+            {
+              data,
+              datasource,
+            },
+            () => {
+              params.changeFloorID(currentFloorID)
+            },
+          )
         }
       }
 
