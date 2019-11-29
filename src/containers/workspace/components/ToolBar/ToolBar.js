@@ -113,6 +113,7 @@ export default class ToolBar extends React.PureComponent {
     //更改导航路径
     changeNavPathInfo: () => {},
     getFloorListView: () => {},
+    changeFloorID: () => {}, //改变当前楼层ID
   }
 
   static defaultProps = {
