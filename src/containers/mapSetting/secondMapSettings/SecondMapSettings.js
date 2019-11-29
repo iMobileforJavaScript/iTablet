@@ -157,7 +157,11 @@ export default class SecondMapSettings extends Component {
         data = getDetectStyleSettings()
         data[0].value = await SAIDetectView.isDrawTileEnable()
         data[1].value = await SAIDetectView.isDrawConfidenceEnable()
-        data[2].value = await SAIDetectView.getIsCountTrackedMode()
+        if (Platform.OS === 'ios') {
+          data.splice(2, 1)
+        } else {
+          data[2].value = await SAIDetectView.getIsCountTrackedMode()
+        }
         break
       case 'Geocentric Transalation(3-para)':
         data = transfer3ParamsSetting()

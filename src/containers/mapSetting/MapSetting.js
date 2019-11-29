@@ -3,7 +3,14 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { View, FlatList, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native'
 import styles from './styles'
 import {
   getlegendSetting,
@@ -68,6 +75,10 @@ export default class MapSetting extends Component {
     } else */
     if (GLOBAL.Type === constants.MAP_AR) {
       newData = newData.concat(getMapARSettings())
+      //ios先暂时屏蔽POI设置和检测类型
+      if (Platform.OS === 'ios') {
+        newData.splice(4, 2)
+      }
     }
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       newData = newData.concat(getnavigationSetting())

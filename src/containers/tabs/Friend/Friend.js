@@ -174,7 +174,7 @@ export default class Friend extends Component {
   }
 
   addFileListener = () => {
-    if (Platform.OS === 'iOS') {
+    if (Platform.OS === 'ios') {
       this.receiveFileListener = iOSEventEmitter.addListener(
         EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
         this.onReceiveProgress,

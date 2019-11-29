@@ -42,7 +42,6 @@
 		0A7E6C8E22437A9A00936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */; };
-		0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFB21104C7100F206BB /* Accelerate.framework */; };
 		0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFC21104C7100F206BB /* AddressBook.framework */; };
 		0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFD21104C7100F206BB /* AudioToolbox.framework */; };
 		0A8EEE1621104C7100F206BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFE21104C7100F206BB /* MediaPlayer.framework */; };
@@ -72,8 +71,11 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2A5299AD2386A1AB0071AD06 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFB21104C7100F206BB /* Accelerate.framework */; };
 		2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 2A89416022CADE2700AA0363 /* PlotLibData.zip */; };
 		2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AAEE197230E696800902D1D /* libxml2.tbd */; };
+		2ABCAA1B2386616D0052EB6B /* detect.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 2ABCAA162386616D0052EB6B /* detect.tflite */; };
+		2ABCAA1C2386616D0052EB6B /* labelmap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2ABCAA172386616D0052EB6B /* labelmap.txt */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -689,6 +691,8 @@
 		244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
 		2A89416022CADE2700AA0363 /* PlotLibData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PlotLibData.zip; sourceTree = "<group>"; };
 		2AAEE197230E696800902D1D /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		2ABCAA162386616D0052EB6B /* detect.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = detect.tflite; sourceTree = "<group>"; };
+		2ABCAA172386616D0052EB6B /* labelmap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = labelmap.txt; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTablet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E13A8DD089744C6A9A2650C /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
@@ -746,6 +750,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A5299AD2386A1AB0071AD06 /* Accelerate.framework in Frameworks */,
 				6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */,
 				6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */,
 				6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */,
@@ -794,7 +799,6 @@
 				0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */,
 				0ABCB8CA224606C100992994 /* libWeChatSDK.a in Frameworks */,
 				0A25E342226182950009CB35 /* libAsHttpRequest.a in Frameworks */,
-				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
 				0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
@@ -952,6 +956,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				2ABCAA152386616D0052EB6B /* Model */,
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
 				0AA134932267432500606012 /* publicMap.txt */,
@@ -1191,6 +1196,15 @@
 				18F2691A2334AD2700768A00 /* libRCTImageResizer.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2ABCAA152386616D0052EB6B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2ABCAA162386616D0052EB6B /* detect.tflite */,
+				2ABCAA172386616D0052EB6B /* labelmap.txt */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -2058,7 +2072,9 @@
 				2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */,
 				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
 				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
+				2ABCAA1C2386616D0052EB6B /* labelmap.txt in Resources */,
 				0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */,
+				2ABCAA1B2386616D0052EB6B /* detect.tflite in Resources */,
 				0AECCF782328E034004F84A4 /* Images.zip in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
@@ -2162,12 +2178,14 @@
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/AI",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AI",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
@@ -2218,6 +2236,7 @@
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)/AI",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"<Multiple",
@@ -2235,6 +2254,7 @@
 					"$(PROJECT_DIR)/iPhoneSimulator",
 					"$(PROJECT_DIR)/SDKExport/",
 				);
+				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 3.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2266,6 +2286,7 @@
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/AI",
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
@@ -2323,6 +2344,7 @@
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)/AI",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
@@ -2340,6 +2362,7 @@
 					"$(PROJECT_DIR)/iPhoneSimulator",
 					"$(PROJECT_DIR)/SDKExport/",
 				);
+				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 3.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2503,6 +2526,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = mh_execute;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2538,6 +2562,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = mh_execute;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

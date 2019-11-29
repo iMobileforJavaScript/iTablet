@@ -1,6 +1,7 @@
 import { ConstToolType } from '../../../../../constants'
 import { SMCollectorType } from 'imobile_for_reactnative'
 import ToolbarModule from './ToolbarModule'
+import { Platform } from 'react-native'
 
 // TODO 分拆到各个模块下
 function getToolbarHeight(type, currentHeight) {
@@ -419,7 +420,12 @@ function getToolbarHeight(type, currentHeight) {
       column = 3
       break
     case ConstToolType.MAP_AR_AIASSISTANT:
-      height = ConstToolType.HEIGHT[2]
+      if (Platform.OS === 'ios') {
+        height = ConstToolType.HEIGHT[0]
+      } else {
+        height = ConstToolType.HEIGHT[2]
+      }
+      // height = ConstToolType.HEIGHT[2]
       column = 4
       break
     default:

@@ -229,6 +229,7 @@ export default class MapView extends React.Component {
       recording: false,
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
+      currentFloorID: '', //导航模块当前楼层id
     }
     this.closeInfo = [
       {
@@ -264,13 +265,24 @@ export default class MapView extends React.Component {
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
 
-    this.selectedData = {
-      selectedDataset: null,
-      selectedModelFilePath: null,
-    }
+    this.selectedDataset = null
+    this.floorHiddenListener = null
+  }
+
+  addFloorHiddenListener = () => {
+    this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
+      if (result.currentFloorID !== this.state.currentFloorID) {
+        this.setState({
+          currentFloorID: result.currentFloorID,
+        })
+      }
+    })
   }
 
   componentDidMount() {
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      this.addFloorHiddenListener()
+    }
     this.container &&
       this.container.setLoading(
         true,
@@ -492,6 +504,9 @@ export default class MapView extends React.Component {
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
       global.isPad && Orientation.unlockAllOrientations()
+    }
+    if (this.floorHiddenListener) {
+      this.floorHiddenListener.remove()
     }
     if (Platform.OS === 'android') {
       this.props.removeBackAction({
@@ -1635,6 +1650,7 @@ export default class MapView extends React.Component {
 
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
+    if (this.state.currentFloorID) return null
     return (
       <MapController
         ref={ref => (this.mapController = ref)}
@@ -1787,11 +1803,11 @@ export default class MapView extends React.Component {
 
   //设置室外导航数据集和模型文件
   setNavigationDatas = params => {
-    this.selectedData = params
+    this.selectedDataset = params
   }
 
   getNavigationDatas = () => {
-    return this.selectedData
+    return this.selectedDataset
   }
 
   //楼层控件
@@ -2286,16 +2302,13 @@ export default class MapView extends React.Component {
   //   )
   // }
 
-  getMapController = () => {
-    return this.mapController
-  }
   _renderFloorListView = () => {
     return (
       <RNFloorListView
+        currentFloorID={this.state.currentFloorID}
         device={this.props.device}
         mapLoaded={this.mapLoaded}
         ref={ref => (GLOBAL.FloorListView = this.FloorListView = ref)}
-        getMapController={this.getMapController}
       />
     )
   }
@@ -2304,6 +2317,7 @@ export default class MapView extends React.Component {
     return (
       <TrafficView
         ref={ref => (GLOBAL.TrafficView = this.TrafficView = ref)}
+        currentFloorID={this.state.currentFloorID}
         getLayers={this.props.getLayers}
         device={this.props.device}
         incrementRoad={() => {

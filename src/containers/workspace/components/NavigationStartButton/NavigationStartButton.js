@@ -268,7 +268,11 @@ export default class NavigationStartButton extends React.Component {
               height: scaleSize(400),
             }}
           >
-            <FlatList data={data} renderItem={this.renderItem} />
+            <FlatList
+              data={data}
+              renderItem={this.renderItem}
+              keyExtractor={(item, index) => item.toString() + index}
+            />
           </View>
         )}
       </View>
@@ -293,18 +297,16 @@ export default class NavigationStartButton extends React.Component {
     if (this.state.show) {
       return (
         <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: scaleSize(200),
-              padding: scaleSize(20),
-              backgroundColor: color.contentWhite,
-            },
-            { height: this.state.height },
-          ]}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            elevation: 100,
+            padding: scaleSize(20),
+            backgroundColor: color.contentWhite,
+            height: this.state.height,
+          }}
         >
           {this.renderHeader()}
           {this.renderMap()}

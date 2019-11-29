@@ -21,12 +21,9 @@ async function action(type) {
       })
     } else {
       //行业导航
-      let {
-        selectedModelFilePath,
-        selectedDataset,
-      } = _params.getNavigationDatas()
-      if (selectedModelFilePath && selectedDataset) {
-        SMap.startNavigation(selectedDataset, selectedModelFilePath)
+      let navigationDatas = _params.getNavigationDatas()
+      if (navigationDatas) {
+        SMap.startNavigation(navigationDatas)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
           showLocationView: true,
