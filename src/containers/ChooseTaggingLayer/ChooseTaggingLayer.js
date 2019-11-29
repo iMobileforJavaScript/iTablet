@@ -71,6 +71,7 @@ export default class ChooseTaggingLayer extends React.Component {
         GLOBAL.toolBox.setVisible(true, ConstToolType.AIDETECT, {
           buttons: buttons,
           isFullScreen: false,
+          height: 0,
         })
       GLOBAL.AIDETECTCHANGE.setVisible(true)
       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
