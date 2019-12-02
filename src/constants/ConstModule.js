@@ -77,7 +77,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -351,7 +354,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -422,7 +428,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -569,7 +578,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData = [
           {
@@ -589,9 +601,9 @@ function SetMap(param) {
     },
   ]
 
-  if (Platform.OS === 'ios') {
-    moduleDatas.splice(2, 1)
-  }
+  // if (Platform.OS === 'ios') {
+  //   moduleDatas.splice(2, 1)
+  // }
 
   return moduleDatas
 }

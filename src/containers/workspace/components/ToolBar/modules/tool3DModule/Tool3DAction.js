@@ -91,6 +91,7 @@ function createPoint() {
     // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
     params.setToolbarVisible(true, ConstToolType.MAP3D_SYMBOL_POINT, {
       isFullScreen: false,
+      height: 0,
     })
   } catch (error) {
     Toast.show(getLanguage(params.language).Prompt.FAILED_TO_CREATE_POINT)
@@ -118,6 +119,7 @@ function createText() {
     // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
     params.setToolbarVisible(true, ConstToolType.MAP3D_SYMBOL_TEXT, {
       isFullScreen: false,
+      height: 0,
     })
   } catch (error) {
     Toast.show(getLanguage(params.language).Prompt.FAILED_TO_CREATE_TEXT)
@@ -139,6 +141,7 @@ function createLine() {
     // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
     params.setToolbarVisible(true, ConstToolType.MAP3D_SYMBOL_POINTLINE, {
       isFullScreen: false,
+      height: 0,
     })
   } catch (error) {
     Toast.show(getLanguage(params.language).Prompt.FAILED_TO_CREATE_LINE)
@@ -160,6 +163,7 @@ function createRegion() {
     // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
     params.setToolbarVisible(true, ConstToolType.MAP3D_SYMBOL_POINTSURFACE, {
       isFullScreen: false,
+      height: 0,
     })
   } catch (error) {
     Toast.show(getLanguage(params.language).Prompt.FAILED_TO_CREATE_REGION)
@@ -220,6 +224,7 @@ function boxClip() {
   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
   params.setToolbarVisible(true, ConstToolType.MAP3D_BOX_CLIPPING, {
     isFullScreen: false,
+    height: 0,
   })
 }
 

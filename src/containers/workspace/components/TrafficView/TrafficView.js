@@ -27,6 +27,7 @@ export default class TrafficView extends React.Component {
     getLayers: () => {},
     incrementRoad: () => {},
     mapLoaded: boolean,
+    currentFloorID: String,
   }
 
   constructor(props) {
@@ -35,46 +36,28 @@ export default class TrafficView extends React.Component {
       left: new Animated.Value(scaleSize(20)),
       hasAdded: false,
       showIcon: true,
-      currentFloorID: '',
+      isIndoor: false,
+      layers: [],
+      currentFloorID: props.currentFloorID,
     }
   }
 
-  async componentDidUpdate(prevProps) {
-    if (this.props.mapLoaded && this.props.mapLoaded !== prevProps.mapLoaded) {
-      let datas = await SMap.getFloorData()
-      if (datas.data && datas.data.length > 0) {
-        let { currentFloorID } = datas
-        this.setState({
-          currentFloorID,
-        })
-      }
-
-      if (!this.listener) {
-        this.listener = SMap.addFloorHiddenListener(async result => {
-          let { currentFloorID } = result
-          if (currentFloorID !== this.state.currentFloorID) {
-            if (!currentFloorID) {
-              let layers =
-                this.props.getLayers && (await this.props.getLayers())
-              let baseMap = layers.filter(layer =>
-                LayerUtils.isBaseLayer(layer.name),
-              )[0]
-              if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
-                this.setState({
-                  currentFloorID,
-                })
-              }
-            } else {
-              this.setState({
-                currentFloorID,
-              })
-            }
-          }
-        })
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentFloorID !== prevState.currentFloorID) {
+      if (nextProps.currentFloorID) {
+        return {
+          currentFloorID: nextProps.currentFloorID,
+          isIndoor: true,
+        }
+      } else {
+        return {
+          currentFloorID: nextProps.currentFloorID,
+          isIndoor: false,
+        }
       }
     }
+    return null
   }
-
   incrementRoad = async () => {
     let rel = await SMap.hasLineDataset()
     if (rel) {
@@ -106,7 +89,7 @@ export default class TrafficView extends React.Component {
     let networkImg = require('../../../../assets/Navigation/network.png')
     return (
       <Animated.View style={[styles.container, { left: this.state.left }]}>
-        {!this.state.currentFloorID ? (
+        {!this.state.isIndoor ? (
           <TouchableOpacity
             underlayColor={constUtil.UNDERLAYCOLOR_TINT}
             style={{
@@ -116,7 +99,17 @@ export default class TrafficView extends React.Component {
               if (this.state.hasAdded) {
                 await SMap.removeTrafficMap('tencent@TrafficMap')
               } else {
-                await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+                let layers = await this.props.getLayers()
+                let baseMap = layers.filter(layer =>
+                  LayerUtils.isBaseLayer(layer.name),
+                )[0]
+                if (
+                  baseMap &&
+                  baseMap.name !== 'baseMap' &&
+                  baseMap.isVisible
+                ) {
+                  await SMap.openTrafficMap(ConstOnline.TrafficMap.DSParams)
+                }
               }
               let hasAdded = !this.state.hasAdded
               this.setState({

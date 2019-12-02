@@ -43,26 +43,6 @@ export default class NavigationView extends React.Component {
     this.historyclick = true
   }
 
-  componentDidMount() {
-    SMap.setStartPointNameListener({
-      callback: result => {
-        this.props.setMapSelectPoint({
-          firstPoint: result,
-          secondPoint: this.props.mapSelectPoint.secondPoint,
-        })
-      },
-    })
-    SMap.setEndPointNameListener({
-      callback: result => {
-        this.props.setMapSelectPoint({
-          firstPoint: this.props.mapSelectPoint.firstPoint,
-          secondPoint: result,
-        })
-        GLOBAL.ENDPOINT = result
-      },
-    })
-  }
-
   close = async () => {
     if (this.backClicked) return
     this.backClicked = true

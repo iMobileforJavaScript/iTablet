@@ -70,6 +70,10 @@ export default class LinkageList extends React.Component {
           [],
       })
     }
+    if (this._panBtnStyles.style.width > screen.getScreenWidth()) {
+      this._panBtnStyles.style.width = screen.getScreenWidth() - LEFT_MIN_WIDTH
+      this._updateNativeStyles()
+    }
   }
 
   _handleStartShouldSetPanResponder = () => {
