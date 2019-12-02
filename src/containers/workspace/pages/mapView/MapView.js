@@ -1333,8 +1333,6 @@ export default class MapView extends React.Component {
         )
 
         this.mapLoaded = true
-        let currentFloorID = await SMap.getCurrentFloorID()
-        this.changeFloorID(currentFloorID)
         this._addGeometrySelectedListener()
 
         setGestureDetectorListener({ ...this.props })
@@ -1368,10 +1366,8 @@ export default class MapView extends React.Component {
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          // SMap.moveToCurrent().then(result => {
-          //   !result &&
-          //     Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
-          // })
+          let currentFloorID = await SMap.getCurrentFloorID()
+          this.changeFloorID(currentFloorID)
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',
