@@ -339,6 +339,7 @@ export default class MapView extends React.Component {
 
     SMap.setIndustryNavigationListener({
       callback: () => {
+        this.FloorListView && this.FloorListView.changeBottom(false, false),
         this.showFullMap(false)
         this.props.setMapNavigation({ isShow: false, name: '' })
         GLOBAL.STARTX = undefined
@@ -2328,6 +2329,7 @@ export default class MapView extends React.Component {
   _renderFloorListView = () => {
     return (
       <RNFloorListView
+        changeFloorID={this.changeFloorID}
         currentFloorID={this.state.currentFloorID}
         device={this.props.device}
         mapLoaded={this.mapLoaded}
@@ -2617,8 +2619,9 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {!this.state.showAIDetect && !this.props.mapNavigation.isShow && (
+        {!this.state.showAIDetect && (
           <ScaleView
+            mapNavigation={this.props.mapNavigation}
             device={this.props.device}
             language={this.props.language}
             isShow={this.props.mapScaleView}

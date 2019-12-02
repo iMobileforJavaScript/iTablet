@@ -17,6 +17,7 @@ export default class RNFloorListView extends React.Component {
     device: Object,
     mapLoaded: Boolean,
     currentFloorID: String,
+    changeFloorID: () => {},
   }
 
   constructor(props) {
@@ -32,7 +33,6 @@ export default class RNFloorListView extends React.Component {
       bottom: new Animated.Value(scaleSize(150)),
       currentFloorID: props.currentFloorID,
     }
-    this.listener = null
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.currentFloorID !== prevState.currentFloorID) {
@@ -106,9 +106,7 @@ export default class RNFloorListView extends React.Component {
   _onFloorPress = async item => {
     //change floor
     await SMap.setCurrentFloorID(item.id)
-    this.setState({
-      currentFloorID: item.id,
-    })
+    this.props.changeFloorID && this.props.changeFloorID(item.id)
   }
 
   _renderItem = ({ item, index }) => {
@@ -154,7 +152,6 @@ export default class RNFloorListView extends React.Component {
           style={styles.floorList}
           keyExtractor={(item, index) => item.toString + index}
           data={this.state.data}
-          extraData={this.state.currentFloorID}
           renderItem={this._renderItem}
           getItemLayout={(param, index) => ({
             length: scaleSize(60),
