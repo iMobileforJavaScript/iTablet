@@ -1367,8 +1367,10 @@ export default class MapView extends React.Component {
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          let currentFloorID = await SMap.getCurrentFloorID()
-          this.changeFloorID(currentFloorID)
+          SMap.viewEntire().then(async () => {
+            let currentFloorID = await SMap.getCurrentFloorID()
+            this.changeFloorID(currentFloorID)
+          })
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',
