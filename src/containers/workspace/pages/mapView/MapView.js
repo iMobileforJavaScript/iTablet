@@ -282,6 +282,23 @@ export default class MapView extends React.Component {
   componentDidMount() {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       this.addFloorHiddenListener()
+      SMap.setStartPointNameListener({
+        callback: result => {
+          this.props.setMapSelectPoint({
+            firstPoint: result,
+            secondPoint: this.props.mapSelectPoint.secondPoint,
+          })
+        },
+      })
+      SMap.setEndPointNameListener({
+        callback: result => {
+          this.props.setMapSelectPoint({
+            firstPoint: this.props.mapSelectPoint.firstPoint,
+            secondPoint: result,
+          })
+          GLOBAL.ENDPOINT = result
+        },
+      })
     }
     this.container &&
       this.container.setLoading(
@@ -2655,6 +2672,10 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
+          mapSelectPoint={this.props.mapSelectPoint}
+          setNavigationDatas={this.setNavigationDatas}
+          setMapSelectPoint={this.props.setMapSelectPoint}
+          changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}
           setMapSearchHistory={this.props.setMapSearchHistory}
