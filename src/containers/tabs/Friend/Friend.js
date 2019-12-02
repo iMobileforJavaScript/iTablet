@@ -946,7 +946,8 @@ export default class Friend extends Component {
       this.props.closeWorkspace(async () => {
         SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
-          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+          ConstPath.CustomerPath +
+            ConstPath.RelativeFilePath.Workspace[global.language],
         )
         this.props.setUser({
           userName: 'Customer',

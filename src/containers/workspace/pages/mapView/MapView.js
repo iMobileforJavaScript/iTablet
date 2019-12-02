@@ -1263,7 +1263,9 @@ export default class MapView extends React.Component {
               ConstPath.UserPath + this.props.user.currentUser.userName + '/'
           }
           let wsPath =
-            homePath + userPath + ConstPath.RelativeFilePath.Workspace
+            homePath +
+            userPath +
+            ConstPath.RelativeFilePath.Workspace[global.language]
           await this._openWorkspace({
             DSParams: { server: wsPath },
           })
