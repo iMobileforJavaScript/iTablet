@@ -153,6 +153,7 @@ export default class RNFloorListView extends React.Component {
           keyExtractor={(item, index) => item.toString + index}
           data={this.state.data}
           renderItem={this._renderItem}
+          showsVerticalScrollIndicator={false}
           getItemLayout={(param, index) => ({
             length: scaleSize(60),
             offset: scaleSize(60) * index,
