@@ -30,26 +30,33 @@ async function action(type) {
         })
       } else {
         const _data = await NavigationData.getData(type)
-        _params.showFullMap && _params.showFullMap(true)
-        _params.setToolbarVisible(true, type, {
-          containerType: ToolbarType.list,
-          isFullScreen: true,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          height:
-            _params.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5],
-          data: _data.data,
-          buttons: _data.buttons,
-        })
-        let data = {
-          type: type,
-          getData: NavigationData.getData,
-          data: _data,
-          actions: NavigationAction,
+        if (_data.data.length > 0) {
+          _params.showFullMap && _params.showFullMap(true)
+          _params.setToolbarVisible(true, type, {
+            containerType: ToolbarType.list,
+            isFullScreen: true,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            height:
+              _params.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5],
+            data: _data.data,
+            buttons: _data.buttons,
+          })
+          let data = {
+            type: type,
+            getData: NavigationData.getData,
+            data: _data,
+            actions: NavigationAction,
+          }
+          ToolbarModule.setData(data)
+        } else {
+          Toast.show(
+            getLanguage(_params.language).Prompt
+              .NETWORK_DATASET_IS_NOT_AVAILABLE,
+          )
         }
-        ToolbarModule.setData(data)
       }
     }
   } else {
