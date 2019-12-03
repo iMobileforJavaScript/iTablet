@@ -4,6 +4,7 @@ import {
   SMediaCollector,
   DatasetType,
   SAIDetectView,
+  SCollector,
 } from 'imobile_for_reactnative'
 import {
   ConstToolType,
@@ -11,7 +12,12 @@ import {
   ConstPath,
   ToolbarType,
 } from '../../../../../../constants'
-import { dataUtil, Toast, StyleUtils } from '../../../../../../utils'
+import {
+  dataUtil,
+  Toast,
+  StyleUtils,
+  LayerUtils,
+} from '../../../../../../utils'
 import { FileTools } from '../../../../../../native'
 import { ImagePicker } from '../../../../../../components'
 import NavigationService from '../../../../../NavigationService'
@@ -674,6 +680,57 @@ function matchPictureStyle() {
   })
 }
 
+/**
+ * 选择标注
+ */
+function selectLabel() {
+  const _params = ToolbarModule.getParams()
+  _params.setSelection()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  let type = ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE
+
+  _params.setToolbarVisible(true, type, {
+    containerType: 'table',
+    column: 3,
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(type),
+  })
+
+  let layers = _params.layers.layers
+  // 其他图层设置为不可选
+  for (let i = 0; i < layers.length; i++) {
+    if (
+      LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
+      layers[i].isSelectable
+    ) {
+      SMap.setLayerSelectable(layers[i].path, false)
+    }
+  }
+}
+
+/**
+ * 删除标注
+ */
+async function deleteLabel() {
+  const _params = ToolbarModule.getParams()
+  let _selection = _params.selection
+  if (_selection.length === 0) {
+    Toast.show(getLanguage(GLOBAL.language).Prompt.NON_SELECTED_OBJ)
+    return
+  }
+  let result = true
+  _selection.forEach(async item => {
+    if (item.ids.length > 0) {
+      result =
+        result && (await SCollector.removeByIds(item.ids, item.layerInfo.path))
+    }
+  })
+  _params.setSelection()
+}
+
 // function captureVideo () {
 //   let options = {
 //     datasourceName: 'Hunan',
@@ -961,6 +1018,29 @@ function close(type) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
     _params.setToolbarVisible(false)
+  } else if (type === ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE) {
+    SMap.setAction(Action.PAN)
+    SMap.clearSelection()
+
+    let layers = _params.layers.layers
+    // 还原其他图层的选择状态
+    for (let i = 0; i < layers.length; i++) {
+      if (
+        LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
+        layers[i].isSelectable
+      ) {
+        SMap.setLayerSelectable(layers[i].path, true)
+      } else if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+        if (
+          _params.currentLayer &&
+          _params.currentLayer.name &&
+          _params.currentLayer.name === layers[i].name
+        ) {
+          SMap.setLayerEditable(layers[i].path, true)
+        }
+      }
+    }
+    _params.setToolbarVisible(false)
   } else {
     return false
   }
@@ -981,6 +1061,8 @@ export default {
   redo,
   listSelectableAction,
   close,
+  selectLabel,
+  deleteLabel,
 
   begin,
   stop,
