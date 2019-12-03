@@ -1341,7 +1341,10 @@ export default class MapView extends React.Component {
         this.mapLoaded = true
         this._addGeometrySelectedListener()
 
-        setGestureDetectorListener({ ...this.props })
+        setGestureDetectorListener({
+          getNavigationDatas: this.getNavigationDatas,
+          ...this.props,
+        })
         GLOBAL.TouchType = TouchType.NORMAL
 
         await SMap.openTaggingDataset(this.props.user.currentUser.userName)
