@@ -523,6 +523,11 @@ export default class MapView extends React.Component {
     if (GLOBAL.Type === constants.MAP_AR) {
       global.isPad && Orientation.unlockAllOrientations()
     }
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      (async function() {
+        await SMap.destroySpeakPlugin()
+      })()
+    }
     if (this.floorHiddenListener) {
       this.floorHiddenListener.remove()
     }
@@ -1371,6 +1376,7 @@ export default class MapView extends React.Component {
             let currentFloorID = await SMap.getCurrentFloorID()
             this.changeFloorID(currentFloorID)
           })
+          await SMap.initSpeakPlugin()
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',

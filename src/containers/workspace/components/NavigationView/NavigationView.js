@@ -244,6 +244,7 @@ export default class NavigationView extends React.Component {
           <FlatList
             style={{ maxHeight: scaleSize(650) }}
             data={this.props.navigationhistory}
+            keyExtractor={(item, index) => item.toString() + index}
             renderItem={this.renderItem}
           />
           {this.props.navigationhistory.length > 0 && (
@@ -429,9 +430,9 @@ export default class NavigationView extends React.Component {
     )
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
-      <View key={item.toString() + index}>
+      <View>
         <TouchableOpacity
           style={styles.itemView}
           onPress={async () => {
