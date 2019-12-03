@@ -24,7 +24,8 @@ import constants from '../../../workspace/constants'
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
-    mapSelectPoint: Object,
+    selectPoint: Object,
+    changeMapSelectPoint: () => {},
     changeNavPathInfo: () => {},
     setMapNavigation: () => {},
     mapSearchHistory: Array,
@@ -32,7 +33,6 @@ export default class PoiInfoContainer extends React.PureComponent {
     setNavigationPoiView: () => {},
     setNavigationChangeAR: () => {},
     setNavigationDatas: () => {},
-    setMapSelectPoint: () => {},
   }
 
   constructor(props) {
@@ -279,9 +279,9 @@ export default class PoiInfoContainer extends React.PureComponent {
       await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
       await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
       await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
-      this.props.setMapSelectPoint({
-        firstPoint: this.props.mapSelectPoint.firstPoint,
-        secondPoint: this.state.destination,
+      this.props.changeMapSelectPoint({
+        startPoint: this.props.selectPoint.startPoint,
+        endPoint: this.state.destination,
       })
       GLOBAL.ENDPOINT = this.state.destination
       let result = await SMap.beginNavigation(

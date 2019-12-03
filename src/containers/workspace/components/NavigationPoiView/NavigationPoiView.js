@@ -32,8 +32,6 @@ export default class NavigationPoiView extends React.Component {
       searchValue: {},
       searchData: [],
       analystData: [],
-      firstPoint: null,
-      secondPoint: null,
       bottom: new Animated.Value(-scaleSize(200)),
       height: new Animated.Value(scaleSize(200)),
       road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,

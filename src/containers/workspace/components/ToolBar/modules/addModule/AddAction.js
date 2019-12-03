@@ -104,6 +104,8 @@ async function listAction(type, params = {}) {
         SMap.startNavigation(selectedItem)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
+          selectPoint: _params.selectPoint,
+          changeMapSelectPoint: _params.changeMapSelectPoint,
           showLocationView: true,
         })
       } else {

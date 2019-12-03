@@ -144,12 +144,6 @@ export const setOpenOnlineMap = (params = {}) => async dispatch => {
     payload: params || false,
   })
 }
-export const setMapSelectPoint = (params = {}) => async dispatch => {
-  await dispatch({
-    type: MAP_SELECT_POINT,
-    payload: params || false,
-  })
-}
 export const setNavigationHistory = (
   data = [],
   cb = () => {},
@@ -279,10 +273,6 @@ const initialState = fromJS({
   navigationChangeAR: false,
   navigationPoiView: false,
   openOnlineMap: false,
-  mapSelectPoint: {
-    firstPoint: '',
-    secondPoint: '',
-  },
   isAgreeToProtocol: false,
   navigationhistory: [],
 })
@@ -471,18 +461,6 @@ export default handleActions(
         data = false
       }
       return state.setIn(['openOnlineMap'], fromJS(data))
-    },
-    [`${MAP_SELECT_POINT}`]: (state, { payload }) => {
-      let data = state.toJS().mapSelectPoint
-      if (payload) {
-        data = payload
-      } else {
-        data = {
-          firstPoint: '选择起点',
-          secondPoint: '选择终点',
-        }
-      }
-      return state.setIn(['mapSelectPoint'], fromJS(data))
     },
     [`${NAVIGATION_HISTORY}`]: (state, { payload }) => {
       let data = state.toJS().navigationhistory

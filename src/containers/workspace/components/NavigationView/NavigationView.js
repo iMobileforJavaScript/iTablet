@@ -27,8 +27,6 @@ export default class NavigationView extends React.Component {
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
-    mapSelectPoint: PropTypes.object,
-    setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     navigationhistory: PropTypes.array,
   }
@@ -38,6 +36,8 @@ export default class NavigationView extends React.Component {
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
     this.showLocationView = params.showLocationView || false
+    this.selectPoint = params.selectPoint
+    this.changeMapSelectPoint = params.changeMapSelectPoint
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
@@ -49,10 +49,9 @@ export default class NavigationView extends React.Component {
     this.props.setMapNavigation({ isShow: false, name: '' })
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
-    this.props.setMapSelectPoint({
-      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
-      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-        .SELECT_DESTINATION,
+    this.changeMapSelectPoint({
+      startPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -147,10 +146,7 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.firstPoint !== ''
-                      ? this.props.mapSelectPoint.firstPoint
-                      : getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SELECT_START_POINT}
+                    {this.selectPoint.startPoint}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -203,10 +199,7 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.secondPoint !== ''
-                      ? this.props.mapSelectPoint.secondPoint
-                      : getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SELECT_DESTINATION}
+                    {this.selectPoint.endPoint}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -326,11 +319,11 @@ export default class NavigationView extends React.Component {
                       sFloor: GLOBAL.STARTPOINTFLOOR,
                       eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
-                        this.props.mapSelectPoint.firstPoint +
+                        this.selectPoint.startPoint +
                         '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                      start: this.props.mapSelectPoint.firstPoint,
-                      end: this.props.mapSelectPoint.secondPoint,
+                        this.selectPoint.endPoint,
+                      start: this.selectPoint.startPoint,
+                      end: this.selectPoint.endPoint,
                     })
                     if (this.historyclick) {
                       this.props.setNavigationHistory(history)
@@ -387,11 +380,11 @@ export default class NavigationView extends React.Component {
                       sFloor: GLOBAL.STARTPOINTFLOOR,
                       eFloor: GLOBAL.ENDPOINTFLOOR,
                       address:
-                        this.props.mapSelectPoint.firstPoint +
+                        this.selectPoint.startPoint +
                         '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                      start: this.props.mapSelectPoint.firstPoint,
-                      end: this.props.mapSelectPoint.secondPoint,
+                        this.selectPoint.endPoint,
+                      start: this.selectPoint.startPoint,
+                      end: this.selectPoint.endPoint,
                     })
                     if (this.historyclick) {
                       this.props.setNavigationHistory(history)
@@ -436,9 +429,9 @@ export default class NavigationView extends React.Component {
         <TouchableOpacity
           style={styles.itemView}
           onPress={async () => {
-            this.props.setMapSelectPoint({
-              firstPoint: item.start,
-              secondPoint: item.end,
+            this.changeMapSelectPoint({
+              startPoint: item.start,
+              endPoint: item.end,
             })
 
             GLOBAL.STARTX = item.sx

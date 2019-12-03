@@ -17,6 +17,8 @@ async function action(type) {
       SMap.startIndoorNavigation()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: _params.changeNavPathInfo,
+        selectPoint: _params.selectPoint,
+        changeMapSelectPoint: _params.changeMapSelectPoint,
         showLocationView: false,
       })
     } else {
@@ -26,6 +28,8 @@ async function action(type) {
         SMap.startNavigation(navigationDatas)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
+          selectPoint: _params.selectPoint,
+          changeMapSelectPoint: _params.changeMapSelectPoint,
           showLocationView: true,
         })
       } else {
