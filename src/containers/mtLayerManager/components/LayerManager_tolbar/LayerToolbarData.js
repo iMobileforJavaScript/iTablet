@@ -6,6 +6,11 @@ import { DatasetType } from 'imobile_for_reactnative'
 function getGroupData(language) {
   return [
     {
+      title: getLanguage(language).Map_Layer.LAYERS_FULL_VIEW_LAYER,
+      //'全副显示图层',
+      image: require('../../../../assets/layerToolbar/layer_full.png'),
+    },
+    {
       title: getLanguage(language).Map_Layer.LAYERS_RENAME,
       //'重命名',
       image: getPublicAssets().mapTools.tools_layer_rename,
