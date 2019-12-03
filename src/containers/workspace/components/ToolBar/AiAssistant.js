@@ -358,7 +358,7 @@ function getAiAssistantData(type, params) {
     // },
   ]
   if (Platform.OS === 'ios') {
-    data.splice(1, 5)
+    data.splice(2, 4)
   }
   return { data, buttons }
 }

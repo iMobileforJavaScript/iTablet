@@ -126,7 +126,7 @@ export default class LayerManager_tolbar extends React.Component {
     let device = this.props.device
     let boxHeight
     if (this.state.isGroup) {
-      boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
+      boxHeight = ConstToolType.TOOLBAR_HEIGHT[3]
     } else {
       switch (this.state.type) {
         case ConstToolType.MAP_STYLE:
