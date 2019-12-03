@@ -362,7 +362,9 @@ export default class NavigationStartButton extends React.Component {
                     this.setVisible(false)
                     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                   } else {
-                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP,
+                    )
                   }
                 } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
                   let naviData = this.props.getNavigationDatas()
@@ -375,7 +377,9 @@ export default class NavigationStartButton extends React.Component {
                     this.setVisible(false)
                     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
                   } else {
-                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP,
+                    )
                   }
                 }
               }}
