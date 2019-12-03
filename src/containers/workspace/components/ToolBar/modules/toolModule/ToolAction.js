@@ -721,11 +721,11 @@ async function deleteLabel() {
     Toast.show(getLanguage(GLOBAL.language).Prompt.NON_SELECTED_OBJ)
     return
   }
-  let result = true
+
   _selection.forEach(async item => {
     if (item.ids.length > 0) {
-      result =
-        result && (await SCollector.removeByIds(item.ids, item.layerInfo.path))
+      SCollector.removeByIds(item.ids, item.layerInfo.path)
+      SMediaCollector.removeByIds(item.ids, item.layerInfo.name)
     }
   })
   _params.setSelection()
