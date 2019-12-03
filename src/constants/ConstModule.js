@@ -77,7 +77,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -222,7 +225,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -282,7 +288,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -297,6 +306,19 @@ function SetMap(param) {
           data = {
             type: 'Map',
             ...lastMap,
+          }
+        } else {
+          let moduleMapName = 'beijing'
+          let moduleMapFullName = moduleMapName + '.xml'
+          // 地图用相对路径
+          let moduleMapPath =
+            userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+          if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+            data = {
+              type: 'Map',
+              path: moduleMapPath,
+              name: moduleMapName,
+            }
           }
         }
 
@@ -352,7 +374,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -423,7 +448,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -496,7 +524,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData,
           isOpenLastMap = false
@@ -570,7 +601,10 @@ function SetMap(param) {
         if (user && user.userName) {
           userPath = ConstPath.UserPath + user.userName + '/'
         }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath =
+          homePath +
+          userPath +
+          ConstPath.RelativeFilePath.Workspace[global.language]
 
         let wsData = [
           {

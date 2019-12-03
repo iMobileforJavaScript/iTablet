@@ -282,6 +282,23 @@ export default class MapView extends React.Component {
   componentDidMount() {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       this.addFloorHiddenListener()
+      SMap.setStartPointNameListener({
+        callback: result => {
+          this.props.setMapSelectPoint({
+            firstPoint: result,
+            secondPoint: this.props.mapSelectPoint.secondPoint,
+          })
+        },
+      })
+      SMap.setEndPointNameListener({
+        callback: result => {
+          this.props.setMapSelectPoint({
+            firstPoint: this.props.mapSelectPoint.firstPoint,
+            secondPoint: result,
+          })
+          GLOBAL.ENDPOINT = result
+        },
+      })
     }
     this.container &&
       this.container.setLoading(
@@ -322,6 +339,7 @@ export default class MapView extends React.Component {
 
     SMap.setIndustryNavigationListener({
       callback: () => {
+        this.FloorListView && this.FloorListView.changeBottom(false, false),
         this.showFullMap(false)
         this.props.setMapNavigation({ isShow: false, name: '' })
         GLOBAL.STARTX = undefined
@@ -504,6 +522,11 @@ export default class MapView extends React.Component {
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
       global.isPad && Orientation.unlockAllOrientations()
+    }
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      (async function() {
+        await SMap.destroySpeakPlugin()
+      })()
     }
     if (this.floorHiddenListener) {
       this.floorHiddenListener.remove()
@@ -1246,7 +1269,9 @@ export default class MapView extends React.Component {
               ConstPath.UserPath + this.props.user.currentUser.userName + '/'
           }
           let wsPath =
-            homePath + userPath + ConstPath.RelativeFilePath.Workspace
+            homePath +
+            userPath +
+            ConstPath.RelativeFilePath.Workspace[global.language]
           await this._openWorkspace({
             DSParams: { server: wsPath },
           })
@@ -1314,7 +1339,6 @@ export default class MapView extends React.Component {
         )
 
         this.mapLoaded = true
-
         this._addGeometrySelectedListener()
 
         setGestureDetectorListener({ ...this.props })
@@ -1348,10 +1372,11 @@ export default class MapView extends React.Component {
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          // SMap.moveToCurrent().then(result => {
-          //   !result &&
-          //     Toast.show(getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS)
-          // })
+          SMap.viewEntire().then(async () => {
+            let currentFloorID = await SMap.getCurrentFloorID()
+            this.changeFloorID(currentFloorID)
+          })
+          await SMap.initSpeakPlugin()
           this.props.setMapSelectPoint({
             firstPoint: '',
             secondPoint: '',
@@ -1822,6 +1847,7 @@ export default class MapView extends React.Component {
         getFloorListView={this._getFloorListView}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
+        changeFloorID={this.changeFloorID}
         setNavigationDatas={this.setNavigationDatas}
         getNavigationDatas={this.getNavigationDatas}
         existFullMap={() => this.showFullMap(false)}
@@ -2301,10 +2327,17 @@ export default class MapView extends React.Component {
   //     </View>
   //   )
   // }
-
+  changeFloorID = currentFloorID => {
+    if (currentFloorID !== this.state.currentFloorID) {
+      this.setState({
+        currentFloorID,
+      })
+    }
+  }
   _renderFloorListView = () => {
     return (
       <RNFloorListView
+        changeFloorID={this.changeFloorID}
         currentFloorID={this.state.currentFloorID}
         device={this.props.device}
         mapLoaded={this.mapLoaded}
@@ -2594,8 +2627,9 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {!this.state.showAIDetect && !this.props.mapNavigation.isShow && (
+        {!this.state.showAIDetect && (
           <ScaleView
+            mapNavigation={this.props.mapNavigation}
             device={this.props.device}
             language={this.props.language}
             isShow={this.props.mapScaleView}
@@ -2647,6 +2681,10 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
+          mapSelectPoint={this.props.mapSelectPoint}
+          setNavigationDatas={this.setNavigationDatas}
+          setMapSelectPoint={this.props.setMapSelectPoint}
+          changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}
           setMapSearchHistory={this.props.setMapSearchHistory}

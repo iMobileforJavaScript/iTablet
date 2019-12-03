@@ -462,6 +462,8 @@ async function _getLayerInfo3D(serverUrl, currentPath) {
         let nodes = $('sml\\:DataSourceAlias')
         for (let n = 0; n < nodes.length; n++) {
           let rpath = nodes[n].children[0].nodeValue
+          //处理反斜线
+          rpath = rpath.replace(/\\/g, '/')
           //目前只获取工作空间同级的图层文件夹
           if (rpath.indexOf('./') === 0) {
             let pathArr = rpath.split('/')
@@ -474,7 +476,9 @@ async function _getLayerInfo3D(serverUrl, currentPath) {
         }
       }
     } else {
-      let wsType = serverUrl.substr(serverUrl.lastIndexOf('.') + 1)
+      let wsType = serverUrl
+        .substr(serverUrl.lastIndexOf('.') + 1)
+        .toLowerCase()
       //ios目前直接从工作空间文件读取
       if (wsType === 'sxwu') {
         let workspaceStr = await RNFS.readFile(serverUrl, 'base64')
@@ -485,6 +489,8 @@ async function _getLayerInfo3D(serverUrl, currentPath) {
         let nodes = $('sml\\:DataSourceAlias')
         for (let n = 0; n < nodes.length; n++) {
           let rpath = nodes[n].children[0].nodeValue
+          //处理反斜线
+          rpath = rpath.replace(/\\/g, '/')
           //目前只获取工作空间同级的图层文件夹
           if (rpath.indexOf('./') === 0) {
             let pathArr = rpath.split('/')

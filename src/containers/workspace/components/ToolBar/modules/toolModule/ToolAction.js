@@ -64,9 +64,11 @@ function cancelSelect() {
 }
 
 function viewEntire() {
-  SMap.viewEntire().then(() => {
-    ToolbarModule.getParams().setToolbarVisible &&
-      ToolbarModule.getParams().setToolbarVisible(false)
+  SMap.viewEntire().then(async () => {
+    const params = ToolbarModule.getParams()
+    params.setToolbarVisible && params.setToolbarVisible(false)
+    let currentFloorID = await SMap.getCurrentFloorID()
+    params.changeFloorID && params.changeFloorID(currentFloorID || '')
   })
 }
 

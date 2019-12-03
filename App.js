@@ -253,12 +253,12 @@ class AppRoot extends Component {
       SOnlineService.init()
       // SOnlineService.removeCookie()
       SIPortalService.init()
-      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language], path = ''
       if (
         this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
         (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
       ) {
-        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[global.language]
         if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
           path = await FileTools.appendingHomeDirectory(userWsPath)
         } else {
@@ -267,7 +267,7 @@ class AppRoot extends Component {
       } else {
         path = await FileTools.appendingHomeDirectory(wsPath)
       }
-      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.inspectEnvironment()
       await this.initOrientation()

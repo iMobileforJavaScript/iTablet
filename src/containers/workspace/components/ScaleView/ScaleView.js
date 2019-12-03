@@ -15,6 +15,7 @@ export default class ScaleView extends React.Component {
     device: Object,
     language: String,
     isShow: boolean,
+    mapNavigation: Object,
   }
 
   constructor(props) {
@@ -94,6 +95,7 @@ export default class ScaleView extends React.Component {
   }
 
   render() {
+    if (this.props.mapNavigation.isShow) return null
     let textWidth =
       this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
     if (!this.props.isShow) return <View />

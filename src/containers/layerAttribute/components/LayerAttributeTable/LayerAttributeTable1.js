@@ -313,7 +313,14 @@ export default class LayerAttributeTable extends React.Component {
           selected.clear()
         }
 
-        selected.set(item.data[0].value, !target) // toggle
+        let data = item.data[0]
+        if (
+          data.name === getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
+        ) {
+          data = item.data[1]
+        }
+
+        selected.set(data.value, !target) // toggle
         return { selected }
       })
     } else {

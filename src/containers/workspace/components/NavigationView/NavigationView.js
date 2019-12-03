@@ -43,26 +43,6 @@ export default class NavigationView extends React.Component {
     this.historyclick = true
   }
 
-  componentDidMount() {
-    SMap.setStartPointNameListener({
-      callback: result => {
-        this.props.setMapSelectPoint({
-          firstPoint: result,
-          secondPoint: this.props.mapSelectPoint.secondPoint,
-        })
-      },
-    })
-    SMap.setEndPointNameListener({
-      callback: result => {
-        this.props.setMapSelectPoint({
-          firstPoint: this.props.mapSelectPoint.firstPoint,
-          secondPoint: result,
-        })
-        GLOBAL.ENDPOINT = result
-      },
-    })
-  }
-
   close = async () => {
     if (this.backClicked) return
     this.backClicked = true
@@ -264,6 +244,7 @@ export default class NavigationView extends React.Component {
           <FlatList
             style={{ maxHeight: scaleSize(650) }}
             data={this.props.navigationhistory}
+            keyExtractor={(item, index) => item.toString() + index}
             renderItem={this.renderItem}
           />
           {this.props.navigationhistory.length > 0 && (
@@ -449,9 +430,9 @@ export default class NavigationView extends React.Component {
     )
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({ item }) => {
     return (
-      <View key={item.toString() + index}>
+      <View>
         <TouchableOpacity
           style={styles.itemView}
           onPress={async () => {

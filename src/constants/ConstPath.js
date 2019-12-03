@@ -41,7 +41,10 @@ const RelativeFilePath = {
   // Workspace: Data + 'Workspace.smwu', // 工作空间
   DefaultData: DefaultData, // 默认数据文件夹目录
   DefaultWorkspaceDir: DefaultData + 'Workspace/', // 工作空间默认数据文件夹目录
-  Workspace: DefaultData + 'Workspace/Workspace.sxwu', // 工作空间
+  Workspace: {
+    CN: DefaultData + 'Workspace/Workspace.sxwu', // 工作空间
+    EN: DefaultData + 'Workspace_EN/Workspace.sxwu', // 英文工作空间
+  },
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
   Map: Data + 'Map/',
