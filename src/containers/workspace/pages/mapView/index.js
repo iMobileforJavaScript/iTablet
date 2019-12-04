@@ -39,7 +39,6 @@ import {
   setMapIs3D,
   setNavigationChangeAR,
   setNavigationPoiView,
-  setMapSelectPoint,
   setOpenOnlineMap,
   setNavigationHistory,
 } from '../../../../models/setting'
@@ -80,7 +79,6 @@ const mapStateToProps = state => ({
   downloads: state.down.toJS().downloads,
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
   openOnlineMap: state.setting.toJS().openOnlineMap,
-  mapSelectPoint: state.setting.toJS().mapSelectPoint,
   navigationhistory: state.setting.toJS().navigationhistory,
 })
 
@@ -124,7 +122,6 @@ const mapDispatchToProps = {
   setNavigationChangeAR,
   setNavigationPoiView,
   setMapSearchHistory,
-  setMapSelectPoint,
   setNavigationHistory,
   setOpenOnlineMap,
   downloadFile,

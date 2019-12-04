@@ -307,6 +307,19 @@ function SetMap(param) {
             type: 'Map',
             ...lastMap,
           }
+        } else {
+          let moduleMapName = 'beijing'
+          let moduleMapFullName = moduleMapName + '.xml'
+          // 地图用相对路径
+          let moduleMapPath =
+            userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+          if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+            data = {
+              type: 'Map',
+              path: moduleMapPath,
+              name: moduleMapName,
+            }
+          }
         }
 
         wsData = [

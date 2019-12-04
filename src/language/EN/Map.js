@@ -365,7 +365,7 @@ const Map_Main_Menu = {
   CLEAR_NAV_HISTORY: 'Clear History',
   ROUTE_ANALYST: 'Route Analyst',
   SELECT_POINTS: 'Select Points',
-  LONG_PRESS_SELECT_POINTS: '(long press)',
+  LONG_PRESS_SELECT_POINTS: '(long press to select a point)',
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',

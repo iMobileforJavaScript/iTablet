@@ -22,6 +22,7 @@ function close(type) {
 async function analyst(type) {
   const _params = ToolbarModule.getParams()
   if (
+    type === ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH ||
     type === ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS ||
     type === ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH
   ) {

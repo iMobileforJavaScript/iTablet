@@ -255,6 +255,11 @@ const Prompt = {
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
+  NETWORK_DATASET_IS_NOT_AVAILABLE: 'Current network dataset is not available',
+  POINT_NOT_IN_BOUNDS:
+    "The bounds of the selected network dataset donsn't contains the point",
+  POSITION_OUT_OF_MAP:
+    'Your location is out of the bounds of map, please use simulate navigation',
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
   PLEASE_SELECT_NETWORKDATASET: 'Select a network dataset first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',

@@ -122,7 +122,6 @@ export default class MapView extends React.Component {
     navigationChangeAR: PropTypes.bool,
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
-    mapSelectPoint: PropTypes.object,
     navigationhistory: PropTypes.array,
 
     bufferSetting: PropTypes.object,
@@ -177,7 +176,6 @@ export default class MapView extends React.Component {
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
     setMapSearchHistory: PropTypes.func,
-    setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
     downloadFile: PropTypes.func,
@@ -230,6 +228,11 @@ export default class MapView extends React.Component {
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
+      selectPoint: {
+        startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+          .SELECT_START_POINT,
+        endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
+      },
     }
     this.closeInfo = [
       {
@@ -284,17 +287,19 @@ export default class MapView extends React.Component {
       this.addFloorHiddenListener()
       SMap.setStartPointNameListener({
         callback: result => {
-          this.props.setMapSelectPoint({
-            firstPoint: result,
-            secondPoint: this.props.mapSelectPoint.secondPoint,
+          let selectPoint = JSON.parse(JSON.stringify(this.state.selectPoint))
+          selectPoint.startPoint = result
+          this.setState({
+            selectPoint,
           })
         },
       })
       SMap.setEndPointNameListener({
         callback: result => {
-          this.props.setMapSelectPoint({
-            firstPoint: this.props.mapSelectPoint.firstPoint,
-            secondPoint: result,
+          let selectPoint = JSON.parse(JSON.stringify(this.state.selectPoint))
+          selectPoint.endPoint = result
+          this.setState({
+            selectPoint,
           })
           GLOBAL.ENDPOINT = result
         },
@@ -345,9 +350,13 @@ export default class MapView extends React.Component {
         GLOBAL.STARTX = undefined
         GLOBAL.ENDX = undefined
         GLOBAL.ROUTEANALYST = undefined
-        this.props.setMapSelectPoint({
-          firstPoint: '',
-          secondPoint: '',
+        this.setState({
+          selectPoint: {
+            startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+              .SELECT_START_POINT,
+            endPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+              .SELECT_DESTINATION,
+          },
         })
         SMap.clearPoint()
       },
@@ -524,6 +533,11 @@ export default class MapView extends React.Component {
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
       global.isPad && Orientation.unlockAllOrientations()
+    }
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      (async function() {
+        await SMap.destroySpeakPlugin()
+      })()
     }
     if (this.floorHiddenListener) {
       this.floorHiddenListener.remove()
@@ -1338,7 +1352,10 @@ export default class MapView extends React.Component {
         this.mapLoaded = true
         this._addGeometrySelectedListener()
 
-        setGestureDetectorListener({ ...this.props })
+        setGestureDetectorListener({
+          getNavigationDatas: this.getNavigationDatas,
+          ...this.props,
+        })
         GLOBAL.TouchType = TouchType.NORMAL
 
         await SMap.openTaggingDataset(this.props.user.currentUser.userName)
@@ -1369,11 +1386,18 @@ export default class MapView extends React.Component {
         this.props.setMap2Dto3D(true)
         this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          let currentFloorID = await SMap.getCurrentFloorID()
-          this.changeFloorID(currentFloorID)
-          this.props.setMapSelectPoint({
-            firstPoint: '',
-            secondPoint: '',
+          SMap.viewEntire().then(async () => {
+            let currentFloorID = await SMap.getCurrentFloorID()
+            this.changeFloorID(currentFloorID)
+          })
+          await SMap.initSpeakPlugin()
+          this.setState({
+            selectPoint: {
+              startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+                .SELECT_START_POINT,
+              endPoint: getLanguage(GLOBAL.language).Map_Main_Menu
+                .SELECT_DESTINATION,
+            },
           })
         }
 
@@ -1837,10 +1861,17 @@ export default class MapView extends React.Component {
     return this.FloorListView || null
   }
 
+  changeMapSelectPoint = selectPoint => {
+    this.setState({
+      selectPoint,
+    })
+  }
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
+        selectPoint={this.state.selectPoint}
+        changeMapSelectPoint={this.changeMapSelectPoint}
         getFloorListView={this._getFloorListView}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
@@ -2452,6 +2483,8 @@ export default class MapView extends React.Component {
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
             NavigationService.navigate('NavigationView', {
               changeNavPathInfo: this.changeNavPathInfo,
+              selectPoint: this.state.selectPoint,
+              changeMapSelectPoint: this.changeMapSelectPoint,
             })
           },
         }}
@@ -2481,8 +2514,8 @@ export default class MapView extends React.Component {
     return (
       <NavigationStartHead
         ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
-        setMapSelectPoint={this.props.setMapSelectPoint}
-        mapSelectPoint={this.props.mapSelectPoint}
+        changeMapSelectPoint={this.changeMapSelectPoint}
+        selectPoint={this.state.selectPoint}
         setMapNavigation={this.props.setMapNavigation}
       />
     )
@@ -2493,8 +2526,8 @@ export default class MapView extends React.Component {
       <MapSelectPointButton
         navigationhistory={this.props.navigationhistory}
         setNavigationHistory={this.props.setNavigationHistory}
-        mapSelectPoint={this.props.mapSelectPoint}
-        setMapSelectPoint={this.props.setMapSelectPoint}
+        changeMapSelectPoint={this.changeMapSelectPoint}
+        selectPoint={this.state.selectPoint}
         changeNavPathInfo={this.changeNavPathInfo}
         ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
       />
@@ -2678,9 +2711,9 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
-          mapSelectPoint={this.props.mapSelectPoint}
+          selectPoint={this.state.selectPoint}
+          changeMapSelectPoint={this.changeMapSelectPoint}
           setNavigationDatas={this.setNavigationDatas}
-          setMapSelectPoint={this.props.setMapSelectPoint}
           changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}

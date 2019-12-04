@@ -382,7 +382,7 @@ const Map_Main_Menu = {
   CLEAR_NAV_HISTORY: '清除历史',
   ROUTE_ANALYST: '路径分析',
   SELECT_POINTS: '地图选点',
-  LONG_PRESS_SELECT_POINTS: '(长按)',
+  LONG_PRESS_SELECT_POINTS: '(长按选点)',
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',

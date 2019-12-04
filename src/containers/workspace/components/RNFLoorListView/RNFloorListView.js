@@ -56,7 +56,11 @@ export default class RNFloorListView extends React.Component {
         },
         () => {
           if (height < prevState.height) {
-            this.list.scrollToIndex({ viewPosition: 0.5, index: this.curIndex })
+            this.list &&
+              this.list.scrollToIndex({
+                viewPosition: 0.5,
+                index: this.curIndex,
+              })
           }
         },
       )
@@ -153,6 +157,7 @@ export default class RNFloorListView extends React.Component {
           keyExtractor={(item, index) => item.toString + index}
           data={this.state.data}
           renderItem={this._renderItem}
+          showsVerticalScrollIndicator={false}
           getItemLayout={(param, index) => ({
             length: scaleSize(60),
             offset: scaleSize(60) * index,

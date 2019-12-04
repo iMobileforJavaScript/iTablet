@@ -10,8 +10,8 @@ import { getLanguage } from '../../../../language'
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
-    mapSelectPoint: Object,
-    setMapSelectPoint: () => {},
+    selectPoint: Object,
+    changeMapSelectPoint: () => {},
     setMapNavigation: () => {},
   }
 
@@ -27,18 +27,18 @@ export default class NavigationStartHead extends React.Component {
   }
 
   close = async () => {
+    await SMap.clearPoint()
+    await SMap.clearTrackingLayer()
     this.setVisible(false)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
     GLOBAL.toolBox.existFullMap()
-    await SMap.clearPoint()
     this.props.setMapNavigation({
       isShow: false,
       name: '',
     })
-    this.props.setMapSelectPoint({
-      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
-      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-        .SELECT_DESTINATION,
+    this.props.changeMapSelectPoint({
+      startPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
+      endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
     })
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
@@ -129,7 +129,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.firstPoint}
+                    {this.props.selectPoint.startPoint}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -183,7 +183,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.secondPoint}
+                    {this.props.selectPoint.endPoint}
                   </Text>
                 </TouchableOpacity>
               </View>
