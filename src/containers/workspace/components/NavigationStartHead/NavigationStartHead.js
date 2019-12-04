@@ -27,10 +27,11 @@ export default class NavigationStartHead extends React.Component {
   }
 
   close = async () => {
+    await SMap.clearPoint()
+    await SMap.clearTrackingLayer()
     this.setVisible(false)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
     GLOBAL.toolBox.existFullMap()
-    await SMap.clearPoint()
     this.props.setMapNavigation({
       isShow: false,
       name: '',
