@@ -99,7 +99,10 @@ async function getTabBarData(type, params = {}) {
     tabBarData = themeModule().getData(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = editModule().getData(type, params)
-  } else if (type === ConstToolType.MAP_ANALYSIS) {
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf(ConstToolType.MAP_ANALYSIS) > -1
+  ) {
     tabBarData = analysisModule().getData(type, params)
   } else if (
     type === ConstToolType.PLOT_ANIMATION_START ||

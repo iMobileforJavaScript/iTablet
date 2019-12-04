@@ -3,9 +3,9 @@ import { View, StyleSheet } from 'react-native'
 import { TextBtn } from '../../../../components'
 import { color, size } from '../../../../styles'
 import { scaleSize, AnalystTools } from '../../../../utils'
-import { Analyst_Types } from '../../../analystView/AnalystType'
+// import { Analyst_Types } from '../../../analystView/AnalystType'
 import { getLanguage } from '../../../../language'
-import { TouchType } from '../../../../constants'
+import { TouchType, ConstToolType } from '../../../../constants'
 
 const BTN_HEIGHT = scaleSize(40)
 const BTN_GAPE = scaleSize(20)
@@ -86,7 +86,7 @@ export default class AnalystMapButtons extends React.Component {
 
   getData = type => {
     let data = {
-      [Analyst_Types.OPTIMAL_PATH]: [
+      [ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH]: [
         {
           title: getLanguage(this.props.language).Analyst_Labels
             .SET_START_STATION,
@@ -116,7 +116,7 @@ export default class AnalystMapButtons extends React.Component {
           },
         },
       ],
-      [Analyst_Types.CONNECTIVITY_ANALYSIS]: [
+      [ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS]: [
         {
           title: getLanguage(this.props.language).Analyst_Labels
             .SET_AS_START_STATION,
@@ -132,7 +132,7 @@ export default class AnalystMapButtons extends React.Component {
           },
         },
       ],
-      [Analyst_Types.FIND_TSP_PATH]: [
+      [ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH]: [
         {
           title: getLanguage(this.props.language).Analyst_Labels.ADD_STATIONS,
           action: () => {
