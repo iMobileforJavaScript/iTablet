@@ -48,6 +48,7 @@ export default class MyDataPage extends Component {
       shareToIPortal: false,
       shareToWechat: false,
       shareToFriend: false,
+      showSectionHeader: false,
       sectionData: [],
       title: (params && params.title) || '',
       isRefreshing: false,
@@ -56,6 +57,15 @@ export default class MyDataPage extends Component {
     }
     this.getItemCallback = params.getItemCallback || undefined
     this.chatCallback = params.chatCallback || undefined
+  }
+
+  types = {
+    data: 'DATA',
+    map: 'MAP',
+    scene: 'SCENE',
+    mark: 'MARK',
+    symbol: 'SYMBOL',
+    template: 'TEMPLATE',
   }
 
   componentDidMount() {
@@ -99,24 +109,17 @@ export default class MyDataPage extends Component {
     return relativeExportPath
   }
 
-  getPagePopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(global.language).Profile.BATCH_OPERATE,
-        action: () => {
-          this.setState({
-            batchMode: !this.state.batchMode,
-          })
-        },
-      },
-    ]
-    return data
-  }
+  //页面popup选项，不会合并公共选项
+  getPagePopupData = () => []
 
-  getItemPopupData = () => {
-    return []
-  }
+  //项目popup选项，不会合并公共选项
+  getItemPopupData = () => []
+
+  //页面自定义选项，会合并公共选项
+  getCustomPagePopupData = () => []
+
+  //项目自定义选项，会合并公共选项
+  getCustomItemPopupData = () => []
 
   /******************************** 接口 end **************************************/
 
@@ -160,11 +163,12 @@ export default class MyDataPage extends Component {
         relatedMap = await this.getRelatedMap(this.itemInfo)
       }
       if (relatedMap) {
-        this.SimpleDialog.setDialogHeight(scaleSize(270))
-        this.SimpleDialog.setConfirm(() => {
-          this._onDeleteData(true)
+        this.SimpleDialog.set({
+          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+          confirmAction: () => this._onDeleteData(true),
+          renderExtra: this.renderRelatedMap(relatedMap),
+          dialogHeight: scaleSize(270),
         })
-        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMap))
         this.SimpleDialog.setVisible(true)
         return
       }
@@ -198,10 +202,6 @@ export default class MyDataPage extends Component {
   _batchDelete = async (forceDelete = false) => {
     try {
       let deleteArr = this._getSelectedList()
-      if (deleteArr.length === 0) {
-        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
-        return
-      }
       let relatedMaps = []
       if (!forceDelete) {
         relatedMaps = await this.getRelatedMaps(deleteArr)
@@ -213,11 +213,12 @@ export default class MyDataPage extends Component {
         } else {
           dialogHeight = scaleSize(370)
         }
-        this.SimpleDialog.setDialogHeight(dialogHeight)
-        this.SimpleDialog.setConfirm(() => {
-          this._batchDelete(true)
+        this.SimpleDialog.set({
+          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+          confirmAction: () => this._batchDelete(true),
+          renderExtra: this.renderRelatedMap(relatedMaps),
+          dialogHeight: dialogHeight,
         })
-        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMaps))
         this.SimpleDialog.setVisible(true)
         return
       }
@@ -525,24 +526,56 @@ export default class MyDataPage extends Component {
 
   /******************************* popup ***********************************************/
 
-  _closeModal = () => {
-    this.ItemPopModal && this.ItemPopModal.setVisible(false)
-    this.PagePopModal && this.PagePopModal.setVisible(false)
+  //页面公共选项
+  getCommonPagePopupData = () => [
+    {
+      title: getLanguage(global.language).Profile.BATCH_OPERATE,
+      action: () => {
+        this.setState({
+          batchMode: !this.state.batchMode,
+        })
+      },
+    },
+  ]
+
+  //项目公共选项
+  getCommonItemPopupData = () => [
+    {
+      title: getLanguage(this.props.language).Profile[`UPLOAD_${this.type}`],
+      action: () => {
+        this._closeModal()
+        this.ModalBtns && this.ModalBtns.setVisible(true)
+      },
+    },
+    {
+      title: getLanguage(this.props.language).Profile[`DELETE_${this.type}`],
+      action: this.showDeleteConfirmDialog,
+    },
+  ]
+
+  _getPagePopupData = () => {
+    if (this.getPagePopupData().length > 0) {
+      return this.getPagePopupData()
+    } else {
+      return this.getCustomPagePopupData().concat(this.getCommonPagePopupData())
+    }
   }
 
-  _renderItemPopup = () => {
-    let data = this.getItemPopupData()
-    return (
-      <MyDataPopupModal
-        ref={ref => (this.ItemPopModal = ref)}
-        data={data}
-        onCloseModal={this._closeModal}
-      />
-    )
+  _getItemPopupData = () => {
+    if (this.getItemPopupData().length > 0) {
+      return this.getItemPopupData()
+    } else {
+      return this.getCustomItemPopupData().concat(this.getCommonItemPopupData())
+    }
+  }
+
+  _closeModal = () => {
+    this.PagePopModal && this.PagePopModal.setVisible(false)
+    this.ItemPopModal && this.ItemPopModal.setVisible(false)
   }
 
   _renderPagePopup = () => {
-    let data = this.getPagePopupData()
+    let data = this._getPagePopupData()
     return (
       <MyDataPopupModal
         ref={ref => (this.PagePopModal = ref)}
@@ -552,12 +585,70 @@ export default class MyDataPage extends Component {
     )
   }
 
+  _renderItemPopup = () => {
+    let data = this._getItemPopupData()
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.ItemPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
+  }
+
   /******************************* popup end *******************************************/
+
+  /******************************* dialog **********************************************/
+
+  showDeleteConfirmDialog = () => {
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.DELETE_CONFIRM,
+      confirmAction: this._onDeleteData,
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showBatchDeleteConfirmDialog = () => {
+    let deleteArr = this._getSelectedList()
+    if (deleteArr.length === 0) {
+      Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+      return
+    }
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.BATCH_DELETE_CONFIRM,
+      confirmAction: this._batchDelete,
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  /******************************* dialog end ******************************************/
 
   /******************************* UI **************************************************/
 
-  renderSectionHeader = () => {
-    return <View />
+  renderSectionHeader = ({ section }) => {
+    let title = section.title
+    let imageSource = section.isShowItem
+      ? require('../../../../assets/Mine/local_data_open.png')
+      : require('../../../../assets/Mine/local_data_close.png')
+    return (
+      <TouchableOpacity
+        style={styles.sectionView}
+        onPress={() => {
+          let sectionData = [...this.state.sectionData]
+          for (let i = 0; i < sectionData.length; i++) {
+            let data = sectionData[i]
+            if (data.title === title) {
+              data.isShowItem = !data.isShowItem
+              break
+            }
+          }
+          this.setState({ sectionData: sectionData })
+        }}
+      >
+        <Image source={imageSource} style={styles.sectionImg} />
+        <Text style={styles.sectionText}>{section.title}</Text>
+      </TouchableOpacity>
+    )
   }
 
   _renderItem = info => {
@@ -724,7 +815,7 @@ export default class MyDataPage extends Component {
         )}
         <TouchableOpacity
           style={styles.bottomItemStyle}
-          onPress={() => this._batchDelete()}
+          onPress={this.showBatchDeleteConfirmDialog}
         >
           <Image
             style={{
@@ -822,7 +913,9 @@ export default class MyDataPage extends Component {
           sections={sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
-          renderSectionHeader={this.renderSectionHeader}
+          renderSectionHeader={
+            this.state.showSectionHeader ? this.renderSectionHeader : null
+          }
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}

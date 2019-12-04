@@ -1915,7 +1915,7 @@ export default class MapView extends React.Component {
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
         //{'是'}
-        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.NO}
         //{'否'}
       />
     )

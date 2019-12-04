@@ -1,12 +1,12 @@
 import { MyDataPage } from '../component'
 import DataHandler from '../DataHandler'
 import { FileTools } from '../../../../native'
-import { getLanguage } from '../../../../language/index'
 import { ConstPath } from '../../../../constants'
 
 class MyMap extends MyDataPage {
   constructor(props) {
     super(props)
+    this.type = this.types.map
     this.state = {
       ...this.state,
       shareToLocal: true,
@@ -92,24 +92,6 @@ class MyMap extends MyDataPage {
       },
     )
     return exportResult
-  }
-
-  getItemPopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.UPLOAD_MAP,
-        action: () => {
-          this._closeModal()
-          this.ModalBtns && this.ModalBtns.setVisible(true)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DELETE_MAP,
-        action: this._onDeleteData,
-      },
-    ]
-    return data
   }
 }
 
