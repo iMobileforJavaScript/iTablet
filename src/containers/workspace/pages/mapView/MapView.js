@@ -91,7 +91,7 @@ import {
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import { Analyst_Types } from '../../../analystView/AnalystType'
+// import { Analyst_Types } from '../../../analystView/AnalystType'
 import Orientation from 'react-native-orientation'
 import {
   ColorTable,
@@ -429,10 +429,12 @@ export default class MapView extends React.Component {
           this.toolBox.setVisible(false, null, {
             cb: () => {
               if (
-                this.props.analyst.params.type === Analyst_Types.OPTIMAL_PATH ||
                 this.props.analyst.params.type ===
-                  Analyst_Types.CONNECTIVITY_ANALYSIS ||
-                this.props.analyst.params.type === Analyst_Types.FIND_TSP_PATH
+                  ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH ||
+                this.props.analyst.params.type ===
+                  ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS ||
+                this.props.analyst.params.type ===
+                  ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH
               ) {
                 this.container && this.container.setHeaderVisible(false)
               } else {
@@ -1554,9 +1556,12 @@ export default class MapView extends React.Component {
   /** 地图分析模式左侧按钮 **/
   renderAnalystMapButtons = () => {
     if (
-      this.props.analyst.params.type !== Analyst_Types.OPTIMAL_PATH &&
-      this.props.analyst.params.type !== Analyst_Types.CONNECTIVITY_ANALYSIS &&
-      this.props.analyst.params.type !== Analyst_Types.FIND_TSP_PATH
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH &&
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS &&
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH
     )
       return null
     return (

@@ -347,6 +347,12 @@ function getToolbarHeight(type, currentHeight) {
         height = ConstToolType.TOOLBAR_HEIGHT[2]
       }
       break
+    case ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH:
+    case ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS:
+    case ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH:
+      height = ConstToolType.HEIGHT[0]
+      column = 5
+      break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:
     case SMCollectorType.POINT_GPS:

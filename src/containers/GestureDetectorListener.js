@@ -55,13 +55,7 @@ async function longtouchCallback(event) {
             )
           }
         } else {
-          let datasetName = _params.getNavigationDatas().name
-          let isInbounds = await SMap.isInBounds(event.LLPoint, datasetName)
-          if (isInbounds) {
-            await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
-          } else {
-            Toast.show(getLanguage(_params.language).Prompt.POINT_NOT_IN_BOUNDS)
-          }
+          await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
         if (result.isindoor) {
           GLOBAL.INDOORSTART = true
@@ -86,13 +80,7 @@ async function longtouchCallback(event) {
             )
           }
         } else {
-          let datasetName = _params.getNavigationDatas().name
-          let isInbounds = await SMap.isInBounds(event.LLPoint, datasetName)
-          if (isInbounds) {
-            await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
-          } else {
-            Toast.show(getLanguage(_params.language).Prompt.POINT_NOT_IN_BOUNDS)
-          }
+          await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
         if (result.isindoor) {
           GLOBAL.INDOOREND = true

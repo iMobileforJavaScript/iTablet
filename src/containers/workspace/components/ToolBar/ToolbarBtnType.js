@@ -69,4 +69,5 @@ export default {
   PLAY: 'PLAY',
   SETTIING: 'setting',
   COLLECTTARGET: 'collecttarget',
+  ANALYST: 'analyst', // 分析
 }
