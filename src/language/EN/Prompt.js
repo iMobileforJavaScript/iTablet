@@ -47,6 +47,7 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  ADD_MAP_FAILED: 'Can not add current map',
   CREATE_THEME_FAILED: 'Failed to Create Theme',
   PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
