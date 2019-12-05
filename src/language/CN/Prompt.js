@@ -51,6 +51,7 @@ const Prompt = {
   SWITCHING_SUCCESS: '切换成功',
   ADD_SUCCESS: '添加成功',
   ADD_FAILED: '添加失败',
+  ADD_MAP_FAILED: '不能添加当前地图',
   CREATE_THEME_FAILED: '创建专题图失败',
   PLEASE_ADD_DATASET: '请先选择要添加的数据集',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',

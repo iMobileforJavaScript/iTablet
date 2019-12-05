@@ -178,7 +178,10 @@ export default class MapCutSetting extends React.Component {
         <TouchableOpacity
           onPress={() => action && action()}
           activeOpacity={0.8}
-          style={[styles.topRightView, { width: scaleSize(360) }]}
+          style={[
+            styles.topRightView,
+            { width: scaleSize(360), paddingRight: scaleSize(30) },
+          ]}
         >
           <Text style={[styles.content, { width: scaleSize(140) }]}>
             {item.dsName ? item.dsName : ''}
@@ -203,7 +206,12 @@ export default class MapCutSetting extends React.Component {
           })}
           <Text style={styles.content}>{item.title}</Text>
         </View>
-        <View style={[styles.topRightView, { width: scaleSize(360) }]}>
+        <View
+          style={[
+            styles.topRightView,
+            { width: scaleSize(360), paddingRight: scaleSize(30) },
+          ]}
+        >
           <Switch
             style={styles.switch}
             trackColor={{ false: color.bgG, true: color.switch }}
