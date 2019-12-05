@@ -333,7 +333,7 @@ export default class NavigationStartButton extends React.Component {
           numberOfLines={1}
           ellipsizeMode={'tail'}
         >
-          {GLOBAL.ENDPOINT}
+          {GLOBAL.ENDNAME}
         </Text>
       </View>
     )

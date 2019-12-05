@@ -228,11 +228,6 @@ export default class MapView extends React.Component {
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
-      selectPoint: {
-        startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-          .SELECT_START_POINT,
-        endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
-      },
     }
     this.closeInfo = [
       {
@@ -285,25 +280,6 @@ export default class MapView extends React.Component {
   componentDidMount() {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       this.addFloorHiddenListener()
-      SMap.setStartPointNameListener({
-        callback: result => {
-          let selectPoint = JSON.parse(JSON.stringify(this.state.selectPoint))
-          selectPoint.startPoint = result
-          this.setState({
-            selectPoint,
-          })
-        },
-      })
-      SMap.setEndPointNameListener({
-        callback: result => {
-          let selectPoint = JSON.parse(JSON.stringify(this.state.selectPoint))
-          selectPoint.endPoint = result
-          this.setState({
-            selectPoint,
-          })
-          GLOBAL.ENDPOINT = result
-        },
-      })
     }
     this.container &&
       this.container.setLoading(
@@ -350,14 +326,12 @@ export default class MapView extends React.Component {
         GLOBAL.STARTX = undefined
         GLOBAL.ENDX = undefined
         GLOBAL.ROUTEANALYST = undefined
-        this.setState({
-          selectPoint: {
-            startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-              .SELECT_START_POINT,
-            endPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-              .SELECT_DESTINATION,
-          },
-        })
+        GLOBAL.STARTNAME = getLanguage(
+          GLOBAL.language,
+        ).Map_Main_Menu.SELECT_START_POINT
+        GLOBAL.ENDNAME = getLanguage(
+          GLOBAL.language,
+        ).Map_Main_Menu.SELECT_DESTINATION
         SMap.clearPoint()
       },
     })
@@ -1389,14 +1363,12 @@ export default class MapView extends React.Component {
             this.changeFloorID(currentFloorID)
           })
           await SMap.initSpeakPlugin()
-          this.setState({
-            selectPoint: {
-              startPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-                .SELECT_START_POINT,
-              endPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-                .SELECT_DESTINATION,
-            },
-          })
+          GLOBAL.STARTNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_START_POINT
+          GLOBAL.ENDNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_DESTINATION
         }
 
         if (hasMap) await SMap.saveMap('', false, false)
@@ -1856,17 +1828,10 @@ export default class MapView extends React.Component {
     return this.FloorListView || null
   }
 
-  changeMapSelectPoint = selectPoint => {
-    this.setState({
-      selectPoint,
-    })
-  }
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
-        selectPoint={this.state.selectPoint}
-        changeMapSelectPoint={this.changeMapSelectPoint}
         getFloorListView={this._getFloorListView}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
@@ -2318,25 +2283,6 @@ export default class MapView extends React.Component {
     }
   }
 
-  _renderARNavigationIcon = () => {
-    return (
-      <View style={styles.arnavigation}>
-        <MTBtn
-          style={styles.iconNav}
-          size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/switch_ar_2d.png')}
-          activeOpacity={0.5}
-          onPress={this.changeAR}
-        />
-      </View>
-    )
-  }
-
-  changeAR = () => {
-    Toast.show('提示：超过1.5km则无法显示目的地')
-    NavigationService.navigate('ArView')
-  }
-
   // _renderNavigationView = () => {
   //   return (
   //     <View
@@ -2478,8 +2424,6 @@ export default class MapView extends React.Component {
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
             NavigationService.navigate('NavigationView', {
               changeNavPathInfo: this.changeNavPathInfo,
-              selectPoint: this.state.selectPoint,
-              changeMapSelectPoint: this.changeMapSelectPoint,
             })
           },
         }}
@@ -2509,8 +2453,6 @@ export default class MapView extends React.Component {
     return (
       <NavigationStartHead
         ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
-        changeMapSelectPoint={this.changeMapSelectPoint}
-        selectPoint={this.state.selectPoint}
         setMapNavigation={this.props.setMapNavigation}
       />
     )
@@ -2521,8 +2463,6 @@ export default class MapView extends React.Component {
       <MapSelectPointButton
         navigationhistory={this.props.navigationhistory}
         setNavigationHistory={this.props.setNavigationHistory}
-        changeMapSelectPoint={this.changeMapSelectPoint}
-        selectPoint={this.state.selectPoint}
         changeNavPathInfo={this.changeNavPathInfo}
         ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
       />
@@ -2625,10 +2565,6 @@ export default class MapView extends React.Component {
           this._renderNavigationIcon()}
         {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderLocationIcon()}
         {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.navigationChangeAR &&
-          this._renderARNavigationIcon()}
-        {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
@@ -2706,8 +2642,6 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
-          selectPoint={this.state.selectPoint}
-          changeMapSelectPoint={this.changeMapSelectPoint}
           setNavigationDatas={this.setNavigationDatas}
           changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}

@@ -121,7 +121,6 @@ import IllegallyParkView from './aiIllegallyPark'
 import AIDetecSettingsView from './AIDetecSettingsView'
 import CastModelOperateView from './arCastModelOperateView'
 
-import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
 import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
@@ -919,12 +918,6 @@ const AppNavigator = createStackNavigator(
     },
     SecondMapSettings7: {
       screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ArView: {
-      screen: ArView,
       navigationOptions: {
         header: null,
       },

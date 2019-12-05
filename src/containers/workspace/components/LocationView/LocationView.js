@@ -7,11 +7,10 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, Image, Animated } from 'react-native'
 
-import { constUtil, scaleSize, Toast } from '../../../../utils'
+import { constUtil, FetchUtils, scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Const } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
-import { getLanguage } from '../../../../language'
 
 export default class LocationView extends React.Component {
   props: {
@@ -21,43 +20,38 @@ export default class LocationView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      left: new Animated.Value(scaleSize(25)),
+      left: new Animated.Value(scaleSize(35)),
       visible: false,
     }
     this.isStart = true
   }
   _location = async () => {
-    let point = await SMap.getCurrentMapPosition()
-    let navigationDatas = this.props.getNavigationDatas()
-    let isInBounds = await SMap.isInBounds(
-      point,
-      navigationDatas.selectedDataset,
-    )
-    if (isInBounds) {
-      if (this.isStart) {
-        GLOBAL.STARTX = point.x
-        GLOBAL.STARTY = point.y
-        await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
-        await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
-      } else {
-        GLOBAL.ENDX = point.x
-        GLOBAL.ENDY = point.y
-        await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
-        await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, false)
-      }
-      SMap.moveToPoint(point)
+    let point = await SMap.getCurrentPosition()
+    if (this.isStart) {
+      GLOBAL.STARTX = point.x
+      GLOBAL.STARTY = point.y
+      await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+      GLOBAL.STARTNAME = await FetchUtils.getPointName(
+        GLOBAL.STARTX,
+        GLOBAL.STARTY,
+      )
     } else {
-      Toast.show(
-        getLanguage(GLOBAL.language).Prompt.CURRENT_POSITION_OUT_OF_RANGE,
+      GLOBAL.ENDX = point.x
+      GLOBAL.ENDY = point.y
+      await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+      GLOBAL.ENDNAME = await FetchUtils.getPointName(
+        GLOBAL.STARTX,
+        GLOBAL.STARTY,
       )
     }
+    SMap.moveToPoint(point)
   }
 
   setVisible = (visible, isStart) => {
-    if (visible === this.state.visible) return
+    if (visible === this.state.visible && isStart === this.isStart) return
     if (visible) {
       Animated.timing(this.state.left, {
-        toValue: scaleSize(25),
+        toValue: scaleSize(35),
         duration: Const.ANIMATED_DURATION,
       }).start()
     } else {
@@ -98,7 +92,7 @@ export default class LocationView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: scaleSize(100),
+    bottom: scaleSize(215),
     backgroundColor: color.content_white,
     borderRadius: scaleSize(4),
     elevation: 20,

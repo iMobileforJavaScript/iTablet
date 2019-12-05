@@ -192,7 +192,7 @@ export default class PointAnalyst extends Component {
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          await SMap.clearTarckingLayer()
+          await SMap.clearTrackingLayer()
           // this.props.setNavigationChangeAR(true)
           this.props.setMapNavigation({
             isShow: true,
@@ -532,7 +532,7 @@ export default class PointAnalyst extends Component {
               GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
 
               if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-                await SMap.clearTarckingLayer()
+                await SMap.clearTrackingLayer()
                 // this.props.setNavigationChangeAR(true)
                 this.props.setMapNavigation({
                   isShow: true,

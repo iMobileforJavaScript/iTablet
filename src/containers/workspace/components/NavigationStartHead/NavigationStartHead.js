@@ -10,8 +10,6 @@ import { getLanguage } from '../../../../language'
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
-    selectPoint: Object,
-    changeMapSelectPoint: () => {},
     setMapNavigation: () => {},
   }
 
@@ -36,10 +34,12 @@ export default class NavigationStartHead extends React.Component {
       isShow: false,
       name: '',
     })
-    this.props.changeMapSelectPoint({
-      startPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
-      endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
-    })
+    GLOBAL.STARTNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_START_POINT
+    GLOBAL.ENDNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_DESTINATION
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
@@ -129,7 +129,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.selectPoint.startPoint}
+                    {GLOBAL.STARTNAME}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -183,7 +183,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.selectPoint.endPoint}
+                    {GLOBAL.ENDNAME}
                   </Text>
                 </TouchableOpacity>
               </View>
