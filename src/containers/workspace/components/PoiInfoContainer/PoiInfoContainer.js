@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import { SMap } from 'imobile_for_reactnative'
 import styles from './style'
-import { scaleSize } from '../../../../utils'
+import { FetchUtils, scaleSize } from '../../../../utils'
 import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
@@ -24,8 +24,6 @@ import constants from '../../../workspace/constants'
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
-    selectPoint: Object,
-    changeMapSelectPoint: () => {},
     changeNavPathInfo: () => {},
     setMapNavigation: () => {},
     mapSearchHistory: Array,
@@ -250,7 +248,7 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   navitoHere = async () => {
-    await SMap.clearTarckingLayer()
+    await SMap.clearTrackingLayer()
 
     let position = await SMap.getCurrentPosition()
     GLOBAL.STARTX = position.x
@@ -277,13 +275,12 @@ export default class PoiInfoContainer extends React.PureComponent {
       await SMap.removePOICallout()
       await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
       await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
-      await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
+      GLOBAL.STARTNAME = await FetchUtils.getPointName(
+        GLOBAL.STARTX,
+        GLOBAL.STARTY,
+      )
+      GLOBAL.ENDNAME = this.state.destination
       await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
-      this.props.changeMapSelectPoint({
-        startPoint: this.props.selectPoint.startPoint,
-        endPoint: this.state.destination,
-      })
-      GLOBAL.ENDPOINT = this.state.destination
       let result = await SMap.beginNavigation(
         GLOBAL.STARTX,
         GLOBAL.STARTY,

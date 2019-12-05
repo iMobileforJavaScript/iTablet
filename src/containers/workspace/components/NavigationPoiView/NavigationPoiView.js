@@ -37,31 +37,6 @@ export default class NavigationPoiView extends React.Component {
       road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
       isroad: true,
     }
-    this.naviPathListener = null
-    this.naviLengthListener = null
-  }
-
-  componentDidMount() {
-    this.naviPathListener = SMap.setOnlineNavigationListener({
-      callback: result => {
-        this.setState({ searchData: result }, () => {
-          Animated.timing(this.state.bottom, {
-            toValue: scaleSize(0),
-            duration: 300,
-          }).start()
-        })
-      },
-    })
-    this.naviLengthListener = SMap.setOnlineNavigation2Listener({
-      callback: result => {
-        this.setState({ searchValue: result })
-      },
-    })
-  }
-  //组件卸载，移除监听
-  componentWillUnmount() {
-    this.naviPathListener && this.naviPathListener.remove()
-    this.naviLengthListener && this.naviLengthListener.remove()
   }
 
   renderHeader = () => {
@@ -128,7 +103,7 @@ export default class NavigationPoiView extends React.Component {
   }
 
   close = async () => {
-    await SMap.clearTarckingLayer() //移除线，线在trackingLayer
+    await SMap.clearTrackingLayer() //移除线，线在trackingLayer
     await SMap.removePOICallout() //移除点，点在DynamicView或者callout
     GLOBAL.PoiInfoContainer.setVisible(false)
     this.props.setMapNavigation({
