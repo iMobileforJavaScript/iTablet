@@ -74,10 +74,7 @@ export default class FunctionToolbar extends React.Component {
     user: Object,
     map: Object,
     //弹出模型、路网弹窗
-    showModelList?: () => {},
-    incrementRoad?: () => {},
     setMap2Dto3D: () => {},
-    changeNavPathInfo?: () => {},
     openOnlineMap: boolean,
   }
 
@@ -236,45 +233,6 @@ export default class FunctionToolbar extends React.Component {
   //   //   })
   //   // }
   // }
-
-  // startNavigation = async () => {
-  //   let rel = await SMap.hasNetworkDataset()
-  //   if (rel) {
-  //     let simpleList = GLOBAL.SimpleSelectList
-  //     let isIndoorMap = await SMap.isIndoorMap()
-  //     if (isIndoorMap) {
-  //       //室内导航
-  //       SMap.startIndoorNavigation()
-  //       NavigationService.navigate('NavigationView', {
-  //         changeNavPathInfo: this.props.changeNavPathInfo,
-  //         showLocationView: false,
-  //       })
-  //     } else {
-  //       //行业导航
-  //       let { networkModel, networkDataset } = simpleList.state
-  //       if (networkModel && networkDataset) {
-  //         SMap.startNavigation(networkDataset.datasetName, networkModel.path)
-  //         NavigationService.navigate('NavigationView', {
-  //           changeNavPathInfo: this.props.changeNavPathInfo,
-  //           showLocationView: true,
-  //         })
-  //       } else {
-  //         this.props.showModelList()
-  //       }
-  //     }
-  //   } else {
-  //     Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK_DATASETS)
-  //   }
-  // }
-
-  incrementRoad = async () => {
-    let rel = await SMap.hasLineDataset()
-    if (rel) {
-      this.props.incrementRoad()
-    } else {
-      Toast.show(getLanguage(this.props.language).Prompt.NO_LINE_DATASETS)
-    }
-  }
 
   remove = () => {}
 
@@ -494,16 +452,6 @@ export default class FunctionToolbar extends React.Component {
             ConstToolType.MAP_NAVIGATION_MODULE,
             getLanguage(this.props.language).Map_Main_Menu.NAVIGATION_START,
           ),
-          {
-            key: '路网',
-            title: getLanguage(this.props.language).Map_Main_Menu
-              .MAO_ROAD_DISTRIBUTION,
-            //'风格',
-            action: isLicenseNotValid ? null : this.incrementRoad,
-            size: 'large',
-            image: getThemeAssets().ar.icon_ai_assistant,
-            selectMode: 'flash',
-          },
           toolModule(
             ConstToolType.MAP_TOOLS,
             getLanguage(this.props.language).Map_Main_Menu.TOOLS,

@@ -91,7 +91,9 @@ export default class Home extends Component {
     try {
       if (filePath !== undefined) {
         let index = filePath.lastIndexOf('/')
-        await SMap.copyNaviSnmFile(filePath.substring(0, index))
+        let path = filePath.substring(0, index)
+        let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+        await SMap.copyNaviSnmFile(snmFiles)
         // if (isFirstImportWorkspace === true) {
         //   this.container && this.container.setLoading(true, '导入数据中...')
         // }
@@ -178,6 +180,11 @@ export default class Home extends Component {
     })
   }
 
+  _onSettingLanguage = () => {
+    this._closeModal()
+    NavigationService.navigate('LanguageSetting')
+  }
+
   _onAbout = () => {
     this._closeModal()
     NavigationService.navigate('AboutITablet')
@@ -211,7 +218,8 @@ export default class Home extends Component {
       this.props.closeWorkspace(async () => {
         SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
-          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+          ConstPath.CustomerPath +
+            ConstPath.RelativeFilePath.Workspace[global.language],
         )
         this.props.setUser({
           userName: 'Customer',
@@ -338,9 +346,9 @@ export default class Home extends Component {
           fileName = '数据分析数据'
           storage = '  5.3MB'
           break
-        case 'NavigationData_示范数据':
-          fileName = 'NavigationData_示范数据'
-          storage = '  6.11MB'
+        case 'Navigation_示范数据':
+          fileName = 'Navigation_示范数据'
+          storage = '  45.97MB'
           break
       }
     }
@@ -444,6 +452,7 @@ export default class Home extends Component {
         onToggleAccount={this._onToggleAccount}
         onLogout={this._logoutConfirm}
         onSetting={this._onSetting}
+        onSettingLanguage={this._onSettingLanguage}
         onAbout={this._onAbout}
         modalVisible={this.state.modalIsVisible}
         onCloseModal={this._closeModal}

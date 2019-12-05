@@ -427,7 +427,7 @@ export default class MT_layerManager extends React.Component {
       }
       this.toolBox.setVisible(true, themeType, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[6],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -438,7 +438,7 @@ export default class MT_layerManager extends React.Component {
     ) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[6],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -449,7 +449,15 @@ export default class MT_layerManager extends React.Component {
     ) {
       this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
+          : ConstToolType.TOOLBAR_HEIGHT[4],
+        layerData: data,
+        refreshParentList: refreshParentList,
+      })
+    } else if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      this.toolBox.setVisible(true, ConstToolType.MAP_NAVIGATION, {
+        height: isGroup
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[4],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -457,7 +465,7 @@ export default class MT_layerManager extends React.Component {
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[5],
         layerData: data,
         refreshParentList: refreshParentList,

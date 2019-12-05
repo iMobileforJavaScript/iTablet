@@ -3727,13 +3727,13 @@ const labelMenuInfo = param => [
     },
   },
   {
-    key: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
-    btnTitle: getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+    key: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
+    btnTitle: getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
     action: () => {
       ThemeAction.getColorTable(
         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
-        getLanguage(param).Map_Main_Menu.STYLE_BACKFROUNG,
+        getLanguage(param).Map_Main_Menu.STYLE_BACKGROUND,
       )
     },
   },
@@ -3925,39 +3925,6 @@ const rangeLabelMenuInfo = param => [
       )
     },
   },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    action: () => {
-      ThemeAction.getLabelFont(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
-        getLanguage(param).Map_Main_Menu.STYLE_FONT,
-      )
-    },
-  },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    action: () => {
-      ThemeAction.getLabelFontSize(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
-        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-      )
-    },
-  },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    action: () => {
-      ThemeAction.getLabelFontRotation(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
-        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-      )
-    },
-  },
 ]
 
 //统计专题图
@@ -3991,7 +3958,7 @@ const graphMenuInfo = param => [
     action: () => {
       ThemeAction.getGraphThemeColorScheme(
         ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
-        getLanguage(param).Map_Main_Menu.Map_Main_Menu.THEME_COLOR_SCHEME,
+        getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
       )
     },
   },

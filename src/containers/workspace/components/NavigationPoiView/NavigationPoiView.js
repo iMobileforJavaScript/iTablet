@@ -16,6 +16,7 @@ import { getLanguage } from '../../../../language'
 
 export default class NavigationPoiView extends React.Component {
   props: {
+    navigationPoiView: boolean,
     setNavigationPoiView: () => {},
     setNavigationChangeAR: () => {},
   }
@@ -27,30 +28,40 @@ export default class NavigationPoiView extends React.Component {
 
   constructor(props) {
     super(props)
-    this.PointType = null
     this.state = {
       searchValue: {},
       searchData: [],
       analystData: [],
-      firstPoint: null,
-      secondPoint: null,
+      bottom: new Animated.Value(-scaleSize(200)),
       height: new Animated.Value(scaleSize(200)),
       road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
       isroad: true,
     }
+    this.naviPathListener = null
+    this.naviLengthListener = null
   }
 
   componentDidMount() {
-    SMap.setOnlineNavigationListener({
+    this.naviPathListener = SMap.setOnlineNavigationListener({
       callback: result => {
-        this.setState({ searchData: result })
+        this.setState({ searchData: result }, () => {
+          Animated.timing(this.state.bottom, {
+            toValue: scaleSize(0),
+            duration: 300,
+          }).start()
+        })
       },
     })
-    SMap.setOnlineNavigation2Listener({
+    this.naviLengthListener = SMap.setOnlineNavigation2Listener({
       callback: result => {
         this.setState({ searchValue: result })
       },
     })
+  }
+  //组件卸载，移除监听
+  componentWillUnmount() {
+    this.naviPathListener && this.naviPathListener.remove()
+    this.naviLengthListener && this.naviLengthListener.remove()
   }
 
   renderHeader = () => {
@@ -62,22 +73,19 @@ export default class NavigationPoiView extends React.Component {
   }
 
   renderItem = ({ item }) => {
+    if (!item.roadName || item.roadName === 'null') {
+      item.roadName = GLOBAL.language === 'CN' ? '无名路' : 'anonymous road'
+    }
     return (
       <View>
         <TouchableOpacity style={styles.itemView1}>
-          {item.roadName && item.roadName !== 'null' && (
-            <Text style={styles.info}>
-              {GLOBAL.language === 'CN'
-                ? '途经路线：沿' +
-                  item.roadName +
-                  '直行' +
-                  item.roadLength +
-                  '米'
-                : `Go straight along the ${item.roadName} for ${
-                  item.roadLength
-                } meters`}
-            </Text>
-          )}
+          <Text style={styles.info}>
+            {GLOBAL.language === 'CN'
+              ? '途经路线：沿' + item.roadName + '直行' + item.roadLength + '米'
+              : `Go straight along the ${item.roadName} for ${
+                item.roadLength
+              } meters`}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -119,7 +127,9 @@ export default class NavigationPoiView extends React.Component {
     )
   }
 
-  close = () => {
+  close = async () => {
+    await SMap.clearTarckingLayer() //移除线，线在trackingLayer
+    await SMap.removePOICallout() //移除点，点在DynamicView或者callout
     GLOBAL.PoiInfoContainer.setVisible(false)
     this.props.setMapNavigation({
       isShow: false,
@@ -198,9 +208,15 @@ export default class NavigationPoiView extends React.Component {
   }
 
   render() {
+    if (!this.props.navigationPoiView) return null
     let closeIcon = require('../../../../assets/mapTools/icon_close_black.png')
     return (
-      <Animated.View style={[styles.nameView, { height: this.state.height }]}>
+      <Animated.View
+        style={[
+          styles.nameView,
+          { bottom: this.state.bottom, height: this.state.height },
+        ]}
+      >
         {this.renderHeader()}
         <TouchableOpacity
           onPress={() => {

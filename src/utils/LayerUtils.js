@@ -1,5 +1,6 @@
-import { SMap, DatasetType } from 'imobile_for_reactnative'
+import { SMap, DatasetType, FieldType } from 'imobile_for_reactnative'
 import { ConstOnline } from '../constants'
+import { getLanguage } from '../language'
 
 /**
  * 获取图层属性
@@ -7,17 +8,19 @@ import { ConstOnline } from '../constants'
  * @param path
  * @param page
  * @param size
+ * @param params 过滤条件 {filter: string  |  groupBy: string}
  * @param type
- * @returns {Promise.<*>}
+ * @returns {Promise.<{attributes, total, currentPage, startIndex, resLength}|*>}
  */
 async function getLayerAttribute(
   attributes,
   path,
   page,
   size,
+  params,
   type = 'loadMore',
 ) {
-  let data = await SMap.getLayerAttribute(path, page, size)
+  let data = await SMap.getLayerAttribute(path, page, size, params)
 
   return dealData(attributes, data, page, type)
 }
@@ -91,13 +94,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       } else {
         tableHead.push({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       }
     })
@@ -107,13 +110,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: { fieldInfo: item },
+          fieldInfo: item.fieldInfo,
         })
       } else {
         tableHead.push({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: { fieldInfo: item },
+          fieldInfo: item.fieldInfo,
         })
       }
     })
@@ -128,7 +131,7 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.push({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       }
     })
@@ -332,6 +335,46 @@ function getLayerType(currentLayer) {
   return layerType
 }
 
+function getFieldTypeText(intType, language = 'CN') {
+  let text = ''
+  switch (intType) {
+    case FieldType.BOOLEAN:
+      text = getLanguage(language).FieldType.BOOLEAN
+      break
+    case FieldType.BYTE:
+      text = getLanguage(language).FieldType.BYTE
+      break
+    case FieldType.INT16:
+      text = getLanguage(language).FieldType.INT16
+      break
+    case FieldType.INT32:
+      text = getLanguage(language).FieldType.INT32
+      break
+    case FieldType.INT64:
+      text = getLanguage(language).FieldType.INT64
+      break
+    case FieldType.SINGLE:
+      text = getLanguage(language).FieldType.SINGLE
+      break
+    case FieldType.DOUBLE:
+      text = getLanguage(language).FieldType.DOUBLE
+      break
+    case FieldType.LONGBINARY:
+      text = getLanguage(language).FieldType.LONGBINARY
+      break
+    case FieldType.TEXT:
+      text = getLanguage(language).FieldType.TEXT
+      break
+    case FieldType.CHAR:
+      text = getLanguage(language).FieldType.CHAR
+      break
+    case FieldType.WTEXT:
+      text = getLanguage(language).FieldType.WTEXT
+      break
+  }
+  return text
+}
+
 export default {
   getLayerAttribute,
   searchLayerAttribute,
@@ -345,4 +388,5 @@ export default {
   addBaseMap,
   setBaseMap,
   getLayerType,
+  getFieldTypeText,
 }

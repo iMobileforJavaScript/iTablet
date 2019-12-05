@@ -5,7 +5,8 @@ import { DatasetType, SMap } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
 import constants from '../containers/workspace/constants'
-
+import { NativeModules } from 'react-native'
+let AppUtils = NativeModules.AppUtils
 // Constants
 // --------------------------------------------------
 export const BUFFER_SETTING_SET = 'BUFFER_SETTING_SET'
@@ -15,6 +16,7 @@ export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
 export const SETTING_DATA = 'SETTING_DATA'
 export const MAP_SETTING = 'MAP_SETTING'
 export const SETTING_LANGUAGE = 'SETTING_LANGUAGE'
+export const SETTING_LANGUAGE_AUTO = 'SETTING_LANGUAGE_AUTO'
 export const MAP_LEGEND = 'MAP_LEGEND'
 export const MAP_SCALEVIEW = 'MAP_SCALEVIEW'
 export const MAP_NAVIGATION = 'MAP_NAVIGATION'
@@ -78,11 +80,26 @@ export const setMapSetting = (cb = () => {}) => async dispatch => {
 }
 
 export const setLanguage = (params, cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: SETTING_LANGUAGE,
-    payload: params,
-  })
-  global.language = params
+  if (params === 'AUTO') {
+    let locale = await AppUtils.getLocale()
+    let language
+    if (locale === 'zh-CN') {
+      language = 'CN'
+    } else {
+      language = 'EN'
+    }
+    await dispatch({
+      type: SETTING_LANGUAGE_AUTO,
+      payload: language,
+    })
+    global.language = language
+  } else {
+    await dispatch({
+      type: SETTING_LANGUAGE,
+      payload: params,
+    })
+    global.language = params
+  }
   cb && cb()
 }
 export const setMapLegend = (params = {}) => async dispatch => {
@@ -124,12 +141,6 @@ export const setNavigationPoiView = (params = {}) => async dispatch => {
 export const setOpenOnlineMap = (params = {}) => async dispatch => {
   await dispatch({
     type: ONLINEMAP,
-    payload: params || false,
-  })
-}
-export const setMapSelectPoint = (params = {}) => async dispatch => {
-  await dispatch({
-    type: MAP_SELECT_POINT,
     payload: params || false,
   })
 }
@@ -200,6 +211,7 @@ const initialState = fromJS({
   settingData: [],
   mapSetting: [],
   language: 'CN',
+  autoLanguage: true,
   mapLegend: {
     [constants.MAP_EDIT]: {
       isShow: false,
@@ -261,10 +273,6 @@ const initialState = fromJS({
   navigationChangeAR: false,
   navigationPoiView: false,
   openOnlineMap: false,
-  mapSelectPoint: {
-    firstPoint: '',
-    secondPoint: '',
-  },
   isAgreeToProtocol: false,
   navigationhistory: [],
 })
@@ -272,7 +280,14 @@ const initialState = fromJS({
 export default handleActions(
   {
     [`${SETTING_LANGUAGE}`]: (state, { payload }) => {
-      return state.setIn(['language'], fromJS(payload))
+      return state
+        .setIn(['language'], fromJS(payload))
+        .setIn(['autoLanguage'], fromJS(false))
+    },
+    [`${SETTING_LANGUAGE_AUTO}`]: (state, { payload }) => {
+      return state
+        .setIn(['language'], fromJS(payload))
+        .setIn(['autoLanguage'], fromJS(true))
     },
     [`${BUFFER_SETTING_SET}`]: (state, { payload }) => {
       return state.setIn(['buffer'], fromJS(payload))
@@ -446,18 +461,6 @@ export default handleActions(
         data = false
       }
       return state.setIn(['openOnlineMap'], fromJS(data))
-    },
-    [`${MAP_SELECT_POINT}`]: (state, { payload }) => {
-      let data = state.toJS().mapSelectPoint
-      if (payload) {
-        data = payload
-      } else {
-        data = {
-          firstPoint: '选择起点',
-          secondPoint: '选择终点',
-        }
-      }
-      return state.setIn(['mapSelectPoint'], fromJS(data))
     },
     [`${NAVIGATION_HISTORY}`]: (state, { payload }) => {
       let data = state.toJS().navigationhistory

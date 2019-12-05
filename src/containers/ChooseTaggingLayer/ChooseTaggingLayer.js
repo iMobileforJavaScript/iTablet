@@ -71,6 +71,7 @@ export default class ChooseTaggingLayer extends React.Component {
         GLOBAL.toolBox.setVisible(true, ConstToolType.AIDETECT, {
           buttons: buttons,
           isFullScreen: false,
+          height: 0,
         })
       GLOBAL.AIDETECTCHANGE.setVisible(true)
       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
@@ -249,7 +250,7 @@ export default class ChooseTaggingLayer extends React.Component {
         <Container
           ref={ref => (this.container = ref)}
           headerProps={{
-            title: '选择图层',
+            title: getLanguage(this.props.language).Prompt.CHOOSE_LAYER,
             backAction: this.back,
           }}
         >

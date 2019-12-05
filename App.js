@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
 class AppRoot extends Component {
   static propTypes = {
     language: PropTypes.string,
+    autoLanguage: PropTypes.bool,
     nav: PropTypes.object,
     backActions: PropTypes.object,
     user: PropTypes.object,
@@ -234,6 +235,9 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
+    if(this.props.autoLanguage) {
+      this.props.setLanguage('AUTO')
+    }
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
@@ -249,12 +253,12 @@ class AppRoot extends Component {
       SOnlineService.init()
       // SOnlineService.removeCookie()
       SIPortalService.init()
-      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language], path = ''
       if (
         this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
         (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
       ) {
-        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[global.language]
         if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
           path = await FileTools.appendingHomeDirectory(userWsPath)
         } else {
@@ -263,7 +267,7 @@ class AppRoot extends Component {
       } else {
         path = await FileTools.appendingHomeDirectory(wsPath)
       }
-      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.inspectEnvironment()
       await this.initOrientation()
@@ -854,6 +858,7 @@ class AppRoot extends Component {
 const mapStateToProps = state => {
   return {
     language: state.setting.toJS().language,
+    autoLanguage: state.setting.toJS().autoLanguage,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

@@ -3,7 +3,14 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { View, FlatList, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native'
 import styles from './styles'
 import {
   getlegendSetting,
@@ -13,7 +20,8 @@ import {
 } from './settingData'
 import SettingSection from './SettingSection'
 import { getLanguage } from '../../language/index'
-import { ConstToolType, getHeaderTitle } from '../../constants'
+import { getHeaderTitle } from '../../constants'
+import { legendModule } from '../workspace/components/ToolBar/modules'
 import { scaleSize } from '../../utils'
 import size from '../../styles/size'
 import color from '../../styles/color'
@@ -67,6 +75,10 @@ export default class MapSetting extends Component {
     } else */
     if (GLOBAL.Type === constants.MAP_AR) {
       newData = newData.concat(getMapARSettings())
+      //ios先暂时屏蔽POI设置和检测类型
+      if (Platform.OS === 'ios') {
+        newData.splice(4, 2)
+      }
     }
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       newData = newData.concat(getnavigationSetting())
@@ -184,37 +196,38 @@ export default class MapSetting extends Component {
     if (
       title === getLanguage(this.props.language).Map_Settings.LEGEND_SETTING
     ) {
-      let mapLegend = this.props.mapLegend
-      if (mapLegend[GLOBAL.Type].isShow) {
-        mapLegend[GLOBAL.Type] = {
-          isShow: true,
-          backgroundColor: mapLegend[GLOBAL.Type].backgroundColor,
-          column: mapLegend[GLOBAL.Type].column,
-          widthPercent: mapLegend[GLOBAL.Type].widthPercent,
-          heightPercent: mapLegend[GLOBAL.Type].heightPercent,
-        }
-      } else {
-        mapLegend[GLOBAL.Type] = {
-          isShow: true,
-          backgroundColor: 'white',
-          column: 2,
-          widthPercent: 80,
-          heightPercent: 80,
-        }
-      }
-      this.props.setMapLegend(mapLegend)
-      GLOBAL.toolBox &&
-        GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
-          containerType: 'colorTable',
-          column: this.props.device.orientation === 'LANDSCAPE' ? 16 : 8,
-          isFullScreen: false,
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[2]
-              : ConstToolType.THEME_HEIGHT[3],
-        })
-      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-      this.props.navigation.navigate('MapView')
+      legendModule().action()
+      // let mapLegend = this.props.mapLegend
+      // if (mapLegend[GLOBAL.Type].isShow) {
+      //   mapLegend[GLOBAL.Type] = {
+      //     isShow: true,
+      //     backgroundColor: mapLegend[GLOBAL.Type].backgroundColor,
+      //     column: mapLegend[GLOBAL.Type].column,
+      //     widthPercent: mapLegend[GLOBAL.Type].widthPercent,
+      //     heightPercent: mapLegend[GLOBAL.Type].heightPercent,
+      //   }
+      // } else {
+      //   mapLegend[GLOBAL.Type] = {
+      //     isShow: true,
+      //     backgroundColor: 'white',
+      //     column: 2,
+      //     widthPercent: 80,
+      //     heightPercent: 80,
+      //   }
+      // }
+      // this.props.setMapLegend(mapLegend)
+      // GLOBAL.toolBox &&
+      //   GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND, {
+      //     containerType: 'colorTable',
+      //     column: this.props.device.orientation === 'LANDSCAPE' ? 16 : 8,
+      //     isFullScreen: false,
+      //     height:
+      //       this.props.device.orientation === 'LANDSCAPE'
+      //         ? ConstToolType.THEME_HEIGHT[2]
+      //         : ConstToolType.THEME_HEIGHT[3],
+      //   })
+      // GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      // this.props.navigation.navigate('MapView')
     } else {
       //根据title跳转
       NavigationService.navigate('SecondMapSettings', {

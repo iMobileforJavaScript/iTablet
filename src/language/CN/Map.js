@@ -70,7 +70,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: '透明度',
   STYLE_LINE_WIDTH: '线宽',
   STYLE_FOREGROUND: '前景色',
-  STYLE_BACKFROUNG: '背景色',
+  STYLE_BACKGROUND: '背景色',
   STYLE_BORDER: '轮廓颜色',
   STYLE_BORDER_WIDTH: '轮廓宽',
   STYLE_GRADIENT_FILL: '渐变',
@@ -356,6 +356,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: '请填写备注',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: '保存',
 
+  MAP_AR_AI_CANCEL: '取消',
+  MAP_AR_AI_CONFIRM: '确认',
+
   //智能配图
   FILL: '填充',
   BORDER: '轮廓',
@@ -372,16 +375,17 @@ const Map_Main_Menu = {
   DISPLAY_MAP: '显示地图',
   START_FROM_START_POINT: '从起点出发',
   ARRIVE_AT_THE_DESTINATION: '到达终点',
-  FIRST_PERSON_PERSPECTIVE: '第一人称',
-  THIRD_PERSON_PERSPECTIVE: '第三人称',
+  REAL_NAVIGATION: '导航',
+  SIMULATED_NAVIGATION: '模拟导航',
   GO_STRAIGHT: '直行',
   SELECT_START_POINT: '选择起点',
   SELECT_DESTINATION: '选择终点',
   SET_AS_START_POINT: '设为起点',
   SET_AS_DESTINATION: '设为终点',
   CLEAR_NAV_HISTORY: '清除历史',
-  NEXT: '下一步',
+  ROUTE_ANALYST: '路径分析',
   SELECT_POINTS: '地图选点',
+  LONG_PRESS_SELECT_POINTS: '(长按选点)',
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',
@@ -533,6 +537,20 @@ const Map_Attribute = {
   ATTRIBUTE_REDO: '恢复',
   ATTRIBUTE_REVERT: '还原',
   ATTRIBUTE_FIELD_ADD: '添加',
+
+  DETAIL: '详情',
+  // 统计模式
+  MAX: '最大值',
+  MIN: '最小值',
+  AVERAGE: '平均值',
+  SUM: '总和',
+  VARIANCE: '方差',
+  STANDARD_DEVIATION: '标准差',
+  COUNT_UNIQUE: '单值个数',
+  FIELD_TYPE: '字段类型',
+  ALIAS: '别名',
+  ASCENDING: '升序',
+  DESCENDING: '降序',
 }
 
 //地图设置

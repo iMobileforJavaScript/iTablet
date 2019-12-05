@@ -16,6 +16,7 @@ import {
   plotModule,
   fly3DModule,
   tool3DModule,
+  legendModule,
 } from '../modules'
 
 // 更新类中的数据
@@ -98,7 +99,10 @@ async function getTabBarData(type, params = {}) {
     tabBarData = themeModule().getData(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = editModule().getData(type, params)
-  } else if (type === ConstToolType.MAP_ANALYSIS) {
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf(ConstToolType.MAP_ANALYSIS) > -1
+  ) {
     tabBarData = analysisModule().getData(type, params)
   } else if (
     type === ConstToolType.PLOT_ANIMATION_START ||
@@ -120,6 +124,8 @@ async function getTabBarData(type, params = {}) {
     type === ConstToolType.MAP3D_BOX_CLIP
   ) {
     tabBarData = await tool3DModule().getData(type, params)
+  } else if (typeof type === 'string' && type.indexOf('LEGEND') > -1) {
+    tabBarData = legendModule().getData(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_MORE') > -1) {
     tabBarData = MoreData.getMapMore(type, params)
   } else if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
@@ -152,9 +158,10 @@ function getMenuDialogData(type, ...others) {
     case ConstToolType.REGIONBORDERCOLOR_SET:
       data = styleModule().getMenuData(type)
       break
-    // case ConstToolType.MAP_THEME_PARAM:
-    //   data = themeModule().getMenuData(type, ...others)
-    //   break
+    case ConstToolType.LEGEND:
+    case ConstToolType.LEGEND_NOT_VISIBLE:
+      data = legendModule().getMenuData(type)
+      break
   }
   if (data.length === 0 && type.indexOf('MAP_THEME_PARAM') >= 0) {
     data = themeModule().getMenuData(type, ...others)

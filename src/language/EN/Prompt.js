@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: 'Yes',
+  NO: 'No',
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
   SAVE_YES: 'Yes',
   SAVE_NO: 'No',
@@ -92,6 +94,8 @@ const Prompt = {
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
 
+  CHOOSE_LAYER: 'Choose Layer',
+
   COLLECT_SUCCESS: 'Collect Success',
 
   SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
@@ -111,6 +115,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: 'The current selection is ',
 
   IMPORTING_DATA: 'Importing Data',
+  DATA_BEING_IMPORT: 'Data is being import',
   IMPORTING: 'Importing',
   IMPORTED_SUCCESS: 'Imported Successfully',
   FAILED_TO_IMPORT: 'Failed to Import',
@@ -123,6 +128,8 @@ const Prompt = {
   PUBLISHING: 'Publishing',
   PUBLISH_SUCCESS: 'Published Successfully',
   PUBLISH_FAILED: 'Failed to Publish',
+  DELETE_CONFIRM: 'Are you sure you want to delete the item?',
+  BATCH_DELETE_CONFIRM: 'Are you sure you want to delete the selected item(s)?',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
   DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',
@@ -171,6 +178,17 @@ const Prompt = {
 
   NETWORK_ERROR: 'Network Error',
   NO_NETWORK: 'No Internet connection',
+  CHOOSE_CLASSIFY_MODEL: 'Choose Classify Model',
+  USED_IMMEDIATELY: 'Used Immediately',
+  USING: 'Using',
+  DEFAULT_MODEL: 'Default Model',
+  DUSTBIN_MODEL: 'Dustbin Model',
+  LANT_MODEL: 'Lant Model',
+  CHANGING: 'Changing',
+  CHANGE_SUCCESS: 'Change Success',
+  CHANGE_FAULT: 'Change Fault',
+  DETECT_DUSTBIN_MODEL: 'Dustbin Model',
+  ROAD_MODEL: 'Road Model',
 
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
@@ -186,6 +204,8 @@ const Prompt = {
   OUT_OF_MAP_BOUNDS: 'Out of map bounds',
 
   POI: 'POI',
+
+  ILLEGAL_DATA: 'Illegal Data!',
 
   SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
   ENTER_DATA_NAME: 'Please enter the data name',
@@ -252,9 +272,13 @@ const Prompt = {
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
+  NETWORK_DATASET_IS_NOT_AVAILABLE: 'Current network dataset is not available',
+  POINT_NOT_IN_BOUNDS:
+    "The bounds of the selected network dataset donsn't contains the point",
+  POSITION_OUT_OF_MAP:
+    'Your location is out of the bounds of map, please use simulate navigation',
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
-  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
-    'Select a network dataset and a network model first',
+  PLEASE_SELECT_NETWORKDATASET: 'Select a network dataset first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
   PATH_ANALYSIS_FAILED:
     'Path analysis failed! Please re-select the start and end points',
@@ -269,6 +293,8 @@ const Prompt = {
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',
   SPEECH_NONE: "You didn't seem to speak anything",
+
+  NOT_SUPPORT_STATISTIC: 'The field not support statistic',
 }
 
 export { Prompt }

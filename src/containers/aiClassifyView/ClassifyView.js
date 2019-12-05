@@ -7,6 +7,8 @@ import {
   Text,
   DeviceEventEmitter,
   Platform,
+  NativeModules,
+  NativeEventEmitter,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -21,6 +23,10 @@ import { ConstPath } from '../../constants'
 import RadioButton from './RadioButton'
 import { scaleSize, Toast, LayerUtils } from '../../utils'
 import { RNCamera } from 'react-native-camera'
+// const { ClassifyView }= NativeModules;
+// const iOSEventEmitter = new NativeEventEmitter(ClassifyView)
+const SMessageServiceClassifyiOS = NativeModules.SAIClassifyView
+const iOSEventEmi = new NativeEventEmitter(SMessageServiceClassifyiOS)
 
 /*
  * AI分类
@@ -72,7 +78,11 @@ export default class ClassifyView extends React.Component {
           this.props.language,
         )
         //注册监听
-        DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
+        if (Platform.OS === 'ios') {
+          iOSEventEmi.addListener('recognizeImage', this.recognizeImage)
+        } else {
+          DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
+        }
       }.bind(this)())
     })
   }

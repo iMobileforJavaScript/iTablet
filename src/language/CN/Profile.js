@@ -118,6 +118,8 @@ const Profile = {
   SET_AS_PUBLIC_DATA: '设为公有数据',
   NO_SERVICE: '没有服务',
 
+  GET_DATA_FAILED: '数据获取失败',
+
   //关于
   ABOUT: '关于',
   SERVICE_HOTLINE: '技术支持与服务',
@@ -161,6 +163,8 @@ const Profile = {
   SETTING_LICENSE: '许可',
   SETTING_ABOUT_ITABLET: '关于iTablet',
   SETTING_CHECK_VERSION: '检查版本',
+  SETTING_LANGUAGE: '语言',
+  SETTING_LANGUAGE_AUTO: '跟随系统',
 
   //许可
   LICENSE_CURRENT: '当前许可',

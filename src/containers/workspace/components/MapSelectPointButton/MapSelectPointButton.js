@@ -11,8 +11,8 @@ export default class MapSelectPointButton extends React.Component {
   props: {
     changeNavPathInfo: () => {},
     headerProps?: Object,
-    mapSelectPoint: Object,
-    setMapSelectPoint: () => {},
+    selectPoint: Object,
+    changeMapSelectPoint: () => {},
     setNavigationHistory: () => {},
     navigationhistory: Array,
   }
@@ -42,6 +42,8 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
+            selectPoint: this.props.selectPoint,
+            changeMapSelectPoint: this.props.changeMapSelectPoint,
           })
         } else {
           GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
@@ -91,6 +93,8 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
+            selectPoint: this.props.selectPoint,
+            changeMapSelectPoint: this.props.changeMapSelectPoint,
           })
         } else {
           GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
@@ -140,7 +144,7 @@ export default class MapSelectPointButton extends React.Component {
       this.props.changeNavPathInfo &&
         this.props.changeNavPathInfo({ path, pathLength })
 
-      let mapSelectPoint = this.props.mapSelectPoint
+      let mapSelectPoint = this.props.selectPoint
 
       let history = this.props.navigationhistory
       history.push({
@@ -150,9 +154,9 @@ export default class MapSelectPointButton extends React.Component {
         ey: GLOBAL.ENDY,
         sFloor: GLOBAL.STARTPOINTFLOOR,
         eFloor: GLOBAL.ENDPOINTFLOOR,
-        address: mapSelectPoint.firstPoint + '---' + mapSelectPoint.secondPoint,
-        start: mapSelectPoint.firstPoint,
-        end: mapSelectPoint.secondPoint,
+        address: mapSelectPoint.startPoint + '---' + mapSelectPoint.endPoint,
+        start: mapSelectPoint.startPoint,
+        end: mapSelectPoint.endPoint,
       })
       this.props.setNavigationHistory(history)
     }

@@ -14,6 +14,7 @@ import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { ConstPath } from '../../../../constants'
 import FetchUtils from '../../../../utils/FetchUtils'
+import { Platform } from 'react-native'
 
 let _params = {}
 
@@ -356,6 +357,9 @@ function getAiAssistantData(type, params) {
     //   image: getThemeAssets().ar.functiontoolbar.ar_cast,
     // },
   ]
+  if (Platform.OS === 'ios') {
+    data.splice(2, 4)
+  }
   return { data, buttons }
 }
 

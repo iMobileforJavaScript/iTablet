@@ -16,6 +16,7 @@ export default class HomePopupModal extends PureComponent {
     onLogout: () => {},
     onToggleAccount: () => {},
     onSetting: () => {},
+    onSettingLanguage: () => {},
     onAbout: () => {},
     getExit: () => {},
     topNavigatorBarImageId: String,
@@ -159,16 +160,8 @@ export default class HomePopupModal extends PureComponent {
             this.props.onSetting,
           )}
           {this._renderItem(
-            this.props.language === 'EN' ? '中文' : 'English',
-            () => {
-              if (this.props.language === 'EN') {
-                this.props.setLanguage('CN')
-                global.language = 'CN'
-              } else {
-                this.props.setLanguage('EN')
-                global.language = 'EN'
-              }
-            },
+            getLanguage(this.props.language).Profile.SETTING_LANGUAGE,
+            this.props.onSettingLanguage,
           )}
           {/* {this._renderItem(
             getLanguage(this.props.language).Navigator_Label.RIGHT_TOP_SETTING,

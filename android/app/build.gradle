@@ -74,6 +74,8 @@ import com.android.build.OutputFile
 
 project.ext.react = [
         entryFile: "index.js"
+//        inputExcludes:["ios/**","_tests_/**","bundle_out/**"],
+//        inputExcludes: ["android/**", "ios/**","bundle_out/**","__tests__/**"],
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -112,7 +114,7 @@ android {
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode 3
         versionName "3.0.4"
         manifestPlaceholders = [

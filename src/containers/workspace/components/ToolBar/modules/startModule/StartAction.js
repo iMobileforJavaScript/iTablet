@@ -784,27 +784,23 @@ async function changeMap(item) {
         getLanguage(params.language).Prompt.SWITCHING_SUCCESS,
         //ConstInfo.CHANGE_MAP_TO + mapInfo.name
       )
-      //切换地图后重新添加楼层控件事件
-      let floorListView = params.getFloorListView()
-      if (floorListView) {
+      if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+        let floorListView = params.getFloorListView()
         let datas = await SMap.getFloorData()
         if (datas.data && datas.data.length > 0) {
           let { data, datasource, currentFloorID } = datas
-          floorListView.setState({
-            data,
-            datasource,
-            currentFloorID,
-          })
-          if (floorListView.listener === null) {
-            floorListView.listener = SMap.addFloorHiddenListener(result => {
-              if (result.isHidden !== floorListView.state.isHidden)
-                floorListView.setState({
-                  isHidden: result.isHidden,
-                })
-            })
-          }
+          floorListView.setState(
+            {
+              data,
+              datasource,
+            },
+            () => {
+              params.changeFloorID(currentFloorID)
+            },
+          )
         }
       }
+
       //切换地图后重新添加图例事件
       if (GLOBAL.legend) {
         await SMap.addLegendListener({
@@ -942,14 +938,15 @@ async function headerAction(type, section = {}) {
 
           // 重新打开工作空间，防止Resource被删除或破坏
           const customerPath =
-            ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+            ConstPath.CustomerPath +
+            ConstPath.RelativeFilePath.Workspace[global.language]
           let wsPath
           if (params.user.currentUser.userName) {
             const userWSPath =
               ConstPath.UserPath +
               params.user.currentUser.userName +
               '/' +
-              ConstPath.RelativeFilePath.Workspace
+              ConstPath.RelativeFilePath.Workspace[global.language]
             wsPath = await FileTools.appendingHomeDirectory(userWSPath)
           } else {
             wsPath = await FileTools.appendingHomeDirectory(customerPath)

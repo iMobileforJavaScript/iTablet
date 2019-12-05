@@ -26,6 +26,18 @@ RCT_REMAP_METHOD(AppExit,AppExit:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
   
 }
 
+RCT_REMAP_METHOD(getLocale, getLocaleWithResolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  @try {
+    NSString * language = [[NSLocale preferredLanguages] firstObject];
+    if([language hasPrefix:@"zh-Hans"]){
+      language = @"zh-CN";
+    }
+    resolve(language);
+  }@catch (NSException *exception) {
+    reject(@"getLocale", exception.reason, nil);
+  }
+}
+
 RCT_REMAP_METHOD(sendFileOfWechat, sendFileOfWechat:(NSDictionary*)data resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     BOOL result = [WeiXinUtils sendFileContent:data];

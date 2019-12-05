@@ -151,7 +151,10 @@ export default class TouchProgress extends Component {
       this.props.currentLayer.isHeatmap
     ) {
       if (isHeatmap) {
-        if (this.props.selectName === '核半径') {
+        if (
+          this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
+        ) {
           this.nuclearRadius =
             value !== undefined
               ? value
@@ -166,7 +169,11 @@ export default class TouchProgress extends Component {
             getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP_RADIUS +
             '     ' +
             parseInt(this.nuclearRadius)
-        } else if (this.props.selectName === '颜色渐变模糊度') {
+        } else if (
+          this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu
+            .THEME_HEATMAP_FUZZY_DEGREE
+        ) {
           this.fuzzyDegree =
             value !== undefined
               ? value
@@ -183,7 +190,11 @@ export default class TouchProgress extends Component {
             '     ' +
             parseInt(this.fuzzyDegree) +
             '%'
-        } else if (this.props.selectName === '最大颜色权重') {
+        } else if (
+          this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu
+            .THEME_HEATMAP_MAXCOLOR_WEIGHT
+        ) {
           this.maxColorWeight =
             value !== undefined
               ? value
@@ -277,7 +288,10 @@ export default class TouchProgress extends Component {
                   getLanguage(global.language).Map_Main_Menu.DOT_VALUE +
                   '     ' +
                   parseInt(this.dotValue)
-              } else if (this.props.selectName === '符号大小') {
+              } else if (
+                this.props.selectName ===
+                getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+              ) {
                 this.dotSize =
                   value !== undefined
                     ? value
@@ -310,15 +324,18 @@ export default class TouchProgress extends Component {
                       LayerName: this.props.currentLayer.name,
                     })
                 this._panBtnStyles.style.left =
-                  (this.baseValue * progressWidth) / 1000 + panBtnDevLeft
-                this._previousLeft = (this.baseValue * progressWidth) / 1000
+                  (this.baseValue * progressWidth) / 10000 + panBtnDevLeft
+                this._previousLeft = (this.baseValue * progressWidth) / 10000
                 this._BackLine.style.width =
-                  (this.baseValue * progressWidth) / 1000
+                  (this.baseValue * progressWidth) / 10000
                 tips =
                   getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +
                   '     ' +
                   parseInt(this.baseValue)
-              } else if (this.props.selectName === '符号大小') {
+              } else if (
+                this.props.selectName ===
+                getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+              ) {
                 this.graSymbolSize =
                   value !== undefined
                     ? value
@@ -368,7 +385,11 @@ export default class TouchProgress extends Component {
             break
           case ThemeType.GRAPH:
             {
-              if (this.props.selectName === '最大显示值') {
+              if (
+                this.props.selectName ===
+                getLanguage(this.props.language).Map_Main_Menu
+                  .THEME_MAX_VISIBLE_SIZE
+              ) {
                 this.maxValue =
                   value !== undefined
                     ? value
@@ -532,7 +553,10 @@ export default class TouchProgress extends Component {
               getLanguage(global.language).Map_Main_Menu.STYLE_TRANSPARENCY +
               '     ' +
               parseInt(gridOpaque)
-          } else if (this.props.selectName === '对比度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+          ) {
             let gridBright =
               value !== undefined
                 ? value
@@ -712,7 +736,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         newValue = value * 30 + 2
         if (newValue <= 2) {
@@ -736,21 +761,38 @@ export default class TouchProgress extends Component {
         getLanguage(this.props.language).Map_Main_Menu.DOT_VALUE
       ) {
         newValue = value * 100
-      } else if (this.props.selectName === '符号大小') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+      ) {
         newValue = value * 100
       } else if (
         this.props.selectName ===
-        getLanguage(this.props.language).Map_Main_Menu.LEGEND_WIDTH
+        getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
       ) {
-        newValue = value * 1000
-      } else if (this.props.selectName === '最大显示值') {
         newValue = value * 20
-      } else if (this.props.selectName === '核半径') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
+      ) {
         newValue = value * 50
-      } else if (this.props.selectName === '颜色渐变模糊度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_FUZZY_DEGREE
+      ) {
         newValue = value * 100
-      } else if (this.props.selectName === '最大颜色权重') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_MAXCOLOR_WEIGHT
+      ) {
         newValue = value * 100
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
+      ) {
+        newValue = value * 10000
       }
     } else if (layerType !== undefined) {
       switch (layerType) {
@@ -784,7 +826,10 @@ export default class TouchProgress extends Component {
             getLanguage(this.props.language).Map_Main_Menu.STYLE_TRANSPARENCY
           ) {
             newValue = value * 100
-          } else if (this.props.selectName === '对比度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+          ) {
             newValue = value * 200
           } else if (
             this.props.selectName ===
@@ -884,7 +929,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
@@ -914,7 +960,7 @@ export default class TouchProgress extends Component {
           parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
-          FontSize: value,
+          FontSize: parseInt(value),
         }
         await SThemeCartography.setUniformLabelFontSize(_params)
       } else if (
@@ -930,7 +976,10 @@ export default class TouchProgress extends Component {
           Value: value,
         }
         await SThemeCartography.modifyDotDensityThemeMap(_params)
-      } else if (this.props.selectName === '符号大小') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+      ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.STYLE_SYMBOL_SIZE +
           '     ' +
@@ -950,7 +999,7 @@ export default class TouchProgress extends Component {
         }
       } else if (
         this.props.selectName ===
-        getLanguage(this.props.language).Map_Main_Menu.LEGEND_WIDTH
+        getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +
@@ -961,7 +1010,10 @@ export default class TouchProgress extends Component {
           BaseValue: value,
         }
         await SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
-      } else if (this.props.selectName === '最大显示值') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
+      ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE +
           '     ' +
@@ -972,7 +1024,10 @@ export default class TouchProgress extends Component {
           MaxValue: value,
         }
         await SThemeCartography.setGraphMaxValue(_params)
-      } else if (this.props.selectName === '核半径') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
+      ) {
         tips =
           getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP_RADIUS +
           '     ' +
@@ -982,7 +1037,11 @@ export default class TouchProgress extends Component {
           Radius: value,
         }
         await SThemeCartography.setHeatMapRadius(_params)
-      } else if (this.props.selectName === '颜色渐变模糊度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_FUZZY_DEGREE
+      ) {
         tips =
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_FUZZY_DEGREE +
@@ -994,7 +1053,11 @@ export default class TouchProgress extends Component {
           FuzzyDegree: value,
         }
         await SThemeCartography.setHeatMapFuzzyDegree(_params)
-      } else if (this.props.selectName === '最大颜色权重') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_MAXCOLOR_WEIGHT
+      ) {
         tips =
           getLanguage(global.language).Map_Main_Menu
             .THEME_HEATMAP_MAXCOLOR_WEIGHT +
@@ -1126,7 +1189,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               '%'
-          } else if (this.props.selectName === '对比度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+          ) {
             if (value <= 100) {
               let gridBrigh = -(100 - value)
               await SCartography.setGridBrightness(
@@ -1226,7 +1292,8 @@ export default class TouchProgress extends Component {
     ) {
       if (
         this.props.selectName === 'range_parameter' ||
-        this.props.selectName === '分段个数'
+        this.props.selectName ===
+          getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
       ) {
         if (value <= 2) {
           value = 2
@@ -1264,7 +1331,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.DOT_VALUE +
           '     ' +
           parseInt(value)
-      } else if (this.props.selectName === '符号大小') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
+      ) {
         if (value <= 0) {
           value = 1
         } else if (value > 100) {
@@ -1277,18 +1347,21 @@ export default class TouchProgress extends Component {
           'mm'
       } else if (
         this.props.selectName ===
-        getLanguage(this.props.language).Map_Main_Menu.LEGEND_WIDTH
+        getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
         if (value <= 0) {
           value = 1
-        } else if (value > 1000) {
-          value = 1000
+        } else if (value > 10000) {
+          value = 10000
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +
           '     ' +
           parseInt(value)
-      } else if (this.props.selectName === '最大显示值') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
+      ) {
         if (value <= 0) {
           value = 1
         } else if (value > 20) {
@@ -1299,7 +1372,10 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(value) +
           'X'
-      } else if (this.props.selectName === '核半径') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
+      ) {
         if (value <= 0) {
           value = 1
         } else if (value > 50) {
@@ -1309,7 +1385,11 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP_RADIUS +
           '     ' +
           parseInt(value)
-      } else if (this.props.selectName === '颜色渐变模糊度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_FUZZY_DEGREE
+      ) {
         if (value <= 0) {
           value = 1
         } else if (value > 100) {
@@ -1321,7 +1401,11 @@ export default class TouchProgress extends Component {
           '     ' +
           parseInt(value) +
           '%'
-      } else if (this.props.selectName === '最大颜色权重') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(this.props.language).Map_Main_Menu
+          .THEME_HEATMAP_MAXCOLOR_WEIGHT
+      ) {
         if (value <= 0) {
           value = 1
         } else if (value > 100) {
@@ -1440,7 +1524,10 @@ export default class TouchProgress extends Component {
               '     ' +
               parseInt(value) +
               '%'
-          } else if (this.props.selectName === '对比度') {
+          } else if (
+            this.props.selectName ===
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+          ) {
             if (value < 0) {
               value = 0
             } else if (value <= 100) {

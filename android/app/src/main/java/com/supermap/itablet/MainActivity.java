@@ -18,6 +18,7 @@ import com.supermap.RN.FileTools;
 import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
 import com.supermap.data.LicenseStatus;
+import com.supermap.data.LicenseType;
 import com.supermap.file.Utils;
 import com.supermap.smNative.collector.SMCollector;
 import com.tbruyelle.rxpermissions2.Permission;
@@ -94,6 +95,7 @@ public class MainActivity extends ReactActivity {
         }
 //        Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
         Environment.setLicensePath(SDCARD + "/iTablet/license");
+        Environment.setLicenseType(LicenseType.UUID);
         Environment.initialization(this);
 
         LicenseStatus status = Environment.getLicenseStatus();

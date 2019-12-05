@@ -48,9 +48,6 @@ export default class Map3DToolBar extends React.Component {
 
   changeBaseMap = (url, type, name) => {
     switch (type) {
-      case 'terrainLayer':
-        SScene.addTerrainLayer(url, name)
-        break
       case 'WMTS':
         SScene.addLayer3D(
           url,

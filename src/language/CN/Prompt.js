@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: '是',
+  NO: '否',
   SAVE_TITLE: '是否保存当前地图',
   SAVE_YES: '保存',
   SAVE_NO: '不保存',
@@ -92,6 +94,8 @@ const Prompt = {
   PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
   DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
 
+  CHOOSE_LAYER: '选择图层',
+
   COLLECT_SUCCESS: '采集成功',
 
   SELECT_TWO_MEDIAS_AT_LEAST: '至少选中两个多媒体文件',
@@ -109,6 +113,7 @@ const Prompt = {
   THE_CURRENT_SELECTION: '当前选择为 ',
 
   IMPORTING_DATA: '正在导入数据',
+  DATA_BEING_IMPORT: '数据正在导入',
   IMPORTING: '导入中...',
   IMPORTED_SUCCESS: '导入成功',
   FAILED_TO_IMPORT: '导入失败',
@@ -121,6 +126,8 @@ const Prompt = {
   PUBLISHING: '发布服务中',
   PUBLISH_SUCCESS: '发布成功',
   PUBLISH_FAILED: '发布失败',
+  DELETE_CONFIRM: '是否删除当前数据？',
+  BATCH_DELETE_CONFIRM: '是否删除当前所选数据？',
 
   SELECT_AT_LEAST_ONE: '请至少选择一个数据',
   DELETE_MAP_RELATE_DATA: '删除数据将影响以下地图\n是否继续删除？',
@@ -168,6 +175,17 @@ const Prompt = {
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
   NO_NETWORK: '未连接到网络',
+  CHOOSE_CLASSIFY_MODEL: '选择分类模型',
+  USED_IMMEDIATELY: '立即使用',
+  USING: '使用中',
+  DEFAULT_MODEL: '默认模型',
+  DUSTBIN_MODEL: '城市垃圾模型',
+  PLANT_MODEL: '植物模型',
+  CHANGING: '切换中',
+  CHANGE_SUCCESS: '切换成功',
+  CHANGE_FAULT: '切换失败',
+  DETECT_DUSTBIN_MODEL: '垃圾箱模型',
+  ROAD_MODEL: '道路模型',
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
@@ -182,6 +200,8 @@ const Prompt = {
   OUT_OF_MAP_BOUNDS: '不在地图范围内',
 
   POI: '兴趣点',
+
+  ILLEGAL_DATA: '数据非法!',
 
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
@@ -246,9 +266,11 @@ const Prompt = {
   PLEASE_SET_BASEMAP_VISIBLE: '请设置底图可见',
   NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
   NO_LINE_DATASETS: '当前工作空间无线数据集',
+  NETWORK_DATASET_IS_NOT_AVAILABLE: '当前路网数据集不可用',
+  POINT_NOT_IN_BOUNDS: '当前选点不在所选路网数据集范围内',
+  POSITION_OUT_OF_MAP: '当前位置不在地图导航范围内，请使用模拟导航',
   SELECT_DATASOURCE_FOR_NAVIGATION: '请选择用于导航路径分析的数据',
-  PLEASE_SELECT_NETWORKDATASET_AND_NETWORKMODEL:
-    '请选择网络数据集和网络模型文件',
+  PLEASE_SELECT_NETWORKDATASET: '请选择网络数据集',
   PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
   PATH_ANALYSIS_FAILED: '路径分析失败请重新选择起终点',
   SET_START_AND_END_POINTS: '请先设置起点和终点',
@@ -261,6 +283,8 @@ const Prompt = {
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',
   SPEECH_NONE: '您好像没有说话哦',
+
+  NOT_SUPPORT_STATISTIC: '该字段不支持统计',
 }
 
 export { Prompt }

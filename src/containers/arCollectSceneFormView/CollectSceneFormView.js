@@ -18,10 +18,9 @@ import Orientation from 'react-native-orientation'
 import styles from './styles'
 import { Container } from '../../components'
 import { FileTools } from '../../native'
-import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 import { color } from '../../styles'
-import { dataUtil } from '../../utils'
+import { Toast, dataUtil, scaleSize } from '../../utils'
 import ToolbarModule from '../workspace/components/ToolBar/modules/ToolbarModule'
 import { ConstPath, UserType } from '../../constants'
 
@@ -140,9 +139,10 @@ export default class CollectSceneFormView extends React.Component {
       this.setState({
         showHistory: false,
         showbuttons: true,
+        chooseDataSource: false,
       })
     } else {
-      let data = await SCollectSceneFormView.getHistoryData(true)
+      let data = await SCollectSceneFormView.getHistoryData()
       if (data && data.history.length > 0) {
         this.setState({
           showHistory: true,
@@ -169,26 +169,6 @@ export default class CollectSceneFormView extends React.Component {
             color: 'black',
           },
         })
-        // let datapoint = await SCollectSceneFormView.getHistoryData(false)
-        // if (datapoint && datapoint.history.length > 0) {
-        //   this.setState({
-        //     showHistory: true,
-        //     showbuttons: false,
-        //     historyData: datapoint.history,
-        //     isLine: false,
-        //     leftcolor: {
-        //       color: 'black',
-        //     },
-        //     rightcolor: {
-        //       color: color.blue1,
-        //     },
-        //   })
-        // } else {
-        //   Toast.show(
-        //     getLanguage(global.language).Map_Main_Menu
-        //       .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
-        //   )
-        // }
       }
     }
   }
@@ -221,22 +201,20 @@ export default class CollectSceneFormView extends React.Component {
 
   /** 保存点 **/
   savepoint = async () => {
-    // await SCollectSceneFormView.stopRecording()
-    // NavigationService.navigate('InputPage', {
-    //   headerTitle: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-    //   value: '',
-    //   placeholder: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
-    //   type: 'name',
-    //   cb: async value => {
-    //     NavigationService.goBack()
-    await SCollectSceneFormView.saveGPSData('point')
-    Toast.show(
-      getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_SAVE_SUCCESS,
-    )
-    //   },
-    // })
+    await SCollectSceneFormView.stopRecording()
+    NavigationService.navigate('InputPage', {
+      headerTitle: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
+      value: '',
+      placeholder: getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
+      type: 'name',
+      cb: async value => {
+        NavigationService.goBack()
+        await SCollectSceneFormView.saveGPSData(value)
+        this.setState({ isnew: false })
+      },
+    })
   }
 
   back = () => {
@@ -270,6 +248,32 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   _keyExtractor = item => item.name + item.index
+
+  cancel = async () => {
+    if (this.state.chooseDataSource) {
+      let data = await SCollectSceneFormView.getHistoryData()
+      if (data && data.history.length > 0) {
+        this.setState({
+          showHistory: true,
+          showbuttons: false,
+          historyData: data.history,
+          chooseDataSource: false,
+        })
+      } else {
+        this.setState({
+          showHistory: true,
+          showbuttons: false,
+          historyData: [],
+          chooseDataSource: false,
+        })
+      }
+    } else {
+      this.setState({
+        showHistory: false,
+        showbuttons: true,
+      })
+    }
+  }
 
   getDatasource = async () => {
     let userUDBPath, userUDBs
@@ -335,9 +339,18 @@ export default class CollectSceneFormView extends React.Component {
     }
   }
 
+  changeSelect = async item => {
+    let newData = this.state.historyData
+    item.select = !item.select
+    newData[item.index] = item
+    this.setState({
+      historyData: newData.concat(),
+    })
+  }
+
   onChooseDataSource = async item => {
     await SCollectSceneFormView.setDataSource(item.name, item.path)
-    let data = await SCollectSceneFormView.getHistoryData(true)
+    let data = await SCollectSceneFormView.getHistoryData()
     if (data && data.history.length > 0) {
       this.setState({
         showHistory: true,
@@ -372,19 +385,28 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   onHistoryItemPress = async item => {
-    // await SCollectSceneFormView.clearData()
-    if (this.state.isnew) {
-      await SCollectSceneFormView.loadData(item.index, this.state.isLine)
-      this.setState({
-        showHistory: false,
-        showbuttons: true,
-      })
-    } else {
-      Toast.show(getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_NEW_ROAD)
+    let isShowtrace = await SCollectSceneFormView.isShowTrace()
+    if (!isShowtrace) {
+      await SCollectSceneFormView.startRecording()
     }
+    item.forEach(async item => {
+      if (item.select) {
+        let isline = await SCollectSceneFormView.isLineDataset(item.index)
+        await SCollectSceneFormView.loadData(item.index, isline)
+      }
+    })
+    this.setState({
+      showHistory: false,
+      showbuttons: true,
+    })
   }
 
   renderItem = ({ item }) => {
+    const visibleImgBlack = item.select
+      ? require('../../assets/mapTools/icon_multi_selected_disable_black.png')
+      : require('../../assets/mapTools/icon_multi_unselected_disable_black.png')
+    let visibleImg = visibleImgBlack
+
     if (this.state.chooseDataSource) {
       return (
         <View style={styles.itemView}>
@@ -404,10 +426,21 @@ export default class CollectSceneFormView extends React.Component {
         <View style={styles.itemView}>
           <TouchableOpacity
             activeOpacity={0.6}
-            style={styles.historyItem}
+            style={styles.historySelect}
             onPress={() => {
-              this.onHistoryItemPress(item)
+              this.changeSelect(item)
             }}
+          >
+            <Image
+              resizeMode={'contain'}
+              style={styles.smallIcon}
+              source={visibleImg}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.historyItem}
+            onPress={() => {}}
           >
             <Text style={styles.historyItemText}>{item.name}</Text>
           </TouchableOpacity>
@@ -427,13 +460,9 @@ export default class CollectSceneFormView extends React.Component {
   }
 
   deleteHistory = async item => {
-    await SCollectSceneFormView.deleteData(item.name, this.state.isLine)
+    await SCollectSceneFormView.deleteData(item.index)
     let data
-    if (this.state.isLine) {
-      data = await SCollectSceneFormView.getHistoryData(true)
-    } else {
-      data = await SCollectSceneFormView.getHistoryData(false)
-    }
+    data = await SCollectSceneFormView.getHistoryData()
     if (data) {
       this.setState({
         showHistory: true,
@@ -469,62 +498,13 @@ export default class CollectSceneFormView extends React.Component {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.historypoint}>
-          <TouchableOpacity
-            onPress={async () => {
-              let data = await SCollectSceneFormView.getHistoryData(true)
-              if (data && data.history.length > 0) {
-                this.setState({
-                  isLine: true,
-                  showHistory: true,
-                  historyData: data.history,
-                  leftcolor: { color: color.blue1 },
-                  rightcolor: { color: 'black' },
-                })
-              } else {
-                Toast.show(
-                  getLanguage(global.language).Map_Main_Menu
-                    .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
-                )
-              }
-            }}
-            style={styles.historyCloseIcon}
-          >
-            <Text style={[styles.historyTitle, this.state.leftcolor]}>
-              {
-                getLanguage(global.language).Map_Main_Menu
-                  .MAP_AR_AI_ASSISTANT_SAVE_LINE
-              }
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={async () => {
-              let data = await SCollectSceneFormView.getHistoryData(false)
-              if (data && data.history.length > 0) {
-                this.setState({
-                  isLine: false,
-                  showHistory: true,
-                  historyData: data.history,
-                  rightcolor: { color: color.blue1 },
-                  leftcolor: { color: 'black' },
-                })
-              } else {
-                Toast.show(
-                  getLanguage(global.language).Map_Main_Menu
-                    .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NO_HISTORY,
-                )
-              }
-            }}
-            style={styles.historyCloseIcon}
-          >
-            <Text style={[styles.historyTitle, this.state.rightcolor]}>
-              {
-                getLanguage(global.language).Map_Main_Menu
-                  .MAP_AR_AI_ASSISTANT_SAVE_POINT
-              }
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <View
+          style={{
+            width: '100%',
+            height: scaleSize(3),
+            backgroundColor: 'black',
+          }}
+        />
         <FlatList
           data={this.state.historyData}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
@@ -533,6 +513,30 @@ export default class CollectSceneFormView extends React.Component {
           keyExtractor={this._keyExtractor}
           extraData={this.state}
         />
+        <View style={styles.listaction}>
+          <TouchableOpacity
+            onPress={() => {
+              this.cancel()
+            }}
+            style={styles.btn_image}
+          >
+            <Text style={[styles.historyTitle]}>
+              {getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_CANCEL}
+            </Text>
+          </TouchableOpacity>
+          {!this.state.chooseDataSource && (
+            <TouchableOpacity
+              onPress={() => {
+                this.onHistoryItemPress(this.state.historyData)
+              }}
+              style={styles.btn_image2}
+            >
+              <Text style={[styles.historyTitle]}>
+                {getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_CONFIRM}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     )
   }

@@ -130,6 +130,8 @@ const Profile = {
   MAP_3D: '3D Map',
   BROWSE_MAP: 'Browse',
 
+  GET_DATA_FAILED: 'Failed to get data',
+
   //创建数据集
   PLEASE_ADD_DATASET: 'Please add dataset',
   ADD_DATASET: 'Add Dataset',
@@ -159,6 +161,8 @@ const Profile = {
   SETTING_LICENSE: 'License',
   SETTING_ABOUT_ITABLET: 'About iTablet',
   SETTING_CHECK_VERSION: 'Check Version',
+  SETTING_LANGUAGE: 'Language',
+  SETTING_LANGUAGE_AUTO: 'Auto',
   //许可
   LICENSE_CURRENT: 'License Current',
   LICENSE_TYPE: 'License Type',

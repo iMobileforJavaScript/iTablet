@@ -11,21 +11,18 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Platform,
   // TextInput,
 } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
-// import Login from './Login'
-import { color, size } from '../../../styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
-import { getPublicAssets } from '../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../assets'
 import styles from './styles'
 const Customer = 'Customer'
 export default class Mine extends Component {
@@ -46,9 +43,6 @@ export default class Mine extends Component {
       display: 'flex',
     }
     this.searchText = ''
-    this.goToMyService = this.goToMyService.bind(this)
-    this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
-    this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
 
   componentDidMount() {
@@ -83,7 +77,7 @@ export default class Mine extends Component {
       ConstPath.UserPath +
         this.props.user.currentUser.userName +
         '/' +
-        ConstPath.RelativeFilePath.Workspace,
+        ConstPath.RelativeFilePath.Workspace[global.language],
     )
     // 防止多次打开同一个工作空间
     if (!this.props.workspace || this.props.workspace.server === userPath)
@@ -151,371 +145,8 @@ export default class Mine extends Component {
     })
   }
 
-  goToMyOnlineData = async () => {
-    NavigationService.navigate('MyOnlineData')
-  }
-
   goToMyService = () => {
     NavigationService.navigate('MyService')
-  }
-
-  _selectionRender = () => {
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      let fontSize = size.fontSize.fontSizeXl
-      return (
-        <View
-          opacity={1}
-          style={{ flex: 1, backgroundColor: color.contentColorWhite }}
-        >
-          {this._renderHeader(fontSize)}
-          <ScrollView
-            style={{ flex: 1 }}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            overScrollMode={'always'}
-            bounces={true}
-          >
-            {this._renderLine()}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.IMPORT,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
-              onClick: this.goToMyLocalData,
-            })}
-
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.DATA,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-              onClick: () =>
-                this.goToMyData(getLanguage(this.props.language).Profile.DATA),
-            })}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.MARK,
-              //Const.MYLABEL,
-              leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
-              onClick: () => {
-                this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
-              },
-            })}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.MAP,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-              onClick: () =>
-                this.goToMyData(getLanguage(this.props.language).Profile.MAP),
-            })}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.SCENE,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-              onClick: () =>
-                this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
-            })}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.BASEMAP,
-              //Const.BASEMAP,
-              leftImagePath: require('../../../assets/Mine/my_basemap.png'),
-              onClick: () => {
-                this.goToMyBaseMap()
-              },
-            })}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.SYMBOL,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
-              onClick: () =>
-                this.goToMyData(
-                  getLanguage(this.props.language).Profile.SYMBOL,
-                ),
-            })}
-            {/* {this._renderItem({
-              title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
-              leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-              onClick: () =>  this.goToMyData(getLanguage(this.props.language).Profile.COLOR_SCHEME),
-            })} */}
-            {this._renderItem({
-              title: getLanguage(this.props.language).Profile.TEMPLATE,
-              leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () =>
-                this.goToMyModule(
-                  getLanguage(this.props.language).Profile.TEMPLATE,
-                ),
-            })}
-          </ScrollView>
-        </View>
-      )
-    } else {
-      return this._render()
-    }
-  }
-
-  _render = () => {
-    let fontSize = Platform.OS === 'ios' ? 18 : 16
-    return (
-      <View
-        opacity={1}
-        style={{ flex: 1, backgroundColor: color.content_white }}
-      >
-        {this._renderHeader(fontSize)}
-        <ScrollView
-          style={{ flex: 1 }}
-          // contentContainerStyle={{ alignItems:'center' }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          overScrollMode={'always'}
-          bounces={true}
-        >
-          {this._renderLine()}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
-            onClick: this.goToMyLocalData,
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.MY_SERVICE,
-            leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
-            onClick: this.goToMyService,
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.DATA,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () =>
-              this.goToMyData(getLanguage(this.props.language).Profile.DATA),
-            //Const.DATA),
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.MARK,
-            leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
-            onClick: () => {
-              this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
-              //Const.MYLABEL)
-            },
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.MAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-            onClick: () =>
-              this.goToMyData(getLanguage(this.props.language).Profile.MAP),
-            //Const.MAP),
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.SCENE,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-            onClick: () =>
-              this.goToMyData(getLanguage(this.props.language).Profile.SCENE),
-            //Const.SCENE),
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.BASEMAP,
-            leftImagePath: require('../../../assets/Mine/my_basemap.png'),
-            onClick: () => {
-              this.goToMyBaseMap()
-            },
-          })}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.SYMBOL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
-            onClick: () =>
-              this.goToMyData(getLanguage(this.props.language).Profile.SYMBOL),
-            //Const.SYMBOL),
-          })}
-          {/* {this._renderItem({
-            title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
-            leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-            onClick: () =>
-              this.goToMyData(
-                getLanguage(this.props.language).Profile.COLOR_SCHEME,
-              ),
-            //Const.MINE_COLOR),
-          })} */}
-          {this._renderItem({
-            title: getLanguage(this.props.language).Profile.TEMPLATE,
-            leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () =>
-              this.goToMyModule(
-                getLanguage(this.props.language).Profile.TEMPLATE,
-              ),
-          })}
-          {/*{this._renderItem({*/}
-          {/*title: '我的数据',*/}
-          {/*leftImagePath: require('../../../assets/Mine/mine_my_online_data.png'),*/}
-          {/*onClick: this.goToMyOnlineData,*/}
-          {/*})}*/}
-          {/*{this._renderItem({*/}
-          {/*title: '我的服务',*/}
-          {/*leftImagePath: require('../../../assets/Mine/mine_my_service.png'),*/}
-          {/*onClick: this.goToMyService,*/}
-          {/*})}*/}
-        </ScrollView>
-      </View>
-    )
-  }
-  _renderHeader = () => {
-    let allColor = color.font_color_white
-    let headerHeight = scaleSize(120)
-    let imageWidth = scaleSize(70)
-    let isPro =
-      this.props.user.currentUser.userType &&
-      this.props.user.currentUser.userType !== UserType.PROBATION_USER
-    let headerImage = isPro
-      ? {
-        uri:
-            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-      }
-      : require('../../../assets/home/system_default_header_image.png')
-    let headerTitle = isPro
-      ? this.props.user.currentUser.userName
-        ? this.props.user.currentUser.userName
-        : Customer
-      : getLanguage(this.props.language).Profile.LOGIN_NOW
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          height: headerHeight,
-          width: '100%',
-          alignItems: 'center',
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            if (
-              headerTitle !== getLanguage(this.props.language).Profile.LOGIN_NOW
-            ) {
-              this.goToPersonal()
-            }
-          }}
-          activeOpacity={1}
-          style={{
-            width: headerHeight,
-            height: headerHeight,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Image
-            resizeMode={'contain'}
-            style={{
-              width: imageWidth,
-              height: imageWidth,
-              borderRadius: 8,
-            }}
-            source={headerImage}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => {
-            if (
-              headerTitle === getLanguage(this.props.language).Profile.LOGIN_NOW
-            ) {
-              this.goToLogin()
-            }
-          }}
-        >
-          <Text
-            style={{
-              fontSize: size.fontSize.fontSizeXXl,
-              color: allColor,
-              fontWeight: 'bold',
-            }}
-          >
-            {headerTitle}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
-  _renderLine = () => {
-    return (
-      <View
-        style={{
-          width: '100%',
-          height: 2,
-          backgroundColor: color.separateColorGray,
-        }}
-      />
-    )
-  }
-
-  _renderItem = (
-    itemRequire = {
-      title: '',
-      leftImagePath: '',
-      onClick: () => {
-        Toast.show('test')
-      },
-    },
-    itemOptions = {
-      itemWidth: '100%',
-      itemHeight: scaleSize(90),
-      fontSize: size.fontSize.fontSizeXl,
-      imageWidth: scaleSize(45),
-      imageHeight: scaleSize(45),
-      rightImagePath: require('../../../assets/Mine/mine_my_arrow.png'),
-    },
-  ) => {
-    const { title, leftImagePath, onClick } = itemRequire
-    const {
-      itemWidth,
-      itemHeight,
-      fontSize,
-      imageWidth,
-      imageHeight,
-      rightImagePath,
-    } = itemOptions
-    let imageColor = color.imageColorBlack
-    let txtColor = color.fontColorBlack
-    return (
-      <View style={{ flex: 1 }} display={this.state.display}>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            width: itemWidth,
-            height: itemHeight,
-            alignItems: 'center',
-            paddingLeft: 15,
-            paddingRight: 15,
-          }}
-          onPress={onClick}
-        >
-          <Image
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              tintColor: imageColor,
-            }}
-            resizeMode={'contain'}
-            source={leftImagePath}
-          />
-          <Text
-            style={{
-              lineHeight: itemHeight,
-              flex: 1,
-              textAlign: 'left',
-              fontSize: fontSize,
-              color: txtColor,
-              paddingLeft: 15,
-            }}
-          >
-            {title}
-          </Text>
-          <Image
-            style={{
-              width: imageWidth - 5,
-              height: imageHeight - 5,
-              tintColor: imageColor,
-            }}
-            resizeMode={'contain'}
-            source={rightImagePath}
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            flex: 1,
-            height: 1,
-            backgroundColor: color.separateColorGray,
-          }}
-        />
-      </View>
-    )
   }
 
   _onPressAvater = () => {
@@ -535,60 +166,52 @@ export default class Mine extends Component {
     data = [
       {
         title: getLanguage(this.props.language).Profile.IMPORT,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
+        leftImagePath: getThemeAssets().mine.my_import,
         onClick: this.goToMyLocalData,
       },
       {
         title: getLanguage(this.props.language).Profile.MY_SERVICE,
-        leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
+        leftImagePath: getThemeAssets().mine.my_service,
         onClick: this.goToMyService,
       },
       {
         title: getLanguage(this.props.language).Profile.DATA,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+        leftImagePath: getThemeAssets().mine.my_data,
         onClick: () =>
           this.goToMyDatasource(getLanguage(this.props.language).Profile.DATA),
       },
       {
         title: getLanguage(this.props.language).Profile.MARK,
-        leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
+        leftImagePath: getThemeAssets().mine.my_plot,
         onClick: () => {
           this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
         },
       },
       {
         title: getLanguage(this.props.language).Profile.MAP,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
+        leftImagePath: getThemeAssets().mine.my_map,
         onClick: () =>
           this.goToMyMap(getLanguage(this.props.language).Profile.MAP),
       },
       {
         title: getLanguage(this.props.language).Profile.SCENE,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
+        leftImagePath: getThemeAssets().mine.my_scene,
         onClick: () =>
           this.goToMyScene(getLanguage(this.props.language).Profile.SCENE),
       },
       {
         title: getLanguage(this.props.language).Profile.BASEMAP,
-        leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+        leftImagePath: getThemeAssets().mine.my_basemap,
         onClick: () => {
           this.goToMyBaseMap()
         },
       },
       {
         title: getLanguage(this.props.language).Profile.SYMBOL,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
+        leftImagePath: getThemeAssets().mine.my_symbol,
         onClick: () =>
           this.goToMySymbol(getLanguage(this.props.language).Profile.SYMBOL),
       },
-      // {
-      //   title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
-      //   leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-      //   onClick: () =>
-      //     this.goToMyData(
-      //       getLanguage(this.props.language).Profile.COLOR_SCHEME,
-      //     ),
-      // },
       {
         title: getLanguage(this.props.language).Profile.TEMPLATE,
         leftImagePath: require('../../../assets/function/icon_function_style.png'),
@@ -831,7 +454,6 @@ export default class Mine extends Component {
         // }}
         withoutHeader
       >
-        {/* {this._selectionRender()} */}
         {this._renderMineContainer()}
       </Container>
     )

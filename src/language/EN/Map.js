@@ -63,7 +63,7 @@ const Map_Main_Menu = {
   STYLE_TRANSPARENCY: 'Transparency',
   STYLE_LINE_WIDTH: 'Line Width',
   STYLE_FOREGROUND: 'Foreground',
-  STYLE_BACKFROUNG: 'Background',
+  STYLE_BACKGROUND: 'Background',
   STYLE_BORDER: 'Border Color',
   STYLE_BORDER_WIDTH: 'Border Width',
   STYLE_GRADIENT_FILL: 'Gradient fill',
@@ -339,6 +339,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: 'Fill in the note',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: 'Save',
 
+  MAP_AR_AI_CANCEL: 'cancel',
+  MAP_AR_AI_CONFIRM: 'confirm',
+
   //智能配图
   FILL: 'Fill',
   BORDER: 'Border',
@@ -355,16 +358,17 @@ const Map_Main_Menu = {
   DISPLAY_MAP: 'Display Map',
   START_FROM_START_POINT: 'Starting from the initial point',
   ARRIVE_AT_THE_DESTINATION: 'Arriving at the destination',
-  FIRST_PERSON_PERSPECTIVE: '1st Perspective',
-  THIRD_PERSON_PERSPECTIVE: '3nd Perspective',
+  REAL_NAVIGATION: 'Start Navigation',
+  SIMULATED_NAVIGATION: 'Simulated Navigation',
   GO_STRAIGHT: 'Going straight',
   SELECT_START_POINT: 'Select Start',
   SELECT_DESTINATION: 'Select Destination',
   SET_AS_START_POINT: 'Set As Start',
   SET_AS_DESTINATION: 'Set As Destination',
   CLEAR_NAV_HISTORY: 'Clear History',
-  NEXT: 'Next',
+  ROUTE_ANALYST: 'Route Analyst',
   SELECT_POINTS: 'Select Points',
+  LONG_PRESS_SELECT_POINTS: '(long press to select a point)',
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
@@ -516,6 +520,20 @@ const Map_Attribute = {
   ATTRIBUTE_REDO: 'Redo',
   ATTRIBUTE_REVERT: 'Revert',
   ATTRIBUTE_FIELD_ADD: 'Add',
+
+  DETAIL: 'Detail',
+  // 统计模式
+  MAX: 'Max',
+  MIN: 'Min',
+  AVERAGE: 'Average',
+  SUM: 'Sum',
+  VARIANCE: 'Variance',
+  STANDARD_DEVIATION: 'STDEV',
+  COUNT_UNIQUE: 'Count',
+  FIELD_TYPE: 'Field Type',
+  ALIAS: 'Alias',
+  ASCENDING: 'Ascending',
+  DESCENDING: 'Descending',
 }
 
 const Map_Setting = {

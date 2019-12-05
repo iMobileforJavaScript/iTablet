@@ -14,6 +14,10 @@ import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 
 export default class LocationView extends React.Component {
+  props: {
+    getNavigationDatas: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -24,9 +28,11 @@ export default class LocationView extends React.Component {
   }
   _location = async () => {
     let point = await SMap.getCurrentMapPosition()
-    let selectList = GLOBAL.SimpleSelectList
-    let networkDataset = selectList.state.networkDataset.datasetName
-    let isInBounds = await SMap.isInBounds(point, networkDataset)
+    let navigationDatas = this.props.getNavigationDatas()
+    let isInBounds = await SMap.isInBounds(
+      point,
+      navigationDatas.selectedDataset,
+    )
     if (isInBounds) {
       if (this.isStart) {
         GLOBAL.STARTX = point.x

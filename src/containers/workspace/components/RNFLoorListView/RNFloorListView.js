@@ -10,11 +10,14 @@ import {
 import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
+import { Const } from '../../../../constants'
 
 export default class RNFloorListView extends React.Component {
   props: {
     device: Object,
     mapLoaded: Boolean,
+    currentFloorID: String,
+    changeFloorID: () => {},
   }
 
   constructor(props) {
@@ -24,53 +27,43 @@ export default class RNFloorListView extends React.Component {
       data: [],
       height:
         props.device.orientation === 'LANDSCAPE'
-          ? scaleSize(160)
-          : scaleSize(240),
-      left: new Animated.Value(scaleSize(34)),
-      bottom:
-        props.device.orientation === 'LANDSCAPE'
-          ? scaleSize(360)
-          : scaleSize(460),
-      currentFloorID: 0,
-      isHidden: false,
+          ? scaleSize(240)
+          : scaleSize(360),
+      left: new Animated.Value(scaleSize(20)),
+      bottom: new Animated.Value(scaleSize(150)),
+      currentFloorID: props.currentFloorID,
     }
-    this.listener = null
   }
-  // async componentDidMount() {
-  //   if(this.props.mapLoaded){
-  //     let datas = await SMap.getFloorData()
-  //     if(datas.data && datas.data.length > 0){
-  //       let {data,datasource,currentFloorID} = datas
-  //       this.setState({
-  //         data,
-  //         datasource,
-  //         currentFloorID,
-  //       })
-  //       this.listener =  SMap.addFloorHiddenListener(result=>{
-  //         if(result.isHidden !== this.state.isHidden)
-  //           this.setState({
-  //             isHidden:result.isHidden,
-  //           })
-  //       })
-  //     }
-  //   }
-  // }
-
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentFloorID !== prevState.currentFloorID) {
+      return {
+        currentFloorID: nextProps.currentFloorID,
+      }
+    }
+    return null
+  }
   async componentDidUpdate(prevProps, prevState) {
     if (this.props.device.orientation !== prevProps.device.orientation) {
       let height = prevState.height
-      let bottom = prevState.bottom
       if (this.props.device.orientation === 'LANDSCAPE') {
-        height = scaleSize(160)
-        bottom = scaleSize(360)
-      } else {
         height = scaleSize(240)
-        bottom = scaleSize(460)
+      } else {
+        height = scaleSize(360)
       }
-      this.setState({
-        height,
-        bottom,
-      })
+      this.setState(
+        {
+          height,
+        },
+        () => {
+          if (height < prevState.height) {
+            this.list &&
+              this.list.scrollToIndex({
+                viewPosition: 0.5,
+                index: this.curIndex,
+              })
+          }
+        },
+      )
     } else if (
       this.props.mapLoaded &&
       this.props.mapLoaded !== prevProps.mapLoaded
@@ -83,31 +76,49 @@ export default class RNFloorListView extends React.Component {
           datasource,
           currentFloorID,
         })
-        if (!this.listener) {
-          this.listener = SMap.addFloorHiddenListener(result => {
-            if (result.isHidden !== this.state.isHidden)
-              this.setState({
-                isHidden: result.isHidden,
-              })
-          })
-        }
       }
     }
   }
 
+  setVisible = (visible, immediately = false) => {
+    if (visible) {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(20),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    } else {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(-200),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    }
+  }
+
+  changeBottom = (isShow, immediately = false) => {
+    if (isShow) {
+      Animated.timing(this.state.bottom, {
+        toValue: scaleSize(280),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    } else {
+      Animated.timing(this.state.bottom, {
+        toValue: scaleSize(150),
+        duration: immediately ? 0 : Const.ANIMATED_DURATION,
+      }).start()
+    }
+  }
   _onFloorPress = async item => {
     //change floor
     await SMap.setCurrentFloorID(item.id)
-    this.setState({
-      currentFloorID: item.id,
-    })
+    this.props.changeFloorID && this.props.changeFloorID(item.id)
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, index }) => {
     let textStyle = {}
     let backgroundStyle = {}
 
     if (item.id === this.state.currentFloorID) {
+      this.curIndex = index
       textStyle = {
         color: color.white,
       }
@@ -130,7 +141,7 @@ export default class RNFloorListView extends React.Component {
   }
 
   render() {
-    if (this.state.data.length === 0 || this.state.isHidden) return null
+    if (this.state.data.length === 0 || !this.state.currentFloorID) return null
     let floorListStyle = {
       maxHeight: this.state.height,
       left: this.state.left,
@@ -139,11 +150,19 @@ export default class RNFloorListView extends React.Component {
     return (
       <Animated.View style={[styles.floorListView, floorListStyle]}>
         <FlatList
+          ref={ref => {
+            this.list = ref
+          }}
           style={styles.floorList}
           keyExtractor={(item, index) => item.toString + index}
           data={this.state.data}
-          extraData={this.state.currentFloorID}
           renderItem={this._renderItem}
+          showsVerticalScrollIndicator={false}
+          getItemLayout={(param, index) => ({
+            length: scaleSize(60),
+            offset: scaleSize(60) * index,
+            index,
+          })}
         />
       </Animated.View>
     )

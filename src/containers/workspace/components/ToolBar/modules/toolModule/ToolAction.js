@@ -4,6 +4,7 @@ import {
   SMediaCollector,
   DatasetType,
   SAIDetectView,
+  SCollector,
 } from 'imobile_for_reactnative'
 import {
   ConstToolType,
@@ -11,10 +12,14 @@ import {
   ConstPath,
   ToolbarType,
 } from '../../../../../../constants'
-import { dataUtil, Toast, StyleUtils } from '../../../../../../utils'
+import {
+  dataUtil,
+  Toast,
+  StyleUtils,
+  LayerUtils,
+} from '../../../../../../utils'
 import { FileTools } from '../../../../../../native'
 import { ImagePicker } from '../../../../../../components'
-import ToolbarBtnType from '../../ToolbarBtnType'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
@@ -33,38 +38,10 @@ function stop() {
 
 function submit() {
   (async function() {
-    const _params = ToolbarModule.getParams()
     if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_GPSINCREMENT) {
-      await SMap.addGPSRecordset(GLOBAL.LINEDATASET)
+      await SMap.addGPSRecordset()
     }
     await SMap.submit()
-
-    let name = GLOBAL.SELECTDATASOURCE
-    let data = []
-    let maplist = await SMap.getNetWorkDataset(name)
-    if (maplist && maplist.length > 0) {
-      let userList = []
-      maplist.forEach(item => {
-        let name = item.dataset
-        item.title = name
-        item.name = name.split('.')[0]
-        item.image = require('../../../../../../assets/Navigation/network.png')
-        userList.push(item)
-      })
-    }
-    data.push({
-      title: getLanguage(global.language).Map_Main_Menu.NETDATA,
-      //'选择数据集',
-      image: require('../../../../../../assets/Navigation/network_white.png'),
-      data: maplist || [],
-    })
-    _params.setToolbarVisible(true, ConstToolType.NETWORKDATASET, {
-      containerType: 'list',
-      height: ConstToolType.THEME_HEIGHT[4],
-      data,
-      isFullScreen: false,
-      buttons: [ToolbarBtnType.CANCEL_INCREMENT],
-    })
   }.bind(this)())
 }
 
@@ -73,14 +50,15 @@ function select(type) {
     type = ToolbarModule.getParams().type
   }
   switch (type) {
-    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
-    case ConstToolType.MAP_TOOL_POINT_SELECT:
-      SMap.setAction(Action.SELECT)
-      break
     case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_POINT_SELECT:
+    default:
+      SMap.setAction(Action.SELECT)
       break
   }
 }
@@ -92,9 +70,11 @@ function cancelSelect() {
 }
 
 function viewEntire() {
-  SMap.viewEntire().then(() => {
-    ToolbarModule.getParams().setToolbarVisible &&
-      ToolbarModule.getParams().setToolbarVisible(false)
+  SMap.viewEntire().then(async () => {
+    const params = ToolbarModule.getParams()
+    params.setToolbarVisible && params.setToolbarVisible(false)
+    let currentFloorID = await SMap.getCurrentFloorID()
+    params.changeFloorID && params.changeFloorID(currentFloorID || '')
   })
 }
 
@@ -116,7 +96,7 @@ function pointSelect() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -138,7 +118,7 @@ function selectByRectangle() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
-    cb: () => select(),
+    cb: () => select(type),
   })
 }
 
@@ -153,13 +133,11 @@ function rectangleCut() {
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
     height: 0,
-    cb: () => select(),
   })
 }
 
 /** 距离量算 **/
 function measureLength() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -169,8 +147,10 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) > -1) return
-      if (_params.buttonView) {
+      if (
+        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
+        _params.buttonView
+      ) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
         if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
@@ -195,7 +175,6 @@ function measureLength() {
 
 /**  面积量算  **/
 function measureArea() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -233,7 +212,6 @@ function measureArea() {
 
 /**  角度量算  **/
 function measureAngle() {
-  select()
   const _params = ToolbarModule.getParams()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
@@ -309,6 +287,10 @@ function clearMeasure(type) {
 
 /** 量算功能 撤销事件 **/
 function undo(type) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.undo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -335,7 +317,11 @@ function undo(type) {
 }
 
 /** 量算功能 重做事件 **/
-function redo() {
+function redo(type = null) {
+  if (type === ConstToolType.MAP_TOOL_INCREMENT) {
+    SMap.redo()
+    return
+  }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
@@ -694,6 +680,57 @@ function matchPictureStyle() {
   })
 }
 
+/**
+ * 选择标注
+ */
+function selectLabel() {
+  const _params = ToolbarModule.getParams()
+  _params.setSelection()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  let type = ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE
+
+  _params.setToolbarVisible(true, type, {
+    containerType: 'table',
+    column: 3,
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(type),
+  })
+
+  let layers = _params.layers.layers
+  // 其他图层设置为不可选
+  for (let i = 0; i < layers.length; i++) {
+    if (
+      LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
+      layers[i].isSelectable
+    ) {
+      SMap.setLayerSelectable(layers[i].path, false)
+    }
+  }
+}
+
+/**
+ * 删除标注
+ */
+async function deleteLabel() {
+  const _params = ToolbarModule.getParams()
+  let _selection = _params.selection
+  if (_selection.length === 0) {
+    Toast.show(getLanguage(GLOBAL.language).Prompt.NON_SELECTED_OBJ)
+    return
+  }
+
+  _selection.forEach(async item => {
+    if (item.ids.length > 0) {
+      SCollector.removeByIds(item.ids, item.layerInfo.path)
+      SMediaCollector.removeByIds(item.ids, item.layerInfo.name)
+    }
+  })
+  _params.setSelection()
+}
+
 // function captureVideo () {
 //   let options = {
 //     datasourceName: 'Hunan',
@@ -970,6 +1007,45 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
+function close(type) {
+  const _params = ToolbarModule.getParams()
+  if (
+    type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT ||
+    type === ConstToolType.MAP_TOOL_POINT_SELECT
+  ) {
+    SMap.setAction(Action.PAN)
+    SMap.clearSelection()
+    _params.setToolbarVisible(false)
+  } else if (type === ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE) {
+    SMap.setAction(Action.PAN)
+    SMap.clearSelection()
+
+    let layers = _params.layers.layers
+    // 还原其他图层的选择状态
+    for (let i = 0; i < layers.length; i++) {
+      if (
+        LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
+        layers[i].isSelectable
+      ) {
+        SMap.setLayerSelectable(layers[i].path, true)
+      } else if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+        if (
+          _params.currentLayer &&
+          _params.currentLayer.name &&
+          _params.currentLayer.name === layers[i].name
+        ) {
+          SMap.setLayerEditable(layers[i].path, true)
+        }
+      }
+    }
+    _params.setToolbarVisible(false)
+  } else {
+    return false
+  }
+}
+
 export default {
   commit,
   showAttribute,
@@ -984,6 +1060,9 @@ export default {
   undo,
   redo,
   listSelectableAction,
+  close,
+  selectLabel,
+  deleteLabel,
 
   begin,
   stop,

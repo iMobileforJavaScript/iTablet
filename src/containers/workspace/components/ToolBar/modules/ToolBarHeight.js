@@ -1,9 +1,10 @@
 import { ConstToolType } from '../../../../../constants'
 import { SMCollectorType } from 'imobile_for_reactnative'
 import ToolbarModule from './ToolbarModule'
+import { Platform } from 'react-native'
 
 // TODO 分拆到各个模块下
-function getToolbarHeight(type) {
+function getToolbarHeight(type, currentHeight) {
   const params = ToolbarModule.getParams()
   const orientation = params.device.orientation
   let height, column
@@ -22,7 +23,7 @@ function getToolbarHeight(type) {
         height = ConstToolType.TOOLBAR_HEIGHT_2[3]
         column = 4
       } else {
-        height = ConstToolType.TOOLBAR_HEIGHT_2[1]
+        height = ConstToolType.TOOLBAR_HEIGHT_2[2]
         column = 8
       }
       break
@@ -144,10 +145,10 @@ function getToolbarHeight(type) {
     case ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[5]
+        height = ConstToolType.THEME_HEIGHT[3]
         column = 4
       } else {
-        height = ConstToolType.THEME_HEIGHT[3]
+        height = ConstToolType.THEME_HEIGHT[7]
         column = 8
       }
       break
@@ -219,12 +220,16 @@ function getToolbarHeight(type) {
       }
       break
     case ConstToolType.LEGEND:
+    case ConstToolType.LEGEND_NOT_VISIBLE:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8
       } else {
         height = ConstToolType.THEME_HEIGHT[2]
         column = 16
+      }
+      if (currentHeight === 0) {
+        height = 0
       }
       break
     case ConstToolType.LINECOLOR_SET:
@@ -342,6 +347,12 @@ function getToolbarHeight(type) {
         height = ConstToolType.TOOLBAR_HEIGHT[2]
       }
       break
+    case ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH:
+    case ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS:
+    case ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH:
+      height = ConstToolType.HEIGHT[0]
+      column = 5
+      break
     case SMCollectorType.REGION_GPS_POINT:
     case SMCollectorType.LINE_GPS_POINT:
     case SMCollectorType.POINT_GPS:
@@ -415,7 +426,12 @@ function getToolbarHeight(type) {
       column = 3
       break
     case ConstToolType.MAP_AR_AIASSISTANT:
-      height = ConstToolType.HEIGHT[2]
+      if (Platform.OS === 'ios') {
+        height = ConstToolType.HEIGHT[0]
+      } else {
+        height = ConstToolType.HEIGHT[2]
+      }
+      // height = ConstToolType.HEIGHT[2]
       column = 4
       break
     default:
