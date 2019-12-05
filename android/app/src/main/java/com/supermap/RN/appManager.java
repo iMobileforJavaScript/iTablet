@@ -123,6 +123,10 @@ public class appManager {
         return iwxapi;
     }
 
+    public boolean isWXInstalled() {
+        return iwxapi.isWXAppInstalled();
+    }
+
     public Boolean sendFileOfWechat(Map map) {
         Boolean result = false;
         WXMediaMessage msg = new WXMediaMessage();

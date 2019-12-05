@@ -15,6 +15,7 @@ const Prompt = {
   BEGIN: '开始',
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
+  WX_NOT_INSTALLED: '未检测到微信',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
