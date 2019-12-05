@@ -470,6 +470,7 @@ export default class LayerAttributeTabs extends React.Component {
 
   // 显示/隐藏属性
   showSystemFields = () => {
+    this.table && this.table.horizontalScrollToStart()
     this.setState({
       isShowSystemFields: !this.state.isShowSystemFields,
     })

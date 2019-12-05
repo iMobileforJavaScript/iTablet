@@ -30,6 +30,7 @@ import {
   GeoStyle,
   SMediaCollector,
   FieldType,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
@@ -618,7 +619,7 @@ export default class LayerAttribute extends React.Component {
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
+              defaultParams: { fieldInfo },
               isDetail: true,
             })
           }.bind(this)())
@@ -1053,6 +1054,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   showSystemFields = () => {
+    this.table && this.table.horizontalScrollToStart()
     this.setState({
       isShowSystemFields: !this.state.isShowSystemFields,
     })
@@ -1380,7 +1382,12 @@ export default class LayerAttribute extends React.Component {
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={true}
+            canAddField={
+              this.props.currentLayer.name !== undefined &&
+              this.props.currentLayer.name !== '' &&
+              this.props.currentLayer.type !== DatasetType.IMAGE &&
+              this.props.currentLayer.type !== DatasetType.MBImage // 影像图层不能添加属性
+            }
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}
