@@ -64,4 +64,30 @@ export default class FetchUtils {
     }
     return url
   }
+
+  /****** 在线路径分析 *******/
+  static routeAnalyst = async (startX, startY, endX, endY) => {
+    let data
+    try {
+      let params = `{startPoint:{"x":${startX},"y":${startY}},endPoint:{"x":${endX},"y":${endY}},routeType:MINLENGTH,to:910111}`
+      let url = `http://www.supermapol.com/iserver/services/navigation/rest/navigationanalyst/China/pathanalystresults.json?pathAnalystParameters=[${params}]&key=fvV2osxwuZWlY0wJb8FEb2i5`
+      data = await FetchUtils.getObjJson(url)
+    } catch (e) {
+      Toast.show('网络错误')
+    }
+    return data
+  }
+
+  /****** 逆地理编码 *******/
+  static getPointName = async (x, y) => {
+    let data
+    try {
+      let url = `http://www.supermapol.com/iserver/services/location-china/rest/locationanalyst/China/geodecoding.json?location={"x":${x},"y":${y}}&key=fvV2osxwuZWlY0wJb8FEb2i5`
+      let rel = await FetchUtils.getObjJson(url)
+      data = rel.formatedAddress
+    } catch (e) {
+      Toast.show('网络错误')
+    }
+    return data
+  }
 }

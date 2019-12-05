@@ -181,18 +181,15 @@ export default class MyDataPage extends Component {
   _onDeleteData = async (forceDelete = false) => {
     try {
       this._closeModal()
-      let relatedMap = undefined
+      let relatedMaps = []
       if (!forceDelete) {
-        relatedMap = await this.getRelatedMap(this.itemInfo)
+        relatedMaps = await this.getRelatedMaps([this.itemInfo])
       }
-      if (relatedMap) {
-        this.SimpleDialog.set({
-          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+      if (relatedMaps.length > 0) {
+        this.showRelatedMapsDialog({
           confirmAction: () => this._onDeleteData(true),
-          renderExtra: this.renderRelatedMap(relatedMap),
-          dialogHeight: scaleSize(270),
+          relatedMaps: relatedMaps,
         })
-        this.SimpleDialog.setVisible(true)
         return
       }
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
@@ -212,7 +209,7 @@ export default class MyDataPage extends Component {
         Toast.show(ConstInfo.PLEASE_CHOOSE_DELETE_OBJ)
       }
     } catch (e) {
-      Toast.show(ConstInfo.DELETE_FAILED)
+      Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
       this._closeModal()
     } finally {
       this.setLoading(false)
@@ -227,34 +224,35 @@ export default class MyDataPage extends Component {
         relatedMaps = await this.getRelatedMaps(deleteArr)
       }
       if (relatedMaps.length !== 0) {
-        let dialogHeight
-        if (relatedMaps.length < 5) {
-          dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(30)
-        } else {
-          dialogHeight = scaleSize(370)
-        }
-        this.SimpleDialog.set({
-          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+        this.showRelatedMapsDialog({
           confirmAction: () => this._batchDelete(true),
-          renderExtra: this.renderRelatedMap(relatedMaps),
-          dialogHeight: dialogHeight,
+          relatedMaps: relatedMaps,
         })
-        this.SimpleDialog.setVisible(true)
         return
       }
       let deleteItem
       deleteItem = async info => {
         this.itemInfo = info
-        await this.deleteData()
+        return await this.deleteData()
       }
-
+      this.setLoading(true, getLanguage(global.language).Prompt.DELETING_DATA)
+      let result = false
       for (let i = 0; i < deleteArr.length; i++) {
-        await deleteItem(deleteArr[i])
+        result = await deleteItem(deleteArr[i])
+        if (!result) {
+          break
+        }
       }
       this._getSectionData()
-      Toast.show(getLanguage(global.language).Prompt.DELETED_SUCCESS)
+      Toast.show(
+        result
+          ? getLanguage(global.language).Prompt.DELETED_SUCCESS
+          : getLanguage(global.language).Prompt.FAILED_TO_DELETE,
+      )
     } catch (error) {
       Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
+    } finally {
+      this.setLoading(false)
     }
   }
 
@@ -403,9 +401,24 @@ export default class MyDataPage extends Component {
   /****************************** 关联地图相关 *********************************************/
 
   /**
+   * 获取关联地图
+   * @param itemInfos  要删除的数据的数组
+   */
+  getRelatedMaps = async itemInfos => {
+    let mapNames = []
+    if (this.type !== this.types.data && this.type !== this.types.symbol) {
+      return mapNames
+    }
+
+    let maps = await this._getMapsInfo()
+    mapNames = await this._getRelatedMapNames(itemInfos, maps)
+    return mapNames
+  }
+
+  /**
    * 获取地图信息
    */
-  getMapsInfo = async () => {
+  _getMapsInfo = async () => {
     let homePath = await FileTools.appendingHomeDirectory()
     let userPath =
       homePath +
@@ -423,71 +436,51 @@ export default class MyDataPage extends Component {
   }
 
   /**
-   * 数据是否在地图中，返回地图名
+   * 查询数据是否在地图中，返回地图名数组
    */
-  getRelatedMapName = async (itemInfo, maps) => {
-    let mapName = undefined
-    let itemPath = itemInfo.item.path
+  _getRelatedMapNames = async (itemInfos, maps) => {
+    let mapNames = []
     let homePath = await FileTools.appendingHomeDirectory()
-    for (let i = 0; i < maps.length; i++) {
-      let value = await RNFS.readFile(homePath + maps[i].path)
-      let jsonObj = JSON.parse(value)
-      if (this.state.title === getLanguage(global.language).Profile.DATA) {
-        for (let n in jsonObj.Datasources) {
-          if (itemPath === ConstPath.UserPath + jsonObj.Datasources[n].Server) {
-            mapName = maps[i].name
-            break
+    let getMap = false
+    if (itemInfos.length > 0) {
+      for (let i = 0; i < maps.length; i++) {
+        let value = await RNFS.readFile(homePath + maps[i].path)
+        let jsonObj = JSON.parse(value)
+        if (this.type === this.types.data) {
+          for (let j = 0; j < jsonObj.Datasources.length; j++) {
+            for (let k = 0; k < itemInfos.length; k++) {
+              let itemPath = itemInfos[k].item.path
+              if (
+                itemPath ===
+                ConstPath.UserPath + jsonObj.Datasources[j].Server
+              ) {
+                let mapName = maps[i].name
+                mapNames.push(mapName.substr(0, mapName.lastIndexOf('.')))
+                getMap = true
+                break
+              }
+            }
+            if (getMap) {
+              getMap = false
+              break
+            }
           }
-        }
-      } else if (
-        this.state.title === getLanguage(global.language).Profile.SYMBOL
-      ) {
-        if (
-          itemPath.substr(0, itemPath.lastIndexOf('.')) ===
-          ConstPath.UserPath + jsonObj.Resources
-        ) {
-          mapName = maps[i].name
-          break
+        } else if (this.type === this.types.symbol) {
+          for (let j = 0; j < itemInfos.length; j++) {
+            let itemPath = itemInfos[j].item.path
+            if (
+              itemPath.substr(0, itemPath.lastIndexOf('.')) ===
+              ConstPath.UserPath + jsonObj.Resources
+            ) {
+              let mapName = maps[i].name
+              mapNames.push(mapName.substr(0, mapName.lastIndexOf('.')))
+              break
+            }
+          }
         }
       }
     }
-    return mapName ? mapName.substr(0, mapName.lastIndexOf('.')) : undefined
-  }
-
-  /**
-   * 获取数据关联的地图
-   */
-  getRelatedMap = async itemInfo => {
-    let mapName = undefined
-    if (
-      this.state.title !== getLanguage(global.language).Profile.DATA &&
-      this.state.title !== getLanguage(global.language).Profile.SYMBOL
-    ) {
-      return mapName
-    }
-
-    let maps = await this.getMapsInfo()
-    return await this.getRelatedMapName(itemInfo, maps)
-  }
-
-  /**
-   * 批量获取关联地图
-   */
-  getRelatedMaps = async itemInfos => {
-    let mapNames = []
-    if (
-      this.state.title !== getLanguage(global.language).Profile.DATA &&
-      this.state.title !== getLanguage(global.language).Profile.SYMBOL
-    ) {
-      return mapNames
-    }
-
-    let maps = await this.getMapsInfo()
-    for (let i = 0; i < itemInfos.length; i++) {
-      let mapName = await this.getRelatedMapName(itemInfos[i], maps)
-      mapName && mapNames.push(mapName)
-    }
-    return Array.from(new Set(mapNames))
+    return mapNames
   }
 
   /****************************** 关联地图相关 end ****************************************/
@@ -637,6 +630,22 @@ export default class MyDataPage extends Component {
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.BATCH_DELETE_CONFIRM,
       confirmAction: this._batchDelete,
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showRelatedMapsDialog = ({ confirmAction, relatedMaps }) => {
+    let dialogHeight
+    if (relatedMaps.length < 5) {
+      dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(35)
+    } else {
+      dialogHeight = scaleSize(410)
+    }
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+      confirmAction: confirmAction,
+      renderExtra: this.renderRelatedMap(relatedMaps),
+      dialogHeight: dialogHeight,
     })
     this.SimpleDialog.setVisible(true)
   }
@@ -886,7 +895,7 @@ export default class MyDataPage extends Component {
     )
   }
 
-  renderRelatedMap = relatedMap => {
+  renderRelatedMap = relatedMaps => {
     return (
       <View
         style={{
@@ -896,19 +905,18 @@ export default class MyDataPage extends Component {
           width: '80%',
         }}
       >
-        {relatedMap instanceof Array ? (
-          <ScrollView showsVerticalScrollIndicator={true}>
-            {relatedMap.map((item, index) => {
-              return (
-                <Text key={index} style={{ fontSize: scaleSize(24) }}>
-                  {item}
-                </Text>
-              )
-            })}
-          </ScrollView>
-        ) : (
-          <Text style={{ fontSize: scaleSize(24) }}>{relatedMap}</Text>
-        )}
+        <ScrollView showsVerticalScrollIndicator={true}>
+          {relatedMaps.map((item, index) => {
+            return (
+              <Text
+                key={index}
+                style={{ fontSize: scaleSize(26), alignSelf: 'center' }}
+              >
+                {item}
+              </Text>
+            )
+          })}
+        </ScrollView>
       </View>
     )
   }
