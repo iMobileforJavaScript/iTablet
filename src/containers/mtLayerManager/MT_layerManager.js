@@ -221,15 +221,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   onAllPressRow = async ({ data, parentData, section }) => {
-    this.props.setCurrentLayer &&
-      this.props.setCurrentLayer(data, () => {
-        // 切换地图，清除历史记录
-        if (
-          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
-        ) {
-          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
-        }
-      })
     // 之前点击的图层组中的某一项
     this.prevItemRef = this.currentItemRef
     let prevParentData =
@@ -237,36 +228,60 @@ export default class MT_layerManager extends React.Component {
       this.prevItemRef.props &&
       this.prevItemRef.props.parentData
     this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
-    if (parentData || prevParentData) {
-      this.setState(
-        {
-          selectLayer: data.name,
-        },
-        () => {
-          if (parentData) {
-            this.getChildList({ data: parentData, section }).then(children => {
-              this.itemRefs[parentData.name] &&
-                this.itemRefs[parentData.name].setChildrenList(children)
-            })
-          }
-          // 若两次选中的item不再同一个图层组中
-          if (
-            prevParentData &&
-            (!parentData || parentData.name !== prevParentData.name)
-          ) {
-            this.getChildList({ data: prevParentData, section }).then(
-              children => {
-                this.itemRefs[prevParentData.name] &&
-                  this.itemRefs[prevParentData.name].setChildrenList(children)
-              },
-            )
-          }
-        },
-      )
-    } else {
+    if (this.state.selectLayer === data.name) {
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(null, () => {
+          // 取消当前地图，清除历史记录
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        })
       this.setState({
-        selectLayer: data.name,
+        selectLayer: '',
       })
+    } else {
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(data, () => {
+          // 切换图层，清除历史记录
+          if (
+            JSON.stringify(this.props.currentLayer) !==
+            JSON.stringify(data.name)
+          ) {
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
+          }
+        })
+      if (parentData || prevParentData) {
+        this.setState(
+          {
+            selectLayer: data.name,
+          },
+          () => {
+            if (parentData) {
+              this.getChildList({ data: parentData, section }).then(
+                children => {
+                  this.itemRefs[parentData.name] &&
+                    this.itemRefs[parentData.name].setChildrenList(children)
+                },
+              )
+            }
+            // 若两次选中的item不再同一个图层组中
+            if (
+              prevParentData &&
+              (!parentData || parentData.name !== prevParentData.name)
+            ) {
+              this.getChildList({ data: prevParentData, section }).then(
+                children => {
+                  this.itemRefs[prevParentData.name] &&
+                    this.itemRefs[prevParentData.name].setChildrenList(children)
+                },
+              )
+            }
+          },
+        )
+      } else {
+        this.setState({
+          selectLayer: data.name,
+        })
+      }
     }
   }
 

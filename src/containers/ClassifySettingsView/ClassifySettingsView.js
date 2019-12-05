@@ -90,11 +90,11 @@ export default class ClassifySettingsView extends React.Component {
         (await FileTools.fileIsExist(this.dustbin_txt))
       if (isDustbin) {
         this.setState({
-          dustbinBtx: '立即使用',
+          dustbinBtx: getLanguage(this.props.language).Prompt.USED_IMMEDIATELY,
         })
       } else {
         this.setState({
-          dustbinBtx: '下载',
+          dustbinBtx: getLanguage(this.props.language).Prompt.DOWNLOAD,
         })
       }
       let plantPath =
@@ -106,11 +106,11 @@ export default class ClassifySettingsView extends React.Component {
         (await FileTools.fileIsExist(this.plant_txt))
       if (isPlant) {
         this.setState({
-          plantBtx: '立即使用',
+          plantBtx: getLanguage(this.props.language).Prompt.USED_IMMEDIATELY,
         })
       } else {
         this.setState({
-          plantBtx: '下载',
+          plantBtx: getLanguage(this.props.language).Prompt.DOWNLOAD,
         })
       }
       //当前使用的模型文件
@@ -118,20 +118,22 @@ export default class ClassifySettingsView extends React.Component {
       if (currentmodel.ModelType === 'ASSETS_FILE') {
         this.setState({
           currentModel: DEFAULT_MODEL,
-          defaultBtx: '使用中',
+          defaultBtx: getLanguage(this.props.language).Prompt.USING,
         })
       } else if (currentmodel.ModelType === 'ABSOLUTE_FILE_PATH') {
         if (currentmodel.ModelPath.indexOf(DUSTBIN_MODEL) !== -1) {
           this.setState({
             currentModel: DUSTBIN_MODEL,
-            defaultBtx: '立即使用',
-            dustbinBtx: '使用中',
+            defaultBtx: getLanguage(this.props.language).Prompt
+              .USED_IMMEDIATELY,
+            dustbinBtx: getLanguage(this.props.language).Prompt.USING,
           })
         } else if (currentmodel.ModelPath.indexOf(PLANT_MODEL) !== -1) {
           this.setState({
             currentModel: PLANT_MODEL,
-            defaultBtx: '立即使用',
-            plantBtx: '使用中',
+            defaultBtx: getLanguage(this.props.language).Prompt
+              .USED_IMMEDIATELY,
+            plantBtx: getLanguage(this.props.language).Prompt.USING,
           })
         }
       }
@@ -176,7 +178,9 @@ export default class ClassifySettingsView extends React.Component {
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'默认模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>
+          {getLanguage(this.props.language).Prompt.DEFAULT_MODEL}
+        </Text>
         <View style={styles.DividingLine} />
       </View>
     )
@@ -203,7 +207,9 @@ export default class ClassifySettingsView extends React.Component {
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'城市垃圾模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>
+          {getLanguage(this.props.language).Prompt.DUSTBIN_MODEL}
+        </Text>
         <View style={styles.DividingLine} />
       </View>
     )
@@ -227,7 +233,9 @@ export default class ClassifySettingsView extends React.Component {
             )
           }
         />
-        <Text style={styles.titleSwitchModelsView}>{'植物模型'}</Text>
+        <Text style={styles.titleSwitchModelsView}>
+          {getLanguage(this.props.language).Prompt.PLANT_MODEL}
+        </Text>
         <View style={styles.DividingLine} />
       </View>
     )
@@ -256,8 +264,11 @@ export default class ClassifySettingsView extends React.Component {
       ModelPath: '',
       LabelPath: '',
     }
-    if (title === '立即使用') {
-      this.Loading.setLoading(true, '切换中...')
+    if (title === getLanguage(this.props.language).Prompt.USED_IMMEDIATELY) {
+      this.Loading.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.CHANGING,
+      )
       if (fileName === DEFAULT_MODEL) {
         params.ModelType = 'ASSETS_FILE'
       } else if (fileName === DUSTBIN_MODEL) {
@@ -271,51 +282,64 @@ export default class ClassifySettingsView extends React.Component {
       }
       let result = await SAIClassifyView.setModel(params)
       if (result) {
-        Toast.show('切换成功')
-        let dustbinBtx = this.state.dustbinBtx === '使用中'
-        let plantBtx = this.state.plantBtx === '使用中'
+        Toast.show(getLanguage(this.props.language).Prompt.CHANGE_SUCCESS)
+        let dustbinBtx =
+          this.state.dustbinBtx ===
+          getLanguage(this.props.language).Prompt.USING
+        let plantBtx =
+          this.state.plantBtx === getLanguage(this.props.language).Prompt.USING
         if (fileName === DEFAULT_MODEL) {
           this.setState({
             currentModel: fileName,
-            defaultBtx: '使用中',
-            dustbinBtx: dustbinBtx ? '立即使用' : this.state.dustbinBtx,
-            plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
+            defaultBtx: getLanguage(this.props.language).Prompt.USING,
+            dustbinBtx: dustbinBtx
+              ? getLanguage(this.props.language).Prompt.USED_IMMEDIATELY
+              : this.state.dustbinBtx,
+            plantBtx: plantBtx
+              ? getLanguage(this.props.language).Prompt.USED_IMMEDIATELY
+              : this.state.plantBtx,
           })
         } else if (fileName === DUSTBIN_MODEL) {
           this.setState({
             currentModel: fileName,
-            defaultBtx: '立即使用',
-            dustbinBtx: '使用中',
-            plantBtx: plantBtx ? '立即使用' : this.state.plantBtx,
+            defaultBtx: getLanguage(this.props.language).Prompt
+              .USED_IMMEDIATELY,
+            dustbinBtx: getLanguage(this.props.language).Prompt.USING,
+            plantBtx: plantBtx
+              ? getLanguage(this.props.language).Prompt.USED_IMMEDIATELY
+              : this.state.plantBtx,
           })
         } else if (fileName === PLANT_MODEL) {
           this.setState({
             currentModel: fileName,
-            defaultBtx: '立即使用',
-            dustbinBtx: dustbinBtx ? '立即使用' : this.state.dustbinBtx,
-            plantBtx: '使用中',
+            defaultBtx: getLanguage(this.props.language).Prompt
+              .USED_IMMEDIATELY,
+            dustbinBtx: dustbinBtx
+              ? getLanguage(this.props.language).Prompt.USED_IMMEDIATELY
+              : this.state.dustbinBtx,
+            plantBtx: getLanguage(this.props.language).Prompt.USING,
           })
         }
       } else {
-        Toast.show('切换失败')
+        Toast.show(getLanguage(this.props.language).Prompt.CHANGE_FAULT)
       }
       this.Loading.setLoading(false)
-    } else if (title === '下载') {
+    } else if (title === getLanguage(this.props.language).Prompt.DOWNLOAD) {
       if (fileName === DUSTBIN_MODEL) {
         this.setState({
-          dustbinBtx: '下载中',
+          dustbinBtx: getLanguage(this.props.language).Prompt.DOWNLOADING,
         })
       } else if (fileName === PLANT_MODEL) {
         this.setState({
-          plantBtx: '下载中',
+          plantBtx: getLanguage(this.props.language).Prompt.DOWNLOADING,
         })
       }
       let downloadData = this.getDownloadData(key, fileName)
       this._downloadData(downloadData)
-    } else if (title === '正在使用') {
-      Toast.show('正在使用中')
+    } else if (title === getLanguage(this.props.language).Prompt.USING) {
+      Toast.show(getLanguage(this.props.language).Prompt.USING)
     } else {
-      Toast.show('正在下载')
+      Toast.show(getLanguage(this.props.language).Prompt.DOWNLOADING)
       return
     }
   }
@@ -373,11 +397,13 @@ export default class ClassifySettingsView extends React.Component {
           await FileTools.deleteFile(fileCachePath)
           if (downloadData.fileName === DUSTBIN_MODEL) {
             this.setState({
-              dustbinBtx: '立即使用',
+              dustbinBtx: getLanguage(this.props.language).Prompt
+                .USED_IMMEDIATELY,
             })
           } else if (downloadData.fileName === PLANT_MODEL) {
             this.setState({
-              plantBtx: '立即使用',
+              plantBtx: getLanguage(this.props.language).Prompt
+                .USED_IMMEDIATELY,
             })
           }
         })
@@ -397,7 +423,7 @@ export default class ClassifySettingsView extends React.Component {
       <Container
         ref={ref => (this.Container = ref)}
         headerProps={{
-          title: '请选择分类模型',
+          title: getLanguage(this.props.language).Prompt.CHOOSE_CLASSIFY_MODEL,
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',

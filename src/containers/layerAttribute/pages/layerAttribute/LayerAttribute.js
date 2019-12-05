@@ -14,7 +14,13 @@ import {
   InfoView,
   Dialog,
 } from '../../../../components'
-import { Toast, scaleSize, LayerUtils, StyleUtils } from '../../../../utils'
+import {
+  Toast,
+  scaleSize,
+  LayerUtils,
+  StyleUtils,
+  screen,
+} from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import {
@@ -686,6 +692,14 @@ export default class LayerAttribute extends React.Component {
     }
     if (pressView) {
       pressView.measure((ox, oy, width, height, px, py) => {
+        let screenWidth = screen.getScreenWidth(),
+          allWidth = width * items.length
+        // let dx = screenWidth - allWidth / 2 + width / 2
+        // let x = px > dx ? dx : px
+        let option = {}
+        if (px > screenWidth - allWidth / 2 + width / 2) {
+          option.direction = 'left'
+        }
         ActionPopover.show(
           {
             x: px,
@@ -694,6 +708,7 @@ export default class LayerAttribute extends React.Component {
             height,
           },
           items,
+          option,
         )
       })
     }
