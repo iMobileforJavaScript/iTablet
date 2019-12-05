@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: 'Yes',
+  NO: 'No',
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
   SAVE_YES: 'Yes',
   SAVE_NO: 'No',
@@ -124,6 +126,8 @@ const Prompt = {
   PUBLISHING: 'Publishing',
   PUBLISH_SUCCESS: 'Published Successfully',
   PUBLISH_FAILED: 'Failed to Publish',
+  DELETE_CONFIRM: 'Are you sure you want to delete the item?',
+  BATCH_DELETE_CONFIRM: 'Are you sure you want to delete the selected item(s)?',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
   DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',

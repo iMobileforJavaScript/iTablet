@@ -5,12 +5,17 @@ import styles from './styles'
 import NavigationService from '../../../NavigationService'
 // import TabNavigationService from '../../../TabNavigationService'
 import { AnalystItem, PopModalList, AnalystBar } from '../../components'
-import { ConstPath, CheckStatus, TouchType } from '../../../../constants'
+import {
+  ConstPath,
+  CheckStatus,
+  TouchType,
+  ConstToolType,
+} from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { getLayerIconByType, getLayerWhiteIconByType } from '../../../../assets'
 import { getLanguage } from '../../../../language'
-import { Analyst_Types } from '../../AnalystType'
+// import { Analyst_Types } from '../../AnalystType'
 import {
   SMap,
   EngineType,
@@ -132,7 +137,7 @@ export default class ReferenceAnalystView extends Component {
     let optionParameter = {}
     // 泰森
     if (
-      this.type === Analyst_Types.THIESSEN_POLYGON &&
+      this.type === ConstToolType.MAP_ANALYSIS_THIESSEN_POLYGON &&
       this.state.isCustomLocale
     ) {
       // 检查选择面
@@ -183,7 +188,7 @@ export default class ReferenceAnalystView extends Component {
           },
           result = false
         switch (this.type) {
-          case Analyst_Types.THIESSEN_POLYGON:
+          case ConstToolType.MAP_ANALYSIS_THIESSEN_POLYGON:
             if (this.state.isCustomLocale) {
               if (this.state.selectRegionStatus === CheckStatus.CHECKED) {
                 optionParameter = {
@@ -202,7 +207,7 @@ export default class ReferenceAnalystView extends Component {
               optionParameter,
             )
             break
-          case Analyst_Types.MEASURE_DISTANCE:
+          case ConstToolType.MAP_ANALYSIS_MEASURE_DISTANCE:
             // result = await SAnalyst.erase(
             //   sourceData,
             //   targetData,
@@ -767,9 +772,9 @@ export default class ReferenceAnalystView extends Component {
       >
         <ScrollView style={styles.container}>
           {this.renderSourceData()}
-          {this.type === Analyst_Types.THIESSEN_POLYGON &&
+          {this.type === ConstToolType.MAP_ANALYSIS_THIESSEN_POLYGON &&
             this.renderDisplaySettingsData()}
-          {this.type === Analyst_Types.MEASURE_DISTANCE &&
+          {this.type === ConstToolType.MAP_ANALYSIS_MEASURE_DISTANCE &&
             this.renderReferenceData()}
           {this.renderResultData()}
         </ScrollView>

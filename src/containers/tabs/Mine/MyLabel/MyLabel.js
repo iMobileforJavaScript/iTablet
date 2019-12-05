@@ -1,13 +1,13 @@
 import { MyDataPage } from '../component'
 import DataHandler from '../DataHandler'
 import { FileTools } from '../../../../native'
-import { getLanguage } from '../../../../language/index'
 import { ConstPath } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
 
 class MyLabel extends MyDataPage {
   constructor(props) {
     super(props)
+    this.type = this.types.mark
     this.state = {
       ...this.state,
       shareToLocal: true,
@@ -104,24 +104,6 @@ class MyLabel extends MyDataPage {
       list.push(itemList[i].item.name)
     }
     return list
-  }
-
-  getItemPopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.UPLOAD_MARK,
-        action: () => {
-          this._closeModal()
-          this.ModalBtns && this.ModalBtns.setVisible(true)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DELETE_MARK,
-        action: this._onDeleteData,
-      },
-    ]
-    return data
   }
 }
 

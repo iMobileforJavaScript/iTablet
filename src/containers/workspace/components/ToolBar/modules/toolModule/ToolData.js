@@ -329,7 +329,7 @@ function getData(type, params) {
         },
         {
           key: 'selectLabel',
-          title: '删除标注',
+          title: getLanguage(global.language).Map_Layer.PLOTS_DELETE,
           action: ToolAction.selectLabel,
           size: 'large',
           image: getThemeAssets().attribute.icon_delete,

@@ -179,6 +179,11 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
+  horizontalScrollToStart = () => {
+    this.horizontalTable &&
+      this.horizontalTable.scrollTo({ x: 0, animated: false })
+  }
+
   scrollToLocation = params => {
     if (!params) return
     // 防止2秒内连续定位滚动
@@ -351,7 +356,7 @@ export default class LayerAttributeTable extends React.Component {
       item.data[0] !== getLanguage(global.language).Map_Label.NAME
     ) {
       this.props.onPressHeader({
-        fieldInfo: item.data[item.columnIndex].fieldInfo.fieldInfo,
+        fieldInfo: item.data[item.columnIndex].fieldInfo,
         index: item.columnIndex,
         pressView: item.pressView,
       })
@@ -552,7 +557,11 @@ export default class LayerAttributeTable extends React.Component {
 
   renderMultiDataTable = () => {
     return (
-      <ScrollView style={{ flex: 1 }} horizontal={true}>
+      <ScrollView
+        ref={ref => (this.horizontalTable = ref)}
+        style={{ flex: 1 }}
+        horizontal={true}
+      >
         <SectionList
           ref={ref => (this.table = ref)}
           refreshing={this.state.refreshing}
