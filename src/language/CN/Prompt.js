@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: '是',
+  NO: '否',
   SAVE_TITLE: '是否保存当前地图',
   SAVE_YES: '保存',
   SAVE_NO: '不保存',
@@ -122,6 +124,8 @@ const Prompt = {
   PUBLISHING: '发布服务中',
   PUBLISH_SUCCESS: '发布成功',
   PUBLISH_FAILED: '发布失败',
+  DELETE_CONFIRM: '是否删除当前数据？',
+  BATCH_DELETE_CONFIRM: '是否删除当前所选数据？',
 
   SELECT_AT_LEAST_ONE: '请至少选择一个数据',
   DELETE_MAP_RELATE_DATA: '删除数据将影响以下地图\n是否继续删除？',

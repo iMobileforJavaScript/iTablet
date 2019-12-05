@@ -130,6 +130,8 @@ const Profile = {
   MAP_3D: '3D Map',
   BROWSE_MAP: 'Browse',
 
+  GET_DATA_FAILED: 'Failed to get data',
+
   //创建数据集
   PLEASE_ADD_DATASET: 'Please add dataset',
   ADD_DATASET: 'Add Dataset',

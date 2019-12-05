@@ -1,11 +1,11 @@
 import { MyDataPage } from '../component'
 import DataHandler from '../DataHandler'
 import { FileTools } from '../../../../native'
-import { getLanguage } from '../../../../language/index'
 
 class MyScene extends MyDataPage {
   constructor(props) {
     super(props)
+    this.type = this.types.scene
     this.state = {
       ...this.state,
       shareToLocal: true,
@@ -64,24 +64,6 @@ class MyScene extends MyDataPage {
 
     let result = await FileTools.zipFiles(archivePaths, targetPath)
     return result
-  }
-
-  getItemPopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.UPLOAD_SCENE,
-        action: () => {
-          this._closeModal()
-          this.ModalBtns && this.ModalBtns.setVisible(true)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DELETE_SCENE,
-        action: this._onDeleteData,
-      },
-    ]
-    return data
   }
 }
 

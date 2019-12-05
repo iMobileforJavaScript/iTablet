@@ -19,7 +19,11 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from './ModalBtns'
 import UserType from '../../../../constants/UserType'
-import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
+import {
+  SOnlineService,
+  SIPortalService,
+  DatasetType,
+} from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant, SimpleDialog } from '../../Friend'
 import { MineItem, BatchHeadBar } from '../component'
@@ -28,6 +32,12 @@ import RNFS from 'react-native-fs'
 import styles from './styles'
 
 const appUtilsModule = NativeModules.AppUtils
+const pointImg = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
+const lineImg = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
+const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
+const textImg = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
+const CADImg = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+const IMGImg = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
 
 export default class MyDataPage extends Component {
   props: {
@@ -48,6 +58,7 @@ export default class MyDataPage extends Component {
       shareToIPortal: false,
       shareToWechat: false,
       shareToFriend: false,
+      showSectionHeader: false,
       sectionData: [],
       title: (params && params.title) || '',
       isRefreshing: false,
@@ -56,6 +67,16 @@ export default class MyDataPage extends Component {
     }
     this.getItemCallback = params.getItemCallback || undefined
     this.chatCallback = params.chatCallback || undefined
+  }
+
+  types = {
+    data: 'DATA',
+    map: 'MAP',
+    scene: 'SCENE',
+    mark: 'MARK',
+    symbol: 'SYMBOL',
+    template: 'TEMPLATE',
+    dataset: 'DATASET',
   }
 
   componentDidMount() {
@@ -99,24 +120,17 @@ export default class MyDataPage extends Component {
     return relativeExportPath
   }
 
-  getPagePopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(global.language).Profile.BATCH_OPERATE,
-        action: () => {
-          this.setState({
-            batchMode: !this.state.batchMode,
-          })
-        },
-      },
-    ]
-    return data
-  }
+  //页面popup选项，不会合并公共选项
+  getPagePopupData = () => []
 
-  getItemPopupData = () => {
-    return []
-  }
+  //项目popup选项，不会合并公共选项
+  getItemPopupData = () => []
+
+  //页面自定义选项，会合并公共选项
+  getCustomPagePopupData = () => []
+
+  //项目自定义选项，会合并公共选项
+  getCustomItemPopupData = () => []
 
   /******************************** 接口 end **************************************/
 
@@ -140,15 +154,27 @@ export default class MyDataPage extends Component {
     }
   }
 
-  _getSectionData = async () => {
+  _getSectionData = async (showLoading = false) => {
     try {
+      showLoading &&
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.LOADING,
+        )
       let sectionData = await this.getData()
       this.setState({
         sectionData: sectionData,
         selectedNum: 0,
       })
+      setTimeout(() => {
+        showLoading && this.container && this.container.setLoading(false)
+      }, 1000)
     } catch (e) {
       // console.log(e)
+      setTimeout(() => {
+        showLoading && this.container && this.container.setLoading(false)
+        Toast.show(getLanguage(global.language).Profile.GET_DATA_FAILED)
+      }, 1000)
     }
   }
 
@@ -160,25 +186,23 @@ export default class MyDataPage extends Component {
         relatedMap = await this.getRelatedMap(this.itemInfo)
       }
       if (relatedMap) {
-        this.SimpleDialog.setDialogHeight(scaleSize(270))
-        this.SimpleDialog.setConfirm(() => {
-          this._onDeleteData(true)
+        this.SimpleDialog.set({
+          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+          confirmAction: () => this._onDeleteData(true),
+          renderExtra: this.renderRelatedMap(relatedMap),
+          dialogHeight: scaleSize(270),
         })
-        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMap))
         this.SimpleDialog.setVisible(true)
         return
       }
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
-        this.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.DELETING_DATA,
-        )
+        this.setLoading(true, getLanguage(global.language).Prompt.DELETING_DATA)
         let result = false
         result = await this.deleteData()
         Toast.show(
           result
-            ? getLanguage(this.props.language).Prompt.DELETED_SUCCESS
-            : getLanguage(this.props.language).Prompt.FAILED_TO_DELETE,
+            ? getLanguage(global.language).Prompt.DELETED_SUCCESS
+            : getLanguage(global.language).Prompt.FAILED_TO_DELETE,
         )
         if (result) {
           this.itemInfo = null
@@ -198,10 +222,6 @@ export default class MyDataPage extends Component {
   _batchDelete = async (forceDelete = false) => {
     try {
       let deleteArr = this._getSelectedList()
-      if (deleteArr.length === 0) {
-        Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
-        return
-      }
       let relatedMaps = []
       if (!forceDelete) {
         relatedMaps = await this.getRelatedMaps(deleteArr)
@@ -213,11 +233,12 @@ export default class MyDataPage extends Component {
         } else {
           dialogHeight = scaleSize(370)
         }
-        this.SimpleDialog.setDialogHeight(dialogHeight)
-        this.SimpleDialog.setConfirm(() => {
-          this._batchDelete(true)
+        this.SimpleDialog.set({
+          text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
+          confirmAction: () => this._batchDelete(true),
+          renderExtra: this.renderRelatedMap(relatedMaps),
+          dialogHeight: dialogHeight,
         })
-        this.SimpleDialog.setExtra(this.renderRelatedMap(relatedMaps))
         this.SimpleDialog.setVisible(true)
         return
       }
@@ -247,7 +268,7 @@ export default class MyDataPage extends Component {
         }
       }
       if (
-        this.state.title === getLanguage(this.props.language).Profile.MARK &&
+        this.state.title === getLanguage(global.language).Profile.MARK &&
         fileName === ''
       ) {
         this.type = type
@@ -255,7 +276,7 @@ export default class MyDataPage extends Component {
         return
       }
       this.ModalBtns && this.ModalBtns.setVisible(false)
-      this.setLoading(true, getLanguage(this.props.language).Prompt.SHARING)
+      this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
         fileName = this.itemInfo.item.name
@@ -291,10 +312,10 @@ export default class MyDataPage extends Component {
       if (result !== undefined) {
         result
           ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
-          : Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+          : Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
       }
     } catch (error) {
-      Toast.show(getLanguage(this.props.language).Prompt.SHARE_FAILED)
+      Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
     } finally {
       this.setLoading(false)
     }
@@ -317,7 +338,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let result
-    if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
+    if (this.state.title === getLanguage(global.language).Profile.MAP) {
       result = await SOnlineService.uploadFile(path, fileName)
     } else {
       result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
@@ -330,7 +351,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let uploadResult
-    if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
+    if (this.state.title === getLanguage(global.language).Profile.MAP) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
     } else {
       uploadResult = await SIPortalService.uploadDataByType(
@@ -354,7 +375,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let type
-    if (this.state.title === getLanguage(this.props.language).Profile.MAP) {
+    if (this.state.title === getLanguage(global.language).Profile.MAP) {
       type = MsgConstant.MSG_MAP
     }
     let action = [
@@ -411,7 +432,7 @@ export default class MyDataPage extends Component {
     for (let i = 0; i < maps.length; i++) {
       let value = await RNFS.readFile(homePath + maps[i].path)
       let jsonObj = JSON.parse(value)
-      if (this.state.title === getLanguage(this.props.language).Profile.DATA) {
+      if (this.state.title === getLanguage(global.language).Profile.DATA) {
         for (let n in jsonObj.Datasources) {
           if (itemPath === ConstPath.UserPath + jsonObj.Datasources[n].Server) {
             mapName = maps[i].name
@@ -419,7 +440,7 @@ export default class MyDataPage extends Component {
           }
         }
       } else if (
-        this.state.title === getLanguage(this.props.language).Profile.SYMBOL
+        this.state.title === getLanguage(global.language).Profile.SYMBOL
       ) {
         if (
           itemPath.substr(0, itemPath.lastIndexOf('.')) ===
@@ -439,8 +460,8 @@ export default class MyDataPage extends Component {
   getRelatedMap = async itemInfo => {
     let mapName = undefined
     if (
-      this.state.title !== getLanguage(this.props.language).Profile.DATA &&
-      this.state.title !== getLanguage(this.props.language).Profile.SYMBOL
+      this.state.title !== getLanguage(global.language).Profile.DATA &&
+      this.state.title !== getLanguage(global.language).Profile.SYMBOL
     ) {
       return mapName
     }
@@ -455,8 +476,8 @@ export default class MyDataPage extends Component {
   getRelatedMaps = async itemInfos => {
     let mapNames = []
     if (
-      this.state.title !== getLanguage(this.props.language).Profile.DATA &&
-      this.state.title !== getLanguage(this.props.language).Profile.SYMBOL
+      this.state.title !== getLanguage(global.language).Profile.DATA &&
+      this.state.title !== getLanguage(global.language).Profile.SYMBOL
     ) {
       return mapNames
     }
@@ -525,24 +546,56 @@ export default class MyDataPage extends Component {
 
   /******************************* popup ***********************************************/
 
-  _closeModal = () => {
-    this.ItemPopModal && this.ItemPopModal.setVisible(false)
-    this.PagePopModal && this.PagePopModal.setVisible(false)
+  //页面公共选项
+  getCommonPagePopupData = () => [
+    {
+      title: getLanguage(global.language).Profile.BATCH_OPERATE,
+      action: () => {
+        this.setState({
+          batchMode: !this.state.batchMode,
+        })
+      },
+    },
+  ]
+
+  //项目公共选项
+  getCommonItemPopupData = () => [
+    {
+      title: getLanguage(global.language).Profile[`UPLOAD_${this.type}`],
+      action: () => {
+        this._closeModal()
+        this.ModalBtns && this.ModalBtns.setVisible(true)
+      },
+    },
+    {
+      title: getLanguage(global.language).Profile[`DELETE_${this.type}`],
+      action: this.showDeleteConfirmDialog,
+    },
+  ]
+
+  _getPagePopupData = () => {
+    if (this.getPagePopupData().length > 0) {
+      return this.getPagePopupData()
+    } else {
+      return this.getCustomPagePopupData().concat(this.getCommonPagePopupData())
+    }
   }
 
-  _renderItemPopup = () => {
-    let data = this.getItemPopupData()
-    return (
-      <MyDataPopupModal
-        ref={ref => (this.ItemPopModal = ref)}
-        data={data}
-        onCloseModal={this._closeModal}
-      />
-    )
+  _getItemPopupData = () => {
+    if (this.getItemPopupData().length > 0) {
+      return this.getItemPopupData()
+    } else {
+      return this.getCustomItemPopupData().concat(this.getCommonItemPopupData())
+    }
+  }
+
+  _closeModal = () => {
+    this.PagePopModal && this.PagePopModal.setVisible(false)
+    this.ItemPopModal && this.ItemPopModal.setVisible(false)
   }
 
   _renderPagePopup = () => {
-    let data = this.getPagePopupData()
+    let data = this._getPagePopupData()
     return (
       <MyDataPopupModal
         ref={ref => (this.PagePopModal = ref)}
@@ -552,59 +605,140 @@ export default class MyDataPage extends Component {
     )
   }
 
+  _renderItemPopup = () => {
+    let data = this._getItemPopupData()
+    return (
+      <MyDataPopupModal
+        ref={ref => (this.ItemPopModal = ref)}
+        data={data}
+        onCloseModal={this._closeModal}
+      />
+    )
+  }
+
   /******************************* popup end *******************************************/
+
+  /******************************* dialog **********************************************/
+
+  showDeleteConfirmDialog = () => {
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.DELETE_CONFIRM,
+      confirmAction: this._onDeleteData,
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showBatchDeleteConfirmDialog = () => {
+    let deleteArr = this._getSelectedList()
+    if (deleteArr.length === 0) {
+      Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
+      return
+    }
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.BATCH_DELETE_CONFIRM,
+      confirmAction: this._batchDelete,
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  /******************************* dialog end ******************************************/
 
   /******************************* UI **************************************************/
 
-  renderSectionHeader = () => {
-    return <View />
+  renderSectionHeader = ({ section }) => {
+    let title = section.title
+    let imageSource = section.isShowItem
+      ? require('../../../../assets/Mine/local_data_open.png')
+      : require('../../../../assets/Mine/local_data_close.png')
+    return (
+      <TouchableOpacity
+        style={styles.sectionView}
+        onPress={() => {
+          let sectionData = [...this.state.sectionData]
+          for (let i = 0; i < sectionData.length; i++) {
+            let data = sectionData[i]
+            if (data.title === title) {
+              data.isShowItem = !data.isShowItem
+              break
+            }
+          }
+          this.setState({ sectionData: sectionData })
+        }}
+      >
+        <Image source={imageSource} style={styles.sectionImg} />
+        <Text style={styles.sectionText}>{section.title}</Text>
+      </TouchableOpacity>
+    )
   }
 
   _renderItem = info => {
     if (!info.section.isShowItem) {
       return <View />
     }
-    let name = info.item.name
-    let txtInfo =
-      name.lastIndexOf('.') > 0
-        ? name.substring(0, name.lastIndexOf('.'))
-        : name
-    let txtType =
-      name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
 
-    let img,
+    let txtInfo,
+      txtType,
+      img,
       isShowMore = true
     if (this.getItemCallback || this.chatCallback) {
       isShowMore = false
     }
-    switch (this.state.title) {
-      case getLanguage(this.props.language).Profile.MAP:
-        img = require('../../../../assets/mapToolbar/list_type_map_black.png')
-        break
-      case getLanguage(this.props.language).Profile.SYMBOL:
-        if (txtType === 'sym') {
-          // 点
-          img = require('../../../../assets/map/icon-shallow-dot_black.png')
-        } else if (txtType === 'lsl') {
-          // 线
-          img = require('../../../../assets/map/icon-shallow-line_black.png')
-        } else if (txtType === 'bru') {
-          // 面
-          img = require('../../../../assets/map/icon-shallow-polygon_black.png')
-        } else {
-          // 默认
+
+    if (this.type === this.types.dataset) {
+      txtInfo = info.item.datasetName
+      let type = info.item.datasetType
+      if (type === DatasetType.POINT) {
+        img = pointImg
+      } else if (type === DatasetType.LINE) {
+        img = lineImg
+      } else if (type === DatasetType.REGION) {
+        img = regionImg
+      } else if (type === DatasetType.TEXT) {
+        img = textImg
+      } else if (type === DatasetType.CAD) {
+        img = CADImg
+      } else if (type === DatasetType.IMAGE) {
+        img = IMGImg
+      }
+    } else {
+      let name = info.item.name
+      txtInfo =
+        name.lastIndexOf('.') > 0
+          ? name.substring(0, name.lastIndexOf('.'))
+          : name
+      txtType =
+        name.lastIndexOf('.') > 0
+          ? name.substring(name.lastIndexOf('.') + 1)
+          : ''
+      switch (this.state.title) {
+        case getLanguage(global.language).Profile.MAP:
+          img = require('../../../../assets/mapToolbar/list_type_map_black.png')
+          break
+        case getLanguage(global.language).Profile.SYMBOL:
+          if (txtType === 'sym') {
+            // 点
+            img = require('../../../../assets/map/icon-shallow-dot_black.png')
+          } else if (txtType === 'lsl') {
+            // 线
+            img = require('../../../../assets/map/icon-shallow-line_black.png')
+          } else if (txtType === 'bru') {
+            // 面
+            img = require('../../../../assets/map/icon-shallow-polygon_black.png')
+          } else {
+            // 默认
+            img = require('../../../../assets/Mine/mine_my_online_data_black.png')
+          }
+          break
+        case getLanguage(global.language).Profile.SCENE:
+          img = require('../../../../assets/mapTools/icon_scene.png')
+          break
+        case getLanguage(global.language).Profile.TEMPLATE:
+          img = require('../../../../assets/mapToolbar/list_type_map_black.png')
+          break
+        default:
           img = require('../../../../assets/Mine/mine_my_online_data_black.png')
-        }
-        break
-      case getLanguage(this.props.language).Profile.SCENE:
-        img = require('../../../../assets/mapTools/icon_scene.png')
-        break
-      case getLanguage(this.props.language).Profile.TEMPLATE:
-        img = require('../../../../assets/mapToolbar/list_type_map_black.png')
-        break
-      default:
-        img = require('../../../../assets/Mine/mine_my_online_data_black.png')
-        break
+          break
+      }
     }
     return (
       <MineItem
@@ -702,7 +836,7 @@ export default class MyDataPage extends Component {
   renderBatchBottom = () => {
     return (
       <View style={styles.bottomStyle}>
-        {this.state.title === getLanguage(this.props.language).Profile.MARK && (
+        {this.state.title === getLanguage(global.language).Profile.MARK && (
           <TouchableOpacity
             style={styles.bottomItemStyle}
             onPress={() => {
@@ -724,7 +858,7 @@ export default class MyDataPage extends Component {
         )}
         <TouchableOpacity
           style={styles.bottomItemStyle}
-          onPress={() => this._batchDelete()}
+          onPress={this.showBatchDeleteConfirmDialog}
         >
           <Image
             style={{
@@ -822,7 +956,9 @@ export default class MyDataPage extends Component {
           sections={sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
-          renderSectionHeader={this.renderSectionHeader}
+          renderSectionHeader={
+            this.state.showSectionHeader ? this.renderSectionHeader : null
+          }
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
