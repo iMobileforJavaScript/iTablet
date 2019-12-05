@@ -265,11 +265,8 @@ export default class MyDataPage extends Component {
           return
         }
       }
-      if (
-        this.state.title === getLanguage(global.language).Profile.MARK &&
-        fileName === ''
-      ) {
-        this.type = type
+      if (this.type === this.types.mark && fileName === '') {
+        this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
@@ -320,15 +317,21 @@ export default class MyDataPage extends Component {
   }
 
   shareToWechat = async fileName => {
-    await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
-    let result = await appUtilsModule.sendFileOfWechat({
-      filePath: path,
-      title: fileName + '.zip',
-      description: 'SuperMap iTablet',
-    })
-    return result
+    let result
+    let isInstalled = await appUtilsModule.isWXInstalled()
+    if (isInstalled) {
+      await this.exportData(fileName)
+      let homePath = await FileTools.appendingHomeDirectory()
+      let path = homePath + this.getRelativeTempFilePath()
+      result = await appUtilsModule.sendFileOfWechat({
+        filePath: path,
+        title: fileName + '.zip',
+        description: 'SuperMap iTablet',
+      })
+    } else {
+      Toast.show(getLanguage(global.language).Prompt.WX_NOT_INSTALLED)
+    }
+    return result === false ? result : undefined
   }
 
   shareToOnline = async fileName => {
@@ -336,7 +339,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let result
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       result = await SOnlineService.uploadFile(path, fileName)
     } else {
       result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
@@ -349,7 +352,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let uploadResult
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
     } else {
       uploadResult = await SIPortalService.uploadDataByType(
@@ -373,7 +376,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let type
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       type = MsgConstant.MSG_MAP
     }
     let action = [
@@ -387,11 +390,21 @@ export default class MyDataPage extends Component {
     NavigationService.navigate('SelectFriend', {
       user: this.props.user,
       callBack: async targetId => {
-        await this.exportData(fileName)
-        NavigationService.replace('CoworkTabs', {
-          targetId: targetId,
-          action: action,
-        })
+        try {
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SHARE_PREPARE,
+          )
+          await this.exportData(fileName)
+          NavigationService.replace('CoworkTabs', {
+            targetId: targetId,
+            action: action,
+          })
+        } catch (error) {
+          Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+        } finally {
+          GLOBAL.Loading.setLoading(false)
+        }
       },
     })
   }
@@ -719,11 +732,11 @@ export default class MyDataPage extends Component {
         name.lastIndexOf('.') > 0
           ? name.substring(name.lastIndexOf('.') + 1)
           : ''
-      switch (this.state.title) {
-        case getLanguage(global.language).Profile.MAP:
+      switch (this.type) {
+        case this.types.map:
           img = require('../../../../assets/mapToolbar/list_type_map_black.png')
           break
-        case getLanguage(global.language).Profile.SYMBOL:
+        case this.types.symbol:
           if (txtType === 'sym') {
             // 点
             img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -738,10 +751,10 @@ export default class MyDataPage extends Component {
             img = require('../../../../assets/Mine/mine_my_online_data_black.png')
           }
           break
-        case getLanguage(global.language).Profile.SCENE:
+        case this.types.scene:
           img = require('../../../../assets/mapTools/icon_scene.png')
           break
-        case getLanguage(global.language).Profile.TEMPLATE:
+        case this.types.template:
           img = require('../../../../assets/mapToolbar/list_type_map_black.png')
           break
         default:
@@ -845,7 +858,7 @@ export default class MyDataPage extends Component {
   renderBatchBottom = () => {
     return (
       <View style={styles.bottomStyle}>
-        {this.state.title === getLanguage(global.language).Profile.MARK && (
+        {this.type === this.types.mark && (
           <TouchableOpacity
             style={styles.bottomItemStyle}
             onPress={() => {
@@ -932,7 +945,7 @@ export default class MyDataPage extends Component {
             return
           }
           this.InputDialog.setDialogVisible(false)
-          this._onShareData(this.type, name)
+          this._onShareData(this.shareType, name)
         }}
         cancelAction={() => {
           this.InputDialog.setDialogVisible(false)

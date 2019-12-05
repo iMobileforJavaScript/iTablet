@@ -14,6 +14,8 @@ const Prompt = {
   WECHAT: 'Wechat',
   BEGIN: 'Begin',
   STOP: 'Stop',
+  FIELD_TO_PAUSE: 'Failed to pause',
+  WX_NOT_INSTALLED: 'Wechat not installed',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',
@@ -47,6 +49,7 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  ADD_MAP_FAILED: 'Can not add current map',
   CREATE_THEME_FAILED: 'Failed to Create Theme',
   PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
@@ -93,6 +96,8 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
+
+  CHOOSE_LAYER: 'Choose Layer',
 
   COLLECT_SUCCESS: 'Collect Success',
 
@@ -176,6 +181,17 @@ const Prompt = {
 
   NETWORK_ERROR: 'Network Error',
   NO_NETWORK: 'No Internet connection',
+  CHOOSE_CLASSIFY_MODEL: 'Choose Classify Model',
+  USED_IMMEDIATELY: 'Used Immediately',
+  USING: 'Using',
+  DEFAULT_MODEL: 'Default Model',
+  DUSTBIN_MODEL: 'Dustbin Model',
+  LANT_MODEL: 'Lant Model',
+  CHANGING: 'Changing',
+  CHANGE_SUCCESS: 'Change Success',
+  CHANGE_FAULT: 'Change Fault',
+  DETECT_DUSTBIN_MODEL: 'Dustbin Model',
+  ROAD_MODEL: 'Road Model',
 
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',

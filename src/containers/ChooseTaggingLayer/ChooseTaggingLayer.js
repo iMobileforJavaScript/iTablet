@@ -250,7 +250,7 @@ export default class ChooseTaggingLayer extends React.Component {
         <Container
           ref={ref => (this.container = ref)}
           headerProps={{
-            title: '选择图层',
+            title: getLanguage(this.props.language).Prompt.CHOOSE_LAYER,
             backAction: this.back,
           }}
         >

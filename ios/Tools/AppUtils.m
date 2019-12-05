@@ -14,11 +14,11 @@ RCT_EXPORT_MODULE();
 RCT_REMAP_METHOD(AppExit,AppExit:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   // NSString* home = NSHomeDirectory();
   dispatch_async(dispatch_get_main_queue(), ^{
-    UIWindow* window =  [UIApplication sharedApplication].keyWindow;
-    [UIView animateWithDuration:1.0f animations:^{
-      window.alpha = 0;
+    UIWindow* window = [UIApplication sharedApplication].keyWindow;
+    [UIView animateWithDuration:1.0f animations:^{
+      window.alpha = 0;
       //window.frame = CGRectMake(0, window.bounds.size.height, 0, 0);
-    } completion:^(BOOL finished) {
+    } completion:^(BOOL finished) {
       exit(0);
     }];
   });
@@ -35,6 +35,14 @@ RCT_REMAP_METHOD(getLocale, getLocaleWithResolve:(RCTPromiseResolveBlock)resolve
     resolve(language);
   }@catch (NSException *exception) {
     reject(@"getLocale", exception.reason, nil);
+  }
+}
+
+RCT_REMAP_METHOD(isWXInstalled, installedResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  @try {
+    resolve([NSNumber numberWithBool:[WeiXinUtils isWXInstalled]]);
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
   }
 }
 
