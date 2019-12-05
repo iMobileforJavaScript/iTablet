@@ -69,7 +69,7 @@ const Prompt = {
   INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
-  SERCHING: '搜索中',
+  SEARCHING: '搜索中',
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
