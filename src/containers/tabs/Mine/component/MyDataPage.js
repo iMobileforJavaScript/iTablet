@@ -265,12 +265,12 @@ export default class MyDataPage extends Component {
           return
         }
       }
+      this.ShareModal && this.ShareModal.setVisible(false)
       if (this.type === this.types.mark && fileName === '') {
         this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
-      this.ModalBtns && this.ModalBtns.setVisible(false)
       this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
@@ -570,7 +570,7 @@ export default class MyDataPage extends Component {
       title: getLanguage(global.language).Profile[`UPLOAD_${this.type}`],
       action: () => {
         this._closeModal()
-        this.ModalBtns && this.ModalBtns.setVisible(true)
+        this.ShareModal && this.ShareModal.setVisible(true)
       },
     },
     {
@@ -862,7 +862,7 @@ export default class MyDataPage extends Component {
           <TouchableOpacity
             style={styles.bottomItemStyle}
             onPress={() => {
-              this.ModalBtns.setVisible(true)
+              this.ShareModal.setVisible(true)
             }}
           >
             <Image
@@ -1012,7 +1012,7 @@ export default class MyDataPage extends Component {
         {this.renderInputDialog()}
         <ModalBtns
           ref={ref => {
-            this.ModalBtns = ref
+            this.ShareModal = ref
           }}
           actionOfLocal={
             this.state.shareToLocal
