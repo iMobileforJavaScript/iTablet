@@ -155,17 +155,13 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
-    marginLeft: scaleSize(20),
+    marginHorizontal: scaleSize(10),
     textAlign: 'center',
   },
   dialogBackground: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
   opacityView: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
 })

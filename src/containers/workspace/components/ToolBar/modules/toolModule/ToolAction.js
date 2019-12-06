@@ -669,13 +669,13 @@ function matchPictureStyle() {
             )
           }
         })
-        ToolbarModule.getParams().showFullMap &&
-          ToolbarModule.getParams().showFullMap(true)
-        _params.setToolbarVisible(true, ConstToolType.STYLE_TRANSFER, {
-          isFullScreen: false,
-          height: 0,
-        })
       }
+      ToolbarModule.getParams().showFullMap &&
+        ToolbarModule.getParams().showFullMap(true)
+      _params.setToolbarVisible(true, ConstToolType.STYLE_TRANSFER, {
+        isFullScreen: false,
+        height: 0,
+      })
     },
   })
 }

@@ -10,8 +10,6 @@ import { getLanguage } from '../../../../language'
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
-    selectPoint: Object,
-    changeMapSelectPoint: () => {},
     setMapNavigation: () => {},
   }
 
@@ -36,16 +34,50 @@ export default class NavigationStartHead extends React.Component {
       isShow: false,
       name: '',
     })
-    this.props.changeMapSelectPoint({
-      startPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
-      endPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_DESTINATION,
-    })
+    GLOBAL.STARTNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_START_POINT
+    GLOBAL.ENDNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_DESTINATION
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
   }
 
+  _onSelectPointPress = async isStart => {
+    let button = isStart
+      ? getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
+      : getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_DESTINATION
+    GLOBAL.TouchType = isStart
+      ? TouchType.NAVIGATION_TOUCH_BEGIN
+      : TouchType.NAVIGATION_TOUCH_END
+    GLOBAL.MAPSELECTPOINT.setVisible(true)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
+      true,
+      {
+        button,
+      },
+      false,
+    )
+    this.setVisible(false)
+    !GLOBAL.INDOORSTART &&
+      GLOBAL.LocationView &&
+      GLOBAL.LocationView.setVisible(true, true)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
+    await SMap.clearTrackingLayer()
+    await SMap.clearPoint()
+    if (isStart) {
+      GLOBAL.STARTX = null
+      GLOBAL.STARTY = null
+      GLOBAL.STRATNAME = null
+    } else {
+      GLOBAL.ENDX = null
+      GLOBAL.ENDY = null
+      GLOBAL.ENDNAME = null
+    }
+  }
   _renderSearchView = () => {
     if (this.state.show) {
       return (
@@ -105,23 +137,8 @@ export default class NavigationStartHead extends React.Component {
                 />
                 <TouchableOpacity
                   style={styles.onInput}
-                  onPress={async () => {
-                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
-                    GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
-                      true,
-                      {
-                        button: getLanguage(GLOBAL.language).Map_Main_Menu
-                          .SET_AS_START_POINT,
-                      },
-                      false,
-                    )
-                    this.setVisible(false)
-                    !GLOBAL.INDOORSTART &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, true)
-                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
-                    await SMap.clearPoint()
+                  onPress={() => {
+                    this._onSelectPointPress(true)
                   }}
                 >
                   <Text
@@ -129,7 +146,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.selectPoint.startPoint}
+                    {GLOBAL.STARTNAME}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -159,23 +176,8 @@ export default class NavigationStartHead extends React.Component {
                 />
                 <TouchableOpacity
                   style={styles.secondInput}
-                  onPress={async () => {
-                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
-                    GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(
-                      true,
-                      {
-                        button: getLanguage(GLOBAL.language).Map_Main_Menu
-                          .SET_AS_DESTINATION,
-                      },
-                      false,
-                    )
-                    this.setVisible(false)
-                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
-                    !GLOBAL.INDOOREND &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, false)
-                    await SMap.clearPoint()
+                  onPress={() => {
+                    this._onSelectPointPress(false)
                   }}
                 >
                   <Text
@@ -183,7 +185,7 @@ export default class NavigationStartHead extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.selectPoint.endPoint}
+                    {GLOBAL.ENDNAME}
                   </Text>
                 </TouchableOpacity>
               </View>

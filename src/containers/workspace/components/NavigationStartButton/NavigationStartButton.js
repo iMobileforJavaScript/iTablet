@@ -213,7 +213,8 @@ export default class NavigationStartButton extends React.Component {
   }
   renderItem = ({ item }) => {
     let roadLength = item.roadLength || item.length
-    let turnType = item.turnType || item.dirToSwerve
+    let turnType =
+      item.turnType !== undefined ? item.turnType : item.dirToSwerve
     if (roadLength > 1000)
       roadLength =
         (roadLength / 1000).toFixed(1) +
@@ -333,7 +334,7 @@ export default class NavigationStartButton extends React.Component {
           numberOfLines={1}
           ellipsizeMode={'tail'}
         >
-          {GLOBAL.ENDPOINT}
+          {GLOBAL.ENDNAME}
         </Text>
       </View>
     )

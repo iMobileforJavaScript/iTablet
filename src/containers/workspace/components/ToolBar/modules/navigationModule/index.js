@@ -8,55 +8,55 @@ import { Toast } from '../../../../../../utils'
 import { getLanguage } from '../../../../../../language'
 
 async function action(type) {
-  const _params = ToolbarModule.getParams()
-  let isIndoorMap = await SMap.isIndoorMap()
-  if (isIndoorMap) {
-    //室内导航
-    SMap.startIndoorNavigation()
-    NavigationService.navigate('NavigationView', {
-      changeNavPathInfo: _params.changeNavPathInfo,
-      selectPoint: _params.selectPoint,
-      changeMapSelectPoint: _params.changeMapSelectPoint,
-      showLocationView: false,
-    })
-  } else {
-    //行业导航
-    let navigationDatas = _params.getNavigationDatas()
-    if (navigationDatas) {
-      SMap.startNavigation(navigationDatas)
+  try {
+    const _params = ToolbarModule.getParams()
+    let isIndoorMap = await SMap.isIndoorMap()
+    if (isIndoorMap) {
+      //室内导航
+      SMap.startIndoorNavigation()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: _params.changeNavPathInfo,
-        selectPoint: _params.selectPoint,
-        changeMapSelectPoint: _params.changeMapSelectPoint,
-        showLocationView: true,
+        showLocationView: false,
       })
     } else {
-      const _data = await NavigationData.getData(type)
-      if (_data.data.length > 0) {
-        _params.showFullMap && _params.showFullMap(true)
-        _params.setToolbarVisible(true, type, {
-          containerType: ToolbarType.list,
-          isFullScreen: true,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          height:
-            _params.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5],
-          data: _data.data,
-          buttons: _data.buttons,
+      //行业导航
+      let navigationDatas = _params.getNavigationDatas()
+      if (navigationDatas) {
+        SMap.startNavigation(navigationDatas)
+        NavigationService.navigate('NavigationView', {
+          changeNavPathInfo: _params.changeNavPathInfo,
+          showLocationView: true,
         })
-        let data = {
-          type: type,
-          getData: NavigationData.getData,
-          data: _data,
-          actions: NavigationAction,
-        }
-        ToolbarModule.setData(data)
       } else {
-        Toast.show(getLanguage(_params.language).Prompt.NO_NETWORK_DATASETS)
+        const _data = await NavigationData.getData(type)
+        if (_data.data.length > 0) {
+          _params.showFullMap && _params.showFullMap(true)
+          _params.setToolbarVisible(true, type, {
+            containerType: ToolbarType.list,
+            isFullScreen: true,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            height:
+              _params.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5],
+            data: _data.data,
+            buttons: _data.buttons,
+          })
+          let data = {
+            type: type,
+            getData: NavigationData.getData,
+            data: _data,
+            actions: NavigationAction,
+          }
+          ToolbarModule.setData(data)
+        } else {
+          Toast.show(getLanguage(_params.language).Prompt.NO_NETWORK_DATASETS)
+        }
       }
     }
+  } catch (e) {
+    //console.warn(e)
   }
 }
 

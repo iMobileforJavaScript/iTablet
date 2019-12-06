@@ -74,6 +74,8 @@ import com.android.build.OutputFile
 
 project.ext.react = [
         entryFile: "index.js"
+//        inputExcludes:["ios/**","_tests_/**","bundle_out/**"],
+//        inputExcludes: ["android/**", "ios/**","bundle_out/**","__tests__/**"],
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"

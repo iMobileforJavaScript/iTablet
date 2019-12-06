@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
-import { scaleSize, setSpText, Toast } from '../../../../utils'
+import { FetchUtils, scaleSize, setSpText, Toast } from '../../../../utils'
 import color from '../../../../styles/color'
 import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../../containers/NavigationService'
@@ -11,10 +11,10 @@ export default class MapSelectPointButton extends React.Component {
   props: {
     changeNavPathInfo: () => {},
     headerProps?: Object,
-    selectPoint: Object,
-    changeMapSelectPoint: () => {},
     setNavigationHistory: () => {},
     navigationhistory: Array,
+    getNavigationDatas: () => {},
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -31,25 +31,30 @@ export default class MapSelectPointButton extends React.Component {
   }
 
   setButton = async () => {
-    let pathLength, path
+    let pathLength,
+      path,
+      isOnline = false
+    let showLocationView = !(await SMap.isIndoorMap())
     if (
       this.state.button ===
       getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
     ) {
       if (GLOBAL.STARTX !== undefined) {
-        await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
+        GLOBAL.STARTNAME = await FetchUtils.getPointName(
+          GLOBAL.STARTX,
+          GLOBAL.STARTY,
+        )
         if (this.state.firstpage) {
           GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
-            selectPoint: this.props.selectPoint,
-            changeMapSelectPoint: this.props.changeMapSelectPoint,
+            showLocationView,
           })
         } else {
-          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-          GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-          this.setVisible(false)
-          GLOBAL.MAPSELECTPOINT.setVisible(false)
+          this.props.setLoading(
+            true,
+            getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+          )
           if (GLOBAL.ENDX !== undefined) {
             await SMap.getEndPoint(
               GLOBAL.ENDX,
@@ -58,23 +63,61 @@ export default class MapSelectPointButton extends React.Component {
               GLOBAL.ENDPOINTFLOOR,
             )
             let result
-            if (GLOBAL.INDOOREND) {
-              result = await SMap.beginIndoorNavigation(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.ENDX,
-                GLOBAL.ENDY,
+            try {
+              if (GLOBAL.INDOOREND) {
+                result = await SMap.beginIndoorNavigation(
+                  GLOBAL.STARTX,
+                  GLOBAL.STARTY,
+                  GLOBAL.ENDX,
+                  GLOBAL.ENDY,
+                )
+              } else {
+                let navInfos = await SMap.isPointsInMapBounds()
+                if (navInfos && navInfos.name) {
+                  await SMap.startNavigation(navInfos)
+                  result = await SMap.beginNavigation(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                } else {
+                  result = await FetchUtils.routeAnalyst(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                  if (result && result[0] && result[0].pathInfos) {
+                    await SMap.drawOnlinePath(result[0].pathPoints)
+                    isOnline = true
+                  } else {
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
+                    return
+                  }
+                }
+              }
+            } catch (e) {
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
-            } else {
-              result = await SMap.beginNavigation(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.ENDX,
-                GLOBAL.ENDY,
-              )
+              return
             }
-            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            if (isOnline) {
+              pathLength = { length: result[0].pathLength }
+              path = result[0].pathInfos
+            } else {
+              path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+              pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            }
+            this.props.setLoading(false)
+            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+            GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+            GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+            this.setVisible(false)
+            GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
               Toast.show(
@@ -88,19 +131,18 @@ export default class MapSelectPointButton extends React.Component {
       }
     } else {
       if (GLOBAL.ENDX !== undefined) {
-        await SMap.getPointName(GLOBAL.ENDX, GLOBAL.ENDY, false)
+        GLOBAL.ENDNAME = await FetchUtils.getPointName(GLOBAL.ENDX, GLOBAL.ENDY)
         if (this.state.firstpage) {
           GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
-            selectPoint: this.props.selectPoint,
-            changeMapSelectPoint: this.props.changeMapSelectPoint,
+            showLocationView,
           })
         } else {
-          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-          GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-          this.setVisible(false)
-          GLOBAL.MAPSELECTPOINT.setVisible(false)
+          this.props.setLoading(
+            true,
+            getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+          )
           if (GLOBAL.STARTX !== undefined) {
             let result
             await SMap.getStartPoint(
@@ -109,23 +151,60 @@ export default class MapSelectPointButton extends React.Component {
               GLOBAL.INDOORSTART,
               GLOBAL.STARTPOINTFLOOR,
             )
-            if (GLOBAL.INDOOREND) {
-              result = await SMap.beginIndoorNavigation(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.ENDX,
-                GLOBAL.ENDY,
+            try {
+              if (GLOBAL.INDOOREND) {
+                result = await SMap.beginIndoorNavigation(
+                  GLOBAL.STARTX,
+                  GLOBAL.STARTY,
+                  GLOBAL.ENDX,
+                  GLOBAL.ENDY,
+                )
+              } else {
+                let navInfos = await SMap.isPointsInMapBounds()
+                if (navInfos && navInfos.name) {
+                  await SMap.startNavigation(navInfos)
+                  result = await SMap.beginNavigation(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                } else {
+                  result = await FetchUtils.routeAnalyst(
+                    GLOBAL.STARTX,
+                    GLOBAL.STARTY,
+                    GLOBAL.ENDX,
+                    GLOBAL.ENDY,
+                  )
+                  if (result && result[0] && result[0].pathInfos) {
+                    await SMap.drawOnlinePath(result[0].pathPoints)
+                    isOnline = true
+                  } else {
+                    Toast.show(
+                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                    )
+                    return
+                  }
+                }
+              }
+            } catch (e) {
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
-            } else {
-              result = await SMap.beginNavigation(
-                GLOBAL.STARTX,
-                GLOBAL.STARTY,
-                GLOBAL.ENDX,
-                GLOBAL.ENDY,
-              )
+              return
             }
-            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            if (isOnline) {
+              pathLength = { length: result[0].pathLength }
+              path = result[0].pathInfos
+            } else {
+              path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+              pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            }
+            this.props.setLoading(false)
+            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+            GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+            this.setVisible(false)
+            GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
               Toast.show(
@@ -144,8 +223,6 @@ export default class MapSelectPointButton extends React.Component {
       this.props.changeNavPathInfo &&
         this.props.changeNavPathInfo({ path, pathLength })
 
-      let mapSelectPoint = this.props.selectPoint
-
       let history = this.props.navigationhistory
       history.push({
         sx: GLOBAL.STARTX,
@@ -154,9 +231,9 @@ export default class MapSelectPointButton extends React.Component {
         ey: GLOBAL.ENDY,
         sFloor: GLOBAL.STARTPOINTFLOOR,
         eFloor: GLOBAL.ENDPOINTFLOOR,
-        address: mapSelectPoint.startPoint + '---' + mapSelectPoint.endPoint,
-        start: mapSelectPoint.startPoint,
-        end: mapSelectPoint.endPoint,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
       })
       this.props.setNavigationHistory(history)
     }
