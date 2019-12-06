@@ -118,6 +118,8 @@ const Profile = {
   SET_AS_PUBLIC_DATA: '设为公有数据',
   NO_SERVICE: '没有服务',
 
+  GET_DATA_FAILED: '数据获取失败',
+
   //关于
   ABOUT: '关于',
   SERVICE_HOTLINE: '技术支持与服务',

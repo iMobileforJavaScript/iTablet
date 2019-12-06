@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: '是',
+  NO: '否',
   SAVE_TITLE: '是否保存当前地图',
   SAVE_YES: '保存',
   SAVE_NO: '不保存',
@@ -13,6 +15,7 @@ const Prompt = {
   BEGIN: '开始',
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
+  WX_NOT_INSTALLED: '未检测到微信',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
@@ -49,6 +52,7 @@ const Prompt = {
   SWITCHING_SUCCESS: '切换成功',
   ADD_SUCCESS: '添加成功',
   ADD_FAILED: '添加失败',
+  ADD_MAP_FAILED: '不能添加当前地图',
   CREATE_THEME_FAILED: '创建专题图失败',
   PLEASE_ADD_DATASET: '请先选择要添加的数据集',
   PLEASE_SELECT_OBJECT: '请选择编辑对象',
@@ -67,7 +71,7 @@ const Prompt = {
   INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
-  SERCHING: '搜索中',
+  SEARCHING: '搜索中',
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
@@ -91,6 +95,8 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
   PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
   DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
+
+  CHOOSE_LAYER: '选择图层',
 
   COLLECT_SUCCESS: '采集成功',
 
@@ -122,6 +128,8 @@ const Prompt = {
   PUBLISHING: '发布服务中',
   PUBLISH_SUCCESS: '发布成功',
   PUBLISH_FAILED: '发布失败',
+  DELETE_CONFIRM: '是否删除当前数据？',
+  BATCH_DELETE_CONFIRM: '是否删除当前所选数据？',
 
   SELECT_AT_LEAST_ONE: '请至少选择一个数据',
   DELETE_MAP_RELATE_DATA: '删除数据将影响以下地图\n是否继续删除？',
@@ -169,6 +177,17 @@ const Prompt = {
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
   NO_NETWORK: '未连接到网络',
+  CHOOSE_CLASSIFY_MODEL: '选择分类模型',
+  USED_IMMEDIATELY: '立即使用',
+  USING: '使用中',
+  DEFAULT_MODEL: '默认模型',
+  DUSTBIN_MODEL: '城市垃圾模型',
+  PLANT_MODEL: '植物模型',
+  CHANGING: '切换中',
+  CHANGE_SUCCESS: '切换成功',
+  CHANGE_FAULT: '切换失败',
+  DETECT_DUSTBIN_MODEL: '垃圾箱模型',
+  ROAD_MODEL: '道路模型',
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
@@ -261,7 +280,7 @@ const Prompt = {
   SELECT_THE_FLOOR: '请选择图层所在楼层',
   LONG_PRESS_ADD_START: '请长按添加起点',
   LONG_PRESS_ADD_END: '请长按添加终点',
-  CURRENT_POSITION_OUT_OF_RANGE: '当前位置不在导航范围内',
+  ROUTE_ANALYSING: '路径分析中',
 
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',

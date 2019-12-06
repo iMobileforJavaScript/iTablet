@@ -5,7 +5,7 @@ import { ConstToolType, ConstPath, UserType } from '../../../../../../constants'
 import { FileTools } from '../../../../../../native'
 import { dataUtil } from '../../../../../../utils'
 import { getLanguage } from '../../../../../../language'
-import { SThemeCartography, SMap } from 'imobile_for_reactnative'
+import { SThemeCartography, SMap, EngineType } from 'imobile_for_reactnative'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import ToolbarModule from '../ToolbarModule'
 
@@ -191,36 +191,48 @@ async function getAllDatas() {
   let { data, buttons } = await getUDBsAndMaps()
   let isIndoorMap = await SMap.isIndoorMap()
   if (!isIndoorMap) {
-    // todo 遍历所有数据源，获取所有路网数据集
-    // let userUDBPath,userUDBs
-    // let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
-    // if (
-    //   ToolbarModule.getParams().user &&
-    //     ToolbarModule.getParams().user.currentUser.userName &&
-    //     ToolbarModule.getParams().user.currentUser.userType !==
-    //     UserType.PROBATION_USER
-    // ) {
-    //   let userPath =
-    //       (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
-    //       ToolbarModule.getParams().user.currentUser.userName +
-    //       '/'
-    //   userUDBPath = userPath + ConstPath.RelativePath.Datasource
-    //   userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
-    //     extension: 'udb',
-    //     type: 'file',
-    //   })
-    //   //过滤掉标注和标绘
-    //   let filterUDBs = userUDBs.filter(item => {
-    //     item.name = dataUtil.getNameByURL(item.path)
-    //     return !item.name.match(checkLabelAndPlot)
-    //   })
-    //   let list = []
-    //   for(let params of filterUDBs){
-    //     await SMap.openDatasource2(params)
-    //     let datas = await SMap.getNetworkDataset(params)
-    //     datas.length > 0 && list.concat(datas)
-    //   }
-    let list = await SMap.getNetworkDataset()
+    let list
+    let userUDBPath, userUDBs
+    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
+    if (
+      params.user &&
+      params.user.currentUser.userName &&
+      params.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
+      let userPath =
+        (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+        params.user.currentUser.userName +
+        '/'
+      userUDBPath = userPath + ConstPath.RelativePath.Datasource
+      userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+    } else {
+      let customerUDBPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+      )
+      userUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+    }
+
+    //过滤掉标注和标绘
+    userUDBs = userUDBs.filter(item => {
+      item.name = dataUtil.getNameByURL(item.path)
+      return !item.name.match(checkLabelAndPlot)
+    })
+
+    for (let item of userUDBs) {
+      let connectionInfo = {}
+      connectionInfo.server = await FileTools.appendingHomeDirectory(item.path)
+      connectionInfo.engineType = EngineType.UDB
+      connectionInfo.alias = item.name
+      await SMap.openNavDatasource(connectionInfo)
+    }
+    let datas = await SMap.getNetworkDataset()
+    datas.length > 0 && (list = datas)
     if (list.length > 0) {
       list.forEach(
         item =>

@@ -94,13 +94,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       } else {
         tableHead.push({
           value: item.fieldInfo.caption,
           isSystemField: item.fieldInfo.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       }
     })
@@ -110,13 +110,13 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.unshift({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: { fieldInfo: item },
+          fieldInfo: item.fieldInfo,
         })
       } else {
         tableHead.push({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: { fieldInfo: item },
+          fieldInfo: item.fieldInfo,
         })
       }
     })
@@ -131,7 +131,7 @@ function dealData(attributes, result = {}, page, type) {
         tableHead.push({
           value: item.caption,
           isSystemField: item.isSystemField,
-          fieldInfo: item,
+          fieldInfo: item.fieldInfo,
         })
       }
     })

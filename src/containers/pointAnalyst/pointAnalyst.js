@@ -124,10 +124,6 @@ export default class PointAnalyst extends Component {
             }
             this.props.setMapSearchHistory(historyArr)
             this.toLocationPoint({ item, pointName: item.pointName, index })
-            if (!this.is3D) {
-              GLOBAL.PoiTopSearchBar.setVisible(true)
-              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
-            }
           }}
         >
           <Image
@@ -187,13 +183,16 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.SEARCHING,
+        )
         let x = item.x
         let y = item.y
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          await SMap.clearTarckingLayer()
-          // this.props.setNavigationChangeAR(true)
+          await SMap.clearTrackingLayer()
           this.props.setMapNavigation({
             isShow: true,
             name: pointName,
@@ -201,7 +200,8 @@ export default class PointAnalyst extends Component {
         }
         let result = await SMap.toLocationPoint(item)
         if (result) {
-          this.container.setLoading(false)
+          GLOBAL.PoiTopSearchBar.setVisible(true)
+          GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
           GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState(
               {
@@ -213,10 +213,13 @@ export default class PointAnalyst extends Component {
                 resultList: [],
               },
               () => {
-                GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
+                setTimeout(() => {
+                  GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
+                  this.container.setLoading(false)
+                  NavigationService.goBack()
+                }, 0)
               },
             )
-          NavigationService.goBack()
         } else {
           Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
         }
@@ -532,7 +535,7 @@ export default class PointAnalyst extends Component {
               GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
 
               if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-                await SMap.clearTarckingLayer()
+                await SMap.clearTrackingLayer()
                 // this.props.setNavigationChangeAR(true)
                 this.props.setMapNavigation({
                   isShow: true,

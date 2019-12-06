@@ -8,9 +8,8 @@ import { Toast } from '../../../../../../utils'
 import { getLanguage } from '../../../../../../language'
 
 async function action(type) {
-  const _params = ToolbarModule.getParams()
-  let rel = await SMap.hasNetworkDataset()
-  if (rel) {
+  try {
+    const _params = ToolbarModule.getParams()
     let isIndoorMap = await SMap.isIndoorMap()
     if (isIndoorMap) {
       //室内导航
@@ -52,15 +51,12 @@ async function action(type) {
           }
           ToolbarModule.setData(data)
         } else {
-          Toast.show(
-            getLanguage(_params.language).Prompt
-              .NETWORK_DATASET_IS_NOT_AVAILABLE,
-          )
+          Toast.show(getLanguage(_params.language).Prompt.NO_NETWORK_DATASETS)
         }
       }
     }
-  } else {
-    Toast.show(getLanguage(_params.language).Prompt.NO_NETWORK_DATASETS)
+  } catch (e) {
+    //console.warn(e)
   }
 }
 

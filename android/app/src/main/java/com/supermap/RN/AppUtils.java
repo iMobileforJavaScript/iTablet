@@ -65,6 +65,15 @@ public class AppUtils extends ReactContextBaseJavaModule {
      }
 
     @ReactMethod
+    public void isWXInstalled(Promise promise) {
+        try {
+            promise.resolve(appManager.getAppManager().isWXInstalled());
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
     public void  sendFileOfWechat(ReadableMap map, Promise promise){
         try {
             Map params = map.toHashMap();

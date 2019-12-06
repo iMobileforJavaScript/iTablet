@@ -14,7 +14,13 @@ import {
   InfoView,
   Dialog,
 } from '../../../../components'
-import { Toast, scaleSize, LayerUtils, StyleUtils } from '../../../../utils'
+import {
+  Toast,
+  scaleSize,
+  LayerUtils,
+  StyleUtils,
+  screen,
+} from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import {
@@ -30,6 +36,7 @@ import {
   GeoStyle,
   SMediaCollector,
   FieldType,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
@@ -618,7 +625,7 @@ export default class LayerAttribute extends React.Component {
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
+              defaultParams: { fieldInfo },
               isDetail: true,
             })
           }.bind(this)())
@@ -685,6 +692,14 @@ export default class LayerAttribute extends React.Component {
     }
     if (pressView) {
       pressView.measure((ox, oy, width, height, px, py) => {
+        let screenWidth = screen.getScreenWidth(),
+          allWidth = width * items.length
+        // let dx = screenWidth - allWidth / 2 + width / 2
+        // let x = px > dx ? dx : px
+        let option = {}
+        if (px > screenWidth - allWidth / 2 + width / 2) {
+          option.direction = 'left'
+        }
         ActionPopover.show(
           {
             x: px,
@@ -693,6 +708,7 @@ export default class LayerAttribute extends React.Component {
             height,
           },
           items,
+          option,
         )
       })
     }
@@ -1053,6 +1069,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   showSystemFields = () => {
+    this.table && this.table.horizontalScrollToStart()
     this.setState({
       isShowSystemFields: !this.state.isShowSystemFields,
     })
@@ -1380,7 +1397,12 @@ export default class LayerAttribute extends React.Component {
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={true}
+            canAddField={
+              this.props.currentLayer.name !== undefined &&
+              this.props.currentLayer.name !== '' &&
+              this.props.currentLayer.type !== DatasetType.IMAGE &&
+              this.props.currentLayer.type !== DatasetType.MBImage // 影像图层不能添加属性
+            }
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}

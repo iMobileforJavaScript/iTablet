@@ -31,6 +31,39 @@ export default class SimpleDialog extends PureComponent {
     this.Dialog.setDialogVisible(visible)
   }
 
+  set = ({ text, confirmAction, cancelAction, renderExtra, dialogHeight }) => {
+    let confirm, cancel
+    if (confirmAction && typeof confirmAction === 'function') {
+      confirm = () => {
+        this.setVisible(false)
+        confirmAction()
+      }
+    }
+    if (cancelAction && typeof cancelAction === 'function') {
+      cancel = () => {
+        this.setVisible(false)
+        cancelAction()
+      }
+    }
+    this.setState({
+      text: text || this.props.text,
+      confirmAction: confirmAction ? confirm || this.confirm : this.confirm,
+      cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
+      renderExtra: renderExtra,
+      dialogHeight: dialogHeight,
+    })
+  }
+
+  reset = () => {
+    this.setState({
+      text: this.props.text,
+      confirmAction: this.confirm,
+      cancelAction: this.cancel,
+      renderExtra: undefined,
+      dialogHeight: undefined,
+    })
+  }
+
   setConfirm = action => {
     if (action && typeof action === 'function') {
       this.setState({
@@ -122,17 +155,13 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
-    marginLeft: scaleSize(20),
+    marginHorizontal: scaleSize(10),
     textAlign: 'center',
   },
   dialogBackground: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
   opacityView: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
 })

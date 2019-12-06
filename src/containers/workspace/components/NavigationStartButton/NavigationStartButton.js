@@ -82,8 +82,9 @@ export default class NavigationStartButton extends React.Component {
         ]
   }
 
-  setVisible = iShow => {
+  setVisible = (iShow, isOnline = false) => {
     this.setState({ show: iShow })
+    this.isOnline = isOnline
   }
 
   changeHeight = () => {
@@ -115,7 +116,48 @@ export default class NavigationStartButton extends React.Component {
       )
     }
   }
+  realNavigation = async () => {
+    if (this.isOnline) {
+      Toast.show('在线导航暂不支持')
+      return
+    }
+    let position = await SMap.getCurrentPosition()
+    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+      let rel = await SMap.isIndoorPoint(position.x, position.y)
+      if (rel.isindoor) {
+        SMap.indoorNavigation(0)
+        this.setVisible(false)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+      } else {
+        Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
+      }
+    } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+      let naviData = this.props.getNavigationDatas()
+      let isInBounds = await SMap.isInBounds(position, naviData.selectedDataset)
+      if (isInBounds) {
+        SMap.outdoorNavigation(0)
+        this.setVisible(false)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+      } else {
+        Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
+      }
+    }
+  }
 
+  simulatedNavigation = async () => {
+    if (this.isOnline) {
+      Toast.show('在线导航暂不支持')
+      return
+    }
+    this.setVisible(false)
+    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+    if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+      SMap.outdoorNavigation(1)
+    }
+    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+      SMap.indoorNavigation(1)
+    }
+  }
   //todo 各种方向相关的符号没图
   getIconByType = type => {
     let icon
@@ -170,7 +212,9 @@ export default class NavigationStartButton extends React.Component {
     return icon
   }
   renderItem = ({ item }) => {
-    let roadLength = item.roadLength
+    let roadLength = item.roadLength || item.length
+    let turnType =
+      item.turnType !== undefined ? item.turnType : item.dirToSwerve
     if (roadLength > 1000)
       roadLength =
         (roadLength / 1000).toFixed(1) +
@@ -180,18 +224,21 @@ export default class NavigationStartButton extends React.Component {
         (roadLength || 1) + getLanguage(GLOBAL.language).Map_Main_Menu.METERS
     let str = ''
     let thenInfo = GLOBAL.language === 'CN' ? '然后' : 'and then'
-    if (item.turnType === 'start' || item.turnType === 'end') {
+    if (turnType === 'start' || turnType === 'end') {
       str = item.text
-    } else if (item.turnType === 0) {
-      str = `${this.directions[item.turnType]} ${roadLength}`
-    } else if (item.turnType === 12) {
+    } else if (turnType === 0) {
+      str = `${this.directions[turnType]} ${roadLength}`
+    } else if (turnType === 12) {
       str = `${
         getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
       }${roadLength}`
     } else {
       str = `${
         getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
-      } ${roadLength} ${thenInfo} ${this.directions[item.turnType]}`
+      } ${roadLength} ${thenInfo} ${this.directions[turnType]}`
+    }
+    if (item.routeName && GLOBAL.language === 'CN') {
+      str = `沿${item.routeName}${str}`
     }
     let icon = this.getIconByType(item.turnType)
     return (
@@ -287,7 +334,7 @@ export default class NavigationStartButton extends React.Component {
           numberOfLines={1}
           ellipsizeMode={'tail'}
         >
-          {GLOBAL.ENDPOINT}
+          {GLOBAL.ENDNAME}
         </Text>
       </View>
     )
@@ -353,35 +400,8 @@ export default class NavigationStartButton extends React.Component {
                 alignItems: 'center',
                 marginTop: scaleSize(20),
               }}
-              onPress={async () => {
-                let position = await SMap.getCurrentPosition()
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  let rel = await SMap.isIndoorPoint(position.x, position.y)
-                  if (rel.isindoor) {
-                    SMap.indoorNavigation(0)
-                    this.setVisible(false)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                  } else {
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP,
-                    )
-                  }
-                } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  let naviData = this.props.getNavigationDatas()
-                  let isInBounds = await SMap.isInBounds(
-                    position,
-                    naviData.selectedDataset,
-                  )
-                  if (isInBounds) {
-                    SMap.outdoorNavigation(0)
-                    this.setVisible(false)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                  } else {
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP,
-                    )
-                  }
-                }
+              onPress={() => {
+                this.realNavigation()
               }}
             >
               <Text
@@ -406,14 +426,7 @@ export default class NavigationStartButton extends React.Component {
                 marginTop: scaleSize(20),
               }}
               onPress={() => {
-                this.setVisible(false)
-                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(1)
-                }
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(1)
-                }
+                this.simulatedNavigation()
               }}
             >
               <Text

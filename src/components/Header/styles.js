@@ -130,7 +130,6 @@ export default StyleSheet.create({
     color: color.gray3,
     fontSize: setSpText(20),
     // fontWeight: 'bold',
-    backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   count: {
     position: 'absolute',

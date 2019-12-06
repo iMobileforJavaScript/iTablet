@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: 'Yes',
+  NO: 'No',
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
   SAVE_YES: 'Yes',
   SAVE_NO: 'No',
@@ -12,6 +14,8 @@ const Prompt = {
   WECHAT: 'Wechat',
   BEGIN: 'Begin',
   STOP: 'Stop',
+  FIELD_TO_PAUSE: 'Failed to pause',
+  WX_NOT_INSTALLED: 'Wechat not installed',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',
@@ -45,6 +49,7 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  ADD_MAP_FAILED: 'Can not add current map',
   CREATE_THEME_FAILED: 'Failed to Create Theme',
   PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
@@ -92,6 +97,8 @@ const Prompt = {
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
 
+  CHOOSE_LAYER: 'Choose Layer',
+
   COLLECT_SUCCESS: 'Collect Success',
 
   SELECT_TWO_MEDIAS_AT_LEAST: 'You have to select two medias at least',
@@ -124,6 +131,8 @@ const Prompt = {
   PUBLISHING: 'Publishing',
   PUBLISH_SUCCESS: 'Published Successfully',
   PUBLISH_FAILED: 'Failed to Publish',
+  DELETE_CONFIRM: 'Are you sure you want to delete the item?',
+  BATCH_DELETE_CONFIRM: 'Are you sure you want to delete the selected item(s)?',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
   DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',
@@ -172,6 +181,17 @@ const Prompt = {
 
   NETWORK_ERROR: 'Network Error',
   NO_NETWORK: 'No Internet connection',
+  CHOOSE_CLASSIFY_MODEL: 'Choose Classify Model',
+  USED_IMMEDIATELY: 'Used Immediately',
+  USING: 'Using',
+  DEFAULT_MODEL: 'Default Model',
+  DUSTBIN_MODEL: 'Dustbin Model',
+  LANT_MODEL: 'Lant Model',
+  CHANGING: 'Changing',
+  CHANGE_SUCCESS: 'Change Success',
+  CHANGE_FAULT: 'Change Fault',
+  DETECT_DUSTBIN_MODEL: 'Dustbin Model',
+  ROAD_MODEL: 'Road Model',
 
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
@@ -271,7 +291,7 @@ const Prompt = {
   SELECT_THE_FLOOR: 'Please select the floor which the layer is located',
   LONG_PRESS_ADD_START: 'Please long press to add starting point',
   LONG_PRESS_ADD_END: 'Please long press to add destination',
-  CURRENT_POSITION_OUT_OF_RANGE: 'The current location is out of range',
+  ROUTE_ANALYSING: 'Analysing',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

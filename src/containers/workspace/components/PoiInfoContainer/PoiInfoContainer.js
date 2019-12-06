@@ -11,28 +11,27 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  Platform,
 } from 'react-native'
 import { SMap } from 'imobile_for_reactnative'
 import styles from './style'
-import { scaleSize } from '../../../../utils'
+import { FetchUtils, scaleSize } from '../../../../utils'
 import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
 import constants from '../../../workspace/constants'
+import { TouchType } from '../../../../constants'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
-    mapSelectPoint: Object,
     changeNavPathInfo: () => {},
     setMapNavigation: () => {},
     mapSearchHistory: Array,
     setMapSearchHistory: () => {},
     setNavigationPoiView: () => {},
     setNavigationChangeAR: () => {},
-    setNavigationDatas: () => {},
-    setMapSelectPoint: () => {},
+    getNavigationDatas: () => {},
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -250,97 +249,104 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   navitoHere = async () => {
-    await SMap.clearTarckingLayer()
-
+    this.props.setLoading(
+      true,
+      getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+    )
+    await SMap.clearTrackingLayer()
+    await SMap.removePOICallout()
     let position = await SMap.getCurrentPosition()
+
     GLOBAL.STARTX = position.x
     GLOBAL.STARTY = position.y
-    // 测试用
-    // GLOBAL.STARTX = this.state.location.x - 0.05
-    // GLOBAL.STARTY = this.state.location.y - 0.05
     GLOBAL.ENDX = this.state.location.x
     GLOBAL.ENDY = this.state.location.y
 
-    let datasetInfos = await SMap.isPointsInMapBounds(
-      {
-        x: GLOBAL.STARTX,
-        y: GLOBAL.STARTY,
-      },
-      this.state.location,
+    GLOBAL.STARTNAME = await FetchUtils.getPointName(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
     )
-    let rel = false
-    if (datasetInfos.name != null) {
-      rel = await SMap.startNavigation(datasetInfos)
-    }
-    if (rel) {
-      //行业导航
-      await SMap.removePOICallout()
-      await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
-      await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
-      await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
-      await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
-      this.props.setMapSelectPoint({
-        firstPoint: this.props.mapSelectPoint.firstPoint,
-        secondPoint: this.state.destination,
-      })
-      GLOBAL.ENDPOINT = this.state.destination
-      let result = await SMap.beginNavigation(
-        GLOBAL.STARTX,
-        GLOBAL.STARTY,
-        GLOBAL.ENDX,
-        GLOBAL.ENDY,
-      )
-      if (result) {
-        let pathLength = await SMap.getNavPathLength(false)
-        let path = await SMap.getPathInfos(false)
-        this.props.setNavigationDatas(datasetInfos)
-        this.props.changeNavPathInfo({ path, pathLength })
-        GLOBAL.ROUTEANALYST = true
-        GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+    GLOBAL.ENDNAME = this.state.destination
+    await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+    await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+
+    if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      let navDatas = this.props.getNavigationDatas()
+      let path, pathLength
+      let isOnline = false
+      let isStartInBounds, isEndInBounds
+      if (navDatas != null) {
+        let datasetName = navDatas.name
+        isStartInBounds = await SMap.isInBounds(
+          { x: GLOBAL.STARTX, y: GLOBAL.STARTY },
+          datasetName,
+        )
+        isEndInBounds = await SMap.isInBounds(
+          { x: GLOBAL.ENDX, y: GLOBAL.ENDY },
+          datasetName,
+        )
+      }
+      //室外导航
+      if (isStartInBounds && isEndInBounds) {
+        try {
+          let result = await SMap.beginNavigation(
+            GLOBAL.STARTX,
+            GLOBAL.STARTY,
+            GLOBAL.ENDX,
+            GLOBAL.ENDY,
+          )
+          if (result) {
+            pathLength = await SMap.getNavPathLength(false)
+            path = await SMap.getPathInfos(false)
+          } else {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          }
+        } catch (e) {
+          this.loading.setLoading(false)
+          Toast.show('无路径分析结果')
+        }
+      } else {
+        //在线路径分析
+        let result = await FetchUtils.routeAnalyst(
+          GLOBAL.STARTX,
+          GLOBAL.STARTY,
+          GLOBAL.ENDX,
+          GLOBAL.ENDY,
+        )
+        if (result && result[0] && result[0].pathInfos) {
+          pathLength = { length: result[0].pathLength }
+          path = result[0].pathInfos
+          await SMap.drawOnlinePath(result[0].pathPoints)
+          isOnline = true
+        } else {
+          Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+        }
+      }
+      if (pathLength && path) {
+        GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
         Animated.timing(this.bottom, {
           toValue: scaleSize(-200),
           duration: 400,
         }).start()
+        this.props.changeNavPathInfo({ path, pathLength })
+        GLOBAL.ROUTEANALYST = true
+        GLOBAL.MAPSELECTPOINT.setVisible(false)
+        GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+          button: '',
+        })
+        GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
         this.props.setMapNavigation({
           isShow: true,
           name: '',
         })
         GLOBAL.toolBox.showFullMap(true)
-      } else {
-        Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+        this.props.setLoading(false)
       }
     } else {
-      //在线路径分析
-      await SMap.routeAnalyst(this.state.location.x, this.state.location.y)
-      GLOBAL.NAVIPOINTX = this.state.location.x
-      GLOBAL.NAVIPOINTY = this.state.location.y
-      GLOBAL.NAVIPOINTNAME = this.state.destination
-      GLOBAL.NAVIPOINTADDRESS = this.state.address
-      this.props.setNavigationPoiView(true)
-      Animated.timing(this.bottom, {
-        toValue: scaleSize(-200),
-        duration: 400,
-      }).start()
-      Animated.timing(this.height, {
-        toValue: scaleSize(200),
-        duration: 400,
-      }).start()
-      Animated.timing(this.boxHeight, {
-        toValue: scaleSize(200),
-        duration: 10,
-      }).start()
-
-      Platform.OS === 'android' && this.props.setNavigationChangeAR(true)
-
-      if (this.state.destination !== '') {
-        this.props.setMapNavigation({
-          isShow: true,
-          name: this.state.destination,
-        })
-      }
+      Toast.show(getLanguage(GLOBAL.language).Prompt.SET_START_AND_END_POINTS)
     }
-    GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
   }
 
   renderView = () => {
