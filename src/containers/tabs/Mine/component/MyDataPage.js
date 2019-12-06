@@ -181,16 +181,21 @@ export default class MyDataPage extends Component {
   _onDeleteData = async (forceDelete = false) => {
     try {
       this._closeModal()
-      let relatedMaps = []
       if (!forceDelete) {
+        let relatedMaps = []
         relatedMaps = await this.getRelatedMaps([this.itemInfo])
-      }
-      if (relatedMaps.length > 0) {
-        this.showRelatedMapsDialog({
-          confirmAction: () => this._onDeleteData(true),
-          relatedMaps: relatedMaps,
-        })
-        return
+        if (relatedMaps.length > 0) {
+          this.showRelatedMapsDialog({
+            confirmAction: () => this._onDeleteData(true),
+            relatedMaps: relatedMaps,
+          })
+          return
+        } else {
+          this.showDeleteConfirmDialog({
+            confirmAction: () => this._onDeleteData(true),
+          })
+          return
+        }
       }
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         this.setLoading(true, getLanguage(global.language).Prompt.DELETING_DATA)
@@ -219,16 +224,21 @@ export default class MyDataPage extends Component {
   _batchDelete = async (forceDelete = false) => {
     try {
       let deleteArr = this._getSelectedList()
-      let relatedMaps = []
       if (!forceDelete) {
+        let relatedMaps = []
         relatedMaps = await this.getRelatedMaps(deleteArr)
-      }
-      if (relatedMaps.length !== 0) {
-        this.showRelatedMapsDialog({
-          confirmAction: () => this._batchDelete(true),
-          relatedMaps: relatedMaps,
-        })
-        return
+        if (relatedMaps.length !== 0) {
+          this.showRelatedMapsDialog({
+            confirmAction: () => this._batchDelete(true),
+            relatedMaps: relatedMaps,
+          })
+          return
+        } else {
+          this.showBatchDeleteConfirmDialog({
+            confirmAction: () => this._batchDelete(true),
+          })
+          return
+        }
       }
       let deleteItem
       deleteItem = async info => {
@@ -575,7 +585,7 @@ export default class MyDataPage extends Component {
     },
     {
       title: getLanguage(global.language).Profile[`DELETE_${this.type}`],
-      action: this.showDeleteConfirmDialog,
+      action: this._onDeleteData,
     },
   ]
 
@@ -626,15 +636,15 @@ export default class MyDataPage extends Component {
 
   /******************************* dialog **********************************************/
 
-  showDeleteConfirmDialog = () => {
+  showDeleteConfirmDialog = ({ confirmAction }) => {
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.DELETE_CONFIRM,
-      confirmAction: this._onDeleteData,
+      confirmAction: confirmAction || this._onDeleteData,
     })
     this.SimpleDialog.setVisible(true)
   }
 
-  showBatchDeleteConfirmDialog = () => {
+  showBatchDeleteConfirmDialog = ({ confirmAction }) => {
     let deleteArr = this._getSelectedList()
     if (deleteArr.length === 0) {
       Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
@@ -642,7 +652,7 @@ export default class MyDataPage extends Component {
     }
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.BATCH_DELETE_CONFIRM,
-      confirmAction: this._batchDelete,
+      confirmAction: confirmAction || this._batchDelete,
     })
     this.SimpleDialog.setVisible(true)
   }
@@ -880,7 +890,7 @@ export default class MyDataPage extends Component {
         )}
         <TouchableOpacity
           style={styles.bottomItemStyle}
-          onPress={this.showBatchDeleteConfirmDialog}
+          onPress={() => this._batchDelete()}
         >
           <Image
             style={{
