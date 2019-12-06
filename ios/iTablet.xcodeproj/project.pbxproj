@@ -71,6 +71,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		2A15229923979D9F00CBC452 /* SuperMapAR.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2A15229623979C1700CBC452 /* SuperMapAR.bundle */; };
 		2A5299AD2386A1AB0071AD06 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFB21104C7100F206BB /* Accelerate.framework */; };
 		2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 2A89416022CADE2700AA0363 /* PlotLibData.zip */; };
 		2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AAEE197230E696800902D1D /* libxml2.tbd */; };
@@ -689,6 +690,7 @@
 		2174BA18CE944BC3A447F8A2 /* CoreTelephony.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		23E1668885E74380A5197539 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
 		244D0910A95D47C8B23823F1 /* libRNGestureHandler.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGestureHandler.a; sourceTree = "<group>"; };
+		2A15229623979C1700CBC452 /* SuperMapAR.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SuperMapAR.bundle; sourceTree = "<group>"; };
 		2A89416022CADE2700AA0363 /* PlotLibData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PlotLibData.zip; sourceTree = "<group>"; };
 		2AAEE197230E696800902D1D /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		2ABCAA162386616D0052EB6B /* detect.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = detect.tflite; sourceTree = "<group>"; };
@@ -956,6 +958,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				2A15229623979C1700CBC452 /* SuperMapAR.bundle */,
 				2ABCAA152386616D0052EB6B /* Model */,
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
@@ -2078,6 +2081,7 @@
 				0AECCF782328E034004F84A4 /* Images.zip in Resources */,
 				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
+				2A15229923979D9F00CBC452 /* SuperMapAR.bundle in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,
 				0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */,
 			);
