@@ -15,6 +15,7 @@ const Map_Label = {
 
 //地图、场景主菜单
 const Map_Main_Menu = {
+  CURRENT_MAP: 'Current Map',
   START: 'Start',
   START_OPEN_MAP: 'Open Map',
   START_NEW_MAP: 'New Map',

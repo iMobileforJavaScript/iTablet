@@ -344,6 +344,7 @@ export default class ToolBarSectionList extends React.Component {
         {item.datasetType && item.datasetName && this.getDatasetImage(item)}
         <View
           style={{
+            flex: 1,
             flexDirection: 'column',
             justifyContent: 'center',
           }}
@@ -373,6 +374,7 @@ export default class ToolBarSectionList extends React.Component {
             this.getColorSchemeItem(item)}
           {item.info && this.getInfo(item)}
         </View>
+        {item.rightView}
       </TouchableOpacity>
     )
   }
