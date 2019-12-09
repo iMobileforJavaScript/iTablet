@@ -101,7 +101,7 @@ async function listAction(type, params = {}) {
       if (selectedItem) {
         _params.setToolbarVisible(false)
         _params.setNavigationDatas && _params.setNavigationDatas(selectedItem)
-        SMap.startNavigation(selectedItem)
+        await SMap.startNavigation(selectedItem)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
           showLocationView: true,
