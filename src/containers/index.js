@@ -311,7 +311,7 @@ const AppNavigator = createStackNavigator(
         header: null,
       },
     },
-    WorkspaceFlieList: {
+    WorkspaceFileList: {
       screen: workspaceFlieList,
       navigationOptions: {
         header: null,

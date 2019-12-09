@@ -281,6 +281,7 @@ const Prompt = {
   LONG_PRESS_ADD_START: '请长按添加起点',
   LONG_PRESS_ADD_END: '请长按添加终点',
   ROUTE_ANALYSING: '路径分析中',
+  DISTANCE_ERROR: '当前起始点距离太近，请重新选点',
 
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',

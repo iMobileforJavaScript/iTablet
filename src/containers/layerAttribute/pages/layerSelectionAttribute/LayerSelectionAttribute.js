@@ -400,8 +400,9 @@ export default class LayerSelectionAttribute extends React.Component {
     }
     this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
     // ConstInfo.LOCATING)
-    this.currentPage = Math.floor(this.total / PAGE_SIZE)
-    let remainder = (this.total % PAGE_SIZE) - 1
+    this.currentPage =
+      this.total > 0 ? Math.floor((this.total - 1) / PAGE_SIZE) : 0
+    let remainder = this.total > 0 ? (this.total - 1) % PAGE_SIZE : 0
 
     let startIndex = this.currentPage * PAGE_SIZE
     if (startIndex !== 0) {

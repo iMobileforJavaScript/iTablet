@@ -55,7 +55,7 @@ export default class OffLineList extends React.Component {
 
   _btn_workspace_click = () => {
     if (this.workspace) {
-      NavigationService.navigate('WorkspaceFlieList', {
+      NavigationService.navigate('WorkspaceFileList', {
         workspace: this.workspace,
         map: this.map,
         mapControl: this.mapControl,
@@ -63,7 +63,7 @@ export default class OffLineList extends React.Component {
         title: '选择工作空间',
       })
     } else {
-      NavigationService.navigate('WorkspaceFlieList', {
+      NavigationService.navigate('WorkspaceFileList', {
         need: 'workspace',
         title: '选择工作空间',
       })
@@ -72,7 +72,7 @@ export default class OffLineList extends React.Component {
 
   _btn_udb_click = () => {
     if (this.workspace) {
-      NavigationService.navigate('WorkspaceFlieList', {
+      NavigationService.navigate('WorkspaceFileList', {
         workspace: this.workspace,
         map: this.map,
         mapControl: this.mapControl,
@@ -80,7 +80,7 @@ export default class OffLineList extends React.Component {
         title: '选择数据源',
       })
     } else {
-      NavigationService.navigate('WorkspaceFlieList', {
+      NavigationService.navigate('WorkspaceFileList', {
         need: 'udb',
         title: '选择数据源',
       })

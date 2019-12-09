@@ -292,6 +292,8 @@ const Prompt = {
   LONG_PRESS_ADD_START: 'Please long press to add starting point',
   LONG_PRESS_ADD_END: 'Please long press to add destination',
   ROUTE_ANALYSING: 'Analysing',
+  DISTANCE_ERROR:
+    'The destination is too close to the start point,please reselect!',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

@@ -200,7 +200,7 @@ export default class Cell extends Component {
       this.props.keyboardType === 'decimal-pad' ||
       this.props.keyboardType === 'numeric'
     ) {
-      if (isNaN(_value) && _value !== '') {
+      if (isNaN(_value) && _value !== '' && _value !== '-') {
         _value = this.state.value
       }
     }

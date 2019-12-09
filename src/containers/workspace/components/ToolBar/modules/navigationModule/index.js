@@ -22,7 +22,7 @@ async function action(type) {
       //行业导航
       let navigationDatas = _params.getNavigationDatas()
       if (navigationDatas) {
-        SMap.startNavigation(navigationDatas)
+        await SMap.startNavigation(navigationDatas)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
           showLocationView: true,

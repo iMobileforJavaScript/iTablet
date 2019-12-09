@@ -122,7 +122,7 @@ export default {
           title: 'KML图层',
           type: 'layerData',
           action: () => {
-            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            // NavigationService.navigate('WorkspaceFileList', { type: 'MAP_3D' })
           },
         },
       ],

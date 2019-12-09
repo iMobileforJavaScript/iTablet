@@ -66,8 +66,6 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
-        GLOBAL.ENDX = event.LLPoint.x
-        GLOBAL.ENDY = event.LLPoint.y
         let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
         let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
@@ -80,6 +78,15 @@ async function longtouchCallback(event) {
             )
           }
         } else {
+          if (
+            Math.sqrt(
+              Math.pow(event.LLPoint.x - GLOBAL.STARTX, 2) +
+                Math.pow(event.LLPoint.y - GLOBAL.STARTY, 2),
+            ) < 0.001
+          ) {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+            return
+          }
           await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
         if (result.isindoor) {
@@ -87,6 +94,8 @@ async function longtouchCallback(event) {
         } else {
           GLOBAL.INDOOREND = false
         }
+        GLOBAL.ENDX = event.LLPoint.x
+        GLOBAL.ENDY = event.LLPoint.y
       }.bind(this)())
       break
   }
