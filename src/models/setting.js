@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { DatasetType, SMap, SLanguage} from 'imobile_for_reactnative'
+import { DatasetType, SMap, SLanguage } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
 import constants from '../containers/workspace/constants'
