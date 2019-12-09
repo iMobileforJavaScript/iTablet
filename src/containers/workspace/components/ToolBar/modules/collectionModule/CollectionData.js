@@ -126,7 +126,7 @@ function getData(type) {
       image: require('../../../../../../assets/mapEdit/icon_function_symbol.png'),
       action: CollectionAction.showSymbol,
     },
-    ToolbarBtnType.COMPLETE,
+    // ToolbarBtnType.COMPLETE,
   ]
 
   return { data, buttons }
