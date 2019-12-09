@@ -40,7 +40,7 @@ export default class LayerManager_item extends React.Component {
     child: Array,
     sectionID: number,
     rowID: number,
-    selectLayer: Object,
+    isSelected: boolean,
     index: number,
     layers: Object,
     hasBaseMap: boolean,
@@ -57,6 +57,7 @@ export default class LayerManager_item extends React.Component {
 
   static defaultProps = {
     isClose: true,
+    isSelected: false,
     swipeEnabled: false,
     hasSelected: false,
     selected: false,
@@ -420,19 +421,19 @@ export default class LayerManager_item extends React.Component {
 
   getStyleIconByType = item => {
     if (item.themeType > 0) {
-      if (this.props.selectLayer === item.name) {
+      if (this.props.isSelected) {
         return getThemeWhiteIconByType(item.themeType)
       } else {
         return getThemeIconByType(item.themeType)
       }
     } else if (item.isHeatmap) {
-      if (this.props.selectLayer === item.name) {
+      if (this.props.isSelected) {
         return getThemeAssets().themeType.heatmap_selected
       } else {
         return getThemeAssets().themeType.heatmap
       }
     } else {
-      if (this.props.selectLayer === item.name) {
+      if (this.props.isSelected) {
         return getLayerWhiteIconByType(item.type)
       } else {
         return getLayerIconByType(item.type)
@@ -590,7 +591,7 @@ export default class LayerManager_item extends React.Component {
     let visibleImg = visibleImgBlack
     let moreImg = require('../../../../assets/function/icon_shallow_more_gray.png')
     let image = this.getStyleIconByType(this.state.data)
-    if (this.props.selectLayer === this.state.data.name) {
+    if (this.props.isSelected) {
       select = '#4680df'
       selectcolor = color.white
       visibleImg = visibleImgWhite

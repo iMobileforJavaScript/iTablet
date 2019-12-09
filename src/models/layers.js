@@ -589,14 +589,15 @@ export default handleActions(
       return state.setIn(['analystLayer'], fromJS(payload))
     },
     [`${GET_LAYERS}`]: (state, { payload }) => {
-      let currentLayer = {},
+      let currentLayer,
         currentLayerIndex = payload.currentLayerIndex || -1
       if (currentLayerIndex >= 0 && payload.layers.length > currentLayerIndex) {
-        currentLayer = payload.layers[0]
+        currentLayer = payload.layers[currentLayerIndex]
       }
-      return state
-        .setIn(['layers'], fromJS(payload.layers))
-        .setIn(['currentLayer'], fromJS(currentLayer))
+      if (currentLayer) {
+        state.setIn(['currentLayer'], fromJS(currentLayer))
+      }
+      return state.setIn(['layers'], fromJS(payload.layers))
     },
     // [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
     //   let currentAttribute = {},

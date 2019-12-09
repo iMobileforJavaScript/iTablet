@@ -21,7 +21,7 @@ import ToolBarHeight from '../ToolBarHeight'
 /** 切换工作空间 **/
 function openWorkspace(cb) {
   // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-  NavigationService.navigate('WorkspaceFlieList', {
+  NavigationService.navigate('WorkspaceFileList', {
     type: 'WORKSPACE',
     title: '选择工作空间',
     cb: path => {
