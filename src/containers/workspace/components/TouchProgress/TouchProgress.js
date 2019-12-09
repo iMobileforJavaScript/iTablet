@@ -34,33 +34,6 @@ export default class TouchProgress extends Component {
     showMenu: () => {},
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.screenWidth !== screen.getScreenWidth()) {
-      this._initialization()
-      this.screenWidth = screen.getScreenWidth()
-    }
-    if (
-      JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
-    ) {
-      this.setState({
-        currentLayer: this.props.currentLayer,
-      })
-    }
-    if (
-      JSON.stringify(prevProps.selectName) !==
-      JSON.stringify(this.props.selectName)
-    ) {
-      this.setState({
-        selectName: this.props.selectName,
-      })
-    }
-  }
-
-  componentDidMount() {
-    this._initialization(this.props.value)
-  }
-
   constructor(props) {
     super(props)
     this.screenWidth = screen.getScreenWidth()
@@ -89,6 +62,25 @@ export default class TouchProgress extends Component {
       onPanResponderTerminate: this._handlePanResponderEnd,
     })
     this._initStatusBarVisible()
+  }
+
+  // shouldComponentUpdate(nextProps) {
+  //   let shouldUpdate =
+  //     JSON.stringify(nextProps) !==
+  //     JSON.stringify(this.props)
+  //
+  //   return shouldUpdate
+  // }
+
+  componentDidUpdate() {
+    if (this.screenWidth !== screen.getScreenWidth()) {
+      this._initialization()
+      this.screenWidth = screen.getScreenWidth()
+    }
+  }
+
+  componentDidMount() {
+    this._initialization(this.props.value)
   }
 
   debounce = fn => {
@@ -595,7 +587,10 @@ export default class TouchProgress extends Component {
           break
         }
       }
-      if (this.props.selectName === '列数') {
+      if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+      ) {
         let columnnumber = this.props.mapLegend[GLOBAL.Type].column
         this._panBtnStyles.style.left =
           (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
@@ -605,7 +600,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
           parseInt(columnnumber)
-      } else if (this.props.selectName === '宽度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+      ) {
         let width = this.props.mapLegend[GLOBAL.Type].widthPercent
         this._panBtnStyles.style.left =
           (width * progressWidth) / 100 + panBtnDevLeft
@@ -615,7 +613,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
           parseInt(width)
-      } else if (this.props.selectName === '高度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+      ) {
         let height = this.props.mapLegend[GLOBAL.Type].heightPercent
         this._panBtnStyles.style.left =
           (height * progressWidth) / 100 + panBtnDevLeft
@@ -724,9 +725,12 @@ export default class TouchProgress extends Component {
         newValue = value * 200
       }
     } else if (
-      this.props.selectName === '列数' ||
-      this.props.selectName === '宽度' ||
-      this.props.selectName === '高度'
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
     ) {
       newValue = value * 100
     } else if (
@@ -878,7 +882,10 @@ export default class TouchProgress extends Component {
       if (mode !== undefined) {
         await SMap.updateMapFixColorsMode(mode, value)
       }
-    } else if (this.props.selectName === '列数') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+    ) {
       let legendSettings = this.props.mapLegend
       let columns
       if (value <= 25) {
@@ -896,7 +903,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
         '     ' +
         parseInt(columns)
-    } else if (this.props.selectName === '宽度') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+    ) {
       let legendSettings = this.props.mapLegend
       if (value > 100) {
         value = 100
@@ -909,7 +919,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
         '     ' +
         parseInt(value)
-    } else if (this.props.selectName === '高度') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+    ) {
       let legendSettings = this.props.mapLegend
       if (value > 100) {
         value = 100
@@ -1593,7 +1606,10 @@ export default class TouchProgress extends Component {
           tips = TPData.getMatchPictureTip(this.props.selectName, value)
         }
       }
-      if (this.props.selectName === '列数') {
+      if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+      ) {
         let columns = this.props.mapLegend[GLOBAL.Type].columns
         if (value <= 25) {
           columns = 1
@@ -1608,7 +1624,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
           parseInt(columns)
-      } else if (this.props.selectName === '宽度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+      ) {
         if (value > 100) {
           value = 100
         } else if (value <= 20) {
@@ -1618,7 +1637,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
           parseInt(value)
-      } else if (this.props.selectName === '高度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+      ) {
         if (value > 100) {
           value = 100
         } else if (value <= 20) {
