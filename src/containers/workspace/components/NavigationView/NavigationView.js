@@ -111,6 +111,7 @@ export default class NavigationView extends React.Component {
         getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
       )
       if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+        //如果不让用户选数据集，自动获取 则使用SMap.isPointsInMapBounds来判断
         let datasetName =
           GLOBAL.ToolBar && GLOBAL.ToolBar.props.getNavigationDatas().name
         let isStartInBounds = await SMap.isInBounds(

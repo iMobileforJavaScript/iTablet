@@ -1,6 +1,7 @@
 const icon_ar_toolbar_close = require('./ai_clean.png')
+const icon_ar_toolbar_delete = require('./icon_delete.png')
 const icon_ar_toolbar_undo = require('./icon_ar_toolbar_undo.png')
-const icon_ar_toolbar_switch = require('./ai_new.png')
+const icon_ar_toolbar_switch = require('./icon_ar_toolbar_switch.png')
 const icon_ar_toolbar_save = require('./ai_save_line.png')
 const icon_save = require('./icon_save.png')
 const icon_delete = require('./icon_delete.png')
@@ -15,6 +16,7 @@ const icon_flex = require('./icon_function_theme_param_style.png')
 const icon_down = require('./icon_down.png')
 export default {
   icon_ar_toolbar_close,
+  icon_ar_toolbar_delete,
   icon_ar_toolbar_undo,
   icon_ar_toolbar_switch,
   icon_ar_toolbar_save,

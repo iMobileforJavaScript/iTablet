@@ -15,6 +15,7 @@ const Prompt = {
   BEGIN: '开始',
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
+  WX_NOT_INSTALLED: '未检测到微信',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
@@ -70,7 +71,7 @@ const Prompt = {
   INSTRUCTION_MANUAL: '使用帮助',
   THE_CURRENT_LAYER: '当前图层为',
   ENTER_KEY_WORDS: '请输入搜索关键字',
-  SERCHING: '搜索中',
+  SEARCHING: '搜索中',
   READING_DATA: '读取数据中',
   CREATE_SUCCESSFULLY: '创建成功',
   SAVE_SUCCESSFULLY: '保存成功',
@@ -94,6 +95,8 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
   PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
   DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
+
+  CHOOSE_LAYER: '选择图层',
 
   COLLECT_SUCCESS: '采集成功',
 
@@ -174,6 +177,17 @@ const Prompt = {
   SETTING_FAILED: '设置失败',
   NETWORK_ERROR: '网络错误',
   NO_NETWORK: '未连接到网络',
+  CHOOSE_CLASSIFY_MODEL: '选择分类模型',
+  USED_IMMEDIATELY: '立即使用',
+  USING: '使用中',
+  DEFAULT_MODEL: '默认模型',
+  DUSTBIN_MODEL: '城市垃圾模型',
+  PLANT_MODEL: '植物模型',
+  CHANGING: '切换中',
+  CHANGE_SUCCESS: '切换成功',
+  CHANGE_FAULT: '切换失败',
+  DETECT_DUSTBIN_MODEL: '垃圾箱模型',
+  ROAD_MODEL: '道路模型',
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',

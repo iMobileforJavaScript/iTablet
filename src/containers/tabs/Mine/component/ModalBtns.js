@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { MTBtn } from '../../../../components'
+import { MTBtn, PopView } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
@@ -15,27 +15,22 @@ export default class ModalBtns extends Component {
     cancel: () => {},
     actionOfWechat: () => {},
     actionOfFriend: () => {},
-    alwaysShow: Boolean,
     showCancel: Boolean,
     style: Object,
   }
   constructor(props) {
     super(props)
-    this.state = {
-      show: false,
-    }
     this.showCancel =
       this.props.showCancel !== undefined ? this.props.showCancel : true
   }
 
-  setVisible = value => {
-    if (value === this.state.show) return
-    this.setState({ show: value })
+  setVisible = visible => {
+    this.PopView && this.PopView.setVisible(visible)
   }
 
   render() {
-    if (this.props.alwaysShow || this.state.show) {
-      return (
+    return (
+      <PopView ref={ref => (this.PopView = ref)}>
         <View style={[styles.bottomBtns, { width: '100%' }, this.props.style]}>
           {this.props.actionOfLocal && (
             <MTBtn
@@ -124,10 +119,8 @@ export default class ModalBtns extends Component {
           {!this.showCancel && <View style={styles.button} />}
           <SimpleDialog ref={ref => (this.SimpleDialog = ref)} />
         </View>
-      )
-    } else {
-      return <View />
-    }
+      </PopView>
+    )
   }
 }
 const styles = StyleSheet.create({
@@ -139,9 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: color.contentColorWhite,
-    // backgroundColor:"red",
-    position: 'absolute',
-    bottom: 0,
   },
   button: {
     flex: 1,

@@ -13,6 +13,8 @@
 
 +(void) registerApp;
 
++(BOOL)isWXInstalled;
+
 //发送文本信息
 + (void) sendTextContent:(NSString*)textContent;
 

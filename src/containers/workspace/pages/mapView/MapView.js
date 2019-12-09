@@ -2466,6 +2466,8 @@ export default class MapView extends React.Component {
   _renderMapSelectPointButton = () => {
     return (
       <MapSelectPointButton
+        setLoading={this.setLoading}
+        getNavigationDatas={this.getNavigationDatas}
         navigationhistory={this.props.navigationhistory}
         setNavigationHistory={this.props.setNavigationHistory}
         changeNavPathInfo={this.changeNavPathInfo}
@@ -2647,7 +2649,8 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
-          setNavigationDatas={this.setNavigationDatas}
+          setLoading={this.setLoading}
+          getNavigationDatas={this.getNavigationDatas}
           changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}

@@ -238,6 +238,7 @@ class AppRoot extends Component {
     if(this.props.autoLanguage) {
       this.props.setLanguage('AUTO')
     }
+    this.inspectEnvironment()
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
@@ -269,7 +270,6 @@ class AppRoot extends Component {
       }
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
-      await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
       await this.addImportExternalDataListener()

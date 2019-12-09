@@ -181,16 +181,21 @@ export default class MyDataPage extends Component {
   _onDeleteData = async (forceDelete = false) => {
     try {
       this._closeModal()
-      let relatedMaps = []
       if (!forceDelete) {
+        let relatedMaps = []
         relatedMaps = await this.getRelatedMaps([this.itemInfo])
-      }
-      if (relatedMaps.length > 0) {
-        this.showRelatedMapsDialog({
-          confirmAction: () => this._onDeleteData(true),
-          relatedMaps: relatedMaps,
-        })
-        return
+        if (relatedMaps.length > 0) {
+          this.showRelatedMapsDialog({
+            confirmAction: () => this._onDeleteData(true),
+            relatedMaps: relatedMaps,
+          })
+          return
+        } else {
+          this.showDeleteConfirmDialog({
+            confirmAction: () => this._onDeleteData(true),
+          })
+          return
+        }
       }
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         this.setLoading(true, getLanguage(global.language).Prompt.DELETING_DATA)
@@ -219,16 +224,21 @@ export default class MyDataPage extends Component {
   _batchDelete = async (forceDelete = false) => {
     try {
       let deleteArr = this._getSelectedList()
-      let relatedMaps = []
       if (!forceDelete) {
+        let relatedMaps = []
         relatedMaps = await this.getRelatedMaps(deleteArr)
-      }
-      if (relatedMaps.length !== 0) {
-        this.showRelatedMapsDialog({
-          confirmAction: () => this._batchDelete(true),
-          relatedMaps: relatedMaps,
-        })
-        return
+        if (relatedMaps.length !== 0) {
+          this.showRelatedMapsDialog({
+            confirmAction: () => this._batchDelete(true),
+            relatedMaps: relatedMaps,
+          })
+          return
+        } else {
+          this.showBatchDeleteConfirmDialog({
+            confirmAction: () => this._batchDelete(true),
+          })
+          return
+        }
       }
       let deleteItem
       deleteItem = async info => {
@@ -265,15 +275,12 @@ export default class MyDataPage extends Component {
           return
         }
       }
-      if (
-        this.state.title === getLanguage(global.language).Profile.MARK &&
-        fileName === ''
-      ) {
-        this.type = type
+      this.ShareModal && this.ShareModal.setVisible(false)
+      if (this.type === this.types.mark && fileName === '') {
+        this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
-      this.ModalBtns && this.ModalBtns.setVisible(false)
       this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
@@ -320,15 +327,21 @@ export default class MyDataPage extends Component {
   }
 
   shareToWechat = async fileName => {
-    await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
-    let result = await appUtilsModule.sendFileOfWechat({
-      filePath: path,
-      title: fileName + '.zip',
-      description: 'SuperMap iTablet',
-    })
-    return result
+    let result
+    let isInstalled = await appUtilsModule.isWXInstalled()
+    if (isInstalled) {
+      await this.exportData(fileName)
+      let homePath = await FileTools.appendingHomeDirectory()
+      let path = homePath + this.getRelativeTempFilePath()
+      result = await appUtilsModule.sendFileOfWechat({
+        filePath: path,
+        title: fileName + '.zip',
+        description: 'SuperMap iTablet',
+      })
+    } else {
+      Toast.show(getLanguage(global.language).Prompt.WX_NOT_INSTALLED)
+    }
+    return result === false ? result : undefined
   }
 
   shareToOnline = async fileName => {
@@ -336,7 +349,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let result
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       result = await SOnlineService.uploadFile(path, fileName)
     } else {
       result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
@@ -349,7 +362,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let uploadResult
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
     } else {
       uploadResult = await SIPortalService.uploadDataByType(
@@ -373,7 +386,7 @@ export default class MyDataPage extends Component {
     let homePath = await FileTools.appendingHomeDirectory()
     let path = homePath + this.getRelativeTempFilePath()
     let type
-    if (this.state.title === getLanguage(global.language).Profile.MAP) {
+    if (this.type === this.types.map) {
       type = MsgConstant.MSG_MAP
     }
     let action = [
@@ -387,11 +400,21 @@ export default class MyDataPage extends Component {
     NavigationService.navigate('SelectFriend', {
       user: this.props.user,
       callBack: async targetId => {
-        await this.exportData(fileName)
-        NavigationService.replace('CoworkTabs', {
-          targetId: targetId,
-          action: action,
-        })
+        try {
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SHARE_PREPARE,
+          )
+          await this.exportData(fileName)
+          NavigationService.replace('CoworkTabs', {
+            targetId: targetId,
+            action: action,
+          })
+        } catch (error) {
+          Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+        } finally {
+          GLOBAL.Loading.setLoading(false)
+        }
       },
     })
   }
@@ -557,12 +580,12 @@ export default class MyDataPage extends Component {
       title: getLanguage(global.language).Profile[`UPLOAD_${this.type}`],
       action: () => {
         this._closeModal()
-        this.ModalBtns && this.ModalBtns.setVisible(true)
+        this.ShareModal && this.ShareModal.setVisible(true)
       },
     },
     {
       title: getLanguage(global.language).Profile[`DELETE_${this.type}`],
-      action: this.showDeleteConfirmDialog,
+      action: this._onDeleteData,
     },
   ]
 
@@ -613,15 +636,15 @@ export default class MyDataPage extends Component {
 
   /******************************* dialog **********************************************/
 
-  showDeleteConfirmDialog = () => {
+  showDeleteConfirmDialog = ({ confirmAction }) => {
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.DELETE_CONFIRM,
-      confirmAction: this._onDeleteData,
+      confirmAction: confirmAction || this._onDeleteData,
     })
     this.SimpleDialog.setVisible(true)
   }
 
-  showBatchDeleteConfirmDialog = () => {
+  showBatchDeleteConfirmDialog = ({ confirmAction }) => {
     let deleteArr = this._getSelectedList()
     if (deleteArr.length === 0) {
       Toast.show(getLanguage(global.language).Prompt.SELECT_AT_LEAST_ONE)
@@ -629,7 +652,7 @@ export default class MyDataPage extends Component {
     }
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.BATCH_DELETE_CONFIRM,
-      confirmAction: this._batchDelete,
+      confirmAction: confirmAction || this._batchDelete,
     })
     this.SimpleDialog.setVisible(true)
   }
@@ -719,11 +742,11 @@ export default class MyDataPage extends Component {
         name.lastIndexOf('.') > 0
           ? name.substring(name.lastIndexOf('.') + 1)
           : ''
-      switch (this.state.title) {
-        case getLanguage(global.language).Profile.MAP:
+      switch (this.type) {
+        case this.types.map:
           img = require('../../../../assets/mapToolbar/list_type_map_black.png')
           break
-        case getLanguage(global.language).Profile.SYMBOL:
+        case this.types.symbol:
           if (txtType === 'sym') {
             // 点
             img = require('../../../../assets/map/icon-shallow-dot_black.png')
@@ -738,10 +761,10 @@ export default class MyDataPage extends Component {
             img = require('../../../../assets/Mine/mine_my_online_data_black.png')
           }
           break
-        case getLanguage(global.language).Profile.SCENE:
+        case this.types.scene:
           img = require('../../../../assets/mapTools/icon_scene.png')
           break
-        case getLanguage(global.language).Profile.TEMPLATE:
+        case this.types.template:
           img = require('../../../../assets/mapToolbar/list_type_map_black.png')
           break
         default:
@@ -845,11 +868,11 @@ export default class MyDataPage extends Component {
   renderBatchBottom = () => {
     return (
       <View style={styles.bottomStyle}>
-        {this.state.title === getLanguage(global.language).Profile.MARK && (
+        {this.type === this.types.mark && (
           <TouchableOpacity
             style={styles.bottomItemStyle}
             onPress={() => {
-              this.ModalBtns.setVisible(true)
+              this.ShareModal.setVisible(true)
             }}
           >
             <Image
@@ -867,7 +890,7 @@ export default class MyDataPage extends Component {
         )}
         <TouchableOpacity
           style={styles.bottomItemStyle}
-          onPress={this.showBatchDeleteConfirmDialog}
+          onPress={() => this._batchDelete()}
         >
           <Image
             style={{
@@ -932,7 +955,7 @@ export default class MyDataPage extends Component {
             return
           }
           this.InputDialog.setDialogVisible(false)
-          this._onShareData(this.type, name)
+          this._onShareData(this.shareType, name)
         }}
         cancelAction={() => {
           this.InputDialog.setDialogVisible(false)
@@ -999,7 +1022,7 @@ export default class MyDataPage extends Component {
         {this.renderInputDialog()}
         <ModalBtns
           ref={ref => {
-            this.ModalBtns = ref
+            this.ShareModal = ref
           }}
           actionOfLocal={
             this.state.shareToLocal

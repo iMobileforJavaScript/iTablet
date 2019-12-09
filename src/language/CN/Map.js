@@ -357,6 +357,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: '请填写备注',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: '保存',
 
+  MAP_AR_AI_CANCEL: '取消',
+  MAP_AR_AI_CONFIRM: '确认',
+
   //智能配图
   FILL: '填充',
   BORDER: '轮廓',

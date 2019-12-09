@@ -340,6 +340,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: 'Fill in the note',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: 'Save',
 
+  MAP_AR_AI_CANCEL: 'cancel',
+  MAP_AR_AI_CONFIRM: 'confirm',
+
   //智能配图
   FILL: 'Fill',
   BORDER: 'Border',
