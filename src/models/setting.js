@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { DatasetType, SMap } from 'imobile_for_reactnative'
+import { DatasetType, SMap, SLanguage } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
 import constants from '../containers/workspace/constants'
@@ -88,12 +88,14 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
     } else {
       language = 'EN'
     }
+    await SLanguage.setLanguage(language)
     await dispatch({
       type: SETTING_LANGUAGE_AUTO,
       payload: language,
     })
     global.language = language
   } else {
+    await SLanguage.setLanguage(params)
     await dispatch({
       type: SETTING_LANGUAGE,
       payload: params,

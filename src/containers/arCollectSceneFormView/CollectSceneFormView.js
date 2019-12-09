@@ -557,7 +557,7 @@ export default class CollectSceneFormView extends React.Component {
             >
               <Image
                 resizeMode={'contain'}
-                source={getThemeAssets().ar.toolbar.icon_ar_toolbar_switch}
+                source={getThemeAssets().ar.toolbar.icon_new}
                 style={styles.smallIcon}
               />
             </TouchableOpacity>
@@ -600,7 +600,7 @@ export default class CollectSceneFormView extends React.Component {
             >
               <Image
                 resizeMode={'contain'}
-                source={getThemeAssets().ar.toolbar.icon_ar_toolbar_save}
+                source={getThemeAssets().ar.toolbar.icon_save_line}
                 style={styles.smallIcon}
               />
             </TouchableOpacity>

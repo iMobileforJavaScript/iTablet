@@ -35,7 +35,7 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager, SSpeechRecognizer} from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager, SSpeechRecognizer, SLanguage} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 import UserType from './src/constants/UserType'
 import { getLanguage } from './src/language/index'
@@ -237,7 +237,10 @@ class AppRoot extends Component {
   componentDidMount () {
     if(this.props.autoLanguage) {
       this.props.setLanguage('AUTO')
+    } else {
+      SLanguage.setLanguage(this.props.language)
     }
+    this.inspectEnvironment()
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
@@ -269,7 +272,6 @@ class AppRoot extends Component {
       }
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
-      await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
       await this.addImportExternalDataListener()
