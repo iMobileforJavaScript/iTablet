@@ -219,7 +219,10 @@ function getOptimalPathData() {
     {
       key: getLanguage(_params.language).Analyst_Labels.CLEAR,
       title: getLanguage(_params.language).Analyst_Labels.CLEAR,
-      action: () => STransportationAnalyst.clear(),
+      action: () => {
+        STransportationAnalyst.clear()
+        GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
+      },
       size: 'large',
       image: require('../../../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
     },
@@ -274,7 +277,10 @@ function getConnectivityData() {
     {
       key: getLanguage(_params.language).Analyst_Labels.CLEAR,
       title: getLanguage(_params.language).Analyst_Labels.CLEAR,
-      action: () => STransportationAnalyst.clear(),
+      action: () => {
+        STransportationAnalyst.clear()
+        GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
+      },
       size: 'large',
       image: require('../../../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
     },
@@ -327,7 +333,10 @@ function getTSPData() {
     {
       key: getLanguage(_params.language).Analyst_Labels.CLEAR,
       title: getLanguage(_params.language).Analyst_Labels.CLEAR,
-      action: () => STransportationAnalyst.clear(),
+      action: () => {
+        STransportationAnalyst.clear()
+        GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
+      },
       size: 'large',
       image: require('../../../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
     },
