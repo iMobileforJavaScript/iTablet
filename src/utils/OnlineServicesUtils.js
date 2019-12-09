@@ -220,10 +220,18 @@ export default class OnlineServicesUtils {
    * 登陆后还可获取相应账号的phone和email
    * @param userName 可以是id，nickname，phone或email
    */
-  getUserInfo = async userName => {
+  getUserInfo = async (userName, isEmail) => {
     try {
-      let url =
-        'https://www.supermapol.com/web/users/online.json?nickname=' + userName
+      let url
+      if (isEmail) {
+        url =
+          'https://www.supermapol.com/web/users/online.json?nickname=' +
+          userName
+      } else {
+        url =
+          'https://www.supermapol.com/web/users/online.json?phoneNumber=' +
+          userName
+      }
       let headers = {}
       let cookie = await this.getCookie()
       if (cookie) {
