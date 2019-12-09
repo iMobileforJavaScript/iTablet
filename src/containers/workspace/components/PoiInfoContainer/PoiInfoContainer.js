@@ -20,6 +20,7 @@ import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
 import constants from '../../../workspace/constants'
 import { TouchType } from '../../../../constants'
+import NavigationService from '../../../NavigationService'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
@@ -31,6 +32,8 @@ export default class PoiInfoContainer extends React.PureComponent {
     setNavigationPoiView: () => {},
     setNavigationChangeAR: () => {},
     getNavigationDatas: () => {},
+    //获取mapView中的getSearchClickedInfo属性,判断是从哪个页面跳转搜索 得出的结果
+    getSearchClickedInfo: () => {},
     setLoading: () => {},
   }
 
@@ -176,6 +179,71 @@ export default class PoiInfoContainer extends React.PureComponent {
           }
         }
       })
+  }
+
+  //搜索结果列表点击事件
+  onListItemClick = async item => {
+    let searchClickedInfo =
+      this.props.getSearchClickedInfo && this.props.getSearchClickedInfo()
+    if (searchClickedInfo.isClicked) {
+      let title = searchClickedInfo.title
+      if (
+        title === getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
+      ) {
+        //设置起点
+        GLOBAL.STARTX = item.x
+        GLOBAL.STARTY = item.y
+        GLOBAL.STARTNAME = item.pointName
+        await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+      } else {
+        //设置终点
+        GLOBAL.ENDX = item.x
+        GLOBAL.ENDY = item.y
+        GLOBAL.ENDNAME = item.pointName
+        await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+      }
+      SMap.removeAllCallout()
+      this.setVisible(false)
+      GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+      GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+      NavigationService.navigate('NavigationView', {
+        changeNavPathInfo: this.props.changeNavPathInfo,
+        showLocationView: true,
+      })
+    } else {
+      let historyArr = this.props.mapSearchHistory
+      let hasAdded = false
+      historyArr.map(v => {
+        if (v.pointName === item.pointName) hasAdded = true
+      })
+      if (!hasAdded) {
+        historyArr.push({
+          x: item.x,
+          y: item.y,
+          pointName: item.pointName,
+          address: item.address,
+        })
+      }
+      this.props.setMapSearchHistory(historyArr)
+      GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
+      this.showTable()
+      setTimeout(async () => {
+        this.setState(
+          {
+            destination: item.pointName,
+            address: item.address,
+            showList: false,
+            neighbor: [],
+            resultList: [],
+            location: { x: item.x, y: item.y },
+          },
+          async () => {
+            await this.clear()
+            await SMap.toLocationPoint(item)
+          },
+        )
+      })
+    }
   }
 
   //显示 '点击查看更多' 时的状态
@@ -462,39 +530,7 @@ export default class PoiInfoContainer extends React.PureComponent {
           <TouchableOpacity
             style={styles.itemView}
             onPress={() => {
-              let historyArr = this.props.mapSearchHistory
-              let hasAdded = false
-              historyArr.map(v => {
-                if (v.pointName === item.pointName) hasAdded = true
-              })
-              if (!hasAdded) {
-                historyArr.push({
-                  x: item.x,
-                  y: item.y,
-                  pointName: item.pointName,
-                  address: item.address,
-                })
-              }
-              this.props.setMapSearchHistory(historyArr)
-              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
-              this.showTable()
-              setTimeout(async () => {
-                this.setState(
-                  {
-                    destination: item.pointName,
-                    address: item.address,
-                    showList: false,
-                    neighbor: [],
-                    resultList: [],
-                    location: { x: item.x, y: item.y },
-                  },
-                  async () => {
-                    await this.clear()
-                    await SMap.toLocationPoint(item)
-                  },
-                )
-              })
-              //this.toLocationPoint({item,pointName:item.pointName, index})
+              this.onListItemClick(item)
             }}
           >
             <View

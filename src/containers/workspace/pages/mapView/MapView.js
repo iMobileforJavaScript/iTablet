@@ -229,6 +229,11 @@ export default class MapView extends React.Component {
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
     }
+    //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
+    this.searchClickedInfo = {
+      isClicked: false,
+      title: '',
+    }
     this.closeInfo = [
       {
         btnTitle: '是',
@@ -269,7 +274,12 @@ export default class MapView extends React.Component {
 
   addFloorHiddenListener = () => {
     this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
-      if (result.currentFloorID !== this.state.currentFloorID) {
+      //在选点过程中不允许拖放改变FloorList、MapController的状态
+      if (
+        result.currentFloorID !== this.state.currentFloorID &&
+        (!GLOBAL.MAPSELECTPOINTBUTTON ||
+          !GLOBAL.MAPSELECTPOINTBUTTON.state.show)
+      ) {
         this.setState({
           currentFloorID: result.currentFloorID,
         })
@@ -2413,6 +2423,49 @@ export default class MapView extends React.Component {
       />
     )
   }
+  getSearchClickedInfo = () => {
+    return this.searchClickedInfo
+  }
+  _renderMapSelectPointHeaderRight = () => {
+    if (!this.state.currentFloorID) {
+      return (
+        <TouchableOpacity
+          key={'search'}
+          onPress={async () => {
+            let layers = this.props.getLayers && (await this.props.getLayers())
+            let baseMap = layers.filter(layer =>
+              LayerUtils.isBaseLayer(layer.name),
+            )[0]
+            if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+              this.searchClickedInfo = {
+                isClicked: true,
+                title: GLOBAL.MAPSELECTPOINTBUTTON.state.button,
+              }
+              GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+              NavigationService.navigate('PointAnalyst', {
+                type: 'pointSearch',
+                searchClickedInfo: this.searchClickedInfo,
+                changeNavPathInfo: this.changeNavPathInfo,
+              })
+            } else {
+              Toast.show(
+                getLanguage(this.props.language).Prompt
+                  .PLEASE_SET_BASEMAP_VISIBLE,
+              )
+            }
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/header/icon_search.png')}
+            style={styles.search}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return null
+    }
+  }
 
   _renderMapSelectPoint = () => {
     return (
@@ -2424,6 +2477,7 @@ export default class MapView extends React.Component {
             .LONG_PRESS_SELECT_POINTS,
           navigation: this.props.navigation,
           type: 'fix',
+          headerRight: this._renderMapSelectPointHeaderRight(),
           backAction: () => {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
@@ -2650,6 +2704,7 @@ export default class MapView extends React.Component {
         />
         <PoiInfoContainer
           setLoading={this.setLoading}
+          getSearchClickedInfo={this.getSearchClickedInfo}
           getNavigationDatas={this.getNavigationDatas}
           changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
