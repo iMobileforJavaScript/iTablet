@@ -27,7 +27,7 @@ export default StyleSheet.create({
   functionToolbar: {
     position: 'absolute',
     top: FUNCTIONHEIGHT,
-    right: scaleSize(31),
+    right: scaleSize(20),
     backgroundColor: color.white,
   },
   item: {

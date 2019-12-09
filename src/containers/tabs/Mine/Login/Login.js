@@ -135,7 +135,7 @@ class Login extends React.Component {
           true,
           getLanguage(this.props.language).Prompt.LOG_IN,
         )
-        userInfo = await JSOnlineService.getUserInfo(userName)
+        userInfo = await JSOnlineService.getUserInfo(userName, isEmail)
         if (
           userInfo !== false &&
           userInfo.userId === this.props.user.currentUser.userId
@@ -155,7 +155,7 @@ class Login extends React.Component {
         return
       }
 
-      userInfo = await JSOnlineService.getUserInfo(userName)
+      userInfo = await JSOnlineService.getUserInfo(userName, isEmail)
 
       if (typeof result === 'boolean' && result && userInfo !== false) {
         await this.initUserDirectories(userName)

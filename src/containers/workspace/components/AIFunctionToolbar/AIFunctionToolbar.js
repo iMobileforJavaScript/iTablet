@@ -54,7 +54,7 @@ export default class AIFunctionToolbar extends React.Component {
     this.state = {
       type: props.type,
       data: data,
-      right: new Animated.Value(scaleSize(31)),
+      right: new Animated.Value(scaleSize(20)),
     }
     this.visible = true
   }
@@ -72,7 +72,7 @@ export default class AIFunctionToolbar extends React.Component {
   setVisible = (visible, immediately = false) => {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
-      toValue: visible ? scaleSize(31) : scaleSize(-200),
+      toValue: visible ? scaleSize(20) : scaleSize(-200),
       duration: immediately ? 0 : Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
