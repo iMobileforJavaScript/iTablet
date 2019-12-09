@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     position: 'absolute',
     top: 95,
-    right: scaleSize(31),
+    right: scaleSize(20),
     backgroundColor: color.content_white,
     borderRadius: scaleSize(4),
     elevation: 20,
