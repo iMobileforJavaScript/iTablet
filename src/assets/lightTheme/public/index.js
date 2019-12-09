@@ -10,6 +10,7 @@ const list_section_spread = require('./list_section_spread.png')
 const icon_arrow_right = require('./icon_arrow_right_light.png')
 const icon_arrow_right_2 = require('./icon_arrow_right_2.png')
 const icon_arrow_down = require('./icon_arrow_down.png')
+const tab_done = require('./tab_done.png')
 
 export default {
   icon_undo,
@@ -24,4 +25,5 @@ export default {
   icon_arrow_right,
   icon_arrow_right_2,
   icon_arrow_down,
+  tab_done,
 }

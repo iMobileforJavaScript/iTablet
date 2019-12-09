@@ -1,7 +1,7 @@
 /**
  * 分析工具
  */
-import { getThemeAssets, getPublicAssets } from '../../../../../../assets'
+import { getThemeAssets } from '../../../../../../assets'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
 import { ConstToolType, TouchType } from '../../../../../../constants'
@@ -181,7 +181,7 @@ function getOptimalPathData() {
     ToolbarBtnType.CANCEL,
     {
       type: ToolbarBtnType.ANALYST,
-      image: getPublicAssets().plot.plot_play,
+      image: getThemeAssets().analyst.analysis_analyst,
       action: () =>
         AnalysisAction.analyst(ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH),
     },
@@ -193,14 +193,14 @@ function getOptimalPathData() {
       title: getLanguage(_params.language).Analyst_Labels.ADD_STATIONS,
       action: () => (GLOBAL.TouchType = TouchType.MIDDLE_STATIONS),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_stop,
     },
     {
       key: getLanguage(_params.language).Analyst_Labels.ADD_BARRIER_NODES,
       title: getLanguage(_params.language).Analyst_Labels.ADD_BARRIER_NODES,
       action: () => (GLOBAL.TouchType = TouchType.ADD_BARRIER_NODES),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_endpoint,
     },
     {
       key: getLanguage(_params.language).Map_Main_Menu.COLLECTION_UNDO,
@@ -234,7 +234,7 @@ function getConnectivityData() {
     ToolbarBtnType.CANCEL,
     {
       type: ToolbarBtnType.ANALYST,
-      image: getPublicAssets().plot.plot_play,
+      image: getThemeAssets().analyst.analysis_analyst,
       action: () =>
         AnalysisAction.analyst(
           ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS,
@@ -248,14 +248,14 @@ function getConnectivityData() {
       title: getLanguage(_params.language).Analyst_Labels.SET_AS_START_STATION,
       action: () => (GLOBAL.TouchType = TouchType.SET_AS_START_STATION),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_startpoint,
     },
     {
       key: getLanguage(_params.language).Analyst_Labels.SET_AS_END_STATION,
       title: getLanguage(_params.language).Analyst_Labels.SET_AS_END_STATION,
       action: () => (GLOBAL.TouchType = TouchType.SET_AS_END_STATION),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_endpoint,
     },
     {
       key: getLanguage(_params.language).Map_Main_Menu.COLLECTION_UNDO,
@@ -289,7 +289,7 @@ function getTSPData() {
     ToolbarBtnType.CANCEL,
     {
       type: ToolbarBtnType.ANALYST,
-      image: getPublicAssets().plot.plot_play,
+      image: getThemeAssets().analyst.analysis_analyst,
       action: () =>
         AnalysisAction.analyst(ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH),
     },
@@ -301,14 +301,14 @@ function getTSPData() {
       title: getLanguage(_params.language).Analyst_Labels.ADD_STATIONS,
       action: () => (GLOBAL.TouchType = TouchType.ADD_STATIONS),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_stop,
     },
     {
       key: getLanguage(_params.language).Analyst_Labels.ADD_BARRIER_NODES,
       title: getLanguage(_params.language).Analyst_Labels.ADD_BARRIER_NODES,
       action: () => (GLOBAL.TouchType = TouchType.ADD_BARRIER_NODES),
       size: 'large',
-      image: getThemeAssets().nav.icon_navi_set_endpoint,
+      image: getThemeAssets().analyst.analysis_barrier,
     },
     {
       key: getLanguage(_params.language).Map_Main_Menu.COLLECTION_UNDO,
