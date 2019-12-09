@@ -27,7 +27,7 @@ export default class MapController extends React.Component {
     this.deg = 0
     this.bottom = DEFAULT_BOTTOM
     this.state = {
-      left: new Animated.Value(scaleSize(34)),
+      left: new Animated.Value(scaleSize(28)),
       bottom: new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),
     }

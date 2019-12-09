@@ -195,6 +195,7 @@ export default class NavigationView extends React.Component {
             this.clickable = false
             GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
             this.loading.setLoading(false)
+            GLOBAL.TouchType = TouchType.NULL
             NavigationService.goBack()
           }
         }
@@ -243,6 +244,7 @@ export default class NavigationView extends React.Component {
               if (this.clickable) {
                 this.clickable = false
                 this.loading.setLoading(false)
+                GLOBAL.TouchType = TouchType.NULL
                 NavigationService.goBack()
                 GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(true)
               }
