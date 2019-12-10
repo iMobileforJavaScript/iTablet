@@ -82,7 +82,8 @@ export default class NavigationView extends React.Component {
       isShow: true,
       name: '',
     })
-    NavigationService.goBack()
+    //考虑搜索界面跳转，不能直接goBack
+    NavigationService.navigate('MapView')
   }
 
   selectEndPoint = async () => {
@@ -101,7 +102,7 @@ export default class NavigationView extends React.Component {
       isShow: true,
       name: '',
     })
-    NavigationService.goBack()
+    NavigationService.navigate('MapView')
   }
   routeAnalyst = async () => {
     if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
@@ -157,6 +158,7 @@ export default class NavigationView extends React.Component {
             pathLength = { length: result[0].pathLength }
             path = result[0].pathInfos
             await SMap.drawOnlinePath(result[0].pathPoints)
+            await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
             isOnline = true
           } else {
             Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
@@ -196,7 +198,8 @@ export default class NavigationView extends React.Component {
             GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
             this.loading.setLoading(false)
             GLOBAL.TouchType = TouchType.NULL
-            NavigationService.goBack()
+            //考虑搜索界面跳转，不能直接goBack
+            NavigationService.navigate('MapView')
           }
         }
       }

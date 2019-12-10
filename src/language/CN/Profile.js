@@ -21,6 +21,7 @@ const Profile = {
   //我的——登录
   LOGIN: '登录',
   LOGIN_CURRENT: '当前用户已经登陆',
+  LOGIN_INVALID: '登陆失效，请重新登陆',
   MOBILE_LOGIN: '手机登录',
   EMAIL_LOGIN: '邮箱登录',
   ENTER_EMAIL_OR_USERNAME: '请输入邮箱或昵称',

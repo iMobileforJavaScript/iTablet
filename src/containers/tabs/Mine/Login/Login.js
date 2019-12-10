@@ -30,6 +30,7 @@ import UserType from '../../../../constants/UserType'
 import { getLanguage } from '../../../../language/index'
 import { setUser } from '../../../../models/user'
 import { connect } from 'react-redux'
+import FriendListFileHandle from '../../Friend/FriendListFileHandle'
 
 const JSOnlineService = new OnlineServicesUtils('online')
 class Login extends React.Component {
@@ -160,9 +161,7 @@ class Login extends React.Component {
       if (typeof result === 'boolean' && result && userInfo !== false) {
         await this.initUserDirectories(userName)
 
-        global.isLogging = true
-
-        this.props.setUser({
+        let user = {
           userName: userName,
           password: password,
           nickname: userInfo.nickname,
@@ -171,10 +170,16 @@ class Login extends React.Component {
           userId: userInfo.userId,
           isEmail: isEmail,
           userType: UserType.COMMON_USER,
-        })
-
-        if (!this.state.isFirstLogin) {
-          NavigationService.popToTop('Tabs')
+        }
+        result = await FriendListFileHandle.initFriendList(user)
+        if (result) {
+          global.isLogging = true
+          this.props.setUser(user)
+          if (!this.state.isFirstLogin) {
+            NavigationService.popToTop('Tabs')
+          }
+        } else {
+          Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_LOG)
         }
       } else {
         if (

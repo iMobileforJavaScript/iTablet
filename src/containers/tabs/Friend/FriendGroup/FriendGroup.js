@@ -86,6 +86,10 @@ class FriendGroup extends Component {
         //console.log('err', err)
         Toast.show(err.message)
       }
+    } else {
+      this.setState({
+        data: [],
+      })
     }
   }
 
