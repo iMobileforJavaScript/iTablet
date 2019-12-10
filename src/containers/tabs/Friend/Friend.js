@@ -285,14 +285,16 @@ export default class Friend extends Component {
   /**
    * 用户登陆后再更新服务
    * 1.用户登陆：连接服务，开启推送
-   * 2.用户登出：断开连接，重置好友列表，关闭推送
+   * 2.用户登出：断开连接，关闭推送, 重置好友列表
    * 3.用户切换：断开连接，新建连接，更新推送
    */
   updateServices = async () => {
     g_connectService && (await this.disconnectService())
-    await FriendListFileHandle.init(this.props.user.currentUser)
     this.restartService()
     JPushService.init(this.props.user.currentUser.userId)
+    if (this.props.user.currentUser.userId === undefined) {
+      FriendListFileHandle.initFriendList(this.props.user.currentUser)
+    }
   }
 
   restartService = async () => {
