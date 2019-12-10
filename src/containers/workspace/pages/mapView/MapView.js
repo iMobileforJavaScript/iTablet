@@ -1373,10 +1373,8 @@ export default class MapView extends React.Component {
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           this.props.setMap2Dto3D(true)
           this.props.setMapNavigation({ isShow: false, name: '' })
-          SMap.viewEntire().then(async () => {
-            let currentFloorID = await SMap.getCurrentFloorID()
-            this.changeFloorID(currentFloorID)
-          })
+          let currentFloorID = await SMap.getCurrentFloorID()
+          this.changeFloorID(currentFloorID)
           await SMap.initSpeakPlugin()
           GLOBAL.STARTNAME = getLanguage(
             GLOBAL.language,
