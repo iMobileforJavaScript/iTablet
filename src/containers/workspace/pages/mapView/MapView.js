@@ -274,11 +274,14 @@ export default class MapView extends React.Component {
 
   addFloorHiddenListener = () => {
     this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
-      //在选点过程中不允许拖放改变FloorList、MapController的状态
+      //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
       if (
         result.currentFloorID !== this.state.currentFloorID &&
-        (!GLOBAL.MAPSELECTPOINTBUTTON ||
-          !GLOBAL.MAPSELECTPOINTBUTTON.state.show)
+        !(
+          (GLOBAL.MAPSELECTPOINTBUTTON &&
+            GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
+          (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+        )
       ) {
         this.setState({
           currentFloorID: result.currentFloorID,
@@ -1694,17 +1697,17 @@ export default class MapView extends React.Component {
     this.container && this.container.setHeaderVisible(full)
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
-    this.mapController && this.mapController.setVisible(full)
+    // this.mapController && this.mapController.setVisible(full)
     this.TrafficView && this.TrafficView.setVisible(full)
-    if (
-      !(
-        !full &&
-        GLOBAL.Type === constants.MAP_NAVIGATION &&
-        this.FloorListView.state.currentFloorID
-      )
-    ) {
-      GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
-    }
+    // if (
+    //   !(
+    //     !full &&
+    //     GLOBAL.Type === constants.MAP_NAVIGATION &&
+    //     this.FloorListView.state.currentFloorID
+    //   )
+    // ) {
+    //   GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    // }
     this.setState({ showArModeIcon: full })
     this.fullMap = !full
   }
@@ -1843,11 +1846,16 @@ export default class MapView extends React.Component {
     return this.FloorListView || null
   }
 
+  getMapController = () => {
+    return this.mapController
+  }
+
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
         getFloorListView={this._getFloorListView}
+        getMapController={this.getMapController}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
         changeFloorID={this.changeFloorID}
@@ -2513,6 +2521,7 @@ export default class MapView extends React.Component {
       <NavigationStartHead
         ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
         setMapNavigation={this.props.setMapNavigation}
+        getMapController={this.getMapController}
       />
     )
   }
