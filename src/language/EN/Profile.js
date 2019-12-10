@@ -20,6 +20,7 @@ const Profile = {
   //我的——登录
   LOGIN: 'Login',
   LOGIN_CURRENT: 'Current user is already logged in',
+  LOGIN_INVALID: 'Login expired. Please login again',
   MOBILE_LOGIN: 'Mobile Login',
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',

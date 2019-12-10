@@ -1367,9 +1367,9 @@ export default class MapView extends React.Component {
           SMap.setIsMagnifierEnabled(false)
         }
         SMap.setPOIOptimized(true)
-        this.props.setMap2Dto3D(true)
-        this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          this.props.setMap2Dto3D(true)
+          this.props.setMapNavigation({ isShow: false, name: '' })
           SMap.viewEntire().then(async () => {
             let currentFloorID = await SMap.getCurrentFloorID()
             this.changeFloorID(currentFloorID)

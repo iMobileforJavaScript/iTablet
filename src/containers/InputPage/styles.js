@@ -6,12 +6,12 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: color.contentColorWhite,
+    backgroundColor: color.separateColorGray,
   },
   subContainer: {
     flex: 1,
     marginTop: scaleSize(45),
-    backgroundColor: color.contentColorWhite,
+    backgroundColor: color.separateColorGray,
   },
   headerBtnTitle: {
     color: 'white',

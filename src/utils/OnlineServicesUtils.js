@@ -91,7 +91,7 @@ export default class OnlineServicesUtils {
     let result = await request(url, 'GET', {
       headers: headers,
     })
-    if (result.total === 1) {
+    if (result && result.total === 1) {
       return result.content[0].id
     }
     return undefined

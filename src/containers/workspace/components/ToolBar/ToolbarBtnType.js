@@ -63,6 +63,7 @@ export default {
 
   TOOLBAR_BACK: 'toolbar_back', //工具栏 添加->返回上一级
   TOOLBAR_COMMIT: 'toolbar_commit', //工具栏 提交
+  TOOLBAR_DONE: 'toolbar_done', //工具栏 完成
 
   SHOW_LIST: 'SHOW_LIST',
   SHOW_NODE_LIST: 'SHOW_NODE_LIST',

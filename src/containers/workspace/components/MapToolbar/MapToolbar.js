@@ -266,7 +266,7 @@ export default class MapToolbar extends React.Component {
   }
 
   _map3Dchange = () => {
-    NavigationService.navigate('WorkspaceFlieList', { type: constants.MAP_3D })
+    NavigationService.navigate('WorkspaceFileList', { type: constants.MAP_3D })
   }
 
   _renderItem = ({ item, index }) => {

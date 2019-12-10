@@ -167,6 +167,10 @@ export default class ToolbarBottomButtons extends React.Component {
             require('../../../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = action || this.commit
           break
+        case ToolbarBtnType.TOOLBAR_DONE:
+          image = image || getThemeAssets().publicAssets.tab_done
+          action = action || this.commit
+          break
         case ToolbarBtnType.MENU_FLEX:
           //菜单框-显示与隐藏
           image =

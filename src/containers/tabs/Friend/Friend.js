@@ -284,13 +284,13 @@ export default class Friend extends Component {
 
   /**
    * 用户登陆后再更新服务
-   * 1.用户登陆：加载好友列表，连接服务，开启推送
+   * 1.用户登陆：连接服务，开启推送
    * 2.用户登出：断开连接，重置好友列表，关闭推送
-   * 3.用户切换：断开连接，重置好友列表，加载新的好友列表，新建连接，更新推送
+   * 3.用户切换：断开连接，新建连接，更新推送
    */
   updateServices = async () => {
     g_connectService && (await this.disconnectService())
-    await FriendListFileHandle.initFriendList(this.props.user.currentUser)
+    await FriendListFileHandle.init(this.props.user.currentUser)
     this.restartService()
     JPushService.init(this.props.user.currentUser.userId)
   }
@@ -938,7 +938,7 @@ export default class Friend extends Component {
     }
   }
 
-  _logout = async () => {
+  _logout = async (message = '') => {
     try {
       if (this.props.user.userType !== UserType.PROBATION_USER) {
         SOnlineService.logout()
@@ -956,7 +956,9 @@ export default class Friend extends Component {
         NavigationService.popToTop('Tabs')
         this.props.openWorkspace({ server: customPath })
         Toast.show(
-          getLanguage(this.props.language).Friends.SYS_LOGIN_ON_OTHER_DEVICE,
+          message === ''
+            ? getLanguage(this.props.language).Friends.SYS_LOGIN_ON_OTHER_DEVICE
+            : message,
         )
       })
     } catch (e) {
