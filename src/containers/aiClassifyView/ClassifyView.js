@@ -198,6 +198,8 @@ export default class ClassifyView extends React.Component {
         getLanguage(global.language).Map_Main_Menu
           .MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED,
       )
+      this.clear()
+      await this.startPreview()
     }
   }
 
