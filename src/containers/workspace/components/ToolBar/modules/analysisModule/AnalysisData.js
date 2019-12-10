@@ -191,7 +191,7 @@ function getOptimalPathData() {
     {
       key: getLanguage(_params.language).Analyst_Labels.ADD_STATIONS,
       title: getLanguage(_params.language).Analyst_Labels.ADD_STATIONS,
-      action: () => (GLOBAL.TouchType = TouchType.MIDDLE_STATIONS),
+      action: () => (GLOBAL.TouchType = TouchType.ADD_STATIONS),
       size: 'large',
       image: getThemeAssets().analyst.analysis_stop,
     },
