@@ -182,6 +182,15 @@ export default class FriendListFileHandle {
       return
     }
 
+    if (fl.user !== undefined) {
+      if (fl.user !== FriendListFileHandle.user.userId) {
+        FriendListFileHandle.friends = undefined
+        return
+      }
+    } else {
+      fl.user = FriendListFileHandle.user.userId
+    }
+
     if (fl.rev === undefined || typeof fl.rev !== 'number') {
       fl.rev = 0
     }
@@ -336,6 +345,7 @@ export default class FriendListFileHandle {
       if (!FriendListFileHandle.friends) {
         FriendListFileHandle.friends = {}
         FriendListFileHandle.friends['rev'] = 1
+        FriendListFileHandle.friends['user'] = FriendListFileHandle.user.userId
         FriendListFileHandle.friends['userInfo'] = []
         FriendListFileHandle.friends['groupInfo'] = []
       } else {
@@ -543,6 +553,7 @@ export default class FriendListFileHandle {
       if (!FriendListFileHandle.friends) {
         FriendListFileHandle.friends = {}
         FriendListFileHandle.friends['rev'] = 1
+        FriendListFileHandle.friends['user'] = FriendListFileHandle.user.userId
         FriendListFileHandle.friends['userInfo'] = []
         FriendListFileHandle.friends['groupInfo'] = []
       } else {
