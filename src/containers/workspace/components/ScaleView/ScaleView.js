@@ -77,7 +77,12 @@ export default class ScaleView extends React.Component {
 
   scaleViewChange = data => {
     this.endTime = +new Date()
-    if (this.endTime - this.startTime > this.INTERVAL) {
+    if (
+      data &&
+      data.title &&
+      data.width &&
+      this.endTime - this.startTime > this.INTERVAL
+    ) {
       let width = ~~this.state.width
       let title = this.state.title
       if (width !== ~~data.width || title !== data.title) {
