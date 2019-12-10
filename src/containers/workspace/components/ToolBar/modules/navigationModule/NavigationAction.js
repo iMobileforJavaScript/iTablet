@@ -14,10 +14,13 @@ async function listAction(type, params = {}) {
       _params.setToolbarVisible(false)
       _params.setNavigationDatas && _params.setNavigationDatas(selectedItem)
       await SMap.startNavigation(selectedItem)
+      let mapController = _params.getMapController()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: _params.changeNavPathInfo,
         showLocationView: true,
+        mapController,
       })
+      mapController.setVisible(false)
     } else {
       Toast.show(
         getLanguage(_params.language).Prompt.PLEASE_SELECT_NETWORKDATASET,

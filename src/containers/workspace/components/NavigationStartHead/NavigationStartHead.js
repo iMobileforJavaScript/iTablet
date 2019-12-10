@@ -11,6 +11,7 @@ const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
     setMapNavigation: () => {},
+    getMapController: () => {},
   }
 
   constructor(props) {
@@ -25,7 +26,6 @@ export default class NavigationStartHead extends React.Component {
   }
 
   close = async () => {
-    await SMap.clearPoint()
     await SMap.clearTrackingLayer()
     this.setVisible(false)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
@@ -45,6 +45,11 @@ export default class NavigationStartHead extends React.Component {
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
+    //室内导航 get到mapController的为null
+    this.props.getMapController &&
+      this.props.getMapController() &&
+      this.props.getMapController().setVisible(true)
+    await SMap.clearPoint()
   }
 
   _onSelectPointPress = async isStart => {

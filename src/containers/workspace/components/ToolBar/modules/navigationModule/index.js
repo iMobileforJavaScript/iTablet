@@ -23,10 +23,13 @@ async function action(type) {
       let navigationDatas = _params.getNavigationDatas()
       if (navigationDatas) {
         await SMap.startNavigation(navigationDatas)
+        let mapController = _params.getMapController()
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
           showLocationView: true,
+          mapController,
         })
+        mapController.setVisible(false)
       } else {
         const _data = await NavigationData.getData(type)
         if (_data.data.length > 0) {

@@ -35,7 +35,7 @@ export default class NavigationView extends React.Component {
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
     this.showLocationView = params.showLocationView || false
-
+    this.mapController = params.mapController || null
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
@@ -63,6 +63,7 @@ export default class NavigationView extends React.Component {
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     await SMap.clearPoint()
+    this.mapController && this.mapController.setVisible(true)
     NavigationService.goBack()
   }
 
