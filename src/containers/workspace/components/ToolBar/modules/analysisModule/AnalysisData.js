@@ -185,7 +185,7 @@ function getOptimalPathData() {
       action: () =>
         AnalysisAction.analyst(ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH),
     },
-    ToolbarBtnType.TOOLBAR_COMMIT,
+    ToolbarBtnType.TOOLBAR_DONE,
   ]
   let data = [
     {
@@ -243,7 +243,7 @@ function getConnectivityData() {
           ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS,
         ),
     },
-    ToolbarBtnType.TOOLBAR_COMMIT,
+    ToolbarBtnType.TOOLBAR_DONE,
   ]
   let data = [
     {
@@ -299,7 +299,7 @@ function getTSPData() {
       action: () =>
         AnalysisAction.analyst(ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH),
     },
-    ToolbarBtnType.TOOLBAR_COMMIT,
+    ToolbarBtnType.TOOLBAR_DONE,
   ]
   let data = [
     {
