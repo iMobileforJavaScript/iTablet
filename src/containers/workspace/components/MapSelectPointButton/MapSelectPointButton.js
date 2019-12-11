@@ -72,7 +72,10 @@ export default class MapSelectPointButton extends React.Component {
                   GLOBAL.ENDY,
                 )
               } else {
-                let navInfos = await SMap.isPointsInMapBounds()
+                let navInfos = await SMap.isPointsInMapBounds(
+                  { x: GLOBAL.STARTX, y: GLOBAL.STARTY },
+                  { x: GLOBAL.ENDX, y: GLOBAL.ENDY },
+                )
                 if (navInfos && navInfos.name) {
                   await SMap.startNavigation(navInfos)
                   result = await SMap.beginNavigation(
@@ -92,6 +95,7 @@ export default class MapSelectPointButton extends React.Component {
                     await SMap.drawOnlinePath(result[0].pathPoints)
                     isOnline = true
                   } else {
+                    this.props.setLoading(false)
                     Toast.show(
                       getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
                     )
@@ -100,6 +104,7 @@ export default class MapSelectPointButton extends React.Component {
                 }
               }
             } catch (e) {
+              this.props.setLoading(false)
               Toast.show(
                 getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
@@ -120,6 +125,7 @@ export default class MapSelectPointButton extends React.Component {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
+              this.props.setLoading(false)
               Toast.show(
                 getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
@@ -160,7 +166,10 @@ export default class MapSelectPointButton extends React.Component {
                   GLOBAL.ENDY,
                 )
               } else {
-                let navInfos = await SMap.isPointsInMapBounds()
+                let navInfos = await SMap.isPointsInMapBounds(
+                  { x: GLOBAL.STARTX, y: GLOBAL.STARTY },
+                  { x: GLOBAL.ENDX, y: GLOBAL.ENDY },
+                )
                 if (navInfos && navInfos.name) {
                   await SMap.startNavigation(navInfos)
                   result = await SMap.beginNavigation(
@@ -180,6 +189,7 @@ export default class MapSelectPointButton extends React.Component {
                     await SMap.drawOnlinePath(result[0].pathPoints)
                     isOnline = true
                   } else {
+                    this.props.setLoading(false)
                     Toast.show(
                       getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
                     )
@@ -188,6 +198,7 @@ export default class MapSelectPointButton extends React.Component {
                 }
               }
             } catch (e) {
+              this.props.setLoading(false)
               Toast.show(
                 getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
@@ -207,6 +218,7 @@ export default class MapSelectPointButton extends React.Component {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
             if (!result) {
+              this.props.setLoading(false)
               Toast.show(
                 getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
               )
