@@ -672,23 +672,58 @@ export default class BufferAnalystViewTab extends Component {
         language={this.props.language}
         popData={this.state.popData}
         currentPopData={this.state.currentPopData}
-        confirm={data => {
+        confirm={async data => {
           let newStateData = {}
           switch (this.currentPop) {
-            case popTypes.DataSource:
+            case popTypes.DataSource: {
               newStateData = { dataSource: data }
+              let udbPath = await FileTools.appendingHomeDirectory(data.path)
               if (
-                this.state.dataSource &&
+                !this.state.dataSource ||
                 data.name !== this.state.dataSource.name
               ) {
+                // 原数据源为空，或者切换数据源，则自动获取对应数据源第一个数据集
+                let dataSets = await this.getDataSets(
+                  {
+                    server: udbPath,
+                    engineType: EngineType.UDB,
+                    alias: data.key,
+                  },
+                  true,
+                )
+                const dataset = dataSets.length > 0 ? dataSets[0] : null
+                let roundTypeStatus = CheckStatus.CHECKED
+                let flatTypeStatus = CheckStatus.UN_CHECK
+                if (
+                  dataset &&
+                  (dataset.datasetType === DatasetType.REGION ||
+                    dataset.datasetType === DatasetType.POINT)
+                ) {
+                  roundTypeStatus = CheckStatus.CHECKED_DISABLE
+                  flatTypeStatus = CheckStatus.UN_CHECK_DISABLE
+                }
                 newStateData = Object.assign(newStateData, {
-                  dataSet: null,
-                  showAdvance: false,
+                  dataSet: dataset,
+                  showAdvance: dataSets.length > 0,
+                  roundTypeStatus,
+                  flatTypeStatus,
+                })
+              }
+              if (this.state.resultDataSource === null) {
+                let resultDatasetName = await SMap.getAvailableDatasetName(
+                  data.key,
+                  'Buffer',
+                )
+                // 结果数据源为空时，自动选择目标数据源
+                newStateData = Object.assign(newStateData, {
+                  resultDataSource: data,
+                  resultDataSet: { value: resultDatasetName },
                   roundTypeStatus: CheckStatus.CHECKED,
                   flatTypeStatus: CheckStatus.UN_CHECK,
                 })
               }
               break
+            }
             case popTypes.DataSet: {
               let roundTypeStatus = CheckStatus.CHECKED
               let flatTypeStatus = CheckStatus.UN_CHECK
