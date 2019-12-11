@@ -117,7 +117,10 @@ async function touchCallback(event) {
         GLOBAL.PoiInfoContainer.hidden()
       }
       isGuiding = await SMap.isGuiding()
-      if (!isGuiding) {
+      if (
+        !isGuiding &&
+        (!GLOBAL.NAVIGATIONSTARTHEAD || !GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+      ) {
         if (!(await isDoubleTouchComing())) {
           if (isfull) {
             GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()
