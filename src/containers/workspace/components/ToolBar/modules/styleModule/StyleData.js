@@ -10,6 +10,7 @@ function getData(type, params) {
   let data = []
   switch (type) {
     case ConstToolType.MAP_STYLE:
+    case ConstToolType.GRID_STYLE:
       if (ToolbarModule.getParams().currentLayer) {
         SCartography.getLayerStyle(
           ToolbarModule.getParams().currentLayer.name,

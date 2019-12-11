@@ -23,6 +23,8 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     let WS3D = []
     let DS = []
     let TIF = []
+    let SHP = []
+    let MIF = []
 
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
@@ -32,12 +34,16 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     WS3D = await getWS3DList(path, contentList, uncheckedChildFileList)
     DS = await getDSList(path, contentList, uncheckedChildFileList)
     TIF = await getTIFList(path, contentList, uncheckedChildFileList)
+    SHP = await getSHPList(path, contentList, uncheckedChildFileList)
+    MIF = await getMIFList(path, contentList, uncheckedChildFileList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
       .concat(WS3D)
       .concat(DS)
       .concat(TIF)
+      .concat(SHP)
+      .concat(MIF)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -247,6 +253,74 @@ async function getTIFList(path, contentList, uncheckedChildFileList) {
   }
 }
 
+async function getSHPList(path, contentList, uncheckedChildFileList) {
+  let SHP = []
+  let relatedFiles = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isSHP(contentList[i].name)) {
+          contentList[i].check = true
+          _checkRelatedSHP(relatedFiles, contentList[i].name, path, contentList)
+          SHP.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'shp',
+            relatedFiles: relatedFiles,
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        SHP = SHP.concat(
+          await getSHPList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return SHP
+  } catch (error) {
+    return SHP
+  }
+}
+
+async function getMIFList(path, contentList, uncheckedChildFileList) {
+  let MIF = []
+  let relatedFiles = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isMIF(contentList[i].name)) {
+          contentList[i].check = true
+          _checkRelatedMIF(relatedFiles, contentList[i].name, path, contentList)
+          MIF.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'mif',
+            relatedFiles: relatedFiles,
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        MIF = MIF.concat(
+          await getMIFList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return MIF
+  } catch (error) {
+    return MIF
+  }
+}
+
 /** 标绘模版 */
 async function _getPlottingList(path) {
   let arrFile = []
@@ -365,6 +439,33 @@ function _checkFlyingFiles(relatedFiles, path, contentList) {
   }
 }
 
+//关联同名的其他shp文件
+function _checkRelatedSHP(relatedFiles, name, path, contentList) {
+  for (let i = 0; i < contentList.length; i++) {
+    if (
+      !contentList[i].check &&
+      contentList[i].type === 'file' &&
+      _isRelatedSHP(name, contentList[i].name)
+    ) {
+      contentList[i].check = true
+      relatedFiles.push(path + '/' + contentList[i].name)
+    }
+  }
+}
+
+function _checkRelatedMIF(relatedFiles, name, path, contentList) {
+  for (let i = 0; i < contentList.length; i++) {
+    if (
+      !contentList[i].check &&
+      contentList[i].type === 'file' &&
+      _isRelatedMIF(name, contentList[i].name)
+    ) {
+      contentList[i].check = true
+      relatedFiles.push(path + '/' + contentList[i].name)
+    }
+  }
+}
+
 function _isWorkspace(name) {
   name = name.toLowerCase()
   let index = name.lastIndexOf('.')
@@ -420,6 +521,74 @@ function _isTIF(name) {
   } else {
     ext = name.substr(index + 1)
     return ext === 'tif'
+  }
+}
+
+function _isSHP(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'shp'
+  }
+}
+
+function _isSubSHP(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'dbf' || ext === 'prj' || ext === 'shx'
+  }
+}
+
+function _isRelatedSHP(name, checkName) {
+  if (_isSubSHP(checkName)) {
+    name = name.substring(0, name.lastIndexOf('.'))
+    checkName = checkName.substring(0, checkName.lastIndexOf('.'))
+    return name === checkName
+  } else {
+    return false
+  }
+}
+
+function _isMIF(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'mif'
+  }
+}
+
+function _isSubMIF(name) {
+  name = name.toLowerCase()
+  let index = name.lastIndexOf('.')
+  let ext
+  if (index < 1) {
+    return false
+  } else {
+    ext = name.substr(index + 1)
+    return ext === 'mid'
+  }
+}
+
+function _isRelatedMIF(name, checkName) {
+  if (_isSubMIF(checkName)) {
+    name = name.substring(0, name.lastIndexOf('.'))
+    checkName = checkName.substring(0, checkName.lastIndexOf('.'))
+    return name === checkName
+  } else {
+    return false
   }
 }
 

@@ -80,6 +80,7 @@ async function getTabBarData(type, params = {}) {
     tabBarData = startModule().getData(type, params)
   } else if (
     type === ConstToolType.MAP_STYLE ||
+    type === ConstToolType.GRID_STYLE ||
     type === ConstToolType.LINECOLOR_SET ||
     type === ConstToolType.POINTCOLOR_SET ||
     type === ConstToolType.REGIONBEFORECOLOR_SET ||
@@ -151,6 +152,7 @@ function getMenuDialogData(type, ...others) {
       data = toolModule().getMenuData(type)
       break
     case ConstToolType.MAP_STYLE:
+    case ConstToolType.GRID_STYLE:
     case ConstToolType.LINECOLOR_SET:
     case ConstToolType.POINTCOLOR_SET:
     case ConstToolType.REGIONBEFORECOLOR_SET:

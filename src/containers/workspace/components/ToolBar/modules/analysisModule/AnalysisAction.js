@@ -1,4 +1,4 @@
-import { SMap, Action } from 'imobile_for_reactnative'
+import { SMap, Action, STransportationAnalyst } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../../../constants'
 import { AnalystTools } from '../../../../../../utils'
 import ToolbarModule from '../ToolbarModule'
@@ -47,6 +47,7 @@ function commit() {
   _params.setToolbarVisible(false, '', {
     cb: () => {
       SMap.setAction(Action.PAN)
+      STransportationAnalyst.clear()
       GLOBAL.bubblePane && GLOBAL.bubblePane.clear()
     },
   })
