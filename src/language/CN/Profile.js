@@ -93,6 +93,7 @@ const Profile = {
   DELETE_DATA: '删除数据',
   OPEN_DATA: '打开数据',
   NEW_DATASET: '新建数据集',
+  UPLOAD_DATASET: '分享数据集',
   DELETE_DATASET: '删除数据集',
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',

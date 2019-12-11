@@ -71,7 +71,24 @@ async function importDatasource(user, item) {
   await FileTools.copyFile(sourceUdd, userPath + '/' + uddName)
 }
 
-async function importTIF(tifPath, datasourceItem) {
+async function importTIF(filePath, datasourceItem) {
+  return await _importDataset('tif', filePath, datasourceItem)
+}
+
+async function importSHP(filePath, datasourceItem) {
+  return await _importDataset('shp', filePath, datasourceItem)
+}
+
+async function importMIF(filePath, datasourceItem) {
+  return await _importDataset('mif', filePath, datasourceItem)
+}
+
+async function _importDataset(
+  type,
+  filePath,
+  datasourceItem,
+  importParams = {},
+) {
   try {
     let homePath = await FileTools.appendingHomeDirectory()
     let alias = datasourceItem.name
@@ -79,11 +96,16 @@ async function importTIF(tifPath, datasourceItem) {
     if (index > 0) {
       alias = alias.substring(0, index)
     }
-    let result = await SMap.importTIF(tifPath, {
-      server: homePath + datasourceItem.path,
-      alias: alias,
-      engineType: EngineType.UDB,
-    })
+    let result = await SMap.importDataset(
+      type,
+      filePath,
+      {
+        server: homePath + datasourceItem.path,
+        alias: alias,
+        engineType: EngineType.UDB,
+      },
+      importParams,
+    )
     SMap.closeDatasource(alias)
     return result
   } catch (error) {
@@ -157,4 +179,6 @@ export default {
   importWorkspace3D,
   importDatasource,
   importTIF,
+  importSHP,
+  importMIF,
 }
