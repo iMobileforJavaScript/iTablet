@@ -9,18 +9,16 @@ import NavigationData from './NavigationData'
 async function listAction(type, params = {}) {
   const _params = ToolbarModule.getParams()
   if (type === ConstToolType.MAP_NAVIGATION_MODULE) {
+    GLOBAL.ISOUTDOORMAP = true
     let selectedItem = params.item
     if (selectedItem) {
       _params.setToolbarVisible(false)
       _params.setNavigationDatas && _params.setNavigationDatas(selectedItem)
       await SMap.startNavigation(selectedItem)
-      let mapController = _params.getMapController()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: _params.changeNavPathInfo,
         showLocationView: true,
-        mapController,
       })
-      mapController.setVisible(false)
     } else {
       Toast.show(
         getLanguage(_params.language).Prompt.PLEASE_SELECT_NETWORKDATASET,

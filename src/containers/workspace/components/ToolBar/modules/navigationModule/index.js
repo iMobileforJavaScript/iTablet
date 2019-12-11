@@ -12,6 +12,7 @@ async function action(type) {
     const _params = ToolbarModule.getParams()
     let isIndoorMap = await SMap.isIndoorMap()
     if (isIndoorMap) {
+      GLOBAL.ISOUTDOORMAP = false
       //室内导航
       SMap.startIndoorNavigation()
       NavigationService.navigate('NavigationView', {
@@ -19,17 +20,16 @@ async function action(type) {
         showLocationView: false,
       })
     } else {
+      //当前是室外地图，只能进行行业导航和在线路径分析
+      GLOBAL.ISOUTDOORMAP = true
       //行业导航
       let navigationDatas = _params.getNavigationDatas()
       if (navigationDatas) {
         await SMap.startNavigation(navigationDatas)
-        let mapController = _params.getMapController()
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
           showLocationView: true,
-          mapController,
         })
-        mapController.setVisible(false)
       } else {
         const _data = await NavigationData.getData(type)
         if (_data.data.length > 0) {

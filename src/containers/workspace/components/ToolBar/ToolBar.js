@@ -112,8 +112,6 @@ export default class ToolBar extends React.PureComponent {
     getNavigationDatas: () => {},
     //更改导航路径
     changeNavPathInfo: () => {},
-    //获取mapController
-    getMapController: () => {},
     //获取FloorListView
     getFloorListView: () => {},
     //改变当前楼层ID
@@ -912,7 +910,7 @@ export default class ToolBar extends React.PureComponent {
         cb: () => SMap.setAction(Action.SELECT),
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
-      this.savePlotAnimationNode()
+      this.contentView.savePlotAnimationNode()
     } else if (this.state.type === ConstToolType.MAP3D_TOOL_FLYLIST) {
       SScene.checkoutListener('startTouchAttribute')
       SScene.setAction('PAN3D')
