@@ -400,7 +400,7 @@ const grid = param => [
           isTouchProgress: true,
           showMenuDialog: false,
           selectName: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
-          selectKey: '栅格透明度',
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
           buttons: [
             ToolbarBtnType.CANCEL,
             // ToolbarBtnType.MENUS,
@@ -410,7 +410,7 @@ const grid = param => [
           ],
         })
     },
-    selectKey: '栅格透明度',
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_CONTRAST,
@@ -419,8 +419,8 @@ const grid = param => [
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '对比度',
-          selectKey: '栅格对比度',
+          selectName: getLanguage(param).Map_Main_Menu.CONTRAST,
+          selectKey: getLanguage(param).Map_Main_Menu.CONTRAST,
           buttons: [
             ToolbarBtnType.CANCEL,
             // ToolbarBtnType.MENUS,
@@ -430,7 +430,7 @@ const grid = param => [
           ],
         })
     },
-    selectKey: '栅格对比度',
+    selectKey: getLanguage(param).Map_Main_Menu.CONTRAST,
   },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
@@ -439,8 +439,8 @@ const grid = param => [
         GLOBAL.toolBox.setState({
           isTouchProgress: true,
           showMenuDialog: false,
-          selectName: '亮度',
-          selectKey: '栅格亮度',
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
           buttons: [
             ToolbarBtnType.CANCEL,
             // ToolbarBtnType.MENUS,
@@ -450,7 +450,7 @@ const grid = param => [
           ],
         })
     },
-    selectKey: '栅格亮度',
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_BRIGHTNESS,
   },
 ]
 

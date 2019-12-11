@@ -103,7 +103,7 @@ async function getThemeExpress(type) {
     if (
       type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
       type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
-      type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
+      // type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
       ThemeMenuData.isThemeFieldTypeAvailable(
         item.fieldTypeStr,
         themeCreateType,
@@ -1358,6 +1358,7 @@ function layerListAction(data) {
       getData: ThemeData.getData,
       actions: actions,
       currentThemeData: data,
+      themeCreateType: curThemeType,
     })
     _params.navigation.navigate('MapView')
     Toast.show(

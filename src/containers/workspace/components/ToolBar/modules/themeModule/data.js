@@ -3611,7 +3611,6 @@ function isThemeFieldTypeAvailable(fieldType, themeType) {
     themeType &&
     (themeType === constants.THEME_UNIFY_LABEL ||
       themeType === constants.THEME_UNIQUE_LABEL)
-    // || themeType === constants.THEME_RANGE_LABEL
   ) {
     return true
   } else {
