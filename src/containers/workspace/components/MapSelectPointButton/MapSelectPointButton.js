@@ -31,9 +31,7 @@ export default class MapSelectPointButton extends React.Component {
   }
 
   setButton = async () => {
-    let pathLength,
-      path,
-      isOnline = false
+    let pathLength, path
     let showLocationView = !(await SMap.isIndoorMap())
     if (
       this.state.button ===
@@ -85,22 +83,9 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDY,
                   )
                 } else {
-                  result = await FetchUtils.routeAnalyst(
-                    GLOBAL.STARTX,
-                    GLOBAL.STARTY,
-                    GLOBAL.ENDX,
-                    GLOBAL.ENDY,
-                  )
-                  if (result && result[0] && result[0].pathInfos) {
-                    await SMap.drawOnlinePath(result[0].pathPoints)
-                    isOnline = true
-                  } else {
-                    this.props.setLoading(false)
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-                    )
-                    return
-                  }
+                  GLOBAL.NavDialog.setDialogVisible(true)
+                  this.props.setLoading(false)
+                  return
                 }
               }
             } catch (e) {
@@ -110,15 +95,10 @@ export default class MapSelectPointButton extends React.Component {
               )
               return
             }
-            if (isOnline) {
-              pathLength = { length: result[0].pathLength }
-              path = result[0].pathInfos
-            } else {
-              path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-              pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
-            }
+            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
             this.props.setLoading(false)
-            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
             GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
             GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
             this.setVisible(false)
@@ -179,22 +159,9 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDY,
                   )
                 } else {
-                  result = await FetchUtils.routeAnalyst(
-                    GLOBAL.STARTX,
-                    GLOBAL.STARTY,
-                    GLOBAL.ENDX,
-                    GLOBAL.ENDY,
-                  )
-                  if (result && result[0] && result[0].pathInfos) {
-                    await SMap.drawOnlinePath(result[0].pathPoints)
-                    isOnline = true
-                  } else {
-                    this.props.setLoading(false)
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-                    )
-                    return
-                  }
+                  GLOBAL.NavDialog.setDialogVisible(true)
+                  this.props.setLoading(false)
+                  return
                 }
               }
             } catch (e) {
@@ -204,15 +171,10 @@ export default class MapSelectPointButton extends React.Component {
               )
               return
             }
-            if (isOnline) {
-              pathLength = { length: result[0].pathLength }
-              path = result[0].pathInfos
-            } else {
-              path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-              pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
-            }
+            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
+            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
             this.props.setLoading(false)
-            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+            GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
             GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
             this.setVisible(false)
             GLOBAL.MAPSELECTPOINT.setVisible(false)
