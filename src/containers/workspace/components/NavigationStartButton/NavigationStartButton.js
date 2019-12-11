@@ -158,7 +158,7 @@ export default class NavigationStartButton extends React.Component {
       SMap.indoorNavigation(1)
     }
   }
-  //todo 各种方向相关的符号没图
+
   getIconByType = type => {
     let icon
     switch (type) {
@@ -169,44 +169,62 @@ export default class NavigationStartButton extends React.Component {
         icon = getPublicAssets().navigation.icon_nav_end
         break
       case 0:
+        icon = getPublicAssets().navigation.icon_go_straight
         break
       case 1:
+        icon = getPublicAssets().navigation.icon_front_left_turn
         break
       case 2:
+        icon = getPublicAssets().navigation.icon_front_right_turn
         break
       case 3:
+        icon = getPublicAssets().navigation.icon_turn_left
         break
       case 4:
+        icon = getPublicAssets().navigation.icon_turn_right
         break
       case 5:
+        icon = getPublicAssets().navigation.icon_back_left_turn
         break
       case 6:
+        icon = getPublicAssets().navigation.icon_back_right_turn
         break
       case 7:
+        icon = getPublicAssets().navigation.icon_U_turn
         break
       case 8:
-        break
       case 9:
+        icon = null
         break
       case 10:
+        icon = getPublicAssets().navigation.icon_enter_roundabout
         break
       case 11:
+        icon = getPublicAssets().navigation.icon_exit_roundabout
         break
       case 12:
+        icon = getPublicAssets().navigation.icon_arrive_destination
         break
       case 13:
+        icon = getPublicAssets().navigation.icon_elevator_up
         break
       case 14:
+        icon = getPublicAssets().navigation.icon_elevator_down
         break
       case 15:
+        icon = getPublicAssets().navigation.icon_escalator_up
         break
       case 16:
+        icon = getPublicAssets().navigation.icon_escalator_down
         break
       case 17:
+        icon = getPublicAssets().navigation.icon_stairs_up
         break
       case 18:
+        icon = getPublicAssets().navigation.icon_stairs_down
         break
       case 19:
+        icon = getPublicAssets().navigation.icon_route_point
         break
     }
     return icon
@@ -240,7 +258,7 @@ export default class NavigationStartButton extends React.Component {
     if (item.routeName && GLOBAL.language === 'CN') {
       str = `沿${item.routeName}${str}`
     }
-    let icon = this.getIconByType(item.turnType)
+    let icon = this.getIconByType(turnType)
     return (
       <View>
         <View
