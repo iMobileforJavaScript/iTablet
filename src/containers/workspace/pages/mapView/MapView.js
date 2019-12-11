@@ -273,7 +273,7 @@ export default class MapView extends React.Component {
   }
 
   addFloorHiddenListener = () => {
-    this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
+    this.floorHiddenListener = SMap.addFloorHiddenListener(async result => {
       //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
       if (
         result.currentFloorID !== this.state.currentFloorID &&
@@ -283,9 +283,12 @@ export default class MapView extends React.Component {
           (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
         )
       ) {
-        this.setState({
-          currentFloorID: result.currentFloorID,
-        })
+        let isGuiding = await SMap.isGuiding()
+        if (!isGuiding) {
+          this.setState({
+            currentFloorID: result.currentFloorID,
+          })
+        }
       }
     })
   }

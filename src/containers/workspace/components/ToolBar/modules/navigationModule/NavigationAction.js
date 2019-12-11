@@ -9,6 +9,7 @@ import NavigationData from './NavigationData'
 async function listAction(type, params = {}) {
   const _params = ToolbarModule.getParams()
   if (type === ConstToolType.MAP_NAVIGATION_MODULE) {
+    GLOBAL.ISOUTDOORMAP = true
     let selectedItem = params.item
     if (selectedItem) {
       _params.setToolbarVisible(false)
