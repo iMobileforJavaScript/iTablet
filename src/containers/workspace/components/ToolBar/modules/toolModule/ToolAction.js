@@ -286,9 +286,9 @@ function clearMeasure(type) {
 }
 
 /** 量算功能 撤销事件 **/
-function undo(type) {
+async function undo(type) {
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
-    SMap.undo()
+    await SMap.undo()
     return
   }
   let pointArr = ToolbarModule.getData().pointArr || []
@@ -312,14 +312,14 @@ function undo(type) {
     }
   }
   _params.buttonView.setState(newState)
-  SMap.undo()
+  await SMap.undo()
   ToolbarModule.addData({ pointArr, redoArr })
 }
 
 /** 量算功能 重做事件 **/
-function redo(type = null) {
+async function redo(type = null) {
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
-    SMap.redo()
+    await SMap.redo()
     return
   }
   let pointArr = ToolbarModule.getData().pointArr || []
@@ -340,7 +340,7 @@ function redo(type = null) {
   _params.buttonView.setState(newState)
   Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
 
-  SMap.redo()
+  await SMap.redo()
   ToolbarModule.addData({ pointArr, redoArr })
 }
 
