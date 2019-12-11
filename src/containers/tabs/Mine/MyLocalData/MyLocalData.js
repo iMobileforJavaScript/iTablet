@@ -347,17 +347,36 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _onImportTIF = async () => {
+  _onImportDataset = async type => {
     NavigationService.navigate('MyDatasource', {
       title: getLanguage(this.props.language).Profile.DATA,
       getItemCallback: async ({ item }) => {
         try {
           NavigationService.goBack()
           this.onImportStart()
-          let result = await DataHandler.importTIF(
-            this.itemInfo.item.filePath,
-            item,
-          )
+          let result
+          switch (type) {
+            case 'tif':
+              result = await DataHandler.importTIF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'shp':
+              result = await DataHandler.importSHP(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'mif':
+              result = await DataHandler.importMIF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            default:
+              break
+          }
           result
             ? Toast.show(
               getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS,
@@ -418,12 +437,22 @@ export default class MyLocalData extends Component {
         this.itemInfo !== undefined &&
         this.itemInfo.item.fileType === 'tif'
       ) {
-        this._onImportTIF()
+        this._onImportDataset('tif')
       } else if (
         this.itemInfo !== undefined &&
         this.itemInfo.item.fileType === 'workspace'
       ) {
         this._onImportWorkspace()
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'shp'
+      ) {
+        this._onImportDataset('shp')
+      } else if (
+        this.itemInfo !== undefined &&
+        this.itemInfo.item.fileType === 'mif'
+      ) {
+        this._onImportDataset('mif')
       } else {
         Toast.show('暂不支持此数据的导入')
       }
