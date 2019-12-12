@@ -269,7 +269,7 @@ export default class MapView extends React.Component {
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
 
-    this.selectedDataset = null
+    this.selectedDataset = {}
     this.floorHiddenListener = null
   }
 
@@ -2128,6 +2128,7 @@ export default class MapView extends React.Component {
                 NavigationService.navigate('PointAnalyst', {
                   type: 'pointSearch',
                 })
+                this.changeFloorID('')
               } else {
                 Toast.show(
                   getLanguage(this.props.language).Prompt
@@ -2319,9 +2320,14 @@ export default class MapView extends React.Component {
   // }
   changeFloorID = currentFloorID => {
     if (currentFloorID !== this.state.currentFloorID) {
-      this.setState({
-        currentFloorID,
-      })
+      this.setState(
+        {
+          currentFloorID,
+        },
+        () => {
+          GLOBAL.ISOUTDOORMAP = !!currentFloorID
+        },
+      )
     }
   }
   _renderFloorListView = () => {

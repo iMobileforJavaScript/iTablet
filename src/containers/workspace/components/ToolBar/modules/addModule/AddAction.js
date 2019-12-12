@@ -104,7 +104,6 @@ async function listAction(type, params = {}) {
         await SMap.startNavigation(selectedItem)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
-          showLocationView: true,
         })
       } else {
         Toast.show(
