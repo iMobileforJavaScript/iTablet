@@ -15,7 +15,10 @@ const ai_tab = require('./ai_tab.png')
 const icon_ar_toolbar_save_point = require('./ai_save_point.png')
 const icon_cancel = require('./icon_function_cancel.png')
 const icon_flex = require('./icon_function_theme_param_style.png')
-const icon_down = require('./icon_down.png')
+const icon_down = require('./icon_down_white.png')
+const icon_datasource = require('./icon_datasource.png')
+const icon_more = require('./icon_more.png')
+const icon_dataset = require('./icon_dataset.png')
 export default {
   icon_save_line,
   icon_new,
@@ -35,4 +38,7 @@ export default {
   icon_cancel,
   icon_flex,
   icon_down,
+  icon_datasource,
+  icon_more,
+  icon_dataset,
 }
