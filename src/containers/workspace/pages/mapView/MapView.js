@@ -281,7 +281,9 @@ export default class MapView extends React.Component {
         !(
           (GLOBAL.MAPSELECTPOINTBUTTON &&
             GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
-          (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+          (GLOBAL.NAVIGATIONSTARTHEAD &&
+            GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
+          GLOBAL.PoiTopSearchBar.state.visible
         )
       ) {
         let isGuiding = await SMap.isGuiding()
