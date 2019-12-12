@@ -132,7 +132,6 @@ export default class PointAnalyst extends Component {
       }
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: this.changeNavPathInfo,
-        showLocationView: true,
       })
       this.setState({
         searchValue: null,
