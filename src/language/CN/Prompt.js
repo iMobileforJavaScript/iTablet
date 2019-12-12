@@ -283,7 +283,7 @@ const Prompt = {
   ROUTE_ANALYSING: '路径分析中',
   DISTANCE_ERROR: '当前起始点距离太近，请重新选点',
   USE_ONLINE_ROUTE_ANALYST:
-    '起始点不在路网数据集范围内，是否使用在线路径分析？',
+    '起始点不在路网数据集范围内或起始点附近无路网，是否使用在线路径分析？',
 
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',

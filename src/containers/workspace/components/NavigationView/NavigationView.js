@@ -137,9 +137,9 @@ export default class NavigationView extends React.Component {
               pathLength = await SMap.getNavPathLength(false)
               path = await SMap.getPathInfos(false)
             } else {
-              Toast.show(
-                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-              )
+              //在线路径分析弹窗
+              this.loading.setLoading(false)
+              this.dialog.setDialogVisible(true)
             }
           } catch (e) {
             this.loading.setLoading(false)
@@ -511,7 +511,7 @@ export default class NavigationView extends React.Component {
               style={styles.dialogHeaderImg}
             />
             <Text style={styles.promptTitle}>
-              起始点不再本地路径分析范围内，是否使用在线路径分析？
+              {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
             </Text>
           </View>
         </Dialog>
