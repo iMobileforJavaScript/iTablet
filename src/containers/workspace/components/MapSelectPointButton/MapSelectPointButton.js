@@ -82,6 +82,11 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDX,
                     GLOBAL.ENDY,
                   )
+                  if (!result) {
+                    GLOBAL.NavDialog.setDialogVisible(true)
+                    this.props.setLoading(false)
+                    return
+                  }
                 } else {
                   GLOBAL.NavDialog.setDialogVisible(true)
                   this.props.setLoading(false)
@@ -158,6 +163,11 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDX,
                     GLOBAL.ENDY,
                   )
+                  if (!result) {
+                    GLOBAL.NavDialog.setDialogVisible(true)
+                    this.props.setLoading(false)
+                    return
+                  }
                 } else {
                   GLOBAL.NavDialog.setDialogVisible(true)
                   this.props.setLoading(false)
