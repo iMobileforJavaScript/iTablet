@@ -376,6 +376,7 @@ const Map_Main_Menu = {
   HAND_PAINTED: 'By Hand',
   NETWORK_DATASET: 'Network Datasets',
   MODEL_FILE: 'Navigation Model Files',
+  MY_LOCATION: 'My location',
 }
 
 //推演动画

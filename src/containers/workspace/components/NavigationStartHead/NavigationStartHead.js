@@ -98,7 +98,7 @@ export default class NavigationStartHead extends React.Component {
         <View
           style={{
             paddingTop: TOOLBARHEIGHT + scaleSize(20),
-            height: scaleSize(185) + TOOLBARHEIGHT,
+            height: scaleSize(205) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',

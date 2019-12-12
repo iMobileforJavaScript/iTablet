@@ -393,6 +393,7 @@ const Map_Main_Menu = {
   HAND_PAINTED: '手绘',
   NETWORK_DATASET: '路网数据集',
   MODEL_FILE: '导航模型文件',
+  MY_LOCATION: '我的位置',
 }
 
 //推演动画

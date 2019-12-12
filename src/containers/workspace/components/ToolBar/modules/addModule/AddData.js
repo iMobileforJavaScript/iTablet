@@ -189,8 +189,7 @@ async function getDatasets(type, params = {}) {
 async function getAllDatas() {
   const params = ToolbarModule.getParams()
   let { data, buttons } = await getUDBsAndMaps()
-  let isIndoorMap = await SMap.isIndoorMap()
-  if (!isIndoorMap) {
+  if (GLOBAL.ISOUTDOORMAP) {
     let list
     let userUDBPath, userUDBs
     let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/

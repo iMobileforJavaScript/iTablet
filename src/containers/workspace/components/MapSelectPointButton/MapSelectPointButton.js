@@ -32,7 +32,6 @@ export default class MapSelectPointButton extends React.Component {
 
   setButton = async () => {
     let pathLength, path
-    let showLocationView = !(await SMap.isIndoorMap())
     if (
       this.state.button ===
       getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
@@ -46,7 +45,6 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
-            showLocationView,
           })
         } else {
           this.props.setLoading(
@@ -82,6 +80,11 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDX,
                     GLOBAL.ENDY,
                   )
+                  if (!result) {
+                    GLOBAL.NavDialog.setDialogVisible(true)
+                    this.props.setLoading(false)
+                    return
+                  }
                 } else {
                   GLOBAL.NavDialog.setDialogVisible(true)
                   this.props.setLoading(false)
@@ -122,7 +125,6 @@ export default class MapSelectPointButton extends React.Component {
           GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
             changeNavPathInfo: this.props.changeNavPathInfo,
-            showLocationView,
           })
         } else {
           this.props.setLoading(
@@ -158,6 +160,11 @@ export default class MapSelectPointButton extends React.Component {
                     GLOBAL.ENDX,
                     GLOBAL.ENDY,
                   )
+                  if (!result) {
+                    GLOBAL.NavDialog.setDialogVisible(true)
+                    this.props.setLoading(false)
+                    return
+                  }
                 } else {
                   GLOBAL.NavDialog.setDialogVisible(true)
                   this.props.setLoading(false)

@@ -8,6 +8,7 @@ import {
   // DatasetType,
   SAIDetectView,
   SMap,
+  SCollectSceneFormView,
 } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
@@ -222,34 +223,36 @@ function collectSceneForm() {
       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
     }
 
-    NavigationService.navigate('InputPage', {
-      headerTitle: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_NEWDATA,
-      value: '',
-      placeholder: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME,
-      type: 'name',
-      cb: async value => {
-        NavigationService.goBack()
-        GLOBAL.mapView.setState({ map: { height: 0 } })
-        GLOBAL.newcollectData = value
-        const datasourceAlias = value
-        const datasetName = 'CollectSceneForm'
-        const datasetPointName = 'CollectPointSceneForm'
-        NavigationService.navigate('CollectSceneFormView', {
-          datasourceAlias,
-          datasetName,
-          datasetPointName,
-        })
-      },
-      backcb: () => {
-        NavigationService.goBack()
-        if (GLOBAL.isswitch) {
-          GLOBAL.isswitch = false
-          GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
-        }
-      },
+    let time = await SCollectSceneFormView.getSystemTime()
+    GLOBAL.mapView.setState({ map: { height: 0 } })
+    GLOBAL.newcollectData = time
+    const datasourceAlias = time
+    const datasetName = 'CollectSceneForm'
+    const datasetPointName = 'CollectPointSceneForm'
+    NavigationService.navigate('CollectSceneFormView', {
+      datasourceAlias,
+      datasetName,
+      datasetPointName,
     })
+
+    // NavigationService.navigate('InputPage', {
+    //   headerTitle: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_NEWDATA,
+    //   value: '',
+    //   placeholder: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_NEW_DATANAME,
+    //   type: 'name',
+    //   cb: async value => {
+    //     NavigationService.goBack()
+    //   },
+    //   backcb: () => {
+    //     NavigationService.goBack()
+    //     if (GLOBAL.isswitch) {
+    //       GLOBAL.isswitch = false
+    //       GLOBAL.toolBox && GLOBAL.toolBox.switchAr()
+    //     }
+    //   },
+    // })
   }.bind(this)())
 }
 

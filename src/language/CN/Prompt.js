@@ -16,6 +16,8 @@ const Prompt = {
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
   WX_NOT_INSTALLED: '未检测到微信',
+  RENAME: '重命名',
+  BATCH_DELETE: '批量删除',
 
   DOWNLOAD_SAMPLE_DATA: '是否下载样例数据？',
   DOWNLOAD: '下载',
@@ -283,7 +285,7 @@ const Prompt = {
   ROUTE_ANALYSING: '路径分析中',
   DISTANCE_ERROR: '当前起始点距离太近，请重新选点',
   USE_ONLINE_ROUTE_ANALYST:
-    '起始点不在路网数据集范围内，是否使用在线路径分析？',
+    '起始点不在路网数据集范围内或起始点附近无路网，是否使用在线路径分析？',
 
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',

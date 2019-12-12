@@ -117,16 +117,21 @@ export default class PointAnalyst extends Component {
         GLOBAL.STARTY = item.y
         GLOBAL.STARTNAME = item.pointName
         await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+        if (GLOBAL.ENDX && GLOBAL.ENDY) {
+          await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+        }
       } else {
         //设置终点
         GLOBAL.ENDX = item.x
         GLOBAL.ENDY = item.y
         GLOBAL.ENDNAME = item.pointName
         await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+        if (GLOBAL.STARTX && GLOBAL.STARTY) {
+          await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+        }
       }
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: this.changeNavPathInfo,
-        showLocationView: true,
       })
       this.setState({
         searchValue: null,

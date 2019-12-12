@@ -35,7 +35,6 @@ export default class NavigationView extends React.Component {
     super(props)
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
-    this.showLocationView = params.showLocationView || false
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
@@ -71,7 +70,7 @@ export default class NavigationView extends React.Component {
     this.backClicked = true
     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
     GLOBAL.MAPSELECTPOINT.setVisible(true)
-    this.showLocationView &&
+    GLOBAL.ISOUTDOORMAP &&
       GLOBAL.LocationView &&
       GLOBAL.LocationView.setVisible(true, true)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
@@ -91,7 +90,7 @@ export default class NavigationView extends React.Component {
     this.backClicked = true
     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
     GLOBAL.MAPSELECTPOINT.setVisible(true)
-    this.showLocationView &&
+    GLOBAL.ISOUTDOORMAP &&
       GLOBAL.LocationView &&
       GLOBAL.LocationView.setVisible(true, false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
@@ -137,9 +136,9 @@ export default class NavigationView extends React.Component {
               pathLength = await SMap.getNavPathLength(false)
               path = await SMap.getPathInfos(false)
             } else {
-              Toast.show(
-                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-              )
+              //在线路径分析弹窗
+              this.loading.setLoading(false)
+              this.dialog.setDialogVisible(true)
             }
           } catch (e) {
             this.loading.setLoading(false)
@@ -322,7 +321,7 @@ export default class NavigationView extends React.Component {
         <View
           style={{
             paddingTop: TOOLBARHEIGHT + scaleSize(20),
-            height: scaleSize(185) + TOOLBARHEIGHT,
+            height: scaleSize(205) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -511,7 +510,7 @@ export default class NavigationView extends React.Component {
               style={styles.dialogHeaderImg}
             />
             <Text style={styles.promptTitle}>
-              起始点不再本地路径分析范围内，是否使用在线路径分析？
+              {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
             </Text>
           </View>
         </Dialog>

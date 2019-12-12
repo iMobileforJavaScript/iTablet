@@ -54,7 +54,7 @@ export default StyleSheet.create({
     backgroundColor: color.background,
     marginLeft: scaleSize(30),
     marginRight: scaleSize(50),
-    height: scaleSize(150),
+    height: scaleSize(170),
     borderRadius: scaleSize(10),
     flexDirection: 'row',
     alignItems: 'center',
@@ -62,14 +62,14 @@ export default StyleSheet.create({
   },
   onInput: {
     flex: 1,
-    height: scaleSize(55),
-    lineHeight: scaleSize(55),
+    height: scaleSize(60),
+    lineHeight: scaleSize(60),
     justifyContent: 'center',
   },
   secondInput: {
     flex: 1,
-    height: scaleSize(55),
-    lineHeight: scaleSize(55),
+    height: scaleSize(60),
+    lineHeight: scaleSize(60),
     color: color.fontColorGray,
     justifyContent: 'center',
   },
@@ -115,7 +115,7 @@ export default StyleSheet.create({
     height: scaleSize(80),
   },
   dialogBackground: {
-    height: scaleSize(300),
+    height: scaleSize(350),
   },
   promptTitle: {
     fontSize: size.fontSize.fontSizeXXl,

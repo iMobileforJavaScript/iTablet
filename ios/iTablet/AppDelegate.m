@@ -80,6 +80,7 @@ static NSString* g_sampleCodeName = @"#";;
 +(void)SetSampleCodeName:(NSString*)name
 {
   g_sampleCodeName = name;
+  
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -91,7 +92,7 @@ static NSString* g_sampleCodeName = @"#";;
   
 #if DEBUG
 
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.103"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.137.69"];
 
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
