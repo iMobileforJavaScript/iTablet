@@ -57,6 +57,7 @@ const Profile = {
   DELETE_DATA: 'Delete Data',
   OPEN_DATA: 'Open Data',
   NEW_DATASET: 'Create Dataset',
+  UPLOAD_DATASET: 'Share Dataset',
   DELETE_DATASET: 'Delete Dataset',
   UPLOAD_MAP: 'Share Map',
   EXPORT_MAP: 'Export Map',

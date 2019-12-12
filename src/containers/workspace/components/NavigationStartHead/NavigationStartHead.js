@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text, Platform } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  Platform,
+  Animated,
+} from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import styles from './styles'
 import { TouchType } from '../../../../constants'
@@ -11,7 +18,6 @@ const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 export default class NavigationStartHead extends React.Component {
   props: {
     setMapNavigation: () => {},
-    getMapController: () => {},
   }
 
   constructor(props) {
@@ -28,7 +34,13 @@ export default class NavigationStartHead extends React.Component {
   close = async () => {
     await SMap.clearTrackingLayer()
     this.setVisible(false)
-    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setState({
+      show: false,
+      isroad: true,
+      road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
+      height: new Animated.Value(scaleSize(200)),
+      length: '',
+    })
     GLOBAL.toolBox.existFullMap()
     this.props.setMapNavigation({
       isShow: false,
@@ -45,10 +57,6 @@ export default class NavigationStartHead extends React.Component {
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
-    //室内导航 get到mapController的为null
-    this.props.getMapController &&
-      this.props.getMapController() &&
-      this.props.getMapController().setVisible(true)
     await SMap.clearPoint()
   }
 

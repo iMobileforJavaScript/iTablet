@@ -16,6 +16,7 @@ import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import Loading from '../../../../components/Container/Loading'
+import { Dialog } from '../../../../components'
 
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 
@@ -35,7 +36,6 @@ export default class NavigationView extends React.Component {
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
     this.showLocationView = params.showLocationView || false
-    this.mapController = params.mapController || null
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
@@ -63,7 +63,6 @@ export default class NavigationView extends React.Component {
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     await SMap.clearPoint()
-    this.mapController && this.mapController.setVisible(true)
     NavigationService.goBack()
   }
 
@@ -125,7 +124,6 @@ export default class NavigationView extends React.Component {
           datasetName,
         )
         let path, pathLength
-        let isOnline = false
         //室外导航
         if (isStartInBounds && isEndInBounds) {
           try {
@@ -148,22 +146,9 @@ export default class NavigationView extends React.Component {
             Toast.show('无路径分析结果')
           }
         } else {
-          //在线路径分析
-          let result = await FetchUtils.routeAnalyst(
-            GLOBAL.STARTX,
-            GLOBAL.STARTY,
-            GLOBAL.ENDX,
-            GLOBAL.ENDY,
-          )
-          if (result && result[0] && result[0].pathInfos) {
-            pathLength = { length: result[0].pathLength }
-            path = result[0].pathInfos
-            await SMap.drawOnlinePath(result[0].pathPoints)
-            await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
-            isOnline = true
-          } else {
-            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
-          }
+          //在线路径分析弹窗
+          this.loading.setLoading(false)
+          this.dialog.setDialogVisible(true)
         }
         if (pathLength && path) {
           this.changeNavPathInfo({ path, pathLength })
@@ -172,7 +157,7 @@ export default class NavigationView extends React.Component {
           GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
             button: '',
           })
-          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, isOnline)
+          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
           GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
           this.props.setMapNavigation({
             isShow: true,
@@ -263,6 +248,67 @@ export default class NavigationView extends React.Component {
       }
     } else {
       Toast.show(getLanguage(GLOBAL.language).Prompt.SET_START_AND_END_POINTS)
+    }
+  }
+
+  _confirm = async () => {
+    this.dialog.setDialogVisible(false)
+    this.loading.setLoading(
+      true,
+      getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+    )
+    let path, pathLength
+    let result = await FetchUtils.routeAnalyst(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
+      GLOBAL.ENDX,
+      GLOBAL.ENDY,
+    )
+    if (result && result[0] && result[0].pathInfos) {
+      pathLength = { length: result[0].pathLength }
+      path = result[0].pathInfos
+      await SMap.drawOnlinePath(result[0].pathPoints)
+      await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
+    } else {
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+    }
+    if (pathLength && path) {
+      this.changeNavPathInfo({ path, pathLength })
+      GLOBAL.ROUTEANALYST = true
+      GLOBAL.MAPSELECTPOINT.setVisible(false)
+      GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+        button: '',
+      })
+      GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
+      GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+      this.props.setMapNavigation({
+        isShow: true,
+        name: '',
+      })
+      GLOBAL.toolBox.showFullMap(true)
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
+      })
+      if (this.historyclick) {
+        this.props.setNavigationHistory(history)
+      }
+      if (this.clickable) {
+        this.clickable = false
+        GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+        this.loading.setLoading(false)
+        GLOBAL.TouchType = TouchType.NULL
+        //考虑搜索界面跳转，不能直接goBack
+        NavigationService.navigate('MapView')
+      }
     }
   }
   _renderSearchView = () => {
@@ -450,6 +496,25 @@ export default class NavigationView extends React.Component {
           </TouchableOpacity>
         </View>
         <Loading ref={ref => (this.loading = ref)} initLoading={false} />
+        <Dialog
+          ref={ref => (this.dialog = ref)}
+          confirmAction={this._confirm}
+          opacity={1}
+          opacityStyle={styles.dialogBackground}
+          style={styles.dialogBackground}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        >
+          <View style={styles.dialogHeaderView}>
+            <Image
+              source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+              style={styles.dialogHeaderImg}
+            />
+            <Text style={styles.promptTitle}>
+              起始点不再本地路径分析范围内，是否使用在线路径分析？
+            </Text>
+          </View>
+        </Dialog>
       </View>
     )
   }

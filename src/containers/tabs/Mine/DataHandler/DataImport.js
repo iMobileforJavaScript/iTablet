@@ -71,7 +71,64 @@ async function importDatasource(user, item) {
   await FileTools.copyFile(sourceUdd, userPath + '/' + uddName)
 }
 
-async function importTIF(tifPath, datasourceItem) {
+async function importTIF(filePath, datasourceItem) {
+  return await _importDataset('tif', filePath, datasourceItem)
+}
+
+async function importSHP(filePath, datasourceItem) {
+  return await _importDataset('shp', filePath, datasourceItem)
+}
+
+async function importMIF(filePath, datasourceItem) {
+  return await _importDataset('mif', filePath, datasourceItem)
+}
+
+async function importKML(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('kml', filePath, datasourceItem, {
+    datasetName: name,
+    importAsCAD: true,
+  })
+}
+
+async function importKMZ(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('kmz', filePath, datasourceItem, {
+    datasetName: name,
+    importAsCAD: true,
+  })
+}
+
+async function importDWG(filePath, datasourceItem) {
+  return await _importDataset('dwg', filePath, datasourceItem, {
+    inverseBlackWhite: false,
+    importAsCAD: true,
+  })
+}
+
+async function importDXF(filePath, datasourceItem) {
+  return await _importDataset('dxf', filePath, datasourceItem, {
+    inverseBlackWhite: false,
+    importAsCAD: true,
+  })
+}
+
+async function importGPX(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('gpx', filePath, datasourceItem, {
+    datasetName: name,
+  })
+}
+
+async function _importDataset(
+  type,
+  filePath,
+  datasourceItem,
+  importParams = {},
+) {
   try {
     let homePath = await FileTools.appendingHomeDirectory()
     let alias = datasourceItem.name
@@ -79,11 +136,16 @@ async function importTIF(tifPath, datasourceItem) {
     if (index > 0) {
       alias = alias.substring(0, index)
     }
-    let result = await SMap.importTIF(tifPath, {
-      server: homePath + datasourceItem.path,
-      alias: alias,
-      engineType: EngineType.UDB,
-    })
+    let result = await SMap.importDataset(
+      type,
+      filePath,
+      {
+        server: homePath + datasourceItem.path,
+        alias: alias,
+        engineType: EngineType.UDB,
+      },
+      importParams,
+    )
     SMap.closeDatasource(alias)
     return result
   } catch (error) {
@@ -157,4 +219,11 @@ export default {
   importWorkspace3D,
   importDatasource,
   importTIF,
+  importSHP,
+  importMIF,
+  importKML,
+  importKMZ,
+  importDWG,
+  importDXF,
+  importGPX,
 }

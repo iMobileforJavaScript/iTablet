@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
+import size from '../../../../styles/size'
 
 export default StyleSheet.create({
   container: {
@@ -108,5 +109,26 @@ export default StyleSheet.create({
     paddingBottom: scaleSize(10),
     marginLeft: scaleSize(15),
     borderRadius: scaleSize(4),
+  },
+  dialogHeaderImg: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+  },
+  dialogBackground: {
+    height: scaleSize(300),
+  },
+  promptTitle: {
+    fontSize: size.fontSize.fontSizeXXl,
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: scaleSize(30),
   },
 })

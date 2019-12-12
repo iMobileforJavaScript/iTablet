@@ -66,6 +66,7 @@ import {
   StyleUtils,
   setSpText,
   LayerUtils,
+  FetchUtils,
 } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -1698,17 +1699,17 @@ export default class MapView extends React.Component {
     this.container && this.container.setHeaderVisible(full)
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
-    // this.mapController && this.mapController.setVisible(full)
+    this.mapController && this.mapController.setVisible(full)
     this.TrafficView && this.TrafficView.setVisible(full)
-    // if (
-    //   !(
-    //     !full &&
-    //     GLOBAL.Type === constants.MAP_NAVIGATION &&
-    //     this.FloorListView.state.currentFloorID
-    //   )
-    // ) {
-    //   GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
-    // }
+    if (
+      !(
+        !full &&
+        GLOBAL.Type === constants.MAP_NAVIGATION &&
+        this.FloorListView.state.currentFloorID
+      )
+    ) {
+      GLOBAL.scaleView && GLOBAL.scaleView.showFullMap(full)
+    }
     this.setState({ showArModeIcon: full })
     this.fullMap = !full
   }
@@ -1847,16 +1848,11 @@ export default class MapView extends React.Component {
     return this.FloorListView || null
   }
 
-  getMapController = () => {
-    return this.mapController
-  }
-
   renderTool = () => {
     return (
       <ToolBar
         ref={ref => (GLOBAL.ToolBar = this.toolBox = ref)}
         getFloorListView={this._getFloorListView}
-        getMapController={this.getMapController}
         language={this.props.language}
         changeNavPathInfo={this.changeNavPathInfo}
         changeFloorID={this.changeFloorID}
@@ -2499,6 +2495,55 @@ export default class MapView extends React.Component {
     )
   }
 
+  _onlineRouteAnylystConfirm = async () => {
+    GLOBAL.NavDialog.setDialogVisible(false)
+    this.setLoading(true, getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING)
+    let result, path, pathLength
+    result = await FetchUtils.routeAnalyst(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
+      GLOBAL.ENDX,
+      GLOBAL.ENDY,
+    )
+    if (result && result[0] && result[0].pathInfos) {
+      await SMap.drawOnlinePath(result[0].pathPoints)
+    } else {
+      this.setLoading(false)
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+      return
+    }
+    pathLength = { length: result[0].pathLength }
+    path = result[0].pathInfos
+
+    this.setLoading(false)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
+    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+    GLOBAL.MAPSELECTPOINT.setVisible(false)
+    GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+
+    if (path && pathLength) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+      this.changeNavPathInfo({ path, pathLength })
+
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
+      })
+      this.props.setNavigationHistory(history)
+    }
+  }
+
   changeNavPathInfo = ({ path, pathLength }) => {
     this.setState({
       path,
@@ -2522,7 +2567,6 @@ export default class MapView extends React.Component {
       <NavigationStartHead
         ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
         setMapNavigation={this.props.setMapNavigation}
-        getMapController={this.getMapController}
       />
     )
   }
@@ -2740,6 +2784,27 @@ export default class MapView extends React.Component {
           recording={this.state.recording}
           defaultText={getLanguage(global.language).Prompt.SPEECH_TIP}
         />
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <Dialog
+            ref={ref => (GLOBAL.NavDialog = ref)}
+            confirmAction={this._onlineRouteAnylystConfirm}
+            opacity={1}
+            opacityStyle={styles.dialogBackground}
+            style={styles.dialogBackground}
+            confirmBtnTitle={'是'}
+            cancelBtnTitle={'否'}
+          >
+            <View style={styles.dialogHeaderView}>
+              <Image
+                source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+                style={styles.dialogHeaderImg}
+              />
+              <Text style={styles.promptTitle}>
+                {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
+              </Text>
+            </View>
+          </Dialog>
+        )}
       </Container>
     )
   }

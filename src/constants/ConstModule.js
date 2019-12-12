@@ -590,11 +590,11 @@ function SetMap(param) {
         right: 0,
         bottom: 0,
       },
-      action: async user => {
-        // let data = Object.assign({}, ConstOnline['Google'])
-        // data.layerIndex = 1
+      action: async (user, lastMap) => {
+        let data = Object.assign({}, ConstOnline['Google'])
+        data.layerIndex = 1
         GLOBAL.Type = constants.MAP_ANALYST
-        // GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+        GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
 
         let homePath = await FileTools.appendingHomeDirectory()
         let userPath = ConstPath.CustomerPath
@@ -606,14 +606,44 @@ function SetMap(param) {
           userPath +
           ConstPath.RelativeFilePath.Workspace[global.language]
 
-        let wsData = [
+        let wsData,
+          isOpenLastMap = false
+
+        if (lastMap) {
+          isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(
+            lastMap.path,
+          )
+        }
+
+        if (isOpenLastMap) {
+          data = {
+            type: 'Map',
+            ...lastMap,
+          }
+        } else {
+          let moduleMapName = 'TracingAnalysis'
+          let moduleMapFullName = moduleMapName + '.xml'
+          // 地图用相对路径
+          let moduleMapPath =
+            userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+          if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+            data = {
+              type: 'Map',
+              path: moduleMapPath,
+              name: moduleMapName,
+            }
+          }
+        }
+
+        wsData = [
           {
             DSParams: { server: wsPath },
             // layerIndex: 0,
             type: 'Workspace',
           },
-          // data,
+          data,
         ]
+
         NavigationService.navigate('MapView', {
           operationType: constants.MAP_ANALYST,
           wsData,

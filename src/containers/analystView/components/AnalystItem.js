@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
   },
 
   rightView: {
-    minWidth: scaleSize(120),
+    flex: 1,
+    // minWidth: scaleSize(120),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
