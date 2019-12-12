@@ -16,6 +16,8 @@ const Prompt = {
   STOP: 'Stop',
   FIELD_TO_PAUSE: 'Failed to pause',
   WX_NOT_INSTALLED: 'Wechat not installed',
+  RENAME: 'Rename',
+  BATCH_DELETE: 'Batch Delete',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',

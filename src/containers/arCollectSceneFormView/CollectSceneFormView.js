@@ -135,41 +135,17 @@ export default class CollectSceneFormView extends React.Component {
 
   /** 历史 **/
   history = async () => {
-    if (this.state.showHistory) {
-      this.setState({
-        showHistory: false,
-        showbuttons: true,
-        chooseDataSource: false,
+    let data = await SCollectSceneFormView.getHistoryData()
+    if (data && data.history.length > 0) {
+      const history = data.history
+      NavigationService.navigate('CollectSceneFormHistoryView', {
+        history,
       })
     } else {
-      let data = await SCollectSceneFormView.getHistoryData()
-      if (data && data.history.length > 0) {
-        this.setState({
-          showHistory: true,
-          showbuttons: false,
-          historyData: data.history,
-          isLine: true,
-          leftcolor: {
-            color: color.blue1,
-          },
-          rightcolor: {
-            color: 'black',
-          },
-        })
-      } else {
-        this.setState({
-          showHistory: true,
-          showbuttons: false,
-          historyData: [],
-          isLine: true,
-          leftcolor: {
-            color: color.blue1,
-          },
-          rightcolor: {
-            color: 'black',
-          },
-        })
-      }
+      const history = []
+      NavigationService.navigate('CollectSceneFormHistoryView', {
+        history,
+      })
     }
   }
 
@@ -184,37 +160,47 @@ export default class CollectSceneFormView extends React.Component {
   /** 保存 **/
   save = async () => {
     await SCollectSceneFormView.stopRecording()
-    NavigationService.navigate('InputPage', {
-      headerTitle: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-      value: '',
-      placeholder: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
-      type: 'name',
-      cb: async value => {
-        NavigationService.goBack()
-        await SCollectSceneFormView.saveData(value)
-        this.setState({ isnew: false })
-      },
-    })
+    await SCollectSceneFormView.saveData('line')
+    this.setState({ isnew: false })
+    Toast.show(
+      getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_SAVE_SUCCESS,
+    )
+    // NavigationService.navigate('InputPage', {
+    //   headerTitle: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
+    //   value: '',
+    //   placeholder: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
+    //   type: 'name',
+    //   cb: async value => {
+    //     NavigationService.goBack()
+    //     await SCollectSceneFormView.saveData(value)
+    //     this.setState({ isnew: false })
+    //   },
+    // })
   }
 
   /** 保存点 **/
   savepoint = async () => {
     await SCollectSceneFormView.stopRecording()
-    NavigationService.navigate('InputPage', {
-      headerTitle: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-      value: '',
-      placeholder: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
-      type: 'name',
-      cb: async value => {
-        NavigationService.goBack()
-        await SCollectSceneFormView.saveGPSData(value)
-        this.setState({ isnew: false })
-      },
-    })
+    await SCollectSceneFormView.saveGPSData('point')
+    this.setState({ isnew: false })
+    Toast.show(
+      getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_SAVE_SUCCESS,
+    )
+    // NavigationService.navigate('InputPage', {
+    //   headerTitle: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
+    //   value: '',
+    //   placeholder: getLanguage(global.language).Map_Main_Menu
+    //     .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_NAME,
+    //   type: 'name',
+    //   cb: async value => {
+    //     NavigationService.goBack()
+    //     await SCollectSceneFormView.saveGPSData(value)
+    //     this.setState({ isnew: false })
+    //   },
+    // })
   }
 
   back = () => {
@@ -731,7 +717,7 @@ export default class CollectSceneFormView extends React.Component {
         <SMCollectSceneFormView
           ref={ref => (this.SMCollectSceneFormView = ref)}
         />
-        {this.state.showHistory && this.renderHistoryView()}
+        {/*{this.state.showHistory && this.renderHistoryView()}*/}
         {this.state.showbuttons && this.renderBottomBtns()}
         {this.renderBottomBtn()}
         {this.renderLengthChangeView()}
