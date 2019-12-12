@@ -374,6 +374,36 @@ export default class MyLocalData extends Component {
                 item,
               )
               break
+            case 'kml':
+              result = await DataHandler.importKML(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'kmz':
+              result = await DataHandler.importKMZ(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'dwg':
+              result = await DataHandler.importDWG(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'dxf':
+              result = await DataHandler.importDXF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'gpx':
+              result = await DataHandler.importGPX(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
             default:
               break
           }
@@ -434,25 +464,22 @@ export default class MyLocalData extends Component {
       ) {
         this._onImportDatasource()
       } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'tif'
+        (this.itemInfo !== undefined &&
+          this.itemInfo.item.fileType === 'tif') ||
+        this.itemInfo.item.fileType === 'shp' ||
+        this.itemInfo.item.fileType === 'mif' ||
+        this.itemInfo.item.fileType === 'kml' ||
+        this.itemInfo.item.fileType === 'kmz' ||
+        this.itemInfo.item.fileType === 'dwg' ||
+        this.itemInfo.item.fileType === 'dxf' ||
+        this.itemInfo.item.fileType === 'gpx'
       ) {
-        this._onImportDataset('tif')
+        this._onImportDataset(this.itemInfo.item.fileType)
       } else if (
         this.itemInfo !== undefined &&
         this.itemInfo.item.fileType === 'workspace'
       ) {
         this._onImportWorkspace()
-      } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'shp'
-      ) {
-        this._onImportDataset('shp')
-      } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'mif'
-      ) {
-        this._onImportDataset('mif')
       } else {
         Toast.show('暂不支持此数据的导入')
       }
