@@ -43,10 +43,12 @@ export default class ToolBarSectionList extends React.Component {
 
   constructor(props) {
     super(props)
+    let { selectList, allSelected } = this.dealSelectList(props.sections)
     this.state = {
-      selectList: this.dealSelectList(props.sections),
+      selectList,
       sections: props.sections,
       sectionSelected: true,
+      allSelected, // 判断是 全部选中 还是 全部取消，只在section.allSelectType = true时生效
     }
   }
 
@@ -54,15 +56,18 @@ export default class ToolBarSectionList extends React.Component {
     if (
       JSON.stringify(prevProps.sections) !== JSON.stringify(this.props.sections)
     ) {
+      let { selectList, allSelected } = this.dealSelectList(this.props.sections)
       this.setState({
         sections: this.props.sections,
-        selectList: this.dealSelectList(this.props.sections),
+        selectList,
+        allSelected,
       })
     }
   }
 
   dealSelectList = sections => {
-    let selectList = {}
+    let selectList = {},
+      allSelected = false
     for (let i = 0; i < sections.length; i++) {
       let section = sections[i]
       if (!selectList[section.title]) selectList[section.title] = []
@@ -77,8 +82,20 @@ export default class ToolBarSectionList extends React.Component {
           selectList[section.title].push(pushName)
         }
       }
+
+      if (
+        selectList &&
+        selectList[section.title] &&
+        section &&
+        section.data &&
+        selectList[section.title].length === section.data.length
+      ) {
+        allSelected = true
+      } else {
+        allSelected = false
+      }
     }
-    return selectList
+    return { selectList, allSelected }
   }
 
   headerAction = ({ section }) => {
@@ -137,11 +154,24 @@ export default class ToolBarSectionList extends React.Component {
     // let selectList = JSON.parse(JSON.stringify(this.state.selectList))
     let selectList = this.state.selectList
     let title = section.title
+    let allSelected = this.state.allSelected
     for (let i = 0; i < sections.length; i++) {
       if (JSON.stringify(sections[i]) === JSON.stringify(section)) {
+        if (
+          selectList &&
+          selectList[title] &&
+          section &&
+          section.data &&
+          section.title === title &&
+          selectList[title].length === section.data.length
+        ) {
+          allSelected = true
+        } else {
+          allSelected = false
+        }
         for (let k = 0; k < sections[i].data.length; k++) {
-          if (!sections[i].data[k].isSelected)
-            sections[i].data[k].isSelected = true
+          // if (!sections[i].data[k].isSelected)
+          sections[i].data[k].isSelected = !allSelected
 
           if (!selectList[title]) selectList[title] = []
           let pushName =
@@ -149,8 +179,14 @@ export default class ToolBarSectionList extends React.Component {
             sections[i].data[k].name ||
             sections[i].data[k].expression ||
             sections[i].data[k].datasetName
-          if (JSON.stringify(selectList[title]).indexOf(pushName) < 0) {
-            selectList[title].push(pushName)
+
+          if (allSelected) {
+            // 全部取消
+            selectList[title] && delete selectList[title]
+          } else {
+            if (selectList[title].indexOf(pushName) < 0) {
+              selectList[title].push(pushName)
+            }
           }
         }
       }
@@ -160,6 +196,7 @@ export default class ToolBarSectionList extends React.Component {
       {
         sections,
         selectList,
+        allSelected: !allSelected,
       },
       () => {
         this.props.listSelectableAction &&
@@ -289,7 +326,10 @@ export default class ToolBarSectionList extends React.Component {
               onPress={() => this.sectionAllPress(section)}
             >
               <Text style={[styles.sectionSelectedTitle]}>
-                {getLanguage(global.language).Map_Main_Menu.THEME_ALL_SELECTED}
+                {this.state.allSelected
+                  ? getLanguage(global.language).Map_Main_Menu.THEME_ALL_CANCEL
+                  : getLanguage(global.language).Map_Main_Menu
+                    .THEME_ALL_SELECTED}
                 {/* 全部选中 */}
               </Text>
             </TouchableOpacity>
