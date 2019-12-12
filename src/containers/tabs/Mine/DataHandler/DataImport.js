@@ -83,6 +83,46 @@ async function importMIF(filePath, datasourceItem) {
   return await _importDataset('mif', filePath, datasourceItem)
 }
 
+async function importKML(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('kml', filePath, datasourceItem, {
+    datasetName: name,
+    importAsCAD: true,
+  })
+}
+
+async function importKMZ(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('kmz', filePath, datasourceItem, {
+    datasetName: name,
+    importAsCAD: true,
+  })
+}
+
+async function importDWG(filePath, datasourceItem) {
+  return await _importDataset('dwg', filePath, datasourceItem, {
+    inverseBlackWhite: false,
+    importAsCAD: true,
+  })
+}
+
+async function importDXF(filePath, datasourceItem) {
+  return await _importDataset('dxf', filePath, datasourceItem, {
+    inverseBlackWhite: false,
+    importAsCAD: true,
+  })
+}
+
+async function importGPX(filePath, datasourceItem) {
+  let name = filePath.substr(filePath.lastIndexOf('/') + 1)
+  name = name.split('.')[0]
+  return await _importDataset('gpx', filePath, datasourceItem, {
+    datasetName: name,
+  })
+}
+
 async function _importDataset(
   type,
   filePath,
@@ -181,4 +221,9 @@ export default {
   importTIF,
   importSHP,
   importMIF,
+  importKML,
+  importKMZ,
+  importDWG,
+  importDXF,
+  importGPX,
 }

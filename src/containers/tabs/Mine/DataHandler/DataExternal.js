@@ -25,6 +25,11 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     let TIF = []
     let SHP = []
     let MIF = []
+    let KML = []
+    let KMZ = []
+    let DWG = []
+    let DXF = []
+    let GPX = []
 
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
@@ -36,6 +41,13 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     TIF = await getTIFList(path, contentList, uncheckedChildFileList)
     SHP = await getSHPList(path, contentList, uncheckedChildFileList)
     MIF = await getMIFList(path, contentList, uncheckedChildFileList)
+    KML = await getKMLList(path, contentList, uncheckedChildFileList)
+    KMZ = await getKMZList(path, contentList, uncheckedChildFileList)
+    if (Platform.OS === 'ios') {
+      DWG = await getDWGList(path, contentList, uncheckedChildFileList)
+      DXF = await getDXFList(path, contentList, uncheckedChildFileList)
+    }
+    GPX = await getGPXList(path, contentList, uncheckedChildFileList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
@@ -44,6 +56,11 @@ async function getExternalData(path, uncheckedChildFileList = []) {
       .concat(TIF)
       .concat(SHP)
       .concat(MIF)
+      .concat(KML)
+      .concat(KMZ)
+      .concat(DWG)
+      .concat(DXF)
+      .concat(GPX)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -321,6 +338,161 @@ async function getMIFList(path, contentList, uncheckedChildFileList) {
   }
 }
 
+async function getKMLList(path, contentList, uncheckedChildFileList) {
+  let KML = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isKML(contentList[i].name)) {
+          contentList[i].check = true
+          KML.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'kml',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        KML = KML.concat(
+          await getKMLList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return KML
+  } catch (error) {
+    return KML
+  }
+}
+
+async function getKMZList(path, contentList, uncheckedChildFileList) {
+  let KMZ = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isKMZ(contentList[i].name)) {
+          contentList[i].check = true
+          KMZ.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'kmz',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        KMZ = KMZ.concat(
+          await getKMZList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return KMZ
+  } catch (error) {
+    return KMZ
+  }
+}
+
+async function getDWGList(path, contentList, uncheckedChildFileList) {
+  let DWG = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isDWG(contentList[i].name)) {
+          contentList[i].check = true
+          DWG.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'dwg',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        DWG = DWG.concat(
+          await getDWGList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return DWG
+  } catch (error) {
+    return DWG
+  }
+}
+
+async function getDXFList(path, contentList, uncheckedChildFileList) {
+  let DXF = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isDXF(contentList[i].name)) {
+          contentList[i].check = true
+          DXF.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'dxf',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        DXF = DXF.concat(
+          await getDXFList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return DXF
+  } catch (error) {
+    return DXF
+  }
+}
+
+async function getGPXList(path, contentList, uncheckedChildFileList) {
+  let GPX = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isGPX(contentList[i].name)) {
+          contentList[i].check = true
+          GPX.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'gpx',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        GPX = GPX.concat(
+          await getGPXList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return GPX
+  } catch (error) {
+    return GPX
+  }
+}
+
 /** 标绘模版 */
 async function _getPlottingList(path) {
   let arrFile = []
@@ -466,7 +638,7 @@ function _checkRelatedMIF(relatedFiles, name, path, contentList) {
   }
 }
 
-function _isWorkspace(name) {
+function _isType(name, types = []) {
   name = name.toLowerCase()
   let index = name.lastIndexOf('.')
   let ext
@@ -474,8 +646,19 @@ function _isWorkspace(name) {
     return false
   } else {
     ext = name.substr(index + 1)
-    return ext === 'smwu' || ext === 'sxwu' || ext === 'sxw' || ext === 'smw'
+    let result = false
+    for (let i = 0; i < types.length; i++) {
+      if (ext === types[i]) {
+        result = true
+        break
+      }
+    }
+    return result
   }
+}
+
+function _isWorkspace(name) {
+  return _isType(name, ['smwu', 'sxwu', 'sxw', 'smw'])
 }
 
 /**
@@ -483,16 +666,7 @@ function _isWorkspace(name) {
  * @param {*} name
  */
 function _isDatasource(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    //todo 添加其他格式
-    return ext === 'udb' || ext === 'udd'
-  }
+  return _isType(name, ['udb', 'udd'])
 }
 
 /**
@@ -500,52 +674,19 @@ function _isDatasource(name) {
  * @param {*} name
  */
 function _isDatasource2(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    //todo 添加其他格式
-    return ext === 'udb'
-  }
+  return _isType(name, ['udb'])
 }
 
 function _isTIF(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'tif'
-  }
+  return _isType(name, ['tif'])
 }
 
 function _isSHP(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'shp'
-  }
+  return _isType(name, ['shp'])
 }
 
 function _isSubSHP(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'dbf' || ext === 'prj' || ext === 'shx'
-  }
+  return _isType(name, ['dbf', 'prj', 'shx'])
 }
 
 function _isRelatedSHP(name, checkName) {
@@ -559,27 +700,11 @@ function _isRelatedSHP(name, checkName) {
 }
 
 function _isMIF(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'mif'
-  }
+  return _isType(name, ['mif'])
 }
 
 function _isSubMIF(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'mid'
-  }
+  return _isType(name, ['mid'])
 }
 
 function _isRelatedMIF(name, checkName) {
@@ -592,28 +717,32 @@ function _isRelatedMIF(name, checkName) {
   }
 }
 
+function _isKML(name) {
+  return _isType(name, ['kml'])
+}
+
+function _isKMZ(name) {
+  return _isType(name, ['kmz'])
+}
+
+function _isDWG(name) {
+  return _isType(name, ['dwg'])
+}
+
+function _isDXF(name) {
+  return _isType(name, ['dxf'])
+}
+
+function _isGPX(name) {
+  return _isType(name, ['gpx'])
+}
+
 function _isSymbol(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'sym' || ext === 'lsl' || ext === 'bru'
-  }
+  return _isType(name, ['sym', 'lsl', 'bru'])
 }
 
 function _isFlyingFile(name) {
-  name = name.toLowerCase()
-  let index = name.lastIndexOf('.')
-  let ext
-  if (index < 1) {
-    return false
-  } else {
-    ext = name.substr(index + 1)
-    return ext === 'fpf'
-  }
+  return _isType(name, ['fpf'])
 }
 
 async function _getLocalWorkspaceInfo(serverPath) {
