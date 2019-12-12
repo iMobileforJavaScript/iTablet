@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     top: 0,
     zIndex: zIndexLevel.THREE,
     backgroundColor: color.overlay_tint,
+    elevation: 99,
   },
 })
 
