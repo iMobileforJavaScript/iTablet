@@ -9,6 +9,7 @@ import {
   Platform,
   NativeModules,
   NativeEventEmitter,
+  AppState,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -61,6 +62,8 @@ export default class ClassifyView extends React.Component {
       isThirdShow: false,
       bgImageSource: '',
     }
+    AppState.addEventListener('change', this.handleStateChange)
+    this.stateChangeCount = 0
   }
 
   // eslint-disable-next-line
@@ -91,6 +94,34 @@ export default class ClassifyView extends React.Component {
     // Orientation.unlockAllOrientations()
     //移除监听
     DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
+
+    AppState.removeEventListener('change', this.handleStateChange)
+  }
+
+  /************************** 处理状态变更 ***********************************/
+
+  handleStateChange = async appState => {
+    if (Platform.OS === 'android') {
+      return
+    }
+    if (appState === 'inactive') {
+      return
+    }
+    let count = this.stateChangeCount + 1
+    this.stateChangeCount = count
+    if (this.stateChangeCount !== count) {
+      return
+    } else if (this.prevAppstate === appState) {
+      return
+    } else {
+      this.prevAppstate = appState
+      this.stateChangeCount = 0
+      if (appState === 'active') {
+        this.clear()
+      } else if (appState === 'background') {
+        this.pausePreview()
+      }
+    }
   }
 
   /**
