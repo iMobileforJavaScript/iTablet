@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { View, Image, TouchableOpacity, Text, Platform } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  Platform,
+  Animated,
+} from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
 import styles from './styles'
 import { TouchType } from '../../../../constants'
@@ -25,10 +32,15 @@ export default class NavigationStartHead extends React.Component {
   }
 
   close = async () => {
-    await SMap.clearPoint()
     await SMap.clearTrackingLayer()
     this.setVisible(false)
-    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setState({
+      show: false,
+      isroad: true,
+      road: getLanguage(GLOBAL.language).Map_Main_Menu.ROAD_DETAILS,
+      height: new Animated.Value(scaleSize(200)),
+      length: '',
+    })
     GLOBAL.toolBox.existFullMap()
     this.props.setMapNavigation({
       isShow: false,
@@ -45,6 +57,7 @@ export default class NavigationStartHead extends React.Component {
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
+    await SMap.clearPoint()
   }
 
   _onSelectPointPress = async isStart => {
@@ -85,7 +98,7 @@ export default class NavigationStartHead extends React.Component {
         <View
           style={{
             paddingTop: TOOLBARHEIGHT + scaleSize(20),
-            height: scaleSize(185) + TOOLBARHEIGHT,
+            height: scaleSize(205) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',

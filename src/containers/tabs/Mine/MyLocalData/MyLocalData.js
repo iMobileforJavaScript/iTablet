@@ -347,17 +347,66 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _onImportTIF = async () => {
+  _onImportDataset = async type => {
     NavigationService.navigate('MyDatasource', {
       title: getLanguage(this.props.language).Profile.DATA,
       getItemCallback: async ({ item }) => {
         try {
           NavigationService.goBack()
           this.onImportStart()
-          let result = await DataHandler.importTIF(
-            this.itemInfo.item.filePath,
-            item,
-          )
+          let result
+          switch (type) {
+            case 'tif':
+              result = await DataHandler.importTIF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'shp':
+              result = await DataHandler.importSHP(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'mif':
+              result = await DataHandler.importMIF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'kml':
+              result = await DataHandler.importKML(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'kmz':
+              result = await DataHandler.importKMZ(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'dwg':
+              result = await DataHandler.importDWG(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'dxf':
+              result = await DataHandler.importDXF(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            case 'gpx':
+              result = await DataHandler.importGPX(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
+            default:
+              break
+          }
           result
             ? Toast.show(
               getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS,
@@ -415,10 +464,17 @@ export default class MyLocalData extends Component {
       ) {
         this._onImportDatasource()
       } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'tif'
+        (this.itemInfo !== undefined &&
+          this.itemInfo.item.fileType === 'tif') ||
+        this.itemInfo.item.fileType === 'shp' ||
+        this.itemInfo.item.fileType === 'mif' ||
+        this.itemInfo.item.fileType === 'kml' ||
+        this.itemInfo.item.fileType === 'kmz' ||
+        this.itemInfo.item.fileType === 'dwg' ||
+        this.itemInfo.item.fileType === 'dxf' ||
+        this.itemInfo.item.fileType === 'gpx'
       ) {
-        this._onImportTIF()
+        this._onImportDataset(this.itemInfo.item.fileType)
       } else if (
         this.itemInfo !== undefined &&
         this.itemInfo.item.fileType === 'workspace'

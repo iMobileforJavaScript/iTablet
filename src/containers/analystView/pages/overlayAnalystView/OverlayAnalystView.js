@@ -553,16 +553,60 @@ export default class OverlayAnalystView extends Component {
         language={this.props.language}
         popData={this.state.popData}
         currentPopData={this.state.currentPopData}
-        confirm={data => {
+        confirm={async data => {
           let newStateData = {}
           switch (this.currentPop) {
             case popTypes.DataSource:
               newStateData = { dataSource: data }
               if (
-                this.state.dataSource &&
+                !this.state.dataSource ||
                 data.name !== this.state.dataSource.name
               ) {
-                newStateData = Object.assign(newStateData, { dataSet: null })
+                // 原数据源为空，或者切换数据源，则自动获取对应数据源第一个数据集
+                let udbPath = await FileTools.appendingHomeDirectory(data.path)
+                let filter = {}
+                filter.typeFilter = this.getDataLimit()
+                if (
+                  this.state.overlayDataSet &&
+                  this.state.overlayDataSet.value
+                ) {
+                  filter.exclude = {
+                    dataSource: this.state.overlayDataSource.value,
+                    dataSet: this.state.overlayDataSet.value,
+                  }
+                }
+                let dataSets = await this.getDataSets(
+                  {
+                    server: udbPath,
+                    engineType: EngineType.UDB,
+                    alias: data.key,
+                  },
+                  filter,
+                )
+
+                newStateData = Object.assign(newStateData, {
+                  dataSet: dataSets.length > 0 ? dataSets[0] : null,
+                })
+
+                // 叠加数据为空，则设置默认值
+                if (this.state.overlayDataSource === null) {
+                  newStateData = Object.assign(newStateData, {
+                    overlayDataSource: data,
+                    overlayDataSet: dataSets.length > 1 ? dataSets[1] : null,
+                  })
+                }
+              }
+
+              if (this.state.resultDataSource === null) {
+                let resultDatasetName = await SMap.getAvailableDatasetName(
+                  data.key,
+                  'Overlay',
+                )
+                // 结果数据源为空时，自动选择目标数据源
+                newStateData = Object.assign(newStateData, {
+                  resultDataSource: data,
+                  resultDataSet: { value: resultDatasetName },
+                })
               }
               break
             case popTypes.DataSet:
@@ -571,11 +615,30 @@ export default class OverlayAnalystView extends Component {
             case popTypes.OverlayDataSource:
               newStateData = { overlayDataSource: data }
               if (
-                this.state.overlayDataSource &&
+                !this.state.overlayDataSource ||
                 data.name !== this.state.overlayDataSource.name
               ) {
+                // 原数据源为空，或者切换数据源，则自动获取对应数据源第一个数据集
+                let udbPath = await FileTools.appendingHomeDirectory(data.path)
+                let filter = {}
+                filter.typeFilter = [DatasetType.REGION]
+                if (this.state.dataSet && this.state.dataSet.value) {
+                  filter.exclude = {
+                    dataSource: this.state.dataSource.value,
+                    dataSet: this.state.dataSet.value,
+                  }
+                }
+                let dataSets = await this.getDataSets(
+                  {
+                    server: udbPath,
+                    engineType: EngineType.UDB,
+                    alias: data.key,
+                  },
+                  filter,
+                )
+
                 newStateData = Object.assign(newStateData, {
-                  overlayDataSet: null,
+                  overlayDataSet: dataSets.length > 0 ? dataSets[0] : null,
                 })
               }
               break

@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { InteractionManager, View, Image, Text, TextInput } from 'react-native'
+import {
+  InteractionManager,
+  View,
+  Image,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import styles from './styles'
@@ -81,62 +88,74 @@ export default class ClassifyResultEditView extends React.Component {
 
   renderInfoViewer = () => {
     return (
-      <View style={styles.infocontainer}>
-        <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>
-            {
+      <KeyboardAvoidingView
+        enabled={true}
+        keyboardVerticalOffset={0}
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flex: 1,
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+        behavior="position"
+      >
+        <View style={styles.infocontainer}>
+          <View style={styles.classifyTitleView}>
+            <Text style={styles.title}>
+              {
+                getLanguage(global.language).Map_Main_Menu
+                  .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_NAME
+              }
+            </Text>
+            <TextInput
+              underlineColorAndroid={'transparent'}
+              style={styles.edit}
+              numberOfLines={2}
+              onChangeText={text => this.setState({ mediaName: text })}
+              value={this.state.mediaName}
+            />
+          </View>
+          <View style={styles.classifyTitleView}>
+            <Text style={styles.title}>
+              {
+                getLanguage(global.language).Map_Main_Menu
+                  .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_TIME
+              }
+            </Text>
+            <Text style={styles.titleConfidence}>{this.classifyTime}</Text>
+          </View>
+          <View style={styles.classifyTitleView}>
+            <Text style={styles.title}>
+              {
+                getLanguage(global.language).Map_Main_Menu
+                  .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_REMARKS
+              }
+            </Text>
+            <TextInput
+              underlineColorAndroid={'transparent'}
+              style={styles.edit}
+              numberOfLines={2}
+              onChangeText={text => (this.remarks = text)}
+              placeholder={
+                getLanguage(global.language).Map_Main_Menu
+                  .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS
+              }
+              placeholderTextColor={'#A0A0A0'}
+            />
+          </View>
+          <Button
+            style={styles.btnSwitchModelsView}
+            titleStyle={styles.txtBtnSwitchModelsView}
+            title={
               getLanguage(global.language).Map_Main_Menu
-                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_NAME
+                .MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE
             }
-          </Text>
-          <TextInput
-            underlineColorAndroid={'transparent'}
-            style={styles.edit}
-            numberOfLines={2}
-            onChangeText={text => this.setState({ mediaName: text })}
-            value={this.state.mediaName}
+            type={'BLUE'}
+            activeOpacity={0.8}
+            onPress={() => this.save()}
           />
         </View>
-        <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>
-            {
-              getLanguage(global.language).Map_Main_Menu
-                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_TIME
-            }
-          </Text>
-          <Text style={styles.titleConfidence}>{this.classifyTime}</Text>
-        </View>
-        <View style={styles.classifyTitleView}>
-          <Text style={styles.title}>
-            {
-              getLanguage(global.language).Map_Main_Menu
-                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_REMARKS
-            }
-          </Text>
-          <TextInput
-            underlineColorAndroid={'transparent'}
-            style={styles.edit}
-            numberOfLines={2}
-            onChangeText={text => (this.remarks = text)}
-            placeholder={
-              getLanguage(global.language).Map_Main_Menu
-                .MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS
-            }
-            placeholderTextColor={'#A0A0A0'}
-          />
-        </View>
-        <Button
-          style={styles.btnSwitchModelsView}
-          titleStyle={styles.txtBtnSwitchModelsView}
-          title={
-            getLanguage(global.language).Map_Main_Menu
-              .MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE
-          }
-          type={'BLUE'}
-          activeOpacity={0.8}
-          onPress={() => this.save()}
-        />
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 

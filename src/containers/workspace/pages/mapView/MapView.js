@@ -66,6 +66,7 @@ import {
   StyleUtils,
   setSpText,
   LayerUtils,
+  FetchUtils,
 } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -273,16 +274,22 @@ export default class MapView extends React.Component {
   }
 
   addFloorHiddenListener = () => {
-    this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
-      //在选点过程中不允许拖放改变FloorList、MapController的状态
+    this.floorHiddenListener = SMap.addFloorHiddenListener(async result => {
+      //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
       if (
         result.currentFloorID !== this.state.currentFloorID &&
-        (!GLOBAL.MAPSELECTPOINTBUTTON ||
-          !GLOBAL.MAPSELECTPOINTBUTTON.state.show)
+        !(
+          (GLOBAL.MAPSELECTPOINTBUTTON &&
+            GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
+          (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+        )
       ) {
-        this.setState({
-          currentFloorID: result.currentFloorID,
-        })
+        let isGuiding = await SMap.isGuiding()
+        if (!isGuiding) {
+          this.setState({
+            currentFloorID: result.currentFloorID,
+          })
+        }
       }
     })
   }
@@ -1370,10 +1377,8 @@ export default class MapView extends React.Component {
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
           this.props.setMap2Dto3D(true)
           this.props.setMapNavigation({ isShow: false, name: '' })
-          SMap.viewEntire().then(async () => {
-            let currentFloorID = await SMap.getCurrentFloorID()
-            this.changeFloorID(currentFloorID)
-          })
+          let currentFloorID = await SMap.getCurrentFloorID()
+          this.changeFloorID(currentFloorID)
           await SMap.initSpeakPlugin()
           GLOBAL.STARTNAME = getLanguage(
             GLOBAL.language,
@@ -2273,6 +2278,7 @@ export default class MapView extends React.Component {
     }
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
+      this.FloorListView.changeBottom(true)
       if (!this.state.isRight) {
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
           containerType: 'table',
@@ -2488,6 +2494,55 @@ export default class MapView extends React.Component {
         }}
       />
     )
+  }
+
+  _onlineRouteAnylystConfirm = async () => {
+    GLOBAL.NavDialog.setDialogVisible(false)
+    this.setLoading(true, getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING)
+    let result, path, pathLength
+    result = await FetchUtils.routeAnalyst(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
+      GLOBAL.ENDX,
+      GLOBAL.ENDY,
+    )
+    if (result && result[0] && result[0].pathInfos) {
+      await SMap.drawOnlinePath(result[0].pathPoints)
+    } else {
+      this.setLoading(false)
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+      return
+    }
+    pathLength = { length: result[0].pathLength }
+    path = result[0].pathInfos
+
+    this.setLoading(false)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
+    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+    GLOBAL.MAPSELECTPOINT.setVisible(false)
+    GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+
+    if (path && pathLength) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+      this.changeNavPathInfo({ path, pathLength })
+
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
+      })
+      this.props.setNavigationHistory(history)
+    }
   }
 
   changeNavPathInfo = ({ path, pathLength }) => {
@@ -2730,6 +2785,27 @@ export default class MapView extends React.Component {
           recording={this.state.recording}
           defaultText={getLanguage(global.language).Prompt.SPEECH_TIP}
         />
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <Dialog
+            ref={ref => (GLOBAL.NavDialog = ref)}
+            confirmAction={this._onlineRouteAnylystConfirm}
+            opacity={1}
+            opacityStyle={styles.dialogBackground}
+            style={styles.dialogBackground}
+            confirmBtnTitle={'是'}
+            cancelBtnTitle={'否'}
+          >
+            <View style={styles.dialogHeaderView}>
+              <Image
+                source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+                style={styles.dialogHeaderImg}
+              />
+              <Text style={styles.promptTitle}>
+                {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
+              </Text>
+            </View>
+          </Dialog>
+        )}
       </Container>
     )
   }

@@ -43,10 +43,12 @@ async function longtouchCallback(event) {
       (async function() {
         GLOBAL.STARTX = event.LLPoint.x
         GLOBAL.STARTY = event.LLPoint.y
-        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
-        let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
-        if (isIndoorMap) {
+        if (!GLOBAL.ISOUTDOORMAP) {
+          let result = await SMap.isIndoorPoint(
+            event.LLPoint.x,
+            event.LLPoint.y,
+          )
           if (result.isindoor) {
             await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
@@ -57,7 +59,7 @@ async function longtouchCallback(event) {
         } else {
           await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
-        if (result.isindoor) {
+        if (!GLOBAL.ISOUTDOORMAP) {
           GLOBAL.INDOORSTART = true
         } else {
           GLOBAL.INDOORSTART = false
@@ -66,10 +68,12 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
-        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
-        let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
-        if (isIndoorMap) {
+        if (!GLOBAL.ISOUTDOORMAP) {
+          let result = await SMap.isIndoorPoint(
+            event.LLPoint.x,
+            event.LLPoint.y,
+          )
           if (result.isindoor) {
             await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
@@ -89,7 +93,7 @@ async function longtouchCallback(event) {
           }
           await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
-        if (result.isindoor) {
+        if (!GLOBAL.ISOUTDOORMAP) {
           GLOBAL.INDOOREND = true
         } else {
           GLOBAL.INDOOREND = false
@@ -113,7 +117,10 @@ async function touchCallback(event) {
         GLOBAL.PoiInfoContainer.hidden()
       }
       isGuiding = await SMap.isGuiding()
-      if (!isGuiding) {
+      if (
+        !isGuiding &&
+        (!GLOBAL.NAVIGATIONSTARTHEAD || !GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+      ) {
         if (!(await isDoubleTouchComing())) {
           if (isfull) {
             GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()

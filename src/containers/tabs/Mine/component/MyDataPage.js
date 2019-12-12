@@ -38,6 +38,9 @@ const regionImg = require('../../../../assets/mapToolbar/dataset_type_region_bla
 const textImg = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
 const CADImg = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
 const IMGImg = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
+const gridImg = require('../../../../assets/mapToolbar/dataset_type_grid_black.png')
+const networkImg = require('../../../../assets/mapToolbar/dataset_type_network_black.png')
+const defaultImg = require('../../../../assets/mapToolbar/dataset_type_else_black.png')
 
 export default class MyDataPage extends Component {
   props: {
@@ -731,6 +734,12 @@ export default class MyDataPage extends Component {
         img = CADImg
       } else if (type === DatasetType.IMAGE) {
         img = IMGImg
+      } else if (type === DatasetType.GRID) {
+        img = gridImg
+      } else if (type === DatasetType.Network) {
+        img = networkImg
+      } else {
+        img = defaultImg
       }
     } else {
       let name = info.item.name

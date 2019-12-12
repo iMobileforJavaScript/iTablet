@@ -194,4 +194,25 @@ export default StyleSheet.create({
   dialogStyle: {
     height: scaleSize(160),
   },
+  dialogHeaderImg: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+  },
+  dialogBackground: {
+    height: scaleSize(350),
+  },
+  promptTitle: {
+    fontSize: size.fontSize.fontSizeXXl,
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: scaleSize(30),
+  },
 })

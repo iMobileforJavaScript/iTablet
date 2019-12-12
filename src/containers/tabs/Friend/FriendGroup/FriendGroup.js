@@ -54,7 +54,7 @@ class FriendGroup extends Component {
   }
 
   download = () => {
-    FriendListFileHandle.syncOnlineFriendList()
+    FriendListFileHandle.initFriendList(this.props.user)
     this.setState({ isRefresh: false })
   }
 

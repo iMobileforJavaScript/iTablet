@@ -9,7 +9,6 @@ import { StyleSheet, TouchableOpacity, Image, Animated } from 'react-native'
 
 import { constUtil, FetchUtils, scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
-import { Const } from '../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
 
 export default class LocationView extends React.Component {
@@ -20,7 +19,6 @@ export default class LocationView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      left: new Animated.Value(scaleSize(35)),
       visible: false,
     }
     this.isStart = true
@@ -49,17 +47,6 @@ export default class LocationView extends React.Component {
 
   setVisible = (visible, isStart) => {
     if (visible === this.state.visible && isStart === this.isStart) return
-    if (visible) {
-      Animated.timing(this.state.left, {
-        toValue: scaleSize(35),
-        duration: Const.ANIMATED_DURATION,
-      }).start()
-    } else {
-      Animated.timing(this.state.left, {
-        toValue: scaleSize(-200),
-        duration: Const.ANIMATED_DURATION,
-      }).start()
-    }
     if (isStart !== undefined) {
       this.isStart = isStart
     }
@@ -72,7 +59,7 @@ export default class LocationView extends React.Component {
     if (!this.state.visible) return null
     let locationImg = require('../../../../assets/mapTool/Frenchgrey/icon_location.png')
     return (
-      <Animated.View style={[styles.container, { left: this.state.left }]}>
+      <Animated.View style={styles.container}>
         <TouchableOpacity
           underlayColor={constUtil.UNDERLAYCOLOR_TINT}
           style={{
@@ -95,6 +82,7 @@ const styles = StyleSheet.create({
     bottom: scaleSize(215),
     backgroundColor: color.content_white,
     borderRadius: scaleSize(4),
+    left: scaleSize(35),
     elevation: 20,
     shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',

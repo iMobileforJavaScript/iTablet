@@ -112,8 +112,10 @@ export default class ToolBar extends React.PureComponent {
     getNavigationDatas: () => {},
     //更改导航路径
     changeNavPathInfo: () => {},
+    //获取FloorListView
     getFloorListView: () => {},
-    changeFloorID: () => {}, //改变当前楼层ID
+    //改变当前楼层ID
+    changeFloorID: () => {},
   }
 
   static defaultProps = {
@@ -524,6 +526,7 @@ export default class ToolBar extends React.PureComponent {
         type === ConstToolType.MAP_TOOL_INCREMENT ||
         type === ConstToolType.MAP_TOOL_GPSINCREMENT
       ) {
+        GLOBAL.FloorListView.changeBottom(false)
         await SMap.removeNetworkDataset()
         SMap.setAction(Action.PAN)
         SMap.setIsMagnifierEnabled(false)
@@ -908,7 +911,7 @@ export default class ToolBar extends React.PureComponent {
         cb: () => SMap.setAction(Action.SELECT),
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
-      this.savePlotAnimationNode()
+      this.contentView.savePlotAnimationNode()
     } else if (this.state.type === ConstToolType.MAP3D_TOOL_FLYLIST) {
       SScene.checkoutListener('startTouchAttribute')
       SScene.setAction('PAN3D')

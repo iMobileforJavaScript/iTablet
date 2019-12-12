@@ -31,6 +31,7 @@ export default class LocalAnalystView extends Component {
     getLayers: () => {},
     setAnalystParams: () => {},
     getUdbAndDs: () => {},
+    closeMap: () => {},
   }
 
   constructor(props) {
@@ -123,54 +124,56 @@ export default class LocalAnalystView extends Component {
           getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE,
         )
 
-        let res
-        // if (this.type === ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS) {
-        //   res = await this.loadFacility({ parent, item })
-        // } else {
-        res = await this.loadTransport({ parent, item })
-        // }
+        this.props.closeMap(async () => {
+          let res
+          // if (this.type === ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS) {
+          //   res = await this.loadFacility({ parent, item })
+          // } else {
+          res = await this.loadTransport({ parent, item })
+          // }
 
-        if (res.result) {
-          ToolbarModule.addData({
-            navigationParams: params2,
-            backAction: () => {
-              AnalystTools.clear(this.type)
-              ToolbarModule.getData().navigationParams &&
-                delete ToolbarModule.getData().navigationParams
-              NavigationService.navigate('LocalAnalystView', {
-                ...params2,
-                reloadData: false,
-              })
-            },
-          })
-          // this.props.setAnalystParams({
-          //   ...params2,
-          //   backAction: () => {
-          //     AnalystTools.clear(this.type)
-          //     this.props.setAnalystParams(null)
-          //     NavigationService.navigate('LocalAnalystView', {
-          //       ...params2,
-          //       reloadData: false,
-          //     })
-          //   },
-          // })
-          ToolbarModule.getParams().setToolbarVisible(true, this.type, {
-            containerType: ToolbarType.table,
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[0],
-          })
-          await AnalystTools.clear(this.type)
-          await this.props.getLayers()
-          this.setLoading(false)
-          await SMap.setLayerFullView(res.layerInfo.path)
-          NavigationService.goBack()
-        } else {
-          this.setLoading(false)
-          Toast.show(
-            getLanguage(this.props.language).Analyst_Prompt
-              .LOADING_MODULE_FAILED,
-          )
-        }
+          if (res.result) {
+            ToolbarModule.addData({
+              navigationParams: params2,
+              backAction: () => {
+                AnalystTools.clear(this.type)
+                ToolbarModule.getData().navigationParams &&
+                  delete ToolbarModule.getData().navigationParams
+                NavigationService.navigate('LocalAnalystView', {
+                  ...params2,
+                  reloadData: false,
+                })
+              },
+            })
+            // this.props.setAnalystParams({
+            //   ...params2,
+            //   backAction: () => {
+            //     AnalystTools.clear(this.type)
+            //     this.props.setAnalystParams(null)
+            //     NavigationService.navigate('LocalAnalystView', {
+            //       ...params2,
+            //       reloadData: false,
+            //     })
+            //   },
+            // })
+            ToolbarModule.getParams().setToolbarVisible(true, this.type, {
+              containerType: ToolbarType.table,
+              isFullScreen: false,
+              height: ConstToolType.HEIGHT[0],
+            })
+            await AnalystTools.clear(this.type)
+            await this.props.getLayers()
+            this.setLoading(false)
+            await SMap.setLayerFullView(res.layerInfo.path)
+            NavigationService.goBack()
+          } else {
+            this.setLoading(false)
+            Toast.show(
+              getLanguage(this.props.language).Analyst_Prompt
+                .LOADING_MODULE_FAILED,
+            )
+          }
+        })
       } catch (e) {
         this.setLoading(false)
         Toast.show(
