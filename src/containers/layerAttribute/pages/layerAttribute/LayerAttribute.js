@@ -1090,6 +1090,12 @@ export default class LayerAttribute extends React.Component {
             false,
             deleteFieldData.name,
           )
+          if (
+            this.filter &&
+            this.filter.split(' ').indexOf(deleteFieldData.name) >= 0
+          ) {
+            this.filter = ''
+          }
           if (result) {
             Toast.show(
               global.language === 'CN'
