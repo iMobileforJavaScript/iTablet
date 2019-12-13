@@ -240,6 +240,10 @@ export default class ClassifyView extends React.Component {
       )
       this.clear()
       await this.startPreview()
+      return
+    }
+    if (Platform.OS === 'ios') {
+      this.recognizeImage(result)
     }
   }
 
