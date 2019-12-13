@@ -241,7 +241,10 @@ export default class TouchProgress extends Component {
               this._previousLeft = (this.ragngeCount * progressWidth) / 32
               this._BackLine.style.width =
                 (this.ragngeCount * progressWidth) / 32
-              tips = '分段个数    ' + parseInt(this.ragngeCount)
+              tips =
+                getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
+                '    ' +
+                parseInt(this.ragngeCount)
             }
             break
           // case ThemeType.GRIDRANGE: // 分段栅格专题图
@@ -347,7 +350,7 @@ export default class TouchProgress extends Component {
               }
             }
             break
-          case 107:
+          case ThemeType.LABELUNIQUE:
           case ThemeType.LABEL: // 标签专题图
             {
               //避免切换地图后 图例设置走这个case
@@ -360,7 +363,7 @@ export default class TouchProgress extends Component {
                 this.fontsize =
                   value !== undefined
                     ? value
-                    : await SThemeCartography.getUniformLabelFontSize({
+                    : await SThemeCartography.getLabelFontSize({
                       LayerName: this.props.currentLayer.name,
                     })
                 this._panBtnStyles.style.left =
@@ -369,9 +372,56 @@ export default class TouchProgress extends Component {
                 this._BackLine.style.width =
                   (this.fontsize * progressWidth) / 20
                 tips =
-                  getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+                  getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
                   '     ' +
                   parseInt(this.fontsize)
+              }
+            }
+            break
+          case ThemeType.LABELRANGE: // 分段标签专题图
+            {
+              //避免切换地图后 图例设置走这个case
+              if (
+                this.props.selectName ===
+                  getLanguage(this.props.language).Map_Main_Menu
+                    .STYLE_FONT_SIZE ||
+                this.props.selectName === 'fontsize'
+              ) {
+                this.fontsize =
+                  value !== undefined
+                    ? value
+                    : await SThemeCartography.getLabelFontSize({
+                      LayerName: this.props.currentLayer.name,
+                      type: 'range',
+                    })
+                this._panBtnStyles.style.left =
+                  (this.fontsize * progressWidth) / 20 + panBtnDevLeft
+                this._previousLeft = (this.fontsize * progressWidth) / 20
+                this._BackLine.style.width =
+                  (this.fontsize * progressWidth) / 20
+                tips =
+                  getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
+                  '     ' +
+                  parseInt(this.fontsize)
+              } else if (
+                this.props.selectName ===
+                getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
+              ) {
+                this.ragngeCount =
+                  value !== undefined
+                    ? value
+                    : await SThemeCartography.getRangeCount({
+                      LayerName: this.props.currentLayer.name,
+                    })
+                this._panBtnStyles.style.left =
+                  (this.ragngeCount * progressWidth) / 32 + panBtnDevLeft
+                this._previousLeft = (this.ragngeCount * progressWidth) / 32
+                this._BackLine.style.width =
+                  (this.ragngeCount * progressWidth) / 32
+                tips =
+                  getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
+                  '     ' +
+                  parseInt(this.ragngeCount)
               }
             }
             break
@@ -955,6 +1005,9 @@ export default class TouchProgress extends Component {
         }
         Object.assign(Params, ToolbarModule.getData().themeParams)
         switch (themeType) {
+          case ThemeType.LABELRANGE:
+            await SThemeCartography.modifyThemeLabelRangeMap(Params)
+            break
           case ThemeType.RANGE:
             await SThemeCartography.modifyThemeRangeMap(Params)
             break
@@ -968,14 +1021,18 @@ export default class TouchProgress extends Component {
           getLanguage(this.props.language).Map_Main_Menu.STYLE_FONT_SIZE
       ) {
         tips =
-          getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+          getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
           '     ' +
           parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
           FontSize: parseInt(value),
         }
-        await SThemeCartography.setUniformLabelFontSize(_params)
+        // 分段标签
+        if (themeType === ThemeType.LABELRANGE) {
+          _params.type = 'range'
+        }
+        await SThemeCartography.setLabelFontSize(_params)
       } else if (
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DOT_VALUE
@@ -1328,7 +1385,7 @@ export default class TouchProgress extends Component {
           value = 20
         }
         tips =
-          getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+          getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
           '     ' +
           parseInt(value)
       } else if (

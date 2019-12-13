@@ -41,6 +41,8 @@ export default class ScaleView extends React.Component {
         isAddedListener: !this.state.isAddedListener,
       })
     }
+    //获取比例尺、图例数据
+    this.getInitialData()
   }
 
   componentDidUpdate(prevProps) {

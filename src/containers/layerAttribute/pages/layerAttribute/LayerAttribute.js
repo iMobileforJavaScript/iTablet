@@ -1085,11 +1085,20 @@ export default class LayerAttribute extends React.Component {
         confirmAction={async () => {
           this.deleteFieldDialog.setDialogVisible(false)
           let layerPath = this.props.currentLayer.path
+          if (this.filter.split(' ').indexOf(deleteFieldData.name) >= 0) {
+            this.filter = ''
+          }
           let result = await SMap.removeRecordsetFieldInfo(
             layerPath,
             false,
             deleteFieldData.name,
           )
+          if (
+            this.filter &&
+            this.filter.split(' ').indexOf(deleteFieldData.name) >= 0
+          ) {
+            this.filter = ''
+          }
           if (result) {
             Toast.show(
               global.language === 'CN'
