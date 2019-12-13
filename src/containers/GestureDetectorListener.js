@@ -41,8 +41,6 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_BEGIN:
       (async function() {
-        GLOBAL.STARTX = event.LLPoint.x
-        GLOBAL.STARTY = event.LLPoint.y
         //室内地图只允许在室内标注点
         if (!GLOBAL.ISOUTDOORMAP) {
           let result = await SMap.isIndoorPoint(
@@ -50,6 +48,8 @@ async function longtouchCallback(event) {
             event.LLPoint.y,
           )
           if (result.isindoor) {
+            GLOBAL.STARTX = event.LLPoint.x
+            GLOBAL.STARTY = event.LLPoint.y
             await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
@@ -57,12 +57,18 @@ async function longtouchCallback(event) {
             )
           }
         } else {
+          if (
+            Math.sqrt(
+              Math.pow(event.LLPoint.x - GLOBAL.ENDX, 2) +
+                Math.pow(event.LLPoint.y - GLOBAL.ENDY, 2),
+            ) < 0.001
+          ) {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+            return
+          }
+          GLOBAL.STARTX = event.LLPoint.x
+          GLOBAL.STARTY = event.LLPoint.y
           await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
-        }
-        if (!GLOBAL.ISOUTDOORMAP) {
-          GLOBAL.INDOORSTART = true
-        } else {
-          GLOBAL.INDOORSTART = false
         }
       }.bind(this)())
       break
@@ -75,6 +81,8 @@ async function longtouchCallback(event) {
             event.LLPoint.y,
           )
           if (result.isindoor) {
+            GLOBAL.ENDX = event.LLPoint.x
+            GLOBAL.ENDY = event.LLPoint.y
             await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
@@ -91,15 +99,10 @@ async function longtouchCallback(event) {
             Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
             return
           }
+          GLOBAL.ENDX = event.LLPoint.x
+          GLOBAL.ENDY = event.LLPoint.y
           await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         }
-        if (!GLOBAL.ISOUTDOORMAP) {
-          GLOBAL.INDOOREND = true
-        } else {
-          GLOBAL.INDOOREND = false
-        }
-        GLOBAL.ENDX = event.LLPoint.x
-        GLOBAL.ENDY = event.LLPoint.y
       }.bind(this)())
       break
   }
