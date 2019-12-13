@@ -335,6 +335,18 @@ export default class PoiInfoContainer extends React.PureComponent {
     NavigationService.navigate('NavigationView', {
       changeNavPathInfo: this.props.changeNavPathInfo,
     })
+    //重置为初始状态
+    this.setState({
+      destination: '',
+      location: {},
+      address: '',
+      showMore: false,
+      showList: false,
+      neighbor: [],
+      resultList: [],
+      visible: false,
+      radius: 5000,
+    })
   }
 
   renderView = () => {
