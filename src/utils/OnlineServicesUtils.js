@@ -159,6 +159,28 @@ export default class OnlineServicesUtils {
     return result.succeed
   }
 
+  /************************ 公共数据相关（不用登陆） ******************************/
+
+  /**
+   * 通过用户id和文件名查询数据
+   * @param {*} userName 用户id
+   * @param {*} fileName 文件名
+   */
+  async getPublicDataByName(userName, fileName) {
+    let url =
+      this.serverUrl + `/datas.rjson?userName=${userName}&fileName=${fileName}`
+
+    let response = await fetch(url)
+    let responseObj = await response.json()
+
+    if (responseObj && responseObj.total === 1) {
+      return responseObj.content[0]
+    } else {
+      return false
+    }
+  }
+  /************************ 公共数据相关（不用登陆）end ***************************/
+
   /************************ online账号相关 ***********************/
   async login(userName, password, loginType) {
     if (this.type === 'online') {

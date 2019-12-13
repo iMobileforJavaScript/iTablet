@@ -76,7 +76,7 @@ export default class NavigationStartHead extends React.Component {
       false,
     )
     this.setVisible(false)
-    !GLOBAL.INDOORSTART &&
+    GLOBAL.ISOUTDOORMAP &&
       GLOBAL.LocationView &&
       GLOBAL.LocationView.setVisible(true, true)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)

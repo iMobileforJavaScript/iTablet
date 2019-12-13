@@ -2288,7 +2288,7 @@ export default class MapView extends React.Component {
     }
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
-      this.FloorListView.changeBottom(true)
+      this.FloorListView.setVisible(false)
       if (!this.state.isRight) {
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
           containerType: 'table',
@@ -2555,6 +2555,7 @@ export default class MapView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: true,
       })
       this.props.setNavigationHistory(history)
     }
@@ -2807,8 +2808,8 @@ export default class MapView extends React.Component {
             opacity={1}
             opacityStyle={styles.dialogBackground}
             style={styles.dialogBackground}
-            confirmBtnTitle={'是'}
-            cancelBtnTitle={'否'}
+            confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+            cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
           >
             <View style={styles.dialogHeaderView}>
               <Image

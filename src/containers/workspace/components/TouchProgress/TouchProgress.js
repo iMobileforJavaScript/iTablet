@@ -597,7 +597,7 @@ export default class TouchProgress extends Component {
               parseInt(gridOpaque)
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
           ) {
             let gridBright =
               value !== undefined
@@ -610,13 +610,13 @@ export default class TouchProgress extends Component {
             this._previousLeft = (gridBright * progressWidth) / 200
             this._BackLine.style.width = (gridBright * progressWidth) / 200
             tips =
-              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
               '     ' +
-              parseInt(gridBright) +
+              parseInt(gridBright - 100) +
               '%'
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
           ) {
             let gridContrast =
               value !== undefined
@@ -629,9 +629,9 @@ export default class TouchProgress extends Component {
             this._previousLeft = (gridContrast * progressWidth) / 200
             this._BackLine.style.width = (gridContrast * progressWidth) / 200
             tips =
-              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
               '     ' +
-              parseInt(gridContrast) +
+              parseInt(gridContrast - 100) +
               '%'
           }
           break
@@ -1261,7 +1261,7 @@ export default class TouchProgress extends Component {
               '%'
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
           ) {
             if (value <= 100) {
               let gridBrigh = -(100 - value)
@@ -1270,28 +1270,28 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
                 '     ' +
                 parseInt(gridBrigh) +
                 '%'
             } else if (value > 100) {
               let gridBrigh = value - 100
+              if (gridBrigh >= 100) {
+                gridBrigh = 100
+              }
               await SCartography.setGridBrightness(
                 gridBrigh,
                 this.props.currentLayer.name,
               )
-              if (gridBrigh >= 100) {
-                gridBrigh = 100
-              }
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
                 '     ' +
                 parseInt(gridBrigh) +
                 '%'
             }
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
           ) {
             if (value <= 100) {
               let gridContrast = -(100 - value)
@@ -1300,11 +1300,12 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
                 '     ' +
                 parseInt(gridContrast) +
                 '%'
             } else if (value > 100) {
+              value -= 100
               if (value >= 100) {
                 value = 100
               }
@@ -1313,7 +1314,7 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
                 '     ' +
                 parseInt(value) +
                 '%'
@@ -1601,23 +1602,17 @@ export default class TouchProgress extends Component {
             if (value < 0) {
               value = 0
             } else if (value <= 100) {
-              let gridBrigh = -(100 - value)
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
-                '     ' +
-                parseInt(gridBrigh) +
-                '%'
-            } else if (value > 100) {
-              let gridBrigh = value - 100
-              if (gridBrigh >= 100) {
-                gridBrigh = 100
-              }
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
-                '     ' +
-                parseInt(gridBrigh) +
-                '%'
+              value = -(100 - value)
+            } else if (value >= 100) {
+              value -= 100
+            } else if (value >= 200) {
+              value = 100
             }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+              '     ' +
+              parseInt(value) +
+              '%'
           } else if (
             this.props.selectName ===
             getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
@@ -1625,22 +1620,17 @@ export default class TouchProgress extends Component {
             if (value < 0) {
               value = 0
             } else if (value <= 100) {
-              let gridContrast = -(100 - value)
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
-                '     ' +
-                parseInt(gridContrast) +
-                '%'
-            } else if (value > 100) {
-              if (value >= 100) {
-                value = 100
-              }
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
-                '     ' +
-                parseInt(value) +
-                '%'
+              value = -(100 - value)
+            } else if (value >= 100) {
+              value -= 100
+            } else if (value >= 200) {
+              value = 100
             }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+              '     ' +
+              parseInt(value) +
+              '%'
           }
           break
         }

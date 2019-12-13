@@ -274,6 +274,9 @@ const Prompt = {
   FAILED_TO_CREATE_REGION: 'Failed to create region',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
+  SEARCH_AROUND: 'Search around',
+  GO_HERE: 'Go here',
+  SHOW_MORE_RESULT: 'Show more results',
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",

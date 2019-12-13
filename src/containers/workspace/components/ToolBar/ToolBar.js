@@ -526,7 +526,7 @@ export default class ToolBar extends React.PureComponent {
         type === ConstToolType.MAP_TOOL_INCREMENT ||
         type === ConstToolType.MAP_TOOL_GPSINCREMENT
       ) {
-        GLOBAL.FloorListView.changeBottom(false)
+        GLOBAL.FloorListView.setVisible(true)
         await SMap.removeNetworkDataset()
         SMap.setAction(Action.PAN)
         SMap.setIsMagnifierEnabled(false)
