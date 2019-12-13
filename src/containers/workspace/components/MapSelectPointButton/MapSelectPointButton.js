@@ -36,7 +36,7 @@ export default class MapSelectPointButton extends React.Component {
       this.state.button ===
       getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
     ) {
-      if (GLOBAL.STARTX !== undefined) {
+      if (GLOBAL.STARTX) {
         GLOBAL.STARTNAME = await FetchUtils.getPointName(
           GLOBAL.STARTX,
           GLOBAL.STARTY,
@@ -51,16 +51,16 @@ export default class MapSelectPointButton extends React.Component {
             true,
             getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
           )
-          if (GLOBAL.ENDX !== undefined) {
+          if (GLOBAL.ENDX) {
             await SMap.getEndPoint(
               GLOBAL.ENDX,
               GLOBAL.ENDY,
-              GLOBAL.INDOORSTART,
+              !GLOBAL.ISOUTDOORMAP,
               GLOBAL.ENDPOINTFLOOR,
             )
             let result
             try {
-              if (GLOBAL.INDOOREND) {
+              if (!GLOBAL.ISOUTDOORMAP) {
                 result = await SMap.beginIndoorNavigation(
                   GLOBAL.STARTX,
                   GLOBAL.STARTY,
@@ -98,8 +98,8 @@ export default class MapSelectPointButton extends React.Component {
               )
               return
             }
-            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            path = await SMap.getPathInfos(!GLOBAL.ISOUTDOORMAP)
+            pathLength = await SMap.getNavPathLength(!GLOBAL.ISOUTDOORMAP)
             this.props.setLoading(false)
             GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
             GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
@@ -119,7 +119,7 @@ export default class MapSelectPointButton extends React.Component {
         Toast.show(getLanguage(GLOBAL.language).Prompt.LONG_PRESS_ADD_START)
       }
     } else {
-      if (GLOBAL.ENDX !== undefined) {
+      if (GLOBAL.ENDX) {
         GLOBAL.ENDNAME = await FetchUtils.getPointName(GLOBAL.ENDX, GLOBAL.ENDY)
         if (this.state.firstpage) {
           GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
@@ -131,16 +131,16 @@ export default class MapSelectPointButton extends React.Component {
             true,
             getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
           )
-          if (GLOBAL.STARTX !== undefined) {
+          if (GLOBAL.STARTX) {
             let result
             await SMap.getStartPoint(
               GLOBAL.STARTX,
               GLOBAL.STARTY,
-              GLOBAL.INDOORSTART,
+              !GLOBAL.ISOUTDOORMAP,
               GLOBAL.STARTPOINTFLOOR,
             )
             try {
-              if (GLOBAL.INDOOREND) {
+              if (!GLOBAL.ISOUTDOORMAP) {
                 result = await SMap.beginIndoorNavigation(
                   GLOBAL.STARTX,
                   GLOBAL.STARTY,
@@ -178,8 +178,8 @@ export default class MapSelectPointButton extends React.Component {
               )
               return
             }
-            path = await SMap.getPathInfos(GLOBAL.INDOOREND)
-            pathLength = await SMap.getNavPathLength(GLOBAL.INDOOREND)
+            path = await SMap.getPathInfos(!GLOBAL.ISOUTDOORMAP)
+            pathLength = await SMap.getNavPathLength(!GLOBAL.ISOUTDOORMAP)
             this.props.setLoading(false)
             GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
             GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
@@ -215,6 +215,7 @@ export default class MapSelectPointButton extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: GLOBAL.ISOUTDOORMAP,
       })
       this.props.setNavigationHistory(history)
     }

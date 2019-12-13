@@ -110,7 +110,7 @@ export default class NavigationView extends React.Component {
         true,
         getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
       )
-      if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+      if (GLOBAL.ISOUTDOORMAP) {
         //如果不让用户选数据集，自动获取 则使用SMap.isPointsInMapBounds来判断
         let datasetName =
           GLOBAL.ToolBar && GLOBAL.ToolBar.props.getNavigationDatas().name
@@ -174,6 +174,7 @@ export default class NavigationView extends React.Component {
             address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
             start: GLOBAL.STARTNAME,
             end: GLOBAL.ENDNAME,
+            isOutDoor: true,
           })
           if (this.historyclick) {
             this.props.setNavigationHistory(history)
@@ -189,7 +190,7 @@ export default class NavigationView extends React.Component {
         }
       }
       //室内导航
-      if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+      if (!GLOBAL.ISOUTDOORMAP) {
         try {
           let result = await SMap.beginIndoorNavigation(
             GLOBAL.STARTX,
@@ -225,6 +226,7 @@ export default class NavigationView extends React.Component {
                 address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
                 start: GLOBAL.STARTNAME,
                 end: GLOBAL.ENDNAME,
+                isOutDoor: false,
               })
               if (this.historyclick) {
                 this.props.setNavigationHistory(history)
@@ -296,6 +298,7 @@ export default class NavigationView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: true,
       })
       if (this.historyclick) {
         this.props.setNavigationHistory(history)
@@ -311,6 +314,9 @@ export default class NavigationView extends React.Component {
     }
   }
   _renderSearchView = () => {
+    let renderHistory = this.props.navigationhistory.filter(
+      item => item.isOutDoor === GLOBAL.ISOUTDOORMAP,
+    )
     return (
       <View
         style={{
@@ -431,12 +437,12 @@ export default class NavigationView extends React.Component {
         <View>
           <FlatList
             style={{ maxHeight: scaleSize(650) }}
-            data={this.props.navigationhistory}
+            data={renderHistory}
             extraData={GLOBAL.STARTX}
             keyExtractor={(item, index) => item.toString() + index}
             renderItem={this.renderItem}
           />
-          {this.props.navigationhistory.length > 0 && (
+          {renderHistory.length > 0 && (
             <TouchableOpacity
               style={{
                 backgroundColor: color.background,
@@ -501,8 +507,8 @@ export default class NavigationView extends React.Component {
           opacity={1}
           opacityStyle={styles.dialogBackground}
           style={styles.dialogBackground}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+          cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
         >
           <View style={styles.dialogHeaderView}>
             <Image
@@ -529,21 +535,10 @@ export default class NavigationView extends React.Component {
     GLOBAL.STARTPOINTFLOOR = item.sFloor
     GLOBAL.ENDPOINTFLOOR = item.eFloor
 
-    let result = await SMap.isIndoorPoint(item.sx, item.sy)
-    SMap.getStartPoint(item.sx, item.sy, result.isindoor, item.sFloor)
-    if (result.isindoor) {
-      GLOBAL.INDOORSTART = true
-    } else {
-      GLOBAL.INDOORSTART = false
-    }
+    SMap.getStartPoint(item.sx, item.sy, !GLOBAL.ISOUTDOORMAP, item.sFloor)
 
-    let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
-    SMap.getEndPoint(item.ex, item.ey, endresult.isindoor, item.eFloor)
-    if (endresult.isindoor) {
-      GLOBAL.INDOOREND = true
-    } else {
-      GLOBAL.INDOOREND = false
-    }
+    SMap.getEndPoint(item.ex, item.ey, !GLOBAL.ISOUTDOORMAP, item.eFloor)
+
     GLOBAL.ROUTEANALYST = undefined
     this.historyclick = false
     this.setState({

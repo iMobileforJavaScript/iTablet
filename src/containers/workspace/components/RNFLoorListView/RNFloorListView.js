@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     borderRadius: scaleSize(4),
     borderWidth: 1,
-    borderColor: 'rgba(48,48,48,0.1)',
+    borderColor: 'rgba(48,48,48,0.5)',
   },
   floorList: {
     flex: 1,

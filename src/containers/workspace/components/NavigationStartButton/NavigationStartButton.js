@@ -123,7 +123,7 @@ export default class NavigationStartButton extends React.Component {
     }
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     let position = await SMap.getCurrentPosition()
-    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+    if (!GLOBAL.ISOUTDOORMAP) {
       let rel = await SMap.isIndoorPoint(position.x, position.y)
       if (rel.isindoor) {
         SMap.indoorNavigation(0)
@@ -132,7 +132,7 @@ export default class NavigationStartButton extends React.Component {
       } else {
         Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
       }
-    } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+    } else if (GLOBAL.ISOUTDOORMAP) {
       let naviData = this.props.getNavigationDatas()
       let isInBounds = await SMap.isInBounds(position, naviData.selectedDataset)
       if (isInBounds) {
@@ -153,10 +153,10 @@ export default class NavigationStartButton extends React.Component {
     this.setVisible(false)
     GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-    if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+    if (GLOBAL.ISOUTDOORMAP) {
       SMap.outdoorNavigation(1)
     }
-    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+    if (!GLOBAL.ISOUTDOORMAP) {
       SMap.indoorNavigation(1)
     }
   }
