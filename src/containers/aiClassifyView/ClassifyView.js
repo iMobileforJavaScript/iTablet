@@ -82,9 +82,15 @@ export default class ClassifyView extends React.Component {
         )
         //注册监听
         if (Platform.OS === 'ios') {
-          iOSEventEmi.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = iOSEventEmi.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         } else {
-          DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = DeviceEventEmitter.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         }
       }.bind(this)())
     })
@@ -93,9 +99,10 @@ export default class ClassifyView extends React.Component {
   componentWillUnmount() {
     // Orientation.unlockAllOrientations()
     //移除监听
-    DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
+    // DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
 
     AppState.removeEventListener('change', this.handleStateChange)
+    this.recognizeImageListener && this.recognizeImageListener.remove()
   }
 
   /************************** 处理状态变更 ***********************************/
@@ -117,7 +124,9 @@ export default class ClassifyView extends React.Component {
       this.prevAppstate = appState
       this.stateChangeCount = 0
       if (appState === 'active') {
-        this.clear()
+        // this.pausePreview()
+        // this.clear()
+        this.startPreview()
       } else if (appState === 'background') {
         this.pausePreview()
       }

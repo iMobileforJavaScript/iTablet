@@ -16,7 +16,7 @@ import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
 import { color, size } from '../../../styles'
 import Toast from '../../../utils/Toast'
-import { scaleSize } from '../../../utils'
+import { scaleSize, OnlineServicesUtils } from '../../../utils'
 import { getLanguage } from '../../../language/index'
 
 var SUPERMAPKNOWN_UPDATE_TIME = 'SUPERMAPKNOWN_UPDATE_TIME'
@@ -24,6 +24,7 @@ var SUPERMAPGROUP_UPDATE_TIME = 'SUPERMAPGROUP_UPDATE_TIME'
 
 var superMapKnownTime
 var superMapGroupTime
+let JSOnlineService = null
 
 export default class Find extends Component {
   props: {
@@ -39,40 +40,58 @@ export default class Find extends Component {
       superMapKnown: false,
       superMapGroup: false,
     }
+    JSOnlineService = new OnlineServicesUtils('online')
   }
 
   componentDidMount() {
-    fetch('http://111.202.121.144:8088/officialAccount/zhidao/update.json')
-      .then(response => response.json())
-      .then(responseJson => {
-        let result = responseJson
-        AsyncStorage.getItem(SUPERMAPKNOWN_UPDATE_TIME)
-          .then(value => {
-            if (value == null || value < result.lastTime) {
-              superMapKnownTime = result.lastTime
-              this.setState({ superMapKnown: true })
-            }
-          })
-          .catch(() => {})
-      })
-      .catch(() => {})
+    this._getSuperMapGroupData()
+    this._getSuperMapKnownData()
+  }
 
-    fetch(
-      'http://111.202.121.144:8088/officialAccount/SuperMapGroup/update.json',
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        let result = responseJson
-        AsyncStorage.getItem(SUPERMAPGROUP_UPDATE_TIME)
-          .then(value => {
-            if (value == null || value < result.lastTime) {
-              superMapGroupTime = result.lastTime
-              this.setState({ superMapGroup: true })
-            }
-          })
-          .catch(() => {})
-      })
-      .catch(() => {})
+  _getSuperMapGroupData = async () => {
+    try {
+      let data = await JSOnlineService.getPublicDataByName(
+        '927528',
+        'SuperMapGroup.geojson',
+      )
+      if (data) {
+        let localUpdataTime = await AsyncStorage.getItem(
+          SUPERMAPGROUP_UPDATE_TIME,
+        )
+        if (
+          localUpdataTime == null ||
+          localUpdataTime !== data.lastModfiedTime + ''
+        ) {
+          superMapGroupTime = data.lastModfiedTime + ''
+          this.setState({ superMapGroup: true })
+        }
+      }
+    } catch (error) {
+      // console.log(error)
+    }
+  }
+
+  _getSuperMapKnownData = async () => {
+    try {
+      let data = await JSOnlineService.getPublicDataByName(
+        '927528',
+        'zhidao.geojson',
+      )
+      if (data) {
+        let localUpdataTime = await AsyncStorage.getItem(
+          SUPERMAPKNOWN_UPDATE_TIME,
+        )
+        if (
+          localUpdataTime == null ||
+          localUpdataTime !== data.lastModfiedTime + ''
+        ) {
+          superMapKnownTime = data.lastModfiedTime + ''
+          this.setState({ superMapKnown: true })
+        }
+      }
+    } catch (error) {
+      // console.log(error)
+    }
   }
 
   goToSuperMapForum = () => {
