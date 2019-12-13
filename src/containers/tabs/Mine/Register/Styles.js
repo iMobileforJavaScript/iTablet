@@ -71,6 +71,27 @@ const styles = StyleSheet.create({
     lineHeight: scaleSize(itemHeight),
     textAlign: 'right',
   },
+  protocalView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: scaleSize(20),
+  },
+  protocalCheck: {
+    width: scaleSize(25),
+    height: scaleSize(25),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: scaleSize(10),
+  },
+  protocalTextView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  protocalText: {
+    fontSize: scaleSize(20),
+    color: '#303030',
+  },
 })
 export default styles
 export { titleOnFocusBackgroundColor, titleOnBlurBackgroundColor, fontSize }

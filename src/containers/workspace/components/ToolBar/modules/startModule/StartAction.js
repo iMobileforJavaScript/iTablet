@@ -402,7 +402,8 @@ async function create() {
     GLOBAL.Type === constants.MAP_THEME ||
     GLOBAL.Type === constants.MAP_PLOTTING ||
     GLOBAL.Type === constants.MAP_NAVIGATION ||
-    GLOBAL.Type === constants.MAP_ANALYST
+    GLOBAL.Type === constants.MAP_ANALYST ||
+    GLOBAL.Type === constants.MAP_AR
   ) {
     GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
     let userPath =
@@ -828,6 +829,7 @@ async function changeMap(item) {
           legendContentChange: GLOBAL.legend._contentChange,
         })
       }
+      GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
       if (mapInfo.Template) {
         params.setContainerLoading(
           true,
