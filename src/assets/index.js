@@ -30,9 +30,13 @@ function getThemeIconByType(type) {
       icon = getThemeAssets().themeType.theme_create_range_style
       break
     case ThemeType.LABEL: // 标签专题图
-    case ThemeType.LABELUNIQUE:
-    case ThemeType.LABELRANGE:
       icon = getThemeAssets().themeType.theme_create_unify_label
+      break
+    case ThemeType.LABELUNIQUE:
+      icon = getThemeAssets().themeType.theme_create_unique_label
+      break
+    case ThemeType.LABELRANGE:
+      icon = getThemeAssets().themeType.theme_create_range_label
       break
     case ThemeType.GRAPH: // 统计专题图
       icon = getThemeAssets().themeType.theme_graphmap
@@ -66,9 +70,13 @@ function getThemeWhiteIconByType(type) {
       icon = getThemeAssets().themeType.theme_create_range_style_selected
       break
     case ThemeType.LABEL: // 标签专题图
-    case ThemeType.LABELUNIQUE:
-    case ThemeType.LABELRANGE:
       icon = getThemeAssets().themeType.theme_create_unify_label_selected
+      break
+    case ThemeType.LABELUNIQUE:
+      icon = getThemeAssets().themeType.theme_create_unique_label_selected
+      break
+    case ThemeType.LABELRANGE:
+      icon = getThemeAssets().themeType.theme_create_range_label_selected
       break
     case ThemeType.GRAPH: // 统计专题图
       icon = getThemeAssets().themeType.theme_graphmap_selected

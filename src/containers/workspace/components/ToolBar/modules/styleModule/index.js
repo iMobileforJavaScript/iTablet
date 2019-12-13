@@ -8,7 +8,7 @@ import NavigationService from '../../../../../NavigationService'
 
 function action(type) {
   const params = ToolbarModule.getParams()
-  if (params.currentLayer.themeType <= 0) {
+  if (params.currentLayer.themeType <= 0 && !params.currentLayer.isHeatmap) {
     if (params.currentLayer.type === 83) {
       params.showFullMap && params.showFullMap(true)
       params.setToolbarVisible(true, ConstToolType.GRID_STYLE, {
