@@ -279,15 +279,30 @@ export default class MyDataPage extends Component {
         }
       }
       this.ShareModal && this.ShareModal.setVisible(false)
+
       if (this.type === this.types.mark && fileName === '') {
         this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
+      if (this.type === this.types.dataset && this.exportType === '') {
+        if (!this.isExportable(this.itemInfo)) {
+          this.showUnableExportDialog()
+        } else {
+          this.shareType = type
+          this.showSelectExportTypeDialog()
+        }
+        return
+      }
+
       this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
       let result = undefined
       if (fileName === '') {
-        fileName = this.itemInfo.item.name
+        if (this.type === this.types.dataset) {
+          fileName = this.itemInfo.item.datasetName
+        } else {
+          fileName = this.itemInfo.item.name
+        }
         let index = fileName.lastIndexOf('.')
         if (index > 0) {
           fileName = fileName.substring(0, index)
@@ -583,6 +598,7 @@ export default class MyDataPage extends Component {
       title: getLanguage(global.language).Profile[`UPLOAD_${this.type}`],
       action: () => {
         this._closeModal()
+        this.exportType = ''
         this.ShareModal && this.ShareModal.setVisible(true)
       },
     },
@@ -732,7 +748,7 @@ export default class MyDataPage extends Component {
         img = textImg
       } else if (type === DatasetType.CAD) {
         img = CADImg
-      } else if (type === DatasetType.IMAGE) {
+      } else if (type === DatasetType.IMAGE || type === DatasetType.MBImage) {
         img = IMGImg
       } else if (type === DatasetType.GRID) {
         img = gridImg
@@ -1009,7 +1025,7 @@ export default class MyDataPage extends Component {
               onRefresh={() => {
                 try {
                   this.setState({ isRefreshing: true })
-                  this.getData().then(() => {
+                  this._getSectionData().then(() => {
                     this.setState({ isRefreshing: false })
                   })
                 } catch (error) {

@@ -175,11 +175,8 @@ const styles = StyleSheet.create({
     width: scaleSize(60),
     backgroundColor: color.white,
     borderRadius: scaleSize(4),
-    elevation: 20,
-    shadowOffset: { width: 0, height: 0 },
-    shadowColor: 'black',
-    shadowOpacity: 1,
-    shadowRadius: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(48,48,48,0.1)',
   },
   floorList: {
     flex: 1,

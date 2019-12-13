@@ -281,14 +281,21 @@ export default class MapView extends React.Component {
         !(
           (GLOBAL.MAPSELECTPOINTBUTTON &&
             GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
-          (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+          (GLOBAL.NAVIGATIONSTARTHEAD &&
+            GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
+          GLOBAL.PoiTopSearchBar.state.visible
         )
       ) {
         let isGuiding = await SMap.isGuiding()
         if (!isGuiding) {
-          this.setState({
-            currentFloorID: result.currentFloorID,
-          })
+          this.setState(
+            {
+              currentFloorID: result.currentFloorID,
+            },
+            () => {
+              GLOBAL.ISOUTDOORMAP = !result.currentFloorID
+            },
+          )
         }
       }
     })
@@ -2325,7 +2332,7 @@ export default class MapView extends React.Component {
           currentFloorID,
         },
         () => {
-          GLOBAL.ISOUTDOORMAP = !!currentFloorID
+          GLOBAL.ISOUTDOORMAP = !currentFloorID
         },
       )
     }

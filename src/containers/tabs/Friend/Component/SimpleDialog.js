@@ -24,6 +24,7 @@ export default class SimpleDialog extends PureComponent {
       text: this.props.text,
       renderExtra: props.renderExtra,
       dialogHeight: undefined,
+      showTitleImage: true,
     }
   }
 
@@ -31,7 +32,14 @@ export default class SimpleDialog extends PureComponent {
     this.Dialog.setDialogVisible(visible)
   }
 
-  set = ({ text, confirmAction, cancelAction, renderExtra, dialogHeight }) => {
+  set = ({
+    text,
+    confirmAction,
+    cancelAction,
+    renderExtra,
+    dialogHeight,
+    showTitleImage,
+  }) => {
     let confirm, cancel
     if (confirmAction && typeof confirmAction === 'function') {
       confirm = () => {
@@ -51,6 +59,7 @@ export default class SimpleDialog extends PureComponent {
       cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
       renderExtra: renderExtra,
       dialogHeight: dialogHeight,
+      showTitleImage: showTitleImage !== undefined ? showTitleImage : true,
     })
   }
 
@@ -61,6 +70,7 @@ export default class SimpleDialog extends PureComponent {
       cancelAction: this.cancel,
       renderExtra: undefined,
       dialogHeight: undefined,
+      showTitleImage: true,
     })
   }
 
@@ -127,10 +137,12 @@ export default class SimpleDialog extends PureComponent {
         disableBackTouch={this.props.disableBackTouch}
       >
         <View style={styles.dialogHeaderView}>
-          <Image
-            source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-            style={styles.dialogHeaderImg}
-          />
+          {this.state.showTitleImage && (
+            <Image
+              source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+              style={styles.dialogHeaderImg}
+            />
+          )}
           <Text style={styles.promptTtile}>{this.state.text}</Text>
           {this.state.renderExtra}
         </View>

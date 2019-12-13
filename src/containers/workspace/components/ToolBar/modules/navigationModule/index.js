@@ -20,7 +20,7 @@ async function action(type) {
       //当前是室外地图，只能进行行业导航和在线路径分析
       //行业导航
       let navigationDatas = _params.getNavigationDatas()
-      if (navigationDatas) {
+      if (navigationDatas && navigationDatas.name) {
         await SMap.startNavigation(navigationDatas)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
