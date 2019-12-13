@@ -229,6 +229,7 @@ export default class MapView extends React.Component {
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
+      showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
     }
     //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
     this.searchClickedInfo = {
@@ -1209,6 +1210,7 @@ export default class MapView extends React.Component {
       }
     })
     this.props.setCurrentAttribute({})
+    this.setState({ showScaleView: false })
     // this.props.getAttributes({})
     return true
   }
@@ -1362,8 +1364,8 @@ export default class MapView extends React.Component {
           this.props.user.currentUser.userName,
         )
 
-        //地图打开后去获取比例尺、图例数据
-        GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
+        //地图打开后显示比例尺，获取图例数据
+        this.setState({ showScaleView: true })
         GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&
@@ -2717,7 +2719,7 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {!this.state.showAIDetect && (
+        {!this.state.showAIDetect && this.state.showScaleView && (
           <ScaleView
             mapNavigation={this.props.mapNavigation}
             device={this.props.device}
