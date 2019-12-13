@@ -374,7 +374,9 @@ export default class PoiInfoContainer extends React.PureComponent {
               this.searchNeighbor()
             }}
           >
-            <Text style={styles.searchTxt}>搜周边</Text>
+            <Text style={styles.searchTxt}>
+              {getLanguage(GLOBAL.language).Prompt.SEARCH_AROUND}
+            </Text>
           </TouchableOpacity>
         </View>
       )
@@ -399,7 +401,9 @@ export default class PoiInfoContainer extends React.PureComponent {
                 this.searchNeighbor()
               }}
             >
-              <Text style={styles.searchTxt}>搜周边</Text>
+              <Text style={styles.searchTxt}>
+                {getLanguage(GLOBAL.language).Prompt.SEARCH_AROUND}
+              </Text>
             </TouchableOpacity>
             <View style={{ width: 20 }} />
             <TouchableOpacity
@@ -409,7 +413,9 @@ export default class PoiInfoContainer extends React.PureComponent {
                 this.navitoHere()
               }}
             >
-              <Text style={styles.searchTxt}>到这去</Text>
+              <Text style={styles.searchTxt}>
+                {getLanguage(GLOBAL.language).Prompt.GO_HERE}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -506,7 +512,9 @@ export default class PoiInfoContainer extends React.PureComponent {
         }}
         style={styles.moreWrap}
       >
-        <Text style={styles.moreText}>点击查看更多结果</Text>
+        <Text style={styles.moreText}>
+          {getLanguage(GLOBAL.language).Prompt.SHOW_MORE_RESULT}
+        </Text>
       </TouchableOpacity>
     )
   }

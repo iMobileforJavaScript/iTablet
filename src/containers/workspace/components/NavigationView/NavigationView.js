@@ -507,8 +507,8 @@ export default class NavigationView extends React.Component {
           opacity={1}
           opacityStyle={styles.dialogBackground}
           style={styles.dialogBackground}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
+          confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+          cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
         >
           <View style={styles.dialogHeaderView}>
             <Image

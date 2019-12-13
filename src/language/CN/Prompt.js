@@ -267,6 +267,9 @@ const Prompt = {
   FAILED_TO_CREATE_REGION: '点绘面失败',
   CLEAR_HISTORY: '清除搜索记录',
   //导航相关
+  SEARCH_AROUND: '搜周边',
+  GO_HERE: '到这去',
+  SHOW_MORE_RESULT: '查看更多结果',
   PLEASE_SET_BASEMAP_VISIBLE: '请设置底图可见',
   NO_NETWORK_DATASETS: '当前工作空间无网络数据集',
   NO_LINE_DATASETS: '当前工作空间无线数据集',
