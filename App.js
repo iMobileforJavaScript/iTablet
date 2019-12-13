@@ -10,6 +10,7 @@ import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './s
 import {
   setEditLayer,
   setSelection,
+  setCurrentLayer,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -288,6 +289,7 @@ class AppRoot extends Component {
       this.props.setCurrentTemplateList() // 清空当前模板
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
+      this.props.setCurrentLayer() // 清空当前图层
     }
     Platform.OS === 'android' && SplashScreen.hide()
 
@@ -881,6 +883,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setShow,
   closeMap,
   setCurrentMap,
+  setCurrentLayer,
   setEditLayer,
   setSelection,
   setCollectionInfo,
