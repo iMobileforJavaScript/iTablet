@@ -41,6 +41,8 @@ const Profile = {
   ENTER_VALID_SERVER_ADDRESS: '请输入合法的服务地址',
   ENTER_REALNAME: '请输入真实姓名',
   ENTER_COMPANY: '请输入工作机构',
+  REGISTER_READ_PROTOCAL: '我已阅读并接受 ',
+  REGISTER_ONLINE_PROTOCAL: '《超图软件用户服务协议》',
   CONNECTING: '连接中',
   CONNECT_SERVER_FAIL: '未能连接到服务器，请检查网络或服务器地址',
   NEXT: '下一步',

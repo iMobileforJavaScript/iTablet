@@ -193,6 +193,20 @@ export default class protocol extends Component {
         }
         title = '注册'
         break
+      case 'SuperMapOnlineProtocal':
+        if (global.language === 'CN') {
+          source = {
+            uri:
+              'https://sso.supermap.com/agreement.html?service=https://www.supermapol.com',
+          }
+        } else {
+          source = {
+            uri:
+              'https://sso.supermap.com/agreement_en.html?service=http://www.supermapol.com',
+          }
+        }
+        title = getLanguage(global.language).Profile.SERVICE_AGREEMENT
+        break
       default:
         break
     }
