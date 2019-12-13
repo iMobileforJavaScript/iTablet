@@ -918,6 +918,14 @@ function commit(type) {
     NavigationService.navigate('MapCut', {
       points: GLOBAL.MapSurfaceView.getResult(),
     })
+  }else if (type === ConstToolType.STYLE_TRANSFER) {
+    // ToolbarPicker.hide()
+    SMap.resetMapFixColorsModeValue(false)
+    _params.setToolbarVisible(false, '', {
+      cb: () => {
+        SMap.setAction(Action.PAN)
+      },
+    })
   } else {
     return false // 表示没找到对应方法，调用默认方法
   }
