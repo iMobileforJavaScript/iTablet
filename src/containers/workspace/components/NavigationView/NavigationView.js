@@ -174,6 +174,7 @@ export default class NavigationView extends React.Component {
             address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
             start: GLOBAL.STARTNAME,
             end: GLOBAL.ENDNAME,
+            isOutDoor: true,
           })
           if (this.historyclick) {
             this.props.setNavigationHistory(history)
@@ -225,6 +226,7 @@ export default class NavigationView extends React.Component {
                 address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
                 start: GLOBAL.STARTNAME,
                 end: GLOBAL.ENDNAME,
+                isOutDoor: false,
               })
               if (this.historyclick) {
                 this.props.setNavigationHistory(history)
@@ -296,6 +298,7 @@ export default class NavigationView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: true,
       })
       if (this.historyclick) {
         this.props.setNavigationHistory(history)
@@ -311,6 +314,9 @@ export default class NavigationView extends React.Component {
     }
   }
   _renderSearchView = () => {
+    let renderHistory = this.props.navigationhistory.filter(
+      item => item.isOutDoor === GLOBAL.ISOUTDOORMAP,
+    )
     return (
       <View
         style={{
@@ -431,12 +437,12 @@ export default class NavigationView extends React.Component {
         <View>
           <FlatList
             style={{ maxHeight: scaleSize(650) }}
-            data={this.props.navigationhistory}
+            data={renderHistory}
             extraData={GLOBAL.STARTX}
             keyExtractor={(item, index) => item.toString() + index}
             renderItem={this.renderItem}
           />
-          {this.props.navigationhistory.length > 0 && (
+          {renderHistory.length > 0 && (
             <TouchableOpacity
               style={{
                 backgroundColor: color.background,

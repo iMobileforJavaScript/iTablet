@@ -215,6 +215,7 @@ export default class MapSelectPointButton extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: GLOBAL.ISOUTDOORMAP,
       })
       this.props.setNavigationHistory(history)
     }

@@ -2555,6 +2555,7 @@ export default class MapView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: true,
       })
       this.props.setNavigationHistory(history)
     }
