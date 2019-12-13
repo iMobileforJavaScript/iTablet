@@ -2288,7 +2288,7 @@ export default class MapView extends React.Component {
     }
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
-      this.FloorListView.changeBottom(true)
+      this.FloorListView.setVisible(false)
       if (!this.state.isRight) {
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
           containerType: 'table',
