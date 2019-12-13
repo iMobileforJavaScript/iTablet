@@ -40,6 +40,8 @@ const Profile = {
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
   ENTER_REALNAME: 'Please enter your real name',
   ENTER_COMPANY: 'Please enter your company',
+  REGISTER_READ_PROTOCAL: 'I have read and agree to the ',
+  REGISTER_ONLINE_PROTOCAL: 'SuperMap Terms of Service and Privacy Policy',
   CONNECTING: 'Connecting',
   CONNECT_SERVER_FAIL:
     'Failed to connect to the server, please check the network or server address',

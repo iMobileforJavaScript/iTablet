@@ -829,6 +829,7 @@ async function changeMap(item) {
           legendContentChange: GLOBAL.legend._contentChange,
         })
       }
+      GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
       if (mapInfo.Template) {
         params.setContainerLoading(
           true,

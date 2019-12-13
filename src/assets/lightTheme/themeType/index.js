@@ -23,7 +23,9 @@ const theme_create_range_style_selected = require('./theme_create_range_style_se
 const theme_create_unify_label = require('./theme_create_unify_label.png')
 const theme_create_unify_label_selected = require('./theme_create_unify_label_selected.png')
 const theme_create_unique_label = require('./theme_create_unique_label.png')
+const theme_create_unique_label_selected = require('./theme_create_unique_label_selected.png')
 const theme_create_range_label = require('./theme_create_range_label.png')
+const theme_create_range_label_selected = require('./theme_create_range_label_selected.png')
 const theme_dot_density = require('./theme_dot_density.png')
 const theme_graduated_symbol = require('./theme_graduated_symbol.png')
 const theme_graphmap = require('./theme_graphmap.png')
@@ -70,8 +72,10 @@ export default {
   theme_create_unify_label_selected,
   //单值标签
   theme_create_unique_label,
+  theme_create_unique_label_selected,
   //分段标签
   theme_create_range_label,
+  theme_create_range_label_selected,
   //点密度专题图
   theme_dot_density,
   theme_dot_density_selected,
