@@ -303,6 +303,7 @@ const Prompt = {
     'The destination is too close to the start point,please reselect!',
   USE_ONLINE_ROUTE_ANALYST:
     "Points are out of dataset's bounds or there are no dataset around points, do you want to use online route analyst?",
+  NOT_SUPPORT_ONLINE_NAVIGATION: 'Online navigation is not support yet.',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

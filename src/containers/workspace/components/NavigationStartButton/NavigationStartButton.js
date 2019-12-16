@@ -118,7 +118,9 @@ export default class NavigationStartButton extends React.Component {
   }
   realNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
     let position = await SMap.getCurrentPosition()
@@ -146,7 +148,9 @@ export default class NavigationStartButton extends React.Component {
 
   simulatedNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
     this.setVisible(false)
