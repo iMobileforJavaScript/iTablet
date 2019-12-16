@@ -124,11 +124,11 @@ export default class ClassifyView extends React.Component {
       this.prevAppstate = appState
       this.stateChangeCount = 0
       if (appState === 'active') {
-        // this.pausePreview()
         // this.clear()
-        this.startPreview()
+        // this.startPreview()
       } else if (appState === 'background') {
-        this.pausePreview()
+        // this.pausePreview()
+        this.back()
       }
     }
   }
