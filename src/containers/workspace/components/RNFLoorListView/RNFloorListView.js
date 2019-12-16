@@ -30,7 +30,12 @@ export default class RNFloorListView extends React.Component {
           ? scaleSize(240)
           : scaleSize(360),
       left: new Animated.Value(scaleSize(20)),
-      bottom: new Animated.Value(scaleSize(150)),
+      bottom:
+        (props.device.height -
+          (props.device.orientation === 'LANDSCAPE'
+            ? scaleSize(240)
+            : scaleSize(360))) /
+        2,
       currentFloorID: props.currentFloorID,
     }
   }
@@ -50,9 +55,11 @@ export default class RNFloorListView extends React.Component {
       } else {
         height = scaleSize(360)
       }
+      let bottom = (this.props.device.height - height) / 2
       this.setState(
         {
           height,
+          bottom,
         },
         () => {
           if (height < prevState.height) {
@@ -94,19 +101,6 @@ export default class RNFloorListView extends React.Component {
     }
   }
 
-  changeBottom = (isShow, immediately = false) => {
-    if (isShow) {
-      Animated.timing(this.state.bottom, {
-        toValue: scaleSize(280),
-        duration: immediately ? 0 : Const.ANIMATED_DURATION,
-      }).start()
-    } else {
-      Animated.timing(this.state.bottom, {
-        toValue: scaleSize(150),
-        duration: immediately ? 0 : Const.ANIMATED_DURATION,
-      }).start()
-    }
-  }
   _onFloorPress = async item => {
     //change floor
     await SMap.setCurrentFloorID(item.id)

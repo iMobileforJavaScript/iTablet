@@ -56,7 +56,6 @@ export default class NavigationStartHead extends React.Component {
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
-    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     await SMap.clearPoint()
   }
 

@@ -345,7 +345,6 @@ export default class MapView extends React.Component {
 
     SMap.setIndustryNavigationListener({
       callback: () => {
-        this.FloorListView && this.FloorListView.changeBottom(false, false),
         this.showFullMap(false)
         this.props.setMapNavigation({ isShow: false, name: '' })
         GLOBAL.STARTX = undefined

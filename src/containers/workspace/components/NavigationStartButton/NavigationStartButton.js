@@ -121,7 +121,6 @@ export default class NavigationStartButton extends React.Component {
       Toast.show('在线导航暂不支持')
       return
     }
-    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     let position = await SMap.getCurrentPosition()
     if (!GLOBAL.ISOUTDOORMAP) {
       let rel = await SMap.isIndoorPoint(position.x, position.y)
@@ -151,7 +150,6 @@ export default class NavigationStartButton extends React.Component {
       return
     }
     this.setVisible(false)
-    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
     if (GLOBAL.ISOUTDOORMAP) {
       SMap.outdoorNavigation(1)
