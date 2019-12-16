@@ -171,8 +171,10 @@ const Prompt = {
   SHARE_PREPARE: 'Preparing for sharing',
   SHARE_START: 'Start sharing',
 
+  EXPORTING: 'Exporting',
   EXPORT_SUCCESS: 'Exported Successfully',
   EXPORT_FAILED: 'Failed to Export',
+  REQUIRE_PRJ_1984: 'PrjCoordSys of the dataset must be WGS_1984',
 
   UNDO_FAILED: 'Failed to Undo',
   REDO_FAILED: 'Failed to Redo',

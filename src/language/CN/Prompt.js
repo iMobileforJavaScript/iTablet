@@ -168,8 +168,10 @@ const Prompt = {
   SHARE_PREPARE: '准备分享',
   SHARE_START: '开始分享',
 
+  EXPORTING: '导出中',
   EXPORT_SUCCESS: '导出成功',
   EXPORT_FAILED: '导出失败',
+  REQUIRE_PRJ_1984: '数据集投影坐标系必须为WGS_1984',
 
   UNDO_FAILED: '撤销失败',
   REDO_FAILED: '恢复失败',

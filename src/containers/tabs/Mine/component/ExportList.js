@@ -31,6 +31,7 @@ export default class ExportList extends Component {
           flexDirection: 'row',
           alignItems: 'center',
           marginVertical: scaleSize(5),
+          width: scaleSize(160),
         }}
         activeOpacity={0.9}
         onPress={() => {
@@ -40,13 +41,13 @@ export default class ExportList extends Component {
       >
         <Image
           style={{
-            width: scaleSize(30),
-            height: scaleSize(30),
+            width: scaleSize(60),
+            height: scaleSize(60),
             marginRight: scaleSize(10),
           }}
           source={this.state.selectedItem === type ? radio_on : radio_off}
         />
-        <Text style={{ fontSize: scaleSize(20), color: '#303030' }}>
+        <Text style={{ fontSize: scaleSize(28), color: '#303030' }}>
           {'*.' + type}
         </Text>
       </TouchableOpacity>
@@ -57,6 +58,7 @@ export default class ExportList extends Component {
     return (
       <FlatList
         data={this.state.data}
+        numColumns={2}
         renderItem={({ item }) => this.renderItem(item)}
         keyExtractor={(item, index) => index.toString()}
         extra={this.state.selectedItem}
