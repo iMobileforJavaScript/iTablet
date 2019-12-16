@@ -295,7 +295,12 @@ export default class MyDataPage extends Component {
         return
       }
 
-      this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
+      this.setLoading(
+        true,
+        type === 'local'
+          ? getLanguage(global.language).Prompt.EXPORTING
+          : getLanguage(global.language).Prompt.SHARING,
+      )
       let result = undefined
       if (fileName === '') {
         if (this.type === this.types.dataset) {
@@ -334,11 +339,23 @@ export default class MyDataPage extends Component {
 
       if (result !== undefined) {
         result
-          ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
-          : Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+          ? Toast.show(
+            type === 'local'
+              ? getLanguage(global.language).Prompt.EXPORT_SUCCESS
+              : getLanguage(global.language).Prompt.SHARE_SUCCESS,
+          )
+          : Toast.show(
+            type === 'local'
+              ? getLanguage(global.language).Prompt.EXPORT_FAILED
+              : getLanguage(global.language).Prompt.SHARE_FAILED,
+          )
       }
     } catch (error) {
-      Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+      Toast.show(
+        type === 'local'
+          ? getLanguage(global.language).Prompt.EXPORT_FAILED
+          : getLanguage(global.language).Prompt.SHARE_FAILED,
+      )
     } finally {
       this.setLoading(false)
     }
