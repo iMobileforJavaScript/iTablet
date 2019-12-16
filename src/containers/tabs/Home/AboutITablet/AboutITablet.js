@@ -154,7 +154,6 @@ export default class AboutITablet extends Component {
             </Text>
             <Image
               style={[
-                styles.phone,
                 imgMarginRight,
                 { width: scaleSize(40), height: scaleSize(40) },
               ]}
