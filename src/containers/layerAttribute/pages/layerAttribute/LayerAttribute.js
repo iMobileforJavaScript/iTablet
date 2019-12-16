@@ -128,6 +128,7 @@ export default class LayerAttribute extends React.Component {
         JSON.stringify(this.props.currentLayer)
     ) {
       let checkData = this.checkToolIsViable()
+      this.filter = ''
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数

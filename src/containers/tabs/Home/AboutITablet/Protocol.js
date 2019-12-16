@@ -103,15 +103,22 @@ export default class protocol extends Component {
         title = 'SuperMap'
         break
       case 'protocol':
-        if (global.language === 'CN') {
-          source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/protocol.html',
-          }
+        if (Platform.OS === 'android') {
+          source =
+            global.language === 'CN'
+              ? {
+                uri:
+                    'file:///android_asset/SuperMapUserServiceAgreement_CN.html',
+              }
+              : {
+                uri:
+                    'file:///android_asset/SuperMapUserServiceAgreement_EN.html',
+              }
         } else {
-          source = {
-            uri:
-              'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
-          }
+          source =
+            global.language === 'CN'
+              ? require('../../../../assets/Protocol/SuperMapUserServiceAgreement_CN.html')
+              : require('../../../../assets/Protocol/SuperMapUserServiceAgreement_EN.html')
         }
         title = getLanguage(global.language).Profile.SERVICE_AGREEMENT
         break
@@ -169,13 +176,17 @@ export default class protocol extends Component {
         //'超图知道'
         break
       case 'userHelp':
-        if (global.language === 'CN') {
+        if (Platform.OS === 'android') {
           source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/help.html',
+            uri:
+              global.homePath +
+              '/iTablet/Common/iTablet_10i_sp1使用帮助/iTablet_10i_sp1使用帮助.html',
           }
         } else {
           source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/help_en.html',
+            uri:
+              global.homePath +
+              '/iTablet/Common/iTablet_10i_sp1使用帮助/iTablet_10i_sp1使用帮助.html',
           }
         }
         title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL

@@ -10,6 +10,7 @@ import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './s
 import {
   setEditLayer,
   setSelection,
+  setCurrentLayer,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -29,7 +30,7 @@ import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { SaveView } from './src/containers/workspace/components'
-import { scaleSize, Toast } from './src/utils'
+import { scaleSize, Toast, OnlineServicesUtils } from './src/utils'
 import { color } from './src/styles'
 import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
@@ -276,6 +277,7 @@ class AppRoot extends Component {
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
       this.props.openWorkspace({server: path})
+      this.downloadUserGuide()
     }).bind(this)()
 
     GLOBAL.clearMapData = () => {
@@ -288,6 +290,7 @@ class AppRoot extends Component {
       this.props.setCurrentTemplateList() // 清空当前模板
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
+      this.props.setCurrentLayer() // 清空当前图层
     }
     Platform.OS === 'android' && SplashScreen.hide()
 
@@ -409,6 +412,47 @@ class AppRoot extends Component {
       return isCreate
     } catch (e) {
       return false
+    }
+  }
+
+
+  downloadUserGuide = async () => {
+    try {
+      let commonPath =  await FileTools.appendingHomeDirectory('/iTablet/Common/')
+      if(await RNFS.exists(commonPath + 'iTablet_10i_sp1使用帮助')){
+        return
+      }
+      let JSOnlineService = new OnlineServicesUtils('online')
+      let data = await JSOnlineService.getPublicDataByName(
+        '927528',
+        'iTablet_10i_sp1使用帮助.zip',
+      )
+      let url = `https://www.supermapol.com/web/datas/${data.id}/download`
+
+      let filePath = commonPath + data.fileName
+
+      if (await RNFS.exists(filePath)) {
+        await RNFS.unlink(filePath)
+      }
+
+      let downloadOptions = {
+        fromUrl: url,
+        toFile: filePath,
+        background: true,
+        fileName: data.fileName,
+        progressDivider: 1,
+      }
+
+      await RNFS.downloadFile(downloadOptions).promise
+      let result = false
+      if (await RNFS.exists(filePath)) {
+        result = await FileTools.unZipFile(filePath, commonPath)
+
+        await RNFS.unlink(filePath)
+      }
+      return result
+    } catch (error) {
+      // console.log(error)
     }
   }
 
@@ -881,6 +925,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setShow,
   closeMap,
   setCurrentMap,
+  setCurrentLayer,
   setEditLayer,
   setSelection,
   setCollectionInfo,

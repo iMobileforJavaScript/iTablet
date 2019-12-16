@@ -130,9 +130,9 @@ export default class LayerAttributeTable extends React.Component {
   componentDidUpdate(prevProps) {
     const isMultiData =
       this.props.data instanceof Array &&
-      // this.props.data.length > 1 &&
-      // this.props.data[0] instanceof Array
-      this.props.data.length !== 1
+      (this.props.data.length === 0 ||
+        (this.props.data.length > 1 && this.props.data[0] instanceof Array))
+    // this.props.data.length !== 1
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||

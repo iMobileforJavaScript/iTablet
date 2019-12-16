@@ -30,12 +30,12 @@ export default class SuperMapKnown extends Component {
     try {
       let JSOnlineService = new OnlineServicesUtils('online')
       let data
-      if (this.type === 'SuperMapKnow') {
+      if (this.type === 'SuperMapGroup') {
         data = await JSOnlineService.getPublicDataByName(
           '927528',
           'SuperMapGroup.geojson',
         )
-      } else if (this.type === 'SuperMapGroup') {
+      } else if (this.type === 'SuperMapKnow') {
         data = await JSOnlineService.getPublicDataByName(
           '927528',
           'zhidao.geojson',
