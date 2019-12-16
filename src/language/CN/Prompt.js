@@ -168,8 +168,10 @@ const Prompt = {
   SHARE_PREPARE: '准备分享',
   SHARE_START: '开始分享',
 
+  EXPORTING: '导出中',
   EXPORT_SUCCESS: '导出成功',
   EXPORT_FAILED: '导出失败',
+  REQUIRE_PRJ_1984: '数据集投影坐标系必须为WGS_1984',
 
   UNDO_FAILED: '撤销失败',
   REDO_FAILED: '恢复失败',
@@ -289,6 +291,7 @@ const Prompt = {
   DISTANCE_ERROR: '当前起始点距离太近，请重新选点',
   USE_ONLINE_ROUTE_ANALYST:
     '起始点不在路网数据集范围内或起始点附近无路网，是否使用在线路径分析？',
+  NOT_SUPPORT_ONLINE_NAVIGATION: '在线导航暂不支持',
 
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',

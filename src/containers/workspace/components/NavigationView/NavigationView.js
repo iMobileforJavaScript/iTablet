@@ -236,7 +236,6 @@ export default class NavigationView extends React.Component {
                 this.loading.setLoading(false)
                 GLOBAL.TouchType = TouchType.NULL
                 NavigationService.goBack()
-                GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(true)
               }
             }
           } else {
