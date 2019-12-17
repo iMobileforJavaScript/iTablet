@@ -208,18 +208,21 @@ async function getWS3DList(path, contentList, uncheckedChildFileList) {
 /** 获取数据源 */
 async function getDSList(path, contentList, uncheckedChildFileList) {
   let DS = []
+  let relatedFiles = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     for (let i = 0; i < contentList.length; i++) {
       if (!contentList[i].check && contentList[i].type === 'file') {
         if (_isDatasource2(contentList[i].name)) {
           contentList[i].check = true
-          //忽略同名udd等
+          //获取同名udd等
+          _checkRelatedDS(relatedFiles, contentList[i].name, path, contentList)
           DS.push({
             directory: path,
             fileName: contentList[i].name,
             filePath: path + '/' + contentList[i].name,
             fileType: 'datasource',
+            relatedFiles: relatedFiles,
           })
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
@@ -611,6 +614,19 @@ function _checkFlyingFiles(relatedFiles, path, contentList) {
   }
 }
 
+function _checkRelatedDS(relatedFiles, name, path, contentList) {
+  for (let i = 0; i < contentList.length; i++) {
+    if (
+      !contentList[i].check &&
+      contentList[i].type === 'file' &&
+      _isRelatedDS(name, contentList[i].name)
+    ) {
+      contentList[i].check = true
+      relatedFiles.push(path + '/' + contentList[i].name)
+    }
+  }
+}
+
 //关联同名的其他shp文件
 function _checkRelatedSHP(relatedFiles, name, path, contentList) {
   for (let i = 0; i < contentList.length; i++) {
@@ -675,6 +691,20 @@ function _isDatasource(name) {
  */
 function _isDatasource2(name) {
   return _isType(name, ['udb'])
+}
+
+function _isSubDS(name) {
+  return _isType(name, ['udd'])
+}
+
+function _isRelatedDS(name, checkName) {
+  if (_isSubDS(checkName)) {
+    name = name.substring(0, name.lastIndexOf('.'))
+    checkName = checkName.substring(0, checkName.lastIndexOf('.'))
+    return name === checkName
+  } else {
+    return false
+  }
 }
 
 function _isTIF(name) {

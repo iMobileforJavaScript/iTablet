@@ -14,7 +14,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  // SAIDetectView,
+  SAIDetectView,
   SSpeechRecognizer,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -231,6 +231,7 @@ export default class MapView extends React.Component {
       currentFloorID: '', //导航模块当前楼层id
       showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
     }
+    this.currentFloorID = ''
     //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
     this.searchClickedInfo = {
       isClicked: false,
@@ -277,8 +278,9 @@ export default class MapView extends React.Component {
   addFloorHiddenListener = () => {
     this.floorHiddenListener = SMap.addFloorHiddenListener(async result => {
       //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
+      // 使用this.currentFloorID 使ID发生变化时只渲染一次
       if (
-        result.currentFloorID !== this.state.currentFloorID &&
+        result.currentFloorID !== this.currentFloorID &&
         !(
           (GLOBAL.MAPSELECTPOINTBUTTON &&
             GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
@@ -287,6 +289,7 @@ export default class MapView extends React.Component {
           GLOBAL.PoiTopSearchBar.state.visible
         )
       ) {
+        this.currentFloorID = result.currentFloorID
         let isGuiding = await SMap.isGuiding()
         if (!isGuiding) {
           this.setState(
@@ -297,6 +300,8 @@ export default class MapView extends React.Component {
               GLOBAL.ISOUTDOORMAP = !result.currentFloorID
             },
           )
+        } else {
+          this.currentFloorID = this.state.currentFloorID
         }
       }
     })
@@ -1794,6 +1799,9 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
         )
         this.props.navigation.navigate('LayerManager')
+      }
+      if (Platform.OS === 'ios') {
+        await SAIDetectView.clearClickAIRecognition()
       }
     }.bind(this)())
   }
