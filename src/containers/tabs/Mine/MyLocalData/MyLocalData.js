@@ -271,6 +271,14 @@ export default class MyLocalData extends Component {
           //'删除成功'
           getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
         )
+        if (await FileTools.fileIsExist(this.itemInfo.item.directory)) {
+          let contents = await FileTools.getDirectoryContent(
+            this.itemInfo.item.directory,
+          )
+          if (contents.length === 0) {
+            await FileTools.deleteFile(this.itemInfo.item.directory)
+          }
+        }
         let sectionData = [...this.state.sectionData]
         for (let i = 0; i < sectionData.length; i++) {
           let data = sectionData[i]

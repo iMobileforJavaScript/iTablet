@@ -1320,6 +1320,7 @@ export default class Friend extends Component {
         <ScrollableTabView
           renderTabBar={() => (
             <DefaultTabBar
+              style={{ height: scaleSize(60) }}
               renderTab={(name, page, isTabActive, onPressHandler) => {
                 let activeTextColor = 'rgba(70,128,223,1.0)'
                 let inactiveTextColor = 'black'
@@ -1377,8 +1378,8 @@ export default class Friend extends Component {
           prerenderingSiblingsNumber={1}
           tabBarUnderlineStyle={{
             backgroundColor: 'rgba(70,128,223,1.0)',
-            height: 2,
-            width: 20,
+            height: scaleSize(3),
+            width: scaleSize(30),
             marginLeft: this.screenWidth / 3 / 2 - 10,
           }}
         >

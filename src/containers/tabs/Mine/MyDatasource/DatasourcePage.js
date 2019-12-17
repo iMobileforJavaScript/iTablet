@@ -156,21 +156,24 @@ class DatasourcePage extends MyDataPage {
         if (Platform.OS === 'ios') {
           data.push(this.exportTypes.DWG)
           data.push(this.exportTypes.DXF)
+        } else {
+          data.push(this.exportTypes.MIF)
         }
-        data.push(this.exportTypes.MIF)
         break
       case DatasetType.POINT:
       case DatasetType.LINE:
       case DatasetType.REGION:
       case DatasetType.TEXT:
         data.push(this.exportTypes.SHP)
-        data.push(this.exportTypes.MIF)
+        if (Platform.OS === 'android') {
+          data.push(this.exportTypes.MIF)
+        }
         data.push(this.exportTypes.KML)
         data.push(this.exportTypes.KMZ)
-        if (Platform.OS === 'ios') {
-          data.push(this.exportTypes.DWG)
-          data.push(this.exportTypes.DXF)
-        }
+        // if (Platform.OS === 'ios') {
+        //   data.push(this.exportTypes.DWG)
+        //   data.push(this.exportTypes.DXF)
+        // }
         if (datasetType === DatasetType.POINT && Platform.OS === 'android') {
           data.push(this.exportTypes.GPX)
         }
