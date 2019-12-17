@@ -200,7 +200,7 @@ function getOptimalPathData() {
       title: getLanguage(_params.language).Analyst_Labels.ADD_BARRIER_NODES,
       action: () => (GLOBAL.TouchType = TouchType.ADD_BARRIER_NODES),
       size: 'large',
-      image: getThemeAssets().analyst.analysis_endpoint,
+      image: getThemeAssets().analyst.analysis_barrier,
     },
     {
       key: getLanguage(_params.language).Map_Main_Menu.COLLECTION_UNDO,

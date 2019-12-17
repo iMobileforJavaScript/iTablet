@@ -171,8 +171,10 @@ const Prompt = {
   SHARE_PREPARE: 'Preparing for sharing',
   SHARE_START: 'Start sharing',
 
+  EXPORTING: 'Exporting',
   EXPORT_SUCCESS: 'Exported Successfully',
   EXPORT_FAILED: 'Failed to Export',
+  REQUIRE_PRJ_1984: 'PrjCoordSys of the dataset must be WGS_1984',
 
   UNDO_FAILED: 'Failed to Undo',
   REDO_FAILED: 'Failed to Redo',
@@ -301,6 +303,7 @@ const Prompt = {
     'The destination is too close to the start point,please reselect!',
   USE_ONLINE_ROUTE_ANALYST:
     "Points are out of dataset's bounds or there are no dataset around points, do you want to use online route analyst?",
+  NOT_SUPPORT_ONLINE_NAVIGATION: 'Online navigation is not support yet.',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

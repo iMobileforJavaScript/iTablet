@@ -118,10 +118,11 @@ export default class NavigationStartButton extends React.Component {
   }
   realNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
-    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     let position = await SMap.getCurrentPosition()
     if (!GLOBAL.ISOUTDOORMAP) {
       let rel = await SMap.isIndoorPoint(position.x, position.y)
@@ -147,11 +148,12 @@ export default class NavigationStartButton extends React.Component {
 
   simulatedNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
     this.setVisible(false)
-    GLOBAL.FloorListView && GLOBAL.FloorListView.changeBottom(false)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
     if (GLOBAL.ISOUTDOORMAP) {
       SMap.outdoorNavigation(1)
