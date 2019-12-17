@@ -237,21 +237,36 @@ export default class MyLocalData extends Component {
         //'删除数据中...'
         getLanguage(this.props.language).Prompt.DELETING_DATA,
       )
-      let delDir
-      if (this.itemInfo.item.fileType === 'tif') {
-        delDir = this.itemInfo.item.filePath
-      } else {
-        delDir = this.itemInfo.item.directory
+
+      let delDirs = []
+      switch (this.itemInfo.item.fileType) {
+        case 'plotting':
+        case 'workspace':
+        case 'workspace3d':
+          delDirs = [this.itemInfo.item.directory]
+          break
+        default:
+          delDirs = [this.itemInfo.item.filePath]
+          if (
+            this.itemInfo.item.relatedFiles !== undefined &&
+            this.itemInfo.item.relatedFiles.length !== 0
+          ) {
+            delDirs = delDirs.concat(this.itemInfo.item.relatedFiles)
+          }
+          break
       }
 
-      let isExist = await FileTools.fileIsExist(delDir)
       let result
-      if (isExist === true) {
-        result = await FileTools.deleteFile(delDir)
-      } else {
-        result = true
+      for (let i = 0; i < delDirs.length; i++) {
+        if (await FileTools.fileIsExist(delDirs[i])) {
+          result = await FileTools.deleteFile(delDirs[i])
+          if (!result) {
+            break
+          }
+        }
       }
-      if (result === true) {
+
+      if (result || result === undefined) {
         Toast.show(
           //'删除成功'
           getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
@@ -266,6 +281,8 @@ export default class MyLocalData extends Component {
         this.setState({ sectionData: sectionData }, () => {
           this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
         })
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
       }
     } catch (e) {
       Toast.show(
