@@ -91,7 +91,8 @@ export default class LayerAttributeTable extends React.Component {
       tableData: [
         {
           title: titles,
-          data: dataUtil.cloneObj(props.data),
+          data:
+            props.data instanceof Array ? dataUtil.cloneObj(props.data) : [],
         },
       ],
       selected: (new Map(): Map<string, boolean>),
