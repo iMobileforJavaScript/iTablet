@@ -1799,9 +1799,9 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
         )
         this.props.navigation.navigate('LayerManager')
-      }
-      if (Platform.OS === 'ios') {
-        await SAIDetectView.clearClickAIRecognition()
+        if (Platform.OS === 'ios') {
+          await SAIDetectView.clearClickAIRecognition()
+        }
       }
     }.bind(this)())
   }
