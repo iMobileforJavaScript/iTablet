@@ -132,6 +132,7 @@ export default class LayerAttributeTabs extends React.Component {
 
     this.currentTabRefs = []
     this.init = !!selectionAttribute
+    this.backClicked = false
   }
 
   componentDidMount() {
@@ -477,41 +478,44 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   back = () => {
-    if (this.locationView && this.locationView.isShow()) {
-      this.locationView.show(false)
-      return
+    if (!this.backClicked) {
+      this.backClicked = true
+      if (this.locationView && this.locationView.isShow()) {
+        this.locationView.show(false)
+        return
+      }
+
+      GLOBAL.SelectedSelectionAttribute = null // 清除选择集中当前选中的属性
+
+      NavigationService.goBack()
+
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.showFullMap &&
+        GLOBAL.toolBox.showFullMap(true)
+
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
+          {
+            containerType: 'table',
+            column: 3,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
+            // cb: () => {
+            //   switch (GLOBAL.currentToolbarType) {
+            //     case ConstToolType.MAP_TOOL_POINT_SELECT:
+            //       SMap.setAction(Action.SELECT)
+            //       break
+            //     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+            //       // SMap.selectByRectangle()
+            //       SMap.setAction(Action.SELECT_BY_RECTANGLE)
+            //       break
+            //   }
+            // },
+          },
+        )
     }
-
-    GLOBAL.SelectedSelectionAttribute = null // 清除选择集中当前选中的属性
-
-    NavigationService.goBack()
-
-    GLOBAL.toolBox &&
-      GLOBAL.toolBox.showFullMap &&
-      GLOBAL.toolBox.showFullMap(true)
-
-    GLOBAL.toolBox &&
-      GLOBAL.toolBox.setVisible(
-        true,
-        ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
-        {
-          containerType: 'table',
-          column: 3,
-          isFullScreen: false,
-          height: ConstToolType.HEIGHT[0],
-          // cb: () => {
-          //   switch (GLOBAL.currentToolbarType) {
-          //     case ConstToolType.MAP_TOOL_POINT_SELECT:
-          //       SMap.setAction(Action.SELECT)
-          //       break
-          //     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-          //       // SMap.selectByRectangle()
-          //       SMap.setAction(Action.SELECT_BY_RECTANGLE)
-          //       break
-          //   }
-          // },
-        },
-      )
   }
 
   setAttributeHistory = type => {
