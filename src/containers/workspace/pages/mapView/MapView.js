@@ -14,7 +14,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  // SAIDetectView,
+  SAIDetectView,
   SSpeechRecognizer,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -1799,6 +1799,9 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
         )
         this.props.navigation.navigate('LayerManager')
+      }
+      if (Platform.OS === 'ios') {
+        await SAIDetectView.clearClickAIRecognition()
       }
     }.bind(this)())
   }
