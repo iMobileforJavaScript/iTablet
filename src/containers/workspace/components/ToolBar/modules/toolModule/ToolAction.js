@@ -158,7 +158,9 @@ function measureLength() {
         if (_params.buttonView.state.canRedo) newState.canRedo = false
         Object.keys(newState).length > 0 &&
           _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
       _params.showMeasureResult(true, rel + 'm')
@@ -195,7 +197,9 @@ function measureArea() {
         if (_params.buttonView.state.canRedo) newState.canRedo = false
         Object.keys(newState).length > 0 &&
           _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
       _params.showMeasureResult(true, rel + '㎡')
@@ -235,7 +239,9 @@ function measureAngle() {
         if (_params.buttonView.state.canRedo) newState.canRedo = false
         Object.keys(newState).length > 0 &&
           _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       if (pointArr.length >= 2) {
         _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
@@ -276,7 +282,7 @@ function clearMeasure(type) {
         break
     }
     if (_params.buttonView) {
-      ToolbarModule.addData({ pointArr: [], redoArr: [] })
+      ToolbarModule.addData({ pointArr: [], redoArr: [], isFinished: true })
       _params.buttonView.setState({
         canUndo: false,
         canRedo: false,
@@ -287,6 +293,7 @@ function clearMeasure(type) {
 
 /** 量算功能 撤销事件 **/
 async function undo(type) {
+  if (ToolbarModule.getData().isFinished === false) return
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
     await SMap.undo()
     return
@@ -311,13 +318,21 @@ async function undo(type) {
       SMap.setAction(Action.MEASUREANGLE)
     }
   }
-  _params.buttonView.setState(newState)
-  await SMap.undo()
-  ToolbarModule.addData({ pointArr, redoArr })
+  _params.buttonView.setState(newState, async () => {
+    await SMap.undo()
+    // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
+    // pointArr为空，撤销到最后，不会进入量算回调，此时isFinished直接为true
+    ToolbarModule.addData({
+      pointArr,
+      redoArr,
+      isFinished: pointArr.length === 0,
+    })
+  })
 }
 
 /** 量算功能 重做事件 **/
 async function redo(type = null) {
+  if (ToolbarModule.getData().isFinished === false) return
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
     await SMap.redo()
     return
@@ -337,11 +352,12 @@ async function redo(type = null) {
   }
   newState.canRedo = redoArr.length > 0
   newState.canUndo = pointArr.length > 0
-  _params.buttonView.setState(newState)
-  Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
-
-  await SMap.redo()
-  ToolbarModule.addData({ pointArr, redoArr })
+  Object.keys(newState).length > 0 &&
+    _params.buttonView.setState(newState, async () => {
+      await SMap.redo()
+      // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
+      ToolbarModule.addData({ pointArr, redoArr, isFinished: false })
+    })
 }
 
 async function point() {
@@ -918,7 +934,7 @@ function commit(type) {
     NavigationService.navigate('MapCut', {
       points: GLOBAL.MapSurfaceView.getResult(),
     })
-  }else if (type === ConstToolType.STYLE_TRANSFER) {
+  } else if (type === ConstToolType.STYLE_TRANSFER) {
     // ToolbarPicker.hide()
     SMap.resetMapFixColorsModeValue(false)
     _params.setToolbarVisible(false, '', {
@@ -1049,6 +1065,23 @@ function close(type) {
       }
     }
     _params.setToolbarVisible(false)
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_TOOL_MEASURE_') >= 0
+  ) {
+    if (_params.buttonView) {
+      ToolbarModule.addData({ pointArr: [], redoArr: [] })
+      _params.buttonView.setState(
+        {
+          canUndo: false,
+          canRedo: false,
+        },
+        () => {
+          SMap.setAction(Action.PAN)
+          _params.setToolbarVisible(false)
+        },
+      )
+    }
   } else {
     return false
   }

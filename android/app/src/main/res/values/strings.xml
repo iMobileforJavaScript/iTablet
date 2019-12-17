@@ -17,6 +17,6 @@
           <item>菜单九</item>
           <item>菜单十</item>-->
     </string-array>
-    <string name="copyright">Copyright © 2018-2019 SuperMap</string>
+    <string name="copyright">Copyright © 2018-2020 SuperMap</string>
     <string name="company">All Right Reserved</string>
 </resources>

@@ -348,11 +348,10 @@ const styles = StyleSheet.create({
   },
   okButton: {
     marginRight: 15,
-    marginTop: scaleSize(5),
     paddingHorizontal: 15,
     height: scaleSize(44),
     ...Platform.select({
-      ios: { lineHeight: 40 },
+      ios: { lineHeight: 20 },
       android: { textAlignVertical: 'center' },
     }),
     borderRadius: 6,
