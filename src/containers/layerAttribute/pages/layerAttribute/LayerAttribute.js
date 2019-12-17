@@ -1106,6 +1106,7 @@ export default class LayerAttribute extends React.Component {
                 ? '属性字段删除成功'
                 : 'Attribute Feild Delete Succeed',
             )
+            this.canBeRefresh = false
             this.refresh()
           } else {
             Toast.show(
