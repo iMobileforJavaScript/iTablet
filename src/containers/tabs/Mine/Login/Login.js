@@ -388,7 +388,6 @@ class Login extends React.Component {
                 <Text
                   style={{
                     paddingLeft: 5,
-                    width: 100,
                     lineHeight: 40,
                     textAlign: 'left',
                     color: color.font_color_white,
@@ -407,7 +406,6 @@ class Login extends React.Component {
                 <Text
                   style={{
                     paddingRight: 5,
-                    width: 100,
                     lineHeight: 40,
                     textAlign: 'right',
                     color: color.font_color_white,
