@@ -3889,18 +3889,18 @@ const rangeLabelMenuInfo = param => [
     },
   },
   // TODO 待增加：分段标签分段个数
-  // {
-  //   key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-  //   selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-  //   btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-  //   action: () => {
-  //     ThemeAction.getRangeParameter(
-  //       ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
-  //       // ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
-  //       getLanguage(param).Map_Main_Menu.RANGE_COUNT,
-  //     )
-  //   },
-  // },
+  {
+    key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    action: () => {
+      ThemeAction.getRangeParameter(
+        ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
+        // ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+      )
+    },
+  },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
