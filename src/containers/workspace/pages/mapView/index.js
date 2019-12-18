@@ -49,6 +49,7 @@ import { setCollectionInfo } from '../../../../models/collection'
 import { setBackAction, removeBackAction } from '../../../../models/backActions'
 import { setAnalystParams } from '../../../../models/analyst'
 import { downloadFile, deleteDownloadFile } from '../../../../models/down'
+import { setToolbarStatus } from '../../../../models/toolbarStatus'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -80,6 +81,7 @@ const mapStateToProps = state => ({
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
   openOnlineMap: state.setting.toJS().openOnlineMap,
   navigationhistory: state.setting.toJS().navigationhistory,
+  toolbarStatus: state.toolbarStatus.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -126,6 +128,7 @@ const mapDispatchToProps = {
   setOpenOnlineMap,
   downloadFile,
   deleteDownloadFile,
+  setToolbarStatus,
 }
 
 export default connect(

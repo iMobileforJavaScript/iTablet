@@ -482,6 +482,7 @@ export default class LayerAttributeTabs extends React.Component {
       this.backClicked = true
       if (this.locationView && this.locationView.isShow()) {
         this.locationView.show(false)
+        this.backClicked = false
         return
       }
 

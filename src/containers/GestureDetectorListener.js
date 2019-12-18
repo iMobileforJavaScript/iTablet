@@ -109,7 +109,7 @@ async function longtouchCallback(event) {
 }
 let isfull = false
 async function touchCallback(event) {
-  let isGuiding = false
+  let guideInfo
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
       if (
@@ -119,9 +119,10 @@ async function touchCallback(event) {
       ) {
         GLOBAL.PoiInfoContainer.hidden()
       }
-      isGuiding = await SMap.isGuiding()
+      guideInfo = await SMap.isGuiding()
       if (
-        !isGuiding &&
+        !guideInfo.isOutdoorGuiding &&
+        !guideInfo.isIndoorGuiding &&
         (!GLOBAL.NAVIGATIONSTARTHEAD ||
           !GLOBAL.NAVIGATIONSTARTHEAD.state.show) &&
         !GLOBAL.PoiInfoContainer.state.visible

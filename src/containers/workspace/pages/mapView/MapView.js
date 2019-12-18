@@ -136,6 +136,7 @@ export default class MapView extends React.Component {
     analyst: PropTypes.object,
     downloads: PropTypes.array,
     mapSearchHistory: PropTypes.array,
+    toolbarStatus: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -181,6 +182,7 @@ export default class MapView extends React.Component {
     setOpenOnlineMap: PropTypes.func,
     downloadFile: PropTypes.func,
     deleteDownloadFile: PropTypes.func,
+    setToolbarStatus: PropTypes.func,
   }
 
   constructor(props) {
@@ -290,8 +292,8 @@ export default class MapView extends React.Component {
         )
       ) {
         this.currentFloorID = result.currentFloorID
-        let isGuiding = await SMap.isGuiding()
-        if (!isGuiding) {
+        let guideInfo = await SMap.isGuiding()
+        if (!guideInfo.isOutdoorGuiding) {
           this.setState(
             {
               currentFloorID: result.currentFloorID,
@@ -1305,10 +1307,15 @@ export default class MapView extends React.Component {
               ConstPath.RelativePath.Plotting +
               'PlotLibData',
           )
-          await this.props.getSymbolPlots({
-            path: plotIconPath,
-            isFirst: true,
-          })
+          this.props.getSymbolPlots(
+            {
+              path: plotIconPath,
+              isFirst: true,
+            },
+            () => {
+              GLOBAL.isInitSymbolPlotsEnd = true
+            },
+          )
           GLOBAL.newPlotMapName = ''
         }
 
