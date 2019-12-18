@@ -97,6 +97,25 @@ export default class OnlineServicesUtils {
     return undefined
   }
 
+  async getService(id) {
+    let url = this.serverUrl + `/services.rjson?ids=[${id}]`
+    let headers = {}
+    let cookie = await this.getCookie()
+    if (cookie) {
+      headers = {
+        cookie: cookie,
+      }
+    }
+
+    let result = await request(url, 'GET', {
+      headers: headers,
+    })
+    if (result && result.total === 1) {
+      return result.content[0]
+    }
+    return false
+  }
+
   async setServicesShareConfig(id, isPublic) {
     let url = this.serverUrl + `/services/sharesetting.rjson`
     let headers = {}
