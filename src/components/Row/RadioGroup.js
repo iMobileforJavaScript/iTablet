@@ -19,6 +19,7 @@ export default class RadioGroup extends PureComponent {
     renderRadio?: () => {},
     onSubmitEditing?: () => {},
     onFocus?: () => {},
+    onBlur?: () => {},
     separatorHeight?: number,
     disable?: boolean,
   }
@@ -76,6 +77,11 @@ export default class RadioGroup extends PureComponent {
       this.props.onFocus({ title, selected, index, value, ...other })
   }
 
+  onBlur = ({ title, selected, index, value, ...other }) => {
+    this.props.onBlur &&
+      this.props.onBlur({ title, selected, index, value, ...other })
+  }
+
   setRefs = (ref, index) => {
     this.refArr[index] = ref
   }
@@ -107,6 +113,7 @@ export default class RadioGroup extends PureComponent {
           onPress={this.select}
           onSubmitEditing={this.onSubmitEditing}
           onFocus={this.onFocus}
+          onBlur={this.onBlur}
           {...others}
         />,
       )
