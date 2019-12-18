@@ -1071,6 +1071,11 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
+        if (value <= 0) {
+          value = 1
+        } else if (value > 10000) {
+          value = 10000
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +
           '     ' +

@@ -382,7 +382,7 @@ function getData(type, params) {
         },
       ]
       break
-    case ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE:
+    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
       buttons = [
         ToolbarBtnType.CANCEL,
         {
