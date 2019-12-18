@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     height: scaleSize(44),
     ...Platform.select({
-      ios: { lineHeight: 20 },
+      ios: { lineHeight: scaleSize(44) },
       android: { textAlignVertical: 'center' },
     }),
     borderRadius: 6,
