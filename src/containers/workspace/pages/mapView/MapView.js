@@ -136,6 +136,7 @@ export default class MapView extends React.Component {
     analyst: PropTypes.object,
     downloads: PropTypes.array,
     mapSearchHistory: PropTypes.array,
+    toolbarStatus: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -181,6 +182,7 @@ export default class MapView extends React.Component {
     setOpenOnlineMap: PropTypes.func,
     downloadFile: PropTypes.func,
     deleteDownloadFile: PropTypes.func,
+    setToolbarStatus: PropTypes.func,
   }
 
   constructor(props) {

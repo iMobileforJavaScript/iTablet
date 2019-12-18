@@ -151,17 +151,13 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
         ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
       } else {
         ToolbarModule.addData({ isFinished: true })
@@ -190,17 +186,13 @@ function measureArea() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
         ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
       } else {
         ToolbarModule.addData({ isFinished: true })
@@ -229,20 +221,16 @@ function measureAngle() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         //角度量算前两次打点不会触发回调，第三次打点添加一个标识，最后一次撤销直接清除当前所有点
         pointArr.indexOf('startLine') === -1 && pointArr.push('startLine')
         pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
           pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
         ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
       } else {
         ToolbarModule.addData({ isFinished: true })
@@ -285,13 +273,11 @@ function clearMeasure(type) {
         SMap.setAction(Action.MEASUREANGLE)
         break
     }
-    if (_params.buttonView) {
-      ToolbarModule.addData({ pointArr: [], redoArr: [], isFinished: true })
-      _params.buttonView.setState({
-        canUndo: false,
-        canRedo: false,
-      })
-    }
+    ToolbarModule.addData({ pointArr: [], redoArr: [], isFinished: true })
+    _params.setToolbarStatus({
+      canUndo: false,
+      canRedo: false,
+    })
   }
 }
 
@@ -305,7 +291,7 @@ async function undo(type) {
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (!_params.buttonView || !_params.buttonView.state.canUndo) return
+  if (!_params.toolbarStatus.canUndo) return
   let newState = {}
   if (pointArr.length > 0) {
     redoArr.push(pointArr.pop())
@@ -322,7 +308,7 @@ async function undo(type) {
       SMap.setAction(Action.MEASUREANGLE)
     }
   }
-  _params.buttonView.setState(newState, async () => {
+  _params.setToolbarStatus(newState, async () => {
     await SMap.undo()
     // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
     // pointArr为空，撤销到最后，不会进入量算回调，此时isFinished直接为true
@@ -344,12 +330,7 @@ async function redo(type = null) {
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (
-    !_params.buttonView ||
-    !_params.buttonView.state.canRedo ||
-    redoArr.length === 0
-  )
-    return
+  if (!_params.toolbarStatus.canRedo || redoArr.length === 0) return
   let newState = {}
   if (redoArr.length > 0) {
     pointArr.push(redoArr.pop())
@@ -357,7 +338,7 @@ async function redo(type = null) {
   newState.canRedo = redoArr.length > 0
   newState.canUndo = pointArr.length > 0
   Object.keys(newState).length > 0 &&
-    _params.buttonView.setState(newState, async () => {
+    _params.setToolbarStatus(newState, async () => {
       await SMap.redo()
       // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
       ToolbarModule.addData({ pointArr, redoArr, isFinished: false })
@@ -1073,19 +1054,14 @@ function close(type) {
     typeof type === 'string' &&
     type.indexOf('MAP_TOOL_MEASURE_') >= 0
   ) {
-    if (_params.buttonView) {
-      ToolbarModule.addData({ pointArr: [], redoArr: [] })
-      _params.buttonView.setState(
-        {
-          canUndo: false,
-          canRedo: false,
-        },
-        () => {
-          SMap.setAction(Action.PAN)
-          _params.setToolbarVisible(false)
-        },
-      )
-    }
+    ToolbarModule.addData({ pointArr: [], redoArr: [] })
+    _params.setToolbarStatus({
+      canUndo: false,
+      canRedo: false,
+    })
+    SMap.setAction(Action.PAN)
+    _params.showMeasureResult(false)
+    _params.setToolbarVisible(false)
   } else {
     return false
   }
