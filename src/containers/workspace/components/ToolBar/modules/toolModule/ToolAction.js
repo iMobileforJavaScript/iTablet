@@ -55,6 +55,10 @@ function select(type) {
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
       break
+    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
+      Toast.show(getLanguage(global.language).Prompt.SELECT_DELETE_BY_RECTANGLE)
+      SMap.setAction(Action.SELECT_BY_RECTANGLE)
+      break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
     default:
@@ -705,7 +709,7 @@ function selectLabel() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  let type = ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE
+  let type = ConstToolType.MAP_TOOL_TAGGING_DELETE
 
   _params.setToolbarVisible(true, type, {
     containerType: 'table',
@@ -1042,7 +1046,7 @@ function close(type) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
     _params.setToolbarVisible(false)
-  } else if (type === ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE) {
+  } else if (type === ConstToolType.MAP_TOOL_TAGGING_DELETE) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
 

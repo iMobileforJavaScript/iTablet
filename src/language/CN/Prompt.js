@@ -97,6 +97,7 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: '此设备不支持ARCore',
   PLEASE_NEW_PLOT_LAYER: '请新建标注图层',
   DOWNLOADING_PLEASE_WAIT: '下载中请稍等',
+  SELECT_DELETE_BY_RECTANGLE: '请框选删除对象',
 
   CHOOSE_LAYER: '选择图层',
 

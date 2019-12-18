@@ -98,6 +98,7 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
+  SELECT_DELETE_BY_RECTANGLE: 'Please select delete item by rectangle select',
 
   CHOOSE_LAYER: 'Choose Layer',
 
