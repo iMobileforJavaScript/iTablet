@@ -290,8 +290,8 @@ export default class MapView extends React.Component {
         )
       ) {
         this.currentFloorID = result.currentFloorID
-        let isGuiding = await SMap.isGuiding()
-        if (!isGuiding) {
+        let guideInfo = await SMap.isGuiding()
+        if (!guideInfo.isOutdoorGuiding) {
           this.setState(
             {
               currentFloorID: result.currentFloorID,
