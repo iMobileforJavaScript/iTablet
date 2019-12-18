@@ -297,8 +297,13 @@ export default class ClassifyView extends React.Component {
             classifyTime,
             cb: async () => {
               NavigationService.goBack()
-              await this.clear()
-              await this.startPreview()
+              // await this.clear()
+              // await this.startPreview()
+              //保存后回到地图
+              NavigationService.goBack()
+              NavigationService.goBack()
+              GLOBAL.toolBox.setVisible(false)(await GLOBAL.toolBox) &&
+                GLOBAL.toolBox.switchAr()
             },
           })
         }
