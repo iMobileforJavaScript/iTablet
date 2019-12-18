@@ -14,6 +14,7 @@ export default class ToolbarBottomButtons extends React.Component {
     buttons: Array,
     type: string,
     language: string,
+    toolbarStatus: Object,
     close: () => {},
     back: () => {}, // 返回上一个Toolbar状态
     showBox: () => {},
@@ -31,10 +32,6 @@ export default class ToolbarBottomButtons extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      canUndo: false,
-      canRedo: false,
-    }
     this.lastState = {}
     ToolbarModule.addParams({
       buttonView: this, // ToolbarBottomButtons ref
@@ -48,6 +45,8 @@ export default class ToolbarBottomButtons extends React.Component {
         JSON.stringify(nextProps.selection) ||
       JSON.stringify(this.props.buttons) !==
         JSON.stringify(nextProps.buttons) ||
+      JSON.stringify(this.props.toolbarStatus) !==
+        JSON.stringify(nextProps.toolbarStatus) ||
       this.props.type !== nextProps.type ||
       JSON.stringify(this.state) !== JSON.stringify(nextState)
     ) {
@@ -193,7 +192,7 @@ export default class ToolbarBottomButtons extends React.Component {
           break
         case ToolbarBtnType.UNDO:
           //二三维 量算功能 撤销按钮
-          if (this.state.canUndo) {
+          if (this.props.toolbarStatus.canUndo) {
             action = action || this.undo
             image = image || getThemeAssets().publicAssets.icon_undo_dark
           } else {
@@ -202,7 +201,7 @@ export default class ToolbarBottomButtons extends React.Component {
           break
         case ToolbarBtnType.REDO:
           //二三维 量算功能 撤销按钮
-          if (this.state.canRedo) {
+          if (this.props.toolbarStatus.canRedo) {
             action = action || this.redo
             image = image || getThemeAssets().publicAssets.icon_redo_dark
           } else {
