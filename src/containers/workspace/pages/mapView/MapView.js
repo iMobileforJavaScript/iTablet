@@ -1305,10 +1305,15 @@ export default class MapView extends React.Component {
               ConstPath.RelativePath.Plotting +
               'PlotLibData',
           )
-          await this.props.getSymbolPlots({
-            path: plotIconPath,
-            isFirst: true,
-          })
+          this.props.getSymbolPlots(
+            {
+              path: plotIconPath,
+              isFirst: true,
+            },
+            () => {
+              GLOBAL.isInitSymbolPlotsEnd = true
+            },
+          )
           GLOBAL.newPlotMapName = ''
         }
 
