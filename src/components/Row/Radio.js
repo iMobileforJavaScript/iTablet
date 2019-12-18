@@ -35,6 +35,7 @@ export default class Radio extends PureComponent {
     index?: number,
     onPress?: () => {},
     onFocus?: () => {},
+    onBlur?: () => {},
     onSubmitEditing?: () => {},
     onChangeText?: () => {},
   }
@@ -169,15 +170,23 @@ export default class Radio extends PureComponent {
     // Android blur不会触发onSubmitEditing
     if (Platform.OS === 'android') {
       this.submitting = true
-      this.props.onSubmitEditing &&
-        this.props.onSubmitEditing({
-          title: this.props.title,
-          value: this.props.value,
-          inputValue: this.state.inputValue,
-          selected: this.state.selected,
-          index: this.props.index,
-        })
+      // this.props.onSubmitEditing &&
+      // this.props.onSubmitEditing({
+      //   title: this.props.title,
+      //   value: this.props.value,
+      //   inputValue: this.state.inputValue,
+      //   selected: this.state.selected,
+      //   index: this.props.index,
+      // })
     }
+    this.props.onBlur &&
+      this.props.onBlur({
+        title: this.props.title,
+        value: this.props.value,
+        inputValue: this.state.inputValue,
+        selected: this.state.selected,
+        index: this.props.index,
+      })
   }
 
   render() {
