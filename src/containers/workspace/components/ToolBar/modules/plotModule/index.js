@@ -4,12 +4,18 @@ import ToolbarModule from '../ToolbarModule'
 import { ConstToolType } from '../../../../../../constants'
 import ToolBarHeight from '../ToolBarHeight'
 import { SMap, Action } from 'imobile_for_reactnative'
+import { Toast } from '../../../../../../utils'
+import { getLanguage } from '../../../../../../language/index'
 
 export async function action(type) {
   const data = ToolBarHeight.getToolbarHeight(type)
   const params = ToolbarModule.getParams()
   switch (type) {
     case ConstToolType.PLOTTING:
+      if (!GLOBAL.isInitSymbolPlotsEnd) {
+        Toast.show(getLanguage(GLOBAL.language).Prompt.MAP_LOADING)
+        return
+      }
       params.showFullMap && params.showFullMap(true)
       params.setToolbarVisible(true, ConstToolType.MAP_SYMBOL, {
         isFullScreen: true,
