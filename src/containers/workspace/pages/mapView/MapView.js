@@ -588,25 +588,29 @@ export default class MapView extends React.Component {
       onResult: ({ info }) => {
         this.setState({ speechContent: info }, () => {
           setTimeout(() => {
-            info = info.toLowerCase()
-            if (info.indexOf('关闭') !== -1 || info.indexOf('close') !== -1) {
-              this.back()
-            } else if (
-              info.indexOf('定位') !== -1 ||
-              info.indexOf('locate') !== -1 ||
-              info.indexOf('location') !== -1
-            ) {
-              this.mapController.location()
-            } else if (
-              info.indexOf('放大') !== -1 ||
-              info.indexOf('zoom in') !== -1
-            ) {
-              this.mapController.plus()
-            } else if (
-              info.indexOf('缩小') !== -1 ||
-              info.indexOf('zoom out') !== -1
-            ) {
-              this.mapController.minus()
+            try {
+              info = info.toLowerCase()
+              if (info.indexOf('关闭') !== -1 || info.indexOf('close') !== -1) {
+                this.back()
+              } else if (
+                info.indexOf('定位') !== -1 ||
+                info.indexOf('locate') !== -1 ||
+                info.indexOf('location') !== -1
+              ) {
+                this.mapController.location()
+              } else if (
+                info.indexOf('放大') !== -1 ||
+                info.indexOf('zoom in') !== -1
+              ) {
+                this.mapController.plus()
+              } else if (
+                info.indexOf('缩小') !== -1 ||
+                info.indexOf('zoom out') !== -1
+              ) {
+                this.mapController.minus()
+              }
+            } catch (e) {
+              return
             }
           }, 1000)
         })
