@@ -11,9 +11,6 @@ let deviceSafeHeight //设备安全高度
 
 function getScreenWidth() {
   deviceWidth = Dimensions.get('window').width
-  if (deviceWidth < 400) {
-    deviceWidth = 400
-  }
   return deviceWidth
 }
 function getScreenHeight() {
@@ -33,7 +30,7 @@ function getScreenSafeHeight() {
 //px转换成dp
 // let w2 = deviceWidth > 320 ? 720 / defaultPixel : 640 / defaultPixel
 // let h2 = deviceWidth > 320 ? 1080 / defaultPixel : 1136 / defaultPixel
-let w2 = 720 / defaultPixel
+let w2 = 610 / defaultPixel
 let h2 = 1080 / defaultPixel
 let scale //获取缩放比例
 if (deviceWidth > deviceHeight) {

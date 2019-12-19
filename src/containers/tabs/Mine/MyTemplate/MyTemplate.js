@@ -88,6 +88,7 @@ class MyTemplate extends MyDataPage {
         'zip',
       )
       toPath = exportPath + availableName
+      this.exportPath = this.getRelativeExportPath() + availableName
     }
     let result = await FileTools.zipFile(fromPath, toPath)
     return result
