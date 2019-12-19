@@ -48,14 +48,14 @@ export default class ToggleAccount extends Component {
       let result
       if (userType === UserType.COMMON_USER) {
         result = await SOnlineService.login(userName, password)
+        if (result) {
+          result = await FriendListFileHandle.initFriendList(item)
+        }
       } else if (userType === UserType.IPORTAL_COMMON_USER) {
         let url = item.serverUrl
         result = await SIPortalService.login(url, userName, password, true)
       }
 
-      if (result) {
-        result = await FriendListFileHandle.initFriendList(item)
-      }
       if (this.containerRef) {
         this.containerRef.setLoading(false)
       }

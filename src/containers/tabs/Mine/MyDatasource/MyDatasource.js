@@ -114,7 +114,7 @@ class MyDatasource extends MyDataPage {
   }
 
   _openDatasource = () => {
-    NavigationService.navigate('DatasourcePage', {
+    NavigationService.navigate('MyDataset', {
       data: this.itemInfo.item,
     })
   }

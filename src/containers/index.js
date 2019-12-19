@@ -24,7 +24,7 @@ import {
   SelectLogin,
   Login,
   IPortalLogin,
-  DatasourcePage,
+  MyDataset,
   NewDataset,
   SearchMine,
   // Chat,
@@ -542,8 +542,8 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
-    DatasourcePage: {
-      screen: DatasourcePage,
+    MyDataset: {
+      screen: MyDataset,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

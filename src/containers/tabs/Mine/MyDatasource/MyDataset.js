@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import ExportList from '../component/ExportList'
 import { Platform } from 'react-native'
 
-class DatasourcePage extends MyDataPage {
+class MyDataset extends MyDataPage {
   constructor(props) {
     super(props)
     this.type = this.types.dataset
@@ -214,4 +214,4 @@ const mapDispatchToProps = {}
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DatasourcePage)
+)(MyDataset)

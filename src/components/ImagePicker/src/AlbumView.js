@@ -348,12 +348,8 @@ const styles = StyleSheet.create({
   },
   okButton: {
     marginRight: 15,
-    paddingHorizontal: 15,
-    height: scaleSize(44),
-    ...Platform.select({
-      ios: { lineHeight: scaleSize(44) },
-      android: { textAlignVertical: 'center' },
-    }),
+    paddingHorizontal: scaleSize(15),
+    paddingVertical: scaleSize(10),
     borderRadius: 6,
     overflow: 'hidden',
     fontSize: size.fontSize.fontSizeMd,
