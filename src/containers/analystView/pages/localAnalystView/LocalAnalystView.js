@@ -8,7 +8,7 @@ import {
 import { Container, LinkageList } from '../../../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
-import { Toast, AnalystTools } from '../../../../utils'
+import { Toast, AnalystTools, scaleSize } from '../../../../utils'
 import { FileTools } from '../../../../native'
 // import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
@@ -136,6 +136,10 @@ export default class LocalAnalystView extends Component {
             ToolbarModule.addData({
               navigationParams: params2,
               backAction: () => {
+                GLOBAL.mapController.move({
+                  bottom: 'default',
+                  left: scaleSize(-200),
+                })
                 AnalystTools.clear(this.type)
                 ToolbarModule.getData().navigationParams &&
                   delete ToolbarModule.getData().navigationParams
@@ -165,6 +169,12 @@ export default class LocalAnalystView extends Component {
             await this.props.getLayers()
             this.setLoading(false)
             await SMap.setLayerFullView(res.layerInfo.path)
+            if (GLOBAL.mapController) {
+              GLOBAL.mapController.move({
+                bottom: scaleSize(100),
+                left: 'default',
+              })
+            }
             NavigationService.goBack()
           } else {
             this.setLoading(false)
