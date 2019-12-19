@@ -37,10 +37,11 @@ export default class MapSelectPointButton extends React.Component {
       getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
     ) {
       if (GLOBAL.STARTX) {
-        GLOBAL.STARTNAME = await FetchUtils.getPointName(
-          GLOBAL.STARTX,
-          GLOBAL.STARTY,
-        )
+        GLOBAL.STARTNAME =
+          (await FetchUtils.getPointName(GLOBAL.STARTX, GLOBAL.STARTY)) ||
+          `${
+            getLanguage(GLOBAL.language).Map_Main_Menu.START_POINT
+          }(${GLOBAL.STARTX.toFixed(6)},${GLOBAL.STARTY.toFixed(6)})`
         if (this.state.firstpage) {
           GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
@@ -120,7 +121,11 @@ export default class MapSelectPointButton extends React.Component {
       }
     } else {
       if (GLOBAL.ENDX) {
-        GLOBAL.ENDNAME = await FetchUtils.getPointName(GLOBAL.ENDX, GLOBAL.ENDY)
+        GLOBAL.ENDNAME =
+          (await FetchUtils.getPointName(GLOBAL.ENDX, GLOBAL.ENDY)) ||
+          `${
+            getLanguage(GLOBAL.language).Map_Main_Menu.END_POINT
+          }(${GLOBAL.ENDX.toFixed(6)},${GLOBAL.ENDY.toFixed(6)})`
         if (this.state.firstpage) {
           GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
           NavigationService.navigate('NavigationView', {
