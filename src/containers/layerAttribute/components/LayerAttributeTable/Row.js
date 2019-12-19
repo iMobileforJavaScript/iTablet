@@ -81,6 +81,7 @@ export default class Row extends Component {
     indexCellStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列样式
     indexCellTextStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列文字样式
     onPress?: () => {},
+    onFocus?: () => {},
     separatorColor?: string,
     onChangeEnd?: () => {},
     isShowSystemFields?: boolean,
@@ -108,6 +109,9 @@ export default class Row extends Component {
     return false
   }
 
+  _onFocus = () => {
+    this.props.onFocus && this.props.onFocus()
+  }
   _action = (iTemView, columnIndex) => {
     if (this.props.onPress && typeof this.props.onPress === 'function') {
       return this.props.onPress({
@@ -292,6 +296,7 @@ export default class Row extends Component {
           keyboardType={typeof value === 'number' ? 'decimal-pad' : 'default'}
           changeEnd={this.changeEnd}
           onPress={() => this._action(null, index)}
+          onFocus={this._onFocus}
         />
       )
     }

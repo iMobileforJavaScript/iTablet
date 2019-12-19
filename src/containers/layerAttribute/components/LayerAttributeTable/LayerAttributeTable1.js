@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   SectionList,
   Dimensions,
+  Platform,
 } from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { IndicatorLoading } from '../../../../components'
@@ -347,7 +348,15 @@ export default class LayerAttributeTable extends React.Component {
       this.props.selectRow(item)
     }
   }
-
+  //IOS avoidingView无效 手动滚动过去
+  onFocus = index => {
+    Platform.OS === 'ios' &&
+      this.table &&
+      this.table.scrollToLocation({
+        itemIndex: index,
+        viewPosition: 0.5,
+      })
+  }
   onPressHeader = item => {
     if (
       this.props.onPressHeader &&
@@ -498,6 +507,9 @@ export default class LayerAttributeTable extends React.Component {
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
         // onPress={() => this.onPressRow({ data: item, index })}
         onPress={this.onPressRow}
+        onFocus={() => {
+          this.onFocus(index)
+        }}
         onChangeEnd={this.onChangeEnd}
         buttonIndexes={buttonIndexes}
         buttonActions={buttonActions}
