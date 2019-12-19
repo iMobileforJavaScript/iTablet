@@ -492,7 +492,7 @@ export default class LayerSelectionAttribute extends React.Component {
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
       if (
-        data.index >= this.state.startIndex &&
+        data.index >= this.state.startIndex + 1 &&
         data.index < this.state.startIndex + this.state.attributes.data.length
       ) {
         // 定位在当前显示数据范围内

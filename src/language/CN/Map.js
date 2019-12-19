@@ -368,6 +368,8 @@ const Map_Main_Menu = {
   MARK: '标注',
 
   //地图导航
+  START_POINT: '起点',
+  END_POINT: '终点',
   DRAW: '绘制',
   ROAD_DETAILS: '路线详情',
   ROUTE_THROUGH: '途经路线：',
