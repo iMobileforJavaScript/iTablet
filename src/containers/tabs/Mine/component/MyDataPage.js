@@ -354,7 +354,7 @@ export default class MyDataPage extends Component {
               textStyle: { marginTop: scaleSize(15) },
               confirmAction: () => (this.exportPath = ''),
               cancelAction: () => (this.exportPath = ''),
-              dialogHeight: scaleSize(250),
+              dialogStyle: { width: scaleSize(500), height: scaleSize(250) },
               showTitleImage: false,
             })
             this.SimpleDialog.setVisible(true)
@@ -721,7 +721,7 @@ export default class MyDataPage extends Component {
       text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
       confirmAction: confirmAction,
       renderExtra: this.renderRelatedMap(relatedMaps),
-      dialogHeight: dialogHeight,
+      dialogStyle: { height: dialogHeight },
     })
     this.SimpleDialog.setVisible(true)
   }

@@ -192,7 +192,7 @@ class MyDataset extends MyDataPage {
         this._onShareData(this.shareType)
       },
       renderExtra: this.renderExportList(data),
-      dialogHeight: dialogHeight,
+      dialogStyle: { height: dialogHeight },
       showTitleImage: false,
     })
     this.SimpleDialog.setVisible(true)
