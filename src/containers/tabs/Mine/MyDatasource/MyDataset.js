@@ -85,19 +85,6 @@ class MyDataset extends MyDataPage {
 
   exportData = async (name, exportToTemp = true) => {
     let datasetParams = Object.assign({}, this.itemInfo.item)
-    if (
-      this.exportType === this.exportTypes.KML ||
-      this.exportType === this.exportTypes.KMZ ||
-      this.exportType === this.exportTypes.GPX
-    ) {
-      if (!(await SMap.isPrgCoordSysWGS1984(datasetParams))) {
-        this.SimpleDialog.set({
-          text: getLanguage(global.language).Prompt.REQUIRE_PRJ_1984,
-        })
-        this.SimpleDialog.setVisible(true)
-        return false
-      }
-    }
     let homePath = await FileTools.appendingHomeDirectory()
     let targetPath
     if (exportToTemp) {
@@ -110,6 +97,7 @@ class MyDataset extends MyDataPage {
         this.exportType,
       )
       targetPath = exportPath + availableName
+      this.exportPath = this.getRelativeExportPath() + availableName
     }
 
     let result = false
@@ -186,7 +174,23 @@ class MyDataset extends MyDataPage {
       scaleSize(130) + Math.ceil(data.length / 2) * scaleSize(70)
     this.SimpleDialog.set({
       text: getLanguage(global.language).Profile.SELECT_DATASET_EXPORT_TYPE,
-      confirmAction: () => this._onShareData(this.shareType),
+      confirmAction: async () => {
+        if (
+          this.exportType === this.exportTypes.KML ||
+          this.exportType === this.exportTypes.KMZ ||
+          this.exportType === this.exportTypes.GPX
+        ) {
+          let datasetParams = Object.assign({}, this.itemInfo.item)
+          if (!(await SMap.isPrgCoordSysWGS1984(datasetParams))) {
+            this.SimpleDialog.set({
+              text: getLanguage(global.language).Prompt.REQUIRE_PRJ_1984,
+            })
+            this.SimpleDialog.setVisible(true)
+            return
+          }
+        }
+        this._onShareData(this.shareType)
+      },
       renderExtra: this.renderExportList(data),
       dialogHeight: dialogHeight,
       showTitleImage: false,

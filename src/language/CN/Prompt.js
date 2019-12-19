@@ -172,6 +172,7 @@ const Prompt = {
   EXPORTING: '导出中',
   EXPORT_SUCCESS: '导出成功',
   EXPORT_FAILED: '导出失败',
+  EXPORT_TO: '数据已导出到：',
   REQUIRE_PRJ_1984: '数据集投影坐标系必须为WGS_1984',
 
   UNDO_FAILED: '撤销失败',
@@ -283,6 +284,7 @@ const Prompt = {
   PLEASE_SELECT_NETWORKDATASET: '请选择网络数据集',
   PLEASE_SELECT_A_POINT_INDOOR: '请在室内选点',
   PATH_ANALYSIS_FAILED: '路径分析失败请重新选择起终点',
+  ROAD_NETWORK_UNLINK: '起点、终点路网未连通，路径分析失败',
   SET_START_AND_END_POINTS: '请先设置起点和终点',
   SELECT_LAYER_NEED_INCREMENTED: '请选择需要增量的图层',
   SELECT_THE_FLOOR: '请选择图层所在楼层',

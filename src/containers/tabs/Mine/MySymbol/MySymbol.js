@@ -53,6 +53,7 @@ class MySymbol extends MyDataPage {
         'zip',
       )
       targetPath = exportPath + availableName
+      this.exportPath = this.getRelativeExportPath() + availableName
     }
     let archivePaths = []
 

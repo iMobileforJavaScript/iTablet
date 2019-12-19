@@ -22,6 +22,7 @@ export default class SimpleDialog extends PureComponent {
       confirmAction: this.confirm,
       cancelAction: this.cancel,
       text: this.props.text,
+      textStyle: {},
       renderExtra: props.renderExtra,
       dialogHeight: undefined,
       showTitleImage: true,
@@ -34,6 +35,7 @@ export default class SimpleDialog extends PureComponent {
 
   set = ({
     text,
+    textStyle,
     confirmAction,
     cancelAction,
     renderExtra,
@@ -55,6 +57,7 @@ export default class SimpleDialog extends PureComponent {
     }
     this.setState({
       text: text || this.props.text,
+      textStyle: textStyle ? textStyle : {},
       confirmAction: confirmAction ? confirm || this.confirm : this.confirm,
       cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
       renderExtra: renderExtra,
@@ -66,6 +69,7 @@ export default class SimpleDialog extends PureComponent {
   reset = () => {
     this.setState({
       text: this.props.text,
+      textStyle: {},
       confirmAction: this.confirm,
       cancelAction: this.cancel,
       renderExtra: undefined,
@@ -143,7 +147,9 @@ export default class SimpleDialog extends PureComponent {
               style={styles.dialogHeaderImg}
             />
           )}
-          <Text style={styles.promptTtile}>{this.state.text}</Text>
+          <Text style={[styles.promptTtile, this.state.textStyle]}>
+            {this.state.text}
+          </Text>
           {this.state.renderExtra}
         </View>
       </Dialog>
