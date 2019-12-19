@@ -82,6 +82,7 @@ class MyMap extends MyDataPage {
         'zip',
       )
       zipPath = exportPath + availableName
+      this.exportPath = this.getRelativeExportPath() + availableName
     }
 
     let exportResult = false

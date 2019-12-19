@@ -1706,7 +1706,7 @@ export default class MapView extends React.Component {
     if (this.state.currentFloorID) return null
     return (
       <MapController
-        ref={ref => (this.mapController = ref)}
+        ref={ref => (GLOBAL.mapController = this.mapController = ref)}
         type={GLOBAL.Type}
       />
     )

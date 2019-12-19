@@ -175,6 +175,7 @@ const Prompt = {
   EXPORTING: 'Exporting',
   EXPORT_SUCCESS: 'Exported Successfully',
   EXPORT_FAILED: 'Failed to Export',
+  EXPORT_TO: 'Data have been exported to:',
   REQUIRE_PRJ_1984: 'PrjCoordSys of the dataset must be WGS_1984',
 
   UNDO_FAILED: 'Failed to Undo',
@@ -293,6 +294,8 @@ const Prompt = {
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
   PATH_ANALYSIS_FAILED:
     'Path analysis failed! Please re-select the start and end points',
+  ROAD_NETWORK_UNLINK:
+    'Path analysis failed due to the disconnected road network from start-point to end-point',
   SET_START_AND_END_POINTS: 'Please set the start and end points first',
   SELECT_LAYER_NEED_INCREMENTED:
     'Please select the layer need to be incremented',
