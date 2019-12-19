@@ -82,6 +82,7 @@ class MyLabel extends MyDataPage {
           'zip',
         )
         targetPath = exportPath + availableName
+        this.exportPath = this.getRelativeExportPath() + availableName
       }
 
       let uploadList

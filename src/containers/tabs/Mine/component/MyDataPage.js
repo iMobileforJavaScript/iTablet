@@ -70,6 +70,7 @@ export default class MyDataPage extends Component {
     }
     this.getItemCallback = params.getItemCallback || undefined
     this.chatCallback = params.chatCallback || undefined
+    this.exportPath = ''
   }
 
   types = {
@@ -338,17 +339,33 @@ export default class MyDataPage extends Component {
       }
 
       if (result !== undefined) {
-        result
-          ? Toast.show(
+        if (result) {
+          Toast.show(
             type === 'local'
               ? getLanguage(global.language).Prompt.EXPORT_SUCCESS
               : getLanguage(global.language).Prompt.SHARE_SUCCESS,
           )
-          : Toast.show(
+          if (this.exportPath !== '') {
+            this.SimpleDialog.set({
+              text:
+                getLanguage(global.language).Prompt.EXPORT_TO +
+                '\n\n' +
+                this.exportPath,
+              textStyle: { marginTop: scaleSize(15) },
+              confirmAction: () => (this.exportPath = ''),
+              cancelAction: () => (this.exportPath = ''),
+              dialogHeight: scaleSize(250),
+              showTitleImage: false,
+            })
+            this.SimpleDialog.setVisible(true)
+          }
+        } else {
+          Toast.show(
             type === 'local'
               ? getLanguage(global.language).Prompt.EXPORT_FAILED
               : getLanguage(global.language).Prompt.SHARE_FAILED,
           )
+        }
       }
     } catch (error) {
       Toast.show(
