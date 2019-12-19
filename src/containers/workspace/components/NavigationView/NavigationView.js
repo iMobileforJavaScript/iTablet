@@ -7,16 +7,16 @@ import {
   FlatList,
   Platform,
 } from 'react-native'
-import { scaleSize, setSpText, Toast } from '../../../../utils'
-// import { getLanguage } from '../../../../language/index'
+import { FetchUtils, scaleSize, setSpText, Toast } from '../../../../utils'
 import NavigationService from '../../../../containers/NavigationService'
-// import { MTBtn } from '../../../../components'
 import { TouchType } from '../../../../constants'
 import styles from './styles'
 import { color } from '../../../../styles'
 import PropTypes from 'prop-types'
 import { SMap } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
+import Loading from '../../../../components/Container/Loading'
+import { Dialog } from '../../../../components'
 
 const TOOLBARHEIGHT = Platform.OS === 'ios' ? scaleSize(20) : 0
 
@@ -27,8 +27,6 @@ export default class NavigationView extends React.Component {
   static propTypes = {
     mapNavigation: PropTypes.object,
     setMapNavigation: PropTypes.func,
-    mapSelectPoint: PropTypes.object,
-    setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     navigationhistory: PropTypes.array,
   }
@@ -37,10 +35,13 @@ export default class NavigationView extends React.Component {
     super(props)
     let { params } = this.props.navigation.state
     this.changeNavPathInfo = params.changeNavPathInfo
-    this.showLocationView = params.showLocationView || false
     // this.PointType = null
     this.clickable = true
     this.historyclick = true
+    this.state = {
+      startName: '',
+      endName: '',
+    }
   }
 
   close = async () => {
@@ -49,11 +50,13 @@ export default class NavigationView extends React.Component {
     this.props.setMapNavigation({ isShow: false, name: '' })
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
-    this.props.setMapSelectPoint({
-      firstPoint: getLanguage(GLOBAL.language).Map_Main_Menu.SELECT_START_POINT,
-      secondPoint: getLanguage(GLOBAL.language).Map_Main_Menu
-        .SELECT_DESTINATION,
-    })
+    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+    GLOBAL.STARTNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_START_POINT
+    GLOBAL.ENDNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_DESTINATION
     GLOBAL.STARTX = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ROUTEANALYST = undefined
@@ -62,7 +65,257 @@ export default class NavigationView extends React.Component {
     NavigationService.goBack()
   }
 
+  selectStartPoint = async () => {
+    if (this.backClicked) return
+    this.backClicked = true
+    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
+    GLOBAL.MAPSELECTPOINT.setVisible(true)
+    GLOBAL.ISOUTDOORMAP &&
+      GLOBAL.LocationView &&
+      GLOBAL.LocationView.setVisible(true, true)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
+      button: getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT,
+    })
+    GLOBAL.toolBox.showFullMap(true)
+    this.props.setMapNavigation({
+      isShow: true,
+      name: '',
+    })
+    //考虑搜索界面跳转，不能直接goBack
+    NavigationService.navigate('MapView')
+  }
+
+  selectEndPoint = async () => {
+    if (this.backClicked) return
+    this.backClicked = true
+    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
+    GLOBAL.MAPSELECTPOINT.setVisible(true)
+    GLOBAL.ISOUTDOORMAP &&
+      GLOBAL.LocationView &&
+      GLOBAL.LocationView.setVisible(true, false)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
+      button: getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_DESTINATION,
+    })
+    GLOBAL.toolBox.showFullMap(true)
+    this.props.setMapNavigation({
+      isShow: true,
+      name: '',
+    })
+    NavigationService.navigate('MapView')
+  }
+  routeAnalyst = async () => {
+    if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      this.loading.setLoading(
+        true,
+        getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+      )
+      if (GLOBAL.ISOUTDOORMAP) {
+        //如果不让用户选数据集，自动获取 则使用SMap.isPointsInMapBounds来判断
+        let datasetName =
+          GLOBAL.ToolBar && GLOBAL.ToolBar.props.getNavigationDatas().name
+        let isStartInBounds = await SMap.isInBounds(
+          { x: GLOBAL.STARTX, y: GLOBAL.STARTY },
+          datasetName,
+        )
+        let isEndInBounds = await SMap.isInBounds(
+          { x: GLOBAL.ENDX, y: GLOBAL.ENDY },
+          datasetName,
+        )
+        let path, pathLength
+        //室外导航
+        if (isStartInBounds && isEndInBounds) {
+          try {
+            let result = await SMap.beginNavigation(
+              GLOBAL.STARTX,
+              GLOBAL.STARTY,
+              GLOBAL.ENDX,
+              GLOBAL.ENDY,
+            )
+            if (result) {
+              pathLength = await SMap.getNavPathLength(false)
+              path = await SMap.getPathInfos(false)
+            } else {
+              //在线路径分析弹窗
+              this.loading.setLoading(false)
+              this.dialog.setDialogVisible(true)
+            }
+          } catch (e) {
+            this.loading.setLoading(false)
+            Toast.show('无路径分析结果')
+          }
+        } else {
+          //在线路径分析弹窗
+          this.loading.setLoading(false)
+          this.dialog.setDialogVisible(true)
+        }
+        if (pathLength && path) {
+          this.changeNavPathInfo({ path, pathLength })
+          GLOBAL.ROUTEANALYST = true
+          GLOBAL.MAPSELECTPOINT.setVisible(false)
+          GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+            button: '',
+          })
+          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
+          GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+          this.props.setMapNavigation({
+            isShow: true,
+            name: '',
+          })
+          GLOBAL.toolBox.showFullMap(true)
+          let history = this.props.navigationhistory
+          history.push({
+            sx: GLOBAL.STARTX,
+            sy: GLOBAL.STARTY,
+            ex: GLOBAL.ENDX,
+            ey: GLOBAL.ENDY,
+            sFloor: GLOBAL.STARTPOINTFLOOR,
+            eFloor: GLOBAL.ENDPOINTFLOOR,
+            address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+            start: GLOBAL.STARTNAME,
+            end: GLOBAL.ENDNAME,
+            isOutDoor: true,
+          })
+          if (this.historyclick) {
+            this.props.setNavigationHistory(history)
+          }
+          if (this.clickable) {
+            this.clickable = false
+            GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+            this.loading.setLoading(false)
+            GLOBAL.TouchType = TouchType.NULL
+            //考虑搜索界面跳转，不能直接goBack
+            NavigationService.navigate('MapView')
+          }
+        }
+      }
+      //室内导航
+      if (!GLOBAL.ISOUTDOORMAP) {
+        try {
+          let result = await SMap.beginIndoorNavigation(
+            GLOBAL.STARTX,
+            GLOBAL.STARTY,
+            GLOBAL.ENDX,
+            GLOBAL.ENDY,
+          )
+          if (result) {
+            let pathLength = await SMap.getNavPathLength(true)
+            let path = await SMap.getPathInfos(true)
+            if (path && pathLength) {
+              this.changeNavPathInfo({ path, pathLength })
+              GLOBAL.ROUTEANALYST = true
+              GLOBAL.MAPSELECTPOINT.setVisible(false)
+              GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+                button: '',
+              })
+              GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
+              GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+              this.props.setMapNavigation({
+                isShow: true,
+                name: '',
+              })
+              GLOBAL.toolBox.showFullMap(true)
+              let history = this.props.navigationhistory
+              history.push({
+                sx: GLOBAL.STARTX,
+                sy: GLOBAL.STARTY,
+                ex: GLOBAL.ENDX,
+                ey: GLOBAL.ENDY,
+                sFloor: GLOBAL.STARTPOINTFLOOR,
+                eFloor: GLOBAL.ENDPOINTFLOOR,
+                address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+                start: GLOBAL.STARTNAME,
+                end: GLOBAL.ENDNAME,
+                isOutDoor: false,
+              })
+              if (this.historyclick) {
+                this.props.setNavigationHistory(history)
+              }
+              if (this.clickable) {
+                this.clickable = false
+                this.loading.setLoading(false)
+                GLOBAL.TouchType = TouchType.NULL
+                NavigationService.goBack()
+              }
+            }
+          } else {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          }
+        } catch (e) {
+          this.loading.setLoading(false)
+          Toast.show('无路径分析结果')
+        }
+      }
+    } else {
+      Toast.show(getLanguage(GLOBAL.language).Prompt.SET_START_AND_END_POINTS)
+    }
+  }
+
+  _confirm = async () => {
+    this.dialog.setDialogVisible(false)
+    this.loading.setLoading(
+      true,
+      getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
+    )
+    let path, pathLength
+    let result = await FetchUtils.routeAnalyst(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
+      GLOBAL.ENDX,
+      GLOBAL.ENDY,
+    )
+    if (result && result[0] && result[0].pathInfos) {
+      pathLength = { length: result[0].pathLength }
+      path = result[0].pathInfos
+      await SMap.drawOnlinePath(result[0].pathPoints)
+      await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
+    } else {
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+    }
+    if (pathLength && path) {
+      this.changeNavPathInfo({ path, pathLength })
+      GLOBAL.ROUTEANALYST = true
+      GLOBAL.MAPSELECTPOINT.setVisible(false)
+      GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+        button: '',
+      })
+      GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
+      GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+      this.props.setMapNavigation({
+        isShow: true,
+        name: '',
+      })
+      GLOBAL.toolBox.showFullMap(true)
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
+        isOutDoor: true,
+      })
+      if (this.historyclick) {
+        this.props.setNavigationHistory(history)
+      }
+      if (this.clickable) {
+        this.clickable = false
+        GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+        this.loading.setLoading(false)
+        GLOBAL.TouchType = TouchType.NULL
+        //考虑搜索界面跳转，不能直接goBack
+        NavigationService.navigate('MapView')
+      }
+    }
+  }
   _renderSearchView = () => {
+    let renderHistory = this.props.navigationhistory.filter(
+      item => item.isOutDoor === GLOBAL.ISOUTDOORMAP,
+    )
     return (
       <View
         style={{
@@ -73,7 +326,7 @@ export default class NavigationView extends React.Component {
         <View
           style={{
             paddingTop: TOOLBARHEIGHT + scaleSize(20),
-            height: scaleSize(185) + TOOLBARHEIGHT,
+            height: scaleSize(205) + TOOLBARHEIGHT,
             width: '100%',
             backgroundColor: '#303030',
             flexDirection: 'row',
@@ -124,22 +377,8 @@ export default class NavigationView extends React.Component {
                 />
                 <TouchableOpacity
                   style={styles.onInput}
-                  onPress={async () => {
-                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
-                    GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    this.showLocationView &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, true)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SET_AS_START_POINT,
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    NavigationService.goBack()
+                  onPress={() => {
+                    this.selectStartPoint()
                   }}
                 >
                   <Text
@@ -147,10 +386,7 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.firstPoint !== ''
-                      ? this.props.mapSelectPoint.firstPoint
-                      : getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SELECT_START_POINT}
+                    {this.state.startName || GLOBAL.STARTNAME}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -180,22 +416,8 @@ export default class NavigationView extends React.Component {
                 />
                 <TouchableOpacity
                   style={styles.secondInput}
-                  onPress={async () => {
-                    GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
-                    GLOBAL.MAPSELECTPOINT.setVisible(true)
-                    this.showLocationView &&
-                      GLOBAL.LocationView &&
-                      GLOBAL.LocationView.setVisible(true, false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
-                      button: getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SET_AS_DESTINATION,
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    NavigationService.goBack()
+                  onPress={() => {
+                    this.selectEndPoint()
                   }}
                 >
                   <Text
@@ -203,50 +425,23 @@ export default class NavigationView extends React.Component {
                     ellipsizeMode={'tail'}
                     style={{ fontSize: setSpText(24) }}
                   >
-                    {this.props.mapSelectPoint.secondPoint !== ''
-                      ? this.props.mapSelectPoint.secondPoint
-                      : getLanguage(GLOBAL.language).Map_Main_Menu
-                        .SELECT_DESTINATION}
+                    {this.state.endName || GLOBAL.ENDNAME}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-
-            {/*<MTBtn*/}
-            {/*style={styles.btn}*/}
-            {/*size={MTBtn.Size.NORMAL}*/}
-            {/*image={require('../../../../assets/Navigation/naviagtion-road.png')}*/}
-            {/*onPress={async () => {*/}
-
-            {/*}}*/}
-            {/*/>*/}
-
-            {/*<MTBtn*/}
-            {/*style={styles.btn}*/}
-            {/*size={MTBtn.Size.NORMAL}*/}
-            {/*image={require('../../../../assets/Navigation/clean_route.png')}*/}
-            {/*onPress={async () => {*/}
-            {/*GLOBAL.TouchType = TouchType.NORMAL*/}
-            {/*GLOBAL.STARTX = undefined*/}
-            {/*GLOBAL.ENDX = undefined*/}
-            {/*GLOBAL.ROUTEANALYST = undefined*/}
-            {/*this.props.setMapSelectPoint({*/}
-            {/*firstPoint: '选择起点',*/}
-            {/*secondPoint: '选择终点',*/}
-            {/*})*/}
-            {/*SMap.clearPoint()*/}
-            {/*}}*/}
-            {/*/>*/}
           </View>
         </View>
 
         <View>
           <FlatList
             style={{ maxHeight: scaleSize(650) }}
-            data={this.props.navigationhistory}
+            data={renderHistory}
+            extraData={GLOBAL.STARTX}
+            keyExtractor={(item, index) => item.toString() + index}
             renderItem={this.renderItem}
           />
-          {this.props.navigationhistory.length > 0 && (
+          {renderHistory.length > 0 && (
             <TouchableOpacity
               style={{
                 backgroundColor: color.background,
@@ -290,129 +485,8 @@ export default class NavigationView extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={async () => {
-              GLOBAL.TouchType = TouchType.NORMAL
-              if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
-                  let result = await SMap.beginNavigation(
-                    GLOBAL.STARTX,
-                    GLOBAL.STARTY,
-                    GLOBAL.ENDX,
-                    GLOBAL.ENDY,
-                  )
-                  if (result) {
-                    let pathLength = await SMap.getNavPathLength(false)
-                    let path = await SMap.getPathInfos(false)
-                    this.changeNavPathInfo({ path, pathLength })
-                    GLOBAL.ROUTEANALYST = true
-                    GLOBAL.MAPSELECTPOINT.setVisible(false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                      button: '',
-                    })
-                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    let history = this.props.navigationhistory
-                    history.push({
-                      sx: GLOBAL.STARTX,
-                      sy: GLOBAL.STARTY,
-                      ex: GLOBAL.ENDX,
-                      ey: GLOBAL.ENDY,
-                      sFloor: GLOBAL.STARTPOINTFLOOR,
-                      eFloor: GLOBAL.ENDPOINTFLOOR,
-                      address:
-                        this.props.mapSelectPoint.firstPoint +
-                        '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                      start: this.props.mapSelectPoint.firstPoint,
-                      end: this.props.mapSelectPoint.secondPoint,
-                    })
-                    if (this.historyclick) {
-                      this.props.setNavigationHistory(history)
-                    }
-                    if (this.clickable) {
-                      this.clickable = false
-                      GLOBAL.LocationView &&
-                        GLOBAL.LocationView.setVisible(false)
-                      NavigationService.goBack()
-                    }
-                  } else {
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-                    )
-                  }
-                } else {
-                  Toast.show(
-                    getLanguage(GLOBAL.language).Prompt
-                      .SET_START_AND_END_POINTS,
-                  )
-                }
-              }
-
-              if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
-                  let result = await SMap.beginIndoorNavigation(
-                    GLOBAL.STARTX,
-                    GLOBAL.STARTY,
-                    GLOBAL.ENDX,
-                    GLOBAL.ENDY,
-                  )
-                  if (result) {
-                    let pathLength = await SMap.getNavPathLength(true)
-                    let path = await SMap.getPathInfos(true)
-                    this.changeNavPathInfo({ path, pathLength })
-                    GLOBAL.ROUTEANALYST = true
-                    GLOBAL.MAPSELECTPOINT.setVisible(false)
-                    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                      button: '',
-                    })
-                    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-                    this.props.setMapNavigation({
-                      isShow: true,
-                      name: '',
-                    })
-                    GLOBAL.toolBox.showFullMap(true)
-                    let history = this.props.navigationhistory
-                    history.push({
-                      sx: GLOBAL.STARTX,
-                      sy: GLOBAL.STARTY,
-                      ex: GLOBAL.ENDX,
-                      ey: GLOBAL.ENDY,
-                      sFloor: GLOBAL.STARTPOINTFLOOR,
-                      eFloor: GLOBAL.ENDPOINTFLOOR,
-                      address:
-                        this.props.mapSelectPoint.firstPoint +
-                        '---' +
-                        this.props.mapSelectPoint.secondPoint,
-                      start: this.props.mapSelectPoint.firstPoint,
-                      end: this.props.mapSelectPoint.secondPoint,
-                    })
-                    if (this.historyclick) {
-                      this.props.setNavigationHistory(history)
-                    }
-                    if (this.clickable) {
-                      this.clickable = false
-                      NavigationService.goBack()
-                      GLOBAL.FloorListView &&
-                        GLOBAL.FloorListView.changeBottom(true)
-                    }
-                  } else {
-                    Toast.show(
-                      getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-                    )
-                  }
-                } else {
-                  Toast.show(
-                    getLanguage(GLOBAL.language).Prompt
-                      .SET_START_AND_END_POINTS,
-                  )
-                }
-              }
+            onPress={() => {
+              this.routeAnalyst()
             }}
           >
             <Text
@@ -425,47 +499,59 @@ export default class NavigationView extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
+        <Loading ref={ref => (this.loading = ref)} initLoading={false} />
+        <Dialog
+          ref={ref => (this.dialog = ref)}
+          confirmAction={this._confirm}
+          opacity={1}
+          opacityStyle={styles.dialogBackground}
+          style={styles.dialogBackground}
+          confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+          cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
+        >
+          <View style={styles.dialogHeaderView}>
+            <Image
+              source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+              style={styles.dialogHeaderImg}
+            />
+            <Text style={styles.promptTitle}>
+              {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
+            </Text>
+          </View>
+        </Dialog>
       </View>
     )
   }
 
-  renderItem = ({ item, index }) => {
+  onItemPress = async item => {
+    GLOBAL.STARTNAME = item.start
+    GLOBAL.ENDNAME = item.end
+
+    GLOBAL.STARTX = item.sx
+    GLOBAL.STARTY = item.sy
+    GLOBAL.ENDX = item.ex
+    GLOBAL.ENDY = item.ey
+    GLOBAL.STARTPOINTFLOOR = item.sFloor
+    GLOBAL.ENDPOINTFLOOR = item.eFloor
+
+    SMap.getStartPoint(item.sx, item.sy, !GLOBAL.ISOUTDOORMAP, item.sFloor)
+
+    SMap.getEndPoint(item.ex, item.ey, !GLOBAL.ISOUTDOORMAP, item.eFloor)
+
+    GLOBAL.ROUTEANALYST = undefined
+    this.historyclick = false
+    this.setState({
+      startName: item.start,
+      endName: item.end,
+    })
+  }
+  renderItem = ({ item }) => {
     return (
-      <View key={item.toString() + index}>
+      <View>
         <TouchableOpacity
           style={styles.itemView}
-          onPress={async () => {
-            this.props.setMapSelectPoint({
-              firstPoint: item.start,
-              secondPoint: item.end,
-            })
-
-            GLOBAL.STARTX = item.sx
-            GLOBAL.STARTY = item.sy
-            GLOBAL.ENDX = item.ex
-            GLOBAL.ENDY = item.ey
-            GLOBAL.STARTPOINTFLOOR = item.sFloor
-            GLOBAL.ENDPOINTFLOOR = item.eFloor
-
-            let result = await SMap.isIndoorPoint(item.sx, item.sy)
-            SMap.getStartPoint(item.sx, item.sy, result.isindoor, item.sFloor)
-            if (result.isindoor) {
-              GLOBAL.INDOORSTART = true
-            } else {
-              GLOBAL.INDOORSTART = false
-            }
-
-            let endresult = await SMap.isIndoorPoint(item.ex, item.ey)
-            SMap.getEndPoint(item.ex, item.ey, endresult.isindoor, item.eFloor)
-            if (endresult.isindoor) {
-              GLOBAL.INDOOREND = true
-            } else {
-              GLOBAL.INDOOREND = false
-            }
-
-            GLOBAL.ROUTEANALYST = undefined
-
-            this.historyclick = false
+          onPress={() => {
+            this.onItemPress(item)
           }}
         >
           <Image

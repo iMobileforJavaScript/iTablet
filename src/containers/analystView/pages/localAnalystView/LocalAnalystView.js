@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
-import { ConstPath, UserType } from '../../../../constants'
+import {
+  ConstPath,
+  UserType,
+  ToolbarType,
+  ConstToolType,
+} from '../../../../constants'
 import { Container, LinkageList } from '../../../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
 import { Toast, AnalystTools } from '../../../../utils'
 import { FileTools } from '../../../../native'
-import { Analyst_Types } from '../../AnalystType'
+// import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
+import { ToolbarModule } from '../../../workspace/components/ToolBar/modules'
 // import TabNavigationService from '../../../TabNavigationService'
 import {
   SMap,
@@ -25,6 +31,7 @@ export default class LocalAnalystView extends Component {
     getLayers: () => {},
     setAnalystParams: () => {},
     getUdbAndDs: () => {},
+    closeMap: () => {},
   }
 
   constructor(props) {
@@ -39,14 +46,14 @@ export default class LocalAnalystView extends Component {
 
     let title = ''
     switch (this.type) {
-      case Analyst_Types.OPTIMAL_PATH:
+      case ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH:
         title = getLanguage(this.props.language).Analyst_Modules.OPTIMAL_PATH
         break
-      case Analyst_Types.CONNECTIVITY_ANALYSIS:
+      case ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS:
         title = getLanguage(this.props.language).Analyst_Modules
           .CONNECTIVITY_ANALYSIS
         break
-      case Analyst_Types.FIND_TSP_PATH:
+      case ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH:
         title = getLanguage(this.props.language).Analyst_Modules.FIND_TSP_PATH
         break
     }
@@ -117,52 +124,56 @@ export default class LocalAnalystView extends Component {
           getLanguage(this.props.language).Analyst_Prompt.LOADING_MODULE,
         )
 
-        let res
-        // if (this.type === Analyst_Types.CONNECTIVITY_ANALYSIS) {
-        //   res = await this.loadFacility({ parent, item })
-        // } else {
-        res = await this.loadTransport({ parent, item })
-        // }
+        this.props.closeMap(async () => {
+          let res
+          // if (this.type === ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS) {
+          //   res = await this.loadFacility({ parent, item })
+          // } else {
+          res = await this.loadTransport({ parent, item })
+          // }
 
-        if (res.result) {
-          this.props.setAnalystParams({
-            ...params2,
-            backAction: () => {
-              AnalystTools.clear(this.type)
-              this.props.setAnalystParams(null)
-              NavigationService.navigate('LocalAnalystView', {
-                ...params2,
-                reloadData: false,
-              })
-            },
-          })
-          await AnalystTools.clear(this.type)
-          await this.props.getLayers()
-          this.setLoading(false)
-          await SMap.setLayerFullView(res.layerInfo.path)
-          NavigationService.goBack()
-          // NavigationService.goBack('AnalystListEntry')
-          // TabNavigationService.navigate('MapAnalystView', {
-          //   backAction: () => {
-          //     AnalystTools.clear(this.type)
-          //     this.props.setAnalystParams(null)
-          //     TabNavigationService.navigate('AnalystTools')
-          //     // NavigationService.navigate('AnalystListEntry', {
-          //     //   ...params1,
-          //     // })
-          //     NavigationService.navigate('LocalAnalystView', {
-          //       ...params2,
-          //       reloadData: false,
-          //     })
-          //   },
-          // })
-        } else {
-          this.setLoading(false)
-          Toast.show(
-            getLanguage(this.props.language).Analyst_Prompt
-              .LOADING_MODULE_FAILED,
-          )
-        }
+          if (res.result) {
+            ToolbarModule.addData({
+              navigationParams: params2,
+              backAction: () => {
+                AnalystTools.clear(this.type)
+                ToolbarModule.getData().navigationParams &&
+                  delete ToolbarModule.getData().navigationParams
+                NavigationService.navigate('LocalAnalystView', {
+                  ...params2,
+                  reloadData: false,
+                })
+              },
+            })
+            // this.props.setAnalystParams({
+            //   ...params2,
+            //   backAction: () => {
+            //     AnalystTools.clear(this.type)
+            //     this.props.setAnalystParams(null)
+            //     NavigationService.navigate('LocalAnalystView', {
+            //       ...params2,
+            //       reloadData: false,
+            //     })
+            //   },
+            // })
+            ToolbarModule.getParams().setToolbarVisible(true, this.type, {
+              containerType: ToolbarType.table,
+              isFullScreen: false,
+              height: ConstToolType.HEIGHT[0],
+            })
+            await AnalystTools.clear(this.type)
+            await this.props.getLayers()
+            this.setLoading(false)
+            await SMap.setLayerFullView(res.layerInfo.path)
+            NavigationService.goBack()
+          } else {
+            this.setLoading(false)
+            Toast.show(
+              getLanguage(this.props.language).Analyst_Prompt
+                .LOADING_MODULE_FAILED,
+            )
+          }
+        })
       } catch (e) {
         this.setLoading(false)
         Toast.show(

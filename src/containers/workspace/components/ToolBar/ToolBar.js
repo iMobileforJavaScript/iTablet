@@ -56,6 +56,10 @@ export default class ToolBar extends React.PureComponent {
     currentLayer: Object,
     selection: Array,
     device: Object,
+    mapLegend?: Object, //图例参数对象
+    layerList?: Array, //三维图层
+    toolbarStatus: Object,
+
     confirm: () => {},
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
@@ -65,7 +69,6 @@ export default class ToolBar extends React.PureComponent {
     setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: () => {},
-    mapLegend?: Object, //图例参数对象
     setMapLegend?: () => {}, //设置图例显隐的redux状态
     getMenuAlertDialogRef: () => {},
     getLayers: () => {}, // 更新数据（包括其他界面）
@@ -96,7 +99,6 @@ export default class ToolBar extends React.PureComponent {
     saveMap: () => {},
     measureShow: () => {},
     clearAttributeHistory: () => {},
-    layerList?: Array, //三维图层
     changeLayerList?: () => {}, //切换场景改变三维图层
     setMapIndoorNavigation: () => {},
     setMapNavigationShow: () => {},
@@ -112,8 +114,11 @@ export default class ToolBar extends React.PureComponent {
     getNavigationDatas: () => {},
     //更改导航路径
     changeNavPathInfo: () => {},
+    //获取FloorListView
     getFloorListView: () => {},
-    changeFloorID: () => {}, //改变当前楼层ID
+    //改变当前楼层ID
+    changeFloorID: () => {},
+    setToolbarStatus: () => {},
   }
 
   static defaultProps = {
@@ -166,20 +171,20 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     let tempPrev = Object.assign({}, prevProps)
     let tempthis = Object.assign({}, this.props)
     tempPrev.nav && delete tempPrev.nav
     tempthis.nav && delete tempthis.nav
-    if (
-      JSON.stringify(tempPrev) !== JSON.stringify(tempthis) ||
-      this.state.type !== prevState.type
-    ) {
-      // 实时更新params
-      this.setToolbarParams()
-    }
+    this.setToolbarParams()
     this.props.device.orientation !== prevProps.device.orientation &&
       this.changeHeight(this.props.device.orientation, this.state.type)
+  }
+
+  componentWillUnmount() {
+    this.buttonView = null
+    this.contentView = null
+    ToolbarModule.setParams({})
   }
 
   setToolbarParams = () => {
@@ -524,6 +529,7 @@ export default class ToolBar extends React.PureComponent {
         type === ConstToolType.MAP_TOOL_INCREMENT ||
         type === ConstToolType.MAP_TOOL_GPSINCREMENT
       ) {
+        GLOBAL.FloorListView.setVisible(true)
         await SMap.removeNetworkDataset()
         SMap.setAction(Action.PAN)
         SMap.setIsMagnifierEnabled(false)
@@ -908,7 +914,7 @@ export default class ToolBar extends React.PureComponent {
         cb: () => SMap.setAction(Action.SELECT),
       })
     } else if (this.state.type === ConstToolType.PLOT_ANIMATION_NODE_CREATE) {
-      this.savePlotAnimationNode()
+      this.contentView.savePlotAnimationNode()
     } else if (this.state.type === ConstToolType.MAP3D_TOOL_FLYLIST) {
       SScene.checkoutListener('startTouchAttribute')
       SScene.setAction('PAN3D')
@@ -949,6 +955,7 @@ export default class ToolBar extends React.PureComponent {
       <ToolbarBottomButtons
         ref={ref => (this.buttonView = ref)}
         selection={this.props.selection}
+        toolbarStatus={this.props.toolbarStatus}
         type={this.state.type}
         close={this.close}
         back={this.back}

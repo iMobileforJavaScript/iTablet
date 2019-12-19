@@ -24,11 +24,54 @@ export default class SimpleDialog extends PureComponent {
       text: this.props.text,
       renderExtra: props.renderExtra,
       dialogHeight: undefined,
+      showTitleImage: true,
     }
   }
 
   setVisible(visible) {
     this.Dialog.setDialogVisible(visible)
+  }
+
+  set = ({
+    text,
+    confirmAction,
+    cancelAction,
+    renderExtra,
+    dialogHeight,
+    showTitleImage,
+  }) => {
+    let confirm, cancel
+    if (confirmAction && typeof confirmAction === 'function') {
+      confirm = () => {
+        this.setVisible(false)
+        confirmAction()
+      }
+    }
+    if (cancelAction && typeof cancelAction === 'function') {
+      cancel = () => {
+        this.setVisible(false)
+        cancelAction()
+      }
+    }
+    this.setState({
+      text: text || this.props.text,
+      confirmAction: confirmAction ? confirm || this.confirm : this.confirm,
+      cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
+      renderExtra: renderExtra,
+      dialogHeight: dialogHeight,
+      showTitleImage: showTitleImage !== undefined ? showTitleImage : true,
+    })
+  }
+
+  reset = () => {
+    this.setState({
+      text: this.props.text,
+      confirmAction: this.confirm,
+      cancelAction: this.cancel,
+      renderExtra: undefined,
+      dialogHeight: undefined,
+      showTitleImage: true,
+    })
   }
 
   setConfirm = action => {
@@ -94,10 +137,12 @@ export default class SimpleDialog extends PureComponent {
         disableBackTouch={this.props.disableBackTouch}
       >
         <View style={styles.dialogHeaderView}>
-          <Image
-            source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
-            style={styles.dialogHeaderImg}
-          />
+          {this.state.showTitleImage && (
+            <Image
+              source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+              style={styles.dialogHeaderImg}
+            />
+          )}
           <Text style={styles.promptTtile}>{this.state.text}</Text>
           {this.state.renderExtra}
         </View>
@@ -122,17 +167,13 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
-    marginLeft: scaleSize(20),
+    marginHorizontal: scaleSize(10),
     textAlign: 'center',
   },
   dialogBackground: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
   opacityView: {
     height: scaleSize(240),
-    // borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
   },
 })

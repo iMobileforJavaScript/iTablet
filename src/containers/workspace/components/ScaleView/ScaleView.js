@@ -15,6 +15,7 @@ export default class ScaleView extends React.Component {
     device: Object,
     language: String,
     isShow: boolean,
+    mapNavigation: Object,
   }
 
   constructor(props) {
@@ -40,6 +41,8 @@ export default class ScaleView extends React.Component {
         isAddedListener: !this.state.isAddedListener,
       })
     }
+    //获取比例尺、图例数据
+    this.getInitialData()
   }
 
   componentDidUpdate(prevProps) {
@@ -76,7 +79,12 @@ export default class ScaleView extends React.Component {
 
   scaleViewChange = data => {
     this.endTime = +new Date()
-    if (this.endTime - this.startTime > this.INTERVAL) {
+    if (
+      data &&
+      data.title &&
+      data.width &&
+      this.endTime - this.startTime > this.INTERVAL
+    ) {
       let width = ~~this.state.width
       let title = this.state.title
       if (width !== ~~data.width || title !== data.title) {
@@ -94,6 +102,7 @@ export default class ScaleView extends React.Component {
   }
 
   render() {
+    if (this.props.mapNavigation.isShow) return null
     let textWidth =
       this.state.width > scaleSize(65) ? this.state.width : scaleSize(65)
     if (!this.props.isShow) return <View />

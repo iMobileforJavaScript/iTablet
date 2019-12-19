@@ -1,5 +1,7 @@
 //提示语
 const Prompt = {
+  YES: 'Yes',
+  NO: 'No',
   SAVE_TITLE: 'Do you want to save the changes to the current map?',
   SAVE_YES: 'Yes',
   SAVE_NO: 'No',
@@ -12,6 +14,10 @@ const Prompt = {
   WECHAT: 'Wechat',
   BEGIN: 'Begin',
   STOP: 'Stop',
+  FIELD_TO_PAUSE: 'Failed to pause',
+  WX_NOT_INSTALLED: 'Wechat not installed',
+  RENAME: 'Rename',
+  BATCH_DELETE: 'Batch Delete',
 
   DOWNLOAD_SAMPLE_DATA: 'Download the sample data?',
   DOWNLOAD: 'Download',
@@ -45,6 +51,7 @@ const Prompt = {
   SWITCHING_SUCCESS: 'Switch Successfully',
   ADD_SUCCESS: 'Added Successfully',
   ADD_FAILED: 'Failed to Add',
+  ADD_MAP_FAILED: 'Can not add current map',
   CREATE_THEME_FAILED: 'Failed to Create Theme',
   PLEASE_ADD_DATASET: 'Please add the dataset',
   PLEASE_SELECT_OBJECT: 'Please select an object to edit',
@@ -91,6 +98,9 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
+  SELECT_DELETE_BY_RECTANGLE: 'Please select delete item by rectangle select',
+
+  CHOOSE_LAYER: 'Choose Layer',
 
   COLLECT_SUCCESS: 'Collect Success',
 
@@ -124,6 +134,8 @@ const Prompt = {
   PUBLISHING: 'Publishing',
   PUBLISH_SUCCESS: 'Published Successfully',
   PUBLISH_FAILED: 'Failed to Publish',
+  DELETE_CONFIRM: 'Are you sure you want to delete the item?',
+  BATCH_DELETE_CONFIRM: 'Are you sure you want to delete the selected item(s)?',
 
   SELECT_AT_LEAST_ONE: 'Please select at least one item',
   DELETE_MAP_RELATE_DATA: 'Following map(s) will be affected, continue?',
@@ -160,8 +172,10 @@ const Prompt = {
   SHARE_PREPARE: 'Preparing for sharing',
   SHARE_START: 'Start sharing',
 
+  EXPORTING: 'Exporting',
   EXPORT_SUCCESS: 'Exported Successfully',
   EXPORT_FAILED: 'Failed to Export',
+  REQUIRE_PRJ_1984: 'PrjCoordSys of the dataset must be WGS_1984',
 
   UNDO_FAILED: 'Failed to Undo',
   REDO_FAILED: 'Failed to Redo',
@@ -172,6 +186,17 @@ const Prompt = {
 
   NETWORK_ERROR: 'Network Error',
   NO_NETWORK: 'No Internet connection',
+  CHOOSE_CLASSIFY_MODEL: 'Choose Classify Model',
+  USED_IMMEDIATELY: 'Used Immediately',
+  USING: 'Using',
+  DEFAULT_MODEL: 'Default Model',
+  DUSTBIN_MODEL: 'Dustbin Model',
+  LANT_MODEL: 'Lant Model',
+  CHANGING: 'Changing',
+  CHANGE_SUCCESS: 'Change Success',
+  CHANGE_FAULT: 'Change Fault',
+  DETECT_DUSTBIN_MODEL: 'Dustbin Model',
+  ROAD_MODEL: 'Road Model',
 
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
@@ -252,9 +277,17 @@ const Prompt = {
   FAILED_TO_CREATE_REGION: 'Failed to create region',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
+  SEARCH_AROUND: 'Search around',
+  GO_HERE: 'Go here',
+  SHOW_MORE_RESULT: 'Show more results',
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
+  NETWORK_DATASET_IS_NOT_AVAILABLE: 'Current network dataset is not available',
+  POINT_NOT_IN_BOUNDS:
+    "The bounds of the selected network dataset donsn't contains the point",
+  POSITION_OUT_OF_MAP:
+    'Your location is out of the bounds of map, please use simulate navigation',
   SELECT_DATASOURCE_FOR_NAVIGATION: 'Select data for navigation',
   PLEASE_SELECT_NETWORKDATASET: 'Select a network dataset first',
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
@@ -266,7 +299,12 @@ const Prompt = {
   SELECT_THE_FLOOR: 'Please select the floor which the layer is located',
   LONG_PRESS_ADD_START: 'Please long press to add starting point',
   LONG_PRESS_ADD_END: 'Please long press to add destination',
-  CURRENT_POSITION_OUT_OF_RANGE: 'The current location is out of range',
+  ROUTE_ANALYSING: 'Analysing',
+  DISTANCE_ERROR:
+    'The destination is too close to the start point,please reselect!',
+  USE_ONLINE_ROUTE_ANALYST:
+    "Points are out of dataset's bounds or there are no dataset around points, do you want to use online route analyst?",
+  NOT_SUPPORT_ONLINE_NAVIGATION: 'Online navigation is not support yet.',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',

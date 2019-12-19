@@ -78,7 +78,6 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
-      selectLayer: this.props.currentLayer.caption,
       type: (params && params.type) || GLOBAL.Type, // 底部Tabbar类型
       allLayersVisible: false,
     }
@@ -88,13 +87,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    let newState = {}
-    if (
-      JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
-    ) {
-      newState.selectLayer = this.props.currentLayer.name
-    }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
@@ -202,7 +194,6 @@ export default class MT_layerManager extends React.Component {
               this.state.data.length === 3 ? this.state.data[2].visible : true,
           },
         ],
-        selectLayer: this.props.currentLayer.name,
         refreshing: false,
         allLayersVisible: this.isAllLayersVisible(layers),
       })
@@ -221,15 +212,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   onAllPressRow = async ({ data, parentData, section }) => {
-    this.props.setCurrentLayer &&
-      this.props.setCurrentLayer(data, () => {
-        // 切换地图，清除历史记录
-        if (
-          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
-        ) {
-          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
-        }
-      })
     // 之前点击的图层组中的某一项
     this.prevItemRef = this.currentItemRef
     let prevParentData =
@@ -237,36 +219,40 @@ export default class MT_layerManager extends React.Component {
       this.prevItemRef.props &&
       this.prevItemRef.props.parentData
     this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
-    if (parentData || prevParentData) {
-      this.setState(
-        {
-          selectLayer: data.name,
-        },
-        () => {
-          if (parentData) {
-            this.getChildList({ data: parentData, section }).then(children => {
-              this.itemRefs[parentData.name] &&
-                this.itemRefs[parentData.name].setChildrenList(children)
-            })
-          }
-          // 若两次选中的item不再同一个图层组中
-          if (
-            prevParentData &&
-            (!parentData || parentData.name !== prevParentData.name)
-          ) {
-            this.getChildList({ data: prevParentData, section }).then(
-              children => {
-                this.itemRefs[prevParentData.name] &&
-                  this.itemRefs[prevParentData.name].setChildrenList(children)
-              },
-            )
-          }
-        },
-      )
+    if (this.props.currentLayer.caption === data.name) {
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(null, () => {
+          // 取消当前地图，清除历史记录
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        })
     } else {
-      this.setState({
-        selectLayer: data.name,
-      })
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(data, () => {
+          // 切换图层，清除历史记录
+          if (
+            JSON.stringify(this.props.currentLayer) !==
+            JSON.stringify(data.name)
+          ) {
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
+          }
+        })
+      if (parentData) {
+        this.getChildList({ data: parentData, section }).then(children => {
+          this.itemRefs[parentData.name] &&
+            this.itemRefs[parentData.name].setChildrenList(children)
+        })
+      }
+      // 若两次选中的item不再同一个图层组中
+      if (
+        prevParentData &&
+        (!parentData || parentData.name !== prevParentData.name)
+      ) {
+        this.getChildList({ data: prevParentData, section }).then(children => {
+          this.itemRefs[prevParentData.name] &&
+            this.itemRefs[prevParentData.name].setChildrenList(children)
+        })
+      }
     }
   }
 
@@ -274,9 +260,6 @@ export default class MT_layerManager extends React.Component {
     // 之前点击的图层组中的某一项
     this.prevItemRef = this.currentItemRef
     this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
-    this.setState({
-      selectLayer: data.name,
-    })
   }
 
   updateTagging = async () => {
@@ -341,35 +324,20 @@ export default class MT_layerManager extends React.Component {
       this.prevItemRef.props &&
       this.prevItemRef.props.parentData
     this.currentItemRef = this.itemRefs && this.itemRefs[data.name]
-    if (parentData || prevParentData) {
-      this.setState(
-        {
-          selectLayer: data.name,
-        },
-        () => {
-          if (parentData) {
-            this.getChildList({ data: parentData, section }).then(children => {
-              this.itemRefs[parentData.name] &&
-                this.itemRefs[parentData.name].setChildrenList(children)
-            })
-          }
-          // 若两次选中的item不再同一个图层组中
-          if (
-            prevParentData &&
-            (!parentData || parentData.name !== prevParentData.name)
-          ) {
-            this.getChildList({ data: prevParentData, section }).then(
-              children => {
-                this.itemRefs[prevParentData.name] &&
-                  this.itemRefs[prevParentData.name].setChildrenList(children)
-              },
-            )
-          }
-        },
-      )
-    } else {
-      this.setState({
-        selectLayer: data.name,
+    if (parentData) {
+      this.getChildList({ data: parentData, section }).then(children => {
+        this.itemRefs[parentData.name] &&
+          this.itemRefs[parentData.name].setChildrenList(children)
+      })
+    }
+    // 若两次选中的item不再同一个图层组中
+    if (
+      prevParentData &&
+      (!parentData || parentData.name !== prevParentData.name)
+    ) {
+      this.getChildList({ data: prevParentData, section }).then(children => {
+        this.itemRefs[prevParentData.name] &&
+          this.itemRefs[prevParentData.name].setChildrenList(children)
       })
     }
   }
@@ -427,7 +395,7 @@ export default class MT_layerManager extends React.Component {
       }
       this.toolBox.setVisible(true, themeType, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[6],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -438,7 +406,7 @@ export default class MT_layerManager extends React.Component {
     ) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[6],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -449,7 +417,7 @@ export default class MT_layerManager extends React.Component {
     ) {
       this.toolBox.setVisible(true, ConstToolType.PLOTTING, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[4],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -457,7 +425,7 @@ export default class MT_layerManager extends React.Component {
     } else if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       this.toolBox.setVisible(true, ConstToolType.MAP_NAVIGATION, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[4],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -465,7 +433,7 @@ export default class MT_layerManager extends React.Component {
     } else {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: isGroup
-          ? ConstToolType.TOOLBAR_HEIGHT[2]
+          ? ConstToolType.TOOLBAR_HEIGHT[3]
           : ConstToolType.TOOLBAR_HEIGHT[5],
         layerData: data,
         refreshParentList: refreshParentList,
@@ -753,7 +721,7 @@ export default class MT_layerManager extends React.Component {
               })
             }}
             getLayers={this.props.getLayers}
-            selectLayer={this.state.selectLayer}
+            isSelected={item.caption === this.props.currentLayer.caption}
             onPress={data => this.onPressRow({ ...data, section })}
             onAllPress={data => this.onAllPressRow({ ...data, section })}
             onArrowPress={({ data }) => this.getChildList({ data, section })}

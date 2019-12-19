@@ -21,6 +21,7 @@ const Profile = {
   //我的——登录
   LOGIN: '登录',
   LOGIN_CURRENT: '当前用户已经登陆',
+  LOGIN_INVALID: '登陆失效，请重新登陆',
   MOBILE_LOGIN: '手机登录',
   EMAIL_LOGIN: '邮箱登录',
   ENTER_EMAIL_OR_USERNAME: '请输入邮箱或昵称',
@@ -40,6 +41,8 @@ const Profile = {
   ENTER_VALID_SERVER_ADDRESS: '请输入合法的服务地址',
   ENTER_REALNAME: '请输入真实姓名',
   ENTER_COMPANY: '请输入工作机构',
+  REGISTER_READ_PROTOCAL: '我已阅读并接受 ',
+  REGISTER_ONLINE_PROTOCAL: '《超图软件用户服务协议》',
   CONNECTING: '连接中',
   CONNECT_SERVER_FAIL: '未能连接到服务器，请检查网络或服务器地址',
   NEXT: '下一步',
@@ -92,6 +95,7 @@ const Profile = {
   DELETE_DATA: '删除数据',
   OPEN_DATA: '打开数据',
   NEW_DATASET: '新建数据集',
+  UPLOAD_DATASET: '分享数据集',
   DELETE_DATASET: '删除数据集',
   UPLOAD_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
@@ -117,6 +121,8 @@ const Profile = {
   SET_AS_PRIVATE_DATA: '设为私有数据',
   SET_AS_PUBLIC_DATA: '设为公有数据',
   NO_SERVICE: '没有服务',
+
+  GET_DATA_FAILED: '数据获取失败',
 
   //关于
   ABOUT: '关于',
@@ -151,6 +157,9 @@ const Profile = {
   SET_DATASOURCE_NAME: '设置数据源名称',
   ENTER_DATASOURCE_NAME: '请输入数据源名称',
   OPEN_DATASROUCE_FAILED: '打开数据源失败',
+
+  SELECT_DATASET_EXPORT_TYPE: '请选择导出类型',
+  DATASET_EXPORT_NOT_SUPPORTED: '暂不支持此数据集的导出',
 
   //搜索
   SEARCH: '搜索',

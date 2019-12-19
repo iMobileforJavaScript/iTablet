@@ -54,7 +54,7 @@ class FriendGroup extends Component {
   }
 
   download = () => {
-    FriendListFileHandle.syncOnlineFriendList()
+    FriendListFileHandle.initFriendList(this.props.user)
     this.setState({ isRefresh: false })
   }
 
@@ -86,6 +86,10 @@ class FriendGroup extends Component {
         //console.log('err', err)
         Toast.show(err.message)
       }
+    } else {
+      this.setState({
+        data: [],
+      })
     }
   }
 

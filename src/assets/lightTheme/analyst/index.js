@@ -41,6 +41,13 @@ const analysis_online_odline = require('./analysis_online_odline_light.png')
 const analysis_online_topology = require('./analysis_online_topology_light.png')
 const analysis_online_features = require('./analysis_online_features_light.png')
 
+/**路径｜商旅分析**/
+const analysis_stop = require('./analysis_stop_light.png')
+const analysis_barrier = require('./analysis_barrier_light.png')
+const analysis_startpoint = require('./analysis_startpoint_light.png')
+const analysis_endpoint = require('./analysis_endpoint_light.png')
+const analysis_analyst = require('./analysis_analyst.png')
+
 export default {
   analysis_adjacent,
   analysis_buffer,
@@ -83,4 +90,10 @@ export default {
   analysis_online_odline,
   analysis_online_topology,
   analysis_online_features,
+
+  analysis_stop,
+  analysis_barrier,
+  analysis_startpoint,
+  analysis_endpoint,
+  analysis_analyst,
 }

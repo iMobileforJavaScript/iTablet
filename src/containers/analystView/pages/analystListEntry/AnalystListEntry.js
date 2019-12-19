@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { FlatList } from 'react-native'
 import { Container } from '../../../../components'
+import { ConstToolType } from '../../../../constants'
 import styles from './styles'
 import NavigationService from '../../../NavigationService'
 import { AnalystListItem } from '../../components'
-import { Analyst_Types } from '../../AnalystType'
+// import { Analyst_Types } from '../../AnalystType'
 import AnalystEntryData from './AnalystEntryData'
 
 export default class AnalystListEntry extends Component {
@@ -22,7 +23,8 @@ export default class AnalystListEntry extends Component {
     super(props)
     const { params } = props.navigation.state
     this.cb = params && params.cb
-    this.type = (params && params.type) || Analyst_Types.ONLINE_ANALYSIS
+    this.type =
+      (params && params.type) || ConstToolType.MAP_ANALYSIS_ONLINE_ANALYSIS
     // TODO 根据类型获取数据列表
     this.state = {
       title: (params && params.title) || '',
@@ -41,31 +43,31 @@ export default class AnalystListEntry extends Component {
   getData = type => {
     let data = []
     switch (type) {
-      case Analyst_Types.OPTIMAL_PATH:
+      case ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH:
         data =
           AnalystEntryData.getLocalAnalystEntryData(
             this.props.language,
-            Analyst_Types.OPTIMAL_PATH,
+            ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH,
           ) || []
         break
-      case Analyst_Types.CONNECTIVITY_ANALYSIS:
+      case ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS:
         data =
           AnalystEntryData.getLocalAnalystEntryData(
             this.props.language,
-            Analyst_Types.CONNECTIVITY_ANALYSIS,
+            ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS,
           ) || []
         break
-      case Analyst_Types.FIND_TSP_PATH:
+      case ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH:
         data =
           AnalystEntryData.getLocalAnalystEntryData(
             this.props.language,
-            Analyst_Types.FIND_TSP_PATH,
+            ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH,
           ) || []
         break
-      case Analyst_Types.ONLINE_ANALYSIS:
+      case ConstToolType.MAP_ANALYSIS_ONLINE_ANALYSIS:
         data = AnalystEntryData.getOnlineAnalystData(this.props.language) || []
         break
-      case Analyst_Types.OVERLAY_ANALYSIS:
+      case ConstToolType.MAP_ANALYSIS_OVERLAY_ANALYSIS:
       default:
         data = AnalystEntryData.getOverlayAnalystData(this.props.language) || []
         break

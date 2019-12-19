@@ -1,4 +1,4 @@
-import WorkspaceFlieList from './WorkspaceFlieList'
+import WorkspaceFileList from './WorkspaceFileList'
 import { connect } from 'react-redux'
 import {
   setEditLayer,
@@ -22,4 +22,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(WorkspaceFlieList)
+)(WorkspaceFileList)

@@ -44,6 +44,7 @@ export default class Map3D extends React.Component {
     latestMap: Object,
     navigation: Object,
     online: Object,
+    toolbarStatus: Object,
     downloads: Array,
     setEditLayer: () => {},
     setLatestMap: () => {},
@@ -55,6 +56,7 @@ export default class Map3D extends React.Component {
     device: Object,
     setBackAction: () => {},
     removeBackAction: () => {},
+    setToolbarStatus: () => {},
   }
 
   constructor(props) {

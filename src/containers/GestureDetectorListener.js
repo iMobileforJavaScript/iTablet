@@ -41,13 +41,15 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_BEGIN:
       (async function() {
-        GLOBAL.STARTX = event.LLPoint.x
-        GLOBAL.STARTY = event.LLPoint.y
-        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
-        let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
-        if (isIndoorMap) {
+        if (!GLOBAL.ISOUTDOORMAP) {
+          let result = await SMap.isIndoorPoint(
+            event.LLPoint.x,
+            event.LLPoint.y,
+          )
           if (result.isindoor) {
+            GLOBAL.STARTX = event.LLPoint.x
+            GLOBAL.STARTY = event.LLPoint.y
             await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
@@ -55,24 +57,32 @@ async function longtouchCallback(event) {
             )
           }
         } else {
+          if (
+            Math.sqrt(
+              Math.pow(event.LLPoint.x - GLOBAL.ENDX, 2) +
+                Math.pow(event.LLPoint.y - GLOBAL.ENDY, 2),
+            ) < 0.001
+          ) {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+            return
+          }
+          GLOBAL.STARTX = event.LLPoint.x
+          GLOBAL.STARTY = event.LLPoint.y
           await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
-        }
-        if (result.isindoor) {
-          GLOBAL.INDOORSTART = true
-        } else {
-          GLOBAL.INDOORSTART = false
         }
       }.bind(this)())
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
-        GLOBAL.ENDX = event.LLPoint.x
-        GLOBAL.ENDY = event.LLPoint.y
-        let result = await SMap.isIndoorPoint(event.LLPoint.x, event.LLPoint.y)
-        let isIndoorMap = await SMap.isIndoorMap()
         //室内地图只允许在室内标注点
-        if (isIndoorMap) {
+        if (!GLOBAL.ISOUTDOORMAP) {
+          let result = await SMap.isIndoorPoint(
+            event.LLPoint.x,
+            event.LLPoint.y,
+          )
           if (result.isindoor) {
+            GLOBAL.ENDX = event.LLPoint.x
+            GLOBAL.ENDY = event.LLPoint.y
             await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
           } else {
             Toast.show(
@@ -80,12 +90,18 @@ async function longtouchCallback(event) {
             )
           }
         } else {
+          if (
+            Math.sqrt(
+              Math.pow(event.LLPoint.x - GLOBAL.STARTX, 2) +
+                Math.pow(event.LLPoint.y - GLOBAL.STARTY, 2),
+            ) < 0.001
+          ) {
+            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+            return
+          }
+          GLOBAL.ENDX = event.LLPoint.x
+          GLOBAL.ENDY = event.LLPoint.y
           await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
-        }
-        if (result.isindoor) {
-          GLOBAL.INDOOREND = true
-        } else {
-          GLOBAL.INDOOREND = false
         }
       }.bind(this)())
       break
@@ -93,7 +109,7 @@ async function longtouchCallback(event) {
 }
 let isfull = false
 async function touchCallback(event) {
-  let isGuiding = false
+  let guideInfo
   switch (GLOBAL.TouchType) {
     case TouchType.NORMAL:
       if (
@@ -103,8 +119,14 @@ async function touchCallback(event) {
       ) {
         GLOBAL.PoiInfoContainer.hidden()
       }
-      isGuiding = await SMap.isGuiding()
-      if (!isGuiding) {
+      guideInfo = await SMap.isGuiding()
+      if (
+        !guideInfo.isOutdoorGuiding &&
+        !guideInfo.isIndoorGuiding &&
+        (!GLOBAL.NAVIGATIONSTARTHEAD ||
+          !GLOBAL.NAVIGATIONSTARTHEAD.state.show) &&
+        !GLOBAL.PoiInfoContainer.state.visible
+      ) {
         if (!(await isDoubleTouchComing())) {
           if (isfull) {
             GLOBAL.toolBox && GLOBAL.toolBox.existFullMap()

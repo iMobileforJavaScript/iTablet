@@ -82,8 +82,9 @@ export default class NavigationStartButton extends React.Component {
         ]
   }
 
-  setVisible = iShow => {
+  setVisible = (iShow, isOnline = false) => {
     this.setState({ show: iShow })
+    this.isOnline = isOnline
   }
 
   changeHeight = () => {
@@ -115,8 +116,53 @@ export default class NavigationStartButton extends React.Component {
       )
     }
   }
+  realNavigation = async () => {
+    if (this.isOnline) {
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
+      return
+    }
+    let position = await SMap.getCurrentPosition()
+    if (!GLOBAL.ISOUTDOORMAP) {
+      let rel = await SMap.isIndoorPoint(position.x, position.y)
+      if (rel.isindoor) {
+        SMap.indoorNavigation(0)
+        this.setVisible(false)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+      } else {
+        Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
+      }
+    } else if (GLOBAL.ISOUTDOORMAP) {
+      let naviData = this.props.getNavigationDatas()
+      let isInBounds = await SMap.isInBounds(position, naviData.selectedDataset)
+      if (isInBounds) {
+        SMap.outdoorNavigation(0)
+        this.setVisible(false)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+      } else {
+        Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
+      }
+    }
+  }
 
-  //todo 各种方向相关的符号没图
+  simulatedNavigation = async () => {
+    if (this.isOnline) {
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
+      return
+    }
+    this.setVisible(false)
+    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
+    if (GLOBAL.ISOUTDOORMAP) {
+      SMap.outdoorNavigation(1)
+    }
+    if (!GLOBAL.ISOUTDOORMAP) {
+      SMap.indoorNavigation(1)
+    }
+  }
+
   getIconByType = type => {
     let icon
     switch (type) {
@@ -127,50 +173,70 @@ export default class NavigationStartButton extends React.Component {
         icon = getPublicAssets().navigation.icon_nav_end
         break
       case 0:
+        icon = getPublicAssets().navigation.icon_go_straight
         break
       case 1:
+        icon = getPublicAssets().navigation.icon_front_left_turn
         break
       case 2:
+        icon = getPublicAssets().navigation.icon_front_right_turn
         break
       case 3:
+        icon = getPublicAssets().navigation.icon_turn_left
         break
       case 4:
+        icon = getPublicAssets().navigation.icon_turn_right
         break
       case 5:
+        icon = getPublicAssets().navigation.icon_back_left_turn
         break
       case 6:
+        icon = getPublicAssets().navigation.icon_back_right_turn
         break
       case 7:
+        icon = getPublicAssets().navigation.icon_U_turn
         break
       case 8:
-        break
       case 9:
+        icon = null
         break
       case 10:
+        icon = getPublicAssets().navigation.icon_enter_roundabout
         break
       case 11:
+        icon = getPublicAssets().navigation.icon_exit_roundabout
         break
       case 12:
+        icon = getPublicAssets().navigation.icon_arrive_destination
         break
       case 13:
+        icon = getPublicAssets().navigation.icon_elevator_up
         break
       case 14:
+        icon = getPublicAssets().navigation.icon_elevator_down
         break
       case 15:
+        icon = getPublicAssets().navigation.icon_escalator_up
         break
       case 16:
+        icon = getPublicAssets().navigation.icon_escalator_down
         break
       case 17:
+        icon = getPublicAssets().navigation.icon_stairs_up
         break
       case 18:
+        icon = getPublicAssets().navigation.icon_stairs_down
         break
       case 19:
+        icon = getPublicAssets().navigation.icon_route_point
         break
     }
     return icon
   }
   renderItem = ({ item }) => {
-    let roadLength = item.roadLength
+    let roadLength = item.roadLength || item.length
+    let turnType =
+      item.turnType !== undefined ? item.turnType : item.dirToSwerve
     if (roadLength > 1000)
       roadLength =
         (roadLength / 1000).toFixed(1) +
@@ -180,20 +246,23 @@ export default class NavigationStartButton extends React.Component {
         (roadLength || 1) + getLanguage(GLOBAL.language).Map_Main_Menu.METERS
     let str = ''
     let thenInfo = GLOBAL.language === 'CN' ? '然后' : 'and then'
-    if (item.turnType === 'start' || item.turnType === 'end') {
+    if (turnType === 'start' || turnType === 'end') {
       str = item.text
-    } else if (item.turnType === 0) {
-      str = `${this.directions[item.turnType]} ${roadLength}`
-    } else if (item.turnType === 12) {
+    } else if (turnType === 0) {
+      str = `${this.directions[turnType]} ${roadLength}`
+    } else if (turnType === 12) {
       str = `${
         getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
       }${roadLength}`
     } else {
       str = `${
         getLanguage(GLOBAL.language).Map_Main_Menu.GO_STRAIGHT
-      } ${roadLength} ${thenInfo} ${this.directions[item.turnType]}`
+      } ${roadLength} ${thenInfo} ${this.directions[turnType]}`
     }
-    let icon = this.getIconByType(item.turnType)
+    if (item.routeName && GLOBAL.language === 'CN') {
+      str = `沿${item.routeName}${str}`
+    }
+    let icon = this.getIconByType(turnType)
     return (
       <View>
         <View
@@ -287,7 +356,7 @@ export default class NavigationStartButton extends React.Component {
           numberOfLines={1}
           ellipsizeMode={'tail'}
         >
-          {GLOBAL.ENDPOINT}
+          {GLOBAL.ENDNAME}
         </Text>
       </View>
     )
@@ -353,31 +422,8 @@ export default class NavigationStartButton extends React.Component {
                 alignItems: 'center',
                 marginTop: scaleSize(20),
               }}
-              onPress={async () => {
-                let position = await SMap.getCurrentPosition()
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  let rel = await SMap.isIndoorPoint(position.x, position.y)
-                  if (rel.isindoor) {
-                    SMap.indoorNavigation(0)
-                    this.setVisible(false)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                  } else {
-                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
-                  }
-                } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  let naviData = this.props.getNavigationDatas()
-                  let isInBounds = await SMap.isInBounds(
-                    position,
-                    naviData.selectedDataset,
-                  )
-                  if (isInBounds) {
-                    SMap.outdoorNavigation(0)
-                    this.setVisible(false)
-                    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                  } else {
-                    Toast.show('当前位置不在地图导航范围内，请使用模拟导航')
-                  }
-                }
+              onPress={() => {
+                this.realNavigation()
               }}
             >
               <Text
@@ -402,14 +448,7 @@ export default class NavigationStartButton extends React.Component {
                 marginTop: scaleSize(20),
               }}
               onPress={() => {
-                this.setVisible(false)
-                GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-                if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
-                  SMap.outdoorNavigation(1)
-                }
-                if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
-                  SMap.indoorNavigation(1)
-                }
+                this.simulatedNavigation()
               }}
             >
               <Text

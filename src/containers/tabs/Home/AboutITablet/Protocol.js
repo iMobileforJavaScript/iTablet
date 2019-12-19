@@ -8,10 +8,11 @@ import {
   LayoutAnimation,
 } from 'react-native'
 import { Container, MTBtn } from '../../../../components'
-import Toast from '../../../../utils/Toast'
+import { Toast, scaleSize, OnlineServicesUtils } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
-import { scaleSize } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
+import RNFS from 'react-native-fs'
+import { FileTools } from '../../../../native'
 
 export default class protocol extends Component {
   props: {
@@ -49,7 +50,68 @@ export default class protocol extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isLoadWebView: true })
+    this.preLoad()
+  }
+
+  preLoad = async () => {
+    if (this.type === 'userHelp') {
+      let commonPath = await FileTools.appendingHomeDirectory(
+        '/iTablet/Common/',
+      )
+      let guidePath = 'iTablet_10i_sp1使用帮助/iTablet_10i_sp1使用帮助.html'
+      if (await RNFS.exists(commonPath + guidePath)) {
+        this.setState({ isLoadWebView: true })
+      } else {
+        let result = await this.downloadUserGuide()
+        this._onLoadStart()
+        if (result) {
+          this.setState({ isLoadWebView: true })
+        } else {
+          Toast.show(getLanguage(global.language).Prompt.NETWORK_REQUEST_FAILED)
+        }
+      }
+    } else {
+      this.setState({ isLoadWebView: true })
+    }
+  }
+
+  downloadUserGuide = async () => {
+    try {
+      let commonPath = await FileTools.appendingHomeDirectory(
+        '/iTablet/Common/',
+      )
+      let JSOnlineService = new OnlineServicesUtils('online')
+      let data = await JSOnlineService.getPublicDataByName(
+        '927528',
+        'iTablet_10i_sp1使用帮助.zip',
+      )
+      let url = `https://www.supermapol.com/web/datas/${data.id}/download`
+
+      let filePath = commonPath + data.fileName
+
+      if (await RNFS.exists(filePath)) {
+        await RNFS.unlink(filePath)
+      }
+
+      let downloadOptions = {
+        fromUrl: url,
+        toFile: filePath,
+        background: true,
+        fileName: data.fileName,
+        progressDivider: 1,
+      }
+
+      await RNFS.downloadFile(downloadOptions).promise
+      let result = false
+      if (await RNFS.exists(filePath)) {
+        result = await FileTools.unZipFile(filePath, commonPath)
+
+        await RNFS.unlink(filePath)
+      }
+      return result
+    } catch (error) {
+      // console.log(error)
+    }
   }
 
   _onLoadStart = () => {
@@ -103,15 +165,22 @@ export default class protocol extends Component {
         title = 'SuperMap'
         break
       case 'protocol':
-        if (global.language === 'CN') {
-          source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/protocol.html',
-          }
+        if (Platform.OS === 'android') {
+          source =
+            global.language === 'CN'
+              ? {
+                uri:
+                    'file:///android_asset/SuperMapUserServiceAgreement_CN.html',
+              }
+              : {
+                uri:
+                    'file:///android_asset/SuperMapUserServiceAgreement_EN.html',
+              }
         } else {
-          source = {
-            uri:
-              'http://111.202.121.144:8088/iTablet/home/help/protocol_en.html',
-          }
+          source =
+            global.language === 'CN'
+              ? require('../../../../assets/Protocol/SuperMapUserServiceAgreement_CN.html')
+              : require('../../../../assets/Protocol/SuperMapUserServiceAgreement_EN.html')
         }
         title = getLanguage(global.language).Profile.SERVICE_AGREEMENT
         break
@@ -169,13 +238,18 @@ export default class protocol extends Component {
         //'超图知道'
         break
       case 'userHelp':
-        if (global.language === 'CN') {
+        if (Platform.OS === 'android') {
           source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/help.html',
+            uri:
+              'file:///' +
+              global.homePath +
+              '/iTablet/Common/iTablet_10i_sp1使用帮助/iTablet_10i_sp1使用帮助.html',
           }
         } else {
           source = {
-            uri: 'http://111.202.121.144:8088/iTablet/home/help/help_en.html',
+            uri:
+              global.homePath +
+              '/iTablet/Common/iTablet_10i_sp1使用帮助/iTablet_10i_sp1使用帮助.html',
           }
         }
         title = getLanguage(global.language).Prompt.INSTRUCTION_MANUAL
@@ -192,6 +266,20 @@ export default class protocol extends Component {
           uri: `https://sso.supermap.com/register?service=http://www.supermapol.com`,
         }
         title = '注册'
+        break
+      case 'SuperMapOnlineProtocal':
+        if (global.language === 'CN') {
+          source = {
+            uri:
+              'https://sso.supermap.com/agreement.html?service=https://www.supermapol.com',
+          }
+        } else {
+          source = {
+            uri:
+              'https://sso.supermap.com/agreement_en.html?service=http://www.supermapol.com',
+          }
+        }
+        title = getLanguage(global.language).Profile.SERVICE_AGREEMENT
         break
       default:
         break
@@ -271,7 +359,9 @@ export default class protocol extends Component {
             }}
           />
         ) : (
-          <View style={{ flex: 1, paddingTop: 0 }} />
+          <View style={{ flex: 1, paddingTop: 0 }}>
+            {this._renderLoading()}
+          </View>
         )}
       </Container>
     )

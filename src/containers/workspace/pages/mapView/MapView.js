@@ -14,7 +14,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  // SAIDetectView,
+  SAIDetectView,
   SSpeechRecognizer,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -66,6 +66,7 @@ import {
   StyleUtils,
   setSpText,
   LayerUtils,
+  FetchUtils,
 } from '../../../../utils'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -91,7 +92,7 @@ import {
 } from 'react-native'
 import { getLanguage } from '../../../../language/index'
 import styles from './styles'
-import { Analyst_Types } from '../../../analystView/AnalystType'
+// import { Analyst_Types } from '../../../analystView/AnalystType'
 import Orientation from 'react-native-orientation'
 import {
   ColorTable,
@@ -122,7 +123,6 @@ export default class MapView extends React.Component {
     navigationChangeAR: PropTypes.bool,
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
-    mapSelectPoint: PropTypes.object,
     navigationhistory: PropTypes.array,
 
     bufferSetting: PropTypes.object,
@@ -136,6 +136,7 @@ export default class MapView extends React.Component {
     analyst: PropTypes.object,
     downloads: PropTypes.array,
     mapSearchHistory: PropTypes.array,
+    toolbarStatus: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -177,11 +178,11 @@ export default class MapView extends React.Component {
     removeBackAction: PropTypes.func,
     setAnalystParams: PropTypes.func,
     setMapSearchHistory: PropTypes.func,
-    setMapSelectPoint: PropTypes.func,
     setNavigationHistory: PropTypes.func,
     setOpenOnlineMap: PropTypes.func,
     downloadFile: PropTypes.func,
     deleteDownloadFile: PropTypes.func,
+    setToolbarStatus: PropTypes.func,
   }
 
   constructor(props) {
@@ -230,6 +231,13 @@ export default class MapView extends React.Component {
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
+      showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
+    }
+    this.currentFloorID = ''
+    //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
+    this.searchClickedInfo = {
+      isClicked: false,
+      title: '',
     }
     this.closeInfo = [
       {
@@ -265,16 +273,38 @@ export default class MapView extends React.Component {
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
 
-    this.selectedDataset = null
+    this.selectedDataset = {}
     this.floorHiddenListener = null
   }
 
   addFloorHiddenListener = () => {
-    this.floorHiddenListener = SMap.addFloorHiddenListener(result => {
-      if (result.currentFloorID !== this.state.currentFloorID) {
-        this.setState({
-          currentFloorID: result.currentFloorID,
-        })
+    this.floorHiddenListener = SMap.addFloorHiddenListener(async result => {
+      //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
+      // 使用this.currentFloorID 使ID发生变化时只渲染一次
+      if (
+        result.currentFloorID !== this.currentFloorID &&
+        !(
+          (GLOBAL.MAPSELECTPOINTBUTTON &&
+            GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
+          (GLOBAL.NAVIGATIONSTARTHEAD &&
+            GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
+          GLOBAL.PoiTopSearchBar.state.visible
+        )
+      ) {
+        this.currentFloorID = result.currentFloorID
+        let guideInfo = await SMap.isGuiding()
+        if (!guideInfo.isOutdoorGuiding) {
+          this.setState(
+            {
+              currentFloorID: result.currentFloorID,
+            },
+            () => {
+              GLOBAL.ISOUTDOORMAP = !result.currentFloorID
+            },
+          )
+        } else {
+          this.currentFloorID = this.state.currentFloorID
+        }
       }
     })
   }
@@ -282,23 +312,6 @@ export default class MapView extends React.Component {
   componentDidMount() {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       this.addFloorHiddenListener()
-      SMap.setStartPointNameListener({
-        callback: result => {
-          this.props.setMapSelectPoint({
-            firstPoint: result,
-            secondPoint: this.props.mapSelectPoint.secondPoint,
-          })
-        },
-      })
-      SMap.setEndPointNameListener({
-        callback: result => {
-          this.props.setMapSelectPoint({
-            firstPoint: this.props.mapSelectPoint.firstPoint,
-            secondPoint: result,
-          })
-          GLOBAL.ENDPOINT = result
-        },
-      })
     }
     this.container &&
       this.container.setLoading(
@@ -344,10 +357,12 @@ export default class MapView extends React.Component {
         GLOBAL.STARTX = undefined
         GLOBAL.ENDX = undefined
         GLOBAL.ROUTEANALYST = undefined
-        this.props.setMapSelectPoint({
-          firstPoint: '',
-          secondPoint: '',
-        })
+        GLOBAL.STARTNAME = getLanguage(
+          GLOBAL.language,
+        ).Map_Main_Menu.SELECT_START_POINT
+        GLOBAL.ENDNAME = getLanguage(
+          GLOBAL.language,
+        ).Map_Main_Menu.SELECT_DESTINATION
         SMap.clearPoint()
       },
     })
@@ -419,10 +434,12 @@ export default class MapView extends React.Component {
           this.toolBox.setVisible(false, null, {
             cb: () => {
               if (
-                this.props.analyst.params.type === Analyst_Types.OPTIMAL_PATH ||
                 this.props.analyst.params.type ===
-                  Analyst_Types.CONNECTIVITY_ANALYSIS ||
-                this.props.analyst.params.type === Analyst_Types.FIND_TSP_PATH
+                  ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH ||
+                this.props.analyst.params.type ===
+                  ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS ||
+                this.props.analyst.params.type ===
+                  ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH
               ) {
                 this.container && this.container.setHeaderVisible(false)
               } else {
@@ -521,6 +538,11 @@ export default class MapView extends React.Component {
   componentWillUnmount() {
     if (GLOBAL.Type === constants.MAP_AR) {
       global.isPad && Orientation.unlockAllOrientations()
+    }
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      (async function() {
+        await SMap.destroySpeakPlugin()
+      })()
     }
     if (this.floorHiddenListener) {
       this.floorHiddenListener.remove()
@@ -1194,6 +1216,7 @@ export default class MapView extends React.Component {
       }
     })
     this.props.setCurrentAttribute({})
+    this.setState({ showScaleView: false })
     // this.props.getAttributes({})
     return true
   }
@@ -1284,10 +1307,15 @@ export default class MapView extends React.Component {
               ConstPath.RelativePath.Plotting +
               'PlotLibData',
           )
-          await this.props.getSymbolPlots({
-            path: plotIconPath,
-            isFirst: true,
-          })
+          this.props.getSymbolPlots(
+            {
+              path: plotIconPath,
+              isFirst: true,
+            },
+            () => {
+              GLOBAL.isInitSymbolPlotsEnd = true
+            },
+          )
           GLOBAL.newPlotMapName = ''
         }
 
@@ -1335,7 +1363,10 @@ export default class MapView extends React.Component {
         this.mapLoaded = true
         this._addGeometrySelectedListener()
 
-        setGestureDetectorListener({ ...this.props })
+        setGestureDetectorListener({
+          getNavigationDatas: this.getNavigationDatas,
+          ...this.props,
+        })
         GLOBAL.TouchType = TouchType.NORMAL
 
         await SMap.openTaggingDataset(this.props.user.currentUser.userName)
@@ -1344,8 +1375,8 @@ export default class MapView extends React.Component {
           this.props.user.currentUser.userName,
         )
 
-        //地图打开后去获取比例尺、图例数据
-        GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
+        //地图打开后显示比例尺，获取图例数据
+        this.setState({ showScaleView: true })
         GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&
@@ -1363,15 +1394,18 @@ export default class MapView extends React.Component {
           SMap.setIsMagnifierEnabled(false)
         }
         SMap.setPOIOptimized(true)
-        this.props.setMap2Dto3D(true)
-        this.props.setMapNavigation({ isShow: false, name: '' })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+          this.props.setMap2Dto3D(true)
+          this.props.setMapNavigation({ isShow: false, name: '' })
           let currentFloorID = await SMap.getCurrentFloorID()
           this.changeFloorID(currentFloorID)
-          this.props.setMapSelectPoint({
-            firstPoint: '',
-            secondPoint: '',
-          })
+          await SMap.initSpeakPlugin()
+          GLOBAL.STARTNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_START_POINT
+          GLOBAL.ENDNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_DESTINATION
         }
 
         if (hasMap) await SMap.saveMap('', false, false)
@@ -1529,9 +1563,12 @@ export default class MapView extends React.Component {
   /** 地图分析模式左侧按钮 **/
   renderAnalystMapButtons = () => {
     if (
-      this.props.analyst.params.type !== Analyst_Types.OPTIMAL_PATH &&
-      this.props.analyst.params.type !== Analyst_Types.CONNECTIVITY_ANALYSIS &&
-      this.props.analyst.params.type !== Analyst_Types.FIND_TSP_PATH
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH &&
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS &&
+      this.props.analyst.params.type !==
+        ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH
     )
       return null
     return (
@@ -1769,6 +1806,9 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
         )
         this.props.navigation.navigate('LayerManager')
+        if (Platform.OS === 'ios') {
+          await SAIDetectView.clearClickAIRecognition()
+        }
       }
     }.bind(this)())
   }
@@ -1883,7 +1923,7 @@ export default class MapView extends React.Component {
         //{'是否开启动态投影？'}
         confirmBtnTitle={getLanguage(this.props.language).Prompt.TURN_ON}
         //{'是'}
-        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.NO}
         //{'否'}
       />
     )
@@ -2111,6 +2151,7 @@ export default class MapView extends React.Component {
                 NavigationService.navigate('PointAnalyst', {
                   type: 'pointSearch',
                 })
+                this.changeFloorID('')
               } else {
                 Toast.show(
                   getLanguage(this.props.language).Prompt
@@ -2261,6 +2302,7 @@ export default class MapView extends React.Component {
     }
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
+      this.FloorListView.setVisible(false)
       if (!this.state.isRight) {
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
           containerType: 'table',
@@ -2286,25 +2328,6 @@ export default class MapView extends React.Component {
     }
   }
 
-  _renderARNavigationIcon = () => {
-    return (
-      <View style={styles.arnavigation}>
-        <MTBtn
-          style={styles.iconNav}
-          size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/Navigation/switch_ar_2d.png')}
-          activeOpacity={0.5}
-          onPress={this.changeAR}
-        />
-      </View>
-    )
-  }
-
-  changeAR = () => {
-    Toast.show('提示：超过1.5km则无法显示目的地')
-    NavigationService.navigate('ArView')
-  }
-
   // _renderNavigationView = () => {
   //   return (
   //     <View
@@ -2320,14 +2343,20 @@ export default class MapView extends React.Component {
   // }
   changeFloorID = currentFloorID => {
     if (currentFloorID !== this.state.currentFloorID) {
-      this.setState({
-        currentFloorID,
-      })
+      this.setState(
+        {
+          currentFloorID,
+        },
+        () => {
+          GLOBAL.ISOUTDOORMAP = !currentFloorID
+        },
+      )
     }
   }
   _renderFloorListView = () => {
     return (
       <RNFloorListView
+        changeFloorID={this.changeFloorID}
         currentFloorID={this.state.currentFloorID}
         device={this.props.device}
         mapLoaded={this.mapLoaded}
@@ -2429,6 +2458,49 @@ export default class MapView extends React.Component {
       />
     )
   }
+  getSearchClickedInfo = () => {
+    return this.searchClickedInfo
+  }
+  _renderMapSelectPointHeaderRight = () => {
+    if (!this.state.currentFloorID) {
+      return (
+        <TouchableOpacity
+          key={'search'}
+          onPress={async () => {
+            let layers = this.props.getLayers && (await this.props.getLayers())
+            let baseMap = layers.filter(layer =>
+              LayerUtils.isBaseLayer(layer.name),
+            )[0]
+            if (baseMap && baseMap.name !== 'baseMap' && baseMap.isVisible) {
+              this.searchClickedInfo = {
+                isClicked: true,
+                title: GLOBAL.MAPSELECTPOINTBUTTON.state.button,
+              }
+              GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+              NavigationService.navigate('PointAnalyst', {
+                type: 'pointSearch',
+                searchClickedInfo: this.searchClickedInfo,
+                changeNavPathInfo: this.changeNavPathInfo,
+              })
+            } else {
+              Toast.show(
+                getLanguage(this.props.language).Prompt
+                  .PLEASE_SET_BASEMAP_VISIBLE,
+              )
+            }
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/header/icon_search.png')}
+            style={styles.search}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return null
+    }
+  }
 
   _renderMapSelectPoint = () => {
     return (
@@ -2440,6 +2512,7 @@ export default class MapView extends React.Component {
             .LONG_PRESS_SELECT_POINTS,
           navigation: this.props.navigation,
           type: 'fix',
+          headerRight: this._renderMapSelectPointHeaderRight(),
           backAction: () => {
             GLOBAL.MAPSELECTPOINT.setVisible(false)
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
@@ -2450,6 +2523,56 @@ export default class MapView extends React.Component {
         }}
       />
     )
+  }
+
+  _onlineRouteAnylystConfirm = async () => {
+    GLOBAL.NavDialog.setDialogVisible(false)
+    this.setLoading(true, getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING)
+    let result, path, pathLength
+    result = await FetchUtils.routeAnalyst(
+      GLOBAL.STARTX,
+      GLOBAL.STARTY,
+      GLOBAL.ENDX,
+      GLOBAL.ENDY,
+    )
+    if (result && result[0] && result[0].pathInfos) {
+      await SMap.drawOnlinePath(result[0].pathPoints)
+    } else {
+      this.setLoading(false)
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+      return
+    }
+    pathLength = { length: result[0].pathLength }
+    path = result[0].pathInfos
+
+    this.setLoading(false)
+    GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
+    GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+    GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
+    GLOBAL.MAPSELECTPOINT.setVisible(false)
+    GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+
+    if (path && pathLength) {
+      GLOBAL.TouchType = TouchType.NORMAL
+      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
+      this.changeNavPathInfo({ path, pathLength })
+
+      let history = this.props.navigationhistory
+      history.push({
+        sx: GLOBAL.STARTX,
+        sy: GLOBAL.STARTY,
+        ex: GLOBAL.ENDX,
+        ey: GLOBAL.ENDY,
+        sFloor: GLOBAL.STARTPOINTFLOOR,
+        eFloor: GLOBAL.ENDPOINTFLOOR,
+        address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+        start: GLOBAL.STARTNAME,
+        end: GLOBAL.ENDNAME,
+        isOutDoor: true,
+      })
+      this.props.setNavigationHistory(history)
+    }
   }
 
   changeNavPathInfo = ({ path, pathLength }) => {
@@ -2474,8 +2597,6 @@ export default class MapView extends React.Component {
     return (
       <NavigationStartHead
         ref={ref => (GLOBAL.NAVIGATIONSTARTHEAD = ref)}
-        setMapSelectPoint={this.props.setMapSelectPoint}
-        mapSelectPoint={this.props.mapSelectPoint}
         setMapNavigation={this.props.setMapNavigation}
       />
     )
@@ -2484,10 +2605,10 @@ export default class MapView extends React.Component {
   _renderMapSelectPointButton = () => {
     return (
       <MapSelectPointButton
+        setLoading={this.setLoading}
+        getNavigationDatas={this.getNavigationDatas}
         navigationhistory={this.props.navigationhistory}
         setNavigationHistory={this.props.setNavigationHistory}
-        mapSelectPoint={this.props.mapSelectPoint}
-        setMapSelectPoint={this.props.setMapSelectPoint}
         changeNavPathInfo={this.changeNavPathInfo}
         ref={ref => (GLOBAL.MAPSELECTPOINTBUTTON = ref)}
       />
@@ -2590,10 +2711,6 @@ export default class MapView extends React.Component {
           this._renderNavigationIcon()}
         {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderLocationIcon()}
         {!this.isExample &&
-          GLOBAL.Type === constants.MAP_NAVIGATION &&
-          this.props.navigationChangeAR &&
-          this._renderARNavigationIcon()}
-        {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
         {/*{!this.isExample && this.props.analyst.params && this.renderAnalystMapRecommend()}*/}
@@ -2617,8 +2734,9 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {!this.state.showAIDetect && !this.props.mapNavigation.isShow && (
+        {!this.state.showAIDetect && this.state.showScaleView && (
           <ScaleView
+            mapNavigation={this.props.mapNavigation}
             device={this.props.device}
             language={this.props.language}
             isShow={this.props.mapScaleView}
@@ -2670,9 +2788,9 @@ export default class MapView extends React.Component {
           setMapNavigation={this.props.setMapNavigation}
         />
         <PoiInfoContainer
-          mapSelectPoint={this.props.mapSelectPoint}
-          setNavigationDatas={this.setNavigationDatas}
-          setMapSelectPoint={this.props.setMapSelectPoint}
+          setLoading={this.setLoading}
+          getSearchClickedInfo={this.getSearchClickedInfo}
+          getNavigationDatas={this.getNavigationDatas}
           changeNavPathInfo={this.changeNavPathInfo}
           ref={ref => (GLOBAL.PoiInfoContainer = ref)}
           mapSearchHistory={this.props.mapSearchHistory}
@@ -2697,6 +2815,27 @@ export default class MapView extends React.Component {
           recording={this.state.recording}
           defaultText={getLanguage(global.language).Prompt.SPEECH_TIP}
         />
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <Dialog
+            ref={ref => (GLOBAL.NavDialog = ref)}
+            confirmAction={this._onlineRouteAnylystConfirm}
+            opacity={1}
+            opacityStyle={styles.dialogBackground}
+            style={styles.dialogBackground}
+            confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+            cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
+          >
+            <View style={styles.dialogHeaderView}>
+              <Image
+                source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+                style={styles.dialogHeaderImg}
+              />
+              <Text style={styles.promptTitle}>
+                {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
+              </Text>
+            </View>
+          </Dialog>
+        )}
       </Container>
     )
   }

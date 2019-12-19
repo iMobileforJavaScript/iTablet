@@ -26,6 +26,7 @@ const persistConfig = {
     'backActions',
     'analyst',
     'localData',
+    'toolbarStatus',
   ],
 }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

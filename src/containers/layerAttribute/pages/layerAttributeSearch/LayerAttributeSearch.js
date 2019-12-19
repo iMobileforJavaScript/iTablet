@@ -219,7 +219,8 @@ export default class LayerAttributeSearch extends React.Component {
   renderMapLayerAttribute = () => {
     if (
       !this.state.attributes ||
-      (!this.state.attributes.data && this.state.attributes.data.length === 0)
+      !this.state.attributes.data ||
+      this.state.attributes.data.length === 0
     )
       return null
     return (
@@ -242,9 +243,9 @@ export default class LayerAttributeSearch extends React.Component {
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
-          this.state.attributes.data.length > 1
-            ? LayerAttributeTable.Type.MULTI_DATA
-            : LayerAttributeTable.Type.SINGLE_DATA
+          this.state.attributes.data.length === 1
+            ? LayerAttributeTable.Type.SINGLE_DATA
+            : LayerAttributeTable.Type.MULTI_DATA
         }
         // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
         indexColumn={0}
@@ -305,8 +306,8 @@ export default class LayerAttributeSearch extends React.Component {
       >
         {this.state.showTable &&
         this.state.attributes &&
-        this.state.attributes.head
-          ? this.state.attributes.head.length > 0
+        this.state.attributes.data
+          ? this.state.attributes.data.length > 0
             ? this.renderMapLayerAttribute()
             : this.renderInfoView({
               title: getLanguage(this.props.language).Prompt

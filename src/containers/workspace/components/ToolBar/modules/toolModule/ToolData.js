@@ -327,6 +327,13 @@ function getData(type, params) {
           size: 'large',
           image: getThemeAssets().mapTools.rightbar_tool_style,
         },
+        {
+          key: 'selectLabel',
+          title: getLanguage(global.language).Map_Layer.PLOTS_DELETE,
+          action: ToolAction.selectLabel,
+          size: 'large',
+          image: getThemeAssets().attribute.icon_delete,
+        },
         // {
         //   key: 'captureVideo',
         //   title: '视频',
@@ -372,6 +379,16 @@ function getData(type, params) {
           type: ToolbarBtnType.MEASURE_CLEAR,
           action: ToolAction.clearMeasure,
           image: require('../../../../../../assets/mapEdit/icon_clear.png'),
+        },
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        {
+          type: ToolbarBtnType.DELETE_OBJ,
+          action: ToolAction.deleteLabel,
+          image: require('../../../../../../assets/mapTools/icon_delete_white.png'),
         },
       ]
       break

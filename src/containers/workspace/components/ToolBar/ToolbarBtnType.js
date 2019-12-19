@@ -36,6 +36,7 @@ export default {
   END_ANIMATION: 'endAnimation',
   UNDO: 'undo', //二三维量算撤销功能
   REDO: 'redo', //二三维量算回退功能
+  DELETE_OBJ: 'deleteObject',
 
   //推演动画
   PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list', //推演动画的xml列表
@@ -62,10 +63,12 @@ export default {
 
   TOOLBAR_BACK: 'toolbar_back', //工具栏 添加->返回上一级
   TOOLBAR_COMMIT: 'toolbar_commit', //工具栏 提交
+  TOOLBAR_DONE: 'toolbar_done', //工具栏 完成
 
   SHOW_LIST: 'SHOW_LIST',
   SHOW_NODE_LIST: 'SHOW_NODE_LIST',
   PLAY: 'PLAY',
   SETTIING: 'setting',
   COLLECTTARGET: 'collecttarget',
+  ANALYST: 'analyst', // 分析
 }

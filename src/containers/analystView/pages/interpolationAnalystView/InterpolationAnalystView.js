@@ -656,6 +656,8 @@ export default class InterpolationAnalystView extends Component {
                       right: parseFloat(bounds.right.toFixed(6)),
                       top: parseFloat(bounds.top.toFixed(6)),
                     })
+                  } else {
+                    newStateData.interpolationField = ''
                   }
                   newStateData.dataSet =
                     dataSets && dataSets.length > 0 && dataSets[0]
@@ -697,7 +699,7 @@ export default class InterpolationAnalystView extends Component {
                   // 获取默认插值范围
                   let bounds = (await SMap.getDatasetBounds(sourceData)) || {}
                   newStateData = Object.assign(newStateData, {
-                    interpolationField: null,
+                    // interpolationField: null,
                     left: bounds.left,
                     bottom: bounds.bottom,
                     right: bounds.right,

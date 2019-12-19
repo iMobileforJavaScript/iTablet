@@ -39,7 +39,6 @@ import {
   setMapIs3D,
   setNavigationChangeAR,
   setNavigationPoiView,
-  setMapSelectPoint,
   setOpenOnlineMap,
   setNavigationHistory,
 } from '../../../../models/setting'
@@ -50,6 +49,7 @@ import { setCollectionInfo } from '../../../../models/collection'
 import { setBackAction, removeBackAction } from '../../../../models/backActions'
 import { setAnalystParams } from '../../../../models/analyst'
 import { downloadFile, deleteDownloadFile } from '../../../../models/down'
+import { setToolbarStatus } from '../../../../models/toolbarStatus'
 
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
@@ -80,8 +80,8 @@ const mapStateToProps = state => ({
   downloads: state.down.toJS().downloads,
   mapSearchHistory: state.histories.toJS().mapSearchHistory,
   openOnlineMap: state.setting.toJS().openOnlineMap,
-  mapSelectPoint: state.setting.toJS().mapSelectPoint,
   navigationhistory: state.setting.toJS().navigationhistory,
+  toolbarStatus: state.toolbarStatus.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -124,11 +124,11 @@ const mapDispatchToProps = {
   setNavigationChangeAR,
   setNavigationPoiView,
   setMapSearchHistory,
-  setMapSelectPoint,
   setNavigationHistory,
   setOpenOnlineMap,
   downloadFile,
   deleteDownloadFile,
+  setToolbarStatus,
 }
 
 export default connect(

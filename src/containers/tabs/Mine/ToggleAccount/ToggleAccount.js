@@ -9,6 +9,7 @@ import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
 import UserType from '../../../../constants/UserType'
 import { MineItem, MyDataPopupModal } from '../component'
+import FriendListFileHandle from '../../Friend/FriendListFileHandle'
 
 export default class ToggleAccount extends Component {
   props: {
@@ -47,10 +48,14 @@ export default class ToggleAccount extends Component {
       let result
       if (userType === UserType.COMMON_USER) {
         result = await SOnlineService.login(userName, password)
+        if (result) {
+          result = await FriendListFileHandle.initFriendList(item)
+        }
       } else if (userType === UserType.IPORTAL_COMMON_USER) {
         let url = item.serverUrl
         result = await SIPortalService.login(url, userName, password, true)
       }
+
       if (this.containerRef) {
         this.containerRef.setLoading(false)
       }

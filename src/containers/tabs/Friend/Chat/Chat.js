@@ -1286,7 +1286,8 @@ class Chat extends React.Component {
     if (
       (currentMessage.type && currentMessage.type === MSGConstant.MSG_MAP) ||
       currentMessage.type === MSGConstant.MSG_LAYER ||
-      currentMessage.type === MSGConstant.MSG_DATASET
+      currentMessage.type === MSGConstant.MSG_DATASET ||
+      currentMessage.type === MSGConstant.MSG_PICTURE
     ) {
       let progress = currentMessage.originMsg.message.message.progress
       return (

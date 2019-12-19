@@ -93,7 +93,7 @@ export default StyleSheet.create({
   functionToolbar: {
     position: 'absolute',
     top: FUNCTIONHEIGHT,
-    right: scaleSize(31),
+    right: scaleSize(0),
     backgroundColor: color.white,
   },
   headerBtnSeparator: {
@@ -141,7 +141,7 @@ export default StyleSheet.create({
   },
   iconAr: {
     position: 'absolute',
-    right: scaleSize(31),
+    right: scaleSize(20),
     padding: scaleSize(5),
     borderRadius: scaleSize(4),
     elevation: 20,
@@ -193,5 +193,26 @@ export default StyleSheet.create({
   },
   dialogStyle: {
     height: scaleSize(160),
+  },
+  dialogHeaderImg: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+  },
+  dialogBackground: {
+    height: scaleSize(350),
+  },
+  promptTitle: {
+    fontSize: size.fontSize.fontSizeXXl,
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: scaleSize(30),
   },
 })

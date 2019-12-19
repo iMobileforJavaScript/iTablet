@@ -19,6 +19,7 @@ import constants from '../workspace/constants'
 import PropTypes from 'prop-types'
 import PoiData from './PoiData'
 import color from '../../styles/color'
+import { TouchType } from '../../constants'
 // import { color } from '../../styles';
 export default class PointAnalyst extends Component {
   props: {
@@ -38,6 +39,8 @@ export default class PointAnalyst extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
+    this.searchClickedInfo = params.searchClickedInfo || {}
+    this.changeNavPathInfo = params.changeNavPathInfo || {}
     this.is3D = GLOBAL.Type === constants.MAP_3D
     this.PointType = null
     this.state = {
@@ -103,31 +106,67 @@ export default class PointAnalyst extends Component {
 
   _keyExtractor = (item, index) => index
 
+  onListItemPress = async (item, index) => {
+    if (this.searchClickedInfo.isClicked) {
+      let title = this.searchClickedInfo.title
+      if (
+        title === getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
+      ) {
+        //设置起点
+        GLOBAL.STARTX = item.x
+        GLOBAL.STARTY = item.y
+        GLOBAL.STARTNAME = item.pointName
+        await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+        if (GLOBAL.ENDX && GLOBAL.ENDY) {
+          await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+        }
+      } else {
+        //设置终点
+        GLOBAL.ENDX = item.x
+        GLOBAL.ENDY = item.y
+        GLOBAL.ENDNAME = item.pointName
+        await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+        if (GLOBAL.STARTX && GLOBAL.STARTY) {
+          await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+        }
+      }
+      NavigationService.navigate('NavigationView', {
+        changeNavPathInfo: this.changeNavPathInfo,
+      })
+      this.setState({
+        searchValue: null,
+        searchData: [],
+        analystData: [],
+        firstPoint: null,
+        secondPoint: null,
+        showList: true,
+      })
+    } else {
+      let historyArr = this.props.mapSearchHistory
+      let hasAdded = false
+      historyArr.map(v => {
+        if (v.pointName === item.pointName) hasAdded = true
+      })
+      if (!hasAdded) {
+        historyArr.push({
+          x: item.x,
+          y: item.y,
+          pointName: item.pointName,
+          address: item.address,
+        })
+      }
+      this.props.setMapSearchHistory(historyArr)
+      this.toLocationPoint({ item, pointName: item.pointName, index })
+    }
+  }
+
   renderItem = ({ item, index }) => {
     return (
       <View>
         <TouchableOpacity
           style={styles.itemView}
           onPress={() => {
-            let historyArr = this.props.mapSearchHistory
-            let hasAdded = false
-            historyArr.map(v => {
-              if (v.pointName === item.pointName) hasAdded = true
-            })
-            if (!hasAdded) {
-              historyArr.push({
-                x: item.x,
-                y: item.y,
-                pointName: item.pointName,
-                address: item.address,
-              })
-            }
-            this.props.setMapSearchHistory(historyArr)
-            this.toLocationPoint({ item, pointName: item.pointName, index })
-            if (!this.is3D) {
-              GLOBAL.PoiTopSearchBar.setVisible(true)
-              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
-            }
+            this.onListItemPress(item, index)
           }}
         >
           <Image
@@ -187,13 +226,16 @@ export default class PointAnalyst extends Component {
           }
         }
       } else {
+        this.container.setLoading(
+          true,
+          getLanguage(global.language).Prompt.SEARCHING,
+        )
         let x = item.x
         let y = item.y
         let address = item.address
         this.setState({ searchValue: pointName, searchData: [] })
         if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-          await SMap.clearTarckingLayer()
-          // this.props.setNavigationChangeAR(true)
+          await SMap.clearTrackingLayer()
           this.props.setMapNavigation({
             isShow: true,
             name: pointName,
@@ -201,7 +243,8 @@ export default class PointAnalyst extends Component {
         }
         let result = await SMap.toLocationPoint(item)
         if (result) {
-          this.container.setLoading(false)
+          GLOBAL.PoiTopSearchBar.setVisible(true)
+          GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
           GLOBAL.PoiInfoContainer &&
             GLOBAL.PoiInfoContainer.setState(
               {
@@ -214,9 +257,10 @@ export default class PointAnalyst extends Component {
               },
               () => {
                 GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
+                this.container.setLoading(false)
+                NavigationService.goBack()
               },
             )
-          NavigationService.goBack()
         } else {
           Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
         }
@@ -532,7 +576,8 @@ export default class PointAnalyst extends Component {
               GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.title })
 
               if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-                await SMap.clearTarckingLayer()
+                GLOBAL.TouchType = TouchType.NORMAL
+                await SMap.clearTrackingLayer()
                 // this.props.setNavigationChangeAR(true)
                 this.props.setMapNavigation({
                   isShow: true,
@@ -572,6 +617,9 @@ export default class PointAnalyst extends Component {
           title: this.type === 'pointSearch' ? '位置搜索' : '路径分析',
           // navigation: this.props.navigation,
           backAction: () => {
+            if (this.searchClickedInfo.isClicked) {
+              GLOBAL.LocationView && GLOBAL.LocationView.setVisible(true, true)
+            }
             this.props.navigation.goBack()
             GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
           },

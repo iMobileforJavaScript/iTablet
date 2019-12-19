@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getLayers } from '../../../../models/layers'
 import { setAnalystParams } from '../../../../models/analyst'
 import { getUdbAndDs } from '../../../../models/localData'
+import { closeMap } from '../../../../models/map'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
@@ -15,6 +16,7 @@ const mapDispatchToProps = {
   getLayers,
   setAnalystParams,
   getUdbAndDs,
+  closeMap,
 }
 
 export default connect(

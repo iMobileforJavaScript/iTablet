@@ -15,6 +15,7 @@ const Map_Label = {
 
 //地图、场景主菜单
 const Map_Main_Menu = {
+  CURRENT_MAP: 'Current Map',
   START: 'Start',
   START_OPEN_MAP: 'Open Map',
   START_NEW_MAP: 'New Map',
@@ -193,7 +194,8 @@ const Map_Main_Menu = {
   THEME_GRADUATED_SYMBOLS_MAP: 'Graduated\n Symbols Map',
   THEME_HEATMAP: 'HeatMap',
 
-  THEME_ALL_SELECTED: 'All selected',
+  THEME_ALL_SELECTED: 'All Selected',
+  THEME_ALL_CANCEL: 'All Cancel',
   THEME_HIDE_SYSTEM_FIELDS: 'Hide system fields',
   THEME_EXPRESSION: 'Expression',
   THEME_UNIQUE_EXPRESSION: 'Unique Expression',
@@ -291,13 +293,13 @@ const Map_Main_Menu = {
   MAP_AR_DONT_SUPPORT_DEVICE: 'Don not support this device',
   MAP_AR_CAMERA_EXCEPTION:
     'The camera is abnormal, please check whether the permission is open.',
-  MAP_AR_AI_ASSISTANT: 'AI\nAssitant',
+  MAP_AR_AI_ASSISTANT: 'AI\nCollect',
   MAP_AR_AI_ASSISTANT_CUSTOM_COLLECT: 'Custom Collect',
   MAP_AR_AI_ASSISTANT_MUNICIPAL_COLLECT: 'Municipal Collect',
   MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT: 'Violation Collect',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: 'Road Collect',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI Map',
-  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: 'Layout Collect',
+  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: 'AI Measure',
   MAP_AR_AI_ASSISTANT_CLASSIFY: 'Target Classify',
   MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: 'Aggregate Collect',
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: 'Target Collect',
@@ -339,6 +341,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: 'Fill in the note',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: 'Save',
 
+  MAP_AR_AI_CANCEL: 'cancel',
+  MAP_AR_AI_CONFIRM: 'confirm',
+
   //智能配图
   FILL: 'Fill',
   BORDER: 'Border',
@@ -365,12 +370,13 @@ const Map_Main_Menu = {
   CLEAR_NAV_HISTORY: 'Clear History',
   ROUTE_ANALYST: 'Route Analyst',
   SELECT_POINTS: 'Select Points',
-  LONG_PRESS_SELECT_POINTS: '(long press)',
+  LONG_PRESS_SELECT_POINTS: '(long press to select a point)',
   INCREMENT_ROAD: 'Increment Road',
   TRACK: 'By Track',
   HAND_PAINTED: 'By Hand',
   NETWORK_DATASET: 'Network Datasets',
   MODEL_FILE: 'Navigation Model Files',
+  MY_LOCATION: 'My location',
 }
 
 //推演动画

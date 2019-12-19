@@ -9,6 +9,7 @@ import { SMap, EngineType } from 'imobile_for_reactnative'
 class MyDatasource extends MyDataPage {
   constructor(props) {
     super(props)
+    this.type = this.types.data
     this.state = {
       ...this.state,
       shareToLocal: true,
@@ -71,68 +72,41 @@ class MyDatasource extends MyDataPage {
     return result
   }
 
-  getPagePopupData = () => {
-    let data = [
-      {
-        title: getLanguage(global.language).Profile.NEW_DATASOURCE,
-        action: () => {
-          this._closeModal()
-          NavigationService.navigate('InputPage', {
-            placeholder: getLanguage(global.language).Profile
-              .ENTER_DATASOURCE_NAME,
-            headerTitle: getLanguage(global.language).Profile
-              .SET_DATASOURCE_NAME,
-            type: 'name',
-            cb: async name => {
-              let homePath = await FileTools.appendingHomeDirectory()
-              let datasourcePath =
-                homePath +
-                ConstPath.UserPath +
-                this.props.user.currentUser.userName +
-                '/' +
-                ConstPath.RelativePath.Datasource
-              await this.createDatasource(datasourcePath, name, name)
-              this._getSectionData()
-              NavigationService.goBack()
-            },
-          })
-        },
+  getCustomPagePopupData = () => [
+    {
+      title: getLanguage(global.language).Profile.NEW_DATASOURCE,
+      action: () => {
+        this._closeModal()
+        NavigationService.navigate('InputPage', {
+          placeholder: getLanguage(global.language).Profile
+            .ENTER_DATASOURCE_NAME,
+          headerTitle: getLanguage(global.language).Profile.SET_DATASOURCE_NAME,
+          type: 'name',
+          cb: async name => {
+            let homePath = await FileTools.appendingHomeDirectory()
+            let datasourcePath =
+              homePath +
+              ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Datasource
+            await this.createDatasource(datasourcePath, name, name)
+            this._getSectionData()
+            NavigationService.goBack()
+          },
+        })
       },
-      {
-        title: getLanguage(global.language).Profile.BATCH_OPERATE,
-        action: () => {
-          this.setState({
-            batchMode: !this.state.batchMode,
-          })
-        },
-      },
-    ]
-    return data
-  }
+    },
+  ]
 
-  getItemPopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.NEW_DATASET,
-        action: () => {
-          this._createDataset()
-        },
+  getCustomItemPopupData = () => [
+    {
+      title: getLanguage(this.props.language).Profile.NEW_DATASET,
+      action: () => {
+        this._createDataset()
       },
-      {
-        title: getLanguage(this.props.language).Profile.UPLOAD_DATA,
-        action: () => {
-          this._closeModal()
-          this.ModalBtns && this.ModalBtns.setVisible(true)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DELETE_DATA,
-        action: this._onDeleteData,
-      },
-    ]
-    return data
-  }
+    },
+  ]
 
   onItemPress = info => {
     this.itemInfo = info
@@ -140,7 +114,7 @@ class MyDatasource extends MyDataPage {
   }
 
   _openDatasource = () => {
-    NavigationService.navigate('DatasourcePage', {
+    NavigationService.navigate('MyDataset', {
       data: this.itemInfo.item,
     })
   }

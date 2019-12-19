@@ -17,6 +17,7 @@ const Map_Label = {
 
 //地图、场景主菜单
 const Map_Main_Menu = {
+  CURRENT_MAP: '当前地图',
   //地图制图及公共 开始
   START: '开始',
   START_OPEN_MAP: '打开地图',
@@ -207,6 +208,7 @@ const Map_Main_Menu = {
   THEME_HEATMAP: '热力图',
 
   THEME_ALL_SELECTED: '全部选中',
+  THEME_ALL_CANCEL: '全部选中',
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
   THEME_UNIQUE_EXPRESSION: '单值表达式',
@@ -314,7 +316,7 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT: '违章采集',
   MAP_AR_AI_ASSISTANT_ROAD_COLLECT: '路面采集',
   MAP_AR_AI_ASSISTANT_POI_COLLECT: 'POI地图',
-  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: '户型图采集',
+  MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT: 'AI测图',
   MAP_AR_AI_ASSISTANT_CLASSIFY: '目标分类',
   MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT: '态势采集',
   MAP_AR_AI_ASSISTANT_TARGET_COLLECT: '目标采集',
@@ -356,6 +358,9 @@ const Map_Main_Menu = {
   MAP_AR_AI_ASSISTANT_CLASSIFY_RESULT_PLEA_REMARKS: '请填写备注',
   MAP_AR_AI_ASSISTANT_CLASSIFY_SAVE: '保存',
 
+  MAP_AR_AI_CANCEL: '取消',
+  MAP_AR_AI_CONFIRM: '确认',
+
   //智能配图
   FILL: '填充',
   BORDER: '轮廓',
@@ -382,12 +387,13 @@ const Map_Main_Menu = {
   CLEAR_NAV_HISTORY: '清除历史',
   ROUTE_ANALYST: '路径分析',
   SELECT_POINTS: '地图选点',
-  LONG_PRESS_SELECT_POINTS: '(长按)',
+  LONG_PRESS_SELECT_POINTS: '(长按选点)',
   INCREMENT_ROAD: '增量路网',
   TRACK: '轨迹',
   HAND_PAINTED: '手绘',
   NETWORK_DATASET: '路网数据集',
   MODEL_FILE: '导航模型文件',
+  MY_LOCATION: '我的位置',
 }
 
 //推演动画

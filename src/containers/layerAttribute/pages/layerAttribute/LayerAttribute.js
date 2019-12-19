@@ -14,7 +14,13 @@ import {
   InfoView,
   Dialog,
 } from '../../../../components'
-import { Toast, scaleSize, LayerUtils, StyleUtils } from '../../../../utils'
+import {
+  Toast,
+  scaleSize,
+  LayerUtils,
+  StyleUtils,
+  screen,
+} from '../../../../utils'
 import { ConstInfo, ConstToolType, getHeaderTitle } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import {
@@ -30,6 +36,7 @@ import {
   GeoStyle,
   SMediaCollector,
   FieldType,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
 import { color } from '../../../../styles'
@@ -121,6 +128,7 @@ export default class LayerAttribute extends React.Component {
         JSON.stringify(this.props.currentLayer)
     ) {
       let checkData = this.checkToolIsViable()
+      this.filter = ''
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -430,8 +438,9 @@ export default class LayerAttribute extends React.Component {
     if (this.total <= 0) return
     this.setLoading(true, getLanguage(global.language).Prompt.LOCATING)
     //ConstInfo.LOCATING)
-    this.currentPage = Math.floor(this.total / PAGE_SIZE)
-    let remainder = (this.total % PAGE_SIZE) - 1
+    this.currentPage =
+      this.total > 0 ? Math.floor((this.total - 1) / PAGE_SIZE) : 0
+    let remainder = this.total > 0 ? (this.total - 1) % PAGE_SIZE : 0
 
     let startIndex = this.currentPage * PAGE_SIZE
     if (startIndex !== 0) {
@@ -618,7 +627,7 @@ export default class LayerAttribute extends React.Component {
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
+              defaultParams: { fieldInfo },
               isDetail: true,
             })
           }.bind(this)())
@@ -685,6 +694,14 @@ export default class LayerAttribute extends React.Component {
     }
     if (pressView) {
       pressView.measure((ox, oy, width, height, px, py) => {
+        let screenWidth = screen.getScreenWidth(),
+          allWidth = width * items.length
+        // let dx = screenWidth - allWidth / 2 + width / 2
+        // let x = px > dx ? dx : px
+        let option = {}
+        if (px > screenWidth - allWidth / 2 + width / 2) {
+          option.direction = 'left'
+        }
         ActionPopover.show(
           {
             x: px,
@@ -693,6 +710,7 @@ export default class LayerAttribute extends React.Component {
             height,
           },
           items,
+          option,
         )
       })
     }
@@ -1053,6 +1071,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   showSystemFields = () => {
+    this.table && this.table.horizontalScrollToStart()
     this.setState({
       isShowSystemFields: !this.state.isShowSystemFields,
     })
@@ -1067,17 +1086,27 @@ export default class LayerAttribute extends React.Component {
         confirmAction={async () => {
           this.deleteFieldDialog.setDialogVisible(false)
           let layerPath = this.props.currentLayer.path
+          if (this.filter.split(' ').indexOf(deleteFieldData.name) >= 0) {
+            this.filter = ''
+          }
           let result = await SMap.removeRecordsetFieldInfo(
             layerPath,
             false,
             deleteFieldData.name,
           )
+          if (
+            this.filter &&
+            this.filter.split(' ').indexOf(deleteFieldData.name) >= 0
+          ) {
+            this.filter = ''
+          }
           if (result) {
             Toast.show(
               global.language === 'CN'
                 ? '属性字段删除成功'
                 : 'Attribute Feild Delete Succeed',
             )
+            this.canBeRefresh = false
             this.refresh()
           } else {
             Toast.show(
@@ -1380,7 +1409,12 @@ export default class LayerAttribute extends React.Component {
           <LayerTopBar
             canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
-            canAddField={true}
+            canAddField={
+              this.props.currentLayer.name !== undefined &&
+              this.props.currentLayer.name !== '' &&
+              this.props.currentLayer.type !== DatasetType.IMAGE &&
+              this.props.currentLayer.type !== DatasetType.MBImage // 影像图层不能添加属性
+            }
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
             addFieldAction={this.addAttributeField}

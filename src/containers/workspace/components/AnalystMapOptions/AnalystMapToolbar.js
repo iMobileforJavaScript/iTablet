@@ -3,9 +3,9 @@ import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize, AnalystTools } from '../../../../utils'
 import { getLanguage } from '../../../../language'
-import { Const, TouchType } from '../../../../constants'
+import { Const, TouchType, ConstToolType } from '../../../../constants'
 import { TextBtn } from '../../../../components'
-import { Analyst_Types } from '../../../analystView/AnalystType'
+// import { Analyst_Types } from '../../../analystView/AnalystType'
 import { SMap, Action } from 'imobile_for_reactnative'
 
 const styles = StyleSheet.create({
@@ -138,11 +138,11 @@ export default class AnalystMapToolbar extends React.Component {
 
   render() {
     switch (this.props.type) {
-      case Analyst_Types.OPTIMAL_PATH:
-      case Analyst_Types.CONNECTIVITY_ANALYSIS:
-      case Analyst_Types.FIND_TSP_PATH:
+      case ConstToolType.MAP_ANALYSIS_OPTIMAL_PATH:
+      case ConstToolType.MAP_ANALYSIS_CONNECTIVITY_ANALYSIS:
+      case ConstToolType.MAP_ANALYSIS_FIND_TSP_PATH:
         return this.renderToolbarWithBack()
-      case Analyst_Types.THIESSEN_POLYGON:
+      case ConstToolType.MAP_ANALYSIS_THIESSEN_POLYGON:
         return this.renderToolbarWithReset()
     }
   }

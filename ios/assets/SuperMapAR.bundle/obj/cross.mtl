@@ -1,0 +1,49 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# 创建的文件:16.08.2019 12:40:17
+
+newmtl wire_252000000
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+	Ka 0.9882 0.0000 0.0000
+	Kd 0.9882 0.0000 0.0000
+	Ks 0.3500 0.3500 0.3500
+
+newmtl wire_cross
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd cross.jpg
+
+
+newmtl my_red
+Material color
+& illumination
+statements
+
+texture map
+statements
+
+reflection map
+statement
+
+
+newmtl my_mtl
+	Ns 32
+	d 1
+	Tr 0
+	Tf 1 1 1
+	illum 2
+ Ka 1 0.002 0.0
+ Kd 0.1086 0.1086 0.1086
+ Ks 0.0000 0.0000 0.0000
+
+
+
+

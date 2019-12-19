@@ -80,6 +80,7 @@ async function getTabBarData(type, params = {}) {
     tabBarData = startModule().getData(type, params)
   } else if (
     type === ConstToolType.MAP_STYLE ||
+    type === ConstToolType.GRID_STYLE ||
     type === ConstToolType.LINECOLOR_SET ||
     type === ConstToolType.POINTCOLOR_SET ||
     type === ConstToolType.REGIONBEFORECOLOR_SET ||
@@ -99,7 +100,10 @@ async function getTabBarData(type, params = {}) {
     tabBarData = themeModule().getData(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = editModule().getData(type, params)
-  } else if (type === ConstToolType.MAP_ANALYSIS) {
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf(ConstToolType.MAP_ANALYSIS) > -1
+  ) {
     tabBarData = analysisModule().getData(type, params)
   } else if (
     type === ConstToolType.PLOT_ANIMATION_START ||
@@ -148,6 +152,7 @@ function getMenuDialogData(type, ...others) {
       data = toolModule().getMenuData(type)
       break
     case ConstToolType.MAP_STYLE:
+    case ConstToolType.GRID_STYLE:
     case ConstToolType.LINECOLOR_SET:
     case ConstToolType.POINTCOLOR_SET:
     case ConstToolType.REGIONBEFORECOLOR_SET:

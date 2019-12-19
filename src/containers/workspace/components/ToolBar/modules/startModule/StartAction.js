@@ -1,3 +1,6 @@
+import React from 'react'
+import { color, size } from '../../../../../../styles'
+import { Text, View } from 'react-native'
 import { FileTools, NativeMethod } from '../../../../../../native'
 import {
   ConstToolType,
@@ -7,7 +10,7 @@ import {
   ConstOnline,
   ToolbarType,
 } from '../../../../../../constants'
-import { Toast, LayerUtils } from '../../../../../../utils'
+import { Toast, LayerUtils, scaleSize } from '../../../../../../utils'
 import NavigationService from '../../../../../NavigationService'
 import constants from '../../../../constants'
 import { SMap, SScene, SMediaCollector } from 'imobile_for_reactnative'
@@ -18,7 +21,7 @@ import ToolBarHeight from '../ToolBarHeight'
 /** 切换工作空间 **/
 function openWorkspace(cb) {
   // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-  NavigationService.navigate('WorkspaceFlieList', {
+  NavigationService.navigate('WorkspaceFileList', {
     type: 'WORKSPACE',
     title: '选择工作空间',
     cb: path => {
@@ -110,18 +113,15 @@ function openWorkspace(cb) {
 
 /** 打开地图 **/
 function openMap() {
-  if (!ToolbarModule.getParams().setToolbarVisible) return
-  ToolbarModule.getParams().showFullMap &&
-    ToolbarModule.getParams().showFullMap(true)
+  const _params = ToolbarModule.getParams()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
   ;(async function() {
     let data = [],
       path =
         (await FileTools.appendingHomeDirectory(
-          ToolbarModule.getParams().user &&
-            ToolbarModule.getParams().user.currentUser.userName
-            ? ConstPath.UserPath +
-                ToolbarModule.getParams().user.currentUser.userName +
-                '/'
+          _params.user && _params.user.currentUser.userName
+            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
             : ConstPath.CustomerPath,
         )) + ConstPath.RelativeFilePath.Map
     let userFileList
@@ -140,6 +140,31 @@ function openMap() {
           lastModifiedDate: item.mtime,
           isTemplate: item.isTemplate,
         }
+        if (_params.map.currentMap.name === item.name) {
+          item.rightView = (
+            <View
+              style={{
+                height: scaleSize(30),
+                width: scaleSize(120),
+                borderRadius: scaleSize(4),
+                backgroundColor: color.bgG,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: scaleSize(30),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: size.fontSize.fontSizeSm,
+                  color: 'white',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                {getLanguage(_params.language).Map_Main_Menu.CURRENT_MAP}
+              </Text>
+            </View>
+          )
+        }
         userList.push(item)
       })
     }
@@ -149,18 +174,14 @@ function openMap() {
       image: require('../../../../../../assets/mapToolbar/list_type_maps.png'),
       data: userFileList || [],
     })
-    ToolbarModule.getParams().setToolbarVisible(
-      true,
-      ConstToolType.MAP_CHANGE,
-      {
-        containerType: ToolbarType.list,
-        height:
-          ToolbarModule.getParams().device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[4]
-            : ConstToolType.HEIGHT[3],
-        data,
-      },
-    )
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: ToolbarType.list,
+      height:
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[4]
+          : ConstToolType.HEIGHT[3],
+      data,
+    })
   })()
 }
 
@@ -381,7 +402,8 @@ async function create() {
     GLOBAL.Type === constants.MAP_THEME ||
     GLOBAL.Type === constants.MAP_PLOTTING ||
     GLOBAL.Type === constants.MAP_NAVIGATION ||
-    GLOBAL.Type === constants.MAP_ANALYST
+    GLOBAL.Type === constants.MAP_ANALYST ||
+    GLOBAL.Type === constants.MAP_AR
   ) {
     GLOBAL.FUNCTIONTOOLBAR.isMapIndoorNavigation()
     let userPath =
@@ -807,6 +829,7 @@ async function changeMap(item) {
           legendContentChange: GLOBAL.legend._contentChange,
         })
       }
+      GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
       if (mapInfo.Template) {
         params.setContainerLoading(
           true,

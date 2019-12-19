@@ -9,6 +9,7 @@ import {
   Platform,
   NativeModules,
   NativeEventEmitter,
+  AppState,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -61,6 +62,8 @@ export default class ClassifyView extends React.Component {
       isThirdShow: false,
       bgImageSource: '',
     }
+    AppState.addEventListener('change', this.handleStateChange)
+    this.stateChangeCount = 0
   }
 
   // eslint-disable-next-line
@@ -79,9 +82,15 @@ export default class ClassifyView extends React.Component {
         )
         //注册监听
         if (Platform.OS === 'ios') {
-          iOSEventEmi.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = iOSEventEmi.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         } else {
-          DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = DeviceEventEmitter.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         }
       }.bind(this)())
     })
@@ -90,7 +99,38 @@ export default class ClassifyView extends React.Component {
   componentWillUnmount() {
     // Orientation.unlockAllOrientations()
     //移除监听
-    DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
+    // DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
+
+    AppState.removeEventListener('change', this.handleStateChange)
+    this.recognizeImageListener && this.recognizeImageListener.remove()
+  }
+
+  /************************** 处理状态变更 ***********************************/
+
+  handleStateChange = async appState => {
+    if (Platform.OS === 'android') {
+      return
+    }
+    if (appState === 'inactive') {
+      return
+    }
+    let count = this.stateChangeCount + 1
+    this.stateChangeCount = count
+    if (this.stateChangeCount !== count) {
+      return
+    } else if (this.prevAppstate === appState) {
+      return
+    } else {
+      this.prevAppstate = appState
+      this.stateChangeCount = 0
+      if (appState === 'active') {
+        this.clear()
+        this.startPreview()
+      } else if (appState === 'background') {
+        this.pausePreview()
+        // this.back()
+      }
+    }
   }
 
   /**
@@ -198,6 +238,12 @@ export default class ClassifyView extends React.Component {
         getLanguage(global.language).Map_Main_Menu
           .MAP_AR_AI_ASSISTANT_CLASSIFY_FAILED,
       )
+      this.clear()
+      await this.startPreview()
+      return
+    }
+    if (Platform.OS === 'ios') {
+      this.recognizeImage(result)
     }
   }
 
@@ -251,8 +297,13 @@ export default class ClassifyView extends React.Component {
             classifyTime,
             cb: async () => {
               NavigationService.goBack()
-              await this.clear()
-              await this.startPreview()
+              // await this.clear()
+              // await this.startPreview()
+              //保存后回到地图
+              NavigationService.goBack()
+              NavigationService.goBack()
+              GLOBAL.toolBox.setVisible(false)(await GLOBAL.toolBox) &&
+                GLOBAL.toolBox.switchAr()
             },
           })
         }

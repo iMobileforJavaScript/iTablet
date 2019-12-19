@@ -18,7 +18,7 @@ function getData(type, params) {
         //   action: () => {
         //     if (!ToolbarModule.getParams().setToolbarVisible) return
         //     // ToolbarModule.getParams().setToolbarVisible(false)
-        //     // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+        //     // NavigationService.navigate('WorkspaceFileList', { type: 'MAP_3D' })
         //     ToolbarModule.getParams().setToolbarVisible(
         //       true,
         //       ConstToolType.MAP3D_IMPORTWORKSPACE,

@@ -1180,7 +1180,7 @@ function getGridRangeMode() {
 /**设置统一标签背景形状 */
 function setLabelFont() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelFontName(_params)
+  return SThemeCartography.setLabelFontName(_params)
 }
 function getLabelFont() {
   let data = [
@@ -1318,7 +1318,7 @@ function getLabelBackShape() {
 /**设置统一标签字体 */
 function setLabelFontName() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelFontName(_params)
+  return SThemeCartography.setLabelFontName(_params)
 }
 
 function getLabelFontName() {
@@ -1426,7 +1426,8 @@ function getLabelFontName() {
 /**设置统一标签旋转角度 */
 function setLabelFontRotation() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelRotaion(_params)
+  // return SThemeCartography.setUniformLabelRotaion(_params)
+  return SThemeCartography.setLabelRotation(_params)
 }
 
 function getLabelFontRotation() {
@@ -3607,12 +3608,7 @@ async function createHeatMap(params) {
 }
 
 function isThemeFieldTypeAvailable(fieldType, themeType) {
-  if (
-    themeType &&
-    (themeType === constants.THEME_UNIFY_LABEL ||
-      themeType === constants.THEME_UNIQUE_LABEL ||
-      themeType === constants.THEME_RANGE_LABEL)
-  ) {
+  if (themeType && themeType === constants.THEME_UNIFY_LABEL) {
     return true
   } else {
     return (
@@ -3672,7 +3668,7 @@ const rangeMenuInfo = param => [
     action: () => {
       ThemeAction.getRangeMode(
         ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
-        '分段方法',
+        getLanguage(param).Map_Main_Menu.THEME_METHOD,
       )
     },
   },
@@ -3892,13 +3888,26 @@ const rangeLabelMenuInfo = param => [
       )
     },
   },
+  // TODO 待增加：分段标签分段个数
+  {
+    key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    action: () => {
+      ThemeAction.getRangeParameter(
+        ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
+        // ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+      )
+    },
+  },
   {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     action: () => {
       ThemeAction.getLabelFont(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        ConstToolType.MAP_THEME_PARAM_RANGELABEL_FONTNAME,
         getLanguage(param).Map_Main_Menu.STYLE_FONT,
       )
     },
@@ -3920,40 +3929,7 @@ const rangeLabelMenuInfo = param => [
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
     action: () => {
       ThemeAction.getLabelFontRotation(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
-        getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-      )
-    },
-  },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
-    action: () => {
-      ThemeAction.getLabelFont(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
-        getLanguage(param).Map_Main_Menu.STYLE_FONT,
-      )
-    },
-  },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-    action: () => {
-      ThemeAction.getLabelFontSize(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
-        getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
-      )
-    },
-  },
-  {
-    key: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
-    action: () => {
-      ThemeAction.getLabelFontRotation(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+        ConstToolType.MAP_THEME_PARAM_RANGELABEL_ROTATION,
         getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
       )
     },

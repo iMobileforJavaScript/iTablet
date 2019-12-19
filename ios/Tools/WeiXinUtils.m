@@ -15,6 +15,10 @@
   [WXApi registerApp:@"wx06e9572a1d069aaa"];
 }
 
++(BOOL)isWXInstalled{
+  return [WXApi isWXAppInstalled];
+}
+
 + (void) sendTextContent:(NSString*)textContent
 {
   SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];

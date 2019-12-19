@@ -63,7 +63,7 @@ async function dealData(params = {}, loading = true) {
 }
 
 //专题图字段表达式列表
-async function getThemeExpress(type) {
+async function getThemeExpress(type, key = '', name = '') {
   const _params = ToolbarModule.getParams()
   const themeCreateType = ToolbarModule.getData().themeCreateType
   let expressionData = await SThemeCartography.getThemeExpressionByLayerName(
@@ -102,8 +102,8 @@ async function getThemeExpress(type) {
     let item = expressionData.list[i]
     if (
       type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
-      type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
-      type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
+      // type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
+      // type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
       ThemeMenuData.isThemeFieldTypeAvailable(
         item.fieldTypeStr,
         themeCreateType,
@@ -144,6 +144,8 @@ async function getThemeExpress(type) {
       ToolbarBtnType.MENU_FLEX,
       ToolbarBtnType.TOOLBAR_COMMIT,
     ],
+    selectName: name || key,
+    selectKey: key,
   })
 }
 
@@ -1185,10 +1187,24 @@ function tableAction(item = {}) {
             FontName: item.key,
           }
           break
+        case ConstToolType.MAP_THEME_PARAM_RANGELABEL_FONTNAME:
+          themeParams = {
+            LayerName: _params.currentLayer.name,
+            FontName: item.key,
+            type: 'range',
+          }
+          break
         case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION:
           themeParams = {
             LayerName: _params.currentLayer.name,
             Rotaion: item.key,
+          }
+          break
+        case ConstToolType.MAP_THEME_PARAM_RANGELABEL_ROTATION:
+          themeParams = {
+            LayerName: _params.currentLayer.name,
+            Rotaion: item.key,
+            type: 'range',
           }
           break
         case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR:
@@ -1358,6 +1374,7 @@ function layerListAction(data) {
       getData: ThemeData.getData,
       actions: actions,
       currentThemeData: data,
+      themeCreateType: curThemeType,
     })
     _params.navigation.navigate('MapView')
     Toast.show(

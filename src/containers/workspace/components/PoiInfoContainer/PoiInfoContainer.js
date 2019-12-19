@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  Platform,
 } from 'react-native'
 import { SMap } from 'imobile_for_reactnative'
 import styles from './style'
@@ -20,19 +19,21 @@ import PoiData from '../../../pointAnalyst/PoiData'
 import Toast from '../../../../utils/Toast'
 import { getLanguage } from '../../../../language'
 import constants from '../../../workspace/constants'
+import NavigationService from '../../../NavigationService'
 
 export default class PoiInfoContainer extends React.PureComponent {
   props: {
     device: Object,
-    mapSelectPoint: Object,
     changeNavPathInfo: () => {},
     setMapNavigation: () => {},
     mapSearchHistory: Array,
     setMapSearchHistory: () => {},
     setNavigationPoiView: () => {},
     setNavigationChangeAR: () => {},
-    setNavigationDatas: () => {},
-    setMapSelectPoint: () => {},
+    getNavigationDatas: () => {},
+    //获取mapView中的getSearchClickedInfo属性,判断是从哪个页面跳转搜索 得出的结果
+    getSearchClickedInfo: () => {},
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -179,6 +180,70 @@ export default class PoiInfoContainer extends React.PureComponent {
       })
   }
 
+  //搜索结果列表点击事件
+  onListItemClick = async item => {
+    let searchClickedInfo =
+      this.props.getSearchClickedInfo && this.props.getSearchClickedInfo()
+    if (searchClickedInfo.isClicked) {
+      let title = searchClickedInfo.title
+      if (
+        title === getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT
+      ) {
+        //设置起点
+        GLOBAL.STARTX = item.x
+        GLOBAL.STARTY = item.y
+        GLOBAL.STARTNAME = item.pointName
+        await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+      } else {
+        //设置终点
+        GLOBAL.ENDX = item.x
+        GLOBAL.ENDY = item.y
+        GLOBAL.ENDNAME = item.pointName
+        await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+      }
+      SMap.removeAllCallout()
+      this.setVisible(false)
+      GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+      GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
+      NavigationService.navigate('NavigationView', {
+        changeNavPathInfo: this.props.changeNavPathInfo,
+      })
+    } else {
+      let historyArr = this.props.mapSearchHistory
+      let hasAdded = false
+      historyArr.map(v => {
+        if (v.pointName === item.pointName) hasAdded = true
+      })
+      if (!hasAdded) {
+        historyArr.push({
+          x: item.x,
+          y: item.y,
+          pointName: item.pointName,
+          address: item.address,
+        })
+      }
+      this.props.setMapSearchHistory(historyArr)
+      GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
+      this.showTable()
+      setTimeout(async () => {
+        this.setState(
+          {
+            destination: item.pointName,
+            address: item.address,
+            showList: false,
+            neighbor: [],
+            resultList: [],
+            location: { x: item.x, y: item.y },
+          },
+          async () => {
+            await this.clear()
+            await SMap.toLocationPoint(item)
+          },
+        )
+      })
+    }
+  }
+
   //显示 '点击查看更多' 时的状态
   hidden = () => {
     if (this.state.showList) {
@@ -250,97 +315,38 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   navitoHere = async () => {
-    await SMap.clearTarckingLayer()
-
+    await SMap.clearTrackingLayer()
+    await SMap.removePOICallout()
     let position = await SMap.getCurrentPosition()
     GLOBAL.STARTX = position.x
     GLOBAL.STARTY = position.y
-    // 测试用
-    // GLOBAL.STARTX = this.state.location.x - 0.05
-    // GLOBAL.STARTY = this.state.location.y - 0.05
     GLOBAL.ENDX = this.state.location.x
     GLOBAL.ENDY = this.state.location.y
 
-    let datasetInfos = await SMap.isPointsInMapBounds(
-      {
-        x: GLOBAL.STARTX,
-        y: GLOBAL.STARTY,
-      },
-      this.state.location,
-    )
-    let rel = false
-    if (datasetInfos.name != null) {
-      rel = await SMap.startNavigation(datasetInfos)
-    }
-    if (rel) {
-      //行业导航
-      await SMap.removePOICallout()
-      await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
-      await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
-      await SMap.getPointName(GLOBAL.STARTX, GLOBAL.STARTY, true)
-      await SMap.moveToPoint({ x: GLOBAL.STARTX, y: GLOBAL.STARTY })
-      this.props.setMapSelectPoint({
-        firstPoint: this.props.mapSelectPoint.firstPoint,
-        secondPoint: this.state.destination,
-      })
-      GLOBAL.ENDPOINT = this.state.destination
-      let result = await SMap.beginNavigation(
-        GLOBAL.STARTX,
-        GLOBAL.STARTY,
-        GLOBAL.ENDX,
-        GLOBAL.ENDY,
-      )
-      if (result) {
-        let pathLength = await SMap.getNavPathLength(false)
-        let path = await SMap.getPathInfos(false)
-        this.props.setNavigationDatas(datasetInfos)
-        this.props.changeNavPathInfo({ path, pathLength })
-        GLOBAL.ROUTEANALYST = true
-        GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-        Animated.timing(this.bottom, {
-          toValue: scaleSize(-200),
-          duration: 400,
-        }).start()
-        this.props.setMapNavigation({
-          isShow: true,
-          name: '',
-        })
-        GLOBAL.toolBox.showFullMap(true)
-      } else {
-        Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
-      }
-    } else {
-      //在线路径分析
-      await SMap.routeAnalyst(this.state.location.x, this.state.location.y)
-      GLOBAL.NAVIPOINTX = this.state.location.x
-      GLOBAL.NAVIPOINTY = this.state.location.y
-      GLOBAL.NAVIPOINTNAME = this.state.destination
-      GLOBAL.NAVIPOINTADDRESS = this.state.address
-      this.props.setNavigationPoiView(true)
-      Animated.timing(this.bottom, {
-        toValue: scaleSize(-200),
-        duration: 400,
-      }).start()
-      Animated.timing(this.height, {
-        toValue: scaleSize(200),
-        duration: 400,
-      }).start()
-      Animated.timing(this.boxHeight, {
-        toValue: scaleSize(200),
-        duration: 10,
-      }).start()
-
-      Platform.OS === 'android' && this.props.setNavigationChangeAR(true)
-
-      if (this.state.destination !== '') {
-        this.props.setMapNavigation({
-          isShow: true,
-          name: this.state.destination,
-        })
-      }
-    }
+    GLOBAL.STARTNAME = getLanguage(GLOBAL.language).Map_Main_Menu.MY_LOCATION
+    GLOBAL.ENDNAME = this.state.destination
+    await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+    await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
     GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
+    Animated.timing(this.bottom, {
+      toValue: scaleSize(-200),
+      duration: 400,
+    }).start()
+    NavigationService.navigate('NavigationView', {
+      changeNavPathInfo: this.props.changeNavPathInfo,
+    })
+    //重置为初始状态
+    this.setState({
+      destination: '',
+      location: {},
+      address: '',
+      showMore: false,
+      showList: false,
+      neighbor: [],
+      resultList: [],
+      visible: false,
+      radius: 5000,
+    })
   }
 
   renderView = () => {
@@ -368,7 +374,9 @@ export default class PoiInfoContainer extends React.PureComponent {
               this.searchNeighbor()
             }}
           >
-            <Text style={styles.searchTxt}>搜周边</Text>
+            <Text style={styles.searchTxt}>
+              {getLanguage(GLOBAL.language).Prompt.SEARCH_AROUND}
+            </Text>
           </TouchableOpacity>
         </View>
       )
@@ -393,7 +401,9 @@ export default class PoiInfoContainer extends React.PureComponent {
                 this.searchNeighbor()
               }}
             >
-              <Text style={styles.searchTxt}>搜周边</Text>
+              <Text style={styles.searchTxt}>
+                {getLanguage(GLOBAL.language).Prompt.SEARCH_AROUND}
+              </Text>
             </TouchableOpacity>
             <View style={{ width: 20 }} />
             <TouchableOpacity
@@ -403,7 +413,9 @@ export default class PoiInfoContainer extends React.PureComponent {
                 this.navitoHere()
               }}
             >
-              <Text style={styles.searchTxt}>到这去</Text>
+              <Text style={styles.searchTxt}>
+                {getLanguage(GLOBAL.language).Prompt.GO_HERE}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -456,39 +468,7 @@ export default class PoiInfoContainer extends React.PureComponent {
           <TouchableOpacity
             style={styles.itemView}
             onPress={() => {
-              let historyArr = this.props.mapSearchHistory
-              let hasAdded = false
-              historyArr.map(v => {
-                if (v.pointName === item.pointName) hasAdded = true
-              })
-              if (!hasAdded) {
-                historyArr.push({
-                  x: item.x,
-                  y: item.y,
-                  pointName: item.pointName,
-                  address: item.address,
-                })
-              }
-              this.props.setMapSearchHistory(historyArr)
-              GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
-              this.showTable()
-              setTimeout(async () => {
-                this.setState(
-                  {
-                    destination: item.pointName,
-                    address: item.address,
-                    showList: false,
-                    neighbor: [],
-                    resultList: [],
-                    location: { x: item.x, y: item.y },
-                  },
-                  async () => {
-                    await this.clear()
-                    await SMap.toLocationPoint(item)
-                  },
-                )
-              })
-              //this.toLocationPoint({item,pointName:item.pointName, index})
+              this.onListItemClick(item)
             }}
           >
             <View
@@ -532,7 +512,9 @@ export default class PoiInfoContainer extends React.PureComponent {
         }}
         style={styles.moreWrap}
       >
-        <Text style={styles.moreText}>点击查看更多结果</Text>
+        <Text style={styles.moreText}>
+          {getLanguage(GLOBAL.language).Prompt.SHOW_MORE_RESULT}
+        </Text>
       </TouchableOpacity>
     )
   }

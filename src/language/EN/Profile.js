@@ -20,6 +20,7 @@ const Profile = {
   //我的——登录
   LOGIN: 'Login',
   LOGIN_CURRENT: 'Current user is already logged in',
+  LOGIN_INVALID: 'Login expired. Please login again',
   MOBILE_LOGIN: 'Mobile Login',
   EMAIL_LOGIN: 'Email Login',
   ENTER_EMAIL_OR_USERNAME: 'Please enter your email or username',
@@ -39,6 +40,8 @@ const Profile = {
   ENTER_VALID_SERVER_ADDRESS: 'Please enter a valid server address',
   ENTER_REALNAME: 'Please enter your real name',
   ENTER_COMPANY: 'Please enter your company',
+  REGISTER_READ_PROTOCAL: 'I have read and agree to the ',
+  REGISTER_ONLINE_PROTOCAL: 'SuperMap Terms of Service and Privacy Policy',
   CONNECTING: 'Connecting',
   CONNECT_SERVER_FAIL:
     'Failed to connect to the server, please check the network or server address',
@@ -56,6 +59,7 @@ const Profile = {
   DELETE_DATA: 'Delete Data',
   OPEN_DATA: 'Open Data',
   NEW_DATASET: 'Create Dataset',
+  UPLOAD_DATASET: 'Share Dataset',
   DELETE_DATASET: 'Delete Dataset',
   UPLOAD_MAP: 'Share Map',
   EXPORT_MAP: 'Export Map',
@@ -130,6 +134,8 @@ const Profile = {
   MAP_3D: '3D Map',
   BROWSE_MAP: 'Browse',
 
+  GET_DATA_FAILED: 'Failed to get data',
+
   //创建数据集
   PLEASE_ADD_DATASET: 'Please add dataset',
   ADD_DATASET: 'Add Dataset',
@@ -149,6 +155,9 @@ const Profile = {
   SET_DATASOURCE_NAME: 'Set Datasource Name',
   ENTER_DATASOURCE_NAME: 'Please enter datasource name',
   OPEN_DATASROUCE_FAILED: 'Failed to open datasource',
+
+  SELECT_DATASET_EXPORT_TYPE: 'Select format for export',
+  DATASET_EXPORT_NOT_SUPPORTED: 'Export of this dataset is not supported yet',
 
   //搜索
   SEARCH: 'Search',

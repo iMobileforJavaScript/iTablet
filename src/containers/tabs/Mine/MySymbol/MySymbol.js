@@ -1,11 +1,11 @@
 import { MyDataPage } from '../component'
 import DataHandler from '../DataHandler'
 import { FileTools } from '../../../../native'
-import { getLanguage } from '../../../../language/index'
 
 class MySymbol extends MyDataPage {
   constructor(props) {
     super(props)
+    this.type = this.types.symbol
     this.state = {
       ...this.state,
       shareToLocal: true,
@@ -61,24 +61,6 @@ class MySymbol extends MyDataPage {
 
     let result = await FileTools.zipFiles(archivePaths, targetPath)
     return result
-  }
-
-  getItemPopupData = () => {
-    let data
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.UPLOAD_SYMBOL,
-        action: () => {
-          this._closeModal()
-          this.ModalBtns && this.ModalBtns.setVisible(true)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DELETE_SYMBOL,
-        action: this._onDeleteData,
-      },
-    ]
-    return data
   }
 }
 

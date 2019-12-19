@@ -11,21 +11,18 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Platform,
   // TextInput,
 } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
-// import Login from './Login'
-import { color, size } from '../../../styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
-import { getPublicAssets } from '../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../assets'
 import styles from './styles'
 const Customer = 'Customer'
 export default class Mine extends Component {
@@ -46,9 +43,6 @@ export default class Mine extends Component {
       display: 'flex',
     }
     this.searchText = ''
-    this.goToMyService = this.goToMyService.bind(this)
-    this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
-    this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
 
   componentDidMount() {
@@ -149,10 +143,6 @@ export default class Mine extends Component {
     NavigationService.navigate('MyLabel', {
       title,
     })
-  }
-
-  goToMyOnlineData = async () => {
-    NavigationService.navigate('MyOnlineData')
   }
 
   goToMyService = () => {
@@ -522,54 +512,46 @@ export default class Mine extends Component {
     data = [
       {
         title: getLanguage(this.props.language).Profile.IMPORT,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
+        leftImagePath: getThemeAssets().mine.my_import,
         onClick: this.goToMyLocalData,
       },
       {
         title: getLanguage(this.props.language).Profile.MY_SERVICE,
-        leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
+        leftImagePath: getThemeAssets().mine.my_service,
         onClick: this.goToMyService,
       },
       {
         title: getLanguage(this.props.language).Profile.DATA,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+        leftImagePath: getThemeAssets().mine.my_data,
         onClick: () =>
           this.goToMyDatasource(getLanguage(this.props.language).Profile.DATA),
       },
       {
         title: getLanguage(this.props.language).Profile.MARK,
-        leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
+        leftImagePath: getThemeAssets().mine.my_plot,
         onClick: () => {
           this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
         },
       },
       {
         title: getLanguage(this.props.language).Profile.MAP,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
+        leftImagePath: getThemeAssets().mine.my_map,
         onClick: () =>
           this.goToMyMap(getLanguage(this.props.language).Profile.MAP),
       },
       {
         title: getLanguage(this.props.language).Profile.BASEMAP,
-        leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+        leftImagePath: getThemeAssets().mine.my_basemap,
         onClick: () => {
           this.goToMyBaseMap()
         },
       },
       {
         title: getLanguage(this.props.language).Profile.SYMBOL,
-        leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
+        leftImagePath: getThemeAssets().mine.my_symbol,
         onClick: () =>
           this.goToMySymbol(getLanguage(this.props.language).Profile.SYMBOL),
       },
-      // {
-      //   title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
-      //   leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-      //   onClick: () =>
-      //     this.goToMyData(
-      //       getLanguage(this.props.language).Profile.COLOR_SCHEME,
-      //     ),
-      // },
       {
         title: getLanguage(this.props.language).Profile.TEMPLATE,
         leftImagePath: require('../../../assets/function/icon_function_style.png'),
@@ -835,7 +817,6 @@ export default class Mine extends Component {
         // }}
         withoutHeader
       >
-        {/* {this._selectionRender()} */}
         {this._renderMineContainer()}
       </Container>
     )

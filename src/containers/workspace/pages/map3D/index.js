@@ -13,6 +13,7 @@ import {
 } from '../../../../models/map'
 import { setSharing } from '../../../../models/online'
 import { setBackAction, removeBackAction } from '../../../../models/backActions'
+import { setToolbarStatus } from '../../../../models/toolbarStatus'
 const mapStateToProps = state => ({
   language: state.setting.toJS().language,
   editLayer: state.layers.toJS().editLayer,
@@ -25,6 +26,7 @@ const mapStateToProps = state => ({
   device: state.device.toJS().device,
   online: state.online.toJS(),
   downloads: state.down.toJS().downloads,
+  toolbarStatus: state.toolbarStatus.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -38,6 +40,7 @@ const mapDispatchToProps = {
   setAttributes,
   setBackAction,
   removeBackAction,
+  setToolbarStatus,
 }
 
 export default connect(

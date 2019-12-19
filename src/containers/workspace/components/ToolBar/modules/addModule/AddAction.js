@@ -83,7 +83,7 @@ async function listAction(type, params = {}) {
         Toast.show(
           result
             ? getLanguage(_params.language).Prompt.ADD_SUCCESS
-            : getLanguage(_params.language).Prompt.ADD_FAILED,
+            : getLanguage(_params.language).Prompt.ADD_MAP_FAILED,
         )
         if (result) {
           await _params.getLayers(-1, layers => {
@@ -101,10 +101,9 @@ async function listAction(type, params = {}) {
       if (selectedItem) {
         _params.setToolbarVisible(false)
         _params.setNavigationDatas && _params.setNavigationDatas(selectedItem)
-        SMap.startNavigation(selectedItem)
+        await SMap.startNavigation(selectedItem)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
-          showLocationView: true,
         })
       } else {
         Toast.show(

@@ -34,33 +34,6 @@ export default class TouchProgress extends Component {
     showMenu: () => {},
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.screenWidth !== screen.getScreenWidth()) {
-      this._initialization()
-      this.screenWidth = screen.getScreenWidth()
-    }
-    if (
-      JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
-    ) {
-      this.setState({
-        currentLayer: this.props.currentLayer,
-      })
-    }
-    if (
-      JSON.stringify(prevProps.selectName) !==
-      JSON.stringify(this.props.selectName)
-    ) {
-      this.setState({
-        selectName: this.props.selectName,
-      })
-    }
-  }
-
-  componentDidMount() {
-    this._initialization(this.props.value)
-  }
-
   constructor(props) {
     super(props)
     this.screenWidth = screen.getScreenWidth()
@@ -89,6 +62,25 @@ export default class TouchProgress extends Component {
       onPanResponderTerminate: this._handlePanResponderEnd,
     })
     this._initStatusBarVisible()
+  }
+
+  // shouldComponentUpdate(nextProps) {
+  //   let shouldUpdate =
+  //     JSON.stringify(nextProps) !==
+  //     JSON.stringify(this.props)
+  //
+  //   return shouldUpdate
+  // }
+
+  componentDidUpdate() {
+    if (this.screenWidth !== screen.getScreenWidth()) {
+      this._initialization()
+      this.screenWidth = screen.getScreenWidth()
+    }
+  }
+
+  componentDidMount() {
+    this._initialization(this.props.value)
   }
 
   debounce = fn => {
@@ -249,7 +241,10 @@ export default class TouchProgress extends Component {
               this._previousLeft = (this.ragngeCount * progressWidth) / 32
               this._BackLine.style.width =
                 (this.ragngeCount * progressWidth) / 32
-              tips = '分段个数    ' + parseInt(this.ragngeCount)
+              tips =
+                getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
+                '    ' +
+                parseInt(this.ragngeCount)
             }
             break
           // case ThemeType.GRIDRANGE: // 分段栅格专题图
@@ -355,7 +350,7 @@ export default class TouchProgress extends Component {
               }
             }
             break
-          case 107:
+          case ThemeType.LABELUNIQUE:
           case ThemeType.LABEL: // 标签专题图
             {
               //避免切换地图后 图例设置走这个case
@@ -368,7 +363,7 @@ export default class TouchProgress extends Component {
                 this.fontsize =
                   value !== undefined
                     ? value
-                    : await SThemeCartography.getUniformLabelFontSize({
+                    : await SThemeCartography.getLabelFontSize({
                       LayerName: this.props.currentLayer.name,
                     })
                 this._panBtnStyles.style.left =
@@ -377,9 +372,56 @@ export default class TouchProgress extends Component {
                 this._BackLine.style.width =
                   (this.fontsize * progressWidth) / 20
                 tips =
-                  getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+                  getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
                   '     ' +
                   parseInt(this.fontsize)
+              }
+            }
+            break
+          case ThemeType.LABELRANGE: // 分段标签专题图
+            {
+              //避免切换地图后 图例设置走这个case
+              if (
+                this.props.selectName ===
+                  getLanguage(this.props.language).Map_Main_Menu
+                    .STYLE_FONT_SIZE ||
+                this.props.selectName === 'fontsize'
+              ) {
+                this.fontsize =
+                  value !== undefined
+                    ? value
+                    : await SThemeCartography.getLabelFontSize({
+                      LayerName: this.props.currentLayer.name,
+                      type: 'range',
+                    })
+                this._panBtnStyles.style.left =
+                  (this.fontsize * progressWidth) / 20 + panBtnDevLeft
+                this._previousLeft = (this.fontsize * progressWidth) / 20
+                this._BackLine.style.width =
+                  (this.fontsize * progressWidth) / 20
+                tips =
+                  getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
+                  '     ' +
+                  parseInt(this.fontsize)
+              } else if (
+                this.props.selectName ===
+                getLanguage(this.props.language).Map_Main_Menu.RANGE_COUNT
+              ) {
+                this.ragngeCount =
+                  value !== undefined
+                    ? value
+                    : await SThemeCartography.getRangeCount({
+                      LayerName: this.props.currentLayer.name,
+                    })
+                this._panBtnStyles.style.left =
+                  (this.ragngeCount * progressWidth) / 32 + panBtnDevLeft
+                this._previousLeft = (this.ragngeCount * progressWidth) / 32
+                this._BackLine.style.width =
+                  (this.ragngeCount * progressWidth) / 32
+                tips =
+                  getLanguage(global.language).Map_Main_Menu.RANGE_COUNT +
+                  '     ' +
+                  parseInt(this.ragngeCount)
               }
             }
             break
@@ -555,7 +597,7 @@ export default class TouchProgress extends Component {
               parseInt(gridOpaque)
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
           ) {
             let gridBright =
               value !== undefined
@@ -568,13 +610,13 @@ export default class TouchProgress extends Component {
             this._previousLeft = (gridBright * progressWidth) / 200
             this._BackLine.style.width = (gridBright * progressWidth) / 200
             tips =
-              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
               '     ' +
-              parseInt(gridBright) +
+              parseInt(gridBright - 100) +
               '%'
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
           ) {
             let gridContrast =
               value !== undefined
@@ -587,15 +629,18 @@ export default class TouchProgress extends Component {
             this._previousLeft = (gridContrast * progressWidth) / 200
             this._BackLine.style.width = (gridContrast * progressWidth) / 200
             tips =
-              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
               '     ' +
-              parseInt(gridContrast) +
+              parseInt(gridContrast - 100) +
               '%'
           }
           break
         }
       }
-      if (this.props.selectName === '列数') {
+      if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+      ) {
         let columnnumber = this.props.mapLegend[GLOBAL.Type].column
         this._panBtnStyles.style.left =
           (columnnumber * 10 * progressWidth) / 40 + panBtnDevLeft
@@ -605,7 +650,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
           parseInt(columnnumber)
-      } else if (this.props.selectName === '宽度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+      ) {
         let width = this.props.mapLegend[GLOBAL.Type].widthPercent
         this._panBtnStyles.style.left =
           (width * progressWidth) / 100 + panBtnDevLeft
@@ -615,7 +663,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
           parseInt(width)
-      } else if (this.props.selectName === '高度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+      ) {
         let height = this.props.mapLegend[GLOBAL.Type].heightPercent
         this._panBtnStyles.style.left =
           (height * progressWidth) / 100 + panBtnDevLeft
@@ -724,9 +775,12 @@ export default class TouchProgress extends Component {
         newValue = value * 200
       }
     } else if (
-      this.props.selectName === '列数' ||
-      this.props.selectName === '宽度' ||
-      this.props.selectName === '高度'
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
     ) {
       newValue = value * 100
     } else if (
@@ -878,7 +932,10 @@ export default class TouchProgress extends Component {
       if (mode !== undefined) {
         await SMap.updateMapFixColorsMode(mode, value)
       }
-    } else if (this.props.selectName === '列数') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+    ) {
       let legendSettings = this.props.mapLegend
       let columns
       if (value <= 25) {
@@ -896,7 +953,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
         '     ' +
         parseInt(columns)
-    } else if (this.props.selectName === '宽度') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+    ) {
       let legendSettings = this.props.mapLegend
       if (value > 100) {
         value = 100
@@ -909,7 +969,10 @@ export default class TouchProgress extends Component {
         getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
         '     ' +
         parseInt(value)
-    } else if (this.props.selectName === '高度') {
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+    ) {
       let legendSettings = this.props.mapLegend
       if (value > 100) {
         value = 100
@@ -942,6 +1005,9 @@ export default class TouchProgress extends Component {
         }
         Object.assign(Params, ToolbarModule.getData().themeParams)
         switch (themeType) {
+          case ThemeType.LABELRANGE:
+            await SThemeCartography.modifyThemeLabelRangeMap(Params)
+            break
           case ThemeType.RANGE:
             await SThemeCartography.modifyThemeRangeMap(Params)
             break
@@ -955,14 +1021,18 @@ export default class TouchProgress extends Component {
           getLanguage(this.props.language).Map_Main_Menu.STYLE_FONT_SIZE
       ) {
         tips =
-          getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+          getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
           '     ' +
           parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
           FontSize: parseInt(value),
         }
-        await SThemeCartography.setUniformLabelFontSize(_params)
+        // 分段标签
+        if (themeType === ThemeType.LABELRANGE) {
+          _params.type = 'range'
+        }
+        await SThemeCartography.setLabelFontSize(_params)
       } else if (
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DOT_VALUE
@@ -1001,6 +1071,11 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
+        if (value <= 0) {
+          value = 1
+        } else if (value > 10000) {
+          value = 10000
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.DATUM_VALUE +
           '     ' +
@@ -1191,7 +1266,7 @@ export default class TouchProgress extends Component {
               '%'
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
+            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
           ) {
             if (value <= 100) {
               let gridBrigh = -(100 - value)
@@ -1200,28 +1275,28 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
                 '     ' +
                 parseInt(gridBrigh) +
                 '%'
             } else if (value > 100) {
               let gridBrigh = value - 100
+              if (gridBrigh >= 100) {
+                gridBrigh = 100
+              }
               await SCartography.setGridBrightness(
                 gridBrigh,
                 this.props.currentLayer.name,
               )
-              if (gridBrigh >= 100) {
-                gridBrigh = 100
-              }
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
                 '     ' +
                 parseInt(gridBrigh) +
                 '%'
             }
           } else if (
             this.props.selectName ===
-            getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
+            getLanguage(this.props.language).Map_Main_Menu.CONTRAST
           ) {
             if (value <= 100) {
               let gridContrast = -(100 - value)
@@ -1230,11 +1305,12 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
                 '     ' +
                 parseInt(gridContrast) +
                 '%'
             } else if (value > 100) {
+              value -= 100
               if (value >= 100) {
                 value = 100
               }
@@ -1243,7 +1319,7 @@ export default class TouchProgress extends Component {
                 this.props.currentLayer.name,
               )
               tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
                 '     ' +
                 parseInt(value) +
                 '%'
@@ -1315,7 +1391,7 @@ export default class TouchProgress extends Component {
           value = 20
         }
         tips =
-          getLanguage(global.language).Map_Main_Menu.THEME_FONT_SIZE +
+          getLanguage(global.language).Map_Main_Menu.STYLE_FONT_SIZE +
           '     ' +
           parseInt(value)
       } else if (
@@ -1531,23 +1607,17 @@ export default class TouchProgress extends Component {
             if (value < 0) {
               value = 0
             } else if (value <= 100) {
-              let gridBrigh = -(100 - value)
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
-                '     ' +
-                parseInt(gridBrigh) +
-                '%'
-            } else if (value > 100) {
-              let gridBrigh = value - 100
-              if (gridBrigh >= 100) {
-                gridBrigh = 100
-              }
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
-                '     ' +
-                parseInt(gridBrigh) +
-                '%'
+              value = -(100 - value)
+            } else if (value >= 100) {
+              value -= 100
+            } else if (value >= 200) {
+              value = 100
             }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_CONTRAST +
+              '     ' +
+              parseInt(value) +
+              '%'
           } else if (
             this.props.selectName ===
             getLanguage(this.props.language).Map_Main_Menu.STYLE_BRIGHTNESS
@@ -1555,22 +1625,17 @@ export default class TouchProgress extends Component {
             if (value < 0) {
               value = 0
             } else if (value <= 100) {
-              let gridContrast = -(100 - value)
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
-                '     ' +
-                parseInt(gridContrast) +
-                '%'
-            } else if (value > 100) {
-              if (value >= 100) {
-                value = 100
-              }
-              tips =
-                getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
-                '     ' +
-                parseInt(value) +
-                '%'
+              value = -(100 - value)
+            } else if (value >= 100) {
+              value -= 100
+            } else if (value >= 200) {
+              value = 100
             }
+            tips =
+              getLanguage(global.language).Map_Main_Menu.STYLE_BRIGHTNESS +
+              '     ' +
+              parseInt(value) +
+              '%'
           }
           break
         }
@@ -1593,7 +1658,10 @@ export default class TouchProgress extends Component {
           tips = TPData.getMatchPictureTip(this.props.selectName, value)
         }
       }
-      if (this.props.selectName === '列数') {
+      if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN
+      ) {
         let columns = this.props.mapLegend[GLOBAL.Type].columns
         if (value <= 25) {
           columns = 1
@@ -1608,7 +1676,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_COLUMN +
           '     ' +
           parseInt(columns)
-      } else if (this.props.selectName === '宽度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH
+      ) {
         if (value > 100) {
           value = 100
         } else if (value <= 20) {
@@ -1618,7 +1689,10 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH +
           '     ' +
           parseInt(value)
-      } else if (this.props.selectName === '高度') {
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+      ) {
         if (value > 100) {
           value = 100
         } else if (value <= 20) {

@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, ScrollView } from 'react-native'
+import { View } from 'react-native'
 import { ImageButton } from '../../../../components'
 import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import styles from './styles'
@@ -129,7 +129,8 @@ export default class LayerTopBar extends React.Component {
             enabled: this.props.canTabs,
             style: styles.tabBtn,
           })}
-        <ScrollView horizontal style={styles.rightList}>
+        {/*<ScrollView horizontal style={styles.rightList}>*/}
+        <View style={styles.rightList}>
           {this.renderBtn({
             icon: this.props.canAddField
               ? getPublicAssets().common.icon_plus
@@ -181,7 +182,7 @@ export default class LayerTopBar extends React.Component {
             action: this.relateAction,
             enabled: this.props.canRelated,
           })}
-        </ScrollView>
+        </View>
       </View>
     )
   }

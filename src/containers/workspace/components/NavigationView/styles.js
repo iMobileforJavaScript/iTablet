@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
+import size from '../../../../styles/size'
 
 export default StyleSheet.create({
   container: {
@@ -53,7 +54,7 @@ export default StyleSheet.create({
     backgroundColor: color.background,
     marginLeft: scaleSize(30),
     marginRight: scaleSize(50),
-    height: scaleSize(150),
+    height: scaleSize(170),
     borderRadius: scaleSize(10),
     flexDirection: 'row',
     alignItems: 'center',
@@ -61,14 +62,14 @@ export default StyleSheet.create({
   },
   onInput: {
     flex: 1,
-    height: scaleSize(55),
-    lineHeight: scaleSize(55),
+    height: scaleSize(60),
+    lineHeight: scaleSize(60),
     justifyContent: 'center',
   },
   secondInput: {
     flex: 1,
-    height: scaleSize(55),
-    lineHeight: scaleSize(55),
+    height: scaleSize(60),
+    lineHeight: scaleSize(60),
     color: color.fontColorGray,
     justifyContent: 'center',
   },
@@ -108,5 +109,26 @@ export default StyleSheet.create({
     paddingBottom: scaleSize(10),
     marginLeft: scaleSize(15),
     borderRadius: scaleSize(4),
+  },
+  dialogHeaderImg: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+  },
+  dialogBackground: {
+    height: scaleSize(350),
+  },
+  promptTitle: {
+    fontSize: size.fontSize.fontSizeXXl,
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: scaleSize(30),
   },
 })

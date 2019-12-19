@@ -7,6 +7,9 @@ import {
   Text,
   DeviceEventEmitter,
   ScrollView,
+  Platform,
+  NativeModules,
+  NativeEventEmitter,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -18,7 +21,8 @@ import { Container } from '../../components'
 import { Toast } from '../../utils'
 import { getLanguage } from '../../language'
 // import Button from '../../components/Button/Button'
-
+const SMeasureViewiOS = NativeModules.SMeasureView
+const iOSEventEmi = new NativeEventEmitter(SMeasureViewiOS)
 /*
  * AR高精度采集界面
  */
@@ -59,26 +63,49 @@ export default class MeasureView extends React.Component {
           this.datasetName,
         )
         //注册监听
-        DeviceEventEmitter.addListener(
-          'onCurrentLengthChanged',
-          this.onCurrentLengthChanged,
-        )
-        DeviceEventEmitter.addListener(
-          'onTotalLengthChanged',
-          this.onTotalLengthChanged,
-        )
-        DeviceEventEmitter.addListener(
-          'onCurrentToLastPntDstChanged',
-          this.onCurrentToLastPntDstChanged,
-        )
-        DeviceEventEmitter.addListener(
-          'onSearchingSurfaces',
-          this.onSearchingSurfaces,
-        )
-        DeviceEventEmitter.addListener(
-          'onSearchingSurfacesSucceed',
-          this.onSearchingSurfacesSucceed,
-        )
+        if (Platform.OS === 'ios') {
+          iOSEventEmi.addListener(
+            'onCurrentLengthChanged',
+            this.onCurrentLengthChanged,
+          )
+          iOSEventEmi.addListener(
+            'onTotalLengthChanged',
+            this.onTotalLengthChanged,
+          )
+          iOSEventEmi.addListener(
+            'onCurrentToLastPntDstChanged',
+            this.onCurrentToLastPntDstChanged,
+          )
+          iOSEventEmi.addListener(
+            'onSearchingSurfaces',
+            this.onSearchingSurfaces,
+          )
+          iOSEventEmi.addListener(
+            'onSearchingSurfacesSucceed',
+            this.onSearchingSurfacesSucceed,
+          )
+        } else {
+          DeviceEventEmitter.addListener(
+            'onCurrentLengthChanged',
+            this.onCurrentLengthChanged,
+          )
+          DeviceEventEmitter.addListener(
+            'onTotalLengthChanged',
+            this.onTotalLengthChanged,
+          )
+          DeviceEventEmitter.addListener(
+            'onCurrentToLastPntDstChanged',
+            this.onCurrentToLastPntDstChanged,
+          )
+          DeviceEventEmitter.addListener(
+            'onSearchingSurfaces',
+            this.onSearchingSurfaces,
+          )
+          DeviceEventEmitter.addListener(
+            'onSearchingSurfacesSucceed',
+            this.onSearchingSurfacesSucceed,
+          )
+        }
       }.bind(this)())
     })
   }
@@ -167,6 +194,11 @@ export default class MeasureView extends React.Component {
     if (result) {
       await SMeasureView.clearAll()
       Toast.show(getLanguage(this.props.language).Prompt.SAVE_SUCCESSFULLY)
+      //保存后回到地图
+      NavigationService.goBack()
+      NavigationService.goBack()
+      GLOBAL.toolBox.setVisible(false)(await GLOBAL.toolBox) &&
+        GLOBAL.toolBox.switchAr()
     }
   }
 
@@ -209,7 +241,7 @@ export default class MeasureView extends React.Component {
           >
             <Image
               resizeMode={'contain'}
-              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_close}
+              source={getThemeAssets().ar.toolbar.icon_ar_toolbar_delete}
               style={styles.smallIcon}
             />
           </TouchableOpacity>
@@ -410,7 +442,7 @@ export default class MeasureView extends React.Component {
   }
 
   renderSearchingView() {
-    return (
+    return Platform.OS === 'ios' ? null : (
       <View style={styles.currentLengthChangeView}>
         <Text style={styles.title}>
           {

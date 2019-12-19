@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { DatasetType, SMap } from 'imobile_for_reactnative'
+import { DatasetType, SMap, SLanguage } from 'imobile_for_reactnative'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 import { ModelUtils } from '../utils'
 import constants from '../containers/workspace/constants'
@@ -88,12 +88,14 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
     } else {
       language = 'EN'
     }
+    await SLanguage.setLanguage(language)
     await dispatch({
       type: SETTING_LANGUAGE_AUTO,
       payload: language,
     })
     global.language = language
   } else {
+    await SLanguage.setLanguage(params)
     await dispatch({
       type: SETTING_LANGUAGE,
       payload: params,
@@ -141,12 +143,6 @@ export const setNavigationPoiView = (params = {}) => async dispatch => {
 export const setOpenOnlineMap = (params = {}) => async dispatch => {
   await dispatch({
     type: ONLINEMAP,
-    payload: params || false,
-  })
-}
-export const setMapSelectPoint = (params = {}) => async dispatch => {
-  await dispatch({
-    type: MAP_SELECT_POINT,
     payload: params || false,
   })
 }
@@ -279,10 +275,6 @@ const initialState = fromJS({
   navigationChangeAR: false,
   navigationPoiView: false,
   openOnlineMap: false,
-  mapSelectPoint: {
-    firstPoint: '',
-    secondPoint: '',
-  },
   isAgreeToProtocol: false,
   navigationhistory: [],
 })
@@ -471,18 +463,6 @@ export default handleActions(
         data = false
       }
       return state.setIn(['openOnlineMap'], fromJS(data))
-    },
-    [`${MAP_SELECT_POINT}`]: (state, { payload }) => {
-      let data = state.toJS().mapSelectPoint
-      if (payload) {
-        data = payload
-      } else {
-        data = {
-          firstPoint: '选择起点',
-          secondPoint: '选择终点',
-        }
-      }
-      return state.setIn(['mapSelectPoint'], fromJS(data))
     },
     [`${NAVIGATION_HISTORY}`]: (state, { payload }) => {
       let data = state.toJS().navigationhistory

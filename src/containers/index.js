@@ -24,7 +24,7 @@ import {
   SelectLogin,
   Login,
   IPortalLogin,
-  DatasourcePage,
+  MyDataset,
   NewDataset,
   SearchMine,
   // Chat,
@@ -121,11 +121,11 @@ import IllegallyParkView from './aiIllegallyPark'
 import AIDetecSettingsView from './AIDetecSettingsView'
 import CastModelOperateView from './arCastModelOperateView'
 
-import ArView from './workspace/components/ArView'
 import Map2Dto3D from './workspace/components/Map2Dto3D'
 import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
+import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
 
 const AppNavigator = createStackNavigator(
   {
@@ -312,7 +312,7 @@ const AppNavigator = createStackNavigator(
         header: null,
       },
     },
-    WorkspaceFlieList: {
+    WorkspaceFileList: {
       screen: workspaceFlieList,
       navigationOptions: {
         header: null,
@@ -542,8 +542,8 @@ const AppNavigator = createStackNavigator(
         gesturesEnabled: true,
       },
     },
-    DatasourcePage: {
-      screen: DatasourcePage,
+    MyDataset: {
+      screen: MyDataset,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -923,12 +923,6 @@ const AppNavigator = createStackNavigator(
         header: null,
       },
     },
-    ArView: {
-      screen: ArView,
-      navigationOptions: {
-        header: null,
-      },
-    },
     Map2Dto3D: {
       screen: Map2Dto3D,
       navigationOptions: {
@@ -937,6 +931,12 @@ const AppNavigator = createStackNavigator(
     },
     NavigationView: {
       screen: NavigationView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    CollectSceneFormHistoryView: {
+      screen: CollectSceneFormHistoryView,
       navigationOptions: {
         header: null,
       },

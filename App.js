@@ -10,6 +10,7 @@ import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './s
 import {
   setEditLayer,
   setSelection,
+  setCurrentLayer,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -43,6 +44,7 @@ import FetchUtils from './src/utils/FetchUtils'
 import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
 import constants from './src/containers/workspace/constants'
+import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 let AppUtils = NativeModules.AppUtils
 
 
@@ -188,56 +190,57 @@ class AppRoot extends Component {
     GLOBAL.isPad = isPad
   }
 
+  loginOnline = async () => {
+    let isEmail = this.props.user.currentUser.isEmail
+    let userName = this.props.user.currentUser.userName
+    let password = this.props.user.currentUser.password
+    let bLogin = false
+    if (isEmail === true) {
+      bLogin = await SOnlineService.login(userName, password)
+    } else if (isEmail === false) {
+      bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+    }
+    return bLogin
+  }
+
   async login(){
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
-
-      let isEmail = this.props.user.currentUser.isEmail
-      let userName = this.props.user.currentUser.userName
-      let password = this.props.user.currentUser.password
-      let bLogin = false
-      if (isEmail === true) {
-        bLogin = await SOnlineService.login(userName, password)
-      } else if (isEmail === false) {
-        bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+      let result
+      result = await this.loginOnline()
+      if(result){
+        result = await FriendListFileHandle.initFriendList(this.props.user.currentUser)
       }
-      if (!bLogin) {
-        if (isEmail === true) {
-          bLogin = await SOnlineService.login(userName, password)
-        } else if (isEmail === false) {
-          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-        }
-        // Toast.show('登陆状态失效')
-      }else{
-        if(!this.initFriend){
-          global.getFriend().onUserLoggedin()
-          this.initFriend = true
-        }
-        // Toast.show('登陆')
+      if(result){
+        global.getFriend().onUserLoggedin()
+      } else {
+        global.getFriend()._logout(getLanguage(this.props.language).Profile.LOGIN_INVALID)
       }
     } else if (UserType.isIPortalUser(this.props.user.currentUser)){
-      if(!this.IPortalLoggedin){
-        let url = this.props.user.currentUser.serverUrl
-        let userName = this.props.user.currentUser.userName
-        let password = this.props.user.currentUser.password
-        SIPortalService.init()
-        SIPortalService.login(url, userName, password, true)
-        this.IPortalLoggedin = true
-      }
+      let url = this.props.user.currentUser.serverUrl
+      let userName = this.props.user.currentUser.userName
+      let password = this.props.user.currentUser.password
+      SIPortalService.init()
+      SIPortalService.login(url, userName, password, true)
     }
   }
 
   reCircleLogin(){
-    if(GLOBAL.loginTimer !== undefined){
-      clearInterval(GLOBAL.loginTimer)
-      GLOBAL.loginTimer = undefined
+    if (UserType.isOnlineUser(this.props.user.currentUser)) {
+      if(GLOBAL.loginTimer !== undefined){
+        clearInterval(GLOBAL.loginTimer)
+        GLOBAL.loginTimer = undefined
+      }
+      GLOBAL.loginTimer = setInterval(this.loginOnline,60000 )
     }
-    GLOBAL.loginTimer = setInterval(this.login,60000 )
   }
 
   componentDidMount () {
     if(this.props.autoLanguage) {
       this.props.setLanguage('AUTO')
+    } else {
+      this.props.setLanguage(this.props.language)
     }
+    this.inspectEnvironment()
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
@@ -269,7 +272,6 @@ class AppRoot extends Component {
       }
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
-      await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
       await this.addImportExternalDataListener()
@@ -287,6 +289,7 @@ class AppRoot extends Component {
       this.props.setCurrentTemplateList() // 清空当前模板
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
+      this.props.setCurrentLayer() // 清空当前图层
     }
     Platform.OS === 'android' && SplashScreen.hide()
 
@@ -589,7 +592,7 @@ class AppRoot extends Component {
           {getLanguage(this.props.language).Profile.LICENSE_CURRENT_EXPIRE}
           {/* 试用许可已过期,请更换许可后重启 */}
         </Text>
-        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white,}}></View>
+        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white}}></View>
         <TouchableOpacity style={styles.btnStyle}
           onPress={this.inputOfficialLicense}
         >
@@ -718,24 +721,26 @@ class AppRoot extends Component {
           {getLanguage(this.props.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE}
           {/* 试用许可已过期,请更换许可后重启 */}
         </Text>
-        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white,}}></View>
-        <View style={{height: scaleSize(200),
-                                  flexDirection: 'column',
-                                  justifyContent: 'center',
-                                  flex: 1,
-                                  alignItems: 'center',}}
+        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white}}></View>
+        <View
+          style={{height: scaleSize(200),
+            flexDirection: 'column',
+            justifyContent: 'center',
+            flex: 1,
+            alignItems: 'center'}}
           onPress={this.inputOfficialLicense}
         >
           <Text style={{fontSize: scaleSize(20),marginLeft:scaleSize(30),marginRight:scaleSize(30)}}>
             {getLanguage(global.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB}
           </Text>
         </View>
-        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white,}}></View>
-        <TouchableOpacity style={{height: scaleSize(80),
-                                width: '100%',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',}}
+        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white}}></View>
+        <TouchableOpacity
+          style={{height: scaleSize(80),
+            width: '100%',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'}}
           onPress={()=>{ GLOBAL.licenseModuleNotContainDialog.setDialogVisible(false)}}
         >
           <Text style={styles.btnTextStyle}>
@@ -878,6 +883,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setShow,
   closeMap,
   setCurrentMap,
+  setCurrentLayer,
   setEditLayer,
   setSelection,
   setCollectionInfo,

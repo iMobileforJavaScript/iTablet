@@ -91,7 +91,8 @@ export default class LayerAttributeTable extends React.Component {
       tableData: [
         {
           title: titles,
-          data: dataUtil.cloneObj(props.data),
+          data:
+            props.data instanceof Array ? dataUtil.cloneObj(props.data) : [],
         },
       ],
       selected: (new Map(): Map<string, boolean>),
@@ -130,9 +131,9 @@ export default class LayerAttributeTable extends React.Component {
   componentDidUpdate(prevProps) {
     const isMultiData =
       this.props.data instanceof Array &&
-      // this.props.data.length > 1 &&
-      // this.props.data[0] instanceof Array
-      this.props.data.length !== 1
+      (this.props.data.length === 0 ||
+        (this.props.data.length > 1 && this.props.data[0] instanceof Array))
+    // this.props.data.length !== 1
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
@@ -177,6 +178,11 @@ export default class LayerAttributeTable extends React.Component {
           })
       }
     }
+  }
+
+  horizontalScrollToStart = () => {
+    this.horizontalTable &&
+      this.horizontalTable.scrollTo({ x: 0, animated: false })
   }
 
   scrollToLocation = params => {
@@ -313,7 +319,14 @@ export default class LayerAttributeTable extends React.Component {
           selected.clear()
         }
 
-        selected.set(item.data[0].value, !target) // toggle
+        let data = item.data[0]
+        if (
+          data.name === getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
+        ) {
+          data = item.data[1]
+        }
+
+        selected.set(data.value, !target) // toggle
         return { selected }
       })
     } else {
@@ -344,7 +357,7 @@ export default class LayerAttributeTable extends React.Component {
       item.data[0] !== getLanguage(global.language).Map_Label.NAME
     ) {
       this.props.onPressHeader({
-        fieldInfo: item.data[item.columnIndex].fieldInfo.fieldInfo,
+        fieldInfo: item.data[item.columnIndex].fieldInfo,
         index: item.columnIndex,
         pressView: item.pressView,
       })
@@ -545,7 +558,11 @@ export default class LayerAttributeTable extends React.Component {
 
   renderMultiDataTable = () => {
     return (
-      <ScrollView style={{ flex: 1 }} horizontal={true}>
+      <ScrollView
+        ref={ref => (this.horizontalTable = ref)}
+        style={{ flex: 1 }}
+        horizontal={true}
+      >
         <SectionList
           ref={ref => (this.table = ref)}
           refreshing={this.state.refreshing}

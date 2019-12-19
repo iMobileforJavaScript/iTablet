@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Platform,
 } from 'react-native'
 import { scaleSize } from '../../utils'
 import { size } from '../../styles'
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   },
   dialogStyle: {
     position: 'absolute',
-    top: scaleSize(100),
+    top: Platform.OS === 'ios' ? scaleSize(120) : scaleSize(100),
     left: scaleSize(30),
     right: scaleSize(30),
     borderRadius: scaleSize(20),

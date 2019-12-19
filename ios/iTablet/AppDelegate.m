@@ -24,6 +24,7 @@
 //#import "RNSplashScreen.h"
 #import "Common/HWNetworkReachabilityManager.h"
 #import "NativeUtil.h"
+#import "Orientation.h"
 
 
 static NSString* g_sampleCodeName = @"#";;
@@ -80,6 +81,7 @@ static NSString* g_sampleCodeName = @"#";;
 +(void)SetSampleCodeName:(NSString*)name
 {
   g_sampleCodeName = name;
+  
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -273,8 +275,8 @@ void initCrash(){
   [[UIApplication sharedApplication] endBackgroundTask:_taskId];
   _taskId = UIBackgroundTaskInvalid;
 }
-//- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
-//{
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
+{
 //  if (self.allowRotation == YES) {
 //    //横屏
 //    return UIInterfaceOrientationMaskLandscape;
@@ -282,5 +284,11 @@ void initCrash(){
 //    //竖屏
 //    return UIInterfaceOrientationMaskPortrait;
 //  }
-//}
+  NSString* strDevice = [[UIDevice currentDevice].model substringToIndex:4];
+  if ([strDevice isEqualToString:@"iPad"]){
+    return [Orientation getOrientation];
+  } else {
+    return UIInterfaceOrientationMaskPortrait;
+  }
+}
 @end
