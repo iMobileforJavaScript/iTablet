@@ -11,7 +11,10 @@ function getData(type, params) {
   switch (type) {
     case ConstToolType.MAP_STYLE:
     case ConstToolType.GRID_STYLE:
-      if (ToolbarModule.getParams().currentLayer) {
+      if (
+        ToolbarModule.getParams().currentLayer &&
+        !ToolbarModule.getData().currentLayerStyle
+      ) {
         SCartography.getLayerStyle(
           ToolbarModule.getParams().currentLayer.name,
         ).then(value => {
