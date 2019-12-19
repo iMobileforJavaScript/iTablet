@@ -41,6 +41,7 @@ export default class AIDetecSettingsView extends React.Component {
     }
 
     this.clickAble = true // 防止重复点击
+    SAIDetectView.setProjectionModeEnable(false)
   }
 
   // eslint-disable-next-line

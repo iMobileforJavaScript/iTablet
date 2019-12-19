@@ -239,7 +239,16 @@ export default class NavigationView extends React.Component {
               }
             }
           } else {
-            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+            this.loading.setLoading(false)
+            if (GLOBAL.ISOUTDOORMAP) {
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+              )
+            } else {
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.ROAD_NETWORK_UNLINK,
+              )
+            }
           }
         } catch (e) {
           this.loading.setLoading(false)
