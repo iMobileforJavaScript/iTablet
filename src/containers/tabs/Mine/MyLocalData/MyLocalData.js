@@ -429,6 +429,12 @@ export default class MyLocalData extends Component {
                 item,
               )
               break
+            case 'img':
+              result = await DataHandler.importIMG(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
             default:
               break
           }
@@ -497,7 +503,8 @@ export default class MyLocalData extends Component {
         this.itemInfo.item.fileType === 'kmz' ||
         this.itemInfo.item.fileType === 'dwg' ||
         this.itemInfo.item.fileType === 'dxf' ||
-        this.itemInfo.item.fileType === 'gpx'
+        this.itemInfo.item.fileType === 'gpx' ||
+        this.itemInfo.item.fileType === 'img'
       ) {
         this._onImportDataset(this.itemInfo.item.fileType)
       } else if (

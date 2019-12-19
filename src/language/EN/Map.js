@@ -351,6 +351,8 @@ const Map_Main_Menu = {
   MARK: 'Mark',
 
   //地图导航
+  START_POINT: 'Start Point',
+  END_POINT: 'Destination',
   DRAW: 'Draw',
   ROAD_DETAILS: 'Road Details',
   ROUTE_THROUGH: 'Route Through：',

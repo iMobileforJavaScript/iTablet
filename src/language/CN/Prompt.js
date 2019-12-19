@@ -172,6 +172,7 @@ const Prompt = {
   EXPORTING: '导出中',
   EXPORT_SUCCESS: '导出成功',
   EXPORT_FAILED: '导出失败',
+  EXPORT_TO: '数据已导出到：',
   REQUIRE_PRJ_1984: '数据集投影坐标系必须为WGS_1984',
 
   UNDO_FAILED: '撤销失败',

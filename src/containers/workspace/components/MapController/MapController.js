@@ -13,6 +13,7 @@ import styles from './styles'
 import { getLanguage } from '../../../../language'
 
 const DEFAULT_BOTTOM = scaleSize(135)
+const DEFAULT_LEFT = scaleSize(20)
 
 export default class MapController extends React.Component {
   props: {
@@ -25,7 +26,6 @@ export default class MapController extends React.Component {
   constructor(props) {
     super(props)
     this.deg = 0
-    this.bottom = DEFAULT_BOTTOM
     this.state = {
       left: new Animated.Value(scaleSize(28)),
       bottom: new Animated.Value(DEFAULT_BOTTOM),
@@ -47,7 +47,7 @@ export default class MapController extends React.Component {
   setVisible = (visible, immediately = false) => {
     if (visible) {
       Animated.timing(this.state.left, {
-        toValue: scaleSize(20),
+        toValue: DEFAULT_LEFT,
         duration: immediately ? 0 : Const.ANIMATED_DURATION,
       }).start()
     } else {
@@ -60,22 +60,49 @@ export default class MapController extends React.Component {
 
   // 归位
   reset = (immediately = false) => {
-    Animated.timing(this.state.bottom, {
-      toValue: scaleSize(DEFAULT_BOTTOM),
-      duration: immediately ? 0 : Const.ANIMATED_DURATION,
-    }).start()
-    this.bottom = DEFAULT_BOTTOM
+    let animatedList = []
+    if (this.state.bottom._value !== DEFAULT_BOTTOM) {
+      animatedList.push(
+        Animated.timing(this.state.bottom, {
+          toValue: DEFAULT_BOTTOM,
+          duration: immediately ? 0 : Const.ANIMATED_DURATION,
+        }),
+      )
+    }
+    if (this.state.left._value !== DEFAULT_LEFT) {
+      animatedList.push(
+        Animated.timing(this.state.left, {
+          toValue: DEFAULT_LEFT,
+          duration: immediately ? 0 : Const.ANIMATED_DURATION,
+        }),
+      )
+    }
   }
 
   // 移动
-  move = ({ bottom }, immediately = false) => {
+  move = ({ bottom, left }, immediately = false) => {
+    let animatedList = []
     if (bottom !== undefined) {
-      Animated.timing(this.state.bottom, {
-        toValue: scaleSize(this.bottom + bottom),
-        duration: immediately ? 0 : Const.ANIMATED_DURATION,
-      }).start()
-      this.bottom = bottom
+      let _bottom = this.state.bottom._value + bottom
+      if (bottom === 'default') _bottom = DEFAULT_BOTTOM
+      animatedList.push(
+        Animated.timing(this.state.bottom, {
+          toValue: _bottom,
+          duration: immediately ? 0 : Const.ANIMATED_DURATION,
+        }),
+      )
     }
+    if (left !== undefined) {
+      let _left = this.state.left._value + left
+      if (left === 'default') _left = DEFAULT_LEFT
+      animatedList.push(
+        Animated.timing(this.state.left, {
+          toValue: _left,
+          duration: immediately ? 0 : Const.ANIMATED_DURATION,
+        }),
+      )
+    }
+    Animated.sequence(animatedList).start()
   }
 
   setCompass = deg => {

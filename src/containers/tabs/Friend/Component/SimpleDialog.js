@@ -22,8 +22,9 @@ export default class SimpleDialog extends PureComponent {
       confirmAction: this.confirm,
       cancelAction: this.cancel,
       text: this.props.text,
+      textStyle: {},
       renderExtra: props.renderExtra,
-      dialogHeight: undefined,
+      dialogStyle: {},
       showTitleImage: true,
     }
   }
@@ -34,10 +35,11 @@ export default class SimpleDialog extends PureComponent {
 
   set = ({
     text,
+    textStyle,
     confirmAction,
     cancelAction,
     renderExtra,
-    dialogHeight,
+    dialogStyle,
     showTitleImage,
   }) => {
     let confirm, cancel
@@ -55,10 +57,11 @@ export default class SimpleDialog extends PureComponent {
     }
     this.setState({
       text: text || this.props.text,
+      textStyle: textStyle ? textStyle : {},
       confirmAction: confirmAction ? confirm || this.confirm : this.confirm,
       cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
       renderExtra: renderExtra,
-      dialogHeight: dialogHeight,
+      dialogStyle: dialogStyle ? dialogStyle : {},
       showTitleImage: showTitleImage !== undefined ? showTitleImage : true,
     })
   }
@@ -66,10 +69,11 @@ export default class SimpleDialog extends PureComponent {
   reset = () => {
     this.setState({
       text: this.props.text,
+      textStyle: {},
       confirmAction: this.confirm,
       cancelAction: this.cancel,
       renderExtra: undefined,
-      dialogHeight: undefined,
+      dialogStyle: {},
       showTitleImage: true,
     })
   }
@@ -104,10 +108,6 @@ export default class SimpleDialog extends PureComponent {
     this.setState({ renderExtra: renderExtra })
   }
 
-  setDialogHeight = height => {
-    this.setState({ dialogHeight: height })
-  }
-
   confirm = () => {
     this.props.confirmAction && this.props.confirmAction()
     this.setVisible(false)
@@ -132,7 +132,7 @@ export default class SimpleDialog extends PureComponent {
         style={[
           styles.dialogBackground,
           this.props.style,
-          this.state.dialogHeight && { height: this.state.dialogHeight },
+          this.state.dialogStyle,
         ]}
         disableBackTouch={this.props.disableBackTouch}
       >
@@ -143,7 +143,9 @@ export default class SimpleDialog extends PureComponent {
               style={styles.dialogHeaderImg}
             />
           )}
-          <Text style={styles.promptTtile}>{this.state.text}</Text>
+          <Text style={[styles.promptTtile, this.state.textStyle]}>
+            {this.state.text}
+          </Text>
           {this.state.renderExtra}
         </View>
       </Dialog>

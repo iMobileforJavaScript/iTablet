@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, ScrollView, Animated, StatusBar } from 'react-native'
+import { View, ScrollView, Animated, StatusBar, Platform } from 'react-native'
 import Header from '../Header'
 import Loading from './Loading'
 import { scaleSize } from '../../utils'
@@ -80,7 +80,11 @@ export default class Container extends PureComponent {
 
   renderHeader = fixHeader => {
     return this.props.withoutHeader ? (
-      <View style={styles.iOSPadding} />
+      Platform.OS === 'ios' ? (
+        <View style={styles.iOSPadding} />
+      ) : (
+        <View />
+      )
     ) : this.props.header ? (
       <AnimatedView
         style={[fixHeader && styles.fixHeader, { top: this.state.top }]}

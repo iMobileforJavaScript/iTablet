@@ -69,6 +69,7 @@ export default class Cell extends Component {
     style?: Object,
     textStyle?: Object,
     onPress?: () => {},
+    onFocus?: () => {},
     separatorColor?: () => {},
     changeEnd?: () => {},
   }
@@ -102,7 +103,9 @@ export default class Cell extends Component {
   _onBlur = () => {
     this._onSubmitEditing()
   }
-
+  _onFocus = () => {
+    this.props.onFocus && this.props.onFocus()
+  }
   changeEnd = () => {
     if (
       this.state.value !== this.props.value &&
@@ -239,6 +242,7 @@ export default class Cell extends Component {
             underlineColorAndroid="transparent"
             onChangeText={this._onChangeText}
             onBlur={this._onBlur}
+            onFocus={this._onFocus}
             onEndEditing={this._onEndEditing}
             onSubmitEditing={this._onSubmitEditing}
             returnKeyType={'done'}

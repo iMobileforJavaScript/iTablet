@@ -1710,7 +1710,7 @@ export default class MapView extends React.Component {
     if (this.state.currentFloorID) return null
     return (
       <MapController
-        ref={ref => (this.mapController = ref)}
+        ref={ref => (GLOBAL.mapController = this.mapController = ref)}
         type={GLOBAL.Type}
       />
     )
@@ -2120,22 +2120,26 @@ export default class MapView extends React.Component {
     // }
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity
-          key={'audio'}
-          onPress={() => {
-            SSpeechRecognizer.start()
-            this.AudioDialog.setVisible(true)
-          }}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={require('../../../../assets/header/icon_audio.png')}
-            style={[
-              { width: scaleSize(50), height: scaleSize(50) },
-              { marginRight: scaleSize(15) },
-            ]}
-          />
-        </TouchableOpacity>
+        {this.state.showAIDetect ? (
+          <View />
+        ) : (
+          <TouchableOpacity
+            key={'audio'}
+            onPress={() => {
+              SSpeechRecognizer.start()
+              this.AudioDialog.setVisible(true)
+            }}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={require('../../../../assets/header/icon_audio.png')}
+              style={[
+                { width: scaleSize(50), height: scaleSize(50) },
+                { marginRight: scaleSize(15) },
+              ]}
+            />
+          </TouchableOpacity>
+        )}
         <MTBtn
           key={'undo'}
           image={getPublicAssets().common.icon_undo}

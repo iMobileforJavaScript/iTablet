@@ -8,7 +8,7 @@ import {
 import { Container, LinkageList } from '../../../../components'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
-import { Toast, AnalystTools } from '../../../../utils'
+import { Toast, AnalystTools, scaleSize } from '../../../../utils'
 import { FileTools } from '../../../../native'
 // import { Analyst_Types } from '../../AnalystType'
 import NavigationService from '../../../NavigationService'
@@ -67,6 +67,29 @@ export default class LocalAnalystView extends Component {
   componentDidMount() {
     if (this.reloadData || this.props.userUdbAndDs.length === 0) {
       this.getData()
+    } else if (this.linkageList && this.props.userUdbAndDs.length > 0) {
+      let params = this.props.navigation.state.params
+      let leftIndex = -1,
+        rightIndex = -1
+      let leftData = this.props.userUdbAndDs[0]
+      for (let i = 0; i < this.props.userUdbAndDs.length; i++) {
+        if (params.parent.title === this.props.userUdbAndDs[i].title) {
+          leftIndex = i
+          leftData = this.props.userUdbAndDs[i]
+        }
+      }
+      if (leftData.data && leftData.data.length > 0) {
+        let rightData = leftData.data
+        for (let i = 0; i < rightData.length; i++) {
+          if (params.item.title === rightData[i].title) {
+            rightIndex = i
+          }
+        }
+      }
+      this.linkageList.select({
+        leftIndex,
+        rightIndex,
+      })
     }
   }
 
@@ -136,26 +159,21 @@ export default class LocalAnalystView extends Component {
             ToolbarModule.addData({
               navigationParams: params2,
               backAction: () => {
+                GLOBAL.mapController.move({
+                  bottom: 'default',
+                  left: scaleSize(-200),
+                })
                 AnalystTools.clear(this.type)
                 ToolbarModule.getData().navigationParams &&
                   delete ToolbarModule.getData().navigationParams
                 NavigationService.navigate('LocalAnalystView', {
                   ...params2,
+                  parent,
+                  item,
                   reloadData: false,
                 })
               },
             })
-            // this.props.setAnalystParams({
-            //   ...params2,
-            //   backAction: () => {
-            //     AnalystTools.clear(this.type)
-            //     this.props.setAnalystParams(null)
-            //     NavigationService.navigate('LocalAnalystView', {
-            //       ...params2,
-            //       reloadData: false,
-            //     })
-            //   },
-            // })
             ToolbarModule.getParams().setToolbarVisible(true, this.type, {
               containerType: ToolbarType.table,
               isFullScreen: false,
@@ -165,6 +183,12 @@ export default class LocalAnalystView extends Component {
             await this.props.getLayers()
             this.setLoading(false)
             await SMap.setLayerFullView(res.layerInfo.path)
+            if (GLOBAL.mapController) {
+              GLOBAL.mapController.move({
+                bottom: scaleSize(100),
+                left: 'default',
+              })
+            }
             NavigationService.goBack()
           } else {
             this.setLoading(false)
@@ -253,22 +277,11 @@ export default class LocalAnalystView extends Component {
           title: this.state.title,
           navigation: this.props.navigation,
           backAction: this.back,
-          // headerRight: (
-          //   <TextBtn
-          //     btnText={getLanguage(this.props.language).Analyst_Labels.ANALYST}
-          //     textStyle={
-          //       this.state.canBeAnalyst
-          //         ? styles.headerBtnTitle
-          //         : styles.headerBtnTitleDisable
-          //     }
-          //     btnClick={this.analyst}
-          //   />
-          // ),
         }}
       >
         <LinkageList
+          ref={ref => (this.linkageList = ref)}
           language={this.props.language}
-          // data={this.state.dataSourceAndSets}
           adjustmentWidth={true}
           data={this.props.userUdbAndDs}
           titles={[

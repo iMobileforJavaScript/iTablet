@@ -30,6 +30,7 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     let DWG = []
     let DXF = []
     let GPX = []
+    let IMG = []
 
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
@@ -48,6 +49,7 @@ async function getExternalData(path, uncheckedChildFileList = []) {
       DXF = await getDXFList(path, contentList, uncheckedChildFileList)
     }
     GPX = await getGPXList(path, contentList, uncheckedChildFileList)
+    IMG = await getIMGList(path, contentList, uncheckedChildFileList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
@@ -61,6 +63,7 @@ async function getExternalData(path, uncheckedChildFileList = []) {
       .concat(DWG)
       .concat(DXF)
       .concat(GPX)
+      .concat(IMG)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -496,6 +499,37 @@ async function getGPXList(path, contentList, uncheckedChildFileList) {
   }
 }
 
+async function getIMGList(path, contentList, uncheckedChildFileList) {
+  let IMG = []
+  try {
+    _checkUncheckedFile(path, contentList, uncheckedChildFileList)
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isIMG(contentList[i].name)) {
+          contentList[i].check = true
+          IMG.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'img',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        IMG = IMG.concat(
+          await getIMGList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+            uncheckedChildFileList,
+          ),
+        )
+      }
+    }
+    return IMG
+  } catch (error) {
+    return IMG
+  }
+}
+
 /** 标绘模版 */
 async function _getPlottingList(path) {
   let arrFile = []
@@ -765,6 +799,10 @@ function _isDXF(name) {
 
 function _isGPX(name) {
   return _isType(name, ['gpx'])
+}
+
+function _isIMG(name) {
+  return _isType(name, ['img'])
 }
 
 function _isSymbol(name) {
