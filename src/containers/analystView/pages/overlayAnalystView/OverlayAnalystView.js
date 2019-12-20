@@ -294,9 +294,10 @@ export default class OverlayAnalystView extends Component {
           if (type === item.datasetType) {
             if (
               filter.exclude &&
-              (filter.exclude.dataSource !== item.datasourceName ||
-                filter.exclude.dataset !== item.datasetName) &&
-              filter.exclude.datasetTypes.indexOf(item.datasetType) < 0
+              ((filter.exclude.dataSource === item.datasourceName &&
+                filter.exclude.dataSet === item.datasetName) ||
+                (filter.exclude.datasetTypes &&
+                  filter.exclude.datasetTypes.indexOf(item.datasetType) > -1))
             )
               continue
             item.key = item.datasetName
@@ -311,7 +312,8 @@ export default class OverlayAnalystView extends Component {
         if (
           !filter.exclude ||
           ((filter.exclude.dataSource !== item.datasourceName ||
-            filter.exclude.dataset !== item.datasetName) &&
+            filter.exclude.dataSet !== item.datasetName) &&
+            filter.exclude.datasetTypes &&
             filter.exclude.datasetTypes.indexOf(item.datasetType) < 0)
         ) {
           item.key = item.datasetName
@@ -374,7 +376,7 @@ export default class OverlayAnalystView extends Component {
             )
             let filter = {}
             filter.typeFilter = this.getDataLimit()
-            filter.datasetTypes = {}
+            filter.exclude = {}
             if (this.state.overlayDataSet && this.state.overlayDataSet.value) {
               filter.exclude = {
                 dataSource: this.state.overlayDataSource.value,
