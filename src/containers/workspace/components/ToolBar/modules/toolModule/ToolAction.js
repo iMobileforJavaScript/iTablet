@@ -702,12 +702,19 @@ function selectLabel() {
 
   let layers = _params.layers.layers
   // 其他图层设置为不可选
+  _setMyLayersSelectable(layers, false)
+}
+
+//设置我的图层的可选择性
+function _setMyLayersSelectable(layers, selectable) {
   for (let i = 0; i < layers.length; i++) {
-    if (
+    if (layers[i].type === 'layerGroup') {
+      _setMyLayersSelectable(layers[i].child, selectable)
+    } else if (
       LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
       layers[i].isSelectable
     ) {
-      SMap.setLayerSelectable(layers[i].path, false)
+      SMap.setLayerSelectable(layers[i].path, selectable)
     }
   }
 }
@@ -1033,13 +1040,9 @@ function close(type) {
 
     let layers = _params.layers.layers
     // 还原其他图层的选择状态
+    _setMyLayersSelectable(layers, true)
     for (let i = 0; i < layers.length; i++) {
-      if (
-        LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
-        layers[i].isSelectable
-      ) {
-        SMap.setLayerSelectable(layers[i].path, true)
-      } else if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+      if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
         if (
           _params.currentLayer &&
           _params.currentLayer.name &&

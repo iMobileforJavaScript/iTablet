@@ -38,18 +38,18 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     PL = await getPLList(path, contentList)
     WS = await getWSList(path, contentList, uncheckedChildFileList)
     WS3D = await getWS3DList(path, contentList, uncheckedChildFileList)
-    DS = await getDSList(path, contentList, uncheckedChildFileList)
-    TIF = await getTIFList(path, contentList, uncheckedChildFileList)
-    SHP = await getSHPList(path, contentList, uncheckedChildFileList)
-    MIF = await getMIFList(path, contentList, uncheckedChildFileList)
-    KML = await getKMLList(path, contentList, uncheckedChildFileList)
-    KMZ = await getKMZList(path, contentList, uncheckedChildFileList)
+    DS = getDSList(path, contentList, uncheckedChildFileList)
+    TIF = getTIFList(path, contentList, uncheckedChildFileList)
+    SHP = getSHPList(path, contentList, uncheckedChildFileList)
+    MIF = getMIFList(path, contentList, uncheckedChildFileList)
+    KML = getKMLList(path, contentList, uncheckedChildFileList)
+    KMZ = getKMZList(path, contentList, uncheckedChildFileList)
     if (Platform.OS === 'ios') {
-      DWG = await getDWGList(path, contentList, uncheckedChildFileList)
-      DXF = await getDXFList(path, contentList, uncheckedChildFileList)
+      DWG = getDWGList(path, contentList, uncheckedChildFileList)
+      DXF = getDXFList(path, contentList, uncheckedChildFileList)
     }
-    GPX = await getGPXList(path, contentList, uncheckedChildFileList)
-    IMG = await getIMGList(path, contentList, uncheckedChildFileList)
+    GPX = getGPXList(path, contentList, uncheckedChildFileList)
+    IMG = getIMGList(path, contentList, uncheckedChildFileList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
@@ -209,7 +209,7 @@ async function getWS3DList(path, contentList, uncheckedChildFileList) {
 }
 
 /** 获取数据源 */
-async function getDSList(path, contentList, uncheckedChildFileList) {
+function getDSList(path, contentList, uncheckedChildFileList) {
   let DS = []
   let relatedFiles = []
   try {
@@ -230,7 +230,7 @@ async function getDSList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         DS = DS.concat(
-          await getDSList(
+          getDSList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -245,7 +245,7 @@ async function getDSList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getTIFList(path, contentList, uncheckedChildFileList) {
+function getTIFList(path, contentList, uncheckedChildFileList) {
   let TIF = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -262,7 +262,7 @@ async function getTIFList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         TIF = TIF.concat(
-          await getTIFList(
+          getTIFList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -276,7 +276,7 @@ async function getTIFList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getSHPList(path, contentList, uncheckedChildFileList) {
+function getSHPList(path, contentList, uncheckedChildFileList) {
   let SHP = []
   let relatedFiles = []
   try {
@@ -296,7 +296,7 @@ async function getSHPList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         SHP = SHP.concat(
-          await getSHPList(
+          getSHPList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -310,7 +310,7 @@ async function getSHPList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getMIFList(path, contentList, uncheckedChildFileList) {
+function getMIFList(path, contentList, uncheckedChildFileList) {
   let MIF = []
   let relatedFiles = []
   try {
@@ -330,7 +330,7 @@ async function getMIFList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         MIF = MIF.concat(
-          await getMIFList(
+          getMIFList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -344,7 +344,7 @@ async function getMIFList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getKMLList(path, contentList, uncheckedChildFileList) {
+function getKMLList(path, contentList, uncheckedChildFileList) {
   let KML = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -361,7 +361,7 @@ async function getKMLList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         KML = KML.concat(
-          await getKMLList(
+          getKMLList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -375,7 +375,7 @@ async function getKMLList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getKMZList(path, contentList, uncheckedChildFileList) {
+function getKMZList(path, contentList, uncheckedChildFileList) {
   let KMZ = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -392,7 +392,7 @@ async function getKMZList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         KMZ = KMZ.concat(
-          await getKMZList(
+          getKMZList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -406,7 +406,7 @@ async function getKMZList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getDWGList(path, contentList, uncheckedChildFileList) {
+function getDWGList(path, contentList, uncheckedChildFileList) {
   let DWG = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -423,7 +423,7 @@ async function getDWGList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         DWG = DWG.concat(
-          await getDWGList(
+          getDWGList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -437,7 +437,7 @@ async function getDWGList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getDXFList(path, contentList, uncheckedChildFileList) {
+function getDXFList(path, contentList, uncheckedChildFileList) {
   let DXF = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -454,7 +454,7 @@ async function getDXFList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         DXF = DXF.concat(
-          await getDXFList(
+          getDXFList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -468,7 +468,7 @@ async function getDXFList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getGPXList(path, contentList, uncheckedChildFileList) {
+function getGPXList(path, contentList, uncheckedChildFileList) {
   let GPX = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -485,7 +485,7 @@ async function getGPXList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         GPX = GPX.concat(
-          await getGPXList(
+          getGPXList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
@@ -499,7 +499,7 @@ async function getGPXList(path, contentList, uncheckedChildFileList) {
   }
 }
 
-async function getIMGList(path, contentList, uncheckedChildFileList) {
+function getIMGList(path, contentList, uncheckedChildFileList) {
   let IMG = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
@@ -516,7 +516,7 @@ async function getIMGList(path, contentList, uncheckedChildFileList) {
         }
       } else if (!contentList[i].check && contentList[i].type === 'directory') {
         IMG = IMG.concat(
-          await getIMGList(
+          getIMGList(
             path + '/' + contentList[i].name,
             contentList[i].contentList,
             uncheckedChildFileList,
