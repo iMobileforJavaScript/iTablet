@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { ConstInfo } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { Toast, LayerUtils, scaleSize } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
@@ -682,6 +682,9 @@ export default class LayerSelectionAttribute extends React.Component {
   }
   /** 点击属性字段回调 **/
   onPressHeader = ({ fieldInfo, index, pressView }) => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      return
+    }
     this._showPopover(pressView, index, fieldInfo)
   }
 

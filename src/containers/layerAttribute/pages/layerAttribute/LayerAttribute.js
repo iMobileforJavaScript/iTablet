@@ -717,6 +717,9 @@ export default class LayerAttribute extends React.Component {
   }
   /** 点击属性字段回调 **/
   onPressHeader = ({ fieldInfo, index, pressView }) => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      return
+    }
     this._showPopover(pressView, index, fieldInfo)
   }
 
