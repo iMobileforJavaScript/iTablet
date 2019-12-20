@@ -65,13 +65,13 @@ export default class LicenseJoin extends Component {
         GLOBAL.modulesNumber = number
         GLOBAL.Loading.setLoading(
           false,
-          global.language === 'CN' ? '许可申请中...' : 'Activate Faild',
+          global.language === 'CN' ? '许可申请中...' : 'Applying',
         )
         this.cb && this.cb()
       } else {
         Toast.show(
           // getLanguage(global.language).Profile.INPUT_LICENSE_SERIAL_NUMBER,
-          global.language === 'CN' ? '激活失败...' : 'Applying',
+          global.language === 'CN' ? '激活失败...' : 'Activate Faild',
         )
         GLOBAL.Loading.setLoading(
           false,

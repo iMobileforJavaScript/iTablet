@@ -627,6 +627,44 @@ class AppRoot extends Component {
   }
   //接入正式许可
   inputOfficialLicense=async () =>{
+
+    if(Platform.OS === 'ios'){
+      GLOBAL.Loading.setLoading(
+        true,
+        global.language === 'CN' ? '许可申请中...' : 'Applying',
+      )
+      
+      let activateResult = await SMap.activateNativeLicense()
+      if(activateResult){
+
+        AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, activateResult)
+        let modules = await SMap.licenseContainModule(activateResult)
+        let size = modules.length
+        let number = 0
+        for (let i = 0; i < size; i++) {
+          let modultCode = Number(modules[i])
+          number = number + modultCode
+        }
+        GLOBAL.modulesNumber = number
+
+        GLOBAL.LicenseValidDialog.setDialogVisible(false)
+        GLOBAL.getLicense && GLOBAL.getLicense()
+        Toast.show(
+          getLanguage(global.language).Profile
+            .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
+        )
+      }else{
+        Toast.show(
+          global.language === 'CN' ? '激活失败...' : 'Activate Faild',
+        )
+      }
+      GLOBAL.Loading.setLoading(
+        false,
+        global.language === 'CN' ? '许可申请中...' : 'Applying...',
+      )
+      return
+    }
+
     GLOBAL.LicenseValidDialog.setDialogVisible(false)
     NavigationService.navigate('LicenseJoin',{
       cb: async () => {
