@@ -191,7 +191,7 @@ class MyDataset extends MyDataPage {
         }
         this._onShareData(this.shareType)
       },
-      renderExtra: this.renderExportList(data),
+      renderExtra: () => this.renderExportList(data),
       dialogStyle: { height: dialogHeight },
       showTitleImage: false,
     })

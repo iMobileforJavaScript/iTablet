@@ -1,5 +1,5 @@
 import { getLanguage } from '../../../../../../language'
-import { Toast } from '../../../../../../utils'
+import { Toast, LayerUtils } from '../../../../../../utils'
 import { ConstToolType, ToolbarType } from '../../../../../../constants'
 import { SMap } from 'imobile_for_reactnative'
 import ToolbarModule from '../ToolbarModule'
@@ -86,8 +86,15 @@ async function listAction(type, params = {}) {
             : getLanguage(_params.language).Prompt.ADD_MAP_FAILED,
         )
         if (result) {
-          await _params.getLayers(-1, layers => {
+          await _params.getLayers(-1, async layers => {
             _params.setCurrentLayer(layers.length > 0 && layers[0])
+
+            for (let i = layers.length; i > 0; i--) {
+              if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+                await SMap.moveToTop(layers[i].name)
+              }
+            }
+            SMap.refreshMap()
           })
         }
         _params.setToolbarVisible(false)
@@ -187,10 +194,17 @@ async function commit() {
   }
 
   if (Object.keys(result).length > 0) {
-    _params.getLayers(-1, layers => {
+    _params.getLayers(-1, async layers => {
       if (layers.length > 0) {
         _params.setCurrentLayer(layers[0])
         SMap.setLayerEditable(layers[0].path, true)
+
+        for (let i = layers.length; i > 0; i--) {
+          if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+            await SMap.moveToTop(layers[i].name)
+          }
+        }
+        SMap.refreshMap()
       }
     })
 

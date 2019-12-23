@@ -23,7 +23,7 @@ export default class SimpleDialog extends PureComponent {
       cancelAction: this.cancel,
       text: this.props.text,
       textStyle: {},
-      renderExtra: props.renderExtra,
+      renderExtra: props.renderExtra ? props.renderExtra : this.renderExtra,
       dialogStyle: {},
       showTitleImage: true,
     }
@@ -60,7 +60,7 @@ export default class SimpleDialog extends PureComponent {
       textStyle: textStyle ? textStyle : {},
       confirmAction: confirmAction ? confirm || this.confirm : this.confirm,
       cancelAction: cancelAction ? cancel || this.cancel : this.cancel,
-      renderExtra: renderExtra,
+      renderExtra: renderExtra ? renderExtra : this.renderExtra,
       dialogStyle: dialogStyle ? dialogStyle : {},
       showTitleImage: showTitleImage !== undefined ? showTitleImage : true,
     })
@@ -72,7 +72,7 @@ export default class SimpleDialog extends PureComponent {
       textStyle: {},
       confirmAction: this.confirm,
       cancelAction: this.cancel,
-      renderExtra: undefined,
+      renderExtra: this.renderExtra,
       dialogStyle: {},
       showTitleImage: true,
     })
@@ -118,6 +118,10 @@ export default class SimpleDialog extends PureComponent {
     this.setVisible(false)
   }
 
+  renderExtra = () => {
+    return <View />
+  }
+
   render() {
     return (
       <Dialog
@@ -146,7 +150,7 @@ export default class SimpleDialog extends PureComponent {
           <Text style={[styles.promptTtile, this.state.textStyle]}>
             {this.state.text}
           </Text>
-          {this.state.renderExtra}
+          {this.state.renderExtra()}
         </View>
       </Dialog>
     )
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dialogHeaderImg: {
-    paddingTop: scaleSize(10),
+    marginTop: scaleSize(10),
     width: scaleSize(80),
     height: scaleSize(80),
     opacity: 1,
@@ -173,9 +177,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   dialogBackground: {
-    height: scaleSize(240),
+    height: scaleSize(250),
   },
   opacityView: {
-    height: scaleSize(240),
+    height: scaleSize(250),
   },
 })
