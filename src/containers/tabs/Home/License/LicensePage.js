@@ -156,7 +156,13 @@ export default class LicensePage extends Component {
         global.language === 'CN' ? '许可申请中...' : 'Applying',
       )
       let activateResult = await SMap.activateNativeLicense()
-      if (activateResult) {
+      if (activateResult === -1) {
+        //没有本地许可文件
+        GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
+      } else if (activateResult === -2) {
+        //本地许可文件序列号无效
+        Toast.show(getLanguage(global.language).Profile.LICENSE_NATIVE_EXPIRE)
+      } else {
         AsyncStorage.setItem(
           constants.LICENSE_OFFICIAL_STORAGE_KEY,
           activateResult,
@@ -175,8 +181,6 @@ export default class LicensePage extends Component {
           getLanguage(global.language).Profile
             .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
         )
-      } else {
-        Toast.show(global.language === 'CN' ? '激活失败...' : 'Activate Faild')
       }
       GLOBAL.Loading.setLoading(
         false,
