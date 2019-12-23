@@ -644,7 +644,7 @@ export default class LayerSelectionAttribute extends React.Component {
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
+              defaultParams: { fieldInfo },
               isDetail: true,
             })
           }.bind(this)())
