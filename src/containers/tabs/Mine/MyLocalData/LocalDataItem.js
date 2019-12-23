@@ -10,6 +10,7 @@ import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { _getHomePath } from './Method'
 import { getLanguage } from '../../../../language'
+import { getThemeAssets } from '../../../../assets'
 export default class LocalDataItem extends Component {
   props: {
     info: Object,
@@ -20,6 +21,56 @@ export default class LocalDataItem extends Component {
     super(props)
     this.state = {}
   }
+
+  getImg = fileType => {
+    let img
+    switch (fileType) {
+      case 'workspace':
+        img = getThemeAssets().mine.my_import_ws
+        break
+      case 'workspace3d':
+        img = getThemeAssets().mine.my_import_ws3d
+        break
+      case 'plotting':
+        img = getThemeAssets().mine.my_import_plot
+        break
+      case 'datasource':
+        img = getThemeAssets().mine.my_import_udb
+        break
+      case 'tif':
+        img = getThemeAssets().mine.my_import_tif
+        break
+      case 'shp':
+        img = getThemeAssets().mine.my_import_shp
+        break
+      case 'mif':
+        img = getThemeAssets().mine.my_import_mif
+        break
+      case 'kml':
+        img = getThemeAssets().mine.my_import_kml
+        break
+      case 'kmz':
+        img = getThemeAssets().mine.my_import_kmz
+        break
+      case 'dwg':
+        img = getThemeAssets().mine.my_import_dwg
+        break
+      case 'dxf':
+        img = getThemeAssets().mine.my_import_dxf
+        break
+      case 'gpx':
+        img = getThemeAssets().mine.my_import_gpx
+        break
+      case 'img':
+        img = getThemeAssets().mine.my_import_img
+        break
+      default:
+        img = require('../../../../assets/Mine/mine_my_import_local_light.png')
+        break
+    }
+    return img
+  }
+
   render() {
     let txtInfo = this.props.info.item.fileName
     let txtindex = txtInfo.lastIndexOf('.')
@@ -53,21 +104,21 @@ export default class LocalDataItem extends Component {
             flexDirection: 'row',
             alignItems: 'center',
             height: itemHeight,
-            paddingLeft: 20,
+            paddingLeft: 15,
           }}
         >
-          <View style={{ width: scaleSize(40) }}>
+          <View style={{ width: scaleSize(50) }}>
             {this.props.isImporting ? (
               <ActivityIndicator size="small" color="#505050" />
             ) : (
               <Image
                 style={{
-                  width: imageWidth,
-                  height: imageHeight,
+                  width: scaleSize(50),
+                  height: scaleSize(50),
                   tintColor: imageColor,
                 }}
                 resizeMode={'contain'}
-                source={require('../../../../assets/Mine/mine_my_import_local_light.png')}
+                source={this.getImg(this.props.info.item.fileType)}
               />
             )}
           </View>

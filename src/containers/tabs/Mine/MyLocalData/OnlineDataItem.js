@@ -98,9 +98,9 @@ export default class OnlineDataItem extends Component {
             source={require('../../../../assets/Mine/mine_my_import_online_light.png')}
             resizeMode={'contain'}
             style={{
-              width: scaleSize(40),
-              height: scaleSize(40),
-              marginLeft: 20,
+              width: scaleSize(50),
+              height: scaleSize(50),
+              marginLeft: 15,
             }}
           />
           <View
