@@ -636,6 +636,7 @@ export default class MT_layerManager extends React.Component {
             // this.setRefreshing(true)
             // this.getData()
             this.updateTagging()
+            this.props.getLayers()
           }.bind(this)())
         }
         NavigationService.goBack()
