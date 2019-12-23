@@ -2,6 +2,7 @@ import { getLanguage } from '../../../../language'
 import { getPublicAssets } from '../../../../assets'
 import dataUtil from '../../../../utils/dataUtil'
 import { DatasetType } from 'imobile_for_reactnative'
+import constants from '../../../../containers/workspace/constants'
 
 function getGroupData(language) {
   return [
@@ -572,7 +573,8 @@ function layerCollectionSetting(language, isGroup = false, layerData) {
           (layerData.type === DatasetType.CAD ||
             layerData.type === DatasetType.IMAGE ||
             layerData.type === DatasetType.MBImage ||
-            layerData.type === DatasetType.TEXT))
+            layerData.type === DatasetType.TEXT ||
+            GLOBAL.Type === constants.MAP_PLOTTING))
       ) {
         data.splice(3, 1) // 若当前图层为CAD或者TEXT，则没有'当前图层采集'选项
       }

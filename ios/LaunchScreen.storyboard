@@ -22,6 +22,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="WZ6-3Q-7Lf"/>
                                 </constraints>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="default">
@@ -42,6 +43,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="KBg-Pb-ncd"/>
                                 </constraints>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <variation key="default">

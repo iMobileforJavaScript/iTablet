@@ -202,6 +202,9 @@ const Profile = {
     'This module is not included under the current license',
   LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
     'This module is not included under the current license and some of its functions will be unavailable！！！',
+  LICENSE_NO_NATIVE_OFFICAL:
+    'No native official license file,Please add license file "Official_License.txt" to "/iTablet/license/" file',
+  LICENSE_NATIVE_EXPIRE: 'Native License Invalid',
   //许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',
