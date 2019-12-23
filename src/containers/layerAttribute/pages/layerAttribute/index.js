@@ -6,6 +6,7 @@ import {
   // setAttributes,
   setLayerAttributes,
   setAttributeHistory,
+  clearAttributeHistory,
 } from '../../../../models/layers'
 
 const mapStateToProps = state => ({
@@ -25,6 +26,7 @@ const mapDispatchToProps = {
   // setAttributes,
   setLayerAttributes,
   setAttributeHistory,
+  clearAttributeHistory,
 }
 
 export default connect(

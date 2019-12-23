@@ -301,6 +301,12 @@ const Prompt = {
   SPEECH_NONE: '您好像没有说话哦',
 
   NOT_SUPPORT_STATISTIC: '该字段不支持统计',
+  ATTRIBUTE_DELETE_CONFIRM: '确定删除所选字段？',
+  ATTRIBUTE_DELETE_TIPS: '删除属性后，不可恢复',
+  ATTRIBUTE_DELETE_SUCCESS: '属性字段删除成功',
+  ATTRIBUTE_DELETE_FAILED: '属性字段删除失败',
+  ATTRIBUTE_ADD_SUCCESS: '属性添加成功',
+  ATTRIBUTE_ADD_FAILED: '属性添加失败',
 }
 
 export { Prompt }

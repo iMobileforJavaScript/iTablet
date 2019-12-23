@@ -314,6 +314,12 @@ const Prompt = {
   SPEECH_NONE: "You didn't seem to speak anything",
 
   NOT_SUPPORT_STATISTIC: 'The field not support statistic',
+  ATTRIBUTE_DELETE_CONFIRM: 'Sure Delete this Attribute Field?',
+  ATTRIBUTE_DELETE_TIPS: 'Can not recoverable after delete attribute',
+  ATTRIBUTE_DELETE_SUCCESS: 'Attribute Field Delete Succeed',
+  ATTRIBUTE_DELETE_FAILED: 'Attribute Field Delete Failed',
+  ATTRIBUTE_ADD_SUCCESS: 'Attribute Add Succeed',
+  ATTRIBUTE_ADD_FAILED: 'Attribute Add Failed',
 }
 
 export { Prompt }
