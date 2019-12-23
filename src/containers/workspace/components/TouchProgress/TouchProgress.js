@@ -1103,6 +1103,11 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
       ) {
+        if (value > 50) {
+          value = 50
+        } else if (value < 1) {
+          value = 1
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP_RADIUS +
           '     ' +
@@ -1452,7 +1457,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 50) {
           value = 50

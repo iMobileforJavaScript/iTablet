@@ -1431,20 +1431,8 @@ function menu(type, selectKey, params = {}) {
 }
 
 function showMenuBox(type, selectKey, params = {}) {
-  const _params = ToolbarModule.getParams()
   if (type.indexOf('MAP_THEME_PARAM') === -1) return
-  if (
-    selectKey ===
-    getLanguage(_params.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
-  ) {
-    // 显示指滑进度条
-    params.showBox &&
-      params.showBox({
-        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
-        showMenuDialog: false,
-        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
-      })
-  } else if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
+  if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
     switch (selectKey) {
       case '表达式':
         getGraphThemeExpressions(
@@ -1468,8 +1456,9 @@ function showMenuBox(type, selectKey, params = {}) {
   } else {
     params.showBox &&
       params.showBox({
+        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
         showMenuDialog: false,
-        isFullScreen: false,
+        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
       })
   }
 }

@@ -346,18 +346,7 @@ export default class MyDataPage extends Component {
               : getLanguage(global.language).Prompt.SHARE_SUCCESS,
           )
           if (this.exportPath !== '') {
-            this.SimpleDialog.set({
-              text:
-                getLanguage(global.language).Prompt.EXPORT_TO +
-                '\n\n' +
-                this.exportPath,
-              textStyle: { marginTop: scaleSize(15) },
-              confirmAction: () => (this.exportPath = ''),
-              cancelAction: () => (this.exportPath = ''),
-              dialogStyle: { width: scaleSize(500), height: scaleSize(250) },
-              showTitleImage: false,
-            })
-            this.SimpleDialog.setVisible(true)
+            this.showExportPathDialog()
           }
         } else {
           Toast.show(
@@ -713,15 +702,39 @@ export default class MyDataPage extends Component {
   showRelatedMapsDialog = ({ confirmAction, relatedMaps }) => {
     let dialogHeight
     if (relatedMaps.length < 5) {
-      dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(35)
+      dialogHeight = scaleSize(270) + relatedMaps.length * scaleSize(35)
     } else {
       dialogHeight = scaleSize(410)
     }
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
       confirmAction: confirmAction,
-      renderExtra: this.renderRelatedMap(relatedMaps),
+      renderExtra: () => this.renderRelatedMap(relatedMaps),
       dialogStyle: { height: dialogHeight },
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showExportPathDialog = () => {
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.EXPORT_TO,
+      textStyle: { fontSize: scaleSize(28) },
+      renderExtra: () => {
+        return (
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: scaleSize(24),
+              marginTop: scaleSize(5),
+            }}
+          >
+            {this.exportPath}
+          </Text>
+        )
+      },
+      confirmAction: () => (this.exportPath = ''),
+      cancelAction: () => (this.exportPath = ''),
+      dialogStyle: { width: scaleSize(500), height: scaleSize(340) },
     })
     this.SimpleDialog.setVisible(true)
   }
