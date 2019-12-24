@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
+import utils from './utils'
 
 const ROW_HEIGHT = scaleSize(80)
 // const CELL_WIDTH = scaleSize(120)
@@ -183,28 +184,11 @@ export default class Cell extends Component {
       } else {
         newState.value = _value
       }
-      if (this.props.data.fieldInfo.type === 1) {
-        // type = 1 为boolean类型
-        if (
-          newState.value === '1' ||
-          newState.value === 'true' ||
-          newState.value === 1 ||
-          newState.value === true
-        ) {
-          newState.value = true
-        } else if (
-          newState.value === '0' ||
-          newState.value === 'false' ||
-          newState.value === 0 ||
-          newState.value === false
-        ) {
-          newState.value = false
-        } else {
-          newState.value =
-            this.props.defaultValue !== '0' ||
-            this.props.defaultValue !== 'false'
-        }
-      }
+      newState.value = utils.getValue(
+        newState.value,
+        this.props.defaultValue,
+        this.props.data.fieldInfo.type,
+      )
       this.state.editable &&
         this.setState(newState, () => {
           this.changeEnd()
@@ -244,28 +228,14 @@ export default class Cell extends Component {
   render() {
     return (
       <TouchableOpacity
-        // activeOpacity={1}
-        style={[
-          styles.cell,
-          this.props.style,
-          // !this.props.editable && { backgroundColor: color.borderLight },
-          // this.props.width ? { width: this.props.width } : { flex: 1 },
-        ]}
-        // onLongPress={this._setEditable}
-
+        style={[styles.cell, this.props.style]}
         activeOpacity={1}
-        // style={styles.cellOverlay}
-        // onLongPress={this._setEditable}
         delayLongPress={this.props.delayLongPress}
         onPress={this._onPress}
       >
-        {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
-        {/*<View>*/}
         {this.props.editable && this.state.editable ? (
           <TextInput
             ref={ref => (this.cellInput = ref)}
-            // editable={this.state.editable && this.props.editable}
-            // multiline = {true}
             value={this.state.value + ''}
             style={styles.input}
             underlineColorAndroid="transparent"
@@ -284,16 +254,6 @@ export default class Cell extends Component {
             {this.state.value + ''}
           </Text>
         )}
-        {/*</View>*/}
-        {/*{(!this.state.editable || !this.props.editable) && (*/}
-        {/*<TouchableOpacity*/}
-        {/*activeOpacity={1}*/}
-        {/*style={styles.cellOverlay}*/}
-        {/*onLongPress={this._setEditable}*/}
-        {/*delayLongPress={this.props.delayLongPress}*/}
-        {/*onPress={this._onPress}*/}
-        {/*/>*/}
-        {/*)}*/}
       </TouchableOpacity>
     )
   }
