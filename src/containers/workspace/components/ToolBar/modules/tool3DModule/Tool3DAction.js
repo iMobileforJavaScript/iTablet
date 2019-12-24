@@ -22,10 +22,9 @@ function measureDistance() {
       if (!isClickMeasurePoint) {
         isClickMeasurePoint = true
         ToolbarModule.addData({ isFinished: true })
-        return
       }
       let pointArr = ToolbarModule.getData().pointArr || []
-      let redoArr = []
+      let redoArr = ToolbarModule.getData().redoArr || []
       pointArr.indexOf(JSON.stringify(result)) === -1 &&
         result.x !== 0 &&
         pointArr.push(JSON.stringify(result))
@@ -57,10 +56,9 @@ function measureArea() {
       if (!isClickMeasurePoint) {
         isClickMeasurePoint = true
         ToolbarModule.addData({ isFinished: true })
-        return
       }
       let pointArr = ToolbarModule.getData().pointArr || []
-      let redoArr = []
+      let redoArr = ToolbarModule.getData().redoArr || []
       pointArr.indexOf(JSON.stringify(result)) === -1 &&
         result.x !== 0 &&
         pointArr.push(JSON.stringify(result))

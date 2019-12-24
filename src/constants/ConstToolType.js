@@ -313,6 +313,7 @@ export default {
     scaleSize(TOOLBAR_HEIGHT_1 * 5),
     scaleSize(TOOLBAR_HEIGHT_1 * 6),
     scaleSize(TOOLBAR_HEIGHT_1 * 7),
+    scaleSize(TOOLBAR_HEIGHT_1 * 8),
   ],
   TOOLBAR_HEIGHT_2: [
     scaleSize(TOOLBAR_HEIGHT_2),
