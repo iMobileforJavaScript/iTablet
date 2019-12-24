@@ -5,6 +5,7 @@ import { getLanguage } from '../../../../../../language'
 import { getThemeAssets } from '../../../../../../assets'
 import { ConstToolType } from '../../../../../../constants'
 import CollectionAction from './CollectionAction'
+import ToolbarModule from '../ToolbarModule'
 
 /**
  * 获取采集操作数据
@@ -141,7 +142,7 @@ function getData(type) {
 function getOperationData(type) {
   let data = [],
     buttons = []
-
+  let _params = ToolbarModule.getParams()
   // 判断是否是采集操作功能
   if (
     type !== ConstToolType.MAP_COLLECTION_POINT &&
@@ -160,7 +161,8 @@ function getOperationData(type) {
     key: 'gpsPoint',
     title: getLanguage(global.language).Map_Main_Menu.COLLECTION_POINTS_BY_GPS,
     //'GPS打点',
-    action: () => CollectionAction.showCollection(gpsPointType),
+    action: () =>
+      CollectionAction.showCollection(gpsPointType, _params.currentLayer.path),
     size: 'large',
     image: require('../../../../../../assets/mapTools/icon_collection_point_collect.png'),
   })
@@ -173,7 +175,8 @@ function getOperationData(type) {
       key: 'gpsPath',
       title: getLanguage(global.language).Map_Main_Menu.COLLECTION_LINE_BY_GPS,
       //'GPS轨迹',
-      action: () => CollectionAction.showCollection(gpsPathType),
+      action: () =>
+        CollectionAction.showCollection(gpsPathType, _params.currentLayer.path),
       size: 'large',
       image: require('../../../../../../assets/mapTools/icon_collection_path_start.png'),
     })
@@ -188,7 +191,10 @@ function getOperationData(type) {
             .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () =>
-            CollectionAction.showCollection(SMCollectorType.POINT_HAND),
+            CollectionAction.showCollection(
+              SMCollectorType.POINT_HAND,
+              _params.currentLayer.path,
+            ),
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_collection_point.png'),
         },
@@ -209,7 +215,10 @@ function getOperationData(type) {
             .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () =>
-            CollectionAction.showCollection(SMCollectorType.LINE_HAND_POINT),
+            CollectionAction.showCollection(
+              SMCollectorType.LINE_HAND_POINT,
+              _params.currentLayer.path,
+            ),
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_collection_line.png'),
         },
@@ -219,7 +228,10 @@ function getOperationData(type) {
             .COLLECTION_FREE_DRAW,
           //'自由式',
           action: () =>
-            CollectionAction.showCollection(SMCollectorType.LINE_HAND_PATH),
+            CollectionAction.showCollection(
+              SMCollectorType.LINE_HAND_PATH,
+              _params.currentLayer.path,
+            ),
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_collection_line_freedom.png'),
         },
@@ -233,7 +245,10 @@ function getOperationData(type) {
             .COLLECTION_POINT_DRAW,
           //'点绘式',
           action: () =>
-            CollectionAction.showCollection(SMCollectorType.REGION_HAND_POINT),
+            CollectionAction.showCollection(
+              SMCollectorType.REGION_HAND_POINT,
+              _params.currentLayer.path,
+            ),
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_collection_region.png'),
         },
@@ -243,7 +258,10 @@ function getOperationData(type) {
             .COLLECTION_FREE_DRAW,
           //'自由式',
           action: () =>
-            CollectionAction.showCollection(SMCollectorType.REGION_HAND_PATH),
+            CollectionAction.showCollection(
+              SMCollectorType.REGION_HAND_PATH,
+              _params.currentLayer.path,
+            ),
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_collection_region_freedom.png'),
         },

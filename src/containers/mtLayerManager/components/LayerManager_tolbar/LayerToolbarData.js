@@ -302,13 +302,13 @@ const layer3dDefault = (language, selected) => {
   let data = {
     title: getLanguage(language).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
-    language: 'setLayerSelect',
+    type: 'setLayerSelect',
   }
   if (selected === false) {
     data = {
       title: getLanguage(language).Map_Layer.OPTIONAL,
       image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
-      language: 'setLayerSelect',
+      type: 'setLayerSelect',
     }
   }
   return [
