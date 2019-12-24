@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    // width: '100%',
+    width: '80%',
     // height: ROW_HEIGHT,
     backgroundColor: 'transparent',
     textAlign: 'center',
@@ -145,6 +145,7 @@ export default class Cell extends Component {
     //   this.setState({
     //     editable: false,
     //   })
+    let _value = this.state.value
     if (
       this.props.keyboardType === 'number-pad' ||
       this.props.keyboardType === 'decimal-pad' ||
@@ -152,7 +153,6 @@ export default class Cell extends Component {
     ) {
       // TextInput中获取的是String
       // 为防止数字中以 '.' 结尾，转成数字
-      let _value = parseFloat(this.state.value)
       if (isNaN(_value) || this.state.value === '') {
         if (this.props.defaultValue !== undefined) {
           _value = this.props.defaultValue
@@ -171,15 +171,44 @@ export default class Cell extends Component {
           },
         )
     } else {
+      let newState = {
+        editable: false,
+      }
+      if (
+        _value === '' &&
+        this.props.defaultValue !== undefined &&
+        this.props.isRequired
+      ) {
+        newState.value = this.props.defaultValue
+      } else {
+        newState.value = _value
+      }
+      if (this.props.data.fieldInfo.type === 1) {
+        // type = 1 为boolean类型
+        if (
+          newState.value === '1' ||
+          newState.value === 'true' ||
+          newState.value === 1 ||
+          newState.value === true
+        ) {
+          newState.value = true
+        } else if (
+          newState.value === '0' ||
+          newState.value === 'false' ||
+          newState.value === 0 ||
+          newState.value === false
+        ) {
+          newState.value = false
+        } else {
+          newState.value =
+            this.props.defaultValue !== '0' ||
+            this.props.defaultValue !== 'false'
+        }
+      }
       this.state.editable &&
-        this.setState(
-          {
-            editable: false,
-          },
-          () => {
-            this.changeEnd()
-          },
-        )
+        this.setState(newState, () => {
+          this.changeEnd()
+        })
     }
   }
 

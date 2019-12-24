@@ -179,12 +179,18 @@ export default class Row extends Component {
         let isHead = this.props.data.fieldInfo === undefined
         editable = !isHead && !this.props.data.fieldInfo.isSystemField
         isRequired = !isHead && this.props.data.fieldInfo.isRequired
-        defaultValue = !isHead && this.props.data.fieldInfo.defaultValue
+        defaultValue =
+          !isHead && this.props.data.fieldInfo.defaultValue !== undefined
+            ? this.props.data.fieldInfo.defaultValue
+            : ''
       }
     } else {
       editable = item.fieldInfo && !item.fieldInfo.isSystemField
-      isRequired = item.fieldInfo && !item.fieldInfo.isRequired
-      defaultValue = item.fieldInfo && !item.fieldInfo.defaultValue
+      isRequired = item.fieldInfo && item.fieldInfo.isRequired
+      defaultValue =
+        item.fieldInfo && item.fieldInfo.defaultValue !== undefined
+          ? item.fieldInfo.defaultValue
+          : ''
     }
 
     let cellStyle = [
