@@ -41,6 +41,8 @@ const Profile = {
   ENTER_VALID_SERVER_ADDRESS: '请输入合法的服务地址',
   ENTER_REALNAME: '请输入真实姓名',
   ENTER_COMPANY: '请输入工作机构',
+  REGISTER_READ_PROTOCAL: '我已阅读并接受 ',
+  REGISTER_ONLINE_PROTOCAL: '《超图软件用户服务协议》',
   CONNECTING: '连接中',
   CONNECT_SERVER_FAIL: '未能连接到服务器，请检查网络或服务器地址',
   NEXT: '下一步',
@@ -156,6 +158,9 @@ const Profile = {
   ENTER_DATASOURCE_NAME: '请输入数据源名称',
   OPEN_DATASROUCE_FAILED: '打开数据源失败',
 
+  SELECT_DATASET_EXPORT_TYPE: '请选择导出类型',
+  DATASET_EXPORT_NOT_SUPPORTED: '暂不支持此数据集的导出',
+
   //搜索
   SEARCH: '搜索',
   NO_SEARCH_RESULT: '没有搜索到相关数据',
@@ -198,6 +203,9 @@ const Profile = {
   LICENSE_NOT_CONTAIN_CURRENT_MODULE: '当前许可不包括该模块',
   LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
     '当前许可不包括该模块，该模块的部分功能将不可用！！！',
+  LICENSE_NO_NATIVE_OFFICAL:
+    '没有本地正式许可文件，请在/iTablet/license/文件夹下添加Official_License.txt许可文件',
+  LICENSE_NATIVE_EXPIRE: '本地许可无效',
   //许可模块
   Core_Dev: '核心开发模块',
   Core_Runtime: '核心运行模块',

@@ -13,7 +13,6 @@ export default StyleSheet.create({
     backgroundColor: '#rgba(0, 0, 0, 0)',
     // backgroundColor:"pink",
     zIndex: zIndexLevel.FOUR,
-    elevation: 100,
   },
   wrapContainer: {
     flexDirection: 'column',
@@ -22,12 +21,10 @@ export default StyleSheet.create({
     right: 0,
     backgroundColor: '#rgba(0, 0, 0, 0)',
     zIndex: zIndexLevel.FOUR,
-    elevation: 100,
   },
   themeoverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    elevation: 99,
     // zIndex: zIndexLevel.FOUR,
   },
   overlay: {

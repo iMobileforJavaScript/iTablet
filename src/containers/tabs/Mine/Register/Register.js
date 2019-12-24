@@ -8,6 +8,7 @@ import * as React from 'react'
 import {
   TextInput,
   Text,
+  Image,
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
@@ -15,16 +16,10 @@ import {
   Keyboard,
 } from 'react-native'
 import { Toast, scaleSize, OnlineServicesUtils } from '../../../../utils'
-
+import { getPublicAssets } from '../../../../assets'
 import { Container } from '../../../../components'
-import { SOnlineService } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
-import styles, {
-  titleOnFocusBackgroundColor,
-  titleOnBlurBackgroundColor,
-  fontSize,
-} from './Styles'
-import color from '../../../../styles/color'
+import styles, { fontSize } from './Styles'
 import { getLanguage } from '../../../../language/index'
 
 let JSOnlineService = undefined
@@ -37,13 +32,9 @@ export default class Register extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      onEmailTitleFocus: true,
-      onPhoneTitleFocus: false,
-      titleEmailDefaultBg: titleOnFocusBackgroundColor,
-      titlePhoneBg: titleOnBlurBackgroundColor,
+      readProtocal: true,
       behavior: 'padding',
     }
-    this._renderEmail = this._renderEmail.bind(this)
     JSOnlineService = new OnlineServicesUtils('online')
     JSOnlineService.loadPhoneRegisterPage()
   }
@@ -55,143 +46,69 @@ export default class Register extends React.Component {
   _register = async () => {
     try {
       let result
-      let isEmail = this.state.onEmailTitleFocus
-      if (isEmail) {
-        if (!this.txtEmail) {
-          //请输入QQ邮箱
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
-          return
-        }
-        if (!this.txtEmailNickname) {
-          //请输入昵称
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
-          return
-        }
-        if (!this.txtEmailPassword) {
-          //请输入密码
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
-          return
-        }
-        this.container.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.REGISTERING,
-        )
-        //'注册中...')
-        result = await SOnlineService.registerWithEmail(
-          this.txtEmail,
-          this.txtEmailNickname,
-          this.txtEmailPassword,
-        )
-      } else {
-        if (!this.txtPhoneNumberNickname) {
-          //请输入昵称
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
-          return
-        }
-        if (!this.txtPhoneNumberRealName) {
-          //请输入真实姓名
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_REALNAME)
-          return
-        }
-        if (!this.txtPhoneNumberCompany) {
-          //请输入工作机构
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_COMPANY)
-          return
-        }
-        if (!this.txtPhoneNumberEmail) {
-          //请输入个人邮箱
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
-          return
-        }
-        if (!this.txtPhoneNumberPassword) {
-          //请输入密码
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
-          return
-        }
-        if (!this.txtPhoneNumber) {
-          //请输入手机号
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
-          return
-        }
-        if (!this.txtVerifyCode) {
-          //请输入验证码
-          Toast.show(getLanguage(this.props.language).Profile.ENTER_CODE)
-          return
-        }
-        this.container.setLoading(
-          true,
-          getLanguage(this.props.language).Prompt.REGISTERING,
-        )
-        //'注册中...')
-        result = await JSOnlineService.register('phone', {
-          nickname: this.txtPhoneNumberNickname,
-          realName: this.txtPhoneNumberRealName,
-          company: this.txtPhoneNumberCompany,
-          email: this.txtPhoneNumberEmail,
-          password: this.txtPhoneNumberPassword,
-          phoneNumber: this.txtPhoneNumber,
-          SMSVerifyCode: this.txtVerifyCode,
-        })
+      if (!this.txtPhoneNumberNickname) {
+        //请输入昵称
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_USERNAME)
+        return
       }
+      if (!this.txtPhoneNumberRealName) {
+        //请输入真实姓名
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_REALNAME)
+        return
+      }
+      if (!this.txtPhoneNumberCompany) {
+        //请输入工作机构
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_COMPANY)
+        return
+      }
+      if (!this.txtPhoneNumberEmail) {
+        //请输入个人邮箱
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL)
+        return
+      }
+      if (!this.txtPhoneNumberPassword) {
+        //请输入密码
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
+        return
+      }
+      if (!this.txtPhoneNumber) {
+        //请输入手机号
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
+        return
+      }
+      if (!this.txtVerifyCode) {
+        //请输入验证码
+        Toast.show(getLanguage(this.props.language).Profile.ENTER_CODE)
+        return
+      }
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.REGISTERING,
+      )
+      //'注册中...')
+      result = await JSOnlineService.register('phone', {
+        nickname: this.txtPhoneNumberNickname,
+        realName: this.txtPhoneNumberRealName,
+        company: this.txtPhoneNumberCompany,
+        email: this.txtPhoneNumberEmail,
+        password: this.txtPhoneNumberPassword,
+        phoneNumber: this.txtPhoneNumber,
+        SMSVerifyCode: this.txtVerifyCode,
+      })
 
       let info
       if (typeof result === 'boolean' && result === true) {
-        if (isEmail) {
-          info = getLanguage(this.props.language).Prompt.GOTO_ACTIVATE
-          //'注册成功，请前往邮箱激活'
-          Toast.show(info)
-        } else {
-          info = getLanguage(this.props.language).Prompt.REGIST_SUCCESS
-          //'注册成功'
-          Toast.show(info)
-        }
+        info = getLanguage(this.props.language).Prompt.REGIST_SUCCESS
+        //'注册成功'
+        Toast.show(info)
         this.container.setLoading(false)
         this._goMine()
         return
       } else {
-        if (isEmail) {
-          let index = result.indexOf('，')
-          if (index !== -1) {
-            result = result.substring(0, index)
-          }
-          switch (result) {
-            case '手机号已注册':
-              info = getLanguage(this.props.language).Prompt
-                .PHIONE_HAS_BEEN_REGISTERED
-              break
-            case '昵称已存在':
-              info = getLanguage(this.props.language).Prompt.NICKNAME_IS_EXISTS
-              break
-            case '短信验证码错误':
-              info = getLanguage(this.props.language).Prompt
-                .VERIFICATION_CODE_ERROR
-              break
-            case '邮箱已注册':
-              info = getLanguage(this.props.language).Prompt
-                .EMAIL_HAS_BEEN_REGISTERED
-              break
-            case '注册失败':
-              info = getLanguage(this.props.language).Prompt.REGIST_FAILED
-              break
-            case '请输入正确的手机号':
-            case '手机格式不正确':
-              info = getLanguage(this.props.language).Prompt
-                .ENTER_CORRECT_MOBILE
-              break
-            case '请输入正确的邮箱号':
-            case '邮箱格式不正确':
-              info = getLanguage(this.props.language).Prompt.ENTER_CORRECT_EMAIL
-              break
-            default:
-              info = getLanguage(this.props.language).Prompt.REGIST_FAILED
-              break
-          }
+        if (typeof result === 'string') {
+          info = result
         } else {
-          if (typeof result === 'string') {
-            info = result
-          } else {
-            info = getLanguage(this.props.language).Prompt.REGIST_FAILED
-          }
+          info = getLanguage(this.props.language).Prompt.REGIST_FAILED
         }
         Toast.show(info)
       }
@@ -203,46 +120,7 @@ export default class Register extends React.Component {
     }
   }
 
-  _renderEmail() {
-    return (
-      <View key={'email'} style={{ width: '70%' }}>
-        <TextInput
-          keyboardType={'email-address'}
-          clearButtonMode={'while-editing'}
-          //'请输入邮箱'
-          placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL}
-          style={styles.textInputStyle}
-          defaultValue={this.txtEmail}
-          onChangeText={text => {
-            this.txtEmail = text
-          }}
-        />
-        <TextInput
-          clearButtonMode={'while-editing'}
-          //'请输入昵称'
-          placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
-          style={styles.textInputStyle}
-          defaultValue={this.txtEmailNickname}
-          onChangeText={text => {
-            this.txtEmailNickname = text
-          }}
-        />
-        <TextInput
-          clearButtonMode={'while-editing'}
-          secureTextEntry={true}
-          // 请输入密码
-          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
-          style={styles.textInputStyle}
-          defaultValue={this.txtEmailPassword}
-          onChangeText={text => {
-            this.txtEmailPassword = text
-          }}
-        />
-      </View>
-    )
-  }
-
-  _renderPhone() {
+  renderRegister() {
     return (
       <View key={'phone'} style={{ width: '70%' }}>
         <TextInput
@@ -350,34 +228,45 @@ export default class Register extends React.Component {
     )
   }
 
-  _onEmailPress = () => {
-    if (!this.state.onEmailTitleFocus) {
-      this.setState({
-        onEmailTitleFocus: true,
-        onPhoneTitleFocus: false,
-        titleEmailDefaultBg: titleOnFocusBackgroundColor,
-        titlePhoneBg: titleOnBlurBackgroundColor,
-      })
-    }
-  }
-  _onPhonePress = () => {
-    if (!this.state.onPhoneTitleFocus) {
-      this.setState({
-        onEmailTitleFocus: false,
-        onPhoneTitleFocus: true,
-        titleEmailDefaultBg: titleOnBlurBackgroundColor,
-        titlePhoneBg: titleOnFocusBackgroundColor,
-      })
-    }
+  renderServiceProtocal = () => {
+    let icon = this.state.readProtocal
+      ? getPublicAssets().common.icon_check
+      : getPublicAssets().common.icon_uncheck
+    return (
+      <View style={styles.protocalView}>
+        <TouchableOpacity
+          style={styles.protocalCheck}
+          onPress={() =>
+            this.setState({ readProtocal: !this.state.readProtocal })
+          }
+        >
+          <Image source={icon} />
+        </TouchableOpacity>
+        <View
+          style={[
+            styles.protocalTextView,
+            { flexDirection: global.language === 'EN' ? 'column' : 'row' },
+          ]}
+        >
+          <Text style={styles.protocalText}>
+            {getLanguage(global.language).Profile.REGISTER_READ_PROTOCAL}
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              NavigationService.navigate('Protocol', {
+                type: 'SuperMapOnlineProtocal',
+              })
+            }
+          >
+            <Text style={[styles.protocalText, { color: '#4680DF' }]}>
+              {getLanguage(global.language).Profile.REGISTER_ONLINE_PROTOCAL}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
   }
 
-  _onSelectTitle = () => {
-    if (this.state.onEmailTitleFocus) {
-      return this._renderEmail()
-    } else {
-      return this._renderPhone()
-    }
-  }
   render() {
     return (
       <Container
@@ -408,57 +297,12 @@ export default class Register extends React.Component {
             showsVerticalScrollIndicator={false}
           >
             <View style={{ alignItems: 'center', width: '100%' }}>
-              <View style={styles.titleStyle}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this._onPhonePress()
-                  }}
-                  style={[
-                    {
-                      flex: 1,
-                      height: '100%',
-                      alignItems: 'center',
-                      borderTopLeftRadius: 4,
-                      borderBottomLeftRadius: 4,
-                      borderTopRightRadius: 0,
-                      borderBottomRightRadius: 0,
-                      borderColor: color.theme,
-                      justifyContent: 'center',
-                      backgroundColor: this.state.titlePhoneBg,
-                    },
-                  ]}
-                >
-                  <Text style={[styles.titleContainerStyle]}>
-                    {/* 手机注册 */}
-                    {getLanguage(this.props.language).Profile.MOBILE_REGISTER}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this._onEmailPress()
-                  }}
-                  style={{
-                    flex: 1,
-                    height: '100%',
-                    alignItems: 'center',
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                    borderTopRightRadius: 4,
-                    borderBottomRightRadius: 4,
-                    justifyContent: 'center',
-                    backgroundColor: this.state.titleEmailDefaultBg,
-                  }}
-                >
-                  <Text style={[styles.titleContainerStyle]}>
-                    {/* 邮箱注册 */}
-                    {getLanguage(this.props.language).Profile.EMAIL_REGISTER}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {this._onSelectTitle()}
+              {this.renderRegister()}
+              {this.renderServiceProtocal()}
 
               <TouchableOpacity
                 style={styles.registerStyle}
+                disabled={!this.state.readProtocal}
                 onPress={() => {
                   Keyboard.dismiss()
                   this._register()

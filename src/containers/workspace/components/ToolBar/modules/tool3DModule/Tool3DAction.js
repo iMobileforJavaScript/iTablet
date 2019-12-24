@@ -21,19 +21,19 @@ function measureDistance() {
     callback: result => {
       if (!isClickMeasurePoint) {
         isClickMeasurePoint = true
-        return
+        ToolbarModule.addData({ isFinished: true })
       }
       let pointArr = ToolbarModule.getData().pointArr || []
-      let redoArr = []
+      let redoArr = ToolbarModule.getData().redoArr || []
       pointArr.indexOf(JSON.stringify(result)) === -1 &&
         result.x !== 0 &&
         pointArr.push(JSON.stringify(result))
       let newState = {}
-      if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+      if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
         newState.canUndo = true
-      if (_params.buttonView.state.canRedo) newState.canRedo = false
-      Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
-      ToolbarModule.addData({ pointArr, redoArr })
+      if (_params.toolbarStatus.canRedo) newState.canRedo = false
+      Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
+      ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
       result.length = Number(result.length)
       result.length = result.length > 0 ? result.length.toFixed(6) : 0
       _params.measureShow(true, result.length + 'm')
@@ -55,19 +55,19 @@ function measureArea() {
     callback: result => {
       if (!isClickMeasurePoint) {
         isClickMeasurePoint = true
-        return
+        ToolbarModule.addData({ isFinished: true })
       }
       let pointArr = ToolbarModule.getData().pointArr || []
-      let redoArr = []
+      let redoArr = ToolbarModule.getData().redoArr || []
       pointArr.indexOf(JSON.stringify(result)) === -1 &&
         result.x !== 0 &&
         pointArr.push(JSON.stringify(result))
       let newState = {}
-      if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+      if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
         newState.canUndo = true
-      if (_params.buttonView.state.canRedo) newState.canRedo = false
-      Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
-      ToolbarModule.addData({ pointArr, redoArr })
+      if (_params.toolbarStatus.canRedo) newState.canRedo = false
+      Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
+      ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
       result.totalArea = Number(result.totalArea)
       result.totalArea = result.totalArea > 0 ? result.totalArea.toFixed(6) : 0
       _params.measureShow(true, result.totalArea + '㎡')
@@ -355,44 +355,41 @@ function showAnalystResult(type) {
 
 /** 量算功能 撤销事件 **/
 function undo() {
+  if (ToolbarModule.getData().isFinished === false) return
   isClickMeasurePoint = false
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (!_params.buttonView || !_params.buttonView.state.canUndo) return
+  if (!_params.toolbarStatus.canUndo) return
   let newState = {}
   if (pointArr.length > 0) {
     redoArr.push(pointArr.pop())
   }
   newState.canRedo = redoArr.length > 0
   newState.canUndo = pointArr.length > 0
-  _params.buttonView.setState(newState)
-  ToolbarModule.addData({ pointArr, redoArr })
+  _params.setToolbarStatus(newState)
+  ToolbarModule.addData({ pointArr, redoArr, isFinished: false })
   SScene.displayDistanceOrArea(pointArr)
 }
 
 /** 量算功能 重做事件 **/
 function redo() {
+  if (ToolbarModule.getData().isFinished === false) return
   isClickMeasurePoint = false
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (
-    !_params.buttonView ||
-    !_params.buttonView.state.canRedo ||
-    redoArr.length === 0
-  )
-    return
+  if (!_params.toolbarStatus.canRedo || redoArr.length === 0) return
   let newState = {}
   if (redoArr.length > 0) {
     pointArr.push(redoArr.pop())
   }
   newState.canRedo = redoArr.length > 0
   newState.canUndo = pointArr.length > 0
-  _params.buttonView.setState(newState)
-  Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
+  _params.setToolbarStatus(newState)
+  Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
 
-  ToolbarModule.addData({ pointArr, redoArr })
+  ToolbarModule.addData({ pointArr, redoArr, isFinished: false })
   SScene.displayDistanceOrArea(pointArr)
 }
 
@@ -404,25 +401,23 @@ function clearMeasure(type) {
       SScene.clearSquareAnalyst()
       ToolbarModule.getParams().measureShow &&
         ToolbarModule.getParams().measureShow(true, '0㎡')
-      if (_params.buttonView) {
-        ToolbarModule.addData({ pointArr: [], redoArr: [] })
-        _params.buttonView.setState({
-          canUndo: false,
-          canRedo: false,
-        })
-      }
+      ToolbarModule.addData({ pointArr: [], redoArr: [] })
+      _params.setToolbarStatus({
+        canUndo: false,
+        canRedo: false,
+        isFinished: true,
+      })
       break
     case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
       SScene.clearLineAnalyst()
       ToolbarModule.getParams().measureShow &&
         ToolbarModule.getParams().measureShow(true, '0m')
-      if (_params.buttonView) {
-        ToolbarModule.addData({ pointArr: [], redoArr: [] })
-        _params.buttonView.setState({
-          canUndo: false,
-          canRedo: false,
-        })
-      }
+      ToolbarModule.addData({ pointArr: [], redoArr: [] })
+      _params.setToolbarStatus({
+        canUndo: false,
+        canRedo: false,
+        isFinished: true,
+      })
       break
     case ConstToolType.MAP3D_BOX_CLIP:
     case ConstToolType.MAP3D_CROSS_CLIP:
@@ -451,12 +446,10 @@ function close(type) {
     _params.existFullMap && _params.existFullMap()
     _params.setToolbarVisible(false)
     // this.clickTime = 0
-    if (_params.buttonView) {
-      _params.buttonView.setState({
-        canUndo: false,
-        canRedo: false,
-      })
-    }
+    _params.setToolbarStatus({
+      canUndo: false,
+      canRedo: false,
+    })
   } else if (
     type === ConstToolType.MAP3D_SYMBOL_POINT ||
     type === ConstToolType.MAP3D_SYMBOL_POINTLINE ||

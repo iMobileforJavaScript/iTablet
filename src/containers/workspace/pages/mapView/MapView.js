@@ -14,7 +14,7 @@ import {
   SMediaCollector,
   SMAIDetectView,
   // SMMapSuspension,
-  // SAIDetectView,
+  SAIDetectView,
   SSpeechRecognizer,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -136,6 +136,7 @@ export default class MapView extends React.Component {
     analyst: PropTypes.object,
     downloads: PropTypes.array,
     mapSearchHistory: PropTypes.array,
+    toolbarStatus: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -181,6 +182,7 @@ export default class MapView extends React.Component {
     setOpenOnlineMap: PropTypes.func,
     downloadFile: PropTypes.func,
     deleteDownloadFile: PropTypes.func,
+    setToolbarStatus: PropTypes.func,
   }
 
   constructor(props) {
@@ -229,7 +231,9 @@ export default class MapView extends React.Component {
       isRight: true,
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
+      showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
     }
+    this.currentFloorID = ''
     //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
     this.searchClickedInfo = {
       isClicked: false,
@@ -269,26 +273,37 @@ export default class MapView extends React.Component {
     this.analystRecommendVisible = false // 底部分析推荐列表 是否显示
     GLOBAL.showAIDetect = GLOBAL.Type === constants.MAP_AR
 
-    this.selectedDataset = null
+    this.selectedDataset = {}
     this.floorHiddenListener = null
   }
 
   addFloorHiddenListener = () => {
     this.floorHiddenListener = SMap.addFloorHiddenListener(async result => {
       //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
+      // 使用this.currentFloorID 使ID发生变化时只渲染一次
       if (
-        result.currentFloorID !== this.state.currentFloorID &&
+        result.currentFloorID !== this.currentFloorID &&
         !(
           (GLOBAL.MAPSELECTPOINTBUTTON &&
             GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
-          (GLOBAL.NAVIGATIONSTARTHEAD && GLOBAL.NAVIGATIONSTARTHEAD.state.show)
+          (GLOBAL.NAVIGATIONSTARTHEAD &&
+            GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
+          GLOBAL.PoiTopSearchBar.state.visible
         )
       ) {
-        let isGuiding = await SMap.isGuiding()
-        if (!isGuiding) {
-          this.setState({
-            currentFloorID: result.currentFloorID,
-          })
+        this.currentFloorID = result.currentFloorID
+        let guideInfo = await SMap.isGuiding()
+        if (!guideInfo.isOutdoorGuiding) {
+          this.setState(
+            {
+              currentFloorID: result.currentFloorID,
+            },
+            () => {
+              GLOBAL.ISOUTDOORMAP = !result.currentFloorID
+            },
+          )
+        } else {
+          this.currentFloorID = this.state.currentFloorID
         }
       }
     })
@@ -337,7 +352,6 @@ export default class MapView extends React.Component {
 
     SMap.setIndustryNavigationListener({
       callback: () => {
-        this.FloorListView && this.FloorListView.changeBottom(false, false),
         this.showFullMap(false)
         this.props.setMapNavigation({ isShow: false, name: '' })
         GLOBAL.STARTX = undefined
@@ -574,25 +588,29 @@ export default class MapView extends React.Component {
       onResult: ({ info }) => {
         this.setState({ speechContent: info }, () => {
           setTimeout(() => {
-            info = info.toLowerCase()
-            if (info.indexOf('关闭') !== -1 || info.indexOf('close') !== -1) {
-              this.back()
-            } else if (
-              info.indexOf('定位') !== -1 ||
-              info.indexOf('locate') !== -1 ||
-              info.indexOf('location') !== -1
-            ) {
-              this.mapController.location()
-            } else if (
-              info.indexOf('放大') !== -1 ||
-              info.indexOf('zoom in') !== -1
-            ) {
-              this.mapController.plus()
-            } else if (
-              info.indexOf('缩小') !== -1 ||
-              info.indexOf('zoom out') !== -1
-            ) {
-              this.mapController.minus()
+            try {
+              info = info.toLowerCase()
+              if (info.indexOf('关闭') !== -1 || info.indexOf('close') !== -1) {
+                this.back()
+              } else if (
+                info.indexOf('定位') !== -1 ||
+                info.indexOf('locate') !== -1 ||
+                info.indexOf('location') !== -1
+              ) {
+                this.mapController.location()
+              } else if (
+                info.indexOf('放大') !== -1 ||
+                info.indexOf('zoom in') !== -1
+              ) {
+                this.mapController.plus()
+              } else if (
+                info.indexOf('缩小') !== -1 ||
+                info.indexOf('zoom out') !== -1
+              ) {
+                this.mapController.minus()
+              }
+            } catch (e) {
+              return
             }
           }, 1000)
         })
@@ -1202,6 +1220,7 @@ export default class MapView extends React.Component {
       }
     })
     this.props.setCurrentAttribute({})
+    this.setState({ showScaleView: false })
     // this.props.getAttributes({})
     return true
   }
@@ -1292,10 +1311,15 @@ export default class MapView extends React.Component {
               ConstPath.RelativePath.Plotting +
               'PlotLibData',
           )
-          await this.props.getSymbolPlots({
-            path: plotIconPath,
-            isFirst: true,
-          })
+          this.props.getSymbolPlots(
+            {
+              path: plotIconPath,
+              isFirst: true,
+            },
+            () => {
+              GLOBAL.isInitSymbolPlotsEnd = true
+            },
+          )
           GLOBAL.newPlotMapName = ''
         }
 
@@ -1355,8 +1379,8 @@ export default class MapView extends React.Component {
           this.props.user.currentUser.userName,
         )
 
-        //地图打开后去获取比例尺、图例数据
-        GLOBAL.scaleView && GLOBAL.scaleView.getInitialData()
+        //地图打开后显示比例尺，获取图例数据
+        this.setState({ showScaleView: true })
         GLOBAL.legend && GLOBAL.legend.getLegendData()
 
         this.showMarker &&
@@ -1686,7 +1710,7 @@ export default class MapView extends React.Component {
     if (this.state.currentFloorID) return null
     return (
       <MapController
-        ref={ref => (this.mapController = ref)}
+        ref={ref => (GLOBAL.mapController = this.mapController = ref)}
         type={GLOBAL.Type}
       />
     )
@@ -1786,6 +1810,9 @@ export default class MapView extends React.Component {
           getLanguage(this.props.language).Prompt.PLEASE_SELECT_PLOT_LAYER,
         )
         this.props.navigation.navigate('LayerManager')
+        if (Platform.OS === 'ios') {
+          await SAIDetectView.clearClickAIRecognition()
+        }
       }
     }.bind(this)())
   }
@@ -2093,22 +2120,26 @@ export default class MapView extends React.Component {
     // }
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity
-          key={'audio'}
-          onPress={() => {
-            SSpeechRecognizer.start()
-            this.AudioDialog.setVisible(true)
-          }}
-        >
-          <Image
-            resizeMode={'contain'}
-            source={require('../../../../assets/header/icon_audio.png')}
-            style={[
-              { width: scaleSize(50), height: scaleSize(50) },
-              { marginRight: scaleSize(15) },
-            ]}
-          />
-        </TouchableOpacity>
+        {this.state.showAIDetect ? (
+          <View />
+        ) : (
+          <TouchableOpacity
+            key={'audio'}
+            onPress={() => {
+              SSpeechRecognizer.start()
+              this.AudioDialog.setVisible(true)
+            }}
+          >
+            <Image
+              resizeMode={'contain'}
+              source={require('../../../../assets/header/icon_audio.png')}
+              style={[
+                { width: scaleSize(50), height: scaleSize(50) },
+                { marginRight: scaleSize(15) },
+              ]}
+            />
+          </TouchableOpacity>
+        )}
         <MTBtn
           key={'undo'}
           image={getPublicAssets().common.icon_undo}
@@ -2128,6 +2159,7 @@ export default class MapView extends React.Component {
                 NavigationService.navigate('PointAnalyst', {
                   type: 'pointSearch',
                 })
+                this.changeFloorID('')
               } else {
                 Toast.show(
                   getLanguage(this.props.language).Prompt
@@ -2278,7 +2310,7 @@ export default class MapView extends React.Component {
     }
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
-      this.FloorListView.changeBottom(true)
+      this.FloorListView.setVisible(false)
       if (!this.state.isRight) {
         this.toolBox.setVisible(true, ConstToolType.MAP_TOOL_GPSINCREMENT, {
           containerType: 'table',
@@ -2319,9 +2351,14 @@ export default class MapView extends React.Component {
   // }
   changeFloorID = currentFloorID => {
     if (currentFloorID !== this.state.currentFloorID) {
-      this.setState({
-        currentFloorID,
-      })
+      this.setState(
+        {
+          currentFloorID,
+        },
+        () => {
+          GLOBAL.ISOUTDOORMAP = !currentFloorID
+        },
+      )
     }
   }
   _renderFloorListView = () => {
@@ -2540,6 +2577,7 @@ export default class MapView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
+        isOutDoor: true,
       })
       this.props.setNavigationHistory(history)
     }
@@ -2704,7 +2742,7 @@ export default class MapView extends React.Component {
           GLOBAL.Type === constants.MAP_AR &&
           this.state.showArModeIcon &&
           this._renderArModeIcon()}
-        {!this.state.showAIDetect && (
+        {!this.state.showAIDetect && this.state.showScaleView && (
           <ScaleView
             mapNavigation={this.props.mapNavigation}
             device={this.props.device}
@@ -2792,8 +2830,8 @@ export default class MapView extends React.Component {
             opacity={1}
             opacityStyle={styles.dialogBackground}
             style={styles.dialogBackground}
-            confirmBtnTitle={'是'}
-            cancelBtnTitle={'否'}
+            confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+            cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
           >
             <View style={styles.dialogHeaderView}>
               <Image

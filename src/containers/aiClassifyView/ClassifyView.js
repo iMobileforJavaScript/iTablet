@@ -82,9 +82,15 @@ export default class ClassifyView extends React.Component {
         )
         //注册监听
         if (Platform.OS === 'ios') {
-          iOSEventEmi.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = iOSEventEmi.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         } else {
-          DeviceEventEmitter.addListener('recognizeImage', this.recognizeImage)
+          this.recognizeImageListener = DeviceEventEmitter.addListener(
+            'recognizeImage',
+            this.recognizeImage,
+          )
         }
       }.bind(this)())
     })
@@ -93,9 +99,10 @@ export default class ClassifyView extends React.Component {
   componentWillUnmount() {
     // Orientation.unlockAllOrientations()
     //移除监听
-    DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
+    // DeviceEventEmitter.removeListener('recognizeImage', this.recognizeImage)
 
     AppState.removeEventListener('change', this.handleStateChange)
+    this.recognizeImageListener && this.recognizeImageListener.remove()
   }
 
   /************************** 处理状态变更 ***********************************/
@@ -118,8 +125,10 @@ export default class ClassifyView extends React.Component {
       this.stateChangeCount = 0
       if (appState === 'active') {
         this.clear()
+        this.startPreview()
       } else if (appState === 'background') {
         this.pausePreview()
+        // this.back()
       }
     }
   }
@@ -231,6 +240,10 @@ export default class ClassifyView extends React.Component {
       )
       this.clear()
       await this.startPreview()
+      return
+    }
+    if (Platform.OS === 'ios') {
+      this.recognizeImage(result)
     }
   }
 
@@ -284,8 +297,13 @@ export default class ClassifyView extends React.Component {
             classifyTime,
             cb: async () => {
               NavigationService.goBack()
-              await this.clear()
-              await this.startPreview()
+              // await this.clear()
+              // await this.startPreview()
+              //保存后回到地图
+              NavigationService.goBack()
+              NavigationService.goBack()
+              GLOBAL.toolBox.setVisible(false)(await GLOBAL.toolBox) &&
+                GLOBAL.toolBox.switchAr()
             },
           })
         }

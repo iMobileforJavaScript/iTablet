@@ -9,6 +9,7 @@ import { getLanguage } from '../../../../language'
 import { UserType } from '../../../../constants'
 const screenWidth = '100%'
 var JSIPortalService
+var JSOnlineService
 export default class PopupModal extends PureComponent {
   props: {
     user: Object,
@@ -25,6 +26,7 @@ export default class PopupModal extends PureComponent {
     super(props)
     this.fontSize = size.fontSize.fontSizeXl
     JSIPortalService = new OnlineServicesUtils('iportal')
+    JSOnlineService = new OnlineServicesUtils('online')
   }
 
   _onClose = () => {
@@ -117,14 +119,32 @@ export default class PopupModal extends PureComponent {
         onPress={async () => {
           try {
             this._onClose()
-            let result
+            global.Loading.setLoading(true, 'deleting')
+
+            let deletPromise
+            let requestPromise
             if (UserType.isOnlineUser(this.props.user.currentUser)) {
-              result = await SOnlineService.deleteServiceWithServiceId(
+              deletPromise = SOnlineService.deleteServiceWithServiceId(
                 this.props.itemId,
               )
+              await new Promise(resolve => {
+                setTimeout(() => resolve(true), 2000)
+              })
+              requestPromise = JSOnlineService.getService(this.props.itemId)
             } else if (UserType.isIPortalUser(this.props.user.currentUser)) {
-              result = await SIPortalService.deleteMyService(this.props.itemId)
+              deletPromise = SIPortalService.deleteMyService(this.props.itemId)
+              await new Promise(resolve => {
+                setTimeout(() => resolve(true), 2000)
+              })
+              requestPromise = JSIPortalService.getService(this.props.itemId)
             }
+            let result = await requestPromise
+            if (result === false) {
+              result = true
+            } else {
+              result = await deletPromise
+            }
+
             if (typeof result === 'boolean' && result) {
               this.deleteService = true
               this._onRefresh()
@@ -139,7 +159,9 @@ export default class PopupModal extends PureComponent {
               Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
               //'删除失败')
             }
+            global.Loading.setLoading(false)
           } catch (error) {
+            global.Loading.setLoading(false)
             Toast.show(getLanguage(global.language).Prompt.FAILED_TO_DELETE)
             //'删除失败')
           }

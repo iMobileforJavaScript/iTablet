@@ -123,6 +123,10 @@ async function importGPX(filePath, datasourceItem) {
   })
 }
 
+async function importIMG(filePath, datasourceItem) {
+  return await _importDataset('img', filePath, datasourceItem)
+}
+
 async function _importDataset(
   type,
   filePath,
@@ -226,4 +230,5 @@ export default {
   importDWG,
   importDXF,
   importGPX,
+  importIMG,
 }

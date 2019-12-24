@@ -39,7 +39,7 @@ import {
   DatasetType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import constants from '../../../workspace/constants'
 //eslint-disable-next-line
 import { ActionPopover } from 'teaset'
@@ -67,6 +67,7 @@ export default class LayerAttribute extends React.Component {
     // getAttributes: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
+    clearAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -128,6 +129,7 @@ export default class LayerAttribute extends React.Component {
         JSON.stringify(this.props.currentLayer)
     ) {
       let checkData = this.checkToolIsViable()
+      this.filter = ''
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -520,7 +522,7 @@ export default class LayerAttribute extends React.Component {
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
       if (
-        data.index >= this.state.startIndex &&
+        data.index >= this.state.startIndex + 1 &&
         data.index < this.state.startIndex + this.state.attributes.data.length
       ) {
         // 定位在当前显示数据范围内
@@ -716,34 +718,30 @@ export default class LayerAttribute extends React.Component {
   }
   /** 点击属性字段回调 **/
   onPressHeader = ({ fieldInfo, index, pressView }) => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      return
+    }
     this._showPopover(pressView, index, fieldInfo)
   }
 
   /** 添加属性字段 **/
   addAttributeField = async fieldInfo => {
-    // if (this.state.attributes.data.length > 0) {
     let path = this.props.currentLayer.path
     let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
     if (result) {
       Toast.show(
-        global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+        Toast.show(
+          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
+        ),
       )
       this.refresh()
-      // this.getAttribute(
-      //   {
-      //     type: 'refresh',
-      //     currentPage: 0,
-      //     startIndex: 0,
-      //   },
-      //   () => {},
-      //   false,
-      // )
     } else {
       Toast.show(
-        global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+        Toast.show(
+          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED,
+        ),
       )
     }
-    // }
   }
 
   /** 关联事件 **/
@@ -1085,31 +1083,39 @@ export default class LayerAttribute extends React.Component {
         confirmAction={async () => {
           this.deleteFieldDialog.setDialogVisible(false)
           let layerPath = this.props.currentLayer.path
+          if (this.filter.split(' ').indexOf(deleteFieldData.name) >= 0) {
+            this.filter = ''
+          }
           let result = await SMap.removeRecordsetFieldInfo(
             layerPath,
             false,
             deleteFieldData.name,
           )
+          if (
+            this.filter &&
+            this.filter.split(' ').indexOf(deleteFieldData.name) >= 0
+          ) {
+            this.filter = ''
+          }
           if (result) {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除成功'
-                : 'Attribute Feild Delete Succeed',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_SUCCESS,
             )
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
+            this.canBeRefresh = false
             this.refresh()
           } else {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除失败'
-                : 'Attribute Feild Delete Faild',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_FAILED,
             )
           }
         }}
-        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
-        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(250) }]}
+        style={[styles.dialogBackground, { height: scaleSize(250) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
@@ -1120,11 +1126,12 @@ export default class LayerAttribute extends React.Component {
             flex: 1,
             flexDirection: 'column',
             alignItems: 'center',
+            paddingHorizontal: scaleSize(10),
           }}
         >
           <Text
             style={{
-              fontSize: scaleSize(32),
+              fontSize: size.fontSize.fontSizeLg,
               color: color.theme_white,
               marginTop: scaleSize(5),
               marginLeft: scaleSize(10),
@@ -1132,9 +1139,9 @@ export default class LayerAttribute extends React.Component {
               textAlign: 'center',
             }}
           >
-            {global.language === 'CN'
-              ? '确定删除所选字段？'
-              : 'Sure Delete this Attribute Field?'}
+            {getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_CONFIRM +
+              '\n' +
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_TIPS}
           </Text>
         </View>
       </Dialog>

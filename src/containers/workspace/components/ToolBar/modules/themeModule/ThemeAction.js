@@ -63,7 +63,7 @@ async function dealData(params = {}, loading = true) {
 }
 
 //专题图字段表达式列表
-async function getThemeExpress(type) {
+async function getThemeExpress(type, key = '', name = '') {
   const _params = ToolbarModule.getParams()
   const themeCreateType = ToolbarModule.getData().themeCreateType
   let expressionData = await SThemeCartography.getThemeExpressionByLayerName(
@@ -102,7 +102,7 @@ async function getThemeExpress(type) {
     let item = expressionData.list[i]
     if (
       type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION ||
-      type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
+      // type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_EXPRESSION ||
       // type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION ||
       ThemeMenuData.isThemeFieldTypeAvailable(
         item.fieldTypeStr,
@@ -144,6 +144,8 @@ async function getThemeExpress(type) {
       ToolbarBtnType.MENU_FLEX,
       ToolbarBtnType.TOOLBAR_COMMIT,
     ],
+    selectName: name || key,
+    selectKey: key,
   })
 }
 
@@ -386,7 +388,7 @@ async function getRangeMode(type, key = '', name = '') {
   let column =
     ToolbarModule.getParams().device.orientation === 'PORTRAIT' ? 4 : 8
   let getData = async function() {
-    return await ThemeMenuData.getRangeMode()
+    return await ThemeMenuData.getRangeMode(type)
   }
 
   dealData({
@@ -1185,10 +1187,24 @@ function tableAction(item = {}) {
             FontName: item.key,
           }
           break
+        case ConstToolType.MAP_THEME_PARAM_RANGELABEL_FONTNAME:
+          themeParams = {
+            LayerName: _params.currentLayer.name,
+            FontName: item.key,
+            type: 'range',
+          }
+          break
         case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION:
           themeParams = {
             LayerName: _params.currentLayer.name,
             Rotaion: item.key,
+          }
+          break
+        case ConstToolType.MAP_THEME_PARAM_RANGELABEL_ROTATION:
+          themeParams = {
+            LayerName: _params.currentLayer.name,
+            Rotaion: item.key,
+            type: 'range',
           }
           break
         case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR:
@@ -1415,20 +1431,8 @@ function menu(type, selectKey, params = {}) {
 }
 
 function showMenuBox(type, selectKey, params = {}) {
-  const _params = ToolbarModule.getParams()
   if (type.indexOf('MAP_THEME_PARAM') === -1) return
-  if (
-    selectKey ===
-    getLanguage(_params.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
-  ) {
-    // 显示指滑进度条
-    params.showBox &&
-      params.showBox({
-        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
-        showMenuDialog: false,
-        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
-      })
-  } else if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
+  if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
     switch (selectKey) {
       case '表达式':
         getGraphThemeExpressions(
@@ -1452,8 +1456,9 @@ function showMenuBox(type, selectKey, params = {}) {
   } else {
     params.showBox &&
       params.showBox({
+        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
         showMenuDialog: false,
-        isFullScreen: false,
+        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
       })
   }
 }

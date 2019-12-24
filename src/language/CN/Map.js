@@ -208,7 +208,7 @@ const Map_Main_Menu = {
   THEME_HEATMAP: '热力图',
 
   THEME_ALL_SELECTED: '全部选中',
-  THEME_ALL_CANCEL: '全部取消',
+  THEME_ALL_CANCEL: '全部选中',
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
   THEME_UNIQUE_EXPRESSION: '单值表达式',
@@ -368,6 +368,8 @@ const Map_Main_Menu = {
   MARK: '标注',
 
   //地图导航
+  START_POINT: '起点',
+  END_POINT: '终点',
   DRAW: '绘制',
   ROAD_DETAILS: '路线详情',
   ROUTE_THROUGH: '途经路线：',
@@ -393,6 +395,7 @@ const Map_Main_Menu = {
   HAND_PAINTED: '手绘',
   NETWORK_DATASET: '路网数据集',
   MODEL_FILE: '导航模型文件',
+  MY_LOCATION: '我的位置',
 }
 
 //推演动画

@@ -387,7 +387,7 @@ export default class Mine extends Component {
         onPress={item.onClick}
         style={[
           styles.itemView,
-          { width: (this.screenWidth - scaleSize(40)) / colNum },
+          { width: (this.screenWidth - scaleSize(50)) / colNum },
           this.props.device.orientation === 'LANDSCAPE'
             ? styles.itemLandscapeView
             : null,

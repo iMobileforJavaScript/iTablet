@@ -154,7 +154,6 @@ export default class AboutITablet extends Component {
             </Text>
             <Image
               style={[
-                styles.phone,
                 imgMarginRight,
                 { width: scaleSize(40), height: scaleSize(40) },
               ]}
@@ -209,7 +208,7 @@ export default class AboutITablet extends Component {
         </View>
         <View style={[styles.informationView, informationBottom]}>
           <Text style={styles.information}>
-            Copyright 2018-2019 SuperMap Software Co.,Ltd.All rights reserved
+            Copyright 2018-2020 SuperMap Software Co.,Ltd.All rights reserved
           </Text>
         </View>
       </Container>

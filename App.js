@@ -10,6 +10,7 @@ import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './s
 import {
   setEditLayer,
   setSelection,
+  setCurrentLayer,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -288,6 +289,7 @@ class AppRoot extends Component {
       this.props.setCurrentTemplateList() // 清空当前模板
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
+      this.props.setCurrentLayer() // 清空当前图层
     }
     Platform.OS === 'android' && SplashScreen.hide()
 
@@ -625,6 +627,48 @@ class AppRoot extends Component {
   }
   //接入正式许可
   inputOfficialLicense=async () =>{
+
+    if(Platform.OS === 'ios'){
+      GLOBAL.Loading.setLoading(
+        true,
+        global.language === 'CN' ? '许可申请中...' : 'Applying',
+      )
+      
+      let activateResult = await SMap.activateNativeLicense()
+      if(activateResult === -1){
+        //没有本地许可文件
+        GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
+      }else if(activateResult === -2){
+        //本地许可文件序列号无效
+        Toast.show(
+          getLanguage(global.language).Profile
+            .LICENSE_NATIVE_EXPIRE,
+        )
+      }else {
+        AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, activateResult)
+        let modules = await SMap.licenseContainModule(activateResult)
+        let size = modules.length
+        let number = 0
+        for (let i = 0; i < size; i++) {
+          let modultCode = Number(modules[i])
+          number = number + modultCode
+        }
+        GLOBAL.modulesNumber = number
+
+        GLOBAL.LicenseValidDialog.setDialogVisible(false)
+        GLOBAL.getLicense && GLOBAL.getLicense()
+        Toast.show(
+          getLanguage(global.language).Profile
+            .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
+        )
+      }
+      GLOBAL.Loading.setLoading(
+        false,
+        global.language === 'CN' ? '许可申请中...' : 'Applying...',
+      )
+      return
+    }
+
     GLOBAL.LicenseValidDialog.setDialogVisible(false)
     NavigationService.navigate('LicenseJoin',{
       cb: async () => {
@@ -824,6 +868,43 @@ class AppRoot extends Component {
     )
   }
 
+  //提示没有本地许可文件
+  renderNoNativeOfficialLicenseDialog = () => {
+    return (<Dialog
+      ref={ref => (GLOBAL.noNativeLicenseDialog = ref)}
+      showBtns={false}
+      type={Dialog.Type.NON_MODAL}
+      opacity={1}
+      opacityStyle={styles.opacityView}
+      style={styles.dialogBackground}
+    >
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>
+          {getLanguage(GLOBAL.language).Profile.LICENSE_NO_NATIVE_OFFICAL}
+        </Text>
+        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white ,marginTop:scaleSize(20)}}></View>
+        <TouchableOpacity
+          style={{height: scaleSize(80),
+            width: '100%',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'}}
+          onPress={()=>{ GLOBAL.noNativeLicenseDialog.setDialogVisible(false)}}
+        >
+          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack, }}>
+            {getLanguage(global.language).Prompt.CONFIRM}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Dialog>
+    )
+    
+  }
+
   render () {
     global.language=this.props.language
     return (
@@ -851,6 +932,7 @@ class AppRoot extends Component {
         {this.renderDialog()}
         {this.renderImportDialog()}
         {this.renderLicenseNotModuleDialog()}
+        {this.renderNoNativeOfficialLicenseDialog()}
         {!this.props.isAgreeToProtocol && this._renderProtocolDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
@@ -881,6 +963,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setShow,
   closeMap,
   setCurrentMap,
+  setCurrentLayer,
   setEditLayer,
   setSelection,
   setCollectionInfo,

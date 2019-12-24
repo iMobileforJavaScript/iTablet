@@ -1366,7 +1366,7 @@ export default class AnimationNodeEditView extends React.Component {
                 if (!isNaN(tempData.startLocation)) {
                   let number = Number(tempData.startLocation)
                   if (number > 1) {
-                    tempData.startLocation = 1
+                    tempData.startLocation = 1 + ''
                   }
                 }
                 this.setState({
@@ -1385,7 +1385,7 @@ export default class AnimationNodeEditView extends React.Component {
                   0.1,
                 )
                 if (tempData.startLocation > 1) {
-                  tempData.startLocation = 1
+                  tempData.startLocation = 1 + ''
                 }
                 this.setState({
                   data: tempData,
@@ -1437,7 +1437,7 @@ export default class AnimationNodeEditView extends React.Component {
                   if (!isNaN(tempData.endLocation)) {
                     let number = Number(tempData.endLocation)
                     if (number > 1) {
-                      tempData.endLocation = 1
+                      tempData.endLocation = 1 + ''
                     }
                   }
                   this.setState({
@@ -1455,7 +1455,7 @@ export default class AnimationNodeEditView extends React.Component {
                     0.1,
                   )
                   if (tempData.endLocation > 1) {
-                    tempData.endLocation = 1
+                    tempData.endLocation = 1 + ''
                   }
                   this.setState({
                     data: tempData,

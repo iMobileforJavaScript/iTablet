@@ -42,6 +42,7 @@ function submit() {
       await SMap.addGPSRecordset()
     }
     await SMap.submit()
+    await SMap.buildNetwork()
   }.bind(this)())
 }
 
@@ -54,6 +55,10 @@ function select(type) {
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
+      Toast.show(getLanguage(global.language).Prompt.SELECT_DELETE_BY_RECTANGLE)
+      SMap.setAction(Action.SELECT_BY_RECTANGLE)
       break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
@@ -147,18 +152,16 @@ function measureLength() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
       _params.showMeasureResult(true, rel + 'm')
@@ -184,18 +187,16 @@ function measureArea() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       let rel = obj.curResult === 0 ? 0 : obj.curResult.toFixed(6)
       _params.showMeasureResult(true, rel + '㎡')
@@ -221,21 +222,19 @@ function measureAngle() {
       let pointArr = ToolbarModule.getData().pointArr || []
       let redoArr = []
       // 防止重复添加
-      if (
-        pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
-        _params.buttonView
-      ) {
+      if (pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1) {
         //角度量算前两次打点不会触发回调，第三次打点添加一个标识，最后一次撤销直接清除当前所有点
         pointArr.indexOf('startLine') === -1 && pointArr.push('startLine')
         pointArr.indexOf(JSON.stringify(obj.curPoint)) === -1 &&
           pointArr.push(JSON.stringify(obj.curPoint))
         let newState = {}
-        if (pointArr.length > 0 && _params.buttonView.state.canUndo === false)
+        if (pointArr.length > 0 && _params.toolbarStatus.canUndo === false)
           newState.canUndo = true
-        if (_params.buttonView.state.canRedo) newState.canRedo = false
-        Object.keys(newState).length > 0 &&
-          _params.buttonView.setState(newState)
-        ToolbarModule.setData({ pointArr, redoArr })
+        if (_params.toolbarStatus.canRedo) newState.canRedo = false
+        Object.keys(newState).length > 0 && _params.setToolbarStatus(newState)
+        ToolbarModule.addData({ pointArr, redoArr, isFinished: true })
+      } else {
+        ToolbarModule.addData({ isFinished: true })
       }
       if (pointArr.length >= 2) {
         _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
@@ -275,26 +274,25 @@ function clearMeasure(type) {
         SMap.setAction(Action.MEASUREANGLE)
         break
     }
-    if (_params.buttonView) {
-      ToolbarModule.addData({ pointArr: [], redoArr: [] })
-      _params.buttonView.setState({
-        canUndo: false,
-        canRedo: false,
-      })
-    }
+    ToolbarModule.addData({ pointArr: [], redoArr: [], isFinished: true })
+    _params.setToolbarStatus({
+      canUndo: false,
+      canRedo: false,
+    })
   }
 }
 
 /** 量算功能 撤销事件 **/
-function undo(type) {
+async function undo(type) {
+  if (ToolbarModule.getData().isFinished === false) return
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
-    SMap.undo()
+    await SMap.undo()
     return
   }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (!_params.buttonView || !_params.buttonView.state.canUndo) return
+  if (!_params.toolbarStatus.canUndo) return
   let newState = {}
   if (pointArr.length > 0) {
     redoArr.push(pointArr.pop())
@@ -311,37 +309,41 @@ function undo(type) {
       SMap.setAction(Action.MEASUREANGLE)
     }
   }
-  _params.buttonView.setState(newState)
-  SMap.undo()
-  ToolbarModule.addData({ pointArr, redoArr })
+  _params.setToolbarStatus(newState, async () => {
+    await SMap.undo()
+    // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
+    // pointArr为空，撤销到最后，不会进入量算回调，此时isFinished直接为true
+    ToolbarModule.addData({
+      pointArr,
+      redoArr,
+      isFinished: pointArr.length === 0,
+    })
+  })
 }
 
 /** 量算功能 重做事件 **/
-function redo(type = null) {
+async function redo(type = null) {
+  if (ToolbarModule.getData().isFinished === false) return
   if (type === ConstToolType.MAP_TOOL_INCREMENT) {
-    SMap.redo()
+    await SMap.redo()
     return
   }
   let pointArr = ToolbarModule.getData().pointArr || []
   let redoArr = ToolbarModule.getData().redoArr || []
   const _params = ToolbarModule.getParams()
-  if (
-    !_params.buttonView ||
-    !_params.buttonView.state.canRedo ||
-    redoArr.length === 0
-  )
-    return
+  if (!_params.toolbarStatus.canRedo || redoArr.length === 0) return
   let newState = {}
   if (redoArr.length > 0) {
     pointArr.push(redoArr.pop())
   }
   newState.canRedo = redoArr.length > 0
   newState.canUndo = pointArr.length > 0
-  _params.buttonView.setState(newState)
-  Object.keys(newState).length > 0 && _params.buttonView.setState(newState)
-
-  SMap.redo()
-  ToolbarModule.addData({ pointArr, redoArr })
+  Object.keys(newState).length > 0 &&
+    _params.setToolbarStatus(newState, async () => {
+      await SMap.redo()
+      // isFinished防止量算撤销回退没完成，再次触发事件，导致出错
+      ToolbarModule.addData({ pointArr, redoArr, isFinished: false })
+    })
 }
 
 async function point() {
@@ -689,7 +691,7 @@ function selectLabel() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  let type = ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE
+  let type = ConstToolType.MAP_TOOL_TAGGING_DELETE
 
   _params.setToolbarVisible(true, type, {
     containerType: 'table',
@@ -701,12 +703,19 @@ function selectLabel() {
 
   let layers = _params.layers.layers
   // 其他图层设置为不可选
+  _setMyLayersSelectable(layers, false)
+}
+
+//设置我的图层的可选择性
+function _setMyLayersSelectable(layers, selectable) {
   for (let i = 0; i < layers.length; i++) {
-    if (
+    if (layers[i].type === 'layerGroup') {
+      _setMyLayersSelectable(layers[i].child, selectable)
+    } else if (
       LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
       layers[i].isSelectable
     ) {
-      SMap.setLayerSelectable(layers[i].path, false)
+      SMap.setLayerSelectable(layers[i].path, selectable)
     }
   }
 }
@@ -918,6 +927,14 @@ function commit(type) {
     NavigationService.navigate('MapCut', {
       points: GLOBAL.MapSurfaceView.getResult(),
     })
+  } else if (type === ConstToolType.STYLE_TRANSFER) {
+    // ToolbarPicker.hide()
+    SMap.resetMapFixColorsModeValue(false)
+    _params.setToolbarVisible(false, '', {
+      cb: () => {
+        SMap.setAction(Action.PAN)
+      },
+    })
   } else {
     return false // 表示没找到对应方法，调用默认方法
   }
@@ -1018,19 +1035,15 @@ function close(type) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
     _params.setToolbarVisible(false)
-  } else if (type === ConstToolType.MAP_TOOL_TAGGING_POINT_DELETE) {
+  } else if (type === ConstToolType.MAP_TOOL_TAGGING_DELETE) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
 
     let layers = _params.layers.layers
     // 还原其他图层的选择状态
+    _setMyLayersSelectable(layers, true)
     for (let i = 0; i < layers.length; i++) {
-      if (
-        LayerUtils.getLayerType(layers[i]) !== 'TAGGINGLAYER' &&
-        layers[i].isSelectable
-      ) {
-        SMap.setLayerSelectable(layers[i].path, true)
-      } else if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+      if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
         if (
           _params.currentLayer &&
           _params.currentLayer.name &&
@@ -1040,6 +1053,18 @@ function close(type) {
         }
       }
     }
+    _params.setToolbarVisible(false)
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_TOOL_MEASURE_') >= 0
+  ) {
+    ToolbarModule.addData({ pointArr: [], redoArr: [] })
+    _params.setToolbarStatus({
+      canUndo: false,
+      canRedo: false,
+    })
+    SMap.setAction(Action.PAN)
+    _params.showMeasureResult(false)
     _params.setToolbarVisible(false)
   } else {
     return false

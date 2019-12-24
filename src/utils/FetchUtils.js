@@ -83,8 +83,10 @@ export default class FetchUtils {
     let data
     try {
       let url = `http://www.supermapol.com/iserver/services/location-china/rest/locationanalyst/China/geodecoding.json?location={"x":${x},"y":${y}}&key=fvV2osxwuZWlY0wJb8FEb2i5`
-      let rel = await FetchUtils.getObjJson(url)
-      data = rel.formatedAddress
+      let rel = await FetchUtils.getObjJson(url, 2000)
+      if (rel.formatedAddress) {
+        data = rel.formatedAddress
+      }
     } catch (e) {
       Toast.show('网络错误')
     }

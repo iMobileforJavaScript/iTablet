@@ -1,5 +1,5 @@
 import constants from '../../../../constants'
-import { SThemeCartography } from 'imobile_for_reactnative'
+import { SThemeCartography, RangeMode } from 'imobile_for_reactnative'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import {
   ConstToolType,
@@ -1057,9 +1057,16 @@ function getThemeMapParam(type) {
 // }
 
 /** 设置分段模式 **/
-function setRangeMode() {
+function setRangeMode(type, rangeMode) {
   const _params = ToolbarModule.getData().themeParams
-  SThemeCartography.modifyThemeRangeMap(_params)
+  if (rangeMode !== undefined) {
+    _params.RangeMode = rangeMode
+  }
+  if (type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_MODE) {
+    SThemeCartography.modifyThemeLabelRangeMap(_params)
+  } else {
+    SThemeCartography.modifyThemeRangeMap(_params)
+  }
 }
 
 function setGridRangeMode() {
@@ -1067,66 +1074,66 @@ function setGridRangeMode() {
   SThemeCartography.modifyThemeGridRangeMap(_params)
 }
 
-function getRangeMode() {
+function getRangeMode(type) {
   let data = [
     {
       // 等距分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_EQUALINTERVAL,
+      key: RangeMode.EQUALINTERVAL,
       title: getLanguage(global.language).Map_Main_Menu.THEME_EQUAL_INTERVAL,
       //'等距分段',
-      action: setRangeMode,
+      action: () => setRangeMode(type, RangeMode.EQUALINTERVAL),
       size: 'large',
       image: require('../../../../../../assets/mapTools/range_mode_equalinterval_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_equalinterval_black.png'),
     },
     {
       // 平方根分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_SQUAREROOT,
+      key: RangeMode.SQUARE_ROOT_INTERVAL,
       title: getLanguage(global.language).Map_Main_Menu
         .THEME_SQURE_ROOT_INTERVAL,
       //'平方根分段',
-      action: setRangeMode,
+      action: () => setRangeMode(type, RangeMode.SQUARE_ROOT_INTERVAL),
       size: 'large',
       image: require('../../../../../../assets/mapTools/range_mode_squareroot_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_squareroot_black.png'),
     },
     {
       // 标准差分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
+      key: RangeMode.STDDEVIATION,
       title: getLanguage(global.language).Map_Main_Menu
         .THEME_STANDARD_DEVIATION_INTERVAL,
       //'标准差分段',
-      action: setRangeMode,
+      action: () => setRangeMode(type, RangeMode.STDDEVIATION),
       size: 'large',
       image: require('../../../../../../assets/mapTools/range_mode_stddeviation_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_stddeviation_black.png'),
     },
     {
       // 对数分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,
+      key: RangeMode.LOGARITHM,
       title: getLanguage(global.language).Map_Main_Menu
         .THEME_LOGARITHMIC_INTERVAL,
       //'对数分段',
-      action: setRangeMode,
+      action: () => setRangeMode(type, RangeMode.LOGARITHM),
       size: 'large',
       image: require('../../../../../../assets/mapTools/range_mode_logarithm_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_logarithm_black.png'),
     },
     {
       // 等计数分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_QUANTILE,
+      key: RangeMode.QUANTILE,
       title: getLanguage(global.language).Map_Main_Menu.THEME_QUANTILE_INTERVAL,
       //'等计数分段',
-      action: setRangeMode,
+      action: () => setRangeMode(type, RangeMode.QUANTILE),
       size: 'large',
       image: require('../../../../../../assets/mapTools/range_mode_quantile_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_quantile_black.png'),
     },
     // {
     //   // 自定义分段
-    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
+    //   key: RangeMode.CUSTOMINTERVAL,
     //   title: '自定义分段',
-    //   action: setRangeMode,
+    //   action: () => setRangeMode(type, RangeMode.CUSTOMINTERVAL),
     //   size: 'large',
     //   image: require('../../../../../../assets/mapTools/range_mode_squareroot.png'),
     //   selectedImage: require('../../../../../../assets/mapTools/range_mode_squareroot.png'),
@@ -1180,7 +1187,7 @@ function getGridRangeMode() {
 /**设置统一标签背景形状 */
 function setLabelFont() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelFontName(_params)
+  return SThemeCartography.setLabelFontName(_params)
 }
 function getLabelFont() {
   let data = [
@@ -1318,7 +1325,7 @@ function getLabelBackShape() {
 /**设置统一标签字体 */
 function setLabelFontName() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelFontName(_params)
+  return SThemeCartography.setLabelFontName(_params)
 }
 
 function getLabelFontName() {
@@ -1426,7 +1433,8 @@ function getLabelFontName() {
 /**设置统一标签旋转角度 */
 function setLabelFontRotation() {
   const _params = ToolbarModule.getData().themeParams
-  return SThemeCartography.setUniformLabelRotaion(_params)
+  // return SThemeCartography.setUniformLabelRotaion(_params)
+  return SThemeCartography.setLabelRotation(_params)
 }
 
 function getLabelFontRotation() {
@@ -3224,7 +3232,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         DatasourceAlias: ToolbarParams.themeDatasourceAlias,
         DatasetName: ToolbarParams.themeDatasetName,
         RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
+        RangeMode: RangeMode.EQUALINTERVAL,
         RangeParameter: '11.0',
         ColorScheme: 'FF_Blues',
       }
@@ -3296,7 +3304,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         DatasourceAlias: ToolbarParams.themeDatasourceAlias,
         DatasetName: ToolbarParams.themeDatasetName,
         UniqueExpression: item.expression,
-        //RangeMode: 'EQUALINTERVAL',
+        //RangeMode: RangeMode.EQUALINTERVAL,
         //RangeParameter: '11.0',
         ColorScheme: 'DA_Ragular',
       }
@@ -3315,7 +3323,7 @@ async function createThemeByDataset(item, ToolbarParams = {}) {
         DatasourceAlias: ToolbarParams.themeDatasourceAlias,
         DatasetName: ToolbarParams.themeDatasetName,
         RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
+        RangeMode: RangeMode.EQUALINTERVAL,
         RangeParameter: '5.0',
         ColorScheme: 'CD_Cyans',
       }
@@ -3370,7 +3378,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         DatasourceAlias: item.datasourceName,
         DatasetName: item.datasetName,
         RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
+        RangeMode: RangeMode.EQUALINTERVAL,
         RangeParameter: '11.0',
         ColorScheme: 'CD_Cyans',
       }
@@ -3442,7 +3450,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         DatasourceAlias: item.datasourceName,
         DatasetName: item.datasetName,
         UniqueExpression: item.expression,
-        //RangeMode: 'EQUALINTERVAL',
+        //RangeMode: RangeMode.EQUALINTERVAL,
         //RangeParameter: '11.0',
         ColorScheme: 'DA_Ragular',
       }
@@ -3461,7 +3469,7 @@ async function createThemeByLayer(item, ToolbarParams = {}) {
         DatasourceAlias: item.datasourceName,
         DatasetName: item.datasetName,
         RangeExpression: item.expression,
-        RangeMode: 'EQUALINTERVAL',
+        RangeMode: RangeMode.EQUALINTERVAL,
         RangeParameter: '5.0',
         ColorScheme: 'CD_Cyans',
       }
@@ -3607,11 +3615,7 @@ async function createHeatMap(params) {
 }
 
 function isThemeFieldTypeAvailable(fieldType, themeType) {
-  if (
-    themeType &&
-    (themeType === constants.THEME_UNIFY_LABEL ||
-      themeType === constants.THEME_UNIQUE_LABEL)
-  ) {
+  if (themeType && themeType === constants.THEME_UNIFY_LABEL) {
     return true
   } else {
     return (
@@ -3671,7 +3675,7 @@ const rangeMenuInfo = param => [
     action: () => {
       ThemeAction.getRangeMode(
         ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
-        '分段方法',
+        getLanguage(param).Map_Main_Menu.THEME_METHOD,
       )
     },
   },
@@ -3881,6 +3885,17 @@ const rangeLabelMenuInfo = param => [
     },
   },
   {
+    key: getLanguage(param).Map_Main_Menu.THEME_METHOD,
+    selectKey: getLanguage(param).Map_Main_Menu.THEME_METHOD,
+    btnTitle: getLanguage(param).Map_Main_Menu.THEME_METHOD,
+    action: () => {
+      ThemeAction.getRangeMode(
+        ConstToolType.MAP_THEME_PARAM_RANGELABEL_MODE,
+        getLanguage(param).Map_Main_Menu.THEME_METHOD,
+      )
+    },
+  },
+  {
     key: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     selectKey: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
     btnTitle: getLanguage(param).Map_Main_Menu.THEME_COLOR_SCHEME,
@@ -3892,12 +3907,24 @@ const rangeLabelMenuInfo = param => [
     },
   },
   {
+    key: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    selectKey: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    btnTitle: getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+    action: () => {
+      ThemeAction.getRangeParameter(
+        ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
+        // ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
+        getLanguage(param).Map_Main_Menu.RANGE_COUNT,
+      )
+    },
+  },
+  {
     key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_FONT,
     action: () => {
       ThemeAction.getLabelFont(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+        ConstToolType.MAP_THEME_PARAM_RANGELABEL_FONTNAME,
         getLanguage(param).Map_Main_Menu.STYLE_FONT,
       )
     },
@@ -3919,7 +3946,7 @@ const rangeLabelMenuInfo = param => [
     btntitle: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
     action: () => {
       ThemeAction.getLabelFontRotation(
-        ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+        ConstToolType.MAP_THEME_PARAM_RANGELABEL_ROTATION,
         getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
       )
     },

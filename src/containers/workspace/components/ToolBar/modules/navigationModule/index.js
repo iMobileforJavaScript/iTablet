@@ -10,25 +10,20 @@ import { getLanguage } from '../../../../../../language'
 async function action(type) {
   try {
     const _params = ToolbarModule.getParams()
-    let isIndoorMap = await SMap.isIndoorMap()
-    if (isIndoorMap) {
-      GLOBAL.ISOUTDOORMAP = false
+    if (!GLOBAL.ISOUTDOORMAP) {
       //室内导航
       SMap.startIndoorNavigation()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: _params.changeNavPathInfo,
-        showLocationView: false,
       })
     } else {
       //当前是室外地图，只能进行行业导航和在线路径分析
-      GLOBAL.ISOUTDOORMAP = true
       //行业导航
       let navigationDatas = _params.getNavigationDatas()
-      if (navigationDatas) {
+      if (navigationDatas && navigationDatas.name) {
         await SMap.startNavigation(navigationDatas)
         NavigationService.navigate('NavigationView', {
           changeNavPathInfo: _params.changeNavPathInfo,
-          showLocationView: true,
         })
       } else {
         const _data = await NavigationData.getData(type)

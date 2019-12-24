@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   SectionList,
   Dimensions,
+  Platform,
 } from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { IndicatorLoading } from '../../../../components'
@@ -75,10 +76,9 @@ export default class LayerAttributeTable extends React.Component {
       props.tableTitle.length > 0 ? props.tableTitle : this.getTitle(props.data)
 
     const isMultiData =
-      props.data instanceof Array &&
-      // props.data.length > 1 &&
-      // props.data[0] instanceof Array
-      this.props.data.length != 1
+      this.props.data instanceof Array &&
+      (this.props.data.length === 0 ||
+        (this.props.data.length > 1 && this.props.data[0] instanceof Array))
 
     this.state = {
       colHeight: COL_HEIGHT,
@@ -91,7 +91,8 @@ export default class LayerAttributeTable extends React.Component {
       tableData: [
         {
           title: titles,
-          data: dataUtil.cloneObj(props.data),
+          data:
+            props.data instanceof Array ? dataUtil.cloneObj(props.data) : [],
         },
       ],
       selected: (new Map(): Map<string, boolean>),
@@ -130,9 +131,8 @@ export default class LayerAttributeTable extends React.Component {
   componentDidUpdate(prevProps) {
     const isMultiData =
       this.props.data instanceof Array &&
-      // this.props.data.length > 1 &&
-      // this.props.data[0] instanceof Array
-      this.props.data.length !== 1
+      (this.props.data.length === 0 ||
+        (this.props.data.length > 1 && this.props.data[0] instanceof Array))
     if (
       JSON.stringify(prevProps.tableTitle) !==
         JSON.stringify(this.props.tableTitle) ||
@@ -346,7 +346,15 @@ export default class LayerAttributeTable extends React.Component {
       this.props.selectRow(item)
     }
   }
-
+  //IOS avoidingView无效 手动滚动过去
+  onFocus = index => {
+    Platform.OS === 'ios' &&
+      this.table &&
+      this.table.scrollToLocation({
+        itemIndex: index,
+        viewPosition: 0.3,
+      })
+  }
   onPressHeader = item => {
     if (
       this.props.onPressHeader &&
@@ -497,6 +505,9 @@ export default class LayerAttributeTable extends React.Component {
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
         // onPress={() => this.onPressRow({ data: item, index })}
         onPress={this.onPressRow}
+        onFocus={() => {
+          this.onFocus(index)
+        }}
         onChangeEnd={this.onChangeEnd}
         buttonIndexes={buttonIndexes}
         buttonActions={buttonActions}
@@ -601,6 +612,7 @@ export default class LayerAttributeTable extends React.Component {
         // onRefresh={this.refresh}
         // onEndReachedThreshold={0.5}
         // onEndReached={this.loadMore}
+        extraData={this.state}
         initialNumToRender={20}
         getItemLayout={this.getItemLayout}
         stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}

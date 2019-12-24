@@ -15,6 +15,9 @@ export default StyleSheet.create({
   rightList: {
     flex: 1,
     height: scaleSize(80),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   imgBtn: {
     flexDirection: 'row',

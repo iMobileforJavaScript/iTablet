@@ -13,15 +13,10 @@ import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color } from '../../../../styles'
-import UserType from '../../../../constants/UserType'
+import { UserType, ConstPath } from '../../../../constants'
 import { getLanguage } from '../../../../language/index'
 import LocalDataItem from './LocalDataItem'
-import {
-  _constructCacheSectionData,
-  _constructUserSectionData,
-  getOnlineData,
-  downFileAction,
-} from './Method'
+import { getOnlineData, downFileAction } from './Method'
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 
@@ -62,7 +57,7 @@ export default class MyLocalData extends Component {
     JSIPortalService = new OnlineServicesUtils('iportal')
   }
   componentDidMount() {
-    this._setSectionDataState3()
+    this.getData()
     if (Platform.OS === 'android') {
       if (UserType.isOnlineUser(this.props.user.currentUser)) {
         SOnlineService.getAndroidSessionID().then(cookie => {
@@ -76,37 +71,29 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _setSectionDataState3 = async () => {
+  getData = async () => {
     try {
       this.container.setLoading(
         true,
         getLanguage(this.props.language).Prompt.LOADING,
       )
-      let cacheSectionData = await _constructCacheSectionData(
-        this.props.language,
-      )
-      let userData = await _constructUserSectionData(this.state.userName)
-      let newData = userData
-      let newSectionData = cacheSectionData.concat([
-        {
-          //'外部数据'
-          title: getLanguage(this.props.language).Profile.ON_DEVICE,
-          data: newData,
-          isShowItem: true,
-        },
-      ])
-      this.setState({
-        sectionData: newSectionData,
-      })
+      let sectionData = []
+      let cacheData = {}
+      let userData = {}
+      let onlineData = {}
+      let homePath = global.homePath
+      let cachePath = homePath + ConstPath.CachePath2
+      let userPath =
+        homePath +
+        ConstPath.UserPath +
+        this.state.userName +
+        '/' +
+        ConstPath.RelativeFilePath.ExternalData
 
-      let online = {
-        title: '在线数据',
-        data: [],
-        isShowItem: true,
-        dataType: 'online',
-      }
+      let cachePromise = DataHandler.getExternalData(cachePath)
+      let userPromise = DataHandler.getExternalData(userPath)
       this.currentPage = 1
-      let onlineData = await getOnlineData(
+      let onlineDataPromise = getOnlineData(
         this.props.user.currentUser,
         this.currentPage,
         this.pageSize,
@@ -114,32 +101,39 @@ export default class MyLocalData extends Component {
           this.dataListTotal = result
         },
       )
-      if (onlineData && onlineData.length > 0) {
-        online = {
+      let result = await new Promise.all([
+        cachePromise,
+        userPromise,
+        onlineDataPromise,
+      ])
+      cacheData = result[0]
+      userData = result[1]
+      onlineData = result[2]
+      if (cacheData.length > 0) {
+        sectionData.push({
+          title: getLanguage(global.language).Profile.SAMPLEDATA,
+          data: cacheData,
+          isShowItem: true,
+        })
+      }
+      if (userData.length > 0) {
+        sectionData.push({
+          title: getLanguage(global.language).Profile.ON_DEVICE,
+          data: userData,
+          isShowItem: true,
+        })
+      }
+      if (onlineData.length > 0) {
+        sectionData.push({
           title: '在线数据',
           data: onlineData,
           isShowItem: true,
           dataType: 'online',
-        }
+        })
       }
-      newSectionData = cacheSectionData.concat([
-        {
-          //'外部数据'
-          title: getLanguage(this.props.language).Profile.ON_DEVICE,
-          data: newData,
-          isShowItem: true,
-        },
-        online,
-      ])
-      this.setState(
-        {
-          sectionData: newSectionData,
-        },
-        () => {
-          this.setLoading(false)
-        },
-      )
-    } catch (e) {
+      this.setState({ sectionData })
+      this.setLoading(false)
+    } catch (error) {
       this.setLoading(false)
     }
   }
@@ -149,9 +143,6 @@ export default class MyLocalData extends Component {
     for (let i = 0; i < sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
-        if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
-          sectionData[sectionData.length - 1].isShowItem = !data.isShowItem
-        }
         data.isShowItem = !data.isShowItem
       }
     }
@@ -237,25 +228,48 @@ export default class MyLocalData extends Component {
         //'删除数据中...'
         getLanguage(this.props.language).Prompt.DELETING_DATA,
       )
-      let delDir
-      if (this.itemInfo.item.fileType === 'tif') {
-        delDir = this.itemInfo.item.filePath
-      } else {
-        delDir = this.itemInfo.item.directory
+
+      let delDirs = []
+      switch (this.itemInfo.item.fileType) {
+        case 'plotting':
+        case 'workspace':
+        case 'workspace3d':
+          delDirs = [this.itemInfo.item.directory]
+          break
+        default:
+          delDirs = [this.itemInfo.item.filePath]
+          if (
+            this.itemInfo.item.relatedFiles !== undefined &&
+            this.itemInfo.item.relatedFiles.length !== 0
+          ) {
+            delDirs = delDirs.concat(this.itemInfo.item.relatedFiles)
+          }
+          break
       }
 
-      let isExist = await FileTools.fileIsExist(delDir)
       let result
-      if (isExist === true) {
-        result = await FileTools.deleteFile(delDir)
-      } else {
-        result = true
+      for (let i = 0; i < delDirs.length; i++) {
+        if (await FileTools.fileIsExist(delDirs[i])) {
+          result = await FileTools.deleteFile(delDirs[i])
+          if (!result) {
+            break
+          }
+        }
       }
-      if (result === true) {
+
+      if (result || result === undefined) {
         Toast.show(
           //'删除成功'
           getLanguage(this.props.language).Prompt.DELETED_SUCCESS,
         )
+        if (await FileTools.fileIsExist(this.itemInfo.item.directory)) {
+          let contents = await FileTools.getDirectoryContent(
+            this.itemInfo.item.directory,
+          )
+          if (contents.length === 0) {
+            await FileTools.deleteFile(this.itemInfo.item.directory)
+          }
+        }
         let sectionData = [...this.state.sectionData]
         for (let i = 0; i < sectionData.length; i++) {
           let data = sectionData[i]
@@ -266,6 +280,8 @@ export default class MyLocalData extends Component {
         this.setState({ sectionData: sectionData }, () => {
           this.LocalDataPopupModal && this.LocalDataPopupModal.setVisible(false)
         })
+      } else {
+        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
       }
     } catch (e) {
       Toast.show(
@@ -404,6 +420,12 @@ export default class MyLocalData extends Component {
                 item,
               )
               break
+            case 'img':
+              result = await DataHandler.importIMG(
+                this.itemInfo.item.filePath,
+                item,
+              )
+              break
             default:
               break
           }
@@ -472,7 +494,8 @@ export default class MyLocalData extends Component {
         this.itemInfo.item.fileType === 'kmz' ||
         this.itemInfo.item.fileType === 'dwg' ||
         this.itemInfo.item.fileType === 'dxf' ||
-        this.itemInfo.item.fileType === 'gpx'
+        this.itemInfo.item.fileType === 'gpx' ||
+        this.itemInfo.item.fileType === 'img'
       ) {
         this._onImportDataset(this.itemInfo.item.fileType)
       } else if (
@@ -811,7 +834,7 @@ export default class MyLocalData extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}
-              onRefresh={this._setSectionDataState3}
+              onRefresh={this.getData}
               colors={['orange', 'red']}
               titleColor={'orange'}
               tintColor={'orange'}

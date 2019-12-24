@@ -132,7 +132,6 @@ export default class PointAnalyst extends Component {
       }
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: this.changeNavPathInfo,
-        showLocationView: true,
       })
       this.setState({
         searchValue: null,
@@ -257,11 +256,9 @@ export default class PointAnalyst extends Component {
                 resultList: [],
               },
               () => {
-                setTimeout(() => {
-                  GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
-                  this.container.setLoading(false)
-                  NavigationService.goBack()
-                }, 0)
+                GLOBAL.PoiInfoContainer.setVisible(true, this.radius)
+                this.container.setLoading(false)
+                NavigationService.goBack()
               },
             )
         } else {

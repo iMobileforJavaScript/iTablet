@@ -4,8 +4,11 @@ import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import styles from './styles'
 // import { SOnlineService } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
+import { Toast, OnlineServicesUtils } from '../../../../utils'
 import { getLanguage } from '../../../../language/index'
+import { FileTools } from '../../../../native'
+import RNFS from 'react-native-fs'
+
 export default class SuperMapKnown extends Component {
   props: {
     navigation: Object,
@@ -25,34 +28,52 @@ export default class SuperMapKnown extends Component {
 
   getData = async () => {
     try {
-      // var result;
-      let uri
-      switch (this.type) {
-        case 'SuperMapKnow':
-          // let result = await SOnlineService.getSuperMapKnown()
-          // this.setState({ data: result })
-          uri = 'http://111.202.121.144:8088/officialAccount/zhidao/data.json'
-          break
-        case 'SuperMapGroup':
-          uri =
-            'http://111.202.121.144:8088/officialAccount/SuperMapGroup/data.json'
-          break
+      let JSOnlineService = new OnlineServicesUtils('online')
+      let data
+      if (this.type === 'SuperMapGroup') {
+        data = await JSOnlineService.getPublicDataByName(
+          '927528',
+          'SuperMapGroup.geojson',
+        )
+      } else if (this.type === 'SuperMapKnow') {
+        data = await JSOnlineService.getPublicDataByName(
+          '927528',
+          'zhidao.geojson',
+        )
       }
-      fetch(uri)
-        .then(response => response.json())
-        .then(responseJson => {
-          // return responseJson.movies;
-          let result = responseJson
-          this.setState({ data: result })
-          if (this.props.navigation.state.params.callback != null) {
-            this.props.navigation.state.params.callback()
-          }
-        })
-        .catch(() => {})
-      //   console.log(result)
-      // this.setState({ data: result })
+      let url = `https://www.supermapol.com/web/datas/${data.id}/download`
+
+      let fileCachePath = await FileTools.appendingHomeDirectory(
+        '/iTablet/Cache/' + data.fileName,
+      )
+
+      if (await RNFS.exists(fileCachePath)) {
+        await RNFS.unlink(fileCachePath)
+      }
+
+      let downloadOptions = {
+        fromUrl: url,
+        toFile: fileCachePath,
+        background: true,
+        fileName: data.fileName,
+        progressDivider: 1,
+      }
+
+      await RNFS.downloadFile(downloadOptions).promise
+
+      if (await RNFS.exists(fileCachePath)) {
+        let fileStr = await RNFS.readFile(fileCachePath)
+        let data = JSON.parse(fileStr)
+        this.setState({ data: data })
+
+        if (this.props.navigation.state.params.callback != null) {
+          this.props.navigation.state.params.callback()
+        }
+
+        await RNFS.unlink(fileCachePath)
+      }
     } catch (error) {
-      Toast.show('请求失败请检查网络')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_REQUEST_FAILED)
     }
   }
 

@@ -71,6 +71,7 @@ export default class LayerAttributeTabs extends React.Component {
     setCurrentAttribute: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
+    clearAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -132,6 +133,7 @@ export default class LayerAttributeTabs extends React.Component {
 
     this.currentTabRefs = []
     this.init = !!selectionAttribute
+    this.backClicked = false
   }
 
   componentDidMount() {
@@ -341,7 +343,9 @@ export default class LayerAttributeTabs extends React.Component {
       let result = await SMap.addAttributeFieldInfo(layerPath, true, fieldInfo)
       if (result) {
         Toast.show(
-          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+          Toast.show(
+            getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
+          ),
         )
         this.currentTabRefs[this.state.currentTabIndex].getAttribute(
           {
@@ -356,7 +360,9 @@ export default class LayerAttributeTabs extends React.Component {
         )
       } else {
         Toast.show(
-          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
+          Toast.show(
+            getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED,
+          ),
         )
       }
     }
@@ -477,41 +483,45 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   back = () => {
-    if (this.locationView && this.locationView.isShow()) {
-      this.locationView.show(false)
-      return
+    if (!this.backClicked) {
+      this.backClicked = true
+      if (this.locationView && this.locationView.isShow()) {
+        this.locationView.show(false)
+        this.backClicked = false
+        return
+      }
+
+      GLOBAL.SelectedSelectionAttribute = null // 清除选择集中当前选中的属性
+
+      NavigationService.goBack()
+
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.showFullMap &&
+        GLOBAL.toolBox.showFullMap(true)
+
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
+          {
+            containerType: 'table',
+            column: 3,
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[0],
+            // cb: () => {
+            //   switch (GLOBAL.currentToolbarType) {
+            //     case ConstToolType.MAP_TOOL_POINT_SELECT:
+            //       SMap.setAction(Action.SELECT)
+            //       break
+            //     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+            //       // SMap.selectByRectangle()
+            //       SMap.setAction(Action.SELECT_BY_RECTANGLE)
+            //       break
+            //   }
+            // },
+          },
+        )
     }
-
-    GLOBAL.SelectedSelectionAttribute = null // 清除选择集中当前选中的属性
-
-    NavigationService.goBack()
-
-    GLOBAL.toolBox &&
-      GLOBAL.toolBox.showFullMap &&
-      GLOBAL.toolBox.showFullMap(true)
-
-    GLOBAL.toolBox &&
-      GLOBAL.toolBox.setVisible(
-        true,
-        ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
-        {
-          containerType: 'table',
-          column: 3,
-          isFullScreen: false,
-          height: ConstToolType.HEIGHT[0],
-          // cb: () => {
-          //   switch (GLOBAL.currentToolbarType) {
-          //     case ConstToolType.MAP_TOOL_POINT_SELECT:
-          //       SMap.setAction(Action.SELECT)
-          //       break
-          //     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-          //       // SMap.selectByRectangle()
-          //       SMap.setAction(Action.SELECT_BY_RECTANGLE)
-          //       break
-          //   }
-          // },
-        },
-      )
   }
 
   setAttributeHistory = type => {
@@ -536,10 +546,10 @@ export default class LayerAttributeTabs extends React.Component {
           )
           if (result) {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除成功'
-                : 'Attribute Feild Delete Succeed',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_SUCCESS,
             )
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
             this.currentTabRefs[this.state.currentTabIndex].getAttribute(
               {
                 type: 'reset',
@@ -553,18 +563,15 @@ export default class LayerAttributeTabs extends React.Component {
             )
           } else {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除失败'
-                : 'Attribute Feild Delete Faild',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_FAILED,
             )
           }
         }}
-        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
-        //{'申请试用许可'}
-        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(250) }]}
+        style={[styles.dialogBackground, { height: scaleSize(250) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
@@ -587,9 +594,9 @@ export default class LayerAttributeTabs extends React.Component {
               textAlign: 'center',
             }}
           >
-            {global.language === 'CN'
-              ? '确定删除所选字段？'
-              : 'Sure Delete this Attribute Field?'}
+            {getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_CONFIRM +
+              '\n' +
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_TIPS}
           </Text>
         </View>
       </Dialog>

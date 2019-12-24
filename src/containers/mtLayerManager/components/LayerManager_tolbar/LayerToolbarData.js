@@ -2,6 +2,7 @@ import { getLanguage } from '../../../../language'
 import { getPublicAssets } from '../../../../assets'
 import dataUtil from '../../../../utils/dataUtil'
 import { DatasetType } from 'imobile_for_reactnative'
+import constants from '../../../../containers/workspace/constants'
 
 function getGroupData(language) {
   return [
@@ -301,13 +302,13 @@ const layer3dDefault = (language, selected) => {
   let data = {
     title: getLanguage(language).Map_Layer.NOT_OPTIONAL,
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
-    language: 'setLayerSelect',
+    type: 'setLayerSelect',
   }
   if (selected === false) {
     data = {
       title: getLanguage(language).Map_Layer.OPTIONAL,
       image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
-      language: 'setLayerSelect',
+      type: 'setLayerSelect',
     }
   }
   return [
@@ -572,7 +573,8 @@ function layerCollectionSetting(language, isGroup = false, layerData) {
           (layerData.type === DatasetType.CAD ||
             layerData.type === DatasetType.IMAGE ||
             layerData.type === DatasetType.MBImage ||
-            layerData.type === DatasetType.TEXT))
+            layerData.type === DatasetType.TEXT ||
+            GLOBAL.Type === constants.MAP_PLOTTING))
       ) {
         data.splice(3, 1) // 若当前图层为CAD或者TEXT，则没有'当前图层采集'选项
       }

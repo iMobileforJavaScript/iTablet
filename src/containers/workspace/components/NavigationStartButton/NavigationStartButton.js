@@ -118,11 +118,13 @@ export default class NavigationStartButton extends React.Component {
   }
   realNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
     let position = await SMap.getCurrentPosition()
-    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+    if (!GLOBAL.ISOUTDOORMAP) {
       let rel = await SMap.isIndoorPoint(position.x, position.y)
       if (rel.isindoor) {
         SMap.indoorNavigation(0)
@@ -131,7 +133,7 @@ export default class NavigationStartButton extends React.Component {
       } else {
         Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
       }
-    } else if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+    } else if (GLOBAL.ISOUTDOORMAP) {
       let naviData = this.props.getNavigationDatas()
       let isInBounds = await SMap.isInBounds(position, naviData.selectedDataset)
       if (isInBounds) {
@@ -146,15 +148,17 @@ export default class NavigationStartButton extends React.Component {
 
   simulatedNavigation = async () => {
     if (this.isOnline) {
-      Toast.show('在线导航暂不支持')
+      Toast.show(
+        getLanguage(GLOBAL.language).Prompt.NOT_SUPPORT_ONLINE_NAVIGATION,
+      )
       return
     }
     this.setVisible(false)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-    if (!GLOBAL.INDOORSTART && !GLOBAL.INDOOREND) {
+    if (GLOBAL.ISOUTDOORMAP) {
       SMap.outdoorNavigation(1)
     }
-    if (GLOBAL.INDOORSTART && GLOBAL.INDOOREND) {
+    if (!GLOBAL.ISOUTDOORMAP) {
       SMap.indoorNavigation(1)
     }
   }

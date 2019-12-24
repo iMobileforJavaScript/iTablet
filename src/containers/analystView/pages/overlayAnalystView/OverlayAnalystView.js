@@ -294,8 +294,10 @@ export default class OverlayAnalystView extends Component {
           if (type === item.datasetType) {
             if (
               filter.exclude &&
-              filter.exclude.dataSource === item.datasourceName &&
-              filter.exclude.dataSet === item.datasetName
+              ((filter.exclude.dataSource === item.datasourceName &&
+                filter.exclude.dataSet === item.datasetName) ||
+                (filter.exclude.datasetTypes &&
+                  filter.exclude.datasetTypes.indexOf(item.datasetType) > -1))
             )
               continue
             item.key = item.datasetName
@@ -309,8 +311,10 @@ export default class OverlayAnalystView extends Component {
       } else {
         if (
           !filter.exclude ||
-          filter.exclude.dataSource !== item.datasourceName ||
-          filter.exclude.dataset !== item.datasetName
+          ((filter.exclude.dataSource !== item.datasourceName ||
+            filter.exclude.dataSet !== item.datasetName) &&
+            filter.exclude.datasetTypes &&
+            filter.exclude.datasetTypes.indexOf(item.datasetType) < 0)
         ) {
           item.key = item.datasetName
           item.value = item.key
@@ -372,12 +376,14 @@ export default class OverlayAnalystView extends Component {
             )
             let filter = {}
             filter.typeFilter = this.getDataLimit()
+            filter.exclude = {}
             if (this.state.overlayDataSet && this.state.overlayDataSet.value) {
               filter.exclude = {
                 dataSource: this.state.overlayDataSource.value,
                 dataSet: this.state.overlayDataSet.value,
               }
             }
+            filter.exclude.datasetTypes = [DatasetType.Network]
             let dataSets = await this.getDataSets(
               {
                 server: udbPath,
@@ -450,12 +456,14 @@ export default class OverlayAnalystView extends Component {
             )
             let filter = {}
             filter.typeFilter = [DatasetType.REGION]
+            filter.exclude = {}
             if (this.state.dataSet && this.state.dataSet.value) {
               filter.exclude = {
                 dataSource: this.state.dataSource.value,
                 dataSet: this.state.dataSet.value,
               }
             }
+            filter.exclude.datasetTypes = [DatasetType.Network]
             let dataSets = await this.getDataSets(
               {
                 server: udbPath,
@@ -566,6 +574,7 @@ export default class OverlayAnalystView extends Component {
                 let udbPath = await FileTools.appendingHomeDirectory(data.path)
                 let filter = {}
                 filter.typeFilter = this.getDataLimit()
+                filter.exclude = {}
                 if (
                   this.state.overlayDataSet &&
                   this.state.overlayDataSet.value
@@ -575,6 +584,7 @@ export default class OverlayAnalystView extends Component {
                     dataSet: this.state.overlayDataSet.value,
                   }
                 }
+                filter.exclude.datasetTypes = [DatasetType.Network] // 过滤掉网路数据集
                 let dataSets = await this.getDataSets(
                   {
                     server: udbPath,
@@ -622,12 +632,14 @@ export default class OverlayAnalystView extends Component {
                 let udbPath = await FileTools.appendingHomeDirectory(data.path)
                 let filter = {}
                 filter.typeFilter = [DatasetType.REGION]
+                filter.exclude = {}
                 if (this.state.dataSet && this.state.dataSet.value) {
                   filter.exclude = {
                     dataSource: this.state.dataSource.value,
                     dataSet: this.state.dataSet.value,
                   }
                 }
+                filter.exclude.datasetTypes = [DatasetType.Network]
                 let dataSets = await this.getDataSets(
                   {
                     server: udbPath,

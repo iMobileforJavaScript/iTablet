@@ -98,6 +98,7 @@ const Prompt = {
   DONOT_SUPPORT_ARCORE: 'This Device does not support ARCore',
   PLEASE_NEW_PLOT_LAYER: 'Please Create New Plot Layer',
   DOWNLOADING_PLEASE_WAIT: 'Downloading Please Wait',
+  SELECT_DELETE_BY_RECTANGLE: 'Please select delete item by rectangle select',
 
   CHOOSE_LAYER: 'Choose Layer',
 
@@ -171,8 +172,11 @@ const Prompt = {
   SHARE_PREPARE: 'Preparing for sharing',
   SHARE_START: 'Start sharing',
 
+  EXPORTING: 'Exporting',
   EXPORT_SUCCESS: 'Exported Successfully',
   EXPORT_FAILED: 'Failed to Export',
+  EXPORT_TO: 'Data have been exported to:',
+  REQUIRE_PRJ_1984: 'PrjCoordSys of the dataset must be WGS_1984',
 
   UNDO_FAILED: 'Failed to Undo',
   REDO_FAILED: 'Failed to Redo',
@@ -274,6 +278,9 @@ const Prompt = {
   FAILED_TO_CREATE_REGION: 'Failed to create region',
   CLEAR_HISTORY: 'Clear history',
   //导航相关
+  SEARCH_AROUND: 'Search around',
+  GO_HERE: 'Go here',
+  SHOW_MORE_RESULT: 'Show more results',
   PLEASE_SET_BASEMAP_VISIBLE: 'Please set basemap visible',
   NO_NETWORK_DATASETS: "Current workspace doesn't contain network dataset",
   NO_LINE_DATASETS: "Current workspace doesn't contain line dataset",
@@ -287,6 +294,8 @@ const Prompt = {
   PLEASE_SELECT_A_POINT_INDOOR: 'Please select point indoor',
   PATH_ANALYSIS_FAILED:
     'Path analysis failed! Please re-select the start and end points',
+  ROAD_NETWORK_UNLINK:
+    'Path analysis failed due to the disconnected road network from start-point to end-point',
   SET_START_AND_END_POINTS: 'Please set the start and end points first',
   SELECT_LAYER_NEED_INCREMENTED:
     'Please select the layer need to be incremented',
@@ -298,12 +307,19 @@ const Prompt = {
     'The destination is too close to the start point,please reselect!',
   USE_ONLINE_ROUTE_ANALYST:
     "Points are out of dataset's bounds or there are no dataset around points, do you want to use online route analyst?",
+  NOT_SUPPORT_ONLINE_NAVIGATION: 'Online navigation is not support yet.',
 
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',
   SPEECH_NONE: "You didn't seem to speak anything",
 
   NOT_SUPPORT_STATISTIC: 'The field not support statistic',
+  ATTRIBUTE_DELETE_CONFIRM: 'Sure Delete this Attribute Field?',
+  ATTRIBUTE_DELETE_TIPS: 'Can not recoverable after delete attribute',
+  ATTRIBUTE_DELETE_SUCCESS: 'Attribute Field Delete Succeed',
+  ATTRIBUTE_DELETE_FAILED: 'Attribute Field Delete Failed',
+  ATTRIBUTE_ADD_SUCCESS: 'Attribute Add Succeed',
+  ATTRIBUTE_ADD_FAILED: 'Attribute Add Failed',
 }
 
 export { Prompt }

@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { ConstInfo } from '../../../../constants'
+import { ConstInfo, ConstToolType } from '../../../../constants'
 import { Toast, LayerUtils, scaleSize } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
 import { getLanguage } from '../../../../language'
@@ -492,7 +492,7 @@ export default class LayerSelectionAttribute extends React.Component {
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
       if (
-        data.index >= this.state.startIndex &&
+        data.index >= this.state.startIndex + 1 &&
         data.index < this.state.startIndex + this.state.attributes.data.length
       ) {
         // 定位在当前显示数据范围内
@@ -644,7 +644,7 @@ export default class LayerSelectionAttribute extends React.Component {
         onPress: () => {
           (async function() {
             NavigationService.navigate('LayerAttributeAdd', {
-              defaultParams: { fieldInfo: { fieldInfo } },
+              defaultParams: { fieldInfo },
               isDetail: true,
             })
           }.bind(this)())
@@ -682,6 +682,9 @@ export default class LayerSelectionAttribute extends React.Component {
   }
   /** 点击属性字段回调 **/
   onPressHeader = ({ fieldInfo, index, pressView }) => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      return
+    }
     this._showPopover(pressView, index, fieldInfo)
   }
 

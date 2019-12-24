@@ -15,6 +15,7 @@ import analyst from './analyst'
 import localData from './localData'
 import histories from './histories'
 import externalData from './externalData'
+import toolbarStatus from './toolbarStatus'
 export {
   nav,
   layers,
@@ -33,4 +34,5 @@ export {
   analyst,
   localData,
   externalData,
+  toolbarStatus,
 }

@@ -18,7 +18,7 @@ import Mine, {
   IPortalLogin,
   MyLabel,
   MyBaseMap,
-  DatasourcePage,
+  MyDataset,
   NewDataset,
   SearchMine,
 } from './Mine'
@@ -78,7 +78,7 @@ export {
   ScanOnlineMap,
   Personal,
   ToggleAccount,
-  DatasourcePage,
+  MyDataset,
   NewDataset,
   SearchMine,
   /**Home*/

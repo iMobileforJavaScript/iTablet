@@ -351,6 +351,8 @@ const Map_Main_Menu = {
   MARK: 'Mark',
 
   //地图导航
+  START_POINT: 'Start Point',
+  END_POINT: 'Destination',
   DRAW: 'Draw',
   ROAD_DETAILS: 'Road Details',
   ROUTE_THROUGH: 'Route Through：',
@@ -376,6 +378,7 @@ const Map_Main_Menu = {
   HAND_PAINTED: 'By Hand',
   NETWORK_DATASET: 'Network Datasets',
   MODEL_FILE: 'Navigation Model Files',
+  MY_LOCATION: 'My location',
 }
 
 //推演动画

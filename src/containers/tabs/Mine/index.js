@@ -18,7 +18,7 @@ import MySymbol from './MySymbol'
 import MyTemplate from './MyTemplate'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
-import DatasourcePage from './MyDatasource/DatasourcePage'
+import MyDataset from './MyDatasource/MyDataset'
 import NewDataset from './MyDatasource/NewDataset'
 import SearchMine from './Search'
 // import LoadServer from './MyBaseMap'
@@ -58,7 +58,7 @@ export {
   IPortalLogin,
   MyLabel,
   MyBaseMap,
-  DatasourcePage,
+  MyDataset,
   NewDataset,
   SearchMine,
 }

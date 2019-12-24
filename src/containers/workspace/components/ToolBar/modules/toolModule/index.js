@@ -14,8 +14,8 @@ function action(type) {
     height: data.height,
   })
   // 重置canUndo和canRedo
-  if (params.buttonView.state.canUndo || params.buttonView.state.canRedo) {
-    params.buttonView.setState({
+  if (params.toolbarStatus.canUndo || params.toolbarStatus.canRedo) {
+    params.setToolbarStatus({
       canUndo: false,
       canRedo: false,
     })

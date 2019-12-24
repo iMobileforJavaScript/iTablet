@@ -70,6 +70,7 @@ export default class MyDataPage extends Component {
     }
     this.getItemCallback = params.getItemCallback || undefined
     this.chatCallback = params.chatCallback || undefined
+    this.exportPath = ''
   }
 
   types = {
@@ -279,15 +280,35 @@ export default class MyDataPage extends Component {
         }
       }
       this.ShareModal && this.ShareModal.setVisible(false)
+
       if (this.type === this.types.mark && fileName === '') {
         this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
-      this.setLoading(true, getLanguage(global.language).Prompt.SHARING)
+      if (this.type === this.types.dataset && this.exportType === '') {
+        if (!this.isExportable(this.itemInfo)) {
+          this.showUnableExportDialog()
+        } else {
+          this.shareType = type
+          this.showSelectExportTypeDialog()
+        }
+        return
+      }
+
+      this.setLoading(
+        true,
+        type === 'local'
+          ? getLanguage(global.language).Prompt.EXPORTING
+          : getLanguage(global.language).Prompt.SHARING,
+      )
       let result = undefined
       if (fileName === '') {
-        fileName = this.itemInfo.item.name
+        if (this.type === this.types.dataset) {
+          fileName = this.itemInfo.item.datasetName
+        } else {
+          fileName = this.itemInfo.item.name
+        }
         let index = fileName.lastIndexOf('.')
         if (index > 0) {
           fileName = fileName.substring(0, index)
@@ -318,12 +339,29 @@ export default class MyDataPage extends Component {
       }
 
       if (result !== undefined) {
-        result
-          ? Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
-          : Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+        if (result) {
+          Toast.show(
+            type === 'local'
+              ? getLanguage(global.language).Prompt.EXPORT_SUCCESS
+              : getLanguage(global.language).Prompt.SHARE_SUCCESS,
+          )
+          if (this.exportPath !== '') {
+            this.showExportPathDialog()
+          }
+        } else {
+          Toast.show(
+            type === 'local'
+              ? getLanguage(global.language).Prompt.EXPORT_FAILED
+              : getLanguage(global.language).Prompt.SHARE_FAILED,
+          )
+        }
       }
     } catch (error) {
-      Toast.show(getLanguage(global.language).Prompt.SHARE_FAILED)
+      Toast.show(
+        type === 'local'
+          ? getLanguage(global.language).Prompt.EXPORT_FAILED
+          : getLanguage(global.language).Prompt.SHARE_FAILED,
+      )
     } finally {
       this.setLoading(false)
     }
@@ -583,6 +621,7 @@ export default class MyDataPage extends Component {
       title: getLanguage(global.language).Profile[`UPLOAD_${this.type}`],
       action: () => {
         this._closeModal()
+        this.exportType = ''
         this.ShareModal && this.ShareModal.setVisible(true)
       },
     },
@@ -663,15 +702,39 @@ export default class MyDataPage extends Component {
   showRelatedMapsDialog = ({ confirmAction, relatedMaps }) => {
     let dialogHeight
     if (relatedMaps.length < 5) {
-      dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(35)
+      dialogHeight = scaleSize(270) + relatedMaps.length * scaleSize(35)
     } else {
       dialogHeight = scaleSize(410)
     }
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
       confirmAction: confirmAction,
-      renderExtra: this.renderRelatedMap(relatedMaps),
-      dialogHeight: dialogHeight,
+      renderExtra: () => this.renderRelatedMap(relatedMaps),
+      dialogStyle: { height: dialogHeight },
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showExportPathDialog = () => {
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.EXPORT_TO,
+      textStyle: { fontSize: scaleSize(28) },
+      renderExtra: () => {
+        return (
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: scaleSize(24),
+              marginTop: scaleSize(5),
+            }}
+          >
+            {this.exportPath}
+          </Text>
+        )
+      },
+      confirmAction: () => (this.exportPath = ''),
+      cancelAction: () => (this.exportPath = ''),
+      dialogStyle: { width: scaleSize(500), height: scaleSize(340) },
     })
     this.SimpleDialog.setVisible(true)
   }
@@ -732,7 +795,7 @@ export default class MyDataPage extends Component {
         img = textImg
       } else if (type === DatasetType.CAD) {
         img = CADImg
-      } else if (type === DatasetType.IMAGE) {
+      } else if (type === DatasetType.IMAGE || type === DatasetType.MBImage) {
         img = IMGImg
       } else if (type === DatasetType.GRID) {
         img = gridImg
@@ -1009,7 +1072,7 @@ export default class MyDataPage extends Component {
               onRefresh={() => {
                 try {
                   this.setState({ isRefreshing: true })
-                  this.getData().then(() => {
+                  this._getSectionData().then(() => {
                     this.setState({ isRefreshing: false })
                   })
                 } catch (error) {

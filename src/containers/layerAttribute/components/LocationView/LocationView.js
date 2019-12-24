@@ -205,6 +205,15 @@ export default class LocationView extends React.Component {
               })
             }
           }}
+          onBlur={data => {
+            this.currentData = data
+            let canBeLocated = this.checkLocated()
+            if (canBeLocated !== this.state.canBeLocated) {
+              this.setState({
+                canBeLocated,
+              })
+            }
+          }}
         />
       </View>
     )

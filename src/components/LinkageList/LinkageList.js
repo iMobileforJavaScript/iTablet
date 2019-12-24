@@ -38,6 +38,7 @@ export default class LinkageList extends React.Component {
     super(props)
     this.state = {
       selected: 0,
+      rightSelected: 0,
       // data: props.data || [],
       rightData: (props.data && props.data[0] && props.data[0].data) || [],
     }
@@ -116,6 +117,24 @@ export default class LinkageList extends React.Component {
     this.leftList && this.leftList.setNativeProps(this._panBtnStyles)
   }
 
+  select = ({ leftIndex, rightIndex }) => {
+    let state = {}
+    if (leftIndex >= 0) state.selected = leftIndex
+    if (rightIndex >= 0) state.rightSelected = rightIndex
+    if (
+      this.props.data &&
+      this.props.data.length > 0 &&
+      this.props.data[leftIndex] &&
+      this.props.data[leftIndex].data &&
+      this.props.data[leftIndex].data.length > 0
+    ) {
+      state.rightData = this.props.data[leftIndex].data
+    }
+    if (Object.keys(state).length > 0) {
+      this.setState(state)
+    }
+  }
+
   onLeftPress = ({ item, index }) => {
     if (this.props.onLeftPress) return this.props.onLeftPress({ item, index })
     this.setState({
@@ -126,17 +145,21 @@ export default class LinkageList extends React.Component {
 
   onRightPress = async ({ item, index }) => {
     let data = this.props.data
-    // let parent = data.filter(val => {
-    //   return val.title === item.parentTitle
-    // })
     let parent = {}
     for (let p of data) {
       if (p.title === item.parentTitle) {
         parent = p
       }
     }
-    if (this.props.onRightPress)
-      return this.props.onRightPress({ parent, item, index })
+    if (index !== this.state.rightSelected) {
+      this.setState({ rightSelected: index }, () => {
+        if (this.props.onRightPress)
+          return this.props.onRightPress({ parent, item, index })
+      })
+    } else {
+      if (this.props.onRightPress)
+        return this.props.onRightPress({ parent, item, index })
+    }
   }
 
   renderLeftItem = ({ item, index }) => {
@@ -162,7 +185,11 @@ export default class LinkageList extends React.Component {
   renderRightItem = ({ item, index }) => {
     return (
       <TouchableOpacity
-        style={this.styles.rightWrap}
+        style={
+          this.state.rightSelected === index
+            ? this.styles.leftWrapSelect
+            : this.styles.leftWrap
+        }
         onPress={() => {
           this.onRightPress({ item, index })
         }}
@@ -214,6 +241,7 @@ export default class LinkageList extends React.Component {
           <FlatList
             renderItem={this.renderRightItem}
             data={this.state.rightData}
+            extraData={this.state.rightSelected}
             keyExtractor={(item, index) => item + index}
           />
         </View>

@@ -27,7 +27,7 @@ import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 import { ConstPath, ConstOnline } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { Toast } from '../../../../utils/index'
+import { Toast, LayerUtils } from '../../../../utils/index'
 import RNFS, { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
@@ -49,6 +49,7 @@ class Chat extends React.Component {
     setBackAction: () => {},
     removeBackAction: () => {},
     closeWorkspace: () => {},
+    getLayers: () => {},
   }
   constructor(props) {
     super(props)
@@ -988,10 +989,16 @@ class Chat extends React.Component {
       }
     }
     await FileTools.deleteFile(fileDir)
-    await SMap.refreshMap()
+    this.props.getLayers(-1, async layers => {
+      for (let i = layers.length; i > 0; i--) {
+        if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+          await SMap.moveToTop(layers[i].name)
+        }
+      }
+      SMap.refreshMap()
+    })
     // NavigationService.navigate('MapView')
     Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
-    //todo refresh
   }
 
   importMap = async message => {
