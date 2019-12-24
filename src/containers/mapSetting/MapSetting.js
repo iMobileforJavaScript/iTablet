@@ -15,7 +15,7 @@ import styles from './styles'
 import {
   getlegendSetting,
   getThematicMapSettings,
-  getnavigationSetting,
+  // getnavigationSetting,
   getMapARSettings,
 } from './settingData'
 import SettingSection from './SettingSection'
@@ -80,9 +80,9 @@ export default class MapSetting extends Component {
         newData.splice(4, 2)
       }
     }
-    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      newData = newData.concat(getnavigationSetting())
-    }
+    // if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+    //   newData = newData.concat(getnavigationSetting())
+    // }
     this.setState({
       data: newData,
     })

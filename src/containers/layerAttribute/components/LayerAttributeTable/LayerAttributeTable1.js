@@ -352,7 +352,7 @@ export default class LayerAttributeTable extends React.Component {
       this.table &&
       this.table.scrollToLocation({
         itemIndex: index,
-        viewPosition: 0.5,
+        viewPosition: 0.3,
       })
   }
   onPressHeader = item => {
