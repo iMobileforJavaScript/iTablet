@@ -1140,7 +1140,7 @@ export default class LayerAttribute extends React.Component {
             }}
           >
             {getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_CONFIRM +
-              '\n' +
+              '\n\n' +
               getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_TIPS}
           </Text>
         </View>
