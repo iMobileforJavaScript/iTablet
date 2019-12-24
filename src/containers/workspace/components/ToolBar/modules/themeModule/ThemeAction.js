@@ -388,7 +388,7 @@ async function getRangeMode(type, key = '', name = '') {
   let column =
     ToolbarModule.getParams().device.orientation === 'PORTRAIT' ? 4 : 8
   let getData = async function() {
-    return await ThemeMenuData.getRangeMode()
+    return await ThemeMenuData.getRangeMode(type)
   }
 
   dealData({
