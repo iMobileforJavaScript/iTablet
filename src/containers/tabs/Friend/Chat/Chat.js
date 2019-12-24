@@ -1164,7 +1164,10 @@ class Chat extends React.Component {
               return (
                 <MessageText
                   {...props}
-                  customTextStyle={{ fontSize: scaleSize(20) }}
+                  customTextStyle={{
+                    fontSize: scaleSize(20),
+                    lineHeight: scaleSize(25),
+                  }}
                 />
               )
             }}
