@@ -167,6 +167,7 @@ export default class MapView extends React.Component {
     getMapSetting: PropTypes.func,
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
+    setCurrentSymbol: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
     setMapNavigation: PropTypes.func,
