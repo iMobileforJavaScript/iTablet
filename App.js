@@ -45,6 +45,7 @@ import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
 import constants from './src/containers/workspace/constants'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
+import { SimpleDialog } from './src/containers/tabs/Friend'
 let AppUtils = NativeModules.AppUtils
 
 
@@ -905,6 +906,10 @@ class AppRoot extends Component {
     
   }
 
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => global.SimpleDialog = ref}/>
+  }
+
   render () {
     global.language=this.props.language
     return (
@@ -930,6 +935,7 @@ class AppRoot extends Component {
           }}
         />
         {this.renderDialog()}
+        {this.renderSimpleDialog()}
         {this.renderImportDialog()}
         {this.renderLicenseNotModuleDialog()}
         {this.renderNoNativeOfficialLicenseDialog()}

@@ -18,6 +18,7 @@ import MessageDataHandle from '../MessageDataHandle'
 import { SimpleDialog } from '../index'
 import MsgConstant from '../MsgConstant'
 import { connect } from 'react-redux'
+import { SMap } from 'imobile_for_reactnative'
 // let AppUtils = NativeModules.AppUtils
 
 class ManageFriend extends Component {
@@ -68,21 +69,15 @@ class ManageFriend extends Component {
   }
 
   navigateToModule = async module => {
-    // if (Platform.OS === 'android') {
-    //   let granted = await PermissionsAndroid.request(
-    //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    //   )
-    //   if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
-    //     this.SimpleDialog.setConfirm(() => {
-    //       AppUtils.startAppLoactionSetting()
-    //     })
-    //     this.SimpleDialog.setText(
-    //       getLanguage(global.language).Prompt.REQUEST_LOCATION,
-    //     )
-    //     this.SimpleDialog.setVisible(true)
-    //     return
-    //   }
-    // }
+    let licenseStatus = await SMap.getEnvironmentStatus()
+    global.isLicenseValid = licenseStatus.isLicenseValid
+    if (!global.isLicenseValid) {
+      this.SimpleDialog.set({
+        text: getLanguage(global.language).Prompt.APPLY_LICENSE_FIRST,
+      })
+      this.SimpleDialog.setVisible(true)
+      return
+    }
     let tmpCurrentUser = this.user
     let currentUserName = tmpCurrentUser.userName
       ? tmpCurrentUser.userName
