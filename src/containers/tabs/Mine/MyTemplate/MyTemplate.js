@@ -77,9 +77,16 @@ class MyTemplate extends MyDataPage {
       fromPath = this.itemInfo.item.path
     }
 
-    let toPath = homePath + this.getRelativeTempFilePath()
+    let toPath
     if (exportToTemp) {
-      toPath = homePath + this.getRelativeTempFilePath()
+      let tempPath = homePath + this.getRelativeTempPath()
+      let availableName = await this._getAvailableFileName(
+        tempPath,
+        'MyExport',
+        'zip',
+      )
+      toPath = tempPath + availableName
+      this.exportPath = toPath
     } else {
       let exportPath = homePath + this.getRelativeExportPath()
       let availableName = await this._getAvailableFileName(

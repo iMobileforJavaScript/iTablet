@@ -106,11 +106,10 @@ export default class MyDataPage extends Component {
 
   onItemPress = async () => {}
 
-  getRelativeTempFilePath = () => {
+  getRelativeTempPath = () => {
     let userPath =
       ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-    let relativeTempPath =
-      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+    let relativeTempPath = userPath + ConstPath.RelativePath.Temp
     return relativeTempPath
   }
 
@@ -372,13 +371,14 @@ export default class MyDataPage extends Component {
     let isInstalled = await appUtilsModule.isWXInstalled()
     if (isInstalled) {
       await this.exportData(fileName)
-      let homePath = await FileTools.appendingHomeDirectory()
-      let path = homePath + this.getRelativeTempFilePath()
+      let path = this.exportPath
+      this.exportPath = ''
       result = await appUtilsModule.sendFileOfWechat({
         filePath: path,
         title: fileName + '.zip',
         description: 'SuperMap iTablet',
       })
+      await FileTools.deleteFile(path)
     } else {
       Toast.show(getLanguage(global.language).Prompt.WX_NOT_INSTALLED)
     }
@@ -387,21 +387,22 @@ export default class MyDataPage extends Component {
 
   shareToOnline = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     let result
     if (this.type === this.types.map) {
       result = await SOnlineService.uploadFile(path, fileName)
     } else {
       result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
     }
+    await FileTools.deleteFile(path)
     return result
   }
 
   shareToIPortal = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     let uploadResult
     if (this.type === this.types.map) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
@@ -412,32 +413,19 @@ export default class MyDataPage extends Component {
         'UDB',
       )
     }
+    await FileTools.deleteFile(path)
     return uploadResult
   }
 
   shareToChat = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     this.chatCallback && this.chatCallback(path, fileName)
     NavigationService.goBack()
   }
 
   shareToFriend = async fileName => {
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
-    let type
-    if (this.type === this.types.map) {
-      type = MsgConstant.MSG_MAP
-    }
-    let action = [
-      {
-        name: 'onSendFile',
-        type: type,
-        filePath: path,
-        fileName: fileName,
-      },
-    ]
     NavigationService.navigate('SelectFriend', {
       user: this.props.user,
       callBack: async targetId => {
@@ -447,6 +435,20 @@ export default class MyDataPage extends Component {
             getLanguage(global.language).Prompt.SHARE_PREPARE,
           )
           await this.exportData(fileName)
+          let path = this.exportPath
+          this.exportPath = ''
+          let type
+          if (this.type === this.types.map) {
+            type = MsgConstant.MSG_MAP
+          }
+          let action = [
+            {
+              name: 'onSendFile',
+              type: type,
+              filePath: path,
+              fileName: fileName,
+            },
+          ]
           NavigationService.replace('CoworkTabs', {
             targetId: targetId,
             action: action,
