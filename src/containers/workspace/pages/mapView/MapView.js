@@ -310,68 +310,77 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      this.addFloorHiddenListener()
-    }
-    this.container &&
-      this.container.setLoading(
-        true,
-        getLanguage(this.props.language).Prompt.LOADING,
-        //'地图加载中'
-      )
-    // 动画导致有时不会进入InteractionManager
-    // InteractionManager.runAfterInteractions(() => {
-    GLOBAL.SaveMapView &&
-      GLOBAL.SaveMapView.setTitle(
-        getLanguage(this.props.language).Prompt.SAVE_TITLE,
-        getLanguage(this.props.language).Prompt.SAVE_YES,
-        getLanguage(this.props.language).Prompt.SAVE_NO,
-        getLanguage(this.props.language).Prompt.CANCEL,
-      )
+    if (global.isLicenseValid) {
+      if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+        this.addFloorHiddenListener()
+      }
+      this.container &&
+        this.container.setLoading(
+          true,
+          getLanguage(this.props.language).Prompt.LOADING,
+          //'地图加载中'
+        )
+      // 动画导致有时不会进入InteractionManager
+      // InteractionManager.runAfterInteractions(() => {
+      GLOBAL.SaveMapView &&
+        GLOBAL.SaveMapView.setTitle(
+          getLanguage(this.props.language).Prompt.SAVE_TITLE,
+          getLanguage(this.props.language).Prompt.SAVE_YES,
+          getLanguage(this.props.language).Prompt.SAVE_NO,
+          getLanguage(this.props.language).Prompt.CANCEL,
+        )
 
-    this.setState({
-      showMap: true,
-    })
-
-    this.props.setBackAction({
-      key: 'MapView',
-      action: () => this.back(),
-    })
-
-    SMediaCollector.setCalloutTapListener(info => {
-      NavigationService.navigate('MediaEdit', {
-        info,
+      this.setState({
+        showMap: true,
       })
-    })
 
-    this.clearData()
-    if (this.toolBox) {
-      GLOBAL.toolBox = this.toolBox
-    }
-    // })
+      this.props.setBackAction({
+        key: 'MapView',
+        action: () => this.back(),
+      })
 
-    SMap.setIndustryNavigationListener({
-      callback: () => {
-        this.showFullMap(false)
-        this.props.setMapNavigation({ isShow: false, name: '' })
-        GLOBAL.STARTX = undefined
-        GLOBAL.ENDX = undefined
-        GLOBAL.ROUTEANALYST = undefined
-        GLOBAL.STARTNAME = getLanguage(
-          GLOBAL.language,
-        ).Map_Main_Menu.SELECT_START_POINT
-        GLOBAL.ENDNAME = getLanguage(
-          GLOBAL.language,
-        ).Map_Main_Menu.SELECT_DESTINATION
-        SMap.clearPoint()
-      },
-    })
+      SMediaCollector.setCalloutTapListener(info => {
+        NavigationService.navigate('MediaEdit', {
+          info,
+        })
+      })
 
-    this.addSpeechRecognizeListener()
-    if (GLOBAL.language === 'CN') {
-      SSpeechRecognizer.setParameter('language', 'zh_cn')
+      this.clearData()
+      if (this.toolBox) {
+        GLOBAL.toolBox = this.toolBox
+      }
+      // })
+
+      SMap.setIndustryNavigationListener({
+        callback: () => {
+          this.showFullMap(false)
+          this.props.setMapNavigation({ isShow: false, name: '' })
+          GLOBAL.STARTX = undefined
+          GLOBAL.ENDX = undefined
+          GLOBAL.ROUTEANALYST = undefined
+          GLOBAL.STARTNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_START_POINT
+          GLOBAL.ENDNAME = getLanguage(
+            GLOBAL.language,
+          ).Map_Main_Menu.SELECT_DESTINATION
+          SMap.clearPoint()
+        },
+      })
+
+      this.addSpeechRecognizeListener()
+      if (GLOBAL.language === 'CN') {
+        SSpeechRecognizer.setParameter('language', 'zh_cn')
+      } else {
+        SSpeechRecognizer.setParameter('language', 'en_us ')
+      }
     } else {
-      SSpeechRecognizer.setParameter('language', 'en_us ')
+      global.SimpleDialog.set({
+        text: getLanguage(global.language).Prompt.APPLY_LICENSE_FIRST,
+        confirmAction: () => NavigationService.goBack(),
+        cancelAction: () => NavigationService.goBack(),
+      })
+      global.SimpleDialog.setVisible(true)
     }
   }
 
@@ -558,7 +567,7 @@ export default class MapView extends React.Component {
     SMediaCollector.removeListener()
 
     // 移除多媒体采集Callout
-    SMediaCollector.removeMedias()
+    GLOBAL.mapView && SMediaCollector.removeMedias()
 
     this.showMarker && SMap.deleteMarker(markerTag)
 
@@ -567,7 +576,7 @@ export default class MapView extends React.Component {
     }
 
     //移除手势监听
-    SMap.deleteGestureDetector()
+    GLOBAL.mapView && SMap.deleteGestureDetector()
   }
 
   addSpeechRecognizeListener = () => {
@@ -2682,7 +2691,7 @@ export default class MapView extends React.Component {
         {/*/>*/}
         {/*)}*/}
         {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderTrafficView()}
-        {this.state.showAIDetect && (
+        {global.isLicenseValid && this.state.showAIDetect && (
           <SMAIDetectView
             ref={ref => (GLOBAL.SMAIDetectView = ref)}
             onArObjectClick={this._onArObjectClick}
