@@ -46,15 +46,12 @@ export default class LayerAttributeAdd extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    params.data = params.defaultParams && params.defaultParams.fieldInfo //&&
-    //params.defaultParams[params.defaultParams.length - 1].fieldInfo
+    params.data = params.defaultParams && params.defaultParams.fieldInfo
     if (params.data && params.data.type === 1) {
       params.data.defaultValue = params.data.defaultValue === '1'
     }
     let isDetail = !!params.isDetail
     this.state = {
-      // isDetail: params.isDetail,
-      // isEdit: params.data && Object.keys(params.data).length > 0,
       isEdit: isDetail,
       callBack: params.callBack,
       defaultParams: params.defaultParams,
@@ -73,9 +70,12 @@ export default class LayerAttributeAdd extends React.Component {
             : this.getTrimSmStr(params.data.caption) + '_1')) ||
         '',
       type: (params.data && params.data.type) || '',
-      // maxLength: (params.data && params.data.maxLength) || '',
       maxLength: this.getDefaultMaxLength(params.data.type),
-      defaultValue: (params.data && params.data.defaultValue) || '',
+      defaultValue:
+        (params.data && params.data.defaultValue) ||
+        typeof params.data.defaultValue === 'boolean'
+          ? params.data.defaultValue
+          : '',
       isRequired:
         params.data && typeof params.data.isRequired === 'boolean'
           ? params.data.isRequired
@@ -83,6 +83,8 @@ export default class LayerAttributeAdd extends React.Component {
       // 弹出框数据
       popData: [],
       currentPopData: this.getTypeDataByType(params.data.type),
+      //缺省值是否能编辑
+      isDefaultValueCanEdit: true,
     }
   }
 
@@ -129,15 +131,17 @@ export default class LayerAttributeAdd extends React.Component {
     if (!this.confirmValidate()) {
       return
     }
-    this.state.callBack &&
-      this.state.callBack({
-        caption: this.getTrimSmStr(this.state.caption),
-        name: this.getTrimSmStr(this.state.name),
-        type: this.state.type,
-        maxLength: this.state.maxLength,
-        defaultValue: this.state.defaultValue,
-        required: this.state.isRequired,
-      })
+    let result = {
+      caption: this.getTrimSmStr(this.state.caption),
+      name: this.getTrimSmStr(this.state.name),
+      type: this.state.type,
+      maxLength: this.state.maxLength,
+      required: this.state.isRequired,
+    }
+    if (result.required) {
+      result.defaultValue = this.state.defaultValue
+    }
+    this.state.callBack && this.state.callBack(result)
     if (isContinue) {
       let tempName = this.state.name + '_1'
       let tempCaption = this.state.caption + '_1'
@@ -179,8 +183,17 @@ export default class LayerAttributeAdd extends React.Component {
         })
         break
       case global.language === 'CN' ? '必填' : 'Required':
+        this.defaultValueView.props.disable =
+          this.state.isEdit && this.state.isDefaultValueCanEdit
+        // this.defaultValueView.setNativeProps({
+        //   disable: this.state.isEdit && this.state.isDefaultValueCanEdit
+        // })
+        this.defaultValueView.setState({
+          disable: this.state.isEdit && this.state.isDefaultValueCanEdit,
+        })
         this.setState({
           isRequired: value,
+          isDefaultValueCanEdit: value,
         })
         break
       case global.language === 'CN' ? '缺省值' : 'Default Value':
@@ -430,35 +443,6 @@ export default class LayerAttributeAdd extends React.Component {
             </View>
           }
         />
-        {this.state.type === 1 ? (
-          <Row
-            style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(50) }}
-            key={'缺省值'}
-            type={Row.Type.RADIO_GROUP}
-            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
-            disable={this.state.isEdit}
-            defaultValue={this.state.defaultValue}
-            radioArr={[
-              { title: global.language === 'CN' ? '是' : 'YES', value: true },
-              { title: global.language === 'CN' ? '否' : 'NO', value: false },
-            ]}
-            radioColumn={2}
-            getValue={this.getType}
-          />
-        ) : (
-          <Row
-            style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(50) }}
-            key={'缺省值'}
-            type={Row.Type.INPUT}
-            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
-            disable={this.state.isEdit}
-            defaultValue={this.state.defaultValue}
-            value={this.state.defaultValue}
-            getValue={this.getInputValue}
-          />
-        )}
 
         <Row
           style={{ marginTop: scaleSize(15) }}
@@ -474,6 +458,38 @@ export default class LayerAttributeAdd extends React.Component {
           radioColumn={2}
           getValue={this.getType}
         />
+
+        {this.state.type === 1 ? (
+          <Row
+            ref={ref => (this.defaultValueView = ref)}
+            style={{ marginTop: scaleSize(15) }}
+            customRightStyle={{ height: scaleSize(50) }}
+            key={'缺省值'}
+            type={Row.Type.RADIO_GROUP}
+            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
+            disable={this.state.isEdit && this.state.isDefaultValueCanEdit}
+            defaultValue={this.state.defaultValue}
+            radioArr={[
+              { title: global.language === 'CN' ? '是' : 'YES', value: true },
+              { title: global.language === 'CN' ? '否' : 'NO', value: false },
+            ]}
+            radioColumn={2}
+            getValue={this.getType}
+          />
+        ) : (
+          <Row
+            ref={ref => (this.defaultValueView = ref)}
+            style={{ marginTop: scaleSize(15) }}
+            customRightStyle={{ height: scaleSize(50) }}
+            key={'缺省值'}
+            type={Row.Type.INPUT}
+            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
+            disable={this.state.isEdit && this.state.isDefaultValueCanEdit}
+            defaultValue={this.state.defaultValue}
+            value={this.state.defaultValue}
+            getValue={this.getInputValue}
+          />
+        )}
       </View>
     )
   }
