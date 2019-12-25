@@ -143,7 +143,8 @@ export default class Cell extends Component {
   _onSubmitEditing = () => {
     let _value = this.state.value
     if (
-      utils.isNumber(this.props.data.fieldInfo.type) ||
+      (this.props.data.fieldInfo &&
+        utils.isNumber(this.props.data.fieldInfo.type)) ||
       this.state.keyboardType === 'number-pad' ||
       this.state.keyboardType === 'decimal-pad' ||
       this.state.keyboardType === 'numeric'
@@ -153,7 +154,7 @@ export default class Cell extends Component {
       _value = utils.getValueWithDefault(
         _value,
         this.props.defaultValue,
-        this.props.data.fieldInfo.type,
+        this.props.data.fieldInfo && this.props.data.fieldInfo.type,
       )
       this.state.editable &&
         this.setState(
@@ -181,7 +182,7 @@ export default class Cell extends Component {
       newState.value = utils.getValueWithDefault(
         newState.value,
         this.props.defaultValue,
-        this.props.data.fieldInfo.type,
+        this.props.data.fieldInfo && this.props.data.fieldInfo.type,
       )
       this.state.editable &&
         this.setState(newState, () => {
@@ -206,7 +207,8 @@ export default class Cell extends Component {
   _onChangeText = value => {
     let _value = value
     if (
-      utils.isNumber(this.props.data.fieldInfo.type) ||
+      (this.props.data.fieldInfo &&
+        utils.isNumber(this.props.data.fieldInfo.type)) ||
       this.state.keyboardType === 'number-pad' ||
       this.state.keyboardType === 'decimal-pad' ||
       this.state.keyboardType === 'numeric'
@@ -243,7 +245,9 @@ export default class Cell extends Component {
             keyboardAppearance={'dark'}
             returnKeyLabel={this.props.returnKeyLabel}
             // keyboardType={this.state.keyboardType}
-            keyboardType={utils.getKeyboardType(this.props.data.fieldInfo.type)}
+            keyboardType={utils.getKeyboardType(
+              this.props.data.fieldInfo && this.props.data.fieldInfo.type,
+            )}
           />
         ) : (
           <Text style={[styles.cellText, this.props.cellTextStyle]}>
