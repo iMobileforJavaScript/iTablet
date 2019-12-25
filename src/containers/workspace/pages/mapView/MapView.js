@@ -2453,7 +2453,8 @@ export default class MapView extends React.Component {
       <MapSelectPoint
         ref={ref => (GLOBAL.AIDETECTCHANGE = ref)}
         headerProps={{
-          title: '目标检测',
+          title: getLanguage(global.language).Map_Main_Menu
+            .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
           navigation: this.props.navigation,
           type: 'fix',
           backAction: async () => {

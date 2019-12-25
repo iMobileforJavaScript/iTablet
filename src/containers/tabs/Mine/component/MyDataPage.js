@@ -368,7 +368,8 @@ export default class MyDataPage extends Component {
 
   shareToWechat = async fileName => {
     let result
-    let isInstalled = await appUtilsModule.isWXInstalled()
+    // let isInstalled = await appUtilsModule.isWXInstalled()
+    let isInstalled = true
     if (isInstalled) {
       await this.exportData(fileName)
       let path = this.exportPath
@@ -379,6 +380,10 @@ export default class MyDataPage extends Component {
         description: 'SuperMap iTablet',
       })
       await FileTools.deleteFile(path)
+      if (!result) {
+        Toast.show(getLanguage(global.language).Prompt.WX_SHARE_FAILED)
+        return undefined
+      }
     } else {
       Toast.show(getLanguage(global.language).Prompt.WX_NOT_INSTALLED)
     }
