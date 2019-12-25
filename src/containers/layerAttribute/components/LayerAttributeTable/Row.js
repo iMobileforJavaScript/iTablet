@@ -109,8 +109,8 @@ export default class Row extends Component {
     return false
   }
 
-  _onFocus = () => {
-    this.props.onFocus && this.props.onFocus()
+  _onFocus = evt => {
+    this.props.onFocus && this.props.onFocus(evt)
   }
   _action = (iTemView, columnIndex) => {
     if (this.props.onPress && typeof this.props.onPress === 'function') {
@@ -179,12 +179,18 @@ export default class Row extends Component {
         let isHead = this.props.data.fieldInfo === undefined
         editable = !isHead && !this.props.data.fieldInfo.isSystemField
         isRequired = !isHead && this.props.data.fieldInfo.isRequired
-        defaultValue = !isHead && this.props.data.fieldInfo.defaultValue
+        defaultValue =
+          !isHead && this.props.data.fieldInfo.defaultValue !== undefined
+            ? this.props.data.fieldInfo.defaultValue
+            : ''
       }
     } else {
       editable = item.fieldInfo && !item.fieldInfo.isSystemField
-      isRequired = item.fieldInfo && !item.fieldInfo.isRequired
-      defaultValue = item.fieldInfo && !item.fieldInfo.defaultValue
+      isRequired = item.fieldInfo && item.fieldInfo.isRequired
+      defaultValue =
+        item.fieldInfo && item.fieldInfo.defaultValue !== undefined
+          ? item.fieldInfo.defaultValue
+          : ''
     }
 
     let cellStyle = [
@@ -288,7 +294,7 @@ export default class Row extends Component {
             this.props.selected && styles.selectedCellText,
           ]}
           value={value}
-          data={item}
+          data={this.props.data instanceof Array ? item : this.props.data}
           editable={editable}
           overlayStyle={editable && styles.selectedOverlay}
           isRequired={isRequired}

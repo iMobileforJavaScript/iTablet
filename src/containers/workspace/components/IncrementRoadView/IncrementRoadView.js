@@ -26,14 +26,22 @@ export default class IncrementRoadView extends React.Component {
   }
 
   render() {
-    let right
-    let left
+    let right, rightTxt
+    let left, leftTxt
     if (this.props.isRight) {
-      right = styles.focus
-      left = styles.normal
+      right = {
+        backgroundColor: '#4680df',
+      }
+      rightTxt = {
+        color: 'white',
+      }
     } else {
-      left = styles.focus
-      right = styles.normal
+      left = {
+        backgroundColor: '#4680df',
+      }
+      leftTxt = {
+        color: 'white',
+      }
     }
     return (
       <View
@@ -47,23 +55,23 @@ export default class IncrementRoadView extends React.Component {
         <Header {...this.props.headerProps} />
         <View style={styles.table}>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, left]}
             onPress={() => {
               this.props.onClick(false)
             }}
           >
-            <Text style={left}>
+            <Text style={[styles.text, leftTxt]}>
               {getLanguage(GLOBAL.language).Map_Main_Menu.TRACK}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, right]}
             onPress={() => {
               this.props.onClick(true)
             }}
           >
-            <Text style={right}>
+            <Text style={[styles.text, rightTxt]}>
               {getLanguage(GLOBAL.language).Map_Main_Menu.HAND_PAINTED}
             </Text>
           </TouchableOpacity>
@@ -76,31 +84,23 @@ export default class IncrementRoadView extends React.Component {
 const styles = StyleSheet.create({
   button: {
     flex: 1,
+    height: scaleSize(60),
     backgroundColor: 'transparent',
-    alignSelf: 'center',
-    borderStyle: 'solid',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   table: {
     position: 'absolute',
     marginTop: HEADER_MARGINTOP + HEADER_HEIGHT,
     width: '100%',
-    height: scaleSize(50),
+    height: scaleSize(60),
     backgroundColor: '#EEEEEE',
-    alignSelf: 'center',
-    borderStyle: 'solid',
+    // alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
   },
-  focus: {
-    fontSize: scaleSize(25),
-    color: '#4680df',
-  },
-  mormal: {
-    fontSize: scaleSize(25),
+  text: {
+    fontSize: scaleSize(26),
     color: 'black',
   },
 })

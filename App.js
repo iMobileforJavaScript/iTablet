@@ -45,6 +45,7 @@ import { ProtocolDialog } from './src/containers/tabs/Home/components'
 import RNFS from 'react-native-fs'
 import constants from './src/containers/workspace/constants'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
+import { SimpleDialog } from './src/containers/tabs/Friend'
 let AppUtils = NativeModules.AppUtils
 
 
@@ -888,7 +889,7 @@ class AppRoot extends Component {
         </Text>
         <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white ,marginTop:scaleSize(20)}}></View>
         <TouchableOpacity
-          style={{height: scaleSize(80),
+          style={{height: scaleSize(60),
             width: '100%',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -903,6 +904,10 @@ class AppRoot extends Component {
     </Dialog>
     )
     
+  }
+
+  renderSimpleDialog = () => {
+    return <SimpleDialog ref={ref => global.SimpleDialog = ref}/>
   }
 
   render () {
@@ -930,6 +935,7 @@ class AppRoot extends Component {
           }}
         />
         {this.renderDialog()}
+        {this.renderSimpleDialog()}
         {this.renderImportDialog()}
         {this.renderLicenseNotModuleDialog()}
         {this.renderNoNativeOfficialLicenseDialog()}

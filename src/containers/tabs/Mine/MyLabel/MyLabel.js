@@ -73,7 +73,14 @@ class MyLabel extends MyDataPage {
     )
     if (result) {
       if (exportToTemp) {
-        targetPath = homePath + this.getRelativeTempFilePath()
+        let tempPath = homePath + this.getRelativeTempPath()
+        let availableName = await this._getAvailableFileName(
+          tempPath,
+          'MyExport',
+          'zip',
+        )
+        targetPath = tempPath + availableName
+        this.exportPath = targetPath
       } else {
         let exportPath = homePath + this.getRelativeExportPath()
         let availableName = await this._getAvailableFileName(

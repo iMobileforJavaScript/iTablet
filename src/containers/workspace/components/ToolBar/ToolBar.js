@@ -544,6 +544,15 @@ export default class ToolBar extends React.PureComponent {
         await this.closeSubAction(type, actionType)
       }
 
+      if (typeof type === 'string' && type.indexOf('MAP_TOOL_') >= 0) {
+        if (
+          ToolbarModule.getData().actions &&
+          ToolbarModule.getData().actions.close
+        ) {
+          ToolbarModule.getData().actions.close(type)
+        }
+      }
+
       // if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
       //   // 去掉量算监听
       //   SMap.removeMeasureListener()

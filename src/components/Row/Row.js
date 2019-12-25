@@ -46,6 +46,8 @@ export default class Row extends PureComponent {
     super(props)
     this.state = {
       value: props.value || props.defaultValue,
+      defaultValue: this.props.defaultValue || '',
+      disable: this.props.disable,
     }
   }
 
@@ -88,8 +90,8 @@ export default class Row extends PureComponent {
             style={[styles.input, this.props.customRightStyle]}
             accessible={true}
             value={this.state.value + ''}
-            defaultValue={this.props.defaultValue + ''}
-            disable={this.props.disable}
+            defaultValue={this.state.defaultValue + ''}
+            disable={this.state.disable}
             accessibilityLabel={this.props.title}
             underlineColorAndroid="transparent"
             onChangeText={this.labelChange}
@@ -103,8 +105,8 @@ export default class Row extends PureComponent {
           data={this.props.radioArr}
           column={this.props.radioColumn}
           getSelected={this.getSelected}
-          disable={this.props.disable}
-          defaultValue={this.props.defaultValue}
+          disable={this.state.disable}
+          defaultValue={this.state.value}
           separatorHeight={this.props.separatorHeight}
         />
       )

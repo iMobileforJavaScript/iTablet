@@ -16,6 +16,7 @@ const Prompt = {
   STOP: 'Stop',
   FIELD_TO_PAUSE: 'Failed to pause',
   WX_NOT_INSTALLED: 'Wechat not installed',
+  WX_SHARE_FAILED: 'Wechat share failed,Please check wechat install',
   RENAME: 'Rename',
   BATCH_DELETE: 'Batch Delete',
 
@@ -202,6 +203,7 @@ const Prompt = {
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
   APPLY_LICENSE: 'Apply License',
+  APPLY_LICENSE_FIRST: 'Please apply a valid license first',
 
   GET_LAYER_GROUP_FAILD: 'Failed to get layer group',
   TYR_AGAIN_LATER: ' Please try again later',

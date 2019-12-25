@@ -16,6 +16,7 @@ const Prompt = {
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
   WX_NOT_INSTALLED: '未检测到微信',
+  WX_SHARE_FAILED: '微信分享失败，请检查是否安装微信',
   RENAME: '重命名',
   BATCH_DELETE: '批量删除',
 
@@ -197,6 +198,7 @@ const Prompt = {
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
+  APPLY_LICENSE_FIRST: '请先获取有效许可',
 
   GET_LAYER_GROUP_FAILD: '获取图层组失败',
   TYR_AGAIN_LATER: '请稍后再试',

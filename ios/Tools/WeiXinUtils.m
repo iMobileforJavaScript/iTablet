@@ -55,8 +55,7 @@
     req.message = message;
     req.scene = WXSceneSession;
     
-    [WXApi sendReq:req];
-    return YES;
+    return [WXApi sendReq:req];
   } @catch (NSException *exception) {
     @throw exception;
   }

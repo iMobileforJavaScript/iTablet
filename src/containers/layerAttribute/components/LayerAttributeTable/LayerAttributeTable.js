@@ -23,7 +23,7 @@ import {
   Col,
   Cell,
 } from 'react-native-table-component'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 // import { SScene } from 'imobile_for_reactnative'
 // import NavigationService from '../../../NavigationService'
 import styles from './styles'
