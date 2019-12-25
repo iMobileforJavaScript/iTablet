@@ -77,7 +77,6 @@ export default class Cell extends Component {
 
   static defaultProps = {
     editable: true,
-    keyboardType: 'default',
     returnKeyLabel: '完成',
     delayLongPress: 500,
   }
@@ -142,25 +141,20 @@ export default class Cell extends Component {
   }
 
   _onSubmitEditing = () => {
-    // this.state.editable &&
-    //   this.setState({
-    //     editable: false,
-    //   })
     let _value = this.state.value
     if (
-      this.props.keyboardType === 'number-pad' ||
-      this.props.keyboardType === 'decimal-pad' ||
-      this.props.keyboardType === 'numeric'
+      utils.isNumber(this.props.data.fieldInfo.type) ||
+      this.state.keyboardType === 'number-pad' ||
+      this.state.keyboardType === 'decimal-pad' ||
+      this.state.keyboardType === 'numeric'
     ) {
       // TextInput中获取的是String
       // 为防止数字中以 '.' 结尾，转成数字
-      if (isNaN(_value) || this.state.value === '') {
-        if (this.props.defaultValue !== undefined) {
-          _value = this.props.defaultValue
-        } else {
-          _value = 0
-        }
-      }
+      _value = utils.getValueWithDefault(
+        _value,
+        this.props.defaultValue,
+        this.props.data.fieldInfo.type,
+      )
       this.state.editable &&
         this.setState(
           {
@@ -184,7 +178,7 @@ export default class Cell extends Component {
       } else {
         newState.value = _value
       }
-      newState.value = utils.getValue(
+      newState.value = utils.getValueWithDefault(
         newState.value,
         this.props.defaultValue,
         this.props.data.fieldInfo.type,
@@ -212,9 +206,10 @@ export default class Cell extends Component {
   _onChangeText = value => {
     let _value = value
     if (
-      this.props.keyboardType === 'number-pad' ||
-      this.props.keyboardType === 'decimal-pad' ||
-      this.props.keyboardType === 'numeric'
+      utils.isNumber(this.props.data.fieldInfo.type) ||
+      this.state.keyboardType === 'number-pad' ||
+      this.state.keyboardType === 'decimal-pad' ||
+      this.state.keyboardType === 'numeric'
     ) {
       if (isNaN(_value) && _value !== '' && _value !== '-') {
         _value = this.state.value
@@ -247,7 +242,8 @@ export default class Cell extends Component {
             returnKeyType={'done'}
             keyboardAppearance={'dark'}
             returnKeyLabel={this.props.returnKeyLabel}
-            keyboardType={this.props.keyboardType}
+            // keyboardType={this.state.keyboardType}
+            keyboardType={utils.getKeyboardType(this.props.data.fieldInfo.type)}
           />
         ) : (
           <Text style={[styles.cellText, this.props.cellTextStyle]}>
