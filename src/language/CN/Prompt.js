@@ -16,6 +16,7 @@ const Prompt = {
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
   WX_NOT_INSTALLED: '未检测到微信',
+  WX_SHARE_FAILED: '微信分享失败，请检查是否安装微信',
   RENAME: '重命名',
   BATCH_DELETE: '批量删除',
 
