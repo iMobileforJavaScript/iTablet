@@ -888,7 +888,7 @@ class AppRoot extends Component {
         </Text>
         <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white ,marginTop:scaleSize(20)}}></View>
         <TouchableOpacity
-          style={{height: scaleSize(80),
+          style={{height: scaleSize(60),
             width: '100%',
             flexDirection: 'column',
             justifyContent: 'center',
