@@ -42,6 +42,7 @@ function submit() {
       await SMap.addGPSRecordset()
     }
     await SMap.submit()
+    await SMap.buildNetwork()
   }.bind(this)())
 }
 

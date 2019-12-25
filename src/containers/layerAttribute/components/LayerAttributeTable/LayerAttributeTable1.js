@@ -19,7 +19,7 @@ import { color } from '../../../../styles'
 import Row from './Row'
 
 import styles from './styles'
-import { getLanguage } from '../../../../language/index'
+import { getLanguage } from '../../../../language'
 
 const COL_HEIGHT = scaleSize(80)
 

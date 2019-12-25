@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
+import utils from './utils'
 
 const ROW_HEIGHT = scaleSize(80)
 // const CELL_WIDTH = scaleSize(120)
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    // width: '100%',
+    width: '80%',
     // height: ROW_HEIGHT,
     backgroundColor: 'transparent',
     textAlign: 'center',
@@ -145,6 +146,7 @@ export default class Cell extends Component {
     //   this.setState({
     //     editable: false,
     //   })
+    let _value = this.state.value
     if (
       this.props.keyboardType === 'number-pad' ||
       this.props.keyboardType === 'decimal-pad' ||
@@ -152,7 +154,6 @@ export default class Cell extends Component {
     ) {
       // TextInput中获取的是String
       // 为防止数字中以 '.' 结尾，转成数字
-      let _value = parseFloat(this.state.value)
       if (isNaN(_value) || this.state.value === '') {
         if (this.props.defaultValue !== undefined) {
           _value = this.props.defaultValue
@@ -171,15 +172,27 @@ export default class Cell extends Component {
           },
         )
     } else {
+      let newState = {
+        editable: false,
+      }
+      if (
+        _value === '' &&
+        this.props.defaultValue !== undefined &&
+        this.props.isRequired
+      ) {
+        newState.value = this.props.defaultValue
+      } else {
+        newState.value = _value
+      }
+      newState.value = utils.getValue(
+        newState.value,
+        this.props.defaultValue,
+        this.props.data.fieldInfo.type,
+      )
       this.state.editable &&
-        this.setState(
-          {
-            editable: false,
-          },
-          () => {
-            this.changeEnd()
-          },
-        )
+        this.setState(newState, () => {
+          this.changeEnd()
+        })
     }
   }
 
@@ -215,28 +228,14 @@ export default class Cell extends Component {
   render() {
     return (
       <TouchableOpacity
-        // activeOpacity={1}
-        style={[
-          styles.cell,
-          this.props.style,
-          // !this.props.editable && { backgroundColor: color.borderLight },
-          // this.props.width ? { width: this.props.width } : { flex: 1 },
-        ]}
-        // onLongPress={this._setEditable}
-
+        style={[styles.cell, this.props.style]}
         activeOpacity={1}
-        // style={styles.cellOverlay}
-        // onLongPress={this._setEditable}
         delayLongPress={this.props.delayLongPress}
         onPress={this._onPress}
       >
-        {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
-        {/*<View>*/}
         {this.props.editable && this.state.editable ? (
           <TextInput
             ref={ref => (this.cellInput = ref)}
-            // editable={this.state.editable && this.props.editable}
-            // multiline = {true}
             value={this.state.value + ''}
             style={styles.input}
             underlineColorAndroid="transparent"
@@ -255,16 +254,6 @@ export default class Cell extends Component {
             {this.state.value + ''}
           </Text>
         )}
-        {/*</View>*/}
-        {/*{(!this.state.editable || !this.props.editable) && (*/}
-        {/*<TouchableOpacity*/}
-        {/*activeOpacity={1}*/}
-        {/*style={styles.cellOverlay}*/}
-        {/*onLongPress={this._setEditable}*/}
-        {/*delayLongPress={this.props.delayLongPress}*/}
-        {/*onPress={this._onPress}*/}
-        {/*/>*/}
-        {/*)}*/}
       </TouchableOpacity>
     )
   }

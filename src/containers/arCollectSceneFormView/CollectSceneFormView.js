@@ -182,7 +182,7 @@ export default class CollectSceneFormView extends React.Component {
 
   /** 保存点 **/
   savepoint = async () => {
-    await SCollectSceneFormView.stopRecording()
+    // await SCollectSceneFormView.stopRecording()
     await SCollectSceneFormView.saveGPSData('point')
     this.setState({ isnew: false })
     Toast.show(
