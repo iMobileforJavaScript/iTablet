@@ -513,10 +513,14 @@ export default class MapView extends React.Component {
     }
 
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
-      setTimeout(async () => {
+      (async function() {
         let currentFloorID = await SMap.getCurrentFloorID()
         this.changeFloorID(currentFloorID)
-      }, 1000)
+      }.bind(this)())
+      // setTimeout(async () => {
+      //   let currentFloorID = await SMap.getCurrentFloorID()
+      //   this.changeFloorID(currentFloorID)
+      // }, 1000)
     }
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
