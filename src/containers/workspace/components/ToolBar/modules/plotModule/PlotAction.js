@@ -122,6 +122,7 @@ async function showCollection(libId, symbolCode, type) {
       height = ConstToolType.HEIGHT[0]
       break
   }
+  ToolbarModule.getParams().showFullMap(true)
   ToolbarModule.getParams().setToolbarVisible(true, type, {
     isFullScreen: false,
     height,

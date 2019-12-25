@@ -198,6 +198,7 @@ const Prompt = {
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
+  APPLY_LICENSE_FIRST: '请先获取有效许可',
 
   GET_LAYER_GROUP_FAILD: '获取图层组失败',
   TYR_AGAIN_LATER: '请稍后再试',

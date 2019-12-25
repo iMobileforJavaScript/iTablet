@@ -4,6 +4,7 @@ import {
   SMap,
   DatasetType,
   GeoStyle,
+  Action,
 } from 'imobile_for_reactnative'
 import { ConstToolType, ConstPath } from '../../../../../../constants'
 import { FileTools } from '../../../../../../native'
@@ -64,6 +65,7 @@ function showCollection(type, layerName) {
       height = ConstToolType.HEIGHT[0]
       break
   }
+  ToolbarModule.getParams().showFullMap(true)
   ToolbarModule.getParams().setToolbarVisible(true, type, {
     isFullScreen: false,
     height,
@@ -263,7 +265,25 @@ function redo(type) {
   return SCollector.redo(type)
 }
 
+async function close(type) {
+  const params = ToolbarModule.getParams()
+  let actionType = Action.PAN
+  // 当前为采集状态
+  if (typeof type === 'number') {
+    await SCollector.stopCollect()
+  }
+  params.existFullMap && params.existFullMap()
+  // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+  params.setToolbarVisible(false)
+  params.setCurrentTemplateInfo()
+  params.setCurrentSymbol()
+  ToolbarModule.setData() // 关闭Toolbar清除临时数据
+  SMap.setAction(actionType)
+}
+
 export default {
+  close,
+
   changeCollection,
   showCollection,
   showSymbol,

@@ -203,6 +203,7 @@ const Prompt = {
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
   APPLY_LICENSE: 'Apply License',
+  APPLY_LICENSE_FIRST: 'Please apply a valid license first',
 
   GET_LAYER_GROUP_FAILD: 'Failed to get layer group',
   TYR_AGAIN_LATER: ' Please try again later',

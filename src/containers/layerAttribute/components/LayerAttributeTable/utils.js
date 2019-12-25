@@ -19,9 +19,13 @@ function getBoolean(value, defaultValue) {
 
 function getInt16(value, defaultValue) {
   let _value
-  if (value === '' || value === undefined) {
-    _value =
-      defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+  if (value === '' || value === undefined || isNaN(value)) {
+    if (defaultValue === '' || defaultValue === undefined) {
+      return ''
+    } else {
+      _value =
+        defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+    }
   } else {
     _value = parseInt(value)
   }
@@ -35,9 +39,13 @@ function getInt16(value, defaultValue) {
 
 function getInt32(value, defaultValue) {
   let _value
-  if (value === '' || value === undefined) {
-    _value =
-      defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+  if (value === '' || value === undefined || isNaN(value)) {
+    if (defaultValue === '' || defaultValue === undefined) {
+      return ''
+    } else {
+      _value =
+        defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+    }
   } else {
     _value = parseInt(value)
   }
@@ -51,9 +59,13 @@ function getInt32(value, defaultValue) {
 
 function getInt64(value, defaultValue) {
   let _value
-  if (value === '' || value === undefined) {
-    _value =
-      defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+  if (value === '' || value === undefined || isNaN(value)) {
+    if (defaultValue === '' || defaultValue === undefined) {
+      return ''
+    } else {
+      _value =
+        defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+    }
   } else {
     _value = parseInt(value)
   }
@@ -67,9 +79,13 @@ function getInt64(value, defaultValue) {
 
 function getSingle(value, defaultValue) {
   let _value
-  if (value === '' || value === undefined) {
-    _value =
-      defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+  if (value === '' || value === undefined || isNaN(value)) {
+    if (defaultValue === '' || defaultValue === undefined) {
+      return ''
+    } else {
+      _value =
+        defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+    }
   } else {
     _value = parseFloat(value)
   }
@@ -83,9 +99,13 @@ function getSingle(value, defaultValue) {
 
 function getDouble(value, defaultValue) {
   let _value
-  if (value === '' || value === undefined) {
-    _value =
-      defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+  if (value === '' || value === undefined || isNaN(value)) {
+    if (defaultValue === '' || defaultValue === undefined) {
+      return ''
+    } else {
+      _value =
+        defaultValue !== undefined && defaultValue !== '' ? defaultValue : 0
+    }
   } else {
     _value = parseFloat(value)
   }
@@ -109,7 +129,7 @@ function getText(value, defaultValue) {
   return _value
 }
 
-function getValue(value, defaultValue, type) {
+function getValueWithDefault(value, defaultValue, type) {
   let _value
   switch (type) {
     case FieldType.BOOLEAN:
@@ -138,6 +158,43 @@ function getValue(value, defaultValue, type) {
   return _value
 }
 
+function getValue(value, type) {
+  let _value = getValueWithDefault(value, undefined, type)
+  return _value
+}
+
+function isNumber(type) {
+  return (
+    type === FieldType.INT16 ||
+    type === FieldType.INT32 ||
+    type === FieldType.INT64 ||
+    type === FieldType.SINGLE ||
+    type === FieldType.DOUBLE
+  )
+}
+
+function getKeyboardType(type) {
+  let keyboardType
+  switch (type) {
+    case FieldType.INT16:
+    case FieldType.INT32:
+    case FieldType.INT64:
+    case FieldType.SINGLE:
+    case FieldType.DOUBLE:
+      keyboardType = 'decimal-pad'
+      break
+    case FieldType.TEXT:
+    case FieldType.BOOLEAN:
+    default:
+      keyboardType = 'default'
+      break
+  }
+  return keyboardType
+}
+
 export default {
   getValue,
+  getValueWithDefault,
+  isNumber,
+  getKeyboardType,
 }

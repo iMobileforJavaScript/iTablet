@@ -537,6 +537,8 @@ export default class LayerManager_tolbar extends React.Component {
             type = SMCollectorType.REGION_HAND_POINT
             break
         }
+        this.props.setCurrentLayer &&
+          this.props.setCurrentLayer(this.state.layerData)
         collectionModule().actions.showCollection(
           type,
           this.state.layerData.name,
