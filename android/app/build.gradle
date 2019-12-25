@@ -195,7 +195,8 @@ android {
         exclude 'org/apache/xerces/impl/msg/XMLSerializerMessages.properties'
         exclude 'org/apache/log4j/lf5/config/defaultconfig.properties'
         exclude 'org/apache/xerces/impl/xpath/regex/message_ja.properties'
-        exclude 'org/apache/log4j/lf5/viewer/images/channelexplorer_satellite.gif'
+        exclude 'org/apache/xerces/impl/msg/XPointerMessages.properties'
+
     }
 }
 
