@@ -511,6 +511,12 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      setTimeout(async () => {
+        let currentFloorID = await SMap.getCurrentFloorID()
+        this.changeFloorID(currentFloorID)
+      }, 1000)
+    }
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
     //   let bottom = this.popList.state.subPopShow
