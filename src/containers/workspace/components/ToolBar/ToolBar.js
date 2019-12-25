@@ -545,7 +545,12 @@ export default class ToolBar extends React.PureComponent {
       }
 
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_') >= 0) {
-        ToolbarModule.getData().actions.close(type)
+        if (
+          ToolbarModule.getData().actions &&
+          ToolbarModule.getData().actions.close
+        ) {
+          ToolbarModule.getData().actions.close(type)
+        }
       }
 
       // if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
