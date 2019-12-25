@@ -226,6 +226,13 @@ class ModuleList extends Component {
         latestMap = this.props.latestMap[currentUserName][module][0]
       }
 
+      let licenseStatus = await SMap.getEnvironmentStatus()
+      global.isLicenseValid = licenseStatus.isLicenseValid
+      if (!global.isLicenseValid) {
+        item.action && composeWaiting(item.action(tmpCurrentUser))
+        return
+      }
+
       if (item.key === constants.MAP_AR) {
         item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
         return

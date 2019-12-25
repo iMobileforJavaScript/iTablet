@@ -294,7 +294,7 @@ export default class Row extends Component {
             this.props.selected && styles.selectedCellText,
           ]}
           value={value}
-          data={item}
+          data={this.props.data instanceof Array ? item : this.props.data}
           editable={editable}
           overlayStyle={editable && styles.selectedOverlay}
           isRequired={isRequired}
