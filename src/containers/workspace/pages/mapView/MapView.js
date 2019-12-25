@@ -167,6 +167,7 @@ export default class MapView extends React.Component {
     getMapSetting: PropTypes.func,
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
+    setCurrentSymbol: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
     setMapLegend: PropTypes.func,
     setMapNavigation: PropTypes.func,
@@ -520,6 +521,16 @@ export default class MapView extends React.Component {
       }
     }
 
+    if (GLOBAL.Type === constants.MAP_NAVIGATION) {
+      (async function() {
+        let currentFloorID = await SMap.getCurrentFloorID()
+        this.changeFloorID(currentFloorID)
+      }.bind(this)())
+      // setTimeout(async () => {
+      //   let currentFloorID = await SMap.getCurrentFloorID()
+      //   this.changeFloorID(currentFloorID)
+      // }, 1000)
+    }
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
     //   let bottom = this.popList.state.subPopShow
