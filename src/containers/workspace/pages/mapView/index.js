@@ -44,7 +44,7 @@ import {
 } from '../../../../models/setting'
 import { setMapSearchHistory } from '../../../../models/histories'
 import { setSharing } from '../../../../models/online'
-import { setCurrentSymbols } from '../../../../models/symbol'
+import { setCurrentSymbols, setCurrentSymbol } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
 import { setBackAction, removeBackAction } from '../../../../models/backActions'
 import { setAnalystParams } from '../../../../models/analyst'
@@ -113,6 +113,7 @@ const mapDispatchToProps = {
   saveMap,
   getMapSetting,
   setSharing,
+  setCurrentSymbol,
   setCurrentSymbols,
   setMapLegend,
   setBackAction,
