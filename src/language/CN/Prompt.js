@@ -310,6 +310,7 @@ const Prompt = {
   ATTRIBUTE_DELETE_FAILED: '属性字段删除失败',
   ATTRIBUTE_ADD_SUCCESS: '属性添加成功',
   ATTRIBUTE_ADD_FAILED: '属性添加失败',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: '缺省值为空',
 }
 
 export { Prompt }

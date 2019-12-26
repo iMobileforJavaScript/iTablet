@@ -8,6 +8,7 @@ import {
   NativeModules,
   RefreshControl,
   ScrollView,
+  Platform,
 } from 'react-native'
 import { Container, ListSeparator, InputDialog } from '../../../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
@@ -368,8 +369,13 @@ export default class MyDataPage extends Component {
 
   shareToWechat = async fileName => {
     let result
+    let isInstalled
+    if (Platform.OS === 'ios') {
+      isInstalled = true
+    } else {
+      isInstalled = await appUtilsModule.isWXInstalled()
+    }
     // let isInstalled = await appUtilsModule.isWXInstalled()
-    let isInstalled = true
     if (isInstalled) {
       await this.exportData(fileName)
       let path = this.exportPath

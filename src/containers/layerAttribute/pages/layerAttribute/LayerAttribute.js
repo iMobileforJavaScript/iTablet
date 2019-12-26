@@ -128,29 +128,13 @@ export default class LayerAttribute extends React.Component {
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
     ) {
-      let checkData = this.checkToolIsViable()
       this.filter = ''
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
-      this.canBeRefresh = true
+      this.canBeRefresh = false
       this.noMore = false
-      this.setState(
-        {
-          attributes: {
-            head: [],
-            data: [],
-          },
-          currentFieldInfo: [],
-          relativeIndex: -1,
-          currentIndex: -1,
-          startIndex: 0,
-          ...checkData,
-        },
-        () => {
-          this.refresh(null, true)
-        },
-      )
+      this.refresh(null, true)
     } else if (
       JSON.stringify(prevProps.attributesHistory) !==
       JSON.stringify(this.props.attributesHistory)
@@ -158,6 +142,20 @@ export default class LayerAttribute extends React.Component {
       let checkData = this.checkToolIsViable()
       this.setState({
         ...checkData,
+      })
+    } else if (GLOBAL.NEEDREFRESHTABLE) {
+      GLOBAL.NEEDREFRESHTABLE = false
+      let startIndex = this.state.startIndex - PAGE_SIZE
+      if (startIndex <= 0) {
+        startIndex = 0
+        this.canBeRefresh = false
+      }
+      let currentPage = startIndex / PAGE_SIZE
+      // this.noMore = false
+      this.getAttribute({
+        type: 'reset',
+        currentPage: currentPage,
+        startIndex: startIndex <= 0 ? 0 : startIndex,
       })
     }
   }
@@ -252,6 +250,7 @@ export default class LayerAttribute extends React.Component {
       attributes = {}
     ;(async function() {
       try {
+        let checkData = this.checkToolIsViable()
         result = await LayerUtils.getLayerAttribute(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
@@ -278,6 +277,7 @@ export default class LayerAttribute extends React.Component {
             relativeIndex: 0,
             currentFieldInfo: attributes.data[0],
             startIndex: 0,
+            ...checkData,
             ...others,
           })
           this.setLoading(false)
@@ -338,6 +338,7 @@ export default class LayerAttribute extends React.Component {
                   ? newAttributes.data[relativeIndex]
                   : this.state.currentFieldInfo,
               startIndex,
+              ...checkData,
               // ...others,
             },
             () => {
@@ -814,7 +815,7 @@ export default class LayerAttribute extends React.Component {
       typeof this.props.setLayerAttributes === 'function'
     ) {
       // 单个对象属性和多个对象属性数据有区别，单个属性cellData是值
-      let isSingleData = typeof data.cellData !== 'object'
+      let isSingleData = this.state.attributes.data.length === 1
       // 单个对象属性 在 隐藏系统字段下，要重新计算index
       if (isSingleData && !this.state.isShowSystemFields) {
         for (let index in this.state.attributes.data[0]) {
