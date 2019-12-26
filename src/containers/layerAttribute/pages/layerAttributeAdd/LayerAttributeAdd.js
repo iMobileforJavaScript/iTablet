@@ -18,6 +18,7 @@ import { Container, Row, Button } from '../../../../components'
 import { Toast, scaleSize } from '../../../../utils'
 import { PopModalList } from '../../../analystView/components'
 import { getLanguage } from '../../../../language'
+import RadioGroup from '../../../../components/Row/RadioGroup'
 
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -120,6 +121,14 @@ export default class LayerAttributeAdd extends React.Component {
       Toast.show(
         global.language === 'CN' ? '请选择是否必选' : 'Please select required',
       )
+    }
+    if (
+      this.state.isRequired &&
+      (this.state.defaultValue === '' || this.state.defaultValue === undefined)
+    ) {
+      Toast.show(
+        getLanguage(global.language).Prompt.ATTRIBUTE_DEFAULT_VALUE_IS_NULL,
+      )
     } else {
       isConfrim = true
     }
@@ -183,14 +192,6 @@ export default class LayerAttributeAdd extends React.Component {
         })
         break
       case global.language === 'CN' ? '必填' : 'Required':
-        this.defaultValueView.props.disable =
-          this.state.isEdit && this.state.isDefaultValueCanEdit
-        // this.defaultValueView.setNativeProps({
-        //   disable: this.state.isEdit && this.state.isDefaultValueCanEdit
-        // })
-        this.defaultValueView.setState({
-          disable: this.state.isEdit && this.state.isDefaultValueCanEdit,
-        })
         this.setState({
           isRequired: value,
           isDefaultValueCanEdit: value,
@@ -326,6 +327,27 @@ export default class LayerAttributeAdd extends React.Component {
     }
     return null
   }
+  getSelected = ({ title, selected, index, value }) => {
+    this.getType({
+      labelTitle: title,
+      title,
+      value,
+      selected,
+      index,
+    })
+  }
+
+  getDefaultValue = type => {
+    let defaultValue
+    if (type === 1) {
+      defaultValue = true
+    } else if (type === 10) {
+      defaultValue = ''
+    } else {
+      defaultValue = 0 + ''
+    }
+    return defaultValue
+  }
 
   renderPopList = () => {
     return (
@@ -337,15 +359,59 @@ export default class LayerAttributeAdd extends React.Component {
         currentPopData={this.state.currentPopData}
         confirm={data => {
           let tempLength = this.getDefaultMaxLength(data.value)
+          let defaultValue = this.getDefaultValue(data.value)
           this.setState({
             currentPopData: data,
             type: data.value,
-            // defaultValue: undefined,
+            defaultValue: defaultValue,
             maxLength: tempLength,
           })
           this.popModal.setVisible(false)
         }}
       />
+    )
+  }
+
+  renderDefaultValue = () => {
+    let defaultValueTile = global.language === 'CN' ? '缺省值' : 'Default Value'
+    return !this.state.isRequired ? null : this.state.type === 1 ? (
+      <View style={styles.defaultValueItem}>
+        <Text style={styles.rowLabel}>{defaultValueTile}</Text>
+        <RadioGroup
+          data={[
+            { title: global.language === 'CN' ? '是' : 'YES', value: true },
+            { title: global.language === 'CN' ? '否' : 'NO', value: false },
+          ]}
+          column={2}
+          getSelected={result => {
+            this.setState({
+              defaultValue: result.value,
+            })
+          }}
+          disable={this.state.isEdit && this.state.isDefaultValueCanEdit}
+          defaultValue={this.state.defaultValue}
+        />
+      </View>
+    ) : (
+      <View style={styles.defaultValueItem}>
+        <Text style={styles.rowLabel}>{defaultValueTile}</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.input}
+            accessible={true}
+            value={this.state.defaultValue + ''}
+            underlineColorAndroid="transparent"
+            onChangeText={text => {
+              this.setState({
+                defaultValue: text,
+              })
+            }}
+          />
+          {this.state.isEdit && this.state.isDefaultValueCanEdit && (
+            <View style={styles.inputOverLayer} />
+          )}
+        </View>
+      </View>
     )
   }
 
@@ -409,7 +475,7 @@ export default class LayerAttributeAdd extends React.Component {
           }
         />
         <Row
-          style={{ marginTop: scaleSize(15) }}
+          style={{ marginTop: scaleSize(25) }}
           customRightStyle={{ height: scaleSize(50) }}
           key={'长度'}
           type={Row.Type.TEXT_BTN}
@@ -458,38 +524,7 @@ export default class LayerAttributeAdd extends React.Component {
           radioColumn={2}
           getValue={this.getType}
         />
-
-        {this.state.type === 1 ? (
-          <Row
-            ref={ref => (this.defaultValueView = ref)}
-            style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(50) }}
-            key={'缺省值'}
-            type={Row.Type.RADIO_GROUP}
-            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
-            disable={this.state.isEdit && this.state.isDefaultValueCanEdit}
-            defaultValue={this.state.defaultValue}
-            radioArr={[
-              { title: global.language === 'CN' ? '是' : 'YES', value: true },
-              { title: global.language === 'CN' ? '否' : 'NO', value: false },
-            ]}
-            radioColumn={2}
-            getValue={this.getType}
-          />
-        ) : (
-          <Row
-            ref={ref => (this.defaultValueView = ref)}
-            style={{ marginTop: scaleSize(15) }}
-            customRightStyle={{ height: scaleSize(50) }}
-            key={'缺省值'}
-            type={Row.Type.INPUT}
-            title={global.language === 'CN' ? '缺省值' : 'Default Value'}
-            disable={this.state.isEdit && this.state.isDefaultValueCanEdit}
-            defaultValue={this.state.defaultValue}
-            value={this.state.defaultValue}
-            getValue={this.getInputValue}
-          />
-        )}
+        {this.renderDefaultValue()}
       </View>
     )
   }

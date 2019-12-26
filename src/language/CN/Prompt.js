@@ -213,6 +213,7 @@ const Prompt = {
 
   ILLEGAL_DATA: '数据非法!',
 
+  UNSUPPORTED_LAYER_TO_SHARE: '暂不支持此图层的分享',
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',
@@ -309,6 +310,7 @@ const Prompt = {
   ATTRIBUTE_DELETE_FAILED: '属性字段删除失败',
   ATTRIBUTE_ADD_SUCCESS: '属性添加成功',
   ATTRIBUTE_ADD_FAILED: '属性添加失败',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: '缺省值为空',
 }
 
 export { Prompt }

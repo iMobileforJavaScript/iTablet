@@ -226,6 +226,8 @@ async function collectionSubmit(type) {
       ToolbarModule.getParams().template.currentTemplateInfo.field,
     )
   }
+  //采集后 需要刷新属性表
+  GLOBAL.NEEDREFRESHTABLE = true
   return result
 }
 

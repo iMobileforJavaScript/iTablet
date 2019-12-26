@@ -18,6 +18,7 @@ export default class LicenseJoin extends Component {
     this.backAction = params && params.backAction
     this.state = {
       texts: ['', '', '', '', ''],
+      isCanSure: false,
     }
   }
 
@@ -92,11 +93,34 @@ export default class LicenseJoin extends Component {
   //编辑序列号
   editSerialNumber(index, text) {
     let tempTexts = this.state.texts
-    if (text.length <= 5) {
+    if (index === 0 && text.length === 25) {
+      tempTexts[0] = text.substring(0, 5)
+      tempTexts[1] = text.substring(5, 10)
+      tempTexts[2] = text.substring(10, 15)
+      tempTexts[3] = text.substring(15, 20)
+      tempTexts[4] = text.substring(20, 25)
+    } else if (index === 0 && text.length === 29) {
+      tempTexts[0] = text.substring(0, 5)
+      tempTexts[1] = text.substring(6, 11)
+      tempTexts[2] = text.substring(12, 17)
+      tempTexts[3] = text.substring(18, 23)
+      tempTexts[4] = text.substring(24, 29)
+    } else if (text.length <= 5) {
       tempTexts[index] = text
+    } else if (index < 4 && this.state.texts[index + 1] === '') {
+      let subStr = text.substring(5)
+      tempTexts[index + 1] = subStr
+      this.inputs[index + 1].focus()
     }
     this.setState({
       texts: tempTexts.concat(),
+    })
+    let lengthTotal = 0
+    for (let i = 0; i < tempTexts.length; i++) {
+      lengthTotal += tempTexts[i].length
+    }
+    this.setState({
+      isCanSure: lengthTotal === 25,
     })
   }
 
@@ -181,13 +205,17 @@ export default class LicenseJoin extends Component {
         <View style={{ alignItems: 'center' }}>
           <Button
             title={global.language === 'CN' ? '确定' : 'Confirm'}
+            ref={ref => (this.sureButton = ref)}
+            type={this.state.isCanSure ? 'BLUE' : 'GRAY'}
             style={{
               width: '94%',
               height: scaleSize(60),
               marginTop: scaleSize(60),
             }}
             titleStyle={{ fontSize: scaleSize(24) }}
-            onPress={this.activateLicenseSerialNumber}
+            onPress={
+              this.state.isCanSure ? this.activateLicenseSerialNumber : null
+            }
           />
         </View>
       </View>

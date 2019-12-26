@@ -113,7 +113,7 @@ export default class SelectFriend extends Component {
             fontSize: setSpText(28),
           }}
         >
-          发送给:
+          {global.language === 'CN' ? '发送给:' : 'Send to:'}
         </Text>
         <View style={styles.ItemViewStyle}>
           <View style={styles.ITemHeadTextViewStyle}>
@@ -207,6 +207,8 @@ export default class SelectFriend extends Component {
             ref={ref => (this.Dialog = ref)}
             opacityStyle={styles.opacityView}
             style={styles.dialogBackground}
+            confirmBtnTitle={getLanguage(global.language).Prompt.CONFIRM}
+            cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
             confirmBtnVisible={true}
             cancelBtnVisible={true}
             confirmAction={() => {

@@ -18,7 +18,6 @@ import MessageDataHandle from '../MessageDataHandle'
 import { SimpleDialog } from '../index'
 import MsgConstant from '../MsgConstant'
 import { connect } from 'react-redux'
-import { SMap } from 'imobile_for_reactnative'
 // let AppUtils = NativeModules.AppUtils
 
 class ManageFriend extends Component {
@@ -68,36 +67,6 @@ class ManageFriend extends Component {
     NavigationService.popToTop()
   }
 
-  navigateToModule = async module => {
-    let licenseStatus = await SMap.getEnvironmentStatus()
-    global.isLicenseValid = licenseStatus.isLicenseValid
-    if (!global.isLicenseValid) {
-      this.SimpleDialog.set({
-        text: getLanguage(global.language).Prompt.APPLY_LICENSE_FIRST,
-      })
-      this.SimpleDialog.setVisible(true)
-      return
-    }
-    let tmpCurrentUser = this.user
-    let currentUserName = tmpCurrentUser.userName
-      ? tmpCurrentUser.userName
-      : 'Customer'
-
-    let latestMap
-    if (
-      this.props.latestMap[currentUserName] &&
-      this.props.latestMap[currentUserName][module.key] &&
-      this.props.latestMap[currentUserName][module.key].length > 0
-    ) {
-      latestMap = this.props.latestMap[currentUserName][module.key][0]
-    }
-    this.friend.setCurMod(module)
-    module.action(this.user, latestMap)
-    this.setState({ coworkMode: true })
-    this.chat.setCoworkMode(true)
-    global.coworkMode = true
-  }
-
   render() {
     return (
       <Container
@@ -126,11 +95,7 @@ class ManageFriend extends Component {
             image={getThemeAssets().friend.friend_map}
             text={getLanguage(global.language).Friends.COWORK}
             onPress={() => {
-              NavigationService.navigate('SelectModule', {
-                callBack: value => {
-                  this.navigateToModule(value)
-                },
-              })
+              NavigationService.navigate('SelectModule')
             }}
           />
         )}
