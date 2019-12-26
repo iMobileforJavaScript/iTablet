@@ -6,12 +6,13 @@
 import React, { PureComponent } from 'react'
 import { TouchableOpacity, View, Animated, StyleSheet } from 'react-native'
 import { color } from '../../styles'
-import { scaleSize, screen } from '../../utils'
+import { screen } from '../../utils'
 import zIndexLevel from '../../styles/zIndexLevel'
 
 export default class PopView extends PureComponent {
   props: {
     children: any,
+    contentStyle?: Object,
     modalVisible?: boolean,
     overLayerStyle?: Object,
     showFullMap?: () => {},
@@ -78,11 +79,7 @@ export default class PopView extends PureComponent {
 
   _renderContent = () => {
     return (
-      <View
-        style={{
-          backgroundColor: color.contentColorWhite,
-        }}
-      >
+      <View style={[styles.infoContainer, this.props.contentStyle]}>
         {this.props.children}
       </View>
     )
@@ -108,7 +105,7 @@ export default class PopView extends PureComponent {
             })
           }}
         />
-        <View style={styles.infoContainer}>{this._renderContent()}</View>
+        {this._renderContent()}
       </Animated.View>
     )
   }
@@ -120,6 +117,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    // top: 0,
     backgroundColor: '#rgba(0, 0, 0, 0)',
     zIndex: zIndexLevel.FOUR,
   },
@@ -128,9 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.modalBgColor,
   },
   infoContainer: {
-    width: '100%',
-    maxHeight: scaleSize(720),
-    minHeight: scaleSize(80),
-    backgroundColor: color.modalBgColor,
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
 })
