@@ -5,6 +5,7 @@ import TouchableItemView from '../TouchableItemView'
 import ConstModule from '../../../../constants/ConstModule'
 import { getLanguage } from '../../../../language/index'
 import { connect } from 'react-redux'
+import { SMap } from 'imobile_for_reactnative'
 
 class SelectModule extends Component {
   props: {
@@ -18,6 +19,15 @@ class SelectModule extends Component {
   }
 
   navigateToModule = async module => {
+    let licenseStatus = await SMap.getEnvironmentStatus()
+    global.isLicenseValid = licenseStatus.isLicenseValid
+    if (!global.isLicenseValid) {
+      global.SimpleDialog.set({
+        text: getLanguage(global.language).Prompt.APPLY_LICENSE_FIRST,
+      })
+      global.SimpleDialog.setVisible(true)
+      return
+    }
     let tmpCurrentUser = global.getFriend().props.user.currentUser
     let currentUserName = tmpCurrentUser.userName
       ? tmpCurrentUser.userName
