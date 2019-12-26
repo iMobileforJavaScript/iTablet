@@ -109,8 +109,8 @@ export default class Row extends Component {
     return false
   }
 
-  _onFocus = () => {
-    this.props.onFocus && this.props.onFocus()
+  _onFocus = evt => {
+    this.props.onFocus && this.props.onFocus(evt)
   }
   _action = (iTemView, columnIndex) => {
     if (this.props.onPress && typeof this.props.onPress === 'function') {

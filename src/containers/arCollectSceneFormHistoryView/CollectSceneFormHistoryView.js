@@ -185,6 +185,27 @@ export default class CollectSceneFormHistoryView extends React.Component {
   _keyExtractor = item => item.name + item.index
 
   renderItem = ({ item }) => {
+    let datasetImg
+    switch (item.type) {
+      case 'LINE':
+        datasetImg = getThemeAssets().ar.toolbar.line
+        break
+      case 'POINT':
+        datasetImg = getThemeAssets().ar.toolbar.point
+        break
+      case 'REGION':
+        datasetImg = getThemeAssets().ar.toolbar.region
+        break
+      case 'POINT3D':
+        datasetImg = getThemeAssets().ar.toolbar.point_3d
+        break
+      case 'LINE3D':
+        datasetImg = getThemeAssets().ar.toolbar.line_3d
+        break
+      default:
+        datasetImg = getThemeAssets().ar.toolbar.icon_dataset
+        break
+    }
     const visibleImgBlack = item.select
       ? require('../../assets/mapTools/icon_multi_selected_disable_black.png')
       : require('../../assets/mapTools/icon_multi_unselected_disable_black.png')
@@ -264,7 +285,7 @@ export default class CollectSceneFormHistoryView extends React.Component {
             <Image
               resizeMode={'contain'}
               style={styles.smallIcon}
-              source={getThemeAssets().ar.toolbar.icon_dataset}
+              source={datasetImg}
             />
           </TouchableOpacity>
           <TouchableOpacity

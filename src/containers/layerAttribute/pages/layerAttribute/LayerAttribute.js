@@ -716,18 +716,10 @@ export default class LayerAttribute extends React.Component {
     let path = this.props.currentLayer.path
     let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
     if (result) {
-      Toast.show(
-        Toast.show(
-          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
-        ),
-      )
+      Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS)
       this.refresh()
     } else {
-      Toast.show(
-        Toast.show(
-          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED,
-        ),
-      )
+      Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED)
     }
   }
 

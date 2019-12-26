@@ -12,6 +12,7 @@ import {
   SectionList,
   Dimensions,
   Platform,
+  Keyboard,
 } from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { IndicatorLoading } from '../../../../components'
@@ -104,7 +105,7 @@ export default class LayerAttributeTable extends React.Component {
     }
     this.canBeLoadMore = true // 控制是否可以加载更多
     this.isScrolling = false // 防止连续定位滚动
-
+    this.itemClickPosition = 0 //当前item点击位置 IOS
     // this.viewabilityConfig = {
     //   waitForInteraction: true,
     //   viewAreaCoveragePercentThreshold: 95,
@@ -179,6 +180,31 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
+  //IOS avoidingView无效 手动滚动过去
+  componentDidMount() {
+    if (Platform.OS === 'ios') {
+      this.keyBoardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        this._keyboardDidShow,
+      )
+    }
+  }
+  componentWillUnmount() {
+    if (Platform.OS === 'ios') {
+      this.keyBoardDidShowListener.remove()
+    }
+  }
+  _keyboardDidShow = e => {
+    let { screenY, height } = e.startCoordinates
+    if (screenY - this.itemClickPosition < height) {
+      this.table &&
+        this.table.scrollToLocation({
+          itemIndex: this.scrollIndex,
+          viewPosition: 1,
+          viewOffset: -height,
+        })
+    }
+  }
   horizontalScrollToStart = () => {
     this.horizontalTable &&
       this.horizontalTable.scrollTo({ x: 0, animated: false })
@@ -346,15 +372,6 @@ export default class LayerAttributeTable extends React.Component {
       this.props.selectRow(item)
     }
   }
-  //IOS avoidingView无效 手动滚动过去
-  onFocus = index => {
-    Platform.OS === 'ios' &&
-      this.table &&
-      this.table.scrollToLocation({
-        itemIndex: index,
-        viewPosition: 0.3,
-      })
-  }
   onPressHeader = item => {
     if (
       this.props.onPressHeader &&
@@ -505,8 +522,9 @@ export default class LayerAttributeTable extends React.Component {
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
         // onPress={() => this.onPressRow({ data: item, index })}
         onPress={this.onPressRow}
-        onFocus={() => {
-          this.onFocus(index)
+        onFocus={evt => {
+          this.itemClickPosition = evt.nativeEvent.pageY
+          this.scrollIndex = index
         }}
         onChangeEnd={this.onChangeEnd}
         buttonIndexes={buttonIndexes}
@@ -646,21 +664,31 @@ export default class LayerAttributeTable extends React.Component {
     // ) {
     //   return null
     // }
-    return (
-      <KeyboardAvoidingView
-        // behavior={this.state.behavior}
-        behavior="padding"
-        enabled
-        style={styles.container}
-      >
-        {/*<View style={styles.container}>*/}
-        {this.props.type === 'MULTI_DATA' && this.state.isMultiData
-          ? this.renderMultiDataTable()
-          : this.renderSingleDataTable()}
-        {/*{this.state.loading && this.renderFooter()}*/}
-        {/*</View>*/}
-      </KeyboardAvoidingView>
-    )
+    if (Platform.OS === 'android') {
+      return (
+        <KeyboardAvoidingView
+          // behavior={this.state.behavior}
+          behavior="padding"
+          enabled
+          style={styles.container}
+        >
+          {/*<View style={styles.container}>*/}
+          {this.props.type === 'MULTI_DATA' && this.state.isMultiData
+            ? this.renderMultiDataTable()
+            : this.renderSingleDataTable()}
+          {/*{this.state.loading && this.renderFooter()}*/}
+          {/*</View>*/}
+        </KeyboardAvoidingView>
+      )
+    } else {
+      return (
+        <View style={styles.container}>
+          {this.props.type === 'MULTI_DATA' && this.state.isMultiData
+            ? this.renderMultiDataTable()
+            : this.renderSingleDataTable()}
+        </View>
+      )
+    }
   }
 }
 

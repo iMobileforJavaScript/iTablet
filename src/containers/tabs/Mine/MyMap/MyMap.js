@@ -73,7 +73,14 @@ class MyMap extends MyDataPage {
       '.smwu'
     let zipPath
     if (exportToTemp) {
-      zipPath = homePath + this.getRelativeTempFilePath()
+      let tempPath = homePath + this.getRelativeTempPath()
+      let availableName = await this._getAvailableFileName(
+        tempPath,
+        'MyExport',
+        'zip',
+      )
+      zipPath = tempPath + availableName
+      this.exportPath = zipPath
     } else {
       let exportPath = homePath + this.getRelativeExportPath()
       let availableName = await this._getAvailableFileName(
