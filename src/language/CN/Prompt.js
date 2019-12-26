@@ -213,6 +213,7 @@ const Prompt = {
 
   ILLEGAL_DATA: '数据非法!',
 
+  UNSUPPORTED_LAYER_TO_SHARE: '暂不支持此图层的分享',
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',

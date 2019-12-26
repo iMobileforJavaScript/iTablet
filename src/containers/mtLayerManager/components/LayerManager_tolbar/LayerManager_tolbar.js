@@ -856,6 +856,14 @@ export default class LayerManager_tolbar extends React.Component {
     //Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
     let layerData = JSON.parse(JSON.stringify(this.state.layerData))
     this.setVisible(false)
+    if (
+      layerData.type !== DatasetType.POINT &&
+      layerData.type !== DatasetType.LINE &&
+      layerData.type !== DatasetType.REGION
+    ) {
+      Toast.show(getLanguage(global.language).Prompt.UNSUPPORTED_LAYER_TO_SHARE)
+      return
+    }
     let homePath = await FileTools.appendingHomeDirectory()
     let tempPath =
       homePath +

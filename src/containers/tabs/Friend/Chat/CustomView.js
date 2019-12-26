@@ -26,6 +26,24 @@ export default class CustomView extends React.Component {
     this.props.onTouch(type, message)
   }
 
+  renderUnsupported = () => {
+    let textColor = 'white'
+    if (this.props.position === 'left') {
+      textColor = 'black'
+    }
+    return (
+      <Text
+        style={{
+          textAlign: 'center',
+          fontSize: scaleSize(20),
+          color: textColor,
+        }}
+      >
+        {'暂不支持的消息类型'}
+      </Text>
+    )
+  }
+
   render() {
     let type = this.props.currentMessage.type
     /*
@@ -83,7 +101,11 @@ export default class CustomView extends React.Component {
     ) {
       let fileSize = this.props.currentMessage.originMsg.message.message
         .fileSize
-      let fileSizeText = fileSize.toFixed(2) + 'B'
+      let fileSizeText = ''
+      if (fileSize === undefined) {
+        return this.renderUnsupported()
+      }
+      fileSizeText = fileSize.toFixed(2) + 'B'
       if (fileSize > 1024) {
         fileSize = fileSize / 1024
         fileSizeText = fileSize.toFixed(2) + 'KB'
@@ -194,21 +216,7 @@ export default class CustomView extends React.Component {
     /*
      * 未在上面处理的消息
      */
-    let textColor = 'white'
-    if (this.props.position === 'left') {
-      textColor = 'black'
-    }
-    return (
-      <Text
-        style={{
-          textAlign: 'center',
-          fontSize: scaleSize(20),
-          color: textColor,
-        }}
-      >
-        {'暂不支持的消息类型'}
-      </Text>
-    )
+    return this.renderUnsupported()
   }
 }
 

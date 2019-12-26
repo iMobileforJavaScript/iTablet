@@ -934,20 +934,43 @@ class Chat extends React.Component {
         if (fileList[i].path.indexOf('.json') !== -1) {
           let jstr = await FileTools.readFile(homePath + fileList[i].path)
           let properties
+          let hasPoint, hasLine, hasPolygon
           try {
-            let firstLine = jstr.substring(0, jstr.indexOf('\n'))
-            let firstRecord = JSON.parse(firstLine)
-            properties = firstRecord.properties
+            let items = jstr.split('\n')
+            for (let i = 0; i < items.length; i++) {
+              if (items[i] !== '') {
+                let item = JSON.parse(items[i])
+                if (!properties) {
+                  properties = item.properties
+                }
+                if (item.geometry.type === 'Point') {
+                  hasPoint = true
+                } else if (item.geometry.type === 'LineString') {
+                  hasLine = true
+                } else if (item.geometry.type === 'Polygon') {
+                  hasPolygon = true
+                }
+              }
+            }
           } catch (error) {
             // console.log(error)
           }
           let type = 1
-          if (jstr.indexOf('Polygon') != -1) {
+          let typeCount = 0
+          if (hasPolygon) {
             type = DatasetType.REGION
-          } else if (jstr.indexOf('LineString') != -1) {
+            typeCount++
+          }
+          if (hasLine) {
             type = DatasetType.LINE
-          } else if (jstr.indexOf('Point') != -1) {
+            typeCount++
+          }
+          if (hasPoint) {
             type = DatasetType.POINT
+            typeCount++
+          }
+          if (typeCount !== 1) {
+            type = DatasetType.CAD
           }
           await SMap.importDatasetFromGeoJson(
             message.originMsg.message.message.datasourceAlias,
@@ -1301,6 +1324,9 @@ class Chat extends React.Component {
       currentMessage.type === MSGConstant.MSG_PICTURE
     ) {
       let progress = currentMessage.originMsg.message.message.progress
+      if (progress === undefined) {
+        progress = 0
+      }
       return (
         <View style={styles.tickView}>
           <Text

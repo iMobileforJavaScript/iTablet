@@ -143,6 +143,20 @@ export default class LayerAttribute extends React.Component {
       this.setState({
         ...checkData,
       })
+    } else if (GLOBAL.NEEDREFRESHTABLE) {
+      GLOBAL.NEEDREFRESHTABLE = false
+      let startIndex = this.state.startIndex - PAGE_SIZE
+      if (startIndex <= 0) {
+        startIndex = 0
+        this.canBeRefresh = false
+      }
+      let currentPage = startIndex / PAGE_SIZE
+      // this.noMore = false
+      this.getAttribute({
+        type: 'reset',
+        currentPage: currentPage,
+        startIndex: startIndex <= 0 ? 0 : startIndex,
+      })
     }
   }
 
