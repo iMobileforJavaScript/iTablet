@@ -322,6 +322,7 @@ const Prompt = {
   ATTRIBUTE_DELETE_FAILED: 'Attribute Field Delete Failed',
   ATTRIBUTE_ADD_SUCCESS: 'Attribute Add Succeed',
   ATTRIBUTE_ADD_FAILED: 'Attribute Add Failed',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: 'Default value is null',
 }
 
 export { Prompt }

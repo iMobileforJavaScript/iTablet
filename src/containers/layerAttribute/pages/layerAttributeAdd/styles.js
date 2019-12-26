@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     // flex: 1,
@@ -43,5 +43,41 @@ export default StyleSheet.create({
     fontSize: setSpText(24),
     textAlign: 'center',
     color: color.blue2,
+  },
+  input: {
+    height: scaleSize(50),
+    paddingHorizontal: scaleSize(15),
+    ...Platform.select({
+      android: {
+        padding: 0,
+      },
+    }),
+    borderWidth: 1,
+    backgroundColor: 'white',
+    borderRadius: scaleSize(8),
+  },
+  defaultValueItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  rowLabel: {
+    flex: 1,
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'left',
+  },
+  inputOverLayer: {
+    position: 'absolute',
+    right: 1,
+    top: 1,
+    left: 1,
+    bottom: 1,
+    borderRadius: scaleSize(8),
+    backgroundColor: '#rgba(0, 0, 0, 0.1)',
+  },
+  inputView: {
+    flex: 2,
   },
 })
