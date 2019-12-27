@@ -865,14 +865,15 @@ export default class Friend extends Component {
     cb,
   ) => {
     if (g_connectService) {
-      let homePath = await FileTools.appendingHomeDirectory()
-      SMessageService.receiveFileWithMQ(
-        fileName,
-        queueName,
-        homePath + receivePath,
-        talkId,
-        msgId,
-      ).then(res => {
+      try {
+        let homePath = await FileTools.appendingHomeDirectory()
+        let res = await SMessageService.receiveFileWithMQ(
+          fileName,
+          queueName,
+          homePath + receivePath,
+          talkId,
+          msgId,
+        )
         let message = this.props.chat[this.props.user.currentUser.userId][
           talkId
         ].history[msgId]
@@ -895,7 +896,14 @@ export default class Friend extends Component {
         if (cb && typeof cb === 'function') {
           cb(res)
         }
-      })
+      } catch (error) {
+        Toast.show(
+          getLanguage(this.props.language).Friends.RECEIVE_FAIL_NETWORK,
+        )
+        if (cb && typeof cb === 'function') {
+          cb(false)
+        }
+      }
     } else {
       Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_NETWORK)
       if (cb && typeof cb === 'function') {
@@ -908,35 +916,43 @@ export default class Friend extends Component {
    * 接收第三方服务器的文件
    */
   receiveFile = async (chatMessage, receivePath, fileName, talkId, cb) => {
-    let homePath = await FileTools.appendingHomeDirectory()
-    let res = await SMessageService.receiveFileWithThirdServer(
-      MSGConstant.FILE_DOWNLOAD_SERVER_URL,
-      chatMessage.originMsg.user.id,
-      chatMessage.originMsg.message.message.queueName,
-      chatMessage.originMsg.message.message.fileSize,
-      homePath + receivePath,
-      fileName,
-      talkId,
-      chatMessage._id,
-    )
+    try {
+      let homePath = await FileTools.appendingHomeDirectory()
+      let res = await SMessageService.receiveFileWithThirdServer(
+        MSGConstant.FILE_DOWNLOAD_SERVER_URL,
+        chatMessage.originMsg.user.id,
+        chatMessage.originMsg.message.message.queueName,
+        chatMessage.originMsg.message.message.fileSize,
+        homePath + receivePath,
+        fileName,
+        talkId,
+        chatMessage._id,
+      )
 
-    let message = this.props.chat[this.props.user.currentUser.userId][talkId]
-      .history[chatMessage._id]
-    if (res === true) {
-      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
-      message.originMsg.message.message.filePath = receivePath + '/' + fileName
-      MessageDataHandle.editMessage({
-        userId: this.props.user.currentUser.userId,
-        talkId: talkId,
-        msgId: chatMessage._id,
-        editItem: message,
-      })
-    } else {
-      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_EXPIRE)
-      FileTools.deleteFile(homePath + receivePath + '/' + fileName)
-    }
-    if (cb && typeof cb === 'function') {
-      cb(res)
+      let message = this.props.chat[this.props.user.currentUser.userId][talkId]
+        .history[chatMessage._id]
+      if (res === true) {
+        Toast.show(getLanguage(this.props.language).Friends.RECEIVE_SUCCESS)
+        message.originMsg.message.message.filePath =
+          receivePath + '/' + fileName
+        MessageDataHandle.editMessage({
+          userId: this.props.user.currentUser.userId,
+          talkId: talkId,
+          msgId: chatMessage._id,
+          editItem: message,
+        })
+      } else {
+        Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_EXPIRE)
+        FileTools.deleteFile(homePath + receivePath + '/' + fileName)
+      }
+      if (cb && typeof cb === 'function') {
+        cb(res)
+      }
+    } catch (error) {
+      Toast.show(getLanguage(this.props.language).Friends.RECEIVE_FAIL_NETWORK)
+      if (cb && typeof cb === 'function') {
+        cb(false)
+      }
     }
   }
 

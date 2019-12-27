@@ -144,7 +144,7 @@ class Chat extends React.Component {
         if (m._id === value.msgId) {
           m.originMsg.message.message.progress = value.percentage
           m.downloading = true
-          if (value.percentage === 100) {
+          if (value.percentage === 100 || value.percentage === 0) {
             m.downloading = false
           }
         }
@@ -655,11 +655,20 @@ class Chat extends React.Component {
       receivePath,
       storeFileName,
       this.targetUser.id,
-      res => {
+      async res => {
         message.originMsg.message.message.filePath =
           receivePath + '/' + storeFileName
         if (res === false) {
           message.downloading = false
+          this.friend.onReceiveProgress({
+            talkId: this.targetUser.id,
+            msgId: message._id,
+            percentage: 0,
+          })
+          let absolutePath = global.homePath + receivePath + '/' + storeFileName
+          if (await FileTools.fileIsExist(absolutePath)) {
+            FileTools.deleteFile(absolutePath)
+          }
         }
         cb && cb(res)
       },
