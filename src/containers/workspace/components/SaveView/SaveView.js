@@ -122,7 +122,7 @@ export default class SaveView extends React.Component {
   }
 
   setVisible = (visible, setLoading, cb) => {
-    if (this.state.visible === visible) return
+    // if (this.state.visible === visible) return
     if (setLoading && typeof setLoading === 'function') {
       this._setLoading = setLoading
     }

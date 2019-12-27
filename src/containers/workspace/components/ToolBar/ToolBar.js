@@ -540,6 +540,23 @@ export default class ToolBar extends React.PureComponent {
         await SMap.resetMapFixColorsModeValue(true)
       }
 
+      if (type === ConstToolType.MAP3D_TOOL_FLY) {
+        SScene.checkoutListener('startTouchAttribute')
+        SScene.flyStop()
+        SScene.setAction('PAN3D')
+      }
+      if (type === ConstToolType.MAP3D_TOOL_NEWFLY) {
+        SScene.checkoutListener('startTouchAttribute')
+        SScene.clearRoutStops()
+        SScene.flyStop()
+        SScene.setAction('PAN3D')
+      }
+      if (
+        type === ConstToolType.PLOT_ANIMATION_PLAY ||
+        type === ConstToolType.PLOT_ANIMATION_START
+      ) {
+        SMap.animationClose()
+      }
       if (actionFirst) {
         await this.closeSubAction(type, actionType)
       }

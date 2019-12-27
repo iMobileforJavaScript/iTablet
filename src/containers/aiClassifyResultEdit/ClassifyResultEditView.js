@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import Orientation from 'react-native-orientation'
@@ -97,7 +98,7 @@ export default class ClassifyResultEditView extends React.Component {
           alignItems: 'center',
           flexDirection: 'column',
         }}
-        behavior="position"
+        behavior={Platform.OS === 'ios' && 'position'}
       >
         <View style={styles.infocontainer}>
           <View style={styles.classifyTitleView}>
