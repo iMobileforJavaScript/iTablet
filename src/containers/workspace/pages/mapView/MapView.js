@@ -2232,7 +2232,7 @@ export default class MapView extends React.Component {
       <PopView
         ref={ref => (GLOBAL.popModal = ref)}
         showFullMap={this.showFullMap}
-        overLayerStyle={{ backgroundColor: 'red' }}
+        overLayerStyle={{ backgroundColor: 'transparent' }}
       >
         {renderPopItem()}
       </PopView>
