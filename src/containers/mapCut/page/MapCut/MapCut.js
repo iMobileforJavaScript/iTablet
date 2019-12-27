@@ -22,7 +22,7 @@ import {
   Button,
   PopView,
 } from '../../../../components'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize, Toast, dataUtil } from '../../../../utils'
 import { CheckStatus } from '../../../../constants'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -280,6 +280,11 @@ export default class MapCut extends React.Component {
   }
 
   _onChangeText = text => {
+    let { result, error } = dataUtil.isLegalName(text, this.props.language)
+    if (!result && error) {
+      Toast.show(error)
+      return
+    }
     this.setState({
       saveAsName: text,
     })
