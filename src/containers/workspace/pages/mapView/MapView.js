@@ -2328,6 +2328,8 @@ export default class MapView extends React.Component {
     if (this.state.showIncrement) {
       this.setState({ showIncrement: false })
     }
+    //清空Toolbar数据
+    ToolbarModule.setData({})
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
       this.FloorListView.setVisible(false)
