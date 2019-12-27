@@ -1338,6 +1338,7 @@ export default class MapView extends React.Component {
             },
             () => {
               GLOBAL.isInitSymbolPlotsEnd = true
+              this.props.getLayers()
             },
           )
           GLOBAL.newPlotMapName = ''
