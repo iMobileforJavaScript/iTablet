@@ -6,7 +6,7 @@
 import React, { PureComponent } from 'react'
 import { TouchableOpacity, View, Animated, StyleSheet } from 'react-native'
 import { color } from '../../styles'
-import { screen } from '../../utils'
+import { scaleSize, screen } from '../../utils'
 import zIndexLevel from '../../styles/zIndexLevel'
 
 export default class PopView extends PureComponent {
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    // top: 0,
     backgroundColor: '#rgba(0, 0, 0, 0)',
     zIndex: zIndexLevel.FOUR,
   },
@@ -126,7 +125,9 @@ const styles = StyleSheet.create({
     backgroundColor: color.modalBgColor,
   },
   infoContainer: {
-    justifyContent: 'flex-end',
-    backgroundColor: 'transparent',
+    width: '100%',
+    maxHeight: scaleSize(720),
+    minHeight: scaleSize(80),
+    backgroundColor: color.contentWhite,
   },
 })

@@ -447,6 +447,7 @@ export default class LayerAttributeTabs extends React.Component {
   drawerOnChange = ({ index }) => {
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
+        this.currentTabRefs[this.state.currentTabIndex] &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
       let newState = {
         currentTabIndex: index,
