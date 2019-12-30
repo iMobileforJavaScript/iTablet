@@ -19,18 +19,11 @@ export default class SMessageServiceHTTP {
         Authorization: 'Basic ' + auth,
       },
     }
-    let bCon = await fetch(url, extraData)
-      .then(data => {
-        return data.json()
-      })
-      .then(data => {
-        return data.consumers === 0 ? false : true
-      })
-      .catch(() => {
-        return false
-      })
-    return bCon
+    let response = await fetch(url, extraData)
+    let data = await response.json()
+    return data.consumers === 0 ? false : true
   }
+
   static async getConsumer(userId) {
     try {
       let auth = Buffer.from(

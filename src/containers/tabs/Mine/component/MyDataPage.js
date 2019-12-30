@@ -380,8 +380,14 @@ export default class MyDataPage extends Component {
       await this.exportData(fileName)
       let path = this.exportPath
       this.exportPath = ''
+      let copyPath
+      if (Platform.OS === 'android') {
+        copyPath =
+          global.homePath + this.getRelativeTempPath() + 'MyExportWX.zip'
+        await FileTools.copyFile(path, copyPath, true)
+      }
       result = await appUtilsModule.sendFileOfWechat({
-        filePath: path,
+        filePath: Platform.OS === 'ios' ? path : copyPath,
         title: fileName + '.zip',
         description: 'SuperMap iTablet',
       })
@@ -1033,7 +1039,7 @@ export default class MyDataPage extends Component {
     return (
       <InputDialog
         ref={ref => (this.InputDialog = ref)}
-        placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
+        title={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
         confirmAction={name => {
           if (name === null || name === '') {
             Toast.show(getLanguage(global.language).Prompt.ENTER_DATA_NAME)

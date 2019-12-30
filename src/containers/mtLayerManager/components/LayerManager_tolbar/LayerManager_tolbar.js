@@ -933,7 +933,6 @@ export default class LayerManager_tolbar extends React.Component {
             })
           }
           NavigationService.goBack()
-          Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
         },
       })
     }
