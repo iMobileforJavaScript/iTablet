@@ -759,7 +759,10 @@ export default class LayerAttribute extends React.Component {
       ],
       true,
     ).then(data => {
-      this.props.navigation && this.props.navigation.navigate('MapView')
+      this.props.navigation &&
+        this.props.navigation.navigate('MapView', {
+          hideMapController: true,
+        })
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
           isFullScreen: false,

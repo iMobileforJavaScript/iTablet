@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     borderRadius: scaleSize(4),
     borderWidth: 1,
-    borderColor: 'rgba(48,48,48,0.5)',
+    borderColor: 'rgba(48,48,48,0.2)',
   },
   floorList: {
     flex: 1,
