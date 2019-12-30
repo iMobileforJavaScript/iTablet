@@ -722,7 +722,7 @@ export default class MT_layerManager extends React.Component {
               })
             }}
             getLayers={this.props.getLayers}
-            isSelected={item.caption === this.props.currentLayer.caption}
+            isSelected={item.name === this.props.currentLayer.name}
             onPress={data => this.onPressRow({ ...data, section })}
             onAllPress={data => this.onAllPressRow({ ...data, section })}
             onArrowPress={({ data }) => this.getChildList({ data, section })}

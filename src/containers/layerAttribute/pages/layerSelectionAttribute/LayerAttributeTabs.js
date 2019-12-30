@@ -343,9 +343,7 @@ export default class LayerAttributeTabs extends React.Component {
       let result = await SMap.addAttributeFieldInfo(layerPath, true, fieldInfo)
       if (result) {
         Toast.show(
-          Toast.show(
-            getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
-          ),
+          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
         )
         this.currentTabRefs[this.state.currentTabIndex].getAttribute(
           {
@@ -359,11 +357,7 @@ export default class LayerAttributeTabs extends React.Component {
           () => {},
         )
       } else {
-        Toast.show(
-          Toast.show(
-            getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED,
-          ),
-        )
+        Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED)
       }
     }
   }
@@ -447,6 +441,7 @@ export default class LayerAttributeTabs extends React.Component {
   drawerOnChange = ({ index }) => {
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
+        this.currentTabRefs[this.state.currentTabIndex] &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
       let newState = {
         currentTabIndex: index,

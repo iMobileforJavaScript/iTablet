@@ -923,6 +923,8 @@ function commit(type) {
       height: 0,
     })
     ToolbarModule.setData()
+    //提交标注后 需要刷新属性表
+    GLOBAL.NEEDREFRESHTABLE = true
   } else if (type === ConstToolType.MAP_TOOL_RECTANGLE_CUT) {
     NavigationService.navigate('MapCut', {
       points: GLOBAL.MapSurfaceView.getResult(),

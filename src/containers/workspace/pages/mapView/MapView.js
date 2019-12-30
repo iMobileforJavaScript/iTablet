@@ -1338,6 +1338,7 @@ export default class MapView extends React.Component {
             },
             () => {
               GLOBAL.isInitSymbolPlotsEnd = true
+              this.props.getLayers()
             },
           )
           GLOBAL.newPlotMapName = ''
@@ -2325,9 +2326,22 @@ export default class MapView extends React.Component {
   }
 
   _incrementRoad = async () => {
+    if (!this.state.isRight) {
+      let position = await SMap.getCurrentPosition()
+      let isIndoor = await SMap.isIndoorPoint(position.x, position.y)
+      if (!isIndoor) {
+        Toast.show(
+          getLanguage(this.props.language).Prompt
+            .CANT_USE_TRACK_TO_INCREMENT_ROAD,
+        )
+        return
+      }
+    }
     if (this.state.showIncrement) {
       this.setState({ showIncrement: false })
     }
+    //清空Toolbar数据
+    ToolbarModule.setData({})
     let rel = await SMap.addNetWorkDataset()
     if (rel) {
       this.FloorListView.setVisible(false)

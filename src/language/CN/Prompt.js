@@ -208,11 +208,14 @@ const Prompt = {
   INDEX_OUT_OF_BOUNDS: '位置越界',
   PLEASE_SELECT_LICATION_INFORMATION: '请选择定位信息',
   OUT_OF_MAP_BOUNDS: '不在地图范围内',
+  CANT_USE_TRACK_TO_INCREMENT_ROAD:
+    '当前位置不在路网数据集范围内，无法使用轨迹增量路网',
 
   POI: '兴趣点',
 
   ILLEGAL_DATA: '数据非法!',
 
+  UNSUPPORTED_LAYER_TO_SHARE: '暂不支持此图层的分享',
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',
@@ -309,6 +312,7 @@ const Prompt = {
   ATTRIBUTE_DELETE_FAILED: '属性字段删除失败',
   ATTRIBUTE_ADD_SUCCESS: '属性添加成功',
   ATTRIBUTE_ADD_FAILED: '属性添加失败',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: '缺省值为空',
 }
 
 export { Prompt }

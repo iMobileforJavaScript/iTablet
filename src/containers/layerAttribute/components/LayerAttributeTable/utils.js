@@ -2,6 +2,9 @@ import { FieldType } from 'imobile_for_reactnative'
 
 function getBoolean(value, defaultValue) {
   let _value
+  if (value === '' && (defaultValue === '' || defaultValue === undefined)) {
+    return ''
+  }
   if (value === '1' || value === 'true' || value === 1 || value === true) {
     _value = true
   } else if (

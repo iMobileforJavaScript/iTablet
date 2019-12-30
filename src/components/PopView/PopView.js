@@ -12,6 +12,7 @@ import zIndexLevel from '../../styles/zIndexLevel'
 export default class PopView extends PureComponent {
   props: {
     children: any,
+    contentStyle?: Object,
     modalVisible?: boolean,
     overLayerStyle?: Object,
     showFullMap?: () => {},
@@ -78,11 +79,7 @@ export default class PopView extends PureComponent {
 
   _renderContent = () => {
     return (
-      <View
-        style={{
-          backgroundColor: color.contentColorWhite,
-        }}
-      >
+      <View style={[styles.infoContainer, this.props.contentStyle]}>
         {this.props.children}
       </View>
     )
@@ -108,7 +105,7 @@ export default class PopView extends PureComponent {
             })
           }}
         />
-        <View style={styles.infoContainer}>{this._renderContent()}</View>
+        {this._renderContent()}
       </Animated.View>
     )
   }
@@ -131,6 +128,6 @@ const styles = StyleSheet.create({
     width: '100%',
     maxHeight: scaleSize(720),
     minHeight: scaleSize(80),
-    backgroundColor: color.modalBgColor,
+    backgroundColor: color.contentWhite,
   },
 })
