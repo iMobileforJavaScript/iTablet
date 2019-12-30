@@ -608,7 +608,7 @@ export default class LayerAttributeTable extends React.Component {
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
           onScroll={() => (this.canBeLoadMore = true)}
-          removeClippedSubviews={true}
+          // removeClippedSubviews={true} // ios使用后，底部有一行被透明行覆盖，无法选中
           onViewableItemsChanged={this._onViewableItemsChanged}
           // viewabilityConfig={this.viewabilityConfig}
         />
