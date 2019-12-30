@@ -1305,7 +1305,7 @@ function toolbarBack() {
   })
 }
 
-function layerListAction(data) {
+async function layerListAction(data) {
   const _params = ToolbarModule.getParams()
   let curThemeType
   if (data.isHeatmap) {
@@ -1357,6 +1357,15 @@ function layerListAction(data) {
         : ConstToolType.MAP_THEME_PARAM
     _params.showFullMap(true)
     let orientation = _params.device.orientation
+    let xml = await SMap.mapToXml()
+    ToolbarModule.setData({
+      type: _type,
+      getData: ThemeData.getData,
+      actions: actions,
+      currentThemeData: data,
+      themeCreateType: curThemeType,
+      mapXml: xml,
+    })
     _params.setToolbarVisible(true, _type, {
       containerType: ToolbarType.list,
       isFullScreen: true,
@@ -1368,13 +1377,6 @@ function layerListAction(data) {
       themeType: curThemeType,
       isTouchProgress: false,
       showMenuDialog: true,
-    })
-    ToolbarModule.setData({
-      type: _type,
-      getData: ThemeData.getData,
-      actions: actions,
-      currentThemeData: data,
-      themeCreateType: curThemeType,
     })
     _params.navigation.navigate('MapView')
     Toast.show(
@@ -1510,6 +1512,9 @@ async function changeGraphType(type) {
 
 async function close() {
   const _params = ToolbarModule.getParams()
+  const mapXml = await ToolbarModule.getData().mapXml
+
+  await SMap.mapFromXml(mapXml) // 不保存专题图修改，还原地图
 
   ToolbarModule.setData()
   _params.setToolbarVisible(false, {

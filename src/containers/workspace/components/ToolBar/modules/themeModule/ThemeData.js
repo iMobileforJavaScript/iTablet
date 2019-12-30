@@ -98,6 +98,7 @@ function getMenuData(type, themeType) {
   let data = []
   if (type.indexOf('MAP_THEME_PARAM') === -1) return data
   let themeParams = ToolbarModule.getData().themeParams // 切换到menu，保留themeParams，用于保存专题参数
+  let mapXml = ToolbarModule.getData().mapXml // 切换到menu，保留mapXml，用于还原专题图
   let moduleData = {
     type: type,
     getData: getData,
@@ -106,6 +107,9 @@ function getMenuData(type, themeType) {
   }
   if (themeParams) {
     Object.assign(moduleData, themeParams)
+  }
+  if (mapXml) {
+    Object.assign(moduleData, { mapXml })
   }
   ToolbarModule.setData(moduleData)
   if (themeType === constants.THEME_UNIQUE_STYLE) {
