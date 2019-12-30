@@ -49,7 +49,7 @@ export default class MyLocalData extends Component {
       activityShow: false,
       itemInfo: {},
     }
-    this.pageSize = 10
+    this.pageSize = 100
     this.dataListTotal = null
     this.currentPage = 1
     this.deleteDataing = false

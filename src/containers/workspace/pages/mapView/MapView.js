@@ -9,6 +9,7 @@ import {
   SMMapView,
   Action,
   SMap,
+  SScene,
   SCollector,
   EngineType,
   SMediaCollector,
@@ -623,17 +624,30 @@ export default class MapView extends React.Component {
                 info.indexOf('locate') !== -1 ||
                 info.indexOf('location') !== -1
               ) {
-                this.mapController.location()
+                (async function() {
+                  if (GLOBAL.Type === constants.MAP_3D) {
+                    await SScene.setHeading()
+                    await SScene.resetCamera()
+                    this.mapController.setCompass(0)
+                  } else {
+                    SMap.moveToCurrent().then(result => {
+                      !result &&
+                        Toast.show(
+                          getLanguage(global.language).Prompt.OUT_OF_MAP_BOUNDS,
+                        )
+                    })
+                  }
+                }.bind(this)())
               } else if (
                 info.indexOf('放大') !== -1 ||
                 info.indexOf('zoom in') !== -1
               ) {
-                this.mapController.plus()
+                SMap.zoom(2)
               } else if (
                 info.indexOf('缩小') !== -1 ||
                 info.indexOf('zoom out') !== -1
               ) {
-                this.mapController.minus()
+                SMap.zoom(0.5)
               }
             } catch (e) {
               return

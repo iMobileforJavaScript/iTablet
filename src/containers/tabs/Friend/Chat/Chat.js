@@ -505,7 +505,7 @@ class Chat extends React.Component {
             msgId: msgId,
             percentage: 0,
           })
-          Toast.show(getLanguage(global.language).Friends.SEND_FAIL)
+          Toast.show(getLanguage(global.language).Friends.SEND_FAIL_NETWORK)
         } else {
           Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
         }
@@ -619,9 +619,12 @@ class Chat extends React.Component {
       return
     }
     message.message.message.filePath = ''
-    let callback = () => {
+    let callback = result => {
       if (hasTempFile) {
         RNFS.unlink(filePath)
+      }
+      if (!result) {
+        Toast.show(getLanguage(global.language).Friends.SEND_FAIL)
       }
     }
     if (sendToServer) {

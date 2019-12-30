@@ -3,7 +3,7 @@ import { Image, Text, View, StyleSheet } from 'react-native'
 import FriendList from './FriendList/FriendList'
 import { Container, Dialog, CheckBox } from '../../../components'
 import { getLanguage } from '../../../language/index'
-import { scaleSize, setSpText } from '../../../utils'
+import { scaleSize, setSpText, Toast } from '../../../utils'
 import {
   getLayerIconByType,
   getThemeAssets,
@@ -11,6 +11,7 @@ import {
 } from '../../../assets'
 import { stat } from 'react-native-fs'
 import color from '../../../styles/color'
+import { FileTools } from '../../../native'
 
 export default class SelectFriend extends Component {
   props: {
@@ -92,6 +93,19 @@ export default class SelectFriend extends Component {
       filePath,
       this.state.targetUser.id,
       msgId,
+      result => {
+        FileTools.deleteFile(filePath)
+        if (!result) {
+          GLOBAL.getFriend().onReceiveProgress({
+            talkId: this.state.targetUser.id,
+            msgId: msgId,
+            percentage: 0,
+          })
+          Toast.show(getLanguage(global.language).Friends.SEND_FAIL_NETWORK)
+        } else {
+          Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
+        }
+      },
     )
   }
 

@@ -602,7 +602,7 @@ export default class Friend extends Component {
       }
       let generalMsg = JSON.stringify(messageObj)
       let result = await SMessageService.sendMessage(generalMsg, talkId)
-      JPushService.push(messageStr, talkIds)
+      result && JPushService.push(messageStr, talkIds)
 
       if (!bSilent && !result) {
         Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
@@ -614,6 +614,7 @@ export default class Friend extends Component {
       if (!bSilent) {
         Toast.show(getLanguage(this.props.language).Friends.MSG_SERVICE_FAILED)
       }
+      cb && cb(false)
       return false
     }
   }

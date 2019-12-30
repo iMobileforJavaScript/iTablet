@@ -65,13 +65,8 @@ export default class JPushService {
       method: 'post',
       body: JSON.stringify(request),
     }
-    let result = await fetch(url, extraData)
-      .then(data => {
-        return data.json()
-      })
-      .then(data => {
-        return data
-      })
+    let response = await fetch(url, extraData)
+    let result = await response.json()
     return result
   }
 
