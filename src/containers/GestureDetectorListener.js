@@ -43,11 +43,11 @@ async function longtouchCallback(event) {
       (async function() {
         //室内地图只允许在室内标注点
         if (!GLOBAL.ISOUTDOORMAP) {
-          let result = await SMap.isIndoorPoint(
+          let isindoor = await SMap.isIndoorPoint(
             event.LLPoint.x,
             event.LLPoint.y,
           )
-          if (result.isindoor) {
+          if (isindoor) {
             GLOBAL.STARTX = event.LLPoint.x
             GLOBAL.STARTY = event.LLPoint.y
             await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
@@ -76,11 +76,11 @@ async function longtouchCallback(event) {
       (async function() {
         //室内地图只允许在室内标注点
         if (!GLOBAL.ISOUTDOORMAP) {
-          let result = await SMap.isIndoorPoint(
+          let isindoor = await SMap.isIndoorPoint(
             event.LLPoint.x,
             event.LLPoint.y,
           )
-          if (result.isindoor) {
+          if (isindoor) {
             GLOBAL.ENDX = event.LLPoint.x
             GLOBAL.ENDY = event.LLPoint.y
             await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)

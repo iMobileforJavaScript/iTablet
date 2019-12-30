@@ -125,8 +125,8 @@ export default class NavigationStartButton extends React.Component {
     }
     let position = await SMap.getCurrentPosition()
     if (!GLOBAL.ISOUTDOORMAP) {
-      let rel = await SMap.isIndoorPoint(position.x, position.y)
-      if (rel.isindoor) {
+      let isindoor = await SMap.isIndoorPoint(position.x, position.y)
+      if (isindoor) {
         SMap.indoorNavigation(0)
         this.setVisible(false)
         GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
