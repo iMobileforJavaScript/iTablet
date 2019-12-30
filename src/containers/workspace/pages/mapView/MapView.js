@@ -524,7 +524,13 @@ export default class MapView extends React.Component {
     if (GLOBAL.Type === constants.MAP_NAVIGATION) {
       (async function() {
         let currentFloorID = await SMap.getCurrentFloorID()
-        this.changeFloorID(currentFloorID)
+        this.changeFloorID(currentFloorID, () => {
+          let { params } = this.props.navigation.state
+          let preParams = prevProps.navigation.state.params
+          if (params.hideMapController && !preParams.hideMapController) {
+            this.mapController && this.mapController.setVisible(false)
+          }
+        })
       }.bind(this)())
       // setTimeout(async () => {
       //   let currentFloorID = await SMap.getCurrentFloorID()
@@ -2383,7 +2389,7 @@ export default class MapView extends React.Component {
   //     </View>
   //   )
   // }
-  changeFloorID = currentFloorID => {
+  changeFloorID = (currentFloorID, cb) => {
     if (currentFloorID !== this.state.currentFloorID) {
       this.setState(
         {
@@ -2391,6 +2397,7 @@ export default class MapView extends React.Component {
         },
         () => {
           GLOBAL.ISOUTDOORMAP = !currentFloorID
+          cb && cb()
         },
       )
     }
