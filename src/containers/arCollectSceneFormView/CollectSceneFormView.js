@@ -119,10 +119,10 @@ export default class CollectSceneFormView extends React.Component {
     //   )
     //   await SCollectSceneFormView.startRecording()
     // } else {
-    //   Toast.show(
-    //     getLanguage(global.language).Map_Main_Menu
-    //       .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_STOP,
-    //   )
+    Toast.show(
+      getLanguage(global.language).Map_Main_Menu
+        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT_START,
+    )
     await SCollectSceneFormView.startRecording()
     this.setState({ isnew: true })
     // }
@@ -161,6 +161,7 @@ export default class CollectSceneFormView extends React.Component {
   save = async () => {
     await SCollectSceneFormView.stopRecording()
     await SCollectSceneFormView.saveData('line')
+    await SCollectSceneFormView.routeAdd()
     this.setState({ isnew: false })
     Toast.show(
       getLanguage(global.language).Map_Main_Menu.MAP_AR_AI_SAVE_SUCCESS,

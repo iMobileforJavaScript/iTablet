@@ -172,6 +172,18 @@ async function collectionSubmit(libId, symbolCode) {
   await SMap.submit()
   await SMap.refreshMap()
   SMap.setPlotSymbol(libId, symbolCode)
+
+  ToolbarModule.getParams().getLayers(-1, async layers => {
+    let plotLayer
+    for (let i = 0; i < layers.length; i++)
+      if (layers[i].name.indexOf('PlotEdit_') != -1) {
+        plotLayer = layers[i]
+        break
+      }
+    if (plotLayer) {
+      ToolbarModule.getParams().setCurrentLayer(plotLayer)
+    }
+  })
 }
 
 async function cancel(libId, symbolCode) {

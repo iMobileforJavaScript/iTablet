@@ -492,10 +492,25 @@ class Chat extends React.Component {
       return
     }
     informMsg.message.message.filePath = ''
-    this.friend.sendFile(informMsg, filePath, this.targetUser.id, msgId, () => {
-      FileTools.deleteFile(filePath)
-      Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
-    })
+    this.friend.sendFile(
+      informMsg,
+      filePath,
+      this.targetUser.id,
+      msgId,
+      result => {
+        FileTools.deleteFile(filePath)
+        if (!result) {
+          this.friend.onReceiveProgress({
+            talkId: this.targetUser.id,
+            msgId: msgId,
+            percentage: 0,
+          })
+          Toast.show(getLanguage(global.language).Friends.SEND_FAIL)
+        } else {
+          Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
+        }
+      },
+    )
   }
 
   /**

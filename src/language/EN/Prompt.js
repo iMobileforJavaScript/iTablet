@@ -213,6 +213,8 @@ const Prompt = {
   INDEX_OUT_OF_BOUNDS: 'Index out of bounds',
   PLEASE_SELECT_LICATION_INFORMATION: 'Please set up Location',
   OUT_OF_MAP_BOUNDS: 'Out of map bounds',
+  CANT_USE_TRACK_TO_INCREMENT_ROAD:
+    "The current location is out of map bounds so that you can't use tracking to increment road",
 
   POI: 'POI',
 
