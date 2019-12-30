@@ -831,26 +831,30 @@ export default class Friend extends Component {
    * 发送到第三方服务器
    */
   sendFile = async (message, filePath, talkId, msgId, cb) => {
-    let res = await SMessageService.sendFileWithThirdServer(
-      MSGConstant.FILE_UPLOAD_SERVER_URL,
-      filePath,
-      this.props.user.currentUser.userId,
-      talkId,
-      msgId,
-    )
+    try {
+      let res = await SMessageService.sendFileWithThirdServer(
+        MSGConstant.FILE_UPLOAD_SERVER_URL,
+        filePath,
+        this.props.user.currentUser.userId,
+        talkId,
+        msgId,
+      )
 
-    let msg = this.getMsgByMsgId(talkId, msgId)
-    msg.originMsg.message.message.queueName = res.queueName
-    MessageDataHandle.editMessage({
-      userId: this.props.user.currentUser.userId,
-      talkId: talkId,
-      msgId: msgId,
-      editItem: msg,
-    })
+      let msg = this.getMsgByMsgId(talkId, msgId)
+      msg.originMsg.message.message.queueName = res.queueName
+      MessageDataHandle.editMessage({
+        userId: this.props.user.currentUser.userId,
+        talkId: talkId,
+        msgId: msgId,
+        editItem: msg,
+      })
 
-    message.message.message.queueName = res.queueName
-    this._sendMessage(JSON.stringify(message), talkId, false)
-    cb && cb()
+      message.message.message.queueName = res.queueName
+      this._sendMessage(JSON.stringify(message), talkId, false)
+      cb && cb(true)
+    } catch (error) {
+      cb && cb(false)
+    }
   }
 
   /**
