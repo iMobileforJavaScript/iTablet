@@ -137,6 +137,9 @@ export default class LicensePage extends Component {
       .then(async serialNumber => {
         if (serialNumber !== null) {
           cb(serialNumber)
+        } else {
+          await SMap.clearLocalLicense()
+          this.getLicense()
         }
       })
       .catch(() => {})
