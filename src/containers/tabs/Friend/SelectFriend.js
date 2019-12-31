@@ -226,6 +226,7 @@ export default class SelectFriend extends Component {
             confirmBtnVisible={true}
             cancelBtnVisible={true}
             confirmAction={() => {
+              this.Dialog.setDialogVisible(false)
               this.callBack &&
                 this.callBack(
                   this.state.targetUser,
