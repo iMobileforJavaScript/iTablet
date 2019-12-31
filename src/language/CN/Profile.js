@@ -205,6 +205,8 @@ const Profile = {
     '当前许可不包括该模块，该模块的部分功能将不可用！！！',
   LICENSE_NO_NATIVE_OFFICAL:
     '没有本地正式许可文件，请在/iTablet/license/文件夹下添加Official_License许可文件',
+  LICENSE_NOT_ITABLET_OFFICAL:
+    '该正式许可不是iTablet内激活的许可，将导致iTablet部分功能不可用，请到许可页面清除许可后重新申请',
   LICENSE_NATIVE_EXPIRE: '本地许可无效',
   //许可模块
   Core_Dev: '核心开发模块',
