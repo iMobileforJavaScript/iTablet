@@ -205,6 +205,7 @@ export default class Map3D extends React.Component {
       SScene.openScence(this.name).then(result => {
         if (!result) {
           this.container.setLoading(false)
+          this.mapLoaded = true
           return
         }
         SScene.setNavigationControlVisible(false)
