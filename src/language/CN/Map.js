@@ -208,7 +208,7 @@ const Map_Main_Menu = {
   THEME_HEATMAP: '热力图',
 
   THEME_ALL_SELECTED: '全部选中',
-  THEME_ALL_CANCEL: '全部选中',
+  THEME_ALL_CANCEL: '全部取消',
   THEME_HIDE_SYSTEM_FIELDS: '隐藏系统字段',
   THEME_EXPRESSION: '表达式',
   THEME_UNIQUE_EXPRESSION: '单值表达式',
