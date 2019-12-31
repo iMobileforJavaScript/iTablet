@@ -729,6 +729,7 @@ export default class ToolBarSectionList extends React.Component {
         ItemSeparatorComponent={this.renderSeparator}
         renderSectionFooter={this.renderSectionFooter}
         initialNumToRender={this.props.initialNumToRender}
+        stickySectionHeadersEnabled={true}
       />
     )
   }

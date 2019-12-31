@@ -356,6 +356,9 @@ class AppRoot extends Component {
         GLOBAL.modulesNumber=number
       }
 
+    }else if(serialNumber === '' && !status.isTrailLicense)
+    {
+      GLOBAL.isNotItableLicenseDialog.setDialogVisible(true)
     }
 
   }
@@ -906,6 +909,49 @@ class AppRoot extends Component {
     
   }
 
+  //提示正式许可不是itablet app激活的许可
+  renderIsNotItabletLicenseDialog = () => {
+    return (<Dialog
+      ref={ref => (GLOBAL.isNotItableLicenseDialog = ref)}
+      showBtns={false}
+      type={Dialog.Type.NON_MODAL}
+      opacity={1}
+      opacityStyle={styles.opacityView}
+      style={styles.dialogBackground}
+    >
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={{fontSize: scaleSize(24),
+            height: scaleSize(120),
+            color: color.theme_white,
+            marginTop: scaleSize(5),
+            marginLeft: scaleSize(10),
+            marginRight: scaleSize(10),
+            textAlign: 'center',}}>
+          {getLanguage(GLOBAL.language).Profile.LICENSE_NOT_ITABLET_OFFICAL}
+        </Text>
+        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white }}></View>
+        <TouchableOpacity
+          style={{height: scaleSize(60),
+            width: '100%',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'}}
+          onPress={()=>{ GLOBAL.isNotItableLicenseDialog.setDialogVisible(false)}}
+        >
+          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack, }}>
+            {getLanguage(global.language).Prompt.CONFIRM}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Dialog>
+    )
+    
+  }
+
   renderSimpleDialog = () => {
     return <SimpleDialog ref={ref => global.SimpleDialog = ref}/>
   }
@@ -939,6 +985,7 @@ class AppRoot extends Component {
         {this.renderImportDialog()}
         {this.renderLicenseNotModuleDialog()}
         {this.renderNoNativeOfficialLicenseDialog()}
+        {this.renderIsNotItabletLicenseDialog()}
         {!this.props.isAgreeToProtocol && this._renderProtocolDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
