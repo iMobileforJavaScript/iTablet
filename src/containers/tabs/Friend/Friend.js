@@ -245,9 +245,11 @@ export default class Friend extends Component {
     }
     this.props.setConsumer(consumer)
     this.endCheckAvailability()
+    this.checkAvailability = true
     //每隔一分钟查询连接到服务器的consumer
     this.interval = setInterval(async () => {
       try {
+        if (!this.checkAvailability) return
         let consumer = await SMessageServiceHTTP.getConsumer(
           this.props.user.currentUser.userId,
         )
@@ -273,6 +275,7 @@ export default class Friend extends Component {
   }
 
   endCheckAvailability = () => {
+    this.checkAvailability = false
     this.interval && clearInterval(this.interval)
   }
 
