@@ -119,7 +119,10 @@ export default class PopupModal extends PureComponent {
         onPress={async () => {
           try {
             this._onClose()
-            global.Loading.setLoading(true, 'deleting')
+            global.Loading.setLoading(
+              true,
+              getLanguage(global.language).Prompt.DELETING_SERVICE,
+            )
 
             let deletPromise
             let requestPromise

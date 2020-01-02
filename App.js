@@ -322,10 +322,7 @@ class AppRoot extends Component {
   handleStateChange = appState => {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
       if (appState === 'active') {
-        SMessageService.resume()
         this.reCircleLogin()
-      }else if(appState === 'background'){
-        SMessageService.suspend()
       }
     }
 

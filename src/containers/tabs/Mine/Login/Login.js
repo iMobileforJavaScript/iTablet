@@ -144,16 +144,52 @@ class Login extends React.Component {
           Toast.show(getLanguage(global.language).Profile.LOGIN_CURRENT)
           return
         }
-        if (isEmail) {
-          result = await JSOnlineService.login(userName, password, 'EMAIL_TYPE')
-          result = await SOnlineService.login(userName, password)
-        } else {
-          result = await JSOnlineService.login(userName, password, 'PHONE_TYPE')
-          result = await SOnlineService.loginWithPhoneNumber(userName, password)
+        let startLogin = async () => {
+          let loginResult
+          if (isEmail) {
+            loginResult = await JSOnlineService.login(
+              userName,
+              password,
+              'EMAIL_TYPE',
+            )
+            if (loginResult === true) {
+              loginResult = await SOnlineService.login(userName, password)
+            }
+          } else {
+            loginResult = await JSOnlineService.login(
+              userName,
+              password,
+              'PHONE_TYPE',
+            )
+            if (loginResult === true) {
+              loginResult = await SOnlineService.loginWithPhoneNumber(
+                userName,
+                password,
+              )
+            }
+          }
+          return loginResult
         }
+        result = startLogin()
       } else {
         Toast.show(getLanguage(this.props.language).Prompt.NO_NETWORK)
         return
+      }
+
+      let timeout = sec => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve('timeout')
+          }, 1000 * sec)
+        })
+      }
+
+      let res = await new Promise.race([result, timeout(20)])
+      if (res === 'timeout') {
+        Toast.show(getLanguage(this.props.language).Profile.LOGIN_TIMEOUT)
+        return
+      } else {
+        result = res
       }
 
       userInfo = await JSOnlineService.getUserInfo(userName, isEmail)
@@ -171,8 +207,11 @@ class Login extends React.Component {
           isEmail: isEmail,
           userType: UserType.COMMON_USER,
         }
-        result = await FriendListFileHandle.initFriendList(user)
-        if (result) {
+        let friendListResult = FriendListFileHandle.initFriendList(user)
+        result = await new Promise.race([friendListResult, timeout(15)])
+        if (result === 'timeout') {
+          Toast.show(getLanguage(this.props.language).Profile.LOGIN_TIMEOUT)
+        } else if (result) {
           global.isLogging = true
           this.props.setUser(user)
           if (!this.state.isFirstLogin) {
