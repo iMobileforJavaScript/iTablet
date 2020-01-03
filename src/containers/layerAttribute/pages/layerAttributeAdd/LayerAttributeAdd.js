@@ -93,9 +93,9 @@ export default class LayerAttributeAdd extends React.Component {
 
   confirmValidate = () => {
     let isConfrim = false
-    if (!this.state.name) {
+    if (!this.state.name || this.state.name === '') {
       Toast.show(global.language === 'CN' ? '请输入名称' : 'Please input name')
-    } else if (!this.state.caption) {
+    } else if (!this.state.caption || this.state.caption === '') {
       Toast.show(
         global.language === 'CN' ? '请输入别名' : 'Please input caption',
       )
@@ -121,8 +121,7 @@ export default class LayerAttributeAdd extends React.Component {
       Toast.show(
         global.language === 'CN' ? '请选择是否必选' : 'Please select required',
       )
-    }
-    if (
+    } else if (
       this.state.isRequired &&
       (this.state.defaultValue === '' || this.state.defaultValue === undefined)
     ) {
@@ -425,7 +424,7 @@ export default class LayerAttributeAdd extends React.Component {
           key={'名称'}
           disable={this.state.isEdit}
           defaultValue={this.state.name}
-          type={Row.Type.INPUT}
+          type={Row.Type.INPUT_WRAP}
           title={global.language === 'CN' ? '名称' : 'Name'}
           getValue={this.getInputValue}
         />
@@ -435,7 +434,7 @@ export default class LayerAttributeAdd extends React.Component {
           key={'别名'}
           disable={this.state.isEdit}
           defaultValue={this.state.caption}
-          type={Row.Type.INPUT}
+          type={Row.Type.INPUT_WRAP}
           title={global.language === 'CN' ? '别名' : 'Caption'}
           getValue={this.getInputValue}
         />

@@ -11,6 +11,7 @@ import ChooseNumber from './ChooseNumber'
 import LabelBtn from './LabelBtn'
 import ChooseColor from './ChooseColor'
 import styles from './styles'
+import { Input } from '../../components'
 
 export default class Row extends PureComponent {
   props: {
@@ -99,6 +100,29 @@ export default class Row extends PureComponent {
           {this.props.disable && <View style={styles.inputOverLayer} />}
         </View>
       )
+    } else if (this.props.type === 'input_wrap') {
+      right = (
+        <View style={styles.inputView}>
+          <Input
+            inputStyle={[styles.input, this.props.customRightStyle]}
+            accessible={true}
+            accessibilityLabel={'输入框'}
+            // placeholder={this.state.placeholder}
+            // placeholderTextColor={color.themePlaceHolder}
+            value={this.state.value + ''}
+            // onChangeText={this.labelChange}
+            onChangeText={text => {
+              this.labelChange(text)
+            }}
+            onClear={() => {
+              this.labelChange('')
+            }}
+            returnKeyType={'done'}
+            showClear={true}
+          />
+          {this.props.disable && <View style={styles.inputOverLayer} />}
+        </View>
+      )
     } else if (this.props.type === 'radio_group') {
       right = (
         <RadioGroup
@@ -160,6 +184,7 @@ export default class Row extends PureComponent {
 
 Row.Type = {
   INPUT: 'input',
+  INPUT_WRAP: 'input_wrap',
   RADIO: 'radio',
   RADIO_GROUP: 'radio_group',
   CHOOSE_NUMBER: 'choose_number',
