@@ -163,7 +163,7 @@ const Prompt = {
   PROJECTED_COORDINATE_SYSTEM: '投影坐标系: ',
   FIELD_TYPE: '字段类型: ',
 
-  PLEASE_LOGIN_AND_SHARE: '请登陆后再分享',
+  PLEASE_LOGIN_AND_SHARE: '请登录后再分享',
   SHARING: '分享中',
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
