@@ -241,7 +241,9 @@ class AppRoot extends Component {
     } else {
       this.props.setLanguage(this.props.language)
     }
-    this.inspectEnvironment()
+    setTimeout(() => {
+      this.inspectEnvironment()
+    }, 2000)
     this.login()
     this.reCircleLogin()
     if(Platform.OS === 'android') {
