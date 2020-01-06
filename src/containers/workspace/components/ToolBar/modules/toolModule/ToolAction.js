@@ -857,11 +857,11 @@ function commit(type) {
         isRegionLayer ||
         isTextLayer
       ) {
-        isTaggingLayer &&
-          SMap.setTaggingGrid(
-            currentLayer.datasetName,
-            _params.user.currentUser.userName,
-          )
+        // isTaggingLayer &&
+        //   SMap.setTaggingGrid(
+        //     currentLayer.datasetName,
+        //     _params.user.currentUser.userName,
+        //   )
         SMap.submit()
         SMap.refreshMap()
         SMap.setAction(Action.PAN)
