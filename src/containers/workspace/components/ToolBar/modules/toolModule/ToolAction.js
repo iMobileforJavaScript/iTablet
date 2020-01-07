@@ -355,7 +355,9 @@ async function point() {
   let isTaggingLayer = false,
     isPointLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isPointLayer = currentLayer.type === DatasetType.POINT
   }
@@ -377,7 +379,9 @@ async function words() {
   let isTaggingLayer = false,
     isTextLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isTextLayer = currentLayer.type === DatasetType.TEXT
   }
@@ -399,7 +403,9 @@ async function pointline() {
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
@@ -421,7 +427,9 @@ async function freeline() {
   let isTaggingLayer = false,
     isLineLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isLineLayer = currentLayer.type === DatasetType.LINE
   }
@@ -443,7 +451,9 @@ async function pointcover() {
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
@@ -465,7 +475,9 @@ async function freecover() {
   let isTaggingLayer = false,
     isRegionLayer = false
   if (currentLayer) {
-    isTaggingLayer = currentLayer.type === DatasetType.CAD
+    let layerType = LayerUtils.getLayerType(currentLayer)
+    isTaggingLayer = layerType === 'TAGGINGLAYER'
+    // isTaggingLayer = currentLayer.type === DatasetType.CAD
     // && currentLayer.datasourceAlias.match(reg)
     isRegionLayer = currentLayer.type === DatasetType.REGION
   }
@@ -550,7 +562,9 @@ function captureImage() {
     let currentLayer = _params.currentLayer
     // let reg = /^Label_(.*)#$/
     if (currentLayer) {
-      let isTaggingLayer = currentLayer.type === DatasetType.CAD
+      let layerType = LayerUtils.getLayerType(currentLayer)
+      isTaggingLayer = layerType === 'TAGGINGLAYER'
+      // let isTaggingLayer = currentLayer.type === DatasetType.CAD
       // && currentLayer.datasourceAlias.match(reg)
       if (isTaggingLayer) {
         // await SMap.setTaggingGrid(
@@ -837,25 +851,27 @@ function commit(type) {
     (async function() {
       let currentLayer = _params.currentLayer
       // let reg = /^Label_(.*)#$/
-      let isTaggingLayer = false,
-        isPointLayer = false,
-        isLineLayer = false,
-        isRegionLayer = false,
-        isTextLayer = false
+      let isTaggingLayer = false
+        // isPointLayer = false,
+        // isLineLayer = false,
+        // isRegionLayer = false,
+        // isTextLayer = false
       if (currentLayer && !currentLayer.themeType) {
-        isTaggingLayer = currentLayer.type === DatasetType.CAD
+        let layerType = LayerUtils.getLayerType(currentLayer)
+        isTaggingLayer = layerType === 'TAGGINGLAYER'
+        // isTaggingLayer = currentLayer.type === DatasetType.CAD
         // && currentLayer.datasourceAlias.match(reg)
-        isPointLayer = currentLayer.type === DatasetType.POINT
-        isLineLayer = currentLayer.type === DatasetType.LINE
-        isRegionLayer = currentLayer.type === DatasetType.REGION
-        isTextLayer = currentLayer.type === DatasetType.TEXT
+        // isPointLayer = currentLayer.type === DatasetType.POINT
+        // isLineLayer = currentLayer.type === DatasetType.LINE
+        // isRegionLayer = currentLayer.type === DatasetType.REGION
+        // isTextLayer = currentLayer.type === DatasetType.TEXT
       }
       if (
-        isTaggingLayer ||
-        isPointLayer ||
-        isLineLayer ||
-        isRegionLayer ||
-        isTextLayer
+        isTaggingLayer
+        // isPointLayer ||
+        // isLineLayer ||
+        // isRegionLayer ||
+        // isTextLayer
       ) {
         isTaggingLayer &&
           SMap.setTaggingGrid(
