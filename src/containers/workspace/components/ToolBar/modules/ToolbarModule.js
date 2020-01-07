@@ -3,7 +3,6 @@ import ToolbarBtnType from '../ToolbarBtnType'
 import { getLanguage } from '../../../../../language'
 import SMap from 'imobile_for_reactnative/NativeModule/interfaces/mapping/SMap'
 import { MoreData, MapData } from '../data'
-import AiAssistant from '../AiAssistant'
 import {
   startModule,
   styleModule,
@@ -17,6 +16,7 @@ import {
   fly3DModule,
   tool3DModule,
   legendModule,
+  aiModule,
 } from '../modules'
 
 // 更新类中的数据
@@ -132,7 +132,7 @@ async function getTabBarData(type, params = {}) {
   } else if (type === ConstToolType.MAP_PLOTTING_ANIMATION_ITEM) {
     tabBarData = getPlotAnimationData(type)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
-    tabBarData = AiAssistant.getAiAssistantData(type, params)
+    tabBarData = await aiModule().getData(type, params)
   } else {
     tabBarData = MapData.getMapData(type)
   }

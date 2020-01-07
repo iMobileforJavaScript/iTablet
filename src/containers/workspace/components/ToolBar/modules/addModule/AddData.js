@@ -254,7 +254,7 @@ async function getData(type, params = {}) {
   switch (type) {
     case ConstToolType.MAP_THEME_ADD_DATASET:
       return getDatasets(type, params)
-    case ConstToolType.MAP_THEME_ADD_UDB:
+    case ConstToolType.MAP_ADD:
       return await getUDBsAndMaps()
     case ConstToolType.MAP_NAVIGATION_ADD_UDB:
       return getAllDatas()

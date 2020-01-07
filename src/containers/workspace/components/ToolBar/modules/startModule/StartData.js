@@ -48,6 +48,7 @@ function getData(type, params) {
         // },
       ]
       break
+    case ConstToolType.MAP_START:
     case ConstToolType.MAP_ANALYST_START:
     case ConstToolType.MAP_EDIT_START:
     case ConstToolType.MAP_COLLECTION_START:

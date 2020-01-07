@@ -3168,7 +3168,7 @@ async function getUnifyStyleAdd() {
     ]
   }
 
-  const type = ConstToolType.MAP_THEME_ADD_UDB
+  const type = ConstToolType.MAP_ADD
   const height =
     ToolbarModule.getParams().device.orientation === 'LANDSCAPE'
       ? ConstToolType.THEME_HEIGHT[3]

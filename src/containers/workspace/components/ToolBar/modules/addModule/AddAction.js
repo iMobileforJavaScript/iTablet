@@ -14,7 +14,7 @@ import NavigationService from '../../../../../NavigationService'
  */
 async function listAction(type, params = {}) {
   if (
-    type === ConstToolType.MAP_THEME_ADD_UDB ||
+    type === ConstToolType.MAP_ADD ||
     type === ConstToolType.MAP_NAVIGATION_ADD_UDB
   ) {
     // 数据源和地图列表点击事件
@@ -145,7 +145,7 @@ function toolbarBack() {
   const _data = ToolbarModule.getData()
   const lastData = _data.lastData || {}
   let selectList = _data.selectList
-  _params.setToolbarVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+  _params.setToolbarVisible(true, ConstToolType.MAP_ADD, {
     isFullScreen: true,
     isTouchProgress: false,
     showMenuDialog: false,
@@ -156,7 +156,7 @@ function toolbarBack() {
   })
 
   ToolbarModule.setData({
-    type: ConstToolType.MAP_THEME_ADD_UDB,
+    type: ConstToolType.MAP_ADD,
     getData: AddData.getData,
     data: lastData,
     actions,

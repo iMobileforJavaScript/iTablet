@@ -1,8 +1,4 @@
-/**
- * AI助手
- */
-import { getThemeAssets } from '../../../../assets'
-import { getLanguage } from '../../../../language'
+import { getLanguage } from '../../../../../../language/index'
 import {
   SMeasureView,
   // DatasetType,
@@ -10,22 +6,17 @@ import {
   SMap,
   SCollectSceneFormView,
 } from 'imobile_for_reactnative'
-import NavigationService from '../../../NavigationService'
-import { Toast } from '../../../../utils'
-import { FileTools } from '../../../../native'
-import { ConstPath } from '../../../../constants'
-import FetchUtils from '../../../../utils/FetchUtils'
-import { Platform } from 'react-native'
-
-let _params = {}
-
-function setParams(params) {
-  _params = params
-}
+import NavigationService from '../../../../../NavigationService'
+import { Toast } from '../../../../../../utils/index'
+import { FileTools } from '../../../../../../native/index'
+import { ConstPath } from '../../../../../../constants/index'
+import FetchUtils from '../../../../../../utils/FetchUtils'
+import ToolbarModule from '../ToolbarModule'
 
 //违章采集
 function illegallyParkCollect() {
   (async function() {
+    let _params = ToolbarModule.getParams()
     let dataList = await SMap.getTaggingLayers(
       _params.user.currentUser.userName,
     )
@@ -52,6 +43,7 @@ function illegallyParkCollect() {
 //户型图采集
 function arMeasureCollect() {
   (async function() {
+    let _params = ToolbarModule.getParams()
     let isSupportedARCore = await SMeasureView.isSupportedARCore()
     if (!isSupportedARCore) {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
@@ -78,6 +70,7 @@ function arMeasureCollect() {
 //AI分类
 function aiClassify() {
   (async function() {
+    let _params = ToolbarModule.getParams()
     if (GLOBAL.isDownload) {
       this.homePath = await FileTools.appendingHomeDirectory()
       let dustbinPath =
@@ -133,6 +126,7 @@ function getDownloadData(key, fileName) {
 
 function _downloadData(downloadData) {
   (async function() {
+    let _params = ToolbarModule.getParams()
     let keyword = downloadData.fileName
     let dataUrl = await FetchUtils.getFindUserDataUrl(
       'xiezhiyan123',
@@ -176,6 +170,7 @@ function _downloadData(downloadData) {
 //目标采集
 function aiDetect() {
   (async function() {
+    let _params = ToolbarModule.getParams()
     let dataList = await SMap.getTaggingLayers(
       _params.user.currentUser.userName,
     )
@@ -212,6 +207,7 @@ function polymerizeCollect() {
 //高精度采集
 function collectSceneForm() {
   (async function() {
+    let _params = ToolbarModule.getParams()
     let isSupportedARCore = await SMeasureView.isSupportedARCore()
     if (!isSupportedARCore) {
       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
@@ -256,117 +252,12 @@ function collectSceneForm() {
   }.bind(this)())
 }
 
-// //AR投放
-// function arCastModelOperate() {
-//   (async function() {
-//     let isSupportedARCore = await SMeasureView.isSupportedARCore()
-//     if (!isSupportedARCore) {
-//       Toast.show(getLanguage(_params.language).Prompt.DONOT_SUPPORT_ARCORE)
-//       return
-//     }
-//     if (GLOBAL.showAIDetect) {
-//       GLOBAL.isswitch = true
-//       ;(await GLOBAL.toolBox) && GLOBAL.toolBox.switchAr()
-//     }
-//     const datasourceAlias = 'AR投放'
-//     const datasetName = 'CastModelOperate'
-//     NavigationService.navigate('CastModelOperateView', {
-//       datasourceAlias,
-//       datasetName,
-//     })
-//   }.bind(this)())
-// }
-
-function getAiAssistantData(type, params) {
-  _params = params
-  let buttons = []
-  let data = [
-    {
-      //目标分类
-      key: 'aiClassify',
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_CLASSIFY,
-      action: aiClassify,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_classify_light,
-    },
-    {
-      //目标采集
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_TARGET_COLLECT,
-      action: aiDetect,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_collect_light,
-    },
-    {
-      //态势采集
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_AGGREGATE_COLLECT,
-      action: polymerizeCollect,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar
-        .rightbar_ai_aggregate_collect_light,
-    },
-    {
-      //违章采集
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_VIOLATION_COLLECT,
-      action: illegallyParkCollect,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_violation_light,
-    },
-    // {
-    //   //路面采集
-    //   key: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
-    //   title: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_ROAD_COLLECT,
-    //   // action:openMap,
-    //   size: 'large',
-    //   image: getThemeAssets().ar.icon_ar,
-    // },
-    {
-      //高精度采集
-      key: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_SCENE_FORM_COLLECT,
-      action: collectSceneForm,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_poi_light,
-    },
-    {
-      //户型图采集
-      key: 'arMeasureCollect',
-      title: getLanguage(global.language).Map_Main_Menu
-        .MAP_AR_AI_ASSISTANT_LAYOUT_COLLECT,
-      action: arMeasureCollect,
-      size: 'large',
-      image: getThemeAssets().ar.functiontoolbar.rightbar_ai_layout_light,
-    },
-    // {
-    //   //AR投放
-    //   key: 'arCastModelOperate',
-    //   title: getLanguage(global.language).Map_Main_Menu
-    //     .MAP_AR_AI_ASSISTANT_CAST_MODEL_OPERATE,
-    //   action: arCastModelOperate,
-    //   size: 'large',
-    //   image: getThemeAssets().ar.functiontoolbar.ar_cast,
-    // },
-  ]
-  if (Platform.OS === 'ios') {
-    data.splice(2, 3)
-  }
-  return { data, buttons }
-}
-
 export default {
-  setParams,
-  getAiAssistantData,
+  illegallyParkCollect,
+  arMeasureCollect,
+  aiClassify,
+  _downloadData,
+  aiDetect,
+  polymerizeCollect,
+  collectSceneForm,
 }

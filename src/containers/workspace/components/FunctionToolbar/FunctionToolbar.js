@@ -22,8 +22,7 @@ const EDIT = 'EDIT'
  * @deprecated 移除当前的类型，使用constants
  */
 export { COLLECTION, NETWORK, EDIT }
-import { getLanguage } from '../../../../language/index'
-import { getThemeAssets } from '../../../../assets'
+import { getLanguage } from '../../../../language'
 import {
   ToolbarModule,
   startModule,
@@ -39,6 +38,7 @@ import {
   fly3DModule,
   tool3DModule,
   navigationModule,
+  aiModule,
 } from '../ToolBar/modules'
 
 const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -120,26 +120,6 @@ export default class FunctionToolbar extends React.Component {
   isMapIndoorNavigation = () => {
     this.props.setMap2Dto3D(false)
     GLOBAL.toolBox.props.setOpenOnlineMap(false)
-  }
-
-  //AI助手
-  aiAssistant = type => {
-    const toolRef = this.props.getToolRef()
-    let height =
-      this.props.device.orientation === 'LANDSCAPE'
-        ? ConstToolType.HEIGHT[0]
-        : ConstToolType.HEIGHT[2]
-    if (Platform.OS === 'ios') {
-      height = ConstToolType.HEIGHT[0]
-    }
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, type, {
-        containerType: 'table',
-        column: 4,
-        height: height,
-      })
-    }
   }
 
   // showMenuAlertDialog = () => {
@@ -269,11 +249,11 @@ export default class FunctionToolbar extends React.Component {
       case constants.MAP_EDIT:
         data = [
           startModule(
-            ConstToolType.MAP_EDIT_START,
+            ConstToolType.MAP_START,
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_ADD,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           styleModule(
@@ -330,7 +310,7 @@ export default class FunctionToolbar extends React.Component {
         }
         data = [
           startModule(
-            ConstToolType.MAP_THEME_START,
+            ConstToolType.MAP_START,
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           themeModule(
@@ -356,11 +336,11 @@ export default class FunctionToolbar extends React.Component {
       case constants.MAP_ANALYST:
         data = [
           startModule(
-            ConstToolType.MAP_ANALYST_START,
+            ConstToolType.MAP_START,
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_ADD,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           analysisModule(
@@ -385,11 +365,11 @@ export default class FunctionToolbar extends React.Component {
         isLicenseNotValid = !this.getLicenseValid(8)
         data = [
           startModule(
-            ConstToolType.MAP_PLOTTING_START,
+            ConstToolType.MAP_START,
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_ADD,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           plotModule(
@@ -417,27 +397,21 @@ export default class FunctionToolbar extends React.Component {
       case constants.MAP_AR:
         data = [
           startModule(
-            ConstToolType.MAP_COLLECTION_START,
+            ConstToolType.MAP_START,
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_ADD,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           styleModule(
             ConstToolType.MAP_STYLE,
             getLanguage(this.props.language).Map_Main_Menu.STYLE,
           ),
-          {
-            key: 'AI助手',
-            title: getLanguage(this.props.language).Map_Main_Menu
-              .MAP_AR_AI_ASSISTANT,
-            //'风格',
-            action: () => this.aiAssistant(ConstToolType.MAP_AR_AIASSISTANT),
-            size: 'large',
-            image: getThemeAssets().ar.icon_ai_assistant,
-            selectMode: 'flash',
-          },
+          aiModule(
+            ConstToolType.MAP_AR_AIASSISTANT,
+            getLanguage(this.props.language).Map_Main_Menu.MAP_AR_AI_ASSISTANT,
+          ),
         ]
         break
       case constants.MAP_NAVIGATION:
@@ -473,7 +447,7 @@ export default class FunctionToolbar extends React.Component {
             getLanguage(this.props.language).Map_Main_Menu.START,
           ),
           addModule(
-            ConstToolType.MAP_THEME_ADD_UDB,
+            ConstToolType.MAP_ADD,
             getLanguage(this.props.language).Map_Main_Menu.OPEN,
           ),
           collectionModule(

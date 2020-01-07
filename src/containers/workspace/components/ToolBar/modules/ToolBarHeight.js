@@ -96,7 +96,7 @@ function getToolbarHeight(type, currentHeight) {
         column = 5
       }
       break
-    case ConstToolType.MAP_THEME_ADD_UDB:
+    case ConstToolType.MAP_ADD:
     case ConstToolType.MAP_THEME_ADD_DATASET:
     case ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS:
     case ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION:

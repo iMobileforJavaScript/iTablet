@@ -683,7 +683,7 @@ async function listAction(type, params = {}) {
   const _params = ToolbarModule.getParams()
   const themeCreateType = ToolbarModule.getData().themeCreateType
   let item = params.item || {}
-  if (type === ConstToolType.MAP_THEME_ADD_UDB) {
+  if (type === ConstToolType.MAP_ADD) {
     // 数据源和地图列表点击事件
     // 添加数据集
     _params.setContainerLoading &&

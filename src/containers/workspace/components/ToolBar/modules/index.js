@@ -14,6 +14,7 @@ import plotModule from './plotModule'
 import tool3DModule from './tool3DModule'
 import navigationModule from './navigationModule'
 import legendModule from './legendModule'
+import aiModule from './aiModule'
 export {
   ToolbarModule,
   startModule,
@@ -30,4 +31,5 @@ export {
   tool3DModule,
   navigationModule,
   legendModule,
+  aiModule,
 }
