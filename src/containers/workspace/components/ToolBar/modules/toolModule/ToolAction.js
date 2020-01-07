@@ -851,7 +851,7 @@ function commit(type) {
     (async function() {
       let currentLayer = _params.currentLayer
       // let reg = /^Label_(.*)#$/
-      let isTaggingLayer = false,
+      let isTaggingLayer = false
         // isPointLayer = false,
         // isLineLayer = false,
         // isRegionLayer = false,
@@ -861,10 +861,10 @@ function commit(type) {
         isTaggingLayer = layerType === 'TAGGINGLAYER'
         // isTaggingLayer = currentLayer.type === DatasetType.CAD
         // && currentLayer.datasourceAlias.match(reg)
-        isPointLayer = currentLayer.type === DatasetType.POINT
-        isLineLayer = currentLayer.type === DatasetType.LINE
-        isRegionLayer = currentLayer.type === DatasetType.REGION
-        isTextLayer = currentLayer.type === DatasetType.TEXT
+        // isPointLayer = currentLayer.type === DatasetType.POINT
+        // isLineLayer = currentLayer.type === DatasetType.LINE
+        // isRegionLayer = currentLayer.type === DatasetType.REGION
+        // isTextLayer = currentLayer.type === DatasetType.TEXT
       }
       if (
         isTaggingLayer
