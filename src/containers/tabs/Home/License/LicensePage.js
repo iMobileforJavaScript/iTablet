@@ -406,9 +406,13 @@ export default class LicensePage extends Component {
         ) : (
           <View />
         )}
-        {this.renderTouchableItemView(
-          getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
-          this.applyTrialLicense,
+        {this.state.status.isTrailLicense ? (
+          this.renderTouchableItemView(
+            getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
+            this.applyTrialLicense,
+          )
+        ) : (
+          <View />
         )}
         <View style={{ height: 10 }} />
 
