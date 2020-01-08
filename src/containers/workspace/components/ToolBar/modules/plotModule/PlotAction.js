@@ -69,7 +69,8 @@ async function geometrySelected(event) {
         Toast.show(
           getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
         )
-      } else {
+        SMap.setAction(Action.PAN)
+      }else{
         params.setToolbarVisible(
           true,
           ConstToolType.PLOT_ANIMATION_NODE_CREATE,
