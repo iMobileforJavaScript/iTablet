@@ -21,6 +21,7 @@ export default class ScaleView extends React.Component {
   constructor(props) {
     super(props)
     this.left = new Animated.Value(scaleSize(120))
+    this.bottom = new Animated.Value(scaleSize(120))
     this.state = {
       width: scaleSize(65),
       title: '',
@@ -63,10 +64,16 @@ export default class ScaleView extends React.Component {
 
   showFullMap = (visible, immediately = false) => {
     if (this.state.visible === visible) return
-    Animated.timing(this.left, {
-      toValue: visible ? scaleSize(120) : scaleSize(30),
-      duration: immediately ? 0 : 300,
-    }).start()
+    Animated.parallel([
+      Animated.timing(this.left, {
+        toValue: visible ? scaleSize(120) : scaleSize(30),
+        duration: immediately ? 0 : 300,
+      }),
+      Animated.timing(this.bottom, {
+        toValue: visible ? scaleSize(120) : scaleSize(30),
+        duration: immediately ? 0 : 300,
+      }),
+    ]).start()
     this.setState({
       visible,
     })
@@ -117,7 +124,7 @@ export default class ScaleView extends React.Component {
         style={{
           position: 'absolute',
           left: this.left,
-          bottom: scaleSize(120),
+          bottom: this.bottom,
           width: scaleSize(150),
           height: scaleSize(40),
         }}
