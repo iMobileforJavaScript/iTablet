@@ -198,6 +198,39 @@ export default class OnlineServicesUtils {
       return false
     }
   }
+
+  /**
+   * 根据类型查找数据
+   * @param {*} types 类型数组
+   * @param {*} orderBy
+   */
+  async getPublicDataByTypes(types, params) {
+    let { orderBy, orderType, pageSize, currentPage } = { ...params }
+    orderBy = orderBy || 'LASTMODIFIEDTIME'
+    orderType = orderType || 'DESC'
+    pageSize = pageSize || 9
+    currentPage = currentPage || 1
+    let url
+    if (!types || types.length === 0) {
+      url = this.serverUrl + `/datas.rjson?`
+    } else if (types.length === 1) {
+      url = this.serverUrl + `/datas.rjson?type=${types[0]}`
+    } else {
+      url = this.serverUrl + `/datas.rjson?types=[${types}]`
+    }
+
+    url += `&orderBy=${orderBy}&orderType=${orderType}`
+    url += `&pageSize=${pageSize}&currentPage=${currentPage}`
+
+    let response = await fetch(url)
+    let responseObj = await response.json()
+
+    if (responseObj) {
+      return responseObj
+    } else {
+      return false
+    }
+  }
   /************************ 公共数据相关（不用登陆）end ***************************/
 
   /************************ online账号相关 ***********************/
