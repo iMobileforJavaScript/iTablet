@@ -72,10 +72,11 @@ export default class ClassifyView extends React.Component {
   }
 
   componentDidMount() {
+    this.Loading.setLoading(true)
     InteractionManager.runAfterInteractions(() => {
       // 初始化数据
       (async function() {
-        SAIClassifyView.initAIClassify(
+        await SAIClassifyView.initAIClassify(
           this.datasourceAlias,
           this.datasetName,
           this.props.language,
@@ -92,6 +93,7 @@ export default class ClassifyView extends React.Component {
             this.recognizeImage,
           )
         }
+        this.Loading.setLoading(false)
       }.bind(this)())
     })
   }
@@ -220,7 +222,7 @@ export default class ClassifyView extends React.Component {
         .MAP_AR_AI_ASSISTANT_CLASSIFY_LOADING,
     )
     const options = {
-      quality: 0.5,
+      quality: 0.7,
       base64: true,
       pauseAfterCapture: true,
       orientation: 'portrait',
