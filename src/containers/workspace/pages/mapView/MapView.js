@@ -235,7 +235,8 @@ export default class MapView extends React.Component {
       currentFloorID: '', //导航模块当前楼层id
       showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
     }
-    this.currentFloorID = ''
+    // this.currentFloorID = ''//有坑，id有可能就是‘’
+    this.currentFloorID = undefined
     //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
     this.searchClickedInfo = {
       isClicked: false,
