@@ -2,6 +2,20 @@ import { FileTools } from '../../../../native'
 import { ConstPath } from '../../../../constants'
 import { SMap, EngineType } from 'imobile_for_reactnative'
 
+async function importWorkspace(item) {
+  let filePath = item.filePath
+  let index = filePath.lastIndexOf('/')
+  let path = filePath.substring(0, index)
+  let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+  await SMap.copyNaviSnmFile(snmFiles)
+  let type = _getWorkspaceType(filePath)
+  let data = {
+    server: filePath,
+    type,
+  }
+  await SMap.importWorkspaceInfo(data)
+}
+
 /**
  * 1.遍历scenes，获取可用的文件夹名
  * 2.生成对应的pxp
@@ -220,6 +234,7 @@ function _getWorkspaceType(path) {
 }
 
 export default {
+  importWorkspace,
   importWorkspace3D,
   importDatasource,
   importTIF,

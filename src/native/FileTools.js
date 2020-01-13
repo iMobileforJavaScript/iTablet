@@ -223,16 +223,8 @@ function getShareResult(handlers) {
   }
 }
 
-function getImportResult() {
-  return FileTools.getImportResult()
-}
-
-function importData() {
-  return FileTools.importData()
-}
-
-function getUri(path) {
-  return FileTools.getUri(path)
+function getImportState() {
+  return FileTools.getImportState()
 }
 
 /**
@@ -403,9 +395,7 @@ export default {
   EnvironmentIsValid,
   addImportExternalData,
   getShareResult,
-  getImportResult,
-  importData,
+  getImportState,
   getThumbnail,
-  getUri,
   getPathListByFilterDeep,
 }

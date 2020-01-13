@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { Container } from '../../../../components'
-import { SOnlineService, SIPortalService, SMap } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -315,17 +315,8 @@ export default class MyLocalData extends Component {
   _onImportWorkspace = async () => {
     try {
       this.onImportStart()
-      let filePath = this.itemInfo.item.filePath
-      let index = filePath.lastIndexOf('/')
-      let path = filePath.substring(0, index)
-      let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
-      await SMap.copyNaviSnmFile(snmFiles)
-      let result = await this.props.importWorkspace({ path: filePath })
-      if (result.msg !== undefined) {
-        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-      } else {
-        Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-      }
+      await DataHandler.importWorkspace(this.itemInfo.item)
+      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
     } catch (e) {
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
     } finally {

@@ -46,6 +46,7 @@ import RNFS from 'react-native-fs'
 import constants from './src/containers/workspace/constants'
 import FriendListFileHandle from './src/containers/tabs/Friend/FriendListFileHandle'
 import { SimpleDialog } from './src/containers/tabs/Friend'
+import DataHandler from './src/containers/tabs/Mine/DataHandler'
 let AppUtils = NativeModules.AppUtils
 
 
@@ -274,7 +275,7 @@ class AppRoot extends Component {
       // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.initOrientation()
-      await this.getImportResult()
+      await this.getImportState()
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
       this.props.openWorkspace({server: path})
@@ -434,8 +435,8 @@ class AppRoot extends Component {
     })
   }
 
-  getImportResult = async () => {
-    let result = await FileTools.getImportResult()
+  getImportState = async () => {
+    let result = await FileTools.getImportState()
     if (result === null)return
     result && this.import.setDialogVisible(true)
   }
@@ -812,21 +813,32 @@ class AppRoot extends Component {
       <Dialog
         ref={ref => (this.import = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
-        confirmAction={() => {
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.YES}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
+        confirmAction={async () => {
           this.import.setDialogVisible(false)
           GLOBAL.Loading.setLoading(
             true,
-            '数据导入中',
+            getLanguage(global.language).Friends.IMPORT_DATA,
           )
-          FileTools.importData().then(result => {
-            GLOBAL.Loading.setLoading(false)
-            result && Toast.show('导入成功')
-          }, () => {
-            GLOBAL.Loading.setLoading(false)
-            Toast.show('导入失败')
-          })
+          let homePath = global.homePath
+          let importPath = homePath + '/iTablet/Import'
+          let filePath = importPath + '/import.zip'
+          let isImport = false
+          if(await FileTools.fileIsExist(filePath)) {
+            await FileTools.unZipFile(filePath, importPath)
+            let dataList = await DataHandler.getExternalData(importPath)
+            //暂时只支持单个工作空间的导入
+            if(dataList.length === 1 && dataList[0].fileType === 'workspace') {
+              await DataHandler.importWorkspace(dataList[0])
+              isImport = true
+            }
+          }
+          FileTools.deleteFile(importPath)
+          isImport
+            ? Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+            : Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
+          GLOBAL.Loading.setLoading(false)
         }}
         cancelAction={ async () => {
           let importPath =ConstPath.Import
