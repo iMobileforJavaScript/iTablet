@@ -93,7 +93,7 @@ static NSString* g_sampleCodeName = @"#";;
   
 #if DEBUG
 
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.1.6"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.43.32"];
 
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -168,7 +168,7 @@ static NSString* g_sampleCodeName = @"#";;
 #pragma mark - 初始化license
 - (void)initEnvironment {
 //  [Environment setOpenGLMode:false];
-  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/%@/",@"license"]];
+  
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/license/%@",@"Trial_License.slm"];
@@ -193,6 +193,7 @@ static NSString* g_sampleCodeName = @"#";;
     [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/license/%@",@""]];
     if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
       NSLog(@"拷贝数据失败");
+    [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/%@/",@"license"]];
   }
 }
 
