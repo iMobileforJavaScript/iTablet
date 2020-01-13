@@ -98,6 +98,15 @@
 		6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE8231516F9005F89FC /* libsqlite3.tbd */; };
 		6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */; };
 		6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBEC23151716005F89FC /* libbz2.tbd */; };
+		614D856723C71A1900BDEC31 /* SegmenationFree-Inception.caffemodel in Resources */ = {isa = PBXBuildFile; fileRef = 614D855E23C71A1900BDEC31 /* SegmenationFree-Inception.caffemodel */; };
+		614D856823C71A1900BDEC31 /* SegmenationFree-Inception.prototxt in Resources */ = {isa = PBXBuildFile; fileRef = 614D855F23C71A1900BDEC31 /* SegmenationFree-Inception.prototxt */; };
+		614D856923C71A1900BDEC31 /* HorizonalFinemapping.caffemodel in Resources */ = {isa = PBXBuildFile; fileRef = 614D856023C71A1900BDEC31 /* HorizonalFinemapping.caffemodel */; };
+		614D856A23C71A1900BDEC31 /* CharacterRecognization.caffemodel in Resources */ = {isa = PBXBuildFile; fileRef = 614D856123C71A1900BDEC31 /* CharacterRecognization.caffemodel */; };
+		614D856B23C71A1900BDEC31 /* cascade.xml in Resources */ = {isa = PBXBuildFile; fileRef = 614D856223C71A1900BDEC31 /* cascade.xml */; };
+		614D856C23C71A1900BDEC31 /* Segmentation.prototxt in Resources */ = {isa = PBXBuildFile; fileRef = 614D856323C71A1900BDEC31 /* Segmentation.prototxt */; };
+		614D856D23C71A1900BDEC31 /* HorizonalFinemapping.prototxt in Resources */ = {isa = PBXBuildFile; fileRef = 614D856423C71A1900BDEC31 /* HorizonalFinemapping.prototxt */; };
+		614D856E23C71A1900BDEC31 /* Segmentation.caffemodel in Resources */ = {isa = PBXBuildFile; fileRef = 614D856523C71A1900BDEC31 /* Segmentation.caffemodel */; };
+		614D856F23C71A1900BDEC31 /* CharacterRecognization.prototxt in Resources */ = {isa = PBXBuildFile; fileRef = 614D856623C71A1900BDEC31 /* CharacterRecognization.prototxt */; };
 		77F6BE748AD84DFBAE668F38 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAAB7B312D51420CBFD827D9 /* CFNetwork.framework */; };
 		7D02BE5C1E034E4AAE286DF7 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2174BA18CE944BC3A447F8A2 /* CoreTelephony.framework */; };
 		7DC9BB94CCCC4845980BE3F8 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC98EA12C9B40A19AB95463 /* libRNPhotoView.a */; };
@@ -719,6 +728,15 @@
 		6112EBE8231516F9005F89FC /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		6112EBEC23151716005F89FC /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		614D855E23C71A1900BDEC31 /* SegmenationFree-Inception.caffemodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SegmenationFree-Inception.caffemodel"; sourceTree = "<group>"; };
+		614D855F23C71A1900BDEC31 /* SegmenationFree-Inception.prototxt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SegmenationFree-Inception.prototxt"; sourceTree = "<group>"; };
+		614D856023C71A1900BDEC31 /* HorizonalFinemapping.caffemodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = HorizonalFinemapping.caffemodel; sourceTree = "<group>"; };
+		614D856123C71A1900BDEC31 /* CharacterRecognization.caffemodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = CharacterRecognization.caffemodel; sourceTree = "<group>"; };
+		614D856223C71A1900BDEC31 /* cascade.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cascade.xml; sourceTree = "<group>"; };
+		614D856323C71A1900BDEC31 /* Segmentation.prototxt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Segmentation.prototxt; sourceTree = "<group>"; };
+		614D856423C71A1900BDEC31 /* HorizonalFinemapping.prototxt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = HorizonalFinemapping.prototxt; sourceTree = "<group>"; };
+		614D856523C71A1900BDEC31 /* Segmentation.caffemodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = Segmentation.caffemodel; sourceTree = "<group>"; };
+		614D856623C71A1900BDEC31 /* CharacterRecognization.prototxt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CharacterRecognization.prototxt; sourceTree = "<group>"; };
 		6169D7C85837443F93EF4F34 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		616F9FBF550E4BF498A86BE9 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		64EBB0CEFDCC424896C92D54 /* CoreFoundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -763,9 +781,9 @@
 				0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */,
 				0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */,
 				0A6180A722A604B300E3D69B /* libRCTVideo.a in Frameworks */,
-				0A334D30229798BD00E4F302 /* libSupermap.a in Frameworks */,
 				0A334D1D229793DA00E4F302 /* libimageCropPicker.a in Frameworks */,
 				0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */,
+				0A334D30229798BD00E4F302 /* libSupermap.a in Frameworks */,
 				0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */,
 				0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */,
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
@@ -961,6 +979,7 @@
 			isa = PBXGroup;
 			children = (
 				2A15229623979C1700CBC452 /* SuperMapAR.bundle */,
+				614D855D23C71A1900BDEC31 /* Resource */,
 				2ABCAA152386616D0052EB6B /* Model */,
 				0AECCF772328E034004F84A4 /* Images.zip */,
 				2A89416022CADE2700AA0363 /* PlotLibData.zip */,
@@ -1269,6 +1288,22 @@
 				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		614D855D23C71A1900BDEC31 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				614D855E23C71A1900BDEC31 /* SegmenationFree-Inception.caffemodel */,
+				614D855F23C71A1900BDEC31 /* SegmenationFree-Inception.prototxt */,
+				614D856023C71A1900BDEC31 /* HorizonalFinemapping.caffemodel */,
+				614D856123C71A1900BDEC31 /* CharacterRecognization.caffemodel */,
+				614D856223C71A1900BDEC31 /* cascade.xml */,
+				614D856323C71A1900BDEC31 /* Segmentation.prototxt */,
+				614D856423C71A1900BDEC31 /* HorizonalFinemapping.prototxt */,
+				614D856523C71A1900BDEC31 /* Segmentation.caffemodel */,
+				614D856623C71A1900BDEC31 /* CharacterRecognization.prototxt */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
@@ -2073,11 +2108,16 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
+				614D856E23C71A1900BDEC31 /* Segmentation.caffemodel in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0AEFC201231762DA006FEDD8 /* PIL in Resources */,
+				614D856F23C71A1900BDEC31 /* CharacterRecognization.prototxt in Resources */,
+				614D856723C71A1900BDEC31 /* SegmenationFree-Inception.caffemodel in Resources */,
+				614D856A23C71A1900BDEC31 /* CharacterRecognization.caffemodel in Resources */,
 				2A89419622CADE2700AA0363 /* PlotLibData.zip in Resources */,
 				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
 				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
+				614D856D23C71A1900BDEC31 /* HorizonalFinemapping.prototxt in Resources */,
 				2ABCAA1C2386616D0052EB6B /* labelmap.txt in Resources */,
 				0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */,
 				2ABCAA1B2386616D0052EB6B /* detect.tflite in Resources */,
@@ -2087,7 +2127,11 @@
 				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
 				2A15229923979D9F00CBC452 /* SuperMapAR.bundle in Resources */,
 				0AA134942267432500606012 /* publicMap.txt in Resources */,
+				614D856823C71A1900BDEC31 /* SegmenationFree-Inception.prototxt in Resources */,
 				0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */,
+				614D856C23C71A1900BDEC31 /* Segmentation.prototxt in Resources */,
+				614D856923C71A1900BDEC31 /* HorizonalFinemapping.caffemodel in Resources */,
+				614D856B23C71A1900BDEC31 /* cascade.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
