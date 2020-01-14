@@ -76,8 +76,8 @@ export default class Setting extends Component {
       })
       Toast.show(
         global.language === 'CN'
-          ? '许可申请失败,请检查网络连接'
-          : 'License application failed.Please check the network connection',
+          ? '请检查网络连接'
+          : 'Please check the network connection',
       )
     }
   }
