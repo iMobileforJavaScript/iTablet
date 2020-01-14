@@ -128,7 +128,7 @@ const Profile = {
   //关于
   ABOUT: '关于',
   SERVICE_HOTLINE: '技术支持与服务',
-  SALES_CONSULTATION: '销售咨询',
+  SALES_CONSULTATION: '咨询',
   BUSINESS_WEBSITE: '进入官网',
   SERVICE_AGREEMENT: '服务协议',
   PRIVACY_POLICY: '隐私政策',
