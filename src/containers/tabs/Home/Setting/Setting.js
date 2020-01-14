@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity, Image, Text } from 'react-native'
+import { View, TouchableOpacity, Image, Text,ScrollView,RefreshControl ,Platform} from 'react-native'
 import { scaleSize } from '../../../../utils'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
@@ -7,6 +7,9 @@ import RenderSettingItem from './RenderSettingItem'
 import { getLanguage } from '../../../../language/index'
 import NavigationService from '../../../NavigationService'
 import Toast from 'react-native-root-toast'
+import FetchUtils from '../../../../../src/utils/FetchUtils'
+import { FileTools } from '../../../../native'
+import RNFS from 'react-native-fs'
 
 export default class Setting extends Component {
   props: {
@@ -17,8 +20,67 @@ export default class Setting extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.user = params && params.user
+    this.state = {
+      bOpenLicense:false,
+      isRefresh:false,
+    }
   }
 
+  componentDidMount() {
+    this._checkOpenLicense()
+  }
+
+  _checkOpenLicense = async () => {
+    try {
+      if (Platform.OS === 'android'){
+        this.setState({
+          bOpenLicense: true,
+          isRefresh:false,
+        })
+        return
+      }
+      let fileCachePath = await FileTools.appendingHomeDirectory(
+        '/iTablet/license/Open_License.ol',
+      )
+      let bRes = await RNFS.exists(fileCachePath)
+      if (bRes) {
+        await RNFS.unlink(fileCachePath)
+      }
+      let dataUrl = undefined
+      dataUrl = await FetchUtils.getFindUserDataUrl(
+        'xiezhiyan123',
+        'Open_License',
+        '.geojson',
+      )
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: fileCachePath,
+        background: true,
+        fileName: 'Open_License.ol',
+        progressDivider: 1,
+      }
+      const ret = RNFS.downloadFile(downloadOptions)
+      ret.promise.then(async () => {
+        let bRes = await RNFS.readFile(fileCachePath)
+        if(parseInt(bRes) === 1){//检查许可接口入口是否开放
+          this.setState({
+            bOpenLicense: true,
+            isRefresh:false,
+          })
+        }
+      })
+    } catch (e) {
+      this.setState({
+        bOpenLicense: false,
+        isRefresh:false,
+      })
+      Toast.show(
+        global.language === 'CN'
+          ? '许可申请失败,请检查网络连接'
+          : 'License application failed.Please check the network connection',
+      )
+    }
+  }
   _renderItem = label => {
     return <RenderSettingItem label={label} />
   }
@@ -42,10 +104,10 @@ export default class Setting extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: color.content_white }}>
         {this._renderItem(getLanguage(global.language).Profile.STATUSBAR_HIDE)}
-        {this.renderItemView(
+        { this.state.bOpenLicense===true ? (this.renderItemView(
           this.onLicense,
           getLanguage(global.language).Profile.SETTING_LICENSE,
-        )}
+        )) : null}
         {this.renderItemView(
           this.onAbout,
           getLanguage(global.language).Profile.SETTING_ABOUT_ITABLET,
@@ -141,7 +203,20 @@ export default class Setting extends Component {
           navigation: this.props.navigation,
         }}
       >
-        {this.renderItems()}
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefresh}
+              onRefresh={this._checkOpenLicense}
+              colors={['orange', 'red']}
+              tintColor={'orange'}
+              titleColor={'orange'}
+              enabled={true}
+            />
+          }
+        >
+          {this.renderItems()}
+        </ScrollView>
       </Container>
     )
   }
