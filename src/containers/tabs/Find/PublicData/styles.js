@@ -15,9 +15,18 @@ const styles = StyleSheet.create({
     height: scaleSize(40),
     alignItems: 'center',
   },
+  HeaderRightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   moreImg: {
     height: scaleSize(60),
     width: scaleSize(60),
+  },
+  searchImg: {
+    height: scaleSize(40),
+    width: scaleSize(40),
+    marginRight: scaleSize(10),
   },
   ListViewStyle: {
     flex: 1,
@@ -132,7 +141,7 @@ const styles = StyleSheet.create({
   },
 
   //MoreMenu
-  MoreMenuCantainer: {
+  MoreMenuContainer: {
     width: '40%',
     borderRadius: scaleSize(20),
     backgroundColor: color.content_white,
@@ -150,6 +159,57 @@ const styles = StyleSheet.create({
     marginLeft: scaleSize(80),
     height: scaleSize(1),
     backgroundColor: '#A0A0A0',
+  },
+
+  //SearchMenu
+  SearchMenuContainer: {
+    width: '100%',
+    maxHeight: '60%',
+    backgroundColor: '#EEEEEE',
+    justifyContent: 'center',
+  },
+  searchViewStyle: {
+    marginVertical: scaleSize(20),
+    paddingHorizontal: scaleSize(30),
+  },
+  searchBarStyle: {
+    width: '100%',
+    height: scaleSize(60),
+    backgroundColor: color.content_white,
+    borderRadius: scaleSize(30),
+    paddingHorizontal: scaleSize(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchImgStyle: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  searchInputStyle: {
+    flex: 1,
+    paddingVertical: 0,
+    fontSize: scaleSize(26),
+  },
+  searchButtonContainer: {
+    width: '100%',
+    height: scaleSize(100),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: scaleSize(1),
+    borderTopColor: '#A0A0A0',
+  },
+  searchButton: {
+    width: scaleSize(200),
+    height: scaleSize(80),
+    borderRadius: scaleSize(40),
+    borderWidth: scaleSize(1),
+    borderColor: '#A0A0A0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchButtonText: {
+    fontSize: scaleSize(26),
   },
 })
 export default styles

@@ -30,6 +30,10 @@ export default class CatagoryMenu extends React.Component {
 
   getData = () => [
     {
+      key: getLanguage(global.language).Find.ONLINE_WORKSPACE,
+      value: 'workspace',
+    },
+    {
       key: getLanguage(global.language).Find.ONLINE_DATASOURCE,
       value: 'udb',
     },

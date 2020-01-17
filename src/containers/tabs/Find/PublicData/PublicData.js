@@ -16,6 +16,7 @@ import { OnlineServicesUtils, Toast } from '../../../../utils'
 import DataItem from './DataItem'
 import CatagoryMenu from './CatagoryMenu'
 import MoreMenu from './MoreMenu'
+import SearchMenu from './SearchMenu'
 
 var JSOnlineService
 var JSIPortalService
@@ -23,6 +24,9 @@ export default class PublicData extends React.Component {
   props: {
     navigation: Object,
     user: Object,
+    down: Array,
+    updateDownList: () => {},
+    removeItemOfDownList: () => {},
   }
 
   constructor(props) {
@@ -35,7 +39,7 @@ export default class PublicData extends React.Component {
       loadError: false,
       loadMore: false,
       isRefresh: false,
-      isShowCloseCatagory: false,
+      isShowCloseCatagory: true,
     }
     this.currentPage = 1
     this.totalPage = 0
@@ -93,6 +97,9 @@ export default class PublicData extends React.Component {
 
   setDataTypes = value => {
     switch (value) {
+      case 'workspace':
+        this.dataTypes = ['WORKSPACE']
+        break
       case 'color':
         this.dataTypes = ['COLORSCHEME']
         break
@@ -121,14 +128,41 @@ export default class PublicData extends React.Component {
         this.searchParams = undefined
         break
       case 'sortByTime':
-        this.searchParams = {
-          orderBy: 'LASTMODIFIEDTIME',
+        if (this.searchParams) {
+          if (this.searchParams.orderBy === 'LASTMODIFIEDTIME') {
+            if (this.searchParams.orderType === 'ASC') {
+              this.searchParams.orderType = 'DESC'
+            } else {
+              this.searchParams.orderType = 'ASC'
+            }
+          } else {
+            this.searchParams.orderBy = 'LASTMODIFIEDTIME'
+            this.searchParams.orderType = 'DESC'
+          }
+        } else {
+          this.searchParams = {
+            orderBy: 'LASTMODIFIEDTIME',
+            orderType: 'ASC',
+          }
         }
         break
       case 'sortByName':
-        this.searchParams = {
-          orderBy: 'fileName',
-          orderType: 'ASC',
+        if (this.searchParams) {
+          if (this.searchParams.orderBy === 'fileName') {
+            if (this.searchParams.orderType === 'ASC') {
+              this.searchParams.orderType = 'DESC'
+            } else {
+              this.searchParams.orderType = 'ASC'
+            }
+          } else {
+            this.searchParams.orderBy = 'fileName'
+            this.searchParams.orderType = 'ASC'
+          }
+        } else {
+          this.searchParams = {
+            orderBy: 'fileName',
+            orderType: 'ASC',
+          }
         }
         break
       default:
@@ -212,6 +246,23 @@ export default class PublicData extends React.Component {
     )
   }
 
+  renderSearchMenu = () => {
+    return (
+      <SearchMenu
+        ref={ref => (this.SearchMenu = ref)}
+        onPress={item => {
+          this.SearchMenu.setVisible(false)
+          this.dataTypes = item.selectTypes
+          this.searchParams = { keywords: item.keywords }
+          this.getData()
+          this.setState({
+            title: getLanguage(global.language).Find.SEARCH_RESULT,
+          })
+        }}
+      />
+    )
+  }
+
   renderProgress = () => {
     if (this.state.initData) {
       return (
@@ -268,7 +319,15 @@ export default class PublicData extends React.Component {
   }
 
   renderItem = data => {
-    return <DataItem user={this.props.user} data={data.item} />
+    return (
+      <DataItem
+        user={this.props.user}
+        data={data.item}
+        down={this.props.down}
+        updateDownList={this.props.updateDownList}
+        removeItemOfDownList={this.props.removeItemOfDownList}
+      />
+    )
   }
 
   renderFoot = () => {
@@ -338,15 +397,33 @@ export default class PublicData extends React.Component {
         </TouchableOpacity>
       )
     }
-    let moreImg = require('../../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.MoreMenu.setVisible(true)
-        }}
-      >
-        <Image resizeMode={'contain'} source={moreImg} style={styles.moreImg} />
-      </TouchableOpacity>
+      <View style={styles.HeaderRightContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            this.SearchMenu.setVisible(true)
+            this.MoreMenu.setVisible(false)
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/header/icon_search.png')}
+            style={styles.searchImg}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this.MoreMenu.setVisible(true)
+            this.SearchMenu.setVisible(false)
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            source={require('../../../../assets/home/Frenchgrey/icon_else_selected.png')}
+            style={styles.moreImg}
+          />
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -363,8 +440,9 @@ export default class PublicData extends React.Component {
         {this.renderProgress()}
         {this.renderStatus()}
         {this.renderDataList()}
-        {this.renderMoreMenu()}
         {this.renderCatagoryMenu()}
+        {this.renderMoreMenu()}
+        {this.renderSearchMenu()}
       </Container>
     )
   }

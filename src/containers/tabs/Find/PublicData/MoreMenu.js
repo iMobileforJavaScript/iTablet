@@ -63,7 +63,7 @@ export default class MoreMenu extends React.Component {
 
   renderList = () => {
     return (
-      <View style={styles.MoreMenuCantainer}>
+      <View style={styles.MoreMenuContainer}>
         <FlatList
           data={this.state.data}
           renderItem={this.renderItem}

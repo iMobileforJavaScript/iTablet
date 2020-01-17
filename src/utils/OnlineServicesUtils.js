@@ -205,7 +205,7 @@ export default class OnlineServicesUtils {
    * @param {*} orderBy
    */
   async getPublicDataByTypes(types, params) {
-    let { orderBy, orderType, pageSize, currentPage } = { ...params }
+    let { orderBy, orderType, pageSize, currentPage, keywords } = { ...params }
     orderBy = orderBy || 'LASTMODIFIEDTIME'
     orderType = orderType || 'DESC'
     pageSize = pageSize || 9
@@ -221,6 +221,9 @@ export default class OnlineServicesUtils {
 
     url += `&orderBy=${orderBy}&orderType=${orderType}`
     url += `&pageSize=${pageSize}&currentPage=${currentPage}`
+    if (keywords) {
+      url += `&keywords=${keywords}`
+    }
 
     let response = await fetch(url)
     let responseObj = await response.json()

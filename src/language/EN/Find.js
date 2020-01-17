@@ -1,8 +1,12 @@
 const Find = {
   PUBLIC_DATA: 'Public Data',
-
+  SEARCH_RESULT: 'Search Result',
   BACK: 'Back',
+  CONFIRM: 'Search',
+  RESET: 'Reset',
 
+  ALL: 'All',
+  ONLINE_WORKSPACE: 'Workspace',
   ONLINE_DATASOURCE: 'Datasource',
   ONLINE_MAP_RESOURCE: 'Map Resource',
   ONLINE_COLORSCHEME: 'Color Scheme',
@@ -16,6 +20,7 @@ const Find = {
   NO_DATA: 'Data no found',
   NETWORK_ERROR: 'Network error, please try again later',
   NO_MORE_DATA: 'No more data found',
+  DOWNLOADED: 'Download successful. You can import this data at Import',
 }
 
 export { Find }

@@ -841,7 +841,8 @@ class AppRoot extends Component {
           GLOBAL.Loading.setLoading(false)
         }}
         cancelAction={ async () => {
-          let importPath =ConstPath.Import
+          let homePath = global.homePath
+          let importPath = homePath + ConstPath.Import
           await FileTools.deleteFile(importPath)
           this.import.setDialogVisible(false)
         }}

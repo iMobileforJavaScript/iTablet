@@ -14,6 +14,10 @@ export default class DataItem extends Component {
   props: {
     data: Object,
     user: Object,
+    down: Array,
+    downloadData: () => {},
+    updateDownList: () => {},
+    removeItemOfDownList: () => {},
   }
 
   constructor(props) {
@@ -25,80 +29,87 @@ export default class DataItem extends Component {
     this.titleName
     this.state = {
       progress: getLanguage(global.language).Prompt.DOWNLOAD,
-      // '下载',
       isDownloading: false,
     }
-
-    this.unZipFile = this.unZipFile.bind(this)
   }
 
-  async componentDidMount() {
-    this.path =
-      (await FileTools.getHomeDirectory()) +
+  componentDidMount() {
+    this.getDownloadProgress()
+  }
+
+  shouldComponentUpdate(prevProps, preState) {
+    if (
+      preState.progress !== this.state.progress ||
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
+    ) {
+      return true
+    }
+    if (JSON.stringify(prevProps.down) !== JSON.stringify(this.props.down)) {
+      for (let i = 0; i < this.props.down.length; i++) {
+        if (this.props.data.id === this.props.down[i].id) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data) ||
+      JSON.stringify(prevProps.down) !== JSON.stringify(this.props.down)
+    ) {
+      this.getDownloadProgress()
+    }
+  }
+
+  getDownloadProgress = () => {
+    let data
+    for (let i = 0; i < this.props.down.length; i++) {
+      if (this.props.data.id === this.props.down[i].id) {
+        data = this.props.down[i]
+        break
+      }
+    }
+    if (data) {
+      if (data.downed) {
+        this.setState({
+          progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
+          isDownloading: false,
+        })
+        this.props.removeItemOfDownList({ id: data.id })
+      } else {
+        this.setState({
+          progress: data.progress + '%',
+          isDownloading: true,
+        })
+      }
+    } else {
+      this.getDownloadStatus()
+    }
+  }
+
+  getDownloadStatus = async () => {
+    let path =
+      global.homePath +
       ConstPath.UserPath +
       this.props.user.currentUser.userName +
       '/' +
       ConstPath.RelativePath.Temp +
       this.props.data.fileName
-
-    this.downloadingPath =
-      (await FileTools.getHomeDirectory()) +
-      ConstPath.UserPath +
-      this.props.user.currentUser.userName +
-      '/' +
-      ConstPath.RelativePath.Temp +
-      this.props.data.MD5
-
-    this.exist = false
-    let exist = await FileTools.fileIsExist(this.downloadingPath + '_')
-    if (exist) {
-      this.exist = true
+    if (await RNFS.exists(path)) {
       this.setState({
         progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
-        //'下载完成',
+        isDownloading: false,
+      })
+    } else {
+      this.setState({
+        progress: getLanguage(global.language).Prompt.DOWNLOAD,
         isDownloading: false,
       })
     }
-
-    //检测是否下载完成
-    exist = await FileTools.fileIsExist(this.downloadingPath)
-    if (exist) {
-      this.downloading = true
-      let timer = setInterval(async () => {
-        exist = await FileTools.fileIsExist(this.downloadingPath + '_')
-        if (exist) {
-          clearInterval(timer)
-          this.exist = true
-          this.setState({
-            progress: getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY,
-            //'下载完成',
-            isDownloading: false,
-          })
-        } else {
-          let result = await RNFS.readFile(this.downloadingPath)
-          this.setState({
-            progress: result,
-            //'下载完成',
-            isDownloading: true,
-          })
-        }
-      }, 2000)
-      this.setState({
-        progress: getLanguage(global.language).Prompt.DOWNLOADING,
-        //'下载完成',
-        isDownloading: true,
-      })
-    }
-
-    this.titleName = ''
-    if (this.props.data.fileName) {
-      let index = this.props.data.fileName.lastIndexOf('.')
-      this.titleName =
-        index === -1
-          ? this.props.data.fileName
-          : this.props.data.fileName.substring(0, index)
-    }
   }
+
   _navigator = uri => {
     NavigationService.navigate('MyOnlineMap', {
       uri: uri,
@@ -119,101 +130,100 @@ export default class DataItem extends Component {
     }
   }
   _downloadFile = async () => {
-    if (this.exist) {
-      await this.unZipFile()
-      Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
-      return
-    }
-    if (
-      this.props.user &&
-      this.props.user.currentUser &&
-      (this.props.user.currentUser.userType === UserType.PROBATION_USER ||
-        (this.props.user.currentUser.userName &&
-          this.props.user.currentUser.userName !== ''))
-    ) {
+    let fileName = this.props.data.fileName
+    let dataId = this.props.data.id
+    let path =
+      global.homePath +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      fileName
+    let dataUrl
+    try {
       if (this.state.isDownloading) {
         Toast.show(getLanguage(global.language).Prompt.DOWNLOADING)
-        //'正在下载...')
         return
+      }
+      if (await RNFS.exists(path)) {
+        Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
+        return
+      }
+      if (await RNFS.exists(path)) {
+        await RNFS.unlink(path)
       }
       this.setState({
         progress: getLanguage(global.language).Prompt.DOWNLOADING,
         isDownloading: true,
       })
-      RNFS.writeFile(this.downloadingPath, '0%', 'utf8')
-
-      let dataId = this.props.data.id
-      let dataUrl =
-        'https://www.supermapol.com/web/datas/' + dataId + '/download'
+      if (UserType.isIPortalUser(this.props.user)) {
+        let url = this.props.user.currentUser.serverUrl
+        if (url.indexOf('http') !== 0) {
+          url = 'http://' + url
+        }
+        dataUrl = url + '/datas/' + dataId + '/download'
+      } else {
+        dataUrl = 'https://www.supermapol.com/web/datas/' + dataId + '/download'
+      }
+      let preProgress = 0
       const downloadOptions = {
         fromUrl: dataUrl,
-        toFile: this.path,
+        toFile: path,
         background: true,
         progress: res => {
           let value = ~~res.progress.toFixed(0)
-          let progress = value + '%'
-          if (this.state.progress !== progress) {
-            this.setState({ progress })
+          if (value !== preProgress) {
+            preProgress = value
+            this.props.updateDownList({
+              id: dataId,
+              progress: value,
+              downed: false,
+            })
           }
-          RNFS.writeFile(this.downloadingPath, progress, 'utf8')
         },
       }
-      try {
-        const ret = RNFS.downloadFile(downloadOptions)
-        ret.promise
-          .then(async () => {
-            this.setState({
-              progress: getLanguage(global.language).Prompt
-                .DOWNLOAD_SUCCESSFULLY,
-              //'下载完成',
-              isDownloading: false,
-            })
-            let result = await this.unZipFile()
-            if (result === false) {
-              Toast.show('网络数据已损坏，无法正常使用')
-            } else {
-              this.exist = true
-            }
-            FileTools.deleteFile(this.downloadingPath)
-            RNFS.writeFile(this.downloadingPath + '_', '100%', 'utf8')
-          })
-          .catch(() => {
-            Toast.show('下载失败')
-            FileTools.deleteFile(this.path)
-            this.setState({ progress: '下载', isDownloading: false })
-          })
-      } catch (e) {
-        Toast.show('网络错误')
-        FileTools.deleteFile(this.path)
-        this.setState({ progress: '下载', isDownloading: false })
+
+      await RNFS.downloadFile(downloadOptions).promise
+      this.props.updateDownList({
+        id: dataId,
+        progress: 100,
+        downed: true,
+      })
+      this.onDownloaded(fileName, path)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_FAILED)
+      if (await RNFS.exists(path)) {
+        await RNFS.unlink(path)
       }
-    } else {
-      Toast.show('登录后可下载')
     }
   }
 
-  async unZipFile() {
+  onDownloaded = async (fileName, path) => {
     let appHome = await FileTools.appendingHomeDirectory()
     let userName =
       this.props.user.currentUser.userType === UserType.PROBATION_USER
         ? 'Customer'
         : this.props.user.currentUser.userName
-    let fileDir =
+    let externalPath =
       appHome +
       ConstPath.UserPath +
       userName +
       '/' +
-      ConstPath.RelativePath.ExternalData +
-      this.titleName
-    let exists = await RNFS.exists(fileDir)
+      ConstPath.RelativePath.ExternalData
+    let exists = await RNFS.exists(externalPath)
     if (!exists) {
-      await RNFS.mkdir(fileDir)
+      return
     }
-    let result = await FileTools.unZipFile(this.path, fileDir)
-    if (!result) {
-      FileTools.deleteFile(this.path)
+    let result
+    try {
+      result = await FileTools.unZipFile(path, externalPath)
+      if (!result) {
+        result = await FileTools.copyFile(path, externalPath + fileName, true)
+      }
+    } catch (error) {
+      result = await FileTools.copyFile(path, externalPath + fileName, true)
     }
-    return result
+    result && Toast.show(getLanguage(global.language).Find.DOWNLOADED)
   }
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
@@ -235,6 +245,14 @@ export default class DataItem extends Component {
         : (this.props.data.size / 1024).toFixed(2) + 'K'
     let fontColor = color.fontColorGray
     let titleFontColor = color.fontColorBlack
+    this.titleName = ''
+    if (this.props.data.fileName) {
+      let index = this.props.data.fileName.lastIndexOf('.')
+      this.titleName =
+        index === -1
+          ? this.props.data.fileName
+          : this.props.data.fileName.substring(0, index)
+    }
     return (
       <View>
         <View style={styles.itemViewStyle}>
@@ -255,7 +273,7 @@ export default class DataItem extends Component {
               style={[styles.restTitleTextStyle, { color: titleFontColor }]}
               numberOfLines={2}
             >
-              {this.props.data.fileName}
+              {this.titleName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image
