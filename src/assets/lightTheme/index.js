@@ -15,6 +15,7 @@ import mine from './mine'
 import nav from './nav'
 import mapTools from './mapTools'
 import share from './share'
+import find from './find'
 export default {
   publicAssets,
   tabBar,
@@ -33,4 +34,5 @@ export default {
   nav,
   mapTools,
   share,
+  find,
 }

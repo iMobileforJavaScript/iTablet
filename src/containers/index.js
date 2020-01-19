@@ -40,6 +40,7 @@ import {
   MyLabel,
   MyBaseMap,
   SuperMapKnown,
+  PublicData,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -685,6 +686,13 @@ const AppNavigator = createStackNavigator(
     },
     SuperMapKnown: {
       screen: SuperMapKnown,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    PublicData: {
+      screen: PublicData,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

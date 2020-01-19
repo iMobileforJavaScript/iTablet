@@ -18,15 +18,8 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.supermap.RNUtils.DataUtil;
-import com.supermap.containts.EventConst;
-import com.supermap.data.Datasource;
-import com.supermap.data.DatasourceConnectionInfo;
-import com.supermap.data.Datasources;
-import com.supermap.data.EngineType;
-import com.supermap.data.Workspace;
 import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
-import com.supermap.interfaces.mapping.SMap;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 import java.io.BufferedInputStream;
@@ -68,7 +61,6 @@ public class FileTools extends ReactContextBaseJavaModule {
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
-    private static Boolean importData=false;
     private static ReactContext mReactContext;
 
     public static final String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -734,144 +726,21 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-
-
     /**
-     * 获取导入外部数据的结果。
+     * 获取是否有需要导入的外部数据。
      *
      */
     @ReactMethod
-    public void getImportResult(Promise promise) {
+    public void getImportState(Promise promise) {
         try {
-             promise.resolve(importData);
+            String importPath=SDCARD+"/iTablet/Import";
+            String filePath=importPath+"/import.zip";
+            File file = new File(filePath);
+            promise.resolve(file.exists());
         } catch (Exception e) {
             promise.reject(e);
         }
     }
-
-    @ReactMethod
-    public void importData(Promise promise){
-        try {
-            SMap sMap=SMap.getInstance();
-            String importPath=SDCARD+"/iTablet/Import";
-            String filePath=importPath+"/weChat.zip";
-            String toPath=importPath;
-            File file=new File(filePath);
-            Boolean importResult=false;
-            if(file.exists()){
-                Boolean reuslt=FileTools.unZipFile(filePath, toPath);
-                if(reuslt){
-                    deleteFile(filePath);
-                    ArrayList<String> arrayList =new ArrayList();
-                    getFilePath(toPath,arrayList);
-                    ArrayList<Map> workspace =new ArrayList();
-                    ArrayList<String> datasource =new ArrayList();
-                    ArrayList<String> xml =new ArrayList();
-                    ArrayList<String> symbol =new ArrayList();
-                    for (int i = 0; i <arrayList.size() ; i++) {
-                        String path= arrayList.get(i);
-                        String fileType=path.substring(path.indexOf('.')+1);
-                        if(fileType.equals("smwu")||fileType.equals("sxwu")||fileType.equals("sxw")||fileType.equals("smw")){
-                            Map map=new HashMap();
-                            map.put("server",arrayList.get(i));
-                            String workspaceType=null;
-                            switch (fileType){
-                                case "smwu":
-                                    workspaceType="9.0";
-                                    break;
-                                case "sxwu":
-                                    workspaceType="8.0";
-                                    break;
-                                case "sxw":
-                                    workspaceType="4.0";
-                                    break;
-                                case "smw":
-                                    workspaceType="5.0";
-                                    break;
-                            }
-                            map.put("type", workspaceType);
-                            workspace.add(map);
-                        }
-                        if(fileType.equals("udb")){
-                            datasource.add(arrayList.get(i));
-                        }
-                        if(fileType.equals("xml")){
-                            xml.add(arrayList.get(i));
-                        }
-                        if(fileType.equals("sym")||fileType.equals("lsl")||fileType.equals("bru")){
-                            symbol.add(arrayList.get(i));
-                        }
-                    }
-                    if(xml.size()>0){
-                        String path=xml.get(0).substring(xml.get(0).lastIndexOf("/")+1);
-                        String fileDirectory=path.substring(0,path.indexOf("."));
-                        String collection=SDCARD+"/iTablet/User/"+getUserName()+"/ExternalData/Collection/"+fileDirectory+"/";
-                        File file1=new File(collection);
-                        if(!file1.exists()){
-                            file1.mkdirs();
-                        }
-                        for (int i = 0; i <arrayList.size() ; i++) {
-                            String fileName=arrayList.get(i).substring(arrayList.get(i).lastIndexOf("/")+1);
-                            FileManager.getInstance().copy(arrayList.get(i), collection+fileName);
-                        }
-                        if(workspace.size()>0){
-                            sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
-                        }
-                        importResult=true;
-                        importData=false;
-                        deleteDirectory(importPath);
-                    }
-                    else if(workspace.size()>0){
-                        List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
-                        if(result.size()>0){
-                            importResult=true;
-                            importData=false;
-                            deleteDirectory(importPath);
-                        }
-                    }else if(datasource.size()>0){
-                        for (int i = 0; i <datasource.size() ; i++) {
-                            Workspace workspace1=new Workspace();
-                            DatasourceConnectionInfo datasourceConnectionInfo=new DatasourceConnectionInfo();
-                            datasourceConnectionInfo.setServer(datasource.get(i));
-                            datasourceConnectionInfo.setEngineType(EngineType.UDB);
-                            Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
-                            if(datasource1.getDescription().equals("Label")){
-                                String udbName="Label_"+getUserName()+"#.udb";
-                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Datasource/"+udbName;
-                                File udb=new File(todatasource);
-                                if(udb.exists()){
-                                    sMap.getSmMapWC().copyDataset(datasource.get(i),todatasource);
-                                    importResult=true;
-                                    importData=false;
-                                }
-                            }else {
-                                sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
-                                importResult=true;
-                                importData=false;
-                            }
-                        }
-                        deleteDirectory(importPath);
-                    }else if (symbol.size()>0){
-                        String symbolPath=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Symbol/";
-                        for (int i = 0; i <symbol.size() ; i++) {
-                            String fileName=symbol.get(i).substring(symbol.get(i).lastIndexOf("/")+1);
-                            FileManager.getInstance().copy(symbol.get(i), symbolPath+fileName);
-                        }
-                        importResult=true;
-                        importData=false;
-                        deleteDirectory(importPath);
-                    }
-                    promise.resolve(importResult);
-                }else {
-                    deleteDirectory(toPath);
-                }
-            }
-        }catch (Exception e){
-            promise.reject(e);
-            return  ;
-        }
-    }
-
 
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
@@ -1300,9 +1169,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
         try {
               InputStream inputStream=activity.getContentResolver().openInputStream(uri);
-              String userName=getUserName();
               String importPath=SDCARD+"/iTablet/Import";
-              String filePath=importPath+"/weChat.zip";
+              String filePath=importPath+"/import.zip";
               File importFile=new File(importPath);
               if(!importFile.exists()){
                   importFile.mkdirs();
@@ -1319,16 +1187,12 @@ public class FileTools extends ReactContextBaseJavaModule {
                   fop.write(buffer,0,length);
               }
               fop.close();
-              importData=true;
-             mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_IMPORTEXTERNALDATA, importData);
+              Boolean importData=true;
+              String MESSAGE_IMPORTEXTERNALDATA = "com.supermap.RN.Mapcontrol.message_importexternaldata";
+              mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(MESSAGE_IMPORTEXTERNALDATA, importData);
         }catch (Exception e){
              e.printStackTrace();
         }
-    }
-
-    public static  String getUserName(){
-        String userNmae=SMap.getInstance().getSmMapWC().getUserName();
-        return userNmae;
     }
 
     public static void getFilePath(String path, ArrayList<String> arr){

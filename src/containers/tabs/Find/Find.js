@@ -18,6 +18,7 @@ import { color, size } from '../../../styles'
 import Toast from '../../../utils/Toast'
 import { scaleSize, OnlineServicesUtils } from '../../../utils'
 import { getLanguage } from '../../../language/index'
+import { getThemeAssets } from '../../../assets'
 
 var SUPERMAPKNOWN_UPDATE_TIME = 'SUPERMAPKNOWN_UPDATE_TIME'
 var SUPERMAPGROUP_UPDATE_TIME = 'SUPERMAPGROUP_UPDATE_TIME'
@@ -229,6 +230,14 @@ export default class Find extends Component {
               NavigationService.navigate('PublicMap')
             },
           })}
+          {this._renderItem({
+            title: getLanguage(this.props.language).Find.PUBLIC_DATA,
+            leftImagePath: require('../../../assets/Find/find_publicmap.png'),
+            isInformSpot: false,
+            onClick: () => {
+              NavigationService.navigate('PublicData')
+            },
+          })}
           {/* {this._renderItem({
             title: Const.FRIENDMAP,
             leftImagePath: require('../../../assets/Find/find_publicmap.png'),
@@ -238,7 +247,7 @@ export default class Find extends Component {
           })} */}
           {this._renderItem({
             title: getLanguage(this.props.language).Prompt.SUPERMAP_GROUP,
-            leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
+            leftImagePath: getThemeAssets().find.supermap,
             isInformSpot: this.state.superMapGroup,
             onClick: () => {
               NavigationService.navigate('SuperMapKnown', {
