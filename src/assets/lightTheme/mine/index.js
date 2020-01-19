@@ -7,6 +7,7 @@ const my_map = require('./my_map.png')
 const my_scene = require('./my_scene.png')
 const my_basemap = require('./my_basemap.png')
 const my_symbol = require('./my_symbol.png')
+const my_color = require('./my_color.png')
 
 const my_import_plot = require('./mine_import_plot_light.png')
 const my_import_ws = require('./mine_import_smwu_light.png')
@@ -32,6 +33,7 @@ export default {
   my_scene,
   my_basemap,
   my_symbol,
+  my_color,
 
   my_import_plot,
   my_import_ws,

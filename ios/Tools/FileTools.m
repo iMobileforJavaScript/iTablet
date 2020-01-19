@@ -805,10 +805,15 @@ RCT_REMAP_METHOD(getImportState, getImportState:(RCTPromiseResolveBlock)resolve 
   
   NSFileManager *filemanager = [NSFileManager defaultManager];
   
+  NSString *destinationFolder = [head stringByAppendingString: @"/iTablet/Import"];
   NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/import.zip"];
   BOOL isFileExist =[filemanager fileExistsAtPath:zipFilePath isDirectory:nil];
   
   if(isFileExist){
+    BOOL isFolderExist =[filemanager fileExistsAtPath:destinationFolder isDirectory:nil];
+    if(!isFolderExist) {
+      [filemanager createDirectoryAtPath:destinationFolder withIntermediateDirectories:YES attributes:nil error:nil];
+    }
     BOOL isCopySucces = [FileTools copyFile:zipFilePath targetPath:destinationPath];
     if(isCopySucces){
       [FileTools deleteFile:zipFilePath];

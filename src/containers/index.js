@@ -17,6 +17,7 @@ import {
   MyDatasource,
   MySymbol,
   MyTemplate,
+  MyColor,
   Personal,
   ToggleAccount,
   Setting,
@@ -538,6 +539,13 @@ const AppNavigator = createStackNavigator(
     },
     MyTemplate: {
       screen: MyTemplate,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyColor: {
+      screen: MyColor,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

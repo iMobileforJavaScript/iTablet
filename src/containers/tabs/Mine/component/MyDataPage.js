@@ -82,6 +82,7 @@ export default class MyDataPage extends Component {
     symbol: 'SYMBOL',
     template: 'TEMPLATE',
     dataset: 'DATASET',
+    color: 'COLOR_SCHEME',
   }
 
   componentDidMount() {

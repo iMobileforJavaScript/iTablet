@@ -146,7 +146,7 @@ export default class DataItem extends Component {
         return
       }
       if (await RNFS.exists(path)) {
-        Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
+        this.onDownloaded(fileName, path)
         return
       }
       if (await RNFS.exists(path)) {
@@ -200,31 +200,35 @@ export default class DataItem extends Component {
 
   onDownloaded = async (fileName, path) => {
     let appHome = await FileTools.appendingHomeDirectory()
-    let userName =
-      this.props.user.currentUser.userType === UserType.PROBATION_USER
-        ? 'Customer'
-        : this.props.user.currentUser.userName
     let externalPath =
       appHome +
       ConstPath.UserPath +
-      userName +
+      this.props.user.currentUser.userName +
       '/' +
       ConstPath.RelativePath.ExternalData
-    let exists = await RNFS.exists(externalPath)
-    if (!exists) {
-      return
+    let index = fileName.lastIndexOf('.')
+    let name, type
+    if (index !== -1) {
+      name = fileName.substring(0, index)
+      type = fileName.substring(index + 1).toLowerCase()
     }
+
     let result
-    try {
-      result = await FileTools.unZipFile(path, externalPath)
-      if (!result) {
-        result = await FileTools.copyFile(path, externalPath + fileName, true)
+    if (!type) {
+      result = false
+    } else if (type === 'zip') {
+      if (await RNFS.exists(externalPath + name)) {
+        await RNFS.unlink(externalPath + name)
       }
-    } catch (error) {
+      result = await FileTools.unZipFile(path, externalPath + name)
+    } else {
       result = await FileTools.copyFile(path, externalPath + fileName, true)
     }
-    result && Toast.show(getLanguage(global.language).Find.DOWNLOADED)
+    result
+      ? Toast.show(getLanguage(global.language).Find.DOWNLOADED)
+      : Toast.show(getLanguage(global.language).Prompt.DOWNLOAD_SUCCESSFULLY)
   }
+
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
     let year = date.getFullYear() + '/'

@@ -220,6 +220,14 @@ export default class Mine extends Component {
             getLanguage(this.props.language).Profile.TEMPLATE,
           ),
       },
+      {
+        title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
+        leftImagePath: getThemeAssets().mine.my_color,
+        onClick: () =>
+          NavigationService.navigate('MyColor', {
+            title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
+          }),
+      },
     ]
     return data
   }

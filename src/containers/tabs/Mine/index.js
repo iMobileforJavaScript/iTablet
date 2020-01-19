@@ -16,6 +16,7 @@ import MyScene from './MyScene'
 import MyDatasource from './MyDatasource'
 import MySymbol from './MySymbol'
 import MyTemplate from './MyTemplate'
+import MyColor from './MyColor'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
 import MyDataset from './MyDatasource/MyDataset'
@@ -48,6 +49,7 @@ export {
   MyDatasource,
   MySymbol,
   MyTemplate,
+  MyColor,
   MyService,
   MyOnlineMap,
   ScanOnlineMap,

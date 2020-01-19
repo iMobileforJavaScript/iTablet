@@ -85,6 +85,22 @@ async function importDatasource(user, item) {
   await FileTools.copyFile(sourceUdd, userPath + '/' + uddName)
 }
 
+async function importColor(user, item) {
+  let userPath = await FileTools.appendingHomeDirectory(
+    ConstPath.UserPath + user.userName + '/Data/Color',
+  )
+
+  return await _copyFile(item, userPath)
+}
+
+async function importSymbol(user, item) {
+  let userPath = await FileTools.appendingHomeDirectory(
+    ConstPath.UserPath + user.userName + '/Data/Symbol',
+  )
+
+  return await _copyFile(item, userPath)
+}
+
 async function importTIF(filePath, datasourceItem) {
   return await _importDataset('tif', filePath, datasourceItem)
 }
@@ -171,6 +187,14 @@ async function _importDataset(
   }
 }
 
+async function _copyFile(item, desDir) {
+  let fileName = item.fileName.substring(0, item.fileName.lastIndexOf('.'))
+  let fileType = item.fileName.substring(item.fileName.lastIndexOf('.') + 1)
+  let contentList = await FileTools.getDirectoryContent(desDir)
+  let name = _getAvailableName(fileName, contentList, 'file', fileType)
+  return await FileTools.copyFile(item.filePath, desDir + '/' + name)
+}
+
 function _getAvailableName(name, fileList, type, ext = '') {
   let AvailabeName = name
   if (type === 'file' && ext !== '') {
@@ -237,6 +261,8 @@ export default {
   importWorkspace,
   importWorkspace3D,
   importDatasource,
+  importColor,
+  importSymbol,
   importTIF,
   importSHP,
   importMIF,
