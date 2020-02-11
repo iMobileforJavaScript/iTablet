@@ -102,9 +102,10 @@ export default class Row extends PureComponent {
       )
     } else if (this.props.type === 'input_wrap') {
       right = (
-        <View style={styles.inputView}>
+        <View style={[styles.inputWrap, styles.inputView]}>
           <Input
-            inputStyle={[styles.input, this.props.customRightStyle]}
+            inputStyle={this.props.customRightStyle}
+            style={this.props.customRightStyle}
             accessible={true}
             accessibilityLabel={'输入框'}
             // placeholder={this.state.placeholder}
