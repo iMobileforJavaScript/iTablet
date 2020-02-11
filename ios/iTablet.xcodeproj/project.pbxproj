@@ -89,12 +89,13 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		4E51DC0F37A544EEAA87110D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 161B72053D084F8288A022CA /* Foundation.framework */; };
+		4E9E993E23C33B8E007F667C /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 4E9E987E23C32276007F667C /* Trial_License.slm */; };
 		4EE4616E239A497C00775A76 /* labelmap_cn.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4EE4616D239A497C00775A76 /* labelmap_cn.txt */; };
+		4EFB3DE123BBF28700688642 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFB3DDF23BBF07300688642 /* libiconv.2.4.0.tbd */; };
 		4FDE080EB44C437285909CD0 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1853C4F095F74312930AEB4B /* libRCTContacts.a */; };
 		5070B3E1494A444D84A68BE0 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 23E1668885E74380A5197539 /* libRNCamera.a */; };
 		554AD35F038E444CA9C593BD /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64EBB0CEFDCC424896C92D54 /* CoreFoundation.framework */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		6112EBE7231516F1005F89FC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBAE231516F1005F89FC /* libiconv.tbd */; };
 		6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE8231516F9005F89FC /* libsqlite3.tbd */; };
 		6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */; };
 		6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6112EBEC23151716005F89FC /* libbz2.tbd */; };
@@ -719,7 +720,9 @@
 		4718178FEC6F4F6183EA8DAB /* RCTJPushModule.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTJPushModule.xcodeproj; path = "../node_modules/jpush-react-native/ios/RCTJPushModule.xcodeproj"; sourceTree = "<group>"; };
 		47393AD6041845BA97972D87 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		49560BBB1D5344A9B91E51D1 /* libRNCookieManagerIOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCookieManagerIOS.a; sourceTree = "<group>"; };
+		4E9E987E23C32276007F667C /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		4EE4616D239A497C00775A76 /* labelmap_cn.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = labelmap_cn.txt; sourceTree = "<group>"; };
+		4EFB3DDF23BBF07300688642 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		5ACE6D6C17F9429194D7409D /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6112EB3023151588005F89FC /* PIL */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PIL; path = "../node_modules/imobile_for_reactnative/ios/python/Pillow-master/PIL"; sourceTree = "<group>"; };
@@ -772,11 +775,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EFB3DE123BBF28700688642 /* libiconv.2.4.0.tbd in Frameworks */,
 				2A5299AD2386A1AB0071AD06 /* Accelerate.framework in Frameworks */,
 				6112EBED23151716005F89FC /* libbz2.tbd in Frameworks */,
 				6112EBEA231516FA005F89FC /* libsqlite3.tbd in Frameworks */,
 				6112EBEB231516FA005F89FC /* libsqlite3.0.tbd in Frameworks */,
-				6112EBE7231516F1005F89FC /* libiconv.tbd in Frameworks */,
 				2AAEE1D0230E696800902D1D /* libxml2.tbd in Frameworks */,
 				0A1A204B22D6BCF40014058A /* libRCTCameraRoll.a in Frameworks */,
 				0A13B49922A66D38005E4AEC /* ExternalAccessory.framework in Frameworks */,
@@ -978,6 +981,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				4E9E987E23C32276007F667C /* Trial_License.slm */,
 				2A15229623979C1700CBC452 /* SuperMapAR.bundle */,
 				614D855D23C71A1900BDEC31 /* Resource */,
 				2ABCAA152386616D0052EB6B /* Model */,
@@ -1235,6 +1239,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EFB3DDF23BBF07300688642 /* libiconv.2.4.0.tbd */,
 				6112EBEC23151716005F89FC /* libbz2.tbd */,
 				6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */,
 				6112EBE8231516F9005F89FC /* libsqlite3.tbd */,
@@ -2106,6 +2111,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				4E9E993E23C33B8E007F667C /* Trial_License.slm in Resources */,
 				0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */,
 				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
 				614D856E23C71A1900BDEC31 /* Segmentation.caffemodel in Resources */,
@@ -2221,7 +2227,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = URZW253WPZ;
@@ -2318,7 +2324,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2330,7 +2336,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 12;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
@@ -2426,7 +2432,7 @@
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7";
+				VALID_ARCHS = arm64;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

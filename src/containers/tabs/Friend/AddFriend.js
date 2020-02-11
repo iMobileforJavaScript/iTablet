@@ -66,6 +66,7 @@ class AddFriend extends Component {
             placeholder={
               getLanguage(this.language).Friends.ADD_FRIEND_PLACEHOLDER
             }
+            placeholderTextColor={'#A7A7A7'}
             clearButtonMode="while-editing"
             onChangeText={newWord => this.setState({ text: newWord })}
             underlineColorAndroid="white"

@@ -179,6 +179,7 @@ class IPortalLogin extends React.Component {
             placeholder={
               getLanguage(this.props.language).Profile.ENTER_SERVER_ADDRESS
             }
+            placeholderTextColor={'#A7A7A7'}
             multiline={false}
             defaultValue={this.iportalAddress || ''}
             style={styles.textInputStyle}
@@ -217,6 +218,7 @@ class IPortalLogin extends React.Component {
             placeholder={
               getLanguage(this.props.language).Profile.ENTER_USERNAME2
             }
+            placeholderTextColor={'#A7A7A7'}
             multiline={false}
             defaultValue={this.iportalUser || ''}
             style={styles.textInputStyle}
@@ -230,6 +232,7 @@ class IPortalLogin extends React.Component {
             placeholder={
               getLanguage(this.props.language).Profile.ENTER_PASSWORD
             }
+            placeholderTextColor={'#A7A7A7'}
             multiline={false}
             password={true}
             style={styles.textInputStyle}
