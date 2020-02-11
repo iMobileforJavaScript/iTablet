@@ -16,15 +16,11 @@ import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import MyDataPopupModal from './MyDataPopupModal'
 import { color } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, OnlineServicesUtils } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from './ModalBtns'
 import UserType from '../../../../constants/UserType'
-import {
-  SOnlineService,
-  SIPortalService,
-  DatasetType,
-} from 'imobile_for_reactnative'
+import { DatasetType } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language/index'
 import { MsgConstant, SimpleDialog } from '../../Friend'
 import { MineItem, BatchHeadBar } from '../component'
@@ -43,6 +39,8 @@ const gridImg = require('../../../../assets/mapToolbar/dataset_type_grid_black.p
 const networkImg = require('../../../../assets/mapToolbar/dataset_type_network_black.png')
 const defaultImg = require('../../../../assets/mapToolbar/dataset_type_else_black.png')
 
+var JSOnlineService
+var JSIPortalServce
 export default class MyDataPage extends Component {
   props: {
     language: string,
@@ -69,6 +67,8 @@ export default class MyDataPage extends Component {
       batchMode: false,
       selectedNum: 0,
     }
+    JSOnlineService = new OnlineServicesUtils('online')
+    JSIPortalServce = new OnlineServicesUtils('iportal')
     this.getItemCallback = params.getItemCallback || undefined
     this.chatCallback = params.chatCallback || undefined
     this.exportPath = ''
@@ -281,9 +281,8 @@ export default class MyDataPage extends Component {
         }
       }
       this.ShareModal && this.ShareModal.setVisible(false)
-
+      this.shareType = type
       if (this.type === this.types.mark && fileName === '') {
-        this.shareType = type
         this.InputDialog.setDialogVisible(true)
         return
       }
@@ -291,7 +290,6 @@ export default class MyDataPage extends Component {
         if (!this.isExportable(this.itemInfo)) {
           this.showUnableExportDialog()
         } else {
-          this.shareType = type
           this.showSelectExportTypeDialog()
         }
         return
@@ -408,10 +406,15 @@ export default class MyDataPage extends Component {
     let path = this.exportPath
     this.exportPath = ''
     let result
-    if (this.type === this.types.map) {
-      result = await SOnlineService.uploadFile(path, fileName)
+    let { ext, onlineDataType } = this._getUploadType()
+    if (ext && onlineDataType) {
+      result = await JSOnlineService.uploadFile(
+        path,
+        fileName + '.' + ext,
+        onlineDataType,
+      )
     } else {
-      result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
+      result = false
     }
     await FileTools.deleteFile(path)
     return result
@@ -421,18 +424,19 @@ export default class MyDataPage extends Component {
     await this.exportData(fileName)
     let path = this.exportPath
     this.exportPath = ''
-    let uploadResult
-    if (this.type === this.types.map) {
-      uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
-    } else {
-      uploadResult = await SIPortalService.uploadDataByType(
+    let result
+    let { ext, onlineDataType } = this._getUploadType()
+    if (ext && onlineDataType) {
+      result = await JSIPortalServce.uploadFile(
         path,
-        fileName + '.zip',
-        'UDB',
+        fileName + '.' + ext,
+        onlineDataType,
       )
+    } else {
+      result = false
     }
     await FileTools.deleteFile(path)
-    return uploadResult
+    return result
   }
 
   shareToChat = async fileName => {
@@ -478,6 +482,41 @@ export default class MyDataPage extends Component {
         }
       },
     })
+  }
+
+  _getUploadType = () => {
+    let ext, onlineDataType
+    if (this.type === this.types.map || this.type === this.types.scene) {
+      ext = 'zip'
+      onlineDataType = 'WORKSPACE'
+    } else if (this.type === this.types.data || this.type === this.types.mark) {
+      ext = 'zip'
+      onlineDataType = 'UDB'
+    } else if (this.type === this.types.color) {
+      ext = 'scs'
+      onlineDataType = 'COLORSCHEME'
+    } else if (this.type === this.types.symbol) {
+      let name = this.itemInfo.item.name
+      let type =
+        name.lastIndexOf('.') > 0
+          ? name.substring(name.lastIndexOf('.') + 1).toLowerCase()
+          : ''
+      ext = type
+      if (type === 'sym') {
+        onlineDataType = 'MARKERSYMBOL'
+      } else if (type === 'lsl') {
+        onlineDataType = 'LINESYMBOL'
+      } else if (type === 'bru') {
+        onlineDataType = 'FILLSYMBOL'
+      }
+    } else if (this.type === this.types.template) {
+      ext = 'zip'
+      onlineDataType = 'UDB'
+    }
+    return {
+      ext,
+      onlineDataType,
+    }
   }
 
   /***************************** 数据相关 end ******************************************/

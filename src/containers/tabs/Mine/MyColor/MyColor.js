@@ -45,11 +45,16 @@ class MyColor extends MyDataPage {
     let targetPath
     if (exportToTemp) {
       let tempPath = homePath + this.getRelativeTempPath()
-      let availableName = await this._getAvailableFileName(
-        tempPath,
-        'MyExport',
-        'zip',
-      )
+      let availableName
+      if (this.shareType === 'online' || this.shareType === 'iportal') {
+        availableName = await this._getAvailableFileName(tempPath, name, 'scs')
+      } else {
+        availableName = await this._getAvailableFileName(
+          tempPath,
+          'MyExport',
+          'zip',
+        )
+      }
       targetPath = tempPath + availableName
       this.exportPath = targetPath
     } else {
@@ -62,12 +67,16 @@ class MyColor extends MyDataPage {
       targetPath = exportPath + availableName
       this.exportPath = this.getRelativeExportPath() + availableName
     }
-    let archivePaths = []
 
     let filePath = homePath + this.itemInfo.item.path
-    archivePaths = [filePath]
-
-    let result = await FileTools.zipFiles(archivePaths, targetPath)
+    let result
+    if (this.shareType === 'online' || this.shareType === 'iportal') {
+      result = await FileTools.copyFile(filePath, targetPath, true)
+    } else {
+      let archivePaths = []
+      archivePaths = [filePath]
+      result = await FileTools.zipFiles(archivePaths, targetPath)
+    }
     return result
   }
 }
