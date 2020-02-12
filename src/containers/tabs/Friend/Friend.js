@@ -24,7 +24,7 @@ import ScrollableTabView, {
 import { SMessageService, SOnlineService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
-import { Toast } from '../../../utils/index'
+import { Toast, OnlineServicesUtils } from '../../../utils'
 import { styles } from './Styles'
 
 import { getThemeAssets } from '../../../assets'
@@ -47,6 +47,7 @@ import { EventConst } from '../../../constants'
 import JPushService from './JPushService'
 import { Buffer } from 'buffer'
 import SMessageServiceHTTP from './SMessageServiceHTTP'
+import RNFS from 'react-native-fs'
 const SMessageServiceiOS = NativeModules.SMessageService
 const appUtilsModule = NativeModules.AppUtils
 const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
@@ -150,6 +151,62 @@ export default class Friend extends Component {
 
   _setHomePath = async () => {
     global.homePath = await FileTools.appendingHomeDirectory()
+  }
+
+  initServerInfo = async () => {
+    try {
+      let commonPath = await FileTools.appendingHomeDirectory(
+        '/iTablet/Common/',
+      )
+      let JSOnlineService = new OnlineServicesUtils('online')
+      let data = await JSOnlineService.getPublicDataByName(
+        '927528',
+        'ServerInfo.geojson',
+      )
+      if (data) {
+        let url = `https://www.supermapol.com/web/datas/${data.id}/download`
+
+        let filePath = commonPath + data.fileName
+
+        if (await RNFS.exists(filePath)) {
+          await RNFS.unlink(filePath)
+        }
+
+        let downloadOptions = {
+          fromUrl: url,
+          toFile: filePath,
+          background: true,
+          fileName: data.fileName,
+          progressDivider: 1,
+        }
+
+        await RNFS.downloadFile(downloadOptions).promise
+        let info = await RNFS.readFile(filePath)
+        RNFS.unlink(filePath)
+        let serverInfo = JSON.parse(info)
+        GLOBAL.MSG_IP = serverInfo.MSG_IP
+        GLOBAL.MSG_Port = serverInfo.MSG_Port
+        GLOBAL.MSG_HostName = serverInfo.MSG_HostName
+        GLOBAL.MSG_UserName = serverInfo.MSG_UserName
+        GLOBAL.MSG_Password = serverInfo.MSG_Password
+        GLOBAL.MSG_HTTP_Port = serverInfo.MSG_HTTP_Port
+        GLOBAL.FILE_UPLOAD_SERVER_URL = serverInfo.FILE_UPLOAD_SERVER_URL
+        GLOBAL.FILE_DOWNLOAD_SERVER_URL = serverInfo.FILE_DOWNLOAD_SERVER_URL
+      } else {
+        GLOBAL.MSG_IP = '127.0.0.1'
+        GLOBAL.MSG_Port = 5672
+        GLOBAL.MSG_HostName = '/'
+        GLOBAL.MSG_UserName = 'Name'
+        GLOBAL.MSG_Password = 'Password'
+      }
+    } catch (error) {
+      GLOBAL.MSG_IP = '127.0.0.1'
+      GLOBAL.MSG_Port = 5672
+      GLOBAL.MSG_HostName = '/'
+      GLOBAL.MSG_UserName = 'Name'
+      GLOBAL.MSG_Password = 'Password'
+      // console.log(error)
+    }
   }
 
   setCurChat = chat => {
@@ -340,12 +397,13 @@ export default class Friend extends Component {
   connectService = async () => {
     if (UserType.isOnlineUser(this.props.user.currentUser)) {
       try {
+        await this.initServerInfo()
         let res = await SMessageService.connectService(
-          MSGConstant.MSG_IP,
-          MSGConstant.MSG_Port,
-          MSGConstant.MSG_HostName,
-          MSGConstant.MSG_UserName,
-          MSGConstant.MSG_Password,
+          GLOBAL.MSG_IP,
+          GLOBAL.MSG_Port,
+          GLOBAL.MSG_HostName,
+          GLOBAL.MSG_UserName,
+          GLOBAL.MSG_Password,
           this.props.user.currentUser.userId,
         )
         if (!res) {
@@ -801,11 +859,11 @@ export default class Friend extends Component {
    */
   _sendFile = (messageStr, filepath, talkId, msgId, informMsg, cb) => {
     let connectInfo = {
-      serverIP: MSGConstant.MSG_IP,
-      port: MSGConstant.MSG_Port,
-      hostName: MSGConstant.MSG_HostName,
-      userName: MSGConstant.MSG_UserName,
-      passwd: MSGConstant.MSG_Password,
+      serverIP: GLOBAL.MSG_IP,
+      port: GLOBAL.MSG_Port,
+      hostName: GLOBAL.MSG_HostName,
+      userName: GLOBAL.MSG_UserName,
+      passwd: GLOBAL.MSG_Password,
       userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFileWithMQ(
@@ -837,7 +895,7 @@ export default class Friend extends Component {
   sendFile = async (message, filePath, talkId, msgId, cb) => {
     try {
       let res = await SMessageService.sendFileWithThirdServer(
-        MSGConstant.FILE_UPLOAD_SERVER_URL,
+        GLOBAL.FILE_UPLOAD_SERVER_URL,
         filePath,
         this.props.user.currentUser.userId,
         talkId,
@@ -927,7 +985,7 @@ export default class Friend extends Component {
     try {
       let homePath = await FileTools.appendingHomeDirectory()
       let res = await SMessageService.receiveFileWithThirdServer(
-        MSGConstant.FILE_DOWNLOAD_SERVER_URL,
+        GLOBAL.FILE_DOWNLOAD_SERVER_URL,
         chatMessage.originMsg.user.id,
         chatMessage.originMsg.message.message.queueName,
         chatMessage.originMsg.message.message.fileSize,
