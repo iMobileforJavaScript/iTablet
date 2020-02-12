@@ -24,7 +24,7 @@ export default class MapToolbar extends React.Component {
   }
 
   static defaultProps = {
-    type: constants.COLLECTION,
+    type: constants.MAP_COLLECTION,
     hidden: false,
     editLayer: {},
     initIndex: -1,
@@ -59,7 +59,7 @@ export default class MapToolbar extends React.Component {
     switch (type) {
       case constants.MAP_EDIT:
       case constants.MAP_PLOTTING:
-      case constants.COLLECTION:
+      case constants.MAP_COLLECTION:
       case constants.MAP_THEME:
       case constants.MAP_ANALYST:
       case constants.MAP_NAVIGATION:

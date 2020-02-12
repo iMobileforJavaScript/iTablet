@@ -169,7 +169,7 @@ export default {
 
   // =====================================
 
-  COLLECTION: 'COLLECTION',
+  MAP_COLLECTION: 'MAP_COLLECTION',
   // PLOTTING: 'PLOTTING',
   MAP_EDIT: 'MAP_EDIT',
   MAP_3D: 'MAP_3D',

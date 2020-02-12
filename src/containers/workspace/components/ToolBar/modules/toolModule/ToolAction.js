@@ -2,7 +2,6 @@ import {
   SMap,
   Action,
   SMediaCollector,
-  DatasetType,
   SAIDetectView,
   SCollector,
 } from 'imobile_for_reactnative'
@@ -352,11 +351,15 @@ async function point() {
   _params.showFullMap && _params.showFullMap(true)
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if (layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='POINTLAYER') {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'POINTLAYER'
+  ) {
     SMap.setAction(Action.CREATEPOINT)
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
@@ -371,11 +374,15 @@ async function words() {
   const _params = ToolbarModule.getParams()
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if ((layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='TEXTLAYER')) {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'TEXTLAYER'
+  ) {
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -390,11 +397,15 @@ async function pointline() {
   const _params = ToolbarModule.getParams()
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if ((layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='LINELAYER')) {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'LINELAYER'
+  ) {
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -409,11 +420,15 @@ async function freeline() {
   const _params = ToolbarModule.getParams()
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if ((layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='LINELAYER')) {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'LINELAYER'
+  ) {
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -428,11 +443,15 @@ async function pointcover() {
   const _params = ToolbarModule.getParams()
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if ((layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='REGIONLAYER')) {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'REGIONLAYER'
+  ) {
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -447,11 +466,15 @@ async function freecover() {
   const _params = ToolbarModule.getParams()
   let currentLayer = _params.currentLayer
   // let reg = /^Label_(.*)#$/
-  let  layerType
+  let layerType
   if (currentLayer) {
     layerType = LayerUtils.getLayerType(currentLayer)
   }
-  if ((layerType==='TAGGINGLAYER'||layerType==='CADLAYER'||layerType==='REGIONLAYER')) {
+  if (
+    layerType === 'TAGGINGLAYER' ||
+    layerType === 'CADLAYER' ||
+    layerType === 'REGIONLAYER'
+  ) {
     _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_TAGGING, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[4],
@@ -832,29 +855,29 @@ function commit(type) {
       //   isRegionLayer ||
       //   isTextLayer
       // ) {
-        layerType==='TAGGINGLAYER' &&
-          SMap.setTaggingGrid(
-            currentLayer.datasetName,
-            _params.user.currentUser.userName,
-          )
-        SMap.submit()
-        SMap.refreshMap()
-        SMap.setAction(Action.PAN)
-        if (type === ConstToolType.MAP_TOOL_TAGGING) {
-          _params.setToolbarVisible(
-            true,
-            ConstToolType.MAP_TOOL_TAGGING_SETTING,
-            {
-              isFullScreen: false,
-              containerType: 'list',
-              height:
-                _params.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.TOOLBAR_HEIGHT[3]
-                  : ConstToolType.TOOLBAR_HEIGHT[3],
-              column: _params.device.orientation === 'LANDSCAPE' ? 8 : 4,
-            },
-          )
-        }
+      layerType === 'TAGGINGLAYER' &&
+        SMap.setTaggingGrid(
+          currentLayer.datasetName,
+          _params.user.currentUser.userName,
+        )
+      SMap.submit()
+      SMap.refreshMap()
+      SMap.setAction(Action.PAN)
+      if (type === ConstToolType.MAP_TOOL_TAGGING) {
+        _params.setToolbarVisible(
+          true,
+          ConstToolType.MAP_TOOL_TAGGING_SETTING,
+          {
+            isFullScreen: false,
+            containerType: 'list',
+            height:
+              _params.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.TOOLBAR_HEIGHT[3]
+                : ConstToolType.TOOLBAR_HEIGHT[3],
+            column: _params.device.orientation === 'LANDSCAPE' ? 8 : 4,
+          },
+        )
+      }
       // } else {
       //   Toast.show(
       //     getLanguage(_params.language).Prompt.PLEASE_SELECT_PLOT_LAYER,

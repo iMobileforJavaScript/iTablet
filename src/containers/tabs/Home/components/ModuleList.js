@@ -41,6 +41,7 @@ class ModuleList extends Component {
     currentUser: Object,
     latestMap: Object,
     downloads: Array,
+    mapModules: Array,
     importWorkspace: () => {},
     showDialog: () => {},
     getModuleItem: () => {},
@@ -159,7 +160,7 @@ class ModuleList extends Component {
       fileName = language === 'CN' ? '湖南' : 'LosAngeles'
     } else if (moduleKey === constants.MAP_THEME) {
       fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
-    } else if (moduleKey === constants.COLLECTION) {
+    } else if (moduleKey === constants.MAP_COLLECTION) {
       fileName = '地理国情普查_示范数据'
     } else if (moduleKey === constants.MAP_ANALYST) {
       // fileName = 'Xiamen_CN'
@@ -355,7 +356,7 @@ class ModuleList extends Component {
   }
 
   render() {
-    let data = ConstModule(this.props.language)
+    let data = ConstModule(this.props.mapModules, this.props.language)
     //模块个数为单数时高度处理
     let heightNum = data.length % 2 === 0 ? data.length : data.length + 1
     let height = (scaleSize(220) * heightNum) / 2

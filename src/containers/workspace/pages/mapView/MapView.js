@@ -125,6 +125,7 @@ export default class MapView extends React.Component {
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
     navigationhistory: PropTypes.array,
+    mapModules: PropTypes.array,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -1365,7 +1366,7 @@ export default class MapView extends React.Component {
           GLOBAL.newPlotMapName = ''
         }
 
-        // GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
+        // GLOBAL.Type === constants.MAP_COLLECTION && this.initCollectorDatasource()
         // 获取图层列表
         this.props.getLayers(
           { type: -1, currentLayerIndex: 0 },
@@ -1432,7 +1433,7 @@ export default class MapView extends React.Component {
             markerTag,
           )
         if (
-          GLOBAL.Type === constants.COLLECTION ||
+          GLOBAL.Type === constants.MAP_COLLECTION ||
           GLOBAL.Type === constants.MAP_PLOTTING
         ) {
           SMap.setIsMagnifierEnabled(true)
@@ -1499,7 +1500,7 @@ export default class MapView extends React.Component {
       })
       if (mapInfo) {
         // 如果是模板地图，则加载模板
-        if (mapInfo.Template && GLOBAL.Type === constants.COLLECTION) {
+        if (mapInfo.Template && GLOBAL.Type === constants.MAP_COLLECTION) {
           this.setLoading(
             true,
             //ConstInfo.TEMPLATE_READING
@@ -1720,6 +1721,7 @@ export default class MapView extends React.Component {
         online={this.props.online}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
+        mapModules={this.props.mapModules}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

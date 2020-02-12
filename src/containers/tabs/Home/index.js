@@ -18,6 +18,7 @@ const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
   currentUser: state.user.toJS().currentUser,
   device: state.device.toJS().device,
+  mapModules: state.modules.toJS().mapModules,
   user: state.user.toJS(),
 })
 const mapDispatchToProps = {

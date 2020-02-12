@@ -1,0 +1,253 @@
+{
+  "name": "iTablet",
+  "version": "0.0.1",
+  "language": "CN",
+  "tabModules": [
+    "Home",
+    "Find",
+    "Friend",
+    "Mine"
+  ],
+  "mapModules": [
+    {
+      "key": "MAP_EDIT",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_ADD"
+        },
+        {
+          "key": "styleModule",
+          "type": "MAP_STYLE"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    },
+    {
+      "key": "MAP_3D",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_3D_START"
+        },
+        {
+          "key": "fly3DModule",
+          "type": "MAP3D_TOOL_FLYLIST"
+        },
+        {
+          "key": "tool3DModule",
+          "type": "MAP3D_TOOL"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE_MAP3D"
+        }
+      ]
+    },
+    {
+      "key": "MAP_AR",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_ADD"
+        },
+        {
+          "key": "styleModule",
+          "type": "MAP_STYLE"
+        },
+        {
+          "key": "arAIAssistant",
+          "type": "MAP_AR_AI_ASSISTANT"
+        }
+      ]
+    },
+    {
+      "key": "MAP_NAVIGATION",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_NAVIGATION_ADD_UDB"
+        },
+        {
+          "key": "navigationModule",
+          "type": "MAP_NAVIGATION_MODULE"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    },
+    {
+      "key": "MAP_THEME",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "themeModule",
+          "type": "MAP_THEME"
+        },
+        {
+          "key": "styleModule",
+          "type": "MAP_STYLE"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    },
+    {
+      "key": "MAP_COLLECTION",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_ADD"
+        },
+        {
+          "key": "collectionModule",
+          "type": "MAP_SYMBOL"
+        },
+        {
+          "key": "editModule",
+          "type": "MAP_EDIT"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    },
+    {
+      "key": "MAP_PLOTTING",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_ADD"
+        },
+        {
+          "key": "plotModule",
+          "type": "PLOTTING"
+        },
+        {
+          "key": "editModule",
+          "type": "MAP_EDIT"
+        },
+        {
+          "key": "plotModule",
+          "type": "PLOTTING_ANIMATION"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    },
+    {
+      "key": "MAP_ANALYST",
+      "functionModules": [
+        {
+          "key": "startModule",
+          "type": "MAP_START"
+        },
+        {
+          "key": "addModule",
+          "type": "MAP_ADD"
+        },
+        {
+          "key": "analysisModule",
+          "type": "MAP_ANALYSIS"
+        },
+        {
+          "key": "styleModule",
+          "type": "MAP_STYLE"
+        },
+        {
+          "key": "toolModule",
+          "type": "MAP_TOOLS"
+        },
+        {
+          "key": "shareModule",
+          "type": "MAP_SHARE"
+        }
+      ]
+    }
+  ],
+  "mineModules": [
+    {
+      "key": "IMPORT"
+    },
+    {
+      "key": "MY_SERVICE"
+    },
+    {
+      "key": "DATA"
+    },
+    {
+      "key": "MARK"
+    },
+    {
+      "key": "MAP"
+    },
+    {
+      "key": "SCENE"
+    },
+    {
+      "key": "BASE_MAP"
+    },
+    {
+      "key": "SYMBOL"
+    },
+    {
+      "key": "TEMPLATE"
+    },
+    {
+      "key": "MyColor"
+    }
+  ]
+}

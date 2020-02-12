@@ -3,7 +3,6 @@ import { View, AppState, StyleSheet, Platform, Image, Text, BackHandler, NativeM
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
-import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
 import { setAgreeToProtocol, setLanguage, setMapSetting ,setMap2Dto3D} from './src/models/setting'
@@ -23,6 +22,7 @@ import {
   setCurrentTemplateList,
   setTemplate,
 } from './src/models/template'
+import { setModules } from './src/models/modules'
 import { Dialog, Loading } from './src/components'
 import { setAnalystParams } from './src/models/analyst'
 import { setCollectionInfo } from './src/models/collection'
@@ -31,12 +31,13 @@ import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
+import RootNavigator from './src/containers/RootNavigator'
 import { color } from './src/styles'
 import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap,SMessageService, SIPortalService ,SpeechManager, SSpeechRecognizer} from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap, SIPortalService ,SpeechManager, SSpeechRecognizer} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 import UserType from './src/constants/UserType'
 import { getLanguage } from './src/language/index'
@@ -122,6 +123,7 @@ class AppRoot extends Component {
     layers: PropTypes.array,
     isAgreeToProtocol: PropTypes.bool,
     device: PropTypes.object,
+    modules: PropTypes.object,
 
     setNav: PropTypes.func,
     setUser: PropTypes.func,
@@ -144,6 +146,8 @@ class AppRoot extends Component {
     setAgreeToProtocol: PropTypes.func,
     setLanguage: PropTypes.func,
     setMap2Dto3D: PropTypes.func,
+    setCurrentLayer: PropTypes.func,
+    setModules: PropTypes.func,
   }
 
   constructor (props) {
@@ -152,6 +156,8 @@ class AppRoot extends Component {
       sceneStyle: styles.invisibleMap,
       import: null,
     }
+    let config = require('./config.json')
+    this.props.setModules(config) // 设置模块
     this.initGlobal()
     PT.initCustomPrototype()
     this.login = this.login.bind(this)
@@ -331,7 +337,7 @@ class AppRoot extends Component {
 
   inspectEnvironment = async () => {
 
-    let serialNumber =await SMap.initSerialNumber(serialNumber)
+    let serialNumber =await SMap.initSerialNumber('')
     if(serialNumber!==''){
       AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, serialNumber)
     }
@@ -635,7 +641,7 @@ class AppRoot extends Component {
         true,
         global.language === 'CN' ? '许可申请中...' : 'Applying',
       )
-      
+
       let activateResult = await SMap.activateNativeLicense()
       if(activateResult === -1){
         //没有本地许可文件
@@ -909,14 +915,14 @@ class AppRoot extends Component {
             alignItems: 'center'}}
           onPress={()=>{ GLOBAL.noNativeLicenseDialog.setDialogVisible(false)}}
         >
-          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack, }}>
+          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack }}>
             {getLanguage(global.language).Prompt.CONFIRM}
           </Text>
         </TouchableOpacity>
       </View>
     </Dialog>
     )
-    
+
   }
 
   //提示正式许可不是itablet app激活的许可
@@ -935,12 +941,12 @@ class AppRoot extends Component {
           style={styles.dialogHeaderImg}
         />
         <Text style={{fontSize: scaleSize(24),
-            height: scaleSize(120),
-            color: color.theme_white,
-            marginTop: scaleSize(5),
-            marginLeft: scaleSize(10),
-            marginRight: scaleSize(10),
-            textAlign: 'center',}}>
+          height: scaleSize(120),
+          color: color.theme_white,
+          marginTop: scaleSize(5),
+          marginLeft: scaleSize(10),
+          marginRight: scaleSize(10),
+          textAlign: 'center'}}>
           {getLanguage(GLOBAL.language).Profile.LICENSE_NOT_ITABLET_OFFICAL}
         </Text>
         <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white }}></View>
@@ -952,14 +958,14 @@ class AppRoot extends Component {
             alignItems: 'center'}}
           onPress={()=>{ GLOBAL.isNotItableLicenseDialog.setDialogVisible(false)}}
         >
-          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack, }}>
+          <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack }}>
             {getLanguage(global.language).Prompt.CONFIRM}
           </Text>
         </TouchableOpacity>
       </View>
     </Dialog>
     )
-    
+
   }
 
   renderSimpleDialog = () => {
@@ -971,15 +977,9 @@ class AppRoot extends Component {
     return (
       <View style={{flex: 1}}>
         <RootNavigator
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef)
-          }}
-          onNavigationStateChange={(prevState, currentState) => {
-            this.props.setNav(currentState)
-            // AudioAnalyst.setConfig({
-            //   nav: currentState,
-            // })
-          }}
+          modules={this.props.modules}
+          setModules={this.props.setModules}
+          setNav={this.props.setNav}
         />
         <SaveView
           ref={ref => GLOBAL.SaveMapView = ref}
@@ -1016,6 +1016,7 @@ const mapStateToProps = state => {
     layers: state.layers.toJS().layers,
     backActions: state.backActions.toJS(),
     isAgreeToProtocol: state.setting.toJS().isAgreeToProtocol,
+    modules: state.modules.toJS(),
   }
 }
 
@@ -1039,6 +1040,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setAgreeToProtocol,
   setLanguage,
   setMap2Dto3D,
+  setModules,
 })(AppRoot)
 
 const App = () =>

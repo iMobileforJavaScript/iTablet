@@ -351,7 +351,7 @@ function openTemplateList() {
 
 /** 导入 **/
 // function importWorkspace() {
-//   if (GLOBAL.Type === constants.COLLECTION) {
+//   if (GLOBAL.Type === constants.MAP_COLLECTION) {
 //     openWorkspace(async path => {
 //       try {
 //         ToolbarModule.getParams().setContainerLoading &&
@@ -393,7 +393,7 @@ function openTemplateList() {
 
 /** 新建 **/
 async function create() {
-  if (GLOBAL.Type === constants.COLLECTION) {
+  if (GLOBAL.Type === constants.MAP_COLLECTION) {
     openTemplateList()
     return
   }
@@ -852,14 +852,14 @@ async function changeMap(item) {
         // 若没有底图，默认添加地图
         // if (LayerUtils.getBaseLayers(layers).length > 0) {
         //   await SMap.openDatasource(
-        //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
+        //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.MAP_COLLECTION
         //       ? 1 : ConstOnline['Google'].layerIndex, false)
         // }
         // if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
         //   await LayerUtils.addBaseMap(
         //     layers,
         //     ConstOnline['Google'],
-        //     GLOBAL.Type === constants.COLLECTION
+        //     GLOBAL.Type === constants.MAP_COLLECTION
         //       ? 1
         //       : ConstOnline['Google'].layerIndex,
         //     false,
@@ -1228,7 +1228,7 @@ async function openTemplate(item) {
                   await LayerUtils.addBaseMap(
                     layers,
                     ConstOnline['Google'],
-                    GLOBAL.Type === constants.COLLECTION
+                    GLOBAL.Type === constants.MAP_COLLECTION
                       ? 1
                       : ConstOnline['Google'].layerIndex,
                     false,
@@ -1238,7 +1238,7 @@ async function openTemplate(item) {
                 // // 若没有底图，默认添加地图
                 // if (LayerUtils.getBaseLayers(layers).length > 0) {
                 //   await SMap.openDatasource(
-                //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
+                //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.MAP_COLLECTION
                 //       ? 1 : ConstOnline['Google'].layerIndex, false)
                 // }
               })

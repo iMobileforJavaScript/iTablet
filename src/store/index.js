@@ -15,6 +15,7 @@ const persistConfig = {
     'symbol',
     'map',
     'histories',
+    'modules',
   ],
   blacklist: [
     'nav',

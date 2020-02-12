@@ -652,7 +652,6 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   NSString* plotFilePath = [NSString stringWithFormat:@"%@/%@", plottingExtDataPath, @"PlotLibData"];
   NSString* commonPlotZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"PlotLibData.zip"];
   NSString* originPlotPath = [[NSBundle mainBundle] pathForResource:@"PlotLibData" ofType:@"zip"];
-  NSString* plotZipData = @"PlotLibData.zip";
   
   // 拷贝默认图片并解压
   NSString* imageZipPath = [[NSBundle mainBundle] pathForResource:@"Images" ofType:@"zip"];

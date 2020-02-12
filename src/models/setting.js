@@ -250,7 +250,7 @@ const initialState = fromJS({
       widthPercent: 80,
       heightPercent: 80,
     },
-    [constants.COLLECTION]: {
+    [constants.MAP_COLLECTION]: {
       isShow: false,
       backgroundColor: 'white',
       column: 2,
@@ -389,7 +389,7 @@ export default handleActions(
             widthPercent: 80,
             heightPercent: 80,
           },
-          [constants.COLLECTION]: {
+          [constants.MAP_COLLECTION]: {
             isShow: false,
             backgroundColor: 'white',
             column: 2,

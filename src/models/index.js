@@ -16,6 +16,7 @@ import localData from './localData'
 import histories from './histories'
 import externalData from './externalData'
 import toolbarStatus from './toolbarStatus'
+import modules from './modules'
 export {
   nav,
   layers,
@@ -35,4 +36,5 @@ export {
   localData,
   externalData,
   toolbarStatus,
+  modules,
 }

@@ -42,7 +42,7 @@ export default class AIFunctionToolbar extends React.Component {
   }
 
   static defaultProps = {
-    type: constants.COLLECTION,
+    type: constants.MAP_COLLECTION,
     hide: false,
     direction: 'column',
     separator: 20,

@@ -6,7 +6,6 @@ import {
   Image,
   Text,
   AsyncStorage,
-  Platform,
 } from 'react-native'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'

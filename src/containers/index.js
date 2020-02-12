@@ -1,4 +1,4 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 // eslint-disable-next-line
 import StackViewStyleInterpolator from 'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator'
 //主页
@@ -129,854 +129,863 @@ import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
 import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
 
-const AppNavigator = createStackNavigator(
-  {
-    Tabs: {
-      screen: Tabs,
-      navigationOptions: {
-        header: null,
+export default function(modules) {
+  return createStackNavigator(
+    {
+      Tabs: {
+        screen: Tabs(modules),
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapLoad: {
+        screen: MapLoad,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapTabs: {
+        screen: MapTabs,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: false,
+        },
+      },
+      MapViewSingle: {
+        screen: MapView,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      CoworkTabs: {
+        screen: CoworkTabs,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      // MapAnalystTabs: {
+      //   screen: MapAnalystTabs,
+      //   navigationOptions: {
+      //     header: null,
+      //   },
+      // },
+      Map3DTabs: {
+        screen: Map3DTabs,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: false,
+        },
+      },
+
+      LayerManager: {
+        screen: MTLayerManager,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      Layer3DManager: {
+        screen: Layer3DManager,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      DataCollection: {
+        screen: MTDataCollection,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      DataManagement: {
+        screen: MTDataManagement,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      NewDSource: {
+        screen: NewDSource,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ChooseDatasource: {
+        screen: ChooseDatasource,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      NewDSet: {
+        screen: NewDSet,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ChooseEditLayer: {
+        screen: ChooseEditLayer,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AnalystParams: {
+        screen: AnalystParams,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AddLayer: {
+        screen: AddLayer,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AddDataset: {
+        screen: AddDataset,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AddLayerGroup: {
+        screen: AddLayerGroup,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapChange: {
+        screen: MapChange,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerSelectionAttribute: {
+        screen: LayerSelectionAttribute,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerAttributeEdit: {
+        screen: LayerAttributeEdit,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerAttributeObj: {
+        screen: LayerAttributeObj,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerAttributeAdd: {
+        screen: LayerAttributeAdd,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerAttributeSearch: {
+        screen: LayerAttributeSearch,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      LayerAttributeStatistic: {
+        screen: LayerAttributeStatistic,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ThemeEntry: {
+        screen: ThemeEntry,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ThemeEdit: {
+        screen: ThemeEdit,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ChoosePage: {
+        screen: ChoosePage,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ThemeStyle: {
+        screen: ThemeStyle,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      WorkspaceFileList: {
+        screen: workspaceFlieList,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      DataSourcelist: {
+        screen: dataSourcelist,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      DataSets: {
+        screen: dataSets,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      ColorPickerPage: {
+        screen: ColorPickerPage,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapCut: {
+        screen: MapCut,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapCutDS: {
+        screen: MapCutDS,
+        navigationOptions: {
+          header: null,
+        },
+      },
+
+      UpLoadList: {
+        screen: UpLoadList,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      MapToolbarSetting: {
+        screen: MapToolbarSetting,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      TouchProgress: {
+        screen: TouchProgress,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      InputPage: {
+        screen: InputPage,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AnimationNodeEditView: {
+        screen: AnimationNodeEditView,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      AnimationNodeEditRotateView: {
+        screen: AnimationNodeEditRotateView,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      /******************************** Friend **********************/
+      //onechat
+      // Chat: {
+      //   screen: Chat,
+      //   navigationOptions: {
+      //     header: null,
+      //     gesturesEnabled: true,
+      //   },
+      // },
+      AddFriend: {
+        screen: AddFriend,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      InformMessage: {
+        screen: InformMessage,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      CreateGroupChat: {
+        screen: CreateGroupChat,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      RecommendFriend: {
+        screen: RecommendFriend,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ManageFriend: {
+        screen: ManageFriend,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ManageGroup: {
+        screen: ManageGroup,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SelectModule: {
+        screen: SelectModule,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      GroupMemberList: {
+        screen: GroupMemberList,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SelectFriend: {
+        screen: SelectFriend,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      /******************************** Mine **********************/
+      Register: {
+        screen: Register,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SelectLogin: {
+        screen: SelectLogin,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      Login: {
+        screen: Login,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      IPortalLogin: {
+        screen: IPortalLogin,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ToggleAccount: {
+        screen: ToggleAccount,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      GetBack: {
+        screen: GetBack,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyLocalData: {
+        screen: MyLocalData,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyMap: {
+        screen: MyMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyScene: {
+        screen: MyScene,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyDatasource: {
+        screen: MyDatasource,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MySymbol: {
+        screen: MySymbol,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyTemplate: {
+        screen: MyTemplate,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyColor: {
+        screen: MyColor,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyDataset: {
+        screen: MyDataset,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      NewDataset: {
+        screen: NewDataset,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SearchMine: {
+        screen: SearchMine,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyService: {
+        screen: MyService,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyOnlineMap: {
+        screen: MyOnlineMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ScanOnlineMap: {
+        screen: ScanOnlineMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      Personal: {
+        screen: Personal,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      /**************************** Home ***************************/
+      AboutITablet: {
+        screen: AboutITablet,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LicensePage: {
+        screen: LicensePage,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LicenseModule: {
+        screen: LicenseModule,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LicenseJoin: {
+        screen: LicenseJoin,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      Setting: {
+        screen: Setting,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LanguageSetting: {
+        screen: LanguageSetting,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      Protocol: {
+        screen: protocol,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      PointAnalyst: {
+        screen: PointAnalyst,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      PublicMap: {
+        screen: PublicMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      FriendMap: {
+        screen: FriendMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyLabel: {
+        screen: MyLabel,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MyBaseMap: {
+        screen: MyBaseMap,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LoadServer: {
+        screen: LoadServer,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SuperMapKnown: {
+        screen: SuperMapKnown,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      PublicData: {
+        screen: PublicData,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      /** 多媒体编辑 **/
+      MediaEdit: {
+        screen: MediaEdit,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      /** 相机界面 **/
+      Camera: {
+        screen: Camera,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      MeasureView: {
+        screen: MeasureView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ClassifyView: {
+        screen: ClassifyView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ModelChoseView: {
+        screen: ModelChoseView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ClassifyResultEditView: {
+        screen: ClassifyResultEditView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      CollectSceneFormView: {
+        screen: CollectSceneFormView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ClassifySettingsView: {
+        screen: ClassifySettingsView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      AIDetecSettingsView: {
+        screen: AIDetecSettingsView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      IllegallyParkView: {
+        screen: IllegallyParkView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ChooseTaggingLayer: {
+        screen: ChooseTaggingLayer,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      CastModelOperateView: {
+        screen: CastModelOperateView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      /**************************** Analyst ***************************/
+      // AnalystTools: {
+      //   screen: AnalystTools,
+      //   navigationOptions: {
+      //     header: null,
+      //     gesturesEnabled: true,
+      //   },
+      // },
+      BufferAnalystView: {
+        screen: BufferAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      AnalystRadiusSetting: {
+        screen: AnalystRadiusSetting,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      AnalystListEntry: {
+        screen: AnalystListEntry,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      OverlayAnalystView: {
+        screen: OverlayAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      OnlineAnalystView: {
+        screen: OnlineAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      IServerLoginPage: {
+        screen: IServerLoginPage,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SourceDatasetPage: {
+        screen: SourceDatasetPage,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      AnalystRangePage: {
+        screen: AnalystRangePage,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      WeightAndStatistic: {
+        screen: WeightAndStatistic,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LocalAnalystView: {
+        screen: LocalAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      ReferenceAnalystView: {
+        screen: ReferenceAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      InterpolationAnalystView: {
+        screen: InterpolationAnalystView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      InterpolationAnalystDetailView: {
+        screen: InterpolationAnalystDetailView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SecondMapSettings: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings1: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings2: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings3: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings4: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings5: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings6: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      SecondMapSettings7: {
+        screen: SecondMapSettings,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      Map2Dto3D: {
+        screen: Map2Dto3D,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      NavigationView: {
+        screen: NavigationView,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      CollectSceneFormHistoryView: {
+        screen: CollectSceneFormHistoryView,
+        navigationOptions: {
+          header: null,
+        },
       },
     },
-    MapLoad: {
-      screen: MapLoad,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapTabs: {
-      screen: MapTabs,
-      navigationOptions: {
-        header: null,
+    {
+      defaultNavigationOptions: {
         gesturesEnabled: false,
       },
-    },
-    MapViewSingle: {
-      screen: MapView,
       navigationOptions: {
-        header: null,
-      },
-    },
-    CoworkTabs: {
-      screen: CoworkTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    // MapAnalystTabs: {
-    //   screen: MapAnalystTabs,
-    //   navigationOptions: {
-    //     header: null,
-    //   },
-    // },
-    Map3DTabs: {
-      screen: Map3DTabs,
-      navigationOptions: {
-        header: null,
+        headerBackTitle: null,
+        headerTintColor: '#333333',
+        showIcon: true,
+        swipeEnabled: false,
         gesturesEnabled: false,
+        animationEnabled: false,
+        headerTitleStyle: { alignSelf: 'center' },
       },
+      lazy: true,
+      mode: 'card',
+      transitionConfig: () => ({
+        screenInterpolator: StackViewStyleInterpolator.forHorizontal,
+      }),
     },
+  )
+}
 
-    LayerManager: {
-      screen: MTLayerManager,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Layer3DManager: {
-      screen: Layer3DManager,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    DataCollection: {
-      screen: MTDataCollection,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    DataManagement: {
-      screen: MTDataManagement,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    NewDSource: {
-      screen: NewDSource,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ChooseDatasource: {
-      screen: ChooseDatasource,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    NewDSet: {
-      screen: NewDSet,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ChooseEditLayer: {
-      screen: ChooseEditLayer,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AnalystParams: {
-      screen: AnalystParams,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AddLayer: {
-      screen: AddLayer,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AddDataset: {
-      screen: AddDataset,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AddLayerGroup: {
-      screen: AddLayerGroup,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapChange: {
-      screen: MapChange,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerSelectionAttribute: {
-      screen: LayerSelectionAttribute,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerAttributeEdit: {
-      screen: LayerAttributeEdit,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerAttributeObj: {
-      screen: LayerAttributeObj,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerAttributeAdd: {
-      screen: LayerAttributeAdd,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerAttributeSearch: {
-      screen: LayerAttributeSearch,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    LayerAttributeStatistic: {
-      screen: LayerAttributeStatistic,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ThemeEntry: {
-      screen: ThemeEntry,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ThemeEdit: {
-      screen: ThemeEdit,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ChoosePage: {
-      screen: ChoosePage,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ThemeStyle: {
-      screen: ThemeStyle,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    WorkspaceFileList: {
-      screen: workspaceFlieList,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    DataSourcelist: {
-      screen: dataSourcelist,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    DataSets: {
-      screen: dataSets,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ColorPickerPage: {
-      screen: ColorPickerPage,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapCut: {
-      screen: MapCut,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapCutDS: {
-      screen: MapCutDS,
-      navigationOptions: {
-        header: null,
-      },
-    },
-
-    UpLoadList: {
-      screen: UpLoadList,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapToolbarSetting: {
-      screen: MapToolbarSetting,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    TouchProgress: {
-      screen: TouchProgress,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    InputPage: {
-      screen: InputPage,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AnimationNodeEditView: {
-      screen: AnimationNodeEditView,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AnimationNodeEditRotateView: {
-      screen: AnimationNodeEditRotateView,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    /******************************** Friend **********************/
-    //onechat
-    // Chat: {
-    //   screen: Chat,
-    //   navigationOptions: {
-    //     header: null,
-    //     gesturesEnabled: true,
-    //   },
-    // },
-    AddFriend: {
-      screen: AddFriend,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    InformMessage: {
-      screen: InformMessage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    CreateGroupChat: {
-      screen: CreateGroupChat,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    RecommendFriend: {
-      screen: RecommendFriend,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ManageFriend: {
-      screen: ManageFriend,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ManageGroup: {
-      screen: ManageGroup,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SelectModule: {
-      screen: SelectModule,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    GroupMemberList: {
-      screen: GroupMemberList,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SelectFriend: {
-      screen: SelectFriend,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    /******************************** Mine **********************/
-    Register: {
-      screen: Register,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SelectLogin: {
-      screen: SelectLogin,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    IPortalLogin: {
-      screen: IPortalLogin,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ToggleAccount: {
-      screen: ToggleAccount,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    GetBack: {
-      screen: GetBack,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyLocalData: {
-      screen: MyLocalData,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyMap: {
-      screen: MyMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyScene: {
-      screen: MyScene,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyDatasource: {
-      screen: MyDatasource,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MySymbol: {
-      screen: MySymbol,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyTemplate: {
-      screen: MyTemplate,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyColor: {
-      screen: MyColor,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyDataset: {
-      screen: MyDataset,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    NewDataset: {
-      screen: NewDataset,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SearchMine: {
-      screen: SearchMine,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyService: {
-      screen: MyService,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyOnlineMap: {
-      screen: MyOnlineMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ScanOnlineMap: {
-      screen: ScanOnlineMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    Personal: {
-      screen: Personal,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    /**************************** Home ***************************/
-    AboutITablet: {
-      screen: AboutITablet,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LicensePage: {
-      screen: LicensePage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LicenseModule: {
-      screen: LicenseModule,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LicenseJoin: {
-      screen: LicenseJoin,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    Setting: {
-      screen: Setting,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LanguageSetting: {
-      screen: LanguageSetting,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    Protocol: {
-      screen: protocol,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    PointAnalyst: {
-      screen: PointAnalyst,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    PublicMap: {
-      screen: PublicMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    FriendMap: {
-      screen: FriendMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyLabel: {
-      screen: MyLabel,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MyBaseMap: {
-      screen: MyBaseMap,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LoadServer: {
-      screen: LoadServer,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SuperMapKnown: {
-      screen: SuperMapKnown,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    PublicData: {
-      screen: PublicData,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    /** 多媒体编辑 **/
-    MediaEdit: {
-      screen: MediaEdit,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    /** 相机界面 **/
-    Camera: {
-      screen: Camera,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    MeasureView: {
-      screen: MeasureView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ClassifyView: {
-      screen: ClassifyView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ModelChoseView: {
-      screen: ModelChoseView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ClassifyResultEditView: {
-      screen: ClassifyResultEditView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    CollectSceneFormView: {
-      screen: CollectSceneFormView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ClassifySettingsView: {
-      screen: ClassifySettingsView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    AIDetecSettingsView: {
-      screen: AIDetecSettingsView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    IllegallyParkView: {
-      screen: IllegallyParkView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ChooseTaggingLayer: {
-      screen: ChooseTaggingLayer,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    CastModelOperateView: {
-      screen: CastModelOperateView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    /**************************** Analyst ***************************/
-    // AnalystTools: {
-    //   screen: AnalystTools,
-    //   navigationOptions: {
-    //     header: null,
-    //     gesturesEnabled: true,
-    //   },
-    // },
-    BufferAnalystView: {
-      screen: BufferAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    AnalystRadiusSetting: {
-      screen: AnalystRadiusSetting,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    AnalystListEntry: {
-      screen: AnalystListEntry,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    OverlayAnalystView: {
-      screen: OverlayAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    OnlineAnalystView: {
-      screen: OnlineAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    IServerLoginPage: {
-      screen: IServerLoginPage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SourceDatasetPage: {
-      screen: SourceDatasetPage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    AnalystRangePage: {
-      screen: AnalystRangePage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    WeightAndStatistic: {
-      screen: WeightAndStatistic,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    LocalAnalystView: {
-      screen: LocalAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    ReferenceAnalystView: {
-      screen: ReferenceAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    InterpolationAnalystView: {
-      screen: InterpolationAnalystView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    InterpolationAnalystDetailView: {
-      screen: InterpolationAnalystDetailView,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    SecondMapSettings: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings1: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings2: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings3: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings4: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings5: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings6: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SecondMapSettings7: {
-      screen: SecondMapSettings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Map2Dto3D: {
-      screen: Map2Dto3D,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    NavigationView: {
-      screen: NavigationView,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    CollectSceneFormHistoryView: {
-      screen: CollectSceneFormHistoryView,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      gesturesEnabled: false,
-    },
-    navigationOptions: {
-      headerBackTitle: null,
-      headerTintColor: '#333333',
-      showIcon: true,
-      swipeEnabled: false,
-      gesturesEnabled: false,
-      animationEnabled: false,
-      headerTitleStyle: { alignSelf: 'center' },
-    },
-    lazy: true,
-    mode: 'card',
-    transitionConfig: () => ({
-      screenInterpolator: StackViewStyleInterpolator.forHorizontal,
-    }),
-  },
-)
-
-export default createAppContainer(AppNavigator)
+// export default (function (a) {
+//   console.warn(a && JSON.stringify(a) || '0000')
+//   return createAppContainer(AppNavigator([
+//     "Home",
+//     "Find",
+//     "Mine",
+//   ]))
+// })()
