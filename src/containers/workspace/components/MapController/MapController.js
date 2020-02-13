@@ -28,7 +28,12 @@ export default class MapController extends React.Component {
     this.deg = 0
     this.state = {
       left: new Animated.Value(scaleSize(28)),
-      bottom: new Animated.Value(DEFAULT_BOTTOM),
+      //在导航界面缩放时，bottom高度为scaleSize(240)避免mapController被遮盖
+      bottom:
+        (GLOBAL.NAV_PARAMS && GLOBAL.NAV_PARAMS.length > 0) ||
+        GLOBAL.PoiInfoContainer
+          ? new Animated.Value(scaleSize(240))
+          : new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),
     }
   }
@@ -42,6 +47,18 @@ export default class MapController extends React.Component {
     } else {
       return
     }
+  }
+
+  /**
+   * 改变bottom位置 导航路径界面使用
+   * @param isBottom
+   */
+  changeBottom = isBottom => {
+    let value = isBottom ? scaleSize(240) : DEFAULT_BOTTOM
+    Animated.timing(this.state.bottom, {
+      toValue: value,
+      duration: Const.ANIMATED_DURATION,
+    }).start()
   }
 
   setVisible = (visible, immediately = false) => {

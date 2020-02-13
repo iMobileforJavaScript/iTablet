@@ -301,6 +301,9 @@ const Prompt = {
     'Path analysis failed! Please re-select the start and end points',
   ROAD_NETWORK_UNLINK:
     'Path analysis failed due to the disconnected road network from start-point to end-point',
+
+  CHANGE_TO_OUTDOOR: 'switch to outdoor?',
+  CHANGE_TO_INDOOR: 'switch to indoor?',
   SET_START_AND_END_POINTS: 'Please set the start and end points first',
   SELECT_LAYER_NEED_INCREMENTED:
     'Please select the layer need to be incremented',

@@ -124,7 +124,7 @@ export default class NavigationStartButton extends React.Component {
       return
     }
     let position = await SMap.getCurrentPosition()
-    if (!GLOBAL.ISOUTDOORMAP) {
+    if (GLOBAL.CURRENT_NAV_MODE === 'INDOOR') {
       let isindoor = await SMap.isIndoorPoint(position.x, position.y)
       if (isindoor) {
         SMap.indoorNavigation(0)
@@ -133,7 +133,7 @@ export default class NavigationStartButton extends React.Component {
       } else {
         Toast.show(getLanguage(GLOBAL.language).Prompt.POSITION_OUT_OF_MAP)
       }
-    } else if (GLOBAL.ISOUTDOORMAP) {
+    } else if (GLOBAL.CURRENT_NAV_MODE === 'OUTDOOR') {
       let naviData = this.props.getNavigationDatas()
       let isInBounds = await SMap.isInBounds(position, naviData.selectedDataset)
       if (isInBounds) {
@@ -155,10 +155,10 @@ export default class NavigationStartButton extends React.Component {
     }
     this.setVisible(false)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(false)
-    if (GLOBAL.ISOUTDOORMAP) {
+    GLOBAL.mapController && GLOBAL.mapController.changeBottom(false)
+    if (GLOBAL.CURRENT_NAV_MODE === 'OUTDOOR') {
       SMap.outdoorNavigation(1)
-    }
-    if (!GLOBAL.ISOUTDOORMAP) {
+    } else if (GLOBAL.CURRENT_NAV_MODE === 'INDOOR') {
       SMap.indoorNavigation(1)
     }
   }

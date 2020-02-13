@@ -6,6 +6,7 @@ import {
 import NavigationService from './NavigationService'
 import { getLanguage } from '../language'
 import { TouchType } from '../constants'
+//eslint-disable-next-line
 import { Toast } from '../utils'
 //eslint-disable-next-line
 let _params = {}
@@ -41,68 +42,76 @@ async function longtouchCallback(event) {
       break
     case TouchType.NAVIGATION_TOUCH_BEGIN:
       (async function() {
+        await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
+        GLOBAL.STARTX = event.LLPoint.x
+        GLOBAL.STARTY = event.LLPoint.y
+        GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
         //室内地图只允许在室内标注点
-        if (!GLOBAL.ISOUTDOORMAP) {
-          let isindoor = await SMap.isIndoorPoint(
-            event.LLPoint.x,
-            event.LLPoint.y,
-          )
-          if (isindoor) {
-            GLOBAL.STARTX = event.LLPoint.x
-            GLOBAL.STARTY = event.LLPoint.y
-            await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
-          } else {
-            Toast.show(
-              getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
-            )
-          }
-        } else {
-          if (
-            Math.sqrt(
-              Math.pow(event.LLPoint.x - GLOBAL.ENDX, 2) +
-                Math.pow(event.LLPoint.y - GLOBAL.ENDY, 2),
-            ) < 0.001
-          ) {
-            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
-            return
-          }
-          GLOBAL.STARTX = event.LLPoint.x
-          GLOBAL.STARTY = event.LLPoint.y
-          await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
-        }
+        // if (!GLOBAL.ISOUTDOORMAP) {
+        //   let isindoor = await SMap.isIndoorPoint(
+        //     event.LLPoint.x,
+        //     event.LLPoint.y,
+        //   )
+        //   if (isindoor) {
+        //     GLOBAL.STARTX = event.LLPoint.x
+        //     GLOBAL.STARTY = event.LLPoint.y
+        //     await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, true)
+        //   } else {
+        //     Toast.show(
+        //       getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
+        //     )
+        //   }
+        // } else {
+        //   if (
+        //     Math.sqrt(
+        //       Math.pow(event.LLPoint.x - GLOBAL.ENDX, 2) +
+        //         Math.pow(event.LLPoint.y - GLOBAL.ENDY, 2),
+        //     ) < 0.001
+        //   ) {
+        //     Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+        //     return
+        //   }
+        //   GLOBAL.STARTX = event.LLPoint.x
+        //   GLOBAL.STARTY = event.LLPoint.y
+        //   await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
+        // }
       }.bind(this)())
       break
     case TouchType.NAVIGATION_TOUCH_END:
       (async function() {
+        await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
+        GLOBAL.ENDX = event.LLPoint.x
+        GLOBAL.ENDY = event.LLPoint.y
+        GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
         //室内地图只允许在室内标注点
-        if (!GLOBAL.ISOUTDOORMAP) {
-          let isindoor = await SMap.isIndoorPoint(
-            event.LLPoint.x,
-            event.LLPoint.y,
-          )
-          if (isindoor) {
-            GLOBAL.ENDX = event.LLPoint.x
-            GLOBAL.ENDY = event.LLPoint.y
-            await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
-          } else {
-            Toast.show(
-              getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
-            )
-          }
-        } else {
-          if (
-            Math.sqrt(
-              Math.pow(event.LLPoint.x - GLOBAL.STARTX, 2) +
-                Math.pow(event.LLPoint.y - GLOBAL.STARTY, 2),
-            ) < 0.001
-          ) {
-            Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
-            return
-          }
-          GLOBAL.ENDX = event.LLPoint.x
-          GLOBAL.ENDY = event.LLPoint.y
-          await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
-        }
+        // if (!GLOBAL.ISOUTDOORMAP) {
+        //   let isindoor = await SMap.isIndoorPoint(
+        //     event.LLPoint.x,
+        //     event.LLPoint.y,
+        //   )
+        //   if (isindoor) {
+        //     GLOBAL.ENDX = event.LLPoint.x
+        //     GLOBAL.ENDY = event.LLPoint.y
+        //     await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, true)
+        //   } else {
+        //     Toast.show(
+        //       getLanguage(_params.language).Prompt.PLEASE_SELECT_A_POINT_INDOOR,
+        //     )
+        //   }
+        // } else {
+        //   if (
+        //     Math.sqrt(
+        //       Math.pow(event.LLPoint.x - GLOBAL.STARTX, 2) +
+        //         Math.pow(event.LLPoint.y - GLOBAL.STARTY, 2),
+        //     ) < 0.001
+        //   ) {
+        //     Toast.show(getLanguage(GLOBAL.language).Prompt.DISTANCE_ERROR)
+        //     return
+        //   }
+        //   GLOBAL.ENDX = event.LLPoint.x
+        //   GLOBAL.ENDY = event.LLPoint.y
+        //   await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
+        // }
       }.bind(this)())
       break
   }

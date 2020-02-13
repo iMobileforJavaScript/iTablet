@@ -234,6 +234,8 @@ export default class MapView extends React.Component {
       alertModal: '', //地图设置菜单弹窗控制
       currentFloorID: '', //导航模块当前楼层id
       showScaleView: false, //是否显示比例尺（地图加载完成后更改值）
+      path: '',
+      pathLength: '',
     }
     this.currentFloorID = ''
     //导航  地图选点界面的搜索按钮被点击,当前设置按钮title
@@ -284,14 +286,14 @@ export default class MapView extends React.Component {
       //在选点过程中/路径分析界面 不允许拖放改变FloorList、MapController的状态
       // 使用this.currentFloorID 使ID发生变化时只渲染一次
       if (
-        result.currentFloorID !== this.currentFloorID &&
-        !(
-          (GLOBAL.MAPSELECTPOINTBUTTON &&
-            GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
-          (GLOBAL.NAVIGATIONSTARTHEAD &&
-            GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
-          GLOBAL.PoiTopSearchBar.state.visible
-        )
+        result.currentFloorID !== this.currentFloorID /*&&*/
+        // !(
+        //   // (GLOBAL.MAPSELECTPOINTBUTTON &&
+        //   //   GLOBAL.MAPSELECTPOINTBUTTON.state.show) ||
+        //   (GLOBAL.NAVIGATIONSTARTHEAD &&
+        //     GLOBAL.NAVIGATIONSTARTHEAD.state.show) ||
+        //   GLOBAL.PoiTopSearchBar.state.visible
+        // )
       ) {
         this.currentFloorID = result.currentFloorID
         let guideInfo = await SMap.isGuiding()
@@ -315,6 +317,22 @@ export default class MapView extends React.Component {
     if (global.isLicenseValid) {
       if (GLOBAL.Type === constants.MAP_NAVIGATION) {
         this.addFloorHiddenListener()
+        SMap.setIndustryNavigationListener({
+          callback: async () => {
+            if (
+              GLOBAL.NAV_PARAMS &&
+              GLOBAL.NAV_PARAMS.filter(item => !item.hasNaved).length > 0
+            ) {
+              GLOBAL.changeRouteDialog &&
+                GLOBAL.changeRouteDialog.setDialogVisible(true)
+            } else {
+              this._changeRouteCancel()
+            }
+          },
+        })
+        SMap.setStopNavigationListener({
+          callback: this._changeRouteCancel,
+        })
       }
       this.container &&
         this.container.setLoading(
@@ -352,23 +370,6 @@ export default class MapView extends React.Component {
         GLOBAL.toolBox = this.toolBox
       }
       // })
-
-      SMap.setIndustryNavigationListener({
-        callback: () => {
-          this.showFullMap(false)
-          this.props.setMapNavigation({ isShow: false, name: '' })
-          GLOBAL.STARTX = undefined
-          GLOBAL.ENDX = undefined
-          GLOBAL.ROUTEANALYST = undefined
-          GLOBAL.STARTNAME = getLanguage(
-            GLOBAL.language,
-          ).Map_Main_Menu.SELECT_START_POINT
-          GLOBAL.ENDNAME = getLanguage(
-            GLOBAL.language,
-          ).Map_Main_Menu.SELECT_DESTINATION
-          SMap.clearPoint()
-        },
-      })
 
       this.addSpeechRecognizeListener()
       if (GLOBAL.language === 'CN') {
@@ -656,6 +657,81 @@ export default class MapView extends React.Component {
         })
       },
     })
+  }
+
+  _changeNavRoute = async () => {
+    GLOBAL.changeRouteDialog.setDialogVisible(false)
+    this.setLoading(true, getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING)
+    let curNavInfos = GLOBAL.NAV_PARAMS.filter(item => !item.hasNaved)
+    let guideLines = GLOBAL.NAV_PARAMS.filter(item => item.hasNaved)
+    await SMap.clearPath()
+    let params = JSON.parse(JSON.stringify(curNavInfos[0]))
+    params.hasNaved = true
+    let { startX, startY, endX, endY, startFloor, endFloor } = params
+    try {
+      if (params.isIndoor) {
+        await SMap.getStartPoint(startX, startY, true, startFloor)
+        await SMap.getEndPoint(endX, endY, true, endFloor)
+        await SMap.startIndoorNavigation()
+        await SMap.beginIndoorNavigation()
+        for (let item of guideLines) {
+          await SMap.addLineOnTrackingLayer(
+            { x: item.startX, y: item.startY },
+            { x: item.endX, y: item.endY },
+          )
+        }
+        SMap.indoorNavigation(1)
+        GLOBAL.CURRENT_NAV_MODE = 'INDOOR'
+      } else {
+        await SMap.startNavigation(params)
+        let result = await SMap.beginNavigation(startX, startY, endX, endY)
+        if (result) {
+          for (let item of guideLines) {
+            await SMap.addLineOnTrackingLayer(
+              { x: item.startX, y: item.startY },
+              { x: item.endX, y: item.endY },
+            )
+          }
+          SMap.outdoorNavigation(1)
+          GLOBAL.CURRENT_NAV_MODE = 'OUTDOOR'
+        } else {
+          Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          this.changeNavPathInfo({ path: '', pathLength: '' })
+          this.setLoading(false)
+          this._changeRouteCancel()
+          return
+        }
+      }
+    } catch (e) {
+      Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+      this.changeNavPathInfo({ path: '', pathLength: '' })
+      this.setLoading(false)
+      this._changeRouteCancel()
+      return
+    }
+    curNavInfos[0] = params
+    GLOBAL.NAV_PARAMS = guideLines.concat(curNavInfos)
+    this.changeNavPathInfo({ path: '', pathLength: '' })
+    this.setLoading(false)
+  }
+  //取消切换 清除所有导航信息
+  _changeRouteCancel = () => {
+    SMap.clearPoint()
+    this.showFullMap(false)
+    this.props.setMapNavigation({ isShow: false, name: '' })
+    GLOBAL.STARTX = undefined
+    GLOBAL.STARTY = undefined
+    GLOBAL.ENDX = undefined
+    GLOBAL.ENDY = undefined
+    GLOBAL.CURRENT_NAV_MODE = ''
+    GLOBAL.ROUTEANALYST = undefined
+    GLOBAL.NAV_PARAMS = []
+    GLOBAL.STARTNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_START_POINT
+    GLOBAL.ENDNAME = getLanguage(
+      GLOBAL.language,
+    ).Map_Main_Menu.SELECT_DESTINATION
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -2540,7 +2616,6 @@ export default class MapView extends React.Component {
                 isClicked: true,
                 title: GLOBAL.MAPSELECTPOINTBUTTON.state.button,
               }
-              GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
               NavigationService.navigate('PointAnalyst', {
                 type: 'pointSearch',
                 searchClickedInfo: this.searchClickedInfo,
@@ -2582,6 +2657,7 @@ export default class MapView extends React.Component {
             GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
             NavigationService.navigate('NavigationView', {
               changeNavPathInfo: this.changeNavPathInfo,
+              getNavigationDatas: this.getNavigationDatas,
             })
           },
         }}
@@ -2612,14 +2688,12 @@ export default class MapView extends React.Component {
     this.setLoading(false)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, true)
     GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
 
     if (path && pathLength) {
       GLOBAL.TouchType = TouchType.NORMAL
-      GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
       this.changeNavPathInfo({ path, pathLength })
 
       let history = this.props.navigationhistory
@@ -2773,7 +2847,7 @@ export default class MapView extends React.Component {
           !this.props.mapNavigation.isShow &&
           this.state.showIncrement &&
           this._renderNavigationIcon()}
-        {GLOBAL.Type === constants.MAP_NAVIGATION && this._renderLocationIcon()}
+        {/*{GLOBAL.Type === constants.MAP_NAVIGATION && this._renderLocationIcon()}*/}
         {!this.isExample &&
           this.props.analyst.params &&
           this.renderAnalystMapButtons()}
@@ -2896,6 +2970,30 @@ export default class MapView extends React.Component {
               />
               <Text style={styles.promptTitle}>
                 {getLanguage(GLOBAL.language).Prompt.USE_ONLINE_ROUTE_ANALYST}
+              </Text>
+            </View>
+          </Dialog>
+        )}
+        {GLOBAL.Type === constants.MAP_NAVIGATION && (
+          <Dialog
+            ref={ref => (GLOBAL.changeRouteDialog = ref)}
+            confirmAction={this._changeNavRoute}
+            cancelAction={this._changeRouteCancel}
+            opacity={1}
+            opacityStyle={styles.dialogOneLine}
+            style={styles.dialogOneLine}
+            confirmBtnTitle={getLanguage(GLOBAL.language).Prompt.YES}
+            cancelBtnTitle={getLanguage(GLOBAL.language).Prompt.NO}
+          >
+            <View style={styles.dialogHeaderView}>
+              <Image
+                source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+                style={styles.dialogHeaderImg}
+              />
+              <Text style={styles.promptTitle}>
+                {GLOBAL.CURRENT_NAV_MODE === 'INDOOR'
+                  ? getLanguage(GLOBAL.language).Prompt.CHANGE_TO_OUTDOOR
+                  : getLanguage(GLOBAL.language).Prompt.CHANGE_TO_INDOOR}
               </Text>
             </View>
           </Dialog>

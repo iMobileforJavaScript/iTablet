@@ -53,10 +53,15 @@ export default class NavigationStartHead extends React.Component {
       GLOBAL.language,
     ).Map_Main_Menu.SELECT_DESTINATION
     GLOBAL.STARTX = undefined
+    GLOBAL.STARTY = undefined
     GLOBAL.ENDX = undefined
+    GLOBAL.ENDY = undefined
+    GLOBAL.CURRENT_NAV_MODE = ''
+    GLOBAL.NAV_PARAMS = []
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.TouchType = TouchType.NORMAL
     await SMap.clearPoint()
+    GLOBAL.mapController && GLOBAL.mapController.changeBottom(false)
   }
 
   _onSelectPointPress = async isStart => {
@@ -75,9 +80,6 @@ export default class NavigationStartHead extends React.Component {
       false,
     )
     this.setVisible(false)
-    GLOBAL.ISOUTDOORMAP &&
-      GLOBAL.LocationView &&
-      GLOBAL.LocationView.setVisible(true, true)
     GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(false)
     await SMap.clearTrackingLayer()
     await SMap.clearPoint()

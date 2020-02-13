@@ -72,10 +72,12 @@ async function getDataset() {
   return { data, buttons }
 }
 
+let navData
 async function getData(type) {
   switch (type) {
     case ConstToolType.MAP_NAVIGATION_MODULE:
-      return getDataset()
+      if (!navData) navData = getDataset()
+      return navData
   }
 }
 export default {

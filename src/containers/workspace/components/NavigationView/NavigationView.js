@@ -34,6 +34,7 @@ export default class NavigationView extends React.Component {
   constructor(props) {
     super(props)
     let { params } = this.props.navigation.state
+    this.getNavgationDatas = params.getNavigationDatas
     this.changeNavPathInfo = params.changeNavPathInfo
     // this.PointType = null
     this.clickable = true
@@ -50,7 +51,6 @@ export default class NavigationView extends React.Component {
     this.props.setMapNavigation({ isShow: false, name: '' })
     GLOBAL.MAPSELECTPOINT.setVisible(false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false)
-    GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
     GLOBAL.STARTNAME = getLanguage(
       GLOBAL.language,
     ).Map_Main_Menu.SELECT_START_POINT
@@ -70,13 +70,12 @@ export default class NavigationView extends React.Component {
     this.backClicked = true
     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_BEGIN
     GLOBAL.MAPSELECTPOINT.setVisible(true)
-    GLOBAL.ISOUTDOORMAP &&
-      GLOBAL.LocationView &&
-      GLOBAL.LocationView.setVisible(true, true)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
       button: getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_START_POINT,
     })
     GLOBAL.toolBox.showFullMap(true)
+    //导航选点 全屏时保留mapController
+    GLOBAL.mapController && GLOBAL.mapController.setVisible(true)
     this.props.setMapNavigation({
       isShow: true,
       name: '',
@@ -90,19 +89,35 @@ export default class NavigationView extends React.Component {
     this.backClicked = true
     GLOBAL.TouchType = TouchType.NAVIGATION_TOUCH_END
     GLOBAL.MAPSELECTPOINT.setVisible(true)
-    GLOBAL.ISOUTDOORMAP &&
-      GLOBAL.LocationView &&
-      GLOBAL.LocationView.setVisible(true, false)
     GLOBAL.MAPSELECTPOINTBUTTON.setVisible(true, {
       button: getLanguage(GLOBAL.language).Map_Main_Menu.SET_AS_DESTINATION,
     })
     GLOBAL.toolBox.showFullMap(true)
+    //导航选点 全屏时保留mapController
+    GLOBAL.mapController && GLOBAL.mapController.setVisible(true)
     this.props.setMapNavigation({
       isShow: true,
       name: '',
     })
     NavigationService.navigate('MapView')
   }
+
+  // [{datasourceName:'',datasetName:''}]
+  // [{datasourceName:''}]
+  //获取数组中相同的对象
+  getSameInfoFromArray = (arr1, arr2) => {
+    let result = []
+    if (arr1.length === 0 || arr2.length === 0) return result
+    arr1.forEach(item => {
+      arr2.forEach(item2 => {
+        if (JSON.stringify(item) === JSON.stringify(item2)) {
+          result.push(item)
+        }
+      })
+    })
+    return result
+  }
+
   routeAnalyst = async () => {
     if (GLOBAL.STARTX !== undefined && GLOBAL.ENDX !== undefined) {
       GLOBAL.TouchType = TouchType.NORMAL
@@ -110,22 +125,221 @@ export default class NavigationView extends React.Component {
         true,
         getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
       )
-      if (GLOBAL.ISOUTDOORMAP) {
-        //如果不让用户选数据集，自动获取 则使用SMap.isPointsInMapBounds来判断
-        let datasetName =
-          GLOBAL.ToolBar && GLOBAL.ToolBar.props.getNavigationDatas().name
-        let isStartInBounds = await SMap.isInBounds(
-          { x: GLOBAL.STARTX, y: GLOBAL.STARTY },
-          datasetName,
+      let startPointInfo
+      let endPointInfo
+      try {
+        startPointInfo = await SMap.getPointBelongs(
+          GLOBAL.STARTX,
+          GLOBAL.STARTY,
         )
-        let isEndInBounds = await SMap.isInBounds(
-          { x: GLOBAL.ENDX, y: GLOBAL.ENDY },
-          datasetName,
-        )
-        let path, pathLength
-        //室外导航
-        if (isStartInBounds && isEndInBounds) {
+        endPointInfo = await SMap.getPointBelongs(GLOBAL.ENDX, GLOBAL.ENDY)
+      } catch (e) {
+        this.loading.setLoading(false)
+        Toast.show(' 获取数据失败')
+        return
+      }
+      let startIndoorInfo = startPointInfo.filter(item => item.isIndoor)
+      let startOutdoorInfo = startPointInfo.filter(item => !item.isIndoor)
+      let endIndoorInfo = endPointInfo.filter(item => item.isIndoor)
+      let endOutdoorInfo = endPointInfo.filter(item => !item.isIndoor)
+      let commonIndoorInfo = this.getSameInfoFromArray(
+        startIndoorInfo,
+        endIndoorInfo,
+      )
+      let commonOutdoorInfo = this.getSameInfoFromArray(
+        startOutdoorInfo,
+        endOutdoorInfo,
+      )
+
+      let selectedData = this.getNavgationDatas()
+      if (selectedData.modelFileName) {
+        let newData = { ...selectedData }
+        newData.isIndoor = false
+        newData.datasetName = selectedData.name
+        commonOutdoorInfo[0] = newData
+      }
+
+      let path, pathLength
+      if (commonIndoorInfo.length > 0) {
+        // todo 室内点的问题 图标问题 最好统一js显示
+        //有公共室内数据源，室内导航
+        // await SMap.clearPoint
+        try {
+          await SMap.getStartPoint(
+            GLOBAL.STARTX,
+            GLOBAL.STARTY,
+            true,
+            GLOBAL.STARTPOINTFLOOR,
+          )
+          await SMap.getEndPoint(
+            GLOBAL.ENDX,
+            GLOBAL.ENDY,
+            true,
+            GLOBAL.ENDPOINTFLOOR,
+          )
+          await SMap.startIndoorNavigation()
+          await SMap.beginIndoorNavigation()
+        } catch (e) {
+          this.loading.setLoading(false)
+          Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          return
+        }
+        pathLength = await SMap.getNavPathLength(true)
+        path = await SMap.getPathInfos(true)
+        GLOBAL.CURRENT_NAV_MODE = 'INDOOR'
+      } else if (commonOutdoorInfo.length > 0) {
+        //有公共室外数据集，分情况
+        if (startIndoorInfo.length > 0 && endIndoorInfo.length > 0) {
+          //todo 有不同的室内数据源 三段室内外一体化导航
+          //getDoorPoint两次 获取最近的两个门的位置，然后启动室内导航
+        } else if (startIndoorInfo.length > 0) {
+          //起点室内数据源 两段室内外一体化导航 先室内
+          let params = {
+            startX: GLOBAL.STARTX,
+            startY: GLOBAL.STARTY,
+            endX: GLOBAL.ENDX,
+            endY: GLOBAL.ENDY,
+            datasourceName: startIndoorInfo[0].datasourceName,
+          }
+          let doorPoint = await SMap.getDoorPoint(params)
+          if (doorPoint.x && doorPoint.y && doorPoint.floorID) {
+            GLOBAL.NAV_PARAMS = [
+              {
+                startX: GLOBAL.STARTX,
+                startY: GLOBAL.STARTY,
+                endX: doorPoint.x,
+                endY: doorPoint.y,
+                datasourceName: startIndoorInfo[0].datasourceName,
+                isIndoor: true,
+                hasNaved: true,
+              },
+              {
+                startX: doorPoint.x,
+                startY: doorPoint.y,
+                startFloor: doorPoint.floorID,
+                endX: GLOBAL.ENDX,
+                endY: GLOBAL.ENDY,
+                endFloor: GLOBAL.ENDPOINTFLOOR || doorPoint.floorID,
+                isIndoor: false,
+                hasNaved: false,
+                datasourceName: commonOutdoorInfo[0].datasourceName,
+                datasetName: commonOutdoorInfo[0].datasetName,
+                modelFileName: commonOutdoorInfo[0].modelFileName,
+              },
+            ]
+            // await SMap.clearPoint()
+            try {
+              await SMap.getStartPoint(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                true,
+                GLOBAL.STARTPOINTFLOOR || doorPoint.floorID,
+              )
+              await SMap.getEndPoint(
+                doorPoint.x,
+                doorPoint.y,
+                true,
+                doorPoint.floorID,
+              )
+              await SMap.startIndoorNavigation()
+              await SMap.beginIndoorNavigation()
+              await SMap.addLineOnTrackingLayer(doorPoint, {
+                x: GLOBAL.ENDX,
+                y: GLOBAL.ENDY,
+              })
+            } catch (e) {
+              this.loading.setLoading(false)
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+              )
+              return
+            }
+
+            pathLength = await SMap.getNavPathLength(true)
+            path = await SMap.getPathInfos(true)
+            GLOBAL.CURRENT_NAV_MODE = 'INDOOR'
+          } else {
+            //分析失败(找不到最近的门的情况（数据问题）) 进行在线路径分析
+            this.loading.setLoading(false)
+            this.dialog.setDialogVisible(true)
+          }
+        } else if (endIndoorInfo.length > 0) {
+          //终点室内数据源 两段室内外一体化导航 先室外
+          let params = {
+            startX: GLOBAL.STARTX,
+            startY: GLOBAL.STARTY,
+            endX: GLOBAL.ENDX,
+            endY: GLOBAL.ENDY,
+            datasourceName: endIndoorInfo[0].datasourceName,
+          }
+          let doorPoint = await SMap.getDoorPoint(params)
+          if (doorPoint.x && doorPoint.y && doorPoint.floorID) {
+            GLOBAL.NAV_PARAMS = [
+              {
+                startX: GLOBAL.STARTX,
+                startY: GLOBAL.STARTY,
+                endX: doorPoint.x,
+                endY: doorPoint.y,
+                isIndoor: false,
+                hasNaved: true,
+                datasourceName: commonOutdoorInfo[0].datasourceName,
+                datasetName: commonOutdoorInfo[0].datasetName,
+                modelFileName: commonOutdoorInfo[0].modelFileName,
+              },
+              {
+                startX: doorPoint.x,
+                startY: doorPoint.y,
+                startFloor: doorPoint.floorID,
+                endX: GLOBAL.ENDX,
+                endY: GLOBAL.ENDY,
+                endFloor: GLOBAL.ENDPOINTFLOOR || doorPoint.floorID,
+                datasourceName: endIndoorInfo[0].datasourceName,
+                isIndoor: true,
+                hasNaved: false,
+              },
+            ]
+
+            try {
+              await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+              await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
+              await SMap.startNavigation(GLOBAL.NAV_PARAMS[0])
+              let canNav = await SMap.beginNavigation(
+                GLOBAL.STARTX,
+                GLOBAL.STARTY,
+                doorPoint.x,
+                doorPoint.y,
+              )
+              if (!canNav) {
+                Toast.show(
+                  '当前选点不在路网数据集范围内,请重新选点或者重设路网数据集',
+                )
+                this.loading.setLoading(false)
+                return
+              }
+              await SMap.addLineOnTrackingLayer(doorPoint, {
+                x: GLOBAL.ENDX,
+                y: GLOBAL.ENDY,
+              })
+            } catch (e) {
+              this.loading.setLoading(false)
+              Toast.show(
+                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+              )
+              return
+            }
+            pathLength = await SMap.getNavPathLength(false)
+            path = await SMap.getPathInfos(false)
+            GLOBAL.CURRENT_NAV_MODE = 'OUTDOOR'
+          } else {
+            //分析失败(找不到最近的门的情况（数据问题）) 进行在线路径分析
+            this.loading.setLoading(false)
+            this.dialog.setDialogVisible(true)
+          }
+        } else {
+          //无室内数据源  室外导航
+          //直接导航
           try {
+            await SMap.startNavigation(commonOutdoorInfo[0])
             let result = await SMap.beginNavigation(
               GLOBAL.STARTX,
               GLOBAL.STARTY,
@@ -135,128 +349,65 @@ export default class NavigationView extends React.Component {
             if (result) {
               pathLength = await SMap.getNavPathLength(false)
               path = await SMap.getPathInfos(false)
+              GLOBAL.CURRENT_NAV_MODE = 'OUTDOOR'
             } else {
-              //在线路径分析弹窗
+              //分析失败(500m范围内找不到路网点的情况)或者选择的点不在选择的路网数据集bounds范围内
+              Toast.show(
+                '当前选点不在路网数据集范围内,请重新选点或者重设路网数据集',
+              )
               this.loading.setLoading(false)
-              this.dialog.setDialogVisible(true)
+              return
             }
           } catch (e) {
             this.loading.setLoading(false)
-            Toast.show('无路径分析结果')
+            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+            return
           }
-        } else {
-          //在线路径分析弹窗
-          this.loading.setLoading(false)
-          this.dialog.setDialogVisible(true)
         }
-        if (pathLength && path) {
-          this.changeNavPathInfo({ path, pathLength })
-          GLOBAL.ROUTEANALYST = true
-          GLOBAL.MAPSELECTPOINT.setVisible(false)
-          GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-            button: '',
-          })
-          GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
-          GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-          this.props.setMapNavigation({
-            isShow: true,
-            name: '',
-          })
-          GLOBAL.toolBox.showFullMap(true)
-          let history = this.props.navigationhistory
-          history.push({
-            sx: GLOBAL.STARTX,
-            sy: GLOBAL.STARTY,
-            ex: GLOBAL.ENDX,
-            ey: GLOBAL.ENDY,
-            sFloor: GLOBAL.STARTPOINTFLOOR,
-            eFloor: GLOBAL.ENDPOINTFLOOR,
-            address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
-            start: GLOBAL.STARTNAME,
-            end: GLOBAL.ENDNAME,
-            isOutDoor: true,
-          })
-          if (this.historyclick) {
-            this.props.setNavigationHistory(history)
-          }
-          if (this.clickable) {
-            this.clickable = false
-            GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
-            this.loading.setLoading(false)
-            GLOBAL.TouchType = TouchType.NULL
-            //考虑搜索界面跳转，不能直接goBack
-            NavigationService.navigate('MapView')
-          }
+      } else {
+        //在线路径分析
+        this.loading.setLoading(false)
+        this.dialog.setDialogVisible(true)
+      }
+      if (path && pathLength) {
+        this.changeNavPathInfo({ path, pathLength })
+        GLOBAL.ROUTEANALYST = true
+        GLOBAL.MAPSELECTPOINT.setVisible(false)
+        GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
+          button: '',
+        })
+        GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true, false)
+        GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
+        this.props.setMapNavigation({
+          isShow: true,
+          name: '',
+        })
+        GLOBAL.toolBox.showFullMap(true)
+        let history = this.props.navigationhistory
+        history.push({
+          sx: GLOBAL.STARTX,
+          sy: GLOBAL.STARTY,
+          ex: GLOBAL.ENDX,
+          ey: GLOBAL.ENDY,
+          sFloor: GLOBAL.STARTPOINTFLOOR,
+          eFloor: GLOBAL.ENDPOINTFLOOR,
+          address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
+          start: GLOBAL.STARTNAME,
+          end: GLOBAL.ENDNAME,
+          isOutDoor: true,
+        })
+        if (this.historyclick) {
+          this.props.setNavigationHistory(history)
+        }
+        if (this.clickable) {
+          this.clickable = false
+          this.loading.setLoading(false)
+          GLOBAL.TouchType = TouchType.NULL
+          //考虑搜索界面跳转，不能直接goBack
+          NavigationService.navigate('MapView')
+          GLOBAL.mapController && GLOBAL.mapController.changeBottom(true)
         }
       }
-      //室内导航
-      if (!GLOBAL.ISOUTDOORMAP) {
-        try {
-          let result = await SMap.beginIndoorNavigation(
-            GLOBAL.STARTX,
-            GLOBAL.STARTY,
-            GLOBAL.ENDX,
-            GLOBAL.ENDY,
-          )
-          if (result) {
-            let pathLength = await SMap.getNavPathLength(true)
-            let path = await SMap.getPathInfos(true)
-            if (path && pathLength) {
-              this.changeNavPathInfo({ path, pathLength })
-              GLOBAL.ROUTEANALYST = true
-              GLOBAL.MAPSELECTPOINT.setVisible(false)
-              GLOBAL.MAPSELECTPOINTBUTTON.setVisible(false, {
-                button: '',
-              })
-              GLOBAL.NAVIGATIONSTARTBUTTON.setVisible(true)
-              GLOBAL.NAVIGATIONSTARTHEAD.setVisible(true)
-              this.props.setMapNavigation({
-                isShow: true,
-                name: '',
-              })
-              GLOBAL.toolBox.showFullMap(true)
-              let history = this.props.navigationhistory
-              history.push({
-                sx: GLOBAL.STARTX,
-                sy: GLOBAL.STARTY,
-                ex: GLOBAL.ENDX,
-                ey: GLOBAL.ENDY,
-                sFloor: GLOBAL.STARTPOINTFLOOR,
-                eFloor: GLOBAL.ENDPOINTFLOOR,
-                address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
-                start: GLOBAL.STARTNAME,
-                end: GLOBAL.ENDNAME,
-                isOutDoor: false,
-              })
-              if (this.historyclick) {
-                this.props.setNavigationHistory(history)
-              }
-              if (this.clickable) {
-                this.clickable = false
-                this.loading.setLoading(false)
-                GLOBAL.TouchType = TouchType.NULL
-                NavigationService.goBack()
-              }
-            }
-          } else {
-            this.loading.setLoading(false)
-            if (GLOBAL.ISOUTDOORMAP) {
-              Toast.show(
-                getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
-              )
-            } else {
-              Toast.show(
-                getLanguage(GLOBAL.language).Prompt.ROAD_NETWORK_UNLINK,
-              )
-            }
-          }
-        } catch (e) {
-          this.loading.setLoading(false)
-          Toast.show('无路径分析结果')
-        }
-      }
-    } else {
-      Toast.show(getLanguage(GLOBAL.language).Prompt.SET_START_AND_END_POINTS)
     }
   }
 
@@ -266,6 +417,8 @@ export default class NavigationView extends React.Component {
       true,
       getLanguage(GLOBAL.language).Prompt.ROUTE_ANALYSING,
     )
+    await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
+    await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
     let path, pathLength
     let result = await FetchUtils.routeAnalyst(
       GLOBAL.STARTX,
@@ -306,25 +459,25 @@ export default class NavigationView extends React.Component {
         address: GLOBAL.STARTNAME + '---' + GLOBAL.ENDNAME,
         start: GLOBAL.STARTNAME,
         end: GLOBAL.ENDNAME,
-        isOutDoor: true,
       })
       if (this.historyclick) {
         this.props.setNavigationHistory(history)
       }
       if (this.clickable) {
         this.clickable = false
-        GLOBAL.LocationView && GLOBAL.LocationView.setVisible(false)
         this.loading.setLoading(false)
         GLOBAL.TouchType = TouchType.NULL
         //考虑搜索界面跳转，不能直接goBack
         NavigationService.navigate('MapView')
+        GLOBAL.mapController && GLOBAL.mapController.changeBottom(true)
       }
     }
   }
   _renderSearchView = () => {
-    let renderHistory = this.props.navigationhistory.filter(
-      item => item.isOutDoor === GLOBAL.ISOUTDOORMAP,
-    )
+    // let renderHistory = this.props.navigationhistory.filter(
+    //   item => item.isOutDoor === GLOBAL.ISOUTDOORMAP,
+    // )
+    let renderHistory = this.props.navigationhistory
     return (
       <View
         style={{
@@ -543,9 +696,9 @@ export default class NavigationView extends React.Component {
     GLOBAL.STARTPOINTFLOOR = item.sFloor
     GLOBAL.ENDPOINTFLOOR = item.eFloor
 
-    SMap.getStartPoint(item.sx, item.sy, !GLOBAL.ISOUTDOORMAP, item.sFloor)
+    await SMap.getStartPoint(item.sx, item.sy, false, item.sFloor)
 
-    SMap.getEndPoint(item.ex, item.ey, !GLOBAL.ISOUTDOORMAP, item.eFloor)
+    await SMap.getEndPoint(item.ex, item.ey, false, item.eFloor)
 
     GLOBAL.ROUTEANALYST = undefined
     this.historyclick = false

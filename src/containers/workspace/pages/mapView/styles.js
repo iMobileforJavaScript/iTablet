@@ -201,6 +201,9 @@ export default StyleSheet.create({
   dialogBackground: {
     height: scaleSize(350),
   },
+  dialogOneLine: {
+    height: scaleSize(270),
+  },
   promptTitle: {
     fontSize: size.fontSize.fontSizeXXl,
     color: color.theme_white,
