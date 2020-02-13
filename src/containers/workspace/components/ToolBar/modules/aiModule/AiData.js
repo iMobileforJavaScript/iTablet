@@ -86,7 +86,8 @@ function getData() {
     // },
   ]
   if (Platform.OS === 'ios') {
-    data.splice(2, 3)
+    data.splice(2, 1)
+    data.splice(3, 1)
   }
   return { data, buttons }
 }
