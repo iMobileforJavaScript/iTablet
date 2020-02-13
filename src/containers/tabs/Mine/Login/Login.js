@@ -254,6 +254,7 @@ class Login extends React.Component {
           placeholder={
             getLanguage(this.props.language).Profile.ENTER_EMAIL_OR_USERNAME
           }
+          placeholderTextColor={'#A7A7A7'}
           multiline={false}
           defaultValue={this.txtEmail || ''}
           style={styles.textInputStyle}
@@ -266,6 +267,7 @@ class Login extends React.Component {
           secureTextEntry={true}
           // 请输入密码
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
+          placeholderTextColor={'#A7A7A7'}
           multiline={false}
           password={true}
           style={styles.textInputStyle}
@@ -284,6 +286,7 @@ class Login extends React.Component {
           clearButtonMode={'while-editing'}
           //请输入手机号
           placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
+          placeholderTextColor={'#A7A7A7'}
           defaultValue={this.txtPhoneNumber}
           keyboardType={'number-pad'}
           style={styles.textInputStyle}
@@ -297,6 +300,7 @@ class Login extends React.Component {
           textContentType={'password'}
           //请输入密码
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
+          placeholderTextColor={'#A7A7A7'}
           defaultValue={this.txtPhoneNumberPassword}
           style={styles.textInputStyle}
           onChangeText={text => {

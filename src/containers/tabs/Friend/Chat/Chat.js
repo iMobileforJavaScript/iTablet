@@ -35,6 +35,7 @@ import FriendListFileHandle from '../FriendListFileHandle'
 import CoworkTouchableView from '../CoworkTouchableView'
 // eslint-disable-next-line import/no-unresolved
 import ImageResizer from 'react-native-image-resizer'
+import DataHandler from '../../Mine/DataHandler'
 import 'moment/locale/zh-cn'
 
 let Top = scaleSize(38)
@@ -1053,28 +1054,27 @@ class Chat extends React.Component {
   }
 
   importMap = async message => {
-    let homePath = await FileTools.appendingHomeDirectory()
-    let receivePath = homePath + message.originMsg.message.message.filePath
-    let toPath = homePath + ConstPath.Import + '/weChat.zip'
-    await FileTools.copyFile(receivePath, toPath)
-    if (Platform.OS === 'ios') {
-      await FileTools.getUri(receivePath)
-    }
     GLOBAL.Loading.setLoading(
       true,
       getLanguage(global.language).Friends.IMPORT_DATA,
     )
-    FileTools.importData().then(
-      result => {
-        GLOBAL.Loading.setLoading(false)
-        result &&
-          Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
-      },
-      () => {
-        GLOBAL.Loading.setLoading(false)
-        Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
-      },
-    )
+    let homePath = await FileTools.appendingHomeDirectory()
+    let receivePath = homePath + message.originMsg.message.message.filePath
+    let importPath = homePath + '/iTablet/Import'
+    try {
+      await FileTools.unZipFile(receivePath, importPath)
+      let dataList = await DataHandler.getExternalData(importPath)
+      //暂时只支持单个工作空间的导入
+      if (dataList.length === 1 && dataList[0].fileType === 'workspace') {
+        await DataHandler.importWorkspace(dataList[0])
+      }
+      Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
+    } catch (error) {
+      Toast.show(getLanguage(global.language).Friends.IMPORT_FAIL)
+    } finally {
+      GLOBAL.Loading.setLoading(false)
+      FileTools.deleteFile(importPath)
+    }
   }
 
   showOpenCoworkDialog = () => {

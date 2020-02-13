@@ -44,6 +44,7 @@ export default class Home extends Component {
     setShow: () => {},
     device: Object,
     user: Object,
+    mapModules: Array,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
     closeWorkspace: () => {},
@@ -524,6 +525,7 @@ export default class Home extends Component {
             showDialog={this.showDialog}
             getModuleItem={this.getModuleItem}
             latestMap={this.props.latestMap}
+            mapModules={this.props.mapModules}
           />
           {this._renderModal()}
           {this.renderDialog()}

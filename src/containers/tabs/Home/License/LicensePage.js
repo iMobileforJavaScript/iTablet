@@ -6,7 +6,6 @@ import {
   Image,
   Text,
   AsyncStorage,
-  Platform,
 } from 'react-native'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
@@ -153,44 +152,44 @@ export default class LicensePage extends Component {
   }
   //接入正式许可
   inputOfficialLicense = async () => {
-    if (Platform.OS === 'ios') {
-      GLOBAL.Loading.setLoading(
-        true,
-        global.language === 'CN' ? '许可申请中...' : 'Applying',
-      )
-      let activateResult = await SMap.activateNativeLicense()
-      if (activateResult === -1) {
-        //没有本地许可文件
-        GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
-      } else if (activateResult === -2) {
-        //本地许可文件序列号无效
-        Toast.show(getLanguage(global.language).Profile.LICENSE_NATIVE_EXPIRE)
-      } else {
-        AsyncStorage.setItem(
-          constants.LICENSE_OFFICIAL_STORAGE_KEY,
-          activateResult,
-        )
-        let modules = await SMap.licenseContainModule(activateResult)
-        let size = modules.length
-        let number = 0
-        for (let i = 0; i < size; i++) {
-          let modultCode = Number(modules[i])
-          number = number + modultCode
-        }
-        GLOBAL.modulesNumber = number
+    // if (Platform.OS === 'ios') {
+    //   GLOBAL.Loading.setLoading(
+    //     true,
+    //     global.language === 'CN' ? '许可申请中...' : 'Applying',
+    //   )
+    //   let activateResult = await SMap.activateNativeLicense()
+    //   if (activateResult === -1) {
+    //     //没有本地许可文件
+    //     GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
+    //   } else if (activateResult === -2) {
+    //     //本地许可文件序列号无效
+    //     Toast.show(getLanguage(global.language).Profile.LICENSE_NATIVE_EXPIRE)
+    //   } else {
+    //     AsyncStorage.setItem(
+    //       constants.LICENSE_OFFICIAL_STORAGE_KEY,
+    //       activateResult,
+    //     )
+    //     let modules = await SMap.licenseContainModule(activateResult)
+    //     let size = modules.length
+    //     let number = 0
+    //     for (let i = 0; i < size; i++) {
+    //       let modultCode = Number(modules[i])
+    //       number = number + modultCode
+    //     }
+    //     GLOBAL.modulesNumber = number
 
-        this.getLicense()
-        Toast.show(
-          getLanguage(global.language).Profile
-            .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
-        )
-      }
-      GLOBAL.Loading.setLoading(
-        false,
-        global.language === 'CN' ? '许可申请中...' : 'Applying...',
-      )
-      return
-    }
+    //     this.getLicense()
+    //     Toast.show(
+    //       getLanguage(global.language).Profile
+    //         .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
+    //     )
+    //   }
+    //   GLOBAL.Loading.setLoading(
+    //     false,
+    //     global.language === 'CN' ? '许可申请中...' : 'Applying...',
+    //   )
+    //   return
+    // }
 
     NavigationService.navigate('LicenseJoin', {
       cb: async () => {
@@ -406,9 +405,13 @@ export default class LicensePage extends Component {
         ) : (
           <View />
         )}
-        {this.renderTouchableItemView(
-          getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
-          this.applyTrialLicense,
+        {this.state.status.isTrailLicense ? (
+          this.renderTouchableItemView(
+            getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY,
+            this.applyTrialLicense,
+          )
+        ) : (
+          <View />
         )}
         <View style={{ height: 10 }} />
 

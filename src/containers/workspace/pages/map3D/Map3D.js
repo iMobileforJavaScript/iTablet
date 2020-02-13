@@ -46,6 +46,7 @@ export default class Map3D extends React.Component {
     online: Object,
     toolbarStatus: Object,
     downloads: Array,
+    mapModules: Array,
     setEditLayer: () => {},
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
@@ -359,6 +360,7 @@ export default class Map3D extends React.Component {
         showFullMap={this.showFullMap}
         device={this.props.device}
         online={this.props.online}
+        mapModules={this.props.mapModules}
       />
     )
   }

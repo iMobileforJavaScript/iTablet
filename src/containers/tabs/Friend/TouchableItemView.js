@@ -43,7 +43,7 @@ export default class TouchableItemView extends Component {
       return this.props.renderText(this.props)
     }
     return (
-      <View>
+      <View style={styles.textView}>
         {this.renderUpperText()}
         {this.renderBottomText()}
       </View>
@@ -55,7 +55,11 @@ export default class TouchableItemView extends Component {
       return this.props.renderUpperText(this.props)
     }
     return (
-      <Text style={[styles.upperText, this.props.textStyle]}>
+      <Text
+        style={[styles.upperText, this.props.textStyle]}
+        numberOfLines={1}
+        ellipsizeMode={'tail'}
+      >
         {this.props.text}
       </Text>
     )
@@ -148,6 +152,9 @@ const styles = StyleSheet.create({
     width: scaleSize(48),
     height: scaleSize(48),
     marginRight: scaleSize(30),
+  },
+  textView: {
+    flex: 1,
   },
   upperText: {
     fontSize: scaleSize(26),

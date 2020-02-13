@@ -652,7 +652,6 @@ RCT_EXPORT_METHOD(getThumbnail:(NSString *)filepath resolve:(RCTPromiseResolveBl
   NSString* plotFilePath = [NSString stringWithFormat:@"%@/%@", plottingExtDataPath, @"PlotLibData"];
   NSString* commonPlotZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"PlotLibData.zip"];
   NSString* originPlotPath = [[NSBundle mainBundle] pathForResource:@"PlotLibData" ofType:@"zip"];
-  NSString* plotZipData = @"PlotLibData.zip";
   
   // 拷贝默认图片并解压
   NSString* imageZipPath = [[NSBundle mainBundle] pathForResource:@"Images" ofType:@"zip"];
@@ -778,158 +777,21 @@ RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDire
   return [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
 }
 
-RCT_REMAP_METHOD(getImportResult, getImportResult:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(getImportState, getImportState:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
   @try {
-    BOOL isSuccess = hasImportedData;
-    resolve(@(isSuccess));
+     NSFileManager *filemanager = [NSFileManager defaultManager];
+     NSString* home = [NSHomeDirectory() stringByAppendingString:@"/Documents"];
+     NSString *destinationPath = [home stringByAppendingString: @"/iTablet/Import/import.zip"];
+     BOOL isFileExist =[filemanager fileExistsAtPath:destinationPath isDirectory:nil];
+     
+    resolve(@(isFileExist));
   } @catch (NSException *exception) {
     reject(@"",@"improtError",(NSError *)exception);
   }
 }
 
-RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
-  
-  NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-  NSString * destinationPath = [head stringByAppendingString:@"/iTablet/Import/"];
-  BOOL isImportSuccess = NO;
-  NSFileManager *filemanager = [NSFileManager defaultManager];
-  if(hasImportedData){
-    @try {
-      NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
-      NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
-      NSMutableArray *xmlSourceFile = [[NSMutableArray alloc]init];
-      NSMutableArray *symbolSourceFile = [[NSMutableArray alloc]init];
-      NSString *deletepath = destinationPath;
-      destinationPath = [FileTools getFilePath:destinationPath];
-      NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
-      NSString *suffix = @"";
-      
-      for(NSString *str in dirArray){
-        suffix = [str pathExtension];
-        
-        NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    @"9.0",@"smwu",
-                                    @"8.0",@"sxwu",
-                                    @"4.0",@"sxw",
-                                    @"5.0",@"smw",
-                                    nil];
-        if([suffix isEqualToString:@"smwu"] || [suffix isEqualToString:@"sxwu"] ||[suffix isEqualToString:@"sxw"] ||[suffix isEqualToString:@"smw"] ){
-          // workspace add
-          NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-          
-          [dic setValue:[destinationPath stringByAppendingString:str] forKey:@"server"];
-          [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
-          
-          [workSpaceFile addObject:dic];
-        }
-        if([suffix isEqualToString:@"udb"]){
-          //udb add
-          [dataSourceFile addObject:[destinationPath stringByAppendingString:str]];
-        }
-        if([suffix isEqualToString:@"xml"]){
-          [xmlSourceFile addObject:[destinationPath stringByAppendingString:str]];
-        }
-        if([suffix isEqualToString:@"sym"] || [suffix isEqualToString:@"lsl"] || [suffix isEqualToString:@"bru"]){
-           [symbolSourceFile addObject:[destinationPath stringByAppendingString:str]];
-        }
-      }
-      SMap *sMap = [SMap singletonInstance];
-      if(xmlSourceFile.count ){
-        NSString *fileDir = [[[xmlSourceFile objectAtIndex:0]lastPathComponent] stringByDeletingPathExtension];
-        NSString *collection = [NSString stringWithFormat:@"%@%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/ExternalData/Collection/",fileDir,@"/"];
-        if(![filemanager fileExistsAtPath:collection]){
-          [FileTools createFileDirectories:collection];
-        }
-        for(int i = 0; i < dirArray.count; i++){
-          NSString *fileName = [dirArray objectAtIndex:i];
-          [FileTools copyFile:[destinationPath stringByAppendingString:fileName] targetPath:[collection stringByAppendingString:fileName]];
-        }
-        if (workSpaceFile.count) {
-          [sMap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:@(YES)];
-        }
-        isImportSuccess = YES;
-        hasImportedData = NO;
-      }
-      else if(workSpaceFile.count){
-        //导入工作空间
-        BOOL importResult = [sMap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:YES];
-        
-        if(importResult){
-          hasImportedData = NO;
-          isImportSuccess = YES;
-        }
-      }else if([dataSourceFile count]){
-        //导入udb文件
-        for(int i = 0,len = dataSourceFile.count; i < len; i++){
-          Workspace *ws = [[Workspace alloc]init];
-          DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
-          dsci.server = [dataSourceFile objectAtIndex:i];
-          dsci.engineType = ET_UDB;
-          Datasource *datasource = [[ws datasources]open:dsci];
-          if([datasource.description isEqualToString:@"Label"]){
-            NSString *udbName = [NSString stringWithFormat:@"%@%@%@",@"Label_",[FileTools getUserName],@"#.udb"];
-            NSString *todatasource = [NSString stringWithFormat:@"%@%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Datasource/",udbName];
-            [filemanager createFileAtPath:todatasource contents:nil attributes:nil];
-            if([filemanager fileExistsAtPath:todatasource]){
-              [sMap.smMapWC copyDatasetsFrom:[dataSourceFile objectAtIndex:i] to:todatasource];
-              isImportSuccess = YES;
-              hasImportedData = NO;
-            }
-          }else{
-            [sMap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
-            isImportSuccess = YES;
-            hasImportedData = NO;
-          }
-        }
-      }else if(symbolSourceFile.count){
-        NSString *symbolPath = [NSString stringWithFormat:@"%@%@%@%@",head,@"/iTablet/User/",[FileTools getUserName],@"/Data/Symbol/"];
-        for(int i = 0; i < symbolSourceFile.count; i++){
-          NSString *fileName = [[symbolSourceFile objectAtIndex:i]lastPathComponent];
-          [FileTools copyFile:[destinationPath stringByAppendingString:fileName] targetPath:[symbolPath stringByAppendingString:fileName]];
-        }
-        isImportSuccess = YES;
-        hasImportedData = NO;
-      }
-      if(isImportSuccess){
-        [FileTools deleteFile:destinationPath];
-      }
-      resolve(@(isImportSuccess));
-    } @catch (NSException *exception) {
-      reject(@"",@"improtError",(NSError *)exception);
-    }
-  }
-  
-}
 /*
- * 获取用户名
- */
-+(NSString *)getUserName{
-  SMap *sMap = [SMap singletonInstance];
-  NSString *userName = [sMap.smMapWC getUserName];
-  return userName;
-}
-//
-RCT_REMAP_METHOD(getUri,getUriStateWithPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  @try {
-    NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    
-     NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/"];
-    path=[NSString stringWithFormat:@"%@weChat.zip", destinationPath];
-    
-    BOOL isUnzipSuccess = [FileTools unZipFile:path targetPath:destinationPath];
-    if(isUnzipSuccess){
-      [FileTools deleteFile:path];
-      hasImportedData = YES;
-    }
-    
-    resolve(@(YES));
-  } @catch (NSException *exception) {
-    reject(@"getUri fail",exception.reason,nil);
-  }
-}
-
-/*
- * 判断压缩包是否存在并解压，给RN发送消息，用户选择是否导入
+ * 判断压缩包是否存在，给RN发送消息，用户选择是否导入
  */
 +(BOOL)getUriState:(NSURL *)url{
   
@@ -942,20 +804,21 @@ RCT_REMAP_METHOD(getUri,getUriStateWithPath:(NSString *)path resolver:(RCTPromis
   
   NSFileManager *filemanager = [NSFileManager defaultManager];
   
-  NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/"];
+  NSString *destinationFolder = [head stringByAppendingString: @"/iTablet/Import"];
+  NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/import.zip"];
   BOOL isFileExist =[filemanager fileExistsAtPath:zipFilePath isDirectory:nil];
   
-  if(isFileExist)
-  {
-     BOOL isUnzipSuccess = [FileTools unZipFile:zipFilePath targetPath:destinationPath];
-    if(isUnzipSuccess){
+  if(isFileExist){
+    BOOL isFolderExist =[filemanager fileExistsAtPath:destinationFolder isDirectory:nil];
+    if(!isFolderExist) {
+      [filemanager createDirectoryAtPath:destinationFolder withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    BOOL isCopySucces = [FileTools copyFile:zipFilePath targetPath:destinationPath];
+    if(isCopySucces){
       [FileTools deleteFile:zipFilePath];
-      hasImportedData = YES;
       [filetools sendEventWithName:MESSAGE_IMPORTEXTERNALDATA
                               body:[NSNumber numberWithBool:YES]];
-      
     }
-   
   }
   
   return isFileExist;

@@ -133,10 +133,10 @@ function getData(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
           //constants.POINT,
           action: ToolAction.point,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='POINTLAYER'||ToolbarModule.getParams().currentLayer.isHeatmap,
           size: 'large',
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='POINTLAYER'||ToolbarModule.getParams().currentLayer.isHeatmap)
               ? getThemeAssets().mapTools.icon_point_disable
               : require('../../../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_black.png'),
@@ -147,9 +147,9 @@ function getData(type, params) {
           //constants.WORDS,
           size: 'large',
           action: ToolAction.words,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='TEXTLAYER'),
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='TEXTLAYER')
               ? getThemeAssets().mapTools.icon_text_disable
               : require('../../../../../../assets/mapTools/icon_words_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_words_black.png'),
@@ -160,9 +160,9 @@ function getData(type, params) {
           //constants.POINTLINE,
           size: 'large',
           action: ToolAction.pointline,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER'),
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER')
               ? getThemeAssets().mapTools.icon_point_line_disable
               : require('../../../../../../assets/mapTools/icon_point_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_line_black.png'),
@@ -173,9 +173,9 @@ function getData(type, params) {
           //constants.FREELINE,
           size: 'large',
           action: ToolAction.freeline,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER'),
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER')
               ? getThemeAssets().mapTools.icon_free_line_disable
               : require('../../../../../../assets/mapTools/icon_free_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_line_black.png'),
@@ -186,9 +186,9 @@ function getData(type, params) {
           //constants.POINTCOVER,
           size: 'large',
           action: ToolAction.pointcover,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER'),
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER')
               ? getThemeAssets().mapTools.icon_region_disable
               : require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
@@ -199,9 +199,9 @@ function getData(type, params) {
           //constants.FREECOVER,
           size: 'large',
           action: ToolAction.freecover,
-          disable: layerType !== 'TAGGINGLAYER',
+          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER'),
           image:
-            layerType !== 'TAGGINGLAYER'
+            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER')
               ? getThemeAssets().mapTools.icon_free_region_disable
               : require('../../../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_cover_black.png'),

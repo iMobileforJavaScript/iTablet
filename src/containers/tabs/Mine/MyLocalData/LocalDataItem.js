@@ -64,6 +64,12 @@ export default class LocalDataItem extends Component {
       case 'img':
         img = getThemeAssets().mine.my_import_img
         break
+      case 'color':
+        img = getThemeAssets().mine.my_color
+        break
+      case 'symbol':
+        img = getThemeAssets().mine.my_symbol
+        break
       default:
         img = require('../../../../assets/Mine/mine_my_import_local_light.png')
         break

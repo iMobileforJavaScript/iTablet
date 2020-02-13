@@ -31,6 +31,8 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     let DXF = []
     let GPX = []
     let IMG = []
+    let COLOR = []
+    let SYMBOL = []
 
     //过滤临时文件： ~[0]@xxxx
     _checkTempFile(contentList)
@@ -50,6 +52,8 @@ async function getExternalData(path, uncheckedChildFileList = []) {
     }
     GPX = getGPXList(path, contentList, uncheckedChildFileList)
     IMG = getIMGList(path, contentList, uncheckedChildFileList)
+    COLOR = getColorList(path, contentList)
+    SYMBOL = getSymbolList(path, contentList)
     resultList = resultList
       .concat(PL)
       .concat(WS)
@@ -64,6 +68,8 @@ async function getExternalData(path, uncheckedChildFileList = []) {
       .concat(DXF)
       .concat(GPX)
       .concat(IMG)
+      .concat(COLOR)
+      .concat(SYMBOL)
     return resultList
   } catch (e) {
     // console.log(e)
@@ -530,6 +536,64 @@ function getIMGList(path, contentList, uncheckedChildFileList) {
   }
 }
 
+function getColorList(path, contentList) {
+  let COLOR = []
+  try {
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isColor(contentList[i].name)) {
+          contentList[i].check = true
+          COLOR.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'color',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        COLOR = COLOR.concat(
+          getColorList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+          ),
+        )
+      }
+    }
+    return COLOR
+  } catch (error) {
+    return COLOR
+  }
+}
+
+function getSymbolList(path, contentList) {
+  let SYMBOL = []
+  try {
+    for (let i = 0; i < contentList.length; i++) {
+      if (!contentList[i].check && contentList[i].type === 'file') {
+        if (_isSymbol(contentList[i].name)) {
+          contentList[i].check = true
+          SYMBOL.push({
+            directory: path,
+            fileName: contentList[i].name,
+            filePath: path + '/' + contentList[i].name,
+            fileType: 'symbol',
+          })
+        }
+      } else if (!contentList[i].check && contentList[i].type === 'directory') {
+        SYMBOL = SYMBOL.concat(
+          getSymbolList(
+            path + '/' + contentList[i].name,
+            contentList[i].contentList,
+          ),
+        )
+      }
+    }
+    return SYMBOL
+  } catch (error) {
+    return SYMBOL
+  }
+}
+
 /** 标绘模版 */
 async function _getPlottingList(path) {
   let arrFile = []
@@ -807,6 +871,10 @@ function _isIMG(name) {
 
 function _isSymbol(name) {
   return _isType(name, ['sym', 'lsl', 'bru'])
+}
+
+function _isColor(name) {
+  return _isType(name, ['scs'])
 }
 
 function _isFlyingFile(name) {

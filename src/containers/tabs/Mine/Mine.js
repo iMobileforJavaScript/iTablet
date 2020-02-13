@@ -18,7 +18,6 @@ import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
-import Toast from '../../../utils/Toast'
 import { UserType } from '../../../constants'
 import { scaleSize } from '../../../utils'
 import { getLanguage } from '../../../language/index'
@@ -32,6 +31,7 @@ export default class Mine extends Component {
     user: Object,
     workspace: Object,
     device: Object,
+    mineModules: Array,
     setUser: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
@@ -163,64 +163,96 @@ export default class Mine extends Component {
 
   _getItems = () => {
     let data = []
-    data = [
-      {
-        title: getLanguage(this.props.language).Profile.IMPORT,
-        leftImagePath: getThemeAssets().mine.my_import,
-        onClick: this.goToMyLocalData,
-      },
-      {
-        title: getLanguage(this.props.language).Profile.MY_SERVICE,
-        leftImagePath: getThemeAssets().mine.my_service,
-        onClick: this.goToMyService,
-      },
-      {
-        title: getLanguage(this.props.language).Profile.DATA,
-        leftImagePath: getThemeAssets().mine.my_data,
-        onClick: () =>
-          this.goToMyDatasource(getLanguage(this.props.language).Profile.DATA),
-      },
-      {
-        title: getLanguage(this.props.language).Profile.MARK,
-        leftImagePath: getThemeAssets().mine.my_plot,
-        onClick: () => {
-          this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.MAP,
-        leftImagePath: getThemeAssets().mine.my_map,
-        onClick: () =>
-          this.goToMyMap(getLanguage(this.props.language).Profile.MAP),
-      },
-      {
-        title: getLanguage(this.props.language).Profile.SCENE,
-        leftImagePath: getThemeAssets().mine.my_scene,
-        onClick: () =>
-          this.goToMyScene(getLanguage(this.props.language).Profile.SCENE),
-      },
-      {
-        title: getLanguage(this.props.language).Profile.BASEMAP,
-        leftImagePath: getThemeAssets().mine.my_basemap,
-        onClick: () => {
-          this.goToMyBaseMap()
-        },
-      },
-      {
-        title: getLanguage(this.props.language).Profile.SYMBOL,
-        leftImagePath: getThemeAssets().mine.my_symbol,
-        onClick: () =>
-          this.goToMySymbol(getLanguage(this.props.language).Profile.SYMBOL),
-      },
-      {
-        title: getLanguage(this.props.language).Profile.TEMPLATE,
-        leftImagePath: require('../../../assets/function/icon_function_style.png'),
-        onClick: () =>
-          this.goToMyTemplate(
-            getLanguage(this.props.language).Profile.TEMPLATE,
-          ),
-      },
-    ]
+    for (let i = 0; i < this.props.mineModules.length; i++) {
+      switch (this.props.mineModules[i].key) {
+        case 'IMPORT':
+          data.push({
+            title: getLanguage(this.props.language).Profile.IMPORT,
+            leftImagePath: getThemeAssets().mine.my_import,
+            onClick: this.goToMyLocalData,
+          })
+          break
+        case 'MY_SERVICE':
+          data.push({
+            title: getLanguage(this.props.language).Profile.MY_SERVICE,
+            leftImagePath: getThemeAssets().mine.my_service,
+            onClick: this.goToMyService,
+          })
+          break
+        case 'DATA':
+          data.push({
+            title: getLanguage(this.props.language).Profile.DATA,
+            leftImagePath: getThemeAssets().mine.my_data,
+            onClick: () =>
+              this.goToMyDatasource(
+                getLanguage(this.props.language).Profile.DATA,
+              ),
+          })
+          break
+        case 'MARK':
+          data.push({
+            title: getLanguage(this.props.language).Profile.MARK,
+            leftImagePath: getThemeAssets().mine.my_plot,
+            onClick: () => {
+              this.goToMyLabel(getLanguage(this.props.language).Profile.MARK)
+            },
+          })
+          break
+        case 'MAP':
+          data.push({
+            title: getLanguage(this.props.language).Profile.MAP,
+            leftImagePath: getThemeAssets().mine.my_map,
+            onClick: () =>
+              this.goToMyMap(getLanguage(this.props.language).Profile.MAP),
+          })
+          break
+        case 'SCENE':
+          data.push({
+            title: getLanguage(this.props.language).Profile.SCENE,
+            leftImagePath: getThemeAssets().mine.my_scene,
+            onClick: () =>
+              this.goToMyScene(getLanguage(this.props.language).Profile.SCENE),
+          })
+          break
+        case 'BASE_MAP':
+          data.push({
+            title: getLanguage(this.props.language).Profile.BASEMAP,
+            leftImagePath: getThemeAssets().mine.my_basemap,
+            onClick: this.goToMyBaseMap,
+          })
+          break
+        case 'SYMBOL':
+          data.push({
+            title: getLanguage(this.props.language).Profile.SYMBOL,
+            leftImagePath: getThemeAssets().mine.my_symbol,
+            onClick: () =>
+              this.goToMySymbol(
+                getLanguage(this.props.language).Profile.SYMBOL,
+              ),
+          })
+          break
+        case 'TEMPLATE':
+          data.push({
+            title: getLanguage(this.props.language).Profile.TEMPLATE,
+            leftImagePath: require('../../../assets/function/icon_function_style.png'),
+            onClick: () =>
+              this.goToMyTemplate(
+                getLanguage(this.props.language).Profile.TEMPLATE,
+              ),
+          })
+          break
+        case 'MyColor':
+          data.push({
+            title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
+            leftImagePath: getThemeAssets().mine.my_color,
+            onClick: () =>
+              NavigationService.navigate('MyColor', {
+                title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
+              }),
+          })
+          break
+      }
+    }
     return data
   }
 
@@ -327,18 +359,6 @@ export default class Mine extends Component {
     )
   }
 
-  _onSearch = () => {
-    if (this.searchText === '') {
-      Toast.show('请输入搜索内容')
-      return
-    }
-    NavigationService.navigate('SearchMine', {
-      searchText: this.searchText,
-    })
-    this.searchText = ''
-    this.searchBar.clear()
-  }
-
   _renderSideItem = () => {
     if (UserType.isProbationUser(this.props.user.currentUser)) {
       return null
@@ -415,46 +435,13 @@ export default class Mine extends Component {
     return true
   }
 
-  _renderMineContainer = () => {
-    return (
-      <View style={styles.mineContainer}>
-        {this._renderProfile()}
-        {this._renderDatas()}
-      </View>
-    )
-  }
-
-  renderHeaderRight = () => {
-    if (this.props.device.orientation !== 'LANDSCAPE') {
-      return null
-    }
-    let searchImg = getPublicAssets().common.icon_search_a0
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          NavigationService.navigate('SearchMine')
-        }}
-      >
-        <Image resizeMode={'contain'} source={searchImg} />
-      </TouchableOpacity>
-    )
-  }
-
   render() {
     this.screenWidth = Dimensions.get('window').width
     this.screenHeight = Dimensions.get('window').height
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        // headerProps={{
-        //   title: getLanguage(this.props.language).Navigator_Label.PROFILE,
-        //   withoutBack: true,
-        //   navigation: this.props.navigation,
-        //   headerRight: this.renderHeaderRight(),
-        // }}
-        withoutHeader
-      >
-        {this._renderMineContainer()}
+      <Container ref={ref => (this.container = ref)} withoutHeader>
+        {this._renderProfile()}
+        {this._renderDatas()}
       </Container>
     )
   }

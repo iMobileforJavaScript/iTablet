@@ -16,6 +16,7 @@ import MyScene from './MyScene'
 import MyDatasource from './MyDatasource'
 import MySymbol from './MySymbol'
 import MyTemplate from './MyTemplate'
+import MyColor from './MyColor'
 import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
 import MyDataset from './MyDatasource/MyDataset'
@@ -27,6 +28,7 @@ const mapStateToProps = state => ({
   user: state.user.toJS(),
   workspace: state.map.toJS().workspace,
   device: state.device.toJS().device,
+  mineModules: state.modules.toJS().mineModules,
 })
 
 const mapDispatchToProps = {
@@ -48,6 +50,7 @@ export {
   MyDatasource,
   MySymbol,
   MyTemplate,
+  MyColor,
   MyService,
   MyOnlineMap,
   ScanOnlineMap,

@@ -53,7 +53,17 @@ export default class LicenseJoin extends Component {
     str = str + this.state.texts[this.state.texts.length - 1]
     //4C95F-AB5F2-6944D-0976C-06891
     if (str.length === 29) {
-      let result = await SMap.activateLicense(str)
+      let result = -1
+      setTimeout(function() {
+        if (result === -1) {
+          GLOBAL.Loading.setLoading(false)
+          Toast.show(
+            global.language === 'CN' ? '激活失败...' : 'Activate Faild',
+          )
+          return
+        }
+      }, 20000)
+      result = await SMap.activateLicense(str)
       if (result) {
         AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, str)
         let modules = await SMap.licenseContainModule(str)

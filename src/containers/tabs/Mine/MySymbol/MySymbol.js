@@ -43,13 +43,24 @@ class MySymbol extends MyDataPage {
   exportData = async (name, exportToTemp = true) => {
     let homePath = await FileTools.appendingHomeDirectory()
     let targetPath
+
+    let fileName = this.itemInfo.item.name
+    let type =
+      fileName.lastIndexOf('.') > 0
+        ? fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase()
+        : ''
     if (exportToTemp) {
       let tempPath = homePath + this.getRelativeTempPath()
-      let availableName = await this._getAvailableFileName(
-        tempPath,
-        'MyExport',
-        'zip',
-      )
+      let availableName
+      if (this.shareType === 'online' || this.shareType === 'iportal') {
+        availableName = await this._getAvailableFileName(tempPath, name, type)
+      } else {
+        availableName = await this._getAvailableFileName(
+          tempPath,
+          'MyExport',
+          'zip',
+        )
+      }
       targetPath = tempPath + availableName
       this.exportPath = targetPath
     } else {
@@ -62,12 +73,16 @@ class MySymbol extends MyDataPage {
       targetPath = exportPath + availableName
       this.exportPath = this.getRelativeExportPath() + availableName
     }
-    let archivePaths = []
 
     let symbolPath = homePath + this.itemInfo.item.path
-    archivePaths = [symbolPath]
-
-    let result = await FileTools.zipFiles(archivePaths, targetPath)
+    let result
+    if (this.shareType === 'online' || this.shareType === 'iportal') {
+      result = await FileTools.copyFile(symbolPath, targetPath, true)
+    } else {
+      let archivePaths = []
+      archivePaths = [symbolPath]
+      result = await FileTools.zipFiles(archivePaths, targetPath)
+    }
     return result
   }
 }

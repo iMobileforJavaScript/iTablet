@@ -2,6 +2,20 @@ import { FileTools } from '../../../../native'
 import { ConstPath } from '../../../../constants'
 import { SMap, EngineType } from 'imobile_for_reactnative'
 
+async function importWorkspace(item) {
+  let filePath = item.filePath
+  let index = filePath.lastIndexOf('/')
+  let path = filePath.substring(0, index)
+  let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
+  await SMap.copyNaviSnmFile(snmFiles)
+  let type = _getWorkspaceType(filePath)
+  let data = {
+    server: filePath,
+    type,
+  }
+  await SMap.importWorkspaceInfo(data)
+}
+
 /**
  * 1.遍历scenes，获取可用的文件夹名
  * 2.生成对应的pxp
@@ -69,6 +83,22 @@ async function importDatasource(user, item) {
 
   await FileTools.copyFile(sourceUdb, userPath + '/' + udbName)
   await FileTools.copyFile(sourceUdd, userPath + '/' + uddName)
+}
+
+async function importColor(user, item) {
+  let userPath = await FileTools.appendingHomeDirectory(
+    ConstPath.UserPath + user.userName + '/Data/Color',
+  )
+
+  return await _copyFile(item, userPath)
+}
+
+async function importSymbol(user, item) {
+  let userPath = await FileTools.appendingHomeDirectory(
+    ConstPath.UserPath + user.userName + '/Data/Symbol',
+  )
+
+  return await _copyFile(item, userPath)
 }
 
 async function importTIF(filePath, datasourceItem) {
@@ -157,6 +187,14 @@ async function _importDataset(
   }
 }
 
+async function _copyFile(item, desDir) {
+  let fileName = item.fileName.substring(0, item.fileName.lastIndexOf('.'))
+  let fileType = item.fileName.substring(item.fileName.lastIndexOf('.') + 1)
+  let contentList = await FileTools.getDirectoryContent(desDir)
+  let name = _getAvailableName(fileName, contentList, 'file', fileType)
+  return await FileTools.copyFile(item.filePath, desDir + '/' + name)
+}
+
 function _getAvailableName(name, fileList, type, ext = '') {
   let AvailabeName = name
   if (type === 'file' && ext !== '') {
@@ -220,8 +258,11 @@ function _getWorkspaceType(path) {
 }
 
 export default {
+  importWorkspace,
   importWorkspace3D,
   importDatasource,
+  importColor,
+  importSymbol,
   importTIF,
   importSHP,
   importMIF,

@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { Container } from '../../../../components'
-import { SOnlineService, SIPortalService, SMap } from 'imobile_for_reactnative'
+import { SOnlineService, SIPortalService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -312,51 +312,32 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _onImportWorkspace = async () => {
+  _onImportExternalData = async type => {
     try {
       this.onImportStart()
-      let filePath = this.itemInfo.item.filePath
-      let index = filePath.lastIndexOf('/')
-      let path = filePath.substring(0, index)
-      let snmFiles = await FileTools.getPathListByFilterDeep(path, 'snm')
-      await SMap.copyNaviSnmFile(snmFiles)
-      let result = await this.props.importWorkspace({ path: filePath })
-      if (result.msg !== undefined) {
-        Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-      } else {
-        Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
+      let user = this.props.user.currentUser
+      let item = this.itemInfo.item
+      switch (type) {
+        case 'workspace':
+          await DataHandler.importWorkspace(item)
+          break
+        case 'workspace3d':
+          await DataHandler.importWorkspace3D(user, item)
+          break
+        case 'datasource':
+          await DataHandler.importDatasource(user, item)
+          break
+        case 'color':
+          await DataHandler.importColor(user, item)
+          break
+        case 'symbol':
+          await DataHandler.importSymbol(user, item)
+          break
+        default:
+          break
       }
+      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
     } catch (e) {
-      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-    } finally {
-      this.onImportEnd()
-    }
-  }
-
-  _onImportWorkspace3D = async () => {
-    try {
-      this.onImportStart()
-      await DataHandler.importWorkspace3D(
-        this.props.user.currentUser,
-        this.itemInfo.item,
-      )
-      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-    } catch (error) {
-      Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
-    } finally {
-      this.onImportEnd()
-    }
-  }
-
-  _onImportDatasource = async () => {
-    try {
-      this.onImportStart()
-      await DataHandler.importDatasource(
-        this.props.user.currentUser,
-        this.itemInfo.item,
-      )
-      Toast.show(getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
-    } catch (error) {
       Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
     } finally {
       this.onImportEnd()
@@ -470,39 +451,29 @@ export default class MyLocalData extends Component {
         this.props.importSceneWorkspace,
       )
     } else {
-      if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'plotting'
-      ) {
+      let fileType = this.itemInfo.item.fileType
+      if (fileType === 'plotting') {
         this._onImportPlotLib()
       } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'workspace3d'
+        fileType === 'workspace' ||
+        fileType === 'workspace3d' ||
+        fileType === 'datasource' ||
+        fileType === 'color' ||
+        fileType === 'symbol'
       ) {
-        this._onImportWorkspace3D()
+        this._onImportExternalData(fileType)
       } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'datasource'
+        fileType === 'tif' ||
+        fileType === 'shp' ||
+        fileType === 'mif' ||
+        fileType === 'kml' ||
+        fileType === 'kmz' ||
+        fileType === 'dwg' ||
+        fileType === 'dxf' ||
+        fileType === 'gpx' ||
+        fileType === 'img'
       ) {
-        this._onImportDatasource()
-      } else if (
-        (this.itemInfo !== undefined &&
-          this.itemInfo.item.fileType === 'tif') ||
-        this.itemInfo.item.fileType === 'shp' ||
-        this.itemInfo.item.fileType === 'mif' ||
-        this.itemInfo.item.fileType === 'kml' ||
-        this.itemInfo.item.fileType === 'kmz' ||
-        this.itemInfo.item.fileType === 'dwg' ||
-        this.itemInfo.item.fileType === 'dxf' ||
-        this.itemInfo.item.fileType === 'gpx' ||
-        this.itemInfo.item.fileType === 'img'
-      ) {
-        this._onImportDataset(this.itemInfo.item.fileType)
-      } else if (
-        this.itemInfo !== undefined &&
-        this.itemInfo.item.fileType === 'workspace'
-      ) {
-        this._onImportWorkspace()
+        this._onImportDataset(fileType)
       } else {
         Toast.show('暂不支持此数据的导入')
       }

@@ -81,6 +81,17 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: scaleSize(8),
   },
+  inputWrap: {
+    paddingHorizontal: scaleSize(5),
+    ...Platform.select({
+      android: {
+        padding: 0,
+      },
+    }),
+    borderWidth: 1,
+    backgroundColor: 'white',
+    borderRadius: scaleSize(8),
+  },
   inputOverLayer: {
     position: 'absolute',
     right: 1,

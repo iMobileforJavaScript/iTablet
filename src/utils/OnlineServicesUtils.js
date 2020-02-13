@@ -5,6 +5,7 @@ import { Platform } from 'react-native'
 import axios from 'axios'
 // eslint-disable-next-line import/default
 import CookieManager from 'react-native-cookies'
+import RNFS from 'react-native-fs'
 
 export default class OnlineServicesUtils {
   constructor(type) {
@@ -178,6 +179,82 @@ export default class OnlineServicesUtils {
     return result.succeed
   }
 
+  async uploadFile(filePath, fileName, fileType, callback) {
+    try {
+      let id = await this._getUploadId(fileName, fileType)
+      if (id) {
+        let url = this.serverUrl + `/mycontent/datas/${id}/upload.rjson`
+        let headers = {}
+        let cookie = await this.getCookie()
+        if (cookie) {
+          headers = {
+            cookie: cookie,
+          }
+        }
+        let uploadParams = {
+          toUrl: url,
+          headers: headers,
+          files: [
+            {
+              name: fileName,
+              filename: fileName,
+              filepath: filePath,
+            },
+          ],
+          background: true,
+          method: 'POST',
+          begin: res => {
+            if (callback && typeof callback.onBegin === 'function') {
+              callback.onBegin(res)
+            }
+          },
+          progress: res => {
+            if (callback && typeof callback.onProgress === 'function') {
+              callback.onProgress(res)
+            }
+          },
+        }
+
+        let result = await RNFS.uploadFiles(uploadParams).promise
+        let body = JSON.parse(result.body)
+        return body.childID !== undefined
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+  }
+
+  async _getUploadId(fileName, fileType) {
+    try {
+      let url = this.serverUrl + `/mycontent/datas.rjson`
+      let headers = {}
+      let cookie = await this.getCookie()
+      if (cookie) {
+        headers = {
+          cookie: cookie,
+        }
+      }
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          fileName: fileName,
+          type: fileType,
+        }),
+      })
+      let result = await response.json()
+      if (result.childID) {
+        return result.childID
+      } else {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+  }
+
   /************************ 公共数据相关（不用登陆） ******************************/
 
   /**
@@ -194,6 +271,42 @@ export default class OnlineServicesUtils {
 
     if (responseObj && responseObj.total === 1) {
       return responseObj.content[0]
+    } else {
+      return false
+    }
+  }
+
+  /**
+   * 根据类型查找数据
+   * @param {*} types 类型数组
+   * @param {*} orderBy
+   */
+  async getPublicDataByTypes(types, params) {
+    let { orderBy, orderType, pageSize, currentPage, keywords } = { ...params }
+    orderBy = orderBy || 'LASTMODIFIEDTIME'
+    orderType = orderType || 'DESC'
+    pageSize = pageSize || 9
+    currentPage = currentPage || 1
+    let url
+    if (!types || types.length === 0) {
+      url = this.serverUrl + `/datas.rjson?`
+    } else if (types.length === 1) {
+      url = this.serverUrl + `/datas.rjson?type=${types[0]}`
+    } else {
+      url = this.serverUrl + `/datas.rjson?types=[${types}]`
+    }
+
+    url += `&orderBy=${orderBy}&orderType=${orderType}`
+    url += `&pageSize=${pageSize}&currentPage=${currentPage}`
+    if (keywords) {
+      url += `&keywords=${keywords}`
+    }
+
+    let response = await fetch(url)
+    let responseObj = await response.json()
+
+    if (responseObj) {
+      return responseObj
     } else {
       return false
     }

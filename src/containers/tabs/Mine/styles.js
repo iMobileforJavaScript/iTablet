@@ -182,6 +182,7 @@ export default StyleSheet.create({
     height: scaleSize(80),
   },
   itemText: {
+    textAlign: 'center',
     fontSize: scaleSize(24),
   },
 })

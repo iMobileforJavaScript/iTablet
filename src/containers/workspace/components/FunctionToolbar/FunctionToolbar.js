@@ -47,6 +47,7 @@ const BottomHeight = scaleSize(100)
 export default class FunctionToolbar extends React.Component {
   props: {
     navigation: Object,
+    mapModules: Array,
     language: string,
     style?: any,
     hide?: boolean,
@@ -79,7 +80,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   static defaultProps = {
-    type: constants.COLLECTION,
+    type: constants.MAP_COLLECTION,
     hide: false,
     direction: 'column',
     separator: 20,
@@ -244,231 +245,398 @@ export default class FunctionToolbar extends React.Component {
   getData = type => {
     // TODO 带添加读取配置文件，添加指定模块功能
     let isLicenseNotValid = false
-    let data
+    const currentMapModule = this.props.mapModules.find(function(item) {
+      return item.key === type
+    })
+    const functionModules = currentMapModule.functionModules
+
+    let data = []
+    functionModules.forEach(item => {
+      switch (item.key) {
+        case 'startModule':
+          data.push(
+            startModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.START,
+            ),
+          )
+          break
+        case 'addModule':
+          data.push(
+            addModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.OPEN,
+            ),
+          )
+          break
+        case 'styleModule': {
+          let styleAction
+          if (type === constants.MAP_THEME) {
+            styleAction = () => {
+              ToolbarModule.getParams()
+              let currentLayer = this.props.currentLayer
+              if (currentLayer.themeType <= 0 && !currentLayer.isHeatmap) {
+                styleModule().action(ConstToolType.MAP_STYLE)
+              } else if (GLOBAL.Type === constants.MAP_THEME) {
+                themeModule().actions.layerListAction(this.props.currentLayer)
+              } else {
+                Toast.show(
+                  getLanguage(this.props.language).Prompt
+                    .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+                )
+              }
+            }
+          }
+          data.push(
+            styleModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.STYLE,
+              styleAction,
+            ),
+          )
+          break
+        }
+        case 'toolModule':
+          data.push(
+            toolModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+            ),
+          )
+          break
+        case 'shareModule':
+          data.push(
+            shareModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.SHARE,
+            ),
+          )
+          break
+        case 'fly3DModule':
+          data.push(
+            fly3DModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.FLY,
+            ),
+          )
+          break
+        case 'tool3DModule':
+          data.push(
+            tool3DModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+            ),
+          )
+          break
+        case 'MAP_SHARE_MAP3D':
+          data.push(
+            shareModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.SHARE,
+            ),
+          )
+          break
+        case 'arAIAssistant':
+          data.push(
+            aiModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu
+                .MAP_AR_AI_ASSISTANT,
+            ),
+          )
+          break
+        case 'navigationModule':
+          data.push(
+            navigationModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.NAVIGATION_START,
+            ),
+          )
+          break
+        case 'themeModule':
+          data.push(
+            themeModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.THEME,
+            ),
+          )
+          break
+        case 'collectionModule':
+          data.push(
+            collectionModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.COLLECTION,
+            ),
+          )
+          break
+        case 'editModule':
+          data.push(
+            editModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.EDIT,
+            ),
+          )
+          break
+        case 'plotModule':
+          data.push(
+            plotModule(
+              item.type,
+              item.type === ConstToolType.PLOTTING_ANIMATION
+                ? getLanguage(this.props.language).Map_Main_Menu
+                  .PLOTTING_ANIMATION
+                : getLanguage(this.props.language).Map_Main_Menu.PLOT,
+            ),
+          )
+          break
+        case 'analysisModule':
+          data.push(
+            analysisModule(
+              item.type,
+              getLanguage(this.props.language).Map_Main_Menu.ANALYSIS,
+            ),
+          )
+          break
+      }
+    })
+
     switch (type) {
-      case constants.MAP_EDIT:
-        data = [
-          startModule(
-            ConstToolType.MAP_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_ADD,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          styleModule(
-            ConstToolType.MAP_STYLE,
-            getLanguage(this.props.language).Map_Main_Menu.STYLE,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
-        break
       case constants.MAP_3D:
         //三维模块是第6个模块
         isLicenseNotValid = !this.getLicenseValid(6)
-        data = [
-          startModule(
-            ConstToolType.MAP_3D_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          fly3DModule(
-            ConstToolType.MAP3D_TOOL_FLYLIST,
-            getLanguage(this.props.language).Map_Main_Menu.FLY,
-          ),
-          tool3DModule(
-            ConstToolType.MAP3D_TOOL,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE_MAP3D,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
-        break
-      case constants.MAP_THEME: {
-        // TODO 模块化待优化
-        let styleAction = () => {
-          ToolbarModule.getParams()
-          let currentLayer = this.props.currentLayer
-          if (currentLayer.themeType <= 0 && !currentLayer.isHeatmap) {
-            styleModule().action(ConstToolType.MAP_STYLE)
-          } else if (GLOBAL.Type === constants.MAP_THEME) {
-            themeModule().actions.layerListAction(this.props.currentLayer)
-          } else {
-            Toast.show(
-              getLanguage(this.props.language).Prompt
-                .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
-            )
-          }
-        }
-        data = [
-          startModule(
-            ConstToolType.MAP_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          themeModule(
-            ConstToolType.MAP_THEME,
-            getLanguage(this.props.language).Map_Main_Menu.THEME,
-          ),
-          styleModule(
-            ConstToolType.MAP_STYLE,
-            getLanguage(this.props.language).Map_Main_Menu.STYLE,
-            styleAction,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
-        break
-      }
-      case constants.MAP_ANALYST:
-        data = [
-          startModule(
-            ConstToolType.MAP_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_ADD,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          analysisModule(
-            ConstToolType.MAP_ANALYSIS,
-            getLanguage(this.props.language).Map_Main_Menu.ANALYSIS,
-          ),
-          styleModule(
-            ConstToolType.MAP_STYLE,
-            getLanguage(this.props.language).Map_Main_Menu.STYLE,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
         break
       case constants.MAP_PLOTTING:
         isLicenseNotValid = !this.getLicenseValid(8)
-        data = [
-          startModule(
-            ConstToolType.MAP_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_ADD,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          plotModule(
-            ConstToolType.PLOTTING,
-            getLanguage(this.props.language).Map_Main_Menu.PLOT,
-          ),
-          editModule(
-            ConstToolType.MAP_EDIT,
-            getLanguage(this.props.language).Map_Main_Menu.EDIT,
-          ),
-          plotModule(
-            ConstToolType.PLOTTING_ANIMATION,
-            getLanguage(this.props.language).Map_Main_Menu.PLOTTING_ANIMATION,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
-        break
-      case constants.MAP_AR:
-        data = [
-          startModule(
-            ConstToolType.MAP_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_ADD,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          styleModule(
-            ConstToolType.MAP_STYLE,
-            getLanguage(this.props.language).Map_Main_Menu.STYLE,
-          ),
-          aiModule(
-            ConstToolType.MAP_AR_AIASSISTANT,
-            getLanguage(this.props.language).Map_Main_Menu.MAP_AR_AI_ASSISTANT,
-          ),
-        ]
         break
       case constants.MAP_NAVIGATION:
         isLicenseNotValid = !this.getLicenseValid(10)
-        data = [
-          startModule(
-            ConstToolType.MAP_NAVIGATION_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_NAVIGATION_ADD_UDB,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          navigationModule(
-            ConstToolType.MAP_NAVIGATION_MODULE,
-            getLanguage(this.props.language).Map_Main_Menu.NAVIGATION_START,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
-        break
-      case constants.COLLECTION:
-      default:
-        data = [
-          startModule(
-            ConstToolType.MAP_COLLECTION_START,
-            getLanguage(this.props.language).Map_Main_Menu.START,
-          ),
-          addModule(
-            ConstToolType.MAP_ADD,
-            getLanguage(this.props.language).Map_Main_Menu.OPEN,
-          ),
-          collectionModule(
-            ConstToolType.MAP_SYMBOL,
-            getLanguage(this.props.language).Map_Main_Menu.COLLECTION,
-          ),
-          editModule(
-            ConstToolType.MAP_EDIT,
-            getLanguage(this.props.language).Map_Main_Menu.EDIT,
-          ),
-          toolModule(
-            ConstToolType.MAP_TOOLS,
-            getLanguage(this.props.language).Map_Main_Menu.TOOLS,
-          ),
-          shareModule(
-            ConstToolType.MAP_SHARE,
-            getLanguage(this.props.language).Map_Main_Menu.SHARE,
-          ),
-        ]
         break
     }
+
+    // let data
+    // switch (type) {
+    //   case constants.MAP_EDIT:
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_ADD,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       styleModule(
+    //         ConstToolType.MAP_STYLE,
+    //         getLanguage(this.props.language).Map_Main_Menu.STYLE,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_3D:
+    //     //三维模块是第6个模块
+    //     isLicenseNotValid = !this.getLicenseValid(6)
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_3D_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       fly3DModule(
+    //         ConstToolType.MAP3D_TOOL_FLYLIST,
+    //         getLanguage(this.props.language).Map_Main_Menu.FLY,
+    //       ),
+    //       tool3DModule(
+    //         ConstToolType.MAP3D_TOOL,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE_MAP3D,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_THEME: {
+    //     // TODO 模块化待优化
+    //     let styleAction = () => {
+    //       ToolbarModule.getParams()
+    //       let currentLayer = this.props.currentLayer
+    //       if (currentLayer.themeType <= 0 && !currentLayer.isHeatmap) {
+    //         styleModule().action(ConstToolType.MAP_STYLE)
+    //       } else if (GLOBAL.Type === constants.MAP_THEME) {
+    //         themeModule().actions.layerListAction(this.props.currentLayer)
+    //       } else {
+    //         Toast.show(
+    //           getLanguage(this.props.language).Prompt
+    //             .THE_CURRENT_LAYER_CANNOT_BE_STYLED,
+    //         )
+    //       }
+    //     }
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       themeModule(
+    //         ConstToolType.MAP_THEME,
+    //         getLanguage(this.props.language).Map_Main_Menu.THEME,
+    //       ),
+    //       styleModule(
+    //         ConstToolType.MAP_STYLE,
+    //         getLanguage(this.props.language).Map_Main_Menu.STYLE,
+    //         styleAction,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   }
+    //   case constants.MAP_ANALYST:
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_ADD,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       analysisModule(
+    //         ConstToolType.MAP_ANALYSIS,
+    //         getLanguage(this.props.language).Map_Main_Menu.ANALYSIS,
+    //       ),
+    //       styleModule(
+    //         ConstToolType.MAP_STYLE,
+    //         getLanguage(this.props.language).Map_Main_Menu.STYLE,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_PLOTTING:
+    //     isLicenseNotValid = !this.getLicenseValid(8)
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_ADD,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       plotModule(
+    //         ConstToolType.PLOTTING,
+    //         getLanguage(this.props.language).Map_Main_Menu.PLOT,
+    //       ),
+    //       editModule(
+    //         ConstToolType.MAP_EDIT,
+    //         getLanguage(this.props.language).Map_Main_Menu.EDIT,
+    //       ),
+    //       plotModule(
+    //         ConstToolType.PLOTTING_ANIMATION,
+    //         getLanguage(this.props.language).Map_Main_Menu.PLOTTING_ANIMATION,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_AR:
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_ADD,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       styleModule(
+    //         ConstToolType.MAP_STYLE,
+    //         getLanguage(this.props.language).Map_Main_Menu.STYLE,
+    //       ),
+    //       aiModule(
+    //         ConstToolType.MAP_AR_AIASSISTANT,
+    //         getLanguage(this.props.language).Map_Main_Menu.MAP_AR_AI_ASSISTANT,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_NAVIGATION:
+    //     isLicenseNotValid = !this.getLicenseValid(10)
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_NAVIGATION_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_NAVIGATION_ADD_UDB,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       navigationModule(
+    //         ConstToolType.MAP_NAVIGATION_MODULE,
+    //         getLanguage(this.props.language).Map_Main_Menu.NAVIGATION_START,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    //   case constants.MAP_COLLECTION:
+    //   default:
+    //     data = [
+    //       startModule(
+    //         ConstToolType.MAP_COLLECTION_START,
+    //         getLanguage(this.props.language).Map_Main_Menu.START,
+    //       ),
+    //       addModule(
+    //         ConstToolType.MAP_ADD,
+    //         getLanguage(this.props.language).Map_Main_Menu.OPEN,
+    //       ),
+    //       collectionModule(
+    //         ConstToolType.MAP_SYMBOL,
+    //         getLanguage(this.props.language).Map_Main_Menu.COLLECTION,
+    //       ),
+    //       editModule(
+    //         ConstToolType.MAP_EDIT,
+    //         getLanguage(this.props.language).Map_Main_Menu.EDIT,
+    //       ),
+    //       toolModule(
+    //         ConstToolType.MAP_TOOLS,
+    //         getLanguage(this.props.language).Map_Main_Menu.TOOLS,
+    //       ),
+    //       shareModule(
+    //         ConstToolType.MAP_SHARE,
+    //         getLanguage(this.props.language).Map_Main_Menu.SHARE,
+    //       ),
+    //     ]
+    //     break
+    // }
     if (isLicenseNotValid) {
       GLOBAL.licenseModuleNotContainDialog &&
         GLOBAL.licenseModuleNotContainDialog.setDialogVisible(true)

@@ -138,7 +138,7 @@ export default class MT_layerManager extends React.Component {
       } else if (allLayers.length === 0) {
         await SMap.openDatasource(
           ConstOnline.Google.DSParams,
-          GLOBAL.Type === constants.COLLECTION
+          GLOBAL.Type === constants.MAP_COLLECTION
             ? 1
             : ConstOnline.Google.layerIndex,
           false,

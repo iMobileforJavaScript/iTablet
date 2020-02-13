@@ -199,7 +199,7 @@ export default class AboutITablet extends Component {
               },
             ]}
           />
-          <TouchableOpacity style={[styles.protocol]} onPress={this.Privacy}>
+          <TouchableOpacity style={[styles.protocol,{right: scaleSize(10)}]} onPress={this.Privacy}>
             <Text style={styles.footerItem}>
               {getLanguage(this.props.language).Profile.PRIVACY_POLICY}
               {/* 隐私政策 */}

@@ -86,14 +86,14 @@ static NSString* g_sampleCodeName = @"#";;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [NativeUtil openGPS];
+  
   [JPUSHService setupWithOption:launchOptions appKey:@"7d2470baad20e273cd6e53cc"
                         channel:nil apsForProduction:nil];
   NSURL *jsCodeLocation;
   
 #if DEBUG
 
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.43.32"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.120"];
 
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -143,10 +143,16 @@ static NSString* g_sampleCodeName = @"#";;
     JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
     entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
     [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    
   } @catch (NSException *exception) {
     NSLog(@"%@", exception.description);
   }
-  
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [NativeUtil openGPS];
+    });
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+         [NativeUtil closeGPS];
+     });
   return YES;
 }
 
@@ -162,16 +168,32 @@ static NSString* g_sampleCodeName = @"#";;
 #pragma mark - 初始化license
 - (void)initEnvironment {
 //  [Environment setOpenGLMode:false];
-  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/%@/",@"license"]];
+  
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/license/%@",@"Trial_License.slm"];
     if([[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-      [[NSFileManager defaultManager] removeItemAtPath:deslic error:nil];
+      NSString* srcTime = [NSString stringWithContentsOfFile:srclic encoding:NSUTF8StringEncoding error:nil];
+      NSString* desTime = [NSString stringWithContentsOfFile:deslic encoding:NSUTF8StringEncoding error:nil];
+      NSRegularExpression *regular = [NSRegularExpression regularExpressionWithPattern:@"ExpiredDate=([0-9]+)" options:0 error:nil];
+      
+      NSTextCheckingResult *match = [regular firstMatchInString:srcTime options:0 range:NSMakeRange(0, [srcTime length])];
+      NSTextCheckingResult *match1 = [regular firstMatchInString:desTime options:0 range:NSMakeRange(0, [desTime length])];
+      
+      if (match && match1) {
+          NSString *result = [srcTime substringWithRange:[match rangeAtIndex:1] ];
+          NSLog(@"time: %@",result);
+          NSString *result1 = [desTime substringWithRange:[match1 rangeAtIndex:1] ];
+          NSLog(@"time: %@",result);
+        if(result1.longLongValue < result.longLongValue){
+          [[NSFileManager defaultManager] removeItemAtPath:deslic error:nil];
+        }
+      }
     }
     [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/license/%@",@""]];
     if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
       NSLog(@"拷贝数据失败");
+    [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/%@/",@"license"]];
   }
 }
 

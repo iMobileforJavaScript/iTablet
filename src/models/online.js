@@ -218,8 +218,6 @@ export default handleActions(
               isItem = true
               if (payload.progress > element.progress || payload.downed) {
                 down[index] = payload
-              } else {
-                return
               }
               break
             }
