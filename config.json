@@ -3,6 +3,10 @@
   "alias": "iTablet",
   "version": "0.0.1",
   "language": "CN",
+  "about": {
+    "isShow": true,
+    "url": ""
+  },
   "tabModules": ["Home", "Find", "Friend", "Mine"],
   "mapModules": [
     {
