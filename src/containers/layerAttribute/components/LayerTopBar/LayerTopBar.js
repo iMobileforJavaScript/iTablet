@@ -88,7 +88,7 @@ export default class LayerTopBar extends React.Component {
     return (
       <ImageButton
         key={key}
-        containerStyle={styles.btn}
+        containerStyle={[styles.btn, { flex: 1 }]}
         iconBtnStyle={styles.imgBtn}
         titleStyle={enabled ? styles.enableBtnTitle : styles.btnTitle}
         icon={icon}

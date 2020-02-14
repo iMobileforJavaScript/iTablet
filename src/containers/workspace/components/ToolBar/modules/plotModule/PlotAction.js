@@ -69,7 +69,8 @@ async function geometrySelected(event) {
         Toast.show(
           getLanguage(global.language).Prompt.PLEASE_SELECT_PLOT_SYMBOL,
         )
-      } else {
+        SMap.setAction(Action.PAN)
+      }else{
         params.setToolbarVisible(
           true,
           ConstToolType.PLOT_ANIMATION_NODE_CREATE,
@@ -122,6 +123,7 @@ async function showCollection(libId, symbolCode, type) {
       height = ConstToolType.HEIGHT[0]
       break
   }
+  ToolbarModule.getParams().showFullMap(true)
   ToolbarModule.getParams().setToolbarVisible(true, type, {
     isFullScreen: false,
     height,
@@ -171,6 +173,18 @@ async function collectionSubmit(libId, symbolCode) {
   await SMap.submit()
   await SMap.refreshMap()
   SMap.setPlotSymbol(libId, symbolCode)
+
+  ToolbarModule.getParams().getLayers(-1, async layers => {
+    let plotLayer
+    for (let i = 0; i < layers.length; i++)
+      if (layers[i].name.indexOf('PlotEdit_') != -1) {
+        plotLayer = layers[i]
+        break
+      }
+    if (plotLayer) {
+      ToolbarModule.getParams().setCurrentLayer(plotLayer)
+    }
+  })
 }
 
 async function cancel(libId, symbolCode) {

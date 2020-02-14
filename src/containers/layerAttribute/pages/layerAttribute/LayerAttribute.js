@@ -39,7 +39,7 @@ import {
   DatasetType,
 } from 'imobile_for_reactnative'
 import { getLanguage } from '../../../../language'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import constants from '../../../workspace/constants'
 //eslint-disable-next-line
 import { ActionPopover } from 'teaset'
@@ -67,6 +67,7 @@ export default class LayerAttribute extends React.Component {
     // getAttributes: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
+    clearAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -127,29 +128,13 @@ export default class LayerAttribute extends React.Component {
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
     ) {
-      let checkData = this.checkToolIsViable()
       this.filter = ''
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
-      this.canBeRefresh = true
+      this.canBeRefresh = false
       this.noMore = false
-      this.setState(
-        {
-          attributes: {
-            head: [],
-            data: [],
-          },
-          currentFieldInfo: [],
-          relativeIndex: -1,
-          currentIndex: -1,
-          startIndex: 0,
-          ...checkData,
-        },
-        () => {
-          this.refresh(null, true)
-        },
-      )
+      this.refresh(null, true)
     } else if (
       JSON.stringify(prevProps.attributesHistory) !==
       JSON.stringify(this.props.attributesHistory)
@@ -157,6 +142,20 @@ export default class LayerAttribute extends React.Component {
       let checkData = this.checkToolIsViable()
       this.setState({
         ...checkData,
+      })
+    } else if (GLOBAL.NEEDREFRESHTABLE) {
+      GLOBAL.NEEDREFRESHTABLE = false
+      let startIndex = this.state.startIndex - PAGE_SIZE
+      if (startIndex <= 0) {
+        startIndex = 0
+        this.canBeRefresh = false
+      }
+      let currentPage = startIndex / PAGE_SIZE
+      // this.noMore = false
+      this.getAttribute({
+        type: 'reset',
+        currentPage: currentPage,
+        startIndex: startIndex <= 0 ? 0 : startIndex,
       })
     }
   }
@@ -251,6 +250,7 @@ export default class LayerAttribute extends React.Component {
       attributes = {}
     ;(async function() {
       try {
+        let checkData = this.checkToolIsViable()
         result = await LayerUtils.getLayerAttribute(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
@@ -277,6 +277,7 @@ export default class LayerAttribute extends React.Component {
             relativeIndex: 0,
             currentFieldInfo: attributes.data[0],
             startIndex: 0,
+            ...checkData,
             ...others,
           })
           this.setLoading(false)
@@ -337,6 +338,7 @@ export default class LayerAttribute extends React.Component {
                   ? newAttributes.data[relativeIndex]
                   : this.state.currentFieldInfo,
               startIndex,
+              ...checkData,
               // ...others,
             },
             () => {
@@ -521,7 +523,7 @@ export default class LayerAttribute extends React.Component {
       }
       this.currentPage = Math.floor((data.index - 1) / PAGE_SIZE)
       if (
-        data.index >= this.state.startIndex &&
+        data.index >= this.state.startIndex + 1 &&
         data.index < this.state.startIndex + this.state.attributes.data.length
       ) {
         // 定位在当前显示数据范围内
@@ -717,34 +719,22 @@ export default class LayerAttribute extends React.Component {
   }
   /** 点击属性字段回调 **/
   onPressHeader = ({ fieldInfo, index, pressView }) => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      return
+    }
     this._showPopover(pressView, index, fieldInfo)
   }
 
   /** 添加属性字段 **/
   addAttributeField = async fieldInfo => {
-    // if (this.state.attributes.data.length > 0) {
     let path = this.props.currentLayer.path
     let result = await SMap.addAttributeFieldInfo(path, false, fieldInfo)
     if (result) {
-      Toast.show(
-        global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
-      )
+      Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS)
       this.refresh()
-      // this.getAttribute(
-      //   {
-      //     type: 'refresh',
-      //     currentPage: 0,
-      //     startIndex: 0,
-      //   },
-      //   () => {},
-      //   false,
-      // )
     } else {
-      Toast.show(
-        global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
-      )
+      Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED)
     }
-    // }
   }
 
   /** 关联事件 **/
@@ -769,7 +759,10 @@ export default class LayerAttribute extends React.Component {
       ],
       true,
     ).then(data => {
-      this.props.navigation && this.props.navigation.navigate('MapView')
+      this.props.navigation &&
+        this.props.navigation.navigate('MapView', {
+          hideMapController: true,
+        })
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
           isFullScreen: false,
@@ -825,7 +818,7 @@ export default class LayerAttribute extends React.Component {
       typeof this.props.setLayerAttributes === 'function'
     ) {
       // 单个对象属性和多个对象属性数据有区别，单个属性cellData是值
-      let isSingleData = typeof data.cellData !== 'object'
+      let isSingleData = this.state.attributes.data.length === 1
       // 单个对象属性 在 隐藏系统字段下，要重新计算index
       if (isSingleData && !this.state.isShowSystemFields) {
         for (let index in this.state.attributes.data[0]) {
@@ -1102,25 +1095,23 @@ export default class LayerAttribute extends React.Component {
           }
           if (result) {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除成功'
-                : 'Attribute Feild Delete Succeed',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_SUCCESS,
             )
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
             this.canBeRefresh = false
             this.refresh()
           } else {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除失败'
-                : 'Attribute Feild Delete Faild',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_FAILED,
             )
           }
         }}
-        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
-        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(250) }]}
+        style={[styles.dialogBackground, { height: scaleSize(250) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
@@ -1131,11 +1122,12 @@ export default class LayerAttribute extends React.Component {
             flex: 1,
             flexDirection: 'column',
             alignItems: 'center',
+            paddingHorizontal: scaleSize(10),
           }}
         >
           <Text
             style={{
-              fontSize: scaleSize(32),
+              fontSize: size.fontSize.fontSizeLg,
               color: color.theme_white,
               marginTop: scaleSize(5),
               marginLeft: scaleSize(10),
@@ -1143,9 +1135,9 @@ export default class LayerAttribute extends React.Component {
               textAlign: 'center',
             }}
           >
-            {global.language === 'CN'
-              ? '确定删除所选字段？'
-              : 'Sure Delete this Attribute Field?'}
+            {getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_CONFIRM +
+              '\n\n' +
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_TIPS}
           </Text>
         </View>
       </Dialog>

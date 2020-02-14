@@ -19,6 +19,7 @@ const Profile = {
 
   //我的——登录
   LOGIN: 'Login',
+  LOGIN_TIMEOUT: 'Login timeout, please try again later',
   LOGIN_CURRENT: 'Current user is already logged in',
   LOGIN_INVALID: 'Login expired. Please login again',
   MOBILE_LOGIN: 'Mobile Login',
@@ -80,7 +81,7 @@ const Profile = {
 
   ABOUT: 'About',
   SERVICE_HOTLINE: 'Service Hotline',
-  SALES_CONSULTATION: 'Sales Consultation',
+  SALES_CONSULTATION: 'Consultation',
   BUSINESS_WEBSITE: 'Business Website',
   SERVICE_AGREEMENT: 'Service Agreement',
   PRIVACY_POLICY: 'Privacy Policy',
@@ -202,6 +203,11 @@ const Profile = {
     'This module is not included under the current license',
   LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
     'This module is not included under the current license and some of its functions will be unavailable！！！',
+  LICENSE_NO_NATIVE_OFFICAL:
+    'No native official license file,Please add license file "Official_License" to "/iTablet/license/" file',
+  LICENSE_NOT_ITABLET_OFFICAL:
+    'This official license is not activat on iTablet,Please go to the license page to clear the license and reactivate it',
+  LICENSE_NATIVE_EXPIRE: 'Native License Invalid',
   //许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',

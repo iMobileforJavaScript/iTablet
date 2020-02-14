@@ -127,6 +127,7 @@ export default class Register extends React.Component {
           keyboardType={'email-address'}
           //'请输入昵称'
           placeholder={getLanguage(this.props.language).Profile.ENTER_USERNAME}
+          placeholderTextColor={'#A7A7A7'}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberNickname}
@@ -138,6 +139,7 @@ export default class Register extends React.Component {
           keyboardType={'email-address'}
           //'请输入真实姓名'
           placeholder={getLanguage(this.props.language).Profile.ENTER_REALNAME}
+          placeholderTextColor={'#A7A7A7'}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberRealName}
@@ -149,6 +151,7 @@ export default class Register extends React.Component {
           keyboardType={'email-address'}
           //'请输入工作机构'
           placeholder={getLanguage(this.props.language).Profile.ENTER_COMPANY}
+          placeholderTextColor={'#A7A7A7'}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberCompany}
@@ -161,6 +164,7 @@ export default class Register extends React.Component {
           clearButtonMode={'while-editing'}
           //'请输入邮箱'
           placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL}
+          placeholderTextColor={'#A7A7A7'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberEmail}
           onChangeText={text => {
@@ -172,6 +176,7 @@ export default class Register extends React.Component {
           clearButtonMode={'while-editing'}
           //'请输入密码'
           placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
+          placeholderTextColor={'#A7A7A7'}
           style={styles.textInputStyle}
           defaultValue={this.txtPhoneNumberPassword}
           onChangeText={text => {
@@ -182,6 +187,7 @@ export default class Register extends React.Component {
           keyboardType={'phone-pad'}
           //'请输入手机号'
           placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
+          placeholderTextColor={'#A7A7A7'}
           style={styles.textInputStyle}
           clearButtonMode={'while-editing'}
           defaultValue={this.txtPhoneNumber}
@@ -195,6 +201,7 @@ export default class Register extends React.Component {
             clearButtonMode={'while-editing'}
             //'请输入验证码'
             placeholder={getLanguage(this.props.language).Profile.ENTER_CODE}
+            placeholderTextColor={'#A7A7A7'}
             style={{ flex: 1, fontSize: scaleSize(fontSize), padding: 0 }}
             defaultValue={this.txtVerifyCode}
             onChangeText={text => {

@@ -10,6 +10,7 @@ import { StyleSheet, TouchableOpacity, Image, Animated } from 'react-native'
 import { constUtil, FetchUtils, scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language'
 
 export default class LocationView extends React.Component {
   props: {
@@ -29,18 +30,20 @@ export default class LocationView extends React.Component {
       GLOBAL.STARTX = point.x
       GLOBAL.STARTY = point.y
       await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
-      GLOBAL.STARTNAME = await FetchUtils.getPointName(
-        GLOBAL.STARTX,
-        GLOBAL.STARTY,
-      )
+      GLOBAL.STARTNAME =
+        (await FetchUtils.getPointName(GLOBAL.STARTX, GLOBAL.STARTY)) ||
+        `${
+          getLanguage(GLOBAL.language).Map_Main_Menu.START_POINT
+        }(${GLOBAL.STARTX.toFixed(6)},${GLOBAL.STARTY.toFixed(6)})`
     } else {
       GLOBAL.ENDX = point.x
       GLOBAL.ENDY = point.y
       await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
-      GLOBAL.ENDNAME = await FetchUtils.getPointName(
-        GLOBAL.STARTX,
-        GLOBAL.STARTY,
-      )
+      GLOBAL.ENDNAME =
+        (await FetchUtils.getPointName(GLOBAL.ENDX, GLOBAL.ENDY)) ||
+        `${
+          getLanguage(GLOBAL.language).Map_Main_Menu.END_POINT
+        }(${GLOBAL.ENDX.toFixed(6)},${GLOBAL.ENDY.toFixed(6)})`
     }
     SMap.moveToPoint(point)
   }

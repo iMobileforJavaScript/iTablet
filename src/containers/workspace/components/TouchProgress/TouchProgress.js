@@ -432,22 +432,27 @@ export default class TouchProgress extends Component {
                 getLanguage(this.props.language).Map_Main_Menu
                   .THEME_MAX_VISIBLE_SIZE
               ) {
-                this.maxValue =
+                let newValue =
                   value !== undefined
                     ? value
                     : await SThemeCartography.getGraphMaxValue({
                       LayerName: this.props.currentLayer.name,
                     })
+
+                if (newValue <= 1) {
+                  newValue = 1
+                } else if (newValue > 20) {
+                  newValue = 20
+                }
                 this._panBtnStyles.style.left =
-                  (this.maxValue * progressWidth) / 20 + panBtnDevLeft
-                this._previousLeft = (this.maxValue * progressWidth) / 20
-                this._BackLine.style.width =
-                  (this.maxValue * progressWidth) / 20
+                  (newValue * progressWidth) / 20 + panBtnDevLeft
+                this._previousLeft = (newValue * progressWidth) / 20
+                this._BackLine.style.width = (newValue * progressWidth) / 20
                 tips =
                   getLanguage(global.language).Map_Main_Menu
                     .THEME_MAX_VISIBLE_SIZE +
                   '     ' +
-                  parseInt(this.maxValue) +
+                  parseInt(newValue) +
                   'X'
               }
             }
@@ -1071,7 +1076,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 10000) {
           value = 10000
@@ -1089,20 +1094,31 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
       ) {
+        let newValue = value
+        if (newValue < 1) {
+          newValue = 1
+        } else if (newValue > 20) {
+          newValue = 20
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE +
           '     ' +
-          parseInt(value) +
+          parseInt(newValue) +
           'X'
         let _params = {
           LayerName: this.props.currentLayer.name,
-          MaxValue: value,
+          MaxValue: newValue,
         }
         await SThemeCartography.setGraphMaxValue(_params)
       } else if (
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
       ) {
+        if (value > 50) {
+          value = 50
+        } else if (value < 1) {
+          value = 1
+        }
         tips =
           getLanguage(global.language).Map_Main_Menu.THEME_HEATMAP_RADIUS +
           '     ' +
@@ -1398,7 +1414,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DOT_VALUE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 100) {
           value = 100
@@ -1411,7 +1427,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.STYLE_SYMBOL_SIZE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 100) {
           value = 100
@@ -1425,7 +1441,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.DATUM_VALUE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 10000) {
           value = 10000
@@ -1438,7 +1454,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 20) {
           value = 20
@@ -1452,7 +1468,7 @@ export default class TouchProgress extends Component {
         this.props.selectName ===
         getLanguage(this.props.language).Map_Main_Menu.THEME_HEATMAP_RADIUS
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 50) {
           value = 50
@@ -1466,7 +1482,7 @@ export default class TouchProgress extends Component {
         getLanguage(this.props.language).Map_Main_Menu
           .THEME_HEATMAP_FUZZY_DEGREE
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 100) {
           value = 100
@@ -1482,7 +1498,7 @@ export default class TouchProgress extends Component {
         getLanguage(this.props.language).Map_Main_Menu
           .THEME_HEATMAP_MAXCOLOR_WEIGHT
       ) {
-        if (value <= 0) {
+        if (value < 1) {
           value = 1
         } else if (value > 100) {
           value = 100

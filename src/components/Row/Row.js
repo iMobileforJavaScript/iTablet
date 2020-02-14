@@ -11,6 +11,7 @@ import ChooseNumber from './ChooseNumber'
 import LabelBtn from './LabelBtn'
 import ChooseColor from './ChooseColor'
 import styles from './styles'
+import { Input } from '../../components'
 
 export default class Row extends PureComponent {
   props: {
@@ -46,6 +47,8 @@ export default class Row extends PureComponent {
     super(props)
     this.state = {
       value: props.value || props.defaultValue,
+      defaultValue: this.props.defaultValue || '',
+      disable: this.props.disable,
     }
   }
 
@@ -88,11 +91,35 @@ export default class Row extends PureComponent {
             style={[styles.input, this.props.customRightStyle]}
             accessible={true}
             value={this.state.value + ''}
-            defaultValue={this.props.defaultValue + ''}
-            disable={this.props.disable}
+            defaultValue={this.state.defaultValue + ''}
+            disable={this.state.disable}
             accessibilityLabel={this.props.title}
             underlineColorAndroid="transparent"
             onChangeText={this.labelChange}
+          />
+          {this.props.disable && <View style={styles.inputOverLayer} />}
+        </View>
+      )
+    } else if (this.props.type === 'input_wrap') {
+      right = (
+        <View style={[styles.inputWrap, styles.inputView]}>
+          <Input
+            inputStyle={this.props.customRightStyle}
+            style={this.props.customRightStyle}
+            accessible={true}
+            accessibilityLabel={'输入框'}
+            // placeholder={this.state.placeholder}
+            // placeholderTextColor={color.themePlaceHolder}
+            value={this.state.value + ''}
+            // onChangeText={this.labelChange}
+            onChangeText={text => {
+              this.labelChange(text)
+            }}
+            onClear={() => {
+              this.labelChange('')
+            }}
+            returnKeyType={'done'}
+            showClear={true}
           />
           {this.props.disable && <View style={styles.inputOverLayer} />}
         </View>
@@ -103,8 +130,8 @@ export default class Row extends PureComponent {
           data={this.props.radioArr}
           column={this.props.radioColumn}
           getSelected={this.getSelected}
-          disable={this.props.disable}
-          defaultValue={this.props.defaultValue}
+          disable={this.state.disable}
+          defaultValue={this.state.value}
           separatorHeight={this.props.separatorHeight}
         />
       )
@@ -158,6 +185,7 @@ export default class Row extends PureComponent {
 
 Row.Type = {
   INPUT: 'input',
+  INPUT_WRAP: 'input_wrap',
   RADIO: 'radio',
   RADIO_GROUP: 'radio_group',
   CHOOSE_NUMBER: 'choose_number',

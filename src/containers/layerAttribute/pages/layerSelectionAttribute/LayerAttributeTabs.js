@@ -71,6 +71,7 @@ export default class LayerAttributeTabs extends React.Component {
     setCurrentAttribute: () => {},
     setLayerAttributes: () => {},
     setAttributeHistory: () => {},
+    clearAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -342,7 +343,7 @@ export default class LayerAttributeTabs extends React.Component {
       let result = await SMap.addAttributeFieldInfo(layerPath, true, fieldInfo)
       if (result) {
         Toast.show(
-          global.language === 'CN' ? '属性添加成功' : 'Attribute Add Succeed',
+          getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_SUCCESS,
         )
         this.currentTabRefs[this.state.currentTabIndex].getAttribute(
           {
@@ -356,9 +357,7 @@ export default class LayerAttributeTabs extends React.Component {
           () => {},
         )
       } else {
-        Toast.show(
-          global.language === 'CN' ? '属性添加失败' : 'Attribute Add Faild',
-        )
+        Toast.show(getLanguage(this.props.language).Prompt.ATTRIBUTE_ADD_FAILED)
       }
     }
   }
@@ -442,6 +441,7 @@ export default class LayerAttributeTabs extends React.Component {
   drawerOnChange = ({ index }) => {
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
+        this.currentTabRefs[this.state.currentTabIndex] &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
       let newState = {
         currentTabIndex: index,
@@ -541,10 +541,10 @@ export default class LayerAttributeTabs extends React.Component {
           )
           if (result) {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除成功'
-                : 'Attribute Feild Delete Succeed',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_SUCCESS,
             )
+            this.props.clearAttributeHistory &&
+              this.props.clearAttributeHistory()
             this.currentTabRefs[this.state.currentTabIndex].getAttribute(
               {
                 type: 'reset',
@@ -558,18 +558,15 @@ export default class LayerAttributeTabs extends React.Component {
             )
           } else {
             Toast.show(
-              global.language === 'CN'
-                ? '属性字段删除失败'
-                : 'Attribute Feild Delete Faild',
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_FAILED,
             )
           }
         }}
-        confirmBtnTitle={global.language === 'CN' ? '确认' : 'Sure'}
-        //{'申请试用许可'}
-        cancelBtnTitle={global.language === 'CN' ? '取消' : 'Cancle'}
+        confirmBtnTitle={getLanguage(this.props.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(200) }]}
-        style={[styles.dialogBackground, { height: scaleSize(200) }]}
+        opacityStyle={[styles.opacityView, { height: scaleSize(250) }]}
+        style={[styles.dialogBackground, { height: scaleSize(250) }]}
         cancelAction={() => {
           this.deleteFieldDialog.setDialogVisible(false)
         }}
@@ -592,9 +589,9 @@ export default class LayerAttributeTabs extends React.Component {
               textAlign: 'center',
             }}
           >
-            {global.language === 'CN'
-              ? '确定删除所选字段？'
-              : 'Sure Delete this Attribute Field?'}
+            {getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_CONFIRM +
+              '\n' +
+              getLanguage(this.props.language).Prompt.ATTRIBUTE_DELETE_TIPS}
           </Text>
         </View>
       </Dialog>

@@ -16,6 +16,7 @@ const Prompt = {
   STOP: '停止',
   FIELD_TO_PAUSE: '暂停失败',
   WX_NOT_INSTALLED: '未检测到微信',
+  WX_SHARE_FAILED: '微信分享失败，请检查是否安装微信',
   RENAME: '重命名',
   BATCH_DELETE: '批量删除',
 
@@ -162,7 +163,7 @@ const Prompt = {
   PROJECTED_COORDINATE_SYSTEM: '投影坐标系: ',
   FIELD_TYPE: '字段类型: ',
 
-  PLEASE_LOGIN_AND_SHARE: '请登陆后再分享',
+  PLEASE_LOGIN_AND_SHARE: '请登录后再分享',
   SHARING: '分享中',
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
@@ -197,6 +198,7 @@ const Prompt = {
 
   LICENSE_EXPIRED: '试用许可已过期,是否继续试用?',
   APPLY_LICENSE: '申请许可',
+  APPLY_LICENSE_FIRST: '请先获取有效许可',
 
   GET_LAYER_GROUP_FAILD: '获取图层组失败',
   TYR_AGAIN_LATER: '请稍后再试',
@@ -206,11 +208,14 @@ const Prompt = {
   INDEX_OUT_OF_BOUNDS: '位置越界',
   PLEASE_SELECT_LICATION_INFORMATION: '请选择定位信息',
   OUT_OF_MAP_BOUNDS: '不在地图范围内',
+  CANT_USE_TRACK_TO_INCREMENT_ROAD:
+    '当前位置不在路网数据集范围内，无法使用轨迹增量路网',
 
   POI: '兴趣点',
 
   ILLEGAL_DATA: '数据非法!',
 
+  UNSUPPORTED_LAYER_TO_SHARE: '暂不支持此图层的分享',
   SELECT_DATASET_TO_SHARE: '请选择要分享的数据集',
   ENTER_DATA_NAME: '请输入数据名称',
   SHARED_DATA_10M: '所分享文件超过10MB',
@@ -301,6 +306,13 @@ const Prompt = {
   SPEECH_NONE: '您好像没有说话哦',
 
   NOT_SUPPORT_STATISTIC: '该字段不支持统计',
+  ATTRIBUTE_DELETE_CONFIRM: '确定删除所选字段？',
+  ATTRIBUTE_DELETE_TIPS: '删除属性后，不可恢复',
+  ATTRIBUTE_DELETE_SUCCESS: '属性字段删除成功',
+  ATTRIBUTE_DELETE_FAILED: '属性字段删除失败',
+  ATTRIBUTE_ADD_SUCCESS: '属性添加成功',
+  ATTRIBUTE_ADD_FAILED: '属性添加失败',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: '缺省值为空',
 }
 
 export { Prompt }

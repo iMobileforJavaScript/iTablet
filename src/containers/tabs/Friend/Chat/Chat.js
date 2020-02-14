@@ -27,7 +27,7 @@ import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 import { ConstPath, ConstOnline } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { Toast } from '../../../../utils/index'
+import { Toast, LayerUtils } from '../../../../utils/index'
 import RNFS, { stat } from 'react-native-fs'
 import MSGConstant from '../MsgConstant'
 import { getLanguage } from '../../../../language/index'
@@ -49,6 +49,7 @@ class Chat extends React.Component {
     setBackAction: () => {},
     removeBackAction: () => {},
     closeWorkspace: () => {},
+    getLayers: () => {},
   }
   constructor(props) {
     super(props)
@@ -143,7 +144,7 @@ class Chat extends React.Component {
         if (m._id === value.msgId) {
           m.originMsg.message.message.progress = value.percentage
           m.downloading = true
-          if (value.percentage === 100) {
+          if (value.percentage === 100 || value.percentage === 0) {
             m.downloading = false
           }
         }
@@ -491,9 +492,25 @@ class Chat extends React.Component {
       return
     }
     informMsg.message.message.filePath = ''
-    this.friend.sendFile(informMsg, filePath, this.targetUser.id, msgId, () => {
-      Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
-    })
+    this.friend.sendFile(
+      informMsg,
+      filePath,
+      this.targetUser.id,
+      msgId,
+      result => {
+        FileTools.deleteFile(filePath)
+        if (!result) {
+          this.friend.onReceiveProgress({
+            talkId: this.targetUser.id,
+            msgId: msgId,
+            percentage: 0,
+          })
+          Toast.show(getLanguage(global.language).Friends.SEND_FAIL_NETWORK)
+        } else {
+          Toast.show(getLanguage(global.language).Friends.SEND_SUCCESS)
+        }
+      },
+    )
   }
 
   /**
@@ -602,9 +619,12 @@ class Chat extends React.Component {
       return
     }
     message.message.message.filePath = ''
-    let callback = () => {
+    let callback = result => {
       if (hasTempFile) {
         RNFS.unlink(filePath)
+      }
+      if (!result) {
+        Toast.show(getLanguage(global.language).Friends.SEND_FAIL)
       }
     }
     if (sendToServer) {
@@ -653,11 +673,20 @@ class Chat extends React.Component {
       receivePath,
       storeFileName,
       this.targetUser.id,
-      res => {
+      async res => {
         message.originMsg.message.message.filePath =
           receivePath + '/' + storeFileName
         if (res === false) {
           message.downloading = false
+          this.friend.onReceiveProgress({
+            talkId: this.targetUser.id,
+            msgId: message._id,
+            percentage: 0,
+          })
+          let absolutePath = global.homePath + receivePath + '/' + storeFileName
+          if (await FileTools.fileIsExist(absolutePath)) {
+            FileTools.deleteFile(absolutePath)
+          }
         }
         cb && cb(res)
       },
@@ -932,20 +961,43 @@ class Chat extends React.Component {
         if (fileList[i].path.indexOf('.json') !== -1) {
           let jstr = await FileTools.readFile(homePath + fileList[i].path)
           let properties
+          let hasPoint, hasLine, hasPolygon
           try {
-            let firstLine = jstr.substring(0, jstr.indexOf('\n'))
-            let firstRecord = JSON.parse(firstLine)
-            properties = firstRecord.properties
+            let items = jstr.split('\n')
+            for (let i = 0; i < items.length; i++) {
+              if (items[i] !== '') {
+                let item = JSON.parse(items[i])
+                if (!properties) {
+                  properties = item.properties
+                }
+                if (item.geometry.type === 'Point') {
+                  hasPoint = true
+                } else if (item.geometry.type === 'LineString') {
+                  hasLine = true
+                } else if (item.geometry.type === 'Polygon') {
+                  hasPolygon = true
+                }
+              }
+            }
           } catch (error) {
             // console.log(error)
           }
           let type = 1
-          if (jstr.indexOf('Polygon') != -1) {
+          let typeCount = 0
+          if (hasPolygon) {
             type = DatasetType.REGION
-          } else if (jstr.indexOf('LineString') != -1) {
+            typeCount++
+          }
+          if (hasLine) {
             type = DatasetType.LINE
-          } else if (jstr.indexOf('Point') != -1) {
+            typeCount++
+          }
+          if (hasPoint) {
             type = DatasetType.POINT
+            typeCount++
+          }
+          if (typeCount !== 1) {
+            type = DatasetType.CAD
           }
           await SMap.importDatasetFromGeoJson(
             message.originMsg.message.message.datasourceAlias,
@@ -988,10 +1040,16 @@ class Chat extends React.Component {
       }
     }
     await FileTools.deleteFile(fileDir)
-    await SMap.refreshMap()
+    this.props.getLayers(-1, async layers => {
+      for (let i = layers.length; i > 0; i--) {
+        if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+          await SMap.moveToTop(layers[i].name)
+        }
+      }
+      SMap.refreshMap()
+    })
     // NavigationService.navigate('MapView')
     Toast.show(getLanguage(global.language).Friends.IMPORT_SUCCESS)
-    //todo refresh
   }
 
   importMap = async message => {
@@ -1157,7 +1215,10 @@ class Chat extends React.Component {
               return (
                 <MessageText
                   {...props}
-                  customTextStyle={{ fontSize: scaleSize(20) }}
+                  customTextStyle={{
+                    fontSize: scaleSize(20),
+                    lineHeight: scaleSize(25),
+                  }}
                 />
               )
             }}
@@ -1290,6 +1351,9 @@ class Chat extends React.Component {
       currentMessage.type === MSGConstant.MSG_PICTURE
     ) {
       let progress = currentMessage.originMsg.message.message.progress
+      if (progress === undefined) {
+        progress = 0
+      }
       return (
         <View style={styles.tickView}>
           <Text

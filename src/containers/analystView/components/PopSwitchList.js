@@ -13,7 +13,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 
 const styles = StyleSheet.create({
   scrollView: {
-    maxHeight: (scaleSize(80) + 1) * 6,
+    maxHeight: scaleSize(80) * 5,
   },
   btnsView: {
     flexDirection: 'row',
@@ -172,7 +172,10 @@ export default class PopSwitchList extends React.Component {
 
   render() {
     return (
-      <PopView ref={ref => (this.popModal = ref)}>
+      <PopView
+        ref={ref => (this.popModal = ref)}
+        contentStyle={{ height: scaleSize(80) * 6 }}
+      >
         <ScrollableTabView
           ref={ref => (this.scrollTab = ref)}
           style={styles.scrollView}
@@ -195,9 +198,7 @@ export default class PopSwitchList extends React.Component {
         >
           {this.renderContent()}
         </ScrollableTabView>
-        <View style={[styles.popView, { width: '100%' }]}>
-          {this.renderBottom()}
-        </View>
+        {this.renderBottom()}
       </PopView>
     )
   }

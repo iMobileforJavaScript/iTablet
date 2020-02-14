@@ -67,42 +67,6 @@ class ManageFriend extends Component {
     NavigationService.popToTop()
   }
 
-  navigateToModule = async module => {
-    // if (Platform.OS === 'android') {
-    //   let granted = await PermissionsAndroid.request(
-    //     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    //   )
-    //   if (PermissionsAndroid.RESULTS.GRANTED !== granted) {
-    //     this.SimpleDialog.setConfirm(() => {
-    //       AppUtils.startAppLoactionSetting()
-    //     })
-    //     this.SimpleDialog.setText(
-    //       getLanguage(global.language).Prompt.REQUEST_LOCATION,
-    //     )
-    //     this.SimpleDialog.setVisible(true)
-    //     return
-    //   }
-    // }
-    let tmpCurrentUser = this.user
-    let currentUserName = tmpCurrentUser.userName
-      ? tmpCurrentUser.userName
-      : 'Customer'
-
-    let latestMap
-    if (
-      this.props.latestMap[currentUserName] &&
-      this.props.latestMap[currentUserName][module.key] &&
-      this.props.latestMap[currentUserName][module.key].length > 0
-    ) {
-      latestMap = this.props.latestMap[currentUserName][module.key][0]
-    }
-    this.friend.setCurMod(module)
-    module.action(this.user, latestMap)
-    this.setState({ coworkMode: true })
-    this.chat.setCoworkMode(true)
-    global.coworkMode = true
-  }
-
   render() {
     return (
       <Container
@@ -131,11 +95,7 @@ class ManageFriend extends Component {
             image={getThemeAssets().friend.friend_map}
             text={getLanguage(global.language).Friends.COWORK}
             onPress={() => {
-              NavigationService.navigate('SelectModule', {
-                callBack: value => {
-                  this.navigateToModule(value)
-                },
-              })
+              NavigationService.navigate('SelectModule')
             }}
           />
         )}

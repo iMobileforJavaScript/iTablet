@@ -51,6 +51,7 @@ import { themeModule } from '../../../workspace/components/ToolBar/modules'
 import { MultiPicker } from '../../../../components'
 
 import collectionModule from '../../../../containers/workspace/components/ToolBar/modules/collectionModule'
+import DataHandler from '../../../tabs/Mine/DataHandler'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -135,7 +136,7 @@ export default class LayerManager_tolbar extends React.Component {
           if (device.orientation === 'LANDSCAPE') {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[3]
           } else {
-            boxHeight = ConstToolType.TOOLBAR_HEIGHT[6]
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[7]
           }
           break
         case ConstToolType.PLOTTING:
@@ -151,7 +152,7 @@ export default class LayerManager_tolbar extends React.Component {
           if (device.orientation === 'LANDSCAPE') {
             boxHeight = ConstToolType.TOOLBAR_HEIGHT[2]
           } else {
-            boxHeight = ConstToolType.TOOLBAR_HEIGHT[5]
+            boxHeight = ConstToolType.TOOLBAR_HEIGHT[6]
           }
           break
         case ConstToolType.MAP_MAX_SCALE:
@@ -537,6 +538,8 @@ export default class LayerManager_tolbar extends React.Component {
             type = SMCollectorType.REGION_HAND_POINT
             break
         }
+        this.props.setCurrentLayer &&
+          this.props.setCurrentLayer(this.state.layerData)
         collectionModule().actions.showCollection(
           type,
           this.state.layerData.name,
@@ -854,32 +857,14 @@ export default class LayerManager_tolbar extends React.Component {
     //Toast.show(getLanguage(global.language).Prompt.SHARE_PREPARE)
     let layerData = JSON.parse(JSON.stringify(this.state.layerData))
     this.setVisible(false)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let tempPath =
-      homePath +
-      ConstPath.UserPath +
-      this.props.user.currentUser.userName +
-      '/' +
-      ConstPath.RelativePath.Temp
-
-    let targetPath = tempPath + layerData.name + '.xml'
-    let zipPath = tempPath + 'MyExportLayer.zip'
-    let xmlLayer = await SMap.getLayerAsXML(layerData.path)
-    if (await FileTools.fileIsExist(targetPath)) {
-      await FileTools.deleteFile(targetPath)
+    if (
+      layerData.type !== DatasetType.POINT &&
+      layerData.type !== DatasetType.LINE &&
+      layerData.type !== DatasetType.REGION
+    ) {
+      Toast.show(getLanguage(global.language).Prompt.UNSUPPORTED_LAYER_TO_SHARE)
+      return
     }
-    await FileTools.writeFile(targetPath, xmlLayer)
-    await FileTools.zipFile(targetPath, zipPath)
-    await FileTools.deleteFile(targetPath)
-
-    let layerAction = {
-      name: 'onSendFile',
-      type: MsgConstant.MSG_LAYER,
-      filePath: zipPath,
-      fileName: layerData.caption,
-    }
-    let action = [layerAction]
-
     if (type === 'friend') {
       let targetUser = ''
       let Chat
@@ -893,16 +878,57 @@ export default class LayerManager_tolbar extends React.Component {
         layerData: this.state.layerData,
         targetUser: targetUser,
         callBack: async (targetUser, shareDataset, sendFile) => {
+          global.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.SHARING,
+          )
+
+          let homePath = await FileTools.appendingHomeDirectory()
+          let tempPath =
+            homePath +
+            ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativePath.Temp
+
+          let targetPath = tempPath + layerData.name + '.xml'
+          let exportName = await DataHandler.getAvailableFileName(
+            tempPath,
+            'MyExportLayer',
+            'zip',
+          )
+          let zipPath = tempPath + exportName
+          let xmlLayer = await SMap.getLayerAsXML(layerData.path)
+          if (await FileTools.fileIsExist(targetPath)) {
+            await FileTools.deleteFile(targetPath)
+          }
+          await FileTools.writeFile(targetPath, xmlLayer)
+          await FileTools.zipFile(targetPath, zipPath)
+          FileTools.deleteFile(targetPath)
+
+          let layerAction = {
+            name: 'onSendFile',
+            type: MsgConstant.MSG_LAYER,
+            filePath: zipPath,
+            fileName: layerData.caption,
+          }
+          let action = [layerAction]
+
           if (shareDataset) {
             let datasetPath = tempPath + layerData.datasetName + '.json'
-            let datasetZipPath = tempPath + 'MyExportDataset.zip'
+            let exportDatasetName = await DataHandler.getAvailableFileName(
+              tempPath,
+              'MyExportDataset',
+              'zip',
+            )
+            let datasetZipPath = tempPath + exportDatasetName
             await SMap.getDatasetToGeoJson(
               layerData.datasourceAlias,
               layerData.datasetName,
               datasetPath,
             )
             await FileTools.zipFile(datasetPath, datasetZipPath)
-            await FileTools.deleteFile(datasetPath)
+            FileTools.deleteFile(datasetPath)
             let datasetAction = {
               name: 'onSendFile',
               type: MsgConstant.MSG_DATASET,
@@ -922,8 +948,8 @@ export default class LayerManager_tolbar extends React.Component {
               sendFile && sendFile(item)
             })
           }
+          global.Loading.setLoading(false)
           NavigationService.goBack()
-          Toast.show(getLanguage(global.language).Prompt.SHARE_SUCCESS)
         },
       })
     }

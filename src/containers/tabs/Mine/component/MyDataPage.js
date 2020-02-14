@@ -8,6 +8,7 @@ import {
   NativeModules,
   RefreshControl,
   ScrollView,
+  Platform,
 } from 'react-native'
 import { Container, ListSeparator, InputDialog } from '../../../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
@@ -106,11 +107,10 @@ export default class MyDataPage extends Component {
 
   onItemPress = async () => {}
 
-  getRelativeTempFilePath = () => {
+  getRelativeTempPath = () => {
     let userPath =
       ConstPath.UserPath + this.props.user.currentUser.userName + '/'
-    let relativeTempPath =
-      userPath + ConstPath.RelativePath.Temp + 'MyExport.zip'
+    let relativeTempPath = userPath + ConstPath.RelativePath.Temp
     return relativeTempPath
   }
 
@@ -346,18 +346,7 @@ export default class MyDataPage extends Component {
               : getLanguage(global.language).Prompt.SHARE_SUCCESS,
           )
           if (this.exportPath !== '') {
-            this.SimpleDialog.set({
-              text:
-                getLanguage(global.language).Prompt.EXPORT_TO +
-                '\n\n' +
-                this.exportPath,
-              textStyle: { marginTop: scaleSize(15) },
-              confirmAction: () => (this.exportPath = ''),
-              cancelAction: () => (this.exportPath = ''),
-              dialogHeight: scaleSize(250),
-              showTitleImage: false,
-            })
-            this.SimpleDialog.setVisible(true)
+            this.showExportPathDialog()
           }
         } else {
           Toast.show(
@@ -380,16 +369,33 @@ export default class MyDataPage extends Component {
 
   shareToWechat = async fileName => {
     let result
-    let isInstalled = await appUtilsModule.isWXInstalled()
+    let isInstalled
+    if (Platform.OS === 'ios') {
+      isInstalled = true
+    } else {
+      isInstalled = await appUtilsModule.isWXInstalled()
+    }
+    // let isInstalled = await appUtilsModule.isWXInstalled()
     if (isInstalled) {
       await this.exportData(fileName)
-      let homePath = await FileTools.appendingHomeDirectory()
-      let path = homePath + this.getRelativeTempFilePath()
+      let path = this.exportPath
+      this.exportPath = ''
+      let copyPath
+      if (Platform.OS === 'android') {
+        copyPath =
+          global.homePath + this.getRelativeTempPath() + 'MyExportWX.zip'
+        await FileTools.copyFile(path, copyPath, true)
+      }
       result = await appUtilsModule.sendFileOfWechat({
-        filePath: path,
+        filePath: Platform.OS === 'ios' ? path : copyPath,
         title: fileName + '.zip',
         description: 'SuperMap iTablet',
       })
+      await FileTools.deleteFile(path)
+      if (!result) {
+        Toast.show(getLanguage(global.language).Prompt.WX_SHARE_FAILED)
+        return undefined
+      }
     } else {
       Toast.show(getLanguage(global.language).Prompt.WX_NOT_INSTALLED)
     }
@@ -398,21 +404,22 @@ export default class MyDataPage extends Component {
 
   shareToOnline = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     let result
     if (this.type === this.types.map) {
       result = await SOnlineService.uploadFile(path, fileName)
     } else {
       result = await SOnlineService.uploadFilebyType(path, fileName, 'UDB')
     }
+    await FileTools.deleteFile(path)
     return result
   }
 
   shareToIPortal = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     let uploadResult
     if (this.type === this.types.map) {
       uploadResult = await SIPortalService.uploadData(path, fileName + '.zip')
@@ -423,32 +430,19 @@ export default class MyDataPage extends Component {
         'UDB',
       )
     }
+    await FileTools.deleteFile(path)
     return uploadResult
   }
 
   shareToChat = async fileName => {
     await this.exportData(fileName)
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
+    let path = this.exportPath
+    this.exportPath = ''
     this.chatCallback && this.chatCallback(path, fileName)
     NavigationService.goBack()
   }
 
   shareToFriend = async fileName => {
-    let homePath = await FileTools.appendingHomeDirectory()
-    let path = homePath + this.getRelativeTempFilePath()
-    let type
-    if (this.type === this.types.map) {
-      type = MsgConstant.MSG_MAP
-    }
-    let action = [
-      {
-        name: 'onSendFile',
-        type: type,
-        filePath: path,
-        fileName: fileName,
-      },
-    ]
     NavigationService.navigate('SelectFriend', {
       user: this.props.user,
       callBack: async targetId => {
@@ -458,6 +452,20 @@ export default class MyDataPage extends Component {
             getLanguage(global.language).Prompt.SHARE_PREPARE,
           )
           await this.exportData(fileName)
+          let path = this.exportPath
+          this.exportPath = ''
+          let type
+          if (this.type === this.types.map) {
+            type = MsgConstant.MSG_MAP
+          }
+          let action = [
+            {
+              name: 'onSendFile',
+              type: type,
+              filePath: path,
+              fileName: fileName,
+            },
+          ]
           NavigationService.replace('CoworkTabs', {
             targetId: targetId,
             action: action,
@@ -713,15 +721,39 @@ export default class MyDataPage extends Component {
   showRelatedMapsDialog = ({ confirmAction, relatedMaps }) => {
     let dialogHeight
     if (relatedMaps.length < 5) {
-      dialogHeight = scaleSize(240) + relatedMaps.length * scaleSize(35)
+      dialogHeight = scaleSize(270) + relatedMaps.length * scaleSize(35)
     } else {
       dialogHeight = scaleSize(410)
     }
     this.SimpleDialog.set({
       text: getLanguage(global.language).Prompt.DELETE_MAP_RELATE_DATA,
       confirmAction: confirmAction,
-      renderExtra: this.renderRelatedMap(relatedMaps),
-      dialogHeight: dialogHeight,
+      renderExtra: () => this.renderRelatedMap(relatedMaps),
+      dialogStyle: { height: dialogHeight },
+    })
+    this.SimpleDialog.setVisible(true)
+  }
+
+  showExportPathDialog = () => {
+    this.SimpleDialog.set({
+      text: getLanguage(global.language).Prompt.EXPORT_TO,
+      textStyle: { fontSize: scaleSize(28) },
+      renderExtra: () => {
+        return (
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: scaleSize(24),
+              marginTop: scaleSize(5),
+            }}
+          >
+            {this.exportPath}
+          </Text>
+        )
+      },
+      confirmAction: () => (this.exportPath = ''),
+      cancelAction: () => (this.exportPath = ''),
+      dialogStyle: { width: scaleSize(500), height: scaleSize(340) },
     })
     this.SimpleDialog.setVisible(true)
   }
@@ -1007,7 +1039,7 @@ export default class MyDataPage extends Component {
     return (
       <InputDialog
         ref={ref => (this.InputDialog = ref)}
-        placeholder={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
+        title={getLanguage(global.language).Prompt.ENTER_DATA_NAME}
         confirmAction={name => {
           if (name === null || name === '') {
             Toast.show(getLanguage(global.language).Prompt.ENTER_DATA_NAME)

@@ -16,6 +16,7 @@ const Prompt = {
   STOP: 'Stop',
   FIELD_TO_PAUSE: 'Failed to pause',
   WX_NOT_INSTALLED: 'Wechat not installed',
+  WX_SHARE_FAILED: 'Wechat share failed,Please check wechat install',
   RENAME: 'Rename',
   BATCH_DELETE: 'Batch Delete',
 
@@ -202,6 +203,7 @@ const Prompt = {
   LICENSE_EXPIRED:
     'The trial license has expired. Do you want to continue the trial?',
   APPLY_LICENSE: 'Apply License',
+  APPLY_LICENSE_FIRST: 'Please apply a valid license first',
 
   GET_LAYER_GROUP_FAILD: 'Failed to get layer group',
   TYR_AGAIN_LATER: ' Please try again later',
@@ -211,11 +213,14 @@ const Prompt = {
   INDEX_OUT_OF_BOUNDS: 'Index out of bounds',
   PLEASE_SELECT_LICATION_INFORMATION: 'Please set up Location',
   OUT_OF_MAP_BOUNDS: 'Out of map bounds',
+  CANT_USE_TRACK_TO_INCREMENT_ROAD:
+    "The current location is out of map bounds so that you can't use tracking to increment road",
 
   POI: 'POI',
 
   ILLEGAL_DATA: 'Illegal Data!',
 
+  UNSUPPORTED_LAYER_TO_SHARE: 'Sharing of this layer is not supported yet',
   SELECT_DATASET_TO_SHARE: 'Please select the data set to share',
   ENTER_DATA_NAME: 'Please enter the data name',
   SHARED_DATA_10M: ' The file over 10MB cannot be shared',
@@ -314,6 +319,13 @@ const Prompt = {
   SPEECH_NONE: "You didn't seem to speak anything",
 
   NOT_SUPPORT_STATISTIC: 'The field not support statistic',
+  ATTRIBUTE_DELETE_CONFIRM: 'Sure Delete this Attribute Field?',
+  ATTRIBUTE_DELETE_TIPS: 'Can not recoverable after delete attribute',
+  ATTRIBUTE_DELETE_SUCCESS: 'Attribute Field Delete Succeed',
+  ATTRIBUTE_DELETE_FAILED: 'Attribute Field Delete Failed',
+  ATTRIBUTE_ADD_SUCCESS: 'Attribute Add Succeed',
+  ATTRIBUTE_ADD_FAILED: 'Attribute Add Failed',
+  ATTRIBUTE_DEFAULT_VALUE_IS_NULL: 'Default value is null',
 }
 
 export { Prompt }

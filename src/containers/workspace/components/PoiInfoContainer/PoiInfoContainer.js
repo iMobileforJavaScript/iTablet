@@ -209,6 +209,7 @@ export default class PoiInfoContainer extends React.PureComponent {
         changeNavPathInfo: this.props.changeNavPathInfo,
       })
     } else {
+      GLOBAL.mapController && GLOBAL.mapController.setVisible(false)
       let historyArr = this.props.mapSearchHistory
       let hasAdded = false
       historyArr.map(v => {

@@ -14,6 +14,8 @@ const Friends = {
   MSG_SERVICE_FAILED: '连接消息服务失败！',
   MSG_SERVICE_NOT_CONNECT: '未能连接消息服务！',
   SEND_SUCCESS: '分享完成',
+  SEND_FAIL: '发送失败',
+  SEND_FAIL_NETWORK: '分享失败，请检查网络',
   RECEIVE_SUCCESS: '接收完成',
   RECEIVE_FAIL_EXPIRE: '下载失败，文件可能已经过期',
   RECEIVE_FAIL_NETWORK: '下载失败，请检查网络',

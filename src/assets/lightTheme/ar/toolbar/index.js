@@ -19,6 +19,11 @@ const icon_down = require('./icon_down_white.png')
 const icon_datasource = require('./icon_datasource.png')
 const icon_more = require('./icon_more.png')
 const icon_dataset = require('./icon_dataset.png')
+const point_3d = require('./layer_type_3dpoint.png')
+const line_3d = require('./layer_type_3dline.png')
+const point = require('./layer_point.png')
+const line = require('./layer_line.png')
+const region = require('./layer_region.png')
 export default {
   icon_save_line,
   icon_new,
@@ -41,4 +46,9 @@ export default {
   icon_datasource,
   icon_more,
   icon_dataset,
+  point_3d,
+  line_3d,
+  point,
+  line,
+  region,
 }

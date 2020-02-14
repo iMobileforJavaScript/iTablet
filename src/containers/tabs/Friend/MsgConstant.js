@@ -1,17 +1,4 @@
 export default {
-  // MSG_IP: '192.168.0.115',
-  // MSG_Port: 5672,
-  // MSG_HostName: '/',
-  // MSG_UserName: 'androidtest',
-  // MSG_Password: 'androidtest',
-  MSG_IP: '111.202.121.144',
-  MSG_Port: 5672,
-  MSG_HostName: '/',
-  MSG_UserName: 'admin',
-  MSG_Password: 'admin',
-  //文件服务器
-  FILE_UPLOAD_SERVER_URL: 'http://111.202.121.144:8124/upload',
-  FILE_DOWNLOAD_SERVER_URL: 'http://111.202.121.144:8124/download',
   //整个message的type
   MSG_SINGLE: 1, //单人消息
   MSG_GROUP: 2, //群组消息

@@ -82,25 +82,34 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    this.container.setLoading(
-      true,
-      getLanguage(this.props.language).Prompt.LOADING,
-    )
-    InteractionManager.runAfterInteractions(() => {
-      if (Platform.OS === 'android') {
-        this.props.setBackAction({
-          action: this.back,
-        })
-      }
-      GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
+    if (global.isLicenseValid) {
+      this.container.setLoading(
+        true,
+        getLanguage(this.props.language).Prompt.LOADING,
+      )
+      InteractionManager.runAfterInteractions(() => {
+        if (Platform.OS === 'android') {
+          this.props.setBackAction({
+            action: this.back,
+          })
+        }
+        GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
 
-      // 三维地图只允许单例
-      // setTimeout(this._addScene, 2000)
-      this._addScene()
-      this.addAttributeListener()
-      this.addCircleFlyListen()
-      this.getLayers()
-    })
+        // 三维地图只允许单例
+        // setTimeout(this._addScene, 2000)
+        this._addScene()
+        this.addAttributeListener()
+        this.addCircleFlyListen()
+        this.getLayers()
+      })
+    } else {
+      global.SimpleDialog.set({
+        text: getLanguage(global.language).Prompt.APPLY_LICENSE_FIRST,
+        confirmAction: () => NavigationService.goBack(),
+        cancelAction: () => NavigationService.goBack(),
+      })
+      global.SimpleDialog.setVisible(true)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -196,6 +205,7 @@ export default class Map3D extends React.Component {
       SScene.openScence(this.name).then(result => {
         if (!result) {
           this.container.setLoading(false)
+          this.mapLoaded = true
           return
         }
         SScene.setNavigationControlVisible(false)
@@ -572,7 +582,9 @@ export default class Map3D extends React.Component {
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
+        {global.isLicenseValid && (
+          <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
+        )}
         <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}

@@ -95,29 +95,34 @@ public class FileTools extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getDirectoryContent(String path, Promise promise) {
-        try {
-            File flist = new File(path);
-            String[] mFileList = flist.list();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File flist = new File(path);
+                    String[] mFileList = flist.list();
 
-            WritableArray arr = Arguments.createArray();
-            for (String str : mFileList) {
-                String type = "";
-                if (new File(path + "/" + str).isDirectory()) {
-                    type = "directory";
-                } else {
-                    type = "file";
+                    WritableArray arr = Arguments.createArray();
+                    for (String str : mFileList) {
+                        String type = "";
+                        if (new File(path + "/" + str).isDirectory()) {
+                            type = "directory";
+                        } else {
+                            type = "file";
+                        }
+                        WritableMap map = Arguments.createMap();
+                        map.putString("name", str);
+                        map.putString("type", type);
+
+                        arr.pushMap(map);
+                    }
+
+                    promise.resolve(arr);
+                } catch (Exception e) {
+                    promise.reject(e);
                 }
-                WritableMap map = Arguments.createMap();
-                map.putString("name", str);
-                map.putString("type", type);
-
-                arr.pushMap(map);
             }
-
-            promise.resolve(arr);
-        } catch (Exception e) {
-            promise.reject(e);
-        }
+        }).start();
     }
 
     @ReactMethod

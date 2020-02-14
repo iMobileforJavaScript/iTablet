@@ -388,7 +388,7 @@ async function getRangeMode(type, key = '', name = '') {
   let column =
     ToolbarModule.getParams().device.orientation === 'PORTRAIT' ? 4 : 8
   let getData = async function() {
-    return await ThemeMenuData.getRangeMode()
+    return await ThemeMenuData.getRangeMode(type)
   }
 
   dealData({
@@ -1305,7 +1305,7 @@ function toolbarBack() {
   })
 }
 
-function layerListAction(data) {
+async function layerListAction(data) {
   const _params = ToolbarModule.getParams()
   let curThemeType
   if (data.isHeatmap) {
@@ -1357,6 +1357,15 @@ function layerListAction(data) {
         : ConstToolType.MAP_THEME_PARAM
     _params.showFullMap(true)
     let orientation = _params.device.orientation
+    let xml = await SMap.mapToXml()
+    ToolbarModule.setData({
+      type: _type,
+      getData: ThemeData.getData,
+      actions: actions,
+      currentThemeData: data,
+      themeCreateType: curThemeType,
+      mapXml: xml,
+    })
     _params.setToolbarVisible(true, _type, {
       containerType: ToolbarType.list,
       isFullScreen: true,
@@ -1368,13 +1377,6 @@ function layerListAction(data) {
       themeType: curThemeType,
       isTouchProgress: false,
       showMenuDialog: true,
-    })
-    ToolbarModule.setData({
-      type: _type,
-      getData: ThemeData.getData,
-      actions: actions,
-      currentThemeData: data,
-      themeCreateType: curThemeType,
     })
     _params.navigation.navigate('MapView')
     Toast.show(
@@ -1431,20 +1433,8 @@ function menu(type, selectKey, params = {}) {
 }
 
 function showMenuBox(type, selectKey, params = {}) {
-  const _params = ToolbarModule.getParams()
   if (type.indexOf('MAP_THEME_PARAM') === -1) return
-  if (
-    selectKey ===
-    getLanguage(_params.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE
-  ) {
-    // 显示指滑进度条
-    params.showBox &&
-      params.showBox({
-        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
-        showMenuDialog: false,
-        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
-      })
-  } else if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
+  if (type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
     switch (selectKey) {
       case '表达式':
         getGraphThemeExpressions(
@@ -1468,8 +1458,9 @@ function showMenuBox(type, selectKey, params = {}) {
   } else {
     params.showBox &&
       params.showBox({
+        isTouchProgress: !GLOBAL.ToolBar.state.isTouchProgress,
         showMenuDialog: false,
-        isFullScreen: false,
+        isFullScreen: !GLOBAL.ToolBar.state.isTouchProgress,
       })
   }
 }
@@ -1521,6 +1512,9 @@ async function changeGraphType(type) {
 
 async function close() {
   const _params = ToolbarModule.getParams()
+  const mapXml = await ToolbarModule.getData().mapXml
+
+  await SMap.mapFromXml(mapXml) // 不保存专题图修改，还原地图
 
   ToolbarModule.setData()
   _params.setToolbarVisible(false, {

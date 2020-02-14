@@ -68,16 +68,6 @@ function getToolbarHeight(type, currentHeight) {
         height = ConstToolType.THEME_HEIGHT[4]
       }
       break
-    case ConstToolType.MAP_TOOL:
-      height = ConstToolType.NEWTHEME_HEIGHT[4]
-      if (orientation === 'PORTRAIT') {
-        // height = ConstToolType.NEWTHEME_HEIGHT[4]
-        column = 4
-      } else {
-        // height = ConstToolType.NEWTHEME_HEIGHT[3]
-        column = 5
-      }
-      break
     case ConstToolType.MAP_EDIT_TAGGING:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.HEIGHT[3]
@@ -97,13 +87,12 @@ function getToolbarHeight(type, currentHeight) {
         column = 8
       }
       break
+    case ConstToolType.MAP_TOOL:
     case ConstToolType.MAP_TOOLS:
-      height = ConstToolType.NEWTHEME_HEIGHT[4]
+      height = ConstToolType.TOOLBAR_HEIGHT[6]
       if (orientation === 'PORTRAIT') {
-        // height = ConstToolType.NEWTHEME_HEIGHT[4]
         column = 4
       } else {
-        // height = ConstToolType.NEWTHEME_HEIGHT[3]
         column = 5
       }
       break

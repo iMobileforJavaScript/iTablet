@@ -20,8 +20,9 @@ const Profile = {
 
   //我的——登录
   LOGIN: '登录',
-  LOGIN_CURRENT: '当前用户已经登陆',
-  LOGIN_INVALID: '登陆失效，请重新登陆',
+  LOGIN_TIMEOUT: '登录超时，请稍后再试',
+  LOGIN_CURRENT: '当前用户已经登录',
+  LOGIN_INVALID: '登录失效，请重新登录',
   MOBILE_LOGIN: '手机登录',
   EMAIL_LOGIN: '邮箱登录',
   ENTER_EMAIL_OR_USERNAME: '请输入邮箱或昵称',
@@ -127,7 +128,7 @@ const Profile = {
   //关于
   ABOUT: '关于',
   SERVICE_HOTLINE: '技术支持与服务',
-  SALES_CONSULTATION: '销售咨询',
+  SALES_CONSULTATION: '咨询',
   BUSINESS_WEBSITE: '进入官网',
   SERVICE_AGREEMENT: '服务协议',
   PRIVACY_POLICY: '隐私政策',
@@ -203,6 +204,11 @@ const Profile = {
   LICENSE_NOT_CONTAIN_CURRENT_MODULE: '当前许可不包括该模块',
   LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB:
     '当前许可不包括该模块，该模块的部分功能将不可用！！！',
+  LICENSE_NO_NATIVE_OFFICAL:
+    '没有本地正式许可文件，请在/iTablet/license/文件夹下添加Official_License许可文件',
+  LICENSE_NOT_ITABLET_OFFICAL:
+    '该正式许可不是iTablet内激活的许可，将导致iTablet部分功能不可用，请到许可页面清除许可后重新申请',
+  LICENSE_NATIVE_EXPIRE: '本地许可无效',
   //许可模块
   Core_Dev: '核心开发模块',
   Core_Runtime: '核心运行模块',

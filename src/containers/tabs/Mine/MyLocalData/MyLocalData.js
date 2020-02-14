@@ -13,15 +13,10 @@ import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color } from '../../../../styles'
-import UserType from '../../../../constants/UserType'
+import { UserType, ConstPath } from '../../../../constants'
 import { getLanguage } from '../../../../language/index'
 import LocalDataItem from './LocalDataItem'
-import {
-  _constructCacheSectionData,
-  _constructUserSectionData,
-  getOnlineData,
-  downFileAction,
-} from './Method'
+import { getOnlineData, downFileAction } from './Method'
 import LocalDtaHeader from './LocalDataHeader'
 import OnlineDataItem from './OnlineDataItem'
 
@@ -54,7 +49,7 @@ export default class MyLocalData extends Component {
       activityShow: false,
       itemInfo: {},
     }
-    this.pageSize = 10
+    this.pageSize = 100
     this.dataListTotal = null
     this.currentPage = 1
     this.deleteDataing = false
@@ -62,7 +57,7 @@ export default class MyLocalData extends Component {
     JSIPortalService = new OnlineServicesUtils('iportal')
   }
   componentDidMount() {
-    this._setSectionDataState3()
+    this.getData()
     if (Platform.OS === 'android') {
       if (UserType.isOnlineUser(this.props.user.currentUser)) {
         SOnlineService.getAndroidSessionID().then(cookie => {
@@ -76,37 +71,29 @@ export default class MyLocalData extends Component {
     }
   }
 
-  _setSectionDataState3 = async () => {
+  getData = async () => {
     try {
       this.container.setLoading(
         true,
         getLanguage(this.props.language).Prompt.LOADING,
       )
-      let cacheSectionData = await _constructCacheSectionData(
-        this.props.language,
-      )
-      let userData = await _constructUserSectionData(this.state.userName)
-      let newData = userData
-      let newSectionData = cacheSectionData.concat([
-        {
-          //'外部数据'
-          title: getLanguage(this.props.language).Profile.ON_DEVICE,
-          data: newData,
-          isShowItem: true,
-        },
-      ])
-      this.setState({
-        sectionData: newSectionData,
-      })
+      let sectionData = []
+      let cacheData = {}
+      let userData = {}
+      let onlineData = {}
+      let homePath = global.homePath
+      let cachePath = homePath + ConstPath.CachePath2
+      let userPath =
+        homePath +
+        ConstPath.UserPath +
+        this.state.userName +
+        '/' +
+        ConstPath.RelativeFilePath.ExternalData
 
-      let online = {
-        title: '在线数据',
-        data: [],
-        isShowItem: true,
-        dataType: 'online',
-      }
+      let cachePromise = DataHandler.getExternalData(cachePath)
+      let userPromise = DataHandler.getExternalData(userPath)
       this.currentPage = 1
-      let onlineData = await getOnlineData(
+      let onlineDataPromise = getOnlineData(
         this.props.user.currentUser,
         this.currentPage,
         this.pageSize,
@@ -114,32 +101,39 @@ export default class MyLocalData extends Component {
           this.dataListTotal = result
         },
       )
-      if (onlineData && onlineData.length > 0) {
-        online = {
+      let result = await new Promise.all([
+        cachePromise,
+        userPromise,
+        onlineDataPromise,
+      ])
+      cacheData = result[0]
+      userData = result[1]
+      onlineData = result[2]
+      if (cacheData.length > 0) {
+        sectionData.push({
+          title: getLanguage(global.language).Profile.SAMPLEDATA,
+          data: cacheData,
+          isShowItem: true,
+        })
+      }
+      if (userData.length > 0) {
+        sectionData.push({
+          title: getLanguage(global.language).Profile.ON_DEVICE,
+          data: userData,
+          isShowItem: true,
+        })
+      }
+      if (onlineData.length > 0) {
+        sectionData.push({
           title: '在线数据',
           data: onlineData,
           isShowItem: true,
           dataType: 'online',
-        }
+        })
       }
-      newSectionData = cacheSectionData.concat([
-        {
-          //'外部数据'
-          title: getLanguage(this.props.language).Profile.ON_DEVICE,
-          data: newData,
-          isShowItem: true,
-        },
-        online,
-      ])
-      this.setState(
-        {
-          sectionData: newSectionData,
-        },
-        () => {
-          this.setLoading(false)
-        },
-      )
-    } catch (e) {
+      this.setState({ sectionData })
+      this.setLoading(false)
+    } catch (error) {
       this.setLoading(false)
     }
   }
@@ -149,9 +143,6 @@ export default class MyLocalData extends Component {
     for (let i = 0; i < sectionData.length; i++) {
       let data = sectionData[i]
       if (data.title === title) {
-        if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
-          sectionData[sectionData.length - 1].isShowItem = !data.isShowItem
-        }
         data.isShowItem = !data.isShowItem
       }
     }
@@ -843,7 +834,7 @@ export default class MyLocalData extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}
-              onRefresh={this._setSectionDataState3}
+              onRefresh={this.getData}
               colors={['orange', 'red']}
               titleColor={'orange'}
               tintColor={'orange'}
