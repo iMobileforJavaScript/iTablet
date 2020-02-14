@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { InteractionManager } from 'react-native'
+import { Platform, InteractionManager } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { Container } from '../../components'
@@ -8,6 +8,7 @@ import {
   SMap,
   SMediaCollector,
   SMIllegallyParkView,
+  SIllegallyParkView,
 } from 'imobile_for_reactnative'
 import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
@@ -58,19 +59,35 @@ export default class IllegallyParkView extends React.Component {
       }.bind(this)())
     }
 
-    SMap.setIllegallyParkListener({
-      callback: async result => {
-        let mediaPaths = [result]
-        let add = await SMediaCollector.addMedia({
-          datasourceName: this.datasourceAlias,
-          datasetName: this.datasetName,
-          mediaPaths,
-        })
-        if (add) {
-          Toast.show(getLanguage(this.props.language).Prompt.COLLECT_SUCCESS)
-        }
-      },
-    })
+    if (Platform.OS === 'ios') {
+      SIllegallyParkView.setIllegallyParkListener({
+        callback: async result => {
+          let mediaPaths = [result]
+          let add = await SMediaCollector.addMedia({
+            datasourceName: this.datasourceAlias,
+            datasetName: this.datasetName,
+            mediaPaths,
+          })
+          if (add) {
+            Toast.show(getLanguage(this.props.language).Prompt.COLLECT_SUCCESS)
+          }
+        },
+      })
+    } else {
+      SMap.setIllegallyParkListener({
+        callback: async result => {
+          let mediaPaths = [result]
+          let add = await SMediaCollector.addMedia({
+            datasourceName: this.datasourceAlias,
+            datasetName: this.datasetName,
+            mediaPaths,
+          })
+          if (add) {
+            Toast.show(getLanguage(this.props.language).Prompt.COLLECT_SUCCESS)
+          }
+        },
+      })
+    }
   }
 
   componentWillUnmount() {

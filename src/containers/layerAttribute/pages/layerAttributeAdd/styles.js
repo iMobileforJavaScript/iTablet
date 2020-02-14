@@ -80,4 +80,9 @@ export default StyleSheet.create({
   inputView: {
     flex: 2,
   },
+  customRightStyle: {
+    height: scaleSize(50),
+    textAlign: 'left',
+    fontSize: scaleSize(20),
+  },
 })
