@@ -189,67 +189,66 @@ async function getDatasets(type, params = {}) {
 async function getAllDatas() {
   const params = ToolbarModule.getParams()
   let { data, buttons } = await getUDBsAndMaps()
-  if (GLOBAL.ISOUTDOORMAP) {
-    let list
-    let userUDBPath, userUDBs
-    let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
-    if (
-      params.user &&
-      params.user.currentUser.userName &&
-      params.user.currentUser.userType !== UserType.PROBATION_USER
-    ) {
-      let userPath =
-        (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
-        params.user.currentUser.userName +
-        '/'
-      userUDBPath = userPath + ConstPath.RelativePath.Datasource
-      userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
-        extension: 'udb',
-        type: 'file',
-      })
-    } else {
-      let customerUDBPath = await FileTools.appendingHomeDirectory(
-        ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-      )
-      userUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
-        extension: 'udb',
-        type: 'file',
-      })
-    }
-
-    //过滤掉标注和标绘
-    userUDBs = userUDBs.filter(item => {
-      item.name = dataUtil.getNameByURL(item.path)
-      return !item.name.match(checkLabelAndPlot)
+  let list
+  let userUDBPath, userUDBs
+  let checkLabelAndPlot = /^(Label_|PlotEdit_(.*)@)(.*)((#$)|(#_\d+$)|(##\d+$))/
+  if (
+    params.user &&
+    params.user.currentUser.userName &&
+    params.user.currentUser.userType !== UserType.PROBATION_USER
+  ) {
+    let userPath =
+      (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+      params.user.currentUser.userName +
+      '/'
+    userUDBPath = userPath + ConstPath.RelativePath.Datasource
+    userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+      extension: 'udb',
+      type: 'file',
     })
+  } else {
+    let customerUDBPath = await FileTools.appendingHomeDirectory(
+      ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+    )
+    userUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+  }
 
-    for (let item of userUDBs) {
-      let connectionInfo = {}
-      connectionInfo.server = await FileTools.appendingHomeDirectory(item.path)
-      connectionInfo.engineType = EngineType.UDB
-      connectionInfo.alias = item.name
-      await SMap.openNavDatasource(connectionInfo)
-    }
-    let datas = await SMap.getNetworkDataset()
-    datas.length > 0 && (list = datas)
-    if (list.length > 0) {
-      list.forEach(
-        item =>
-          (item.image = require('../../../../../../assets/Navigation/network.png')),
-      )
-      let networkData = [
-        {
-          title: getLanguage(params.language).Map_Main_Menu.NETWORK_DATASET,
-          image: require('../../../../../../assets/mapToolbar/dataset_type_network.png'),
-          data: list,
-        },
-      ]
-      data = data.concat(networkData)
-    }
+  //过滤掉标注和标绘
+  userUDBs = userUDBs.filter(item => {
+    item.name = dataUtil.getNameByURL(item.path)
+    return !item.name.match(checkLabelAndPlot)
+  })
+
+  for (let item of userUDBs) {
+    let connectionInfo = {}
+    connectionInfo.server = await FileTools.appendingHomeDirectory(item.path)
+    connectionInfo.engineType = EngineType.UDB
+    connectionInfo.alias = item.name
+    await SMap.openNavDatasource(connectionInfo)
+  }
+  let datas = await SMap.getNetworkDataset()
+  datas.length > 0 && (list = datas)
+  if (list.length > 0) {
+    list.forEach(
+      item =>
+        (item.image = require('../../../../../../assets/Navigation/network.png')),
+    )
+    let networkData = [
+      {
+        title: getLanguage(params.language).Map_Main_Menu.NETWORK_DATASET,
+        image: require('../../../../../../assets/mapToolbar/dataset_type_network.png'),
+        data: list,
+      },
+    ]
+    data = data.concat(networkData)
   }
   return { data, buttons }
 }
 
+let navDatas
 async function getData(type, params = {}) {
   switch (type) {
     case ConstToolType.MAP_THEME_ADD_DATASET:
@@ -257,7 +256,8 @@ async function getData(type, params = {}) {
     case ConstToolType.MAP_ADD:
       return await getUDBsAndMaps()
     case ConstToolType.MAP_NAVIGATION_ADD_UDB:
-      return getAllDatas()
+      if (!navDatas) navDatas = await getAllDatas()
+      return navDatas
   }
 }
 

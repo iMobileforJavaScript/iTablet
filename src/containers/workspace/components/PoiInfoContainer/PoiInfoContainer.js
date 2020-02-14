@@ -101,6 +101,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     return a[prop] - b[prop]
   }
 
+  //online返回存在的缺陷，没有直接返回楼层，地址中包含有楼层，但格式不统一，无法拿到，后续导航无法到正确楼层
   getSearchResult = (params, cb) => {
     let location = this.state.location
     let searchStr = ''
@@ -207,6 +208,7 @@ export default class PoiInfoContainer extends React.PureComponent {
       GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: this.props.changeNavPathInfo,
+        getNavigationDatas: this.props.getNavigationDatas,
       })
     } else {
       GLOBAL.mapController && GLOBAL.mapController.setVisible(false)
@@ -316,8 +318,8 @@ export default class PoiInfoContainer extends React.PureComponent {
   }
 
   navitoHere = async () => {
-    await SMap.clearTrackingLayer()
-    await SMap.removePOICallout()
+    SMap.clearTrackingLayer()
+    SMap.removePOICallout()
     let position = await SMap.getCurrentPosition()
     GLOBAL.STARTX = position.x
     GLOBAL.STARTY = position.y
@@ -335,6 +337,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     }).start()
     NavigationService.navigate('NavigationView', {
       changeNavPathInfo: this.props.changeNavPathInfo,
+      getNavigationDatas: this.props.getNavigationDatas,
     })
     //重置为初始状态
     this.setState({

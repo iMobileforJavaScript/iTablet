@@ -132,6 +132,7 @@ export default class PointAnalyst extends Component {
       }
       NavigationService.navigate('NavigationView', {
         changeNavPathInfo: this.changeNavPathInfo,
+        getNavigationDatas: this.getNavigationDatas,
       })
       this.setState({
         searchValue: null,
@@ -617,9 +618,9 @@ export default class PointAnalyst extends Component {
           title: this.type === 'pointSearch' ? '位置搜索' : '路径分析',
           // navigation: this.props.navigation,
           backAction: () => {
-            if (this.searchClickedInfo.isClicked) {
-              GLOBAL.LocationView && GLOBAL.LocationView.setVisible(true, true)
-            }
+            // if (this.searchClickedInfo.isClicked) {
+            //   GLOBAL.LocationView && GLOBAL.LocationView.setVisible(true, true)
+            // }
             this.props.navigation.goBack()
             GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
           },

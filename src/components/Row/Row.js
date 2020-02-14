@@ -119,7 +119,7 @@ export default class Row extends PureComponent {
               this.labelChange('')
             }}
             returnKeyType={'done'}
-            showClear={true}
+            showClear={!this.props.disable}
           />
           {this.props.disable && <View style={styles.inputOverLayer} />}
         </View>

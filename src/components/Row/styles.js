@@ -83,6 +83,7 @@ export default StyleSheet.create({
   },
   inputWrap: {
     paddingHorizontal: scaleSize(5),
+    paddingVertical: scaleSize(1),
     ...Platform.select({
       android: {
         padding: 0,
