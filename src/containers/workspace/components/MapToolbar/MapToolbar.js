@@ -21,6 +21,7 @@ export default class MapToolbar extends React.Component {
     POP_List: PropTypes.func,
     layerManager: PropTypes.func,
     style: PropTypes.any,
+    modules: PropTypes.object,
   }
 
   static defaultProps = {
@@ -56,16 +57,13 @@ export default class MapToolbar extends React.Component {
 
   getToolbar = type => {
     let list = []
-    switch (type) {
-      case constants.MAP_EDIT:
-      case constants.MAP_PLOTTING:
-      case constants.MAP_COLLECTION:
-      case constants.MAP_THEME:
-      case constants.MAP_ANALYST:
-      case constants.MAP_NAVIGATION:
-      case constants.MAP_AR:
-        list = [
-          {
+    const tabModules = this.props.modules.mapModules[
+      this.props.modules.currentMapModule
+    ].tabModules
+    for (let i = 0; i < tabModules.length; i++) {
+      switch (tabModules[i]) {
+        case 'Map':
+          list.push({
             key: 'MapView',
             title:
               type === constants.MAP_AR
@@ -78,19 +76,10 @@ export default class MapToolbar extends React.Component {
               this.props.navigation &&
                 this.props.navigation.navigate('MapView', { type })
             },
-          },
-          {
-            key: 'LayerManager',
-            title: getLanguage(global.language).Map_Label.LAYER,
-            //'图层',
-            image: getThemeAssets().tabBar.tab_layer,
-            selectedImage: getThemeAssets().tabBar.tab_layer_selected,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerManager', { type })
-            },
-          },
-          {
+          })
+          break
+        case 'Layer':
+          list.push({
             key: 'LayerAttribute',
             title: getLanguage(global.language).Map_Label.ATTRIBUTE,
             //'属性',
@@ -100,8 +89,23 @@ export default class MapToolbar extends React.Component {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerAttribute', { type })
             },
-          },
-          {
+          })
+          break
+        case 'Attribute':
+          list.push({
+            key: 'LayerManager',
+            title: getLanguage(global.language).Map_Label.LAYER,
+            //'图层',
+            image: getThemeAssets().tabBar.tab_layer,
+            selectedImage: getThemeAssets().tabBar.tab_layer_selected,
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerManager', { type })
+            },
+          })
+          break
+        case 'Settings':
+          list.push({
             key: 'MapSetting',
             title: getLanguage(global.language).Map_Label.SETTING,
             //'设置',
@@ -111,46 +115,10 @@ export default class MapToolbar extends React.Component {
               this.props.navigation &&
                 this.props.navigation.navigate('MapSetting', { type })
             },
-          },
-        ]
-        break
-      // case constants.MAP_ANALYST:
-      //   list = [
-      //     {
-      //       key: 'MapAnalystView',
-      //       title: getLanguage(global.language).Map_Label.MAP,
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('MapAnalystView', { type })
-      //       },
-      //     },
-      //     {
-      //       key: 'AnalystTools',
-      //       title: getLanguage(global.language).Map_Label.TOOL_BOX,
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('AnalystTools', { type })
-      //       },
-      //     },
-      //     {
-      //       key: 'LayerAnalystManager',
-      //       title: getLanguage(global.language).Map_Label.LAYER,
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('LayerAnalystManager', { type })
-      //       },
-      //     },
-      //   ]
-      //   break
-      case constants.MAP_3D:
-        list = [
-          {
+          })
+          break
+        case 'Scene':
+          list.push({
             key: 'scene',
             title: getLanguage(global.language).Map_Label.SCENE,
             //'场景',
@@ -162,8 +130,10 @@ export default class MapToolbar extends React.Component {
                   type: 'MAP_3D',
                 })
             },
-          },
-          {
+          })
+          break
+        case 'Layer3D':
+          list.push({
             key: 'Layer3DManager',
             title: getLanguage(global.language).Map_Label.LAYER,
             //'图层',
@@ -175,8 +145,10 @@ export default class MapToolbar extends React.Component {
                   type: 'MAP_3D',
                 })
             },
-          },
-          {
+          })
+          break
+        case 'Attribute3D':
+          list.push({
             key: 'LayerAttribute3D',
             title: getLanguage(global.language).Map_Label.ATTRIBUTE,
             //'属性',
@@ -188,80 +160,230 @@ export default class MapToolbar extends React.Component {
                   type: 'MAP_3D',
                 })
             },
-          },
-          {
+          })
+          break
+        case 'Settings3D':
+          list.push({
             key: 'Setting',
             title: getLanguage(global.language).Map_Label.SETTING,
             //'设置',
             image: getThemeAssets().tabBar.tab_setting,
             selectedImage: getThemeAssets().tabBar.tab_setting_selected,
             btnClick: () => {
-              // this._map3Dchange()
-              // let file=["/storage/emulated/0/iTablet/data/local/Changchun"]
-              // let toPath="/storage/emulated/0/iTablet/data/local/Changchun.zip"
-              // let path="/storage/emulated/0/iTablet/data"
-              // SScene.doZipFiles(file,toPath)
-              // Utility.unZipFile(toPath,path)
               this.props.navigation &&
                 this.props.navigation.navigate('Map3DSetting', {})
             },
-          },
-        ]
-        break
-      // case constants.MAP_NAVIGATION:
-      //   list = [
-      //     {
-      //       key: 'MapView',
-      //       title:
-      //         type === constants.MAP_AR
-      //           ? getLanguage(global.language).Map_Label.ARMAP
-      //           : getLanguage(global.language).Map_Label.MAP,
-      //       //'地图',
-      //       image: getThemeAssets().tabBar.tab_map,
-      //       selectedImage: getThemeAssets().tabBar.tab_map,
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('MapView', { type })
-      //       },
-      //     },
-      //     {
-      //       key: 'LayerManager',
-      //       title: getLanguage(global.language).Map_Label.LAYER,
-      //       //'图层',
-      //       image: getThemeAssets().tabBar.tab_layer,
-      //       selectedImage: getThemeAssets().tabBar.tab_layer_selected,
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('LayerManager', { type })
-      //       },
-      //     },
-      //     {
-      //       key: 'LayerAttribute',
-      //       title: getLanguage(global.language).Map_Label.ATTRIBUTE,
-      //       //'属性',
-      //       image: getThemeAssets().tabBar.tab_attribute,
-      //       selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('LayerAttribute', { type })
-      //       },
-      //     },
-      //     {
-      //       key: 'MapSetting',
-      //       title: getLanguage(global.language).Map_Label.SETTING,
-      //       //'设置',
-      //       image: getThemeAssets().tabBar.tab_setting,
-      //       selectedImage: getThemeAssets().tabBar.tab_setting_selected,
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('MapSetting', {
-      //             type,
-      //           })
-      //       },
-      //     },
-      //   ]
-      //   break
+          })
+          break
+      }
     }
+
+    // switch (type) {
+    //   case constants.MAP_EDIT:
+    //   case constants.MAP_PLOTTING:
+    //   case constants.MAP_COLLECTION:
+    //   case constants.MAP_THEME:
+    //   case constants.MAP_ANALYST:
+    //   case constants.MAP_NAVIGATION:
+    //   case constants.MAP_AR:
+    //     list = [
+    //       {
+    //         key: 'MapView',
+    //         title:
+    //           type === constants.MAP_AR
+    //             ? getLanguage(global.language).Map_Label.ARMAP
+    //             : getLanguage(global.language).Map_Label.MAP,
+    //         //'地图',
+    //         image: getThemeAssets().tabBar.tab_map,
+    //         selectedImage: getThemeAssets().tabBar.tab_map_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('MapView', { type })
+    //         },
+    //       },
+    //       {
+    //         key: 'LayerManager',
+    //         title: getLanguage(global.language).Map_Label.LAYER,
+    //         //'图层',
+    //         image: getThemeAssets().tabBar.tab_layer,
+    //         selectedImage: getThemeAssets().tabBar.tab_layer_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('LayerManager', { type })
+    //         },
+    //       },
+    //       {
+    //         key: 'LayerAttribute',
+    //         title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+    //         //'属性',
+    //         image: getThemeAssets().tabBar.tab_attribute,
+    //         selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('LayerAttribute', { type })
+    //         },
+    //       },
+    //       {
+    //         key: 'MapSetting',
+    //         title: getLanguage(global.language).Map_Label.SETTING,
+    //         //'设置',
+    //         image: getThemeAssets().tabBar.tab_setting,
+    //         selectedImage: getThemeAssets().tabBar.tab_setting_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('MapSetting', { type })
+    //         },
+    //       },
+    //     ]
+    //     break
+    //   // case constants.MAP_ANALYST:
+    //   //   list = [
+    //   //     {
+    //   //       key: 'MapAnalystView',
+    //   //       title: getLanguage(global.language).Map_Label.MAP,
+    //   //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+    //   //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('MapAnalystView', { type })
+    //   //       },
+    //   //     },
+    //   //     {
+    //   //       key: 'AnalystTools',
+    //   //       title: getLanguage(global.language).Map_Label.TOOL_BOX,
+    //   //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+    //   //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('AnalystTools', { type })
+    //   //       },
+    //   //     },
+    //   //     {
+    //   //       key: 'LayerAnalystManager',
+    //   //       title: getLanguage(global.language).Map_Label.LAYER,
+    //   //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+    //   //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('LayerAnalystManager', { type })
+    //   //       },
+    //   //     },
+    //   //   ]
+    //   //   break
+    //   case constants.MAP_3D:
+    //     list = [
+    //       {
+    //         key: 'scene',
+    //         title: getLanguage(global.language).Map_Label.SCENE,
+    //         //'场景',
+    //         image: getThemeAssets().tabBar.tab_scene,
+    //         selectedImage: getThemeAssets().tabBar.tab_scene_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('Map3D', {
+    //               type: 'MAP_3D',
+    //             })
+    //         },
+    //       },
+    //       {
+    //         key: 'Layer3DManager',
+    //         title: getLanguage(global.language).Map_Label.LAYER,
+    //         //'图层',
+    //         image: getThemeAssets().tabBar.tab_layer,
+    //         selectedImage: getThemeAssets().tabBar.tab_layer_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('Layer3DManager', {
+    //               type: 'MAP_3D',
+    //             })
+    //         },
+    //       },
+    //       {
+    //         key: 'LayerAttribute3D',
+    //         title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+    //         //'属性',
+    //         image: getThemeAssets().tabBar.tab_attribute,
+    //         selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
+    //         btnClick: () => {
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('LayerAttribute3D', {
+    //               type: 'MAP_3D',
+    //             })
+    //         },
+    //       },
+    //       {
+    //         key: 'Setting',
+    //         title: getLanguage(global.language).Map_Label.SETTING,
+    //         //'设置',
+    //         image: getThemeAssets().tabBar.tab_setting,
+    //         selectedImage: getThemeAssets().tabBar.tab_setting_selected,
+    //         btnClick: () => {
+    //           // this._map3Dchange()
+    //           // let file=["/storage/emulated/0/iTablet/data/local/Changchun"]
+    //           // let toPath="/storage/emulated/0/iTablet/data/local/Changchun.zip"
+    //           // let path="/storage/emulated/0/iTablet/data"
+    //           // SScene.doZipFiles(file,toPath)
+    //           // Utility.unZipFile(toPath,path)
+    //           this.props.navigation &&
+    //             this.props.navigation.navigate('Map3DSetting', {})
+    //         },
+    //       },
+    //     ]
+    //     break
+    //   // case constants.MAP_NAVIGATION:
+    //   //   list = [
+    //   //     {
+    //   //       key: 'MapView',
+    //   //       title:
+    //   //         type === constants.MAP_AR
+    //   //           ? getLanguage(global.language).Map_Label.ARMAP
+    //   //           : getLanguage(global.language).Map_Label.MAP,
+    //   //       //'地图',
+    //   //       image: getThemeAssets().tabBar.tab_map,
+    //   //       selectedImage: getThemeAssets().tabBar.tab_map,
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('MapView', { type })
+    //   //       },
+    //   //     },
+    //   //     {
+    //   //       key: 'LayerManager',
+    //   //       title: getLanguage(global.language).Map_Label.LAYER,
+    //   //       //'图层',
+    //   //       image: getThemeAssets().tabBar.tab_layer,
+    //   //       selectedImage: getThemeAssets().tabBar.tab_layer_selected,
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('LayerManager', { type })
+    //   //       },
+    //   //     },
+    //   //     {
+    //   //       key: 'LayerAttribute',
+    //   //       title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+    //   //       //'属性',
+    //   //       image: getThemeAssets().tabBar.tab_attribute,
+    //   //       selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('LayerAttribute', { type })
+    //   //       },
+    //   //     },
+    //   //     {
+    //   //       key: 'MapSetting',
+    //   //       title: getLanguage(global.language).Map_Label.SETTING,
+    //   //       //'设置',
+    //   //       image: getThemeAssets().tabBar.tab_setting,
+    //   //       selectedImage: getThemeAssets().tabBar.tab_setting_selected,
+    //   //       btnClick: () => {
+    //   //         this.props.navigation &&
+    //   //           this.props.navigation.navigate('MapSetting', {
+    //   //             type,
+    //   //           })
+    //   //       },
+    //   //     },
+    //   //   ]
+    //   //   break
+    // }
     return list
   }
 

@@ -116,7 +116,7 @@ function mapEdit(language) {
         data,
       ]
 
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_EDIT,
         wsData: wsData,
         mapName: getLanguage(language).Map_Module.MAP_EDIT,
@@ -254,7 +254,7 @@ function mapAR(language) {
       ]
 
       global.isPad && Orientation.lockToPortrait()
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_AR,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_AR,
@@ -330,7 +330,7 @@ function mapNavigation(language) {
         },
         data,
       ]
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_NAVIGATION,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_NAVIGATION,
@@ -405,7 +405,7 @@ function mapTheme(language) {
         data,
       ]
 
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_THEME,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_THEME,
@@ -483,7 +483,7 @@ function mapPlotting(language) {
         data,
       ]
 
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_PLOTTING,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_PLOTTING,
@@ -559,7 +559,7 @@ function mapCollection(language) {
         },
         data,
       ]
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_COLLECTION,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_COLLECTION,
@@ -636,7 +636,7 @@ function mapAnalyst(language) {
         data,
       ]
 
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('MapTabs', {
         operationType: constants.MAP_ANALYST,
         wsData,
         mapName: getLanguage(language).Map_Module.MAP_ANALYST,

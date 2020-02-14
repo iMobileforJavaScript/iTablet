@@ -125,7 +125,7 @@ export default class MapView extends React.Component {
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
     navigationhistory: PropTypes.array,
-    mapModules: PropTypes.array,
+    modules: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -1685,6 +1685,7 @@ export default class MapView extends React.Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
+        modules={this.props.modules}
         initIndex={0}
         type={this.type}
       />
@@ -1805,7 +1806,7 @@ export default class MapView extends React.Component {
         online={this.props.online}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
-        mapModules={this.props.mapModules}
+        mapModules={this.props.modules.mapModules}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

@@ -133,7 +133,7 @@ export default function(modules) {
   return createStackNavigator(
     {
       Tabs: {
-        screen: Tabs(modules),
+        screen: Tabs(modules.tabModules),
         navigationOptions: {
           header: null,
         },
