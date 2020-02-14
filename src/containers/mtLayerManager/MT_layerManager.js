@@ -53,6 +53,7 @@ export default class MT_layerManager extends React.Component {
     removeBackAction: () => {},
     user: Object,
     baseMaps: Object,
+    modules: Object,
   }
 
   constructor(props) {
@@ -893,7 +894,11 @@ export default class MT_layerManager extends React.Component {
 
   renderToolBar = () => {
     return (
-      <MapToolbar navigation={this.props.navigation} type={this.state.type} />
+      <MapToolbar
+        navigation={this.props.navigation}
+        type={this.state.type}
+        modules={this.props.modules}
+      />
     )
   }
 

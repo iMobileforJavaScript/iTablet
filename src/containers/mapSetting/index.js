@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
   mapSetting: state.setting.toJS().mapSetting,
   device: state.device.toJS().device,
   mapLegend: state.setting.toJS().mapLegend,
+  modules: state.modules.toJS(),
 })
 
 const mapDispatchToProps = {

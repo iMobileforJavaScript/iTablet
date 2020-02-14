@@ -4,6 +4,7 @@ import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
 export const MODULES_SET = 'MODULES_SET'
+export const MODULES_SET_CUT_MAP_MODULE = 'MODULES_SET_CUT_MAP_MODULE'
 
 // Actions
 // --------------------------------------------------
@@ -16,6 +17,19 @@ export const setModules = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const setCurrentMapModule = (
+  params,
+  cb = () => {},
+) => async dispatch => {
+  if (params >= 0) {
+    await dispatch({
+      type: MODULES_SET_CUT_MAP_MODULE,
+      payload: params,
+    })
+    cb && cb()
+  }
+}
+
 const initialState = fromJS({})
 
 export default handleActions(
@@ -23,6 +37,9 @@ export default handleActions(
     [`${MODULES_SET}`]: (state, { payload }) => {
       let modules = payload
       return fromJS(modules)
+    },
+    [`${MODULES_SET_CUT_MAP_MODULE}`]: (state, { payload }) => {
+      return state.setIn(['currentMapModule'], fromJS(payload))
     },
     [REHYDRATE]: (state, payload) => {
       return payload && payload.modules ? fromJS(payload.modules) : state

@@ -37,6 +37,7 @@ export default class MapSetting extends Component {
     mapSetting: any,
     device: Object,
     mapLegend: Object,
+    modules: Object,
     setMapLegend: () => {},
   }
 
@@ -315,6 +316,7 @@ export default class MapSetting extends Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
+        modules={this.props.modules}
         initIndex={3}
         type={this.type}
       />

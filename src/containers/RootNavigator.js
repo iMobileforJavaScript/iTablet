@@ -14,8 +14,12 @@ export default class RootNavigator extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    let prevModules = Object.assign({}, this.props.modules)
+    let nextModules = Object.assign({}, nextProps.modules)
+    delete prevModules.currentMapModule
+    delete nextModules.currentMapModule
     let shouldUpdate =
-      JSON.stringify(this.props.modules) !== JSON.stringify(nextProps.modules)
+      JSON.stringify(prevModules) !== JSON.stringify(nextModules)
     return shouldUpdate
   }
 
@@ -25,9 +29,7 @@ export default class RootNavigator extends Component {
       this.props.modules.tabModules &&
       this.props.modules.tabModules.length > 0
     ) {
-      const Root = createAppContainer(
-        AppNavigator(this.props.modules.tabModules),
-      )
+      const Root = createAppContainer(AppNavigator(this.props.modules))
       RootView = (
         <Root
           ref={navigatorRef => {

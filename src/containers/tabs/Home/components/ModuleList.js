@@ -47,6 +47,7 @@ class ModuleList extends Component {
     getModuleItem: () => {},
     downloadFile: () => {},
     deleteDownloadFile: () => {},
+    setCurrentMapModule: () => {},
   }
 
   constructor(props) {
@@ -295,7 +296,9 @@ class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
       }
     } catch (e) {
       this.moduleItems[index].setNewState({

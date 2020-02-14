@@ -32,6 +32,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -53,6 +59,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE_MAP3D"
         }
+      ],
+      "tabModules": [
+        "Scene",
+        "Layer3D",
+        "Attribute3D",
+        "Settings3D"
       ]
     },
     {
@@ -74,6 +86,12 @@
           "key": "arAIAssistant",
           "type": "MAP_AR_AI_ASSISTANT"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -99,6 +117,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -124,6 +148,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -153,6 +183,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -186,6 +222,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     },
     {
@@ -215,6 +257,12 @@
           "key": "shareModule",
           "type": "MAP_SHARE"
         }
+      ],
+      "tabModules": [
+        "Map",
+        "Layer",
+        "Attribute",
+        "Settings"
       ]
     }
   ],

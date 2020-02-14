@@ -60,6 +60,7 @@ export default class LayerAttribute extends React.Component {
     currentLayer: Object,
     selection: Object,
     map: Object,
+    modules: Object,
     attributesHistory: Array,
     attributes: Object, // 此时用于3D属性
     // setAttributes: () => {},
@@ -1148,6 +1149,7 @@ export default class LayerAttribute extends React.Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
+        modules={this.props.modules}
         initIndex={2}
         type={this.type}
       />
