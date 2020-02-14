@@ -328,6 +328,11 @@ export default class PoiInfoContainer extends React.PureComponent {
 
     GLOBAL.STARTNAME = getLanguage(GLOBAL.language).Map_Main_Menu.MY_LOCATION
     GLOBAL.ENDNAME = this.state.destination
+    //先跳转，尽量减少用户界面等待时间
+    NavigationService.navigate('NavigationView', {
+      changeNavPathInfo: this.props.changeNavPathInfo,
+      getNavigationDatas: this.props.getNavigationDatas,
+    })
     await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
     await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
     GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
@@ -335,10 +340,6 @@ export default class PoiInfoContainer extends React.PureComponent {
       toValue: scaleSize(-200),
       duration: 400,
     }).start()
-    NavigationService.navigate('NavigationView', {
-      changeNavPathInfo: this.props.changeNavPathInfo,
-      getNavigationDatas: this.props.getNavigationDatas,
-    })
     //重置为初始状态
     this.setState({
       destination: '',
