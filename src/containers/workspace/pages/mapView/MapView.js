@@ -675,7 +675,14 @@ export default class MapView extends React.Component {
         await SMap.getStartPoint(startX, startY, true, startFloor)
         await SMap.getEndPoint(endX, endY, true, endFloor)
         await SMap.startIndoorNavigation()
-        await SMap.beginIndoorNavigation()
+        let rel = await SMap.beginIndoorNavigation()
+        if (!rel) {
+          Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          this.changeNavPathInfo({ path: '', pathLength: '' })
+          this.setLoading(false)
+          this._changeRouteCancel()
+          return
+        }
         for (let item of guideLines) {
           await SMap.addLineOnTrackingLayer(
             { x: item.startX, y: item.startY },

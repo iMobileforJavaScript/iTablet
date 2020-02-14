@@ -152,7 +152,12 @@ export default class MapSelectPointButton extends React.Component {
             GLOBAL.ENDPOINTFLOOR,
           )
           await SMap.startIndoorNavigation()
-          await SMap.beginIndoorNavigation()
+          let rel = await SMap.beginIndoorNavigation()
+          if (!rel) {
+            this.props.setLoading(false)
+            Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+            return
+          }
         } catch (e) {
           this.props.setLoading(false)
           Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
@@ -215,7 +220,14 @@ export default class MapSelectPointButton extends React.Component {
                 doorPoint.floorID,
               )
               await SMap.startIndoorNavigation()
-              await SMap.beginIndoorNavigation()
+              let rel = await SMap.beginIndoorNavigation()
+              if (!rel) {
+                this.props.setLoading(false)
+                Toast.show(
+                  getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED,
+                )
+                return
+              }
               await SMap.addLineOnTrackingLayer(doorPoint, {
                 x: GLOBAL.ENDX,
                 y: GLOBAL.ENDY,
