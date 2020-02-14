@@ -420,7 +420,7 @@ export default class LayerAttributeAdd extends React.Component {
       <View style={styles.rows}>
         <Row
           style={{ marginTop: scaleSize(30) }}
-          customRightStyle={{ height: scaleSize(50) }}
+          customRightStyle={styles.customRightStyle}
           key={'名称'}
           disable={this.state.isEdit}
           defaultValue={this.state.name}
@@ -430,7 +430,7 @@ export default class LayerAttributeAdd extends React.Component {
         />
         <Row
           style={{ marginTop: scaleSize(15) }}
-          customRightStyle={{ height: scaleSize(50) }}
+          customRightStyle={styles.customRightStyle}
           key={'别名'}
           disable={this.state.isEdit}
           defaultValue={this.state.caption}
