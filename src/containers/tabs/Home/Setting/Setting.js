@@ -108,10 +108,6 @@ export default class Setting extends Component {
           this.onLicense,
           getLanguage(global.language).Profile.SETTING_LICENSE,
         )) : null}
-        {this.renderItemView(
-          this.onAbout,
-          getLanguage(global.language).Profile.SETTING_ABOUT_ITABLET,
-        )}
         {this.renderItemCheckVersion(
           this.onCheckUpdate,
           getLanguage(global.language).Profile.SETTING_CHECK_VERSION,

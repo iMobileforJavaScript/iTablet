@@ -983,7 +983,6 @@ class AppRoot extends Component {
         {this.renderLicenseNotModuleDialog()}
         {this.renderNoNativeOfficialLicenseDialog()}
         {this.renderIsNotItabletLicenseDialog()}
-        {!this.props.isAgreeToProtocol && this._renderProtocolDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )
