@@ -129,11 +129,11 @@ import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
 import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
 
-export default function(modules) {
+export default function(appConfig) {
   return createStackNavigator(
     {
       Tabs: {
-        screen: Tabs(modules.tabModules),
+        screen: Tabs(appConfig.tabModules),
         navigationOptions: {
           header: null,
         },

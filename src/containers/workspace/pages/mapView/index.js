@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
   openOnlineMap: state.setting.toJS().openOnlineMap,
   navigationhistory: state.setting.toJS().navigationhistory,
   toolbarStatus: state.toolbarStatus.toJS(),
-  modules: state.modules.toJS(),
+  appConfig: state.appConfig.toJS(),
 })
 
 const mapDispatchToProps = {

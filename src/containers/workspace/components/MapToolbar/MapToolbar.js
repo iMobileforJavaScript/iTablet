@@ -21,7 +21,7 @@ export default class MapToolbar extends React.Component {
     POP_List: PropTypes.func,
     layerManager: PropTypes.func,
     style: PropTypes.any,
-    modules: PropTypes.object,
+    appConfig: PropTypes.object,
   }
 
   static defaultProps = {
@@ -57,8 +57,8 @@ export default class MapToolbar extends React.Component {
 
   getToolbar = type => {
     let list = []
-    const tabModules = this.props.modules.mapModules[
-      this.props.modules.currentMapModule
+    const tabModules = this.props.appConfig.mapModules[
+      this.props.appConfig.currentMapModule
     ].tabModules
     for (let i = 0; i < tabModules.length; i++) {
       switch (tabModules[i]) {

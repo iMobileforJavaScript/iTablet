@@ -28,7 +28,7 @@ const mapStateToProps = state => ({
   user: state.user.toJS(),
   workspace: state.map.toJS().workspace,
   device: state.device.toJS().device,
-  mineModules: state.modules.toJS().mineModules,
+  mineModules: state.appConfig.toJS().mineModules,
 })
 
 const mapDispatchToProps = {

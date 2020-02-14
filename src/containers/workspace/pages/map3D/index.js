@@ -27,7 +27,7 @@ const mapStateToProps = state => ({
   online: state.online.toJS(),
   downloads: state.down.toJS().downloads,
   toolbarStatus: state.toolbarStatus.toJS(),
-  modules: state.modules.toJS(),
+  appConfig: state.appConfig.toJS(),
 })
 
 const mapDispatchToProps = {

@@ -54,7 +54,7 @@ export default class Map3D extends React.Component {
     refreshLayer3dList: () => {},
     user: Object,
     device: Object,
-    modules: Object,
+    appConfig: Object,
     setBackAction: () => {},
     removeBackAction: () => {},
     setToolbarStatus: () => {},
@@ -360,7 +360,7 @@ export default class Map3D extends React.Component {
         showFullMap={this.showFullMap}
         device={this.props.device}
         online={this.props.online}
-        mapModules={this.props.modules.mapModules}
+        mapModules={this.props.appConfig.mapModules}
       />
     )
   }
@@ -433,7 +433,7 @@ export default class Map3D extends React.Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
-        modules={this.props.modules}
+        appConfig={this.props.appConfig}
         initIndex={0}
         type={this.operationType}
         layerManager={this._layer_manager}
