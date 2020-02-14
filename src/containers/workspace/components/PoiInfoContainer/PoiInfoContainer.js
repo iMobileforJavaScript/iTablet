@@ -101,6 +101,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     return a[prop] - b[prop]
   }
 
+  //online返回存在的缺陷，没有直接返回楼层，地址中包含有楼层，但格式不统一，无法拿到，后续导航无法到正确楼层
   getSearchResult = (params, cb) => {
     let location = this.state.location
     let searchStr = ''
