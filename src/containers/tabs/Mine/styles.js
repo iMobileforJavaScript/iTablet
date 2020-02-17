@@ -64,7 +64,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginBottom: -scaleSize(30),
   },
-  porfileAvaterStyle: {
+  profileAvatarStyle: {
     height: scaleSize(140),
     width: scaleSize(140),
     backgroundColor: '#FFFFFF',

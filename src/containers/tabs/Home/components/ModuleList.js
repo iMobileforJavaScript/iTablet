@@ -338,12 +338,12 @@ class ModuleList extends Component {
     )
   }
 
-  _renderScrollView = () => {
+  _renderScrollView = data => {
     return (
       <View style={styles.flatListView}>
         <FlatList
           key={'landscapeList'}
-          data={ConstModule(this.props.language)}
+          data={data}
           horizontal={true}
           downloads={this.props.downloads}
           renderItem={this._renderItem}
@@ -377,7 +377,7 @@ class ModuleList extends Component {
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
-          this._renderScrollView()
+          this._renderScrollView(data)
         ) : (
           <View style={{ width: '100%', height: height }}>
             <FlatList

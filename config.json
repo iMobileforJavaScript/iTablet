@@ -7,7 +7,8 @@
     "isShow": true,
     "url": ""
   },
-  "tabModules": ["Home", "Find", "Friend", "Mine"],
+  "login": ["Online", "iPortal"],
+  "tabModules": ["Home", "Friend", "Find", "Mine"],
   "mapModules": [
     {
       "key": "MAP_EDIT",

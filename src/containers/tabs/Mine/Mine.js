@@ -149,7 +149,7 @@ export default class Mine extends Component {
     NavigationService.navigate('MyService')
   }
 
-  _onPressAvater = () => {
+  _onPressAvatar = () => {
     this.goToPersonal()
   }
 
@@ -293,8 +293,8 @@ export default class Mine extends Component {
           <TouchableOpacity
             disabled={!isPro}
             activeOpacity={0.7}
-            onPress={this._onPressAvater}
-            style={styles.porfileAvaterStyle}
+            onPress={this._onPressAvatar}
+            style={styles.profileAvatarStyle}
           >
             <Image style={styles.headImgStyle} source={headerImage} />
           </TouchableOpacity>
