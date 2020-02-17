@@ -80,19 +80,6 @@ export default class MapToolbar extends React.Component {
           break
         case 'Layer':
           list.push({
-            key: 'LayerAttribute',
-            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
-            //'属性',
-            image: getThemeAssets().tabBar.tab_attribute,
-            selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute', { type })
-            },
-          })
-          break
-        case 'Attribute':
-          list.push({
             key: 'LayerManager',
             title: getLanguage(global.language).Map_Label.LAYER,
             //'图层',
@@ -101,6 +88,19 @@ export default class MapToolbar extends React.Component {
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerManager', { type })
+            },
+          })
+          break
+        case 'Attribute':
+          list.push({
+            key: 'LayerAttribute',
+            title: getLanguage(global.language).Map_Label.ATTRIBUTE,
+            //'属性',
+            image: getThemeAssets().tabBar.tab_attribute,
+            selectedImage: getThemeAssets().tabBar.tab_attribute_selected,
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute', { type })
             },
           })
           break
