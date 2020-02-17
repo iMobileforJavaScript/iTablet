@@ -7,7 +7,7 @@
     "isShow": true,
     "url": ""
   },
-  "tabModules": ["Home", "Find", "Friend", "Mine"],
+  "tabModules": ["Home","Friend","Find", "Mine"],
   "mapModules": [
     {
       "key": "MAP_EDIT",
