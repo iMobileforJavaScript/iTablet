@@ -231,12 +231,16 @@ class ModuleList extends Component {
       let licenseStatus = await SMap.getEnvironmentStatus()
       global.isLicenseValid = licenseStatus.isLicenseValid
       if (!global.isLicenseValid) {
-        item.action && composeWaiting(item.action(tmpCurrentUser))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
         return
       }
 
       if (item.key === constants.MAP_AR) {
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
         return
       }
 
