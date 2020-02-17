@@ -259,7 +259,9 @@ class ModuleList extends Component {
         ) {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
       } else {
         let filePath2
         let filePath = arrFile[0].filePath
