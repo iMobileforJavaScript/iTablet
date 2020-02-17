@@ -60,6 +60,12 @@ export default StyleSheet.create({
     marginVertical: scaleSize(20),
     alignItems: 'center',
   },
+  profileImages: {
+    flex: 1,
+    backgroundColor: 'yellow',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   profileHeadStyle: {
     alignItems: 'center',
     marginBottom: -scaleSize(30),
@@ -184,5 +190,17 @@ export default StyleSheet.create({
   itemText: {
     textAlign: 'center',
     fontSize: scaleSize(24),
+  },
+
+  logoView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  logoImagStyle: {
+    width: scaleSize(100),
+    height: scaleSize(100),
+    marginBottom: scaleSize(30),
+    marginHorizontal: scaleSize(10),
   },
 })
