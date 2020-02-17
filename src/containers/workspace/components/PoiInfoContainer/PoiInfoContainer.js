@@ -49,6 +49,10 @@ export default class PoiInfoContainer extends React.PureComponent {
       visible: false,
       radius: 5000,
     }
+    this.tempResult = {
+      name: '',
+      tempList: [],
+    } //暂存搜索结果，用于返回事件
     this.bottom = new Animated.Value(scaleSize(-200))
     this.boxHeight = new Animated.Value(scaleSize(200))
     this.height = new Animated.Value(scaleSize(200))
@@ -226,9 +230,15 @@ export default class PoiInfoContainer extends React.PureComponent {
         })
       }
       this.props.setMapSearchHistory(historyArr)
+      let tempName = GLOBAL.PoiTopSearchBar.state.defaultValue
       GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
       this.showTable()
       setTimeout(async () => {
+        let tempList = JSON.parse(JSON.stringify(this.state.resultList))
+        this.tempResult = {
+          name: tempName,
+          tempList,
+        }
         this.setState(
           {
             destination: item.pointName,
@@ -396,7 +406,9 @@ export default class PoiInfoContainer extends React.PureComponent {
             <Text style={styles.title}>{this.state.destination}</Text>
           </View>
           <View>
-            <Text style={styles.info}>{this.state.address}</Text>
+            <Text style={styles.info} numberOfLines={1} ellipsizeMode={'tail'}>
+              {this.state.address}
+            </Text>
           </View>
           <View style={styles.searchBox}>
             <TouchableOpacity
@@ -492,7 +504,13 @@ export default class PoiInfoContainer extends React.PureComponent {
               </Text>
               <Text style={styles.distance}>{item.distance}</Text>
             </View>
-            <Text style={styles.address}>{item.address}</Text>
+            <Text
+              style={styles.address}
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+            >
+              {item.address}
+            </Text>
           </TouchableOpacity>
           <View style={styles.itemSeparator} />
         </View>
