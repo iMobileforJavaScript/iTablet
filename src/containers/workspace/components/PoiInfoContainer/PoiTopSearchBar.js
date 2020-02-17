@@ -15,6 +15,7 @@ import {
 import SearchBar from '../../../../components/SearchBar'
 import { scaleSize } from '../../../../utils'
 import { getLanguage } from '../../../../language'
+import { SMap } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 
 const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -52,28 +53,55 @@ export default class PoiTopSearchBar extends React.Component {
     return (
       <Animated.View style={[styles.container, { top: this.top }]}>
         <TouchableOpacity
-          onPress={() => {
-            NavigationService.navigate('PointAnalyst', {
-              type: 'pointSearch',
-            })
+          onPress={async () => {
             if (GLOBAL.PoiInfoContainer) {
-              GLOBAL.PoiInfoContainer.clear()
-              GLOBAL.PoiInfoContainer.setVisible(false)
-              GLOBAL.PoiInfoContainer.setState({
-                destination: '',
-                location: {},
-                address: '',
-                showMore: false,
-                showList: false,
-                neighbor: [],
-                resultList: [],
-              })
+              let poiData = GLOBAL.PoiInfoContainer.state
+              let tempResult = GLOBAL.PoiInfoContainer.tempResult
+              if (tempResult.tempList.length > 0 && !poiData.showList) {
+                //清除操作分开写，此处需要await，返回搜索界面无需await，加快速度
+                await GLOBAL.PoiInfoContainer.clear()
+                this.setState({ defaultValue: tempResult.name })
+                GLOBAL.PoiInfoContainer.setState(
+                  {
+                    destination: '',
+                    location: {},
+                    address: '',
+                    showMore: false,
+                    showList: true,
+                    neighbor: [],
+                    resultList: tempResult.tempList,
+                  },
+                  async () => {
+                    GLOBAL.PoiInfoContainer.show()
+                    await SMap.addCallouts(tempResult.tempList)
+                  },
+                )
+              } else {
+                NavigationService.navigate('PointAnalyst', {
+                  type: 'pointSearch',
+                })
+                GLOBAL.PoiInfoContainer.setVisible(false)
+                GLOBAL.PoiInfoContainer.setState({
+                  destination: '',
+                  location: {},
+                  address: '',
+                  showMore: false,
+                  showList: false,
+                  neighbor: [],
+                  resultList: [],
+                })
+                GLOBAL.PoiInfoContainer.tempResult = {
+                  name: '',
+                  tempList: [],
+                }
+                this.props.setMapNavigation({
+                  isShow: false,
+                  name: '',
+                })
+                this.setVisible(false)
+                GLOBAL.PoiInfoContainer.clear()
+              }
             }
-            this.props.setMapNavigation({
-              isShow: false,
-              name: '',
-            })
-            this.setVisible(false)
           }}
         >
           <Image source={backImg} resizeMode={'contain'} style={styles.back} />
