@@ -742,6 +742,7 @@ export default class MapView extends React.Component {
     GLOBAL.ENDNAME = getLanguage(
       GLOBAL.language,
     ).Map_Main_Menu.SELECT_DESTINATION
+    GLOBAL.mapController && GLOBAL.mapController.changeBottom(false)
   }
 
   /** 检测MapView在router中是否唯一 **/
