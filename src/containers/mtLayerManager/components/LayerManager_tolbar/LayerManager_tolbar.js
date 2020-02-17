@@ -858,6 +858,7 @@ export default class LayerManager_tolbar extends React.Component {
     let layerData = JSON.parse(JSON.stringify(this.state.layerData))
     this.setVisible(false)
     if (
+      layerData.type !== DatasetType.CAD &&
       layerData.type !== DatasetType.POINT &&
       layerData.type !== DatasetType.LINE &&
       layerData.type !== DatasetType.REGION
