@@ -23,6 +23,7 @@ export default class setting extends Component {
     setSettingData: () => {},
     settingData: any,
     device: Object,
+    appConfig: Object,
   }
 
   constructor(props) {
@@ -180,6 +181,7 @@ export default class setting extends Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
+        appConfig={this.props.appConfig}
         initIndex={3}
         type={this.type}
       />

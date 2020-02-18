@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity, Image, Text,ScrollView,RefreshControl ,Platform} from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  ScrollView,
+  RefreshControl,
+  Platform,
+} from 'react-native'
 import { scaleSize } from '../../../../utils'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
@@ -14,6 +22,7 @@ import RNFS from 'react-native-fs'
 export default class Setting extends Component {
   props: {
     navigation: Object,
+    appConfig: Object,
   }
 
   constructor(props) {
@@ -21,8 +30,8 @@ export default class Setting extends Component {
     const { params } = this.props.navigation.state
     this.user = params && params.user
     this.state = {
-      bOpenLicense:false,
-      isRefresh:false,
+      bOpenLicense: false,
+      isRefresh: false,
     }
   }
 
@@ -32,10 +41,10 @@ export default class Setting extends Component {
 
   _checkOpenLicense = async () => {
     try {
-      if (Platform.OS === 'android'){
+      if (Platform.OS === 'android') {
         this.setState({
           bOpenLicense: true,
-          isRefresh:false,
+          isRefresh: false,
         })
         return
       }
@@ -62,17 +71,18 @@ export default class Setting extends Component {
       const ret = RNFS.downloadFile(downloadOptions)
       ret.promise.then(async () => {
         let bRes = await RNFS.readFile(fileCachePath)
-        if(parseInt(bRes) === 1){//检查许可接口入口是否开放
+        if (parseInt(bRes) === 1) {
+          //检查许可接口入口是否开放
           this.setState({
             bOpenLicense: true,
-            isRefresh:false,
+            isRefresh: false,
           })
         }
       })
     } catch (e) {
       this.setState({
         bOpenLicense: false,
-        isRefresh:false,
+        isRefresh: false,
       })
       Toast.show(
         global.language === 'CN'
@@ -104,14 +114,19 @@ export default class Setting extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: color.content_white }}>
         {this._renderItem(getLanguage(global.language).Profile.STATUSBAR_HIDE)}
-        { this.state.bOpenLicense===true ? (this.renderItemView(
-          this.onLicense,
-          getLanguage(global.language).Profile.SETTING_LICENSE,
-        )) : null}
-        {this.renderItemView(
-          this.onAbout,
-          getLanguage(global.language).Profile.SETTING_ABOUT_ITABLET,
-        )}
+        {this.state.bOpenLicense === true
+          ? this.renderItemView(
+            this.onLicense,
+            getLanguage(global.language).Profile.SETTING_LICENSE,
+          )
+          : null}
+        {this.props.appConfig.about.isShow &&
+          this.renderItemView(
+            this.onAbout,
+            getLanguage(global.language).Profile.SETTING_ABOUT +
+              ' ' +
+              this.props.appConfig.alias,
+          )}
         {this.renderItemCheckVersion(
           this.onCheckUpdate,
           getLanguage(global.language).Profile.SETTING_CHECK_VERSION,

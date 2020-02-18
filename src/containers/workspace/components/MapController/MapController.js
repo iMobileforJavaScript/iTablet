@@ -31,7 +31,9 @@ export default class MapController extends React.Component {
       //在导航界面缩放时，bottom高度为scaleSize(240)避免mapController被遮盖
       bottom:
         (GLOBAL.NAV_PARAMS && GLOBAL.NAV_PARAMS.length > 0) ||
-        GLOBAL.PoiInfoContainer
+        (GLOBAL.PoiInfoContainer && GLOBAL.PoiInfoContainer.state.visible) ||
+        (GLOBAL.NAVIGATIONSTARTBUTTON &&
+          GLOBAL.NAVIGATIONSTARTBUTTON.state.show)
           ? new Animated.Value(scaleSize(240))
           : new Animated.Value(DEFAULT_BOTTOM),
       compass: new Animated.Value(0),

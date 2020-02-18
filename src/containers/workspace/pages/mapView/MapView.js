@@ -125,7 +125,7 @@ export default class MapView extends React.Component {
     navigationPoiView: PropTypes.bool,
     openOnlineMap: PropTypes.bool,
     navigationhistory: PropTypes.array,
-    mapModules: PropTypes.array,
+    appConfig: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -675,7 +675,14 @@ export default class MapView extends React.Component {
         await SMap.getStartPoint(startX, startY, true, startFloor)
         await SMap.getEndPoint(endX, endY, true, endFloor)
         await SMap.startIndoorNavigation()
-        await SMap.beginIndoorNavigation()
+        let rel = await SMap.beginIndoorNavigation()
+        if (!rel) {
+          Toast.show(getLanguage(GLOBAL.language).Prompt.PATH_ANALYSIS_FAILED)
+          this.changeNavPathInfo({ path: '', pathLength: '' })
+          this.setLoading(false)
+          this._changeRouteCancel()
+          return
+        }
         for (let item of guideLines) {
           await SMap.addLineOnTrackingLayer(
             { x: item.startX, y: item.startY },
@@ -725,6 +732,7 @@ export default class MapView extends React.Component {
     GLOBAL.STARTY = undefined
     GLOBAL.ENDX = undefined
     GLOBAL.ENDY = undefined
+    GLOBAL.TouchType = TouchType.NORMAL
     GLOBAL.CURRENT_NAV_MODE = ''
     GLOBAL.ROUTEANALYST = undefined
     GLOBAL.NAV_PARAMS = []
@@ -734,6 +742,7 @@ export default class MapView extends React.Component {
     GLOBAL.ENDNAME = getLanguage(
       GLOBAL.language,
     ).Map_Main_Menu.SELECT_DESTINATION
+    GLOBAL.mapController && GLOBAL.mapController.changeBottom(false)
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -1677,6 +1686,7 @@ export default class MapView extends React.Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
+        appConfig={this.props.appConfig}
         initIndex={0}
         type={this.type}
       />
@@ -1797,7 +1807,7 @@ export default class MapView extends React.Component {
         online={this.props.online}
         setMap2Dto3D={this.props.setMap2Dto3D}
         openOnlineMap={this.props.openOnlineMap}
-        mapModules={this.props.mapModules}
+        mapModules={this.props.appConfig.mapModules}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

@@ -45,7 +45,6 @@ async function longtouchCallback(event) {
         await SMap.getStartPoint(event.LLPoint.x, event.LLPoint.y, false)
         GLOBAL.STARTX = event.LLPoint.x
         GLOBAL.STARTY = event.LLPoint.y
-        GLOBAL.STARTPOINTFLOOR = await SMap.getCurrentFloorID()
         //室内地图只允许在室内标注点
         // if (!GLOBAL.ISOUTDOORMAP) {
         //   let isindoor = await SMap.isIndoorPoint(
@@ -82,7 +81,6 @@ async function longtouchCallback(event) {
         await SMap.getEndPoint(event.LLPoint.x, event.LLPoint.y, false)
         GLOBAL.ENDX = event.LLPoint.x
         GLOBAL.ENDY = event.LLPoint.y
-        GLOBAL.ENDPOINTFLOOR = await SMap.getCurrentFloorID()
         //室内地图只允许在室内标注点
         // if (!GLOBAL.ISOUTDOORMAP) {
         //   let isindoor = await SMap.isIndoorPoint(

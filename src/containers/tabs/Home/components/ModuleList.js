@@ -47,6 +47,7 @@ class ModuleList extends Component {
     getModuleItem: () => {},
     downloadFile: () => {},
     deleteDownloadFile: () => {},
+    setCurrentMapModule: () => {},
   }
 
   constructor(props) {
@@ -230,12 +231,16 @@ class ModuleList extends Component {
       let licenseStatus = await SMap.getEnvironmentStatus()
       global.isLicenseValid = licenseStatus.isLicenseValid
       if (!global.isLicenseValid) {
-        item.action && composeWaiting(item.action(tmpCurrentUser))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
         return
       }
 
       if (item.key === constants.MAP_AR) {
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
         return
       }
 
@@ -258,7 +263,9 @@ class ModuleList extends Component {
         ) {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
       } else {
         let filePath2
         let filePath = arrFile[0].filePath
@@ -295,7 +302,9 @@ class ModuleList extends Component {
           disabled: false,
           isShowProgressView: false,
         })
-        item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        this.props.setCurrentMapModule(index).then(() => {
+          item.action && composeWaiting(item.action(tmpCurrentUser, latestMap))
+        })
       }
     } catch (e) {
       this.moduleItems[index].setNewState({
@@ -335,12 +344,12 @@ class ModuleList extends Component {
     )
   }
 
-  _renderScrollView = () => {
+  _renderScrollView = data => {
     return (
       <View style={styles.flatListView}>
         <FlatList
           key={'landscapeList'}
-          data={ConstModule(this.props.language)}
+          data={data}
           horizontal={true}
           downloads={this.props.downloads}
           renderItem={this._renderItem}
@@ -374,7 +383,7 @@ class ModuleList extends Component {
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
-          this._renderScrollView()
+          this._renderScrollView(data)
         ) : (
           <View style={{ width: '100%', height: height }}>
             <FlatList

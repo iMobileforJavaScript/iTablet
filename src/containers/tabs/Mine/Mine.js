@@ -24,6 +24,8 @@ import { getLanguage } from '../../../language/index'
 import { getPublicAssets, getThemeAssets } from '../../../assets'
 import styles from './styles'
 const Customer = 'Customer'
+import logos from '../../../assets/custom/logo'
+
 export default class Mine extends Component {
   props: {
     language: string,
@@ -149,7 +151,7 @@ export default class Mine extends Component {
     NavigationService.navigate('MyService')
   }
 
-  _onPressAvater = () => {
+  _onPressAvatar = () => {
     this.goToPersonal()
   }
 
@@ -259,6 +261,7 @@ export default class Mine extends Component {
   _renderProfile = () => {
     return (
       <View style={styles.profileContainer}>
+        {this._renderLogo()}
         {this._renderMyProfile()}
         {this._renderSearch()}
         {this._renderSideItem()}
@@ -266,14 +269,52 @@ export default class Mine extends Component {
     )
   }
 
+  /**
+   * 定制logo
+   * 如果assets/custom/logo中存在logo1，logo2，logo3，则会一次显示在'我的'顶部图片
+   * logo2会代替原本的用户头像
+   */
+  _renderLogo = () => {
+    let isPro = !UserType.isProbationUser(this.props.user.currentUser)
+    let logo
+    if (logos.logo2) {
+      logo = logos.logo2
+    } else {
+      logo = isPro
+        ? {
+          uri:
+              'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+        }
+        : require('../../../assets/home/system_default_header_image.png')
+    }
+    return (
+      <View style={styles.logoView}>
+        {logos.logo1 && (
+          <Image
+            style={[
+              styles.logoImagStyle,
+              { width: scaleSize(190), height: scaleSize(70) },
+            ]}
+            source={logos.logo1}
+          />
+        )}
+        <Image
+          resizeMode={'contain'}
+          style={styles.logoImagStyle}
+          source={logo}
+        />
+        {logos.logo3 && (
+          <Image
+            style={[styles.logoImagStyle, { width: scaleSize(190) }]}
+            source={logos.logo3}
+          />
+        )}
+      </View>
+    )
+  }
+
   _renderMyProfile = () => {
     let isPro = !UserType.isProbationUser(this.props.user.currentUser)
-    let headerImage = isPro
-      ? {
-        uri:
-            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-      }
-      : require('../../../assets/home/system_default_header_image.png')
     let headerTitle = isPro
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
@@ -290,14 +331,14 @@ export default class Mine extends Component {
     return (
       <View style={styles.MyProfileStyle}>
         <View style={styles.profileHeadStyle}>
-          <TouchableOpacity
-            disabled={!isPro}
-            activeOpacity={0.7}
-            onPress={this._onPressAvater}
-            style={styles.porfileAvaterStyle}
-          >
-            <Image style={styles.headImgStyle} source={headerImage} />
-          </TouchableOpacity>
+          {/*<TouchableOpacity*/}
+          {/*disabled={!isPro}*/}
+          {/*activeOpacity={0.7}*/}
+          {/*onPress={this._onPressAvatar}*/}
+          {/*style={styles.profileAvatarStyle}*/}
+          {/*>*/}
+          {/*<Image style={styles.headImgStyle} source={headerImage} />*/}
+          {/*</TouchableOpacity>*/}
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={this._onPressMore}
@@ -367,7 +408,7 @@ export default class Mine extends Component {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={this._onPressSwitch}
-        style={styles.sideItemStyle}
+        style={[styles.sideItemStyle, logos.logo1 && { top: scaleSize(150) }]} // 判断是否包含定制logo
       >
         <Text style={styles.SideTextStyle}>
           {getLanguage(this.props.language).Profile.SWITCH_ACCOUNT}

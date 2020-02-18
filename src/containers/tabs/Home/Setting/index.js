@@ -1,2 +1,10 @@
 import Setting from './Setting'
-export default Setting
+import { connect } from 'react-redux'
+const mapStateToProps = state => ({
+  appConfig: state.appConfig.toJS(),
+})
+
+export default connect(
+  mapStateToProps,
+  {},
+)(Setting)

@@ -44,6 +44,7 @@ export default StyleSheet.create({
   info: {
     paddingTop: scaleSize(20),
     fontSize: setSpText(20),
+    color: color.gray,
   },
   search: {
     marginTop: scaleSize(20),
@@ -121,6 +122,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(15),
     height: scaleSize(30),
     fontSize: setSpText(16),
+    color: color.gray,
     alignSelf: 'flex-start',
   },
   moreWrap: {

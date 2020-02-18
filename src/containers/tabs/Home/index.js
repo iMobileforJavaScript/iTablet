@@ -11,6 +11,7 @@ import { setDownInformation } from '../../../models/down'
 import { importWorkspace } from '../../../models/template'
 import { setUser } from '../../../models/user'
 import { setBackAction, removeBackAction } from '../../../models/backActions'
+import { setCurrentMapModule } from '../../../models/appConfig'
 import AboutITablet from './AboutITablet'
 import Setting from './Setting'
 const mapStateToProps = state => ({
@@ -18,7 +19,7 @@ const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
   currentUser: state.user.toJS().currentUser,
   device: state.device.toJS().device,
-  mapModules: state.modules.toJS().mapModules,
+  appConfig: state.appConfig.toJS(),
   user: state.user.toJS(),
 })
 const mapDispatchToProps = {
@@ -32,6 +33,7 @@ const mapDispatchToProps = {
   setDownInformation,
   setBackAction,
   removeBackAction,
+  setCurrentMapModule,
 }
 export default connect(
   mapStateToProps,

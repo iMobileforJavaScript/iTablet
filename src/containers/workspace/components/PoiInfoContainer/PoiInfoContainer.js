@@ -49,6 +49,10 @@ export default class PoiInfoContainer extends React.PureComponent {
       visible: false,
       radius: 5000,
     }
+    this.tempResult = {
+      name: '',
+      tempList: [],
+    } //暂存搜索结果，用于返回事件
     this.bottom = new Animated.Value(scaleSize(-200))
     this.boxHeight = new Animated.Value(scaleSize(200))
     this.height = new Animated.Value(scaleSize(200))
@@ -101,6 +105,7 @@ export default class PoiInfoContainer extends React.PureComponent {
     return a[prop] - b[prop]
   }
 
+  //online返回存在的缺陷，没有直接返回楼层，地址中包含有楼层，但格式不统一，无法拿到，后续导航无法到正确楼层
   getSearchResult = (params, cb) => {
     let location = this.state.location
     let searchStr = ''
@@ -225,9 +230,15 @@ export default class PoiInfoContainer extends React.PureComponent {
         })
       }
       this.props.setMapSearchHistory(historyArr)
+      let tempName = GLOBAL.PoiTopSearchBar.state.defaultValue
       GLOBAL.PoiTopSearchBar.setState({ defaultValue: item.pointName })
       this.showTable()
       setTimeout(async () => {
+        let tempList = JSON.parse(JSON.stringify(this.state.resultList))
+        this.tempResult = {
+          name: tempName,
+          tempList,
+        }
         this.setState(
           {
             destination: item.pointName,
@@ -327,6 +338,11 @@ export default class PoiInfoContainer extends React.PureComponent {
 
     GLOBAL.STARTNAME = getLanguage(GLOBAL.language).Map_Main_Menu.MY_LOCATION
     GLOBAL.ENDNAME = this.state.destination
+    //先跳转，尽量减少用户界面等待时间
+    NavigationService.navigate('NavigationView', {
+      changeNavPathInfo: this.props.changeNavPathInfo,
+      getNavigationDatas: this.props.getNavigationDatas,
+    })
     await SMap.getStartPoint(GLOBAL.STARTX, GLOBAL.STARTY, false)
     await SMap.getEndPoint(GLOBAL.ENDX, GLOBAL.ENDY, false)
     GLOBAL.PoiTopSearchBar && GLOBAL.PoiTopSearchBar.setVisible(false)
@@ -334,10 +350,6 @@ export default class PoiInfoContainer extends React.PureComponent {
       toValue: scaleSize(-200),
       duration: 400,
     }).start()
-    NavigationService.navigate('NavigationView', {
-      changeNavPathInfo: this.props.changeNavPathInfo,
-      getNavigationDatas: this.props.getNavigationDatas,
-    })
     //重置为初始状态
     this.setState({
       destination: '',
@@ -394,7 +406,9 @@ export default class PoiInfoContainer extends React.PureComponent {
             <Text style={styles.title}>{this.state.destination}</Text>
           </View>
           <View>
-            <Text style={styles.info}>{this.state.address}</Text>
+            <Text style={styles.info} numberOfLines={1} ellipsizeMode={'tail'}>
+              {this.state.address}
+            </Text>
           </View>
           <View style={styles.searchBox}>
             <TouchableOpacity
@@ -490,7 +504,13 @@ export default class PoiInfoContainer extends React.PureComponent {
               </Text>
               <Text style={styles.distance}>{item.distance}</Text>
             </View>
-            <Text style={styles.address}>{item.address}</Text>
+            <Text
+              style={styles.address}
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+            >
+              {item.address}
+            </Text>
           </TouchableOpacity>
           <View style={styles.itemSeparator} />
         </View>

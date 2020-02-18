@@ -22,7 +22,7 @@ import {
   setCurrentTemplateList,
   setTemplate,
 } from './src/models/template'
-import { setModules } from './src/models/modules'
+import { setModules } from './src/models/appConfig'
 import { Dialog, Loading } from './src/components'
 import { setAnalystParams } from './src/models/analyst'
 import { setCollectionInfo } from './src/models/collection'
@@ -123,7 +123,7 @@ class AppRoot extends Component {
     layers: PropTypes.array,
     isAgreeToProtocol: PropTypes.bool,
     device: PropTypes.object,
-    modules: PropTypes.object,
+    appConfig: PropTypes.object,
 
     setNav: PropTypes.func,
     setUser: PropTypes.func,
@@ -162,6 +162,14 @@ class AppRoot extends Component {
     PT.initCustomPrototype()
     this.login = this.login.bind(this)
     this.reCircleLogin = this.reCircleLogin.bind(this)
+
+    if (this.props.language !== config.language) {
+      this.props.setLanguage(config.language)
+    } else if(this.props.autoLanguage) {
+      this.props.setLanguage('AUTO')
+    } else {
+      this.props.setLanguage(this.props.language)
+    }
   }
 
   UNSAFE_componentWillMount(){
@@ -243,11 +251,6 @@ class AppRoot extends Component {
   }
 
   componentDidMount () {
-    if(this.props.autoLanguage) {
-      this.props.setLanguage('AUTO')
-    } else {
-      this.props.setLanguage(this.props.language)
-    }
     this.inspectEnvironment()
     this.login()
     this.reCircleLogin()
@@ -264,12 +267,12 @@ class AppRoot extends Component {
       SOnlineService.init()
       // SOnlineService.removeCookie()
       SIPortalService.init()
-      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language], path = ''
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
       if (
         this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
         (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
       ) {
-        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[global.language]
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
         if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
           path = await FileTools.appendingHomeDirectory(userWsPath)
         } else {
@@ -278,7 +281,7 @@ class AppRoot extends Component {
       } else {
         path = await FileTools.appendingHomeDirectory(wsPath)
       }
-      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[global.language]
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
       // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.initOrientation()
       await this.getImportState()
@@ -605,21 +608,21 @@ class AppRoot extends Component {
           onPress={this.inputOfficialLicense}
         >
           <Text style={styles.btnTextStyle}>
-            {getLanguage(global.language).Profile.LICENSE_OFFICIAL_INPUT}
+            {getLanguage(this.props.language).Profile.LICENSE_OFFICIAL_INPUT}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btnStyle}
           onPress={this.applyTrialLicense}
         >
           <Text style={styles.btnTextStyle}>
-            {getLanguage(global.language).Profile.LICENSE_TRIAL_APPLY}
+            {getLanguage(this.props.language).Profile.LICENSE_TRIAL_APPLY}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btnStyle}
           onPress={this.exitApp}
         >
           <Text style={styles.btnTextStyle}>
-            {getLanguage(global.language).Profile.LICENSE_EXIT}
+            {getLanguage(this.props.language).Profile.LICENSE_EXIT}
           </Text>
         </TouchableOpacity>
       </View>
@@ -630,7 +633,7 @@ class AppRoot extends Component {
     try {
       await AppUtils.AppExit()
     } catch (error) {
-      Toast.show(getLanguage(global.language).Profile.LICENSE_EXIT_FAILED)
+      Toast.show(getLanguage(this.props.language).Profile.LICENSE_EXIT_FAILED)
     }
   }
   //接入正式许可
@@ -639,7 +642,7 @@ class AppRoot extends Component {
     if(Platform.OS === 'ios'){
       GLOBAL.Loading.setLoading(
         true,
-        global.language === 'CN' ? '许可申请中...' : 'Applying',
+        this.props.language === 'CN' ? '许可申请中...' : 'Applying',
       )
 
       let activateResult = await SMap.activateNativeLicense()
@@ -649,7 +652,7 @@ class AppRoot extends Component {
       }else if(activateResult === -2){
         //本地许可文件序列号无效
         Toast.show(
-          getLanguage(global.language).Profile
+          getLanguage(this.props.language).Profile
             .LICENSE_NATIVE_EXPIRE,
         )
       }else {
@@ -666,13 +669,13 @@ class AppRoot extends Component {
         GLOBAL.LicenseValidDialog.setDialogVisible(false)
         GLOBAL.getLicense && GLOBAL.getLicense()
         Toast.show(
-          getLanguage(global.language).Profile
+          getLanguage(this.props.language).Profile
             .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
         )
       }
       GLOBAL.Loading.setLoading(
         false,
-        global.language === 'CN' ? '许可申请中...' : 'Applying...',
+        this.props.language === 'CN' ? '许可申请中...' : 'Applying...',
       )
       return
     }
@@ -682,7 +685,7 @@ class AppRoot extends Component {
       cb: async () => {
         NavigationService.goBack()
         GLOBAL.LicenseValidDialog.setDialogVisible(false)
-        Toast.show(getLanguage(global.language).Profile.LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS)
+        Toast.show(getLanguage(this.props.language).Profile.LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS)
         GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
       },
       backAction:()=>{
@@ -696,7 +699,7 @@ class AppRoot extends Component {
     GLOBAL.LicenseValidDialog.setDialogVisible(false)
     GLOBAL.Loading.setLoading(
       true,
-      global.language==='CN'?"许可申请中...":"Applying"
+      this.props.language==='CN'?"许可申请中...":"Applying"
     )
     try{
       let fileCachePath = await FileTools.appendingHomeDirectory('/iTablet/license/Trial_License.slm')
@@ -709,9 +712,9 @@ class AppRoot extends Component {
         if(dataUrl === undefined){
           GLOBAL.Loading.setLoading(
             false,
-            global.language==='CN'?"许可申请中...":"Applying..."
+            this.props.language==='CN'?"许可申请中...":"Applying..."
           )
-          Toast.show(global.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
+          Toast.show(this.props.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
         }
       }, 10000 )
       dataUrl = await FetchUtils.getFindUserDataUrl(
@@ -733,18 +736,18 @@ class AppRoot extends Component {
         .then(async () => {
           GLOBAL.Loading.setLoading(
             false,
-            global.language==='CN'?"许可申请中...":"Applying"
+            this.props.language==='CN'?"许可申请中...":"Applying"
           )
           SMap.initTrailLicensePath()
-          Toast.show(global.language==='CN'?"试用成功":'Successful trial')
+          Toast.show(this.props.language==='CN'?"试用成功":'Successful trial')
           GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
         })
     }catch (e) {
       GLOBAL.Loading.setLoading(
         false,
-        global.language==='CN'?"许可申请中...":"Applying"
+        this.props.language==='CN'?"许可申请中...":"Applying"
       )
-      Toast.show(global.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
+      Toast.show(this.props.language==='CN'?"许可申请失败,请检查网络连接":'License application failed.Please check the network connection')
       GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
     }
     // NavigationService.navigate('Protocol', { type: 'ApplyLicense' })
@@ -757,7 +760,7 @@ class AppRoot extends Component {
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
-      confirmBtnTitle={global.language==='CN' ? '试用' : 'The trial'}
+      confirmBtnTitle={this.props.language==='CN' ? '试用' : 'The trial'}
       cancelBtnTitle={getLanguage(this.props.language).Prompt.CANCEL}
     >
       {this.renderLicenseDialogChildren()}
@@ -771,7 +774,7 @@ class AppRoot extends Component {
           {getLanguage(this.props.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE}
           {/* 试用许可已过期,请更换许可后重启 */}
         </Text>
-        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white}}></View>
+        <View style={{marginTop: scaleSize(30),width: '100%',height: 1,backgroundColor: color.item_separate_white}} />
         <View
           style={{height: scaleSize(200),
             flexDirection: 'column',
@@ -781,10 +784,10 @@ class AppRoot extends Component {
           onPress={this.inputOfficialLicense}
         >
           <Text style={{fontSize: scaleSize(20),marginLeft:scaleSize(30),marginRight:scaleSize(30)}}>
-            {getLanguage(global.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB}
+            {getLanguage(this.props.language).Profile.LICENSE_NOT_CONTAIN_CURRENT_MODULE_SUB}
           </Text>
         </View>
-        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white}}></View>
+        <View style={{width: '100%',height: 1,backgroundColor: color.item_separate_white}} />
         <TouchableOpacity
           style={{height: scaleSize(80),
             width: '100%',
@@ -794,7 +797,7 @@ class AppRoot extends Component {
           onPress={()=>{ GLOBAL.licenseModuleNotContainDialog.setDialogVisible(false)}}
         >
           <Text style={styles.btnTextStyle}>
-            {getLanguage(global.language).Prompt.CONFIRM}
+            {getLanguage(this.props.language).Prompt.CONFIRM}
           </Text>
         </TouchableOpacity>
       </View>
@@ -825,7 +828,7 @@ class AppRoot extends Component {
           this.import.setDialogVisible(false)
           GLOBAL.Loading.setLoading(
             true,
-            getLanguage(global.language).Friends.IMPORT_DATA,
+            getLanguage(this.props.language).Friends.IMPORT_DATA,
           )
           let homePath = global.homePath
           let importPath = homePath + '/iTablet/Import'
@@ -916,7 +919,7 @@ class AppRoot extends Component {
           onPress={()=>{ GLOBAL.noNativeLicenseDialog.setDialogVisible(false)}}
         >
           <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack }}>
-            {getLanguage(global.language).Prompt.CONFIRM}
+            {getLanguage(this.props.language).Prompt.CONFIRM}
           </Text>
         </TouchableOpacity>
       </View>
@@ -959,7 +962,7 @@ class AppRoot extends Component {
           onPress={()=>{ GLOBAL.isNotItableLicenseDialog.setDialogVisible(false)}}
         >
           <Text style={{ fontSize: scaleSize(24), color: color.fontColorBlack }}>
-            {getLanguage(global.language).Prompt.CONFIRM}
+            {getLanguage(this.props.language).Prompt.CONFIRM}
           </Text>
         </TouchableOpacity>
       </View>
@@ -973,11 +976,10 @@ class AppRoot extends Component {
   }
 
   render () {
-    global.language=this.props.language
     return (
       <View style={{flex: 1}}>
         <RootNavigator
-          modules={this.props.modules}
+          appConfig={this.props.appConfig}
           setModules={this.props.setModules}
           setNav={this.props.setNav}
         />
@@ -1016,7 +1018,7 @@ const mapStateToProps = state => {
     layers: state.layers.toJS().layers,
     backActions: state.backActions.toJS(),
     isAgreeToProtocol: state.setting.toJS().isAgreeToProtocol,
-    modules: state.modules.toJS(),
+    appConfig: state.appConfig.toJS(),
   }
 }
 

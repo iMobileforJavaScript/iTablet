@@ -168,6 +168,7 @@ const Profile = {
   STATUSBAR_HIDE: 'StatusBar Hide',
   SETTING_LICENSE: 'License',
   SETTING_ABOUT_ITABLET: 'About iTablet',
+  SETTING_ABOUT: 'About',
   SETTING_CHECK_VERSION: 'Check Version',
   SETTING_LANGUAGE: 'Language',
   SETTING_LANGUAGE_AUTO: 'Auto',

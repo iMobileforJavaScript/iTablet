@@ -44,7 +44,7 @@ export default class Home extends Component {
     setShow: () => {},
     device: Object,
     user: Object,
-    mapModules: Array,
+    appConfig: Object,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
     closeWorkspace: () => {},
@@ -53,6 +53,7 @@ export default class Home extends Component {
     setDownInformation: () => {},
     setBackAction: () => {},
     removeBackAction: () => {},
+    setCurrentMapModule: () => {},
   }
 
   constructor(props) {
@@ -481,7 +482,7 @@ export default class Home extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: 'SuperMap iTablet',
+          title: this.props.appConfig.name,
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}
@@ -525,7 +526,8 @@ export default class Home extends Component {
             showDialog={this.showDialog}
             getModuleItem={this.getModuleItem}
             latestMap={this.props.latestMap}
-            mapModules={this.props.mapModules}
+            mapModules={this.props.appConfig.mapModules}
+            setCurrentMapModule={this.props.setCurrentMapModule}
           />
           {this._renderModal()}
           {this.renderDialog()}

@@ -60,6 +60,7 @@ export default class Friend extends Component {
     language: string,
     navigation: Object,
     user: Object,
+    appConfig: Object,
     chat: Array,
     addChat: () => {},
     editChat: () => {},
@@ -159,12 +160,18 @@ export default class Friend extends Component {
         '/iTablet/Common/',
       )
       let JSOnlineService = new OnlineServicesUtils('online')
-      let data = await JSOnlineService.getPublicDataByName(
-        '927528',
-        'ServerInfo.geojson',
-      )
-      if (data) {
-        let url = `https://www.supermapol.com/web/datas/${data.id}/download`
+      let data
+      if (this.props.appConfig.infoServer) {
+        data = this.props.appConfig.infoServer
+      } else {
+        data = await JSOnlineService.getPublicDataByName(
+          '927528',
+          'ServerInfo.geojson',
+        )
+      }
+      if (data && (data.url || data.id !== undefined)) {
+        let url =
+          data.url || `https://www.supermapol.com/web/datas/${data.id}/download`
 
         let filePath = commonPath + data.fileName
 

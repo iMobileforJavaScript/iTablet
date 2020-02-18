@@ -8,6 +8,7 @@ import { getLanguage } from '../../../../language/index'
 export default class SelectLogin extends React.Component {
   props: {
     navigation: Object,
+    appConfig: Object,
   }
 
   constructor(props) {
@@ -16,17 +17,18 @@ export default class SelectLogin extends React.Component {
 
   renderBlock = type => {
     let image, text, loginPage
-    if (type === 'online') {
+    if (type === 'Online') {
       image = require('../../../../assets/Mine/online_white.png')
       text = 'Online'
       loginPage = 'Login'
-    } else if (type === 'iportal') {
+    } else if (type === 'iPortal') {
       image = require('../../../../assets/Mine/iportal_white.png')
       text = 'iPortal'
       loginPage = 'IPortalLogin'
     }
     return (
       <TouchableOpacity
+        key={text}
         activeOpacity={0.7}
         onPress={() => {
           NavigationService.navigate(loginPage)
@@ -40,6 +42,25 @@ export default class SelectLogin extends React.Component {
     )
   }
 
+  renderContent = () => {
+    let content = []
+    if (this.props.appConfig.login && this.props.appConfig.login.length > 0) {
+      for (let i = 0; i < this.props.appConfig.login.length; i++) {
+        switch (this.props.appConfig.login[i]) {
+          case 'Online':
+            content.push(this.renderBlock('Online'))
+            break
+          case 'iPortal':
+            content.push(this.renderBlock('iPortal'))
+            break
+        }
+      }
+    } else {
+      content = [this.renderBlock('Online'), this.renderBlock('iPortal')]
+    }
+    return content
+  }
+
   render() {
     return (
       <Container
@@ -49,10 +70,7 @@ export default class SelectLogin extends React.Component {
           navigation: this.props.navigation,
         }}
       >
-        <View style={styles.containerView}>
-          {this.renderBlock('online')}
-          {this.renderBlock('iportal')}
-        </View>
+        <View style={styles.containerView}>{this.renderContent()}</View>
       </Container>
     )
   }
