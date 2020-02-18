@@ -113,5 +113,9 @@
     {"key": "SYMBOL"},
     {"key": "TEMPLATE"},
     {"key": "MyColor"}
-  ]
+  ],
+  "infoServer": {
+    "url": "https://www.supermapol.com/web/datas/235674088/download",
+    "fileName": "ServerInfo.geojson"
+  }
 }
