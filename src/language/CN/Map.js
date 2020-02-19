@@ -59,7 +59,14 @@ const Map_Main_Menu = {
   LEGEND_COLUMN: '列数',
   LEGEND_WIDTH: '宽度',
   LEGEND_HEIGHT: '高度',
+  LEGEND_FONT: '字体大小',
+  LEGEND_ICON: '图标大小',
   LEGEND_COLOR: '填充色',
+  LEGEND_POSITION: '图例位置',
+  TOP_LEFT: '左上对齐',
+  TOP_RIGHT: '右上对齐',
+  LEFT_BOTTOM: '左下对齐',
+  RIGHT_BOTTOM: '右下对齐',
 
   //地图制图及公共 风格
   STYLE: '风格',
