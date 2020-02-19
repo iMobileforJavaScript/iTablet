@@ -55,6 +55,13 @@ const Map_Main_Menu = {
   LEGEND_WIDTH: 'Width',
   LEGEND_HEIGHT: 'Height',
   LEGEND_COLOR: 'Color',
+  LEGEND_FONT: 'Fontsize',
+  LEGEND_ICON: 'Image Size',
+  LEGEND_POSITION: 'Legend Position',
+  TOP_LEFT: 'Top Left Alignment',
+  TOP_RIGHT: 'Right Upper Alignment',
+  LEFT_BOTTOM: 'Lower Left Alignment',
+  RIGHT_BOTTOM: 'Right Bottom Alignment',
 
   STYLE: 'Styles',
   STYLE_SYMBOL: 'Symbol',

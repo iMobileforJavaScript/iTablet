@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   ConstToolType,
   legendColor,
@@ -8,12 +9,26 @@ import { getLanguage } from '../../../../../../language'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import ToolbarModule from '../ToolbarModule'
 import LegendAction from './LegendAction'
-
+import { MultiPicker } from '../../../../../../components'
 function getData(type) {
+  const _params = ToolbarModule.getParams()
   let data = [],
-    buttons = getButtons(type)
-
+    buttons = getButtons(type),
+    customView = null
   switch (type) {
+    case ConstToolType.LEGEND_POSITION:
+      data = getPickerData(_params.mapLegend[GLOBAL.Type].legendPosition)
+      customView = () => (
+        <MultiPicker
+          language={GLOBAL.language}
+          confirm={LegendAction.changePosition}
+          cancel={LegendAction.cancelSelect}
+          popData={data}
+          currentPopData={_params.mapLegend[GLOBAL.Type].legendPosition}
+          viewableItems={1}
+        />
+      )
+      break
     case ConstToolType.LEGEND:
       data = legendColor
       break
@@ -22,7 +37,38 @@ function getData(type) {
       data = legendColor
       break
   }
-  return { data, buttons }
+  return { data, buttons, customView }
+}
+
+function getPickerData(selectKey) {
+  let options = [
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.TOP_LEFT,
+      value: 'topLeft',
+    },
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.TOP_RIGHT,
+      value: 'topRight',
+    },
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.LEFT_BOTTOM,
+      value: 'leftBottom',
+    },
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.RIGHT_BOTTOM,
+      value: 'rightBottom',
+    },
+  ]
+  let selectedItem = options.filter(item => item.value === selectKey)[0]
+  return [
+    {
+      key: getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_POSITION,
+      value: getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_POSITION,
+      initItem: selectedItem,
+      children: options,
+      selectedItem,
+    },
+  ]
 }
 
 function getMenuData(type) {
@@ -104,6 +150,48 @@ function getMenuData(type) {
       },
       selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_HEIGHT,
       selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_HEIGHT,
+    },
+    {
+      key: getLanguage(_params.language).Map_Main_Menu.LEGEND_FONT,
+      action: () => {
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setState({
+            isTouchProgress: true,
+            showMenuDialog: false,
+            selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_FONT,
+            selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_FONT,
+            buttons: getButtons(type),
+          })
+      },
+      selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_FONT,
+      selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_FONT,
+    },
+    {
+      key: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+      action: () => {
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setState({
+            isTouchProgress: true,
+            showMenuDialog: false,
+            selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+            selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+            buttons: getButtons(type),
+          })
+      },
+      selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+      selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+    },
+    {
+      key: getLanguage(_params.language).Map_Main_Menu.LEGEND_POSITION,
+      action: () => {
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setVisible(true, ConstToolType.LEGEND_POSITION, {
+            isFullScreen: false,
+            height: ConstToolType.TOOLBAR_HEIGHT[1],
+          })
+      },
+      selectName: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
+      selectKey: getLanguage(_params.language).Map_Main_Menu.LEGEND_ICON,
     },
   ]
   return data
