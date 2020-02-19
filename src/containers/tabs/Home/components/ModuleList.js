@@ -79,23 +79,24 @@ class ModuleList extends Component {
 
   _downloadModuleData = async (ref, downloadData) => {
     ref.setDownloading(true)
-    let keyword
-    if (downloadData.fileName.indexOf('_示范数据') !== -1) {
-      keyword = downloadData.fileName
-    } else {
-      keyword = downloadData.fileName + '_示范数据'
-    }
-    let dataUrl = await FetchUtils.getFindUserDataUrl(
-      'xiezhiyan123',
-      keyword,
-      '.zip',
-    )
+    // let keyword
+    // if (downloadData.fileName.indexOf('_示范数据') !== -1) {
+    //   keyword = downloadData.fileName
+    // } else {
+    //   keyword = downloadData.fileName + '_示范数据'
+    // }
+    // let dataUrl = await FetchUtils.getFindUserDataUrl(
+    //   'xiezhiyan123',
+    //   keyword,
+    //   '.zip',
+    // )
     let cachePath = downloadData.cachePath
     let fileDirPath = cachePath + downloadData.fileName
     try {
       let fileCachePath = fileDirPath + '.zip'
       let downloadOptions = {
-        fromUrl: dataUrl,
+        // fromUrl: dataUrl,
+        fromUrl: downloadData.url,
         toFile: fileCachePath,
         background: true,
         fileName: downloadData.fileName,
@@ -153,32 +154,52 @@ class ModuleList extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  getDownloadData = (language, item) => {
-    let fileName
+  getDownloadData = (language, item, index) => {
+    let example = this.props.mapModules[index].example
     let moduleKey = item.key
-    /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-    if (moduleKey === constants.MAP_EDIT) {
-      fileName = language === 'CN' ? '湖南' : 'LosAngeles'
-    } else if (moduleKey === constants.MAP_THEME) {
-      fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
-    } else if (moduleKey === constants.MAP_COLLECTION) {
-      fileName = '地理国情普查_示范数据'
-    } else if (moduleKey === constants.MAP_ANALYST) {
-      // fileName = 'Xiamen_CN'
-      fileName = '数据分析数据'
-    } else if (moduleKey === constants.MAP_3D) {
-      if (Platform.OS === 'android') {
-        fileName = 'OlympicGreen_android'
-      } else if (Platform.OS === 'ios') {
-        fileName = 'OlympicGreen_ios'
+    let getNameFromConfig = function(example) {
+      if (example) {
+        if (example.name) {
+          return example.name
+        }
+        if (language === 'EN' && example.name_en) {
+          return example.name_en
+        } else if (language === 'CN' && example.name_cn) {
+          return example.name_cn
+        }
+        if (Platform.OS === 'ios' && example.name_ios) {
+          return example.name_ios
+        } else if (Platform.OS === 'android' && example.name_android) {
+          return example.name_android
+        }
       }
-    } else if (moduleKey === constants.MAP_PLOTTING) {
-      fileName = '福建_示范数据'
-    } else if (moduleKey === constants.MAP_NAVIGATION) {
-      fileName = 'Navigation_示范数据'
+      return ''
     }
-    // else if(moduleKey === constants.MAP_AR) {
-    //   fileName = 'AIData'
+    let fileName = getNameFromConfig(example)
+
+    // 默认数据
+    // if (!fileName) {
+    //   /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+    //   if (moduleKey === constants.MAP_EDIT) {
+    //     fileName = language === 'CN' ? '湖南' : 'LosAngeles'
+    //   } else if (moduleKey === constants.MAP_THEME) {
+    //     fileName = language === 'CN' ? '湖北' : 'PrecipitationOfUSA'
+    //   } else if (moduleKey === constants.MAP_COLLECTION) {
+    //     fileName = '地理国情普查_示范数据'
+    //   } else if (moduleKey === constants.MAP_ANALYST) {
+    //     // fileName = 'Xiamen_CN'
+    //     fileName = '数据分析数据'
+    //   } else if (moduleKey === constants.MAP_3D) {
+    //     if (Platform.OS === 'android') {
+    //       fileName = 'OlympicGreen_android'
+    //     } else if (Platform.OS === 'ios') {
+    //       fileName = 'OlympicGreen_ios'
+    //     }
+    //   } else if (moduleKey === constants.MAP_PLOTTING) {
+    //     fileName = '福建_示范数据'
+    //   } else if (moduleKey === constants.MAP_NAVIGATION) {
+    //     fileName = 'Navigation_示范数据'
+    //   }
     // }
 
     let tmpCurrentUser = this.props.currentUser
@@ -193,6 +214,7 @@ class ModuleList extends Component {
       copyFilePath: toPath,
       itemData: item,
       tmpCurrentUser: tmpCurrentUser,
+      ...example,
     }
   }
 
@@ -244,7 +266,23 @@ class ModuleList extends Component {
         return
       }
 
-      let downloadData = this.getDownloadData(language, item)
+      let downloadData = this.getDownloadData(language, item, index)
+
+      let keyword
+      if (downloadData.fileName.indexOf('_示范数据') !== -1) {
+        keyword = downloadData.fileName
+      } else {
+        keyword = downloadData.fileName + '_示范数据'
+      }
+      if (!downloadData.url) {
+        let downloadInfo = await FetchUtils.getDataInfoByUrl(
+          downloadData,
+          keyword,
+          '.zip',
+        )
+        downloadData.size = downloadInfo.size
+        downloadData.url = downloadInfo.url
+      }
       let currentDownloadData = this.getCurrentDownloadData(downloadData)
       // let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
 
@@ -330,7 +368,7 @@ class ModuleList extends Component {
   }
 
   _renderItem = ({ item, index }) => {
-    let downloadData = this.getDownloadData(global.language, item)
+    let downloadData = this.getDownloadData(global.language, item, index)
     return (
       <ModuleItem
         item={item}
