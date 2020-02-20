@@ -55,8 +55,7 @@ export default class Setting extends Component {
       if (bRes) {
         await RNFS.unlink(fileCachePath)
       }
-      let dataUrl = undefined
-      dataUrl = await FetchUtils.getFindUserDataUrl(
+      let dataUrl = await FetchUtils.getFindUserDataUrl(
         'xiezhiyan123',
         'Open_License',
         '.geojson',
