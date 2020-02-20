@@ -29,7 +29,13 @@ export default function(type, title, customAction) {
     key: title,
     title: title,
     action: () => {
-      customAction ? customAction(type) : action(type)
+      if (customAction === false) {
+        return
+      } else if (typeof customAction === 'function') {
+        customAction(type)
+      } else {
+        action(type)
+      }
     },
     size: 'large',
     image: require('../../../../../../assets/function/icon_function_theme_create.png'),
