@@ -119,7 +119,8 @@ export default class Setting extends Component {
             getLanguage(global.language).Profile.SETTING_LICENSE,
           )
           : null}
-        {this.props.appConfig.about.isShow &&
+        {this.props.appConfig.about &&
+          this.props.appConfig.about.isShow &&
           this.renderItemView(
             this.onAbout,
             getLanguage(global.language).Profile.SETTING_ABOUT +

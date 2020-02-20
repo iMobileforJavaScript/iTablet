@@ -347,15 +347,6 @@ export default class FunctionToolbar extends React.Component {
             ),
           )
           break
-        case 'MAP_SHARE_MAP3D':
-          data.push(
-            shareModule(
-              item.type,
-              getLanguage(this.props.language).Map_Main_Menu.SHARE,
-              !isLicenseNotValid,
-            ),
-          )
-          break
         case 'arAIAssistant':
           data.push(
             aiModule(
