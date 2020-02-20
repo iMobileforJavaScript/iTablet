@@ -13,6 +13,9 @@ async function action(type) {
       column: mapLegend[GLOBAL.Type].column,
       widthPercent: mapLegend[GLOBAL.Type].widthPercent,
       heightPercent: mapLegend[GLOBAL.Type].heightPercent,
+      fontPercent: mapLegend[GLOBAL.Type].fontPercent,
+      imagePercent: mapLegend[GLOBAL.Type].imagePercent,
+      legendPosition: mapLegend[GLOBAL.Type].legendPosition,
     }
   } else {
     mapLegend[GLOBAL.Type] = {
@@ -21,6 +24,9 @@ async function action(type) {
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     }
   }
   _params.setMapLegend(mapLegend)

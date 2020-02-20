@@ -681,6 +681,32 @@ export default class TouchProgress extends Component {
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
           '     ' +
           parseInt(height)
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_ICON
+      ) {
+        let imagePercent = this.props.mapLegend[GLOBAL.Type].imagePercent
+        this._panBtnStyles.style.left =
+          (imagePercent * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (imagePercent * progressWidth) / 100
+        this._BackLine.style.width = (imagePercent * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_ICON +
+          '     ' +
+          parseInt(imagePercent)
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_FONT
+      ) {
+        let fontPercent = this.props.mapLegend[GLOBAL.Type].fontPercent
+        this._panBtnStyles.style.left =
+          (fontPercent * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (fontPercent * progressWidth) / 100
+        this._BackLine.style.width = (fontPercent * progressWidth) / 100
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_FONT +
+          '     ' +
+          parseInt(fontPercent)
       }
     }
 
@@ -785,7 +811,11 @@ export default class TouchProgress extends Component {
       this.props.selectName ===
         getLanguage(global.language).Map_Main_Menu.LEGEND_WIDTH ||
       this.props.selectName ===
-        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT
+        getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_ICON ||
+      this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_FONT
     ) {
       newValue = value * 100
     } else if (
@@ -988,6 +1018,38 @@ export default class TouchProgress extends Component {
       this._setMapLegend(legendSettings)
       tips =
         getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+        '     ' +
+        parseInt(value)
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_ICON
+    ) {
+      let legendSettings = this.props.mapLegend
+      if (value > 100) {
+        value = 100
+      } else if (value <= 10) {
+        value = 10
+      }
+      legendSettings[GLOBAL.Type].imagePercent = value
+      this._setMapLegend(legendSettings)
+      tips =
+        getLanguage(global.language).Map_Main_Menu.LEGEND_ICON +
+        '     ' +
+        parseInt(value)
+    } else if (
+      this.props.selectName ===
+      getLanguage(global.language).Map_Main_Menu.LEGEND_FONT
+    ) {
+      let legendSettings = this.props.mapLegend
+      if (value > 100) {
+        value = 100
+      } else if (value <= 10) {
+        value = 10
+      }
+      legendSettings[GLOBAL.Type].fontPercent = value
+      this._setMapLegend(legendSettings)
+      tips =
+        getLanguage(global.language).Map_Main_Menu.LEGEND_FONT +
         '     ' +
         parseInt(value)
     } else if (
@@ -1716,6 +1778,32 @@ export default class TouchProgress extends Component {
         }
         tips =
           getLanguage(global.language).Map_Main_Menu.LEGEND_HEIGHT +
+          '     ' +
+          parseInt(value)
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_ICON
+      ) {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_ICON +
+          '     ' +
+          parseInt(value)
+      } else if (
+        this.props.selectName ===
+        getLanguage(global.language).Map_Main_Menu.LEGEND_FONT
+      ) {
+        if (value > 100) {
+          value = 100
+        } else if (value <= 10) {
+          value = 10
+        }
+        tips =
+          getLanguage(global.language).Map_Main_Menu.LEGEND_FONT +
           '     ' +
           parseInt(value)
       }

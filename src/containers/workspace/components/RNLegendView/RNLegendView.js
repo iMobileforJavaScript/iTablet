@@ -34,13 +34,14 @@ export default class RNLegendView extends React.Component {
       title: getLanguage(this.props.language).Map_Settings.THEME_LEGEND,
       width: 600,
       height: 420,
-      currentPosition: 'topLeft',
       topLeft: { left: 0, top: HEADER_HEIGHT },
       topRight: { right: 0, top: HEADER_HEIGHT },
       leftBottom: { left: 0, bottom: FOOTER_HEIGHT },
       rightBottom: { right: 0, bottom: FOOTER_HEIGHT },
       legendSource: '',
       flatListKey: 0,
+      imageSize: scaleSize(120),
+      fontSize: setSpText(40),
     }
     this.startTime = 0
     this.endTime = 0
@@ -161,6 +162,14 @@ export default class RNLegendView extends React.Component {
    * @returns {*}
    */
   renderLegendItem = item => {
+    let curImageSize =
+      (this.state.imageSize *
+        this.props.legendSettings[GLOBAL.Type].imagePercent) /
+      100
+    let curFontSize =
+      (this.state.fontSize *
+        this.props.legendSettings[GLOBAL.Type].fontPercent) /
+      100
     return (
       <TouchableOpacity
         style={{
@@ -176,8 +185,8 @@ export default class RNLegendView extends React.Component {
           <Image
             source={{ uri: `data:image/png;base64,${item.item.image}` }}
             style={{
-              width: scaleSize(65),
-              height: scaleSize(30),
+              width: curImageSize,
+              height: curImageSize / 2,
               resizeMode: 'contain',
             }}
           />
@@ -185,16 +194,16 @@ export default class RNLegendView extends React.Component {
         {item.item.color && (
           <View
             style={{
-              width: scaleSize(65),
-              height: scaleSize(30),
+              width: curImageSize,
+              height: curImageSize / 2,
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
             <View
               style={{
-                width: scaleSize(48),
-                height: scaleSize(32),
+                width: (curImageSize * 3) / 4,
+                height: (curImageSize * 9) / 16,
                 backgroundColor: item.item.color,
               }}
             />
@@ -205,10 +214,10 @@ export default class RNLegendView extends React.Component {
           ellipsizeMode={'tail'}
           style={{
             flex: 1,
-            fontSize: setSpText(20),
+            fontSize: curFontSize,
             backgroundColor: 'transparent',
             fontWeight: 'bold',
-            height: scaleSize(24),
+            height: curFontSize + scaleSize(4),
           }}
         >
           {item.item.title.replace(/\s<=?\sX\s<\s/, '~')}
@@ -218,56 +227,56 @@ export default class RNLegendView extends React.Component {
   }
 
   render() {
-    if(this.props.legendSettings[GLOBAL.Type]){
+    if (this.props.legendSettings[GLOBAL.Type]) {
       let frontStyle =
-      this.props.language === 'CN'
-        ? {
-          position: 'absolute',
-          top: 0,
-          left: '46%',
-          letterSpacing: scaleSize(2),
-          fontSize: setSpText(18),
-        }
-        : {
-          position: 'absolute',
-          top: 0,
-          left: '35%',
-          letterSpacing: scaleSize(2),
-          fontSize: setSpText(18),
-        }
+        this.props.language === 'CN'
+          ? {
+            position: 'absolute',
+            top: 0,
+            left: '46%',
+            letterSpacing: scaleSize(2),
+            fontSize: setSpText(18),
+          }
+          : {
+            position: 'absolute',
+            top: 0,
+            left: '35%',
+            letterSpacing: scaleSize(2),
+            fontSize: setSpText(18),
+          }
       let backStyle =
-      this.props.language === 'CN'
-        ? {
-          left: '46%',
-          position: 'absolute',
-          top: 0,
-          fontSize: setSpText(18),
-          letterSpacing: scaleSize(2),
-          color: color.white,
-          fontWeight: '900',
-        }
-        : {
-          left: '35%',
-          position: 'absolute',
-          top: 0,
-          fontSize: setSpText(18),
-          letterSpacing: scaleSize(1.1),
-          color: color.white,
-          fontWeight: '900',
-        }
+        this.props.language === 'CN'
+          ? {
+            left: '46%',
+            position: 'absolute',
+            top: 0,
+            fontSize: setSpText(18),
+            letterSpacing: scaleSize(2),
+            color: color.white,
+            fontWeight: '900',
+          }
+          : {
+            left: '35%',
+            position: 'absolute',
+            top: 0,
+            fontSize: setSpText(18),
+            letterSpacing: scaleSize(1.1),
+            color: color.white,
+            fontWeight: '900',
+          }
       return (
         <View
           style={{
             position: 'absolute',
             width: scaleSize(
               (this.state.width *
-              this.props.legendSettings[GLOBAL.Type].widthPercent) /
-              100,
+                this.props.legendSettings[GLOBAL.Type].widthPercent) /
+                100,
             ),
             height: scaleSize(
               (this.state.height *
-              this.props.legendSettings[GLOBAL.Type].heightPercent) /
-              100,
+                this.props.legendSettings[GLOBAL.Type].heightPercent) /
+                100,
             ),
             borderColor: 'black',
             borderWidth: scaleSize(3),
@@ -275,7 +284,9 @@ export default class RNLegendView extends React.Component {
             backgroundColor: this.props.legendSettings[GLOBAL.Type]
               .backgroundColor,
             zIndex: 1,
-            ...this.state[this.state.currentPosition],
+            ...this.state[
+              this.props.legendSettings[GLOBAL.Type].legendPosition
+            ],
           }}
         >
           <View
