@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   Platform,
+  NetInfo,
   // NativeModules,
   // PermissionsAndroid,
 } from 'react-native'
@@ -63,18 +64,39 @@ class ModuleList extends Component {
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
-    setTimeout(() => {
-      this.props.showDialog && this.props.showDialog(true)
-    }, 1500)
-    this.props.getModuleItem &&
-      this.props.getModuleItem(
-        ref,
-        this.sureDown,
-        this.cancelDown,
-        downloadData,
-        currentUserName,
-        ref.getDialogCheck(),
-      )
+    (async function() {
+      // TODO 获取
+      let keyword
+      if (downloadData.fileName.indexOf('_示范数据') !== -1) {
+        keyword = downloadData.fileName
+      } else {
+        keyword = downloadData.fileName + '_示范数据'
+      }
+      let isConnected = await NetInfo.isConnected.fetch() // 检测网络，有网的时候再去检查数据
+      if (!isConnected) return
+      if (!downloadData.url) {
+        let downloadInfo = await FetchUtils.getDataInfoByUrl(
+          downloadData,
+          keyword,
+          '.zip',
+        )
+        downloadData.size = downloadInfo.size
+        downloadData.url = downloadInfo.url
+      }
+
+      this.props.getModuleItem &&
+        this.props.getModuleItem(
+          ref,
+          this.sureDown,
+          this.cancelDown,
+          downloadData,
+          currentUserName,
+          ref.getDialogCheck(),
+        )
+      setTimeout(() => {
+        this.props.showDialog && this.props.showDialog(true)
+      }, 1500)
+    }.bind(this)())
   }
 
   _downloadModuleData = async (ref, downloadData) => {
@@ -268,21 +290,22 @@ class ModuleList extends Component {
 
       let downloadData = this.getDownloadData(language, item, index)
 
-      let keyword
-      if (downloadData.fileName.indexOf('_示范数据') !== -1) {
-        keyword = downloadData.fileName
-      } else {
-        keyword = downloadData.fileName + '_示范数据'
-      }
-      if (!downloadData.url) {
-        let downloadInfo = await FetchUtils.getDataInfoByUrl(
-          downloadData,
-          keyword,
-          '.zip',
-        )
-        downloadData.size = downloadInfo.size
-        downloadData.url = downloadInfo.url
-      }
+      // let keyword
+      // if (downloadData.fileName.indexOf('_示范数据') !== -1) {
+      //   keyword = downloadData.fileName
+      // } else {
+      //   keyword = downloadData.fileName + '_示范数据'
+      // }
+      // let isConnected = await NetInfo.isConnected.fetch() // 检测网络，有网的时候再去检查数据
+      // if (isConnected && !downloadData.url) {
+      //   let downloadInfo = await FetchUtils.getDataInfoByUrl(
+      //     downloadData,
+      //     keyword,
+      //     '.zip',
+      //   )
+      //   downloadData.size = downloadInfo.size
+      //   downloadData.url = downloadInfo.url
+      // }
       let currentDownloadData = this.getCurrentDownloadData(downloadData)
       // let toPath = this.homePath + ConstPath.CachePath + downloadData.fileName
 
