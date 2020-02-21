@@ -23,6 +23,7 @@ const mapStateToProps = state => ({
   language: state.setting.toJS().language,
   user: state.user.toJS(),
   chat: state.chat.toJS(),
+  appConfig: state.appConfig.toJS(),
 })
 
 const mapDispatchToProps = {

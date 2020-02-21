@@ -1,7 +1,6 @@
 import { ConstToolType } from '../../../../../constants'
 import { SMCollectorType } from 'imobile_for_reactnative'
 import ToolbarModule from './ToolbarModule'
-import { Platform } from 'react-native'
 
 // TODO 分拆到各个模块下
 function getToolbarHeight(type, currentHeight) {
@@ -221,6 +220,9 @@ function getToolbarHeight(type, currentHeight) {
         height = 0
       }
       break
+    case ConstToolType.LEGEND_POSITION:
+      height = ConstToolType.TOOLBAR_HEIGHT[1]
+      break
     case ConstToolType.LINECOLOR_SET:
     case ConstToolType.POINTCOLOR_SET:
       if (orientation === 'PORTRAIT') {
@@ -415,12 +417,7 @@ function getToolbarHeight(type, currentHeight) {
       column = 3
       break
     case ConstToolType.MAP_AR_AIASSISTANT:
-      if (Platform.OS === 'ios') {
-        height = ConstToolType.HEIGHT[0]
-      } else {
-        height = ConstToolType.HEIGHT[2]
-      }
-      // height = ConstToolType.HEIGHT[2]
+      height = ConstToolType.HEIGHT[2]
       column = 4
       break
     default:

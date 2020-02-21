@@ -78,7 +78,7 @@ export default class MapSetting extends Component {
       newData = newData.concat(getMapARSettings())
       //ios先暂时屏蔽POI设置和检测类型
       if (Platform.OS === 'ios') {
-        newData.splice(4, 2)
+        newData.splice(4, 1)
       }
     }
     // if (GLOBAL.Type === constants.MAP_NAVIGATION) {

@@ -307,52 +307,11 @@ export default class Home extends Component {
     let storage = null
     let fileName = null
     if (this.state.downloadData !== null) {
-      switch (this.state.downloadData.fileName) {
-        case '福建_示范数据':
-          fileName = '福建'
-          storage = '  3.23MB'
-          break
-        case '地理国情普查_示范数据':
-          fileName = '地理国情普查'
-          storage = '  4.70MB'
-          break
-        case '湖北':
-          fileName = '湖北'
-          storage = '  3.34MB'
-          break
-        case '湖南':
-          fileName = '湖南'
-          storage = '  5.28MB'
-          break
-        case 'OlympicGreen_android':
-          fileName = 'OlympicGreen'
-          storage = '  38.10MB'
-          break
-        case 'OlympicGreen_ios':
-          fileName = 'OlympicGreen'
-          storage = '  25.57MB'
-          break
-        case 'PrecipitationOfUSA':
-          fileName = 'PrecipitationOfUSA'
-          storage = '  28.93MB'
-          break
-        case 'LosAngeles':
-          fileName = 'LosAngeles'
-          storage = '  23.73MB'
-          break
-        // case 'Xiamen_CN':
-        //   fileName = 'Xiamen_CN'
-        //   storage = '  1.9MB'
-        //   break
-        case '数据分析数据':
-          fileName = '数据分析数据'
-          storage = '  5.3MB'
-          break
-        case 'Navigation_示范数据':
-          fileName = 'Navigation_示范数据'
-          storage = '  45.97MB'
-          break
-      }
+      fileName = this.state.downloadData.fileName
+      storage =
+        (this.state.downloadData.size === undefined
+          ? 0
+          : (this.state.downloadData.size / 1024 / 1024).toFixed(2)) + 'MB'
     }
     let Img = this.state.dialogCheck
       ? require('../../../assets/home/Frenchgrey/icon_check_selected.png')
@@ -366,10 +325,7 @@ export default class Home extends Component {
         <Text style={styles.promptTtile}>
           {getLanguage(this.props.language).Prompt.DOWNLOAD_SAMPLE_DATA}
         </Text>
-        <Text style={styles.depict}>
-          {fileName}
-          {storage}
-        </Text>
+        <Text style={styles.depict}>{fileName + '  ' + storage}</Text>
         <TouchableOpacity
           style={styles.checkView}
           onPress={() => {

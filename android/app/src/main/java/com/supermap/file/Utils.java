@@ -8,20 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Utils {
-    public static void copyAssetFileToSDcard(Context context, String originPath, String targetPath) {
+    public static void copyAssetFileToSDcard(Context context, String filePath, String fileName) {
         InputStream inputStream;
         try {
-            inputStream = context.getResources().getAssets().open(originPath);// assets文件夹下的文件
-            File file;
-            if (targetPath.lastIndexOf("/") > 0) {
-                file = new File(targetPath.substring(0, targetPath.lastIndexOf("/")));
-            } else {
-                file = new File(targetPath);
-            }
+            inputStream = context.getResources().getAssets().open(fileName);// assets文件夹下的文件
+            File file = new File(filePath);
             if (!file.exists()) {
                 file.mkdirs();
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(targetPath);// 保存到本地的文件夹下的文件
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath + "/" + fileName);// 保存到本地的文件夹下的文件
             byte[] buffer = new byte[1024];
             int count = 0;
             while ((count = inputStream.read(buffer)) > 0) {
