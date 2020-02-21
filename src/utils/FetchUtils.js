@@ -78,7 +78,7 @@ export default class FetchUtils {
   static getFindUserDataUrl = async (nickname, keyword, type) => {
     let url
     try {
-      let obj = await this.getDataInfoByUrl({ nickname }, keyword, type)
+      let obj = await FetchUtils.getDataInfoByUrl({ nickname }, keyword, type)
       url = obj && obj.url
     } catch (e) {
       Toast.show('网络错误')
