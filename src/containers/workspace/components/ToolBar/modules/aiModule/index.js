@@ -3,7 +3,6 @@ import AiActions from './AiActions'
 import ToolbarModule from '../ToolbarModule'
 import { ConstToolType } from '../../../../../../constants'
 import { getThemeAssets } from '../../../../../../assets'
-import { Platform } from 'react-native'
 
 export async function action(type) {
   const params = ToolbarModule.getParams()
@@ -12,9 +11,7 @@ export async function action(type) {
     containerType: 'table',
     isFullScreen: true,
     height:
-      params.device.orientation === 'LANDSCAPE' || Platform.OS === 'ios'
-        ? ConstToolType.HEIGHT[0]
-        : ConstToolType.HEIGHT[2],
+      params.device.orientation === 'LANDSCAPE' || ConstToolType.HEIGHT[2],
     column: params.device.orientation === 'LANDSCAPE' ? 5 : 4,
   })
   ToolbarModule.setData({
