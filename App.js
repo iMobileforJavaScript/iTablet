@@ -271,27 +271,11 @@ class AppRoot extends Component {
       SOnlineService.init()
       // SOnlineService.removeCookie()
       SIPortalService.init()
-      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
-      if (
-        this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
-        (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
-      ) {
-        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
-        if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
-          path = await FileTools.appendingHomeDirectory(userWsPath)
-        } else {
-          path = await FileTools.appendingHomeDirectory(wsPath)
-        }
-      } else {
-        path = await FileTools.appendingHomeDirectory(wsPath)
-      }
-      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
-      // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.initOrientation()
       await this.getImportState()
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
-      this.props.openWorkspace({server: path})
+      await this.openWorkspace()
     }).bind(this)()
 
     GLOBAL.clearMapData = () => {
@@ -310,6 +294,27 @@ class AppRoot extends Component {
 
     Platform.OS === 'android' &&
     BackHandler.addEventListener('hardwareBackPress', this.back)
+  }
+
+  openWorkspace = async () => {
+    let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
+      (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
+    ) {
+      let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
+      if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
+        path = await FileTools.appendingHomeDirectory(userWsPath)
+      } else {
+        path = await FileTools.appendingHomeDirectory(wsPath)
+      }
+    } else {
+      path = await FileTools.appendingHomeDirectory(wsPath)
+    }
+    // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
+    // path = await FileTools.appendingHomeDirectory(customerPath)
+
+    this.props.openWorkspace({server: path})
   }
 
   back = () => {
@@ -743,6 +748,7 @@ class AppRoot extends Component {
             this.props.language==='CN'?"许可申请中...":"Applying"
           )
           SMap.initTrailLicensePath()
+          this.openWorkspace()
           Toast.show(this.props.language==='CN'?"试用成功":'Successful trial')
           GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
         })
