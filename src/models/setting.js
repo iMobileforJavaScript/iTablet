@@ -221,6 +221,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_THEME]: {
       isShow: false,
@@ -228,6 +231,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_PLOTTING]: {
       isShow: false,
@@ -235,6 +241,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_NAVIGATION]: {
       isShow: false,
@@ -242,6 +251,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_ANALYST]: {
       isShow: false,
@@ -249,6 +261,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_COLLECTION]: {
       isShow: false,
@@ -256,6 +271,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
     [constants.MAP_AR]: {
       isShow: false,
@@ -263,6 +281,9 @@ const initialState = fromJS({
       column: 2,
       widthPercent: 80,
       heightPercent: 80,
+      fontPercent: 50,
+      imagePercent: 50,
+      legendPosition: 'topLeft',
     },
   },
   mapNavigation: {
@@ -360,6 +381,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_THEME]: {
             isShow: false,
@@ -367,6 +391,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_PLOTTING]: {
             isShow: false,
@@ -374,6 +401,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_NAVIGATION]: {
             isShow: false,
@@ -381,6 +411,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_ANALYST]: {
             isShow: false,
@@ -388,6 +421,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_COLLECTION]: {
             isShow: false,
@@ -395,6 +431,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
           [constants.MAP_AR]: {
             isShow: false,
@@ -402,6 +441,9 @@ export default handleActions(
             column: 2,
             widthPercent: 80,
             heightPercent: 80,
+            fontPercent: 50,
+            imagePercent: 50,
+            legendPosition: 'topLeft',
           },
         }
       }

@@ -55,8 +55,7 @@ export default class Setting extends Component {
       if (bRes) {
         await RNFS.unlink(fileCachePath)
       }
-      let dataUrl = undefined
-      dataUrl = await FetchUtils.getFindUserDataUrl(
+      let dataUrl = await FetchUtils.getFindUserDataUrl(
         'xiezhiyan123',
         'Open_License',
         '.geojson',
@@ -120,7 +119,8 @@ export default class Setting extends Component {
             getLanguage(global.language).Profile.SETTING_LICENSE,
           )
           : null}
-        {this.props.appConfig.about.isShow &&
+        {this.props.appConfig.about &&
+          this.props.appConfig.about.isShow &&
           this.renderItemView(
             this.onAbout,
             getLanguage(global.language).Profile.SETTING_ABOUT +

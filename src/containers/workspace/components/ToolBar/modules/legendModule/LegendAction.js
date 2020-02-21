@@ -84,11 +84,52 @@ function tableAction(item = {}) {
   _params.setMapLegend && _params.setMapLegend(legendData)
 }
 
+function cancelSelect() {
+  const _params = ToolbarModule.getParams()
+
+  let legendData = _params.mapLegend
+  let type = legendData[GLOBAL.Type].isShow
+    ? ConstToolType.LEGEND
+    : ConstToolType.LEGEND_NOT_VISIBLE
+  let isFullScreen, showMenuDialog, isTouchProgress
+  let { data, buttons } = LegendData.getData(type)
+  let setData = function() {
+    GLOBAL.ToolBar &&
+      GLOBAL.ToolBar.setState(
+        {
+          type,
+          data,
+          isFullScreen,
+          showMenuDialog,
+          isTouchProgress,
+          buttons,
+        },
+        () => {
+          GLOBAL.ToolBar.updateOverlayView()
+        },
+      )
+  }
+  isFullScreen = !GLOBAL.ToolBar.state.showMenuDialog
+  showMenuDialog = !GLOBAL.ToolBar.state.showMenuDialog
+  isTouchProgress = false
+  // 先滑出box，再显示Menu
+  GLOBAL.ToolBar && GLOBAL.ToolBar.showBox()
+  setTimeout(setData, Const.ANIMATED_DURATION_2)
+}
+function changePosition(params) {
+  const _params = ToolbarModule.getParams()
+  let legendData = { ..._params.mapLegend }
+  legendData[GLOBAL.Type].legendPosition =
+    params[0].selectedItem && params[0].selectedItem.value
+  _params.setMapLegend(legendData)
+}
 export default {
   commit,
   close,
   menu,
   tableAction,
 
+  cancelSelect,
+  changePosition,
   changeLegendVisible,
 }

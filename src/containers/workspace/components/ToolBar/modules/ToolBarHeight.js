@@ -220,6 +220,9 @@ function getToolbarHeight(type, currentHeight) {
         height = 0
       }
       break
+    case ConstToolType.LEGEND_POSITION:
+      height = ConstToolType.TOOLBAR_HEIGHT[1]
+      break
     case ConstToolType.LINECOLOR_SET:
     case ConstToolType.POINTCOLOR_SET:
       if (orientation === 'PORTRAIT') {

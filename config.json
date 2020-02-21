@@ -12,6 +12,13 @@
   "mapModules": [
     {
       "key": "MAP_EDIT",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name_en": "LosAngeles",
+        "name_cn": "湖南",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "addModule", "type": "MAP_ADD"},
@@ -23,6 +30,13 @@
     },
     {
       "key": "MAP_3D",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name_ios": "OlympicGreen_ios",
+        "name_android": "OlympicGreen_android",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_3D_START"},
         {"key": "fly3DModule", "type": "MAP3D_TOOL_FLYLIST"},
@@ -43,6 +57,12 @@
     },
     {
       "key": "MAP_NAVIGATION",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name": "Navigation_示范数据",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "addModule", "type": "MAP_NAVIGATION_ADD_UDB"},
@@ -54,6 +74,13 @@
     },
     {
       "key": "MAP_THEME",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name_en": "PrecipitationOfUSA",
+        "name_cn": "湖北",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "themeModule", "type": "MAP_THEME"},
@@ -66,6 +93,12 @@
     },
     {
       "key": "MAP_COLLECTION",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name": "地理国情普查_示范数据",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "addModule", "type": "MAP_ADD"},
@@ -78,6 +111,12 @@
     },
     {
       "key": "MAP_PLOTTING",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name": "福建_示范数据",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "addModule", "type": "MAP_ADD"},
@@ -91,6 +130,12 @@
     },
     {
       "key": "MAP_ANALYST",
+      "example": {
+        "checkUrl": "https://www.supermapol.com/web/datas.json?currentPage=1&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&keywords=",
+        "name": "数据分析数据",
+        "nickname": "xiezhiyan123",
+        "type": "zip"
+      },
       "functionModules": [
         {"key": "startModule", "type": "MAP_START"},
         {"key": "addModule", "type": "MAP_ADD"},

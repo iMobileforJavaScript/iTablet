@@ -38,27 +38,48 @@ export default class FetchUtils {
       return {}
     }
   }
+
+  /**
+   * 获取用户数据的下载详情
+   * @param downloadData   查询数据结果
+   * @param keyword        获取数据结果的关键字
+   * @param type
+   * @returns {Promise.<{}>}
+   */
+  static getDataInfoByUrl = async (downloadData, keyword, type) => {
+    let dataInfo = {}
+    try {
+      let time = new Date().getTime()
+      let uri = downloadData.checkUrl // 查询数据结果url
+        ? downloadData.checkUrl + keyword
+        : `https://www.supermapol.com/web/datas.json?currentPage=1&keywords=["${keyword}"]&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
+      let objFindUserZipData = await FetchUtils.getObjJson(uri)
+      let arrContent = objFindUserZipData.content
+      for (let i = 0; i < arrContent.length; i++) {
+        let fileName = keyword + type
+        if (
+          downloadData.nickname === arrContent[i].nickname &&
+          fileName === arrContent[i].fileName
+        ) {
+          dataInfo = arrContent[i]
+          dataInfo.url =
+            downloadData.downloadUrl ||
+            `https://www.supermapol.com/web/datas/${dataInfo.id}/download`
+          break
+        }
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    }
+    return dataInfo
+  }
+
   /** 获取用户数据的下载url*/
   static getFindUserDataUrl = async (nickname, keyword, type) => {
     let url
     try {
-      let time = new Date().getTime()
-      let uri = `https://www.supermapol.com/web/datas.json?currentPage=1&keywords=["${keyword}"]&filterFields=%5B%22FILENAME%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
-      let objFindUserZipData = await FetchUtils.getObjJson(uri)
-      let arrContent = objFindUserZipData.content
-      let findDataId
-      for (let i = 0; i < arrContent.length; i++) {
-        let objContent = arrContent[i]
-        let fileName = keyword + type
-        if (
-          nickname === objContent.nickname &&
-          fileName === objContent.fileName
-        ) {
-          findDataId = objContent.id
-          break
-        }
-      }
-      url = `https://www.supermapol.com/web/datas/${findDataId}/download`
+      let obj = await this.getDataInfoByUrl({ nickname }, keyword, type)
+      url = obj && obj.url
     } catch (e) {
       Toast.show('网络错误')
     }

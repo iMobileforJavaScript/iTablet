@@ -30,7 +30,13 @@ export default function(type, title, customAction) {
     key: title,
     title: title,
     action: () => {
-      customAction ? customAction(type) : action(type)
+      if (customAction === false) {
+        return
+      } else if (typeof customAction === 'function') {
+        customAction(type)
+      } else {
+        action(type)
+      }
     },
     size: 'large',
     image: getThemeAssets().functionBar.rightbar_analysis,
