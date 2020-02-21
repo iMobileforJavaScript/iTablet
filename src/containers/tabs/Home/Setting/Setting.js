@@ -95,6 +95,11 @@ export default class Setting extends Component {
     return <RenderSettingItem label={label} />
   }
 
+  //定位设置
+  onLocation = () => {
+    NavigationService.navigate('LocationSetting')
+  }
+
   //关于
   onAbout = () => {
     NavigationService.navigate('AboutITablet')
@@ -120,6 +125,10 @@ export default class Setting extends Component {
             getLanguage(global.language).Profile.SETTING_LICENSE,
           )
           : null}
+        {this.renderItemView(
+          this.onLocation,
+          getLanguage(global.language).Profile.SETTING_LOCATION_DEVICE,
+        )}
         {this.props.appConfig.about.isShow &&
           this.renderItemView(
             this.onAbout,
