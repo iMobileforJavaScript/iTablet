@@ -1,5 +1,5 @@
 global.language = 'CN'
-global.APP_VERSION = 'V3.0.6_20191230'
+global.APP_VERSION = 'V3.0.9_20200221'
 function getLanguage(param) {
   let language = {}
   switch (param) {

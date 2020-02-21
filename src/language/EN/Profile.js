@@ -172,6 +172,8 @@ const Profile = {
   SETTING_CHECK_VERSION: 'Check Version',
   SETTING_LANGUAGE: 'Language',
   SETTING_LANGUAGE_AUTO: 'Auto',
+  SETTING_LOCATION_DEVICE: 'Location Device',
+  SETTING_LOCATION_LOCAL: 'This device',
   //许可
   LICENSE_CURRENT: 'License Current',
   LICENSE_TYPE: 'License Type',
