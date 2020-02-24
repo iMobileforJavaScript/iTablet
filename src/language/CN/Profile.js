@@ -174,6 +174,8 @@ const Profile = {
   SETTING_CHECK_VERSION: '检查版本',
   SETTING_LANGUAGE: '语言',
   SETTING_LANGUAGE_AUTO: '跟随系统',
+  SETTING_LOCATION_DEVICE: '定位设备',
+  SETTING_LOCATION_LOCAL: '此设备',
 
   //许可
   LICENSE_CURRENT: '当前许可',

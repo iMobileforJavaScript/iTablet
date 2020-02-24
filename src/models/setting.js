@@ -17,6 +17,7 @@ export const SETTING_DATA = 'SETTING_DATA'
 export const MAP_SETTING = 'MAP_SETTING'
 export const SETTING_LANGUAGE = 'SETTING_LANGUAGE'
 export const SETTING_LANGUAGE_AUTO = 'SETTING_LANGUAGE_AUTO'
+export const SETTING_DEVICE = 'SETTING_DEVICE'
 export const MAP_LEGEND = 'MAP_LEGEND'
 export const MAP_SCALEVIEW = 'MAP_SCALEVIEW'
 export const MAP_NAVIGATION = 'MAP_NAVIGATION'
@@ -103,6 +104,12 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
     global.language = params
   }
   cb && cb()
+}
+export const setDevice = (params = {}) => async dispatch => {
+  await dispatch({
+    type: SETTING_DEVICE,
+    payload: params || false,
+  })
 }
 export const setMapLegend = (params = {}) => async dispatch => {
   await dispatch({
@@ -214,6 +221,7 @@ const initialState = fromJS({
   mapSetting: [],
   language: 'CN',
   autoLanguage: true,
+  peripheralDevice: 'local',
   mapLegend: {
     [constants.MAP_EDIT]: {
       isShow: false,
@@ -311,6 +319,9 @@ export default handleActions(
       return state
         .setIn(['language'], fromJS(payload))
         .setIn(['autoLanguage'], fromJS(true))
+    },
+    [`${SETTING_DEVICE}`]: (state, { payload }) => {
+      return state.setIn(['peripheralDevice'], fromJS(payload))
     },
     [`${BUFFER_SETTING_SET}`]: (state, { payload }) => {
       return state.setIn(['buffer'], fromJS(payload))
