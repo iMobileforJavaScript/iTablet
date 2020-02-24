@@ -348,10 +348,11 @@ class AppRoot extends Component {
     let status = await SMap.getEnvironmentStatus()
     if (!status.isLicenseValid) {
       GLOBAL.LicenseValidDialog.setDialogVisible(true)
-    }else if(serialNumber === '' && !status.isTrailLicense)
-    {
-      GLOBAL.isNotItableLicenseDialog.setDialogVisible(true)
     }
+    // else if(serialNumber === '' && !status.isTrailLicense)
+    // {
+    //   GLOBAL.isNotItableLicenseDialog.setDialogVisible(true)
+    // }
 
     if(serialNumber!==''&&!status.isTrailLicense){
       let licenseInfo = await SMap.getSerialNumberAndModules()
