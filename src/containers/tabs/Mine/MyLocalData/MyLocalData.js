@@ -78,9 +78,9 @@ export default class MyLocalData extends Component {
         getLanguage(this.props.language).Prompt.LOADING,
       )
       let sectionData = []
-      let cacheData = {}
-      let userData = {}
-      let onlineData = {}
+      let cacheData = []
+      let userData = []
+      let onlineData = []
       let homePath = global.homePath
       let cachePath = homePath + ConstPath.CachePath2
       let userPath =
@@ -229,22 +229,31 @@ export default class MyLocalData extends Component {
         getLanguage(this.props.language).Prompt.DELETING_DATA,
       )
 
+      let exportDir =
+        global.homePath +
+        ConstPath.UserPath +
+        this.state.userName +
+        '/' +
+        ConstPath.RelativeFilePath.ExternalData
+
       let delDirs = []
-      switch (this.itemInfo.item.fileType) {
-        case 'plotting':
-        case 'workspace':
-        case 'workspace3d':
-          delDirs = [this.itemInfo.item.directory]
-          break
-        default:
-          delDirs = [this.itemInfo.item.filePath]
-          if (
-            this.itemInfo.item.relatedFiles !== undefined &&
-            this.itemInfo.item.relatedFiles.length !== 0
-          ) {
-            delDirs = delDirs.concat(this.itemInfo.item.relatedFiles)
-          }
-          break
+      if (this.itemInfo.item.fileType === 'plotting') {
+        delDirs = [this.itemInfo.item.directory]
+      } else if (
+        //todo 关联所有二三维工作空间的文件，直接删除关联文件而不是文件夹
+        (this.itemInfo.item.fileType === 'workspace' ||
+          this.itemInfo.item.fileType === 'workspace3d') &&
+        this.itemInfo.item.directory !== exportDir
+      ) {
+        delDirs = [this.itemInfo.item.directory]
+      } else {
+        delDirs = [this.itemInfo.item.filePath]
+        if (
+          this.itemInfo.item.relatedFiles !== undefined &&
+          this.itemInfo.item.relatedFiles.length !== 0
+        ) {
+          delDirs = delDirs.concat(this.itemInfo.item.relatedFiles)
+        }
       }
 
       let result
