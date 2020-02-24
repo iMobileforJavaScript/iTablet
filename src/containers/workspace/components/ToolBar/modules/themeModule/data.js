@@ -4048,7 +4048,6 @@ const dotDensityMenuInfo = param => [
           selectName: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           selectKey: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           themeType: constants.THEME_DOT_DENSITY,
-          themeSymbolType: ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS,
         },
       )
     },
@@ -4141,7 +4140,6 @@ const graduatedSymbolMenuInfo = param => [
           selectName: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           selectKey: getLanguage(param).Map_Main_Menu.THEME_MARKER_SYMBOL,
           themeType: constants.THEME_GRADUATED_SYMBOL,
-          themeSymbolType: ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
         },
       )
     },

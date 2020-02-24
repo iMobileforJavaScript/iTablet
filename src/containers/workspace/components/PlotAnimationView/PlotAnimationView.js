@@ -39,7 +39,6 @@ export default class PlotAnimationView extends React.Component {
     layerName: string,
     geoId: number,
     device: Object,
-    themeSymbolType: '',
     saveAndContinue: () => {},
     savePlotAnimationNode: () => {},
     showToolbar: () => {},

@@ -27,7 +27,6 @@ export default class ToolbarContentView extends React.Component {
   props: {
     type: any,
     containerType: string,
-    themeSymbolType: string,
     device: Object,
     currentLayer: Object,
     data: Array,
@@ -68,7 +67,6 @@ export default class ToolbarContentView extends React.Component {
       // this.height !== 0 ||
       this.props.type !== nextProps.type ||
       this.props.containerType !== nextProps.containerType ||
-      this.props.themeSymbolType !== nextProps.themeSymbolType ||
       this.props.language !== nextProps.language ||
       JSON.stringify(this.props.device) !== JSON.stringify(nextProps.device) ||
       JSON.stringify(this.props.currentLayer) !==
@@ -230,7 +228,7 @@ export default class ToolbarContentView extends React.Component {
       <SymbolList
         device={this.props.device}
         layerData={this.props.currentLayer}
-        themeSymbolType={this.props.themeSymbolType}
+        type={this.props.type}
       />
     )
   }

@@ -4,7 +4,7 @@
 > * AlertDialog             (提示框)
 > * CollectionToolbar       (采集二级菜单面板)
 > * DrawerView              (侧边栏)
-> * FunctoonToolbar         (地图右侧菜单栏)
+> * FunctionToolbar         (地图右侧菜单栏)
 > * LeftToolbar
 > * LegendView
 > * Map3DToolbar            (三维场景二级菜单面板)

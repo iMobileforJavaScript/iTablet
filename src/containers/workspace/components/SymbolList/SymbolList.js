@@ -16,7 +16,7 @@ export default class SymbolList extends React.Component {
     setCurrentSymbol?: () => {},
     layerData: Object,
     device: Object,
-    themeSymbolType: '',
+    type: '',
   }
 
   constructor(props) {
@@ -36,7 +36,7 @@ export default class SymbolList extends React.Component {
         LayerName: this.props.layerData.name,
         SymbolID: data.id,
       }
-      switch (this.props.themeSymbolType) {
+      switch (this.props.type) {
         case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
           SThemeCartography.modifyDotDensityThemeMap(params)
           break
@@ -78,7 +78,7 @@ export default class SymbolList extends React.Component {
   renderLibrary = () => {
     let symbols = []
     if (GLOBAL.Type === constants.MAP_THEME) {
-      switch (this.props.themeSymbolType) {
+      switch (this.props.type) {
         case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
         case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
           SMap.findSymbolsByGroups('point', '').then(result => {
