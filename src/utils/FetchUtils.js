@@ -1,4 +1,5 @@
 import Toast from './Toast'
+import { getLanguage } from '../language'
 
 export default class FetchUtils {
   /*
@@ -7,22 +8,22 @@ export default class FetchUtils {
   static getObjJson = (url, timeout) => {
     try {
       if (!timeout) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
           fetch(url, {})
             .then(response => response.json())
             .then(result => {
               resolve(result)
             })
-            .catch(() => ({}))
+            .catch(error => reject(error))
         })
       } else {
-        const request = new Promise(resolve => {
+        const request = new Promise((resolve, reject) => {
           fetch(url)
             .then(response => response.json())
             .then(result => {
               resolve(result)
             })
-            .catch(() => ({}))
+            .catch(error => reject(error))
         })
         const timeoutRequest = new Promise((resolve, reject) => {
           setTimeout(reject, timeout, 'Request time out')
@@ -69,7 +70,7 @@ export default class FetchUtils {
         }
       }
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
     }
     return dataInfo
   }
@@ -78,9 +79,10 @@ export default class FetchUtils {
   static getFindUserDataUrl = async (nickname, keyword, type) => {
     let url
     try {
-      url = this.getDataInfoByUrl({ nickname }, keyword, type).url
+      let obj = await FetchUtils.getDataInfoByUrl({ nickname }, keyword, type)
+      url = obj && obj.url
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
     }
     return url
   }
@@ -93,7 +95,7 @@ export default class FetchUtils {
       let url = `http://www.supermapol.com/iserver/services/navigation/rest/navigationanalyst/China/pathanalystresults.json?pathAnalystParameters=[${params}]&key=fvV2osxwuZWlY0wJb8FEb2i5`
       data = await FetchUtils.getObjJson(url)
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
     }
     return data
   }
@@ -108,7 +110,7 @@ export default class FetchUtils {
         data = rel.formatedAddress
       }
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show(getLanguage(global.language).Prompt.NETWORK_ERROR)
     }
     return data
   }

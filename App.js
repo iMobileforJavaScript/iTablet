@@ -37,7 +37,7 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType} from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap, SIPortalService ,SpeechManager, SSpeechRecognizer} from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap, SIPortalService ,SpeechManager, SSpeechRecognizer, SLocation} from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 import UserType from './src/constants/UserType'
 import { getLanguage } from './src/language/index'
@@ -114,6 +114,7 @@ class AppRoot extends Component {
   static propTypes = {
     language: PropTypes.string,
     autoLanguage: PropTypes.bool,
+    peripheralDevice: PropTypes.string,
     nav: PropTypes.object,
     backActions: PropTypes.object,
     user: PropTypes.object,
@@ -254,6 +255,9 @@ class AppRoot extends Component {
     this.inspectEnvironment()
     this.login()
     this.reCircleLogin()
+    if(this.props.peripheralDevice !== 'local') {
+      SLocation.changeDevice(this.props.peripheralDevice)
+    }
     if(Platform.OS === 'android') {
     //  this.initSpeechManager()
       SSpeechRecognizer.init('5a45b65c')
@@ -267,27 +271,11 @@ class AppRoot extends Component {
       SOnlineService.init()
       // SOnlineService.removeCookie()
       SIPortalService.init()
-      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
-      if (
-        this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
-        (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
-      ) {
-        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
-        if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
-          path = await FileTools.appendingHomeDirectory(userWsPath)
-        } else {
-          path = await FileTools.appendingHomeDirectory(wsPath)
-        }
-      } else {
-        path = await FileTools.appendingHomeDirectory(wsPath)
-      }
-      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
-      // path = await FileTools.appendingHomeDirectory(customerPath)
       await this.initOrientation()
       await this.getImportState()
       await this.addImportExternalDataListener()
       await this.addGetShareResultListener()
-      this.props.openWorkspace({server: path})
+      await this.openWorkspace()
     }).bind(this)()
 
     GLOBAL.clearMapData = () => {
@@ -306,6 +294,27 @@ class AppRoot extends Component {
 
     Platform.OS === 'android' &&
     BackHandler.addEventListener('hardwareBackPress', this.back)
+  }
+
+  openWorkspace = async () => {
+    let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
+      (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
+    ) {
+      let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
+      if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
+        path = await FileTools.appendingHomeDirectory(userWsPath)
+      } else {
+        path = await FileTools.appendingHomeDirectory(wsPath)
+      }
+    } else {
+      path = await FileTools.appendingHomeDirectory(wsPath)
+    }
+    // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
+    // path = await FileTools.appendingHomeDirectory(customerPath)
+
+    this.props.openWorkspace({server: path})
   }
 
   back = () => {
@@ -740,6 +749,7 @@ class AppRoot extends Component {
             this.props.language==='CN'?"许可申请中...":"Applying"
           )
           SMap.initTrailLicensePath()
+          this.openWorkspace()
           Toast.show(this.props.language==='CN'?"试用成功":'Successful trial')
           GLOBAL.LicenseValidDialog.callback&&GLOBAL.LicenseValidDialog.callback()
         })
@@ -1010,6 +1020,7 @@ const mapStateToProps = state => {
   return {
     language: state.setting.toJS().language,
     autoLanguage: state.setting.toJS().autoLanguage,
+    peripheralDevice: state.setting.toJS().peripheralDevice,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

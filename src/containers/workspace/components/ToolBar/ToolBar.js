@@ -151,7 +151,6 @@ export default class ToolBar extends React.PureComponent {
       isTouchProgress: false,
       selectName: '',
       selectKey: '',
-      themeSymbolType: '',
       hasSoftMenuBottom: false,
     }
     this.height = 0
@@ -369,8 +368,6 @@ export default class ToolBar extends React.PureComponent {
                   : '',
             selectKey: params && params.selectKey ? params.selectKey : '',
             selectName: params && params.selectName ? params.selectName : '',
-            themeSymbolType:
-              params && params.themeSymbolType ? params.themeSymbolType : '',
           },
           () => {
             // if (!showViewFirst) {
@@ -965,7 +962,6 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.contentView = ref)}
         {...this.props}
         type={this.state.type}
-        themeSymbolType={this.state.themeSymbolType}
         containerType={this.state.containerType}
         data={this.state.data}
         existFullMap={this.existFullMap}

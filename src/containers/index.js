@@ -128,6 +128,7 @@ import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
 import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
+import LocationSetting from './locationSetting'
 
 export default function(appConfig) {
   return createStackNavigator(
@@ -639,6 +640,13 @@ export default function(appConfig) {
       },
       LanguageSetting: {
         screen: LanguageSetting,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      LocationSetting: {
+        screen: LocationSetting,
         navigationOptions: {
           header: null,
           gesturesEnabled: true,
