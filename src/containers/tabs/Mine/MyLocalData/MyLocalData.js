@@ -114,6 +114,7 @@ export default class MyLocalData extends Component {
           title: getLanguage(global.language).Profile.SAMPLEDATA,
           data: cacheData,
           isShowItem: true,
+          dataType: 'cache',
         })
       }
       if (userData.length > 0) {
@@ -121,11 +122,12 @@ export default class MyLocalData extends Component {
           title: getLanguage(global.language).Profile.ON_DEVICE,
           data: userData,
           isShowItem: true,
+          dataType: 'external',
         })
       }
       if (onlineData.length > 0) {
         sectionData.push({
-          title: '在线数据',
+          title: getLanguage(global.language).Profile.ON_DEVICE,
           data: onlineData,
           isShowItem: true,
           dataType: 'online',
@@ -162,7 +164,12 @@ export default class MyLocalData extends Component {
   }
 
   _renderSectionHeader = info => {
-    if (info.section.title === '在线数据') {
+    if (
+      info.section.dataType === 'online' &&
+      ((this.state.sectionData.length === 2 &&
+        this.state.sectionData[0].dataType === 'external') ||
+        this.state.sectionData.length === 3)
+    ) {
       return <View />
     }
     return (
@@ -174,21 +181,22 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    if (info.section.title === '在线数据') {
-      if (info.section.data && !info.section.data.length > 0) {
-        return <View />
+    if (info.section.dataType === 'online') {
+      if (info.section.isShowItem) {
+        return (
+          <OnlineDataItem
+            user={this.props.user}
+            item={info.item}
+            itemOnPress={this.onlineItemOnPress}
+            down={this.props.down}
+            updateDownList={this.props.updateDownList}
+            index={info.index}
+            removeItemOfDownList={this.props.removeItemOfDownList}
+          />
+        )
+      } else {
+        return null
       }
-      return (
-        <OnlineDataItem
-          user={this.props.user}
-          item={info.item}
-          itemOnPress={this.onlineItemOnPress}
-          down={this.props.down}
-          updateDownList={this.props.updateDownList}
-          index={info.index}
-          removeItemOfDownList={this.props.removeItemOfDownList}
-        />
-      )
     } else {
       return (
         <LocalDataItem
@@ -706,7 +714,7 @@ export default class MyLocalData extends Component {
       if (this.state.activityShow) return
       if (this.state.sectionData && this.state.sectionData.length === 0) return
       let section = this.state.sectionData[this.state.sectionData.length - 1]
-      if (section.title !== '在线数据') return
+      if (section.dataType !== 'online') return
       if (
         section.dataType &&
         section.dataType === 'online' &&
@@ -725,7 +733,6 @@ export default class MyLocalData extends Component {
       let sectionData = [...this.state.sectionData]
       let oldOnlineData = sectionData[sectionData.length - 1]
       let oldData = oldOnlineData.data
-      sectionData.splice(sectionData.length - 1, 1)
       this.currentPage = this.currentPage + 1
       let data = await getOnlineData(
         this.props.user.currentUser,
@@ -734,13 +741,7 @@ export default class MyLocalData extends Component {
       )
       if (data.length > 0) {
         let newData = oldData.concat(data)
-        let online = {
-          title: '在线数据',
-          data: newData,
-          isShowItem: true,
-          dataType: 'online',
-        }
-        sectionData.push(online)
+        oldOnlineData.data = newData
         this.setState({ sectionData: sectionData, activityShow: false })
       } else {
         this.currentPage = this.currentPage - 1
