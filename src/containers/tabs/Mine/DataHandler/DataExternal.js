@@ -97,6 +97,7 @@ async function getPLList(path, contentList) {
 /** 获取二维工作空间 */
 async function getWSList(path, contentList, uncheckedChildFileList) {
   let WS = []
+  let relatedFiles = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
     for (let i = 0; i < contentList.length; i++) {
@@ -117,6 +118,7 @@ async function getWSList(path, contentList, uncheckedChildFileList) {
           }
           let relatedDatasources = wsInfo.datasources
           _checkDatasources(
+            relatedFiles,
             relatedDatasources,
             path,
             contentList,
@@ -127,6 +129,7 @@ async function getWSList(path, contentList, uncheckedChildFileList) {
             fileName: contentList[i].name,
             filePath: path + '/' + contentList[i].name,
             fileType: 'workspace',
+            relatedFiles: relatedFiles,
             wsInfo: contentList[i].wsInfo,
           })
         }
@@ -150,10 +153,9 @@ async function getWSList(path, contentList, uncheckedChildFileList) {
 /** 获取三维工作空间 */
 async function getWS3DList(path, contentList, uncheckedChildFileList) {
   let WS3D = []
+  let relatedFiles = []
   try {
     _checkUncheckedFile(path, contentList, uncheckedChildFileList)
-    let WS3D = []
-    let relatedFiles = []
     for (let i = 0; i < contentList.length; i++) {
       if (!contentList[i].check && contentList[i].type === 'file') {
         if (_isWorkspace(contentList[i].name)) {
@@ -162,6 +164,7 @@ async function getWS3DList(path, contentList, uncheckedChildFileList) {
           //过滤udb
           let relatedDatasources = contentList[i].wsInfo.datasources
           _checkDatasources(
+            relatedFiles,
             relatedDatasources,
             path,
             contentList,
@@ -181,7 +184,7 @@ async function getWS3DList(path, contentList, uncheckedChildFileList) {
           )
           _checkRelated3DSymbols(
             relatedFiles,
-            contentList[i].name,
+            contentList[i].wsInfo.scenes,
             path,
             contentList,
           )
@@ -620,6 +623,7 @@ async function _getPlottingList(path) {
  * 其他文件夹下的文件加入uncheckedChildFileList
  */
 function _checkDatasources(
+  relatedFiles,
   relatedDatasources,
   path,
   contentList,
@@ -631,6 +635,8 @@ function _checkDatasources(
         0,
         relatedDatasources[n].server.lastIndexOf('.'),
       )
+      relatedFiles.push(ServerPathNoExt + '.udb')
+      relatedFiles.push(ServerPathNoExt + '.udd')
       let datasourceChecked = false
       for (let i = 0; i < contentList.length; i++) {
         if (
@@ -685,16 +691,24 @@ function _checkRelated3DLayer(
   }
 }
 
-//关联当前文件夹下所有符号 todo：只关联同名符号
-function _checkRelated3DSymbols(relatedFiles, wsName, path, contentList) {
-  for (let i = 0; i < contentList.length; i++) {
-    if (
-      !contentList[i].check &&
-      contentList[i].type === 'file' &&
-      _isSymbol(contentList[i].name)
-    ) {
-      contentList[i].check = true
-      relatedFiles.push(path + '/' + contentList[i].name)
+//关联当前文件夹下所有和场景同名的符号
+function _checkRelated3DSymbols(relatedFiles, scenes, path, contentList) {
+  for (let n = 0; n < scenes.length; n++) {
+    for (let i = 0; i < contentList.length; i++) {
+      if (
+        !contentList[i].check &&
+        contentList[i].type === 'file' &&
+        _isSymbol(contentList[i].name)
+      ) {
+        let symName = contentList[i].name.substring(
+          0,
+          contentList[i].name.lastIndexOf('.'),
+        )
+        if (symName === scenes[n]) {
+          contentList[i].check = true
+          relatedFiles.push(path + '/' + contentList[i].name)
+        }
+      }
     }
   }
 }
