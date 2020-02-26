@@ -460,6 +460,7 @@ const Map_Layer = {
   PLOTS: 'My Marks',
   PLOTS_IMPORT: 'Import Marks',
   PLOTS_DELETE: 'Delete Marks',
+  PLOTS_EDIT: 'Edit Marks',
   PLOTS_SET_AS_CURRENT: 'Set As Current Marks',
 
   LAYERS: 'My Layers',

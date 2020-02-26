@@ -477,6 +477,7 @@ const Map_Layer = {
   PLOTS: '我的标注',
   PLOTS_IMPORT: '导入标注',
   PLOTS_DELETE: '删除标注',
+  PLOTS_EDIT: '编辑标注',
   PLOTS_SET_AS_CURRENT: '设置为当前标注',
 
   LAYERS: '我的图层',

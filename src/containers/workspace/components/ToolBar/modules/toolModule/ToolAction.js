@@ -4,6 +4,7 @@ import {
   SMediaCollector,
   SAIDetectView,
   SCollector,
+  DatasetType,
 } from 'imobile_for_reactnative'
 import {
   ConstToolType,
@@ -61,6 +62,7 @@ function select(type) {
       break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT:
     default:
       SMap.setAction(Action.SELECT)
       break
@@ -690,9 +692,50 @@ function matchPictureStyle() {
 }
 
 /**
- * 选择标注
+ * 显示编辑标注菜单
  */
-function selectLabel() {
+function showEditLabel() {
+  const _params = ToolbarModule.getParams()
+  _params.setSelection()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  let type = ConstToolType.MAP_TOOL_TAGGING_EDIT_MENU
+
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[0],
+  })
+}
+
+/**
+ * 选择标注_编辑
+ */
+function selectLabelToEdit() {
+  const _params = ToolbarModule.getParams()
+  _params.setSelection()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  let type = ConstToolType.MAP_TOOL_TAGGING_EDIT
+
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(type),
+  })
+
+  let layers = _params.layers.layers
+  // 其他图层设置为不可选
+  _setMyLayersSelectable(layers, false)
+
+  Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_OBJECT)
+}
+
+/**
+ * 选择标注_删除
+ */
+function selectLabelToDelete() {
   const _params = ToolbarModule.getParams()
   _params.setSelection()
   if (!_params.setToolbarVisible) return
@@ -745,6 +788,56 @@ async function deleteLabel() {
     }
   })
   _params.setSelection()
+}
+
+function geometrySelected(event) {
+  if (
+    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT ||
+    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT ||
+    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE ||
+    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
+  ) {
+    let geoType
+    for (let i = 0; i < event.fieldInfo.length; i++) {
+      if (event.fieldInfo[i].name === 'SmGeoType') {
+        geoType = event.fieldInfo[i].value
+        break
+      }
+    }
+
+    if (geoType) {
+      const params = ToolbarModule.getParams()
+
+      let column = 4,
+        height = ConstToolType.HEIGHT[3],
+        containerType = ToolbarType.table,
+        type = ''
+
+      switch (geoType) {
+        case DatasetType.POINT:
+          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT
+          height = ConstToolType.HEIGHT[0]
+          break
+        case DatasetType.LINE:
+          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE
+          height = ConstToolType.HEIGHT[2]
+          break
+        case DatasetType.REGION:
+          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
+          height = ConstToolType.HEIGHT[2]
+          containerType = ToolbarType.scrollTable
+          break
+      }
+      params.setToolbarVisible &&
+        params.setToolbarVisible(true, type, {
+          isFullScreen: false,
+          column,
+          height,
+          containerType,
+          cb: () => SMap.appointEditGeometry(event.id, event.layerInfo.path),
+        })
+    }
+  }
 }
 
 // function captureVideo () {
@@ -1035,7 +1128,13 @@ function close(type) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
     _params.setToolbarVisible(false)
-  } else if (type === ConstToolType.MAP_TOOL_TAGGING_DELETE) {
+  } else if (
+    type === ConstToolType.MAP_TOOL_TAGGING_DELETE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_EDIT ||
+    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT ||
+    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
+  ) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
 
@@ -1086,8 +1185,11 @@ export default {
   redo,
   listSelectableAction,
   close,
-  selectLabel,
+  showEditLabel,
+  selectLabelToEdit,
+  selectLabelToDelete,
   deleteLabel,
+  geometrySelected,
 
   begin,
   stop,
