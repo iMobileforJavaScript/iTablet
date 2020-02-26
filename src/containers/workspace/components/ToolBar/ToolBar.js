@@ -861,6 +861,11 @@ export default class ToolBar extends React.PureComponent {
         this.contentView.changeHeight(this.isBoxShow ? 0 : this.height)
       this.isBoxShow = !this.isBoxShow
       if (GLOBAL.Type === constants.MAP_EDIT) {
+        if (
+          GLOBAL.MapToolType.indexOf(ConstToolType.MAP_TOOL_TAGGING_EDIT) !== -1
+        ) {
+          return
+        }
         if (GLOBAL.showMenu) {
           GLOBAL.showMenu = false
           this.setState({

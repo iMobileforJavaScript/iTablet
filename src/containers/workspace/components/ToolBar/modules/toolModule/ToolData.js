@@ -10,6 +10,7 @@ import ToolbarBtnType from '../../ToolbarBtnType'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolAction from './ToolAction'
+import EditAction from '../editModule/EditAction'
 
 /**
  * 获取工具操作
@@ -133,10 +134,17 @@ function getData(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.TOOLS_CREATE_POINT,
           //constants.POINT,
           action: ToolAction.point,
-          disable: layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='POINTLAYER'||ToolbarModule.getParams().currentLayer.isHeatmap,
+          disable:
+            (layerType !== 'TAGGINGLAYER' &&
+              layerType !== 'CADLAYER' &&
+              layerType !== 'POINTLAYER') ||
+            ToolbarModule.getParams().currentLayer.isHeatmap,
           size: 'large',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='POINTLAYER'||ToolbarModule.getParams().currentLayer.isHeatmap)
+            (layerType !== 'TAGGINGLAYER' &&
+              layerType !== 'CADLAYER' &&
+              layerType !== 'POINTLAYER') ||
+            ToolbarModule.getParams().currentLayer.isHeatmap
               ? getThemeAssets().mapTools.icon_point_disable
               : require('../../../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_black.png'),
@@ -147,9 +155,14 @@ function getData(type, params) {
           //constants.WORDS,
           size: 'large',
           action: ToolAction.words,
-          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='TEXTLAYER'),
+          disable:
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'TEXTLAYER',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='TEXTLAYER')
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'TEXTLAYER'
               ? getThemeAssets().mapTools.icon_text_disable
               : require('../../../../../../assets/mapTools/icon_words_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_words_black.png'),
@@ -160,9 +173,14 @@ function getData(type, params) {
           //constants.POINTLINE,
           size: 'large',
           action: ToolAction.pointline,
-          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER'),
+          disable:
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'LINELAYER',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER')
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'LINELAYER'
               ? getThemeAssets().mapTools.icon_point_line_disable
               : require('../../../../../../assets/mapTools/icon_point_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_line_black.png'),
@@ -173,9 +191,14 @@ function getData(type, params) {
           //constants.FREELINE,
           size: 'large',
           action: ToolAction.freeline,
-          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER'),
+          disable:
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'LINELAYER',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='LINELAYER')
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'LINELAYER'
               ? getThemeAssets().mapTools.icon_free_line_disable
               : require('../../../../../../assets/mapTools/icon_free_line_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_line_black.png'),
@@ -186,9 +209,14 @@ function getData(type, params) {
           //constants.POINTCOVER,
           size: 'large',
           action: ToolAction.pointcover,
-          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER'),
+          disable:
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'REGIONLAYER',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER')
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'REGIONLAYER'
               ? getThemeAssets().mapTools.icon_region_disable
               : require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_point_cover_black.png'),
@@ -199,9 +227,14 @@ function getData(type, params) {
           //constants.FREECOVER,
           size: 'large',
           action: ToolAction.freecover,
-          disable: (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER'),
+          disable:
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'REGIONLAYER',
           image:
-            (layerType!=='TAGGINGLAYER'&&layerType!=='CADLAYER'&&layerType!=='REGIONLAYER')
+            layerType !== 'TAGGINGLAYER' &&
+            layerType !== 'CADLAYER' &&
+            layerType !== 'REGIONLAYER'
               ? getThemeAssets().mapTools.icon_free_region_disable
               : require('../../../../../../assets/mapTools/icon_free_cover_black.png'),
           selectedImage: require('../../../../../../assets/mapTools/icon_free_cover_black.png'),
@@ -304,11 +337,11 @@ function getData(type, params) {
           image: getThemeAssets().mapTools.rightbar_tool_style,
         },
         {
-          key: 'selectLabel',
-          title: getLanguage(global.language).Map_Layer.PLOTS_DELETE,
-          action: ToolAction.selectLabel,
+          key: 'showEditLabel',
+          title: getLanguage(global.language).Map_Layer.PLOTS_EDIT,
+          action: ToolAction.showEditLabel,
           size: 'large',
-          image: getThemeAssets().attribute.icon_delete,
+          image: require('../../../../../../assets/function/icon_edit.png'),
         },
         // {
         //   key: 'captureVideo',
@@ -358,6 +391,28 @@ function getData(type, params) {
         },
       ]
       break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT_MENU:
+      data = [
+        {
+          key: constants.CANCEL_SELECT,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          action: ToolAction.selectLabelToDelete,
+          size: 'large',
+          image: getThemeAssets().attribute.icon_delete,
+        },
+        {
+          key: constants.CANCEL_SELECT,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT,
+          action: ToolAction.selectLabelToEdit,
+          size: 'large',
+          image: require('../../../../../../assets/function/icon_edit.png'),
+        },
+      ]
+      buttons = [ToolbarBtnType.CANCEL]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT:
+      buttons = [ToolbarBtnType.CANCEL]
+      break
     case ConstToolType.MAP_TOOL_TAGGING_DELETE:
       buttons = [
         ToolbarBtnType.CANCEL,
@@ -366,6 +421,164 @@ function getData(type, params) {
           action: ToolAction.deleteLabel,
           image: require('../../../../../../assets/mapTools/icon_delete_white.png'),
         },
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT:
+      data = [
+        {
+          key: constants.DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          action: EditAction.remove,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
+        },
+        {
+          key: constants.UNDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+          action: () => EditAction.undo(type),
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_undo_black.png'),
+        },
+        {
+          key: 'redo',
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+          action: () => EditAction.redo(type),
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_recover_black.png'),
+        },
+        {
+          key: constants.MOVE,
+          title: getLanguage(global.language).Map_Main_Menu.MOVE,
+          action: EditAction.move,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_move_black.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE:
+      data = [
+        {
+          key: constants.MOVE,
+          title: getLanguage(global.language).Map_Main_Menu.MOVE,
+          action: EditAction.move,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_move_black.png'),
+        },
+        {
+          key: constants.DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          action: EditAction.remove,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
+          selectMode: 'flash',
+        },
+        {
+          key: constants.UNDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+          action: EditAction.undo,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_undo_black.png'),
+          selectMode: 'flash',
+        },
+        {
+          key: constants.REDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+          action: EditAction.redo,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_recover_black.png'),
+          selectMode: 'flash',
+        },
+        {
+          key: constants.EDIT_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_NODES,
+          action: EditAction.editNode,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_edit_node_black.png'),
+        },
+        {
+          key: constants.DELETE_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
+          action: EditAction.deleteNode,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_delete_node_black.png'),
+        },
+        {
+          key: constants.ADD_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_ADD_NODES,
+          action: EditAction.addNode,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_add_node_black.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION:
+      data = [
+        {
+          key: constants.MOVE,
+          title: getLanguage(global.language).Map_Main_Menu.MOVE,
+          action: EditAction.move,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_move_black.png'),
+        },
+        {
+          key: constants.DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          //constants.DELETE,
+          size: 'large',
+          action: EditAction.remove,
+          image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
+        },
+        {
+          key: constants.UNDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_UNDO,
+          size: 'large',
+          action: EditAction.undo,
+          image: require('../../../../../../assets/mapTools/icon_undo_black.png'),
+        },
+        {
+          key: constants.REDO,
+          title: getLanguage(global.language).Map_Main_Menu.COLLECTION_REDO,
+          size: 'large',
+          action: EditAction.redo,
+          image: require('../../../../../../assets/mapTools/icon_recover_black.png'),
+        },
+        {
+          key: constants.EDIT_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_NODES,
+          size: 'large',
+          action: EditAction.editNode,
+          image: require('../../../../../../assets/mapTools/icon_edit_node_black.png'),
+        },
+        {
+          key: constants.DELETE_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE_NODES,
+          size: 'large',
+          action: EditAction.deleteNode,
+          image: require('../../../../../../assets/mapTools/icon_delete_node_black.png'),
+        },
+        {
+          key: constants.ADD_NODE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_ADD_NODES,
+          //constants.ADD_NODE,
+          size: 'large',
+          action: EditAction.addNode,
+          image: require('../../../../../../assets/mapTools/icon_add_node_black.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
       ]
       break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
