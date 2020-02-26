@@ -1,7 +1,6 @@
 import { getThemeAssets } from '../../../../../../assets'
 import { getLanguage } from '../../../../../../language'
 import AiActions from './AiActions'
-import { Platform } from 'react-native'
 
 function getData() {
   let buttons = []
@@ -85,9 +84,9 @@ function getData() {
     //   image: getThemeAssets().ar.functiontoolbar.ar_cast,
     // },
   ]
-  if (Platform.OS === 'ios') {
-    data.splice(4, 1)
-  }
+  // if (Platform.OS === 'ios') {
+  //   data.splice(4, 1)
+  // }
   return { data, buttons }
 }
 
