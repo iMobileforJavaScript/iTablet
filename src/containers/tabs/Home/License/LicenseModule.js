@@ -44,7 +44,7 @@ export default class LicenseModule extends Component {
   }
 
   componentDidMount() {
-    this.initAllModules()
+    this.initItabletAllModules()
   }
 
   getModules = async serialNumber => {
@@ -55,8 +55,9 @@ export default class LicenseModule extends Component {
     for (let i = 0; i < size; i++) {
       let modultCode = Number(modules[i])
       number = number + modultCode
+      modules[i] = modultCode % 100
     }
-    let allModules = this.initAllModules()
+    let allModules = this.initItabletAllModules()
     this.setState({
       modules: modules,
       modulesNumber: number,
@@ -97,6 +98,25 @@ export default class LicenseModule extends Component {
     )
     return allModules
   }
+
+  initItabletAllModules = () => {
+    let allModules = []
+    allModules.push(
+      getLanguage(global.language).Profile.LICENSE_EDITION_STANDARD,
+    )
+    allModules.push(
+      getLanguage(global.language).Profile.LICENSE_EDITION_PROFESSIONAL,
+    )
+    allModules.push(
+      getLanguage(global.language).Profile.LICENSE_EDITION_ADVANCED,
+    )
+    allModules.push(getLanguage(global.language).Profile.ITABLET_ARMAP)
+    allModules.push(getLanguage(global.language).Profile.ITABLET_NAVIGATIONMAP)
+    allModules.push(getLanguage(global.language).Profile.ITABLET_DATAANALYSIS)
+    allModules.push(getLanguage(global.language).Profile.ITABLET_PLOTTING)
+    return allModules
+  }
+
   //购买登记
   registerModule = async moduleCode => {
     let userName = this.user.currentUser.userName
@@ -151,7 +171,7 @@ export default class LicenseModule extends Component {
                 width: scaleSize(100),
                 height: scaleSize(40),
                 fontSize: scaleSize(17),
-                marginRight: 30,
+                marginRight: 15,
                 alignItems: 'center',
               }}
               titleStyle={{
@@ -206,19 +226,53 @@ export default class LicenseModule extends Component {
       </View>
     )
   }
+
+  renderLicenseEdition() {
+    let index = this.state.modules[0] - 1
+    let editionStr = this.state.allModules[index]
+
+    return (
+      <View style={{ width: '100%', backgroundColor: color.content_white }}>
+        <View
+          style={{
+            width: '100%',
+            height: scaleSize(80),
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: scaleSize(24), marginLeft: 30 }}>
+            {getLanguage(global.language).Profile.LICENSE_EDITION}
+          </Text>
+          <Text
+            style={{
+              fontSize: scaleSize(20),
+              marginRight: 15,
+            }}
+          >
+            {editionStr}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
   renderContainModule() {
     let rows = []
-    for (let i = 0; i < this.state.allModules.length; i++) {
-      if ((this.state.modulesNumber >> i) & (1 == 1)) {
-        rows.push(this.renderContainModuleItemView(i))
+    for (let i = 0; i < this.state.modules.length; i++) {
+      let index = this.state.modules[i] - 1
+      if (index < 3 || index >= this.state.allModules.length) {
+        continue
       }
+      rows.push(this.renderContainModuleItemView(index))
     }
 
     return (
       <View style={{ backgroundColor: color.background }}>
         <View style={styles.item}>
           <Text style={styles.title}>
-            {getLanguage(global.language).Profile.LICENSE_CONTAIN_MODULE}
+            {getLanguage(global.language).Profile.LICENSE_CONTAIN_EXPAND_MODULE}
           </Text>
         </View>
         <View style={styles.separateLine} />
@@ -229,11 +283,16 @@ export default class LicenseModule extends Component {
 
   renderNotContainModule() {
     let rows = []
-    for (let i = 0; i < this.state.allModules.length; i++) {
-      if ((this.state.modulesNumber >> i) & (1 == 1)) {
-        continue
+    for (let i = 3; i < this.state.allModules.length; i++) {
+      let index = -1
+      for (let j = 0; j < this.state.modules.length; j++) {
+        if (this.state.modules[j] - 1 == i) {
+          index = i
+        }
       }
-      rows.push(this.renderNotContainModuleItemView(i))
+      if (index === -1) {
+        rows.push(this.renderNotContainModuleItemView(i))
+      }
     }
 
     return (
@@ -253,6 +312,9 @@ export default class LicenseModule extends Component {
     return (
       <ScrollView style={{ flex: 1, backgroundColor: color.background }}>
         <View style={{ flex: 1, backgroundColor: color.background }}>
+          <View style={{ height: 10 }} />
+          {this.renderLicenseEdition()}
+          <View style={{ height: 10 }} />
           {this.renderContainModule()}
           <View style={{ height: 10 }} />
           {this.renderNotContainModule()}

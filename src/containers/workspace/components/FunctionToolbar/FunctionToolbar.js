@@ -237,7 +237,7 @@ export default class FunctionToolbar extends React.Component {
   //判断当前模块是否有效
   getLicenseValid = index => {
     return GLOBAL.modulesNumber
-      ? (GLOBAL.modulesNumber << (index - 1)) % 2 === 1
+      ? (GLOBAL.modulesNumber >> index) % 2 === 1
       : true
   }
 
@@ -251,15 +251,18 @@ export default class FunctionToolbar extends React.Component {
     const functionModules = currentMapModule.functionModules
 
     switch (type) {
-      case constants.MAP_3D:
-        //三维模块是第6个模块
-        isLicenseNotValid = !this.getLicenseValid(6)
+      case constants.MAP_AR:
+        //ar模块id是19004
+        isLicenseNotValid = !this.getLicenseValid(4)
         break
       case constants.MAP_PLOTTING:
-        isLicenseNotValid = !this.getLicenseValid(8)
+        isLicenseNotValid = !this.getLicenseValid(7)
         break
       case constants.MAP_NAVIGATION:
-        isLicenseNotValid = !this.getLicenseValid(10)
+        isLicenseNotValid = !this.getLicenseValid(5)
+        break
+      case constants.MAP_ANALYST:
+        isLicenseNotValid = !this.getLicenseValid(6)
         break
     }
 

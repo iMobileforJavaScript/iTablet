@@ -71,7 +71,10 @@ export default class LicenseJoin extends Component {
         let number = 0
         for (let i = 0; i < size; i++) {
           let modultCode = Number(modules[i])
-          number = number + modultCode
+          if (modultCode == 0) {
+            continue
+          }
+          number = number + (1 << modultCode % 100)
         }
         GLOBAL.modulesNumber = number
         GLOBAL.Loading.setLoading(

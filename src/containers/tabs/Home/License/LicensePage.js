@@ -30,7 +30,7 @@ export default class LicensePage extends Component {
     this.user = params && params.user
     this.state = {
       status: {},
-      licenseCount: 0,
+      licenseCount: -1,
     }
   }
 
@@ -55,6 +55,10 @@ export default class LicensePage extends Component {
     } else {
       GLOBAL.LicenseValidDialog.callback = null
     }
+    let licenseCount = await SMap.getLicenseCount('')
+    this.setState({
+      licenseCount: licenseCount,
+    })
   }
 
   renderLicenseDialogChildren = remindStr => {
@@ -88,17 +92,17 @@ export default class LicensePage extends Component {
   }
   //清除正式许可时提醒许可数量
   renderDialog = () => {
-    let remindStr =
-      getLanguage(global.language).Profile.LICENSE_CLEAN_ALERT +
-      this.state.licenseCount
+    let remindStr = getLanguage(global.language).Profile.LICENSE_CLEAN_ALERT
     return (
       <Dialog
         ref={ref => (this.cleanDialog = ref)}
         type={'modal'}
         confirmAction={async () => {
+          GLOBAL.Loading.setLoading(true)
           this.cleanDialog.setDialogVisible(false)
-          await SMap.clearLocalLicense()
+          await SMap.recycleLicense()
           this.getLicense()
+          GLOBAL.Loading.setLoading(false)
         }}
         confirmBtnTitle={
           getLanguage(global.language).Profile.LICENSE_CLEAN_CONTINUE
@@ -121,25 +125,21 @@ export default class LicensePage extends Component {
     )
   }
   //获取许可数量
-  getLicenseCount = async serialNumber => {
-    GLOBAL.Loading.setLoading(true)
-    let licenseCount = await SMap.getLicenseCount(serialNumber)
+  getLicenseCount = () => {
     this.cleanDialog.setDialogVisible(true)
-    this.setState({
-      licenseCount: licenseCount,
-    })
-    GLOBAL.Loading.setLoading(false)
   }
   //获取序列号
   getLicenseSerialNumber(cb) {
+    GLOBAL.Loading.setLoading(true)
     AsyncStorage.getItem(constants.LICENSE_OFFICIAL_STORAGE_KEY)
       .then(async serialNumber => {
         if (serialNumber !== null) {
-          cb(serialNumber)
+          cb()
         } else {
           await SMap.clearLocalLicense()
           this.getLicense()
         }
+        GLOBAL.Loading.setLoading(false)
       })
       .catch(() => {})
   }
@@ -339,11 +339,18 @@ export default class LicensePage extends Component {
   }
 
   renderContent() {
-    let licenseType = this.state.status.isTrailLicense
-      ? getLanguage(global.language).Profile.LICENSE_TRIAL
-      : getLanguage(global.language).Profile.LICENSE_OFFICIAL
-
+    let licenseType
+    if (this.state.status.isTrailLicense) {
+      licenseType = getLanguage(global.language).Profile.LICENSE_TRIAL
+    } else {
+      licenseType =
+        this.state.status.licenseType === 0
+          ? getLanguage(global.language).Profile.LICENSE_OFFLINE
+          : getLanguage(global.language).Profile.LICENSE_CLOUD
+    }
     let days = 0
+    let daysStr
+    let yearDays = 365
     if (this.state.status.expireDate) {
       let timeStr = ''
       timeStr = this.state.status.expireDate
@@ -355,10 +362,22 @@ export default class LicensePage extends Component {
         (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24),
       )
     }
-    let daysStr =
-      getLanguage(global.language).Profile.LICENSE_SURPLUS +
-      days +
-      getLanguage(global.language).Profile.LICENSE_DAY
+    if (days >= yearDays * 20) {
+      daysStr = getLanguage(global.language).Profile.LICENSE_LONG_EFFECTIVE
+    } else if (days > yearDays * 20 && days > yearDays) {
+      daysStr =
+        getLanguage(global.language).Profile.LICENSE_SURPLUS +
+        days / yearDays +
+        getLanguage(global.language).Profile.LICENSE_YEAR +
+        (days % yearDays) +
+        getLanguage(global.language).Profile.LICENSE_DAY
+    } else {
+      daysStr =
+        getLanguage(global.language).Profile.LICENSE_SURPLUS +
+        days +
+        getLanguage(global.language).Profile.LICENSE_DAY
+    }
+
     return (
       <View style={{ flex: 1, backgroundColor: color.background }}>
         {/* <Text>
@@ -383,6 +402,27 @@ export default class LicensePage extends Component {
           true,
           daysStr,
         )}
+
+        {this.state.status.isTrailLicense ? (
+          <View />
+        ) : (
+          this.renderItemView(
+            getLanguage(global.language).Profile.LICENSE_USER_NAME,
+            true,
+            this.state.status.user,
+          )
+        )}
+
+        {this.state.status.isTrailLicense || this.state.licenseCount == -1 ? (
+          <View />
+        ) : (
+          this.renderItemView(
+            getLanguage(global.language).Profile.LICENSE_REMIND_NUMBER,
+            true,
+            this.state.licenseCount,
+          )
+        )}
+
         {this.state.status.isTrailLicense ? (
           <View />
         ) : (
@@ -391,6 +431,7 @@ export default class LicensePage extends Component {
             this.containModule,
           )
         )}
+
         <View style={{ height: 10 }} />
         {this.state.status.isTrailLicense ? (
           this.renderTouchableItemView(
@@ -430,7 +471,7 @@ export default class LicensePage extends Component {
             onPress={() => this.getLicenseSerialNumber(this.getLicenseCount)}
           >
             <Text style={{ fontSize: scaleSize(24), color: color.red }}>
-              {getLanguage(global.language).Profile.LICENSE_OFFICIAL_CLEAN}
+              {getLanguage(global.language).Profile.LICENSE_OFFICIAL_RETURN}
             </Text>
           </TouchableOpacity>
         )}
