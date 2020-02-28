@@ -48,7 +48,7 @@ export default class LicenseModule extends Component {
   }
 
   getModules = async serialNumber => {
-    GLOBAL.Loading.setLoading(true)
+    GLOBAL.Loading.setLoading(true, getLanguage(global.language).Prompt.LOADING)
     let modules = await SMap.licenseContainModule(serialNumber)
     let size = modules.length
     let number = 0
@@ -227,10 +227,12 @@ export default class LicenseModule extends Component {
     )
   }
 
-  renderLicenseEdition() {
-    let index = this.state.modules[0] - 1
-    let editionStr = this.state.allModules[index]
-
+  renderLicenseEditionItemView(position, index) {
+    let label = this.state.allModules[index]
+    let currentEdition =
+      position === index
+        ? getLanguage(global.language).Profile.LICENSE_EDITION_CURRENT
+        : null
     return (
       <View style={{ width: '100%', backgroundColor: color.content_white }}>
         <View
@@ -242,18 +244,36 @@ export default class LicenseModule extends Component {
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: scaleSize(24), marginLeft: 30 }}>
+          <Text style={{ fontSize: scaleSize(20), marginLeft: 30 }}>
+            {label}
+          </Text>
+          {currentEdition ? (
+            <Text style={{ fontSize: scaleSize(20), marginRight: 15 }}>
+              {currentEdition}
+            </Text>
+          ) : null}
+        </View>
+        <View style={styles.separateLine} />
+      </View>
+    )
+  }
+
+  renderLicenseEdition() {
+    let position = this.state.modules[0] - 1
+    let rows = []
+    for (let i = 0; i < 3; i++) {
+      rows.push(this.renderLicenseEditionItemView(position, i))
+    }
+
+    return (
+      <View style={{ backgroundColor: color.background }}>
+        <View style={styles.item}>
+          <Text style={styles.title}>
             {getLanguage(global.language).Profile.LICENSE_EDITION}
           </Text>
-          <Text
-            style={{
-              fontSize: scaleSize(20),
-              marginRight: 15,
-            }}
-          >
-            {editionStr}
-          </Text>
         </View>
+        <View style={styles.separateLine} />
+        {rows}
       </View>
     )
   }

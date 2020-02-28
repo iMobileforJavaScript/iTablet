@@ -61,66 +61,42 @@ export default class LicensePage extends Component {
     })
   }
 
-  renderLicenseDialogChildren = remindStr => {
+  renderLicenseDialogChildren = () => {
     return (
       <View style={styles.dialogHeaderView}>
-        <Text style={styles.promptTtile}>
-          {getLanguage(global.language).Profile.LICENSE_OFFICIAL_CLEAN}
-          {/* 清除正式许可 */}
-        </Text>
-        <View
-          style={{
-            marginTop: scaleSize(30),
-            width: '100%',
-            height: 1,
-            backgroundColor: color.item_separate_white,
-          }}
+        <Image
+          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
         />
-        <View style={styles.btnStyle}>
-          <Text
-            style={{
-              fontSize: scaleSize(20),
-              marginLeft: scaleSize(30),
-              marginRight: scaleSize(30),
-            }}
-          >
-            {remindStr}
-          </Text>
-        </View>
+        <Text style={styles.promptTtile}>
+          {getLanguage(global.language).Profile.LICENSE_CLEAN_ALERT}
+        </Text>
       </View>
     )
   }
   //清除正式许可时提醒许可数量
   renderDialog = () => {
-    let remindStr = getLanguage(global.language).Profile.LICENSE_CLEAN_ALERT
     return (
       <Dialog
         ref={ref => (this.cleanDialog = ref)}
         type={'modal'}
+        confirmBtnTitle={getLanguage(global.language).Prompt.CONFIRM}
+        cancelBtnTitle={getLanguage(global.language).Prompt.CANCEL}
         confirmAction={async () => {
-          GLOBAL.Loading.setLoading(true)
+          GLOBAL.Loading.setLoading(
+            true,
+            getLanguage(global.language).Prompt.LOADING,
+          )
           this.cleanDialog.setDialogVisible(false)
           await SMap.recycleLicense()
           this.getLicense()
           GLOBAL.Loading.setLoading(false)
         }}
-        confirmBtnTitle={
-          getLanguage(global.language).Profile.LICENSE_CLEAN_CONTINUE
-        }
-        //{'申请试用许可'}
-        cancelBtnTitle={
-          getLanguage(global.language).Profile.LICENSE_CLEAN_CANCLE
-        }
-        //{'取消清除'}
-        // backgroundStyle={styles.dialogBackground}
         opacity={1}
-        opacityStyle={[styles.opacityView, { height: scaleSize(340) }]}
-        style={[styles.dialogBackground, { height: scaleSize(340) }]}
-        cancelAction={() => {
-          this.cleanDialog.setDialogVisible(false)
-        }}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
       >
-        {this.renderLicenseDialogChildren(remindStr)}
+        {this.renderLicenseDialogChildren()}
       </Dialog>
     )
   }
@@ -130,7 +106,7 @@ export default class LicensePage extends Component {
   }
   //获取序列号
   getLicenseSerialNumber(cb) {
-    GLOBAL.Loading.setLoading(true)
+    GLOBAL.Loading.setLoading(true, getLanguage(global.language).Prompt.LOADING)
     AsyncStorage.getItem(constants.LICENSE_OFFICIAL_STORAGE_KEY)
       .then(async serialNumber => {
         if (serialNumber !== null) {
@@ -544,5 +520,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     alignItems: 'center',
+  },
+  dialogBackground: {
+    height: scaleSize(300),
+    backgroundColor: color.content_white,
+  },
+  dialogHeaderImg: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+    opacity: 1,
+  },
+  opacityView: {
+    height: scaleSize(300),
+    backgroundColor: color.content_white,
   },
 })

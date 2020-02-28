@@ -62,7 +62,7 @@ export default class LicenseJoin extends Component {
           )
           return
         }
-      }, 20000)
+      }, 40000)
       result = await SMap.activateLicense(str)
       if (result) {
         AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, str)

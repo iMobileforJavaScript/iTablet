@@ -166,7 +166,7 @@ const Profile = {
 
   //设置
   STATUSBAR_HIDE: 'StatusBar Hide',
-  SETTING_LICENSE: 'License',
+  SETTING_LICENSE: 'License Center',
   SETTING_ABOUT_ITABLET: 'About iTablet',
   SETTING_ABOUT: 'About',
   SETTING_CHECK_VERSION: 'Check Version',
@@ -218,11 +218,12 @@ const Profile = {
   LICENSE_LONG_EFFECTIVE: 'Long Effective',
   LICENSE_OFFLINE: 'License OffLine',
   LICENSE_CLOUD: 'License Cloud',
-  LICENSE_EDITION: '许可版本',
+  LICENSE_EDITION: 'License Edition',
+  LICENSE_EDITION_CURRENT: 'Current Edition',
   //itablet许可版本
-  LICENSE_EDITION_STANDARD: '标准版',
-  LICENSE_EDITION_PROFESSIONAL: '专业版',
-  LICENSE_EDITION_ADVANCED: '高级版',
+  LICENSE_EDITION_STANDARD: 'Standard Edition',
+  LICENSE_EDITION_PROFESSIONAL: 'Professional Edition',
+  LICENSE_EDITION_ADVANCED: 'ADVANCED Edition',
   //imobile许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',

@@ -168,7 +168,7 @@ const Profile = {
 
   //设置
   STATUSBAR_HIDE: '隐藏状态栏',
-  SETTING_LICENSE: '许可',
+  SETTING_LICENSE: '许可中心',
   SETTING_ABOUT_ITABLET: '关于iTablet',
   SETTING_ABOUT: '关于',
   SETTING_CHECK_VERSION: '检查版本',
@@ -221,6 +221,7 @@ const Profile = {
   LICENSE_OFFLINE: '离线许可',
   LICENSE_CLOUD: '云许可',
   LICENSE_EDITION: '许可版本',
+  LICENSE_EDITION_CURRENT: '当前版本',
   //itablet许可版本
   LICENSE_EDITION_STANDARD: '标准版',
   LICENSE_EDITION_PROFESSIONAL: '专业版',
