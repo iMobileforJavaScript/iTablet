@@ -259,10 +259,14 @@ export default class LicenseModule extends Component {
   }
 
   renderLicenseEdition() {
-    let position = this.state.modules[0] - 1
     let rows = []
-    for (let i = 0; i < 3; i++) {
-      rows.push(this.renderLicenseEditionItemView(position, i))
+    for (let index = 0; index < this.state.modules.length; index++) {
+      let position = this.state.modules[index] - 1
+      if (position >= 0 && position <= 2) {
+        for (let i = 0; i < 3; i++) {
+          rows.push(this.renderLicenseEditionItemView(position, i))
+        }
+      }
     }
 
     return (
