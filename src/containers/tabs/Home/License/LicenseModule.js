@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView, Text, AsyncStorage } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  AsyncStorage,
+  Platform,
+} from 'react-native'
 import { Container, Button } from '../../../../components'
 import { color } from '../../../../styles'
 import { getLanguage } from '../../../../language/index'
@@ -22,6 +29,7 @@ export default class LicenseModule extends Component {
       modules: [],
       modulesNumber: 0,
       allModules: [],
+      allAPPModules: [],
       licenseModuleRegisterNumber: 0,
     }
     AsyncStorage.getItem(LICENSE_MODULE_REGISTER)
@@ -53,15 +61,21 @@ export default class LicenseModule extends Component {
     let size = modules.length
     let number = 0
     for (let i = 0; i < size; i++) {
+      if (!modules[i] || modules[i] === '') {
+        continue
+      }
       let modultCode = Number(modules[i])
       number = number + modultCode
-      modules[i] = modultCode % 100
+      modules[i] = modultCode
     }
+    let allAPPModules = this.initAllAPPModules()
     let allModules = this.initItabletAllModules()
+    GLOBAL.Loading.setLoading(false)
     this.setState({
       modules: modules,
       modulesNumber: number,
       allModules: allModules,
+      allAPPModules: allAPPModules,
     })
     GLOBAL.Loading.setLoading(false)
   }
@@ -117,6 +131,19 @@ export default class LicenseModule extends Component {
     return allModules
   }
 
+  initAllAPPModules = () => {
+    let allAPPModules = []
+    allAPPModules.push([18001, 19001])
+    allAPPModules.push([18002, 19002])
+    allAPPModules.push([18003, 19003])
+    allAPPModules.push([18004, 19004])
+    allAPPModules.push([18005, 19005])
+    allAPPModules.push([18006, 19006])
+    allAPPModules.push([18007, 19007])
+
+    return allAPPModules
+  }
+
   //购买登记
   registerModule = async moduleCode => {
     let userName = this.user.currentUser.userName
@@ -130,7 +157,7 @@ export default class LicenseModule extends Component {
         getLanguage(global.language).Profile.LICENSE_MODULE_REGISTER_SUCCESS,
       )
       let licenseModuleRegisterNumber = this.state.licenseModuleRegisterNumber
-      let offset = 1 << moduleCode
+      let offset = 1 << moduleCode % 100
       licenseModuleRegisterNumber = licenseModuleRegisterNumber | offset
       AsyncStorage.setItem(
         LICENSE_MODULE_REGISTER,
@@ -227,10 +254,11 @@ export default class LicenseModule extends Component {
     )
   }
 
-  renderLicenseEditionItemView(position, index) {
+  renderLicenseEditionItemView(moduleCode, index) {
+    let position = Platform.OS === 'ios' ? 0 : 1
     let label = this.state.allModules[index]
     let currentEdition =
-      position === index
+      moduleCode === this.state.allAPPModules[index][position]
         ? getLanguage(global.language).Profile.LICENSE_EDITION_CURRENT
         : null
     return (
@@ -259,13 +287,18 @@ export default class LicenseModule extends Component {
   }
 
   renderLicenseEdition() {
+    let position = Platform.OS === 'ios' ? 0 : 1
     let rows = []
     for (let index = 0; index < this.state.modules.length; index++) {
-      let position = this.state.modules[index] - 1
-      if (position >= 0 && position <= 2) {
+      let moduleCode = this.state.modules[index]
+      if (
+        moduleCode >= this.state.allAPPModules[0][position] &&
+        position <= this.state.allAPPModules[2][position]
+      ) {
         for (let i = 0; i < 3; i++) {
-          rows.push(this.renderLicenseEditionItemView(position, i))
+          rows.push(this.renderLicenseEditionItemView(moduleCode, i))
         }
+        break
       }
     }
 
@@ -283,13 +316,19 @@ export default class LicenseModule extends Component {
   }
 
   renderContainModule() {
+    let position = Platform.OS === 'ios' ? 0 : 1
     let rows = []
     for (let i = 0; i < this.state.modules.length; i++) {
-      let index = this.state.modules[i] - 1
-      if (index < 3 || index >= this.state.allModules.length) {
+      let moduleCode = this.state.modules[i]
+      if (moduleCode <= this.state.allAPPModules[2][position]) {
         continue
       }
-      rows.push(this.renderContainModuleItemView(index))
+      for (let j = 3; j < this.state.allAPPModules.length; j++) {
+        if (moduleCode === this.state.allAPPModules[j][position]) {
+          rows.push(this.renderContainModuleItemView(j))
+          break
+        }
+      }
     }
 
     return (
@@ -306,11 +345,12 @@ export default class LicenseModule extends Component {
   }
 
   renderNotContainModule() {
+    let position = Platform.OS === 'ios' ? 0 : 1
     let rows = []
-    for (let i = 3; i < this.state.allModules.length; i++) {
+    for (let i = 3; i < this.state.allAPPModules.length; i++) {
       let index = -1
       for (let j = 0; j < this.state.modules.length; j++) {
-        if (this.state.modules[j] - 1 == i) {
+        if (this.state.modules[j] === this.state.allAPPModules[i][position]) {
           index = i
         }
       }

@@ -250,21 +250,21 @@ export default class FunctionToolbar extends React.Component {
     })
     const functionModules = currentMapModule.functionModules
 
-    switch (type) {
-      case constants.MAP_AR:
-        //ar模块id是19004
-        isLicenseNotValid = !this.getLicenseValid(4)
-        break
-      case constants.MAP_PLOTTING:
-        isLicenseNotValid = !this.getLicenseValid(7)
-        break
-      case constants.MAP_NAVIGATION:
-        isLicenseNotValid = !this.getLicenseValid(5)
-        break
-      case constants.MAP_ANALYST:
-        isLicenseNotValid = !this.getLicenseValid(6)
-        break
-    }
+    // switch (type) {
+    //   case constants.MAP_AR:
+    //     //ar模块id是19004
+    //     isLicenseNotValid = !this.getLicenseValid(4)
+    //     break
+    //   case constants.MAP_PLOTTING:
+    //     isLicenseNotValid = !this.getLicenseValid(7)
+    //     break
+    //   case constants.MAP_NAVIGATION:
+    //     isLicenseNotValid = !this.getLicenseValid(5)
+    //     break
+    //   case constants.MAP_ANALYST:
+    //     isLicenseNotValid = !this.getLicenseValid(6)
+    //     break
+    // }
 
     let data = []
     functionModules.forEach(item => {
