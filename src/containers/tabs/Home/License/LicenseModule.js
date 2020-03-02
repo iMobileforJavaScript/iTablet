@@ -293,7 +293,7 @@ export default class LicenseModule extends Component {
       let moduleCode = this.state.modules[index]
       if (
         moduleCode >= this.state.allAPPModules[0][position] &&
-        position <= this.state.allAPPModules[2][position]
+        moduleCode <= this.state.allAPPModules[2][position]
       ) {
         for (let i = 0; i < 3; i++) {
           rows.push(this.renderLicenseEditionItemView(moduleCode, i))
