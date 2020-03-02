@@ -397,7 +397,12 @@ export default class OnlineServicesUtils {
         let page = cheerio.load(responsedata)
         this.registerPage = page
         try {
-          return page('.sso_tip_block').text()
+          let errorText = page('.sso_tip_block').text()
+          if (errorText !== '') {
+            return errorText
+          } else {
+            return true
+          }
         } catch (e) {
           return true
         }
