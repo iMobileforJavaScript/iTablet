@@ -25,7 +25,8 @@ function isTouchProgress(selectKey) {
       getLanguage(GLOBAL.language).Map_Main_Menu.THEME_MAX_VISIBLE_SIZE ||
     selectKey === getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_COLUMN ||
     selectKey === getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_HEIGHT ||
-    selectKey === getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_WIDTH
+    selectKey === getLanguage(GLOBAL.language).Map_Main_Menu.LEGEND_WIDTH ||
+    selectKey === getLanguage(GLOBAL.language).Map_Main_Menu.STYLE_BORDER_WIDTH
   ) {
     return true
   }

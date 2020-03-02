@@ -11,6 +11,7 @@ import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolAction from './ToolAction'
 import EditAction from '../editModule/EditAction'
+import { line, point, region, colors, colorsWithNull } from './data'
 
 /**
  * 获取工具操作
@@ -394,23 +395,31 @@ function getData(type, params) {
     case ConstToolType.MAP_TOOL_TAGGING_EDIT_MENU:
       data = [
         {
-          key: constants.CANCEL_SELECT,
+          key: 'tagging_delete',
           title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
           action: ToolAction.selectLabelToDelete,
           size: 'large',
           image: getThemeAssets().attribute.icon_delete,
         },
         {
-          key: constants.CANCEL_SELECT,
+          key: 'tagging_edit',
           title: getLanguage(global.language).Map_Main_Menu.EDIT,
           action: ToolAction.selectLabelToEdit,
           size: 'large',
           image: require('../../../../../../assets/function/icon_edit.png'),
         },
+        {
+          key: 'tagging_style',
+          title: getLanguage(global.language).Map_Main_Menu.STYLE,
+          action: ToolAction.selectLabelToStyle,
+          size: 'large',
+          image: require('../../../../../../assets/function/icon_function_style.png'),
+        },
       ]
       buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP_TOOL_TAGGING_EDIT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE:
       buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP_TOOL_TAGGING_DELETE:
@@ -581,6 +590,36 @@ function getData(type, params) {
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
       break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.MENU,
+        ToolbarBtnType.MENU_FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
+      data = colors
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.MENU,
+        ToolbarBtnType.MENU_FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
+      data = colorsWithNull
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.MENU,
+        ToolbarBtnType.MENU_FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_TAGGING_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
@@ -719,6 +758,7 @@ function getData(type, params) {
 }
 
 function getMenuData(type) {
+  const _params = ToolbarModule.getParams()
   let data = []
   switch (type) {
     case ConstToolType.STYLE_TRANSFER:
@@ -773,6 +813,19 @@ function getMenuData(type) {
           selectKey: getLanguage(GLOBAL.language).Map_Main_Menu.SATURATION,
         },
       ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
+      data = point(_params.language, _params.device.orientation)
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET:
+      data = line(_params.language, _params.device.orientation)
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
+      data = region(_params.language, _params.device.orientation)
       break
   }
   return data

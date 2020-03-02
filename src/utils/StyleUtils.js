@@ -23,6 +23,16 @@ async function setSelectionStyle(layerPath = '', geoStyle) {
   SMap.setSelectionStyle(layerPath, geoStyle)
 }
 
+/** 点选（单选）选择集样式 */
+async function setSingleSelectionStyle(layerPath = '') {
+  let geoStyle = new GeoStyle()
+  geoStyle.setFillOpaqueRate(0)
+  geoStyle.setLineWidth(0.1)
+  geoStyle.setLineColor(0, 0, 255)
+  geoStyle.setMarkerSize(2.4)
+  SMap.setSelectionStyle(layerPath, geoStyle)
+}
+
 async function setDefaultMapControlStyle() {
   let nodeStyle = new GeoStyle()
   // nodeStyle.setFillForeColor(250, 20, 20, 1)
@@ -49,5 +59,6 @@ async function setDefaultMapControlStyle() {
 
 export default {
   setSelectionStyle,
+  setSingleSelectionStyle,
   setDefaultMapControlStyle,
 }

@@ -862,7 +862,10 @@ export default class ToolBar extends React.PureComponent {
       this.isBoxShow = !this.isBoxShow
       if (GLOBAL.Type === constants.MAP_EDIT) {
         if (
-          GLOBAL.MapToolType.indexOf(ConstToolType.MAP_TOOL_TAGGING_EDIT) !== -1
+          GLOBAL.MapToolType.indexOf(ConstToolType.MAP_TOOL_TAGGING_EDIT) !==
+            -1 ||
+          GLOBAL.MapToolType.indexOf(ConstToolType.MAP_TOOL_TAGGING_STYLE) !==
+            -1
         ) {
           return
         }

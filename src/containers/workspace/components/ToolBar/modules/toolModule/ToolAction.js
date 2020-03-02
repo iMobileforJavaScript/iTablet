@@ -11,6 +11,7 @@ import {
   TouchType,
   ConstPath,
   ToolbarType,
+  Const,
 } from '../../../../../../constants'
 import {
   dataUtil,
@@ -23,6 +24,7 @@ import { ImagePicker } from '../../../../../../components'
 import NavigationService from '../../../../../NavigationService'
 import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
+import Utils from '../../utils'
 
 function begin() {
   GLOBAL.GPS = setInterval(() => {
@@ -63,6 +65,7 @@ function select(type) {
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
     case ConstToolType.MAP_TOOL_TAGGING_EDIT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE:
     default:
       SMap.setAction(Action.SELECT)
       break
@@ -733,6 +736,30 @@ function selectLabelToEdit() {
 }
 
 /**
+ * 选择标注_设置风格
+ */
+function selectLabelToStyle() {
+  const _params = ToolbarModule.getParams()
+  _params.setSelection()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  let type = ConstToolType.MAP_TOOL_TAGGING_STYLE
+
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(type),
+  })
+
+  let layers = _params.layers.layers
+  // 其他图层设置为不可选
+  _setMyLayersSelectable(layers, false)
+
+  Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_OBJECT)
+}
+
+/**
  * 选择标注_删除
  */
 function selectLabelToDelete() {
@@ -828,15 +855,73 @@ function geometrySelected(event) {
           containerType = ToolbarType.scrollTable
           break
       }
-      params.setToolbarVisible &&
-        params.setToolbarVisible(true, type, {
-          isFullScreen: false,
-          column,
-          height,
-          containerType,
-          cb: () => SMap.appointEditGeometry(event.id, event.layerInfo.path),
-        })
+      if (type !== '') {
+        params.setToolbarVisible &&
+          params.setToolbarVisible(true, type, {
+            isFullScreen: false,
+            column,
+            height,
+            containerType,
+            cb: () => SMap.appointEditGeometry(event.id, event.layerInfo.path),
+          })
+      }
     }
+  } else if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_STYLE) {
+    let geoType
+    for (let i = 0; i < event.fieldInfo.length; i++) {
+      if (event.fieldInfo[i].name === 'SmGeoType') {
+        geoType = event.fieldInfo[i].value
+        break
+      }
+    }
+    if (geoType) {
+      const params = ToolbarModule.getParams()
+
+      let type = ''
+      switch (geoType) {
+        case DatasetType.POINT:
+          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT
+          break
+        case DatasetType.LINE:
+          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE
+          break
+        case DatasetType.REGION:
+          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION
+          break
+      }
+
+      if (type !== '') {
+        params.setToolbarVisible &&
+          params.setToolbarVisible(true, type, {
+            containerType: ToolbarType.symbol,
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+            cb: () => {
+              StyleUtils.setSingleSelectionStyle(event.layerInfo.path)
+              SMap.setLayerEditable(event.layerInfo.path, false)
+              SMap.setAction(Action.PAN)
+            },
+          })
+      }
+    }
+  }
+}
+
+function colorAction(params) {
+  switch (params.type) {
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
+      SMap.setTaggingMarkerColor(params.key)
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
+      SMap.setTaggingLineColor(params.key)
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
+      SMap.setTaggingFillForeColor(params.key)
+      break
+    default:
+      break
   }
 }
 
@@ -1066,7 +1151,84 @@ async function showAttribute() {
   )
 }
 
-function showMenuBox() {
+function menu(type, selectKey, params = {}) {
+  let isFullScreen, showMenuDialog, isTouchProgress
+  let showBox = function() {
+    if (
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
+      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
+    ) {
+      params.showBox && params.showBox()
+    }
+  }.bind(this)
+
+  let setData = function() {
+    params.setData &&
+      params.setData({
+        isFullScreen,
+        showMenuDialog,
+        isTouchProgress,
+      })
+  }.bind(this)
+
+  if (Utils.isTouchProgress(selectKey)) {
+    isFullScreen = true
+    showMenuDialog = !GLOBAL.ToolBar.state.showMenuDialog
+    isTouchProgress = GLOBAL.ToolBar.state.showMenuDialog
+    setData()
+  } else {
+    isFullScreen = !GLOBAL.ToolBar.state.showMenuDialog
+    showMenuDialog = !GLOBAL.ToolBar.state.showMenuDialog
+    isTouchProgress = false
+    if (!GLOBAL.ToolBar.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+}
+
+function showMenuBox(type, selectKey, params = {}) {
+  if (
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
+  ) {
+    if (Utils.isTouchProgress(selectKey)) {
+      params.setData &&
+        params.setData({
+          isTouchProgress: GLOBAL.ToolBar.state.showMenuDialog,
+          showMenuDialog: !GLOBAL.ToolBar.state.showMenuDialog,
+          isFullScreen: true,
+        })
+    } else {
+      if (!GLOBAL.ToolBar.state.showMenuDialog) {
+        params.showBox && params.showBox()
+      } else {
+        params.setData &&
+          params.setData({
+            showMenuDialog: false,
+            isFullScreen: false,
+          })
+        params.showBox && params.showBox()
+      }
+    }
+    return
+  }
+
   const _params = ToolbarModule.getParams()
   _params.setToolbarVisible(true, ConstToolType.STYLE_TRANSFER_PICKER, {
     containerType: ToolbarType.picker,
@@ -1133,7 +1295,14 @@ function close(type) {
     type === ConstToolType.MAP_TOOL_TAGGING_EDIT ||
     type === ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT ||
     type === ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE ||
-    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
+    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
+    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
   ) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
@@ -1173,6 +1342,7 @@ function close(type) {
 export default {
   commit,
   showAttribute,
+  menu,
   showMenuBox,
   matchPictureStyle,
   pickerConfirm,
@@ -1187,9 +1357,11 @@ export default {
   close,
   showEditLabel,
   selectLabelToEdit,
+  selectLabelToStyle,
   selectLabelToDelete,
   deleteLabel,
   geometrySelected,
+  colorAction,
 
   begin,
   stop,
