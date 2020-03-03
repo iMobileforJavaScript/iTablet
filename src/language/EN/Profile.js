@@ -166,7 +166,7 @@ const Profile = {
 
   //设置
   STATUSBAR_HIDE: 'StatusBar Hide',
-  SETTING_LICENSE: 'License',
+  SETTING_LICENSE: 'License Center',
   SETTING_ABOUT_ITABLET: 'About iTablet',
   SETTING_ABOUT: 'About',
   SETTING_CHECK_VERSION: 'Check Version',
@@ -181,15 +181,19 @@ const Profile = {
   LICENSE_OFFICIAL: 'License Official',
   LICENSE_STATE: 'License State',
   LICENSE_SURPLUS: 'License Surplus ',
+  LICENSE_YEAR: 'YEAR',
   LICENSE_DAY: ' Day',
   LICENSE_CONTAIN_MODULE: 'License Contain Module',
+  LICENSE_CONTAIN_EXPAND_MODULE: 'License Contain Expand Module',
+  LICENSE_USER_NAME: 'User Name',
+  LICENSE_REMIND_NUMBER: 'License Remind Number',
   LICENSE_OFFICIAL_INPUT: 'License Official Input',
   LICENSE_TRIAL_APPLY: 'License Trial Apply',
-  LICENSE_OFFICIAL_CLEAN: 'License Official Clean',
-  LICENSE_CLEAN_CANCLE: 'Clean Cancle',
-  LICENSE_CLEAN_CONTINUE: 'Clean Continue',
-  LICENSE_CLEAN_ALERT:
-    'The number of licenses will be deducted from the next activation after clearing the license. The current remaining license number:',
+  LICENSE_OFFICIAL_CLEAN: 'License Official Return',
+  LICENSE_OFFICIAL_RETURN: 'License Return',
+  LICENSE_CLEAN_CANCLE: 'Return Cancle',
+  LICENSE_CLEAN_CONTINUE: 'Return Continue',
+  LICENSE_CLEAN_ALERT: 'Sure return license?',
   INPUT_LICENSE_SERIAL_NUMBER: 'Input License Serial Number',
   PLEASE_INPUT_LICENSE_SERIAL_NUMBER: 'Please Input License Serial Number',
   PLEASE_INPUT_LICENSE_SERIAL_NUMBER_NOT_CORRECT:
@@ -197,7 +201,7 @@ const Profile = {
   LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS: 'Serial Number Activat Success',
   LICENSE_REGISTER_BUY: 'Register Buy',
   LICENSE_HAVE_REGISTER: 'Have Registerd',
-  LICENSE_NOT_CONTAIN_MODULE: 'Not Contain Module',
+  LICENSE_NOT_CONTAIN_MODULE: 'Not Contain Expand Module',
   LICENSE_MODULE_REGISTER_SUCCESS: 'Module Register Success',
   LICENSE_EXIT: 'Exit',
   LICENSE_EXIT_FAILED: 'Exit Failed',
@@ -211,7 +215,16 @@ const Profile = {
   LICENSE_NOT_ITABLET_OFFICAL:
     'This official license is not activat on iTablet,Please go to the license page to clear the license and reactivate it',
   LICENSE_NATIVE_EXPIRE: 'Native License Invalid',
-  //许可模块
+  LICENSE_LONG_EFFECTIVE: 'Long Effective',
+  LICENSE_OFFLINE: 'License OffLine',
+  LICENSE_CLOUD: 'License Cloud',
+  LICENSE_EDITION: 'License Edition',
+  LICENSE_EDITION_CURRENT: 'Current Edition',
+  //itablet许可版本
+  LICENSE_EDITION_STANDARD: 'Standard Edition',
+  LICENSE_EDITION_PROFESSIONAL: 'Professional Edition',
+  LICENSE_EDITION_ADVANCED: 'ADVANCED Edition',
+  //imobile许可模块
   Core_Dev: 'Core Dev',
   Core_Runtime: 'Core Runtime',
   Navigation_Dev: 'Navigation Dev',
@@ -230,5 +243,10 @@ const Profile = {
   Realspace_Analyst_Runtime: 'Realspace Analyst Runtime',
   Realspace_Effect_Dev: 'Realspace Effect Dev',
   Realspace_Effect_Runtime: 'Realspace Effect Runtime',
+  //itablet许可模块
+  ITABLET_ARMAP: 'Ar Map',
+  ITABLET_NAVIGATIONMAP: 'Navigation Map',
+  ITABLET_DATAANALYSIS: 'Data Analysis',
+  ITABLET_PLOTTING: 'Plotting',
 }
 export { Profile }

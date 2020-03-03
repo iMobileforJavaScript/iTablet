@@ -168,7 +168,7 @@ const Profile = {
 
   //设置
   STATUSBAR_HIDE: '隐藏状态栏',
-  SETTING_LICENSE: '许可',
+  SETTING_LICENSE: '许可中心',
   SETTING_ABOUT_ITABLET: '关于iTablet',
   SETTING_ABOUT: '关于',
   SETTING_CHECK_VERSION: '检查版本',
@@ -184,21 +184,26 @@ const Profile = {
   LICENSE_OFFICIAL: '正式许可',
   LICENSE_STATE: '许可状态',
   LICENSE_SURPLUS: '剩余',
+  LICENSE_YEAR: '年',
   LICENSE_DAY: '天',
   LICENSE_CONTAIN_MODULE: '所含模块',
+  LICENSE_CONTAIN_EXPAND_MODULE: '所含拓展模块',
+  LICENSE_USER_NAME: '用户名',
+  LICENSE_REMIND_NUMBER: '剩余许可数量',
   LICENSE_OFFICIAL_INPUT: '接入正式许可',
   LICENSE_TRIAL_APPLY: '申请试用许可',
-  LICENSE_OFFICIAL_CLEAN: '清除正式许可',
+  LICENSE_OFFICIAL_CLEAN: '归还正式许可',
+  LICENSE_OFFICIAL_RETURN: '归还许可',
   LICENSE_CLEAN_CANCLE: '取消',
-  LICENSE_CLEAN_CONTINUE: '清除',
-  LICENSE_CLEAN_ALERT: '清除许可后下次激活还将扣除许可次数，当前剩余许可数量：',
+  LICENSE_CLEAN_CONTINUE: '归还',
+  LICENSE_CLEAN_ALERT: '是否归还许可？',
   INPUT_LICENSE_SERIAL_NUMBER: '输入许可序列编号',
   PLEASE_INPUT_LICENSE_SERIAL_NUMBER: '请输入许可序列编号',
   PLEASE_INPUT_LICENSE_SERIAL_NUMBER_NOT_CORRECT: '请输入正确的许可序列编号',
   LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS: '序列号激活成功',
   LICENSE_REGISTER_BUY: '登记购买',
   LICENSE_HAVE_REGISTER: '已登记',
-  LICENSE_NOT_CONTAIN_MODULE: '未包含模块',
+  LICENSE_NOT_CONTAIN_MODULE: '未包含拓展模块',
   LICENSE_MODULE_REGISTER_SUCCESS: '模块登记成功',
   LICENSE_MODULE_REGISTER_FAIL: '模块登记失败',
   LICENSE_EXIT: '退出',
@@ -212,7 +217,16 @@ const Profile = {
   LICENSE_NOT_ITABLET_OFFICAL:
     '该正式许可不是iTablet内激活的许可，将导致iTablet部分功能不可用，请到许可页面清除许可后重新申请',
   LICENSE_NATIVE_EXPIRE: '本地许可无效',
-  //许可模块
+  LICENSE_LONG_EFFECTIVE: '长期有效',
+  LICENSE_OFFLINE: '离线许可',
+  LICENSE_CLOUD: '云许可',
+  LICENSE_EDITION: '许可版本',
+  LICENSE_EDITION_CURRENT: '当前版本',
+  //itablet许可版本
+  LICENSE_EDITION_STANDARD: '标准版',
+  LICENSE_EDITION_PROFESSIONAL: '专业版',
+  LICENSE_EDITION_ADVANCED: '高级版',
+  //imobile许可模块
   Core_Dev: '核心开发模块',
   Core_Runtime: '核心运行模块',
   Navigation_Dev: '传统导航开发模块',
@@ -231,6 +245,11 @@ const Profile = {
   Realspace_Analyst_Runtime: '三维分析运行模块',
   Realspace_Effect_Dev: '三维特效开发模块',
   Realspace_Effect_Runtime: '三维特效运行模块',
+  //itablet许可模块
+  ITABLET_ARMAP: 'AR地图',
+  ITABLET_NAVIGATIONMAP: '导航地图',
+  ITABLET_DATAANALYSIS: '数据分析',
+  ITABLET_PLOTTING: '应急标绘',
 }
 
 export { Profile }

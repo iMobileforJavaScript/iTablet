@@ -55,6 +55,15 @@ export default class SymbolList extends React.Component {
     if (this.props.layerData.type === 5) {
       SCartography.setFillSymbolID(data.id, this.props.layerData.name)
     }
+    if (this.props.type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT) {
+      SMap.setTaggingSymbolID(data.id)
+    }
+    if (this.props.type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE) {
+      SMap.setTaggingSymbolID(data.id)
+    }
+    if (this.props.type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION) {
+      SMap.setTaggingSymbolID(data.id)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -65,7 +74,8 @@ export default class SymbolList extends React.Component {
     }
     if (
       JSON.stringify(prevProps.layerData.type) !==
-      JSON.stringify(this.props.layerData.type)
+        JSON.stringify(this.props.layerData.type) ||
+      this.props.type !== prevProps.type
     ) {
       this.renderLibrary()
     }
@@ -91,7 +101,19 @@ export default class SymbolList extends React.Component {
       }
       if (symbols.length > 0) return
     }
-    switch (this.props.layerData.type) {
+    let symbolType = this.props.layerData.type
+    switch (this.props.type) {
+      case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
+        symbolType = 1
+        break
+      case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
+        symbolType = 3
+        break
+      case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+        symbolType = 5
+        break
+    }
+    switch (symbolType) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {
           result.forEach(item => {

@@ -149,6 +149,13 @@ function getMenuDialogData(type, ...others) {
   let data = []
   switch (type) {
     case ConstToolType.STYLE_TRANSFER:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
       data = toolModule().getMenuData(type)
       break
     case ConstToolType.MAP_STYLE:

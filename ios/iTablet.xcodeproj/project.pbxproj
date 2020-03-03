@@ -63,6 +63,7 @@
 		0AEFC1E923165D6D006FEDD8 /* python2.7.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB6A23151595005F89FC /* python2.7.zip */; };
 		0AEFC201231762DA006FEDD8 /* PIL in Resources */ = {isa = PBXBuildFile; fileRef = 6112EB3023151588005F89FC /* PIL */; };
 		0AF433CB224C78E4003FDADE /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF433CA224C78E4003FDADE /* SuperMap.framework */; };
+		0AFDDB0A23FE714A00E6BFE4 /* JRE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFDDAC423FE714900E6BFE4 /* JRE.framework */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -681,6 +682,8 @@
 		0ABCB8C8224605E300992994 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		0AECCF772328E034004F84A4 /* Images.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Images.zip; sourceTree = "<group>"; };
 		0AF433CA224C78E4003FDADE /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
+		0AFDDAC423FE714900E6BFE4 /* JRE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JRE.framework; path = iPhoneOS.sdk/JRE.framework; sourceTree = "<group>"; };
+		0AFDDB0E23FE78B700E6BFE4 /* ITabletLicenseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ITabletLicenseManager.h; path = ../../../../sourceCode/01_SourceCode_Objects/Objects_iOS/Data/PermissionToolkit/ITabletLicenseManager.h; sourceTree = "<group>"; };
 		125E67BD15C84118B881A822 /* CoreGraphics.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -839,7 +842,7 @@
 				554AD35F038E444CA9C593BD /* CoreFoundation.framework in Frameworks */,
 				B906E572BE854858B85C8635 /* SystemConfiguration.framework in Frameworks */,
 				4E51DC0F37A544EEAA87110D /* Foundation.framework in Frameworks */,
-				B72C4F10240CD96B00D19927 /* JRE.framework in Frameworks */,
+				0AFDDB0A23FE714A00E6BFE4 /* JRE.framework in Frameworks */,
 				D15AD4572D5244D593915653 /* UIKit.framework in Frameworks */,
 				EDCFE5F05909482399867063 /* libresolv.tbd in Frameworks */,
 				CFFC10A9D14645FBB08D3CBA /* CoreGraphics.framework in Frameworks */,
@@ -1178,6 +1181,7 @@
 				D83ED3B621704BA600683BB3 /* Tools */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				0AFDDB0E23FE78B700E6BFE4 /* ITabletLicenseManager.h */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -1239,7 +1243,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B72C4ED2240CD96A00D19927 /* JRE.framework */,
+				0AFDDAC423FE714900E6BFE4 /* JRE.framework */,
 				4EFB3DDF23BBF07300688642 /* libiconv.2.4.0.tbd */,
 				6112EBEC23151716005F89FC /* libbz2.tbd */,
 				6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */,

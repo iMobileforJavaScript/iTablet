@@ -810,7 +810,7 @@ class Chat extends React.Component {
     this.ImageViewer.setVisible(true)
   }
 
-  onCustomViewLocationTouch = message => {
+  onCustomViewLocationTouch = async message => {
     if (global.coworkMode) {
       Toast.show(getLanguage(global.language).Friends.LOCATION_COWORK_NOTIFY)
     } else if (this.action) {
@@ -818,6 +818,8 @@ class Chat extends React.Component {
     } else {
       let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
       wsData.layerIndex = 3
+      let licenseStatus = await SMap.getEnvironmentStatus()
+      global.isLicenseValid = licenseStatus.isLicenseValid
       NavigationService.navigate('MapViewSingle', {
         wsData,
         isExample: true,

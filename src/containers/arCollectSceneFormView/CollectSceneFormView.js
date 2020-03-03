@@ -7,6 +7,9 @@ import {
   Text,
   DeviceEventEmitter,
   FlatList,
+  NativeModules,
+  NativeEventEmitter,
+  Platform,
 } from 'react-native'
 import NavigationService from '../../containers/NavigationService'
 import { getThemeAssets } from '../../assets'
@@ -23,6 +26,9 @@ import { color } from '../../styles'
 import { Toast, dataUtil, scaleSize } from '../../utils'
 import ToolbarModule from '../workspace/components/ToolBar/modules/ToolbarModule'
 import { ConstPath, UserType } from '../../constants'
+
+let nativeSCollectSceneFormView = NativeModules.SCollectSceneFormView
+const nativeEvt = new NativeEventEmitter(nativeSCollectSceneFormView)
 
 /*
  * AR高精度采集界面
@@ -86,21 +92,45 @@ export default class CollectSceneFormView extends React.Component {
           udbPath,
         )
         //注册监听
-        DeviceEventEmitter.addListener(
-          'onTotalLengthChanged',
-          this.onTotalLengthChanged,
-        )
+        if (Platform.OS === 'ios') {
+          nativeEvt.addListener(
+            'onTotalLengthChanged',
+            this.onTotalLengthChanged,
+          )
+        } else {
+          DeviceEventEmitter.addListener(
+            'onTotalLengthChanged',
+            this.onTotalLengthChanged,
+          )
+        }
+        // DeviceEventEmitter.addListener(
+        //   'onTotalLengthChanged',
+        //   this.onTotalLengthChanged,
+        // )
       }.bind(this)())
     })
   }
 
   componentWillUnmount() {
     // Orientation.unlockAllOrientations()
+    SCollectSceneFormView.onDestroy
     //移除监听
-    DeviceEventEmitter.removeListener(
-      'onTotalLengthChanged',
-      this.onTotalLengthChanged,
-    )
+    if (Platform.OS === 'ios') {
+      nativeEvt.removeListener(
+        'onTotalLengthChanged',
+        this.onTotalLengthChanged,
+      )
+    } else {
+      DeviceEventEmitter.removeListener(
+        'onTotalLengthChanged',
+        this.onTotalLengthChanged,
+      )
+    }
+
+    // DeviceEventEmitter.removeListener(
+    //   'onTotalLengthChanged',
+    //   this.onTotalLengthChanged,
+    // )
   }
 
   onTotalLengthChanged = params => {

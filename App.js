@@ -357,10 +357,11 @@ class AppRoot extends Component {
     let status = await SMap.getEnvironmentStatus()
     if (!status.isLicenseValid) {
       GLOBAL.LicenseValidDialog.setDialogVisible(true)
-    }else if(serialNumber === '' && !status.isTrailLicense)
-    {
-      GLOBAL.isNotItableLicenseDialog.setDialogVisible(true)
     }
+    // else if(serialNumber === '' && !status.isTrailLicense)
+    // {
+    //   GLOBAL.isNotItableLicenseDialog.setDialogVisible(true)
+    // }
 
     if(serialNumber!==''&&!status.isTrailLicense){
       let licenseInfo = await SMap.getSerialNumberAndModules()
@@ -370,7 +371,10 @@ class AppRoot extends Component {
         let number = 0
         for (let i = 0; i < size; i++) {
           let modultCode = Number(modules[i])
-          number = number + modultCode
+          if(modultCode == 0){
+            continue
+          }
+          number = number + (1<<(modultCode%100))
         }
         GLOBAL.modulesNumber=number
       }
@@ -648,46 +652,46 @@ class AppRoot extends Component {
   //接入正式许可
   inputOfficialLicense=async () =>{
 
-    if(Platform.OS === 'ios'){
-      GLOBAL.Loading.setLoading(
-        true,
-        this.props.language === 'CN' ? '许可申请中...' : 'Applying',
-      )
+    // if(Platform.OS === 'ios'){
+    //   GLOBAL.Loading.setLoading(
+    //     true,
+    //     this.props.language === 'CN' ? '许可申请中...' : 'Applying',
+    //   )
 
-      let activateResult = await SMap.activateNativeLicense()
-      if(activateResult === -1){
-        //没有本地许可文件
-        GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
-      }else if(activateResult === -2){
-        //本地许可文件序列号无效
-        Toast.show(
-          getLanguage(this.props.language).Profile
-            .LICENSE_NATIVE_EXPIRE,
-        )
-      }else {
-        AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, activateResult)
-        let modules = await SMap.licenseContainModule(activateResult)
-        let size = modules.length
-        let number = 0
-        for (let i = 0; i < size; i++) {
-          let modultCode = Number(modules[i])
-          number = number + modultCode
-        }
-        GLOBAL.modulesNumber = number
+    //   let activateResult = await SMap.activateNativeLicense()
+    //   if(activateResult === -1){
+    //     //没有本地许可文件
+    //     GLOBAL.noNativeLicenseDialog.setDialogVisible(true)
+    //   }else if(activateResult === -2){
+    //     //本地许可文件序列号无效
+    //     Toast.show(
+    //       getLanguage(this.props.language).Profile
+    //         .LICENSE_NATIVE_EXPIRE,
+    //     )
+    //   }else {
+    //     AsyncStorage.setItem(constants.LICENSE_OFFICIAL_STORAGE_KEY, activateResult)
+    //     let modules = await SMap.licenseContainModule(activateResult)
+    //     let size = modules.length
+    //     let number = 0
+    //     for (let i = 0; i < size; i++) {
+    //       let modultCode = Number(modules[i])
+    //       number = number + modultCode
+    //     }
+    //     GLOBAL.modulesNumber = number
 
-        GLOBAL.LicenseValidDialog.setDialogVisible(false)
-        GLOBAL.getLicense && GLOBAL.getLicense()
-        Toast.show(
-          getLanguage(this.props.language).Profile
-            .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
-        )
-      }
-      GLOBAL.Loading.setLoading(
-        false,
-        this.props.language === 'CN' ? '许可申请中...' : 'Applying...',
-      )
-      return
-    }
+    //     GLOBAL.LicenseValidDialog.setDialogVisible(false)
+    //     GLOBAL.getLicense && GLOBAL.getLicense()
+    //     Toast.show(
+    //       getLanguage(this.props.language).Profile
+    //         .LICENSE_SERIAL_NUMBER_ACTIVATION_SUCCESS,
+    //     )
+    //   }
+    //   GLOBAL.Loading.setLoading(
+    //     false,
+    //     this.props.language === 'CN' ? '许可申请中...' : 'Applying...',
+    //   )
+    //   return
+    // }
 
     GLOBAL.LicenseValidDialog.setDialogVisible(false)
     NavigationService.navigate('LicenseJoin',{
