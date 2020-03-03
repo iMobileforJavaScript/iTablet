@@ -14,6 +14,7 @@ import { Toast } from '../../../../../../utils'
 import ToolbarModule from '../ToolbarModule'
 import ThemeData from './ThemeData'
 import ThemeAction from './ThemeAction'
+import NavigationService from '../../../../../NavigationService'
 
 /**
  *
@@ -1058,14 +1059,33 @@ function getThemeMapParam(type) {
 
 /** 设置分段模式 **/
 function setRangeMode(type, rangeMode) {
+  const globalParams = ToolbarModule.getParams()
   const _params = ToolbarModule.getData().themeParams
   if (rangeMode !== undefined) {
     _params.RangeMode = rangeMode
   }
   if (type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_MODE) {
-    SThemeCartography.modifyThemeLabelRangeMap(_params)
+    if (rangeMode === RangeMode.CUSTOMINTERVAL) {
+      globalParams.setToolbarVisible(false, {
+        isTouchProgress: false,
+        showMenuDialog: false,
+        selectKey: '',
+      })
+      NavigationService.navigate('CustomModePage', { type })
+    } else {
+      SThemeCartography.modifyThemeLabelRangeMap(_params)
+    }
   } else {
-    SThemeCartography.modifyThemeRangeMap(_params)
+    if (rangeMode === RangeMode.CUSTOMINTERVAL) {
+      globalParams.setToolbarVisible(false, {
+        isTouchProgress: false,
+        showMenuDialog: false,
+        selectKey: '',
+      })
+      NavigationService.navigate('CustomModePage', { type })
+    } else {
+      SThemeCartography.modifyThemeRangeMap(_params)
+    }
   }
 }
 
@@ -1129,15 +1149,15 @@ function getRangeMode(type) {
       image: require('../../../../../../assets/mapTools/range_mode_quantile_black.png'),
       selectedImage: require('../../../../../../assets/mapTools/range_mode_quantile_black.png'),
     },
-    // {
-    //   // 自定义分段
-    //   key: RangeMode.CUSTOMINTERVAL,
-    //   title: '自定义分段',
-    //   action: () => setRangeMode(type, RangeMode.CUSTOMINTERVAL),
-    //   size: 'large',
-    //   image: require('../../../../../../assets/mapTools/range_mode_squareroot.png'),
-    //   selectedImage: require('../../../../../../assets/mapTools/range_mode_squareroot.png'),
-    // },
+    {
+      // 自定义分段
+      key: RangeMode.CUSTOMINTERVAL,
+      title: getLanguage(global.language).Map_Main_Menu.THEME_MANUAL,
+      action: () => setRangeMode(type, RangeMode.CUSTOMINTERVAL),
+      size: 'large',
+      image: getPublicAssets().mapTools.range_mode_custom,
+      selectedImage: getPublicAssets().mapTools.range_mode_custom,
+    },
   ]
   return data
 }
@@ -2569,6 +2589,11 @@ function getRangeColorScheme() {
  */
 function getUniqueColorScheme() {
   let list = [
+    {
+      key: 'USER_DEFINE',
+      colorSchemeName: getLanguage(GLOBAL.language).Map_Main_Menu.USER_DEFINE,
+      colorScheme: require('../../../../../../assets/uniqueColorScheme/USER_DEFINE.png'),
+    },
     {
       key: 'BA_Blue',
       colorSchemeName: 'BA_Blue',

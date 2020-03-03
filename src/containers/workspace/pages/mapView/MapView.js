@@ -44,6 +44,8 @@ import {
   LocationView,
   NavigationPoiView,
   RNFloorListView,
+  PreviewHeader,
+  PreviewColorPicker,
 } from '../../components'
 import { ToolbarModule } from '../../components/ToolBar/modules'
 import {
@@ -1830,6 +1832,25 @@ export default class MapView extends React.Component {
     )
   }
 
+  renderPreviewHeader = () => {
+    return (
+      <PreviewHeader
+        ref={ref => (GLOBAL.PreviewHeader = ref)}
+        navigation={this.props.navigation}
+        language={this.props.language}
+      />
+    )
+  }
+  renderPreviewColorPicker = () => {
+    return (
+      <PreviewColorPicker
+        ref={ref => (GLOBAL.PreviewColorPicker = ref)}
+        navigation={this.props.navigation}
+        device={this.props.device}
+        language={this.props.language}
+      />
+    )
+  }
   //遮盖层
   renderOverLayer = () => {
     return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
@@ -2949,6 +2970,8 @@ export default class MapView extends React.Component {
           setNavigationPoiView={this.props.setNavigationPoiView}
           setNavigationChangeAR={this.props.setNavigationChangeAR}
         />
+        {GLOBAL.Type === constants.MAP_THEME && this.renderPreviewHeader()}
+        {GLOBAL.Type === constants.MAP_THEME && this.renderPreviewColorPicker()}
         {/*{GLOBAL.Type === constants.MAP_NAVIGATION && (*/}
         {/*  <PopView*/}
         {/*    showFullMap={this.showFullMap}*/}

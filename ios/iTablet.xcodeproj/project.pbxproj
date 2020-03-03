@@ -116,6 +116,7 @@
 		AB9C1E0FCFFF4818AE82E25D /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CEBBE375A25447F9697656F /* libRCTJCoreModule.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B4C5629C9ECB4E5491401AA7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3977DB9C6AC414797811E2F /* Security.framework */; };
+		B72C4F10240CD96B00D19927 /* JRE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B72C4ED2240CD96A00D19927 /* JRE.framework */; };
 		B7AAA32D17DE43D8B5F94F9C /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 410FBE4CFD0D457AB7FB9B28 /* UserNotifications.framework */; };
 		B906E572BE854858B85C8635 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365D7087643F439D805CDB5E /* SystemConfiguration.framework */; };
 		CFFC10A9D14645FBB08D3CBA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 125E67BD15C84118B881A822 /* CoreGraphics.framework */; };
@@ -757,6 +758,7 @@
 		B3977DB9C6AC414797811E2F /* Security.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B3C729742C5A43198594C430 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		B6715E489CA142739903C659 /* libRNViewShot.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNViewShot.a; sourceTree = "<group>"; };
+		B72C4ED2240CD96A00D19927 /* JRE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JRE.framework; path = iPhoneOS.sdk/JRE.framework; sourceTree = "<group>"; };
 		BFDA3FC05BEC446BAE4F2E22 /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		CC5A76B8862342D4B30E22D6 /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		CD6BEDE0251A4FD9A83E2659 /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 				554AD35F038E444CA9C593BD /* CoreFoundation.framework in Frameworks */,
 				B906E572BE854858B85C8635 /* SystemConfiguration.framework in Frameworks */,
 				4E51DC0F37A544EEAA87110D /* Foundation.framework in Frameworks */,
+				B72C4F10240CD96B00D19927 /* JRE.framework in Frameworks */,
 				D15AD4572D5244D593915653 /* UIKit.framework in Frameworks */,
 				EDCFE5F05909482399867063 /* libresolv.tbd in Frameworks */,
 				CFFC10A9D14645FBB08D3CBA /* CoreGraphics.framework in Frameworks */,
@@ -1236,6 +1239,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B72C4ED2240CD96A00D19927 /* JRE.framework */,
 				4EFB3DDF23BBF07300688642 /* libiconv.2.4.0.tbd */,
 				6112EBEC23151716005F89FC /* libbz2.tbd */,
 				6112EBE9231516F9005F89FC /* libsqlite3.0.tbd */,

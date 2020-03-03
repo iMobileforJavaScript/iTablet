@@ -73,7 +73,8 @@
     "redux-persist": "^5.10.0",
     "redux-promise-middleware": "^6.1.0",
     "redux-thunk": "^2.3.0",
-    "teaset": "^0.6.3"
+    "teaset": "^0.6.3",
+    "react-native-slider": "latest"
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge.0",

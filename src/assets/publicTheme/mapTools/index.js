@@ -15,6 +15,7 @@ const tools_layer_paste = require('./layer_paste.png')
 const tools_layer_delete = require('./layer_delete.png')
 const icon_arrow_up = require('./icon_arrow_up.png')
 const icon_arrow_down = require('./icon_arrow_down.png')
+const range_mode_custom = require('./range_mode_customer.png')
 export default {
   tools_rectangle_cut,
   /*多媒体采集*/
@@ -45,4 +46,6 @@ export default {
   //三维box裁剪专用箭头
   icon_arrow_up,
   icon_arrow_down,
+  //分段专题图自定义分段
+  range_mode_custom,
 }

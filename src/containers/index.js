@@ -129,6 +129,7 @@ import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
 import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
 import LocationSetting from './locationSetting'
+import CustomModePage from './CustomModePage'
 
 export default function(appConfig) {
   return createStackNavigator(
@@ -962,6 +963,12 @@ export default function(appConfig) {
       },
       CollectSceneFormHistoryView: {
         screen: CollectSceneFormHistoryView,
+        navigationOptions: {
+          header: null,
+        },
+      },
+      CustomModePage: {
+        screen: CustomModePage,
         navigationOptions: {
           header: null,
         },

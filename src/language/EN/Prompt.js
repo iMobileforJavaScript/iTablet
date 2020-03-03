@@ -317,6 +317,10 @@ const Prompt = {
     "Points are out of dataset's bounds or there are no dataset around points, do you want to use online route analyst?",
   NOT_SUPPORT_ONLINE_NAVIGATION: 'Online navigation is not support yet.',
 
+  //自定义专题图
+  ONLY_INTEGER: 'Only integers can be entered!',
+  ONLY_INTEGER_GREATER_THAN_2: 'Only integers greater than 2 can be entered!',
+  PARAMS_ERROR: 'Params error! Failed to set!',
   SPEECH_TIP: "You may say:\n'Zoom in'，'Zoom out'，'Locate' or 'Close'",
   SPEECH_ERROR: 'Recognize error, please try again later',
   SPEECH_NONE: "You didn't seem to speak anything",
