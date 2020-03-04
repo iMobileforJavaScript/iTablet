@@ -19,6 +19,8 @@ import {
   Container,
   Dialog,
   InputDialog,
+  MenuDialog,
+  PanResponderView,
   Progress,
 } from '../../../../components'
 import {
@@ -35,7 +37,7 @@ import NavigationService from '../../../NavigationService'
 import styles from './styles'
 import { getLanguage } from '../../../../language'
 import SurfaceView from '../../../../components/SurfaceView'
-import { tool3DModule } from '../../components/ToolBar/modules'
+import { tool3DModule, ToolbarModule } from '../../components/ToolBar/modules'
 const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
@@ -76,7 +78,14 @@ export default class Map3D extends React.Component {
       showErrorInfo: false,
       measureShow: false,
       measureResult: '',
+      showMenuDialog: false, //裁剪菜单
+      showPanResponderView: false, //裁剪拖动界面
+      clipSetting: {}, //裁剪数据
+      cutLayers: [], //三维裁剪的图层数组
+      tips: '', //裁剪数值信息
     }
+    this.selectKey = '' //裁剪选中的key
+    this.preGestureDx = 0 //上一次拖动的X位移
     this.name = params.name || ''
     this.type = params.type || 'MAP_3D'
     this.mapLoaded = false // 判断地图是否加载完成
@@ -146,8 +155,12 @@ export default class Map3D extends React.Component {
     let layerlist = await SScene.getLayerList()
     let terrainLayerList = await SScene.getTerrainLayerList()
     layerlist = JSON.parse(JSON.stringify(layerlist.concat(terrainLayerList)))
+    let cutLayers = layerlist.map(layer => {
+      layer.selected = true
+    })
     this.setState({
       layerlist,
+      cutLayers,
     })
   }
   initListener = async () => {
@@ -285,6 +298,30 @@ export default class Map3D extends React.Component {
     }.bind(this)())
   }
 
+  showMenuDialog = params => {
+    let { clipSetting, showMenuDialog } = params
+    if (showMenuDialog === undefined) {
+      showMenuDialog = !this.state.showMenuDialog
+    }
+    if (clipSetting === undefined) {
+      clipSetting = this.state.clipSetting
+    }
+    this.setState({
+      showMenuDialog,
+      showPanResponderView: false,
+      clipSetting,
+    })
+  }
+
+  //获取裁剪设置ClipSetting
+  getClipSetting = () => {
+    return this.state.clipSetting
+  }
+  setClipSetting = clipSetting => {
+    this.setState({
+      clipSetting,
+    })
+  }
   back = async () => {
     // GLOBAL.SaveMapView &&
     //   GLOBAL.openWorkspace &&
@@ -347,6 +384,193 @@ export default class Map3D extends React.Component {
     return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
   }
 
+  _onKeySelect = item => {
+    //拖动裁剪 显示PanResponderView
+    this.selectKey = item.selectKey
+    this.setState({
+      showMenuDialog: false,
+      showPanResponderView: true,
+      tips: '',
+    })
+  }
+  renderMenuDialog = () => {
+    let data = [
+      {
+        key: getLanguage(this.props.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_LENGTH,
+        selectKey: 'length',
+        action: this._onKeySelect,
+      },
+      {
+        key: getLanguage(this.props.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_WIDTH,
+        selectKey: 'width',
+        action: this._onKeySelect,
+      },
+      {
+        key: getLanguage(this.props.language).Map_Main_Menu
+          .CLIP_AREA_SETTINGS_HEIGHT,
+        selectKey: 'height',
+        action: this._onKeySelect,
+      },
+      { key: 'X', selectKey: 'X', action: this._onKeySelect },
+      { key: 'Y', selectKey: 'Y', action: this._onKeySelect },
+      { key: 'Z', selectKey: 'Z', action: this._onKeySelect },
+    ]
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: color.transOverlay,
+        }}
+      >
+        <MenuDialog
+          data={data}
+          autoSelect={true}
+          viewableItems={5}
+          selectKey={this.selectKey}
+        />
+      </View>
+    )
+  }
+
+  //移动
+  _onHandleMove = async (evt, gestureState) => {
+    let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
+    let { dx } = gestureState
+    let change = 0
+    if (Math.abs(this.preGestureDx - dx) >= 10) {
+      this.preGestureDx = dx
+      switch (this.selectKey) {
+        case 'X':
+        case 'Y':
+          change = dx / 5000000
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 0) {
+            clipSetting[this.selectKey] = 0
+          } else if (clipSetting[this.selectKey] > 360) {
+            clipSetting[this.selectKey] = 360
+          }
+          break
+        case 'Z':
+          change = dx / 200
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 0) {
+            clipSetting[this.selectKey] = 0
+          }
+          break
+        case 'width':
+        case 'height':
+        case 'length':
+          change = dx / 100
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 1) {
+            clipSetting[this.selectKey] = 1
+          }
+          break
+      }
+      // clipSetting.layers = [...this.state.cutLayers]
+      this.setState({
+        tips: clipSetting[this.selectKey],
+      })
+      await SScene.clipByBox(clipSetting)
+    }
+  }
+
+  //结束移动
+  _onHandleMoveEnd = (evt, gestureState) => {
+    let { dx, dy } = gestureState
+    let clipSetting = JSON.parse(JSON.stringify(this.state.clipSetting))
+    if (Math.abs(dx) > 10) {
+      let change
+      switch (this.selectKey) {
+        case 'X':
+        case 'Y':
+          change = dx / 5000000
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 0) {
+            clipSetting[this.selectKey] = 0
+          } else if (clipSetting[this.selectKey] > 360) {
+            clipSetting[this.selectKey] = 360
+          }
+          break
+        case 'Z':
+          change = dx / 200
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 0) {
+            clipSetting[this.selectKey] = 0
+          }
+          break
+        case 'width':
+        case 'height':
+        case 'length':
+          change = dx / 100
+          clipSetting[this.selectKey] += change
+          if (clipSetting[this.selectKey] < 1) {
+            clipSetting[this.selectKey] = 1
+          }
+          break
+      }
+      this.setState(
+        {
+          clipSetting,
+        },
+        () => {
+          this.preGestureDx = 0
+          ToolbarModule.addData({ clipSetting })
+        },
+      )
+    } else if (Math.abs(dy) >= 10) {
+      this.setState({
+        tips: '',
+        showMenuDialog: true,
+        showPanResponderView: false,
+      })
+    }
+  }
+  clearClip = () => {
+    this.selectKey = ''
+    this.setState({
+      tips: '',
+      showMenuDialog: false,
+      showPanResponderView: false,
+      clipSetting: {},
+    })
+  }
+  renderPanResponderView = () => {
+    let tips = this.state.tips
+    tips = tips.toString().length > 8 ? tips.toFixed(6) : tips
+    let needTips = !!tips
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: color.transOverlay,
+        }}
+      >
+        <PanResponderView
+          onHandleMove={this._onHandleMove}
+          onHandleMoveEnd={this._onHandleMoveEnd}
+        >
+          {needTips && (
+            <View style={styles.measureResultContainer}>
+              <View style={styles.measureResultView}>
+                <Text style={styles.measureResultText}>{tips}</Text>
+              </View>
+            </View>
+          )}
+        </PanResponderView>
+      </View>
+    )
+  }
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
@@ -458,6 +682,10 @@ export default class Map3D extends React.Component {
         {...this.props}
         setAttributes={this.props.setAttributes}
         measureShow={this.measureShow}
+        showMenuDialog={this.showMenuDialog}
+        clearClip={this.clearClip}
+        getClipSetting={this.getClipSetting}
+        setClipSetting={this.setClipSetting}
         setContainerLoading={this.setLoading}
         layerList={this.state.layerlist}
         changeLayerList={this.getLayers}
@@ -596,6 +824,8 @@ export default class Map3D extends React.Component {
         {this.renderDialog()}
         {this.renderInputDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
+        {this.state.showMenuDialog && this.renderMenuDialog()}
+        {this.state.showPanResponderView && this.renderPanResponderView()}
       </Container>
     )
   }

@@ -7,8 +7,9 @@ import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import Tool3DAction from './Tool3DAction'
-import { MenuList } from './CustomViews'
+import { SelectList } from './CustomViews'
 import { SScene } from 'imobile_for_reactnative'
+import { getPublicAssets } from '../../../../../../assets'
 
 async function getData(type, params) {
   if (params) {
@@ -239,7 +240,11 @@ async function getData(type, params) {
       break
     case ConstToolType.MAP3D_BOX_CLIP:
     case ConstToolType.MAP3D_PLANE_CLIP:
-    case ConstToolType.MAP3D_CROSS_CLIP: {
+    case ConstToolType.MAP3D_CROSS_CLIP:
+    case ConstToolType.MAP3D_CLIP_SHOW:
+    case ConstToolType.MAP3D_CLIP_HIDDEN:
+    case ConstToolType.MAP3D_BOX_CLIP_IN:
+    case ConstToolType.MAP3D_BOX_CLIP_OUT: {
       const _data = await getClipData(type)
       data = _data.data
       buttons = _data.buttons
@@ -270,216 +275,226 @@ async function getData(type, params) {
 /** 获取裁剪数据 **/
 async function getClipData(type) {
   let params = ToolbarModule.getParams()
-  let data
-  let layerList = await SScene.getLayerList()
-  let terrainLayerList = await SScene.getTerrainLayerList()
-  layerList = JSON.parse(JSON.stringify(layerList.concat(terrainLayerList)))
+  let clipSetting = params.getClipSetting && params.getClipSetting()
+  let isClipInner = clipSetting.clipInner
+  let customView
+  let data = clipSetting.layers
   switch (type) {
-    case ConstToolType.MAP3D_BOX_CLIP:
-      data = BoxClipData()
-      break
-    case ConstToolType.MAP3D_PLANE_CLIP:
-      data = PlaneClipData()
-      break
-    case ConstToolType.MAP3D_CROSS_CLIP:
-      data = CrossClipData()
+    case ConstToolType.MAP3D_CLIP_SHOW:
+      if (data[0].selected === undefined) {
+        data.map(item => {
+          item.selected = true
+        })
+      }
+      customView = () => (
+        <SelectList
+          data={data}
+          onSelect={layers => {
+            Tool3DAction.layerChange(layers)
+          }}
+        />
+      )
       break
   }
-  layerList.map(item => {
-    let obj = item
-    obj.title = item.name
-    obj.iconType = 'Select'
-    obj.isChecked = true
-    data[0].data.push(obj)
-  })
 
   const buttons = [
-    ToolbarBtnType.CANCEL,
+    {
+      type: ToolbarBtnType.CANCEL,
+      image: require('../../../../../../assets/mapEdit/icon_function_cancel.png'),
+      action: () => Tool3DAction.closeClip(),
+    },
+    {
+      type: ToolbarBtnType.CLIP_LAYER,
+      image: getPublicAssets().mapTools.tab_layer,
+      action: () => Tool3DAction.showLayerList(),
+    },
+    {
+      type: ToolbarBtnType.MENU,
+      action: () => Tool3DAction.showMenuDialog(),
+    },
+    {
+      type: ToolbarBtnType.CHANGE_CLIP,
+      image: isClipInner
+        ? getPublicAssets().mapTools.scene_tool_clip_in
+        : getPublicAssets().mapTools.scene_tool_clip_out,
+      action: () => Tool3DAction.changeClip(),
+    },
     {
       type: ToolbarBtnType.CLEAR,
       image: require('../../../../../../assets/mapEdit/icon_clear.png'),
       action: () => Tool3DAction.clearMeasure(type),
     },
   ]
-  const customView = (prop, state) => (
-    <MenuList
-      data={prop.data}
-      device={prop.device}
-      clipSetting={state.clipSetting}
-      dataChangeCall={Tool3DAction.cut3d}
-      changeHeight={params.contentView.changeHeight}
-    />
-  )
   return { data, buttons, customView }
 }
 
-const BoxClipData = () => [
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
-    data: [], //获取图层数据
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS,
-    data: [
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_LENGTH,
-        value: 0,
-        iconType: 'Text',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_WIDTH,
-        value: 0,
-        iconType: 'Text',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_HEIGHT,
-        value: 0,
-        iconType: 'Text',
-      },
-      // {
-      //   title:getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT,
-      //   value:0,
-      //   iconType:"Input",
-      // },
-    ],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
-    data: [
-      {
-        title: 'X',
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: 'Y',
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: 'Z',
-        value: 0,
-        iconType: 'Input',
-      },
-    ],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
-    data: [
-      // {
-      //   title:getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
-      //   iconType:"Arrow",
-      // },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_INNER,
-        iconType: 'Switch',
-      },
-    ],
-  },
-]
-
-const CrossClipData = () => [
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
-    data: [],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
-    data: [
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
-        iconType: 'Arrow',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_OPACITY,
-        value: 100,
-        maxValue: 100,
-        minValue: 0,
-        iconType: 'Input',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu.SHOW_OTHER_SIDE,
-        iconType: 'Switch',
-      },
-    ],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
-    data: [
-      {
-        title: 'X',
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: 'Y',
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: 'Z',
-        value: 0,
-        iconType: 'Input',
-      },
-    ],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.ROTATE_SETTINGS,
-    data: [
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_XROT,
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_YROT,
-        value: 0,
-        iconType: 'Input',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_ZROT,
-        value: 0,
-        iconType: 'Input',
-      },
-    ],
-  },
-]
-
-const PlaneClipData = () => [
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
-    data: [],
-  },
-  {
-    title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SURFACE_SETTING,
-    data: [
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_LENGTH,
-        value: 10,
-        iconType: 'Input',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_WIDTH,
-        value: 10,
-        iconType: 'Input',
-      },
-      {
-        title: getLanguage(GLOBAL.language).Map_Main_Menu
-          .CLIP_AREA_SETTINGS_HEIGHT,
-        value: 0,
-        iconType: 'Input',
-      },
-    ],
-  },
-]
+// const BoxClipData = () => [
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
+//     data: [], //获取图层数据
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS,
+//     data: [
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_LENGTH,
+//         value: 0,
+//         iconType: 'Text',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_WIDTH,
+//         value: 0,
+//         iconType: 'Text',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_HEIGHT,
+//         value: 0,
+//         iconType: 'Text',
+//       },
+//       // {
+//       //   title:getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_AREA_SETTINGS_ZROT,
+//       //   value:0,
+//       //   iconType:"Input",
+//       // },
+//     ],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
+//     data: [
+//       {
+//         title: 'X',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: 'Y',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: 'Z',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//     ],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
+//     data: [
+//       // {
+//       //   title:getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
+//       //   iconType:"Arrow",
+//       // },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_INNER,
+//         iconType: 'Switch',
+//       },
+//     ],
+//   },
+// ]
+//
+// const CrossClipData = () => [
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
+//     data: [],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SETTING,
+//     data: [
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_COLOR,
+//         iconType: 'Arrow',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu.LINE_OPACITY,
+//         value: 100,
+//         maxValue: 100,
+//         minValue: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu.SHOW_OTHER_SIDE,
+//         iconType: 'Switch',
+//       },
+//     ],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.POSITION,
+//     data: [
+//       {
+//         title: 'X',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: 'Y',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: 'Z',
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//     ],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.ROTATE_SETTINGS,
+//     data: [
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_XROT,
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_YROT,
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_ZROT,
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//     ],
+//   },
+// ]
+//
+// const PlaneClipData = () => [
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_LAYER,
+//     data: [],
+//   },
+//   {
+//     title: getLanguage(GLOBAL.language).Map_Main_Menu.CLIP_SURFACE_SETTING,
+//     data: [
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_LENGTH,
+//         value: 10,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_WIDTH,
+//         value: 10,
+//         iconType: 'Input',
+//       },
+//       {
+//         title: getLanguage(GLOBAL.language).Map_Main_Menu
+//           .CLIP_AREA_SETTINGS_HEIGHT,
+//         value: 0,
+//         iconType: 'Input',
+//       },
+//     ],
+//   },
+// ]
 
 export default {
   getData,

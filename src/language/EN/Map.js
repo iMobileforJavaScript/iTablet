@@ -164,7 +164,7 @@ const Map_Main_Menu = {
   CLIP_AREA_SETTINGS: 'Settings',
   CLIP_AREA_SETTINGS_WIDTH: 'Bottom width',
   CLIP_AREA_SETTINGS_LENGTH: 'Bottom length',
-  CLIP_AREA_SETTINGS_HEIGHT: 'height',
+  CLIP_AREA_SETTINGS_HEIGHT: 'Height',
   CLIP_AREA_SETTINGS_XROT: 'x rotate',
   CLIP_AREA_SETTINGS_YROT: 'y rotate',
   CLIP_AREA_SETTINGS_ZROT: 'Z rotate',

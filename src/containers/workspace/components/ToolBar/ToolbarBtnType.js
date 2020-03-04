@@ -37,7 +37,8 @@ export default {
   UNDO: 'undo', //二三维量算撤销功能
   REDO: 'redo', //二三维量算回退功能
   DELETE_OBJ: 'deleteObject',
-
+  CLIP_LAYER: 'clip_layer', //三维裁剪图层
+  CHANGE_CLIP: 'change_clip', //三维裁剪 切换区域内外
   //推演动画
   PLOT_ANIMATION_XML_LIST: 'plot_animation_xml_list', //推演动画的xml列表
   PLOT_ANIMATION_PLAY: 'plot_animation_play', //播放推演动画

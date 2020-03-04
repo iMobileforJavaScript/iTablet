@@ -244,6 +244,11 @@ async function map3dCut() {
     }
     let rel = await cut3d(clipSetting)
     rel.isCliped = true
+    let layers = params.layerList
+    layers.map(layer => {
+      layer.selected = true
+    })
+    rel.layers = layers
     let num
     Object.keys(rel).map(key => {
       switch (key) {
@@ -272,16 +277,13 @@ async function map3dCut() {
       if (rel[key] * 1 === rel[key])
         rel[key] = parseFloat(rel[key].toFixed(num))
     })
-    params.contentView &&
-      params.contentView.setState({
-        clipSetting: rel,
-      })
     GLOBAL.MapSurfaceView.show(false)
     // this.props.showMap3DTool(ConstToolType.MAP3D_BOX_CLIP)
     params.setToolbarVisible(true, ConstToolType.MAP3D_BOX_CLIP, {
       isFullScreen: false,
-      height: ConstToolType.TOOLBAR_HEIGHT[5],
+      height: 0,
     })
+    params.setClipSetting && params.setClipSetting(rel)
   } else {
     Toast.show(getLanguage(GLOBAL.language).Map_Main_Menu.CUT_FIRST)
   }
@@ -422,11 +424,18 @@ function clearMeasure(type) {
     case ConstToolType.MAP3D_BOX_CLIP:
     case ConstToolType.MAP3D_CROSS_CLIP:
     case ConstToolType.MAP3D_PLANE_CLIP:
+    case ConstToolType.MAP3D_CLIP_SHOW:
+    case ConstToolType.MAP3D_CLIP_HIDDEN:
+    case ConstToolType.MAP3D_BOX_CLIP_IN:
+    case ConstToolType.MAP3D_BOX_CLIP_OUT:
       //清除裁剪面 返回上个界面
+      _params.clearClip && _params.clearClip()
+      ToolbarModule.setData()
       SScene.clipSenceClear()
       GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show()
       _params.setToolbarVisible(true, ConstToolType.MAP3D_BOX_CLIPPING, {
         isFullScreen: false,
+        height: 0,
       })
       break
     default:
@@ -494,7 +503,81 @@ function circleFly() {
     height: ConstToolType.HEIGHT[0],
   })
 }
+function showMenuDialog() {
+  const _params = ToolbarModule.getParams()
+  let _data = ToolbarModule.getData()
+  let configs = JSON.parse(JSON.stringify(_data))
+  if (configs.showBox) {
+    _params.setToolbarVisible(true, ConstToolType.MAP3D_CLIP_HIDDEN, {
+      isFullScreen: false,
+      height: 0,
+    })
+    ToolbarModule.addData({ showBox: false })
+  }
+  _params.showMenuDialog && _params.showMenuDialog(configs)
+}
 
+function showLayerList() {
+  const _params = ToolbarModule.getParams()
+  let data = ToolbarModule.getData()
+  let showBox = data.showBox
+  _params.showMenuDialog &&
+    _params.showMenuDialog({
+      showMenuDialog: false,
+    })
+  if (!showBox) {
+    _params.setToolbarVisible(true, ConstToolType.MAP3D_CLIP_SHOW, {
+      isFullScreen: false,
+      height: ConstToolType.TOOLBAR_HEIGHT[3],
+    })
+  } else {
+    _params.setToolbarVisible(true, ConstToolType.MAP3D_CLIP_HIDDEN, {
+      isFullScreen: false,
+      height: 0,
+    })
+  }
+  showBox = !showBox
+  ToolbarModule.addData({ showBox })
+}
+
+function changeClip() {
+  const _params = ToolbarModule.getParams()
+  let _data = _params.getClipSetting()
+
+  let clipSetting = JSON.parse(JSON.stringify(_data))
+  clipSetting.clipInner = !clipSetting.clipInner
+  if (!clipSetting.layers) {
+    clipSetting.layers = _params.layerList || []
+  }
+  SScene.clipByBox(clipSetting)
+  _params.setClipSetting && _params.setClipSetting(clipSetting)
+  let type = clipSetting.clipInner
+    ? ConstToolType.MAP3D_BOX_CLIP_IN
+    : ConstToolType.MAP3D_BOX_CLIP_OUT
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height: 0,
+  })
+}
+function layerChange(layers) {
+  const _params = ToolbarModule.getParams()
+  let _data = _params.getClipSetting()
+
+  let clipSetting = JSON.parse(JSON.stringify(_data))
+  clipSetting.layers = layers
+  SScene.clipByBox(clipSetting)
+  _params.setClipSetting && _params.setClipSetting(clipSetting)
+}
+
+function closeClip() {
+  const _params = ToolbarModule.getParams()
+  SScene.clipSenceClear()
+  _params.setToolbarVisible(false)
+  _params.existFullMap && _params.existFullMap()
+  _params.setClipSetting && _params.setClipSetting({})
+  ToolbarModule.setData()
+  GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+}
 export default {
   close,
 
@@ -512,6 +595,11 @@ export default {
   undo,
   redo,
   map3dCut,
+  showLayerList,
+  changeClip,
+  showMenuDialog,
+  layerChange,
+  closeClip,
   cut3d,
   circleFly,
 }

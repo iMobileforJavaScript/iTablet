@@ -16,6 +16,9 @@ const tools_layer_delete = require('./layer_delete.png')
 const icon_arrow_up = require('./icon_arrow_up.png')
 const icon_arrow_down = require('./icon_arrow_down.png')
 const range_mode_custom = require('./range_mode_customer.png')
+const tab_layer = require('./tab-layer.png')
+const scene_tool_clip_in = require('./scene_tool_clip_in.png')
+const scene_tool_clip_out = require('./scene_tool_clip_out.png')
 export default {
   tools_rectangle_cut,
   /*多媒体采集*/
@@ -48,4 +51,9 @@ export default {
   icon_arrow_down,
   //分段专题图自定义分段
   range_mode_custom,
+  //三维box裁剪图层
+  tab_layer,
+  /*三维裁剪区域内外*/
+  scene_tool_clip_in,
+  scene_tool_clip_out,
 }

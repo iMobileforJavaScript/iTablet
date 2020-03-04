@@ -100,6 +100,10 @@ export default class ToolBar extends React.PureComponent {
     measureShow: () => {},
     clearAttributeHistory: () => {},
     changeLayerList?: () => {}, //切换场景改变三维图层
+    showMenuDialog?: () => {}, //显示裁剪菜单
+    getClipSetting?: () => {}, //获取三维裁剪最新的参数 每次设置裁剪图层时需要重新获取
+    setClipSetting?: () => {}, //获取当前裁剪设置
+    clearClip?: () => {}, //清除三维裁剪相关信息
     setMapIndoorNavigation: () => {},
     setMapNavigationShow: () => {},
     setMapNavigation: () => {},

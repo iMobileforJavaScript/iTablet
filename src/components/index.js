@@ -37,6 +37,7 @@ import TableList from './TableList'
 import TreeList from './TreeList'
 import SaveDialog from './SaveDialog'
 import SaveMapNameDialog from './SaveMapNameDialog'
+import PanResponderView from './PanResPonderView'
 // import ColorTableList from './ColorTableList'
 import Input from './Input'
 import SearchBar from './SearchBar'
@@ -125,4 +126,5 @@ export {
   Picker,
   MenuDialog,
   MultiPicker,
+  PanResponderView,
 }
