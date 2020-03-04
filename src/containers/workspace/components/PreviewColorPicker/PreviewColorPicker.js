@@ -179,7 +179,15 @@ export default class PreviewColorPicker extends Component {
     return (
       <View style={styles.progressItem}>
         <Text style={styles.sliderText}>{text.toUpperCase()}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this._onValueChange({
+              name: text,
+              value: this.state[`${text}`] - 1,
+            })
+            this._setAttrToMap()
+          }}
+        >
           <Image source={minus} style={styles.leftIcon} />
         </TouchableOpacity>
         <Slider
@@ -204,7 +212,15 @@ export default class PreviewColorPicker extends Component {
           }}
           onSlidingComplete={this._setAttrToMap}
         />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this._onValueChange({
+              name: text,
+              value: this.state[`${text}`] + 1,
+            })
+            this._setAttrToMap()
+          }}
+        >
           <Image source={plus} style={styles.rightIcon} />
         </TouchableOpacity>
         <Text style={styles.sliderText}>{value}</Text>
