@@ -242,6 +242,17 @@ const Map_Main_Menu = {
   THEME_MAX_VISIBLE_SIZE: 'Max Visible Size',
   THEME_MIN_VISIBLE_SIZE: 'Min Visible Size',
 
+  //自定义专题图设置
+  THEME_RANGES_LABEL_MAP_TITLE: 'Ranges Label Map',
+  THEME_RANGES_MAP_TITLE: 'Ranges Map',
+  THEME_UNIQUE_VALUES_MAP_TITLE: 'Unique Values Map',
+  THEME_UNIQUE_VALUE_LABEL_MAP_TITLE: 'Unique Value Label Map',
+  RANGE: 'Ranges',
+  PREVIEW: 'Preview',
+  CUSTOM_THEME_MAP: 'Custom Thematic Map',
+  COLOR_PICKER: 'Color Picker',
+  USER_DEFINE: 'User Defined',
+
   DOT_VALUE: 'Dot Value',
   GRADUATE_BY: 'Graduate by',
   DATUM_VALUE: 'Datum Value',

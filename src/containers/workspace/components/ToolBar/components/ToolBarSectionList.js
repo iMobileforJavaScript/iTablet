@@ -510,10 +510,25 @@ export default class ToolBarSectionList extends React.Component {
 
   /**颜色方案Item */
   getColorSchemeItem = item => {
+    //用户自定义单独处理
+    if (item.key === 'USER_DEFINE') {
+      return (
+        <View style={styles.item}>
+          <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
+          <View style={styles.colorImgView}>
+            <Image
+              source={item.colorScheme}
+              resizeMode={'contain'}
+              style={styles.userDefineImage}
+            />
+          </View>
+        </View>
+      )
+    }
     return (
       <View style={styles.item}>
         <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
-        <View style={styles.colorImgView}>
+        <View>
           <Image
             source={item.colorScheme}
             resizeMode={'stretch'} //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
@@ -841,6 +856,16 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.content_white,
+  },
+  colorImgView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  userDefineImage: {
+    height: scaleSize(40),
+    width: scaleSize(410),
+    marginRight: scaleSize(30),
   },
   colorScheme: {
     height: scaleSize(40),

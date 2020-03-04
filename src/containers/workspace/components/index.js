@@ -38,6 +38,8 @@ import ScaleView from './ScaleView'
 import MapSelectPointButton from './MapSelectPointButton'
 import TrafficView from './TrafficView'
 import NavigationPoiView from './NavigationPoiView'
+import PreviewHeader from './PreviewHeader'
+import PreviewColorPicker from './PreviewColorPicker'
 export {
   ScaleView,
   RNLegendView,
@@ -77,4 +79,6 @@ export {
   AIMapSuspensionDialog,
   NavigationPoiView,
   RNFloorListView,
+  PreviewHeader,
+  PreviewColorPicker,
 }

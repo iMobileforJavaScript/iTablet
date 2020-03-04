@@ -255,6 +255,17 @@ const Map_Main_Menu = {
   THEME_MAX_VISIBLE_SIZE: '最大显示值',
   THEME_MIN_VISIBLE_SIZE: '最小显示值',
 
+  //自定义专题图设置
+  THEME_RANGES_LABEL_MAP_TITLE: '分段标签专题图',
+  THEME_RANGES_MAP_TITLE: '分段风格专题图',
+  THEME_UNIQUE_VALUES_MAP_TITLE: '单值风格专题图',
+  THEME_UNIQUE_VALUE_LABEL_MAP_TITLE: '单值标签专题图',
+  RANGE: '段数',
+  PREVIEW: '预览',
+  CUSTOM_THEME_MAP: '自定义专题图',
+  COLOR_PICKER: '色盘',
+  USER_DEFINE: '用户自定义',
+
   DOT_VALUE: '单点代表值',
   GRADUATE_BY: '分级方式',
   DATUM_VALUE: '基准值',

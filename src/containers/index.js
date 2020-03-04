@@ -126,7 +126,7 @@ import NavigationView from './workspace/components/NavigationView'
 import ChooseTaggingLayer from './ChooseTaggingLayer'
 import LanguageSetting from './languageSetting'
 import CollectSceneFormHistoryView from './arCollectSceneFormHistoryView'
-
+import CustomModePage from './CustomModePage'
 const AppNavigator = createStackNavigator(
   {
     Tabs: {
@@ -937,6 +937,12 @@ const AppNavigator = createStackNavigator(
     },
     CollectSceneFormHistoryView: {
       screen: CollectSceneFormHistoryView,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    CustomModePage: {
+      screen: CustomModePage,
       navigationOptions: {
         header: null,
       },

@@ -301,6 +301,11 @@ const Prompt = {
     '起始点不在路网数据集范围内或起始点附近无路网，是否使用在线路径分析？',
   NOT_SUPPORT_ONLINE_NAVIGATION: '在线导航暂不支持',
 
+  //自定义专题图
+  ONLY_INTEGER: '只能输入整数！',
+  ONLY_INTEGER_GREATER_THAN_2: '只能输入大于2的整数！',
+  PARAMS_ERROR: '参数错误，设置失败！',
+
   SPEECH_TIP: '您可以说:\n"放大"，"缩小"，"定位"或"关闭"',
   SPEECH_ERROR: '识别出错，请稍后再试',
   SPEECH_NONE: '您好像没有说话哦',

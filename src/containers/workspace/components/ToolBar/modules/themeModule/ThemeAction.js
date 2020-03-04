@@ -8,6 +8,7 @@ import ToolbarModule from '../ToolbarModule'
 import ToolbarBtnType from '../../ToolbarBtnType'
 import constants from '../../../../constants'
 import Utils from '../../utils'
+import NavigationService from '../../../../../NavigationService'
 
 /**
  * 统一处理方法
@@ -757,13 +758,23 @@ async function listAction(type, params = {}) {
     params.refreshList && (await params.refreshList(item.expression))
     await SThemeCartography.modifyThemeUniqueMap(Params)
   } else if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR) {
-    //单值专题图颜色表
-    ToolbarModule.addData({ themeColor: item.key })
-    let Params = {
-      ColorScheme: item.key,
-      LayerName: _params.currentLayer.name,
+    if (item.key === 'USER_DEFINE') {
+      _params.setToolbarVisible(false, {
+        isTouchProgress: false,
+        showMenuDialog: false,
+        selectKey: '',
+      })
+      _params.setToolbarVisible(false)
+      NavigationService.navigate('CustomModePage', { type })
+    } else {
+      //单值专题图颜色表
+      ToolbarModule.addData({ themeColor: item.key })
+      let Params = {
+        ColorScheme: item.key,
+        LayerName: _params.currentLayer.name,
+      }
+      await SThemeCartography.setUniqueColorScheme(Params)
     }
-    await SThemeCartography.setUniqueColorScheme(Params)
   } else if (type === ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR) {
     //栅格单值专题图颜色表
     ToolbarModule.addData({ themeColor: item.key })
@@ -848,12 +859,22 @@ async function listAction(type, params = {}) {
     await SThemeCartography.setUniqueLabelExpression(Params)
   } else if (type === ConstToolType.MAP_THEME_PARAM_UNIQUELABEL_COLOR) {
     //单值标签专题图颜色表
-    ToolbarModule.addData({ themeColor: item.key })
-    let Params = {
-      ColorScheme: item.key,
-      LayerName: _params.currentLayer.name,
+    if (item.key === 'USER_DEFINE') {
+      _params.setToolbarVisible(false, {
+        isTouchProgress: false,
+        showMenuDialog: false,
+        selectKey: '',
+      })
+      _params.setToolbarVisible(false)
+      NavigationService.navigate('CustomModePage', { type })
+    } else {
+      ToolbarModule.addData({ themeColor: item.key })
+      let Params = {
+        ColorScheme: item.key,
+        LayerName: _params.currentLayer.name,
+      }
+      await SThemeCartography.setUniqueLabelColorScheme(Params)
     }
-    await SThemeCartography.setUniqueLabelColorScheme(Params)
   } else if (type === ConstToolType.MAP_THEME_PARAM_RANGELABEL_EXPRESSION) {
     //分段标签表达式
     let Params = {
