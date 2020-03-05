@@ -26,7 +26,7 @@ const line = (param, orientation = 'PORTRAIT') => [
             column,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -49,7 +49,7 @@ const line = (param, orientation = 'PORTRAIT') => [
           isTouchProgress: true,
           showMenuDialog: false,
           buttons: [
-            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -84,7 +84,7 @@ const line = (param, orientation = 'PORTRAIT') => [
             isFullScreen: false,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -121,7 +121,7 @@ const point = (param, orientation = 'PORTRAIT') => [
             column,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -144,8 +144,7 @@ const point = (param, orientation = 'PORTRAIT') => [
           selectName: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
           selectKey: getLanguage(param).Map_Main_Menu.STYLE_SYMBOL_SIZE,
           buttons: [
-            ToolbarBtnType.CANCEL,
-            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -177,7 +176,7 @@ const point = (param, orientation = 'PORTRAIT') => [
             isFullScreen: false,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -200,8 +199,7 @@ const point = (param, orientation = 'PORTRAIT') => [
           selectName: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
           selectKey: getLanguage(param).Map_Main_Menu.STYLE_ROTATION,
           buttons: [
-            ToolbarBtnType.CANCEL,
-            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -220,8 +218,7 @@ const point = (param, orientation = 'PORTRAIT') => [
           selectName: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
           selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
           buttons: [
-            ToolbarBtnType.CANCEL,
-            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -256,7 +253,7 @@ const region = (param, orientation = 'PORTRAIT') => [
             column,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -290,7 +287,7 @@ const region = (param, orientation = 'PORTRAIT') => [
             isFullScreen: false,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -323,7 +320,7 @@ const region = (param, orientation = 'PORTRAIT') => [
             isFullScreen: false,
             height,
             buttons: [
-              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.TOOLBAR_BACK,
               ToolbarBtnType.MENU,
               ToolbarBtnType.MENU_FLEX,
               ToolbarBtnType.TOOLBAR_COMMIT,
@@ -342,8 +339,7 @@ const region = (param, orientation = 'PORTRAIT') => [
           isTouchProgress: true,
           showMenuDialog: false,
           buttons: [
-            ToolbarBtnType.CANCEL,
-            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -362,8 +358,7 @@ const region = (param, orientation = 'PORTRAIT') => [
           isTouchProgress: true,
           showMenuDialog: false,
           buttons: [
-            ToolbarBtnType.CANCEL,
-            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.TOOLBAR_BACK,
             ToolbarBtnType.MENU,
             ToolbarBtnType.MENU_FLEX,
             ToolbarBtnType.TOOLBAR_COMMIT,
@@ -373,6 +368,113 @@ const region = (param, orientation = 'PORTRAIT') => [
         })
     },
     selectKey: getLanguage(param).Map_Main_Menu.STYLE_TRANSPARENCY,
+  },
+]
+
+const text = (param, orientation = 'PORTRAIT') => [
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+    action: () => {
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      let height, column
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.THEME_HEIGHT[2]
+        column = 4
+      } else {
+        height = ConstToolType.TOOLBAR_HEIGHT_2[2]
+        column = 8
+      }
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_FONT,
+          {
+            isFullScreen: false,
+            column,
+            height,
+            buttons: [
+              ToolbarBtnType.TOOLBAR_BACK,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.TOOLBAR_COMMIT,
+            ],
+            selectName: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+            selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT,
+          },
+        )
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.TOOLBAR_BACK,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.TOOLBAR_COMMIT,
+          ],
+          selectName: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+          selectKey: getLanguage(param).Map_Main_Menu.STYLE_FONT_SIZE,
+        })
+    },
+  },
+  {
+    key: getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION,
+    selectKey: getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION,
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.TOOLBAR_BACK,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.TOOLBAR_COMMIT,
+          ],
+          selectName: 'TEXT_ROTATION',
+          selectKey: getLanguage(global.language).Map_Main_Menu.STYLE_ROTATION,
+        })
+    },
+  },
+  {
+    key: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    selectKey: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+    action: () => {
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      let height, column
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.THEME_HEIGHT[3]
+        column = 8
+      } else {
+        height = ConstToolType.TOOLBAR_HEIGHT_2[3]
+        column = 12
+      }
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_COLOR_SET,
+          {
+            containerType: ToolbarType.colorTable,
+            column,
+            isFullScreen: false,
+            height,
+            buttons: [
+              ToolbarBtnType.TOOLBAR_BACK,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.TOOLBAR_COMMIT,
+            ],
+            selectKey: getLanguage(param).Map_Main_Menu.STYLE_COLOR,
+          },
+        )
+    },
   },
 ]
 
@@ -500,4 +602,4 @@ const colorsWithNull = [
   },
 ].concat(colors)
 
-export { line, point, region, colors, colorsWithNull }
+export { line, point, region, text, colors, colorsWithNull }

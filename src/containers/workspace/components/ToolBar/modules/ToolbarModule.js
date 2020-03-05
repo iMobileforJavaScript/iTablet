@@ -152,10 +152,13 @@ function getMenuDialogData(type, ...others) {
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_FONT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_COLOR_SET:
       data = toolModule().getMenuData(type)
       break
     case ConstToolType.MAP_STYLE:
