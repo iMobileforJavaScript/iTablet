@@ -219,7 +219,9 @@ export default class Home extends Component {
         SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
           ConstPath.CustomerPath +
-            ConstPath.RelativeFilePath.Workspace[global.language],
+            ConstPath.RelativeFilePath.Workspace[
+              global.language === 'CN' ? 'CN' : 'EN'
+            ],
         )
         this.props.setUser({
           userName: 'Customer',

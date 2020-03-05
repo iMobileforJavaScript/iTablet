@@ -80,7 +80,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -228,7 +230,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -291,7 +295,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -377,7 +383,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -451,7 +459,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -527,7 +537,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false
@@ -604,7 +616,9 @@ function SetMap(param) {
         let wsPath =
           homePath +
           userPath +
-          ConstPath.RelativeFilePath.Workspace[global.language]
+          ConstPath.RelativeFilePath.Workspace[
+            global.language === 'CN' ? 'CN' : 'EN'
+          ]
 
         let wsData,
           isOpenLastMap = false

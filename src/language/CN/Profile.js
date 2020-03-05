@@ -170,6 +170,8 @@ const Profile = {
   STATUSBAR_HIDE: '隐藏状态栏',
   SETTING_LICENSE: '许可',
   SETTING_ABOUT_ITABLET: '关于iTablet',
+  SETTING_ABOUT: '关于',
+  SETTING_ABOUT_AFTER: '',
   SETTING_CHECK_VERSION: '检查版本',
   SETTING_LANGUAGE: '语言',
   SETTING_LANGUAGE_AUTO: '跟随系统',
