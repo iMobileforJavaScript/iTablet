@@ -67,12 +67,6 @@ export default class ColorTable extends React.Component {
     return newData
   }
 
-  itemAction = async item => {
-    if (this.props.itemAction) {
-      this.props.itemAction(item)
-    }
-  }
-
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.device.orientation !== this.props.device.orientation) {
       this.height =

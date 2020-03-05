@@ -17,6 +17,7 @@ import {
   tool3DModule,
   legendModule,
   aiModule,
+  mapSettingModule,
 } from '../modules'
 
 // 更新类中的数据
@@ -133,6 +134,11 @@ async function getTabBarData(type, params = {}) {
     tabBarData = getPlotAnimationData(type)
   } else if (type === ConstToolType.MAP_AR_AIASSISTANT) {
     tabBarData = await aiModule().getData(type, params)
+  } else if (
+    type === ConstToolType.MAP_BACKGROUND_COLOR ||
+    type === ConstToolType.MAP_COLOR_MODE
+  ) {
+    tabBarData = mapSettingModule().getData(type)
   } else {
     tabBarData = MapData.getMapData(type)
   }
@@ -171,6 +177,9 @@ function getMenuDialogData(type, ...others) {
     case ConstToolType.LEGEND_NOT_VISIBLE:
       data = legendModule().getMenuData(type)
       break
+    case ConstToolType.MAP_COLOR_MODE:
+    case ConstToolType.MAP_BACKGROUND_COLOR:
+      data = mapSettingModule.getMenuData(type)
   }
   if (data.length === 0 && type.indexOf('MAP_THEME_PARAM') >= 0) {
     data = themeModule().getMenuData(type, ...others)

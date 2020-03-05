@@ -15,6 +15,7 @@ import tool3DModule from './tool3DModule'
 import navigationModule from './navigationModule'
 import legendModule from './legendModule'
 import aiModule from './aiModule'
+import mapSettingModule from './mapSettingModule'
 export {
   ToolbarModule,
   startModule,
@@ -32,4 +33,5 @@ export {
   navigationModule,
   legendModule,
   aiModule,
+  mapSettingModule,
 }

@@ -209,6 +209,8 @@ function getToolbarHeight(type, currentHeight) {
       break
     case ConstToolType.LEGEND:
     case ConstToolType.LEGEND_NOT_VISIBLE:
+    case ConstToolType.MAP_COLOR_MODE:
+    case ConstToolType.MAP_BACKGROUND_COLOR:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
         column = 8

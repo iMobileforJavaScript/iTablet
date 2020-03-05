@@ -47,6 +47,8 @@ import NavigationService from '../../NavigationService'
 import { getThemeAssets } from '../../../assets'
 import { getLanguage } from '../../../language'
 import FileTools from '../../../native/FileTools'
+import { mapSettingModule } from '../../workspace/components/ToolBar/modules'
+import { ConstToolType } from '../../../constants'
 
 export default class SecondMapSettings extends Component {
   props: {
@@ -509,14 +511,14 @@ export default class SecondMapSettings extends Component {
         break
       case getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE:
       case getLanguage(GLOBAL.language).Map_Settings.BACKGROUND_COLOR:
-        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
-        this.props.navigation.navigate('MapView', {
-          title,
-          needShowFullMap: true,
-        })
-        setTimeout(() => {
-          GLOBAL.popModal && GLOBAL.popModal.setVisible(true)
-        })
+        {
+          let type =
+            title === getLanguage(GLOBAL.language).Map_Settings.COLOR_MODE
+              ? ConstToolType.MAP_COLOR_MODE
+              : ConstToolType.MAP_BACKGROUND_COLOR
+          mapSettingModule().action(type)
+        }
+
         // if (this.popModal) {
         //   this.setState(
         //     {
