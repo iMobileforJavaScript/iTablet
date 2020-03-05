@@ -12,26 +12,15 @@ import { ConstToolType, ToolbarType } from '../../../../../../constants'
 async function action(type) {
   const _params = ToolbarModule.getParams()
   let _data = MapSettingData.getData(type)
-  if (type === ConstToolType.MAP_BACKGROUND_COLOR) {
-    _params.setToolbarVisible(true, type, {
-      containerType: ToolbarType.colorTable,
-      column: _params.device.orientation === 'LANDSCAPE' ? 16 : 8,
-      isFullScreen: false,
-      height:
-        _params.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[2]
-          : ConstToolType.THEME_HEIGHT[3],
-    })
-  } else {
-    _params.setToolbarVisible(true, type, {
-      containerType: ToolbarType.list,
-      isFullScreen: false,
-      height:
-        _params.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[2]
-          : ConstToolType.THEME_HEIGHT[3],
-    })
-  }
+  _params.setToolbarVisible(true, type, {
+    containerType: ToolbarType.colorTable,
+    column: _params.device.orientation === 'LANDSCAPE' ? 16 : 8,
+    isFullScreen: false,
+    height:
+      _params.device.orientation === 'LANDSCAPE'
+        ? ConstToolType.THEME_HEIGHT[2]
+        : ConstToolType.THEME_HEIGHT[3],
+  })
 
   _params.showFullMap && _params.showFullMap(true)
   _params.navigation.navigate('MapView')
