@@ -63,7 +63,7 @@ export default StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 20,
+    top: scaleSize(80),
     backgroundColor: 'transparent',
     height: scaleSize(80),
     justifyContent: 'center',
