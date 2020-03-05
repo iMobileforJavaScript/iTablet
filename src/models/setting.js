@@ -86,6 +86,10 @@ export const setLanguage = (params, cb = () => {}) => async dispatch => {
     let language
     if (locale === 'zh-CN') {
       language = 'CN'
+    } else if (locale.indexOf('tr-') === 0) {
+      language = 'TR'
+    } else if (locale.indexOf('ja-') === 0) {
+      language = 'JA'
     } else {
       language = 'EN'
     }

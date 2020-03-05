@@ -133,8 +133,8 @@ export default class Setting extends Component {
           this.renderItemView(
             this.onAbout,
             getLanguage(global.language).Profile.SETTING_ABOUT +
-              ' ' +
-              this.props.appConfig.alias,
+              this.props.appConfig.alias +
+              getLanguage(global.language).Profile.SETTING_ABOUT_AFTER,
           )}
         {this.renderItemCheckVersion(
           this.onCheckUpdate,

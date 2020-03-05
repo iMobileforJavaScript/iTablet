@@ -1421,7 +1421,9 @@ export default class MapView extends React.Component {
           let wsPath =
             homePath +
             userPath +
-            ConstPath.RelativeFilePath.Workspace[global.language]
+            ConstPath.RelativeFilePath.Workspace[
+              global.language === 'CN' ? 'CN' : 'EN'
+            ]
           await this._openWorkspace({
             DSParams: { server: wsPath },
           })
