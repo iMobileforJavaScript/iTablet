@@ -12,6 +12,7 @@ export default class PanResponderView extends React.PureComponent {
   props: {
     onHandleMove: () => {}, //处理move事件
     onHandleMoveEnd?: () => {}, //停止move事件
+    children: any,
   }
 
   constructor(props) {

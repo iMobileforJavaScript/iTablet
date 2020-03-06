@@ -170,6 +170,7 @@ const Profile = {
   SETTING_ABOUT_ITABLET: 'About iTablet',
   SETTING_ABOUT: 'About',
   SETTING_CHECK_VERSION: 'Check Version',
+  SETTING_SUGGESTION_FEEDBACK: 'Suggestion Feedback',
   SETTING_LANGUAGE: 'Language',
   SETTING_LANGUAGE_AUTO: 'Auto',
   SETTING_LOCATION_DEVICE: 'Location Device',
@@ -248,5 +249,19 @@ const Profile = {
   ITABLET_NAVIGATIONMAP: 'Navigation Map',
   ITABLET_DATAANALYSIS: 'Data Analysis',
   ITABLET_PLOTTING: 'Plotting',
+
+  //意见反馈
+  SUGGESTION_FUNCTION_ABNORMAL:
+    'Function Abnormal : Function abnormal or not can use',
+  SUGGESTION_PRODUCT_ADVICE: 'Product Suggestion : I have a suggestion',
+  SUGGESTION_OTHER_PROBLEMS: 'Other Problems',
+  SUGGESTION_SELECT_PROBLEMS: 'Please select the problems',
+  SUGGESTION_PROBLEMS_DETAIL: 'Please provide detailed problems and suggestion',
+  SUGGESTION_PROBLEMS_DESCRIPTION: 'Plese input problem description',
+  SUGGESTION_CONTACT_WAY: 'Contact Way',
+  SUGGESTION_CONTACT_WAY_INPUT: 'Please input contact way',
+  SUGGESTION_SUBMIT: 'Submit',
+  SUGGESTION_SUBMIT_SUCCEED: 'Submit Succeed',
+  SUGGESTION_SUBMIT_FAILED: 'Submit Failed',
 }
 export { Profile }

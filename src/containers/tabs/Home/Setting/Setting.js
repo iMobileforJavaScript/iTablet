@@ -114,6 +114,10 @@ export default class Setting extends Component {
   onCheckUpdate = () => {
     Toast.show(global.APP_VERSION)
   }
+  //意见反馈
+  suggestionFeedback = () => {
+    NavigationService.navigate('SuggestionFeedback')
+  }
   renderItems() {
     return (
       <View style={{ flex: 1, backgroundColor: color.content_white }}>
@@ -139,6 +143,10 @@ export default class Setting extends Component {
         {this.renderItemCheckVersion(
           this.onCheckUpdate,
           getLanguage(global.language).Profile.SETTING_CHECK_VERSION,
+        )}
+        {this.renderItemView(
+          this.suggestionFeedback,
+          getLanguage(global.language).Profile.SETTING_SUGGESTION_FEEDBACK,
         )}
       </View>
     )

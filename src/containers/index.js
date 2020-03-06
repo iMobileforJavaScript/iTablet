@@ -90,6 +90,7 @@ import protocol from './tabs/Home/AboutITablet/Protocol'
 import LicensePage from './tabs/Home/License/LicensePage'
 import LicenseModule from './tabs/Home/License/LicenseModule'
 import LicenseJoin from './tabs/Home/License/LicenseJoin'
+import SuggestionFeedback from './tabs/Home/SuggestionFeedback/SuggestionFeedback'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import FriendMap from './friendMap'
@@ -797,6 +798,13 @@ export default function(appConfig) {
       },
       CastModelOperateView: {
         screen: CastModelOperateView,
+        navigationOptions: {
+          header: null,
+          gesturesEnabled: true,
+        },
+      },
+      SuggestionFeedback: {
+        screen: SuggestionFeedback,
         navigationOptions: {
           header: null,
           gesturesEnabled: true,
