@@ -3,7 +3,6 @@ package com.supermap.itablet;
 import android.support.multidex.MultiDexApplication;
 
 import com.supermap.file.CrashHandler;
-import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
@@ -96,7 +95,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        LicConfig.configLic(this);
         SoLoader.init(this, /* native exopackage */ false);
         CrashHandler.getInstance().init(getApplicationContext());
     }

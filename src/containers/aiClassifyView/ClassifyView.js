@@ -140,6 +140,10 @@ export default class ClassifyView extends React.Component {
    */
   recognizeImage = params => {
     this.Loading.setLoading(false)
+    if(params === "License Invalid"){
+      Toast.show("License Invalid\nPlease Check Your License")
+      return
+    }
     this.results = params.results
     if (this.results && this.results.length > 0) {
       this.setState({
