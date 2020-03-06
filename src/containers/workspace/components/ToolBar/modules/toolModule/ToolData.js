@@ -11,7 +11,7 @@ import { getLanguage } from '../../../../../../language'
 import ToolbarModule from '../ToolbarModule'
 import ToolAction from './ToolAction'
 import EditAction from '../editModule/EditAction'
-import { line, point, region, colors, colorsWithNull } from './data'
+import { line, point, region, text, colors, colorsWithNull } from './data'
 
 /**
  * 获取工具操作
@@ -392,15 +392,14 @@ function getData(type, params) {
         },
       ]
       break
-    case ConstToolType.MAP_TOOL_TAGGING_EDIT_MENU:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT:
+      buttons = [ToolbarBtnType.CANCEL]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_POINT:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_LINE:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_REGION:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_TEXT:
       data = [
-        {
-          key: 'tagging_delete',
-          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
-          action: ToolAction.selectLabelToDelete,
-          size: 'large',
-          image: getThemeAssets().attribute.icon_delete,
-        },
         {
           key: 'tagging_edit',
           title: getLanguage(global.language).Map_Main_Menu.EDIT,
@@ -416,28 +415,14 @@ function getData(type, params) {
           image: require('../../../../../../assets/function/icon_function_style.png'),
         },
       ]
-      buttons = [ToolbarBtnType.CANCEL]
-      break
-    case ConstToolType.MAP_TOOL_TAGGING_EDIT:
-    case ConstToolType.MAP_TOOL_TAGGING_STYLE:
-      buttons = [ToolbarBtnType.CANCEL]
-      break
-    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
-      buttons = [
-        ToolbarBtnType.CANCEL,
-        {
-          type: ToolbarBtnType.DELETE_OBJ,
-          action: ToolAction.deleteLabel,
-          image: require('../../../../../../assets/mapTools/icon_delete_white.png'),
-        },
-      ]
+      buttons = [ToolbarBtnType.TOOLBAR_BACK]
       break
     case ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT:
       data = [
         {
           key: constants.DELETE,
           title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
-          action: EditAction.remove,
+          action: ToolAction.deleteLabel,
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
         },
@@ -464,7 +449,7 @@ function getData(type, params) {
         },
       ]
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
@@ -481,7 +466,7 @@ function getData(type, params) {
         {
           key: constants.DELETE,
           title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
-          action: EditAction.remove,
+          action: ToolAction.deleteLabel,
           size: 'large',
           image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
           selectMode: 'flash',
@@ -525,7 +510,7 @@ function getData(type, params) {
         },
       ]
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
@@ -544,7 +529,7 @@ function getData(type, params) {
           title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
           //constants.DELETE,
           size: 'large',
-          action: EditAction.remove,
+          action: ToolAction.deleteLabel,
           image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
         },
         {
@@ -585,7 +570,23 @@ function getData(type, params) {
         },
       ]
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
+        ToolbarBtnType.FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_EDIT_TEXT:
+      data = [
+        {
+          key: constants.DELETE,
+          title: getLanguage(global.language).Map_Main_Menu.EDIT_DELETE,
+          action: ToolAction.deleteLabel,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/icon_delete_black.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
@@ -593,17 +594,77 @@ function getData(type, params) {
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT:
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
+        ToolbarBtnType.MENU,
+        ToolbarBtnType.MENU_FLEX,
+        ToolbarBtnType.TOOLBAR_COMMIT,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_FONT:
+      data = [
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_BOLD,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_BOLD,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_bold.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_bold.png'),
+        },
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_ITALIC,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_ITALIC,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_italic.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_italic.png'),
+        },
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_UNDERLINE,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_UNDERLINE,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_underline.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_underline.png'),
+        },
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_STRIKEOUT,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_STRIKEOUT,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_strikeout.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_strikeout.png'),
+        },
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_SHADOW,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_SHADOW,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_shadow.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_shadow.png'),
+        },
+        {
+          key: constants.MAP_THEME_PARAM_UNIFORMLABEL_FONT_OUTLINE,
+          title: getLanguage(global.language).Map_Main_Menu.STYLE_OUTLINE,
+          action: ToolAction.setTaggingTextFont,
+          size: 'large',
+          image: require('../../../../../../assets/mapTools/style_font_outline.png'),
+          selectedImage: require('../../../../../../assets/mapTools/style_font_outline.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.MENU,
         ToolbarBtnType.MENU_FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
       ]
       break
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_COLOR_SET:
       data = colors
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.MENU,
         ToolbarBtnType.MENU_FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
@@ -614,7 +675,7 @@ function getData(type, params) {
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
       data = colorsWithNull
       buttons = [
-        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.TOOLBAR_BACK,
         ToolbarBtnType.MENU,
         ToolbarBtnType.MENU_FLEX,
         ToolbarBtnType.TOOLBAR_COMMIT,
@@ -826,6 +887,11 @@ function getMenuData(type) {
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET:
       data = region(_params.language, _params.device.orientation)
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_FONT:
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_COLOR_SET:
+      data = text(_params.language, _params.device.orientation)
       break
   }
   return data

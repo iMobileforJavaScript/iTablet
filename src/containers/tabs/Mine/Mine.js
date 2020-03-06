@@ -79,7 +79,9 @@ export default class Mine extends Component {
       ConstPath.UserPath +
         this.props.user.currentUser.userName +
         '/' +
-        ConstPath.RelativeFilePath.Workspace[global.language],
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ],
     )
     // 防止多次打开同一个工作空间
     if (!this.props.workspace || this.props.workspace.server === userPath)

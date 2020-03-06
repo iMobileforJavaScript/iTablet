@@ -95,11 +95,10 @@ public class MainActivity extends ReactActivity {
         }
 //        Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
         Environment.setLicensePath(SDCARD + "/iTablet/license");
-        Environment.setLicenseType(LicenseType.UUID);
+
         Environment.initialization(this);
 
         LicenseStatus status = Environment.getLicenseStatus();
-
         if (status.isTrailLicense() && !status.isLicenseValid()) {
             Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
             Environment.initialization(this);

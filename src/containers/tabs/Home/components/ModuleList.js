@@ -184,10 +184,10 @@ class ModuleList extends Component {
         if (example.name) {
           return example.name
         }
-        if (language === 'EN' && example.name_en) {
-          return example.name_en
-        } else if (language === 'CN' && example.name_cn) {
+        if (language === 'CN' && example.name_cn) {
           return example.name_cn
+        } else if (example.name_en) {
+          return example.name_en
         }
         if (Platform.OS === 'ios' && example.name_ios) {
           return example.name_ios

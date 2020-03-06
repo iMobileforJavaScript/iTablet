@@ -559,6 +559,7 @@ export default class Map3D extends React.Component {
         <PanResponderView
           onHandleMove={this._onHandleMove}
           onHandleMoveEnd={this._onHandleMoveEnd}
+          withTopBar={true}
         >
           {needTips && (
             <View style={styles.measureResultContainer}>

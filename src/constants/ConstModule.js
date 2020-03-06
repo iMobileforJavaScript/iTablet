@@ -79,7 +79,9 @@ function mapEdit(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -229,7 +231,9 @@ function mapAR(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -293,7 +297,9 @@ function mapNavigation(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -368,7 +374,9 @@ function mapTheme(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -444,7 +452,9 @@ function mapPlotting(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -521,7 +531,9 @@ function mapCollection(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false
@@ -598,7 +610,9 @@ function mapAnalyst(language) {
       let wsPath =
         homePath +
         userPath +
-        ConstPath.RelativeFilePath.Workspace[global.language]
+        ConstPath.RelativeFilePath.Workspace[
+          global.language === 'CN' ? 'CN' : 'EN'
+        ]
 
       let wsData,
         isOpenLastMap = false

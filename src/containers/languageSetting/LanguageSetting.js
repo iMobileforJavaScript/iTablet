@@ -11,6 +11,8 @@ const option = {
   auto: 'AUTO',
   CN: 'CN',
   EN: 'EN',
+  TR: 'TR',
+  JA: 'JA',
 }
 
 class LanguageSetting extends React.Component {
@@ -51,6 +53,12 @@ class LanguageSetting extends React.Component {
       case option.EN:
         title = 'English'
         break
+      case option.TR:
+        title = 'Türkçe'
+        break
+      case option.JA:
+        title = '日本語'
+        break
     }
     return (
       <View>
@@ -78,6 +86,8 @@ class LanguageSetting extends React.Component {
         {this.renderItem(option.auto)}
         {this.renderItem(option.CN)}
         {this.renderItem(option.EN)}
+        {this.renderItem(option.TR)}
+        {this.renderItem(option.JA)}
       </View>
     )
   }

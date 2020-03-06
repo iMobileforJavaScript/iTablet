@@ -575,6 +575,7 @@ function closeClip() {
   _params.setToolbarVisible(false)
   _params.existFullMap && _params.existFullMap()
   _params.setClipSetting && _params.setClipSetting({})
+  _params.clearClip && _params.clearClip()
   ToolbarModule.setData()
   GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
 }

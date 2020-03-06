@@ -297,12 +297,12 @@ class AppRoot extends Component {
   }
 
   openWorkspace = async () => {
-    let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language], path = ''
+    let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language === 'CN' ? 'CN' : 'EN'], path = ''
     if (
       this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
       (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
     ) {
-      let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language]
+      let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace[this.props.language === 'CN' ? 'CN' : 'EN']
       if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
         path = await FileTools.appendingHomeDirectory(userWsPath)
       } else {
@@ -311,7 +311,7 @@ class AppRoot extends Component {
     } else {
       path = await FileTools.appendingHomeDirectory(wsPath)
     }
-    // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language]
+    // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace[this.props.language === 'CN' ? 'CN' : 'EN']
     // path = await FileTools.appendingHomeDirectory(customerPath)
 
     this.props.openWorkspace({server: path})

@@ -58,14 +58,9 @@ function select(type) {
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
       break
-    case ConstToolType.MAP_TOOL_TAGGING_DELETE:
-      Toast.show(getLanguage(global.language).Prompt.SELECT_DELETE_BY_RECTANGLE)
-      SMap.setAction(Action.SELECT_BY_RECTANGLE)
-      break
     case ConstToolType.MAP_TOOL_TAGGING_POINT_SELECT:
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
-    case ConstToolType.MAP_TOOL_TAGGING_EDIT:
-    case ConstToolType.MAP_TOOL_TAGGING_STYLE:
     default:
       SMap.setAction(Action.SELECT)
       break
@@ -703,12 +698,23 @@ function showEditLabel() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  let type = ConstToolType.MAP_TOOL_TAGGING_EDIT_MENU
+  let type = ConstToolType.MAP_TOOL_TAGGING_SELECT
 
   _params.setToolbarVisible(true, type, {
     isFullScreen: false,
-    height: ConstToolType.HEIGHT[0],
+    height: 0,
+    cb: () => select(type),
   })
+
+  let layers = _params.layers.layers
+  // 其他图层设置为不可选
+  _setMyLayersSelectable(layers, false)
+
+  Toast.show(
+    global.language === 'CN'
+      ? '点击文字左上角以选中文字'
+      : 'Tap top-right of text to select it',
+  )
 }
 
 /**
@@ -716,17 +722,45 @@ function showEditLabel() {
  */
 function selectLabelToEdit() {
   const _params = ToolbarModule.getParams()
-  _params.setSelection()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  let type = ConstToolType.MAP_TOOL_TAGGING_EDIT
+  let event = ToolbarModule.getData().event
 
-  _params.setToolbarVisible(true, type, {
-    isFullScreen: false,
-    height: 0,
-    cb: () => select(type),
-  })
+  let column = 4,
+    height = ConstToolType.HEIGHT[3],
+    containerType = ToolbarType.table,
+    type = ''
+
+  switch (global.MapToolType) {
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_POINT:
+      type = ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT
+      height = ConstToolType.HEIGHT[0]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_LINE:
+      type = ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE
+      height = ConstToolType.HEIGHT[2]
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_REGION:
+      type = ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
+      height = ConstToolType.HEIGHT[2]
+      containerType = ToolbarType.scrollTable
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_TEXT:
+      type = ConstToolType.MAP_TOOL_TAGGING_EDIT_TEXT
+      height = ConstToolType.HEIGHT[0]
+      break
+  }
+  if (type !== '') {
+    _params.setToolbarVisible &&
+      _params.setToolbarVisible(true, type, {
+        isFullScreen: false,
+        column,
+        height,
+        containerType,
+        cb: () => SMap.appointEditGeometry(event.id, event.layerInfo.path),
+      })
+  }
 
   let layers = _params.layers.layers
   // 其他图层设置为不可选
@@ -740,47 +774,57 @@ function selectLabelToEdit() {
  */
 function selectLabelToStyle() {
   const _params = ToolbarModule.getParams()
-  _params.setSelection()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  let type = ConstToolType.MAP_TOOL_TAGGING_STYLE
+  let event = ToolbarModule.getData().event
+  let showMenuDialog = false
+  let isFullScreen = false
+  let containerType = ''
+  let height = ConstToolType.THEME_HEIGHT[3]
+  let type = ''
+  switch (global.MapToolType) {
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_POINT:
+      containerType = ToolbarType.symbol
+      type = ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_LINE:
+      containerType = ToolbarType.symbol
+      type = ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_REGION:
+      containerType = ToolbarType.symbol
+      type = ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION
+      break
+    case ConstToolType.MAP_TOOL_TAGGING_SELECT_TEXT:
+      showMenuDialog = true
+      height = 0
+      isFullScreen = true
+      type = ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT
+      break
+  }
 
-  _params.setToolbarVisible(true, type, {
-    isFullScreen: false,
-    height: 0,
-    cb: () => select(type),
-  })
+  if (type !== '') {
+    _params.setToolbarVisible &&
+      _params.setToolbarVisible(true, type, {
+        containerType,
+        isFullScreen,
+        column: 4,
+        height,
+        showMenuDialog,
+        cb: () => {
+          StyleUtils.setSingleSelectionStyle(event.layerInfo.path)
+          SMap.setLayerEditable(event.layerInfo.path, false)
+          SMap.setAction(Action.PAN)
+        },
+      })
+  }
 
   let layers = _params.layers.layers
   // 其他图层设置为不可选
   _setMyLayersSelectable(layers, false)
 
   Toast.show(getLanguage(global.language).Prompt.PLEASE_SELECT_OBJECT)
-}
-
-/**
- * 选择标注_删除
- */
-function selectLabelToDelete() {
-  const _params = ToolbarModule.getParams()
-  _params.setSelection()
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-
-  let type = ConstToolType.MAP_TOOL_TAGGING_DELETE
-
-  _params.setToolbarVisible(true, type, {
-    containerType: 'table',
-    column: 3,
-    isFullScreen: false,
-    height: 0,
-    cb: () => select(type),
-  })
-
-  let layers = _params.layers.layers
-  // 其他图层设置为不可选
-  _setMyLayersSelectable(layers, false)
 }
 
 //设置我的图层的可选择性
@@ -810,100 +854,59 @@ async function deleteLabel() {
 
   _selection.forEach(async item => {
     if (item.ids.length > 0) {
-      SCollector.removeByIds(item.ids, item.layerInfo.path)
-      SMediaCollector.removeByIds(item.ids, item.layerInfo.name)
+      await SCollector.removeByIds(item.ids, item.layerInfo.path)
+      await SMediaCollector.removeByIds(item.ids, item.layerInfo.name)
     }
   })
   _params.setSelection()
+  let type = ConstToolType.MAP_TOOL_TAGGING_SELECT
+
+  _params.setToolbarVisible(true, type, {
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(type),
+  })
 }
 
 function geometrySelected(event) {
-  if (
-    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT ||
-    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT ||
-    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE ||
-    GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
-  ) {
-    let geoType
-    for (let i = 0; i < event.fieldInfo.length; i++) {
-      if (event.fieldInfo[i].name === 'SmGeoType') {
-        geoType = event.fieldInfo[i].value
+  const _params = ToolbarModule.getParams()
+  let geoType
+  for (let i = 0; i < event.fieldInfo.length; i++) {
+    if (event.fieldInfo[i].name === 'SmGeoType') {
+      geoType = event.fieldInfo[i].value
+      break
+    }
+  }
+  if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_SELECT) {
+    ToolbarModule.addData({
+      event: event,
+    })
+    let type = ''
+    switch (geoType) {
+      case DatasetType.POINT:
+        type = ConstToolType.MAP_TOOL_TAGGING_SELECT_POINT
         break
-      }
-    }
-
-    if (geoType) {
-      const params = ToolbarModule.getParams()
-
-      let column = 4,
-        height = ConstToolType.HEIGHT[3],
-        containerType = ToolbarType.table,
-        type = ''
-
-      switch (geoType) {
-        case DatasetType.POINT:
-          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT
-          height = ConstToolType.HEIGHT[0]
-          break
-        case DatasetType.LINE:
-          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE
-          height = ConstToolType.HEIGHT[2]
-          break
-        case DatasetType.REGION:
-          type = ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION
-          height = ConstToolType.HEIGHT[2]
-          containerType = ToolbarType.scrollTable
-          break
-      }
-      if (type !== '') {
-        params.setToolbarVisible &&
-          params.setToolbarVisible(true, type, {
-            isFullScreen: false,
-            column,
-            height,
-            containerType,
-            cb: () => SMap.appointEditGeometry(event.id, event.layerInfo.path),
-          })
-      }
-    }
-  } else if (GLOBAL.MapToolType === ConstToolType.MAP_TOOL_TAGGING_STYLE) {
-    let geoType
-    for (let i = 0; i < event.fieldInfo.length; i++) {
-      if (event.fieldInfo[i].name === 'SmGeoType') {
-        geoType = event.fieldInfo[i].value
+      case DatasetType.LINE:
+        type = ConstToolType.MAP_TOOL_TAGGING_SELECT_LINE
         break
-      }
+      case DatasetType.REGION:
+        type = ConstToolType.MAP_TOOL_TAGGING_SELECT_REGION
+        break
+      case DatasetType.TEXT:
+        type = ConstToolType.MAP_TOOL_TAGGING_SELECT_TEXT
     }
-    if (geoType) {
-      const params = ToolbarModule.getParams()
 
-      let type = ''
-      switch (geoType) {
-        case DatasetType.POINT:
-          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT
-          break
-        case DatasetType.LINE:
-          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE
-          break
-        case DatasetType.REGION:
-          type = ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION
-          break
-      }
-
-      if (type !== '') {
-        params.setToolbarVisible &&
-          params.setToolbarVisible(true, type, {
-            containerType: ToolbarType.symbol,
-            isFullScreen: false,
-            column: 4,
-            height: ConstToolType.THEME_HEIGHT[3],
-            cb: () => {
-              StyleUtils.setSingleSelectionStyle(event.layerInfo.path)
-              SMap.setLayerEditable(event.layerInfo.path, false)
-              SMap.setAction(Action.PAN)
-            },
-          })
-      }
+    if (type !== '') {
+      _params.setToolbarVisible(true, type, {
+        isFullScreen: false,
+        column: 5,
+        height: ConstToolType.HEIGHT[0],
+        cb: () => {
+          StyleUtils.setSingleSelectionStyle(event.layerInfo.path)
+          SMap.setLayerEditable(event.layerInfo.path, false)
+          SMap.setAction(Action.PAN)
+        },
+      })
     }
   }
 }
@@ -920,7 +923,33 @@ function colorAction(params) {
     case ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET:
       SMap.setTaggingFillForeColor(params.key)
       break
+    case ConstToolType.MAP_TOOL_TAGGING_STYLE_TEXT_COLOR_SET:
+      SMap.setTaggingTextColor(params.key)
+      break
     default:
+      break
+  }
+}
+
+function setTaggingTextFont(param) {
+  switch (param.title) {
+    case getLanguage(global.language).Map_Main_Menu.STYLE_BOLD:
+      SMap.setTaggingTextFont('BOLD')
+      break
+    case getLanguage(global.language).Map_Main_Menu.STYLE_ITALIC:
+      SMap.setTaggingTextFont('ITALIC')
+      break
+    case getLanguage(global.language).Map_Main_Menu.STYLE_UNDERLINE:
+      SMap.setTaggingTextFont('UNDERLINE')
+      break
+    case getLanguage(global.language).Map_Main_Menu.STYLE_STRIKEOUT:
+      SMap.setTaggingTextFont('STRIKEOUT')
+      break
+    case getLanguage(global.language).Map_Main_Menu.STYLE_SHADOW:
+      SMap.setTaggingTextFont('SHADOW')
+      break
+    case getLanguage(global.language).Map_Main_Menu.STYLE_OUTLINE:
+      SMap.setTaggingTextFont('OUTLINE')
       break
   }
 }
@@ -1113,6 +1142,27 @@ function commit(type) {
         SMap.setAction(Action.PAN)
       },
     })
+  } else if (
+    type.indexOf('MAP_TOOL_TAGGING_EDIT') !== -1 ||
+    type.indexOf('MAP_TOOL_TAGGING_STYLE') !== -1
+  ) {
+    SMap.clearSelection()
+    SMap.setAction(Action.PAN)
+    let layers = _params.layers.layers
+    // 还原其他图层的选择状态
+    _setMyLayersSelectable(layers, true)
+    for (let i = 0; i < layers.length; i++) {
+      if (LayerUtils.getLayerType(layers[i]) === 'TAGGINGLAYER') {
+        if (
+          _params.currentLayer &&
+          _params.currentLayer.name &&
+          _params.currentLayer.name === layers[i].name
+        ) {
+          SMap.setLayerEditable(layers[i].path, true)
+        }
+      }
+    }
+    _params.setToolbarVisible(false)
   } else {
     return false // 表示没找到对应方法，调用默认方法
   }
@@ -1154,15 +1204,7 @@ async function showAttribute() {
 function menu(type, selectKey, params = {}) {
   let isFullScreen, showMenuDialog, isTouchProgress
   let showBox = function() {
-    if (
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
-      type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
-    ) {
+    if (type.indexOf('MAP_TOOL_TAGGING_STYLE') !== -1) {
       params.showBox && params.showBox()
     }
   }.bind(this)
@@ -1198,15 +1240,7 @@ function menu(type, selectKey, params = {}) {
 }
 
 function showMenuBox(type, selectKey, params = {}) {
-  if (
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
-  ) {
+  if (type.indexOf('MAP_TOOL_TAGGING_STYLE') !== -1) {
     if (Utils.isTouchProgress(selectKey)) {
       params.setData &&
         params.setData({
@@ -1279,6 +1313,48 @@ async function listSelectableAction({ selectList }) {
   ToolbarModule.addData({ selectList })
 }
 
+function toolbarBack() {
+  const _params = ToolbarModule.getParams()
+  if (GLOBAL.MapToolType.indexOf('MAP_TOOL_TAGGING_SELECT_') !== -1) {
+    SMap.clearSelection()
+    _params.setSelection()
+    let type = ConstToolType.MAP_TOOL_TAGGING_SELECT
+
+    _params.setToolbarVisible(true, type, {
+      isFullScreen: false,
+      height: 0,
+      cb: () => select(type),
+    })
+  } else if (
+    GLOBAL.MapToolType.indexOf('MAP_TOOL_TAGGING_EDIT') !== -1 ||
+    GLOBAL.MapToolType.indexOf('MAP_TOOL_TAGGING_STYLE') !== -1
+  ) {
+    let type = ''
+    if (GLOBAL.MapToolType.indexOf('_POINT') !== -1) {
+      type = ConstToolType.MAP_TOOL_TAGGING_SELECT_POINT
+    } else if (GLOBAL.MapToolType.indexOf('_LINE') !== -1) {
+      type = ConstToolType.MAP_TOOL_TAGGING_SELECT_LINE
+    } else if (GLOBAL.MapToolType.indexOf('_REGION') !== -1) {
+      type = ConstToolType.MAP_TOOL_TAGGING_SELECT_REGION
+    } else if (GLOBAL.MapToolType.indexOf('_TEXT') !== -1) {
+      type = ConstToolType.MAP_TOOL_TAGGING_SELECT_TEXT
+    }
+    if (type !== '') {
+      let event = ToolbarModule.getData().event
+      _params.setToolbarVisible(true, type, {
+        isFullScreen: false,
+        column: 5,
+        height: ConstToolType.HEIGHT[0],
+        cb: () => {
+          StyleUtils.setSingleSelectionStyle(event.layerInfo.path)
+          SMap.setLayerEditable(event.layerInfo.path, false)
+          SMap.setAction(Action.PAN)
+        },
+      })
+    }
+  }
+}
+
 function close(type) {
   const _params = ToolbarModule.getParams()
   if (
@@ -1290,23 +1366,8 @@ function close(type) {
     SMap.setAction(Action.PAN)
     SMap.clearSelection()
     _params.setToolbarVisible(false)
-  } else if (
-    type === ConstToolType.MAP_TOOL_TAGGING_DELETE ||
-    type === ConstToolType.MAP_TOOL_TAGGING_EDIT ||
-    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_POINT ||
-    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_LINE ||
-    type === ConstToolType.MAP_TOOL_TAGGING_EDIT_REGION ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_POINT_COLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_LINE_COLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_FORECOLOR_SET ||
-    type === ConstToolType.MAP_TOOL_TAGGING_STYLE_REGION_BOARDERCOLOR_SET
-  ) {
+  } else if (type === ConstToolType.MAP_TOOL_TAGGING_SELECT) {
     SMap.setAction(Action.PAN)
-    SMap.clearSelection()
-
     let layers = _params.layers.layers
     // 还原其他图层的选择状态
     _setMyLayersSelectable(layers, true)
@@ -1355,13 +1416,14 @@ export default {
   redo,
   listSelectableAction,
   close,
+  toolbarBack,
   showEditLabel,
   selectLabelToEdit,
   selectLabelToStyle,
-  selectLabelToDelete,
   deleteLabel,
   geometrySelected,
   colorAction,
+  setTaggingTextFont,
 
   begin,
   stop,

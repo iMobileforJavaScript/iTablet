@@ -170,14 +170,18 @@ export default class ToolList extends React.Component {
             // 重新打开工作空间，防止Resource被删除或破坏
             const customerPath =
               ConstPath.CustomerPath +
-              ConstPath.RelativeFilePath.Workspace[global.language]
+              ConstPath.RelativeFilePath.Workspace[
+                global.language === 'CN' ? 'CN' : 'EN'
+              ]
             let wsPath
             if (this.props.user.currentUser.userName) {
               const userWSPath =
                 ConstPath.UserPath +
                 this.props.user.currentUser.userName +
                 '/' +
-                ConstPath.RelativeFilePath.Workspace[global.language]
+                ConstPath.RelativeFilePath.Workspace[
+                  global.language === 'CN' ? 'CN' : 'EN'
+                ]
               wsPath = await FileTools.appendingHomeDirectory(userWSPath)
             } else {
               wsPath = await FileTools.appendingHomeDirectory(customerPath)
