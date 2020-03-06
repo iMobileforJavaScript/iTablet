@@ -35,7 +35,7 @@ const Map_Main_Menu = {
   OPEN_MAP: 'Harita',
   OPEN_BACK: 'Geri',
 
-  NAVIGATION_START: 'Yönlendirme',
+  NAVIGATION_START: 'Yönlen\ndirme',
   NETWORK_MODEL: 'Model',
   NETWORK_MODEL_FILE: 'Ağ Model Dosyaları',
   NAVIGATION_WORKSPACE: 'Navigasyon Çalışma Alanı',
@@ -286,7 +286,7 @@ const Map_Main_Menu = {
   PLOTTING: 'Çizim',
   PLOTTING_LIB_CHANGE: 'Çizim Grafiğini Değiştir',
   PLOTTING_LIB: 'Çizim Grafiği',
-  PLOTTING_ANIMATION: 'Sonuç Çıkarma',
+  PLOTTING_ANIMATION: 'Sonuç\nÇıkarma',
   PLOTTING_ANIMATION_DEDUCTION: 'Animasyon Kesintisi Çizme',
   PLOTTING_ANIMATION_RESET: 'Sıfırla',
 
